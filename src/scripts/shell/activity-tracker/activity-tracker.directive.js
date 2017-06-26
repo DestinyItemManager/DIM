@@ -5,7 +5,7 @@ export function ActivityTrackerDirective($document, $interval, dimActivityTracke
 
   return {
     restrict: 'A',
-    link: function ActivityTrackerLink(scope) {
+    link: function link(scope) {
       function clickHandler() {
         dimActivityTrackerService.track();
       }

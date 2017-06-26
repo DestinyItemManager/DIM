@@ -1,4 +1,5 @@
 import angular from 'angular';
+import template from './dimFilterLink.directive.html';
 
 /**
  * Link to a specific filter in search. Clicking adds this term to the search.
@@ -6,7 +7,7 @@ import angular from 'angular';
  */
 angular.module('dimApp')
   .component('dimFilterLink', {
-    template: "<span ng-click='$ctrl.addFilter($ctrl.filter)' ng-bind='$ctrl.filter'></span>",
+    template: template,
     controller: FilterLinkCtrl,
     bindings: {
       filter: '@'
@@ -15,7 +16,7 @@ angular.module('dimApp')
 
 function FilterLinkCtrl(dimSearchService, $window, $translate) {
   this.addFilter = function(filter) {
-    var itemNameFilter = false;
+    let itemNameFilter = false;
 
     if (filter === 'item name') {
       itemNameFilter = true;
@@ -26,34 +27,34 @@ function FilterLinkCtrl(dimSearchService, $window, $translate) {
     if (filter === 'notes:value') {
       itemNameFilter = true;
       filter = $window.prompt($translate.instant('Filter.EnterNote'));
-      filter = 'notes:"' + filter.trim() + '"';
+      filter = `notes:"${filter.trim()}"`;
     }
 
     if (filter.indexOf('light:') === 0 || filter.indexOf('quality:') === 0) {
-      var type = filter.split(':');
-      var lightFilterType = type[1];
-      var light = $window.prompt("Enter a " + type[0] + " value:");
+      const type = filter.split(':');
+      const lightFilterType = type[1];
+      let light = $window.prompt(`Enter a ${type[0]} value:`);
       if (light) {
         light = light.trim();
       } else {
         return;
       }
-      filter = type[0] + ':';
+      filter = `${type[0]}:`;
       switch (lightFilterType) {
       case 'value':
         filter += light;
         break;
       case '>value':
-        filter += '>' + light;
+        filter += `>${light}`;
         break;
       case '>=value':
-        filter += '>=' + light;
+        filter += `>=${light}`;
         break;
       case '<value':
-        filter += '<' + light;
+        filter += `<${light}`;
         break;
       case '<=value':
-        filter += '<=' + light;
+        filter += `<=${light}`;
         break;
       default:
         filter = '';
@@ -61,17 +62,16 @@ function FilterLinkCtrl(dimSearchService, $window, $translate) {
       }
     }
 
-    var text = dimSearchService.query;
+    const text = dimSearchService.query;
 
     if (itemNameFilter) {
-      dimSearchService.query = filter + (text.length ? ' ' + text : '');
-    } else if ((text + ' ').indexOf(filter + ' ') < 0) {
+      dimSearchService.query = filter + (text.length ? ` ${text}` : '');
+    } else if ((`${text} `).indexOf(`${filter} `) < 0) {
       if (text.length > 0) {
-        dimSearchService.query = text + ' ' + filter;
+        dimSearchService.query = `${text} ${filter}`;
       } else {
         dimSearchService.query = filter;
       }
     }
   };
 }
-

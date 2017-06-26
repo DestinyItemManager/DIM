@@ -476,7 +476,7 @@ AddDefaultCharset utf-8
 
 <IfModule mod_headers.c>
 
-    Header set Content-Security-Policy "default-src 'none'; script-src 'self' 'unsafe-eval' https://apis.google.com https://www.google-analytics.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css; connect-src 'self' https://www.bungie.net; img-src 'self' https://www.bungie.net https://ssl.google-analytics.com https://csi.gstatic.com data:; font-src 'self' https://fonts.gstatic.com; child-src 'self' https://accounts.google.com; object-src 'self'"
+    Header set Content-Security-Policy "default-src 'none'; script-src 'self' 'unsafe-eval' https://apis.google.com https://www.google-analytics.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css; connect-src 'self' https://beta.destinyitemmanager.com https://www.bungie.net https://reviews-api.destinytracker.net; img-src 'self' https://www.bungie.net https://ssl.google-analytics.com https://csi.gstatic.com https://opencollective.com data:; font-src 'self' https://fonts.gstatic.com; child-src 'self' https://accounts.google.com https://content.googleapis.com; object-src 'self'"
 
     # `mod_headers` cannot match based on the content-type, however,
     # the `Content-Security-Policy` response header should be send
@@ -710,89 +710,69 @@ ServerSignature Off
 # # WEB PERFORMANCE                                                    #
 # ######################################################################
 
-# ----------------------------------------------------------------------
-# | Compression                                                        |
-# ----------------------------------------------------------------------
+SetEnv no-gzip
 
-<IfModule mod_deflate.c>
+AddEncoding gzip .svgz
+AddEncoding gzip .gz
+AddEncoding br .br
 
-    # Force compression for mangled `Accept-Encoding` request headers
-    # https://developer.yahoo.com/blogs/ydn/pushing-beyond-gzipping-25601.html
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
 
-    <IfModule mod_setenvif.c>
-        <IfModule mod_headers.c>
-            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
-            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
-        </IfModule>
-    </IfModule>
+    # for any request, search for pre-compressed versions (gzip or brotli) and serve that directly if it's supported
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Serve pre-brotli stuff if we got it
+    RewriteCond %{HTTP:Accept-encoding} br
+    RewriteCond %{REQUEST_FILENAME}.br -f
+    RewriteRule ^(.*)$ $1.br [QSA,L]
 
-    # Compress all output labeled with one of the following media types.
-    #
-    # (!) For Apache versions below version 2.3.7 you don't need to
-    # enable `mod_filter` and can remove the `<IfModule mod_filter.c>`
-    # and `</IfModule>` lines as `AddOutputFilterByType` is still in
-    # the core directives.
-    #
-    # https://httpd.apache.org/docs/current/mod/mod_filter.html#addoutputfilterbytype
-
-    <IfModule mod_filter.c>
-        AddOutputFilterByType DEFLATE "application/atom+xml" \
-                                      "application/javascript" \
-                                      "application/json" \
-                                      "application/ld+json" \
-                                      "application/manifest+json" \
-                                      "application/rdf+xml" \
-                                      "application/rss+xml" \
-                                      "application/schema+json" \
-                                      "application/vnd.geo+json" \
-                                      "application/vnd.ms-fontobject" \
-                                      "application/x-font-ttf" \
-                                      "application/x-javascript" \
-                                      "application/x-web-app-manifest+json" \
-                                      "application/xhtml+xml" \
-                                      "application/xml" \
-                                      "font/eot" \
-                                      "font/opentype" \
-                                      "image/bmp" \
-                                      "image/svg+xml" \
-                                      "image/vnd.microsoft.icon" \
-                                      "image/x-icon" \
-                                      "text/cache-manifest" \
-                                      "text/css" \
-                                      "text/html" \
-                                      "text/javascript" \
-                                      "text/plain" \
-                                      "text/vcard" \
-                                      "text/vnd.rim.location.xloc" \
-                                      "text/vtt" \
-                                      "text/x-component" \
-                                      "text/x-cross-domain-policy" \
-                                      "text/xml"
-
-    </IfModule>
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    # Map the following filename extensions to the specified
-    # encoding type in order to make Apache serve the file types
-    # with the appropriate `Content-Encoding` response header
-    # (do note that this will NOT make Apache compress them!).
-    #
-    # If these files types would be served without an appropriate
-    # `Content-Enable` response header, client applications (e.g.:
-    # browsers) wouldn't know that they first need to uncompress
-    # the response, and thus, wouldn't be able to understand the
-    # content.
-    #
-    # https://httpd.apache.org/docs/current/mod/mod_mime.html#addencoding
-
-    <IfModule mod_mime.c>
-        AddEncoding gzip              svgz
-    </IfModule>
-
+    # Serve pre-gzipped stuff if we got it
+    RewriteCond %{HTTP:Accept-encoding} gzip
+    RewriteCond %{REQUEST_FILENAME}.gz -f
+    RewriteRule ^(.*)$ $1.gz [QSA,L]
 </IfModule>
+
+# Our host seems to want to force the .gz files to be application/x-gzip
+<FilesMatch \.html\.gz$>
+    ForceType text/html
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.js\.gz$>
+    ForceType application/javascript
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.css\.gz$>
+    ForceType text/css
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.json\.gz$>
+    ForceType text/json
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.svg\.gz$>
+    ForceType image/svg+xml
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.ttf\.gz$>
+    ForceType application/font-sfnt
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.eot\.gz$>
+    ForceType application/vnd.ms-fontobject
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.wasm\.gz$>
+    ForceType application/wasm
+    Header set Content-Encoding gzip
+</FilesMatch>
 
 # ----------------------------------------------------------------------
 # | Content transformation                                             |

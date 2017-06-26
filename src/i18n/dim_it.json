@@ -22,9 +22,9 @@
       "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {platform}.",
       "NoCookies": "Non è stato trovato nessun cookie.",
       "NotConnected": "Potresti non essere connesso a internet.",
-      "Twitter": "Ottieni informazioni sullo stato del servizio su",
+      "Twitter": "Ottieni informazioni sullo stato del servizio su:",
       "ItemUniqueness": "Unicità dell elemento",
-      "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} female{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa.",
+      "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} other{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa.",
       "VendorNotFound": "I dati dei mercanti non sono disponibili."
    },
    "Compare": {
@@ -40,9 +40,12 @@
       "Splits": "Confronta simili suddivisioni ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Granate tempo di recupero",
-      "Melee": "Corpo a corpo tempo di recupero",
-      "Super": "Super tempo di recupero"
+      "Grenade": "Granate tempo di recupero: {cooldown}",
+      "Melee": "Corpo a corpo tempo di recupero: {cooldown}",
+      "Super": "Super tempo di recupero: {cooldown}"
+   },
+   "Countdown": {
+      "Days": "{numDays, plural, =1{# Giorno} other{# Giorni}}"
    },
    "Debug": {
       "Dump": "Svuota informazioni nella console",
@@ -59,10 +62,10 @@
    },
    "FarmingMode": {
       "FarmingMode": "Modalità Farming (sposta oggetti)",
-      "Desc": "DIM sposta Engrammi e consumabili per Lumen {gender, select, male{dal} female{dalla}} {store} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
+      "Desc": "DIM sposta Engrammi e consumabili per Lumen {gender, select, male{dal} other{dalla}} {store} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
       "Configuration": "Configurazione",
       "MakeRoom": {
-         "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen {gender, select, male{dal} female{dalla}} {store} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
+         "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen {gender, select, male{dal} other{dalla}} {store} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
          "MakeRoom": "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
          "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
       },
@@ -80,8 +83,7 @@
       "Filters": "Filtri",
       "FilterHelp": "Cerca oggetti/perk o is:arc",
       "MaterialsExchange": "Livelli fazione disponibili",
-      "Refresh": "Aggiorna i Dati di Destiny",
-      "SupportDIM": "Supporto"
+      "Refresh": "Aggiorna i Dati di Destiny"
    },
    "Help": {
       "BackToDIM": "Torna a DIM",
@@ -92,10 +94,7 @@
       "HidePopup": "Nascondi Questo Popup",
       "NeverShow": "Non mostrarmi più questo messaggio.",
       "UpgradeChrome": "Prego aggiornare Chrome",
-      "Version": {
-         "Beta": "La Beta è stata aggiornata alla versione v{version}",
-         "Stable": "Rilasciata la versione v{version} di DIM"
-      },
+      "Version": "{beta, select, true{La Beta è stata aggiornata alla versione v{version}} other{Rilasciata la versione v{version} di DIM}}",
       "Xur": "Xûr è arrivato"
    },
    "Hotkey": {
@@ -115,12 +114,11 @@
       "NoItems": "Non è disponibile nessun oggetto per l'infusione.",
       "NoTransfer": "Trasferimento maperiale per infusione\n {target} non può essere spostato.",
       "ShowItems": "Mostra gli oggetti infondibili di tutti i personaggi e del deposito",
-      "TransferItems": "Trasferisci oggetti",
-      "Using3": "usa 3"
+      "TransferItems": "Trasferisci oggetti"
    },
    "ItemInfoService": {
-     "SaveInfoErrorTitle": "Si è presentato un errore salvando le informazioni dell'oggetto",
-     "SaveInfoErrorDescription": "Si è presentato un problema salvando informazioni specifiche di DIM riguardo un oggetto. Un problema è dato dal fatto che è presente un limite sul numero di dati che possono essere conservati. Per questo motivo i tag e le note non sono ancora state consentite al di fuori della versione Beta. L'errore era: {error}."
+      "SaveInfoErrorTitle": "Si è presentato un errore salvando le informazioni dell'oggetto",
+      "SaveInfoErrorDescription": "Si è presentato un problema salvando informazioni specifiche di DIM riguardo un oggetto. Un problema è dato dal fatto che è presente un limite sul numero di dati che possono essere conservati. Per questo motivo i tag e le note non sono ancora state consentite al di fuori della versione Beta. L'errore era: {error}."
    },
    "ItemMove": {
       "Consolidate": "{name} consolidati",
@@ -168,24 +166,23 @@
       },
       "IncludeRare": "Includi oggetti rari (blu)",
       "Help": {
-        "Help": "Hai bisogno di aiuto?",
-        "Lock": "Per costruire un loadout basato su uno specifico set di perk clicca su uno dei riquadri soprastanti e seleziona i perk desiderati",
-        "NoPerk": "Se un perk non è visibile, significa che non possiedi alcuna armatura con quel perk",
-        "MultiPerk":"Per utilizzare un'armatura con più perk fai shift+click sui perk desiderati",
-        "Or": "Verranno utilizzate armature, che presentano almeno uno dei perk selezionati",
-        "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
-        "DragAndDrop": "Trascina e rilascia un oggetto nel suo riquadro per costruire un set con quella specifica armatura",
-        "ShiftClick": "Shift+click per escludere un oggetto dal set",
-        "HigherTiers": "Utilizzare Tier più alte è meglio",
-        "Tier11Example": "4/5/2 (una build Tier 11) corrisponde a 4 Intelletto, 5 Disciplina, 2 Forza (4+5+2 = Tier 11)",
-        "Intellect": "L'Intelletto riduce il tempo di ricarica della Super",
-        "Discipline": "La Disciplina riduce il tempo di ricarica delle Granate",
-        "Strength": "La Forza riduce il tempo di ricarica del Corpo a Corpo",
-        "Synergy": "Cerca di trovare armature con perk, che aumentino le munizioni per i tipi di armi che vuoi utilizzare.",
-        "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
-        "StatsIncrease": "Quando la difesa di un oggetto aumenta, aumentano anche le sue statistiche (intelletto/disciplina/forza)."
+         "Help": "Hai bisogno di aiuto?",
+         "Lock": "Per costruire un loadout basato su uno specifico set di perk clicca su uno dei riquadri soprastanti e seleziona i perk desiderati",
+         "NoPerk": "Se un perk non è visibile, significa che non possiedi alcuna armatura con quel perk",
+         "MultiPerk": "Per utilizzare un'armatura con più perk fai shift+click sui perk desiderati",
+         "Or": "Verranno utilizzate armature, che presentano almeno uno dei perk selezionati",
+         "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
+         "DragAndDrop": "Trascina e rilascia un oggetto nel suo riquadro per costruire un set con quella specifica armatura",
+         "ShiftClick": "Shift+click per escludere un oggetto dal set",
+         "HigherTiers": "Utilizzare Tier più alte è meglio",
+         "Tier11Example": "4/5/2 (una build Tier 11) corrisponde a 4 Intelletto, 5 Disciplina, 2 Forza (4+5+2 = Tier 11)",
+         "Intellect": "L'Intelletto riduce il tempo di ricarica della Super",
+         "Discipline": "La Disciplina riduce il tempo di ricarica delle Granate",
+         "Strength": "La Forza riduce il tempo di ricarica del Corpo a Corpo",
+         "Synergy": "Cerca di trovare armature con perk, che aumentino le munizioni per i tipi di armi che vuoi utilizzare.",
+         "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
+         "StatsIncrease": "Quando la difesa di un oggetto aumenta, aumentano anche le sue statistiche (intelletto/disciplina/forza)."
       },
-      "Equip": "Equipaggia sul personaggio corrente",
       "ShowAllConfigs": "Mostra tutte le configurazioni",
       "ShowConfigs": "Mostra configurazioni",
       "HideAllConfigs": "Nascondi tutte le configurazioni",
@@ -231,12 +228,12 @@
       "TooManyRequested": "Hai un totale di {total} {itemname}, ma il tuo loadout ne richiede {requested}. Abbiamo trasferito tutti quelli che avevi.",
       "DoesNotExist": "{itemname} non esiste sul tuo account.",
       "AppliedAuto": "Costruttore Automatico di Loadout",
-      "Applied": "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} female{alla tua}} {store}.",
+      "Applied": "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} other{alla tua}} {store}.",
       "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
       "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {failed} di {total} oggetti il trasferimento è fallito.",
       "NameRequired": "E' richiesto un nome.",
       "MakeRoom": "Crea spazio per l'Amministratore",
-      "MakeRoomDone": "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} female{dalla}} {store}.",
+      "MakeRoomDone": "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} other{dalla}} {store}.",
       "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}.",
       "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
       "SaveErrorDescription": "Impossibile salvare il loadout {loadoutName}: {error}.",
@@ -249,7 +246,6 @@
       "Error": "Errore caricando le informazioni su Destiny:\n{error}\nRicarica per riprovare.",
       "Outdated": "Informazioni su Destiny datate",
       "OutdatedExplanation": "Bungie ha aggiornato il suo database di informazioni su Destiny. Ricarica DIM per raccogliere le nuove informazioni. Nota che alcune cose su DIM potrebbero non funzionare per alcune ore, dopo che Bungie ha aggiornato Destiny, poichè i nuovi dati vengono diffusi dai loro sistemi.",
-      "BungieDown": "Bungie.net potrebbe star riscontrando dei problemi.",
       "Load": "Carico le informazioni su Destiny salvate",
       "LoadCharInv": "Carico i personaggi e l'inventario di Destiny",
       "Save": "Salvo le ultime informazioni su Destiny",
@@ -265,25 +261,50 @@
       "NewRep": "Nuova Reputazione"
    },
    "MovePopup": {
+      "OverviewTab": "Panoramica",
+      "ReviewsTab": "Recensioni",
       "Consolidate": "Consolida",
       "DistributeEvenly": "Distribuisci Equamente",
       "Equip": "Usa",
       "Split": "Dividi",
       "Store": "Muovi",
+      "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {typeName} {classType}",
       "Take": "Prendi",
-      "Vault": "Depos"
+      "Vault": "Depos",
+      "LockUnlock": "{locked, select, false{Blocca} other{Sblocca}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Segui} other{Non seguire}} {itemType}"
    },
    "MoveAmount": {
-     "Min": "Stack minimo (1)",
-     "Max": "Totale in questa posizione",
-     "UpStack": "Aumento fino al prossimo stack pieno",
-     "DownStack": "Diminuisci fino al prossimo stack pieno",
-     "Increment": "Uno in più",
-     "Decrement": "Uno in meno"
+      "Min": "Stack minimo (1)",
+      "Max": "Totale in questa posizione",
+      "UpStack": "Aumento fino al prossimo stack pieno",
+      "DownStack": "Diminuisci fino al prossimo stack pieno",
+      "Increment": "Uno in più",
+      "Decrement": "Uno in meno"
    },
    "Notes": {
       "Error": "Errore! Massimo 120 caratteri per nota.",
       "Help": "Aggiungere note a questo oggetto"
+   },
+   "DtrReview": {
+      "ThankYou": "Grazie per aver inviato la recensione! Sarà online a breve.",
+      "Help": "Scrivi una recensione (facoltativo)",
+      "HelpPros": "Descrivi gli aspetti positivi di quest'arma (facoltativo)",
+      "HelpCons": "Descrivi gli aspetti negativi di quest'arma (facoltativo)",
+      "YourReview": "La tua recensione",
+      "Edit": "Modifica",
+      "Delete": "Elimina",
+      "Submit": "Invia",
+      "Cancel": "Cancella",
+      "Pros": "Pro",
+      "Cons": "Contro",
+      "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
+      "ServiceCallError": "Richiesta di servizio di Destiny Tracker fallita.",
+      "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker"
+   },
+   "Objectives": {
+      "Complete": "Completo",
+      "Incomplete": "Incompleto"
    },
    "Postmaster": {
       "Limit": "Limite Amministratore",
@@ -302,8 +323,12 @@
       "ShowOverlayHelp": "Mostrerà una sfumatura sui nuovi oggetti.",
       "ShowAnimations": "Mostra una sfumatura animata sui nuovi oggetti.",
       "ShowAnimationsHelp": "Mostrerà una sfumatura animata sui nuovi oggetti. Disattivare quest'opzione può salvare cicli di CPU.",
+      "ShowReviews": "Mostra i punteggi delle recensioni sulle armi",
+      "ShowReviewsHelp": "Mostra i punteggi medi derivati dalle recensioni degli utenti.",
       "ShowElemental": "Mostra icona di danno elemetale sulle armi",
       "ShowElementalHelp": "Mostra icona di danno elemetale sulle armi.",
+      "AllowIdPostToDtr": "Condividi il nome account e gli oggetti recensiti con Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "DIM condividerà il tuo nome account ed ogni oggetto che recensirai con Destiny Tracker.",
       "SetSort": "Ordina oggetti per:",
       "SetSortHelp": "Ordina oggetti per rarità o per valore delle statistiche primarie.",
       "SortPrimary": "Statistiche Primarie",
@@ -315,7 +340,7 @@
       "VaultColumnsHelp": "Seleziona il numero massimo di colonne per il Deposito.",
       "SizeItem": "Dimensione Oggetti",
       "SizeItemHelp": "Quanto grandi devono essere le icone degli oggetti?",
-      "ResetToDefault": "Ripristina Default",
+      "ResetToDefault": "Ripristina default",
       "CharacterOrder": "Ordine Personaggi",
       "CharacterOrderHelp": "I personaggi possono essere ordinati in base all'ultimo login o in base alla loro data di creazione.",
       "CharacterOrderRecent": "Dal Personaggio Più Recente",
@@ -339,7 +364,7 @@
       "Prestige": "Livello Prestigio: {level}\n{exp}xp fino alle 5 particelle di luce",
       "Quality": "Qualità statistiche",
       "Strength": "Forza",
-      "TierProgress": "{progress} per {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 per T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Riempi Stack ({amount})",
@@ -347,9 +372,9 @@
       "Move": "Sposta"
    },
    "SyncService": {
-     "GoogleDriveReAuth": "Per autorizzare nuovamente google drive, devi riavviare il browser.",
-     "OneItemTooLarge": "Il tuo file di salvataggio contiene un elemento troppo grande. Molto probabilmente un loadout possiede troppi oggetti.",
-     "SaveTooLarge": "Il tuo file di salvataggio è troppo grande. Rimuovi i loadout salvati."
+      "GoogleDriveReAuth": "Per autorizzare nuovamente google drive, devi riavviare il browser.",
+      "OneItemTooLarge": "Il tuo file di salvataggio contiene un elemento troppo grande. Molto probabilmente un loadout possiede troppi oggetti.",
+      "SaveTooLarge": "Il tuo file di salvataggio è troppo grande. Rimuovi i loadout salvati."
    },
    "Tags": {
       "TagItem": "Segna Oggetto",
@@ -361,9 +386,8 @@
    "Vendors": {
       "Vendors": "Mercanti",
       "All": "Tutto",
-      "Available": "Disponibile da",
-      "Compare": "Confronta con quello che hai già",
-      "Day": "{numDays, plural, =1{Giorno} other{Giorni}}",
+      "Available": "Disponibile da:",
+      "Compare": "Confronta con quello che hai già:",
       "Load": "Caricamento Mercanti",
       "ArmorAndWeapons": "Equipaggiamento & Armi",
       "ShipsAndVehicles": "Navi & Veicoli",
@@ -373,53 +397,53 @@
       "Emotes": "Emotes"
    },
    "RecordBooks": {
-     "RecordBooks": "Registri",
-     "HideCompleted": "Nascondi completati"
+      "RecordBooks": "Registri",
+      "HideCompleted": "Nascondi completati"
    },
    "Views": {
-     "About":{
-       "BungieCopyright": "Tutte le immagini e i contenuti sono proprietà di Bungie. Contattaci se ci dovessero essere problemi.",
-       "ContactUs":"Contattaci",
-       "FAQ": "FAQ",
-       "FAQAccess": "Come fa DIM ad avere accesso ai miei dati di Destiny?",
-       "FAQAccessAnswer": "Qualsiasi estensione di Chrome può richiedere i dati, che un sito web salva sul tuo computer. Quando effettui l'accesso su Bungie.net, ti viene dato un gettone (un cookie), che viene generato unicamente per il tuo account. Si usa questo gettone per comunicare con Bungie in modo sicuro. Questo gettone è più sicuro rispetto al mandare il tuo nome utente e la tua password allegati a ogni richiesta ai server di Bungie. DIM usa questo gettone per comunicare con Bungie a tuo nome.",
-       "FAQDupeGally": "Hey, DIM ha duplicato il mio Gjallarhorn!",
-       "FAQDupeGallyAnswer": "No, non è vero. Giuro.",
-       "FAQKeyboard": "Su DIM funzionano le scelte rapide da tastiera (scorciatoie)?",
-       "FAQKeyboardAnswer": "Sì! Premi \"?\" per vedere una lista delle scelte rapide disponibili.",
-       "FAQLogout": "Come posso effettuare il log out da DIM?",
-       "FAQLogoutAnswer": "La tua sessione è legata a Bungie.net. Se effettui il log out da Bungie.net, ti disconnetti anche da DIM.",
-       "FAQLostItem": "Ho perso un mio oggetto utilizzando DIM!",
-       "FAQLostItemAnswer": "Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o a un altro personaggio. Puoi cercare quell'oggetto. Se ciò non dovesse funzionare, aggiorna l'applicazione premendo F5. Controlla su Bungie.net oppure nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
-       "GitHub": "GitHub",
-       "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su GitHub.",
-       "GitHubRepo": "DIM Git Repo",
-       "Header": "Riguardo Destiny Item Manager (DIM)",
-       "HowItsMade": "DIM si basa sui servizi usati da Bungie.net e dalla Destiny Companion App. DIM può accedere agli oggetti all'interno dell'inventario e del deposito del tuo Guardiano, sia su Playstation che su Xbox. Tu puoi trascinarli e rilasciarli ovunque tu voglia muoverli.",
-       "Reddit": "Reddit",
-       "RedditHelp": "Se hai domande, commenti o suggerimenti - facci sapere!",
-       "Twitter": "Twitter",
-       "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
-       "Version": "Versione",
-       "Transifex": "Unisciti al Team Traduzione!",
-       "TransifexText": "Utilizziamo Transifex per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team."
-     },
-     "Support": {
-       "Support": "Supportare DIM",
-       "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
-       "OpenCollective": "Utilizziamo OpenCollective come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto.",
-       "Backers": "Donatori",
-       "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
-       "Sponsors": "Sponsors",
-       "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito."
-     },
-     "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM.",
-     "Login": {
-       "Permission": "Ci serve il tuo permesso...",
-       "Explanation": "Permetti a DIM di consultare e modificare i tuoi personaggi, deposito e progresso di Destiny.",
-       "Auth": "Richiedi autorizzazione su Bungie.net",
-       "LearnMore": "Vuoi saperne di più?"
-     }
+      "About": {
+         "BungieCopyright": "Tutte le immagini e i contenuti sono proprietà di Bungie. Contattaci se ci dovessero essere problemi.",
+         "ContactUs": "Contattaci",
+         "FAQ": "FAQ",
+         "FAQAccess": "Come fa DIM ad avere accesso ai miei dati di Destiny?",
+         "FAQAccessAnswer": "Qualsiasi estensione di Chrome può richiedere i dati, che un sito web salva sul tuo computer. Quando effettui l'accesso su Bungie.net, ti viene dato un gettone (un cookie), che viene generato unicamente per il tuo account. Si usa questo gettone per comunicare con Bungie in modo sicuro. Questo gettone è più sicuro rispetto al mandare il tuo nome utente e la tua password allegati a ogni richiesta ai server di Bungie. DIM usa questo gettone per comunicare con Bungie a tuo nome.",
+         "FAQDupeGally": "Hey, DIM ha duplicato il mio Gjallarhorn!",
+         "FAQDupeGallyAnswer": "No, non è vero. Giuro.",
+         "FAQKeyboard": "Su DIM funzionano le scelte rapide da tastiera (scorciatoie)?",
+         "FAQKeyboardAnswer": "Sì! Premi \"?\" per vedere una lista delle scelte rapide disponibili.",
+         "FAQLogout": "Come posso effettuare il log out da DIM?",
+         "FAQLogoutAnswer": "La tua sessione è legata a Bungie.net. Se effettui il log out da Bungie.net, ti disconnetti anche da DIM.",
+         "FAQLostItem": "Ho perso un mio oggetto utilizzando DIM!",
+         "FAQLostItemAnswer": "Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o a un altro personaggio. Puoi cercare quell'oggetto. Se ciò non dovesse funzionare, aggiorna l'applicazione premendo F5. Controlla su Bungie.net oppure nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
+         "GitHub": "GitHub",
+         "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su GitHub.",
+         "GitHubRepo": "DIM Git Repo",
+         "Header": "Riguardo Destiny Item Manager (DIM)",
+         "HowItsMade": "DIM si basa sui servizi usati da Bungie.net e dalla Destiny Companion App. DIM può accedere agli oggetti all'interno dell'inventario e del deposito del tuo Guardiano, sia su Playstation che su Xbox. Tu puoi trascinarli e rilasciarli ovunque tu voglia muoverli.",
+         "Reddit": "Reddit",
+         "RedditHelp": "Se hai domande, commenti o suggerimenti - facci sapere!",
+         "Twitter": "Twitter",
+         "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
+         "Version": "Versione {version} ({flavor}), built on {date}",
+         "Transifex": "Unisciti al Team Traduzione!",
+         "TransifexText": "Utilizziamo Transifex per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team."
+      },
+      "Support": {
+         "Support": "Supportare DIM",
+         "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
+         "OpenCollective": "Utilizziamo OpenCollective come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto.",
+         "Backers": "Donatori",
+         "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
+         "Sponsors": "Sponsors",
+         "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito."
+      },
+      "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM.",
+      "Login": {
+         "Permission": "Ci serve il tuo permesso...",
+         "Explanation": "Permetti a DIM di consultare e modificare i tuoi personaggi, deposito e progresso di Destiny.",
+         "Auth": "Richiedi autorizzazione su Bungie.net",
+         "LearnMore": "Vuoi saperne di più?"
+      }
    },
    "TrialsCard": {
       "FiveWins": "Ricompensa 5 Vittorie (Armatura)",

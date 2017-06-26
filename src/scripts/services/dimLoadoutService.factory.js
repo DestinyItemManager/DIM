@@ -1,15 +1,16 @@
 import angular from 'angular';
+import uuidv4 from 'uuid/v4';
 import _ from 'underscore';
 
 angular.module('dimApp')
   .factory('dimLoadoutService', LoadoutService);
 
 
-function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
-  var _loadouts = [];
-  var _previousLoadouts = {}; // by character ID
+function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreService, toaster, loadingTracker, SyncService, dimActionQueue) {
+  let _loadouts = [];
+  const _previousLoadouts = {}; // by character ID
 
-  $rootScope.$on('dim-stores-updated', function() {
+  $rootScope.$on('dim-stores-updated', () => {
     getLoadouts(true);
   });
 
@@ -36,81 +37,66 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
       stringToTest = stringToTest.substring(1, stringToTest.length - 1);
     }
 
-    var regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(\}){0,1}$/gi;
+    const regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(\}){0,1}$/gi;
 
     return regexGuid.test(stringToTest);
   }
 
   function processLoadout(data, version) {
-    if (data) {
-      if (version === 'v3.0') {
-        var ids = data['loadouts-v3.0'];
-        _loadouts.splice(0);
-
-        _.each(ids, function(id) {
-          data[id].items.forEach(function(item) {
-            var itemFromStore = dimItemService.getItem({
-              id: item.id,
-              hash: item.hash
-            });
-            if (itemFromStore) {
-              itemFromStore.isInLoadout = true;
-            }
-          });
-          _loadouts.push(hydrate(data[id]));
-        });
-      } else {
-        _loadouts.splice(0);
-
-        // Remove null loadouts.
-        data = _.filter(data, function(primitive) {
-          return !_.isNull(primitive);
-        });
-
-        _.each(data, function(primitive) {
-          // Add id to loadout.
-          _loadouts.push(hydrate(primitive));
-        });
-      }
-
-      var objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
-      var hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
-      var loadoutGuids = _.pluck(_loadouts, 'id');
-      var containsLoadoutGuids = (item) => !_.contains(loadoutGuids, item.id);
-
-      var orphanIds = _.chain(data)
-        .filter(objectTest)
-        .filter(hasGuid)
-        .filter(containsLoadoutGuids)
-        .pluck('id')
-        .value();
-
-      if (orphanIds.length > 0) {
-        return SyncService.remove(orphanIds);
-      }
-    } else {
-      _loadouts = _loadouts.splice(0);
+    if (!data) {
+      return [];
     }
-    return $q.when();
+
+    let loadouts = [];
+    if (version === 'v3.0') {
+      const ids = data['loadouts-v3.0'];
+      loadouts = ids.map((id) => {
+        // Mark all the items as being in loadouts
+        data[id].items.forEach((item) => {
+          const itemFromStore = dimItemService.getItem({
+            id: item.id,
+            hash: item.hash
+          });
+          if (itemFromStore) {
+            itemFromStore.isInLoadout = true;
+          }
+        });
+        return hydrate(data[id]);
+      });
+    }
+
+    const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
+    const hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
+    const loadoutGuids = new Set(_.pluck(loadouts, 'id'));
+    const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
+
+    const orphanIds = _.chain(data)
+      .filter(objectTest)
+      .filter(hasGuid)
+      .reject(containsLoadoutGuids)
+      .pluck('id')
+      .value();
+
+    if (orphanIds.length > 0) {
+      return SyncService.remove(orphanIds).then(() => loadouts);
+    }
+
+    return loadouts;
   }
 
   function getLoadouts(getLatest) {
     // Avoids the hit going to data store if we have data already.
-    if (getLatest || _.size(_loadouts) === 0) {
+    if (getLatest || !_loadouts.length) {
       return SyncService.get()
         .then((data) => {
           if (_.has(data, 'loadouts-v3.0')) {
             return processLoadout(data, 'v3.0');
-          } else if (_.has(data, 'loadouts-v2.0')) {
-            return processLoadout(data['loadouts-v2.0'], 'v2.0')
-              .then(() => {
-                saveLoadouts(_loadouts);
-              });
           } else {
-            return processLoadout();
+            return [];
           }
         })
-        .then(() => {
+        .then((newLoadouts) => {
+          _loadouts = newLoadouts;
           return _loadouts;
         });
     } else {
@@ -120,16 +106,16 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
 
   function saveLoadouts(loadouts) {
     return $q.when(loadouts || getLoadouts())
-      .then(function(loadouts) {
+      .then((loadouts) => {
         _loadouts = loadouts;
 
-        var loadoutPrimitives = _.map(loadouts, dehydrate);
+        const loadoutPrimitives = _.map(loadouts, dehydrate);
 
-        var data = {
+        const data = {
           'loadouts-v3.0': []
         };
 
-        _.each(loadoutPrimitives, function(l) {
+        _.each(loadoutPrimitives, (l) => {
           data['loadouts-v3.0'].push(l.id);
           data[l.id] = l;
         });
@@ -140,8 +126,8 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
 
   function deleteLoadout(loadout) {
     return getLoadouts()
-      .then(function(loadouts) {
-        var index = _.findIndex(loadouts, { id: loadout.id });
+      .then((loadouts) => {
+        const index = _.findIndex(loadouts, { id: loadout.id });
         if (index >= 0) {
           loadouts.splice(index, 1);
         }
@@ -150,10 +136,10 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           return loadouts;
         });
       })
-      .then(function(loadouts) {
+      .then((loadouts) => {
         return saveLoadouts(loadouts);
       })
-      .then(function(loadouts) {
+      .then((loadouts) => {
         $rootScope.$broadcast('dim-delete-loadout', {
           loadout: loadout
         });
@@ -164,13 +150,13 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
 
   function saveLoadout(loadout) {
     return getLoadouts()
-      .then(function(loadouts) {
+      .then((loadouts) => {
         if (!_.has(loadout, 'id')) {
-          loadout.id = uuid2.newguid();
+          loadout.id = uuidv4();
         }
 
         // Handle overwriting an old loadout
-        var existingLoadoutIndex = _.findIndex(loadouts, { id: loadout.id });
+        const existingLoadoutIndex = _.findIndex(loadouts, { id: loadout.id });
         if (existingLoadoutIndex > -1) {
           loadouts[existingLoadoutIndex] = loadout;
         } else {
@@ -179,7 +165,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
 
         return saveLoadouts(loadouts);
       })
-      .then(function(loadouts) {
+      .then((loadouts) => {
         $rootScope.$broadcast('dim-filter-invalidate');
         $rootScope.$broadcast('dim-save-loadout', {
           loadout: loadout
@@ -190,21 +176,20 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
   }
 
   function hydrate(loadout) {
-    var hydration = {
-      'v1.0': hydratev1d0,
-      'v2.0': hydratev2d0,
-      'v3.0': hydratev3d0,
-      default: hydratev3d0
+    const hydration = {
+      'v3.0': hydratev3d0
     };
 
-    // v1.0 did not have a 'version' property so if it fails, we'll assume.
-    return (hydration[(loadout.version)] || hydration['v1.0'])(loadout);
+    return (hydration[(loadout.version)])(loadout);
   }
 
   // A special getItem that takes into account the fact that
   // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
   function getLoadoutItem(pseudoItem, store) {
-    var item = dimItemService.getItem(pseudoItem);
+    let item = dimItemService.getItem(pseudoItem);
+    if (!item) {
+      return null;
+    }
     if (_.contains(['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'], item.type)) {
       item = _.find(store.items, {
         hash: pseudoItem.hash
@@ -217,13 +202,13 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
   // or it won't be accurate. function properly supports guardians w/o artifacts
   // returns to tenth decimal place.
   function getLight(store, loadout) {
-    var itemWeight = {
+    const itemWeight = {
       Weapons: store.level === 40 ? .12 : .1304,
       Armor: store.level === 40 ? .10 : .1087,
       General: store.level === 40 ? .08 : .087
     };
-    return (Math.floor(10 * _.reduce(loadout.items, function(memo, items) {
-      var item = _.findWhere(items, { equipped: true });
+    return (Math.floor(10 * _.reduce(loadout.items, (memo, items) => {
+      const item = _.findWhere(items, { equipped: true });
 
       return memo + (item.primStat.value * itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
     }, 0)) / 10).toFixed(1);
@@ -235,7 +220,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
    * @return a promise for the completion of the whole loadout operation.
    */
   function applyLoadout(store, loadout, allowUndo = false) {
-    return dimActionQueue.queueAction(function() {
+    return dimActionQueue.queueAction(() => {
       if (allowUndo) {
         if (!_previousLoadouts[store.id]) {
           _previousLoadouts[store.id] = [];
@@ -252,9 +237,9 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
         }
       }
 
-      var items = angular.copy(_.flatten(_.values(loadout.items)));
+      let items = angular.copy(_.flatten(_.values(loadout.items)));
 
-      var loadoutItemIds = items.map(function(i) {
+      const loadoutItemIds = items.map((i) => {
         return {
           id: i.id,
           hash: i.hash
@@ -262,53 +247,65 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
       });
 
       // Only select stuff that needs to change state
-      items = _.filter(items, function(pseudoItem) {
-        var item = getLoadoutItem(pseudoItem, store);
-        return !item ||
-          !item.equipment ||
-          item.owner !== store.id ||
-          item.equipped !== pseudoItem.equipped;
+      let totalItems = items.length;
+      items = _.filter(items, (pseudoItem) => {
+        const item = getLoadoutItem(pseudoItem, store);
+        const invalid = !item || !item.equipment;
+        // provide a more accurate count of total items
+        if (invalid) {
+          totalItems--;
+          return true;
+        }
+
+        const alreadyThere = item.owner !== store.id ||
+              // Needs to be equipped. Stuff not marked "equip" doesn't
+              // necessarily mean to de-equip it.
+              (pseudoItem.equipped && !item.equipped);
+
+        return alreadyThere;
       });
 
       // only try to equip subclasses that are equippable, since we allow multiple in a loadout
-      items = items.filter(function(item) {
-        return item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
+      items = items.filter((item) => {
+        const ok = item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
+        if (!ok) {
+          totalItems--;
+        }
+        return ok;
       });
-      var totalItems = items.length;
-
 
       // vault can't equip
       if (store.isVault) {
-        items.forEach(function(i) { i.equipped = false; });
+        items.forEach((i) => { i.equipped = false; });
       }
 
       // We'll equip these all in one go!
-      var itemsToEquip = _.filter(items, 'equipped');
+      let itemsToEquip = _.filter(items, 'equipped');
       if (itemsToEquip.length > 1) {
         // we'll use the equipItems function
-        itemsToEquip.forEach(function(i) { i.equipped = false; });
+        itemsToEquip.forEach((i) => { i.equipped = false; });
       }
 
       // Stuff that's equipped on another character. We can bulk-dequip these
-      var itemsToDequip = _.filter(items, function(pseudoItem) {
-        var item = dimItemService.getItem(pseudoItem);
+      const itemsToDequip = _.filter(items, (pseudoItem) => {
+        const item = dimItemService.getItem(pseudoItem);
         return item.owner !== store.id && item.equipped;
       });
 
-      var scope = {
+      const scope = {
         failed: 0,
         total: totalItems,
         successfulItems: []
       };
 
-      var promise = $q.when();
+      let promise = $q.when();
 
       if (itemsToDequip.length > 1) {
-        var realItemsToDequip = itemsToDequip.map(function(i) {
+        const realItemsToDequip = itemsToDequip.map((i) => {
           return dimItemService.getItem(i);
         });
-        var dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), function(dequipItems, owner) {
-          var equipItems = _.compact(realItemsToDequip.map(function(i) {
+        const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
+          const equipItems = _.compact(realItemsToDequip.map((i) => {
             return dimItemService.getSimilarItem(i, loadoutItemIds);
           }));
           return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems);
@@ -317,16 +314,16 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
       }
 
       promise = promise
-        .then(function() {
+        .then(() => {
           return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
         })
-        .then(function() {
+        .then(() => {
           if (itemsToEquip.length > 1) {
             // Use the bulk equipAll API to equip all at once.
-            itemsToEquip = _.filter(itemsToEquip, function(i) {
+            itemsToEquip = _.filter(itemsToEquip, (i) => {
               return _.find(scope.successfulItems, { id: i.id });
             });
-            var realItemsToEquip = itemsToEquip.map(function(i) {
+            const realItemsToEquip = itemsToEquip.map((i) => {
               return getLoadoutItem(i, store);
             });
 
@@ -335,18 +332,18 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
             return itemsToEquip;
           }
         })
-        .then(function(equippedItems) {
+        .then((equippedItems) => {
           if (equippedItems.length < itemsToEquip.length) {
-            var failedItems = _.filter(itemsToEquip, function(i) {
+            const failedItems = _.filter(itemsToEquip, (i) => {
               return !_.find(equippedItems, { id: i.id });
             });
-            failedItems.forEach(function(item) {
+            failedItems.forEach((item) => {
               scope.failed++;
               toaster.pop('error', loadout.name, $translate.instant('Loadouts.CouldNotEquip', { itemname: item.name }));
             });
           }
         })
-        .then(function() {
+        .then(() => {
           // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
           // is fixed on Bungie's end. When that happens, just remove this call.
           if (scope.successfulItems.length > 0) {
@@ -354,10 +351,10 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           }
           return undefined;
         })
-        .then(function() {
-          var value = 'success';
+        .then(() => {
+          let value = 'success';
 
-          var message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name, gender: store.gender });
+          let message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name, gender: store.gender });
 
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
@@ -384,19 +381,19 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
       return $q.when();
     }
 
-    var promise = $q.when();
-    var pseudoItem = items.shift();
-    var item = getLoadoutItem(pseudoItem, store);
+    let promise = $q.when();
+    const pseudoItem = items.shift();
+    let item = getLoadoutItem(pseudoItem, store);
 
     if (item.type === 'Material' || item.type === 'Consumable') {
       // handle consumables!
-      var amountAlreadyHave = store.amountOfItem(pseudoItem);
-      var amountNeeded = pseudoItem.amount - amountAlreadyHave;
+      const amountAlreadyHave = store.amountOfItem(pseudoItem);
+      let amountNeeded = pseudoItem.amount - amountAlreadyHave;
       if (amountNeeded > 0) {
-        const otherStores = _.reject(dimStoreService.getStores(), function(otherStore) {
+        const otherStores = _.reject(dimStoreService.getStores(), (otherStore) => {
           return store.id === otherStore.id;
         });
-        const storesByAmount = _.sortBy(otherStores.map(function(store) {
+        const storesByAmount = _.sortBy(otherStores.map((store) => {
           return {
             store: store,
             amount: store.amountOfItem(pseudoItem)
@@ -410,7 +407,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           const sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
 
           if (amountToMove === 0 || !sourceItem) {
-            promise = promise.then(function() {
+            promise = promise.then(() => {
               const error = new Error($translate.instant('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
               error.level = 'warn';
               return $q.reject(error);
@@ -436,22 +433,22 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
         // Pass in the list of items that shouldn't be moved away
         promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
       } else {
-        promise = $.reject(new Error($translate.instant('Loadouts.DoesNotExist', { itemname: item.name })));
+        promise = $q.reject(new Error($translate.instant('Loadouts.DoesNotExist', { itemname: item.name })));
       }
     }
 
     promise = promise
-      .then(function() {
+      .then(() => {
         scope.successfulItems.push(item);
       })
-      .catch(function(e) {
+      .catch((e) => {
         const level = e.level || 'error';
         if (level === 'error') {
           scope.failed++;
         }
         toaster.pop(e.level || 'error', item.name, e.message);
       })
-      .finally(function() {
+      .finally(() => {
         // Keep going
         return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
       });
@@ -460,7 +457,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
   }
 
   function hydratev3d0(loadoutPrimitive) {
-    var result = {
+    const result = {
       id: loadoutPrimitive.id,
       name: loadoutPrimitive.name,
       platform: loadoutPrimitive.platform,
@@ -471,14 +468,14 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
       }
     };
 
-    _.each(loadoutPrimitive.items, function(itemPrimitive) {
-      var item = angular.copy(dimItemService.getItem({
+    _.each(loadoutPrimitive.items, (itemPrimitive) => {
+      let item = angular.copy(dimItemService.getItem({
         id: itemPrimitive.id,
         hash: itemPrimitive.hash
       }));
 
       if (item) {
-        var discriminator = item.type.toLowerCase();
+        const discriminator = item.type.toLowerCase();
 
         item.equipped = itemPrimitive.equipped;
 
@@ -501,83 +498,8 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
     return result;
   }
 
-  function hydratev2d0(loadoutPrimitive) {
-    var result = {
-      id: loadoutPrimitive.id,
-      name: loadoutPrimitive.name,
-      classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
-      version: 'v3.0',
-      items: {
-        unknown: []
-      }
-    };
-
-    _.each(loadoutPrimitive.items, function(itemPrimitive) {
-      var item = angular.copy(dimItemService.getItem({
-        id: itemPrimitive.id,
-        hash: itemPrimitive.hash
-      }));
-
-      if (item) {
-        var discriminator = item.type.toLowerCase();
-
-        item.equipped = itemPrimitive.equipped;
-
-        result.items[discriminator] = (result.items[discriminator] || []);
-        result.items[discriminator].push(item);
-      } else {
-        item = {
-          id: itemPrimitive.id,
-          hash: itemPrimitive.hash,
-          amount: itemPrimitive.amount,
-          equipped: itemPrimitive.equipped
-        };
-
-        result.items.unknown.push(item);
-      }
-    });
-
-    return result;
-  }
-
-  function hydratev1d0(loadoutPrimitive) {
-    var result = {
-      id: uuid2.newguid(),
-      name: loadoutPrimitive.name,
-      classType: -1,
-      version: 'v3.0',
-      items: {
-        unknown: []
-      }
-    };
-
-    _.each(loadoutPrimitive.items, function(itemPrimitive) {
-      var item = angular.copy(dimItemService.getItem(itemPrimitive));
-
-      if (item) {
-        var discriminator = item.type.toLowerCase();
-
-        result.items[discriminator] = (result.items[discriminator] || []);
-        result.items[discriminator].push(item);
-
-        item.equipped = true;
-      } else {
-        item = {
-          id: itemPrimitive.id,
-          hash: itemPrimitive.hash,
-          amount: itemPrimitive.amount,
-          equipped: itemPrimitive.equipped
-        };
-
-        result.items.unknown.push(item);
-      }
-    });
-
-    return result;
-  }
-
   function dehydrate(loadout) {
-    var result = {
+    const result = {
       id: loadout.id,
       name: loadout.name,
       classType: loadout.classType,
@@ -589,7 +511,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
     result.items = _.chain(loadout.items)
       .values()
       .flatten()
-      .map(function(item) {
+      .map((item) => {
         return {
           id: item.id,
           hash: item.hash,

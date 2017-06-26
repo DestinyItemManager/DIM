@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimStores.directive.html';
 
 angular.module('dimApp')
   .directive('dimStores', Stores);
@@ -11,35 +12,7 @@ function Stores() {
     bindToController: true,
     scope: {},
     link: Link,
-    template: [
-      '<div ng-if="vm.stores.length" ng-class="{ \'hide-filtered\': vm.settings.hideFilteredItems }">',
-      '  <div class="store-row store-header">',
-      '    <div class="store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '      <dim-store-heading class="character" ng-class="{ current: store.current }" store-data="store"></dim-store-heading>',
-      '    </div>',
-      '  </div>',
-      '  <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">',
-      '    <div class="title">',
-      '      <span class="collapse-handle" ng-click="vm.toggleSection(category)"><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> <span translate="Bucket.{{::category}}"></span></span>',
-      '      <span ng-if="::vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{::vm.vault.capacityForItem({sort: category})}}</span>',
-      '    </div>',
-      '    <div class="store-row items" ng-if="!vm.settings.collapsedSections[category]" ng-repeat="bucket in ::buckets track by bucket.id" ng-repeat="bucket in ::buckets track by bucket.id"><i ng-click="vm.toggleSection(bucket.id)" class="fa collapse" ng-class="vm.settings.collapsedSections[bucket.id] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i>',
-      '      <div ng-if="!vm.settings.collapsedSections[bucket.id]" class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '        <dim-store-bucket ng-if="::!store.isVault || vm.vault.vaultCounts[category] !== undefined" store-data="store" bucket-items="store.buckets[bucket.id]" bucket="bucket"></dim-store-bucket>',
-      '      </div>',
-      '      <div ng-if="vm.settings.collapsedSections[bucket.id]" ng-click="vm.toggleSection(bucket.id)" class="store-text collapse"><span translate="Bucket.Show" translate-values="{ bucket: bucket.name }"></span></div>',
-      '    </div>',
-      '  </div>',
-      '  <div class="title" ng-click="vm.toggleSection(\'Reputation\')">',
-      '    <span><i class="fa collapse" ng-class="vm.settings.collapsedSections[\'Reputation\'] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> <span translate="Bucket.Reputation"></span></span>',
-      '  </div>',
-      '  <div class="store-row items reputation" ng-if="!vm.settings.collapsedSections[\'Reputation\']">',
-      '    <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '      <dim-store-reputation store-data="store"></dim-store-reputation>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    template: template
   };
 
   function Link($scope) {
@@ -49,7 +22,7 @@ function Stores() {
 
     $(document).on('scroll', stickyHeader);
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', () => {
       $(document).off('scroll', stickyHeader);
     });
   }
@@ -57,9 +30,9 @@ function Stores() {
 
 
 function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $translate) {
-  var vm = this;
-  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.Collapse')}</p>` +
-                             `<p>${$translate.instant('DidYouKnow.Expand')}</p>`;
+  const vm = this;
+  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.Collapse')}</p>
+                              <p>${$translate.instant('DidYouKnow.Expand')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('collapsed', {
@@ -73,7 +46,7 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
   vm.stores = dimStoreService.getStores();
   vm.vault = dimStoreService.getVault();
   vm.buckets = null;
-  dimBucketService.getBuckets().then(function(buckets) {
+  dimBucketService.getBuckets().then((buckets) => {
     vm.buckets = angular.copy(buckets);
   });
   vm.toggleSection = function(id) {
@@ -82,7 +55,7 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     vm.settings.save();
   };
 
-  $scope.$on('dim-stores-updated', function(e, stores) {
+  $scope.$on('dim-stores-updated', (e, stores) => {
     vm.stores = stores.stores;
     vm.vault = dimStoreService.getVault();
   });

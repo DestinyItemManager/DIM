@@ -1,9 +1,5 @@
-import best from 'app/views/best.template.html';
-import vendors from 'app/views/vendors.template.html';
-import materialExchange from 'app/views/mats-exchange.template.html';
-import debugItem from 'app/views/debugItem.template.html';
-import developer from 'app/scripts/developer/developer.template.html';
-import login from 'app/scripts/login/login.template.html';
+import debugItem from 'app/views/debugItem.html';
+import login from 'app/scripts/login/login.html';
 
 function routes($stateProvider, $urlRouterProvider) {
   'ngInject';
@@ -12,36 +8,37 @@ function routes($stateProvider, $urlRouterProvider) {
     name: 'root',
     abstract: true
   }, {
-    name: 'best',
-    parent: 'content',
-    templateUrl: best,
-    url: '/best'
-  }, {
-    name: 'vendors',
-    parent: 'content',
-    templateUrl: vendors,
-    url: '/vendors'
-  }, {
-    name: 'materials-exchange',
-    parent: 'content',
-    url: '/materials-exchange',
-    templateUrl: materialExchange
-  }, {
     name: 'debugItem',
     parent: 'content',
     url: '/debugItem/:itemId',
-    templateUrl: debugItem
-  }, {
-    name: 'developer',
-    parent: 'content',
-    url: '/developer',
-    templateUrl: developer
+    template: debugItem
   }, {
     name: 'login',
     parent: 'shell',
     url: '/login',
-    templateUrl: login
+    template: login,
+    params: {
+      reauth: false
+    }
   }];
+
+  if ($featureFlags.materialsExchangeEnabled) {
+    states.push({
+      name: 'materials-exchange',
+      parent: 'content',
+      url: '/materials-exchange',
+      template: require('app/views/mats-exchange.html')
+    });
+  }
+
+  if ($DIM_FLAVOR === 'dev') {
+    states.push({
+      name: 'developer',
+      parent: 'shell',
+      url: '/developer',
+      template: require('app/scripts/developer/developer.html')
+    });
+  }
 
   states.forEach((state) => {
     $stateProvider.state(state);

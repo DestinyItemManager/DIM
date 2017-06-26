@@ -1,57 +1,85 @@
-import angular from 'angular';
+import { oauthClientId, oauthClientSecret } from '../services/bungie-api-utils';
 
-angular.module('dim-oauth')
-  .service('OAuthService', OAuthService);
+const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
-function OAuthService($q, $injector, localStorageService, OAuthTokenService) {
-  function isAuthenticated() {
-    return Boolean(OAuthTokenService.getToken());
+// https://www.bungie.net/en/Clan/Post/1777779/227330965/0/0
+export function OAuthService($injector, $httpParamSerializer) {
+  'ngInject';
+
+  function handleAccessToken(response) {
+    if (response && response.data && response.data.access_token) {
+      const data = response.data;
+      const inception = Date.now();
+      const accessToken = {
+        value: data.access_token,
+        expires: data.expires_in,
+        name: 'access',
+        inception: inception
+      };
+
+      const tokens = {
+        accessToken,
+        bungieMembershipId: data.membership_id
+      };
+
+      if (data.refresh_token) {
+        tokens.refreshToken = {
+          value: data.refresh_token,
+          expires: data.refresh_expires_in,
+          name: 'refresh',
+          inception: inception
+        };
+      }
+
+      return tokens;
+    } else {
+      throw response;
+    }
   }
 
-  function getToken() {
-    // Gets an access token from service.
-  }
-
-  function refreshToken() {
+  function getAccessTokenFromRefreshToken(refreshToken) {
+    // Break a circular dependency
     const $http = $injector.get('$http');
 
     return $http({
       method: 'POST',
-      url: 'https://www.bungie.net/Platform/App/GetAccessTokensFromRefreshToken/',
+      url: TOKEN_URL,
+      data: $httpParamSerializer({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken.value,
+        client_id: oauthClientId(),
+        client_secret: oauthClientSecret()
+      }),
       headers: {
-        'X-API-Key': localStorageService.get('apiKey')
-      },
-      data: {
-        refreshToken: OAuthTokenService.getRefreshToken().value
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
     })
-    .then((response) => {
-      if (response && response.data && (response.data.ErrorCode === 1) && response.data.Response && response.data.Response.accessToken) {
-        const accessToken = angular.merge({}, response.data.Response.accessToken, { name: 'access', inception: (new Date()).toISOString() });
-        const refreshToken = angular.merge({}, response.data.Response.refreshToken, { name: 'refresh', inception: (new Date()).toISOString() });
-
-        OAuthTokenService.setToken({
-          accessToken,
-          refreshToken,
-          scope: response.data.Response.scope
-        });
-
-        return OAuthTokenService.getToken();
-      } else {
-        return $q.reject(response);
-      }
-    });
+      .then(handleAccessToken);
   }
 
-  function revokeToken() {
-    // Revokes token via api
+  function getAccessTokenFromCode(code) {
+    // Break a circular dependency
+    const $http = $injector.get('$http');
+
+    return $http({
+      method: 'POST',
+      url: TOKEN_URL,
+      data: $httpParamSerializer({
+        code: code,
+        client_id: oauthClientId(),
+        client_secret: oauthClientSecret(),
+        grant_type: 'authorization_code'
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+      .then(handleAccessToken);
   }
 
   return {
-    isAuthenticated,
-    getToken,
-    refreshToken,
-    revokeToken
+    getAccessTokenFromRefreshToken,
+    getAccessTokenFromCode
   };
 }
 

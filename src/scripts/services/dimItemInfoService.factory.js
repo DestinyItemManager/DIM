@@ -9,12 +9,12 @@ angular.module('dimApp')
  * The item info service maintains a map of extra, DIM-specific, synced data about items (per platform).
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
-function ItemInfoService(dimPlatformService, SyncService, $translate, toaster, $q) {
+function ItemInfoService(SyncService, $translate, toaster, $q) {
   /**
    * Rebuild infos from partitioned info keys.
    */
   function getInfos(key) {
-    return SyncService.get().then(function(data) {
+    return SyncService.get().then((data) => {
       const infos = {};
       _.each(data, (v, k) => {
         if (k.startsWith(key)) {
@@ -39,15 +39,15 @@ function ItemInfoService(dimPlatformService, SyncService, $translate, toaster, $
       partition[k] = v;
       partitionSize++;
       if (partitionSize >= 50) {
-        partitions[key + '-p' + partitionCount] = partition;
+        partitions[`${key}-p${partitionCount}`] = partition;
         partition = {};
         partitionSize = 0;
         partitionCount++;
       }
     });
-    partitions[key + '-p' + partitionCount] = partition;
+    partitions[`${key}-p${partitionCount}`] = partition;
 
-    return SyncService.get().then(function(data) {
+    return SyncService.get().then((data) => {
       const emptyPartitions = _.filter(
         _.keys(data), (k) => k.startsWith(key) && !partitions[k]);
 
@@ -61,11 +61,11 @@ function ItemInfoService(dimPlatformService, SyncService, $translate, toaster, $
 
   // Returns a function that, when given a platform, returns the item info source for that platform
   return function(platform) {
-    const key = 'dimItemInfo-' + platform.type;
-    return getInfos(key).then(function(infos) {
+    const key = `dimItemInfo-${platform.type}`;
+    return getInfos(key).then((infos) => {
       return {
         infoForItem: function(hash, id) {
-          const itemKey = hash + '-' + id;
+          const itemKey = `${hash}-${id}`;
           const info = infos[itemKey];
           return angular.extend({
             save: function() {
@@ -90,12 +90,12 @@ function ItemInfoService(dimPlatformService, SyncService, $translate, toaster, $
             return $q.when();
           }
 
-          return getInfos(key).then(function(infos) {
+          return getInfos(key).then((infos) => {
             const remain = {};
 
             stores.forEach((store) => {
               store.items.forEach((item) => {
-                const itemKey = item.hash + '-' + item.id;
+                const itemKey = `${item.hash}-${item.id}`;
                 const info = infos[itemKey];
                 if (info && (info.tag !== undefined || (info.notes && info.notes.length))) {
                   remain[itemKey] = info;

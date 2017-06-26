@@ -1,5 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimStoreBucket.directive.html';
+import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 
 angular.module('dimApp')
   .directive('dimStoreBucket', StoreBucket);
@@ -16,24 +18,7 @@ function StoreBucket() {
       items: '=bucketItems',
       bucket: '=bucket'
     },
-    template: [
-      '<div class="sub-section"',
-      '     ng-class="[\'sort-\' + vm.bucket.id, { empty: !vm.items.length }]"',
-      '     ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
-      '     drop-channel="{{::vm.dropChannel}}">',
-      '  <div class="equipped sub-bucket" ng-repeat="item in vm.items | equipped:true track by item.index"',
-      '       ng-if="!vm.store.isVault"',
-      '       ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
-      '       drop-channel="{{::vm.dropChannel}}">',
-      '    <dim-store-item store-data="vm.store" item-data="item"></dim-store-item>',
-      '  </div>',
-      '  <div class="unequipped sub-bucket" ui-on-drop="vm.onDrop($data, $event, false)" ',
-      '      ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" ',
-      '      drop-channel="{{::vm.dropChannel}}">',
-      '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.settings.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    template: template
   };
 }
 
@@ -48,25 +33,24 @@ function StoreBucketCtrl($scope,
                          ngDialog,
                          $rootScope,
                          dimActionQueue,
-                         dimFeatureFlags,
                          dimInfoService,
                          $translate) {
-  var vm = this;
+  const vm = this;
 
   vm.settings = dimSettingsService;
 
-  vm.dropChannel = vm.bucket.type + ',' + vm.store.id + vm.bucket.type;
+  vm.dropChannel = `${vm.bucket.type},${vm.store.id}${vm.bucket.type}`;
 
   // Detect when we're hovering a dragged item over a target
-  var dragTimer = null;
-  var hovering = false;
-  var dragHelp = document.getElementById('drag-help');
-  var entered = 0;
+  let dragTimer = null;
+  let hovering = false;
+  const dragHelp = document.getElementById('drag-help');
+  let entered = 0;
   vm.onDragEnter = function() {
     if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
       entered = entered + 1;
       if (entered === 1) {
-        dragTimer = $timeout(function() {
+        dragTimer = $timeout(() => {
           if ($rootScope.dragItem) {
             hovering = true;
             dragHelp.classList.add('drag-dwell-activated');
@@ -86,13 +70,13 @@ function StoreBucketCtrl($scope,
     }
   };
   vm.onDrop = function(id, $event, equip) {
-    vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event, hovering);
+    vm.moveDroppedItem(angular.element(`#${id}`).scope().item, equip, $event, hovering);
     hovering = false;
     dragHelp.classList.remove('drag-dwell-activated');
     $timeout.cancel(dragTimer);
   };
-  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DoubleClick')}</p>` +
-                             `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
+  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DoubleClick')}</p>
+                              <p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('doubleclick', {
@@ -102,8 +86,8 @@ function StoreBucketCtrl($scope,
     });
   });
 
-  vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
-    var target = vm.store;
+  vm.moveDroppedItem = dimActionQueue.wrap((item, equip, $event, hovering) => {
+    const target = vm.store;
 
     if (target.current && equip) {
       didYouKnow();
@@ -119,33 +103,18 @@ function StoreBucketCtrl($scope,
       }
     }
 
-    var promise = $q.when(item.amount);
+    let promise = $q.when(item.amount);
 
     if (item.maxStackSize > 1 && item.amount > 1 && ($event.shiftKey || hovering)) {
       ngDialog.closeAll();
-      var dialogResult = ngDialog.open({
+      const dialogResult = ngDialog.open({
         // TODO: break this out into a separate service/directive?
-        template: [
-          '<div>',
-          '  <h1>',
-          '    <dim-simple-item item-data="vm.item"></dim-simple-item>',
-          '    <span translate="StoreBucket.HowMuch" translate-values="{ itemname: vm.item.name }"></span>',
-          '  </h1>',
-          '  <div class="ngdialog-inner-content">',
-          '    <form ng-submit="vm.finish()">',
-          '      <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>',
-          '    </form>',
-          '    <div class="buttons">' +
-          '      <button ng-click="vm.finish()"><span translate="StoreBucket.Move"</span></button>',
-          '      <button ng-click="vm.stacksWorthClick()" ng-show="vm.stacksWorth > 0"><span translate="StoreBucket.FillStack" translate-values="{ amount : vm.stacksWorth }"</span></button>',
-          '    </div>',
-          '  </div>',
-          '</div>'].join(''),
+        template: dialogTemplate,
         scope: $scope,
         controllerAs: 'vm',
         controller: function($scope) {
           'ngInject';
-          var vm = this;
+          const vm = this;
           vm.item = $scope.ngDialogData;
           vm.moveAmount = vm.item.amount;
           vm.maximum = dimStoreService.getStore(vm.item.owner).amountOfItem(item);
@@ -166,31 +135,31 @@ function StoreBucketCtrl($scope,
         appendClassName: 'modal-dialog'
       });
 
-      promise = dialogResult.closePromise.then(function(data) {
+      promise = dialogResult.closePromise.then((data) => {
         if (typeof data.value === 'string') {
           const error = new Error("move-canceled");
           error.code = "move-canceled";
           return $q.reject(error);
         }
-        var moveAmount = data.value;
+        const moveAmount = data.value;
         return moveAmount;
       });
     }
 
-    promise = promise.then(function(moveAmount) {
-      if (dimFeatureFlags.debugMoves) {
+    promise = promise.then((moveAmount) => {
+      if ($featureFlags.debugMoves) {
         console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', dimStoreService.getStore(item.owner).name);
       }
-      var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
+      let movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
-      var reload = item.equipped || equip;
+      const reload = item.equipped || equip;
       if (reload) {
-        movePromise = movePromise.then(function() {
+        movePromise = movePromise.then(() => {
           return dimStoreService.updateCharacters();
         });
       }
       return movePromise;
-    }).catch(function(e) {
+    }).catch((e) => {
       if (e.message !== 'move-canceled') {
         toaster.pop('error', item.name, e.message);
       }
@@ -201,4 +170,3 @@ function StoreBucketCtrl($scope,
     return promise;
   });
 }
-

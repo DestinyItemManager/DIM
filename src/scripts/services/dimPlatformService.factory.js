@@ -4,74 +4,68 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, $q, dimBungieService, SyncService) {
-  var _platforms = [];
-  var _active = null;
+function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, $state, toaster) {
+  let _platforms = [];
+  let _active = null;
 
-  // Testing
-  var testFakeXbox = false;
-  var testFakePlaystation = false;
-
-  var service = {
+  const service = {
     getPlatforms: getPlatforms,
     getActive: getActive,
-    setActive: setActive
+    setActive: setActive,
+    reportBadPlatform: reportBadPlatform
   };
 
   return service;
 
   function getPlatforms() {
-    var dataPromise = dimBungieService.getPlatforms()
-      .then(generatePlatforms);
+    const token = OAuthTokenService.getToken();
+    if (!token) {
+      // We're not logged in, don't bother
+      $state.go('login');
+      return $q.when();
+    }
 
-    return dataPromise;
+    if (token.bungieMembershipId) {
+      return dimBungieService.getAccounts(token.bungieMembershipId)
+        .then(generatePlatforms)
+        .catch((e) => {
+          toaster.pop('error', 'Unexpected error getting accounts', e.message);
+          throw e;
+        });
+    } else {
+      // they're logged in, just need to fill in membership
+      // TODO: this can be removed after everyone has had a chance to upgrade
+      return dimBungieService.getAccountsForCurrentUser()
+        .then((accounts) => {
+          const token = OAuthTokenService.getToken();
+          token.bungieMembershipId = accounts.bungieNetUser.membershipId;
+          OAuthTokenService.setToken(token);
+
+          return accounts;
+        })
+        .then(generatePlatforms)
+        .catch((e) => {
+          toaster.pop('error', 'Unexpected error getting accounts', e.message);
+          throw e;
+        });
+    }
   }
 
-  function generatePlatforms(response) {
-    var bungieUser = response.data.Response;
-
-    _platforms.splice(0);
-
-    if (bungieUser.gamerTag) {
-      _platforms.push({
-        id: bungieUser.gamerTag,
-        type: 1,
-        label: 'Xbox'
-      });
-
-      // A fake PSN account for Xbox-only testers
-      if (testFakePlaystation) {
-        _platforms.push({
-          id: bungieUser.gamerTag,
-          type: 2,
-          fake: true,
-          label: 'Fake PlayStation'
-        });
-      }
-    }
-
-    if (bungieUser.psnId) {
-      _platforms.push({
-        id: bungieUser.psnId,
-        type: 2,
-        label: 'PlayStation'
-      });
-
-      // A fake Xbox account for PSN-only testers
-      if (testFakeXbox) {
-        _platforms.push({
-          id: bungieUser.psnId,
-          type: 2,
-          fake: true,
-          label: 'Fake Xbox'
-        });
-      }
-    }
+  function generatePlatforms(accounts) {
+    _platforms = accounts.destinyMemberships.map((destinyAccount) => {
+      const account = {
+        id: destinyAccount.displayName,
+        type: destinyAccount.membershipType,
+        membershipId: destinyAccount.membershipId
+      };
+      account.label = account.type === 1 ? 'Xbox' : 'PlayStation';
+      return account;
+    });
 
     $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
 
     getActivePlatform()
-      .then(function(activePlatform) {
+      .then((activePlatform) => {
         setActive(activePlatform);
       });
 
@@ -79,37 +73,23 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
   }
 
   function getActivePlatform() {
-    var promise = SyncService.get().then(function(data) {
-      var previousPlatform = null;
-      var active = null;
-      var previousPlatformType = null;
-
-      if (data) {
-        previousPlatformType = data.platformType;
+    return SyncService.get().then((data) => {
+      if (!_platforms.length) {
+        return null;
       }
 
-      if (!_.isNull(previousPlatformType)) {
-        previousPlatform = _.find(_platforms, function(platform) {
-          return platform.type === previousPlatformType;
+      if (_active && _.find(_platforms, { id: _active.id })) {
+        return _active;
+      } else if (data && data.platformType) {
+        const active = _.find(_platforms, (platform) => {
+          return platform.type === data.platformType;
         });
-      }
-
-      if (_.size(_platforms) > 0) {
-        if (active === null) {
-          active = previousPlatform || _platforms[0];
-        } else if (_.find(_platforms, { id: _active.id })) {
-          active = _active;
-        } else {
-          active = _platforms[0];
+        if (active) {
+          return active;
         }
-      } else {
-        active = null;
       }
-
-      return active;
+      return _platforms[0];
     });
-
-    return promise;
   }
 
   function getActive() {
@@ -118,7 +98,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
 
   function setActive(platform) {
     _active = platform;
-    var promise;
+    let promise;
 
     if (platform === null) {
       promise = SyncService.remove('platformType');
@@ -128,6 +108,18 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
 
     $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
     return promise;
+  }
+
+  // When we find a platform with no characters, remove it from the list and try something else.
+  function reportBadPlatform(platform, e) {
+    if (_platforms.length > 1) {
+      _platforms = _platforms.filter((p) => p !== platform);
+      $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
+      setActive(_platforms[0]);
+    } else {
+      // Nothing we can do
+      throw e;
+    }
   }
 }
 

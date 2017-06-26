@@ -17,7 +17,7 @@ angular.module('dimApp')
  * always watch the settings you are using.
  */
 function SettingsService($rootScope, SyncService, $window, $translate) {
-  var _loaded = false;
+  let _loaded = false;
 
   const destinyLanguages = ['de', 'en', 'fr', 'es', 'it', 'ja', 'pt-br'];
 
@@ -27,7 +27,7 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
     return _.find(destinyLanguages, (lang) => browserLang.startsWith(lang)) || 'en';
   }
 
-  var settings = {
+  const settings = {
     // Hide items that don't match the current search
     hideFilteredItems: false,
     // Show full details in item popup
@@ -38,8 +38,12 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
     showNewItems: false,
     // Show animation of new item overlay on new items
     showNewAnimation: true,
+    // Show reviews damage icons
+    showReviews: true,
     // Show elemental damage icons
     showElements: false,
+    // Can we post identifying information to DTR?
+    allowIdPostToDtr: true,
     // Sort characters (mostRecent, mostRecentReverse, fixed)
     characterOrder: 'mostRecent',
     // Sort items in buckets (primaryStat, rarityThenPrimary, quality)
@@ -48,8 +52,8 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
     charCol: 3,
     // How many columns to display vault buckets
     vaultMaxCol: 999,
-    // How big in pixels to draw items
-    itemSize: 44,
+    // How big in pixels to draw items - start smaller for iPad
+    itemSize: window.matchMedia('(max-width: 1025px)').matches ? 38 : 44,
     // Which categories or buckets should be collapsed?
     collapsedSections: {},
     // What settings for farming mode
@@ -73,19 +77,19 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
       if (!_loaded) {
         throw new Error("Settings haven't loaded - they can't be saved.");
       }
-      $rootScope.$evalAsync(function() {
+      $rootScope.$evalAsync(() => {
         SyncService.set({
-          'settings-v1.0': _.omit(settings, 'save')
+          'settings-v1.0': _.omit(settings, 'save', 'itemTags')
         });
       });
     }
   };
 
   // Load settings async
-  SyncService.get().then(function(data) {
+  SyncService.get().then((data) => {
     data = data || {};
 
-    var savedSettings = data['settings-v1.0'] || {};
+    const savedSettings = data['settings-v1.0'] || {};
 
     // for now just override itemTags. eventually let users create own?
     savedSettings.itemTags = [
@@ -98,7 +102,7 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
 
     _loaded = true;
 
-    $rootScope.$evalAsync(function() {
+    $rootScope.$evalAsync(() => {
       angular.merge(settings, savedSettings);
       $translate.use(settings.language);
       $translate.fallbackLanguage('en');

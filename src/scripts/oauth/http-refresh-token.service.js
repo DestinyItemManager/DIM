@@ -1,106 +1,92 @@
-import angular from 'angular';
-
-angular.module('dim-oauth')
-  .service('http-refresh-token', HttpRefreshTokenService);
-
-function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthTokenService) {
+/**
+ * This is an interceptor for the $http service that watches for missing or expired
+ * OAuth tokens and attempts to acquire them.
+ */
+export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthTokenService) {
   'ngInject';
 
-  const service = this;
   let cache = null;
-  const matcher = /www\.bungie\.net\/Platform\/(User|Destiny)\//;
+  const matcher = /www\.bungie\.net\/(D1\/)?Platform\/(User|Destiny)\//;
 
-  service.request = requestHandler;
-  service.response = responseHandler;
+  return {
+    request: requestHandler
+  };
 
   function requestHandler(config) {
     config.headers = config.headers || {};
 
-    if (config.url.match(matcher)) {
-      if (!config.headers.hasOwnProperty('Authorization')) {
-        if (OAuthService.isAuthenticated()) {
-          let isValid = isTokenValid(OAuthTokenService.getAccessToken());
+    if (config.url.match(matcher) &&
+        !config.headers.hasOwnProperty('Authorization')) {
+      const token = OAuthTokenService.getToken();
+      if (token) {
+        const accessTokenIsValid = token && isTokenValid(token.accessToken);
 
-          if (isValid) {
-            config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
-          } else {
-            isValid = isTokenValid(OAuthTokenService.getRefreshToken());
+        if (accessTokenIsValid) {
+          config.headers.Authorization = `Bearer ${token.accessToken.value}`;
+        } else {
+          const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
 
-            if (isValid) {
-              if (!cache) {
-                cache = OAuthService.refreshToken();
-              }
+          if (refreshTokenIsValid) {
+            cache = cache || OAuthService.getAccessTokenFromRefreshToken(token.refreshToken);
 
-              return cache.then(function() {
-                config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+            return cache
+              .then((token) => {
+                OAuthTokenService.setToken(token);
 
+                console.log("Successfully updated auth token from refresh token.");
+                config.headers.Authorization = `Bearer ${token.accessToken.value}`;
                 return config;
               })
-              .catch(() => {
-                OAuthTokenService.removeToken();
-                $rootScope.$broadcast('dim-no-token-found');
+              .catch(handleRefreshTokenError)
+              .finally(() => {
+                cache = null;
               });
-            } else {
-              OAuthTokenService.removeToken();
-              $rootScope.$broadcast('dim-no-token-found');
-            }
+          } else {
+            console.warn("Refresh token invalid, clearing auth tokens & going to login");
+            OAuthTokenService.removeToken();
+            $rootScope.$broadcast('dim-no-token-found');
+            // TODO: throw error?
           }
-        } else {
-          OAuthTokenService.removeToken();
-          $rootScope.$broadcast('dim-no-token-found');
         }
+      } else {
+        console.warn("No auth token exists, redirect to login");
+        OAuthTokenService.removeToken();
+        $rootScope.$broadcast('dim-no-token-found');
+        // TODO: throw error?
       }
-
-      //  && OAuthTokenService.getAuthorizationHeader()) {
-      //   config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
-      // }
     }
 
     return config;
   }
 
-  function isTokenValid(token) {
-    const expired = OAuthTokenService.hasTokenExpired(token);
-    const isReady = OAuthTokenService.isTokenReady(token);
-
-    return (!expired && isReady);
-  }
-
-  function responseHandler(response) {
-    if (response && response.config.url.match(matcher) && response.data) {
-      switch (response.data.ErrorCode) {
-      case 99:
-        {
-          if (OAuthTokenService.hasTokenExpired(OAuthTokenService.getAccessToken())) {
-            $rootScope.$broadcast('dim-no-token-found');
-          }
-          // if (canRefreshAuthorization(response)) {
-          //   return refreshAuthorization(response);
-          // } else {
-          //   // Generate access token
-          // }
-          break;
-        }
+  function handleRefreshTokenError(response) {
+    if (response.status === -1) {
+      console.warn("Error getting auth token from refresh token because there's no internet connection. Not clearing token.", response);
+    } else if (response.status === 401 || response.status === 403) {
+      console.warn("Refresh token expired or not valid, clearing auth tokens & going to login", response);
+      OAuthTokenService.removeToken();
+      $rootScope.$broadcast('dim-no-token-found');
+    } else if (response.data && response.data.ErrorCode) {
+      if (response.data.ErrorCode === 2110 /* RefreshTokenNotYetValid */ ||
+          response.data.ErrorCode === 2111 /* AccessTokenHasExpired */ ||
+          response.data.ErrorCode === 2106 /* AuthorizationCodeInvalid */) {
+        console.warn("Refresh token expired or not valid, clearing auth tokens & going to login", response);
+        OAuthTokenService.removeToken();
+        $rootScope.$broadcast('dim-no-token-found');
       }
+    } else {
+      console.warn("Other error getting auth token from refresh token. Not clearing auth tokens", response);
     }
-
-    return $q.when(response);
+    return $q.reject(response);
   }
 
-//    function canRefreshAuthorization(response) {
-//      const responseHasAuthorization = response.config && response.config.headers && response.config.headers.Authorization;
-//
-//      return responseHasAuthorization;
-//    }
-//
-//    function replayRequest(config) {
-//      const $http = $injector.get('$http');
-//
-//      return $http(config);
-//    }
-//
-//    function refreshAuthorization(response) {
-//          // response.config.headers.Authorization = 'Bearer ' + authorization.accessToken.value;
-//          // return $injector.get('$http')(response.config);
-//    }
+  function isTokenValid(token) {
+    // TODO: private oauth apps don't have refresh tokens!
+    // reject refresh tokens from the old auth process
+    if (token && token.name === 'refresh' && token.readyin) {
+      return false;
+    }
+    const expired = OAuthTokenService.hasTokenExpired(token);
+    return !expired;
+  }
 }

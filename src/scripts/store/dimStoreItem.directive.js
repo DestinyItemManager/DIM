@@ -1,9 +1,11 @@
 import angular from 'angular';
+import template from './dimStoreItem.directive.html';
+import dialogTemplate from './dimStoreItem.directive.dialog.html';
 
 angular.module('dimApp')
   .directive('dimStoreItem', StoreItem)
-  .filter('tagIcon', ['dimSettingsService', function(dimSettingsService) {
-    var iconType = {};
+  .filter('tagIcon', (dimSettingsService) => {
+    const iconType = {};
 
     dimSettingsService.itemTags.forEach((tag) => {
       if (tag.type) {
@@ -12,19 +14,17 @@ angular.module('dimApp')
     });
 
     return function tagIcon(value) {
-      var icon = iconType[value];
+      const icon = iconType[value];
       if (icon) {
-        return "item-tag fa fa-" + icon;
+        return `item-tag fa fa-${icon}`;
       } else {
         return "item-tag no-tag";
       }
     };
-  }]);
-
-
+  });
 
 function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
-  var otherDialog = null;
+  let otherDialog = null;
   let firstItemTimed = false;
 
   return {
@@ -35,11 +35,10 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     replace: true,
     restrict: 'E',
     scope: {
-      store: '=storeData',
       item: '=itemData',
       shiftClickCallback: '=shiftClickCallback'
     },
-    templateUrl: require('./dimStoreItem.directive.template.html'),
+    template: template
   };
 
   function Link(scope, element) {
@@ -47,23 +46,23 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       firstItemTimed = true;
     }
 
-    var vm = scope.vm;
-    var dialogResult = null;
+    const vm = scope.vm;
+    let dialogResult = null;
 
-    var dragHelp = document.getElementById('drag-help');
+    const dragHelp = document.getElementById('drag-help');
 
     if (vm.item.maxStackSize > 1) {
-      element.on('dragstart', function(e) {
+      element.on('dragstart', (e) => {
         $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
         if (vm.item.amount > 1) {
           dragHelp.classList.remove('drag-help-hidden');
         }
       });
-      element.on('dragend', function() {
+      element.on('dragend', () => {
         dragHelp.classList.add('drag-help-hidden');
         delete $rootScope.dragItem;
       });
-      element.on('drag', function(e) {
+      element.on('drag', (e) => {
         if (e.shiftKey) {
           dragHelp.classList.add('drag-shift-activated');
         } else {
@@ -72,7 +71,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       });
     }
 
-    vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
+    vm.doubleClicked = dimActionQueue.wrap((item, e) => {
       if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
         e.stopPropagation();
         const active = dimStoreService.getActiveStore();
@@ -81,14 +80,16 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         const equip = !item.equipped || item.owner !== active.id;
 
         dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount)
-          .then(function() {
+          .then(() => {
             return dimStoreService.updateCharacters();
           });
       }
     });
 
-    vm.clicked = function openPopup(item, e) {
+    vm.clicked = function clicked(item, e) {
       e.stopPropagation();
+
+      $rootScope.$broadcast('item-clicked', item);
 
       if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(item);
@@ -115,13 +116,18 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         dimCompareService.addItemToCompare(item, e);
       } else {
         dialogResult = ngDialog.open({
-          template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
+          template: dialogTemplate,
           plain: true,
           overlay: false,
           className: 'move-popup-dialog',
           showClose: false,
           data: element,
-          scope: scope,
+          controllerAs: 'vm',
+          controller: function() {
+            'ngInject';
+            this.item = vm.item;
+            this.store = dimStoreService.getStore(this.item.owner);
+          },
 
           // Setting these focus options prevents the page from
           // jumping as dialogs are shown/hidden
@@ -130,50 +136,53 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         });
         otherDialog = dialogResult;
 
-        dialogResult.closePromise.then(function() {
+        dialogResult.closePromise.then(() => {
           dialogResult = null;
         });
       }
     };
 
-    scope.$on('$destroy', function() {
+    scope.$on('$destroy', () => {
       if (dialogResult) {
         dialogResult.close();
       }
     });
 
+    // Perf hack: the item's "index" property is computed based on:
+    //  * its ID
+    //  * amount (and a unique-ifier) if it's a stackable
+    //  * primary stat
+    //  * completion percentage
+    //  * quality minimum
+    //
+    // As a result we can bind-once or compute up front properties that depend
+    // on those values, since if any of them change, the *entire* item directive
+    // will be recreated from scratch. This is cheaper overall since the number of
+    // items that get infused or have XP added to them in any given refresh is much
+    // smaller than the number of items that don't.
+    //
+    // Note that this hack means that dim-store-items used outside of ng-repeat won't
+    // update!
+
     vm.badgeClassNames = {};
 
     if (!vm.item.primStat && vm.item.objectives) {
-      scope.$watchGroup([
-        'vm.item.percentComplete',
-        'vm.item.complete'], function() {
-        processBounty(vm, vm.item);
-      });
+      processBounty(vm, vm.item);
     } else if (vm.item.maxStackSize > 1) {
-      scope.$watchGroup([
-        'vm.item.amount'], function() {
-        processStackable(vm, vm.item);
-      });
+      processStackable(vm, vm.item);
     } else {
-      scope.$watch('vm.item.primStat.value', function() {
-        processItem(vm, vm.item);
-      });
+      processItem(vm, vm.item);
     }
-
-    scope.$watch('vm.item.quality', function() {
-      vm.badgeClassNames['item-stat-no-bg'] = vm.item.quality;
-    });
   }
 }
 
 function processBounty(vm, item) {
-  var showBountyPercentage = !item.complete;
+  const showBountyPercentage = !item.complete;
   vm.showBadge = showBountyPercentage;
 
   if (showBountyPercentage) {
     vm.badgeClassNames = { 'item-stat': true, 'item-bounty': true };
-    vm.badgeCount = Math.floor(100.0 * item.percentComplete) + '%';
+    vm.badgeCount = `${Math.floor(100.0 * item.percentComplete)}%`;
   }
 }
 
@@ -188,19 +197,16 @@ function processItem(vm, item) {
     'item-equipment': true
   };
 
-  vm.showBadge = item.primStat && item.primStat.value;
+  vm.showBadge = Boolean(item.primStat && item.primStat.value);
 
   if (vm.showBadge) {
     vm.badgeClassNames['item-stat'] = true;
-
-    vm.badgeClassNames['stat-damage-' + item.dmg] = true;
     vm.badgeCount = item.primStat.value;
   }
 }
 
-
 function StoreItemCtrl() {
-  var vm = this;
+  const vm = this;
 
   vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
   vm.draggable = !vm.item.location.inPostmaster &&
@@ -208,4 +214,3 @@ function StoreItemCtrl() {
     ? vm.item.equipment
     : (vm.item.equipment || vm.item.location.hasTransferDestination);
 }
-

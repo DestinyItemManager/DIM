@@ -3,7 +3,7 @@ import _ from 'underscore';
 // Some utility functions missing from underscore
 function sum(list, summer) {
   const fn = _.iteratee(summer);
-  return _.reduce(list, function(memo, val, index) {
+  return _.reduce(list, (memo, val, index) => {
     return memo + fn(val, index);
   }, 0);
 }
@@ -11,7 +11,7 @@ function sum(list, summer) {
 // Count the number of "true" values
 function count(list, predicate) {
   const fn = _.iteratee(predicate);
-  return sum(list, function(item, index) {
+  return sum(list, (item, index) => {
     return fn(item, index) ? 1 : 0;
   });
 }

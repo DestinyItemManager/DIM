@@ -15,7 +15,6 @@ function FarmingService($rootScope,
                         dimStoreService,
                         $interval,
                         toaster,
-                        dimFeatureFlags,
                         dimSettingsService,
                         $translate,
                         dimBucketService) {
@@ -83,13 +82,13 @@ function FarmingService($rootScope,
                 const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
 
                 if (otherStoresWithSpace.length) {
-                  if (dimFeatureFlags.debugMoves) {
+                  if ($featureFlags.debugMoves) {
                     console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
                   }
                   return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
                 }
               }
-              if (dimFeatureFlags.debugMoves) {
+              if ($featureFlags.debugMoves) {
                 console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
               }
               return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
@@ -141,7 +140,7 @@ function FarmingService($rootScope,
         if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
           // We'll move the lowest-value item to the vault.
           const itemToMove = _.min(_.select(items, { equipped: false, notransfer: false }), (i) => {
-            var value = {
+            let value = {
               Common: 0,
               Uncommon: 1,
               Rare: 2,
@@ -171,17 +170,17 @@ function FarmingService($rootScope,
         });
     },
     start: function(store) {
-      var self = this;
+      const self = this;
       function farm() {
-        var consolidateHashes = [
+        const consolidateHashes = [
           417308266, // three of coins
           211861343, // heavy ammo synth
           928169143, // special ammo synth
           2180254632 // primary ammo synth
         ];
 
-        self.consolidate = _.compact(consolidateHashes.map(function(hash) {
-          var ret = angular.copy(dimItemService.getItem({
+        self.consolidate = _.compact(consolidateHashes.map((hash) => {
+          const ret = angular.copy(dimItemService.getItem({
             hash: hash
           }));
           if (ret) {
@@ -190,7 +189,7 @@ function FarmingService($rootScope,
           return ret;
         }));
 
-        self.farmItems().then(function() {
+        self.farmItems().then(() => {
           if (settings.makeRoomForItems) {
             self.makeRoomForItems();
           }
@@ -206,13 +205,13 @@ function FarmingService($rootScope,
 
         // Whenever the store is reloaded, run the farming algo
         // That way folks can reload manually too
-        cancelReloadListener = $rootScope.$on('dim-stores-updated', function() {
+        cancelReloadListener = $rootScope.$on('dim-stores-updated', () => {
           // prevent some recursion...
           if (self.active && !self.movingItems && !self.makingRoom) {
             farm();
           }
         });
-        intervalId = $interval(function() {
+        intervalId = $interval(() => {
           // just start reloading stores more often
           dimStoreService.reloadStores();
         }, 60000);

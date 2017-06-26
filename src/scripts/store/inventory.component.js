@@ -1,5 +1,5 @@
-import templateUrl from './inventory.html';
+import template from './inventory.html';
 
 export default {
-  templateUrl
+  template
 };

@@ -1,3 +1,6 @@
+const child_process = require("child_process");
+const fs = require("fs");
+
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
 
@@ -19,7 +22,8 @@ module.exports = function(grunt) {
             '**',
             '!data',
             '!chrome.zip',
-            '!.htaccess'
+            '!.htaccess',
+            '!stats.html'
           ],
           dest: '/',
           filter: 'isFile'
@@ -56,7 +60,6 @@ module.exports = function(grunt) {
       extensions: {
         release: {
           appID: "apghicjnekejhfancbkahkhdckhdagna",
-          publish: false,
           zip: "dist/chrome.zip"
         },
         beta: {
@@ -71,7 +74,7 @@ module.exports = function(grunt) {
       options: {
         //dryRun: true,
         args: ["--verbose"],
-        exclude: ["chrome.zip"],
+        exclude: ["chrome.zip", "stats.html"],
         host: process.env.REMOTE_HOST,
         port: 2222,
         recursive: true,
@@ -91,6 +94,18 @@ module.exports = function(grunt) {
           src: "dist/",
           dest: process.env.REMOTE_PATH + "prod"
         }
+      },
+      website: {
+        options: {
+          src: "destinyitemmanager.com/",
+          dest: "public_html/destinyitemmanager.com"
+        }
+      }
+    },
+
+    precompress: {
+      web: {
+        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg,wasm}"
       }
     }
   });
@@ -103,24 +118,80 @@ module.exports = function(grunt) {
     var manifest = grunt.file.readJSON('dist/manifest.json');
     manifest.name = manifest.name + " Beta";
     manifest.version = betaVersion;
+    manifest.content_scripts[0].matches = ['https://beta.destinyitemmanager.com/*'];
     grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
   });
+
+  grunt.registerTask('update_chrome_release_manifest', function() {
+    var manifest = grunt.file.readJSON('dist/manifest.json');
+    manifest.version = pkg.version;
+    grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
+  });
+
+  grunt.registerMultiTask(
+    'precompress',
+    'Create gzip and brotli versions of web assets',
+    function() {
+      const done = this.async();
+      const promises = [];
+      this.filesSrc.forEach(function(file) {
+        promises.push(new Promise(function(resolve, reject) {
+          child_process.exec("gzip -c --no-name " + file + " > " + file + ".gz", function(error, stdout, stderr) {
+            if (error) {
+              grunt.log.writeln("gzip " + file + " => error: " + stdout + stderr);
+              reject(error);
+            } else {
+              grunt.log.writeln("gzip " + file + " => success");
+              resolve();
+            }
+          });
+        }));
+
+        promises.push(new Promise(function(resolve, reject) {
+          child_process.execFile("brotli/brotli", [file], function(error, stdout, stderr) {
+            if (error) {
+              grunt.log.writeln("brotli " + file + " => error: " + stdout + stderr);
+              reject(error);
+            } else {
+              grunt.log.writeln("brotli " + file + " => success");
+              resolve();
+            }
+          });
+        }).then(function() {
+          return new Promise(function(resolve, reject) {
+            fs.chmod(file + ".br", 0644, resolve);
+          });
+        }));
+      });
+
+      Promise.all(promises).then(done);
+    }
+  );
 
   grunt.registerTask('publish_beta', [
     'update_chrome_beta_manifest',
     'compress:chrome',
     'log_beta_version',
     'webstore_upload:beta',
-    'rsync:beta'
+    'precompress',
+    'rsync:beta',
+    'rsync:website',
   ]);
 
   grunt.registerTask('publish_release', [
+    'update_chrome_release_manifest',
     'compress:chrome',
-    'webstore_upload:release',
-    'rsync:prod'
+    'log_release_version',
+    'precompress',
+    'rsync:prod',
+    'webstore_upload:release'
   ]);
 
   grunt.registerTask('log_beta_version', function() {
     grunt.log.ok("New Beta version is " + betaVersion);
+  });
+
+  grunt.registerTask('log_release_version', function() {
+    grunt.log.ok("New production version is " + pkg.version);
   });
 };

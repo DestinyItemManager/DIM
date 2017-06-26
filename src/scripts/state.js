@@ -1,7 +1,7 @@
 const state = {
   membershipType: -1,
   active: null,
-  debug: false
+  debug: $featureFlags.debugMode
 };
 
 export default state;

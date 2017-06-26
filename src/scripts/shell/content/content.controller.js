@@ -1,8 +1,13 @@
+import settingsTemplate from 'app/views/settings.html';
+import aboutTemplate from 'app/views/about.html';
+import supportTemplate from 'app/views/support.html';
+import filtersTemplate from 'app/views/filters.html';
+
 export default class ContentController {
-  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimVendorService, $translate) {
     'ngInject';
 
-    var vm = this;
+    const vm = this;
 
     // Variables for templates that webpack does not automatically correct.
     vm.$DIM_VERSION = $DIM_VERSION;
@@ -16,53 +21,39 @@ export default class ContentController {
       loadingTracker.addPromise(dimPlatformService.setActive(platform));
     };
 
-    $scope.$on('dim-platforms-updated', function(e, args) {
+    $scope.$on('dim-platforms-updated', (e, args) => {
       vm.platforms = args.platforms;
     });
 
-    $scope.$on('dim-active-platform-updated', function(e, args) {
+    $scope.$on('dim-active-platform-updated', (e, args) => {
       dimState.active = vm.currentPlatform = args.platform;
     });
 
     loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
     vm.settings = dimSettingsService;
-    $scope.$watch(() => { return vm.settings.itemSize; }, function(size) {
-      document.querySelector('html').style.setProperty("--item-size", size + 'px');
+    $scope.$watch(() => { return vm.settings.itemSize; }, (size) => {
+      document.querySelector('html').style.setProperty("--item-size", `${size}px`);
     });
-    $scope.$watch(() => { return vm.settings.charCol; }, function(cols) {
+    $scope.$watch(() => { return vm.settings.charCol; }, (cols) => {
       document.querySelector('html').style.setProperty("--character-columns", cols);
     });
 
-    $scope.$watch(() => { return vm.settings.vaultMaxCol; }, function(cols) {
+    $scope.$watch(() => { return vm.settings.vaultMaxCol; }, (cols) => {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
 
-    vm.featureFlags = dimFeatureFlags;
+    vm.featureFlags = {
+      materialsExchangeEnabled: $featureFlags.materialsExchangeEnabled,
+      vendorsEnabled: $featureFlags.vendorsEnabled
+    };
     vm.vendorService = dimVendorService;
 
-    hotkeys.add({
-      combo: ['f'],
-      description: 'Start a search',
-      callback: function(event) {
-        $rootScope.$broadcast('dim-focus-filter-input');
-
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    });
-
-    hotkeys.add({
-      combo: ['esc'],
-      allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-      callback: function() {
-        $rootScope.$broadcast('dim-escape-filter-input');
-      }
-    });
+    hotkeys = hotkeys.bindTo($scope);
 
     hotkeys.add({
       combo: ['r'],
-      description: "Refresh inventory",
+      description: $translate.instant('Hotkey.RefreshInventory'),
       callback: function() {
         vm.refresh();
       }
@@ -70,62 +61,23 @@ export default class ContentController {
 
     hotkeys.add({
       combo: ['i'],
-      description: "Toggle showing full item details",
+      description: $translate.instant('Hotkey.ToggleDetails'),
       callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
       }
     });
 
     if (vm.featureFlags.tagsEnabled) {
-      /* Add each hotkey manually until hotkeys can be translated.
-          _.each(dimSettingsService.itemTags, (tag) => {
-            if (tag.hotkey) {
-              hotkeys.add({
-                combo: [tag.hotkey],
-                description: "Mark item as '" + tag.label + "'",
-                callback: function() {
-                  $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
-                }
-              });
+      dimSettingsService.itemTags.forEach((tag) => {
+        if (tag.hotkey) {
+          hotkeys.add({
+            combo: [tag.hotkey],
+            description: $translate.instant('Hotkey.MarkItemAs', {
+              tag: $translate.instant(tag.label)
+            }),
+            callback: function() {
+              $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
             }
-          });
-      */
-      hotkeys.add({
-        combo: ['!'],
-        description: "Mark item as 'Favorite'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', {
-            tag: 'favorite'
-          });
-        }
-      });
-
-      hotkeys.add({
-        combo: ['@'],
-        description: "Mark item as 'Keep'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', {
-            tag: 'keep'
-          });
-        }
-      });
-
-      hotkeys.add({
-        combo: ['#'],
-        description: "Mark item as 'Junk'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', {
-            tag: 'junk'
-          });
-        }
-      });
-
-      hotkeys.add({
-        combo: ['$'],
-        description: "Mark item as 'Infuse'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', {
-            tag: 'infuse'
           });
         }
       });
@@ -133,7 +85,7 @@ export default class ContentController {
 
     hotkeys.add({
       combo: ['x'],
-      description: "Clear new items",
+      description: $translate.instant('Hotkey.ClearNewItems'),
       callback: function() {
         dimStoreService.clearNewItems();
       }
@@ -142,7 +94,7 @@ export default class ContentController {
     hotkeys.add({
       combo: ['ctrl+alt+shift+d'],
       callback: function() {
-        dimFeatureFlags.debugMode = true;
+        dimState.debug = true;
         console.log("***** DIM DEBUG MODE ENABLED *****");
       }
     });
@@ -151,8 +103,8 @@ export default class ContentController {
      * Show a popup dialog containing the given template. Its class
      * will be based on the name.
      */
-    function showPopupFunction(name) {
-      var result;
+    function showPopupFunction(name, template) {
+      let result;
       return function(e) {
         e.stopPropagation();
 
@@ -161,34 +113,28 @@ export default class ContentController {
         } else {
           ngDialog.closeAll();
           result = ngDialog.open({
-            template: require('app/views/' + name + '.template.html'),
+            template: template,
             className: name,
             appendClassName: 'modal-dialog'
           });
 
-          result.closePromise.then(function() {
+          result.closePromise.then(() => {
             result = null;
           });
         }
       };
     }
 
-    vm.showSetting = showPopupFunction('settings');
-    vm.showAbout = showPopupFunction('about');
-    vm.showSupport = showPopupFunction('support');
-    vm.showFilters = showPopupFunction('filters');
-    vm.showXur = showPopupFunction('xur');
-    vm.showMatsExchange = showPopupFunction('mats-exchange');
+    vm.showSetting = showPopupFunction('settings', settingsTemplate);
+    vm.showAbout = showPopupFunction('about', aboutTemplate);
+    vm.showSupport = showPopupFunction('support', supportTemplate);
+    vm.showFilters = showPopupFunction('filters', filtersTemplate);
+    vm.showXur = showPopupFunction('xur', '<xur></xur>');
 
-    function toggleState(name) {
-      return function(e) {
-        $state.go($state.is(name) ? 'inventory' : name);
-      };
-    }
-
-    vm.toggleMinMax = toggleState('best');
-    vm.toggleVendors = toggleState('vendors');
-    vm.toggleRecordBooks = toggleState('record-books');
+    // TODO: make this into a ui-sref-toggle attribute directive
+    vm.toggleState = function(name) {
+      $state.go($state.is(name) ? 'inventory' : name);
+    };
 
     vm.xur = dimXurService;
 

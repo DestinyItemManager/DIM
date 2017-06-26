@@ -1,5 +1,4 @@
-import isFunction from 'lodash/isFunction';
-import templateUrl from './platform-choice.html';
+import template from './platform-choice.html';
 import './platform-choice.scss';
 
 class PlatformChoiceController {
@@ -20,7 +19,7 @@ class PlatformChoiceController {
   }
 
   change(platform) {
-    if (platform && isFunction(this.onPlatformChange)) {
+    if (platform && this.onPlatformChange) {
       this.onPlatformChange({
         platform: platform
       });
@@ -35,5 +34,5 @@ export const PlatformChoiceComponent = {
     platforms: '<'
   },
   controller: PlatformChoiceController,
-  templateUrl: templateUrl
+  template: template
 };

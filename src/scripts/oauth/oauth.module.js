@@ -1,19 +1,19 @@
 import angular from 'angular';
+import { OAuthService } from './oauth.service';
+import { OAuthTokenService } from './oauth-token.service';
+import { HttpRefreshTokenService } from './http-refresh-token.service';
 
-require('angular-local-storage');
-
-angular.module('dim-oauth', ['LocalStorageModule'])
-  .run(function($rootScope, $state) {
-    $rootScope.$on('dim-no-token-found', function() {
-      if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-        $state.go('login');
-        return;
-      }
-      if (!localStorage.apiKey || !localStorage.authorizationURL) {
+export default angular.module('dim-oauth', [])
+  .service('OAuthTokenService', OAuthTokenService)
+  .service('OAuthService', OAuthService)
+  .service('http-refresh-token', HttpRefreshTokenService)
+  .run(($rootScope, $state) => {
+    $rootScope.$on('dim-no-token-found', () => {
+      if ($DIM_FLAVOR === 'dev' &&
+          (!localStorage.apiKey || !localStorage.oauthClientId || !localStorage.oauthClientSecret)) {
         $state.go('developer');
       } else {
         $state.go('login');
       }
     });
-  });
-
+  }).name;

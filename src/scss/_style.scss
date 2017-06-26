@@ -11,6 +11,13 @@
   --vault-max-columns: 999;
 }
 
+// iPad - use smaller items to fit them on screen.
+@media (max-width: 1025px) {
+  :root {
+    --item-size: 38px;
+  }
+}
+
 @mixin item-size {
   width: 44px;
   height: 44px;
@@ -21,8 +28,8 @@
 @mixin item-size-padded {
   width: 48px;
   height: 48px;
-  width: var(--item-size + 4px);
-  height: var(--item-size + 4px);
+  width: calc(var(--item-size) + 4px);
+  height: calc(var(--item-size) + 4px);
 }
 
 h1, h2, h3, h4, h5 {
@@ -48,6 +55,9 @@ div:focus, span:focus {
 
 .new_overlay {
   @include item-size;
+  position: absolute;
+  top: 2px;
+  left: 2px;
   pointer-events: none;
   .new-item-animated & {
     will-change: transform;
@@ -75,11 +85,7 @@ div:focus, span:focus {
 }
 
 .logo {
-  background: url('../logo.png') no-repeat;
-  background-position: left center;
-  background-size: 24px;
   height: 24px;
-  padding-left: 32px;
   color: #999;
   font-size: 16px !important;
   font-weight: bold;
@@ -89,16 +95,8 @@ div:focus, span:focus {
     filter: grayscale(100%);
   }
   &.beta {
-    filter: hue-rotate(153deg);
+    filter: hue-rotate(153deg) saturate(60%);
   }
-}
-
-.oc {
-  background: url('../oc.svg') no-repeat;
-  background-size: contain;
-  padding-left: 18px;
-  height: 14px;
-  line-height: 15px !important;
 }
 
 #header {
@@ -117,7 +115,7 @@ div:focus, span:focus {
         margin-top: 1px;
       }
     }
-    span, a {
+    span, a, img {
       vertical-align: middle;
       margin: 0 6px;
       text-decoration: none;
@@ -141,6 +139,12 @@ div:focus, span:focus {
     cursor: default;
     float: right;
   }
+  .header-separator {
+      display: inline;
+      width: 0;
+      height: 16px;
+      border-right: 1px solid #6f7070;
+  }
 }
 
 #actions {
@@ -163,18 +167,6 @@ div:focus, span:focus {
   display: none !important;
 }
 
-.img.how:before {
-  content: '';
-  display: block;
-  background-image: url('../images/how.png');
-  position: absolute;
-  height: 16px;
-  width: 16px;
-  background-size: 16px;
-  right: 0;
-  box-shadow: inset 0 0 10px 0px #B84;
-}
-
 #filter-input {
   width: 250px;
   margin-left: -3gpx;
@@ -192,10 +184,6 @@ dt {
 
 dd {
   margin: 3px 20px;
-}
-
-.item.search-hidden .item-elem {
-  opacity: .20;
 }
 
 .search-link {
@@ -334,6 +322,10 @@ a {
     h1, h2, h3, p, table, dl {
       padding-left: 25px;
       padding-right: 25px;
+
+      img {
+        vertical-align: middle;
+      }
     }
   }
   form {
@@ -600,6 +592,9 @@ img {
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');
   background-repeat: no-repeat;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
   }
@@ -645,7 +640,7 @@ img {
   -webkit-user-select: none;
   box-sizing: content-box;
 }
-.itemQuality .item-stat-no-bg {
+.itemQuality .item-quality ~ .item-stat, .show-reviews .item-review ~ .item-stat {
   background-color: transparent;
 }
 
@@ -658,86 +653,96 @@ img {
   }
 }
 
-.stat-damage-arc {
-  background: $arc;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
-.stat-damage-solar {
-  background: $solar;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
-.stat-damage-void {
-  background: $void;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
 .item {
-  margin: 2px 2px -2px 2px;
+  @include item-size-padded;
+  margin: 2px;
   position: relative;
-  display: inline-block;
-  &.popup-open:before {
-    border: solid;
-    border-color: rgba(0, 0, 0, 0.8) transparent;
-    border-width: .4em .4em 0;
-    top: -6px;
-    content: "";
-    display: block;
-    left: 16px;
-    position: absolute;
-    z-index: 2;
-  }
+  contain: strict;
+  cursor: pointer;
+  box-sizing: border-box;
+}
 
-  .item-xp-bar-small {
+.search-hidden {
+  opacity: .2;
+}
+
+.item-xp-bar-small {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: $xp;
+}
+
+.item-img {
+  @include item-size;
+  background-color: #5c7183;
+  border: 2px solid #DDD;
+  background-size: cover;
+  display: block;
+  box-sizing: content-box;
+  &:focus {
+    outline: none;
+  }
+  &.complete {
+    border-color: $gold;
+  }
+}
+
+.item-element {
+  display: block;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  pointer-events: none;
+
+  &::before, &::after {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    height: 2px;
+    border-color: transparent;
+    border-style: solid;
   }
-}
+  &::before {
+    border-width: 5px;
+  }
+  &.void::before {
+    border-left-color: $void;
+    border-top-color: $void;
+  }
+  &.arc::before {
+    border-left-color: $arc;
+    border-top-color: $arc;
+  }
+  &.solar::before {
+    border-left-color: $solar;
+    border-top-color: $solar;
+  }
 
-.item-elem {
-  background-color: #5c7183;
-  cursor: pointer;
-  border: 2px solid #DDD;
-  > {
-    .img, img {
-      @include item-size;
-      background-size: cover;
-      display: block;
-      &:focus {
-        outline: none;
-      }
+  .show-elements & {
+    top: 35%;
+    left: auto;
+    right: 1px;
+    height: 35%;
+    width: 35%;
+    filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    &::before {
+      content: none;
     }
-  }
-  .element {
-    display: none;
-    pointer-events: none;
-    .show-elements & {
-      position: absolute;
-      bottom: 2px;
-      left: 2px;
-      height: 16px;
-      width: 16px;
-      filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
-      background-repeat: no-repeat;
-      background-size: contain;
-      &.void {
-        display: block;
-        background-image: url('../images/void.png');
-      }
-      &.arc {
-        display: block;
-        background-image: url('../images/arc.png');
-      }
-      &.solar {
-        display: block;
-        background-image: url('../images/solar.png');
-      }
+
+    &.void {
+      background-image: url('../images/void.png');
+    }
+    &.arc {
+      background-image: url('../images/arc.png');
+    }
+    &.solar {
+      background-image: url('../images/solar.png');
     }
   }
 }
@@ -754,23 +759,14 @@ img {
   }
 }
 
-.item .stack {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 1px;
-  max-width: 20px;
-  text-align: center;
-  background: #F5f5f5;
-  color: #24282b;
-}
-
 .complete {
-  border-color: #f5dc56;
+  border-color: $gold;
 }
 
-.over {
-  background: rgba(0, 0, 0, 0.5);
+.factionrep {
+  margin: 2px 2px -2px 2px;
+  position: relative;
+  display: inline-block;
 }
 
 dim-store-heading {
@@ -871,7 +867,7 @@ dim-store-heading {
     margin-right: 1px;
   }
   .powerLevel {
-    color: #f5dc56;
+    color: $gold;
     &:before {
       content: "\2726";
       display: inline-block;
@@ -894,7 +890,7 @@ dim-store-heading {
   position: absolute;
   bottom: -2px;
   left: 0;
-  background-color: #5da469;
+  background-color: $xp;
 
   &.moteProgress {
     background-color: #069;
@@ -1176,25 +1172,9 @@ rzslider, .rzslider {
   margin: 10px;
 }
 
-.item-notes {
-  width: 100%;
-  height: 30px;
-  background-color: #333;
-  padding: 4px 8px;
-  border: none;
-  outline: none;
-  color: white;
-}
 .item-description {
   margin: 5px 10px;
   white-space: pre-wrap;
-}
-.item-notes-error {
-  margin: 5px 10px;
-  white-space: pre-wrap;
-  color: #985C58;
-  width: 100%;
-  text-align: right;
 }
 
 .item-perks {
@@ -1348,7 +1328,7 @@ rzslider, .rzslider {
 }
 
 .talent-node-showxp .talent-node-xp {
-  stroke: #5EA16A;
+  stroke: $xp;
 }
 
 .talent-node-activated .talent-node-xp {
@@ -1480,6 +1460,16 @@ g {
   background: #434444;
   color: #e0e0e0;
   box-shadow: 0 -1px 6px 0px #222;
+
+  dim-stats {
+    display: block;
+    width: 300px;
+    opacity: .3;
+
+    &.complete {
+      opacity: 1;
+    }
+  }
 }
 
 dim-compare {
@@ -1529,14 +1519,11 @@ dim-compare {
   .item {
     float: right;
     padding: 0 4px 0 0;
+    margin-right: 4px;
     z-index: -10;
-    .item-stat {
-      display: none;
-    }
   }
   > div {
     padding-left: 4px;
-    height: 16px;
   }
   .highlight {
     background-color: rgba(128, 128, 128, .25);
@@ -1602,6 +1589,7 @@ dim-compare {
   flex-direction: row;
   align-items: flex-start;
   min-height: 50px;
+  min-height: calc(var(--item-size) + 4px);
   .equipped {
     width: 16px;
     height: 16px;
@@ -1693,7 +1681,7 @@ dim-compare {
 
   .light {
     font-weight: 200;
-    color: #f5dc56;
+    color: $gold;
     float: right;
     &:before {
       content: "\2726";
@@ -1803,10 +1791,7 @@ h2, h3, h4 {
 .item-xp-bar {
   height: 4px;
   width: 100%;
-  div {
-    height: 100%;
-    background-color: #5EA16A;
-  }
+  background-color: $xp;
 }
 
 /* Infuse */
@@ -1847,9 +1832,6 @@ h2, h3, h4 {
   .bigValue {
     font-size: 32px;
     line-height: 1em;
-  }
-  .infuseSourceItem {
-    @include item-size-padded;
   }
   .infuseSourceDetailsRow {
     margin-left: 1rem;
@@ -1902,12 +1884,10 @@ h2, h3, h4 {
   .item {
     float: left;
     margin: 3px 3px;
-    @include item-size-padded;
   }
   .infusedItem {
     float: left;
     margin: 3px 10px 3px 3px;
-    @include item-size-padded;
   }
   .plusSeparator {
     float: left;
@@ -2011,6 +1991,10 @@ h2, h3, h4 {
       padding: 0;
       list-style: none;
     }
+  }
+
+  .item {
+    float: left;
   }
 
   .engram-icon {
@@ -2161,6 +2145,11 @@ dim-manifest-progress {
   margin-bottom: .25em;
 }
 
-.backers a {
-  margin-right: 1em;
+.backers {
+  a {
+    margin-right: 1em;
+  }
+  img {
+    border-radius: 50%;
+  }
 }

@@ -1,12 +1,11 @@
 import _ from 'underscore';
 import angular from 'angular';
-import moment from 'moment';
 import { sum, count } from '../util';
 
-import templateUrl from './record-books.html';
+import template from './record-books.html';
 import './record-books.scss';
 
-function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSettingsService) {
+function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSettingsService, $filter) {
   'ngInject';
 
   const vm = this;
@@ -69,7 +68,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
     let i = 0;
     recordBook.pages = recordBookDef.pages.map((page) => {
       const createdPage = {
-        id: recordBook.hash + '-' + i++,
+        id: `${recordBook.hash}-${i++}`,
         name: page.displayName,
         description: page.displayDescription,
         rewardsPage: page.displayStyle === 1,
@@ -107,15 +106,20 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
     const objectives = record.objectives.map((objective) => {
       const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
-      let display = undefined;
+      let progress = objective.progress;
+      let display = `${objective.progress}/${objectiveDef.completionValue}`;
       if (recordDef.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
         display = objective.isComplete
           ? objective.displayValue
-          : moment(moment.duration(objectiveDef.completionValue)._data).format("m:ss.SSS");
+          : $filter('duration')(objectiveDef.completionValue, 'mm:ss.sss');
+        if (objectiveDef.isCountingDownward) {
+          // Otherwise the bar will always look full
+          progress = 0;
+        }
       }
 
       return {
-        progress: objective.progress,
+        progress: progress,
         display: display,
         completionValue: objectiveDef.completionValue,
         complete: objective.isComplete,
@@ -136,5 +140,5 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
 
 export const RecordBooksComponent = {
   controller: RecordBooksController,
-  templateUrl: templateUrl
+  template: template
 };

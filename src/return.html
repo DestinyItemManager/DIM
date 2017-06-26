@@ -2,8 +2,8 @@
   <head>
     <title>Validating Authorization</title>
 
-    {{#each htmlWebpackPlugin.files.chunks.authReturn.css}}
-      <link href="{{webpackConfig.output.publicPath}}{{this}}" rel="stylesheet">
+    {{#each htmlWebpackPlugin.files.css}}
+    <link href="{{ webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
     {{/each}}
   </head>
 
@@ -12,6 +12,8 @@
       <dim-return></dim-return>
     </div>
 
-    <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{htmlWebpackPlugin.files.chunks.authReturn.entry}}"></script>
+    {{#each htmlWebpackPlugin.files.js}}
+    <script type="text/javascript" src="{{ webpackConfig.output.publicPath }}{{ this }}"></script>
+    {{/each}}
   </body>
 </html>

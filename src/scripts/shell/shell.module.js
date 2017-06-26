@@ -1,12 +1,14 @@
 import angular from 'angular';
 
-import UIRouterModule from 'angular-ui-router';
+import UIRouterModule from '@uirouter/angularjs';
 
 import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
 import { PlatformChoiceComponent } from './platform-choice';
 import shellComponent from './shell/shell.component';
 import contentComponent from './content/content.component';
 import backLinkComponent from './shell/backLink.component';
+import { CountdownComponent } from './countdown.component';
+import { StarRatingComponent } from './star-rating/star-rating.component';
 
 export const ShellModule = angular
   .module('dimShell', [
@@ -18,7 +20,9 @@ export const ShellModule = angular
   .component('dimShell', shellComponent)
   .component('content', contentComponent)
   .component('backLink', backLinkComponent)
-  .config(function($stateProvider) {
+  .component('countdown', CountdownComponent)
+  .component('starRating', StarRatingComponent)
+  .config(($stateProvider) => {
     'ngInject';
 
     const states = [{

@@ -1,0 +1,35 @@
+@import "../../scss/variables.scss";
+
+.storage {
+  max-width: 900px;
+  min-width: 450px;
+  margin: 0 auto;
+
+  h2 {
+    margin: 0 0 12px 0;
+  }
+
+  .storage-status {
+    font-size: 12px;
+    color: #DDD;
+
+    &.enabled {
+      color: #20ea42;
+    }
+  }
+
+  .storage-adapter {
+    background: #555;
+    margin: 10px 0 0 0;
+    padding: 8px;
+  }
+
+  .dim-button {
+    //font-size: 14px;
+  }
+
+  ul {
+    margin: 8px 0;
+    padding-left: 2em;
+  }
+}

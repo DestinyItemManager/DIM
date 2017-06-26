@@ -1,11 +1,12 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimSearchFilter.directive.html';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
   .directive('dimSearchFilter', SearchFilter);
 
-function SearchService(dimSettingsService, dimFeatureFlags) {
+function SearchService(dimSettingsService) {
   const categoryFilters = {
     pulserifle: ['CATEGORY_PULSE_RIFLE'],
     scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
@@ -27,7 +28,7 @@ function SearchService(dimSettingsService, dimFeatureFlags) {
    * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
    * values that will set the left-hand to the "match."
    */
-  var filterTrans = {
+  const filterTrans = {
     dmg: ['arc', 'solar', 'void', 'kinetic'],
     type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
     tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
@@ -55,8 +56,8 @@ function SearchService(dimSettingsService, dimFeatureFlags) {
     new: ['new'],
     glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
     year: ['year1', 'year2', 'year3'],
-    vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev'],
-    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning'],
+    vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
+    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
     hasLight: ['light', 'haslight'],
     weapon: ['weapon'],
     armor: ['armor'],
@@ -67,14 +68,18 @@ function SearchService(dimSettingsService, dimFeatureFlags) {
     transferable: ['transferable', 'movable']
   };
 
-  var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
-    return ["is:" + word, "not:" + word];
+  if ($featureFlags.reviewsEnabled) {
+    filterTrans.hasRating = ['rated', 'hasrating'];
+  }
+
+  const keywords = _.flatten(_.flatten(_.values(filterTrans)).map((word) => {
+    return [`is:${word}`, `not:${word}`];
   }));
 
-  if (dimFeatureFlags.tagsEnabled) {
-    dimSettingsService.itemTags.forEach(function(tag) {
+  if ($featureFlags.tagsEnabled) {
+    dimSettingsService.itemTags.forEach((tag) => {
       if (tag.type) {
-        keywords.push("tag:" + tag.type);
+        keywords.push(`tag:${tag.type}`);
       } else {
         keywords.push("tag:none");
       }
@@ -85,22 +90,27 @@ function SearchService(dimSettingsService, dimFeatureFlags) {
   const comparisons = [":<", ":>", ":<=", ":>=", ":"];
 
   const stats = ['rof', 'impact', 'range', 'stability', 'reload', 'magazine', 'aimassist', 'equipspeed'];
-  stats.forEach(function(word) {
-    const filter = 'stat:' + word;
+  stats.forEach((word) => {
+    const filter = `stat:${word}`;
     comparisons.forEach((comparison) => {
       keywords.push(filter + comparison);
     });
   });
 
-  var ranges = ['light', 'level', 'quality', 'percentage'];
-  ranges.forEach(function(range) {
+  const ranges = ['light', 'level', 'quality', 'percentage'];
+
+  if ($featureFlags.reviewsEnabled) {
+    ranges.push('rating');
+  }
+
+  ranges.forEach((range) => {
     comparisons.forEach((comparison) => {
       keywords.push(range + comparison);
     });
   });
 
   // free form notes on items
-  if (dimFeatureFlags.tagsEnabled) {
+  if ($featureFlags.tagsEnabled) {
     keywords.push('notes:');
   }
 
@@ -117,20 +127,20 @@ function SearchFilter(dimSearchService) {
   return {
     controller: SearchFilterCtrl,
     controllerAs: 'vm',
-    link: function Link(scope, element) {
+    link: function link(scope, element) {
       element.find('input').textcomplete([
         {
           words: dimSearchService.keywords,
-          match: /\b((li|le|qu|pe|is:|not:|tag:|notes:|stat:)\w*)$/,
+          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
           search: function(term, callback) {
-            callback($.map(this.words, function(word) {
+            callback($.map(this.words, (word) => {
               return word.indexOf(term) === 0 ? word : null;
             }));
           },
           index: 1,
           replace: function(word) {
             return (word.indexOf('is:') === 0 && word.indexOf('not:') === 0)
-              ? (word + ' ') : word;
+              ? (`${word} `) : word;
           }
         }
       ], {
@@ -139,50 +149,59 @@ function SearchFilter(dimSearchService) {
     },
     bindToController: true,
     restrict: 'E',
-    template: [
-      '<input id="filter-input" class="dim-input" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
-    ].join('')
+    scope: {},
+    template: template
   };
 }
 
 
-function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService) {
-  var vm = this;
-  var filterInputSelector = '#filter-input';
-  var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
+function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $translate) {
+  const vm = this;
+  const filterInputSelector = '#filter-input';
+  let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
   vm.search = dimSearchService;
 
-  $scope.$watch('vm.search.query', function() {
+  $scope.$watch('vm.search.query', () => {
     vm.filter();
   });
 
-  $scope.$on('dim-stores-updated', function() {
+  $scope.$on('dim-stores-updated', () => {
     _duplicates = null;
     vm.filter();
   });
 
-  $scope.$on('dim-vendors-updated', function() {
+  $scope.$on('dim-vendors-updated', () => {
     _duplicates = null;
     vm.filter();
   });
 
   // Something has changed that could invalidate filters
-  $scope.$on('dim-filter-invalidate', function() {
+  $scope.$on('dim-filter-invalidate', () => {
     _duplicates = null;
     vm.filter();
   });
 
-  $scope.$on('dim-focus-filter-input', function() {
-    vm.focusFilterInput();
-  });
+  hotkeys.bindTo($scope)
+    .add({
+      combo: ['f'],
+      description: $translate.instant('Hotkey.StartSearch'),
+      callback: function(event) {
+        vm.focusFilterInput();
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    })
+    .add({
+      combo: ['esc'],
+      allowIn: ['INPUT'],
+      callback: function() {
+        vm.blurFilterInputIfEmpty();
+        vm.clearFilter();
+      }
+    });
 
-  $scope.$on('dim-escape-filter-input', function() {
-    vm.blurFilterInputIfEmpty();
-    vm.clearFilter();
-  });
-
-  $scope.$on('dim-clear-filter-input', function() {
+  $scope.$on('dim-clear-filter-input', () => {
     vm.clearFilter();
   });
 
@@ -206,24 +225,23 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
   };
 
   vm.filter = function() {
-    var filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
+    let filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
 
     // could probably tidy this regex, just a quick hack to support multi term:
     // [^\s]*"[^"]*" -> match is:"stuff here"
     // [^\s]*'[^']*' -> match is:'stuff here'
     // [^\s"']+' -> match is:stuff
-    var searchTerms = filterValue.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g);
-    var filter;
-    var predicate = '';
-    var filterFn;
-    var filters = [];
+    const searchTerms = filterValue.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g);
+    let filter;
+    let predicate = '';
+    const filters = [];
 
     function addPredicate(predicate, filter, invert = false) {
       filters.push({ predicate: predicate, value: filter, invert: invert });
     }
 
-    _.each(searchTerms, function(term) {
+    _.each(searchTerms, (term) => {
       term = term.replace(/'/g, '').replace(/"/g, '');
 
       if (term.startsWith('is:')) {
@@ -270,9 +288,12 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
         filter = term.replace('quality:', '').replace('percentage:', '');
         addPredicate("quality", filter);
+      } else if (term.startsWith('rating:')) {
+        filter = term.replace('rating:', '');
+        addPredicate("rating", filter);
       } else if (term.startsWith('stat:')) {
         // Avoid console.error by checking if all parameters are typed
-        var pieces = term.split(':');
+        const pieces = term.split(':');
         if (pieces.length === 3) {
           filter = pieces[1];
           addPredicate(filter, pieces[2]);
@@ -282,23 +303,23 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       }
     });
 
-    filterFn = function(item) {
-      return _.all(filters, function(filter) {
-        var result = filterFns[filter.predicate](filter.value, item);
+    const filterFn = function(item) {
+      return _.all(filters, (filter) => {
+        const result = filterFns[filter.predicate](filter.value, item);
         return filter.invert ? !result : result;
       });
     };
 
-    _.each(dimStoreService.getStores(), function(store) {
-      _.each(store.items, function(item) {
+    _.each(dimStoreService.getStores(), (store) => {
+      _.each(store.items, (item) => {
         item.visible = (filters.length > 0) ? filterFn(item) : true;
       });
     });
 
 
     // Filter vendor items
-    _.each(dimVendorService.vendors, function(vendor) {
-      _.each(vendor.allItems, function(saleItem) {
+    _.each(dimVendorService.vendors, (vendor) => {
+      _.each(vendor.allItems, (saleItem) => {
         saleItem.item.visible = (filters.length > 0) ? filterFn(saleItem.item) : true;
       });
     });
@@ -306,7 +327,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
 
   // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
   // make the for(...) loop for filterTrans a little more bearable for the readability tradeoff.
-  var _cachedFilters = {};
+  const _cachedFilters = {};
 
   /**
    * Filter groups keyed by type check. Key is what the user will search for, e.g.
@@ -317,7 +338,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
    * @param {Object} item The item to test against.
    * @return {Boolean} Returns true for a match, false for a non-match
    */
-  var filterFns = {
+  const filterFns = {
     dmg: function(predicate, item) {
       return item.dmg === predicate;
     },
@@ -335,7 +356,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
     },
     sublime: function(predicate, item) {
-      var sublimeEngrams = [
+      const sublimeEngrams = [
         1986458096, // -gauntlet
         2218811091,
         2672986950, // -body-armor
@@ -415,7 +436,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return item.hash !== 4248210736 && _duplicates[item.hash] > 1;
     },
     classType: function(predicate, item) {
-      var value;
+      let value;
 
       switch (predicate) {
       case 'titan':
@@ -432,13 +453,13 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return (item.classType === value);
     },
     glimmer: function(predicate, item) {
-      var boosts = [
+      const boosts = [
         1043138475, // -black-wax-idol
         1772853454, // -blue-polyphage
         3783295803, // -ether-seeds
         3446457162  // -resupply-codes
       ];
-      var supplies = [
+      const supplies = [
         269776572, // -house-banners
         3632619276, // -silken-codex
         2904517731, // -axiomatic-beads
@@ -462,7 +483,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return item.dimInfo && item.dimInfo.notes && item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
     },
     stattype: function(predicate, item) {
-      return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });
+      return item.stats && _.any(item.stats, (s) => { return s.name.toLowerCase() === predicate && s.value > 0; });
     },
     stackable: function(predicate, item) {
       return item.maxStackSize > 1;
@@ -481,21 +502,21 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     keyword: function(predicate, item) {
       return item.name.toLowerCase().indexOf(predicate) >= 0 ||
         // Search perks as well
-        (item.talentGrid && _.any(item.talentGrid.nodes, function(node) {
+        (item.talentGrid && _.any(item.talentGrid.nodes, (node) => {
           // Fixed #798 by searching on the description too.
-          return (node.name + ' ' + node.description).toLowerCase().indexOf(predicate) >= 0;
+          return (`${node.name} ${node.description}`).toLowerCase().indexOf(predicate) >= 0;
         }));
     },
     light: function(predicate, item) {
-      if (predicate.length === 0 || item.primStat === undefined) {
+      if (predicate.length === 0 || !item.primStat) {
         return false;
       }
 
-      var operands = ['<=', '>=', '=', '>', '<'];
-      var operand = 'none';
-      var result = false;
+      const operands = ['<=', '>=', '=', '>', '<'];
+      let operand = 'none';
+      let result = false;
 
-      operands.forEach(function(element) {
+      operands.forEach((element) => {
         if (predicate.substring(0, element.length) === element) {
           operand = element;
           predicate = predicate.substring(element.length);
@@ -530,15 +551,15 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return result;
     },
     quality: function(predicate, item) {
-      if (predicate.length === 0 || item.quality === undefined || item.quality === null) {
+      if (predicate.length === 0 || !item.quality) {
         return false;
       }
 
-      var operands = ['<=', '>=', '=', '>', '<'];
-      var operand = 'none';
-      var result = false;
+      const operands = ['<=', '>=', '=', '>', '<'];
+      let operand = 'none';
+      let result = false;
 
-      operands.forEach(function(element) {
+      operands.forEach((element) => {
         if (predicate.substring(0, element.length) === element) {
           operand = element;
           predicate = predicate.substring(element.length);
@@ -572,6 +593,53 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       }
       return result;
     },
+    hasRating: function(predicate, item) {
+      return predicate.length !== 0 && item.dtrRating;
+    },
+    rating: function(predicate, item) {
+      if (predicate.length === 0 || !item.dtrRating) {
+        return false;
+      }
+
+      const operands = ['<=', '>=', '=', '>', '<'];
+      let operand = 'none';
+      let result = false;
+
+      operands.forEach((element) => {
+        if (predicate.substring(0, element.length) === element) {
+          operand = element;
+          predicate = predicate.substring(element.length);
+          return false;
+        } else {
+          return true;
+        }
+      }, this);
+
+      predicate = parseFloat(predicate);
+      const itemRating = parseFloat(item.dtrRating);
+
+      switch (operand) {
+      case 'none':
+        result = (itemRating === predicate);
+        break;
+      case '=':
+        result = (itemRating === predicate);
+        break;
+      case '<':
+        result = (itemRating < predicate);
+        break;
+      case '<=':
+        result = (itemRating <= predicate);
+        break;
+      case '>':
+        result = (itemRating > predicate);
+        break;
+      case '>=':
+        result = (itemRating >= predicate);
+        break;
+      }
+      return result;
+    },
     year: function(predicate, item) {
       if (predicate === 'year1') {
         return item.year === 1;
@@ -597,25 +665,40 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Eris Morn (eris)
     //   * Eververse (ev)
     vendor: function(predicate, item) {
-      var vendorHashes = {         // identifier
-        fwc: 995344558,            // SOURCE_VENDOR_FUTURE_WAR_CULT
-        do: 103311758,             // SOURCE_VENDOR_DEAD_ORBIT
-        nm: 3072854931,            // SOURCE_VENDOR_NEW_MONARCHY
-        speaker: 4241664776,       // SOURCE_VENDOR_SPEAKER
-        variks: 512830513,         // SOURCE_VENDOR_FALLEN
-        shipwright: 3721473564,    // SOURCE_VENDOR_SHIPWRIGHT
-        vanguard: 1482793537,      // SOURCE_VENDOR_VANGUARD
-        osiris: 3378481830,        // SOURCE_VENDOR_OSIRIS
-        xur: 2179714245,           // SOURCE_VENDOR_BLACK_MARKET
-        shaxx: 4134961255,         // SOURCE_VENDOR_CRUCIBLE_HANDLER
-        cq: 1362425043,            // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER
-        eris: 1374970038,          // SOURCE_VENDOR_CROTAS_BANE
-        ev: 3559790162             // SOURCE_VENDOR_SPECIAL_ORDERS
+      const vendorHashes = {             // identifier
+        required: {
+          fwc: [995344558],            // SOURCE_VENDOR_FUTURE_WAR_CULT
+          do: [103311758],             // SOURCE_VENDOR_DEAD_ORBIT
+          nm: [3072854931],            // SOURCE_VENDOR_NEW_MONARCHY
+          speaker: [4241664776],       // SOURCE_VENDOR_SPEAKER
+          variks: [512830513],         // SOURCE_VENDOR_FALLEN
+          shipwright: [3721473564],    // SOURCE_VENDOR_SHIPWRIGHT
+          vanguard: [1482793537],      // SOURCE_VENDOR_VANGUARD
+          osiris: [3378481830],        // SOURCE_VENDOR_OSIRIS
+          xur: [2179714245],           // SOURCE_VENDOR_BLACK_MARKET
+          shaxx: [4134961255],         // SOURCE_VENDOR_CRUCIBLE_HANDLER
+          cq: [1362425043],            // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER
+          eris: [1374970038],          // SOURCE_VENDOR_CROTAS_BANE
+          ev: [3559790162],            // SOURCE_VENDOR_SPECIAL_ORDERS
+          gunsmith: [353834582]        // SOURCE_VENDOR_GUNSMITH
+        },
+        restricted: {
+          fwc: [353834582],            // remove motes of light & strange coins
+          do: [353834582],
+          nm: [353834582],
+          speaker: [353834582],
+          cq: [353834582, 2682516238]  // remove ammo synths and planetary materials
+        }
       };
       if (!item) {
         return false;
       }
-      return (item.sourceHashes.includes(vendorHashes[predicate]));
+      if (vendorHashes.restricted[predicate]) {
+        return (vendorHashes.required[predicate].some((vendorHash) => item.sourceHashes.includes(vendorHash)) &&
+              !(vendorHashes.restricted[predicate].some((vendorHash) => item.sourceHashes.includes(vendorHash))));
+      } else {
+        return (vendorHashes.required[predicate].some((vendorHash) => item.sourceHashes.includes(vendorHash)));
+      }
     },
     // filter on what activity an item can come from. Currently supports
     //   * Vanilla (vanilla)
@@ -634,30 +717,49 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Challenge of Elders (coe)
     //   * Archon Forge (af)
     activity: function(predicate, item) {
-      var activityHashes = { // identifier
-        trials: 2650556703,  // SOURCE_TRIALS_OF_OSIRIS
-        ib: 1322283879,      // SOURCE_IRON_BANNER
-        qw: 1983234046,      // SOURCE_QUEENS_EMISSARY_QUEST
-        cd: 2775576620,      // SOURCE_CRIMSON_DOUBLES
-        srl: 1234918199,     // SOURCE_SRL
-        vog: 440710167,      // SOURCE_VAULT_OF_GLASS
-        ce: 2585003248,      // SOURCE_CROTAS_END
-        ttk: 2659839637,     // SOURCE_TTK
-        kf: 1662673928,      // SOURCE_KINGS_FALL
-        roi: 2964550958,     // SOURCE_RISE_OF_IRON
-        wotm: 4160622434,    // SOURCE_WRATH_OF_THE_MACHINE
-        poe: 2784812137,     // SOURCE_PRISON_ELDERS
-        coe: 1537575125,     // SOURCE_POE_ELDER_CHALLENGE
-        af: 3667653533,      // SOURCE_ARCHON_FORGE
-        dawning: 3131490494  // SOURCE_DAWNING
+      const activityHashes = { // identifier
+        required: {
+          trials: [2650556703],  // SOURCE_TRIALS_OF_OSIRIS
+          ib: [1322283879],      // SOURCE_IRON_BANNER
+          qw: [1983234046],      // SOURCE_QUEENS_EMISSARY_QUEST
+          cd: [2775576620],      // SOURCE_CRIMSON_DOUBLES
+          srl: [1234918199],     // SOURCE_SRL
+          vog: [440710167],      // SOURCE_VAULT_OF_GLASS
+          ce: [2585003248],      // SOURCE_CROTAS_END
+          ttk: [2659839637],     // SOURCE_TTK
+          kf: [1662673928],      // SOURCE_KINGS_FALL
+          roi: [2964550958],     // SOURCE_RISE_OF_IRON
+          wotm: [4160622434],    // SOURCE_WRATH_OF_THE_MACHINE
+          poe: [2784812137],     // SOURCE_PRISON_ELDERS
+          coe: [1537575125],     // SOURCE_POE_ELDER_CHALLENGE
+          af: [3667653533],      // SOURCE_ARCHON_FORGE
+          dawning: [3131490494], // SOURCE_DAWNING
+          aot: [3068521220, 4161861381, 440710167]    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+        },
+        restricted: {
+          trials: [2179714245, 2682516238, 560942287],    // remove xur exotics and patrol items
+          ib: [3602080346],                               // remove engrams and random blue drops (Strike)
+          qw: [3602080346],                               // remove engrams and random blue drops (Strike)
+          cd: [3602080346],                               // remove engrams and random blue drops (Strike)
+          kf: [2179714245, 2682516238, 560942287],        // remove xur exotics and patrol items
+          wotm: [2179714245, 2682516238, 560942287],      // remove xur exotics and patrol items
+          poe: [3602080346, 2682516238],                  // remove engrams
+          coe: [3602080346, 2682516238],                  // remove engrams
+          af: [2682516238],                               // remove engrams
+          dawning: [2682516238, 1111209135],              // remove engrams, planetary materials, & chroma
+          aot: [2964550958, 2659839637, 353834582, 560942287] // Remove ROI, TTK, motes, & glimmer items
+        }
       };
       if (!item) {
         return false;
       }
       if (predicate === "vanilla") {
         return item.year === 1;
+      } else if (activityHashes.restricted[predicate]) {
+        return (activityHashes.required[predicate].some((sourceHash) => item.sourceHashes.includes(sourceHash)) &&
+              !(activityHashes.restricted[predicate].some((sourceHash) => item.sourceHashes.includes(sourceHash))));
       } else {
-        return (item.sourceHashes.includes(activityHashes[predicate]));
+        return (activityHashes.required[predicate].some((sourceHash) => item.sourceHashes.includes(sourceHash)));
       }
     },
     inloadout: function(predicate, item) {
@@ -735,18 +837,17 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
-  var filterByStats = function(predicate, item, statType) {
-    if (predicate.length === 0 || item.stats === undefined) {
+  const filterByStats = function(predicate, item, statType) {
+    if (predicate.length === 0 || !item.stats) {
       return false;
     }
 
-    var foundStatHash;
-    var operands = ['<=', '>=', '=', '>', '<'];
-    var operand = 'none';
-    var result = false;
-    var statHash = {};
+    const operands = ['<=', '>=', '=', '>', '<'];
+    let operand = 'none';
+    let result = false;
+    let statHash = {};
 
-    operands.forEach(function(element) {
+    operands.forEach((element) => {
       if (predicate.substring(0, element.length) === element) {
         operand = element;
         predicate = predicate.substring(element.length);
@@ -767,7 +868,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       equipspeed: 943549884
     }[statType];
 
-    foundStatHash = _.find(item.stats, { statHash });
+    const foundStatHash = _.find(item.stats, { statHash });
 
     if (typeof foundStatHash === 'undefined') {
       return false;

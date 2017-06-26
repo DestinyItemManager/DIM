@@ -1,20 +1,26 @@
 import angular from 'angular';
 import _ from 'underscore';
+import '../materials-exchange/materials-exchange.scss';
 
 angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
 
-function MaterialsController($scope, dimItemService, dimStoreService, $state, dimFeatureFlags) {
-  if (!dimFeatureFlags.materialsExchangeEnabled) {
+function MaterialsController(dimDefinitions, dimItemService, dimStoreService, $state) {
+  if (!$featureFlags.materialsExchangeEnabled) {
     $state.go('inventory');
     return;
   }
 
-  var vm = this;
+  const vm = this;
+
+  vm.items = {};
+  dimDefinitions.getDefinitions().then((defs) => {
+    vm.items[3159615086] = defs.InventoryItem.get(3159615086);
+  });
+
   vm.repPool = {};
   vm.newRank = 0;
   vm.newExperience = 0;
-  vm.GlimmerIcon = require('../../images/glimmer.png');
 
   vm.factions = [
     // 174528503, eris breaks things atm
@@ -24,17 +30,17 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
   ];
 
   vm.characters = dimStoreService.getStores()
-    .filter(function(character) {
+    .filter((character) => {
       return !character.isVault;
     })
-    .map(function(item) {
-      var background = item.background;
-      var icon = item.icon;
-      var className = item.className;
-      var genderRace = item.genderRace;
-      var factions = item.progression.progressions.filter((faction) => {
+    .map((item) => {
+      const background = item.background;
+      const icon = item.icon;
+      const className = item.className;
+      const genderRace = item.genderRace;
+      const factions = item.progression.progressions.filter((faction) => {
         return vm.factions.includes(faction.hash);
-      }).reduce(function(map, obj) {
+      }).reduce((map, obj) => {
         map[obj.hash] = obj;
         return map;
       }, {});
@@ -71,19 +77,18 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
     // rank 1 = 1500
     // rank 2 = 2000
     // rank 3+ = 2500
-    var total = 0;
+    let total = 0;
 
-    for (var key in vm.repPool) {
+    for (const key in vm.repPool) {
       total = total + vm.repPool[key];
     }
 
-    var totalRank = total + vm.activeFaction.progressToNextLevel;
+    const totalRank = total + vm.activeFaction.progressToNextLevel;
     vm.newRank = Math.floor((totalRank) / 2500) + vm.activeFaction.level;
     vm.newExperience = (totalRank % 2500);
   }
 
-
-  var materialsHashes = [
+  const materialsHashes = [
     211861343,  // heavy ammo synth
     928169143,  // special ammo synth
     937555249,  // motes of light
@@ -91,7 +96,7 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
     1898539128  // weapon parts
   ];
 
-  var planataryMatsHashes = [
+  const planataryMatsHashes = [
     1797491610, // Helium Filaments
     2882093969, // Spin Metal
     3242866270, // Relic Iron
@@ -99,26 +104,24 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
     3164836592 // Wormspore
   ];
 
-  var xurMatsHashes = [
+  const xurMatsHashes = [
     1738186005, // strange coins
     211861343  // heavy ammo synth
   ];
 
-  var variksMatsHashes = [
+  const variksMatsHashes = [
     3783295803, // Ether Seeds
     211861343  // heavy ammo synth
   ];
 
-  var erisMatsHashes = [
+  const erisMatsHashes = [
     1043138475, // black wax idol
     211861343  // heavy ammo synth
   ];
 
-  var gunSmithMatsHashes = [
+  const gunSmithMatsHashes = [
     1898539128  // weapon parts
   ];
-
-
 
   vm.glimmer = dimStoreService.getVault().glimmer;
   vm.xurMats = mapXurItems(xurMatsHashes);
@@ -129,13 +132,13 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
   vm.gunSmithMats = mapGunsmithItems(gunSmithMatsHashes);
 
   function mapItems(hashes) {
-    return hashes.map(function(hash) {
-      var ret = angular.copy(dimItemService.getItem({
+    return hashes.map((hash) => {
+      const ret = angular.copy(dimItemService.getItem({
         hash: hash
       }));
       if (ret) {
         ret.amount = 0;
-        dimStoreService.getStores().forEach(function(s) {
+        dimStoreService.getStores().forEach((s) => {
           ret.amount += s.amountOfItem(ret);
         });
       }
@@ -144,7 +147,7 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
   }
 
   function mapXurItems(hashes) {
-    var mappedItems = mapItems(hashes);
+    const mappedItems = mapItems(hashes);
     if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
       mappedItems[1].amount = mappedItems[0].amount * 3;
     }
@@ -152,7 +155,7 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
   }
 
   function mapGunsmithItems(hashes) {
-    var mappedItems = mapItems(hashes);
+    const mappedItems = mapItems(hashes);
     if (mappedItems[0]) {
       mappedItems[0].amount = Math.floor(vm.glimmer / 1250) * 25;
     }
@@ -160,7 +163,7 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
   }
 
   function mapVariksItems(hashes) {
-    var mappedItems = mapItems(hashes);
+    const mappedItems = mapItems(hashes);
     if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
       mappedItems[1].amount = mappedItems[0].amount;
     }
@@ -168,25 +171,25 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
   }
 
   function mapErisItems(hashes) {
-    var mappedItems = mapItems(hashes);
+    const mappedItems = mapItems(hashes);
     if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
-      mappedItems[1].amount = Math.floor(mappedItems[0].amount / 5);
+      mappedItems[1].amount = mappedItems[0].amount;
     }
     return mappedItems;
   }
 
   vm.calculateRep = function(item) {
-    var rep = 0;
+    let rep = 0;
     if (item && item.hash) {
       switch (item.hash) {
-      case 211861343:
+      case 211861343: // heavy ammo synth
         rep = Math.floor(item.amount * 25);
-        break;       // heavy ammo synth
-      case 937555249:
-        rep = Math.floor(item.amount / 5) * 100;  // motes of light
         break;
-      case 928169143:
-        rep = Math.floor(item.amount / 4) * 25;   // special ammo synth
+      case 937555249: // motes of light
+        rep = Math.floor(item.amount / 5) * 100;
+        break;
+      case 928169143: // special ammo synth
+        rep = Math.floor(item.amount / 4) * 25;
         break;
       case 1542293174: // armor materials
       case 1898539128: // weapon parts

@@ -6,13 +6,14 @@ angular.module('dimApp')
 
 
 function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, $translate) {
-  var vm = this;
+  const vm = this;
 
-  $scope.$on('dim-stores-updated', function() {
+  const deregister = $scope.$on('dim-stores-updated', () => {
     vm.showRandomLoadout = true;
+    deregister();
   });
 
-  vm.showRandomLoadout = false;
+  vm.showRandomLoadout = undefined;
   vm.disableRandomLoadout = false;
 
   vm.applyRandomLoadout = function() {
@@ -44,11 +45,11 @@ function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, 
             warlock: 2
           })[store.class];
 
-          var checkClassType = function(classType) {
+          const checkClassType = function(classType) {
             return ((classType === 3) || (classType === classTypeId));
           };
 
-          var types = ['Class',
+          const types = ['Class',
             'Primary',
             'Special',
             'Heavy',
@@ -61,15 +62,15 @@ function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, 
             'Ghost'];
 
           let accountItems = [];
-          var items = {};
+          const items = {};
 
           _.each(stores, (store) => {
             accountItems = accountItems.concat(_.filter(store.items, (item) => checkClassType(item.classType)));
           });
 
-          var foundExotic = {};
+          const foundExotic = {};
 
-          var fn = (type) => (item) => ((item.type === type) &&
+          const fn = (type) => (item) => ((item.type === type) &&
             item.equipment &&
             (store.level >= item.equipRequiredLevel) &&
             (item.typeName !== 'Mask' || ((item.typeName === 'Mask') && (item.tier === 'Legendary'))) &&

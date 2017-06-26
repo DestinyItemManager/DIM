@@ -47,7 +47,7 @@ angular.module('dimApp')
 function BucketService(dimDefinitions, dimCategory) {
   // A mapping from the bucket names to DIM item types
   // Some buckets like vault and currencies have been ommitted
-  var bucketToType = {
+  const bucketToType = {
     BUCKET_CHEST: "Chest",
     BUCKET_LEGS: "Leg",
     BUCKET_RECOVERY: "Lost Items",
@@ -78,23 +78,23 @@ function BucketService(dimDefinitions, dimCategory) {
     BUCKET_EMBLEM: "Emblem"
   };
 
-  var vaultTypes = {
+  const vaultTypes = {
     BUCKET_VAULT_ARMOR: 'Armor',
     BUCKET_VAULT_WEAPONS: 'Weapons',
     BUCKET_VAULT_ITEMS: 'General'
   };
 
-  var typeToSort = {};
-  _.each(dimCategory, function(types, category) {
-    types.forEach(function(type) {
+  const typeToSort = {};
+  _.each(dimCategory, (types, category) => {
+    types.forEach((type) => {
       typeToSort[type] = category;
     });
   });
 
   return {
-    getBuckets: _.memoize(function getBuckets() {
-      return dimDefinitions.getDefinitions().then(function(defs) {
-        var buckets = {
+    getBuckets: _.memoize(() => {
+      return dimDefinitions.getDefinitions().then((defs) => {
+        const buckets = {
           byHash: {}, // numeric hash -> bucket
           byId: {}, // BUCKET_LEGS -> bucket
           byType: {}, // DIM types ("ClassItem, Special") -> bucket
@@ -115,9 +115,9 @@ function BucketService(dimDefinitions, dimCategory) {
             this.byType[this.unknown.type] = this.unknown;
           }
         };
-        _.each(defs.InventoryBucket, function(def) {
+        _.each(defs.InventoryBucket, (def) => {
           if (def.enabled) {
-            var bucket = {
+            const bucket = {
               id: def.bucketIdentifier,
               description: def.bucketDescription,
               name: def.bucketName,
@@ -136,15 +136,15 @@ function BucketService(dimDefinitions, dimCategory) {
             }
 
             // Add an easy helper property like "inPostmaster"
-            bucket['in' + bucket.sort] = true;
+            bucket[`in${bucket.sort}`] = true;
 
             buckets.byHash[bucket.hash] = bucket;
             buckets.byId[bucket.id] = bucket;
           }
         });
 
-        _.each(dimCategory, function(types, category) {
-          buckets.byCategory[category] = _.compact(types.map(function(type) {
+        _.each(dimCategory, (types, category) => {
+          buckets.byCategory[category] = _.compact(types.map((type) => {
             return buckets.byType[type];
           }));
         });

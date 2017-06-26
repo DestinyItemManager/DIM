@@ -5,8 +5,18 @@ angular.module('dimApp')
   .controller('dimInfuseCtrl', dimInfuseCtrl);
 
 
-function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoadoutService, toaster, $q, $translate) {
-  var vm = this;
+function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, toaster, $q, $translate) {
+  const vm = this;
+
+  vm.items = {};
+  dimDefinitions.getDefinitions().then((defs) => {
+    vm.items[452597397] = defs.InventoryItem.get(452597397);
+    vm.items[2534352370] = defs.InventoryItem.get(2534352370);
+    vm.items[3159615086] = defs.InventoryItem.get(3159615086);
+    vm.items[937555249] = defs.InventoryItem.get(937555249);
+    vm.items[1898539128] = defs.InventoryItem.get(1898539128);
+    vm.items[1542293174] = defs.InventoryItem.get(1542293174);
+  });
 
   if (_gaq) {
     // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
@@ -30,12 +40,16 @@ function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoa
       vm.target = null;
       vm.exotic = item.tier === 'Exotic';
       vm.stat = vm.source.primStat.stat;
-      vm.wildcardMaterialIcon = item.bucket.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1'
-        : vm.stat.statIdentifier === 'STAT_DAMAGE' ? 'f2572a4949fb16df87ba9760f713dac3'
-        : '972ae2c6ccbf59cde293a2ed50a57a93';
-      vm.wildcardMaterialIcon = '/common/destiny_content/icons/' + vm.wildcardMaterialIcon + '.jpg';
-      // 2 motes, or 10 armor/weapon materials
-      vm.wildcardMaterialCost = item.bucket.sort === 'General' ? 2 : 10;
+      if (item.bucket.sort === 'General') {
+        vm.wildcardMaterialCost = 2;
+        vm.wildcardMaterialHash = 937555249;
+      } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
+        vm.wildcardMaterialCost = 10;
+        vm.wildcardMaterialHash = 1898539128;
+      } else {
+        vm.wildcardMaterialCost = 10;
+        vm.wildcardMaterialHash = 1542293174;
+      }
     },
 
     selectItem: function(item, e) {
@@ -48,20 +62,20 @@ function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoa
 
     // get Items for infusion
     getItems: function() {
-      var stores = dimStoreService.getStores();
-      var allItems = [];
+      let stores = dimStoreService.getStores();
+      let allItems = [];
 
       // If we want ALL our weapons, including vault's one
       if (!vm.getAllItems) {
-        stores = _.filter(stores, function(store) {
+        stores = _.filter(stores, (store) => {
           return store.id === vm.source.owner;
         });
       }
 
       // all stores
-      stores.forEach(function(store) {
+      stores.forEach((store) => {
         // all items in store
-        var items = _.filter(store.items, function(item) {
+        const items = _.filter(store.items, (item) => {
           return item.primStat &&
             item.year !== 1 &&
             (!item.locked || vm.showLockedItems) &&
@@ -72,7 +86,7 @@ function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoa
         allItems = allItems.concat(items);
       });
 
-      allItems = _.sortBy(allItems, function(item) {
+      allItems = _.sortBy(allItems, (item) => {
         return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
       });
 
@@ -94,11 +108,11 @@ function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoa
         toaster.pop('error', $translate.instant('Infusion.NoTransfer', { target: vm.target.name }));
         return $q.resolve();
       }
-      var store = dimStoreService.getStore(vm.source.owner);
-      var items = {};
-      var key = vm.target.type.toLowerCase();
+      const store = dimStoreService.getStore(vm.source.owner);
+      const items = {};
+      const key = vm.target.type.toLowerCase();
       items[key] = items[key] || [];
-      var itemCopy = angular.copy(vm.target);
+      const itemCopy = angular.copy(vm.target);
       itemCopy.equipped = false;
       items[key].push(itemCopy);
       // Include the source, since we wouldn't want it to get moved out of the way
@@ -140,14 +154,14 @@ function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoa
         });
       }
 
-      var loadout = {
+      const loadout = {
         classType: -1,
         name: $translate.instant('Infusion.InfusionMaterials'),
         items: items
       };
 
       vm.transferInProgress = true;
-      return dimLoadoutService.applyLoadout(store, loadout).then(function() {
+      return dimLoadoutService.applyLoadout(store, loadout).then(() => {
         vm.transferInProgress = false;
       });
     }
@@ -156,4 +170,3 @@ function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoa
   vm.setSourceItem($scope.$parent.ngDialogData);
   vm.getItems();
 }
-

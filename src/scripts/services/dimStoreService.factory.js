@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import uuidv4 from 'uuid/v4';
 import { sum, count } from '../util';
 import idbKeyval from 'idb-keyval';
 
@@ -11,31 +12,30 @@ function StoreService(
   $q,
   dimBungieService,
   dimPlatformService,
-  dimCategory,
   dimDefinitions,
   dimBucketService,
   dimItemInfoService,
   dimInfoService,
-  SyncService,
   loadingTracker,
   dimManifestService,
   $translate,
-  uuid2,
-  dimFeatureFlags,
+  dimState,
+  dimDestinyTrackerService,
   dimSettingsService,
+  toaster,
   $http
 ) {
-  var _stores = [];
-  var _idTracker = {};
+  let _stores = [];
+  let _idTracker = {};
 
-  var _removedNewItems = new Set();
+  const _removedNewItems = new Set();
 
   // Load classified data once per load and keep it in memory until
   // reload. Classified data always comes from
   // beta.destinyitemmanager.com so it can be released faster than the
   // release website, but the release website can still use the
   // updated definitions.
-  const getClassifiedData = _.memoize(function() {
+  const getClassifiedData = _.memoize(() => {
     return idbKeyval.get('classified-data').then((data) => {
       // Use cached data for up to 4 hours
       if ($DIM_FLAVOR !== 'dev' &&
@@ -57,14 +57,14 @@ function StoreService(
             return idbKeyval.set('classified-data', remoteData).then(() => remoteData);
           }
 
-          console.error("Couldn't load classified info from " + url);
+          console.error(`Couldn't load classified info from ${url}`);
 
           return {
             itemHash: {}
           };
         })
         .catch((e) => {
-          console.error("Couldn't load classified info from " + url, e);
+          console.error(`Couldn't load classified info from ${url}`, e);
 
           return {
             itemHash: {}
@@ -110,23 +110,23 @@ function StoreService(
   ];
 
   // A promise used to dedup parallel calls to reloadStores
-  var _reloadPromise;
+  let _reloadPromise;
 
   // Cooldowns
-  var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
-  var cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
-  var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
-  var cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
+  const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
+  const cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
+  const cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
+  const cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
   // Prototype for Store objects - add methods to this to add them to all
   // stores.
-  var StoreProto = {
+  const StoreProto = {
     /**
      * Get the total amount of this item in the store, across all stacks,
      * excluding stuff in the postmaster.
      */
     amountOfItem: function(item) {
-      return sum(_.filter(this.items, function(i) {
+      return sum(_.filter(this.items, (i) => {
         return i.hash === item.hash && !i.location.inPostmaster;
       }), 'amount');
     },
@@ -168,20 +168,20 @@ function StoreService(
       this.level = characterInfo.characterLevel;
       this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
       this.powerLevel = characterInfo.characterBase.powerLevel;
-      this.background = 'https://www.bungie.net/' + characterInfo.backgroundPath;
-      this.icon = 'https://www.bungie.net/' + characterInfo.emblemPath;
+      this.background = `https://www.bungie.net/${characterInfo.backgroundPath}`;
+      this.icon = `https://www.bungie.net/${characterInfo.emblemPath}`;
       this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
     },
     // Remove an item from this store. Returns whether it actually removed anything.
     removeItem: function(item) {
       // Completely remove the source item
       function match(i) { return item.index === i.index; }
-      var sourceIndex = _.findIndex(this.items, match);
+      const sourceIndex = _.findIndex(this.items, match);
       if (sourceIndex >= 0) {
         this.items.splice(sourceIndex, 1);
 
-        var bucketItems = this.buckets[item.location.id];
-        var bucketIndex = _.findIndex(bucketItems, match);
+        const bucketItems = this.buckets[item.location.id];
+        const bucketIndex = _.findIndex(bucketItems, match);
         bucketItems.splice(bucketIndex, 1);
 
         return true;
@@ -190,7 +190,7 @@ function StoreService(
     },
     addItem: function(item) {
       this.items.push(item);
-      var bucketItems = this.buckets[item.location.id];
+      const bucketItems = this.buckets[item.location.id];
       bucketItems.push(item);
       if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
         dimInfoService.show('lostitems', {
@@ -205,7 +205,7 @@ function StoreService(
     // Create a loadout from this store's equipped items
     loadoutFromCurrentlyEquipped: function(name) {
       return {
-        id: uuid2.newguid(),
+        id: uuidv4(),
         classType: -1,
         name: name,
         items: _(this.items)
@@ -259,7 +259,7 @@ function StoreService(
 
   // Prototype for Item objects - add methods to this to add them to all
   // items.
-  var ItemProto = {
+  const ItemProto = {
     // Can this item be equipped by the given store?
     canBeEquippedBy: function(store) {
       if (store.isVault) {
@@ -291,7 +291,7 @@ function StoreService(
     }
   };
 
-  var service = {
+  const service = {
     getActiveStore: getActiveStore,
     getStores: getStores,
     reloadStores: reloadStores,
@@ -303,10 +303,11 @@ function StoreService(
     dropNewItem: dropNewItem,
     createItemIndex: createItemIndex,
     processItems: processItems,
+    getCharacterStatsData,
     hasNewItems: false
   };
 
-  $rootScope.$on('dim-active-platform-updated', function() {
+  $rootScope.$on('dim-active-platform-updated', () => {
     _stores = [];
     service.hasNewItems = false;
     $rootScope.$broadcast('dim-stores-updated', {
@@ -324,10 +325,10 @@ function StoreService(
     return $q.all([
       dimDefinitions.getDefinitions(),
       dimBungieService.getCharacters(dimPlatformService.getActive())
-    ]).then(function([defs, bungieStores]) {
-      _.each(_stores, function(dStore) {
+    ]).then(([defs, bungieStores]) => {
+      _.each(_stores, (dStore) => {
         if (!dStore.isVault) {
-          var bStore = _.findWhere(bungieStores, { id: dStore.id });
+          const bStore = _.findWhere(bungieStores, { id: dStore.id });
           dStore.updateCharacterInfo(defs, bStore.base);
         }
       });
@@ -363,9 +364,11 @@ function StoreService(
 
     function fakeItemId(item) {
       if (activePlatform.fake && item.itemInstanceId !== "0") {
-        item.itemInstanceId = 'fake-' + item.itemInstanceId;
+        item.itemInstanceId = `fake-${item.itemInstanceId}`;
       }
     }
+
+    _idTracker = {};
 
     _reloadPromise = $q.all([
       dimDefinitions.getDefinitions(),
@@ -373,7 +376,7 @@ function StoreService(
       loadNewItems(activePlatform),
       dimItemInfoService(activePlatform),
       dimBungieService.getStores(activePlatform)])
-      .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
+      .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
         if (activePlatform !== dimPlatformService.getActive()) {
           throw new Error("Active platform mismatch");
         }
@@ -388,19 +391,19 @@ function StoreService(
           return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
         }, null);
 
-        var glimmer;
-        var marks;
-        var silver;
+        let glimmer;
+        let marks;
+        let silver;
         _removedNewItems.forEach((id) => newItems.delete(id));
         _removedNewItems.clear();
         service.hasNewItems = (newItems.size !== 0);
 
-        return $q.all([newItems, itemInfoService, ...rawStores.map(function(raw) {
+        return $q.all([newItems, itemInfoService, ...rawStores.map((raw) => {
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
-          var store;
-          var items = [];
+          let store;
+          let items = [];
           if (!raw) {
             return undefined;
           }
@@ -424,7 +427,7 @@ function StoreService(
               isVault: true,
               // Vault has different capacity rules
               capacityForItem: function(item) {
-                var sort = item.sort;
+                let sort = item.sort;
                 if (item.bucket) {
                   sort = item.bucket.sort;
                 }
@@ -453,7 +456,7 @@ function StoreService(
                 }
               },
               removeItem: function(item) {
-                var result = StoreProto.removeItem.call(this, item);
+                const result = StoreProto.removeItem.call(this, item);
                 this.vaultCounts[item.location.sort]--;
                 return result;
               },
@@ -463,8 +466,8 @@ function StoreService(
               }
             });
 
-            _.each(raw.data.buckets, function(bucket) {
-              _.each(bucket.items, function(item) {
+            _.each(raw.data.buckets, (bucket) => {
+              _.each(bucket.items, (item) => {
                 item.bucket = bucket.bucketHash;
                 fakeItemId(item);
               });
@@ -473,9 +476,9 @@ function StoreService(
             });
           } else {
             try {
-              glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
-              marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
-              silver = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2749350776; }).value;
+              glimmer = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 3159615086; }).value;
+              marks = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 2534352370; }).value;
+              silver = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 2749350776; }).value;
             } catch (e) {
               glimmer = 0;
               marks = 0;
@@ -497,10 +500,10 @@ function StoreService(
 
             store = angular.extend(Object.create(StoreProto), {
               id: raw.id,
-              icon: 'https://www.bungie.net/' + character.emblemPath,
+              icon: `https://www.bungie.net/${character.emblemPath}`,
               current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
               lastPlayed: character.characterBase.dateLastPlayed,
-              background: 'https://www.bungie.net/' + character.backgroundPath,
+              background: `https://www.bungie.net/${character.backgroundPath}`,
               level: character.characterLevel,
               powerLevel: character.characterBase.powerLevel,
               stats: getCharacterStatsData(defs.Stat, character.characterBase),
@@ -515,10 +518,10 @@ function StoreService(
               isVault: false
             });
 
-            store.name = store.genderRace + ' ' + store.className;
+            store.name = `${store.genderRace} ${store.className}`;
 
             if (store.progression) {
-              store.progression.progressions.forEach(function(prog) {
+              store.progression.progressions.forEach((prog) => {
                 angular.extend(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
                 const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
                 if (faction) {
@@ -527,9 +530,9 @@ function StoreService(
               });
             }
 
-            _.each(raw.data.buckets, function(bucket) {
-              _.each(bucket, function(pail) {
-                _.each(pail.items, function(item) {
+            _.each(raw.data.buckets, (bucket) => {
+              _.each(bucket, (pail) => {
+                _.each(pail.items, (item) => {
                   item.bucket = pail.bucketHash;
                   fakeItemId(item);
                 });
@@ -540,8 +543,8 @@ function StoreService(
 
             if (_.has(character.inventory.buckets, 'Invisible')) {
               if (_.size(character.inventory.buckets.Invisible) > 0) {
-                _.each(character.inventory.buckets.Invisible, function(pail) {
-                  _.each(pail.items, function(item) {
+                _.each(character.inventory.buckets.Invisible, (pail) => {
+                  _.each(pail.items, (item) => {
                     item.bucket = pail.bucketHash;
                     fakeItemId(item);
                   });
@@ -552,7 +555,7 @@ function StoreService(
             }
           }
 
-          return processItems(store, items, previousItems, newItems, itemInfoService).then(function(items) {
+          return processItems(store, items, previousItems, newItems, itemInfoService).then((items) => {
             if (activePlatform !== dimPlatformService.getActive()) {
               throw new Error("Active platform mismatch");
             }
@@ -560,12 +563,12 @@ function StoreService(
             store.items = items;
 
             // by type-bucket
-            store.buckets = _.groupBy(items, function(i) {
+            store.buckets = _.groupBy(items, (i) => {
               return i.location.id;
             });
 
             // Fill in any missing buckets
-            _.values(buckets.byType).forEach(function(bucket) {
+            _.values(buckets.byType).forEach((bucket) => {
               if (!store.buckets[bucket.id]) {
                 store.buckets[bucket.id] = [];
               }
@@ -573,9 +576,9 @@ function StoreService(
 
             if (store.isVault) {
               store.vaultCounts = {};
-              ['Weapons', 'Armor', 'General'].forEach(function(category) {
+              ['Weapons', 'Armor', 'General'].forEach((category) => {
                 store.vaultCounts[category] = 0;
-                buckets.byCategory[category].forEach(function(bucket) {
+                buckets.byCategory[category].forEach((bucket) => {
                   if (store.buckets[bucket.id]) {
                     store.vaultCounts[category] += store.buckets[bucket.id].length;
                   }
@@ -587,7 +590,7 @@ function StoreService(
           });
         })]);
       })
-      .then(function([newItems, itemInfoService, ...stores]) {
+      .then(([newItems, itemInfoService, ...stores]) => {
         if (activePlatform !== dimPlatformService.getActive()) {
           throw new Error("Active platform mismatch");
         }
@@ -614,14 +617,25 @@ function StoreService(
 
         return stores;
       })
-      .catch(function(e) {
+      .then((stores) => {
+        dimDestinyTrackerService.reattachScoresFromCache(stores);
+        return stores;
+      })
+      .catch((e) => {
         if (e.message === 'Active platform mismatch') {
           // no problem, just canceling the request
           return null;
         }
+        if (e.code === 1601) { // DestinyAccountNotFound
+          return dimPlatformService.reportBadPlatform(activePlatform, e);
+        }
         throw e;
       })
-      .finally(function() {
+      .catch((e) => {
+        showErrorToaster(e);
+        throw e;
+      })
+      .finally(() => {
         // Clear the reload promise so this can be called again
         if (_reloadPromise.activePlatform === activePlatform) {
           _reloadPromise = null;
@@ -633,6 +647,19 @@ function StoreService(
     return _reloadPromise;
   }
 
+  function showErrorToaster(e) {
+    const twitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
+    const twitter = `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`;
+
+    toaster.pop({
+      type: 'error',
+      bodyOutputType: 'trustedHtml',
+      title: 'Bungie.net Error',
+      body: e.message + twitter,
+      showCloseButton: false
+    });
+  }
+
   function getStore(id) {
     return _.find(_stores, { id: id });
   }
@@ -640,19 +667,36 @@ function StoreService(
   // Set an ID for the item that should be unique across all items
   function createItemIndex(item) {
     // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-    var index = item.hash + '-';
+    let index = item.id;
     if (item.id === '0') {
-      index = index + item.amount;
+      index = `${item.hash}-am${item.amount}`;
       _idTracker[index] = (_idTracker[index] || 0) + 1;
-      index = index + '-' + _idTracker[index];
-    } else {
-      index = index + item.id;
+      index = `${index}-t${_idTracker[index]}`;
     }
+
+    // Perf hack: the index is used as a key for ng-repeat. What we are doing here
+    // is adding extra info to that key in order to force items to be re-rendered when
+    // this index changes. These properties are selected because they're used in the
+    // dimStoreItem directive. Ideally this would just be a hash of all these properties,
+    // but for now a big string will do.
+    //
+    // Oh, also, this value needs to be safe as an HTML ID.
+
+    if (!item.complete && item.percentComplete) {
+      index += `-pc${Math.round(item.percentComplete * 100)}`;
+    }
+    if (item.quality) {
+      index += `-q${item.quality.min}`;
+    }
+    if (item.primStat && item.primStat.value) {
+      index += `-ps${item.primStat.value}`;
+    }
+
     return index;
   }
 
   function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner) {
-    var itemDef = defs.InventoryItem.get(item.itemHash);
+    let itemDef = defs.InventoryItem.get(item.itemHash);
     // Missing definition?
     if (!itemDef) {
       // maybe it is redacted...
@@ -694,12 +738,12 @@ function StoreService(
 
     // fix itemDef for defense items with missing nodes
     if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
-      var defaultMinMax = _.find(itemDef.stats, function(stat) {
+      const defaultMinMax = _.find(itemDef.stats, (stat) => {
         return _.indexOf([144602215, 1735777505, 4244567218], stat.statHash) >= 0;
       });
 
       if (defaultMinMax) {
-        [144602215, 1735777505, 4244567218].forEach(function(val) {
+        [144602215, 1735777505, 4244567218].forEach((val) => {
           if (!itemDef.stats[val]) {
             itemDef.stats[val] = {
               maximum: defaultMinMax.maximum,
@@ -713,14 +757,13 @@ function StoreService(
     }
 
     // def.bucketTypeHash is where it goes normally
-    var normalBucket = buckets.byHash[itemDef.bucketTypeHash];
+    let normalBucket = buckets.byHash[itemDef.bucketTypeHash];
+    // item.bucket is where it IS right now
+    let currentBucket = buckets.byHash[item.bucket] || normalBucket;
     if (!normalBucket) {
       currentBucket = normalBucket = buckets.unknown;
       buckets.setHasUnknown();
     }
-
-    // item.bucket is where it IS right now
-    var currentBucket = buckets.byHash[item.bucket] || normalBucket;
 
     // We cheat a bit for items in the vault, since we treat the
     // vault as a character. So put them in the bucket they would
@@ -741,14 +784,14 @@ function StoreService(
       }
     }
 
-    var itemType = normalBucket.type || 'Unknown';
+    const itemType = normalBucket.type || 'Unknown';
 
     const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
       const category = defs.ItemCategory.get(c);
       return category ? category.identifier : null;
     })) : [];
 
-    var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
+    const dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
     itemDef.sourceHashes = itemDef.sourceHashes || [];
 
@@ -757,7 +800,7 @@ function StoreService(
       itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
     }
 
-    var createdItem = angular.extend(Object.create(ItemProto), {
+    const createdItem = angular.extend(Object.create(ItemProto), {
       // figure out what year this item is probably from
 
       // The bucket the item is currently in
@@ -779,9 +822,8 @@ function StoreService(
       equipped: item.isEquipped,
       equipment: item.isEquipment,
       complete: item.isGridComplete,
-      percentComplete: null,
       amount: item.stackSize,
-      primStat: item.primaryStat,
+      primStat: item.primaryStat || null,
       typeName: itemDef.itemTypeName,
       // "perks" are the two or so talent grid items that are "featured" for an
       // item in its popup in the game. We don't currently use these.
@@ -796,17 +838,24 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-      trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
+      trackable: Boolean(currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)),
       tracked: item.state === 2,
       locked: item.locked,
-      redacted: itemDef.redacted,
-      classified: itemDef.classified,
-      isInLoadout: false
+      redacted: Boolean(itemDef.redacted),
+      classified: Boolean(itemDef.classified),
+      isInLoadout: false,
+      dtrRating: item.dtrRating,
+      percentComplete: null, // filled in later
+      talentGrid: null, // filled in later
+      stats: null, // filled in later
+      objectives: null, // filled in later
+      quality: null // filled in later
     });
 
-    createdItem.taggable = createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM');
-
-    createdItem.index = createItemIndex(createdItem);
+    // *able
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
+    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
+    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
 
     // Moving rare masks destroys them
     if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
@@ -822,21 +871,21 @@ function StoreService(
     try {
       createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
     } catch (e) {
-      console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
+      console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
     }
 
     if (itemInfoService) {
       try {
         createdItem.dimInfo = itemInfoService.infoForItem(createdItem.hash, createdItem.id);
       } catch (e) {
-        console.error("Error getting extra DIM info for " + createdItem.name, item, itemDef, e);
+        console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
       }
     }
 
     try {
       createdItem.talentGrid = buildTalentGrid(item, defs.TalentGrid, defs.Progression);
     } catch (e) {
-      console.error("Error building talent grid for " + createdItem.name, item, itemDef, e);
+      console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
     }
     try {
       createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
@@ -845,18 +894,18 @@ function StoreService(
         createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
       }
     } catch (e) {
-      console.error("Error building stats for " + createdItem.name, item, itemDef, e);
+      console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     }
     try {
       createdItem.objectives = buildObjectives(item.objectives, defs.Objective);
     } catch (e) {
-      console.error("Error building objectives for " + createdItem.name, item, itemDef, e);
+      console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
     }
     if (createdItem.talentGrid && createdItem.talentGrid.infusable) {
       try {
         createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
       } catch (e) {
-        console.error("Error building quality rating for " + createdItem.name, item, itemDef, e);
+        console.error(`Error building quality rating for ${createdItem.name}`, item, itemDef, e);
       }
     }
 
@@ -865,8 +914,12 @@ function StoreService(
     // More objectives properties
     if (createdItem.objectives) {
       createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-      createdItem.percentComplete = sum(createdItem.objectives, function(objective) {
-        return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
+      createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
+        if (objective.completionValue) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
+        } else {
+          return 0;
+        }
       });
     } else if (createdItem.talentGrid) {
       createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
@@ -874,62 +927,64 @@ function StoreService(
     }
 
     // In debug mode, keep the original JSON around
-    if (dimFeatureFlags.debugMode) {
+    if (dimState.debug) {
       createdItem.originalItem = item;
     }
 
     // do specific things for specific items
     if (createdItem.hash === 491180618) { // Trials Cards
       createdItem.objectives = buildTrials(owner.advisors.activities.trials);
-      var best = owner.advisors.activities.trials.extended.highestWinRank;
+      const best = owner.advisors.activities.trials.extended.highestWinRank;
       createdItem.complete = owner.advisors.activities.trials.completion.success;
       createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
     }
+
+    createdItem.index = createItemIndex(createdItem);
 
     return createdItem;
   }
 
   function buildTalentGrid(item, talentDefs, progressDefs) {
-    var talentGridDef = talentDefs.get(item.talentGridHash);
+    const talentGridDef = talentDefs.get(item.talentGridHash);
     if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length || !progressDefs.get(item.progression.progressionHash)) {
       return undefined;
     }
 
-    var totalXP = item.progression.currentProgress;
-    var totalLevel = item.progression.level; // Can be way over max
+    const totalXP = item.progression.currentProgress;
+    const totalLevel = item.progression.level; // Can be way over max
 
     // progressSteps gives the XP needed to reach each level, with
     // the last element repeating infinitely.
-    var progressSteps = progressDefs.get(item.progression.progressionHash).steps;
+    const progressSteps = progressDefs.get(item.progression.progressionHash).steps;
     // Total XP to get to specified level
     function xpToReachLevel(level) {
       if (level === 0) {
         return 0;
       }
-      var totalXPRequired = 0;
-      for (var step = 1; step <= level; step++) {
+      let totalXPRequired = 0;
+      for (let step = 1; step <= level; step++) {
         totalXPRequired += progressSteps[Math.min(step, progressSteps.length) - 1].progressTotal;
       }
 
       return totalXPRequired;
     }
 
-    var possibleNodes = talentGridDef.nodes;
+    const possibleNodes = talentGridDef.nodes;
 
     // var featuredPerkNames = item.perks.map(function(perk) {
     //   var perkDef = perkDefs.get(perk.perkHash);
     //   return perkDef ? perkDef.displayName : 'Unknown';
     // });
 
-    var gridNodes = item.nodes.map(function(node) {
-      var talentNodeGroup = possibleNodes[node.nodeHash];
-      var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
+    let gridNodes = item.nodes.map((node) => {
+      const talentNodeGroup = possibleNodes[node.nodeHash];
+      const talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
       if (!talentNodeSelected) {
         return undefined;
       }
 
-      var nodeName = talentNodeSelected.nodeStepName;
+      const nodeName = talentNodeSelected.nodeStepName;
 
       // Filter out some weird bogus nodes
       if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
@@ -937,28 +992,28 @@ function StoreService(
       }
 
       // Only one node in this column can be selected (scopes, etc)
-      var exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodes &&
+      const exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodes &&
                                talentNodeGroup.exlusiveWithNodes.length > 0);
 
       // Unlocked is whether or not the material cost has been paid
       // for the node
-      var unlocked = node.isActivated ||
+      const unlocked = node.isActivated ||
             talentNodeGroup.autoUnlocks ||
             // If only one can be activated, the cost only needs to be
             // paid once per row.
             (exclusiveInColumn &&
-             _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
+             _.any(talentNodeGroup.exlusiveWithNodes, (nodeIndex) => {
                return item.nodes[nodeIndex].isActivated;
              }));
 
       // Calculate relative XP for just this node
-      var startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
-      var activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
-      var xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
-      var xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
+      const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
+      const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+      const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
+      const xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
 
       // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
-      var dtrHash = null;
+      let dtrHash = null;
       if (node.isActivated || talentNodeGroup.isRandom) {
         dtrHash = node.nodeHash.toString(16);
         if (dtrHash.length > 1) {
@@ -972,6 +1027,30 @@ function StoreService(
           }
         }
       }
+
+      // Generate a hash that identifies the weapons permutation and selected perks.
+      // This is used by the Weapon Reviewing system.
+      const generateNodeDtrRoll = (node, talentNodeSelected) => {
+        let dtrRoll = node.nodeHash.toString(16);
+
+        if (dtrRoll.length > 1) {
+          dtrRoll += ".";
+        }
+
+        dtrRoll += node.stepIndex.toString(16);
+
+        if (node.isActivated) {
+          dtrRoll += "o";
+        }
+
+        if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
+          dtrRoll += `,${talentNodeSelected.perkHashes.join(',')}`;
+        }
+
+        return dtrRoll;
+      };
+
+      const dtrRoll = generateNodeDtrRoll(node, talentNodeSelected);
 
       // There's a lot more here, but we're taking just what we need
       return {
@@ -999,7 +1078,8 @@ function StoreService(
         // Some nodes don't show up in the grid, like purchased ascend nodes
         hidden: node.hidden,
 
-        dtrHash: dtrHash
+        dtrHash: dtrHash,
+        dtrRoll: dtrRoll
 
         // Whether (and in which order) this perk should be
         // "featured" on an abbreviated info panel, as in the
@@ -1033,20 +1113,20 @@ function StoreService(
     // This can be handy for visualization/debugging
     // var columns = _.groupBy(gridNodes, 'column');
 
-    var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
-    var totalXPRequired = xpToReachLevel(maxLevelRequired);
+    const maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
+    const totalXPRequired = xpToReachLevel(maxLevelRequired);
 
-    var ascendNode = _.find(gridNodes, { hash: 1920788875 });
+    const ascendNode = _.find(gridNodes, { hash: 1920788875 });
 
     // Fix for stuff that has nothing in early columns
-    var minColumn = _.min(_.reject(gridNodes, 'hidden'), 'column').column;
+    const minColumn = _.min(_.reject(gridNodes, 'hidden'), 'column').column;
     if (minColumn > 0) {
-      gridNodes.forEach(function(node) { node.column -= minColumn; });
+      gridNodes.forEach((node) => { node.column -= minColumn; });
     }
-    var maxColumn = _.max(gridNodes, 'column').column;
+    const maxColumn = _.max(gridNodes, 'column').column;
 
     return {
-      nodes: _.sortBy(gridNodes, function(node) { return node.column + (0.1 * node.row); }),
+      nodes: _.sortBy(gridNodes, (node) => { return node.column + (0.1 * node.row); }),
       xpComplete: totalXPRequired <= totalXP,
       totalXPRequired: totalXPRequired,
       totalXP: Math.min(totalXPRequired, totalXP),
@@ -1054,17 +1134,18 @@ function StoreService(
       ascended: Boolean(ascendNode && ascendNode.activated),
       infusable: _.any(gridNodes, { hash: 1270552711 }),
       dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
+      dtrRoll: _.compact(_.pluck(gridNodes, 'dtrRoll')).join(';'),
       complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
     };
   }
 
   function buildTrials(trials) {
-    var flawless = trials.completion.success;
+    const flawless = trials.completion.success;
     trials = trials.extended;
     function buildObjective(name, current, max, bool, style) {
       return {
         displayStyle: style,
-        displayName: $translate.instant('TrialsCard.' + name),
+        displayName: $translate.instant(`TrialsCard.${name}`),
         progress: current,
         completionValue: max,
         complete: bool ? current >= max : false,
@@ -1086,16 +1167,19 @@ function StoreService(
       return undefined;
     }
 
-    return objectives.map(function(objective) {
-      var def = objectiveDefs.get(objective.objectiveHash);
+    return objectives.map((objective) => {
+      const def = objectiveDefs.get(objective.objectiveHash);
 
       return {
-        description: '',
-        displayName: def.displayDescription,
+        displayName: def.displayDescription ||
+          (objective.isComplete
+           ? $translate.instant('Objectives.Complete')
+           : $translate.instant('Objectives.Incomplete')),
         progress: objective.progress,
         completionValue: def.completionValue,
         complete: objective.isComplete,
-        boolean: def.completionValue === 1
+        boolean: def.completionValue === 1,
+        display: `${objective.progress}/${def.completionValue}`
       };
     });
   }
@@ -1111,7 +1195,7 @@ function StoreService(
   }
 
   function getScaledStat(base, light) {
-    var max = 335;
+    const max = 335;
 
     if (light > 335) {
       light = 335;
@@ -1138,16 +1222,16 @@ function StoreService(
         light = 335;
       }
 
-      return ((quality.min === quality.max || light === 335)
+      return `${(quality.min === quality.max || light === 335)
               ? quality.min
-              : (quality.min + "%-" + quality.max)) + '%';
+              : (`${quality.min}%-${quality.max}`)}%`;
     }
 
     if (!stats || !stats.length || !light || light.value < 280) {
       return null;
     }
 
-    var split = 0;
+    let split = 0;
     switch (type.toLowerCase()) {
     case 'helmet':
       split = 46; // bungie reports 48, but i've only seen 46
@@ -1172,7 +1256,7 @@ function StoreService(
       return null;
     }
 
-    var ret = {
+    const ret = {
       total: {
         min: 0,
         max: 0
@@ -1180,9 +1264,9 @@ function StoreService(
       max: split * 2
     };
 
-    var pure = 0;
-    stats.forEach(function(stat) {
-      var scaled = {
+    let pure = 0;
+    stats.forEach((stat) => {
+      let scaled = {
         min: 0,
         max: 0
       };
@@ -1201,7 +1285,7 @@ function StoreService(
     });
 
     if (pure === ret.total.min) {
-      stats.forEach(function(stat) {
+      stats.forEach((stat) => {
         stat.scaled = {
           min: Math.floor(stat.scaled.min / 2),
           max: Math.floor(stat.scaled.max / 2)
@@ -1213,13 +1297,13 @@ function StoreService(
       });
     }
 
-    var quality = {
+    let quality = {
       min: Math.round(ret.total.min / ret.max * 100),
       max: Math.round(ret.total.max / ret.max * 100)
     };
 
     if (type.toLowerCase() !== 'artifact') {
-      stats.forEach(function(stat) {
+      stats.forEach((stat) => {
         stat.qualityPercentage = {
           min: Math.min(100, stat.qualityPercentage.min),
           max: Math.min(100, stat.qualityPercentage.max)
@@ -1231,7 +1315,7 @@ function StoreService(
       };
     }
 
-    stats.forEach(function(stat) {
+    stats.forEach((stat) => {
       stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
     });
     quality.range = getQualityRange(light.value, quality);
@@ -1302,10 +1386,10 @@ function StoreService(
       return undefined;
     }
 
-    var armorNodes = [];
-    var activeArmorNode;
+    let armorNodes = [];
+    let activeArmorNode;
     if (grid && grid.nodes && item.primaryStat && item.primaryStat.statHash === 3897883278) {
-      armorNodes = _.filter(grid.nodes, function(node) {
+      armorNodes = _.filter(grid.nodes, (node) => {
         return _.contains([1034209669, 1263323987, 193091484], node.hash); // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
       });
       if (armorNodes) {
@@ -1313,8 +1397,8 @@ function StoreService(
       }
     }
 
-    return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
-      var def = statDefs.get(stat.statHash);
+    return _.sortBy(_.compact(_.map(itemDef.stats, (stat) => {
+      const def = statDefs.get(stat.statHash);
       if (!def) {
         return undefined;
       }
@@ -1322,11 +1406,11 @@ function StoreService(
       const identifier = def.statIdentifier;
 
       // Only include these hidden stats, in this order
-      var secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
-      var secondaryIndex = -1;
+      const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
+      let secondaryIndex = -1;
 
-      var sort = _.findIndex(item.stats, { statHash: stat.statHash });
-      var itemStat;
+      let sort = _.findIndex(item.stats, { statHash: stat.statHash });
+      let itemStat;
       if (sort < 0) {
         secondaryIndex = secondarySort.indexOf(identifier);
         sort = 50 + secondaryIndex;
@@ -1342,14 +1426,14 @@ function StoreService(
         return undefined;
       }
 
-      var maximumValue = 100;
+      let maximumValue = 100;
       if (itemStat && itemStat.maximumValue) {
         maximumValue = itemStat.maximumValue;
       }
 
-      var val = itemStat ? itemStat.value : stat.value;
-      var base = val;
-      var bonus = 0;
+      const val = itemStat ? itemStat.value : stat.value;
+      let base = val;
+      let bonus = 0;
 
       if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
         if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
@@ -1371,6 +1455,7 @@ function StoreService(
         bonus: bonus,
         statHash: stat.statHash,
         name: def.statName,
+        id: def.statIdentifier,
         sort: sort,
         value: val,
         maximumValue: maximumValue,
@@ -1382,7 +1467,7 @@ function StoreService(
   /** New Item Tracking **/
 
   function buildItemSet(stores) {
-    var itemSet = new Set();
+    const itemSet = new Set();
     stores.forEach((store) => {
       store.items.forEach((item) => {
         itemSet.add(item.id);
@@ -1438,8 +1523,6 @@ function StoreService(
   function loadNewItems(activePlatform) {
     if (activePlatform) {
       const key = newItemsKey();
-      // Clean out old new-items from the Sync Service, we store in IndexedDB now.
-      SyncService.remove(key);
       return idbKeyval.get(key).then((v) => v || new Set());
     }
     return $q.resolve(new Set());
@@ -1451,7 +1534,7 @@ function StoreService(
 
   function newItemsKey() {
     const platform = dimPlatformService.getActive();
-    return 'newItems-' + (platform ? platform.type : '');
+    return `newItems-${platform ? platform.type : ''}`;
   }
 
   function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
@@ -1462,11 +1545,11 @@ function StoreService(
       newItems,
       itemInfoService,
       getClassifiedData()])
-      .then(function(args) {
-        var result = [];
-        dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
-        _.each(items, function(item) {
-          var createdItem = null;
+      .then((args) => {
+        const result = [];
+        dimManifestService.statusText = `${$translate.instant('Manifest.LoadCharInv')}...`;
+        _.each(items, (item) => {
+          let createdItem = null;
           try {
             createdItem = processSingleItem(...args, item, owner);
           } catch (e) {
@@ -1542,9 +1625,9 @@ function StoreService(
     // year 1
 
     item.year = 1;
-    var infusable = (item.talentGrid && item.talentGrid.infusable);
-    var ttk = item.sourceHashes.includes(yearHashes.year2[0]);
-    var roi = item.sourceHashes.includes(yearHashes.year3[0]);
+    const infusable = (item.talentGrid && item.talentGrid.infusable);
+    const ttk = item.sourceHashes.includes(yearHashes.year2[0]);
+    const roi = item.sourceHashes.includes(yearHashes.year3[0]);
     if (ttk || infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
       item.year = 2;
     }
@@ -1558,10 +1641,10 @@ function StoreService(
    */
   function getCharacterStatsData(statDefs, data) {
     const statsWithTiers = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
-    var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
-    var ret = {};
+    const stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
+    const ret = {};
     stats.forEach((statId) => {
-      var statHash = {};
+      const statHash = {};
       statHash.id = statId;
       switch (statId) {
       case 'STAT_INTELLECT':
@@ -1596,7 +1679,7 @@ function StoreService(
         statHash.tier = Math.floor(statHash.normalized / 60);
         statHash.tiers = [];
         statHash.remaining = statHash.value;
-        for (var t = 0; t < 5; t++) {
+        for (let t = 0; t < 5; t++) {
           statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
         }
         if (data.peerView) {

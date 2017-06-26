@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Destiny Item Manager",
-  "version": "3.18.0",
+  "version": "4.0.0",
   "description": "Robust interface to manage gear, weapons, and items in Destiny.",
   "icons": {
     "16": "icon16.png",
@@ -14,6 +14,12 @@
       "extension-scripts/main.js"
     ]
   },
+  "content_scripts": [
+    {
+      "matches": ["https://app.destinyitemmanager.com/*"],
+      "js": ["extension-scripts/content-script.js"]
+    }
+  ],
   "web_accessible_resources": [
     "input.html",
     "return.html"
@@ -41,7 +47,7 @@
     "chrome_style": false,
     "open_in_tab": true
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://apis.google.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://apis.google.com https://reviews-api.destinytracker.net; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false,
   "minimum_chrome_version": "51"

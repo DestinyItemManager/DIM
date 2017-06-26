@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Failed to find a Destiny account for you on {platform}.",
       "NoCookies": "No cookies found.",
       "NotConnected": "You may not be connected to the internet.",
-      "Twitter": "Get status updates on",
+      "Twitter": "Get status updates on:",
       "ItemUniqueness": "Item Uniqueness",
       "ItemUniquenessExplanation": "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one.",
       "VendorNotFound": "Vendor data is unavailable."
@@ -37,12 +37,16 @@
          "Class": "Cannot compare this item as it is not for a {class}.",
          "Archetype": "Cannot compare this item as it is not a {type}."
       },
+      "ItemCount": "You have {num} of these.",
       "Splits": "Compare similar splits ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Grenade cooldown",
-      "Melee": "Melee cooldown",
-      "Super": "Super cooldown"
+      "Grenade": "Grenade cooldown: {cooldown}",
+      "Melee": "Melee cooldown: {cooldown}",
+      "Super": "Super cooldown: {cooldown}"
+   },
+   "Countdown": {
+      "Days": "{numDays, plural, =1{# Day} other{# Days}}"
    },
    "Debug": {
       "Dump": "Dump info to console",
@@ -81,7 +85,8 @@
       "FilterHelp": "Search item/perk or is:arc",
       "MaterialsExchange": "Available faction ranks",
       "Refresh": "Refresh Destiny Data",
-      "SupportDIM": "Support"
+      "SupportDIM": "Backers",
+      "Shop": "Shop"
    },
    "Help": {
       "BackToDIM": "Back to DIM",
@@ -92,10 +97,7 @@
       "HidePopup": "Hide This Popup",
       "NeverShow": "Never show me this again.",
       "UpgradeChrome": "Please Upgrade Chrome",
-      "Version": {
-         "Beta": "Beta has been updated to v{version}",
-         "Stable": "DIM v{version} Released"
-      },
+      "Version": "{beta, select, true{Beta has been updated to v{version}} other{DIM v{version} Released}}",
       "Xur": "Xûr is Here"
    },
    "Hotkey": {
@@ -107,7 +109,7 @@
    },
    "Infusion": {
       "Infusion": "Infusion Fuel Finder",
-      "BringGear": "Will bring the gear to",
+      "BringGear": "Will bring the gear to:",
       "Calc": "Infusion calculator",
       "InfuseItems": "Select item to infuse with:",
       "InfusionMaterials": "Infusion Materials",
@@ -115,12 +117,11 @@
       "NoItems": "No infusable items available.",
       "NoTransfer": "Transfer infusion material\n {target} cannot be moved.",
       "ShowItems": "Show infusable items across all characters and vault",
-      "TransferItems": "Transfer items",
-      "Using3": "using 3"
+      "TransferItems": "Transfer items"
    },
    "ItemInfoService": {
-     "SaveInfoErrorTitle": "Error saving item info",
-     "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {error}."
+      "SaveInfoErrorTitle": "Error saving item info",
+      "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {error}."
    },
    "ItemMove": {
       "Consolidate": "Consolidated {name}",
@@ -129,7 +130,7 @@
       "ToStore": "All {name} are now on your {store}."
    },
    "ItemService": {
-      "BucketFull": "There are too many '{itemtype}' items {isVault, select, true{in the} false{on your}} {store}.",
+      "BucketFull": "There are too many '{itemtype}' items {isVault, select, true{in the} other{on your}} {store}.",
       "Classified": "This item is classified and cannot be transferred at this time.",
       "Classified2": "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
       "Deequip": "Cannot find another item to equip in order to dequip {itemname}",
@@ -152,6 +153,7 @@
       "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
       "FilterSets": "Filter sets",
       "AdvancedOptions": "Advanced Options",
+      "ContainsVendorItems": "This loadout contains vendor items",
       "ProcessingMode": {
          "Fast": "Fast",
          "Full": "Full",
@@ -168,24 +170,24 @@
       },
       "IncludeRare": "Include rare (blue) items",
       "Help": {
-        "Help": "Need help?",
-        "Lock": "Lock a set of perks by clicking a lock bucket and selecting perks",
-        "NoPerk": "If a perk doesn't appear it means that you own no armor with that perk",
-        "MultiPerk":"To use armor with multiple perks together shift+click the desired perks",
-        "Or": "Armor with any of these perks will be used (\"or\")",
-        "And": "Armor with all of these perks will be used (\"and\")",
-        "DragAndDrop": "Drag and drop items into the locked buckets to build sets with only that gear",
-        "ShiftClick": "Shift click an item to build sets without that gear",
-        "HigherTiers": "Higher Tiers are better",
-        "Tier11Example": "4/5/2 (a Tier 11 build) is 4 Intellect, 5 Discipline, 2 Strength (4+5+2 = Tier 11)",
-        "Intellect": "Intellect speeds up Super recharge time",
-        "Discipline": "Discipline speeds up Grenade recharge time",
-        "Strength": "Strength speeds up Melee recharge time",
-        "Synergy": "Try to find armor that has ammo increasing perks for weapon types that you use.",
-        "ChangeNodes": "Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.",
-        "StatsIncrease": "As an items defense level increases, the stats on that item (int/dis/str) also increase."
+         "Help": "Need help?",
+         "Lock": "Lock a set of perks by clicking a lock bucket and selecting perks",
+         "NoPerk": "If a perk doesn't appear it means that you own no armor with that perk",
+         "MultiPerk": "To use armor with multiple perks together shift+click the desired perks",
+         "Or": "Armor with any of these perks will be used (\"or\")",
+         "And": "Armor with all of these perks will be used (\"and\")",
+         "DragAndDrop": "Drag and drop items into the locked buckets to build sets with only that gear",
+         "ShiftClick": "Shift click an item to build sets without that gear",
+         "HigherTiers": "Higher Tiers are better",
+         "Tier11Example": "4/5/2 (a Tier 11 build) is 4 Intellect, 5 Discipline, 2 Strength (4+5+2 = Tier 11)",
+         "Intellect": "Intellect speeds up Super recharge time",
+         "Discipline": "Discipline speeds up Grenade recharge time",
+         "Strength": "Strength speeds up Melee recharge time",
+         "Synergy": "Try to find armor that has ammo increasing perks for weapon types that you use.",
+         "ChangeNodes": "Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.",
+         "StatsIncrease": "As an items defense level increases, the stats on that item (int/dis/str) also increase."
       },
-      "Equip": "Equip on Current Character",
+      "Equip": "Equip on {character}",
       "ShowAllConfigs": "Show all configurations",
       "ShowConfigs": "Show configurations",
       "HideAllConfigs": "Hide all configurations",
@@ -249,7 +251,6 @@
       "Error": "Error loading Destiny info:\n{error}\nReload to retry.",
       "Outdated": "Outdated Destiny Info",
       "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.",
-      "BungieDown": "Bungie.net may be having trouble.",
       "Load": "Loading saved Destiny info",
       "LoadCharInv": "Loading Destiny characters and inventory",
       "Save": "Saving latest Destiny info",
@@ -265,25 +266,51 @@
       "NewRep": "New Rep"
    },
    "MovePopup": {
+      "OverviewTab": "Overview",
+      "ReviewsTab": "Reviews",
       "Consolidate": "Consolidate",
       "DistributeEvenly": "Distribute Evenly",
       "Equip": "Equip",
       "Split": "Split",
       "Store": "Store",
+      "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "Take",
-      "Vault": "Vault"
+      "Vault": "Vault",
+      "LockUnlock": "{locked, select, false{Lock} other{Unlock}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Track} other{Untrack}} {itemType}"
    },
    "MoveAmount": {
-     "Min": "Minimum stack (1)",
-     "Max": "Total amount in this location",
-     "UpStack": "Increase up to the next full stack",
-     "DownStack": "Decrease down to the next full stack",
-     "Increment": "One more",
-     "Decrement": "One fewer"
+      "Min": "Minimum stack (1)",
+      "Max": "Total amount in this location",
+      "UpStack": "Increase up to the next full stack",
+      "DownStack": "Decrease down to the next full stack",
+      "Increment": "One more",
+      "Decrement": "One fewer"
    },
    "Notes": {
       "Error": "Error! Max 120 characters for notes.",
       "Help": "Add notes to this item"
+   },
+   "DtrReview": {
+      "ThankYou": "Thank you for submitting a review! It will go live shortly.",
+      "Help": "Write a review (optional)",
+      "HelpPros": "Describe the positives of this weapon (optional)",
+      "HelpCons": "Describe the negatives of this weapon (optional)",
+      "YourReview": "Your Review",
+      "Edit": "Edit",
+      "Delete": "Delete",
+      "Submit": "Submit",
+      "Cancel": "Cancel",
+      "Pros": "Pros",
+      "Cons": "Cons",
+      "NoReviews": "There are no reviews for this item, be the first!",
+      "ServiceCallError": "Destiny tracker service call failed.",
+      "ServiceSubmitError": "Destiny tracker service submit failed.",
+      "AverageRating": "({itemRating}) based on {numRatings} ratings."
+   },
+   "Objectives": {
+      "Complete": "Complete",
+      "Incomplete": "Incomplete"
    },
    "Postmaster": {
       "Limit": "Postmaster Limit",
@@ -291,6 +318,8 @@
    },
    "Settings": {
       "Settings": "Settings",
+      "LogOutDesc": "Log out of DIM, or switch Bungie.net accounts",
+      "LogOut": "Log out",
       "Language": "Language (reload DIM to take effect)",
       "HideUnfiltered": "Hide Unfiltered Items while Filtering",
       "HideUnfilteredHelp": "Items that do not match filter criteria will be hidden.",
@@ -302,20 +331,24 @@
       "ShowOverlayHelp": "Will show new items with an overlay.",
       "ShowAnimations": "Show new item overlay animations on new items.",
       "ShowAnimationsHelp": "Will show the animated new item overlay on new items. Turning this off can save CPU cycles.",
+      "ShowReviews": "Show review ratings on weapons",
+      "ShowReviewsHelp": "Show the average user-sourced ratings on weapons.",
       "ShowElemental": "Show elemental damage icons on weapons",
       "ShowElementalHelp": "Show elemental damage icons on weapons.",
+      "AllowIdPostToDtr": "Share account name and reviewed items with Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "DIM will share your account name and any item you review with Destiny Tracker.",
       "SetSort": "Sort Items by:",
-      "SetSortHelp": "Sort items by rarity or their primary stat value.",
+      "SetSortHelp": "Sort items by rating, rarity, or their primary stat value.",
       "SortPrimary": "Primary stat",
       "SortRarity": "Rarity",
-      "SortRoll": "Stat roll percent",
+      "SortRoll": "Rating",
       "InventoryColumns": "Character Inventory Columns",
       "InventoryColumnsHelp": "Select the number of columns for character inventory.",
       "VaultColumns": "Vault Maximum Inventory Columns",
       "VaultColumnsHelp": "Select the maximum number of columns for vault.",
       "SizeItem": "Item Size",
       "SizeItemHelp": "How big should items be?",
-      "ResetToDefault": "Reset to Default",
+      "ResetToDefault": "Reset",
       "CharacterOrder": "Character Order",
       "CharacterOrderHelp": "Characters can be ordered by last login or based on their creation date.",
       "CharacterOrderRecent": "By Most Recent Character",
@@ -324,10 +357,7 @@
       "ExportSS": "Download Spreadsheets",
       "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
       "DIMPopups": "DIM Info Popups",
-      "DIMPopupsReset": "Reset previously hidden info tips",
-      "ImportExport": "Import/Export settings and data",
-      "Export": "Export DIM Data",
-      "Import": "Import DIM Data"
+      "DIMPopupsReset": "Reset previously hidden info tips"
    },
    "Stats": {
       "Discipline": "Discipline",
@@ -339,7 +369,40 @@
       "Prestige": "Prestige Level: {level}\n{exp}xp until 5 motes of light.",
       "Quality": "Stats quality",
       "Strength": "Strength",
-      "TierProgress": "{progress} for {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 for T{nextTier}}})\n"
+   },
+   "Storage": {
+      "Title": "DIM Storage",
+      "Explain": "DIM stores its own data separate from your Destiny data (which is maintained by Bungie.net).",
+      "Enabled": "Enabled",
+      "Disabled": "Disabled",
+      "StatLabel": "This currently contains:",
+      "Loadouts": "{value} loadouts",
+      "Settings": "Your DIM settings and preferences",
+      "TagNotes": "{value} items with tags or notes",
+      "ImportExport": "Back Up Data",
+      "GoogleDriveStorage": "Google Drive",
+      "ChromeSyncStorage": "Chrome Sync (Extension Only)",
+      "IndexedDBStorage": "Local Browser Storage",
+      "Details": {
+        "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
+        "ChromeSyncStorage": "If you are logged in to Chrome, this will sync your data to other Chrome instances. It does not work on the DIM website.",
+        "IndexedDBStorage": "Local storage will save your information only on this browser. The browser may delete this information if you run out of space or don't visit DIM frequently."
+      },
+      "ForceSync": "Force sync data",
+      "DriveSync": "Log in to Google Drive",
+      "DriveLogout": "Log out of Google Drive",
+      "NoData": "No data",
+      "Export": "Back up DIM data",
+      "Import": "Import DIM data from file",
+      "ImportSuccess": "Imported DIM data!",
+      "ImportNoFile": "No file selected!",
+      "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
+      "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
+      "ImportFromExtension": "Import data from DIM Chrome Extension",
+      "ImportFromExtensionDetail": "You can import data from the DIM Chrome Extension into the DIM website.",
+      "ImportFromExtensionButton": "Import Data",
+      "ImportFromExtensionWarning": "Your DIM Chrome Extension data will overwrite your current data. Continue?"
    },
    "StoreBucket": {
       "FillStack": "Fill Stack ({amount})",
@@ -347,9 +410,9 @@
       "Move": "Move"
    },
    "SyncService": {
-     "GoogleDriveReAuth": "To re-authorize google drive, must restart your browser.",
-     "OneItemTooLarge": "Your save file has an item that is too large. Most likely a saved loadout has too many items.",
-     "SaveTooLarge": "Your save file is too large.  Remove saved loadouts."
+      "GoogleDriveReAuth": "To re-authorize google drive, must restart your browser.",
+      "OneItemTooLarge": "Your save file has an item that is too large. Most likely a saved loadout has too many items.",
+      "SaveTooLarge": "Your save file is too large.  Remove saved loadouts."
    },
    "Tags": {
       "TagItem": "Tag Item",
@@ -361,9 +424,8 @@
    "Vendors": {
       "Vendors": "Vendors",
       "All": "All",
-      "Available": "Available on",
-      "Compare": "Compare with what you already have",
-      "Day": "{numDays, plural, =1{Day} other{Days}}",
+      "Available": "Available on:",
+      "Compare": "Compare with what you already have:",
       "Load": "Loading Vendors",
       "ArmorAndWeapons": "Armor & Weapons",
       "ShipsAndVehicles": "Ships & Vehicles",
@@ -373,53 +435,55 @@
       "Emotes": "Emotes"
    },
    "RecordBooks": {
-     "RecordBooks": "Record Books",
-     "HideCompleted": "Hide completed records"
+      "RecordBooks": "Record Books",
+      "HideCompleted": "Hide completed records"
    },
    "Views": {
-     "About":{
-       "BungieCopyright": "All images and content are property of Bungie. Please contact us if there are any issues.",
-       "ContactUs":"Contact Us",
-       "FAQ": "FAQ",
-       "FAQAccess": "How does DIM get access to my Destiny data?",
-       "FAQAccessAnswer": "Any chrome extension can ask for the data a website stores on your computer. When you log into Bungie.net, you are given a token (a cookie) that is generated uniquely for your account. You use this token to communicate with Bungie securely. The token is more secure than sending your username and password with each request to Bungie's server. DIM uses this token to communicate with Bungie on your behalf.",
-       "FAQDupeGally": "Hey, DIM duplicated my Gjallarhorn!",
-       "FAQDupeGallyAnswer": "No, we didn't. Promise.",
-       "FAQKeyboard": "Does DIM support keyboard shortcuts?",
-       "FAQKeyboardAnswer": "Yes! Press \"?\" to see a list of available shortcuts.",
-       "FAQLogout": "How can I log out of DIM?",
-       "FAQLogoutAnswer": "Your session is tied to Bungie.net. If you logout on Bungie.net, you're effectively logged out of DIM.",
-       "FAQLostItem": "I lost my item using your tool!",
-       "FAQLostItemAnswer": "More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check Bungie.net or in game to see if your item still exists. We're sure it's still there.",
-       "GitHub": "GitHub",
-       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on GitHub.",
-       "GitHubRepo": "DIM Git Repo",
-       "Header": "About Destiny Item Manager (DIM)",
-       "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.",
-       "Reddit": "Reddit",
-       "RedditHelp": "If you have questions, comments, or suggestions- let us know!",
-       "Twitter": "Twitter",
-       "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
-       "Version": "Version",
-       "Transifex": "Join the Translation Team!",
-       "TransifexText": "We use Transifex for ease of translation. If you want to improve one of DIM's translations, join the team."
-     },
-     "Support": {
-       "Support": "Supporting DIM",
-       "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open sourced, and free to anyone to enhance. You will never see an ad in DIM. That is our commitment.",
-       "OpenCollective": "We are using OpenCollective as a service to provide compensation to our developers for their dedication and time spent on this project.",
-       "Backers": "Backers",
-       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
-       "Sponsors": "Sponsors",
-       "SponsorsDetail": "Become a sponsor and get your logo here with a link to your site."
-     },
-     "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM.",
-     "Login": {
-       "Permission": "We need your permission...",
-       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
-       "Auth": "Authorize with Bungie.net",
-       "LearnMore": "Do you want to know more?"
-     }
+      "About": {
+         "BungieCopyright": "All images and content are property of Bungie. Please contact us if there are any issues.",
+         "ContactUs": "Contact Us",
+         "FAQ": "FAQ",
+         "FAQAccess": "How does DIM get access to my Destiny data?",
+         "FAQAccessAnswer": "Any chrome extension can ask for the data a website stores on your computer. When you log into Bungie.net, you are given a token (a cookie) that is generated uniquely for your account. You use this token to communicate with Bungie securely. The token is more secure than sending your username and password with each request to Bungie's server. DIM uses this token to communicate with Bungie on your behalf.",
+         "FAQDupeGally": "Hey, DIM duplicated my Gjallarhorn!",
+         "FAQDupeGallyAnswer": "No, we didn't. Promise.",
+         "FAQKeyboard": "Does DIM support keyboard shortcuts?",
+         "FAQKeyboardAnswer": "Yes! Press \"?\" to see a list of available shortcuts.",
+         "FAQLogout": "How can I log out of DIM?",
+         "FAQLogoutAnswer": "Your session is tied to Bungie.net. If you logout on Bungie.net, you're effectively logged out of DIM.",
+         "FAQLostItem": "I lost my item using your tool!",
+         "FAQLostItemAnswer": "More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check Bungie.net or in game to see if your item still exists. We're sure it's still there.",
+         "GitHub": "GitHub",
+         "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on GitHub.",
+         "GitHubRepo": "DIM Git Repo",
+         "Header": "About Destiny Item Manager (DIM)",
+         "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.",
+         "Reddit": "Reddit",
+         "RedditHelp": "If you have questions, comments, or suggestions- let us know!",
+         "Twitter": "Twitter",
+         "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
+         "Version": "Version {version} ({flavor}), built on {date}",
+         "Transifex": "Join the Translation Team!",
+         "TransifexText": "We use Transifex for ease of translation. If you want to improve one of DIM's translations, join the team."
+      },
+      "Support": {
+         "Support": "Supporting DIM",
+         "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open sourced, and free to anyone to enhance. You will never see an ad in DIM. That is our commitment.",
+         "OpenCollective": "We are using OpenCollective as a service to provide compensation to our developers for their dedication and time spent on this project.",
+         "Backers": "Backers",
+         "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
+         "Sponsors": "Sponsors",
+         "SponsorsDetail": "Become a sponsor and get your logo here with a link to your site.",
+         "Teespring": "We also have shirts with our new logo for sale on Teespring:",
+         "TeespringLink": "DIM on Teespring"
+      },
+      "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM.",
+      "Login": {
+         "Permission": "We need your permission...",
+         "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
+         "Auth": "Authorize with Bungie.net",
+         "LearnMore": "Do you want to know more?"
+      }
    },
    "TrialsCard": {
       "FiveWins": "5 Win Reward (Armor)",

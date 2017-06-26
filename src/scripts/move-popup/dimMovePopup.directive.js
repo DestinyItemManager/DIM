@@ -1,4 +1,6 @@
 import angular from 'angular';
+import template from './dimMovePopup.directive.html';
+import infuseTemplate from 'app/views/infuse.html';
 
 angular.module('dimApp')
   .directive('dimMovePopup', MovePopup);
@@ -8,80 +10,45 @@ function MovePopup() {
     controller: MovePopupController,
     controllerAs: 'vm',
     bindToController: true,
-    restrict: 'A',
+    restrict: 'E',
     scope: {
-      store: '=dimStore',
-      item: '=dimItem'
+      store: '=',
+      item: '='
     },
     replace: true,
-    template: [
-      '<div class="move-popup" alt="" title="">',
-      '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse" change-details="vm.reposition()"></div>',
-      '  <dim-move-amount ng-if="vm.maximum > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>',
-      '  <div class="interaction">',
-      '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '      <div class="move-button move-vault" alt="{{::store.name}}" title="{{::store.name}}" ',
-      '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
-      '        data-type="item" data-character="{{::store.id}}">',
-      '        <span translate="MovePopup.Vault"></span>',
-      '      </div>',
-      '      <div class="move-button move-equip" alt="{{::store.name}}" title="{{::store.name}}" ',
-      '        ng-if="!(vm.item.owner == store.id && vm.item.equipped) && vm.item.canBeEquippedBy(store)" ng-click="vm.moveItemTo(store, true)" ',
-      '        data-type="equip" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})">',
-      '        <span translate="MovePopup.Equip"></span>',
-      '      </div>',
-      '      <div class="move-button move-store" alt="{{::store.name}}" title="{{::store.name}}" ',
-      '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
-      '        data-type="item" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})"> ',
-      '        <span translate="MovePopup.Store"></span>',
-      '      </div>',
-      '    </div>',
-      '    <div class="move-button move-consolidate" translate-attr="{ alt: \'MovePopup.Consolidate\', title:\'MovePopup.Consolidate\' }"',
-      '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.consolidate()">',
-      '      <span translate="MovePopup.Take"></span>',
-      '    </div>',
-      '    <div class="move-button move-distribute" translate-attr="{ alt: \'MovePopup.DistributeEvenly\', title: \'MovePopup.DistributeEvenly\' }" ',
-      '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
-      '      <span translate="MovePopup.Split"></span>',
-      '    </div>',
-      '  <div class="locations">',
-      '    <div class="move-button infuse-perk" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" translate-attr="{ title: \'Infusion\', alt: \'Infusion.Calc\' }" ng-class="vm.item.bucket.sort"></div>',
-      '  </div>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    template: template
   };
 }
 
 
 function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
-  var vm = this;
+  const vm = this;
   vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
 
   if (vm.item.maxStackSize > 1) {
-    var store = dimStoreService.getStore(vm.item.owner);
+    const store = dimStoreService.getStore(vm.item.owner);
     vm.maximum = store.amountOfItem(vm.item);
   }
 
-  var shown = false;
+  let shown = false;
 
   // Capture the dialog element
-  var dialog = null;
-  $scope.$on('ngDialog.opened', function(event, $dialog) {
+  let dialog = null;
+  $scope.$on('ngDialog.opened', (event, $dialog) => {
     dialog = $dialog;
     vm.reposition();
   });
 
   // Reposition the popup as it is shown or if its size changes
   vm.reposition = function() {
-    var element = $scope.$parent.ngDialogData;
+    const element = $scope.$parent.ngDialogData;
     if (element) {
       if (!shown) {
         dialog.hide();
       }
       shown = true;
-      $timeout(function() {
+      $timeout(() => {
         dialog
           .position({
             my: 'left bottom',
@@ -107,7 +74,8 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
 
     // Open the infuse window
     ngDialog.open({
-      template: require('app/views/infuse.template.html'),
+      template: infuseTemplate,
+      plain: true,
       className: 'app-settings',
       appendClassName: 'modal-dialog',
       data: item
@@ -132,7 +100,7 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
 
   vm.stores = dimStoreService.getStores();
 
-  vm.canShowVault = function canShowButton(item, itemStore, buttonStore) {
+  vm.canShowVault = function canShowVault(item, itemStore, buttonStore) {
     // If my itemStore is the vault, don't show a vault button.
     // Can't vault a vaulted item.
     if (itemStore.isVault) {
@@ -152,7 +120,7 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     return true;
   };
 
-  vm.canShowStore = function canShowButton(item, itemStore, buttonStore) {
+  vm.canShowStore = function canShowStore(item, itemStore, buttonStore) {
     if (buttonStore.isVault) {
       return false;
     }
@@ -168,4 +136,3 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     return false;
   };
 }
-

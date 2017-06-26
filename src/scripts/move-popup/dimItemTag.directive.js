@@ -1,24 +1,23 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimItemTag.directive.html';
 
 angular.module('dimApp').component('dimItemTag', {
   controller: ItemTagController,
   bindings: {
     item: '='
   },
-  template: `
-    <select ng-if="$ctrl.item.dimInfo" ng-options="tag as tag.label | translate for tag in $ctrl.settings.itemTags track by tag.type" ng-model="$ctrl.selected" ng-change="$ctrl.updateTag()"></select>
-  `
+  template: template
 });
 
 
 function ItemTagController($scope, $rootScope, dimSettingsService) {
-  var vm = this;
+  const vm = this;
 
   vm.settings = dimSettingsService;
-  $scope.$watch('$ctrl.item.dimInfo.tag', function() {
+  $scope.$watch('$ctrl.item.dimInfo.tag', () => {
     if (vm.item.dimInfo) {
-      vm.selected = _.find(vm.settings.itemTags, function(tag) {
+      vm.selected = _.find(vm.settings.itemTags, (tag) => {
         return tag.type === vm.item.dimInfo.tag;
       });
     }
@@ -40,6 +39,3 @@ function ItemTagController($scope, $rootScope, dimSettingsService) {
     vm.item.dimInfo.save();
   });
 }
-
-
-

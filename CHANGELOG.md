@@ -1,5 +1,17 @@
 # Next
 
+* Exclude all variants of 'Husk of the Pit' from 'Item Leveling' loadout.
+
+# 4.1.2
+
+* Add a "Log Out" button in settings.
+
+# 4.1.1
+
+* Fixed changelog popup too large to close.
+
+# 4.1.0
+
 * Fixed the logic for deciding which items can be tagged.
 * Fix "Make room for postmaster".
 * Record books have been moved out of the inventory into their own page. Get a better look at your records, collapse old books, and narrow records down to only those left to complete.
@@ -8,6 +20,20 @@
 * Fixed objective text in the record book floating above stuff.
 * Fixed displaying record objectives that are time-based as time instead of just a number of seconds.
 * When pinned to the iOS home screen, DIM now looks more like a regular browser than an app. The upside is you can now actually authorize it when it's pinned!
+* Loadouts with a complete set of equipped armor now include a stat bar that will tell you the stat tiers of the equipped loadout pieces.
+* Loadouts with non-equipping items now won't *de-equip* those items if they're already equipped. #1567
+* The count of items in your loadout is now more accurate.
+* DIM is now better at figuring out which platforms you have Destiny accounts on.
+* DIM is faster!
+* Added Age of Triumph filters is:aot and is:triumph
+* Add gunsmith filter is:gunsmith
+* Updated filters to remove common items for specific filters (e.g. is:wotm no longer shows exotic items from xur, engrams, and planetary materials)
+* Loadout Builder's equip button now operates on the selected character, not your last-played character.
+* Loadout Builder no longer has equip and create loadout buttons for loadouts that include vendor items.
+* Loadout Builder is faster.
+* DIM has a new logo!
+* Elemental damage color has been moved to a triangle in the upper-left corner of your weapon.
+* See community weapon ratings in DIM, and submit your own! Weapon ratings can be turned on in Settings, and will show up on your individual weapons as well as in the details popup. You can submit your own reviews - each review is specific to the weapon roll you're looking at, so you know whether you've got the god roll.
 
 # v3.17.1
 
@@ -18,6 +44,7 @@
 # 3.17.0
 
 * Fixed the perk selection in Loadout Builder. #1453
+* Integrated Trials-centric weapon reviews (and the ability to rate your own gear (and make comments about your gear)).  Done in conjunction with destinytracker.com.
 * Fixed the logic for artifact bonuses to compute the right number. #1477
 * Restore some missing images from our build system changes.
 * Don't allow engrams to be tagged. #1478

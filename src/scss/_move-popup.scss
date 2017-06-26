@@ -8,6 +8,26 @@
   height: fit-content;
 }
 
+.move-popup-tabs {
+  display: flex;
+  justify-content: space-around;
+}
+.move-popup-tab {
+  opacity: .8;
+  padding: 5px 0 3px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid transparent;
+  &.selected {
+    opacity: 1;
+    border-bottom: 2px solid $orange;
+  }
+  &:hover {
+    opacity: 1;
+  }
+}
+
 .move-popup {
   background-color: #222;
   cursor: default;
@@ -103,9 +123,22 @@ $item-header-spacing: 5px;
   overflow: hidden;
   padding: $item-header-spacing;
 
+  star-rating {
+    .read-only {
+      color: #777;
+    }
+    .read-only.filled {
+      color: #000;
+    }
+  }
+
   .item-title-link {
     color: #000;
     letter-spacing: 1px;
+  }
+
+  .item-review-average {
+    margin-left: 1rem;
   }
 
   .item-subtitle, .item-title-container {
@@ -155,7 +188,7 @@ $item-header-spacing: 5px;
   }
   .element {
     display: inline-block;
-    filter: invert(100%);
+    filter: brightness(0%);
     height: 1rem;
     vertical-align: top;
     width: 1rem;
