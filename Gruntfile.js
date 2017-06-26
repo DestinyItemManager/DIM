@@ -119,8 +119,8 @@ module.exports = function(grunt) {
       target2: {
         upload: { // special case for uploads
           id: '<%= poeditor.options.project_id %>',
-          language: 'en',
-          file: 'src/i18n/dim_en.po',
+          languages: {'en':'en'},
+          file: 'src/i18n/dim_?.json',
           updating: 'terms_definitions',
           overwrite: 1, // set any POE's API option
           sync_terms: 1,
@@ -130,9 +130,9 @@ module.exports = function(grunt) {
       target3: {
         download: {
           project_id: '<%= poeditor.options.project_id %>',
-          type: 'po', // export type (check out the doc)
+          type: 'key_value_json', // export type (check out the doc)
           filters: ["translated"], // https://poeditor.com/api_reference/#export
-          dest: 'src/i18n/dim_?.po',
+          dest: 'src/i18n/dim_?.json',
           languages: {
             'de': 'de',
             'es': 'es',
