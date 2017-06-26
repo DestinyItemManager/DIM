@@ -274,7 +274,7 @@
             "Stats": "{{statName}}",
             "Class": "{{classType}}",
             "Type": "{{typeName}}",
-            "Combined": "$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.statName) $t(MovePopup.Subtitle.classType) $t(MovePopup.Subtitle.typeName)"
+            "Combined": "$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.Stats) $t(MovePopup.Subtitle.Class) $t(MovePopup.Subtitle.Type)"
         },
         "Take": "取る",
         "Vault": "保管庫"

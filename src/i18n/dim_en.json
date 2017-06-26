@@ -37,6 +37,7 @@
       "Class": "Cannot compare this item as it is not for a {{class}}.",
       "Archetype": "Cannot compare this item as it is not a {{type}}."
     },
+    "ItemCount": "You have {{num}} of these.",
     "Splits": "Compare similar splits ({{quantity}})"
   },
   "Cooldown": {
@@ -284,7 +285,7 @@
       "Stats": "{{statName}}",
       "Class": "{{classType}}",
       "Type": "{{typeName}}",
-      "Combined": "$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.statName) $t(MovePopup.Subtitle.classType) $t(MovePopup.Subtitle.typeName)"
+      "Combined": "$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.Stats) $t(MovePopup.Subtitle.Class) $t(MovePopup.Subtitle.Type)"
     },
     "Take": "Take",
     "Vault": "Vault",

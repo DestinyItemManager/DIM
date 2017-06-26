@@ -42,7 +42,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       fr: { translation: fr },
       es: { translation: es },
       ja: { translation: ja },
-      "pt-br": { translation: ptBr }
+      ptBr: { translation: ptBr }
     },
     useCookie: false,
     useLocalStorage: false,
