@@ -1,362 +1,362 @@
 {
-  "Bucket": {
-    "Armor": "防具",
-    "General": "全般",
-    "Postmaster": "ポストマスター",
-    "Progress": "進行状況",
-    "Reputation": "ランク",
-    "Show": "表示 {{bucket}}",
-    "Unknown": "不明",
-    "Vault": "保管庫",
-    "Weapons": "武器"
-  },
-  "BungieService": {
-    "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
-    "Down": "Bungie.net に接続不可。",
-    "Difficulties": "Bungie APIに問題が発生しています。",
-    "NetworkError": "ネットワークエラー。{{status}} {{statusText}}",
-    "Throttled": "Bungie APIの制限が超えました。しばらくしてからお待ちください。",
-    "NotLoggedIn": "この拡張を利用するためには、Bungie.net にログインしてください。",
-    "Maintenance": "Bungie.net サーバーがメンテナンス中。",
-    "NoAccount": "{{platform}} ではディスティニーアカウントみつかりません。正しいプラットフォームを選択しているかご確認ください。",
-    "NoAccountForPlatform": "{{platform}} でのデスティニーアカウントが見つかりません。",
-    "NoCookies": "クッキーが見つかりませんでした。",
-    "NotConnected": "インターネットに接続してない可能性あります。",
-    "Twitter": "最新情報に更新します。:",
-    "ItemUniqueness": "アイテムのレア度",
-    "ItemUniquenessExplanation": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
-    "VendorNotFound": "ベンダー情報ありません"
-  },
-  "Compare": {
-    "ButtonHelp": "アイテムを比較する",
-    "All": "{{type}} 比較  ({{quantity}})",
-    "Archetype": "原型と比較 ({{quantity}})",
-    "Compare": "比較",
-    "Close": "終了",
-    "Error": {
-      "Class": "このアイテム {{class}} 用のため、比較できません。",
-      "Archetype": "このアイテムは {{type}} ではないため、比較できません。"
+    "Bucket": {
+        "Armor": "防具",
+        "General": "全般",
+        "Postmaster": "ポストマスター",
+        "Progress": "進行状況",
+        "Reputation": "ランク",
+        "Show": "表示 {{bucket}}",
+        "Unknown": "不明",
+        "Vault": "保管庫",
+        "Weapons": "武器"
     },
-    "Splits": "同様の分割を比較する（{{quantity}}）"
-  },
-  "Cooldown": {
-    "Grenade": "グレネードのクールダウン: {{cooldown}}",
-    "Melee": "近接のクールダウン: {{cooldown}}",
-    "Super": "スーパースキルのクールダウン: {{cooldown}}"
-  },
-  "Countdown": {
-    "Days": "{{count}} 日間"
-  },
-  "Debug": {
-    "Dump": "ゲーム機に情報を転送する",
-    "View": "アイテムのデバッグ情報を見る"
-  },
-  "DidYouKnow": {
-    "DidYouKnow": "知っていますか？",
-    "Collapse": "あなたは、ちょうどDIMでセクションを崩壊させました！\nこれは、あなたが通常使う必要はないDIMの部分を隠すために役に立つかもしれません。",
-    "DontShowAgain": "このヒントをこれ以降表示しない",
-    "DoubleClick": "今使用中のキャラクター(最後にログインしたキャラクター)にアイテムを移動する時はダブルクリックで即座に装備出来ます。",
-    "DragAndDrop": "各キャラ及び、保管庫の間にアイテムをドラッグ＆ドロップできます。",
-    "Expand": "セクションを再展開するには、折りたたんでいるカテゴリの一番左にあるプラス記号アイコンをクリックします。",
-    "TryNext": "今度お試しください。"
-  },
-  "FarmingMode": {
-    "FarmingMode": "アイテム収集モード (アイテム移動)",
-    "Desc": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
-    "Configuration": "設定",
-    "MakeRoom": {
-      "Desc": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
-      "MakeRoom": "設備を動かしてアイテムを拾うための空間を確保する",
-      "Tooltip": "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
+    "BungieService": {
+        "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
+        "Down": "Bungie.net に接続不可。",
+        "Difficulties": "Bungie APIに問題が発生しています。",
+        "NetworkError": "ネットワークエラー。{{status}} {{statusText}}",
+        "Throttled": "Bungie APIの制限が超えました。しばらくしてからお待ちください。",
+        "NotLoggedIn": "この拡張を利用するためには、Bungie.net にログインしてください。",
+        "Maintenance": "Bungie.net サーバーがメンテナンス中。",
+        "NoAccount": "{{platform}} ではディスティニーアカウントみつかりません。正しいプラットフォームを選択しているかご確認ください。",
+        "NoAccountForPlatform": "{{platform}} でのデスティニーアカウントが見つかりません。",
+        "NoCookies": "クッキーが見つかりませんでした。",
+        "NotConnected": "インターネットに接続してない可能性あります。",
+        "Twitter": "最新情報に更新します。:",
+        "ItemUniqueness": "アイテムのレア度",
+        "ItemUniquenessExplanation": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
+        "VendorNotFound": "ベンダー情報ありません"
     },
-    "OutOfRoomTitle": "スペースありません。",
-    "OutOfRoom": "{{character}}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
-    "Quickmove": "素早く移動",
-    "Stop": "停止"
-  },
-  "Filter": {
-    "EnterName": "アイテム名を入力してください。",
-    "EnterNote": "ここにノート入力:"
-  },
-  "Header": {
-    "About": "情報",
-    "Filters": "フィルター",
-    "FilterHelp": "アイテム／パークを検索",
-    "MaterialsExchange": "利用可能な派閥のランク",
-    "Refresh": "デスティニーデータを更新",
-    "SupportDIM": "支持者"
-  },
-  "Help": {
-    "BackToDIM": "DIMに戻る",
-    "CannotMove": "キャラクターからこのアイテムを外せません",
-    "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
-    "ChangingPerks": "パーク変更は対応していません",
-    "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
-    "HidePopup": "ポップアップを非表示にする",
-    "NeverShow": "次回から表示しない",
-    "UpgradeChrome": "クロームをアップデートしてください",
-    "Xur": "Xûrはここです",
-    "Version_release": "DIM v{{version}} がリリースされました",
-    "Version_beta": "ベータがv{{version}}にアップデートされました"
-  },
-  "Hotkey": {
-    "StartSearch": "検索開始",
-    "RefreshInventory": "インベントリーを更新",
-    "ToggleDetails": "完全なアイテムの詳細を表示する",
-    "MarkItemAs": "アイテムを '{{tag}}' とマークする",
-    "ClearNewItems": "新しいアイテムをクリアする"
-  },
-  "Infusion": {
-    "Infusion": "融合対象物発掘機能",
-    "BringGear": "装備を転送する:",
-    "Calc": "融合計算機能",
-    "InfuseItems": "融合するアイテムを選択",
-    "InfusionMaterials": "融合材料",
-    "LockedItems": "ロックされているアイテムも含む",
-    "NoItems": "融合可能なアイテムありません。",
-    "NoTransfer": "融合材を移動\n {{target}} 移動できません.",
-    "ShowItems": "各キャラや保管庫にある融合可能なアイテムを表示。",
-    "TransferItems": "アイテムの転送"
-  },
-  "ItemInfoService": {
-    "SaveInfoErrorTitle": "アイテム情報を保存するにエラーが発生しました。",
-    "SaveInfoErrorDescription": "アイテムにDIM固有の情報を保存する際に問題が発生しました。1つの問題は、保存できるデータの量に制限があることです。これがベータ版からタグとメモがまだ許可されていない理由です。エラーは{{error}}でした。"
-  },
-  "ItemMove": {
-    "Consolidate": "{{name}}が統合されました",
-    "Distributed": "分散 {{name}}\n {{name}} は文字間で等しく分割されました。",
-    "ToVault": "{{name}} 今は全て保管庫にあります。",
-    "ToStore": "{{name}} が全て {{store}} にあります。"
-  },
-  "ItemService": {
-    "BucketFull": "{{store}} には {{itemtype}} のスペースがありません。",
-    "Classified": "この商品は現在分類されており、現時点では譲渡できません。",
-    "Classified2": "極秘扱いのアイテムです。Bungie がこのアイテムについて情報提供していません。このアイテムの移動は不可です。",
-    "Deequip": "{{itemname}}を取り除くために装備するアイテムが見つかりません",
-    "ExoticError": "'{{itemname}}'は装備できません。なぜなら{{slot}}エキゾチックなものは装備できないからです。({{error}})",
-    "NotEnoughRoom": "{{itemname}}のスペースを確保するために{{store}}から移動することはできません。",
-    "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
-    "OnlyEquippedClassLevel": "これは、レベル{{level}}以上の{{class}}にしか装備できません。",
-    "PercentComplete": "({{percent, pct}} 完了)",
-    "TooMuch": "保有している数より多めに移動しようとしています。",
-    "TwoExotics": "エキゾチックをどうやって2つを装備できたのかわかりません。"
-  },
-  "LB": {
-    "LB": "ロードアウトビルダ",
-    "Guardians": "ガーディアン",
-    "ShowGear": "{{class}} 装備を表示する",
-    "HideGear": "{{class}} 装備を非表示する",
-    "LockEquipped": "装備をロック",
-    "ClearLocked": "ロックを解除",
-    "Locked": "ロックされたアイテム",
-    "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
-    "FilterSets": "フィルタセット",
-    "AdvancedOptions": "高度なオプション",
-    "ProcessingMode": {
-      "Fast": "最速",
-      "Full": "すべて",
-      "ProcessingMode": "処理モード",
-      "HelpFast": "あなたの最高の装備だけを見てください。",
-      "HelpFull": "装備が多く見つかりますが、時間がかかります。"
+    "Compare": {
+        "ButtonHelp": "アイテムを比較する",
+        "All": "{{type}} 比較  ({{quantity}})",
+        "Archetype": "原型と比較 ({{quantity}})",
+        "Compare": "比較",
+        "Close": "終了",
+        "Error": {
+            "Class": "このアイテム {{class}} 用のため、比較できません。",
+            "Archetype": "このアイテムは {{type}} ではないため、比較できません。"
+        },
+        "Splits": "同様の分割を比較する（{{quantity}}）"
     },
-    "Scaled": "縮尺",
-    "Current": "現在",
-    "LightMode": {
-      "LightMode": "ライトモード",
-      "HelpScaled": "すべてのアイテムが350防御であるかのように負荷を計算します。",
-      "HelpCurrent": "現在の防衛レベルでの負荷を計算します。"
+    "Cooldown": {
+        "Grenade": "グレネードのクールダウン: {{cooldown}}",
+        "Melee": "近接のクールダウン: {{cooldown}}",
+        "Super": "スーパースキルのクールダウン: {{cooldown}}"
     },
-    "IncludeRare": "レアアイテム (青) を含む",
+    "Countdown": {
+        "Days": "{{count}} 日間"
+    },
+    "Debug": {
+        "Dump": "ゲーム機に情報を転送する",
+        "View": "アイテムのデバッグ情報を見る"
+    },
+    "DidYouKnow": {
+        "DidYouKnow": "知っていますか？",
+        "Collapse": "あなたは、ちょうどDIMでセクションを崩壊させました！\nこれは、あなたが通常使う必要はないDIMの部分を隠すために役に立つかもしれません。",
+        "DontShowAgain": "このヒントをこれ以降表示しない",
+        "DoubleClick": "今使用中のキャラクター(最後にログインしたキャラクター)にアイテムを移動する時はダブルクリックで即座に装備出来ます。",
+        "DragAndDrop": "各キャラ及び、保管庫の間にアイテムをドラッグ＆ドロップできます。",
+        "Expand": "セクションを再展開するには、折りたたんでいるカテゴリの一番左にあるプラス記号アイコンをクリックします。",
+        "TryNext": "今度お試しください。"
+    },
+    "FarmingMode": {
+        "FarmingMode": "アイテム収集モード (アイテム移動)",
+        "Desc": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
+        "Configuration": "設定",
+        "MakeRoom": {
+            "Desc": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
+            "MakeRoom": "設備を動かしてアイテムを拾うための空間を確保する",
+            "Tooltip": "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
+        },
+        "OutOfRoomTitle": "スペースありません。",
+        "OutOfRoom": "{{character}}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
+        "Quickmove": "素早く移動",
+        "Stop": "停止"
+    },
+    "Filter": {
+        "EnterName": "アイテム名を入力してください。",
+        "EnterNote": "ここにノート入力:"
+    },
+    "Header": {
+        "About": "情報",
+        "Filters": "フィルター",
+        "FilterHelp": "アイテム／パークを検索",
+        "MaterialsExchange": "利用可能な派閥のランク",
+        "Refresh": "デスティニーデータを更新",
+        "SupportDIM": "支持者"
+    },
     "Help": {
-      "Help": "助けが必要？",
-      "Lock": "クリックするとパークを固定できます。",
-      "NoPerk": "特典が表示されない場合は、その特典を持つ装甲を所有していないことを意味します",
-      "MultiPerk": "複数の特典を持つアーマーを一緒に使用するには、希望の特典をシフト+クリックします",
-      "Or": "これらの特典のいずれかを持つアーマーが使用されます (\"or\")",
-      "And": "これの特典をすべて装備したアーマーが使用されます (\"and\")",
-      "DragAndDrop": "アイテムをドラッグしてロックされたバケットにドロップすると、その装備のみのセットが作成されます",
-      "ShiftClick": "アイテムをShiftキーを押しながらクリックすると、そのギアがないセットが作成されます",
-      "HigherTiers": "ティアが高い方がより良いです",
-      "Tier11Example": "4/5/2(ティア11装備)は知性4、鍛錬5、腕力、2(4+5+2=ティア11)",
-      "Intellect": "知性はスーパースキルのクールダウン時間を短縮する",
-      "Discipline": "鍛錬はグレネードのクールダウン時間を短縮する",
-      "Strength": "腕力は近接スキルのクールダウン時間を短縮する",
-      "Synergy": "使用中の武器の弾増弾がついてる防具を探しましょう。",
-      "ChangeNodes": "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい.",
-      "StatsIncrease": "アイテムの防御レベルが上昇するとともに、アイテムのステータス(知性/鍛錬/腕力)も上昇します。"
+        "BackToDIM": "DIMに戻る",
+        "CannotMove": "キャラクターからこのアイテムを外せません",
+        "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
+        "ChangingPerks": "パーク変更は対応していません",
+        "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
+        "HidePopup": "ポップアップを非表示にする",
+        "NeverShow": "次回から表示しない",
+        "UpgradeChrome": "クロームをアップデートしてください",
+        "Xur": "Xûrはここです",
+        "Version_release": "DIM v{{version}} がリリースされました",
+        "Version_beta": "ベータがv{{version}}にアップデートされました"
     },
-    "ShowAllConfigs": "全ての設定を表示する",
-    "ShowConfigs": "設定を表示する",
-    "HideAllConfigs": "全ての設定を隠す",
-    "HideConfigs": "設定を隠す",
-    "Loading": "ベストセットをロードする ({{percent, pct2}})",
-    "Vendor": "ベンダー装備も含む",
-    "Exclude": "省かれたアイテム",
-    "ExcludeHelp": "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック（またはこのバケットにドラッグアンドドロップ）します。",
-    "LockPerk": "パークを固定する",
-    "Missing1": "フルセットを作るためのレジェンダリー、エキゾチックの部位が足りません！",
-    "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！"
-  },
-  "Loadouts": {
-    "Any": "どれか",
-    "Loadouts": "ロードアウト",
-    "Before": "前 '{{name}}'",
-    "Create": "ロードアウトを作成",
-    "FromEquipped": "装備している",
-    "Edit": "ロードアウトを編集",
-    "Delete": "ロードアウトを削除",
-    "ConfirmDelete": "本当に「{{name}}」を削除しますか？",
-    "ApplySearch": "アイテム = \"{{query}}\"",
-    "MaximizeLight": "光レベルを最大化",
-    "ItemLeveling": "アイテムのレベルアップ",
-    "GatherEngrams": "エングラム収集",
-    "GatherEngramsExceptExotics": "エキゾチック",
-    "RestoreAllItems": "全アイテム",
-    "Random": "ランダム",
-    "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",
-    "VendorsCannotEquip": "これらのベンダーアイテムは装備出来ません。",
-    "VendorsCanEquip": "これらのアイテムは装備出来ません。",
-    "MaxSlots": "ロードアウトでは、その種のアイテムの{{slots}}しか持てません。",
-    "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
-    "FilteredItems": "フィルタ処理された項目",
-    "NoEngrams": "転送出来るエングラムがありません。",
-    "NoExotics": "非エキゾチクなエングラムは転送できません。",
-    "LoadoutName": "ロードアウトの名前...",
-    "Save": "保存",
-    "SaveAsNew": "新規で保存",
-    "Cancel": "キャンセル",
-    "ItemsWithIcon": "このアイコンを持つアイテムが装備されます。アイテムをクリックすると装備を切り替えることができます。",
-    "CouldNotEquip": "{{itemname}} を装備できませんでした",
-    "TooManyRequested": "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。",
-    "DoesNotExist": "{{itemname}} はあなたのアカウント内に存在しません。",
-    "AppliedAuto": "自動ロードアウトビルダー",
-    "Applied": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
-    "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
-    "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}}の{{failed}}アイテムにエラーがありました。",
-    "NameRequired": "名称が必要",
-    "MakeRoom": "ポストマスターのための部屋を作る",
-    "MakeRoomDone": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
-    "MakeRoomError": "ポストマスターの全アイテム用のスペースを確保できませんでした: {{error}} 。",
-    "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
-    "SaveErrorDescription": "ロードアウトのセーブに失敗 {{loadoutName}}: {{error}}.",
-    "DeleteErrorTitle": "ロードアウト削除中にエラー",
-    "DeleteErrorDescription": "ロードアウト削除失敗 {{loadoutName}}: {{error}}."
-  },
-  "Manifest": {
-    "Build": "Destinyのデータを再構築する。",
-    "Download": "最新のDestiny情報をBungieからダウンロードする",
-    "Error": "読み込みエラー:\n{{error}}\n再読み込みをしてください。",
-    "Outdated": "古いデスティニーのデータ",
-    "OutdatedExplanation": "Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。",
-    "Load": "デスティニーのセーブデータをロード中",
-    "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中",
-    "Save": "最新のデータを保存する",
-    "Unzip": "最新のデータを解凍する"
-  },
-  "MaterialsExchange": {
-    "MaterialsExchange": "素材交換",
-    "CurrentRank": "現在のランク",
-    "CurrentRep": "現在の担当者",
-    "OnHand": "手持ちの材料",
-    "FromTrade": "交換素材",
-    "NewRank": "新しいランク",
-    "NewRep": "新しい担当者"
-  },
-  "MovePopup": {
-    "OverviewTab": "概要",
-    "ReviewsTab": "レビュー",
-    "Consolidate": "統合する",
-    "DistributeEvenly": "均等に割り当てる。",
-    "Equip": "装備する",
-    "Split": "分割",
-    "Store": "保管する",
-    "Subtitle": {
-      "Light": "{{light}}",
-      "Stats": "{{statName}}",
-      "Class": "{{classType}}",
-      "Type": "{{typeName}}",
-      "Combined": "$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.statName) $t(MovePopup.Subtitle.classType) $t(MovePopup.Subtitle.typeName)"
+    "Hotkey": {
+        "StartSearch": "検索開始",
+        "RefreshInventory": "インベントリーを更新",
+        "ToggleDetails": "完全なアイテムの詳細を表示する",
+        "MarkItemAs": "アイテムを '{{tag}}' とマークする",
+        "ClearNewItems": "新しいアイテムをクリアする"
     },
-    "Take": "取る",
-    "Vault": "保管庫"
-  },
-  "MoveAmount": {
-    "Min": "最小限 (1)",
-    "Max": "ここの合計は",
-    "UpStack": "一群になるまで追加する",
-    "DownStack": "一群になるまで減少させる",
-    "Increment": "一つ多く",
-    "Decrement": "一つ少なく"
-  },
-  "Notes": {
-    "Error": "エラー！ノートは120文字が上限です。",
-    "Help": "このアイテムにメモを追加"
-  },
-  "DtrReview": {
-    "Edit": "編集",
-    "Delete": "削除",
-    "Cancel": "キャンセル"
-  },
-  "Objectives": {
-    "Complete": "完成",
-    "Incomplete": "未完"
-  },
-  "Postmaster": {
-    "Limit": "ポストマスターに空きがありません",
-    "Desc": "{{store}} のポストマスターに20個のアイテムがあります。新アイテムは前のと入り替わります."
-  },
-  "Settings": {
-    "Settings": "設定",
-    "Language": "言語(反映させるにはDIMをリフレッシュしてください)",
-    "HideUnfiltered": "フィルタリングされていない項目を非表示にする。",
-    "HideUnfilteredHelp": "フィルタ条件に一致しない項目は非表示になります。",
-    "AlwaysShowDetails": "常にアイテム詳細を表示",
-    "AlwaysShowDetailsHelp": "アイテムをクリックするとポップアップが表示され、perkとstatの詳細が表示されます。このオプションは、アイテムをクリックするとその詳細を常に表示します。",
-    "EnableAdvancedStats": "高度な品質比較機能を有効にする",
-    "EnableAdvancedStatsHelp": "移動ダイアログで高度な最小/最大機能を有効にして、装甲比較ビューを有効にします。",
-    "ShowOverlay": "オーバレイで新しいアイテムを表示する。",
-    "ShowOverlayHelp": "オーレイで新しいアイテムを表示します。",
-    "ShowAnimations": "新しいアイテムのオーバーレイアニメーションを表示する。",
-    "ShowAnimationsHelp": "新しいアイテムにアニメートされたオーバーレイが表示されます。これをオフにすると、CPUサイクルを節約できます。",
-    "ShowReviews": "武器に関するレビュー評価を表示する",
-    "ShowReviewsHelp": "武器に関するユーザーの評価を表示します。",
-    "ShowElemental": "武器の属性アイコンを表示する",
-    "ShowElementalHelp": "武器の属性アイコンを表示する。",
-    "AllowIdPostToDtr": "アカウント名を共有し、Destiny Trackerでアイテムを評価します。",
-    "SetSort": "アイテムを並べ替える",
-    "SetSortHelp": "アイテムをレア度か統計量順で並べる.",
-    "SortPrimary": "主要",
-    "SortRarity": "レア度",
-    "SortRoll": "統計量のパーセント",
-    "InventoryColumns": "キャラクターインベントリ欄",
-    "InventoryColumnsHelp": "キャラクターインベントリの欄数を選択して下さい.",
-    "VaultColumns": "保管庫の上限欄数",
-    "VaultColumnsHelp": "保管庫の上限欄数を選択して下さい.",
-    "SizeItem": "アイテムサイズ",
-    "SizeItemHelp": "アイテムの大きさどのぐらいがいいですか。",
-    "CharacterOrder": "キャラクター指名",
-    "CharacterOrderHelp": "キャラクターが最近のログイン順や作成順に整理できます.",
-    "CharacterOrderRecent": "最近使用したキャラクター順で",
-    "CharacterOrderReversed": "最近使用したキャラクター順で (反転)",
-    "CharacterOrderFixed": "固定 (作成順)",
-    "ExportSS": "スプレッドシートをダウンロードする",
-    "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
-    "DIMPopups": "DIMの情報",
-    "DIMPopupsReset": "以前非表示にしたヒントをリセットする"
-  },
-  "Stats": {
-    "Discipline": "鍛錬",
-    "Intellect": "知性",
-    "Level": "レベル",
-    "NoBonus": "ボーナスなし。",
-    "OfMaxRoll": "統計量の  {{range}}",
-    "PercentHelp": "品質の詳細については、をクリックしてください。",
-    "Prestige": "評判レベル：  {{level}}\n光の欠片5個までは後  {{exp}}xp",
-    "Quality": "品質",
-    "Strength": "腕力",
-    "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
-  },
+    "Infusion": {
+        "Infusion": "融合対象物発掘機能",
+        "BringGear": "装備を転送する:",
+        "Calc": "融合計算機能",
+        "InfuseItems": "融合するアイテムを選択",
+        "InfusionMaterials": "融合材料",
+        "LockedItems": "ロックされているアイテムも含む",
+        "NoItems": "融合可能なアイテムありません。",
+        "NoTransfer": "融合材を移動\n {{target}} 移動できません.",
+        "ShowItems": "各キャラや保管庫にある融合可能なアイテムを表示。",
+        "TransferItems": "アイテムの転送"
+    },
+    "ItemInfoService": {
+        "SaveInfoErrorTitle": "アイテム情報を保存するにエラーが発生しました。",
+        "SaveInfoErrorDescription": "アイテムにDIM固有の情報を保存する際に問題が発生しました。1つの問題は、保存できるデータの量に制限があることです。これがベータ版からタグとメモがまだ許可されていない理由です。エラーは{{error}}でした。"
+    },
+    "ItemMove": {
+        "Consolidate": "{{name}}が統合されました",
+        "Distributed": "分散 {{name}}\n {{name}} は文字間で等しく分割されました。",
+        "ToVault": "{{name}} 今は全て保管庫にあります。",
+        "ToStore": "{{name}} が全て {{store}} にあります。"
+    },
+    "ItemService": {
+        "BucketFull": "{{store}} には {{itemtype}} のスペースがありません。",
+        "Classified": "この商品は現在分類されており、現時点では譲渡できません。",
+        "Classified2": "極秘扱いのアイテムです。Bungie がこのアイテムについて情報提供していません。このアイテムの移動は不可です。",
+        "Deequip": "{{itemname}}を取り除くために装備するアイテムが見つかりません",
+        "ExoticError": "'{{itemname}}'は装備できません。なぜなら{{slot}}エキゾチックなものは装備できないからです。({{error}})",
+        "NotEnoughRoom": "{{itemname}}のスペースを確保するために{{store}}から移動することはできません。",
+        "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
+        "OnlyEquippedClassLevel": "これは、レベル{{level}}以上の{{class}}にしか装備できません。",
+        "PercentComplete": "({{percent, pct}} 完了)",
+        "TooMuch": "保有している数より多めに移動しようとしています。",
+        "TwoExotics": "エキゾチックをどうやって2つを装備できたのかわかりません。"
+    },
+    "LB": {
+        "LB": "ロードアウトビルダ",
+        "Guardians": "ガーディアン",
+        "ShowGear": "{{class}} 装備を表示する",
+        "HideGear": "{{class}} 装備を非表示する",
+        "LockEquipped": "装備をロック",
+        "ClearLocked": "ロックを解除",
+        "Locked": "ロックされたアイテム",
+        "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
+        "FilterSets": "フィルタセット",
+        "AdvancedOptions": "高度なオプション",
+        "ProcessingMode": {
+            "Fast": "最速",
+            "Full": "すべて",
+            "ProcessingMode": "処理モード",
+            "HelpFast": "あなたの最高の装備だけを見てください。",
+            "HelpFull": "装備が多く見つかりますが、時間がかかります。"
+        },
+        "Scaled": "縮尺",
+        "Current": "現在",
+        "LightMode": {
+            "LightMode": "ライトモード",
+            "HelpScaled": "すべてのアイテムが350防御であるかのように負荷を計算します。",
+            "HelpCurrent": "現在の防衛レベルでの負荷を計算します。"
+        },
+        "IncludeRare": "レアアイテム (青) を含む",
+        "Help": {
+            "Help": "助けが必要？",
+            "Lock": "クリックするとパークを固定できます。",
+            "NoPerk": "特典が表示されない場合は、その特典を持つ装甲を所有していないことを意味します",
+            "MultiPerk": "複数の特典を持つアーマーを一緒に使用するには、希望の特典をシフト+クリックします",
+            "Or": "これらの特典のいずれかを持つアーマーが使用されます (\"or\")",
+            "And": "これの特典をすべて装備したアーマーが使用されます (\"and\")",
+            "DragAndDrop": "アイテムをドラッグしてロックされたバケットにドロップすると、その装備のみのセットが作成されます",
+            "ShiftClick": "アイテムをShiftキーを押しながらクリックすると、そのギアがないセットが作成されます",
+            "HigherTiers": "ティアが高い方がより良いです",
+            "Tier11Example": "4/5/2(ティア11装備)は知性4、鍛錬5、腕力、2(4+5+2=ティア11)",
+            "Intellect": "知性はスーパースキルのクールダウン時間を短縮する",
+            "Discipline": "鍛錬はグレネードのクールダウン時間を短縮する",
+            "Strength": "腕力は近接スキルのクールダウン時間を短縮する",
+            "Synergy": "使用中の武器の弾増弾がついてる防具を探しましょう。",
+            "ChangeNodes": "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい.",
+            "StatsIncrease": "アイテムの防御レベルが上昇するとともに、アイテムのステータス(知性/鍛錬/腕力)も上昇します。"
+        },
+        "ShowAllConfigs": "全ての設定を表示する",
+        "ShowConfigs": "設定を表示する",
+        "HideAllConfigs": "全ての設定を隠す",
+        "HideConfigs": "設定を隠す",
+        "Loading": "ベストセットをロードする ({{percent, pct2}})",
+        "Vendor": "ベンダー装備も含む",
+        "Exclude": "省かれたアイテム",
+        "ExcludeHelp": "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック（またはこのバケットにドラッグアンドドロップ）します。",
+        "LockPerk": "パークを固定する",
+        "Missing1": "フルセットを作るためのレジェンダリー、エキゾチックの部位が足りません！",
+        "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！"
+    },
+    "Loadouts": {
+        "Any": "どれか",
+        "Loadouts": "ロードアウト",
+        "Before": "前 '{{name}}'",
+        "Create": "ロードアウトを作成",
+        "FromEquipped": "装備している",
+        "Edit": "ロードアウトを編集",
+        "Delete": "ロードアウトを削除",
+        "ConfirmDelete": "本当に「{{name}}」を削除しますか？",
+        "ApplySearch": "アイテム = \"{{query}}\"",
+        "MaximizeLight": "光レベルを最大化",
+        "ItemLeveling": "アイテムのレベルアップ",
+        "GatherEngrams": "エングラム収集",
+        "GatherEngramsExceptExotics": "エキゾチック",
+        "RestoreAllItems": "全アイテム",
+        "Random": "ランダム",
+        "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",
+        "VendorsCannotEquip": "これらのベンダーアイテムは装備出来ません。",
+        "VendorsCanEquip": "これらのアイテムは装備出来ません。",
+        "MaxSlots": "ロードアウトでは、その種のアイテムの{{slots}}しか持てません。",
+        "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
+        "FilteredItems": "フィルタ処理された項目",
+        "NoEngrams": "転送出来るエングラムがありません。",
+        "NoExotics": "非エキゾチクなエングラムは転送できません。",
+        "LoadoutName": "ロードアウトの名前...",
+        "Save": "保存",
+        "SaveAsNew": "新規で保存",
+        "Cancel": "キャンセル",
+        "ItemsWithIcon": "このアイコンを持つアイテムが装備されます。アイテムをクリックすると装備を切り替えることができます。",
+        "CouldNotEquip": "{{itemname}} を装備できませんでした",
+        "TooManyRequested": "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。",
+        "DoesNotExist": "{{itemname}} はあなたのアカウント内に存在しません。",
+        "AppliedAuto": "自動ロードアウトビルダー",
+        "Applied": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+        "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
+        "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}}の{{failed}}アイテムにエラーがありました。",
+        "NameRequired": "名称が必要",
+        "MakeRoom": "ポストマスターのための部屋を作る",
+        "MakeRoomDone": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
+        "MakeRoomError": "ポストマスターの全アイテム用のスペースを確保できませんでした: {{error}} 。",
+        "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
+        "SaveErrorDescription": "ロードアウトのセーブに失敗 {{loadoutName}}: {{error}}.",
+        "DeleteErrorTitle": "ロードアウト削除中にエラー",
+        "DeleteErrorDescription": "ロードアウト削除失敗 {{loadoutName}}: {{error}}."
+    },
+    "Manifest": {
+        "Build": "Destinyのデータを再構築する。",
+        "Download": "最新のDestiny情報をBungieからダウンロードする",
+        "Error": "読み込みエラー:\n{{error}}\n再読み込みをしてください。",
+        "Outdated": "古いデスティニーのデータ",
+        "OutdatedExplanation": "Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。",
+        "Load": "デスティニーのセーブデータをロード中",
+        "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中",
+        "Save": "最新のデータを保存する",
+        "Unzip": "最新のデータを解凍する"
+    },
+    "MaterialsExchange": {
+        "MaterialsExchange": "素材交換",
+        "CurrentRank": "現在のランク",
+        "CurrentRep": "現在の担当者",
+        "OnHand": "手持ちの材料",
+        "FromTrade": "交換素材",
+        "NewRank": "新しいランク",
+        "NewRep": "新しい担当者"
+    },
+    "MovePopup": {
+        "OverviewTab": "概要",
+        "ReviewsTab": "レビュー",
+        "Consolidate": "統合する",
+        "DistributeEvenly": "均等に割り当てる。",
+        "Equip": "装備する",
+        "Split": "分割",
+        "Store": "保管する",
+        "Subtitle": {
+            "Light": "{{light}}",
+            "Stats": "{{statName}}",
+            "Class": "{{classType}}",
+            "Type": "{{typeName}}",
+            "Combined": "$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.statName) $t(MovePopup.Subtitle.classType) $t(MovePopup.Subtitle.typeName)"
+        },
+        "Take": "取る",
+        "Vault": "保管庫"
+    },
+    "MoveAmount": {
+        "Min": "最小限 (1)",
+        "Max": "ここの合計は",
+        "UpStack": "一群になるまで追加する",
+        "DownStack": "一群になるまで減少させる",
+        "Increment": "一つ多く",
+        "Decrement": "一つ少なく"
+    },
+    "Notes": {
+        "Error": "エラー！ノートは120文字が上限です。",
+        "Help": "このアイテムにメモを追加"
+    },
+    "DtrReview": {
+        "Edit": "編集",
+        "Delete": "削除",
+        "Cancel": "キャンセル"
+    },
+    "Objectives": {
+        "Complete": "完成",
+        "Incomplete": "未完"
+    },
+    "Postmaster": {
+        "Limit": "ポストマスターに空きがありません",
+        "Desc": "{{store}} のポストマスターに20個のアイテムがあります。新アイテムは前のと入り替わります."
+    },
+    "Settings": {
+        "Settings": "設定",
+        "Language": "言語(反映させるにはDIMをリフレッシュしてください)",
+        "HideUnfiltered": "フィルタリングされていない項目を非表示にする。",
+        "HideUnfilteredHelp": "フィルタ条件に一致しない項目は非表示になります。",
+        "AlwaysShowDetails": "常にアイテム詳細を表示",
+        "AlwaysShowDetailsHelp": "アイテムをクリックするとポップアップが表示され、perkとstatの詳細が表示されます。このオプションは、アイテムをクリックするとその詳細を常に表示します。",
+        "EnableAdvancedStats": "高度な品質比較機能を有効にする",
+        "EnableAdvancedStatsHelp": "移動ダイアログで高度な最小/最大機能を有効にして、装甲比較ビューを有効にします。",
+        "ShowOverlay": "オーバレイで新しいアイテムを表示する。",
+        "ShowOverlayHelp": "オーレイで新しいアイテムを表示します。",
+        "ShowAnimations": "新しいアイテムのオーバーレイアニメーションを表示する。",
+        "ShowAnimationsHelp": "新しいアイテムにアニメートされたオーバーレイが表示されます。これをオフにすると、CPUサイクルを節約できます。",
+        "ShowReviews": "武器に関するレビュー評価を表示する",
+        "ShowReviewsHelp": "武器に関するユーザーの評価を表示します。",
+        "ShowElemental": "武器の属性アイコンを表示する",
+        "ShowElementalHelp": "武器の属性アイコンを表示する。",
+        "AllowIdPostToDtr": "アカウント名を共有し、Destiny Trackerでアイテムを評価します。",
+        "SetSort": "アイテムを並べ替える",
+        "SetSortHelp": "アイテムをレア度か統計量順で並べる.",
+        "SortPrimary": "主要",
+        "SortRarity": "レア度",
+        "SortRoll": "統計量のパーセント",
+        "InventoryColumns": "キャラクターインベントリ欄",
+        "InventoryColumnsHelp": "キャラクターインベントリの欄数を選択して下さい.",
+        "VaultColumns": "保管庫の上限欄数",
+        "VaultColumnsHelp": "保管庫の上限欄数を選択して下さい.",
+        "SizeItem": "アイテムサイズ",
+        "SizeItemHelp": "アイテムの大きさどのぐらいがいいですか。",
+        "CharacterOrder": "キャラクター指名",
+        "CharacterOrderHelp": "キャラクターが最近のログイン順や作成順に整理できます.",
+        "CharacterOrderRecent": "最近使用したキャラクター順で",
+        "CharacterOrderReversed": "最近使用したキャラクター順で (反転)",
+        "CharacterOrderFixed": "固定 (作成順)",
+        "ExportSS": "スプレッドシートをダウンロードする",
+        "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
+        "DIMPopups": "DIMの情報",
+        "DIMPopupsReset": "以前非表示にしたヒントをリセットする"
+    },
+    "Stats": {
+        "Discipline": "鍛錬",
+        "Intellect": "知性",
+        "Level": "レベル",
+        "NoBonus": "ボーナスなし。",
+        "OfMaxRoll": "統計量の  {{range}}",
+        "PercentHelp": "品質の詳細については、をクリックしてください。",
+        "Prestige": "評判レベル：  {{level}}\n光の欠片5個までは後  {{exp}}xp",
+        "Quality": "品質",
+        "Strength": "腕力",
+        "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
+        "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    },
   "Storage": {
     "Enabled": "有効",
     "Disabled": "無効",
@@ -364,88 +364,88 @@
     "NoData": "データなし",
     "Export": "DIMのデータをバックアップ"
   },
-  "StoreBucket": {
-    "FillStack": "フルスタック ({{amount}})",
-    "HowMuch": "{{itemname}} を何個移動しますか。",
-    "Move": "移動"
-  },
-  "SyncService": {
-    "GoogleDriveReAuth": "Googleドライブを再認証するには、ブラウザを再起動する必要があります。",
-    "OneItemTooLarge": "保存ファイルのアイテムが大きすぎます。または保存されたアイテムの量が多すぎます。",
-    "SaveTooLarge": "容量上限です。ロードアウトを削除してください。"
-  },
-  "Tags": {
-    "TagItem": "アイテムをタグする",
-    "Favorite": "お気に入り",
-    "Junk": "不要",
-    "Infuse": "融合する",
-    "Keep": "保管"
-  },
-  "Vendors": {
-    "Vendors": "ベンダー",
-    "All": "全て",
-    "Available": "利用可能:",
-    "Compare": "装備中のものと比較:",
-    "Load": "ローディングベンダー",
-    "ArmorAndWeapons": "アーマーとウェポン",
-    "ShipsAndVehicles": "船とビークル",
-    "Consumables": "消費アイテム",
-    "Bounties": "バウンティ",
-    "ShadersAndEmblems": "シェーダーとエンブレム",
-    "Emotes": "感情表現"
-  },
-  "RecordBooks": {
-    "RecordBooks": "記録ブック",
-    "HideCompleted": "完了した記録を非表示にする"
-  },
-  "Views": {
-    "About": {
-      "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
-      "ContactUs": "お問い合わせ",
-      "FAQ": "よくある質問",
-      "FAQAccess": "DIMはどのようにデスティニーのデータを入手しますか？",
-      "FAQAccessAnswer": "どのクロームエクステンションでもあなたのコンピューターにセーブしてあるウェブサイトのデータを使う許可を得ることが出来ます。Bungie.netにログインする時、個人別のトークン(クッキー)が作られます。このトークンを使ってあなたのコンピューターとBungieが安全に情報交換が出来る様になります。毎回ログインする度にアカウント名とパスワードを入力するより、このトークンを使ったほうが個人情報がより安全だからです。DIMもこのトークンを使ってあなたの代わりにBungieと通信します。",
-      "FAQDupeGally": "ちょっと、DIMが私のギャラルホルンを複製しました！",
-      "FAQDupeGallyAnswer": "いいえ、こちらでは何もしていません。 約束します。",
-      "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
-      "FAQKeyboardAnswer": "使えます！使用可能なショートカットリストを表示するには「？」を押してください。",
-      "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
-      "FAQLogoutAnswer": "あなたのセッションはBungie.netと繋がっています。Bungie.netからログアウトするとDIMからもログアウトする事になります。",
-      "FAQLostItem": "このツールを使っている間にアイテムを紛失してしまった！",
-      "FAQLostItemAnswer": "アイテムの転送が失敗した可能性があります。保管庫か他のキャラクターに無いか確かめて下さい。DIMで検索してみて下さい。もし見つからないなら、ブラウザーの更新を。(F5かCommand+R) それでも見つからない場合は、Bungie.net かゲームで直接、探してみてください。どこかに必ず在るはずです。",
-      "GitHub": "ギットハブ",
-      "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクからGitHubへ。",
-      "GitHubRepo": "DIM Git Repo",
-      "Header": "デスティニー・アイテム・マネージャー「DIM」 について",
-      "HowItsMade": "DIMはBungie.netとDestinyコンパニオンアプリが使っている同じサービスを素にして作られたクロームエクステンションです。DIMはPlayStationとXboxのアカウント両方対応で、キャラクターや保管庫に入っているアイテムにアクセスすることができます。アイテムはドラッグアンドドロップで自由自在に移動できます。",
-      "Reddit": "レディット",
-      "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
-      "Twitter": "ツイッター",
-      "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
-      "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
-      "Transifex": "翻訳チームに参加してください！",
-      "TransifexText": "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
+    "StoreBucket": {
+        "FillStack": "フルスタック ({{amount}})",
+        "HowMuch": "{{itemname}} を何個移動しますか。",
+        "Move": "移動"
     },
-    "Support": {
-      "Support": "DIMを支援する",
-      "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。",
-      "OpenCollective": "私たちはOpenCollectiveをサービスとして使用しており、開発者にこのプロジェクトに費やされた時間と献身的な報酬を提供しています。",
-      "Backers": "支援者",
-      "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",
-      "Sponsors": "スポンサー",
-      "SponsorsDetail": "スポンサーになってあなたのロゴやホームページをここに記載しましょう。"
+    "SyncService": {
+        "GoogleDriveReAuth": "Googleドライブを再認証するには、ブラウザを再起動する必要があります。",
+        "OneItemTooLarge": "保存ファイルのアイテムが大きすぎます。または保存されたアイテムの量が多すぎます。",
+        "SaveTooLarge": "容量上限です。ロードアウトを削除してください。"
     },
-    "UpgradeChrome": "古いバージョンのクロームはDIMに対応していません。クロームのアップデートをしてください。",
-    "Login": {
-      "Permission": "許可が必要です。",
-      "Explanation": "DIM にディスティニーのキャラクターや保管庫、進歩状況などを読み取ると編集する許可を与えて下さい。",
-      "Auth": "Bungie.net で許可する。",
-      "LearnMore": "詳しく知りたいですか。"
+    "Tags": {
+        "TagItem": "アイテムをタグする",
+        "Favorite": "お気に入り",
+        "Junk": "不要",
+        "Infuse": "融合する",
+        "Keep": "保管"
+    },
+    "Vendors": {
+        "Vendors": "ベンダー",
+        "All": "全て",
+        "Available": "利用可能:",
+        "Compare": "装備中のものと比較:",
+        "Load": "ローディングベンダー",
+        "ArmorAndWeapons": "アーマーとウェポン",
+        "ShipsAndVehicles": "船とビークル",
+        "Consumables": "消費アイテム",
+        "Bounties": "バウンティ",
+        "ShadersAndEmblems": "シェーダーとエンブレム",
+        "Emotes": "感情表現"
+    },
+    "RecordBooks": {
+        "RecordBooks": "記録ブック",
+        "HideCompleted": "完了した記録を非表示にする"
+    },
+    "Views": {
+        "About": {
+            "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
+            "ContactUs": "お問い合わせ",
+            "FAQ": "よくある質問",
+            "FAQAccess": "DIMはどのようにデスティニーのデータを入手しますか？",
+            "FAQAccessAnswer": "どのクロームエクステンションでもあなたのコンピューターにセーブしてあるウェブサイトのデータを使う許可を得ることが出来ます。Bungie.netにログインする時、個人別のトークン(クッキー)が作られます。このトークンを使ってあなたのコンピューターとBungieが安全に情報交換が出来る様になります。毎回ログインする度にアカウント名とパスワードを入力するより、このトークンを使ったほうが個人情報がより安全だからです。DIMもこのトークンを使ってあなたの代わりにBungieと通信します。",
+            "FAQDupeGally": "ちょっと、DIMが私のギャラルホルンを複製しました！",
+            "FAQDupeGallyAnswer": "いいえ、こちらでは何もしていません。 約束します。",
+            "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
+            "FAQKeyboardAnswer": "使えます！使用可能なショートカットリストを表示するには「？」を押してください。",
+            "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
+            "FAQLogoutAnswer": "あなたのセッションはBungie.netと繋がっています。Bungie.netからログアウトするとDIMからもログアウトする事になります。",
+            "FAQLostItem": "このツールを使っている間にアイテムを紛失してしまった！",
+            "FAQLostItemAnswer": "アイテムの転送が失敗した可能性があります。保管庫か他のキャラクターに無いか確かめて下さい。DIMで検索してみて下さい。もし見つからないなら、ブラウザーの更新を。(F5かCommand+R) それでも見つからない場合は、Bungie.net かゲームで直接、探してみてください。どこかに必ず在るはずです。",
+            "GitHub": "ギットハブ",
+            "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクからGitHubへ。",
+            "GitHubRepo": "DIM Git Repo",
+            "Header": "デスティニー・アイテム・マネージャー「DIM」 について",
+            "HowItsMade": "DIMはBungie.netとDestinyコンパニオンアプリが使っている同じサービスを素にして作られたクロームエクステンションです。DIMはPlayStationとXboxのアカウント両方対応で、キャラクターや保管庫に入っているアイテムにアクセスすることができます。アイテムはドラッグアンドドロップで自由自在に移動できます。",
+            "Reddit": "レディット",
+            "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
+            "Twitter": "ツイッター",
+            "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
+            "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
+            "Transifex": "翻訳チームに参加してください！",
+            "TransifexText": "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
+        },
+        "Support": {
+            "Support": "DIMを支援する",
+            "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。",
+            "OpenCollective": "私たちはOpenCollectiveをサービスとして使用しており、開発者にこのプロジェクトに費やされた時間と献身的な報酬を提供しています。",
+            "Backers": "支援者",
+            "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",
+            "Sponsors": "スポンサー",
+            "SponsorsDetail": "スポンサーになってあなたのロゴやホームページをここに記載しましょう。"
+        },
+        "UpgradeChrome": "古いバージョンのクロームはDIMに対応していません。クロームのアップデートをしてください。",
+        "Login": {
+            "Permission": "許可が必要です。",
+            "Explanation": "DIM にディスティニーのキャラクターや保管庫、進歩状況などを読み取ると編集する許可を与えて下さい。",
+            "Auth": "Bungie.net で許可する。",
+            "LearnMore": "詳しく知りたいですか。"
+        }
+    },
+    "TrialsCard": {
+        "FiveWins": "5勝目の報酬 (防具)",
+        "SevenWins": "7勝目の報酬 (武器)",
+        "Flawless": "完全勝利"
     }
-  },
-  "TrialsCard": {
-    "FiveWins": "5勝目の報酬 (防具)",
-    "SevenWins": "7勝目の報酬 (武器)",
-    "Flawless": "完全勝利"
-  }
 }
