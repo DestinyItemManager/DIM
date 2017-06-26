@@ -193,7 +193,7 @@
         "ShowConfigs": "Mostrar configuraciones",
         "HideAllConfigs": "Ocultar todas las configuraciones",
         "HideConfigs": "Ocultar configuraciones",
-        "Loading": "Cargar mejores equipos ({{percent, pct2}})",
+        "Loading": "Cargar mejores equipos ({{percent, pct}})",
         "Vendor": "Incluir objetos de vendedores",
         "Exclude": "Objetos excluidos",
         "ExcludeHelp": "Shift + click en un objeto (o arrástralo y suéltalo en esta cubeta) para crear un conjunto sin equipo específico.",
@@ -458,7 +458,7 @@
             "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, háznoslas saber!",
             "Twitter": "Twitter",
             "TwitterHelp": "Asegúrate de seguirnos para estar informado de las actualizaciones e información de la aplicación en tiempo real.",
-            "Version": "Versión {{version}} ({{flavor}}), built on {{date}}",
+            "Version": "Versión {{version}} ({{flavor}}), built on {{- date}}",
             "Transifex": "Únete al Equipo Traductor!",
             "TransifexText": "Utilizamos Transifex para facilitar la traducción. Si quieres mejorar alguna de las traducciones de DIM, únete al equipo."
         },

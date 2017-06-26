@@ -188,7 +188,7 @@
         "ShowConfigs": "設定を表示する",
         "HideAllConfigs": "全ての設定を隠す",
         "HideConfigs": "設定を隠す",
-        "Loading": "ベストセットをロードする ({{percent, pct2}})",
+        "Loading": "ベストセットをロードする ({{percent, pct}})",
         "Vendor": "ベンダー装備も含む",
         "Exclude": "省かれたアイテム",
         "ExcludeHelp": "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック（またはこのバケットにドラッグアンドドロップ）します。",
@@ -416,7 +416,7 @@
             "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
             "Twitter": "ツイッター",
             "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
-            "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
+            "Version": "バージョン {{version}} ({{flavor}}), built on {{- date}}",
             "Transifex": "翻訳チームに参加してください！",
             "TransifexText": "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
         },

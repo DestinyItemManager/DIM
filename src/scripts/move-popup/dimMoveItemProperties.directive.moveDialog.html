@@ -28,7 +28,7 @@
       <div ng-if="vm.item.objectives" ng-i18next="[i18next]({ percent: vm.item.percentComplete })ItemService.PercentComplete"></div>
       <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
     </div>
-    <div ng-show="vm.item.reviewable && vm.item.totalReviews" class="item-review-average">
+    <div ng-if="vm.item.reviewable && vm.item.totalReviews" class="item-review-average">
       <star-rating rating="vm.item.dtrRating" read-only></star-rating>
       <span ng-i18next="[i18next]({ itemRating: vm.item.dtrRating, numRatings: vm.item.totalReviews })DtrReview.AverageRating"></span>
     </div>

@@ -21,16 +21,14 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
 
   // See https://github.com/i18next/ng-i18next
   window.i18next.init({
-   // debug: true,
+    debug: true,
+    returnEmptyString: true,
     lng: 'en', // If not given, i18n will detect the browser language.
     fallbackLng: 'en',
     interpolation: {
       format: function(val, format) {
         if (format === 'pct') {
           return `${Math.min(100.0, Math.floor(100.0 * val))}%`;
-        }
-        if (format === 'pct2') {
-          return `${Math.min(100.00, Math.floor(100.00 * val))}%`;
         }
         return val;
       }
@@ -46,7 +44,8 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
     },
     useCookie: false,
     useLocalStorage: false,
-    returnObjects: true
+    returnObjects: true,
+    returnNull: true,
   });
 
   hotkeysProvider.includeCheatSheet = true;

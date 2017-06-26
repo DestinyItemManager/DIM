@@ -193,7 +193,7 @@
         "ShowConfigs": "Exibir configurações",
         "HideAllConfigs": "Ocultar todas as configurações",
         "HideConfigs": "Ocultar configurações",
-        "Loading": "Carregando os melhores sets ({{percent, pct2}})",
+        "Loading": "Carregando os melhores sets ({{percent, pct}})",
         "Vendor": "Incluir itens de vendedores",
         "Exclude": "Itens ignorados",
         "ExcludeHelp": "SHIFT+Clique em um item (ou arraste e solte no quadro abaixo) para construir sets ignorando itens específicos.",
@@ -435,7 +435,7 @@
             "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
             "Twitter": "Twitter",
             "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
-            "Version": "Versão {{version}} ({{flavor}}), built on {{date}}",
+            "Version": "Versão {{version}} ({{flavor}}), built on {{- date}}",
             "Transifex": "Junte-se à equipe de tradução!",
             "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
         },

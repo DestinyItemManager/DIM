@@ -197,7 +197,7 @@
     "ShowConfigs": "Show configurations",
     "HideAllConfigs": "Hide all configurations",
     "HideConfigs": "Hide configurations",
-    "Loading": "Loading best sets ({{percent, pct2}})",
+    "Loading": "Loading best sets ({{percent, pct}})",
     "Vendor": "Include Vendor items",
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
@@ -473,7 +473,7 @@
       "RedditHelp": "If you have questions, comments, or suggestions- let us know!",
       "Twitter": "Twitter",
       "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
-      "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
+      "Version": "Version {{version}} ({{flavor}}), built on {{- date}}",
       "Transifex": "Join the Translation Team!",
       "TransifexText": "We use Transifex for ease of translation. If you want to improve one of DIM's translations, join the team."
     },

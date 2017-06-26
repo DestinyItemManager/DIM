@@ -71,7 +71,7 @@
     <p><span ng-i18next="LB.FilterSets"></span> (<span ng-i18next="Stats.Intellect"></span>/<span ng-i18next="Stats.Discipline"></span>/<span ng-i18next="Stats.Strength"></span>):
       <select ng-model="vm.activesets" ng-change="vm.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in vm.allSetTiers"></select>
       <span class="dim-button" ng-click="vm.showAdvanced=!vm.showAdvanced;vm.showHelp=false" ng-i18next="LB.AdvancedOptions"></span>
-      <span class="dim-button" ng-click="vm.showHelp=!vm.showHelp;vm.showAdvanced=false" ng-i18next="LB.Help"></span>
+      <span class="dim-button" ng-click="vm.showHelp=!vm.showHelp;vm.showAdvanced=false" ng-i18next="LB.Help.Help"></span>
       <span><div ng-show="vm.showAdvanced">
         <p>
           <label>

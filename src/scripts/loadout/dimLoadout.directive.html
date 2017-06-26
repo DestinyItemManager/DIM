@@ -1,6 +1,6 @@
 <div id="loadout-drawer" ng-if="vm.show" class="loadout-create">
   <div ng-messages="vm.form.name.$error" ng-if="vm.form.$submitted || vm.form.name.$touched">
-    <div ng-message="required"><span ng-i18next="Loadouts.NameRequired"></span></div>
+    <div ng-message="required" ng-i18next="Loadouts.NameRequired"></div>
     <div ng-message="minlength">...</div>
     <div ng-message="maxlength">...</div>
   </div>
