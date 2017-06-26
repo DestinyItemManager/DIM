@@ -6,7 +6,6 @@ angular.module('dimApp')
 
 function ItemService(dimStoreService,
                      dimBungieService,
-                     dimCategory,
                      $q,
                      $i18next) {
   // We'll reload the stores to check if things have been

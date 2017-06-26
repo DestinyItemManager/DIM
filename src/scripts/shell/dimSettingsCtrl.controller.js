@@ -38,7 +38,7 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvSe
 
   vm.logout = function() {
     OAuthTokenService.removeToken();
-    $scope.closeThisDialog();
+    $scope.closeThisDialog(); // eslint-disable-line angular/controller-as
     $state.go('login', { reauth: true });
   };
 

@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, OAuthService, $state, toaster) {
+function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, $state, toaster) {
   let _platforms = [];
   let _active = null;
 

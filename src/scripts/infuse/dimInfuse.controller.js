@@ -5,7 +5,7 @@ angular.module('dimApp')
   .controller('dimInfuseCtrl', dimInfuseCtrl);
 
 
-function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoadoutService, toaster, $q, $i18next) {
+function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, toaster, $q, $i18next) {
   const vm = this;
 
   vm.items = {};
