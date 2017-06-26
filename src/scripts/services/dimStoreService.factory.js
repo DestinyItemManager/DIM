@@ -1,11 +1,16 @@
 import angular from 'angular';
 import _ from 'underscore';
-import uuidv4 from 'uuid/v4';
-import { sum, count } from '../util';
+import { sum } from '../util';
 import idbKeyval from 'idb-keyval';
+import { ClassifiedDataService } from './store/classified-data.service';
+import { StoreFactory } from './store/store-factory.service';
+import { getCharacterStatsData, getClass } from './store/character-stats-data';
+import missingSources from 'app/data/missing_sources.json';
 
 angular.module('dimApp')
-  .factory('dimStoreService', StoreService);
+  .factory('dimStoreService', StoreService)
+  .factory('ClassifiedDataService', ClassifiedDataService)
+  .factory('StoreFactory', StoreFactory);
 
 function StoreService(
   $rootScope,
@@ -25,79 +30,19 @@ function StoreService(
   dimDestinyTrackerService,
   dimSettingsService,
   toaster,
-  $http
+  ClassifiedDataService,
+  StoreFactory
 ) {
   let _stores = [];
   let _idTracker = {};
 
   const _removedNewItems = new Set();
 
-  // Load classified data once per load and keep it in memory until
-  // reload. Classified data always comes from
-  // beta.destinyitemmanager.com so it can be released faster than the
-  // release website, but the release website can still use the
-  // updated definitions.
-  const getClassifiedData = _.memoize(() => {
-    return idbKeyval.get('classified-data').then((data) => {
-      // Use cached data for up to 4 hours
-      if ($DIM_FLAVOR !== 'dev' &&
-          data &&
-          data.time > Date.now() - (4 * 60 * 60 * 1000)) {
-        return data;
-      }
-
-      // In dev, use a local copy of the JSON for testing
-      const url = ($DIM_FLAVOR === 'dev')
-              ? '/data/classified.json'
-              : 'https://beta.destinyitemmanager.com/data/classified.json';
-
-      return $http.get(url)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const remoteData = response.data;
-            remoteData.time = Date.now();
-            return idbKeyval.set('classified-data', remoteData).then(() => remoteData);
-          }
-
-          console.error(`Couldn't load classified info from ${url}`);
-
-          return {
-            itemHash: {}
-          };
-        })
-        .catch((e) => {
-          console.error(`Couldn't load classified info from ${url}`, e);
-
-          return {
-            itemHash: {}
-          };
-        });
-    });
-  });
-
-  const dimMissingSources = require('app/data/missing_sources.json');
-
   const yearHashes = {
     //         tTK       Variks        CoE         FoTL    Kings Fall
     year2: [2659839637, 512830513, 1537575125, 3475869915, 1662673928],
     //         RoI       WoTM         FoTl       Dawning    Raid Reprise
     year3: [2964550958, 4160622434, 3475869915, 3131490494, 4161861381]
-  };
-
-  // Label isn't used, but it helps us understand what each one is
-  const progressionMeta = {
-    529303302: { label: "Cryptarch", order: 0 },
-    3233510749: { label: "Vanguard", order: 1 },
-    1357277120: { label: "Crucible", order: 2 },
-    2778795080: { label: "Dead Orbit", order: 3 },
-    1424722124: { label: "Future War Cult", order: 4 },
-    3871980777: { label: "New Monarchy", order: 5 },
-    2161005788: { label: "Iron Banner", order: 6 },
-    174528503: { label: "Crota's Bane", order: 7 },
-    807090922: { label: "Queen's Wrath", order: 8 },
-    3641985238: { label: "House of Judgment", order: 9 },
-    2335631936: { label: "Gunsmith", order: 10 },
-    2576753410: { label: "SRL", order: 11 }
   };
 
   // Maps tierType to tierTypeName in English
@@ -113,126 +58,6 @@ function StoreService(
 
   // A promise used to dedup parallel calls to reloadStores
   let _reloadPromise;
-
-  // Cooldowns
-  const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
-  const cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
-  const cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
-  const cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
-
-  // Prototype for Store objects - add methods to this to add them to all
-  // stores.
-  const StoreProto = {
-    /**
-     * Get the total amount of this item in the store, across all stacks,
-     * excluding stuff in the postmaster.
-     */
-    amountOfItem: function(item) {
-      return sum(_.filter(this.items, (i) => {
-        return i.hash === item.hash && !i.location.inPostmaster;
-      }), 'amount');
-    },
-    /**
-     * How much of items like this item can fit in this store? For
-     * stackables, this is in stacks, not individual pieces.
-     */
-    capacityForItem: function(item) {
-      if (!item.bucket) {
-        console.error("item needs a 'bucket' field", item);
-        return 10;
-      }
-      return item.bucket.capacity;
-    },
-    /**
-     * How many *more* items like this item can fit in this store?
-     * This takes into account stackables, so the answer will be in
-     * terms of individual pieces.
-     */
-    spaceLeftForItem: function(item) {
-      if (!item.type) {
-        throw new Error("item needs a 'type' field");
-      }
-      const openStacks = Math.max(0, this.capacityForItem(item) -
-                                  this.buckets[item.location.id].length);
-      const maxStackSize = item.maxStackSize || 1;
-      if (maxStackSize === 1) {
-        return openStacks;
-      } else {
-        const existingAmount = this.amountOfItem(item);
-        const stackSpace = existingAmount > 0 ? (maxStackSize - (existingAmount % maxStackSize)) : 0;
-        return (openStacks * maxStackSize) + stackSpace;
-      }
-    },
-    updateCharacterInfoFromEquip: function(characterInfo) {
-      dimDefinitions.getDefinitions().then((defs) => this.updateCharacterInfo(defs, characterInfo));
-    },
-    updateCharacterInfo: function(defs, characterInfo) {
-      this.level = characterInfo.characterLevel;
-      this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
-      this.powerLevel = characterInfo.characterBase.powerLevel;
-      this.background = `https://www.bungie.net/${characterInfo.backgroundPath}`;
-      this.icon = `https://www.bungie.net/${characterInfo.emblemPath}`;
-      this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
-    },
-    // Remove an item from this store. Returns whether it actually removed anything.
-    removeItem: function(item) {
-      // Completely remove the source item
-      function match(i) { return item.index === i.index; }
-      const sourceIndex = _.findIndex(this.items, match);
-      if (sourceIndex >= 0) {
-        this.items.splice(sourceIndex, 1);
-
-        const bucketItems = this.buckets[item.location.id];
-        const bucketIndex = _.findIndex(bucketItems, match);
-        bucketItems.splice(bucketIndex, 1);
-
-        return true;
-      }
-      return false;
-    },
-    addItem: function(item) {
-      this.items.push(item);
-      const bucketItems = this.buckets[item.location.id];
-      bucketItems.push(item);
-      if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
-        dimInfoService.show('lostitems', {
-          type: 'warning',
-          title: $translate.instant('Postmaster.Limit'),
-          body: $translate.instant('Postmaster.Desc', { store: this.name }),
-          hide: $translate.instant('Help.NeverShow')
-        });
-      }
-      item.owner = this.id;
-    },
-    // Create a loadout from this store's equipped items
-    loadoutFromCurrentlyEquipped: function(name) {
-      return {
-        id: uuidv4(),
-        classType: -1,
-        name: name,
-        items: _(this.items)
-          .chain()
-          .select((item) => item.canBeInLoadout())
-          .map((i) => angular.copy(i))
-          .groupBy((i) => i.type.toLowerCase())
-          .value()
-      };
-    },
-    factionAlignment: function() {
-      const factionBadges = {
-        969832704: 'Future War Cult',
-        27411484: 'Dead Orbit',
-        2954371221: 'New Monarchy'
-      };
-
-      const badge = _.find(this.buckets.BUCKET_MISSION, (i) => factionBadges[i.hash]);
-      if (!badge) {
-        return null;
-      }
-
-      return factionBadges[badge.hash];
-    }
-  };
 
   /**
    * Check to see if this item has a node that restricts it to a
@@ -364,12 +189,6 @@ function StoreService(
     const previousItems = buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
 
-    function fakeItemId(item) {
-      if (activePlatform.fake && item.itemInstanceId !== "0") {
-        item.itemInstanceId = `fake-${item.itemInstanceId}`;
-      }
-    }
-
     _idTracker = {};
 
     _reloadPromise = $q.all([
@@ -393,9 +212,12 @@ function StoreService(
           return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
         }, null);
 
-        let glimmer;
-        let marks;
-        let silver;
+        const currencies = {
+          glimmer: 0,
+          marks: 0,
+          silver: 0
+        };
+
         _removedNewItems.forEach((id) => newItems.delete(id));
         _removedNewItems.clear();
         service.hasNewItems = (newItems.size !== 0);
@@ -404,158 +226,24 @@ function StoreService(
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
-          let store;
-          let items = [];
           if (!raw) {
             return undefined;
           }
 
           const character = raw.character.base;
 
+          let store;
+          let items;
           if (raw.id === 'vault') {
-            store = angular.extend(Object.create(StoreProto), {
-              id: 'vault',
-              name: $translate.instant('Bucket.Vault'),
-              class: 'vault',
-              current: false,
-              className: $translate.instant('Bucket.Vault'),
-              lastPlayed: '2005-01-01T12:00:01Z',
-              icon: require('app/images/vault.png'),
-              background: require('app/images/vault-background.png'),
-              items: [],
-              legendaryMarks: marks,
-              glimmer: glimmer,
-              silver: silver,
-              isVault: true,
-              // Vault has different capacity rules
-              capacityForItem: function(item) {
-                let sort = item.sort;
-                if (item.bucket) {
-                  sort = item.bucket.sort;
-                }
-                if (!sort) {
-                  throw new Error("item needs a 'sort' field");
-                }
-                return buckets[sort].capacity;
-              },
-              spaceLeftForItem: function(item) {
-                let sort = item.sort;
-                if (item.bucket) {
-                  sort = item.bucket.sort;
-                }
-                if (!sort) {
-                  throw new Error("item needs a 'sort' field");
-                }
-                const openStacks = Math.max(0, this.capacityForItem(item) -
-                                            count(this.items, (i) => i.bucket.sort === sort));
-                const maxStackSize = item.maxStackSize || 1;
-                if (maxStackSize === 1) {
-                  return openStacks;
-                } else {
-                  const existingAmount = this.amountOfItem(item);
-                  const stackSpace = existingAmount > 0 ? (maxStackSize - (existingAmount % maxStackSize)) : 0;
-                  return (openStacks * maxStackSize) + stackSpace;
-                }
-              },
-              removeItem: function(item) {
-                const result = StoreProto.removeItem.call(this, item);
-                this.vaultCounts[item.location.sort]--;
-                return result;
-              },
-              addItem: function(item) {
-                StoreProto.addItem.call(this, item);
-                this.vaultCounts[item.location.sort]++;
-              }
-            });
-
-            _.each(raw.data.buckets, (bucket) => {
-              _.each(bucket.items, (item) => {
-                item.bucket = bucket.bucketHash;
-                fakeItemId(item);
-              });
-
-              items = _.union(items, bucket.items);
-            });
+            const result = StoreFactory.makeVault(raw, buckets, currencies);
+            store = result.store;
+            items = result.items;
           } else {
-            try {
-              glimmer = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 3159615086; }).value;
-              marks = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 2534352370; }).value;
-              silver = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 2749350776; }).value;
-            } catch (e) {
-              glimmer = 0;
-              marks = 0;
-            }
-
-            const race = defs.Race[character.characterBase.raceHash];
-            let genderRace = "";
-            let className = "";
-            let gender = "";
-            if (character.characterBase.genderType === 0) {
-              gender = 'male';
-              genderRace = race.raceNameMale;
-              className = defs.Class[character.characterBase.classHash].classNameMale;
-            } else {
-              gender = 'female';
-              genderRace = race.raceNameFemale;
-              className = defs.Class[character.characterBase.classHash].classNameFemale;
-            }
-
-            store = angular.extend(Object.create(StoreProto), {
-              id: raw.id,
-              icon: `https://www.bungie.net/${character.emblemPath}`,
-              current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
-              lastPlayed: character.characterBase.dateLastPlayed,
-              background: `https://www.bungie.net/${character.backgroundPath}`,
-              level: character.characterLevel,
-              powerLevel: character.characterBase.powerLevel,
-              stats: getCharacterStatsData(defs.Stat, character.characterBase),
-              class: getClass(character.characterBase.classType),
-              classType: character.characterBase.classType,
-              className: className,
-              gender: gender,
-              genderRace: genderRace,
-              percentToNextLevel: character.percentToNextLevel / 100.0,
-              progression: raw.character.progression,
-              advisors: raw.character.advisors,
-              isVault: false
-            });
-
-            store.name = `${store.genderRace} ${store.className}`;
-
-            if (store.progression) {
-              store.progression.progressions.forEach((prog) => {
-                angular.extend(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
-                const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
-                if (faction) {
-                  prog.faction = faction;
-                }
-              });
-            }
-
-            _.each(raw.data.buckets, (bucket) => {
-              _.each(bucket, (pail) => {
-                _.each(pail.items, (item) => {
-                  item.bucket = pail.bucketHash;
-                  fakeItemId(item);
-                });
-
-                items = _.union(items, pail.items);
-              });
-            });
-
-            if (_.has(character.inventory.buckets, 'Invisible')) {
-              if (_.size(character.inventory.buckets.Invisible) > 0) {
-                _.each(character.inventory.buckets.Invisible, (pail) => {
-                  _.each(pail.items, (item) => {
-                    item.bucket = pail.bucketHash;
-                    fakeItemId(item);
-                  });
-
-                  items = _.union(items, pail.items);
-                });
-              }
-            }
+            const result = StoreFactory.makeCharacter(raw, defs, lastPlayedDate, currencies);
+            store = result.store;
+            items = result.items;
           }
+          console.log(store, items);
 
           return processItems(store, items, previousItems, newItems, itemInfoService).then((items) => {
             if (activePlatform !== dimPlatformService.getActive()) {
@@ -797,7 +485,7 @@ function StoreService(
 
     itemDef.sourceHashes = itemDef.sourceHashes || [];
 
-    const missingSource = dimMissingSources[itemDef.hash] || [];
+    const missingSource = missingSources[itemDef.hash] || [];
     if (missingSource.length) {
       itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
     }
@@ -1546,7 +1234,7 @@ function StoreService(
       previousItems,
       newItems,
       itemInfoService,
-      getClassifiedData()])
+      ClassifiedDataService.getClassifiedData()])
       .then((args) => {
         const result = [];
         dimManifestService.statusText = `${$translate.instant('Manifest.LoadCharInv')}...`;
@@ -1566,51 +1254,12 @@ function StoreService(
       });
   }
 
-  function getClass(type) {
-    switch (type) {
-    case 0:
-      return 'titan';
-    case 1:
-      return 'hunter';
-    case 2:
-      return 'warlock';
-    }
-    return 'unknown';
-  }
-
   function getClassTypeNameLocalized(defs, type) {
     const klass = _.find(_.values(defs.Class), { classType: type });
     if (klass) {
       return klass.className;
     } else {
       return $translate.instant('Loadouts.Any');
-    }
-  }
-
-  // following code is from https://github.com/DestinyTrialsReport
-  function getAbilityCooldown(subclass, ability, tier) {
-    if (ability === 'STAT_INTELLECT') {
-      switch (subclass) {
-      case 2007186000: // Defender
-      case 4143670656: // Nightstalker
-      case 2455559914: // Striker
-      case 3658182170: // Sunsinger
-        return cooldownsSuperA[tier];
-      default:
-        return cooldownsSuperB[tier];
-      }
-    } else if (ability === 'STAT_DISCIPLINE') {
-      return cooldownsGrenade[tier];
-    } else if (ability === 'STAT_STRENGTH') {
-      switch (subclass) {
-      case 4143670656: // Nightstalker
-      case 1716862031: // Gunslinger
-        return cooldownsMelee[tier];
-      default:
-        return cooldownsGrenade[tier];
-      }
-    } else {
-      return '-:--';
     }
   }
 
@@ -1636,65 +1285,6 @@ function StoreService(
     if (!ttk && (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)) {
       item.year = 3;
     }
-  }
-
-  /**
-   * Compute character-level stats (int, dis, str).
-   */
-  function getCharacterStatsData(statDefs, data) {
-    const statsWithTiers = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
-    const stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
-    const ret = {};
-    stats.forEach((statId) => {
-      const statHash = {};
-      statHash.id = statId;
-      switch (statId) {
-      case 'STAT_INTELLECT':
-        statHash.name = 'Intellect';
-        statHash.effect = 'Super';
-        statHash.icon = require('app/images/intellect.png');
-        break;
-      case 'STAT_DISCIPLINE':
-        statHash.name = 'Discipline';
-        statHash.effect = 'Grenade';
-        statHash.icon = require('app/images/discipline.png');
-        break;
-      case 'STAT_STRENGTH':
-        statHash.name = 'Strength';
-        statHash.effect = 'Melee';
-        statHash.icon = require('app/images/strength.png');
-        break;
-      }
-
-      const stat = data.stats[statId];
-      if (!stat) {
-        return;
-      }
-      statHash.value = stat.value;
-      const statDef = statDefs.get(stat.statHash);
-      if (statDef) {
-        statHash.name = statDef.statName; // localized name
-      }
-
-      if (statsWithTiers.has(statId)) {
-        statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
-        statHash.tier = Math.floor(statHash.normalized / 60);
-        statHash.tiers = [];
-        statHash.remaining = statHash.value;
-        for (let t = 0; t < 5; t++) {
-          statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
-        }
-        if (data.peerView) {
-          statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, statId, statHash.tier);
-        }
-        statHash.percentage = Number(100 * statHash.normalized / 300).toFixed();
-      } else {
-        statHash.percentage = Number(100 * statHash.value / 10).toFixed();
-      }
-
-      ret[statId] = statHash;
-    });
-    return ret;
   }
 
   function buildClassifiedItem(classifiedData, hash) {
