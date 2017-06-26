@@ -13,7 +13,7 @@ angular.module('dimApp')
  * "save()" on the settings object.
  *
  * Settings will start out with default values and asynchronously
- * load in the user's actual settings, so it is a good sidea to
+ * load in the user's actual settings, so it is a good idea to
  * always watch the settings you are using.
  */
 function SettingsService($rootScope, SyncService, $window) {
@@ -104,9 +104,8 @@ function SettingsService($rootScope, SyncService, $window) {
 
     $rootScope.$evalAsync(() => {
       angular.merge(settings, savedSettings);
-      // See https://github.com/i18next/ng-i18next
       window.i18next.init({
-        lng: settings.language === 'pt-br' ? 'ptBr' : settings.language,
+        lng: settings.language,
       });
       $rootScope.$emit('dim-settings-loaded', {});
     });

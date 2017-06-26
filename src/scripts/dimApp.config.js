@@ -4,7 +4,7 @@ import de from '../i18n/dim_de.json';
 import fr from '../i18n/dim_fr.json';
 import es from '../i18n/dim_es.json';
 import ja from '../i18n/dim_ja.json';
-import ptBr from '../i18n/dim_pt_BR.json';
+import ptBR from '../i18n/dim_pt_BR.json';
 
 function config($compileProvider, $httpProvider, hotkeysProvider,
                 ngHttpRateLimiterConfigProvider, ngDialogProvider) {
@@ -25,6 +25,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
   window.i18next.init({
     debug: true,
     fallbackLng: 'en',
+    lowerCaseLng: true,
     interpolation: {
       format: function(val, format) {
         if (format === 'pct') {
@@ -40,7 +41,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       fr: { translation: fr },
       es: { translation: es },
       ja: { translation: ja },
-      ptBr: { translation: ptBr }
+      'pt-br': { translation: ptBR }
     },
     useCookie: false,
     useLocalStorage: false
