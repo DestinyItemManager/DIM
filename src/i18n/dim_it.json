@@ -284,7 +284,7 @@
         "Split": "Dividi",
         "Store": "Muovi",
         "Subtitle_Consumable": "{{classType}} {{typeName}}",
-        "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+        "Subtitle_Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
         "Take": "Prendi",
         "Vault": "Depos",
         "LockUnlock_Lock": "Blocca {{itemType}}",
@@ -440,7 +440,7 @@
             "RedditHelp": "Se hai domande, commenti o suggerimenti - facci sapere!",
             "Twitter": "Twitter",
             "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
-            "Version": "Versione {{version}} ({{flavor}}), built on {{- date}}",
+            "Version": "Versione {{version}} ({{flavor}}), pubblicata il {{- date}}",
             "Transifex": "Unisciti al Team Traduzione!",
             "TransifexText": "Utilizziamo Transifex per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team."
         },
