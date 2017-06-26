@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp')
   .factory('dimInfoService', InfoService);
 
-function InfoService(toaster, $http, $translate, SyncService) {
+function InfoService(toaster, $translate, SyncService) {
   return {
     show: function(id, content, timeout) {
       timeout = timeout || 0;

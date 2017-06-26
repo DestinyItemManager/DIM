@@ -6,7 +6,6 @@ angular.module('dimApp')
 
 function ItemService(dimStoreService,
                      Destiny1Api,
-                     dimCategory,
                      $q,
                      $translate) {
   // We'll reload the stores to check if things have been
