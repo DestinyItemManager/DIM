@@ -316,6 +316,7 @@
    },
    "Settings": {
       "Settings": "Einstellungen",
+      "LogOut": "Ausloggen",
       "Language": "Sprache (lade DIM neu zum Übernehmnen)",
       "HideUnfiltered": "Blende ungefilterte Gegenstände beim Filtern aus",
       "HideUnfilteredHelp": "Items welche die Filterkriterien nicht erfüllen, werden ausgeblendet.",
@@ -334,10 +335,8 @@
       "AllowIdPostToDtr": "Teile Account-Name und bewertete Items mit Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM wird deinen Account-Namen und jedes Item das du bewertet hast mit Destiny Tracker teilen.",
       "SetSort": "Sortiere Gegenstände nach:",
-      "SetSortHelp": "Sortieren von Gegenständen nach Seltenheit oder ihrem primären Statuswert.",
       "SortPrimary": "Primärer Wert",
       "SortRarity": "Seltenheit",
-      "SortRoll": "Roll-Wert Prozent",
       "InventoryColumns": "Charakter Inventar Spalten",
       "InventoryColumnsHelp": "Wähle die Anzahl der Spalten für das Charakter Inventar.",
       "VaultColumns": "Maximale Anzahl von Spalten des Tresors",
@@ -353,10 +352,7 @@
       "ExportSS": "Lade Tabelle herunter",
       "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
       "DIMPopups": "DIM Info Popups",
-      "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps",
-      "ImportExport": "Einstellungen und Daten importieren/exportieren",
-      "Export": "DIM Daten exportieren",
-      "Import": "DIM Daten importieren"
+      "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps"
    },
    "Stats": {
       "Discipline": "Disziplin",
