@@ -16,7 +16,7 @@ angular.module('dimApp')
 function StoreService(
   $rootScope,
   $q,
-  dimBungieService,
+  Destiny1Api,
   dimPlatformService,
   dimDefinitions,
   dimBucketService,
@@ -80,7 +80,7 @@ function StoreService(
   function updateCharacters() {
     return $q.all([
       dimDefinitions.getDefinitions(),
-      dimBungieService.getCharacters(dimPlatformService.getActive())
+      Destiny1Api.getCharacters(dimPlatformService.getActive())
     ]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
@@ -119,7 +119,7 @@ function StoreService(
       dimBucketService.getBuckets(),
       NewItemsService.loadNewItems(activePlatform),
       dimItemInfoService(activePlatform),
-      dimBungieService.getStores(activePlatform)
+      Destiny1Api.getStores(activePlatform)
     ];
 
     _reloadPromise = $q.all(dataDependencies)

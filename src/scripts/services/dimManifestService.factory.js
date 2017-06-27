@@ -59,7 +59,7 @@ angular.module('dimApp')
   .factory('dimManifestService', ManifestService);
 
 
-function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $translate, $rootScope) {
+function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $translate, $rootScope) {
   // Testing flags
   const alwaysLoadRemote = false;
 
@@ -79,7 +79,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
     // often than every 10 seconds, and only warns if the manifest
     // version has actually changed.
     warnMissingDefinition: _.debounce(() => {
-      dimBungieService.getManifest()
+      Destiny1Api.getManifest()
         .then((data) => {
           const language = dimSettingsService.language;
           const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
@@ -103,7 +103,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
       manifestPromise = Promise
         .all([
           requireSqlLib(), // load in the sql.js library
-          dimBungieService.getManifest()
+          Destiny1Api.getManifest()
             .then((data) => {
               const language = dimSettingsService.language;
               const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;

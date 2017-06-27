@@ -10,7 +10,7 @@ angular.module('dimApp')
 function ItemService(
   dimStoreService,
   ItemFactory,
-  dimBungieService,
+  Destiny1Api,
   $q,
   $translate
 ) {
@@ -250,7 +250,7 @@ function ItemService(
       if (items.length === 1) {
         return equipItem(items[0]);
       }
-      return dimBungieService.equipItems(store, items)
+      return Destiny1Api.equipItems(store, items)
         .then((equippedItems) => {
           return equippedItems.map((i) => {
             return updateItemModel(i, store, store, true);
@@ -263,7 +263,7 @@ function ItemService(
     if ($featureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', dimStoreService.getStore(item.owner).name);
     }
-    return dimBungieService.equip(item)
+    return Destiny1Api.equip(item)
       .then(() => {
         const store = dimStoreService.getStore(item.owner);
         return updateItemModel(item, store, store, true);
@@ -296,7 +296,7 @@ function ItemService(
     if ($featureFlags.debugMoves) {
       console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
     }
-    return dimBungieService.transfer(item, store, amount)
+    return Destiny1Api.transfer(item, store, amount)
       .then(() => {
         const source = dimStoreService.getStore(item.owner);
         const newItem = updateItemModel(item, source, store, false, amount);

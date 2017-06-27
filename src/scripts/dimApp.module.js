@@ -13,6 +13,7 @@ import UIRouterModule from '@uirouter/angularjs';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
 
+import bungieApiModule from './bungie-api/bungie-api.module';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
@@ -41,6 +42,7 @@ export const DimAppModule = angular
     TranslateModule,
     TranslateMessageFormatModule,
     UIRouterModule,
+    bungieApiModule,
     inventoryModule,
     recordBooksModule,
     vendorsModule,

@@ -1,7 +1,7 @@
 import angular from 'angular';
 import uuidv4 from 'uuid/v4';
 import './login.scss';
-import { oauthClientId } from '../services/bungie-api-utils';
+import { oauthClientId } from '../bungie-api/bungie-api-utils';
 
 angular.module('dimApp')
   .controller('dimLoginCtrl', dimLoginCtrl);
