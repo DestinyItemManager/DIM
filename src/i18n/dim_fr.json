@@ -317,10 +317,8 @@
       "ShowElementalHelp": "Afficher les icônes d'élément de dégât sur les armes.",
       "AllowIdPostToDtrHelp": "DIM va partager votre nom de compte et tout élément que vous consultez avec Destiny Tracker.",
       "SetSort": "Ordonner les objets par:",
-      "SetSortHelp": "Ordonner les objets par rareté ou par la valeur de leur stat première.",
       "SortPrimary": "Stat première",
       "SortRarity": "Rareté",
-      "SortRoll": "Pourcentage de roulement de stat",
       "InventoryColumns": "Colonnes d'Inventaire de Perso",
       "InventoryColumnsHelp": "Sélectionner le nombre de colonnes pour l'inventaire de votre perso.",
       "VaultColumns": "Maximum de Colonnes de l'Inventaire des Coffres",
@@ -336,10 +334,7 @@
       "ExportSS": "Télécharger le Tableur",
       "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
       "DIMPopups": "Popups d'Info de DIM",
-      "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes",
-      "ImportExport": "Paramètres et données d'importation/exportation",
-      "Export": "Exportation des données de DIM",
-      "Import": "Importer des données de DIM"
+      "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes"
    },
    "Stats": {
       "Discipline": "Discipline",

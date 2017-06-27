@@ -11,7 +11,6 @@ function ItemService(
   dimStoreService,
   ItemFactory,
   dimBungieService,
-  dimCategory,
   $q,
   $translate
 ) {

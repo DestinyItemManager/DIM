@@ -12,6 +12,7 @@ const NotifyPlugin = require('notify-webpack-plugin');
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 const packageJson = require('../package.json');
+
 const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development

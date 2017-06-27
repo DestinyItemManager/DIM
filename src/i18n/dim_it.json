@@ -37,6 +37,7 @@
          "Class": "Impossibile confrontare questo oggetto, poichè non è per {class}.",
          "Archetype": "Impossibile confrontare questo oggetto, poichè non è un {type}."
       },
+      "ItemCount": "Tu hai {num} di questi.",
       "Splits": "Confronta simili suddivisioni ({quantity})"
    },
    "Cooldown": {
@@ -83,7 +84,9 @@
       "Filters": "Filtri",
       "FilterHelp": "Cerca oggetti/perk o is:arc",
       "MaterialsExchange": "Livelli fazione disponibili",
-      "Refresh": "Aggiorna i Dati di Destiny"
+      "Refresh": "Aggiorna i Dati di Destiny",
+      "SupportDIM": "Sostenitori",
+      "Shop": "Negozio"
    },
    "Help": {
       "BackToDIM": "Torna a DIM",
@@ -150,6 +153,7 @@
       "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
       "FilterSets": "Filtra i set",
       "AdvancedOptions": "Opzioni Avanzate",
+      "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
       "ProcessingMode": {
          "Fast": "Veloce",
          "Full": "Completa",
@@ -183,6 +187,7 @@
          "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
          "StatsIncrease": "Quando la difesa di un oggetto aumenta, aumentano anche le sue statistiche (intelletto/disciplina/forza)."
       },
+      "Equip": "Equipaggia su {character}",
       "ShowAllConfigs": "Mostra tutte le configurazioni",
       "ShowConfigs": "Mostra configurazioni",
       "HideAllConfigs": "Nascondi tutte le configurazioni",
@@ -300,7 +305,8 @@
       "Cons": "Contro",
       "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
       "ServiceCallError": "Richiesta di servizio di Destiny Tracker fallita.",
-      "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker"
+      "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker",
+      "AverageRating": "({itemRating}) basato su {numRatings} giudizi."
    },
    "Objectives": {
       "Complete": "Completo",
@@ -312,6 +318,8 @@
    },
    "Settings": {
       "Settings": "Impostazioni",
+      "LogOutDesc": "Esci da DIM, oppure cambia account Bungie.net",
+      "LogOut": "Disconnetti",
       "Language": "Lingua (ricarica DIM per apportare la modifica)",
       "HideUnfiltered": "Nascondi elementi indersiderati mentre uso i Filtri",
       "HideUnfilteredHelp": "Gli oggetti che non corrispondono ai criteri dei filtri verranno nascosti.",
@@ -330,10 +338,10 @@
       "AllowIdPostToDtr": "Condividi il nome account e gli oggetti recensiti con Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM condividerà il tuo nome account ed ogni oggetto che recensirai con Destiny Tracker.",
       "SetSort": "Ordina oggetti per:",
-      "SetSortHelp": "Ordina oggetti per rarità o per valore delle statistiche primarie.",
+      "SetSortHelp": "Ordina gli oggetti per giudizio, rarità, oppure per valore della statistica primaria.",
       "SortPrimary": "Statistiche Primarie",
       "SortRarity": "Rarità",
-      "SortRoll": "Percentuale delle statistiche",
+      "SortRoll": "Giudizio",
       "InventoryColumns": "Colonne per Inventario del Personaggio",
       "InventoryColumnsHelp": "Seleziona il numero di colonne per inventario del personaggio.",
       "VaultColumns": "Massimo Colonne per il Deposito",
@@ -349,10 +357,7 @@
       "ExportSS": "Scarica il foglio elettronico",
       "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
       "DIMPopups": "Popup informativi di DIM ",
-      "DIMPopupsReset": "Ripristina i consigli precedentemente nascosti",
-      "ImportExport": "Importa/Esporta impostazioni e dati",
-      "Export": "Esporta Dati DIM",
-      "Import": "Importa Dati DIM"
+      "DIMPopupsReset": "Ripristina i consigli precedentemente nascosti"
    },
    "Stats": {
       "Discipline": "Disciplina",
@@ -424,7 +429,7 @@
          "RedditHelp": "Se hai domande, commenti o suggerimenti - facci sapere!",
          "Twitter": "Twitter",
          "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
-         "Version": "Versione {version} ({flavor}), built on {date}",
+         "Version": "Versione {version} ({flavor}), pubblicata il {date}",
          "Transifex": "Unisciti al Team Traduzione!",
          "TransifexText": "Utilizziamo Transifex per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team."
       },
@@ -435,7 +440,9 @@
          "Backers": "Donatori",
          "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
          "Sponsors": "Sponsors",
-         "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito."
+         "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito.",
+         "Teespring": "Abbiamo anche magliette con il nostro nuovo logo in venfita su Teespring:",
+         "TeespringLink": "DIM su Teespring"
       },
       "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM.",
       "Login": {

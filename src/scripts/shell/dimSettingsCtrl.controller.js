@@ -3,7 +3,7 @@ import _ from 'underscore';
 
 angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state) {
+function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $translate) {
   const vm = this;
 
   vm.featureFlags = {
@@ -17,9 +17,9 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvSe
     dimSettingsService.save();
   });
 
-  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: num }));
-  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: num }));
-  vm.vaultColOptions.unshift({ id: 999, name: 'Auto' });
+  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $translate.instant('Settings.ColumnSize', { num }) }));
+  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $translate.instant('Settings.ColumnSize', { num }) }));
+  vm.vaultColOptions.unshift({ id: 999, name: $translate.instant('Settings.ColumnSizeAuto') });
 
   vm.languageOptions = {
     de: 'Deutsch',
@@ -38,7 +38,7 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvSe
 
   vm.logout = function() {
     OAuthTokenService.removeToken();
-    $scope.closeThisDialog();
+    $scope.closeThisDialog(); // eslint-disable-line angular/controller-as
     $state.go('login', { reauth: true });
   };
 

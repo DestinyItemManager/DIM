@@ -1,28 +1,20 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-import { IndexedDBStorage } from './sync/indexed-db-storage';
-import { ChromeSyncStorage } from './sync/chrome-sync-storage';
-import { GoogleDriveStorage } from './sync/google-drive-storage';
-
-angular.module('dimApp')
-  .factory('IndexedDBStorage', IndexedDBStorage)
-  .factory('ChromeSyncStorage', ChromeSyncStorage)
-  .factory('GoogleDriveStorage', GoogleDriveStorage)
-  .factory('SyncService', SyncService);
-
 /**
  * The sync service allows us to save a single object to persistent
  * storage - potentially using multiple different storage
  * systems. Each system is a separate adapter that can be enabled or
  * disabled.
  */
-function SyncService(
+export function SyncService(
   $q,
   IndexedDBStorage,
   ChromeSyncStorage,
   GoogleDriveStorage
 ) {
+  'ngInject';
+
   let cached;
 
   const adapters = [
