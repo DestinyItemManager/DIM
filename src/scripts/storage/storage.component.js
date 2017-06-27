@@ -13,6 +13,7 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   vm.settings = dimSettingsService;
   vm.syncService = SyncService;
   vm.adapterStats = {};
+  vm.googleApiBlocked = !window.gapi;
 
   function dataStats(data) {
     const taggedItems = sum(Object.keys(data)

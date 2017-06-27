@@ -384,6 +384,7 @@
       "ForceSync": "Force sync data",
       "DriveSync": "Log in to Google Drive",
       "DriveLogout": "Log out of Google Drive",
+      "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
       "NoData": "No data",
       "Export": "Back up DIM data",
       "Import": "Import DIM data from file",
