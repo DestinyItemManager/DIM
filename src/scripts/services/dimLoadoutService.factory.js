@@ -53,7 +53,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
       loadouts = ids.map((id) => {
         // Mark all the items as being in loadouts
         data[id].items.forEach((item) => {
-          const itemFromStore = dimItemService.getItem({
+          const itemFromStore = dimStoreService.getItemAcrossStores({
             id: item.id,
             hash: item.hash
           });
@@ -186,7 +186,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
   // A special getItem that takes into account the fact that
   // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
   function getLoadoutItem(pseudoItem, store) {
-    let item = dimItemService.getItem(pseudoItem);
+    let item = dimStoreService.getItemAcrossStores(pseudoItem);
     if (!item) {
       return null;
     }
@@ -288,7 +288,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
 
       // Stuff that's equipped on another character. We can bulk-dequip these
       const itemsToDequip = _.filter(items, (pseudoItem) => {
-        const item = dimItemService.getItem(pseudoItem);
+        const item = dimStoreService.getItemAcrossStores(pseudoItem);
         return item.owner !== store.id && item.equipped;
       });
 
@@ -302,7 +302,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
 
       if (itemsToDequip.length > 1) {
         const realItemsToDequip = itemsToDequip.map((i) => {
-          return dimItemService.getItem(i);
+          return dimStoreService.getItemAcrossStores(i);
         });
         const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
           const equipItems = _.compact(realItemsToDequip.map((i) => {
@@ -469,7 +469,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
     };
 
     _.each(loadoutPrimitive.items, (itemPrimitive) => {
-      let item = angular.copy(dimItemService.getItem({
+      let item = angular.copy(dimStoreService.getItemAcrossStores({
         id: itemPrimitive.id,
         hash: itemPrimitive.hash
       }));

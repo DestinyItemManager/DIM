@@ -133,7 +133,7 @@ function MaterialsController(dimDefinitions, dimItemService, dimStoreService, $s
 
   function mapItems(hashes) {
     return hashes.map((hash) => {
-      const ret = angular.copy(dimItemService.getItem({
+      const ret = angular.copy(dimStoreService.getItemAcrossStores({
         hash: hash
       }));
       if (ret) {

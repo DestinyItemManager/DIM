@@ -74,7 +74,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
         rewardsPage: page.displayStyle === 1,
         records: page.records.map((r) => recordByHash[r.recordHash])
         // rewards - map to items!
-        // dimStoreService.processItems({ id: null }
+        // ItemFactory.processItems({ id: null }
         // may have to extract store service bits...
       };
 

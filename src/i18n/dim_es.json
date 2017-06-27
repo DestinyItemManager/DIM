@@ -331,10 +331,8 @@
       "AllowIdPostToDtr": "Comparte tu nombre de cuenta y tus reseñas de objetos con Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM compartirá el nombre de tu cuenta y cualquier objeto del cual hagas una reseña con Destiny Tracker",
       "SetSort": "Ordernar objetos por:",
-      "SetSortHelp": "Ordernar objetos por rareza o por sus valores estadísticos.",
       "SortPrimary": "Estadística primaria",
       "SortRarity": "Rareza",
-      "SortRoll": "Porcentaje de valor de estadísticas",
       "InventoryColumns": "Columnas de Inventario de personaje",
       "InventoryColumnsHelp": "Seleccionar el número de columnas por inventario de personaje.",
       "VaultColumns": "Máximo número de columnas del Inventario",
@@ -350,10 +348,7 @@
       "ExportSS": "Descargar hojas de cálculo",
       "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
       "DIMPopups": "Ventanas emergentes de información de DIM",
-      "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos",
-      "ImportExport": "Importa/Exporta configuraciones y data",
-      "Export": "Exporta Data DIM",
-      "Import": "Importa Data DIM"
+      "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos"
    },
    "Stats": {
       "Discipline": "Disciplina",

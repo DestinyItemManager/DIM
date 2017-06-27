@@ -45,7 +45,6 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     return promise;
   });
 
-
   const consolidate = dimActionQueue.wrap((actionableItem, store, callback) => {
     const stores = _.filter(dimStoreService.getStores(), (s) => { return !s.isVault; });
     const vault = dimStoreService.getVault();
