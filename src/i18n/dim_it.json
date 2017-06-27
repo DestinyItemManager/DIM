@@ -24,6 +24,7 @@
         "NotConnected": "Potresti non essere connesso a internet.",
         "Twitter": "Ottieni informazioni sullo stato del servizio su:",
         "ItemUniqueness": "Unicità dell elemento",
+        "ItemUniquenessExplanation": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
         "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
         "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
         "VendorNotFound": "I dati dei mercanti non sono disponibili."
@@ -38,6 +39,7 @@
             "Class": "Impossibile confrontare questo oggetto, poichè non è per {{class}}.",
             "Archetype": "Impossibile confrontare questo oggetto, poichè non è un {{type}}."
         },
+        "ItemCount": "Tu hai {{num}} di questi.",
         "Splits": "Confronta simili suddivisioni ({{quantity}})"
     },
     "Cooldown": {
@@ -64,10 +66,12 @@
     },
     "FarmingMode": {
         "FarmingMode": "Modalità Farming (sposta oggetti)",
-        "Configuration": "Configurazione",
+        "Desc": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
         "Desc_male": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
         "Desc_female": "DIM sposta Engrammi e consumabili per Lumen dalla {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
+        "Configuration": "Configurazione",
         "MakeRoom": {
+            "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dal {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
             "Desc_male": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dal {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
             "Desc_female": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dalla {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
             "MakeRoom": "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
@@ -87,7 +91,9 @@
         "Filters": "Filtri",
         "FilterHelp": "Cerca oggetti/perk o is:arc",
         "MaterialsExchange": "Livelli fazione disponibili",
-        "Refresh": "Aggiorna i Dati di Destiny"
+        "Refresh": "Aggiorna i Dati di Destiny",
+        "SupportDIM": "Donatori",
+        "Shop": "Negozio"
     },
     "Help": {
         "BackToDIM": "Torna a DIM",
@@ -133,9 +139,10 @@
     },
     "ItemService": {
         "BucketFull": {
+            "Vault": "Il {{store}} ha troppe '{{itemtype}}'.",
+            "Guardian": "La {{store}} ha troppe '{{itemtype}}'.",
             "Guardian_male": "Il {{store}} ha troppe '{{itemtype}}'.",
-            "Guardian_female": "La {{store}} ha troppe '{{itemtype}}'.",
-            "Vault": "Il {{store}} ha troppe '{{itemtype}}'."
+            "Guardian_female": "La {{store}} ha troppe '{{itemtype}}'."
         },
         "Classified": "Questo oggetto è classificato e non può essere trasferito attualemente.",
         "Classified2": "Oggetto classificato. Bungie non fornisce informazioni riguardo questo oggetto. Questo oggetto non è ancora trasferibile.",
@@ -159,6 +166,7 @@
         "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
         "FilterSets": "Filtra i set",
         "AdvancedOptions": "Opzioni Avanzate",
+        "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
         "ProcessingMode": {
             "Fast": "Veloce",
             "Full": "Completa",
@@ -192,6 +200,7 @@
             "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
             "StatsIncrease": "Quando la difesa di un oggetto aumenta, aumentano anche le sue statistiche (intelletto/disciplina/forza)."
         },
+        "Equip": "Equipaggia su {{character}}",
         "ShowAllConfigs": "Mostra tutte le configurazioni",
         "ShowConfigs": "Mostra configurazioni",
         "HideAllConfigs": "Nascondi tutte le configurazioni",
@@ -236,15 +245,19 @@
         "CouldNotEquip": "Impossibile equipaggiare {{itemname}}",
         "TooManyRequested": "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
         "DoesNotExist": "{{itemname}} non esiste sul tuo account.",
+        "AppliedAuto": "Costruttore Automatico di Loadout",
+        "Applied": "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
+        "Applied_plural": "Il tuo loadout di {{count}} oggetti è stato trasferito alla tua {{store}}.",
         "Applied_male": "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
         "Applied_female": "Il tuo loadout di un oggetto  è stato trasferito alla tua {{store}}.",
         "Applied_plural_male": "Il tuo loadout di {{count}} oggetti è stato trasferito al tuo {{store}}.",
         "Applied_plural_female": "Il tuo loadout di {{count}} oggetti è stato trasferito alla tua {{store}}.",
-        "AppliedAuto": "Costruttore Automatico di Loadout",
         "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
         "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
         "NameRequired": "E' richiesto un nome.",
         "MakeRoom": "Crea spazio per l'Amministratore",
+        "MakeRoomDone": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dal {{store}}.",
+        "MakeRoomDone_plural": "Ho terminato di creare spazio per {{count}} oggetti dell'Amministratore togliendo {{movedNum}} oggetti dal {{store}}.",
         "MakeRoomDone_male": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dal {{store}}.",
         "MakeRoomDone_female": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dalla {{store}}.",
         "MakeRoomDone_plural_male": "Ho terminato di creare spazio per {{count}} oggetti dell'Amministratore togliendo {{movedNum}} oggetti dal {{store}}.",
@@ -283,7 +296,7 @@
         "Equip": "Usa",
         "Split": "Dividi",
         "Store": "Muovi",
-        "Subtitle_Consumable": "{{classType}} {{typeName}}",
+        "Subtitle_Consumable": "{{typeName}} {{classType}}",
         "Subtitle_Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
         "Take": "Prendi",
         "Vault": "Depos",
@@ -318,7 +331,8 @@
         "Cons": "Contro",
         "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
         "ServiceCallError": "Richiesta di servizio di Destiny Tracker fallita.",
-        "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker"
+        "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker",
+        "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi."
     },
     "Objectives": {
         "Complete": "Completo",
@@ -330,6 +344,8 @@
     },
     "Settings": {
         "Settings": "Impostazioni",
+        "LogOutDesc": "Esci da DIM, oppure cambia account Bungie.net",
+        "LogOut": "Disconnetti",
         "Language": "Lingua (ricarica DIM per apportare la modifica)",
         "HideUnfiltered": "Nascondi elementi indersiderati mentre uso i Filtri",
         "HideUnfilteredHelp": "Gli oggetti che non corrispondono ai criteri dei filtri verranno nascosti.",
@@ -451,7 +467,9 @@
             "Backers": "Donatori",
             "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
             "Sponsors": "Sponsors",
-            "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito."
+            "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito.",
+            "Teespring": "Abbiamo anche magliette con il nostro nuovo logo in venfita su Teespring:",
+            "TeespringLink": "DIM su Teespring"
         },
         "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM.",
         "Login": {

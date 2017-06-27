@@ -25,6 +25,8 @@
         "Twitter": "Entérate de los estados de actualizaciones en:",
         "ItemUniqueness": "Unicidad de objeto",
         "ItemUniquenessExplanation": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo puede tener uno.",
+        "ItemUniquenessExplanation_male": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo puede tener uno.",
+        "ItemUniquenessExplanation_female": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo puede tener uno.",
         "VendorNotFound": "Los datos del proveedor no están disponibles."
     },
     "Compare": {
@@ -64,9 +66,13 @@
     "FarmingMode": {
         "FarmingMode": "Modo recolector (mover objetos)",
         "Desc": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depísoto y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
+        "Desc_male": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depísoto y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
+        "Desc_female": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depísoto y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
         "Configuration": "Configuración",
         "MakeRoom": {
             "Desc": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
+            "Desc_male": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
+            "Desc_female": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
             "MakeRoom": "Hacer espacio para coger objetos moviendo equipamiento",
             "Tooltip": "Si esta marcado, DIM va a mover armas y armadura para hacer espacio en el depósito para Engramas."
         },
@@ -132,7 +138,9 @@
     "ItemService": {
         "BucketFull": {
             "Vault": "Hay muchos objetos de tipo '{{itemtype}}' en la {{store}}.",
-            "Guardian": "Hay muchos objetos de tipo '{{itemtype}}' en tu {{store}}."
+            "Guardian": "Hay muchos objetos de tipo '{{itemtype}}' en tu {{store}}.",
+            "Guardian_male": "Hay muchos objetos de tipo '{{itemtype}}' en tu {{store}}.",
+            "Guardian_female": "Hay muchos objetos de tipo '{{itemtype}}' en tu {{store}}."
         },
         "Classified": "Este objeto es 'clasificado' y no puede transferirse en este momento",
         "Classified2": "Objeto 'clasificado'. Bungie no a entregado información acerca de este objeto.  Este objeto todavía no es transferible.",
@@ -236,12 +244,20 @@
         "AppliedAuto": "Crear automático de equipo",
         "Applied": "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
         "Applied_plural": "Tu equipo de {{count}} objetos han sido transferidos a tu {{store}}.",
+        "Applied_male": "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
+        "Applied_female": "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
+        "Applied_plural_male": "Tu equipo de {{count}} objetos han sido transferidos a tu {{store}}.",
+        "Applied_plural_female": "Tu equipo de {{count}} objetos han sido transferidos a tu {{store}}.",
         "AppliedError": "Ninguno de los objetos en tu equipo pudo ser transferido.",
         "AppliedWarn": "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores.",
         "NameRequired": "Se necesita un nombre",
         "MakeRoom": "Hacer espacio en la Administración",
         "MakeRoomDone": "Se terminó de hacer espacio para 1 objeto de la Administración al mover 1 objeto fuera de {{store}}.",
         "MakeRoomDone_plural": "Se terminó de hacer espacio para {{count}} objetos de la Administración al mover {{movedNum}} objetos fuera de {{store}}.",
+        "MakeRoomDone_male": "Se terminó de hacer espacio para 1 objeto de la Administración al mover 1 objeto fuera de {{store}}.",
+        "MakeRoomDone_female": "Se terminó de hacer espacio para 1 objeto de la Administración al mover 1 objeto fuera de {{store}}.",
+        "MakeRoomDone_plural_male": "Se terminó de hacer espacio para {{count}} objetos de la Administración al mover {{movedNum}} objetos fuera de {{store}}.",
+        "MakeRoomDone_plural_female": "Se terminó de hacer espacio para {{count}} objetos de la Administración al mover {{movedNum}} objetos fuera de {{store}}.",
         "MakeRoomError": "Imposible hacer espacio para todos los objetos en la Administración: {{error}}.",
         "SaveErrorTitle": "Error al guardar equipo",
         "SaveErrorDescription": "Incapaz de guardar equipo {{loadoutName}}: {{error}}.",

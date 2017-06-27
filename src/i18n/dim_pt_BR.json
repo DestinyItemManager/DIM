@@ -25,6 +25,8 @@
         "Twitter": "Veja atualizações em:",
         "ItemUniqueness": "Unicidade de itens",
         "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui um item do tipo.",
+        "ItemUniquenessExplanation_male": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui um item do tipo.",
+        "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui um item do tipo.",
         "VendorNotFound": "Informação do vendedor não disponível."
     },
     "Compare": {
@@ -67,6 +69,8 @@
         "Configuration": "Configuração",
         "MakeRoom": {
             "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+            "Desc_male": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+            "Desc_female": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
             "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
             "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
         },
@@ -132,7 +136,9 @@
     "ItemService": {
         "BucketFull": {
             "Vault": "Há muitos '{{itemtype}}' no {{store}}.",
-            "Guardian": "Há muitos '{{itemtype}}' em seu {{store}}."
+            "Guardian": "Há muitos '{{itemtype}}' em seu {{store}}.",
+            "Guardian_male": "Há muitos '{{itemtype}}' em seu {{store}}.",
+            "Guardian_female": "Há muitos '{{itemtype}}' em seu {{store}}."
         },
         "Classified": "Este item é confidencial e não pode ser transferido no momento.",
         "Classified2": "Item confidencial. A Bungie não fornece informações sobre este item. Este item ainda não é transferível.",
@@ -235,12 +241,21 @@
         "DoesNotExist": "{{itemname}} não existe em sua conta.",
         "AppliedAuto": "Construtor automático de sets",
         "Applied": "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
+        "Applied_plural": "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
+        "Applied_male": "Seu set de 1 iten foi transferido para seu {{store}}.",
+        "Applied_female": "Seu set de 1 iten foi transferido para seu {{store}}.",
+        "Applied_plural_male": "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
+        "Applied_plural_female": "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
         "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
         "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
         "NameRequired": "Um nome é obrigatório.",
         "MakeRoom": "Abrir espaço para itens do Correio",
         "MakeRoomDone": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
         "MakeRoomDone_plural": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
+        "MakeRoomDone_male": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
+        "MakeRoomDone_female": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
+        "MakeRoomDone_plural_male": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
+        "MakeRoomDone_plural_female": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
         "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {{error}}.",
         "SaveErrorTitle": "Erro ao salvar o set",
         "SaveErrorDescription": "Incapaz de salvar o set {{loadoutName}}: {{error}}.",

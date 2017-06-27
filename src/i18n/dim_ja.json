@@ -25,6 +25,8 @@
         "Twitter": "最新情報に更新します。:",
         "ItemUniqueness": "アイテムのレア度",
         "ItemUniquenessExplanation": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
+        "ItemUniquenessExplanation_male": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
+        "ItemUniquenessExplanation_female": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
         "VendorNotFound": "ベンダー情報ありません"
     },
     "Compare": {
@@ -45,7 +47,8 @@
         "Super": "スーパースキルのクールダウン: {{cooldown}}"
     },
     "Countdown": {
-        "Days": "{{count}} 日間"
+        "Days": "{{count}} 日間",
+        "Days_plural": "{{count}} 日間 "
     },
     "Debug": {
         "Dump": "ゲーム機に情報を転送する",
@@ -63,9 +66,13 @@
     "FarmingMode": {
         "FarmingMode": "アイテム収集モード (アイテム移動)",
         "Desc": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
+        "Desc_male": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
+        "Desc_female": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
         "Configuration": "設定",
         "MakeRoom": {
             "Desc": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
+            "Desc_male": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
+            "Desc_female": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
             "MakeRoom": "設備を動かしてアイテムを拾うための空間を確保する",
             "Tooltip": "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
         },
@@ -84,7 +91,8 @@
         "FilterHelp": "アイテム／パークを検索",
         "MaterialsExchange": "利用可能な派閥のランク",
         "Refresh": "デスティニーデータを更新",
-        "SupportDIM": "支持者"
+        "SupportDIM": "支持者",
+        "Shop": "店"
     },
     "Help": {
         "BackToDIM": "DIMに戻る",
@@ -129,6 +137,12 @@
         "ToStore": "{{name}} が全て {{store}} にあります。"
     },
     "ItemService": {
+        "BucketFull": {
+            "Vault": "{{store}} には {{itemtype}} のスペースがありません。",
+            "Guardian": "{{store}} には {{itemtype}} のスペースがありません。",
+            "Guardian_male": "{{store}} には {{itemtype}} のスペースがありません。",
+            "Guardian_female": "{{store}} には {{itemtype}} のスペースがありません。"
+        },
         "Classified": "この商品は現在分類されており、現時点では譲渡できません。",
         "Classified2": "極秘扱いのアイテムです。Bungie がこのアイテムについて情報提供していません。このアイテムの移動は不可です。",
         "Deequip": "{{itemname}}を取り除くために装備するアイテムが見つかりません",
@@ -230,11 +244,21 @@
         "DoesNotExist": "{{itemname}} はあなたのアカウント内に存在しません。",
         "AppliedAuto": "自動ロードアウトビルダー",
         "Applied": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+        "Applied_plural": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+        "Applied_male": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+        "Applied_female": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+        "Applied_plural_male": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+        "Applied_plural_female": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
         "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
         "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}}の{{failed}}アイテムにエラーがありました。",
         "NameRequired": "名称が必要",
         "MakeRoom": "ポストマスターのための部屋を作る",
         "MakeRoomDone": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
+        "MakeRoomDone_plural": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
+        "MakeRoomDone_male": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
+        "MakeRoomDone_female": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
+        "MakeRoomDone_plural_male": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
+        "MakeRoomDone_plural_female": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
         "MakeRoomError": "ポストマスターの全アイテム用のスペースを確保できませんでした: {{error}} 。",
         "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
         "SaveErrorDescription": "ロードアウトのセーブに失敗 {{loadoutName}}: {{error}}.",
@@ -272,7 +296,8 @@
         "Subtitle_Consumable": "{{classType}} {{typeName}}",
         "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
         "Take": "取る",
-        "Vault": "保管庫"
+        "Vault": "保管庫",
+        "LockUnlock_Unlock": "解除 {{itemType}}"
     },
     "MoveAmount": {
         "Min": "最小限 (1)",
@@ -301,6 +326,7 @@
     },
     "Settings": {
         "Settings": "設定",
+        "LogOut": "ログアウト",
         "Language": "言語(反映させるにはDIMをリフレッシュしてください)",
         "HideUnfiltered": "フィルタリングされていない項目を非表示にする。",
         "HideUnfilteredHelp": "フィルタ条件に一致しない項目は非表示になります。",
@@ -328,6 +354,7 @@
         "VaultColumnsHelp": "保管庫の上限欄数を選択して下さい.",
         "SizeItem": "アイテムサイズ",
         "SizeItemHelp": "アイテムの大きさどのぐらいがいいですか。",
+        "ResetToDefault": "リセット",
         "CharacterOrder": "キャラクター指名",
         "CharacterOrderHelp": "キャラクターが最近のログイン順や作成順に整理できます.",
         "CharacterOrderRecent": "最近使用したキャラクター順で",
@@ -352,11 +379,15 @@
         "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
     },
     "Storage": {
+        "Title": "DIMのストレージ\n",
         "Enabled": "有効",
         "Disabled": "無効",
         "ImportExport": "データのバックアップ",
+        "GoogleDriveStorage": "Google Drive",
+        "DriveSync": "Google Driveにログイン",
         "NoData": "データなし",
-        "Export": "DIMのデータをバックアップ"
+        "Export": "DIMのデータをバックアップ",
+        "ImportFromExtensionButton": "データのインポート"
     },
     "StoreBucket": {
         "FillStack": "フルスタック ({{amount}})",

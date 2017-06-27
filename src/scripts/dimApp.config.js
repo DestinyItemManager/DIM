@@ -42,9 +42,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       es: { translation: es },
       ja: { translation: ja },
       'pt-br': { translation: ptBR }
-    },
-    useCookie: false,
-    useLocalStorage: false
+    }
   });
 
   // Bungie's API will start throttling an API if it's called more than once per second. It does this
