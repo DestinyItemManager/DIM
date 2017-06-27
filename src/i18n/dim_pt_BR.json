@@ -313,6 +313,7 @@
    },
    "Settings": {
       "Settings": "Configurações",
+      "LogOut": "Sair",
       "Language": "Idioma (reinicie o DIM para aplicar)",
       "HideUnfiltered": "Ocultar itens não-filtrados ao filtrar",
       "HideUnfilteredHelp": "Itens que não corresponderem à pesquisa serão ocultos.",
@@ -331,10 +332,8 @@
       "AllowIdPostToDtr": "Partilhar username e items analisados com o Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM vai partilhar o seu username e qualquer item que tenhas feito review com o Destiny Tracker.",
       "SetSort": "Ordenar itens por:",
-      "SetSortHelp": "Ordena os itens por nível de luz ou raridade.",
       "SortPrimary": "Estatística primária",
       "SortRarity": "Raridade",
-      "SortRoll": "% de progresso do aprimoramento",
       "InventoryColumns": "Colunas no inventário de personagens",
       "InventoryColumnsHelp": "Selecione o número máximo de colunas a ser exibido no inventário dos personagens.",
       "VaultColumns": "Numero máximo de colunas no cofre",
@@ -350,10 +349,7 @@
       "ExportSS": "Baixar planilha",
       "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
       "DIMPopups": "Alertas do DIM",
-      "DIMPopupsReset": "Resetar todos os alertas ocultos",
-      "ImportExport": "Importar/exportar configurações e dados",
-      "Export": "Exportar dados do DIM",
-      "Import": "Importar dados do DIM"
+      "DIMPopupsReset": "Resetar todos os alertas ocultos"
    },
    "Stats": {
       "Discipline": "Disciplina",

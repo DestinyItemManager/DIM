@@ -300,6 +300,7 @@
    },
    "Settings": {
       "Settings": "設定",
+      "LogOut": "ログアウト",
       "Language": "言語(反映させるにはDIMをリフレッシュしてください)",
       "HideUnfiltered": "フィルタリングされていない項目を非表示にする。",
       "HideUnfilteredHelp": "フィルタ条件に一致しない項目は非表示になります。",
@@ -317,10 +318,8 @@
       "ShowElementalHelp": "武器の属性アイコンを表示する。",
       "AllowIdPostToDtr": "アカウント名を共有し、Destiny Trackerでアイテムを評価します。",
       "SetSort": "アイテムを並べ替える",
-      "SetSortHelp": "アイテムをレア度か統計量順で並べる.",
       "SortPrimary": "主要",
       "SortRarity": "レア度",
-      "SortRoll": "統計量のパーセント",
       "InventoryColumns": "キャラクターインベントリ欄",
       "InventoryColumnsHelp": "キャラクターインベントリの欄数を選択して下さい.",
       "VaultColumns": "保管庫の上限欄数",
@@ -335,10 +334,7 @@
       "ExportSS": "スプレッドシートをダウンロードする",
       "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
       "DIMPopups": "DIMの情報",
-      "DIMPopupsReset": "以前非表示にしたヒントをリセットする",
-      "ImportExport": "データの入力／出力やデータ管理。",
-      "Export": "DIM データを出力。",
-      "Import": "DIM データを入力。"
+      "DIMPopupsReset": "以前非表示にしたヒントをリセットする"
    },
    "Stats": {
       "Discipline": "鍛錬",
@@ -355,7 +351,9 @@
    "Storage": {
       "Enabled": "有効",
       "Disabled": "無効",
+      "DriveSync": "Google Driveにログイン",
       "ImportExport": "データのバックアップ",
+      "ImportFromExtension": "データのインポート",
       "NoData": "データなし",
       "Export": "DIMのデータをバックアップ"
    },
