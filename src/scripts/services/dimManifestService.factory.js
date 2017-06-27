@@ -15,7 +15,11 @@ import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 // in the Webpack config, we need to explicitly name this chunk, which
 // can only be done using the dynamic import method.
 function requireSqlLib() {
-  if (typeof WebAssembly === 'object') {
+  function importAsmJs() {
+    return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
+  }
+
+  if ($featureFlags.wasm && typeof WebAssembly === 'object') {
     return new Promise((resolve, reject) => {
       let loaded = false;
 
@@ -39,7 +43,7 @@ function requireSqlLib() {
           loaded = true;
 
           // Fall back to the old one
-          import(/* webpackChunkName: "sqlLib" */ 'sql.js').then(resolve, reject);
+          importAsmJs.then(resolve, reject);
         }
       }, 10000);
 
@@ -51,7 +55,7 @@ function requireSqlLib() {
       head.appendChild(script);
     });
   } else {
-    return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
+    return importAsmJs();
   }
 }
 

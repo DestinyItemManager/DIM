@@ -199,7 +199,9 @@ module.exports = (env) => {
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
-        '$featureFlags.debugSync': JSON.stringify(false)
+        '$featureFlags.debugSync': JSON.stringify(false),
+        // Use a WebAssembly version of SQLite, if possible
+        '$featureFlags.wasm': JSON.stringify(false)
       }),
 
       // Enable if you want to debug the size of the chunks
