@@ -4,10 +4,16 @@ import _ from 'underscore';
 angular.module('dimApp')
   .factory('dimItemService', ItemService);
 
-function ItemService(dimStoreService,
-                     dimBungieService,
-                     $q,
-                     $translate) {
+/**
+ * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
+ */
+function ItemService(
+  dimStoreService,
+  ItemFactory,
+  dimBungieService,
+  $q,
+  $translate
+) {
   // We'll reload the stores to check if things have been
   // thrown away or moved and we just don't have up to date info. But let's
   // throttle these calls so we don't just keep refreshing over and over.
@@ -17,18 +23,10 @@ function ItemService(dimStoreService,
   }, 10000, { trailing: false });
 
   return {
-    getSimilarItem: getSimilarItem,
-    getItem: getItem,
-    getItems: getItems,
-    moveTo: moveTo,
-    equipItems: equipItems,
-    setItemState: setItemState
+    getSimilarItem,
+    moveTo,
+    equipItems
   };
-
-  function setItemState(item, store, lockState, type) {
-    return dimBungieService.setItemState(item, store, lockState, type)
-      .then(() => lockState);
-  }
 
   /**
    * Update our item and store models after an item has been moved (or equipped/dequipped).
@@ -38,7 +36,7 @@ function ItemService(dimStoreService,
     // Refresh all the items - they may have been reloaded!
     source = dimStoreService.getStore(source.id);
     target = dimStoreService.getStore(target.id);
-    item = getItem(item);
+    item = dimStoreService.getItemAcrossStores(item);
 
     // If we've moved to a new place
     if (source.id !== target.id) {
@@ -89,7 +87,7 @@ function ItemService(dimStoreService,
           source.removeItem(sourceItem);
           sourceItem = angular.copy(sourceItem);
           sourceItem.amount -= amountToRemove;
-          sourceItem.index = dimStoreService.createItemIndex(sourceItem);
+          sourceItem.index = ItemFactory.createItemIndex(sourceItem);
           source.addItem(sourceItem);
         }
 
@@ -105,7 +103,7 @@ function ItemService(dimStoreService,
           targetItem = item;
           if (!removedSourceItem) {
             targetItem = angular.copy(item);
-            targetItem.index = dimStoreService.createItemIndex(targetItem);
+            targetItem.index = ItemFactory.createItemIndex(targetItem);
           }
           removedSourceItem = false; // only move without cloning once
           targetItem.amount = 0; // We'll increment amount below
@@ -121,7 +119,7 @@ function ItemService(dimStoreService,
         target.removeItem(targetItem);
         targetItem = angular.copy(targetItem);
         targetItem.amount += amountToAdd;
-        targetItem.index = dimStoreService.createItemIndex(targetItem);
+        targetItem.index = ItemFactory.createItemIndex(targetItem);
         target.addItem(targetItem);
         addAmount -= amountToAdd;
       }
@@ -724,18 +722,5 @@ function ItemService(dimStoreService,
 
         return promise;
       });
-  }
-
-  function getItems() {
-    let returnValue = [];
-    dimStoreService.getStores().forEach((store) => {
-      returnValue = returnValue.concat(store.items);
-    });
-    return returnValue;
-  }
-
-  function getItem(params, store) {
-    const items = store ? store.items : getItems();
-    return _.findWhere(items, _.pick(params, 'id', 'hash', 'notransfer'));
   }
 }

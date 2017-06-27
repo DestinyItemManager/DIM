@@ -4,6 +4,7 @@ import template from './loadout-builder.html';
 import intellectIcon from 'app/images/intellect.png';
 import disciplineIcon from 'app/images/discipline.png';
 import strengthIcon from 'app/images/strength.png';
+import { getBonus } from '../services/store/character-utils';
 
 export const LoadoutBuilderComponent = {
   controller: LoadoutBuilderController,
@@ -625,7 +626,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
         $timeout(step, 0, true, activeGuardian, 0, 0, 0, 0, 0, 0, 0, 0);
         return setMap;
       },
-      getBonus: dimStoreService.getBonus,
+      getBonus: getBonus,
       getStore: dimStoreService.getStore,
       getItems: function() {
         const stores = dimStoreService.getStores();

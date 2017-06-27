@@ -34,7 +34,7 @@ function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, dimBungieService) {
   const vm = this;
 
   vm.tab = 'default';
@@ -135,12 +135,12 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
       state = !item.tracked;
     }
 
-    dimItemService.setItemState(item, store, state, type)
-      .then((lockState) => {
+    dimBungieService.setItemState(item, store, state, type)
+      .then(() => {
         if (type === 'lock') {
-          item.locked = lockState;
+          item.locked = state;
         } else if (type === 'track') {
-          item.tracked = lockState;
+          item.tracked = state;
         }
         $rootScope.$broadcast('dim-filter-invalidate');
       })
