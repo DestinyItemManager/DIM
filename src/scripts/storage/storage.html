@@ -24,14 +24,17 @@
     <p translate="Storage.Details.{{adapter.name}}"></p>
 
     <div ng-switch-when="GoogleDriveStorage">
-      <button ng-if="!adapter.enabled" class="dim-button" ng-click="$ctrl.driveSync()">
-        <i class="fa fa-sign-in"></i>
-        <span translate="Storage.DriveSync"></span>
-      </button>
-      <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.driveLogout()">
-        <i class="fa fa-sign-out"></i>
-        <span translate="Storage.DriveLogout"></span>
-      </button>
+      <p class="warning-block" ng-if="$ctrl.googleApiBlocked" translate="Storage.GoogleApiBlocked"></p>
+      <div ng-if="!$ctrl.googleApiBlocked">
+        <button ng-if="!adapter.enabled" class="dim-button" ng-click="$ctrl.driveSync()">
+          <i class="fa fa-sign-in"></i>
+          <span translate="Storage.DriveSync"></span>
+        </button>
+        <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.driveLogout()">
+          <i class="fa fa-sign-out"></i>
+          <span translate="Storage.DriveLogout"></span>
+        </button>
+      </div>
     </div>
 
     <p translate="Storage.StatLabel"></p>
