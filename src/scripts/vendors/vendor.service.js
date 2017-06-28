@@ -157,7 +157,9 @@ function VendorService(
         })));
       })
       .then(() => {
-        $rootScope.$broadcast('dim-vendors-updated');
+        $rootScope.$broadcast('dim-vendors-updated', {
+          vendors: service.vendors
+        });
         service.vendorsLoaded = true;
       })
       .finally(() => {
