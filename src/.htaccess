@@ -750,7 +750,7 @@ AddEncoding br .br
 </FilesMatch>
 
 <FilesMatch \.json\.gz$>
-    ForceType text/json
+    ForceType application/json
     Header set Content-Encoding gzip
 </FilesMatch>
 
