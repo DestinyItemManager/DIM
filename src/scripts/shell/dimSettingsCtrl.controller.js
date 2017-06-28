@@ -58,6 +58,5 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvSe
 
   vm.resetItemSize = function() {
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
-    vm.save();
   };
 }
