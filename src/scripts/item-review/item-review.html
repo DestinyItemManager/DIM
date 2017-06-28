@@ -3,7 +3,7 @@
     <div class="review-setting-table">
       <div ng-show="$ctrl.featureFlags.reviewsEnabled">
         <div class="review-setting-table--name">
-          <label for="showReviews" ng-i18next="[title]Settings.ShowReviewsHelp;Settings.ShowReviews"></label>
+          <label for="showReviews" ng-i18next="Settings.ShowReviews"></label>
         </div>
         <div class="review-setting-table--value">
           <input type="checkbox" id="showReviews" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.showReviews"/>
@@ -11,7 +11,8 @@
       </div>
       <div ng-show="$ctrl.featureFlags.reviewsEnabled">
         <div class="review-setting-table--name">
-          <label for="allowIdPostToDtr" ng-i18next="[title]Settings.AllowIdPostToDtrHelp;Settings.AllowIdPostToDtr"></label>
+          <label for="allowIdPostToDtr" ng-i18next="Settings.AllowIdPostToDtr"></label>
+          <div class="fineprint" ng-i18next="Settings.AllowIdPostToDtrLine2"></div>
         </div>
         <div class="review-setting-table--value">
           <input type="checkbox" id="allowIdPostToDtr" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.allowIdPostToDtr"/>

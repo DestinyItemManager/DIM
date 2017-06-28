@@ -15,7 +15,11 @@ import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 // in the Webpack config, we need to explicitly name this chunk, which
 // can only be done using the dynamic import method.
 function requireSqlLib() {
-  if (typeof WebAssembly === 'object') {
+  function importAsmJs() {
+    return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
+  }
+
+  if ($featureFlags.wasm && typeof WebAssembly === 'object') {
     return new Promise((resolve, reject) => {
       let loaded = false;
 
@@ -39,7 +43,7 @@ function requireSqlLib() {
           loaded = true;
 
           // Fall back to the old one
-          import(/* webpackChunkName: "sqlLib" */ 'sql.js').then(resolve, reject);
+          importAsmJs.then(resolve, reject);
         }
       }, 10000);
 
@@ -51,7 +55,7 @@ function requireSqlLib() {
       head.appendChild(script);
     });
   } else {
-    return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
+    return importAsmJs();
   }
 }
 
@@ -59,7 +63,7 @@ angular.module('dimApp')
   .factory('dimManifestService', ManifestService);
 
 
-function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   // Testing flags
   const alwaysLoadRemote = false;
 
@@ -79,7 +83,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
     // often than every 10 seconds, and only warns if the manifest
     // version has actually changed.
     warnMissingDefinition: _.debounce(() => {
-      dimBungieService.getManifest()
+      Destiny1Api.getManifest()
         .then((data) => {
           const language = dimSettingsService.language;
           const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
@@ -103,7 +107,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
       manifestPromise = Promise
         .all([
           requireSqlLib(), // load in the sql.js library
-          dimBungieService.getManifest()
+          Destiny1Api.getManifest()
             .then((data) => {
               const language = dimSettingsService.language;
               const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;

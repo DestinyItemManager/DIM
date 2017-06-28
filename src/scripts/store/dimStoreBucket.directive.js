@@ -80,7 +80,7 @@ function StoreBucketCtrl($scope,
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('doubleclick', {
-      title: $i18next.t('DidYouKnow'),
+      title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')
     });

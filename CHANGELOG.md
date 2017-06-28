@@ -1,6 +1,9 @@
 # Next
 
 * Exclude all variants of 'Husk of the Pit' from 'Item Leveling' loadout.
+* Add a new storage page (under the floppy disk icon) for managing your DIM data. Import and export to a file, and set up Google Drive storage to sync across machines (website only). You can import your data from the Chrome extension into the website from this page as well.
+* The settings page has been cleaned up and reworded.
+* Added missing Trials emblems and shaders to the is:trials search.
 
 # 4.1.2
 

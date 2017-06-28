@@ -24,7 +24,6 @@ require('jquery-ui/ui/position');
 require('./scripts/app.module');
 
 require('./scripts/services/dimActionQueue.factory');
-require('./scripts/services/dimBungieService.factory');
 require('./scripts/services/dimDefinitions.factory');
 require('./scripts/services/dimManifestService.factory');
 require('./scripts/services/dimBucketService.factory');

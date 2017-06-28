@@ -23,7 +23,7 @@ angular.module('dimApp')
     };
   });
 
-function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
+function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, NewItemsService) {
   let otherDialog = null;
   let firstItemTimed = false;
 
@@ -96,7 +96,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         return;
       }
 
-      dimStoreService.dropNewItem(item);
+      NewItemsService.dropNewItem(item);
 
       if (otherDialog) {
         if (ngDialog.isOpen(otherDialog.id)) {

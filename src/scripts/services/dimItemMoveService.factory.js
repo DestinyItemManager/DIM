@@ -11,7 +11,7 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('movebox', {
-      title: $i18next.t('DidYouKnow'),
+      title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')
     });
@@ -44,7 +44,6 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
 
     return promise;
   });
-
 
   const consolidate = dimActionQueue.wrap((actionableItem, store, callback) => {
     const stores = _.filter(dimStoreService.getStores(), (s) => { return !s.isVault; });

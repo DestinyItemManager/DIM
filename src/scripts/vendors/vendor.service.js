@@ -5,8 +5,9 @@ import idbKeyval from 'idb-keyval';
 
 function VendorService(
   $rootScope,
-  dimBungieService,
+  Destiny1Api,
   dimStoreService,
+  ItemFactory,
   dimDefinitions,
   dimPlatformService,
   $q
@@ -285,7 +286,7 @@ function VendorService(
           return vendor;
         } else {
           // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
-          return dimBungieService
+          return Destiny1Api
             .getVendorForCharacter(store, vendorHash)
             .then((vendor) => {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
@@ -377,7 +378,7 @@ function VendorService(
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
     });
 
-    return dimStoreService.processItems({ id: null }, _.pluck(saleItems, 'item'))
+    return ItemFactory.processItems({ id: null }, _.pluck(saleItems, 'item'))
       .then((items) => {
         const itemsById = _.indexBy(items, 'id');
         const categories = _.compact(_.map(vendor.saleItemCategories, (category) => {

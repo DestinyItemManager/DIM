@@ -9,7 +9,17 @@ angular.module('dimApp')
     controller: ClearNewItemsCtrl
   });
 
-function ClearNewItemsCtrl(dimStoreService, dimSettingsService) {
-  this.storeService = dimStoreService;
+function ClearNewItemsCtrl($scope, NewItemsService, dimSettingsService, hotkeys, $i18next) {
   this.settings = dimSettingsService;
+  this.newItemsService = NewItemsService;
+
+  hotkeys = hotkeys.bindTo($scope);
+
+  hotkeys.add({
+    combo: ['x'],
+    description: $i18next.t('Hotkey.ClearNewItems'),
+    callback: function() {
+      NewItemsService.clearNewItems();
+    }
+  });
 }

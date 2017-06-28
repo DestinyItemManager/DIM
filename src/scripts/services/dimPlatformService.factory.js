@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, $state, toaster) {
+function PlatformService($rootScope, $q, BungieUserApi, SyncService, OAuthTokenService, $state, toaster) {
   let _platforms = [];
   let _active = null;
 
@@ -26,7 +26,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
     }
 
     if (token.bungieMembershipId) {
-      return dimBungieService.getAccounts(token.bungieMembershipId)
+      return BungieUserApi.getAccounts(token.bungieMembershipId)
         .then(generatePlatforms)
         .catch((e) => {
           toaster.pop('error', 'Unexpected error getting accounts', e.message);
@@ -35,7 +35,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
     } else {
       // they're logged in, just need to fill in membership
       // TODO: this can be removed after everyone has had a chance to upgrade
-      return dimBungieService.getAccountsForCurrentUser()
+      return BungieUserApi.getAccountsForCurrentUser()
         .then((accounts) => {
           const token = OAuthTokenService.getToken();
           token.bungieMembershipId = accounts.bungieNetUser.membershipId;

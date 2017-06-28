@@ -84,14 +84,6 @@ export default class ContentController {
     }
 
     hotkeys.add({
-      combo: ['x'],
-      description: $i18next.t('Hotkey.ClearNewItems'),
-      callback: function() {
-        dimStoreService.clearNewItems();
-      }
-    });
-
-    hotkeys.add({
       combo: ['ctrl+alt+shift+d'],
       callback: function() {
         dimState.debug = true;

@@ -27,6 +27,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
     fallbackLng: 'en',
     lowerCaseLng: true,
     interpolation: {
+      escapeValue: false,
       format: function(val, format) {
         if (format === 'pct') {
           return `${Math.min(100.0, Math.floor(100.0 * val))}%`;
@@ -42,7 +43,8 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       es: { translation: es },
       ja: { translation: ja },
       'pt-br': { translation: ptBR }
-    }
+    },
+    returnObjects: true
   });
 
   // Bungie's API will start throttling an API if it's called more than once per second. It does this

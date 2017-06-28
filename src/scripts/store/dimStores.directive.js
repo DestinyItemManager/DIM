@@ -36,7 +36,7 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('collapsed', {
-      title: $i18next.t('DidYouKnow'),
+      title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')
     });

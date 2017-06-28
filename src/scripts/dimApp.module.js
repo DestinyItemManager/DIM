@@ -17,6 +17,7 @@ import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
 
+import bungieApiModule from './bungie-api/bungie-api.module';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
@@ -47,6 +48,7 @@ export const DimAppModule = angular
     SliderModule,
     ToasterModule,
     UIRouterModule,
+    bungieApiModule,
     inventoryModule,
     recordBooksModule,
     vendorsModule,

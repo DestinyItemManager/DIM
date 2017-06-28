@@ -95,23 +95,29 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
       if ($featureFlags.debugSync) {
         console.log("gdrive init requested");
       }
-      gapi.load('client:auth2', () => {
-        gapi.client.init(this.drive).then(() => {
-          if ($featureFlags.debugSync) {
-            console.log("gdrive init complete");
-          }
-          const auth = gapi.auth2.getAuthInstance();
-          if (!auth) {
-            return $q.reject(new Error("No auth instance - has it not initialized??"));
-          }
 
-          // Listen for sign-in state changes.
-          auth.isSignedIn.listen(this.updateSigninStatus.bind(this));
+      if (window.gapi) {
+        gapi.load('client:auth2', () => {
+          gapi.client.init(this.drive).then(() => {
+            if ($featureFlags.debugSync) {
+              console.log("gdrive init complete");
+            }
+            const auth = gapi.auth2.getAuthInstance();
+            if (!auth) {
+              return $q.reject(new Error("No auth instance - has it not initialized??"));
+            }
 
-          // Handle the initial sign-in state.
-          return this.updateSigninStatus(auth.isSignedIn.get()).then(() => this.ready.resolve());
+            // Listen for sign-in state changes.
+            auth.isSignedIn.listen(this.updateSigninStatus.bind(this));
+
+            // Handle the initial sign-in state.
+            return this.updateSigninStatus(auth.isSignedIn.get()).then(() => this.ready.resolve());
+          });
         });
-      });
+      } else {
+        console.warn("Google Drive API blocked");
+        this.enabled = false;
+      }
     },
 
     /**
