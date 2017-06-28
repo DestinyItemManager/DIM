@@ -35,6 +35,6 @@ function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $translate) {
       .then((alerts) => {
         alerts.forEach(showAlertToaster);
       })
-      .catch((e) => { console.log(e) });
+      .catch((e) => { });
   }
 }
