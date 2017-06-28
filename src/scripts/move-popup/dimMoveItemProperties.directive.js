@@ -34,7 +34,7 @@ function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, dimBungieService) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, Destiny1Api) {
   const vm = this;
 
   vm.tab = 'default';
@@ -135,7 +135,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
       state = !item.tracked;
     }
 
-    dimBungieService.setItemState(item, store, state, type)
+    Destiny1Api.setItemState(item, store, state, type)
       .then(() => {
         if (type === 'lock') {
           item.locked = state;
