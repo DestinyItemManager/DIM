@@ -9,8 +9,6 @@
     "128": "icon128.png"
   },
   "short_name": "DIM",
-  "theme_color": "#404141",
-  "background_color": "#434444",
   "background": {
     "scripts": [
       "extension-scripts/main.js"
