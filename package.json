@@ -88,7 +88,8 @@
     "url-loader": "^0.5.7",
     "webpack": "^2.2.0-rc.0",
     "webpack-bundle-analyzer": "^2.8.2",
-    "webpack-dev-server": "^2.2.0-rc.0"
+    "webpack-dev-server": "^2.2.0-rc.0",
+    "workbox-webpack-plugin": "^1.0.1"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.3",

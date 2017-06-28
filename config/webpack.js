@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -202,6 +203,19 @@ module.exports = (env) => {
         '$featureFlags.debugSync': JSON.stringify(false),
         // Use a WebAssembly version of SQLite, if possible
         '$featureFlags.wasm': JSON.stringify(false)
+      }),
+
+      // Generate a service worker
+      new WorkboxPlugin({
+        maximumFileSizeToCacheInBytes: 5000000,
+        globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
+        globIgnores: [
+          'authReturn*',
+          'extension-scripts/*',
+          'return.html',
+        ],
+        // swSrc: './src/sw.js',
+        swDest: './dist/sw.js'
       }),
 
       // Enable if you want to debug the size of the chunks
