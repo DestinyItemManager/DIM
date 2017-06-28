@@ -414,6 +414,7 @@ function VendorService(
           categoryItems.forEach((saleItem) => {
             const item = saleItem.item;
             if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
+              item.dtrRoll = _.compact(_.pluck(item.talentGrid.nodes, 'dtrRoll')).join(';');
               hasArmorWeaps = true;
             }
             if (item.type === 'Ship' || item.type === 'Vehicle') {
