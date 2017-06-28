@@ -1,5 +1,8 @@
 import { bungieApiQuery } from './bungie-api-utils';
 
+/**
+ * UserService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
+ */
 export function BungieUserApi(
   BungieServiceHelper,
   $http) {

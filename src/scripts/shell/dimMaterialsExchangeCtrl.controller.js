@@ -5,7 +5,7 @@ import '../materials-exchange/materials-exchange.scss';
 angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
 
-function MaterialsController(dimDefinitions, dimItemService, dimStoreService, $state) {
+function MaterialsController(dimDefinitions, dimStoreService, $state) {
   if (!$featureFlags.materialsExchangeEnabled) {
     $state.go('inventory');
     return;
