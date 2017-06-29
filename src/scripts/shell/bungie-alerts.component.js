@@ -23,10 +23,15 @@ function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $translate) {
 
   // Memoize so we only show each alert once per session
   const showAlertToaster = _.memoize((alert) => {
+    const bungieTwitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp">@BungieHelp Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp"></a>';
+    const dimTwitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">@ThisIsDIM Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"></a>';
+    const twitter = `<div>${$translate.instant('BungieService.Twitter')} ${bungieTwitterLink} | ${dimTwitterLink}</div>`;
+
     toaster.pop({
       type: alert.type,
       title: $translate.instant('BungieAlert.Title'),
-      body: alert.body
+      bodyOutputType: 'trustedHtml',
+      body: `<p>${alert.body}</p>${twitter}`
     });
   }, (alert) => `${alert.key}-${alert.timestamp}`);
 
