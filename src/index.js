@@ -81,3 +81,10 @@ if ($featureFlags.materialsExchangeEnabled) {
 require('./scripts/login/dimLogin.controller');
 
 require('./scss/main.scss');
+
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('/sw.js')
+    .catch((err) => {
+      console.error('Unable to register service worker.', err);
+    });
+}
