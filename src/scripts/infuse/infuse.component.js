@@ -1,28 +1,35 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './infuse.html';
+import './infuse.scss';
 
-angular.module('dimApp')
-  .controller('dimInfuseCtrl', dimInfuseCtrl);
+export const InfuseComponent = {
+  template,
+  bindings: {
+    source: '<'
+  },
+  controller: InfuseCtrl,
+  controllerAs: 'vm'
+};
 
+function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, toaster, $q, $translate) {
+  'ngInject';
 
-function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, toaster, $q, $translate) {
   const vm = this;
 
   vm.items = {};
   dimDefinitions.getDefinitions().then((defs) => {
-    vm.items[452597397] = defs.InventoryItem.get(452597397);
-    vm.items[2534352370] = defs.InventoryItem.get(2534352370);
-    vm.items[3159615086] = defs.InventoryItem.get(3159615086);
-    vm.items[937555249] = defs.InventoryItem.get(937555249);
-    vm.items[1898539128] = defs.InventoryItem.get(1898539128);
-    vm.items[1542293174] = defs.InventoryItem.get(1542293174);
+    [
+      452597397,
+      2534352370,
+      3159615086,
+      937555249,
+      1898539128,
+      1542293174
+    ].forEach((hash) => {
+      vm.items[hash] = defs.InventoryItem.get(452597397);
+    });
   });
-
-  if (_gaq) {
-    // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
-    // Send a virtual pageview event, even though this is a popup
-    // _gaq('send', 'pageview', { page: '/infuse' });
-  }
 
   angular.extend(vm, {
     getAllItems: true,
@@ -33,14 +40,13 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutServic
     infusable: [],
     transferInProgress: false,
 
-    setSourceItem: function(item) {
+    $onInit: function() {
       // Set the source and reset the targets
-      vm.source = item;
       vm.infused = 0;
       vm.target = null;
-      vm.exotic = item.tier === 'Exotic';
+      vm.exotic = vm.source.tier === 'Exotic';
       vm.stat = vm.source.primStat.stat;
-      if (item.bucket.sort === 'General') {
+      if (vm.source.bucket.sort === 'General') {
         vm.wildcardMaterialCost = 2;
         vm.wildcardMaterialHash = 937555249;
       } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
@@ -50,6 +56,8 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutServic
         vm.wildcardMaterialCost = 10;
         vm.wildcardMaterialHash = 1542293174;
       }
+
+      vm.getItems();
     },
 
     selectItem: function(item, e) {
@@ -166,7 +174,4 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutServic
       });
     }
   });
-
-  vm.setSourceItem($scope.$parent.ngDialogData);
-  vm.getItems();
 }
