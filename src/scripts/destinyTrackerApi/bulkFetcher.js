@@ -33,7 +33,7 @@ class BulkFetcher {
     const promise = this.$q
               .when(this._getBulkWeaponDataEndpointPost(weaponList))
               .then(this.$http)
-              .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
+              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
               .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
