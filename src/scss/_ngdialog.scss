@@ -2,21 +2,44 @@
 
 .ngdialog {
   box-sizing: border-box;
-  position: fixed;
-  overflow: auto;
+  position: absolute;
+  display: block;
+  background-color: #222;
   -webkit-overflow-scrolling: touch;
-  z-index: 2;
-  top: 0;
-  right: 0;
+  z-index: 3;
   bottom: 0;
-  left: 0;
-}
+  overflow: visible;
+  h1 {
+    font-weight: 400;
+  }
 
-.ngdialog-content > div {
-  display: flex;
-  flex-direction: column;
-  height: 90%;
-  max-height: 100%;
+  * {
+    box-sizing: inherit;
+    &:before, &:after {
+      box-sizing: inherit;
+    }
+  }
+
+  &.modal-dialog {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    z-index: 1000;
+    font-size: 13px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ngdialog-content {
+      max-height: fit-content;
+      max-width: 50%;
+      background-color: #222;
+      border: solid 1px #3e3e3e;
+      height: 70%;
+    }
+  }
 }
 
 .ngdialog-inner-content {
@@ -24,6 +47,10 @@
   -webkit-overflow-scrolling: touch;
   flex: 1;
   padding: 15px;
+
+  > p {
+    margin: 5px 0;
+  }
 }
 
 .ngdialog-close {
@@ -34,36 +61,15 @@
   background: transparent;
   color: #e0e0e0;
   border: 0;
+
   &:hover {
     color: $orange;
   }
-}
 
-
-@keyframes ngdialog-fadeout {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes ngdialog-fadein {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-.ngdialog * {
-  box-sizing: inherit;
-  &:before, &:after {
-    box-sizing: inherit;
+  &:before {
+    content: '\f00d';
+    font-family: 'FontAwesome';
+    cursor: pointer;
   }
 }
 
@@ -74,13 +80,6 @@
   right: 0;
   bottom: 0;
   left: 0;
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadein 0s;
-}
-
-.ngdialog.ngdialog-closing .ngdialog-overlay {
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadeout 0s;
 }
 
 .ngdialog-content {
@@ -88,6 +87,14 @@
   background-color: transparent;
   position: relative;
   z-index: 100;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    max-height: 100%;
+  }
+
   > div > {
     h1, h2, h3, p, table, dl {
       padding-left: 25px;
@@ -159,57 +166,5 @@
       width: 15px;
       height: 15px;
     }
-  }
-}
-
-.ngdialog.ngdialog-closing .ngdialog-content {
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadeout 0s;
-}
-
-.ngdialog-inner-content > p {
-  margin: 5px 0;
-}
-
-.ngdialog-close:before {
-  content: '\f00d';
-  font-family: 'FontAwesome';
-  cursor: pointer;
-}
-
-.ngdialog {
-  position: absolute;
-  display: block;
-  background-color: #222;
-  top: 0;
-  -webkit-overflow-scrolling: touch;
-  z-index: 3;
-  top: initial;
-  left: initial;
-  right: initial;
-  overflow: visible;
-  h1 {
-    font-weight: 400;
-  }
-}
-
-.ngdialog.modal-dialog {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  color: #fff;
-  z-index: 1000;
-  font-size: 13px;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .ngdialog-content {
-    max-height: fit-content;
-    max-width: 50%;
-    background-color: #222;
-    border: solid 1px #3e3e3e;
-    height: 70%;
   }
 }
