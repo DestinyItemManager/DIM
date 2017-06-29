@@ -40,7 +40,9 @@ function DestinyTrackerService($q,
   });
 
   $rootScope.$on('dim-vendors-updated', (event, vendors) => {
-    console.log('click');
+    if (dimSettingsService.showReviews) {
+      _bulkFetcher.bulkFetch(vendors);
+    }
   });
 
   return {

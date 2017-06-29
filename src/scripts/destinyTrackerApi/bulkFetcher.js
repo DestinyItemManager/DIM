@@ -49,11 +49,20 @@ class BulkFetcher {
    * @memberof BulkFetcher
    */
   bulkFetch(storesContainer) {
-    const stores = storesContainer.stores;
+    if (storesContainer.stores) {
+      const stores = storesContainer.stores;
 
-    this._getBulkFetchPromise(stores)
-      .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                  stores));
+      this._getBulkFetchPromise(stores)
+        .then((bulkRankings) => this.attachRankings(bulkRankings,
+                                                    stores));
+    }
+    else if (storesContainer.vendors) {
+      const vendors = storesContainer.vendors;
+
+      this._getBulkFetchPromise(vendors)
+        .then((bulkRankings) => this.attachRankings(bulkRankings,
+                                                    vendors));
+    }
   }
 
   attachRankings(bulkRankings,
