@@ -9,6 +9,7 @@
   --num-characters: 3;
   --character-columns: 3;
   --vault-max-columns: 999;
+  --color-filter: '';
 }
 
 // iPad - use smaller items to fit them on screen.
@@ -434,6 +435,7 @@ body {
   color: white;
   font-family: 'Open Sans', sans-serif;
   font-size:12px;
+  filter: var(--color-filter);
   > div:first-child {
     padding-top: 10px;
   }

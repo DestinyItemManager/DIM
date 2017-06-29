@@ -73,6 +73,8 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
 
     language: defaultLanguage(),
 
+    colorA11y: '-',
+
     save: function() {
       if (!_loaded) {
         throw new Error("Settings haven't loaded - they can't be saved.");

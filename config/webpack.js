@@ -201,7 +201,9 @@ module.exports = (env) => {
         '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
         '$featureFlags.debugSync': JSON.stringify(false),
         // Use a WebAssembly version of SQLite, if possible
-        '$featureFlags.wasm': JSON.stringify(false)
+        '$featureFlags.wasm': JSON.stringify(false),
+        // Enable color-blind a11y
+        '$featureFlags.colorA11y': JSON.stringify(env !== 'release')
       }),
 
       // Enable if you want to debug the size of the chunks
