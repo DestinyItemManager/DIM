@@ -29,30 +29,37 @@ import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
+const dependencies = [
+  AriaModule,
+  DialogModule,
+  DragAndDropModule,
+  MessagesModule,
+  RateLimiterModule,
+  ShellModule,
+  SliderModule,
+  ToasterModule,
+  TranslateModule,
+  TranslateMessageFormatModule,
+  UIRouterModule,
+  bungieApiModule,
+  inventoryModule,
+  recordBooksModule,
+  vendorsModule,
+  itemReviewModule,
+  loadoutBuilderModule,
+  oauthModule,
+  storageModule,
+  'ajoslin.promise-tracker',
+  'cfp.hotkeys'
+];
+
+if ($featureFlags.materialsExchangeEnabled) {
+  const materialsExchangeModule = require('./materials-exchange/materials-exchange.module').default;
+  dependencies.push(materialsExchangeModule);
+}
+
 export const DimAppModule = angular
-  .module('dimApp', [
-    AriaModule,
-    DialogModule,
-    DragAndDropModule,
-    MessagesModule,
-    RateLimiterModule,
-    ShellModule,
-    SliderModule,
-    ToasterModule,
-    TranslateModule,
-    TranslateMessageFormatModule,
-    UIRouterModule,
-    bungieApiModule,
-    inventoryModule,
-    recordBooksModule,
-    vendorsModule,
-    itemReviewModule,
-    loadoutBuilderModule,
-    oauthModule,
-    storageModule,
-    'ajoslin.promise-tracker',
-    'cfp.hotkeys'
-  ])
+  .module('dimApp', dependencies)
   .config(config)
   .config(routes)
   .run(run)
