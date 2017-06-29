@@ -342,6 +342,7 @@
       "ColumnSizeAuto": "Auto",
       "SizeItem": "Item size",
       "ResetToDefault": "Reset",
+      "ColorA11y": "Color blindness configuration",
       "CharacterOrder": "Sort characters by",
       "CharacterOrderRecent": "most recent character",
       "CharacterOrderReversed": "most recent character (reversed)",
