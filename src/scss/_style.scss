@@ -259,6 +259,9 @@ a {
   top: 20px;
   right: 20px;
   font-size: 20px;
+  background: transparent;
+  color: #e0e0e0;
+  border: 0;
   &:hover {
     color: $orange;
   }
