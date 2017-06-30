@@ -52,8 +52,7 @@
       "Days": "{numDays, plural, =1{# Day} other{# Days}}"
    },
    "Debug": {
-      "Dump": "Dump info to console",
-      "View": "View Item Debug Info"
+      "Dump": "Dump info to console"
    },
    "DidYouKnow": {
       "DidYouKnow": "Did you know?",
