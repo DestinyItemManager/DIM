@@ -60,8 +60,8 @@ class BulkFetcher {
       const vendors = $.map(storesContainer.vendors, (vendor) => { return vendor; });
 
       this._getBulkFetchPromise(vendors)
-        .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                    vendors));
+        .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
+                                                          vendors));
     }
   }
 
@@ -91,6 +91,37 @@ class BulkFetcher {
             storeItem.pros = matchingItem.pros;
             storeItem.cons = matchingItem.cons;
           }
+        }
+      });
+    });
+  }
+
+  attachVendorRankings(bulkRankings,
+                       vendors) {
+    if (!bulkRankings && !vendors) {
+      return;
+    }
+
+    const self = this;
+
+    if (bulkRankings) {
+      bulkRankings.forEach((bulkRanking) => {
+        self._reviewDataCache.addScore(bulkRanking);
+      });
+    }
+
+    vendors.forEach((vendor) => {
+      vendor.allItems.forEach((vendorItemContainer) => {
+        const vendorItem = vendorItemContainer.item;
+
+        const matchingItem = self._reviewDataCache.getRatingData(vendorItem);
+
+        if (matchingItem) {
+          vendorItem.dtrRating = matchingItem.rating;
+          vendorItem.userRating = matchingItem.userRating;
+          vendorItem.userReview = matchingItem.review;
+          vendorItem.pros = matchingItem.pros;
+          vendorItem.cons = matchingItem.cons;
         }
       });
     });
