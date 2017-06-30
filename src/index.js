@@ -42,8 +42,6 @@ require('./scripts/services/dimFarmingService.factory');
 require('./scripts/loadout/dimLoadout.directive');
 require('./scripts/loadout/dimLoadoutPopup.directive');
 require('./scripts/loadout/random/dimRandom.controller');
-require('./scripts/compare/dimCompare.directive');
-require('./scripts/compare/dimCompareService.factory');
 require('./scripts/shell/dimAngularFilters.filter');
 require('./scripts/shell/dimSearchFilter.directive');
 require('./scripts/shell/dimClickAnywhereButHere.directive');

@@ -1,37 +1,33 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimCompare.directive.html';
+import template from './compare.html';
+import './compare.scss';
 
-angular.module('dimApp')
-  .directive('dimCompare', Compare)
-  .filter('statRange', () => {
-    return function(stat, statRanges) {
-      const statRange = statRanges[stat.statHash];
-      if (stat.qualityPercentage) {
-        return stat.qualityPercentage.min;
-      }
+export function StatRangeFilter() {
+  // Turns a stat and a list of ranges into a 0-100 scale
+  return function(stat, statRanges) {
+    const statRange = statRanges[stat.statHash];
+    if (stat.qualityPercentage) {
+      return stat.qualityPercentage.min;
+    }
 
-      if (!statRange.enabled) {
-        return -1;
-      }
+    if (!statRange.enabled) {
+      return -1;
+    }
 
-      return 100 * (stat.value - statRange.min) / (statRange.max - statRange.min);
-    };
-  });
-
-
-function Compare() {
-  return {
-    controller: CompareCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    scope: {},
-    template: template
+    return 100 * (stat.value - statRange.min) / (statRange.max - statRange.min);
   };
 }
 
+export const CompareComponent = {
+  controller: CompareCtrl,
+  controllerAs: 'vm',
+  template
+};
 
 function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $translate) {
+  'ngInject';
+
   const vm = this;
   vm.tagsEnabled = $featureFlags.tagsEnabled;
   vm.show = dimCompareService.dialogOpen;
