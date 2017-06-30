@@ -1,4 +1,3 @@
-import debugItem from 'app/views/debugItem.html';
 import login from 'app/scripts/login/login.html';
 
 function routes($stateProvider, $urlRouterProvider) {
@@ -7,11 +6,6 @@ function routes($stateProvider, $urlRouterProvider) {
   const states = [{
     name: 'root',
     abstract: true
-  }, {
-    name: 'debugItem',
-    parent: 'content',
-    url: '/debugItem/:itemId',
-    template: debugItem
   }, {
     name: 'login',
     parent: 'shell',
