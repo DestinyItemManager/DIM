@@ -23,6 +23,12 @@ class ItemListBuilder {
   }
 
   _getAllItems(stores) {
+    const firstItem = stores[0];
+
+    if (firstItem.allItems !== undefined) {
+      return _.pluck(flatMap(stores, (vendor) => vendor.allItems), 'item');
+    }
+
     return flatMap(stores, (store) => store.items);
   }
 
@@ -60,6 +66,10 @@ class ItemListBuilder {
    * @memberof ItemListBuilder
    */
   getWeaponList(stores, reviewDataCache) {
+    if (stores.length > 10) {
+      console.log('big');
+    }
+
     const dtrWeapons = this._getDtrWeapons(stores, reviewDataCache);
 
     const list = new Set(dtrWeapons);

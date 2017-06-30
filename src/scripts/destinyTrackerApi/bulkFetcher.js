@@ -57,7 +57,7 @@ class BulkFetcher {
                                                     stores));
     }
     else if (storesContainer.vendors) {
-      const vendors = storesContainer.vendors;
+      const vendors = $.map(storesContainer.vendors, (vendor) => { return vendor; });
 
       this._getBulkFetchPromise(vendors)
         .then((bulkRankings) => this.attachRankings(bulkRankings,
