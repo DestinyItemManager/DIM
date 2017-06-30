@@ -3,6 +3,8 @@ import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 
 /**
  * APIs for interacting with Destiny 1 game data.
+ *
+ * DestinyService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
 export function Destiny1Api(
   BungieServiceHelper,

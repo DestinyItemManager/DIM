@@ -10,6 +10,9 @@
       "Vault": "Vault",
       "Weapons": "Weapons"
    },
+   "BungieAlert": {
+     "Title": "A message from Bungie:"
+   },
    "BungieService": {
       "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
       "Down": "Bungie.net is down.",
