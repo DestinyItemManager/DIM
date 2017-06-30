@@ -3,7 +3,7 @@ import angular from 'angular';
 import UIRouterModule from '@uirouter/angularjs';
 
 import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
-import { PlatformChoiceComponent } from './platform-choice';
+import { PlatformChoiceComponent } from './platform-choice/platform-choice.component';
 import shellComponent from './shell/shell.component';
 import contentComponent from './content/content.component';
 import backLinkComponent from './shell/backLink.component';
