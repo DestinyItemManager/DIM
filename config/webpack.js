@@ -196,7 +196,6 @@ module.exports = (env) => {
         '$featureFlags.debugMoves': JSON.stringify(false),
         // show changelog toaster
         '$featureFlags.changelogToaster': JSON.stringify(env === 'release'),
-        '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(env !== 'release'),

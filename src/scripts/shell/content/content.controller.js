@@ -45,7 +45,6 @@ export default class ContentController {
     });
 
     vm.featureFlags = {
-      materialsExchangeEnabled: $featureFlags.materialsExchangeEnabled,
       vendorsEnabled: $featureFlags.vendorsEnabled,
       colorA11y: $featureFlags.colorA11y
     };

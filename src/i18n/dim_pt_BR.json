@@ -82,7 +82,6 @@
       "About": "Sobre",
       "Filters": "Filtros",
       "FilterHelp": "Buscar por item/perk ou is:arc",
-      "MaterialsExchange": "Ranks de facção disponíveis",
       "Refresh": "Atualizar dados do Destiny",
       "SupportDIM": "Apoiantes"
    },
@@ -251,15 +250,6 @@
       "LoadCharInv": "Carregando personagens e inventário",
       "Save": "Salvando últimas informações ",
       "Unzip": "Descompactando últimas informações"
-   },
-   "MaterialsExchange": {
-      "MaterialsExchange": "Troca de materiais",
-      "CurrentRank": "Rank atual",
-      "CurrentRep": "Reputação atual",
-      "OnHand": "Materiais disponíveis",
-      "FromTrade": "Materiais para troca",
-      "NewRank": "Novo rank",
-      "NewRep": "Nova reputação"
    },
    "MovePopup": {
       "OverviewTab": "Visão geral",

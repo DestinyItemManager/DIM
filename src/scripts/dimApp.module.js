@@ -61,11 +61,6 @@ const dependencies = [
   'cfp.hotkeys'
 ];
 
-if ($featureFlags.materialsExchangeEnabled) {
-  const materialsExchangeModule = require('./materials-exchange/materials-exchange.module').default;
-  dependencies.push(materialsExchangeModule);
-}
-
 export const DimAppModule = angular
   .module('dimApp', dependencies)
   .config(config)

@@ -82,7 +82,6 @@
       "About": "情報",
       "Filters": "フィルター",
       "FilterHelp": "アイテム／パークを検索",
-      "MaterialsExchange": "利用可能な派閥のランク",
       "Refresh": "デスティニーデータを更新",
       "SupportDIM": "支持者"
    },
@@ -251,15 +250,6 @@
       "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中",
       "Save": "最新のデータを保存する",
       "Unzip": "最新のデータを解凍する"
-   },
-   "MaterialsExchange": {
-      "MaterialsExchange": "素材交換",
-      "CurrentRank": "現在のランク",
-      "CurrentRep": "現在の担当者",
-      "OnHand": "手持ちの材料",
-      "FromTrade": "交換素材",
-      "NewRank": "新しいランク",
-      "NewRep": "新しい担当者"
    },
    "MovePopup": {
       "OverviewTab": "概要",
