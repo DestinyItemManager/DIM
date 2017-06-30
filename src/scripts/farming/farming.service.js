@@ -2,14 +2,11 @@ import angular from 'angular';
 import _ from 'underscore';
 import { sum } from '../util';
 
-angular.module('dimApp')
-  .factory('dimFarmingService', FarmingService);
-
 /**
  * A service for "farming" items by moving them continuously off a character,
  * so that they don't go to the Postmaster.
  */
-function FarmingService($rootScope,
+export function FarmingService($rootScope,
                         $q,
                         dimItemService,
                         dimStoreService,
@@ -18,6 +15,7 @@ function FarmingService($rootScope,
                         dimSettingsService,
                         $translate,
                         dimBucketService) {
+  'ngInject';
   let intervalId;
   let cancelReloadListener;
   const glimmerHashes = new Set([

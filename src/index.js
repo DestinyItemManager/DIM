@@ -37,7 +37,6 @@ require('./scripts/services/dimDestinyTrackerService.factory');
 require('./scripts/services/dimItemService.factory');
 require('./scripts/services/dimItemMoveService.factory');
 require('./scripts/services/dimItemInfoService.factory');
-require('./scripts/services/dimFarmingService.factory');
 
 require('./scripts/loadout/dimLoadout.directive');
 require('./scripts/loadout/dimLoadoutPopup.directive');
@@ -55,7 +54,6 @@ require('./scripts/store/dimStoreItem.directive');
 require('./scripts/store/dimStoreHeading.directive');
 require('./scripts/store/dimSimpleItem.directive');
 require('./scripts/store/dimStats.directive');
-require('./scripts/store/dimFarming.directive');
 require('./scripts/store/dimClearNewItems.directive');
 require('./scripts/item-review/item-review.component');
 require('./scripts/move-popup/dimItemStats.component');

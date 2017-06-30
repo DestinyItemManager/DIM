@@ -22,6 +22,7 @@ import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
 import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
+import farmingModule from './farming/farming.module';
 import settingsModule from './settings/settings.module';
 import oauthModule from './oauth/oauth.module';
 import storageModule from './storage/storage.module';
@@ -52,6 +53,7 @@ const dependencies = [
   loadoutBuilderModule,
   compareModule,
   infuseModule,
+  farmingModule,
   settingsModule,
   oauthModule,
   storageModule,
