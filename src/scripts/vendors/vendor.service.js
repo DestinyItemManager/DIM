@@ -68,6 +68,8 @@ function VendorService(
     2634310414
   ];
 
+  let _ratingsRequested = false;
+
   const xur = 2796397637;
 
   let _reloadPromise = null;
@@ -79,7 +81,9 @@ function VendorService(
     vendors: {},
     totalVendors: 0,
     loadedVendors: 0,
-    countCurrencies: countCurrencies
+    countCurrencies: countCurrencies,
+    requestRatings: requestRatings,
+    _fulfillRatingsRequest: _fulfillRatingsRequest
     // TODO: expose getVendor promise, idempotently?
   };
 
@@ -157,10 +161,8 @@ function VendorService(
         })));
       })
       .then(() => {
-        $rootScope.$broadcast('dim-vendors-updated', {
-          vendors: service.vendors
-        });
         service.vendorsLoaded = true;
+        service._fulfillRatingsRequest();
       })
       .finally(() => {
         // Clear the reload promise so this can be called again
@@ -469,6 +471,21 @@ function VendorService(
 
   function isSaleItemUnlocked(saleItem) {
     return _.every(saleItem.unlockStatuses, 'isSet');
+  }
+
+  function requestRatings() {
+    _ratingsRequested = true;
+    _fulfillRatingsRequest();
+  }
+
+  function _fulfillRatingsRequest() {
+    if ((service.vendorsLoaded) && (_ratingsRequested)) {
+      _ratingsRequested = false;
+
+      $rootScope.$broadcast('dim-vendors-updated', {
+        vendors: service.vendors
+      });
+    }
   }
 
   /**
