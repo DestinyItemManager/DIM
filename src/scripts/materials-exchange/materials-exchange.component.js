@@ -1,11 +1,17 @@
 import angular from 'angular';
 import _ from 'underscore';
-import '../materials-exchange/materials-exchange.scss';
+import template from './materials-exchange.html';
+import './materials-exchange.scss';
 
-angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
-
+export const MaterialsExchangeComponent = {
+  template: template,
+  controller: MaterialsController,
+  controllerAs: 'vm'
+};
 
 function MaterialsController(dimDefinitions, dimStoreService, $state) {
+  'ngInject';
+
   if (!$featureFlags.materialsExchangeEnabled) {
     $state.go('inventory');
     return;

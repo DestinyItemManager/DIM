@@ -73,10 +73,6 @@ require('./scripts/debug/dimDebugItem.controller');
 if ($DIM_FLAVOR === 'dev') {
   require('./scripts/developer/dimDeveloper.controller');
 }
-if ($featureFlags.materialsExchangeEnabled) {
-  require('./scripts/shell/dimMaterialsExchangeCtrl.controller');
-  require('./scripts/materials-exchange/dimCollapsible.directive');
-}
 require('./scripts/login/dimLogin.controller');
 
 require('./scss/main.scss');

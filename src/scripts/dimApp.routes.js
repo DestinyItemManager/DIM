@@ -22,15 +22,6 @@ function routes($stateProvider, $urlRouterProvider) {
     }
   }];
 
-  if ($featureFlags.materialsExchangeEnabled) {
-    states.push({
-      name: 'materials-exchange',
-      parent: 'content',
-      url: '/materials-exchange',
-      template: require('app/views/mats-exchange.html')
-    });
-  }
-
   if ($DIM_FLAVOR === 'dev') {
     states.push({
       name: 'developer',

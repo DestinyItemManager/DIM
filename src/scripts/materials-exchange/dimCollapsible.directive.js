@@ -1,9 +1,6 @@
-import angular from 'angular';
 import template from './dimCollapsible.directive.html';
 
-angular.module('dimApp').directive('dimCollapsibleSection', Section);
-
-function Section() {
+export function Section() {
   return {
     transclude: true,
     scope: {
