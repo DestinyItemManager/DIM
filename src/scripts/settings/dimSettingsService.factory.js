@@ -1,10 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-angular.module('dimApp')
-  .factory('dimSettingsService', SettingsService);
-
-
 /**
  * The settings service provides a settings object which contains
  * all DIM settings as properties. To observe changes in settings,
@@ -16,7 +12,9 @@ angular.module('dimApp')
  * load in the user's actual settings, so it is a good sidea to
  * always watch the settings you are using.
  */
-function SettingsService($rootScope, SyncService, $window, $translate) {
+export function SettingsService($rootScope, SyncService, $window, $translate) {
+  'ngInject';
+
   let _loaded = false;
 
   const destinyLanguages = ['de', 'en', 'fr', 'es', 'it', 'ja', 'pt-br'];
