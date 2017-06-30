@@ -50,7 +50,7 @@ const dependencies = [
   itemReviewModule,
   loadoutBuilderModule,
   infuseModule,
-    settingsModule,
+  settingsModule,
   oauthModule,
   storageModule,
   'ajoslin.promise-tracker',
