@@ -202,195 +202,17 @@ dd {
   }
 }
 
-.ngdialog.modal-dialog {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  color: #fff;
-  z-index: 1000;
-  font-size: 13px;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .ngdialog-content {
-    max-height: fit-content;
-    max-width: 50%;
-    background-color: #222;
-    border: solid 1px #3e3e3e;
-    height: 70%;
-  }
-}
-
 a {
   color: $blue;
   font-size: 13px;
 }
 
-.ngdialog {
-  box-sizing: border-box;
-  position: fixed;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  z-index: 2;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.ngdialog-content > div {
-  display: flex;
-  flex-direction: column;
-  height: 90%;
-  max-height: 100%;
-}
-
-.ngdialog-inner-content {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  flex: 1;
-  padding: 15px;
-}
-
-.ngdialog-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 20px;
-  &:hover {
-    color: $orange;
-  }
-}
 
 /* settings dialog */
 
 .settings td:nth-child(2) {
   white-space: nowrap;
   min-width: 20em;
-}
-
-@keyframes ngdialog-fadeout {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes ngdialog-fadein {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-.ngdialog * {
-  box-sizing: inherit;
-  &:before, &:after {
-    box-sizing: inherit;
-  }
-}
-
-.ngdialog-overlay {
-  position: fixed;
-  background: rgba(0, 0, 0, 0.85);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadein 0s;
-}
-
-.ngdialog.ngdialog-closing .ngdialog-overlay {
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadeout 0s;
-}
-
-.ngdialog-content {
-  color: #e0e0e0;
-  background-color: transparent;
-  position: relative;
-  z-index: 100;
-  > div > {
-    h1, h2, h3, p, table, dl {
-      padding-left: 25px;
-      padding-right: 25px;
-
-      img {
-        vertical-align: middle;
-      }
-    }
-  }
-  form {
-    padding: 0;
-  }
-  h1 {
-    flex-shrink: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 15px;
-    font-weight: 200;
-    background-color: #101010;
-  }
-  h2 {
-    margin-top: 0;
-  }
-  > p {
-    margin: 5px 0;
-  }
-  dl {
-    background-color: #2F2F2F;
-    border-radius: 6px;
-    padding: 5px 15px;
-    margin: 0 25px;
-  }
-  dt {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.1em;
-    margin-top: 10px;
-    color: $orange;
-  }
-  dd {
-    margin: 10px 10px 15px 10px;
-  }
-  table {
-    padding: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background-color: #222;
-    tr:nth-child(2n+1) {
-      background-color: #1B1B1B;
-    }
-  }
-  tr td:first-child {
-    border-left-style: solid;
-    border-left-width: 1px;
-  }
-  td {
-    border-color: #1B1B1B;
-    border-style: none solid solid none;
-    border-top: medium none;
-    border-width: medium 1px 1px medium;
-    font-size: 13px;
-    padding: 6px 9px;
-    vertical-align: top;
-  }
-  input {
-    &[type="checkbox"], &[type="radio"] {
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-    }
-  }
 }
 
 #filter-view td span {
@@ -411,20 +233,6 @@ h2, h3 {
   margin-bottom: 15px;
 }
 
-.ngdialog.ngdialog-closing .ngdialog-content {
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadeout 0s;
-}
-
-.ngdialog-inner-content > p {
-  margin: 5px 0;
-}
-
-.ngdialog-close:before {
-  content: '\f00d';
-  font-family: 'FontAwesome';
-  cursor: pointer;
-}
 
 body {
   overflow-y: auto;
@@ -1700,22 +1508,6 @@ dim-compare {
 
 .ng-hide {
   display: none;
-}
-
-.ngdialog {
-  position: absolute;
-  display: block;
-  background-color: #222;
-  top: 0;
-  -webkit-overflow-scrolling: touch;
-  z-index: 3;
-  top: initial;
-  left: initial;
-  right: initial;
-  overflow: visible;
-  h1 {
-    font-weight: 400;
-  }
 }
 
 h2, h3, h4 {
