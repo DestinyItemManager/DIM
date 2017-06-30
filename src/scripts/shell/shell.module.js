@@ -8,6 +8,7 @@ import shellComponent from './shell/shell.component';
 import contentComponent from './content/content.component';
 import backLinkComponent from './shell/backLink.component';
 import { CountdownComponent } from './countdown.component';
+import { BungieAlertsComponent } from './bungie-alerts.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 
 export const ShellModule = angular
@@ -16,6 +17,7 @@ export const ShellModule = angular
   ])
   .directive('dimActivityTracker', ActivityTrackerDirective)
   .service('dimActivityTrackerService', ActivityTrackerService)
+  .component('bungieAlerts', BungieAlertsComponent)
   .component('dimPlatformChoice', PlatformChoiceComponent)
   .component('dimShell', shellComponent)
   .component('content', contentComponent)
