@@ -6,6 +6,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
 
   const vm = this;
   vm.canReview = dimSettingsService.allowIdPostToDtr;
+  vm.canCreateReview = (vm.canReview && vm.item.instanceId);
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
   vm.expandReview = vm.hasUserReview;
