@@ -20,6 +20,7 @@ import recordBooksModule from './record-books/record-books.module';
 import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
+import infuseModule from './infuse/infuse.module';
 import oauthModule from './oauth/oauth.module';
 import storageModule from './storage/storage.module';
 
@@ -48,6 +49,7 @@ export const DimAppModule = angular
     vendorsModule,
     itemReviewModule,
     loadoutBuilderModule,
+    infuseModule,
     oauthModule,
     storageModule,
     'ajoslin.promise-tracker',
