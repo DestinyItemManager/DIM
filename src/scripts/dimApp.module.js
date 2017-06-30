@@ -31,32 +31,39 @@ import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
-export const DimAppModule = angular
-  .module('dimApp', [
-    AriaModule,
-    DialogModule,
-    DragAndDropModule,
-    MessagesModule,
-    RateLimiterModule,
-    ShellModule,
-    SliderModule,
-    ToasterModule,
-    TranslateModule,
-    TranslateMessageFormatModule,
-    UIRouterModule,
-    bungieApiModule,
-    inventoryModule,
-    recordBooksModule,
-    vendorsModule,
-    itemReviewModule,
-    loadoutBuilderModule,
-    infuseModule,
+const dependencies = [
+  AriaModule,
+  DialogModule,
+  DragAndDropModule,
+  MessagesModule,
+  RateLimiterModule,
+  ShellModule,
+  SliderModule,
+  ToasterModule,
+  TranslateModule,
+  TranslateMessageFormatModule,
+  UIRouterModule,
+  bungieApiModule,
+  inventoryModule,
+  recordBooksModule,
+  vendorsModule,
+  itemReviewModule,
+  loadoutBuilderModule,
+  infuseModule,
     settingsModule,
-    oauthModule,
-    storageModule,
-    'ajoslin.promise-tracker',
-    'cfp.hotkeys'
-  ])
+  oauthModule,
+  storageModule,
+  'ajoslin.promise-tracker',
+  'cfp.hotkeys'
+];
+
+if ($featureFlags.materialsExchangeEnabled) {
+  const materialsExchangeModule = require('./materials-exchange/materials-exchange.module').default;
+  dependencies.push(materialsExchangeModule);
+}
+
+export const DimAppModule = angular
+  .module('dimApp', dependencies)
   .config(config)
   .config(routes)
   .run(run)
