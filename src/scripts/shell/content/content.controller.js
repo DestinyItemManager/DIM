@@ -55,14 +55,6 @@ export default class ContentController {
     hotkeys = hotkeys.bindTo($scope);
 
     hotkeys.add({
-      combo: ['r'],
-      description: $translate.instant('Hotkey.RefreshInventory'),
-      callback: function() {
-        vm.refresh();
-      }
-    });
-
-    hotkeys.add({
       combo: ['i'],
       description: $translate.instant('Hotkey.ToggleDetails'),
       callback: function() {
@@ -132,9 +124,5 @@ export default class ContentController {
     };
 
     vm.xur = dimXurService;
-
-    vm.refresh = function refresh() {
-      loadingTracker.addPromise(dimStoreService.reloadStores());
-    };
   }
 }
