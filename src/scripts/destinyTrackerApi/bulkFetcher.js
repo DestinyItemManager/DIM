@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import { ItemListBuilder } from './itemListBuilder';
 
 class BulkFetcher {
@@ -57,7 +58,7 @@ class BulkFetcher {
                                                     stores));
     }
     else if (storesContainer.vendors) {
-      const vendors = $.map(storesContainer.vendors, (vendor) => { return vendor; });
+      const vendors = _.values(storesContainer.vendors);
 
       this._getBulkFetchPromise(vendors)
         .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
