@@ -88,23 +88,27 @@
   position: relative;
   z-index: 100;
 
-  > div {
-    display: flex;
-    flex-direction: column;
-    height: 90%;
-    max-height: 100%;
-  }
+  > {
+    div, settings > div, xur > div {
+      display: flex;
+      flex-direction: column;
+      height: 90%;
+      max-height: 100%;
 
-  > div > {
-    h1, h2, h3, p, table, dl {
-      padding-left: 25px;
-      padding-right: 25px;
+      > {
+        h1, h2, h3, p, table, dl {
+          padding-left: 25px;
+          padding-right: 25px;
 
-      img {
-        vertical-align: middle;
+          img {
+            vertical-align: middle;
+          }
+        }
       }
     }
   }
+
+  > div
   form {
     padding: 0;
   }

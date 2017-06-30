@@ -21,6 +21,7 @@ import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
 import infuseModule from './infuse/infuse.module';
+import settingsModule from './settings/settings.module';
 import oauthModule from './oauth/oauth.module';
 import storageModule from './storage/storage.module';
 
@@ -50,6 +51,7 @@ export const DimAppModule = angular
     itemReviewModule,
     loadoutBuilderModule,
     infuseModule,
+    settingsModule,
     oauthModule,
     storageModule,
     'ajoslin.promise-tracker',

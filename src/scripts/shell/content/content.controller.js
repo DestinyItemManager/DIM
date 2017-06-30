@@ -1,4 +1,3 @@
-import settingsTemplate from 'app/views/settings.html';
 import aboutTemplate from 'app/views/about.html';
 import supportTemplate from 'app/views/support.html';
 import filtersTemplate from 'app/views/filters.html';
@@ -120,7 +119,7 @@ export default class ContentController {
       };
     }
 
-    vm.showSetting = showPopupFunction('settings', settingsTemplate);
+    vm.showSetting = showPopupFunction('settings', '<settings></settings>');
     vm.showAbout = showPopupFunction('about', aboutTemplate);
     vm.showSupport = showPopupFunction('support', supportTemplate);
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
