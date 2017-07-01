@@ -10,6 +10,7 @@ function VendorService(
   ItemFactory,
   dimDefinitions,
   dimPlatformService,
+  dimDestinyTrackerService,
   $q
 ) {
   'ngInject';
@@ -482,9 +483,7 @@ function VendorService(
     if ((service.vendorsLoaded) && (_ratingsRequested)) {
       _ratingsRequested = false;
 
-      $rootScope.$broadcast('dim-vendors-updated', {
-        vendors: service.vendors
-      });
+      dimDestinyTrackerService.updateVendorRankings(service.vendors);
     }
   }
 
