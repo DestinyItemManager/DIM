@@ -232,6 +232,16 @@ module.exports = (env) => {
     config.bail = true;
     config.stats = 'verbose';
 
+    // The sql.js library doesnt work at all (reports no tables) when minified,
+    // so we exclude it from the regular minification
+    // FYI, uglification runs on final chunks rather than individual modules
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+      exclude: [/-sqlLib-/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
+      compress: { warnings: false },
+      output: { comments: false },
+      sourceMap: true
+    }));
+
     // Generate a service worker
     config.plugins.push(new WorkboxPlugin({
       maximumFileSizeToCacheInBytes: 5000000,
@@ -243,16 +253,6 @@ module.exports = (env) => {
       ],
       // swSrc: './src/sw.js',
       swDest: './dist/sw.js'
-    }));
-
-    // The sql.js library doesnt work at all (reports no tables) when minified,
-    // so we exclude it from the regular minification
-    // FYI, uglification runs on final chunks rather than individual modules
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      exclude: [/-sqlLib-/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
-      compress: { warnings: false },
-      output: { comments: false },
-      sourceMap: true
     }));
   }
 
