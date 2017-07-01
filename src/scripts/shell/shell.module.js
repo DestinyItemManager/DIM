@@ -7,6 +7,7 @@ import { PlatformChoiceComponent } from './platform-choice/platform-choice.compo
 import shellComponent from './shell/shell.component';
 import contentComponent from './content/content.component';
 import backLinkComponent from './shell/backLink.component';
+import { RefreshStoresComponent } from './refresh-stores.component';
 import { CountdownComponent } from './countdown.component';
 import { BungieAlertsComponent } from './bungie-alerts.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
@@ -20,6 +21,7 @@ export const ShellModule = angular
   .component('bungieAlerts', BungieAlertsComponent)
   .component('dimPlatformChoice', PlatformChoiceComponent)
   .component('dimShell', shellComponent)
+  .component('refreshStores', RefreshStoresComponent)
   .component('content', contentComponent)
   .component('backLink', backLinkComponent)
   .component('countdown', CountdownComponent)
