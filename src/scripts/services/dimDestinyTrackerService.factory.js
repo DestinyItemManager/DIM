@@ -39,12 +39,6 @@ function DestinyTrackerService($q,
     }
   });
 
-  $rootScope.$on('dim-vendors-updated', (event, vendors) => {
-    if (dimSettingsService.showReviews) {
-      _bulkFetcher.bulkFetch(vendors);
-    }
-  });
-
   return {
     reattachScoresFromCache: function(stores) {
       _bulkFetcher.attachRankings(null,
@@ -54,6 +48,11 @@ function DestinyTrackerService($q,
                                        userReview) {
       _reviewDataCache.addUserReviewData(item,
                                          userReview);
+    },
+    updateVendorRankings: function(vendors) {
+      if (dimSettingsService.showReviews) {
+        _bulkFetcher.bulkFetch(vendors);
+      }
     }
   };
 }

@@ -57,8 +57,8 @@ class BulkFetcher {
         .then((bulkRankings) => this.attachRankings(bulkRankings,
                                                     stores));
     }
-    else if (storesContainer.vendors) {
-      const vendors = _.values(storesContainer.vendors);
+    else if (storesContainer) {
+      const vendors = _.values(storesContainer);
 
       this._getBulkFetchPromise(vendors)
         .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
