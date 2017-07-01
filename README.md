@@ -70,6 +70,16 @@ Have a bug or a feature request? Please first search for [existing and closed is
 <a href="https://opencollective.com/dim/backer/48/website" target="_blank"><img src="https://opencollective.com/dim/backer/48/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/49/website" target="_blank"><img src="https://opencollective.com/dim/backer/49/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/50/website" target="_blank"><img src="https://opencollective.com/dim/backer/50/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/51/website" target="_blank"><img src="https://opencollective.com/dim/backer/51/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/52/website" target="_blank"><img src="https://opencollective.com/dim/backer/52/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/53/website" target="_blank"><img src="https://opencollective.com/dim/backer/53/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/54/website" target="_blank"><img src="https://opencollective.com/dim/backer/54/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/55/website" target="_blank"><img src="https://opencollective.com/dim/backer/55/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/56/website" target="_blank"><img src="https://opencollective.com/dim/backer/56/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/57/website" target="_blank"><img src="https://opencollective.com/dim/backer/57/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/58/website" target="_blank"><img src="https://opencollective.com/dim/backer/58/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/59/website" target="_blank"><img src="https://opencollective.com/dim/backer/59/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/60/website" target="_blank"><img src="https://opencollective.com/dim/backer/60/avatar.svg"></a>
 
 ## Sponsors
 Become a sponsor and get your logo here with a link to your site.
