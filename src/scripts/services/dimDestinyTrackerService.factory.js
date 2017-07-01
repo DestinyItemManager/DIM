@@ -48,11 +48,6 @@ function DestinyTrackerService($q,
                                        userReview) {
       _reviewDataCache.addUserReviewData(item,
                                          userReview);
-    },
-    updateVendorRankings: function(vendors) {
-      if (dimSettingsService.showReviews) {
-        _bulkFetcher.bulkFetch(vendors);
-      }
     }
   };
 }
