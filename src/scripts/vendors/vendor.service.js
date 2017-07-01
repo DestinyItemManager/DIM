@@ -481,8 +481,6 @@ function VendorService(
 
   function _fulfillRatingsRequest() {
     if ((service.vendorsLoaded) && (_ratingsRequested)) {
-      _ratingsRequested = false;
-
       dimDestinyTrackerService.updateVendorRankings(service.vendors);
     }
   }
