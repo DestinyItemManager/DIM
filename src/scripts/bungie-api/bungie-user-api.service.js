@@ -10,6 +10,9 @@ export function BungieUserApi(
 
   const { handleErrors } = BungieServiceHelper;
 
+  /**
+   * @typedef {object} BungieUserApi
+   */
   return {
     getAccounts,
     getAccountsForCurrentUser
