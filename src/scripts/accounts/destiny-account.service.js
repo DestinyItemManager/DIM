@@ -4,7 +4,7 @@ import { PLATFORMS } from '../bungie-api/platforms';
  * @typedef {Object} DestinyAccount - a specific Destiny account (one per platform and Destiny version)
  * @property {number} destinyVersion - 1 for Destiny 1, 2 for Destiny 2
  * @property {string} displayName - Platform account name (gamertag or PSN ID)
- * @property {number} platform - platform ID
+ * @property {number} platformType - platform ID
  * @property {string} platformLabel - readable platform name
  * @property {string} membershipId - Destiny membership ID
  */
@@ -15,6 +15,8 @@ import { PLATFORMS } from '../bungie-api/platforms';
  * This account is indexed by a Destiny membership ID and is how we access their characters.
  */
 export function DestinyAccountService(BungieUserApi, toaster) {
+  'ngInject';
+
   return {
     getDestinyAccountsForBungieAccount
   };
@@ -25,6 +27,7 @@ export function DestinyAccountService(BungieUserApi, toaster) {
    * @return {Promise<DestinyAccount[]>}
    */
   function getDestinyAccountsForBungieAccount(bungieMembershipId) {
+    console.log(bungieMembershipId);
     return BungieUserApi.getAccounts(bungieMembershipId)
       .then(generatePlatforms)
       .catch((e) => {
@@ -38,15 +41,15 @@ export function DestinyAccountService(BungieUserApi, toaster) {
    * @return {DestinyAccount[]}
    */
   function generatePlatforms(accounts) {
-    accounts.destinyMemberships.map((destinyAccount) => {
+    return accounts.destinyMemberships.map((destinyAccount) => {
       /** @type {DestinyAccount} */
       const account = {
         destinyVersion: 1,
         displayName: destinyAccount.displayName,
-        platform: destinyAccount.membershipType,
+        platformType: destinyAccount.membershipType,
         membershipId: destinyAccount.membershipId
       };
-      account.platformLabel = PLATFORMS[account.platform];
+      account.platformLabel = PLATFORMS[account.platformType].label;
       return account;
     });
   }

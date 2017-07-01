@@ -1,6 +1,6 @@
 <div class="platform-choice">
-  <span ng-if="$ctrl.current" class="first-to-go" id="user">{{ $ctrl.current.id }}</span>
+  <span ng-if="$ctrl.current" class="first-to-go" id="user">{{ $ctrl.current.displayName }}</span>
   <select id="system" ng-if="$ctrl.platforms.length > 1" ng-model="$ctrl.current"
-    ng-options="platform.label for platform in $ctrl.platforms track by platform.type"
+    ng-options="platform.platformLabel for platform in $ctrl.platforms track by platform.platformType"
     ng-change="$ctrl.change($ctrl.current)"></select>
 </div>

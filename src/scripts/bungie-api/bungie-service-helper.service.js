@@ -58,7 +58,7 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
     case 1618: // DestinyUnexpectedError
       if (response.config.url.indexOf('/Account/') >= 0 &&
           response.config.url.indexOf('/Character/') < 0) {
-        const error = new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label }));
+        const error = new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.platformLabel }));
         error.code = errorCode;
         return $q.reject(error);
       }

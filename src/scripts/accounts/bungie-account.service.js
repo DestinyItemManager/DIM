@@ -32,7 +32,7 @@ export function BungieAccountService(OAuthTokenService) {
 
     if (token && token.bungieMembershipId) {
       return Promise.resolve([{
-        membershipId: token.membershipId
+        membershipId: token.bungieMembershipId
       }]);
     }
 

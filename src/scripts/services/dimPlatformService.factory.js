@@ -4,26 +4,30 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, $q, BungieAccountService, DestinyAccountService, SyncService, OAuthTokenService, $state, toaster) {
+function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $state) {
   let _platforms = [];
   let _active = null;
 
   const service = {
-    getPlatforms: getPlatforms,
-    getActive: getActive,
-    setActive: setActive,
-    reportBadPlatform: reportBadPlatform
+    getPlatforms,
+    getActive,
+    setActive,
+    reportBadPlatform
   };
 
   return service;
 
+  /**
+   * @return {DestinyAccount[]}
+   */
   function getPlatforms() {
-    return BungieAccountService.getAccounts()
+    // TODO: wire this up with observables?
+    return BungieAccountService.getBungieAccounts()
       .then((bungieAccounts) => {
         if (!bungieAccounts.length) {
           // We're not logged in, don't bother
           $state.go('login');
-          return;
+          return [];
         }
 
         // We only support one account now
@@ -31,30 +35,12 @@ function PlatformService($rootScope, $q, BungieAccountService, DestinyAccountSer
         return DestinyAccountService.getDestinyAccountsForBungieAccount(membershipId);
       })
       .then((destinyAccounts) => {
-
-      });
-    }
-  }
-
-  function generatePlatforms(accounts) {
-    _platforms = accounts.destinyMemberships.map((destinyAccount) => {
-      const account = {
-        id: destinyAccount.displayName,
-        type: destinyAccount.membershipType,
-        membershipId: destinyAccount.membershipId
-      };
-      account.label = account.type === 1 ? 'Xbox' : 'PlayStation';
-      return account;
-    });
-
-    $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
-
-    getActivePlatform()
-      .then((activePlatform) => {
-        setActive(activePlatform);
-      });
-
-    return _platforms;
+        _platforms = destinyAccounts;
+        $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
+        return getActivePlatform();
+      })
+      .then(setActive)
+      .then(() => _platforms);
   }
 
   function getActivePlatform() {
@@ -67,7 +53,7 @@ function PlatformService($rootScope, $q, BungieAccountService, DestinyAccountSer
         return _active;
       } else if (data && data.platformType) {
         const active = _.find(_platforms, (platform) => {
-          return platform.type === data.platformType;
+          return platform.platformType === data.platformType;
         });
         if (active) {
           return active;
@@ -88,7 +74,7 @@ function PlatformService($rootScope, $q, BungieAccountService, DestinyAccountSer
     if (platform === null) {
       promise = SyncService.remove('platformType');
     } else {
-      promise = SyncService.set({ platformType: platform.type });
+      promise = SyncService.set({ platformType: platform.platformType });
     }
 
     $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
@@ -97,6 +83,8 @@ function PlatformService($rootScope, $q, BungieAccountService, DestinyAccountSer
 
   // When we find a platform with no characters, remove it from the list and try something else.
   function reportBadPlatform(platform, e) {
+    // TODO: push this up to DestinyAccountService
+
     if (_platforms.length > 1) {
       _platforms = _platforms.filter((p) => p !== platform);
       $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });

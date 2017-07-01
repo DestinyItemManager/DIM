@@ -127,7 +127,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
 
   vm.save = function save() {
     const platform = dimPlatformService.getActive();
-    vm.loadout.platform = platform.label; // Playstation or Xbox
+    vm.loadout.platform = platform.platformLabel; // Playstation or Xbox
     dimLoadoutService
       .saveLoadout(vm.loadout)
       .catch((e) => {
