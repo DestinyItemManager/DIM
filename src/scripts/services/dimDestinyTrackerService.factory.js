@@ -39,6 +39,12 @@ function DestinyTrackerService($q,
     }
   });
 
+  $rootScope.$on('dim-vendors-updated', (event, vendors) => {
+    if (dimSettingsService.showReviews) {
+      _bulkFetcher.bulkFetch(vendors);
+    }
+  });
+
   return {
     reattachScoresFromCache: function(stores) {
       _bulkFetcher.attachRankings(null,
