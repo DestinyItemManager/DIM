@@ -44,8 +44,6 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
       vm.stores = _.reject(stores, (s) => s.isVault);
       vm.totalCoins = dimVendorService.countCurrencies(stores, vm.vendorService.vendors);
     });
-
-    dimVendorService.requestRatings();
   }
 
   init();
