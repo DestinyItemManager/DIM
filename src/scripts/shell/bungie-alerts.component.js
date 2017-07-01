@@ -12,8 +12,8 @@ function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $translate) {
   'ngInject';
 
   this.$onInit = function() {
-    // Poll every 5 minutes for new alerts
-    this.interval = $interval(pollBungieAlerts, 5 * 1000);
+    // Poll every 10 minutes for new alerts
+    this.interval = $interval(pollBungieAlerts, 10 * 60 * 1000);
     pollBungieAlerts();
   };
 
