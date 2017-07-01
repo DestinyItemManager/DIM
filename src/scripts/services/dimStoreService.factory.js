@@ -34,6 +34,7 @@ function StoreService(
   let _stores = [];
 
   // A promise used to dedup parallel calls to reloadStores
+  // TODO: do this per-platform?
   let _reloadPromise;
 
   const service = {
@@ -100,15 +101,26 @@ function StoreService(
    * If this is called while a reload is already happening, it'll return the promise
    * for the ongoing reload rather than kicking off a new reload.
    */
+  // TODO: make this take a platform
   function reloadStores() {
     // TODO: hack alert!
     const destinyMembershipId = $stateParams.destinyMembershipId;
     const platformType = $stateParams.platformType;
 
-    const activePlatform = dimPlatformService.getPlatformMatching({
+    let activePlatform = dimPlatformService.getPlatformMatching({
       membershipId: destinyMembershipId,
       platformType
     });
+    if (!activePlatform) {
+      // TODO: gotta mark the difference between viewing somebody else's thing and yours
+      // disable tagging, rating, moving, etc
+      // if it's not one of ours, you shouldn't load vault
+
+      activePlatform = {
+        membershipId: destinyMembershipId,
+        platformType
+      };
+    }
 
     if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
       return _reloadPromise;
@@ -135,10 +147,6 @@ function StoreService(
 
     _reloadPromise = $q.all(dataDependencies)
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
-        if (activePlatform !== dimPlatformService.getActive()) {
-          throw new Error("Active platform mismatch");
-        }
-
         NewItemsService.applyRemovedNewItems(newItems);
 
         const lastPlayedDate = findLastPlayedDate(rawStores);
@@ -155,10 +163,6 @@ function StoreService(
         return $q.all([newItems, itemInfoService, ...processStorePromises]);
       })
       .then(([newItems, itemInfoService, ...stores]) => {
-        if (activePlatform !== dimPlatformService.getActive()) {
-          throw new Error("Active platform mismatch");
-        }
-
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -186,10 +190,6 @@ function StoreService(
         return stores;
       })
       .catch((e) => {
-        if (e.message === 'Active platform mismatch') {
-          // no problem, just canceling the request
-          return null;
-        }
         if (e.code === 1601) { // DestinyAccountNotFound
           return dimPlatformService.reportBadPlatform(activePlatform, e);
         }

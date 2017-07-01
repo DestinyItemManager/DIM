@@ -12,6 +12,8 @@ export default {
 function InventoryController() {
   'ngInject';
 
+  // TODO: This should probably be the top level destiny1 component
+
   this.$onInit = function() {
     console.log(this.destinyMembershipId, this.platformType);
   };

@@ -62,6 +62,7 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
         error.code = errorCode;
         return $q.reject(error);
       }
+      break;
     case 2101: // ApiInvalidOrExpiredKey
     case 2102: // ApiKeyMissingFromRequest
     case 2107: // OriginHeaderDoesNotMatchKey
