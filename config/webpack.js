@@ -206,19 +206,6 @@ module.exports = (env) => {
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release')
       }),
 
-      // Generate a service worker
-      new WorkboxPlugin({
-        maximumFileSizeToCacheInBytes: 5000000,
-        globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
-        globIgnores: [
-          'authReturn*',
-          'extension-scripts/*',
-          'return.html',
-        ],
-        // swSrc: './src/sw.js',
-        swDest: './dist/sw.js'
-      }),
-
       // Enable if you want to debug the size of the chunks
       //new Visualizer(),
     ],
@@ -244,6 +231,19 @@ module.exports = (env) => {
     // Bail and fail hard on first error
     config.bail = true;
     config.stats = 'verbose';
+
+    // Generate a service worker
+    config.plugins.push(new WorkboxPlugin({
+      maximumFileSizeToCacheInBytes: 5000000,
+      globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
+      globIgnores: [
+        'authReturn*',
+        'extension-scripts/*',
+        'return.html',
+      ],
+      // swSrc: './src/sw.js',
+      swDest: './dist/sw.js'
+    }));
 
     // The sql.js library doesnt work at all (reports no tables) when minified,
     // so we exclude it from the regular minification
