@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, $q, BungieUserApi, SyncService, OAuthTokenService, $state, toaster) {
+function PlatformService($rootScope, $q, BungieAccountService, DestinyAccountService, SyncService, OAuthTokenService, $state, toaster) {
   let _platforms = [];
   let _active = null;
 
@@ -18,36 +18,21 @@ function PlatformService($rootScope, $q, BungieUserApi, SyncService, OAuthTokenS
   return service;
 
   function getPlatforms() {
-    const token = OAuthTokenService.getToken();
-    if (!token) {
-      // We're not logged in, don't bother
-      $state.go('login');
-      return $q.when();
-    }
+    return BungieAccountService.getAccounts()
+      .then((bungieAccounts) => {
+        if (!bungieAccounts.length) {
+          // We're not logged in, don't bother
+          $state.go('login');
+          return;
+        }
 
-    if (token.bungieMembershipId) {
-      return BungieUserApi.getAccounts(token.bungieMembershipId)
-        .then(generatePlatforms)
-        .catch((e) => {
-          toaster.pop('error', 'Unexpected error getting accounts', e.message);
-          throw e;
-        });
-    } else {
-      // they're logged in, just need to fill in membership
-      // TODO: this can be removed after everyone has had a chance to upgrade
-      return BungieUserApi.getAccountsForCurrentUser()
-        .then((accounts) => {
-          const token = OAuthTokenService.getToken();
-          token.bungieMembershipId = accounts.bungieNetUser.membershipId;
-          OAuthTokenService.setToken(token);
+        // We only support one account now
+        const membershipId = bungieAccounts[0].membershipId;
+        return DestinyAccountService.getDestinyAccountsForBungieAccount(membershipId);
+      })
+      .then((destinyAccounts) => {
 
-          return accounts;
-        })
-        .then(generatePlatforms)
-        .catch((e) => {
-          toaster.pop('error', 'Unexpected error getting accounts', e.message);
-          throw e;
-        });
+      });
     }
   }
 
