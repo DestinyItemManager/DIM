@@ -10,7 +10,7 @@ export default angular
 
     const states = [{
       name: 'inventory',
-      parent: 'content',
+      parent: 'destiny1account',
       component: 'inventory',
       url: '/inventory'
     }];

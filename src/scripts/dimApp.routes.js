@@ -15,7 +15,8 @@ function routes($stateProvider, $urlRouterProvider) {
     $stateProvider.state(state);
   });
 
-  $urlRouterProvider.otherwise('/inventory');
+  // TODO: should redirect to index component, which should redirect to default character or offer selection?
+  $urlRouterProvider.otherwise('/d1/4611686018433092312-2/inventory');
 }
 
 export default routes;

@@ -12,10 +12,15 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     getPlatforms,
     getActive,
     setActive,
-    reportBadPlatform
+    reportBadPlatform,
+    getPlatformMatching
   };
 
   return service;
+
+  function getPlatformMatching(params) {
+    return _.find(_platforms, params);
+  }
 
   /**
    * @return {DestinyAccount[]}

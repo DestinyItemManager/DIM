@@ -35,5 +35,18 @@ export const ShellModule = angular
       abstract: true,
       component: 'content'
     });
+
+    // TODO: move this, and/or replace "content" with this
+    // TODO: use https://github.com/angular-ui/ui-router/wiki/Multiple-Named-Views to inject stuff into header
+    $stateProvider.state({
+      name: 'destiny1account',
+      abstract: true,
+      parent: 'content',
+      url: '/d1/:destinyMembershipId-:platformType',
+      resolve: {
+        destinyMembershipId: ($stateParams) => $stateParams.destinyMembershipId,
+        platformType: ($stateParams) => $stateParams.platformType,
+      }
+    });
   })
   .name;

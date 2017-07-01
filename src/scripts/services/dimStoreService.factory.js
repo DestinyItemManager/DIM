@@ -28,7 +28,8 @@ function StoreService(
   toaster,
   StoreFactory,
   ItemFactory,
-  NewItemsService
+  NewItemsService,
+  $stateParams
 ) {
   let _stores = [];
 
@@ -100,7 +101,15 @@ function StoreService(
    * for the ongoing reload rather than kicking off a new reload.
    */
   function reloadStores() {
-    const activePlatform = dimPlatformService.getActive();
+    // TODO: hack alert!
+    const destinyMembershipId = $stateParams.destinyMembershipId;
+    const platformType = $stateParams.platformType;
+
+    const activePlatform = dimPlatformService.getPlatformMatching({
+      membershipId: destinyMembershipId,
+      platformType
+    });
+
     if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
       return _reloadPromise;
     }
