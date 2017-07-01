@@ -3,9 +3,8 @@
     <span class="header-right">
       <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.currentPlatform" on-platform-change="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
       <div class="header-right" id="actions">
-        <span class="link" ng-click="$ctrl.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': $ctrl.loadingTracker.active()}" class="fa fa-refresh"></i></span>
+        <refresh-stores class="link"></refresh-stores>
         <span class="link" ng-click="$ctrl.toggleState('loadout-builder')" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
-        <span class="link" ng-if="::$ctrl.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" translate-attr="{ title: 'Header.MaterialsExchange' }"><i class="fa fa-list-alt"></i></span>
         <span class="link" ng-click="$ctrl.toggleState('storage')" translate-attr="{ title: 'Storage'}"><i class="fa fa-save"></i></span>
         <span class="link" ng-click="$ctrl.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
         <span class="link search-link">
@@ -24,10 +23,10 @@
     <span class="link" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
   </div>
 </div>
-<toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
 <div id="content" class="content" ui-view></div>
 <div class="store-bounds"></div>
 <dim-manifest-progress></dim-manifest-progress>
 <div class="random-loadout" ng-controller="dimRandomCtrl as random">
   <a class="loadout random" href="#" ng-disabled="random.disableRandomLoadout" ng-if="::random.showRandomLoadout" ng-click="random.applyRandomLoadout($event)">&Pi;</a>
 </div>
+<ng-include ng-if="::$ctrl.featureFlags.colorA11y" src="'data/color-a11y.svg'"></ng-include>

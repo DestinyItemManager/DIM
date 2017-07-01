@@ -1,4 +1,4 @@
-<div ng-controller="dimSettingsCtrl as vm">
+<div>
   <h1 translate="Settings"></h1>
   <div class="ngdialog-inner-content">
   <form class="settings">
@@ -17,6 +17,14 @@
         </td>
         <td>
           <select id="language" ng-model="vm.settings.language" ng-options="code as name for (code, name) in vm.languageOptions" required></select>
+        </td>
+      </tr>
+      <tr ng-if="vm.featureFlags.colorA11y">
+        <td>
+          <label for="color" translate="Settings.ColorA11y"></label>
+        </td>
+        <td>
+          <select id="color" ng-model="vm.settings.colorA11y" ng-options="name as name for name in vm.colorA11yOptions" required></select>
         </td>
       </tr>
       <tr>

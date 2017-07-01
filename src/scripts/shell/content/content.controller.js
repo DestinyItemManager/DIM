@@ -1,4 +1,3 @@
-import settingsTemplate from 'app/views/settings.html';
 import aboutTemplate from 'app/views/about.html';
 import supportTemplate from 'app/views/support.html';
 import filtersTemplate from 'app/views/filters.html';
@@ -38,26 +37,20 @@ export default class ContentController {
     $scope.$watch(() => { return vm.settings.charCol; }, (cols) => {
       document.querySelector('html').style.setProperty("--character-columns", cols);
     });
-
     $scope.$watch(() => { return vm.settings.vaultMaxCol; }, (cols) => {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
+    $scope.$watch(() => { return vm.settings.colorA11y; }, (color) => {
+      document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
+    });
 
     vm.featureFlags = {
-      materialsExchangeEnabled: $featureFlags.materialsExchangeEnabled,
-      vendorsEnabled: $featureFlags.vendorsEnabled
+      vendorsEnabled: $featureFlags.vendorsEnabled,
+      colorA11y: $featureFlags.colorA11y
     };
     vm.vendorService = dimVendorService;
 
     hotkeys = hotkeys.bindTo($scope);
-
-    hotkeys.add({
-      combo: ['r'],
-      description: $translate.instant('Hotkey.RefreshInventory'),
-      callback: function() {
-        vm.refresh();
-      }
-    });
 
     hotkeys.add({
       combo: ['i'],
@@ -117,7 +110,7 @@ export default class ContentController {
       };
     }
 
-    vm.showSetting = showPopupFunction('settings', settingsTemplate);
+    vm.showSetting = showPopupFunction('settings', '<settings></settings>');
     vm.showAbout = showPopupFunction('about', aboutTemplate);
     vm.showSupport = showPopupFunction('support', supportTemplate);
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
@@ -129,9 +122,5 @@ export default class ContentController {
     };
 
     vm.xur = dimXurService;
-
-    vm.refresh = function refresh() {
-      loadingTracker.addPromise(dimStoreService.reloadStores());
-    };
   }
 }

@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -195,13 +196,27 @@ module.exports = (env) => {
         '$featureFlags.debugMoves': JSON.stringify(false),
         // show changelog toaster
         '$featureFlags.changelogToaster': JSON.stringify(env === 'release'),
-        '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
         '$featureFlags.debugSync': JSON.stringify(false),
         // Use a WebAssembly version of SQLite, if possible
-        '$featureFlags.wasm': JSON.stringify(false)
+        '$featureFlags.wasm': JSON.stringify(false),
+        // Enable color-blind a11y
+        '$featureFlags.colorA11y': JSON.stringify(env !== 'release')
+      }),
+
+      // Generate a service worker
+      new WorkboxPlugin({
+        maximumFileSizeToCacheInBytes: 5000000,
+        globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
+        globIgnores: [
+          'authReturn*',
+          'extension-scripts/*',
+          'return.html',
+        ],
+        // swSrc: './src/sw.js',
+        swDest: './dist/sw.js'
       }),
 
       // Enable if you want to debug the size of the chunks

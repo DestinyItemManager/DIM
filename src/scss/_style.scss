@@ -3,12 +3,14 @@
 /* End:                 */
 
 @import "variables.scss";
+@import "pop-in.scss";
 
 :root {
   --item-size: 44px;
   --num-characters: 3;
   --character-columns: 3;
   --vault-max-columns: 999;
+  --color-filter: '';
 }
 
 // iPad - use smaller items to fit them on screen.
@@ -201,195 +203,9 @@ dd {
   }
 }
 
-.ngdialog.modal-dialog {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  color: #fff;
-  z-index: 1000;
-  font-size: 13px;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .ngdialog-content {
-    max-height: fit-content;
-    max-width: 50%;
-    background-color: #222;
-    border: solid 1px #3e3e3e;
-    height: 70%;
-  }
-}
-
 a {
   color: $blue;
   font-size: 13px;
-}
-
-.ngdialog {
-  box-sizing: border-box;
-  position: fixed;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  z-index: 2;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.ngdialog-content > div {
-  display: flex;
-  flex-direction: column;
-  height: 90%;
-  max-height: 100%;
-}
-
-.ngdialog-inner-content {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  flex: 1;
-  padding: 15px;
-}
-
-.ngdialog-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 20px;
-  &:hover {
-    color: $orange;
-  }
-}
-
-/* settings dialog */
-
-.settings td:nth-child(2) {
-  white-space: nowrap;
-  min-width: 20em;
-}
-
-@keyframes ngdialog-fadeout {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes ngdialog-fadein {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-.ngdialog * {
-  box-sizing: inherit;
-  &:before, &:after {
-    box-sizing: inherit;
-  }
-}
-
-.ngdialog-overlay {
-  position: fixed;
-  background: rgba(0, 0, 0, 0.85);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadein 0s;
-}
-
-.ngdialog.ngdialog-closing .ngdialog-overlay {
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadeout 0s;
-}
-
-.ngdialog-content {
-  color: #e0e0e0;
-  background-color: transparent;
-  position: relative;
-  z-index: 100;
-  > div > {
-    h1, h2, h3, p, table, dl {
-      padding-left: 25px;
-      padding-right: 25px;
-
-      img {
-        vertical-align: middle;
-      }
-    }
-  }
-  form {
-    padding: 0;
-  }
-  h1 {
-    flex-shrink: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 15px;
-    font-weight: 200;
-    background-color: #101010;
-  }
-  h2 {
-    margin-top: 0;
-  }
-  > p {
-    margin: 5px 0;
-  }
-  dl {
-    background-color: #2F2F2F;
-    border-radius: 6px;
-    padding: 5px 15px;
-    margin: 0 25px;
-  }
-  dt {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.1em;
-    margin-top: 10px;
-    color: $orange;
-  }
-  dd {
-    margin: 10px 10px 15px 10px;
-  }
-  table {
-    padding: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background-color: #222;
-    tr:nth-child(2n+1) {
-      background-color: #1B1B1B;
-    }
-  }
-  tr td:first-child {
-    border-left-style: solid;
-    border-left-width: 1px;
-  }
-  td {
-    border-color: #1B1B1B;
-    border-style: none solid solid none;
-    border-top: medium none;
-    border-width: medium 1px 1px medium;
-    font-size: 13px;
-    padding: 6px 9px;
-    vertical-align: top;
-  }
-  input {
-    &[type="checkbox"], &[type="radio"] {
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-    }
-  }
 }
 
 #filter-view td span {
@@ -410,20 +226,6 @@ h2, h3 {
   margin-bottom: 15px;
 }
 
-.ngdialog.ngdialog-closing .ngdialog-content {
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadeout 0s;
-}
-
-.ngdialog-inner-content > p {
-  margin: 5px 0;
-}
-
-.ngdialog-close:before {
-  content: '\f00d';
-  font-family: 'FontAwesome';
-  cursor: pointer;
-}
 
 body {
   overflow-y: auto;
@@ -434,6 +236,7 @@ body {
   color: white;
   font-family: 'Open Sans', sans-serif;
   font-size:12px;
+  filter: var(--color-filter);
   > div:first-child {
     padding-top: 10px;
   }
@@ -1472,112 +1275,8 @@ g {
   }
 }
 
-dim-compare {
-  #loadout-drawer {
-    padding-left: 1em;
-    padding-right: 1em;
-  }
-}
-
 .loadout-item {
   position: relative;
-}
-
-.compare-bucket {
-  white-space: nowrap;
-  overflow-x: scroll;
-  display: flex;
-  margin-left: 100px;
-  flex-direction: row;
-  justify-content: flex-start;
-  .fixed-left {
-    border-left: none;
-    position: fixed;
-    left: 1em;
-    width: 100px;
-  }
-  .compare-stat-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .talent-grid {
-    padding: 4px 2px 0 2px;
-    box-sizing: border-box;
-    width: 150px;
-    height: auto;
-  }
-}
-
-.compare-options {
-  margin: 1em 0;
-}
-
-.compare-item {
-  border-left: 1px solid $lightgray;
-  width: 150px;
-
-  .item {
-    float: right;
-    padding: 0 4px 0 0;
-    margin-right: 4px;
-    z-index: -10;
-  }
-  > div {
-    padding-left: 4px;
-  }
-  .highlight {
-    background-color: rgba(128, 128, 128, .25);
-    cursor: pointer;
-  }
-  .item-name {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    cursor: pointer;
-    margin-top: 2px;
-    margin-bottom: 2px;
-
-    .elemental {
-      vertical-align: bottom;
-      margin: 0;
-    }
-  }
-  .sorted {
-    color: $orange;
-  }
-  .close {
-    position: static;
-    float: right;
-    margin: 1px 4px;
-    padding-left: 0px;
-  }
-  .range {
-    font-size: .9em;
-  }
-  dim-item-tag {
-    height: 20px;
-    margin-left: 5px;
-    display: block;
-    select {
-      background: gray;
-      border: none;
-      color: white;
-      width: 120px;
-    }
-  }
-  .spacer {
-    height: 20px;
-    &.withTags {
-      height: 40px;
-    }
-  }
-}
-
-@keyframes pop {
-  to { transform: scale(1.5) }
-}
-.item-pop {
-  animation: .25s linear 2 alternate pop;
-  z-index: 1;
 }
 
 .loadout-content {
@@ -1700,22 +1399,6 @@ dim-compare {
   display: none;
 }
 
-.ngdialog {
-  position: absolute;
-  display: block;
-  background-color: #222;
-  top: 0;
-  -webkit-overflow-scrolling: touch;
-  z-index: 3;
-  top: initial;
-  left: initial;
-  right: initial;
-  overflow: visible;
-  h1 {
-    font-weight: 400;
-  }
-}
-
 h2, h3, h4 {
   font-weight: 400;
 }
@@ -1794,108 +1477,6 @@ h2, h3, h4 {
   background-color: $xp;
 }
 
-/* Infuse */
-
-.infuseSourceItemInfo {
-  padding: 0px 0px 10px 25px;
-  display: flex;
-  flex-direction: row;
-}
-
-.infuseControls {
-  padding: 0px 25px 10px 25px;
-  label {
-    display: block;
-  }
-}
-
-.infuseDialog {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  small {
-    font-size: 10px;
-  }
-  .ngdialog-inner-content {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .locked {
-    position: absolute;
-  }
-  .gearsContainer {
-    width: 100%;
-    padding: 10px 25px;
-    overflow: hidden;
-  }
-  .bigValue {
-    font-size: 32px;
-    line-height: 1em;
-  }
-  .infuseSourceDetailsRow {
-    margin-left: 1rem;
-  }
-  .results {
-    margin-bottom: 2px;
-  }
-}
-
-.infuseHeader {
-  display: flex;
-  flex-direction: row;
-}
-
-.infuseResults {
-  flex: 1;
-}
-
-.infuse-selected {
-  outline: 2px solid black !important;
-}
-
-.bestInfusion label {
-  display: inline;
-  margin-right: 22px;
-}
-
-.infuse-hidden {
-  opacity: 0.35;
-}
-
-.infuse-excluded {
-  filter: greyscale();
-  opacity: 0.15;
-}
-
-.black {
-  background-color: #222222;
-}
-
-.grey {
-  background-color: #6D6D6D;
-}
-
-.green {
-  color: green;
-}
-
-.gearsContainer {
-  .item {
-    float: left;
-    margin: 3px 3px;
-  }
-  .infusedItem {
-    float: left;
-    margin: 3px 10px 3px 3px;
-  }
-  .plusSeparator {
-    float: left;
-    margin-top: 5px;
-    font-size: 32px;
-  }
-}
-
 /* Textcomplete */
 
 .dropdown-menu {
@@ -1928,103 +1509,6 @@ h2, h3, h4 {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-// Makes an element appear up from the bottom of the screen with a fade
-@mixin pop-in {
-  &.ng-animate {
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  }
-
-  &.ng-enter, &.ng-leave.ng-leave-active {
-    opacity: 0;
-    transform: translateY(5rem);
-  }
-
-  &.ng-leave, &.ng-enter.ng-enter-active {
-    opacity: 1;
-    transform: translateY(0rem);
-  }
-}
-
-/* Engram Farming */
-
-#item-farming {
-  position: fixed;
-  bottom: 6rem;
-  background-color: rgba(0, 0, 0, 0.9);
-  left: calc(50% - 21.5rem);
-  width: 43rem;
-  right: 0;
-  border-radius: .5rem;
-  padding: .5rem 1rem;
-  color: #e0e0e0;
-  align-items: center;
-  text-align: left;
-  display: flex;
-  flex-direction: row;
-
-  button {
-    color: white;
-    background-color: rgba(128, 128, 128, .8);
-    border-radius: 4px;
-    border: none;
-    width: 6rem;
-    height: 3rem;
-    text-align: center;
-    font-size: 1.5em;
-    transition: .3s background-color;
-    &:hover, &:active {
-      background-color: rgba(232, 165, 52, .8);
-    }
-  }
-
-  .item-details {
-    display: flex;
-    flex-direction: row;
-    margin: 0;
-    span {
-      flex: 1;
-    }
-    ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-  }
-
-  .item {
-    float: left;
-  }
-
-  .engram-icon {
-    position: relative;
-    margin-right: 1em;
-  }
-
-  .item-count {
-    font-size: 16px;
-    position: absolute;
-    width: 100%;
-    height: 94%;
-    font-weight: bold;
-    color: rgb(232, 165, 52);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-  }
-
-  h1 {
-    font-size: 16px;
-    margin: 0;
-  }
-
-  p {
-    margin: .25em 0;
-  }
-
-  @include pop-in;
 }
 
 /* Clear new items */

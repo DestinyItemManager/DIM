@@ -82,7 +82,6 @@
       "About": "Acerca de",
       "Filters": "Filtros",
       "FilterHelp": "Buscar objeto/beneficio o is:arc",
-      "MaterialsExchange": "Rangos de facción disponible",
       "Refresh": "Actualizar datos de Destiny",
       "SupportDIM": "Partidarios"
    },
@@ -251,15 +250,6 @@
       "LoadCharInv": "Cargando personajes e inventario de Destiny",
       "Save": "Guardando última información de Destiny",
       "Unzip": "Descomprimiendo última información de Destiny"
-   },
-   "MaterialsExchange": {
-      "MaterialsExchange": "Intercambio de materiales",
-      "CurrentRank": "Rango actual",
-      "CurrentRep": "Reputación actual",
-      "OnHand": "Materiales a la mano",
-      "FromTrade": "Materiales de intercambio",
-      "NewRank": "Nuevo rango",
-      "NewRep": "Nueva reputación"
    },
    "MovePopup": {
       "OverviewTab": "Resumen",

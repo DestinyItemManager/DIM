@@ -10,6 +10,9 @@
       "Vault": "Vault",
       "Weapons": "Weapons"
    },
+   "BungieAlert": {
+     "Title": "A message from Bungie:"
+   },
    "BungieService": {
       "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
       "Down": "Bungie.net is down.",
@@ -49,8 +52,7 @@
       "Days": "{numDays, plural, =1{# Day} other{# Days}}"
    },
    "Debug": {
-      "Dump": "Dump info to console",
-      "View": "View Item Debug Info"
+      "Dump": "Dump info to console"
    },
    "DidYouKnow": {
       "DidYouKnow": "Did you know?",
@@ -83,7 +85,6 @@
       "About": "About",
       "Filters": "Filters",
       "FilterHelp": "Search item/perk or is:arc",
-      "MaterialsExchange": "Available faction ranks",
       "Refresh": "Refresh Destiny Data",
       "SupportDIM": "Backers",
       "Shop": "Shop"
@@ -256,15 +257,6 @@
       "Save": "Saving latest Destiny info",
       "Unzip": "Unzipping latest Destiny info"
    },
-   "MaterialsExchange": {
-      "MaterialsExchange": "Materials Exchange",
-      "CurrentRank": "Current Rank",
-      "CurrentRep": "Current Rep",
-      "OnHand": "Materials on hand",
-      "FromTrade": "Materials from trade",
-      "NewRank": "New Rank",
-      "NewRep": "New Rep"
-   },
    "MovePopup": {
       "OverviewTab": "Overview",
       "ReviewsTab": "Reviews",
@@ -342,6 +334,7 @@
       "ColumnSizeAuto": "Auto",
       "SizeItem": "Item size",
       "ResetToDefault": "Reset",
+      "ColorA11y": "Color blindness configuration",
       "CharacterOrder": "Sort characters by",
       "CharacterOrderRecent": "most recent character",
       "CharacterOrderReversed": "most recent character (reversed)",
@@ -443,7 +436,7 @@
          "FAQKeyboard": "Does DIM support keyboard shortcuts?",
          "FAQKeyboardAnswer": "Yes! Press \"?\" to see a list of available shortcuts.",
          "FAQLogout": "How can I log out of DIM?",
-         "FAQLogoutAnswer": "Your session is tied to Bungie.net. If you logout on Bungie.net, you're effectively logged out of DIM.",
+         "FAQLogoutAnswer": "Go to the settings page (gear icon) and click \"Log out\".",
          "FAQLostItem": "I lost my item using your tool!",
          "FAQLostItemAnswer": "More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check Bungie.net or in game to see if your item still exists. We're sure it's still there.",
          "GitHub": "GitHub",
@@ -452,7 +445,7 @@
          "Header": "About Destiny Item Manager (DIM)",
          "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.",
          "Reddit": "Reddit",
-         "RedditHelp": "If you have questions, comments, or suggestions- let us know!",
+         "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
          "Twitter": "Twitter",
          "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
          "Version": "Version {version} ({flavor}), built on {date}",

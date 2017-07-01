@@ -32,7 +32,7 @@ class ReviewsFetcher {
     const promise = this.$q
               .when(this._getItemReviewsCall(postWeapon))
               .then(this.$http)
-              .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
+              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
               .then((response) => { return response.data; });
 
     this._loadingTracker.addPromise(promise);

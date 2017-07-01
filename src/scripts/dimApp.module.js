@@ -20,6 +20,10 @@ import recordBooksModule from './record-books/record-books.module';
 import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
+import compareModule from './compare/compare.module';
+import infuseModule from './infuse/infuse.module';
+import farmingModule from './farming/farming.module';
+import settingsModule from './settings/settings.module';
 import oauthModule from './oauth/oauth.module';
 import storageModule from './storage/storage.module';
 
@@ -29,30 +33,36 @@ import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
+const dependencies = [
+  AriaModule,
+  DialogModule,
+  DragAndDropModule,
+  MessagesModule,
+  RateLimiterModule,
+  ShellModule,
+  SliderModule,
+  ToasterModule,
+  TranslateModule,
+  TranslateMessageFormatModule,
+  UIRouterModule,
+  bungieApiModule,
+  inventoryModule,
+  recordBooksModule,
+  vendorsModule,
+  itemReviewModule,
+  loadoutBuilderModule,
+  compareModule,
+  infuseModule,
+  farmingModule,
+  settingsModule,
+  oauthModule,
+  storageModule,
+  'ajoslin.promise-tracker',
+  'cfp.hotkeys'
+];
+
 export const DimAppModule = angular
-  .module('dimApp', [
-    AriaModule,
-    DialogModule,
-    DragAndDropModule,
-    MessagesModule,
-    RateLimiterModule,
-    ShellModule,
-    SliderModule,
-    ToasterModule,
-    TranslateModule,
-    TranslateMessageFormatModule,
-    UIRouterModule,
-    bungieApiModule,
-    inventoryModule,
-    recordBooksModule,
-    vendorsModule,
-    itemReviewModule,
-    loadoutBuilderModule,
-    oauthModule,
-    storageModule,
-    'ajoslin.promise-tracker',
-    'cfp.hotkeys'
-  ])
+  .module('dimApp', dependencies)
   .config(config)
   .config(routes)
   .run(run)

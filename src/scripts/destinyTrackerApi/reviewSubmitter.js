@@ -55,7 +55,7 @@ class ReviewSubmitter {
     const promise = this.$q
               .when(this._submitItemReviewCall(rating))
               .then(this.$http)
-              .then(this._trackerErrorHandler.handleSubmitErrors, this._trackerErrorHandler.handleSubmitErrors);
+              .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
 
     this._loadingTracker.addPromise(promise);
 
