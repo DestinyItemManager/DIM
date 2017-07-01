@@ -1,5 +1,7 @@
 # Next
 
+# 4.1.3
+
 * Exclude all variants of 'Husk of the Pit' from 'Item Leveling' loadout.
 
 # 4.1.2
