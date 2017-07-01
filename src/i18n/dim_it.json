@@ -83,7 +83,6 @@
       "About": "Chi siamo",
       "Filters": "Filtri",
       "FilterHelp": "Cerca oggetti/perk o is:arc",
-      "MaterialsExchange": "Livelli fazione disponibili",
       "Refresh": "Aggiorna i Dati di Destiny",
       "SupportDIM": "Sostenitori",
       "Shop": "Negozio"
@@ -255,15 +254,6 @@
       "LoadCharInv": "Carico i personaggi e l'inventario di Destiny",
       "Save": "Salvo le ultime informazioni su Destiny",
       "Unzip": "Decomprimo le ultime informazioni su Destiny"
-   },
-   "MaterialsExchange": {
-      "MaterialsExchange": "Scambio Materiali",
-      "CurrentRank": "Grado Attuale",
-      "CurrentRep": "Reputazione Attuale",
-      "OnHand": "Materiali disponibili",
-      "FromTrade": "Materiali da scambi",
-      "NewRank": "Nuovo Grado",
-      "NewRep": "Nuova Reputazione"
    },
    "MovePopup": {
       "OverviewTab": "Panoramica",

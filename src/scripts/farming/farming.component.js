@@ -1,19 +1,16 @@
 import angular from 'angular';
-import template from './dimFarming.directive.html';
+import template from './farming.html';
+import './farming.scss';
 
-angular.module('dimApp').directive('dimFarming', Farming);
-
-function Farming() {
-  return {
-    controller: FarmingCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    scope: {},
-    template: template
-  };
-}
+export const FarmingComponent = {
+  controller: FarmingCtrl,
+  controllerAs: 'vm',
+  template
+};
 
 function FarmingCtrl(dimFarmingService, dimItemMoveService, dimSettingsService) {
+  'ngInject';
+
   const vm = this;
 
   angular.extend(vm, {

@@ -1,1 +1,0 @@
-export * from './platform-choice.component';

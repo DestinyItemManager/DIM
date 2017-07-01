@@ -1,9 +1,16 @@
-import angular from 'angular';
 import _ from 'underscore';
+import template from './settings.html';
+import './settings.scss';
 
-angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
+export const SettingsComponent = {
+  template,
+  controller: SettingsController,
+  controllerAs: 'vm'
+};
 
-function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $translate) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $translate) {
+  'ngInject';
+
   const vm = this;
 
   vm.featureFlags = {

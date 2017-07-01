@@ -1,13 +1,11 @@
-import angular from 'angular';
+export function CompareService($rootScope) {
+  'ngInject';
 
-angular.module('dimApp')
-  .factory('dimCompareService', CompareService);
-
-function CompareService($rootScope) {
   return {
     dialogOpen: false,
-    addItemToCompare: addItemToCompare
+    addItemToCompare
   };
+
   function addItemToCompare(item, $event) {
     $rootScope.$broadcast('dim-store-item-compare', {
       item: item,

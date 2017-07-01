@@ -1,4 +1,3 @@
-import settingsTemplate from 'app/views/settings.html';
 import aboutTemplate from 'app/views/about.html';
 import supportTemplate from 'app/views/support.html';
 import filtersTemplate from 'app/views/filters.html';
@@ -46,21 +45,12 @@ export default class ContentController {
     });
 
     vm.featureFlags = {
-      materialsExchangeEnabled: $featureFlags.materialsExchangeEnabled,
       vendorsEnabled: $featureFlags.vendorsEnabled,
       colorA11y: $featureFlags.colorA11y
     };
     vm.vendorService = dimVendorService;
 
     hotkeys = hotkeys.bindTo($scope);
-
-    hotkeys.add({
-      combo: ['r'],
-      description: $translate.instant('Hotkey.RefreshInventory'),
-      callback: function() {
-        vm.refresh();
-      }
-    });
 
     hotkeys.add({
       combo: ['i'],
@@ -120,7 +110,7 @@ export default class ContentController {
       };
     }
 
-    vm.showSetting = showPopupFunction('settings', settingsTemplate);
+    vm.showSetting = showPopupFunction('settings', '<settings></settings>');
     vm.showAbout = showPopupFunction('about', aboutTemplate);
     vm.showSupport = showPopupFunction('support', supportTemplate);
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
@@ -132,9 +122,5 @@ export default class ContentController {
     };
 
     vm.xur = dimXurService;
-
-    vm.refresh = function refresh() {
-      loadingTracker.addPromise(dimStoreService.reloadStores());
-    };
   }
 }
