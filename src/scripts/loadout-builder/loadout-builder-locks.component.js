@@ -2,6 +2,7 @@ import angular from 'angular';
 import _ from 'underscore';
 import template from './loadout-builder-locks.html';
 import dialogTemplate from './loadout-builder-locks-dialog.html';
+import 'jquery-ui/ui/position';
 
 export const LoadoutBuilderLocks = {
   controller: LoadoutBuilderLocksCtrl,
