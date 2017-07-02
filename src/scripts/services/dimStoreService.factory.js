@@ -83,6 +83,7 @@ function StoreService(
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
+  // TODO: update references to this
   function updateCharacters(platform) {
     return $q.all([
       dimDefinitions.getDefinitions(),
@@ -103,6 +104,7 @@ function StoreService(
    * If this is called while a reload is already happening, it'll return the promise
    * for the ongoing reload rather than kicking off a new reload.
    */
+  // TODO: this feels like a good use for observables
   function reloadStores({ destinyMembershipId, platformType }) {
     // TODO: shouldn't need any of this
     let activePlatform = dimPlatformService.getPlatformMatching({

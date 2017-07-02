@@ -31,13 +31,8 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     });
   });
 
-  vm.settings = dimSettingsService;
-  vm.stores = dimStoreService.getStores();
-  vm.vault = dimStoreService.getVault();
   vm.buckets = null;
-  dimBucketService.getBuckets().then((buckets) => {
-    vm.buckets = angular.copy(buckets);
-  });
+  vm.settings = dimSettingsService;
   vm.toggleSection = function(id) {
     didYouKnow();
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
@@ -46,6 +41,14 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
 
   vm.$onChanges = function() {
     console.log('changes!');
+    vm.vault = dimStoreService.getVault();
+    if (!vm.buckets) {
+      // TODO: why are we copying?
+      // TODO: deferring this to prevent manifest load... wise?
+      dimBucketService.getBuckets().then((buckets) => {
+        vm.buckets = angular.copy(buckets);
+      });
+    }
   };
 
 /**

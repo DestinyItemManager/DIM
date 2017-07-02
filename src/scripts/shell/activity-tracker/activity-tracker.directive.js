@@ -38,6 +38,7 @@ export function ActivityTrackerDirective($document, $interval, dimActivityTracke
 
         if (dimHasNoActivePromises && userWasActiveInTheLastHour && isDimVisible) {
           refresh();
+          // TODO: fire an event instead
         }
       }
 

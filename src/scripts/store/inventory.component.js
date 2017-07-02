@@ -19,7 +19,9 @@ function InventoryController($scope, dimStoreService) {
   this.$onInit = function() {
     console.log(vm.destinyMembershipId, vm.platformType);
 
+    // TODO: can I get rid of all getStores?
     vm.stores = dimStoreService.getStores();
+    // TODO: OK, need to push this check into store service
     if (!vm.stores.length ||
         dimStoreService.activePlatform.membershipId !== vm.destinyMembershipId ||
         dimStoreService.activePlatform.platformType !== vm.platformType) {
@@ -31,8 +33,8 @@ function InventoryController($scope, dimStoreService) {
     }
   };
 
+  // TODO: break characters out into their own thing!
   $scope.$on('dim-stores-updated', (e, stores) => {
     vm.stores = stores.stores;
-    vm.vault = dimStoreService.getVault();
   });
 }

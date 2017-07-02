@@ -27,7 +27,6 @@ export function DestinyAccountService(BungieUserApi, toaster) {
    * @return {Promise<DestinyAccount[]>}
    */
   function getDestinyAccountsForBungieAccount(bungieMembershipId) {
-    console.log(bungieMembershipId);
     return BungieUserApi.getAccounts(bungieMembershipId)
       .then(generatePlatforms)
       .catch((e) => {
@@ -51,7 +50,6 @@ export function DestinyAccountService(BungieUserApi, toaster) {
       };
       account.platformLabel = PLATFORMS[account.platformType].label;
       account.platformIcon = PLATFORMS[account.platformType].icon;
-      console.log(account, accounts);
       return account;
     });
   }
