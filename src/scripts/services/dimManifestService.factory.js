@@ -247,7 +247,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
     return $q((resolve, reject) => {
       zip.useWebWorkers = true;
       zip.workerScripts = {
-        inflater: [ zipWorker, inflate ]
+        inflater: [zipWorker, inflate]
       };
       zip.createReader(new zip.BlobReader(blob), (zipReader) => {
         // get all entries from the zip
