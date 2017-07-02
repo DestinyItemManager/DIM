@@ -4,11 +4,7 @@ function routes($stateProvider, $urlRouterProvider) {
   'ngInject';
 
   const states = [{
-    name: 'root',
-    abstract: true
-  }, {
     name: 'login',
-    parent: 'shell',
     url: '/login',
     template: login,
     params: {
@@ -19,7 +15,6 @@ function routes($stateProvider, $urlRouterProvider) {
   if ($DIM_FLAVOR === 'dev') {
     states.push({
       name: 'developer',
-      parent: 'shell',
       url: '/developer',
       template: require('app/scripts/developer/developer.html')
     });

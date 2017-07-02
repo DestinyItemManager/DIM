@@ -15,7 +15,7 @@ export const VendorItem = {
 
 let otherDialog = null;
 
-function VendorItemCtrl($rootScope, $scope, ngDialog, dimStoreService) {
+function VendorItemCtrl($scope, ngDialog, dimStoreService) {
   'ngInject';
 
   const vm = this;
@@ -97,8 +97,6 @@ function VendorItemCtrl($rootScope, $scope, ngDialog, dimStoreService) {
       dialogResult.closePromise.then(() => {
         dialogResult = null;
       });
-
-      $rootScope.$broadcast('item-clicked', item);
     }
   };
 

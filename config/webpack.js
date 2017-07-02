@@ -198,25 +198,12 @@ module.exports = (env) => {
         '$featureFlags.changelogToaster': JSON.stringify(env === 'release'),
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
-        '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
+        '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(false),
         // Use a WebAssembly version of SQLite, if possible
         '$featureFlags.wasm': JSON.stringify(false),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release')
-      }),
-
-      // Generate a service worker
-      new WorkboxPlugin({
-        maximumFileSizeToCacheInBytes: 5000000,
-        globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
-        globIgnores: [
-          'authReturn*',
-          'extension-scripts/*',
-          'return.html',
-        ],
-        // swSrc: './src/sw.js',
-        swDest: './dist/sw.js'
       }),
 
       // Enable if you want to debug the size of the chunks
@@ -253,6 +240,19 @@ module.exports = (env) => {
       compress: { warnings: false },
       output: { comments: false },
       sourceMap: true
+    }));
+
+    // Generate a service worker
+    config.plugins.push(new WorkboxPlugin({
+      maximumFileSizeToCacheInBytes: 5000000,
+      globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
+      globIgnores: [
+        'authReturn*',
+        'extension-scripts/*',
+        'return.html',
+      ],
+      // swSrc: './src/sw.js',
+      swDest: './dist/sw.js'
     }));
   }
 

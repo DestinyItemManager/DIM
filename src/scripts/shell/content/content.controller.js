@@ -41,7 +41,11 @@ export default class ContentController {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
     $scope.$watch(() => { return vm.settings.colorA11y; }, (color) => {
-      document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
+      if (color && color !== '-') {
+        document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
+      } else {
+        document.querySelector('html').style.removeProperty("--color-filter");
+      }
     });
 
     vm.featureFlags = {

@@ -70,7 +70,7 @@ require('./scripts/login/dimLogin.controller');
 
 require('./scss/main.scss');
 
-if (navigator.serviceWorker) {
+if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
   navigator.serviceWorker.register('/sw.js')
     .catch((err) => {
       console.error('Unable to register service worker.', err);
