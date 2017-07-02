@@ -10,6 +10,7 @@ import { RefreshStoresComponent } from './refresh-stores.component';
 import { CountdownComponent } from './countdown.component';
 import { BungieAlertsComponent } from './bungie-alerts.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
+import { ScrollClass } from './scroll-class.directive';
 
 export const ShellModule = angular
   .module('dimShell', [
@@ -24,6 +25,7 @@ export const ShellModule = angular
   .component('backLink', backLinkComponent)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
+  .directive('scrollClass', ScrollClass)
   .config(($stateProvider) => {
     'ngInject';
 
