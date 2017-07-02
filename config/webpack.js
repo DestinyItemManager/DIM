@@ -198,7 +198,7 @@ module.exports = (env) => {
         '$featureFlags.changelogToaster': JSON.stringify(env === 'release'),
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
-        '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
+        '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(false),
         // Use a WebAssembly version of SQLite, if possible
         '$featureFlags.wasm': JSON.stringify(false),
