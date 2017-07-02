@@ -4,7 +4,6 @@ import filtersTemplate from 'app/views/filters.html';
 
 export default class ContentController {
   constructor(
-    dimActivityTrackerService,
     dimState,
     ngDialog,
     $rootScope,
@@ -12,11 +11,8 @@ export default class ContentController {
     dimPlatformService,
     $interval,
     hotkeys,
-    $timeout,
-    dimStoreService,
     dimXurService,
     dimSettingsService,
-    $window,
     $scope,
     $state,
     dimVendorService,
@@ -31,23 +27,6 @@ export default class ContentController {
     vm.$DIM_VERSION = $DIM_VERSION;
     vm.$DIM_FLAVOR = $DIM_FLAVOR;
     vm.$DIM_CHANGELOG = $DIM_CHANGELOG;
-
-    vm.loadingTracker = loadingTracker;
-    vm.platforms = [];
-
-    vm.platformChange = function platformChange(platform) {
-      loadingTracker.addPromise(dimPlatformService.setActive(platform));
-    };
-
-    $scope.$on('dim-platforms-updated', (e, args) => {
-      vm.platforms = args.platforms;
-    });
-
-    $scope.$on('dim-active-platform-updated', (e, args) => {
-      dimState.active = vm.currentPlatform = args.platform;
-    });
-
-    loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
     vm.settings = dimSettingsService;
     $scope.$watch(() => vm.settings.itemSize, (size) => {

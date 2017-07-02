@@ -28,6 +28,7 @@
   <span class="link second-to-go" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleState('vendors')" translate="Vendors"></span>
   <span class="link second-to-go" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
 
+  <account-select class="header-right"></account-select>
   <span class="header-right">
     <refresh-stores ng-if="!$ctrl.showSearch" class="link"></refresh-stores>
     <span class="link" ng-if="!$ctrl.showSearch" ng-click="$ctrl.toggleState('storage')" translate-attr="{ title: 'Storage.Title'}"><i class="fa fa-save"></i></span>
@@ -37,7 +38,6 @@
       <dim-search-filter></dim-search-filter>
     </span>
     <span class="link search-button" ng-click="$ctrl.showSearch = !$ctrl.showSearch"><i class="fa fa-search"></i></span>
-    <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.currentPlatform" on-platform-change="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
   </span>
 </div>
 

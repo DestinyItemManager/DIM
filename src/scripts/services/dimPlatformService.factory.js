@@ -25,6 +25,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
   /**
    * @return {DestinyAccount[]}
    */
+  // TODO: return a list of bungie accounts and associated destiny accounts?
   function getPlatforms() {
     // TODO: wire this up with observables?
     return BungieAccountService.getBungieAccounts()
