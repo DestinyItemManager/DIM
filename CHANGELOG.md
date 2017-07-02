@@ -1,5 +1,9 @@
 # Next
 
+# 4.2.1
+
+* Actually turn on Google Drive in prod.
+
 # 4.2.0
 
 * Exclude all variants of 'Husk of the Pit' from 'Item Leveling' loadout.
