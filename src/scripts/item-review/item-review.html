@@ -22,7 +22,7 @@
   </form>
 </div>
 
-<div ng-if="$ctrl.canReview" class="user-review--header">
+<div ng-if="$ctrl.canCreateReview" class="user-review--header">
   <span translate="DtrReview.YourReview"></span>
   <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()"></star-rating>
 
