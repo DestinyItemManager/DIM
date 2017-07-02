@@ -138,9 +138,8 @@ module.exports = (env) => {
         { from: './node_modules/zip-js/WebContent/inflate.js', to: 'static/zipjs' },
 
         { from: './src/.htaccess' },
-        { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
-        { from: './src/extension-scripts/content-script.js', to: 'extension-scripts/' },
-        { from: './src/manifest.json' },
+        { from: './extension', to: '../extension-dist' },
+        { from: `./icons/${env}-extension/`, to: '../extension-dist' },
         { from: './src/manifest-webapp.json' },
         { from: './src/data', to: 'data/' },
         { from: `./icons/${env}/` },

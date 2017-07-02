@@ -13,17 +13,18 @@ module.exports = function(grunt) {
       // Zip up the extension
       chrome: {
         options: {
-          archive: 'dist/chrome.zip'
+          archive: 'extension-dist/chrome.zip'
         },
         files: [{
           expand: true,
-          cwd: 'dist',
+          cwd: 'extension-dist',
           src: [
             '**',
             '!data',
             '!chrome.zip',
             '!.htaccess',
-            '!stats.html'
+            '!stats.html',
+            'README.md'
           ],
           dest: '/',
           filter: 'isFile'
@@ -60,11 +61,11 @@ module.exports = function(grunt) {
       extensions: {
         release: {
           appID: "apghicjnekejhfancbkahkhdckhdagna",
-          zip: "dist/chrome.zip"
+          zip: "extension-dist/chrome.zip"
         },
         beta: {
           appID: "mkiipknpfaacbjdagdeppdacpgpdjklc",
-          zip: "dist/chrome.zip"
+          zip: "extension-dist/chrome.zip"
         }
       }
     },
@@ -115,17 +116,20 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-rsync');
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
-    var manifest = grunt.file.readJSON('dist/manifest.json');
+    var manifest = grunt.file.readJSON('extension-dist/manifest.json');
     manifest.name = manifest.name + " Beta";
     manifest.version = betaVersion;
     manifest.content_scripts[0].matches = ['https://beta.destinyitemmanager.com/*'];
-    grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
+    grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
+    var mainjs = grunt.file.read('extension-dist/main.js');
+    mainjs = mainjs.replace('app.destinyitemmanager.com', 'beta.destinyitemmanager.com');
+    grunt.file.write('extension-dist/main.js', mainjs);
   });
 
   grunt.registerTask('update_chrome_release_manifest', function() {
     var manifest = grunt.file.readJSON('dist/manifest.json');
     manifest.version = pkg.version;
-    grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
+    grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
   });
 
   grunt.registerMultiTask(
