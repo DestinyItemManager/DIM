@@ -206,6 +206,8 @@ module.exports = (env) => {
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release')
       }),
 
+      new webpack.optimize.ModuleConcatenationPlugin(),
+
       // Enable if you want to debug the size of the chunks
       //new Visualizer(),
     ],
