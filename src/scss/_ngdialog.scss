@@ -13,13 +13,6 @@
     font-weight: 400;
   }
 
-  * {
-    box-sizing: inherit;
-    &:before, &:after {
-      box-sizing: inherit;
-    }
-  }
-
   &.modal-dialog {
     position: fixed;
     width: 100%;
