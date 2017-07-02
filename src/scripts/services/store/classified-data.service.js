@@ -39,7 +39,9 @@ export function ClassifiedDataService($http, dimSettingsService) {
             if (response && response.status === 200) {
               const remoteData = response.data;
               remoteData.time = Date.now();
-              return idbKeyval.set('classified-data', remoteData).then(() => remoteData);
+              // Don't wait for the set - for some reason this was hanging
+              idbKeyval.set('classified-data', remoteData);
+              return remoteData;
             }
 
             console.error(`Couldn't load classified info from ${url}`);
