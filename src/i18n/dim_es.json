@@ -48,8 +48,7 @@
       "Days": "{numDays, plural, =1{# Día} other{# Días}}"
    },
    "Debug": {
-      "Dump": "Tirar información a la consola",
-      "View": "Ver información de depuración de objeto"
+      "Dump": "Tirar información a la consola"
    },
    "DidYouKnow": {
       "DidYouKnow": "¿Sabias que?",
@@ -183,6 +182,7 @@
          "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
          "StatsIncrease": "Mientras el nivel de defensa de los objetos incremente, las estadísticas en ese objeto (int/dis/fuer) también incrementan."
       },
+      "Equip": "Equipar al personaje actual",
       "ShowAllConfigs": "Mostrar todas las configuraciones",
       "ShowConfigs": "Mostrar configuraciones",
       "HideAllConfigs": "Ocultar todas las configuraciones",
@@ -291,7 +291,8 @@
       "Cons": "Contras",
       "NoReviews": "No hay reseñas para este objeto, sé el primero!",
       "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker",
-      "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker"
+      "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker",
+      "AverageRating": "({itemRating}) basado en {numReviews} reseñas."
    },
    "Objectives": {
       "Complete": "Completo",
@@ -303,41 +304,12 @@
    },
    "Settings": {
       "Settings": "Configuración",
+      "LogOut": "Cerrar sesión",
       "Language": "Lenguaje (recarga DIM para que se apliquen los cambios)",
-      "HideUnfiltered": "Ocultar objetos sin filtro mientras se filtran",
-      "HideUnfilteredHelp": "Objetos que no cumplan con el criterio serán escondidos",
-      "AlwaysShowDetails": "Siempre mostrar detalles de objeto",
-      "AlwaysShowDetailsHelp": "Hacer click en un objeto va a mostrar una ventana emergente que puede ser expandida para mostrar mejoras y detalles de estadísticas.  Ésta opción siempre va a mostrar ese detalle cuando hagas click en un objeto.",
-      "EnableAdvancedStats": "Habilitar características comparativas de calidad de mejoras",
-      "EnableAdvancedStatsHelp": "Habilitará características avanzadas de mín/máx en el diálogo móvil y habilitará vista de comparación de armadura.",
-      "ShowOverlay": "Mostrar objetos nuevos con una cobertura",
-      "ShowOverlayHelp": "Mostrará objetos nuevos con una cobertura.",
-      "ShowAnimations": "Mostrar cobertura animada en nuevos objetos.",
-      "ShowAnimationsHelp": "Mostrará la cobertura animada en objetos nuevos. Apagando esto puede ahorrar ciclos de procesamiento.",
       "ShowReviews": "Muestra la valuación de reseñas en las armas",
-      "ShowReviewsHelp": "Muestra el promedio de reseñas de armas por usuarios.",
       "ShowElemental": "Mostrar ícono de daño elemental en armas",
-      "ShowElementalHelp": "Mostrará ícono de daño elemental en armas.",
-      "AllowIdPostToDtr": "Comparte tu nombre de cuenta y tus reseñas de objetos con Destiny Tracker.",
-      "AllowIdPostToDtrHelp": "DIM compartirá el nombre de tu cuenta y cualquier objeto del cual hagas una reseña con Destiny Tracker",
-      "SetSort": "Ordernar objetos por:",
-      "SortPrimary": "Estadística primaria",
-      "SortRarity": "Rareza",
-      "InventoryColumns": "Columnas de Inventario de personaje",
-      "InventoryColumnsHelp": "Seleccionar el número de columnas por inventario de personaje.",
-      "VaultColumns": "Máximo número de columnas del Inventario",
-      "VaultColumnsHelp": "Seleccionar el máximo número de columnas para el depósito.",
-      "SizeItem": "Tamaño de objetos",
-      "SizeItemHelp": "Qué tan grande deben verse los objetos?",
       "ResetToDefault": "Reiniciar",
-      "CharacterOrder": "Órden de personajes",
-      "CharacterOrderHelp": "Los personajes pueden ser ordenados por última sesión iniciada o por su fecha de creación.",
-      "CharacterOrderRecent": "Por el personaje más reciente",
-      "CharacterOrderReversed": "Por el personaje más reciente (Reverso)",
-      "CharacterOrderFixed": "Fijo (Por la edad del personaje)",
-      "ExportSS": "Descargar hojas de cálculo",
       "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
-      "DIMPopups": "Ventanas emergentes de información de DIM",
       "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos"
    },
    "Stats": {
@@ -423,7 +395,6 @@
          "FAQKeyboard": "¿Cuenta DIM con soporte para atajos de teclado (shortcuts)?",
          "FAQKeyboardAnswer": "Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
          "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
-         "FAQLogoutAnswer": "Tu sesión esta ligada a Bungie.net. Si cierras sesión en Bungie.net, estas efectivamente cerrando sesión en DIM.",
          "FAQLostItem": "¡Perdí mi artículo usando tu herramienta!",
          "FAQLostItemAnswer": "Es muy probable que la transferencia falló, lo cual deja tu artículo en el Depósito o en otro personaje. Puedes buscar ese objeto. Si incluso así no aparece, actualiza la aplicación presionando F5. Asegúrate de revisar Bungie.net o en el juego para verificar que tu objeto todavía existe. Estamos seguros de que todavía esta ahí.",
          "GitHub": "GitHub",
@@ -432,7 +403,6 @@
          "Header": "Acerca de Destiny Item Manager (DIM)",
          "HowItsMade": "DIM fue construido sobre los mismos servicios que utiliza Bungie.net y la Aplicación complementaria de Destiny. DIM puede accesar los artículos dentro de el Inventario de tus Guardianes y el Depósito para ambos Xbox y PlayStation. Después puedes arrastrar y soltar los objetos a donde gustes moverlos.",
          "Reddit": "Reddit",
-         "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, háznoslas saber!",
          "Twitter": "Twitter",
          "TwitterHelp": "Asegúrate de seguirnos para estar informado de las actualizaciones e información de la aplicación en tiempo real.",
          "Version": "Versión {version} ({flavor}), built on {date}",

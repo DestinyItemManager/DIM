@@ -48,8 +48,7 @@
       "Days": "{numDays, plural, =1{# Journée} other{# Journées}}"
    },
    "Debug": {
-      "Dump": "Envoyer les infos sur la console",
-      "View": "Afficher les infos de débug de l'objet."
+      "Dump": "Envoyer les infos sur la console"
    },
    "DidYouKnow": {
       "DidYouKnow": "Le saviez-vous?",
@@ -293,37 +292,9 @@
    "Settings": {
       "Settings": "Paramètres",
       "Language": "Langue (redémarrez DIM pour prendre effet)",
-      "HideUnfiltered": "Cacher les objets non filtrés pendant le filtrage",
-      "HideUnfilteredHelp": "Les objets qui ne correspondent pas aux critères de filtrage seront cachés.",
-      "AlwaysShowDetails": "Toujours afficher les détails de l'objet",
-      "AlwaysShowDetailsHelp": "Cliquer sur un objet affichera toujours un popup pouvant être agrandi pour afficher les stats et améliorations. Cette option les affichera toujours quand vous cliquerez sur un objet.",
-      "EnableAdvancedStats": "Activer les fonctionalités de comparaison de qualité de stat avancée",
-      "EnableAdvancedStatsHelp": "Activera les fonctionalités avancées de min/max dans le dialogue de déplacement et activera la vue de comparaison d'armure.",
-      "ShowOverlay": "Afficher les nouveaux objets avec un indicateur",
-      "ShowOverlayHelp": "Afficher les nouveaux objets avec un indicateur.",
-      "ShowAnimations": "Afficher les animations pour les nouveaux objets",
-      "ShowAnimationsHelp": "Affichera les animations pour les nouveaux objets. Désactiver cette option peut améliorer les performances du CPU.",
       "ShowElemental": "Afficher les icônes d'élément de dégât sur les armes",
-      "ShowElementalHelp": "Afficher les icônes d'élément de dégât sur les armes.",
-      "AllowIdPostToDtrHelp": "DIM va partager votre nom de compte et tout élément que vous consultez avec Destiny Tracker.",
-      "SetSort": "Ordonner les objets par:",
-      "SortPrimary": "Stat première",
-      "SortRarity": "Rareté",
-      "InventoryColumns": "Colonnes d'Inventaire de Perso",
-      "InventoryColumnsHelp": "Sélectionner le nombre de colonnes pour l'inventaire de votre perso.",
-      "VaultColumns": "Maximum de Colonnes de l'Inventaire des Coffres",
-      "VaultColumnsHelp": "Sélectionner le nombre maximum de colonnes pour l'inventaire des Coffres.",
-      "SizeItem": "Taille d'un objet",
-      "SizeItemHelp": "Quelle taille devrait être les objets?",
       "ResetToDefault": "Réinitialiser",
-      "CharacterOrder": "Ordre de Perso",
-      "CharacterOrderHelp": "Les persos peuvent être ordonnés par dernière connexion ou par leur date de création.",
-      "CharacterOrderRecent": "Par le Plus Récent",
-      "CharacterOrderReversed": "Par le Plus Récent (Inversé)",
-      "CharacterOrderFixed": "Fixe (Par Age du Perso)",
-      "ExportSS": "Télécharger le Tableur",
       "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
-      "DIMPopups": "Popups d'Info de DIM",
       "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes"
    },
    "Stats": {
@@ -384,7 +355,6 @@
          "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
          "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
          "FAQLogout": "Comment puis-je me déconnecter de DIM?",
-         "FAQLogoutAnswer": "Votre session est liée à Bungie.net. Si vous vous déconnnectez de Bungie.net, vous vous déconnectez de DIM.",
          "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
          "FAQLostItemAnswer": "Il est plus que probable que votre transfer a échoué, laissant votre objet dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
          "GitHub": "GitHub",
