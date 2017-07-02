@@ -106,8 +106,7 @@ module.exports = (env) => {
       extensions: ['.js', '.json'],
 
       alias: {
-        app: path.resolve('./src'),
-        jquery: "jquery/src/jquery"
+        app: path.resolve('./src')
       }
     },
 
