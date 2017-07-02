@@ -10,7 +10,6 @@ import _ from 'underscore';
 export function SyncService(
   $q,
   IndexedDBStorage,
-  ChromeSyncStorage,
   GoogleDriveStorage
 ) {
   'ngInject';
@@ -19,7 +18,6 @@ export function SyncService(
 
   const adapters = [
     IndexedDBStorage,
-    ChromeSyncStorage,
     GoogleDriveStorage
   ].filter((a) => a.supported);
 
