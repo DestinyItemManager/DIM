@@ -4,6 +4,7 @@
 
 * Fix DIM being invisible on Firefox
 * Fix a case where DIM would never finish loading.
+* Vendor weapons now show reviews.
 
 # 4.2.1
 
@@ -17,7 +18,6 @@
 * Added missing Trials emblems and shaders to the is:trials search.
 * DIM should look more like an app if you add it to your home screen on Android.
 * DIM will show service alerts from Bungie.
-* Vendor weapons now show reviews.
 
 # 4.1.2
 
