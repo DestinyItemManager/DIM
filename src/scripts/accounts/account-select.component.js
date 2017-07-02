@@ -13,6 +13,8 @@ function AccountSelectController($scope, dimPlatformService, dimState, loadingTr
   const vm = this;
   let dialogResult = null;
 
+  // TODO: s/platform/account
+
   vm.loadingTracker = loadingTracker;
   vm.platforms = [];
 
@@ -39,7 +41,11 @@ function AccountSelectController($scope, dimPlatformService, dimState, loadingTr
 
   vm.selectPlatform = function(e, platform) {
     e.stopPropagation();
-    dimPlatformService.setActive(platform);
+    // dimPlatformService.setActive(platform);
+    $state.go('inventory', {
+      destinyMembershipId: platform.membershipId,
+      platformType: platform.platformType
+    });
   };
 
   vm.openDropdown = function(e) {

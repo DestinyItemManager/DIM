@@ -28,14 +28,13 @@ function StoreService(
   toaster,
   StoreFactory,
   ItemFactory,
-  NewItemsService,
-  $stateParams
+  NewItemsService
 ) {
   let _stores = [];
 
   // A promise used to dedup parallel calls to reloadStores
   // TODO: do this per-platform?
-  let _reloadPromise;
+  const _reloadPromises = {};
 
   const service = {
     getActiveStore: () => _.find(_stores, 'current'),
@@ -45,9 +44,11 @@ function StoreService(
     getAllItems: () => flatMap(_stores, 'items'),
     getItemAcrossStores,
     updateCharacters,
-    reloadStores
+    reloadStores,
+    activePlatform: null // TODO: kind of a hack so consumers know when to re-fetch
   };
 
+  /*
   $rootScope.$on('dim-active-platform-updated', () => {
     _stores = [];
     NewItemsService.hasNewItems = false;
@@ -58,6 +59,7 @@ function StoreService(
 
     dimDestinyTrackerService.fetchReviews(_stores);
   });
+  */
 
   return service;
 
@@ -81,10 +83,10 @@ function StoreService(
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  function updateCharacters() {
+  function updateCharacters(platform) {
     return $q.all([
       dimDefinitions.getDefinitions(),
-      Destiny1Api.getCharacters(dimPlatformService.getActive())
+      Destiny1Api.getCharacters(platform)
     ]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
@@ -101,12 +103,8 @@ function StoreService(
    * If this is called while a reload is already happening, it'll return the promise
    * for the ongoing reload rather than kicking off a new reload.
    */
-  // TODO: make this take a platform
-  function reloadStores() {
-    // TODO: hack alert!
-    const destinyMembershipId = $stateParams.destinyMembershipId;
-    const platformType = $stateParams.platformType;
-
+  function reloadStores({ destinyMembershipId, platformType }) {
+    // TODO: shouldn't need any of this
     let activePlatform = dimPlatformService.getPlatformMatching({
       membershipId: destinyMembershipId,
       platformType
@@ -122,13 +120,11 @@ function StoreService(
       };
     }
 
-    if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
-      return _reloadPromise;
-    }
+    const promiseCacheKey = `${destinyMembershipId}-${platformType}`;
+    let reloadPromise = _reloadPromises[promiseCacheKey];
 
-    // #786 Exiting early when finding no activePlatform.
-    if (!activePlatform) {
-      return $q.reject("Cannot find active platform.");
+    if (reloadPromise) {
+      return reloadPromise;
     }
 
     // Save a snapshot of all the items before we update
@@ -145,7 +141,7 @@ function StoreService(
       Destiny1Api.getStores(activePlatform)
     ];
 
-    _reloadPromise = $q.all(dataDependencies)
+    reloadPromise = $q.all(dataDependencies)
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
@@ -171,7 +167,9 @@ function StoreService(
         }
 
         _stores = stores;
+        service.activePlatform = activePlatform;
 
+        // TODO: knock this out
         $rootScope.$broadcast('dim-stores-updated', {
           stores: stores
         });
@@ -201,14 +199,12 @@ function StoreService(
       })
       .finally(() => {
         // Clear the reload promise so this can be called again
-        if (_reloadPromise.activePlatform === activePlatform) {
-          _reloadPromise = null;
-        }
+        _reloadPromises[promiseCacheKey] = null;
         dimManifestService.isLoaded = true;
       });
 
-    _reloadPromise.activePlatform = activePlatform;
-    return _reloadPromise;
+    _reloadPromises[promiseCacheKey] = reloadPromise;
+    return reloadPromise;
   }
 
   /**

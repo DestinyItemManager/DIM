@@ -23,7 +23,7 @@ export function BungieAccountService(OAuthTokenService) {
   };
 
   /**
-   * Get the Bungie accounts for this DIM user. For now, we only have one (or none if you're not logged in.
+   * Get the Bungie accounts for this DIM user. For now, we only have one (or none if you're not logged in).
    *
    * @return {Promise<BungieAccount[]>} a list of all the known Bungie accounts.
    */
