@@ -1,5 +1,8 @@
 # Next
 
+* In Google Chrome (and the next version of Firefox), your local DIM data won't be deleted by the browser in low storage situations if you visit DIM frequently.
+* Fixed a case where DIM could hang when you have very little free space on your computer, and added a warning when we can't store data.
+
 # 4.2.2
 
 * Fix DIM being invisible on Firefox
