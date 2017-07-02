@@ -31,22 +31,24 @@ export default class ContentController {
     loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
     vm.settings = dimSettingsService;
-    $scope.$watch(() => { return vm.settings.itemSize; }, (size) => {
+    $scope.$watch(() => vm.settings.itemSize, (size) => {
       document.querySelector('html').style.setProperty("--item-size", `${size}px`);
     });
-    $scope.$watch(() => { return vm.settings.charCol; }, (cols) => {
+    $scope.$watch(() => vm.settings.charCol, (cols) => {
       document.querySelector('html').style.setProperty("--character-columns", cols);
     });
-    $scope.$watch(() => { return vm.settings.vaultMaxCol; }, (cols) => {
+    $scope.$watch(() => vm.settings.vaultMaxCol, (cols) => {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
-    $scope.$watch(() => { return vm.settings.colorA11y; }, (color) => {
-      if (color && color !== '-') {
-        document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
-      } else {
-        document.querySelector('html').style.removeProperty("--color-filter");
-      }
-    });
+    if ($featureFlags.colorA11y) {
+      $scope.$watch(() => vm.settings.colorA11y, (color) => {
+        if (color && color !== '-') {
+          document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
+        } else {
+          document.querySelector('html').style.removeProperty("--color-filter");
+        }
+      });
+    }
 
     vm.featureFlags = {
       vendorsEnabled: $featureFlags.vendorsEnabled,

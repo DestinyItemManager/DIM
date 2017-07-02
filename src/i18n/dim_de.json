@@ -39,6 +39,7 @@
             "Class": "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist.",
             "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist."
         },
+        "ItemCount": "Du hast {num} davon.",
         "Splits": "Vergleiche mit selben Werten ({{quantity}})"
     },
     "Cooldown": {
@@ -51,8 +52,7 @@
         "Days_plural": "{{count}} Tage"
     },
     "Debug": {
-        "Dump": "Info in Konsole ausgeben",
-        "View": "Zeige Item Debug Info"
+        "Dump": "Info in Konsole ausgeben"
     },
     "DidYouKnow": {
         "DidYouKnow": "Wusstest du schon?",
@@ -195,7 +195,7 @@
             "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen des Loadouts angezeigt werden.",
             "StatsIncrease": "Wenn sich der Verteidigungswert für ein Rüstungsteil erhöht, nehmen auch die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu."
         },
-        "Equip": "Ausgerüstet bei {{character}}",
+        "Equip": "Ausrüsten beim {{character}}",
         "ShowAllConfigs": "Zeige alle Einstellungen",
         "ShowConfigs": "Zeige Einstellungen",
         "HideAllConfigs": "Verstecke alle Einstellungen",
@@ -211,7 +211,7 @@
     "Loadouts": {
         "Any": "Irgendein",
         "Loadouts": "Loadouts",
-        "Before": "Zurück zu '{{name}}'",
+        "Before": "Bevor '{{name}}'",
         "Create": "Loadout erstellen",
         "FromEquipped": "Ausrüstung",
         "Edit": "Loadout bearbeiten",
@@ -326,12 +326,33 @@
     },
     "Settings": {
         "Settings": "Einstellungen",
-        "LogOut": "Ausloggen",
+        "LogOutDesc": "Melde dich von DIM ab, oder wechsel das Bungie.net Konto",
+        "LogOut": "Abmelden",
         "Language": "Sprache (lade DIM neu zum Übernehmnen)",
+        "HideUnfiltered": "Verstecke Gegenstände die nicht der Suche entsprechen",
+        "AlwaysShowDetails": "Zeige immer erweitertes Pop-Up an",
+        "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen",
+        "ShowOverlay": "Hebe neue Gegenstände mit einem glänzenden Icon hervor",
+        "ShowAnimations": "Animiere den neuen, hervorgehobenen Gegenstand",
+        "ShowAnimationsHelp": "Animiert die Hervorhebung bei neuen Gegenständen. Deaktivierung senkt CPU Belastung",
         "ShowReviews": "Zeige Berichtwertungen bei Waffen an",
         "ShowElemental": "Zeige Elementarschaden bei Waffen an",
-        "SetSortHelp": "Sortieren von Gegenständen nach Seltenheit oder ihrem primären Statuswert.",
+        "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen.",
+        "AllowIdPostToDtrLine2": "Teile deinen Account-Namen und überprüfte Elemente mit Destiny Tracker.",
+        "SetSort": "Sortiere Gegenstände nach",
+        "SetSortHelp": "Sortiere Gegenstände nach Bewertung, Seltenheit oder primärem Wert",
+        "SortPrimary": "Primärer Wert",
+        "SortRarity": "Seltenheit",
+        "SortRoll": "Roll-Wert Prozent",
+        "InventoryColumns": "Charakter Inventar Spalten",
+        "VaultColumns": "Maximale Anzahl von Spalten des Tresors",
+        "ColumnSize": "{{num}} Gegenstände",
+        "SizeItem": "Item Größe",
         "ResetToDefault": "Zurücksetzen",
+        "CharacterOrder": "Charakter Reihenfolge",
+        "CharacterOrderRecent": "Nach zuletzt aktivem Charakter",
+        "CharacterOrderReversed": "Nach zuletzt aktivem Charakter (umgekehrt)",
+        "CharacterOrderFixed": "Fest (Nach Alter des Charakters)",
         "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
         "DIMPopups": "DIM info popups",
         "DIMPopupsReset": "Zeige zuvor versteckte info tipps"
@@ -348,6 +369,40 @@
         "Strength": "Stärke",
         "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",
         "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    },
+    "Storage": {
+        "Title": "DIM Speicher",
+        "Explain": "Dim speichert seine eigenen Daten separat von den Destiny Daten (welche von Bungie.net verwaltet werden).",
+        "Enabled": "Aktiviert",
+        "Disabled": "Deaktiviert",
+        "StatLabel": "Das beinhaltet derzeit:",
+        "Loadouts": "{{value}} Loadouts",
+        "Settings": "Deine DIM Einstellungen",
+        "TagNotes": "{{value}} Gegenstände mit Notizen",
+        "ImportExport": "Back Up Dateien",
+        "GoogleDriveStorage": "Google Drive",
+        "ChromeSyncStorage": "Chrome Sync (nur Erweiterung)",
+        "IndexedDBStorage": "Lokaler Browser Speicher",
+        "Details": {
+          "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
+          "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
+          "IndexedDBStorage": "Lokales Speichern speichert deine Informationen nur in diesem Browser. Der Browser könnte diese Informationen löschen, wenn du keinen freien Speicher mehr hast oder DIM nicht regelmäßig besuchst."
+        },
+        "ForceSync": "Erzwinge Synchronisation",
+        "DriveSync": "Bei Google Drive anmelden",
+        "DriveLogout": "Bei Google Drive abmelden",
+        "GoogleApiBlocked": "Google Drive ist nicht erreichbar, weil ein Inhaltsblocker JavaScript für Google Drive deaktiviert hat.",
+        "NoData": "Keine Daten",
+        "Export": "Sichere DIM Daten",
+        "Import": "Importiere DIM Daten aus Datei",
+        "ImportSuccess": "DIM Daten importiert!",
+        "ImportNoFile": "Keine Datei ausgewählt!",
+        "GDriveSignInWarning": "Wenn du bereits DIM Daten in Google Drive gespeichert hast, wird es alles überschreiben was du lokal gespeichert hast. Du solltest eventuell deine Daten sichern, bevor du dich anmeldest.\n\nGoogle Drive Anmeldung fortsetzen?",
+        "GDriveLogout": "Deine Daten sind noch immer in Google Drive - wenn du dich wieder anmeldest, wird DIM diese wieder verwenden.",
+        "ImportFromExtension": "Importiere Daten von der DIM Chrome Erweiterung",
+        "ImportFromExtensionDetail": "Du kannst Daten von der DIM Chrome Erweiterung auf der DIM Webseite importieren.",
+        "ImportFromExtensionButton": "Importiere Daten",
+        "ImportFromExtensionWarning": "Deine Daten der DIM Chrome Erweiterung werden deine aktuellen Daten überschreiben. Fortsetzen?"
     },
     "StoreBucket": {
         "FillStack": "Stapel auffüllen ({{amount}})",
@@ -395,7 +450,6 @@
             "FAQKeyboard": "Unterstützt DIM Tastaturkürzel?",
             "FAQKeyboardAnswer": "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen.",
             "FAQLogout": "Wie kann ich mich von DIM abmelden?",
-            "FAQLogoutAnswer": "Deine Sitzung ist an Bungie.net gebunden. Wenn du dich auf Bungie.net abmeldest, wirst du auch von DIM abgemeldet.",
             "FAQLostItem": "Ich habe durch euer Tool einen Gegenstand verloren!",
             "FAQLostItemAnswer": "Sehr wahrscheinlich ist eine Übertragung fehlgeschlagen, so dass der Gegenstand im Tresor oder auf einem anderen Charakter gelandet ist. Du kannst nach dem Gegenstand suchen. Wenn du ihn trotzdem nicht findest, aktualisiere die App, indem du F5 drückst. Schau auf Bungie.net oder im Spiel nach, um zu sehen wo sich der Gegenstand befindet. Wir sind sicher, er ist da.",
             "GitHub": "GitHub",
@@ -418,7 +472,9 @@
             "Backers": "Unterstützer",
             "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln",
             "Sponsors": "Sponsoren",
-            "SponsorsDetail": "Werde Sponsor und platziere hier dein Logo mit einem Link zu deiner Seite."
+            "SponsorsDetail": "Werde Sponsor und platziere hier dein Logo mit einem Link zu deiner Seite.",
+            "Teespring": "Wir haben auch T-Shirts mit unserem neuen Logo zum kaufen auf Teespring:",
+            "TeespringLink": "DIM bei Teespring"
         },
         "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können.",
         "Login": {

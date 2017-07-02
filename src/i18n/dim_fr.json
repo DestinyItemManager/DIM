@@ -51,8 +51,7 @@
         "Days_plural": "{{count}} Journées"
     },
     "Debug": {
-        "Dump": "Envoyer les infos sur la console",
-        "View": "Afficher les infos de débug de l'objet."
+        "Dump": "Envoyer les infos sur la console"
     },
     "DidYouKnow": {
         "DidYouKnow": "Le saviez-vous?",
@@ -383,7 +382,6 @@
             "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
             "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
             "FAQLogout": "Comment puis-je me déconnecter de DIM?",
-            "FAQLogoutAnswer": "Votre session est liée à Bungie.net. Si vous vous déconnnectez de Bungie.net, vous vous déconnectez de DIM.",
             "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
             "FAQLostItemAnswer": "Il est plus que probable que votre transfer a échoué, laissant votre objet dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
             "GitHub": "GitHub",

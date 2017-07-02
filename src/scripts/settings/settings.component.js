@@ -39,7 +39,9 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     ja: '日本語'
   };
 
-  vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
+  if ($featureFlags.colorA11y) {
+    vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
+  }
 
   vm.settings = dimSettingsService;
 

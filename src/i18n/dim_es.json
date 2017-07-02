@@ -51,8 +51,7 @@
         "Days_plural": "{{count}} Días"
     },
     "Debug": {
-        "Dump": "Tirar información a la consola",
-        "View": "Ver información de depuración de objeto"
+        "Dump": "Tirar información a la consola"
     },
     "DidYouKnow": {
         "DidYouKnow": "¿Sabias que?",
@@ -196,6 +195,7 @@
             "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
             "StatsIncrease": "Mientras el nivel de defensa de los objetos incremente, las estadísticas en ese objeto (int/dis/fuer) también incrementan."
         },
+        "Equip": "Equipar al personaje actual",
         "ShowAllConfigs": "Mostrar todas las configuraciones",
         "ShowConfigs": "Mostrar configuraciones",
         "HideAllConfigs": "Ocultar todas las configuraciones",
@@ -317,7 +317,8 @@
         "Cons": "Contras",
         "NoReviews": "No hay reseñas para este objeto, sé el primero!",
         "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker",
-        "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker"
+        "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker",
+        "AverageRating": "({itemRating}) basado en {numReviews} reseñas."
     },
     "Objectives": {
         "Complete": "Completo",
@@ -329,6 +330,7 @@
     },
     "Settings": {
         "Settings": "Configuración",
+        "LogOut": "Cerrar sesión",
         "Language": "Lenguaje (recarga DIM para que se apliquen los cambios)",
         "ShowReviews": "Muestra la valuación de reseñas en las armas",
         "ShowElemental": "Mostrar ícono de daño elemental en armas",
@@ -422,7 +424,6 @@
             "FAQKeyboard": "¿Cuenta DIM con soporte para atajos de teclado (shortcuts)?",
             "FAQKeyboardAnswer": "Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
             "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
-            "FAQLogoutAnswer": "Tu sesión esta ligada a Bungie.net. Si cierras sesión en Bungie.net, estas efectivamente cerrando sesión en DIM.",
             "FAQLostItem": "¡Perdí mi artículo usando tu herramienta!",
             "FAQLostItemAnswer": "Es muy probable que la transferencia falló, lo cual deja tu artículo en el Depósito o en otro personaje. Puedes buscar ese objeto. Si incluso así no aparece, actualiza la aplicación presionando F5. Asegúrate de revisar Bungie.net o en el juego para verificar que tu objeto todavía existe. Estamos seguros de que todavía esta ahí.",
             "GitHub": "GitHub",
