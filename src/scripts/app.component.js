@@ -7,10 +7,14 @@ export const AppComponent = {
   controller: AppComponentCtrl
 };
 
-function AppComponentCtrl($window, $rootScope, dimInfoService, $translate) {
+function AppComponentCtrl($window, $rootScope, dimInfoService, dimSettingsService, $translate) {
   'ngInject';
 
   this.$onInit = function() {
+    this.qualityEnabled = $featureFlags.qualityEnabled;
+    this.reviewsEnabled = $featureFlags.reviewsEnabled;
+    this.settings = dimSettingsService;
+
     // Check for old Chrome versions
     // TODO: do feature checks instead? Use Modernizr?
     const chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
