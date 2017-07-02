@@ -134,9 +134,6 @@ module.exports = (env) => {
       }),
 
       new CopyWebpackPlugin([
-        { from: './node_modules/zip-js/WebContent/z-worker.js', to: 'static/zipjs' },
-        { from: './node_modules/zip-js/WebContent/inflate.js', to: 'static/zipjs' },
-
         { from: './src/.htaccess' },
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
         { from: './src/extension-scripts/content-script.js', to: 'extension-scripts/' },
