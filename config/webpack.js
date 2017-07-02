@@ -106,11 +106,19 @@ module.exports = (env) => {
       extensions: ['.js', '.json'],
 
       alias: {
-        app: path.resolve('./src')
+        app: path.resolve('./src'),
+        jquery: "jquery/src/jquery"
       }
     },
 
     plugins: [
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery',
+        MessageFormat: 'messageformat'
+      }),
+
       new CleanWebpackPlugin(['dist'], {
         root: path.resolve('./')
       }),
