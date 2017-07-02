@@ -1,0 +1,4 @@
+<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()">
+  <account ng-repeat="platform in $ctrl.platforms track by $index" account="platform" ng-click="$ctrl.selectPlatform($event, platform)"></account>
+  <div class="log-out" ng-click="$ctrl.logOut($event)"><i class="fa fa-sign-out"></i> <span translate="Settings.LogOut"></span></div>
+</div>
