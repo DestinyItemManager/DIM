@@ -202,7 +202,14 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
             console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
             localStorage.setItem('manifest-version', version);
           })
-          .catch((e) => console.error('Error saving manifest file', e));
+          .catch((e) => {
+            console.error('Error saving manifest file', e);
+            toaster.pop({
+              title: $translate.instant('Help.NoStorage'),
+              body: $translate.instant('Help.NoStorageMessage'),
+              type: 'error'
+            }, 0);
+          });
 
         $rootScope.$broadcast('dim-new-manifest');
         return typedArray;
