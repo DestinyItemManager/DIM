@@ -99,7 +99,9 @@
       "NeverShow": "Never show me this again.",
       "UpgradeChrome": "Please Upgrade Chrome",
       "Version": "{beta, select, true{Beta has been updated to v{version}} other{DIM v{version} Released}}",
-      "Xur": "Xûr is Here"
+      "Xur": "Xûr is Here",
+      "ExtensionDeprecatedTitle": "DIM is just a website now!",
+      "ExtensionDeprecatedMessage": "The DIM Chrome extension now just opens our website - which works on every browser and on mobile devices! You can uninstall the extension, or leave it around as a convenient bookmark for the site. Your date (tags, notes, and settings) can be imported from the storage page (disk icon in the header)."
    },
    "Hotkey": {
       "StartSearch": "Start a search",

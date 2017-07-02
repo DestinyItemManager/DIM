@@ -3,7 +3,26 @@ import supportTemplate from 'app/views/support.html';
 import filtersTemplate from 'app/views/filters.html';
 
 export default class ContentController {
-  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimVendorService, $translate) {
+  constructor(
+    dimActivityTrackerService,
+    dimState,
+    ngDialog,
+    $rootScope,
+    loadingTracker,
+    dimPlatformService,
+    $interval,
+    hotkeys,
+    $timeout,
+    dimStoreService,
+    dimXurService,
+    dimSettingsService,
+    $window,
+    $scope,
+    $state,
+    dimVendorService,
+    $translate,
+    dimInfoService
+  ) {
     'ngInject';
 
     const vm = this;
@@ -128,5 +147,31 @@ export default class ContentController {
     };
 
     vm.xur = dimXurService;
+
+    // An abbreviated version of the messager from storage.component.js,
+    // just so we can send an info popup.
+    function messageHandler(event) {
+      // We only accept messages from ourselves
+      if (event.source !== window) {
+        return;
+      }
+
+      switch (event.data.type) {
+      case 'DIM_EXT_PONG':
+        dimInfoService.show('extension-deprecated', {
+          title: $translate.instant('Help.ExtensionDeprecatedTitle'),
+          body: $translate.instant('Help.ExtensionDeprecatedMessage'),
+          type: 'info'
+        }, 0);
+        break;
+      }
+    }
+
+    window.addEventListener('message', messageHandler, false);
+    window.postMessage({ type: 'DIM_EXT_PING' }, "*");
+
+    $scope.$on('$destroy', () => {
+      window.removeEventListener('message', messageHandler);
+    });
   }
 }
