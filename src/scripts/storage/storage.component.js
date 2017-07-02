@@ -126,12 +126,10 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
     switch (event.data.type) {
     case 'DIM_EXT_PONG':
       vm.supportsExtensionImport = true;
-      console.log('pong!');
       window.postMessage({ type: 'DIM_GET_DATA' }, "*");
       break;
 
     case 'DIM_DATA_RESPONSE':
-      console.log('data response', event);
       vm.extensionData = event.data.data;
       vm.extensionDataStats = dataStats(vm.extensionData);
       break;

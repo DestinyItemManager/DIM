@@ -51,13 +51,17 @@ export function SyncService(
 
     return adapters.reduce((promise, adapter) => {
       if (adapter.enabled) {
-        return promise.then(() => {
-          if ($featureFlags.debugSync) {
-            console.log('setting', adapter.name, cached);
-          }
-          return adapter.set(cached);
-        });
-        // TODO: catch?
+        return promise
+          .then(() => {
+            if ($featureFlags.debugSync) {
+              console.log('setting', adapter.name, cached);
+            }
+            return adapter.set(cached);
+          })
+          .catch((e) => {
+            console.error('Sync: Error saving to', adapter.name, e);
+            return null;
+          });
       }
       return promise;
     }, $q.when());
@@ -86,20 +90,24 @@ export function SyncService(
     _getPromise = adapters.slice().reverse()
       .reduce((promise, adapter) => {
         if (adapter.enabled) {
-          return promise.then((value) => {
-            if (value && !_.isEmpty(value)) {
-              if ($featureFlags.debugSync) {
-                console.log('got', value, 'from previous adapter ', previous);
+          return promise
+            .then((value) => {
+              if (value && !_.isEmpty(value)) {
+                if ($featureFlags.debugSync) {
+                  console.log('got', value, 'from previous adapter ', previous);
+                }
+                return value;
               }
-              return value;
-            }
-            previous = adapter.name;
-            if ($featureFlags.debugSync) {
-              console.log('getting from ', adapter.name);
-            }
-            return adapter.get();
-          });
-          // TODO: catch, set status
+              previous = adapter.name;
+              if ($featureFlags.debugSync) {
+                console.log('getting from ', adapter.name);
+              }
+              return adapter.get();
+            })
+            .catch((e) => {
+              console.error('Sync: Error loading from', adapter.name, e);
+              return null;
+            });
         }
         return promise;
       }, $q.when())

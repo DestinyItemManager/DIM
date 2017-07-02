@@ -1,15 +1,23 @@
-import angular from 'angular';
 import _ from 'underscore';
+import template from './settings.html';
+import './settings.scss';
 
-angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
+export const SettingsComponent = {
+  template,
+  controller: SettingsController,
+  controllerAs: 'vm'
+};
 
-function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $i18next) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $i18next) {
+  'ngInject';
+
   const vm = this;
 
   vm.featureFlags = {
     qualityEnabled: $featureFlags.qualityEnabled,
     reviewsEnabled: $featureFlags.reviewsEnabled,
-    tagsEnabled: $featureFlags.tagsEnabled
+    tagsEnabled: $featureFlags.tagsEnabled,
+    colorA11y: $featureFlags.colorA11y
   };
   vm.loadingTracker = loadingTracker;
 
@@ -30,6 +38,8 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvSe
     'pt-br': 'Português (Brasil)',
     ja: '日本語'
   };
+
+  vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
 
   vm.settings = dimSettingsService;
 
