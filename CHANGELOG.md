@@ -1,5 +1,10 @@
 # Next
 
+# 4.2.2
+
+* Fix DIM being invisible on Firefox
+* Fix a case where DIM would never finish loading.
+
 # 4.2.1
 
 * Actually turn on Google Drive in prod.
