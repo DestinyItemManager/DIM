@@ -5,6 +5,9 @@
 * Vendor weapons now show reviews.
 * Fixed some visual goofs on Firefox.
 * Fix a case where DIM would never finish loading.
+# 4.2.3
+
+* Fix log out button.
 
 # 4.2.2
 
