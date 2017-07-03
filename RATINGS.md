@@ -31,6 +31,8 @@ For a given item that we're looking to fetch ratings/reviews for (currently only
 * Certain other perk rolls are ignored.
   - This mostly applies to primary weapons that have elemental rolls.
   - For the sake of ratings, we don't see a difference between a Stellar Vestige with void burn and solar burn.
+* Scopes are currently being ignored.
+  - This is a known issue; there's no perk hashes associated with them. Technical details are fun.
 
 You won't necessarily have the exact same roll as every item every reviewer mentions, but your available perks should match the perks they had selected when they reviewed it. If you see reviews mentioning auto-fire or some other perk your item definitely doesn't have, let us know.
 
