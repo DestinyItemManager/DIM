@@ -1,5 +1,7 @@
 # Next
 
+* Ratings will no longer disappear from the item details popup the second time it is shown.
+
 # 4.2.2
 
 * Fix DIM being invisible on Firefox
