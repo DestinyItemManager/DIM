@@ -106,6 +106,8 @@
     "NeverShow": "Never show me this again.",
     "UpgradeChrome": "Please Upgrade Chrome",
     "Xur": "Xûr is Here",
+    "NoStorage": "DIM can't store data",
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
     "Version_release": "DIM v{{version}} Released",
     "Version_beta": "Beta has been updated to v{{version}}"
   },

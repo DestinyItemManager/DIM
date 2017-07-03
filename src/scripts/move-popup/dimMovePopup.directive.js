@@ -1,5 +1,6 @@
 import angular from 'angular';
 import template from './dimMovePopup.directive.html';
+import 'jquery-ui/ui/position';
 
 angular.module('dimApp')
   .directive('dimMovePopup', MovePopup);

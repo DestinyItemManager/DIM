@@ -7,7 +7,7 @@ export const AppComponent = {
   controller: AppComponentCtrl
 };
 
-function AppComponentCtrl($window, $rootScope, dimInfoService, dimSettingsService, $i18next) {
+function AppComponentCtrl($window, $rootScope, dimInfoService, dimSettingsService, $i18next, toaster, $timeout) {
   'ngInject';
 
   this.$onInit = function() {
@@ -19,22 +19,40 @@ function AppComponentCtrl($window, $rootScope, dimInfoService, dimSettingsServic
     // TODO: do feature checks instead? Use Modernizr?
     const chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
     if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
-      dimInfoService.show('old-chrome', {
-        title: $i18next.t('Help.UpgradeChrome'),
-        body: $i18next.t('Views.UpgradeChrome'),
-        type: 'error',
-        hideable: false
-      }, 0);
+      $timeout(() => {
+        dimInfoService.show('old-chrome', {
+          title: $i18next.t('Help.UpgradeChrome'),
+          body: $i18next.t('Views.UpgradeChrome'),
+          type: 'error',
+          hideable: false
+        }, 0);
+      });
     }
 
     // Show the changelog
     if ($featureFlags.changelogToaster) {
-      dimInfoService.show(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
-        title: $i18next.t('Help.Version', {
-          version: $DIM_VERSION,
-          beta: $DIM_FLAVOR === 'beta'
-        }),
-        body: changelog
+      $timeout(() => {
+        dimInfoService.show(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
+          title: $i18next.t('Help.Version', {
+            version: $DIM_VERSION,
+            beta: $DIM_FLAVOR === 'beta'
+          }),
+          body: changelog
+        });
+      });
+    }
+
+    try {
+      localStorage.setItem('test', 'true');
+    } catch (e) {
+      console.log('storage test', e);
+      $timeout(() => {
+        dimInfoService.show('no-storage', {
+          title: $i18next.t('Help.NoStorage'),
+          body: $i18next.t('Help.NoStorageMessage'),
+          type: 'error',
+          hideable: false
+        }, 0);
       });
     }
   };

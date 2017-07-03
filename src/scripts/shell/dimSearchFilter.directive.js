@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimSearchFilter.directive.html';
+import 'jquery-textcomplete';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
