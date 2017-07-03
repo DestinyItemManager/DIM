@@ -1,5 +1,7 @@
 import angular from 'angular';
 import template from './dimManifestProgress.directive.html';
+import './dimManifestProgress.scss';
+
 /**
  * A dialog that shows the progress of loading the manifest.
  */
