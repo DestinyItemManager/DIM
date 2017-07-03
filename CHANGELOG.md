@@ -8,6 +8,9 @@
 # 4.2.3
 
 * Fix log out button.
+* Put back the accidentally removed hotkeys for setting tags on items.
+* Fixed some visual goofs on Firefox.
+* Fix a case where DIM would never finish loading.
 
 # 4.2.2
 
