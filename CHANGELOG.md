@@ -4,6 +4,7 @@
 
 * Fix DIM being invisible on Firefox
 * Fix a case where DIM would never finish loading.
+* Vendor weapons now show reviews.
 
 # 4.2.1
 
