@@ -5,6 +5,7 @@
 * Fix DIM being invisible on Firefox
 * Fix a case where DIM would never finish loading.
 * Put back the accidentally removed hotkeys for setting tags on items.
+* Vendor weapons now show reviews.
 
 # 4.2.1
 
