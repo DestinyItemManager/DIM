@@ -46,8 +46,8 @@ It's all a rough outline to give you some guidance as to what diamonds you have 
 
 We're not gearing this towards the expert who can tell at a glance whether that item that just dropped is worth keeping (but we'd certainly love it if you reviewed items!), we're trying to make something that works for as many people as possible.
 
-## More Sooner or Later
+## More To Come (Sooner or Later)
 
-We have ideas about things we'd like to add (displaying TTK somewhere, pros/cons, ratings per game mode, mechanisms to make it clear what perk loadouts have the best ratings for a weapon have all been discussed) for the future, but we're waiting to get community feedback and see what happens with Destiny 2.
+We have ideas about things we'd like to add (displaying TTK somewhere, pros/cons, ratings per game mode, mechanisms to make it clear what perk loadouts have the best ratings for a weapon have all been discussed) for the future, but we're waiting to get community feedback, see how this is being used, and see what happens with Destiny 2.
 
 We're trying to provide something useful to the community - if you have comments or ideas, we're listening!
