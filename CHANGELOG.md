@@ -1,5 +1,9 @@
 # Next
 
+# 4.2.4
+
+* Work around a Chrome bug that marked the extension as "corrupted".
+
 # 4.2.3
 
 * Fix log out button.
