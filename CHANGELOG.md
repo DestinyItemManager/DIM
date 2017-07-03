@@ -1,5 +1,9 @@
 # Next
 
+# 4.2.3
+
+* Fix log out button.
+
 # 4.2.2
 
 * Fix DIM being invisible on Firefox
