@@ -8,7 +8,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $translate) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $translate, ngDialog) {
   'ngInject';
 
   const vm = this;
@@ -50,7 +50,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
 
   vm.logout = function() {
     OAuthTokenService.removeToken();
-    $scope.closeThisDialog(); // eslint-disable-line angular/controller-as
+    ngDialog.closeAll();
     $state.go('login', { reauth: true });
   };
 

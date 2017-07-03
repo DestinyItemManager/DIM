@@ -85,7 +85,7 @@ export default class ContentController {
       }
     });
 
-    if (vm.featureFlags.tagsEnabled) {
+    if ($featureFlags.tagsEnabled) {
       dimSettingsService.itemTags.forEach((tag) => {
         if (tag.hotkey) {
           hotkeys.add({

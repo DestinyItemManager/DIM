@@ -1,11 +1,25 @@
 # Next
 
 * DIM is now just a website - the extension now just sends you to our website. This gives us one, more cross-platform, place to focus on and enables features we couldn't do with just an extension. Don't forget to import your data from the storage page!
+* Scrolling should be smoother overall.
+* Vendor weapons now show reviews.
+
+# 4.2.4
+
+* Work around a Chrome bug that marked the extension as "corrupted".
+
+# 4.2.3
+
+* Fix log out button.
+* Put back the accidentally removed hotkeys for setting tags on items.
+* Fixed some visual goofs on Firefox.
+* Fix a case where DIM would never finish loading.
 
 # 4.2.2
 
 * Fix DIM being invisible on Firefox
 * Fix a case where DIM would never finish loading.
+* Put back the accidentally removed hotkeys for setting tags on items.
 
 # 4.2.1
 

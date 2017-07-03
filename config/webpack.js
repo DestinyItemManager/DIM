@@ -111,6 +111,13 @@ module.exports = (env) => {
     },
 
     plugins: [
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery',
+        MessageFormat: 'messageformat'
+      }),
+
       new CleanWebpackPlugin(['dist'], {
         root: path.resolve('./')
       }),
@@ -134,9 +141,6 @@ module.exports = (env) => {
       }),
 
       new CopyWebpackPlugin([
-        { from: './node_modules/zip-js/WebContent/z-worker.js', to: 'static/zipjs' },
-        { from: './node_modules/zip-js/WebContent/inflate.js', to: 'static/zipjs' },
-
         { from: './src/.htaccess' },
         { from: './extension', to: '../extension-dist' },
         { from: `./icons/${env}-extension/`, to: '../extension-dist' },
@@ -200,6 +204,8 @@ module.exports = (env) => {
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release')
       }),
+
+      new webpack.optimize.ModuleConcatenationPlugin(),
 
       // Enable if you want to debug the size of the chunks
       //new Visualizer(),

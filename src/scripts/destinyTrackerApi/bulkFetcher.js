@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import { ItemListBuilder } from './itemListBuilder';
 
 class BulkFetcher {
@@ -49,11 +50,20 @@ class BulkFetcher {
    * @memberof BulkFetcher
    */
   bulkFetch(storesContainer) {
-    const stores = storesContainer.stores;
+    if (storesContainer.stores) {
+      const stores = storesContainer.stores;
 
-    this._getBulkFetchPromise(stores)
-      .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                  stores));
+      this._getBulkFetchPromise(stores)
+        .then((bulkRankings) => this.attachRankings(bulkRankings,
+                                                    stores));
+    }
+    else if (storesContainer) {
+      const vendors = _.values(storesContainer);
+
+      this._getBulkFetchPromise(vendors)
+        .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
+                                                          vendors));
+    }
   }
 
   attachRankings(bulkRankings,
@@ -82,6 +92,37 @@ class BulkFetcher {
             storeItem.pros = matchingItem.pros;
             storeItem.cons = matchingItem.cons;
           }
+        }
+      });
+    });
+  }
+
+  attachVendorRankings(bulkRankings,
+                       vendors) {
+    if (!bulkRankings && !vendors) {
+      return;
+    }
+
+    const self = this;
+
+    if (bulkRankings) {
+      bulkRankings.forEach((bulkRanking) => {
+        self._reviewDataCache.addScore(bulkRanking);
+      });
+    }
+
+    vendors.forEach((vendor) => {
+      vendor.allItems.forEach((vendorItemContainer) => {
+        const vendorItem = vendorItemContainer.item;
+
+        const matchingItem = self._reviewDataCache.getRatingData(vendorItem);
+
+        if (matchingItem) {
+          vendorItem.dtrRating = matchingItem.rating;
+          vendorItem.userRating = matchingItem.userRating;
+          vendorItem.userReview = matchingItem.review;
+          vendorItem.pros = matchingItem.pros;
+          vendorItem.cons = matchingItem.cons;
         }
       });
     });

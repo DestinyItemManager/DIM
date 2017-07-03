@@ -3,6 +3,7 @@ import _ from 'underscore';
 import { sum, flatMap } from '../util';
 import template from './loadout-builder-item.html';
 import dialogTemplate from './loadout-builder-item-dialog.html';
+import 'jquery-ui/ui/position';
 
 export const LoadoutBuilderItem = {
   controller: LoadoutBuilderItemCtrl,
