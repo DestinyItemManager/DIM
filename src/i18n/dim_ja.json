@@ -48,8 +48,7 @@
       "Days": "{numDays} 日間"
    },
    "Debug": {
-      "Dump": "ゲーム機に情報を転送する",
-      "View": "アイテムのデバッグ情報を見る"
+      "Dump": "ゲーム機に情報を転送する"
    },
    "DidYouKnow": {
       "DidYouKnow": "知っていますか？",
@@ -292,38 +291,9 @@
       "Settings": "設定",
       "LogOut": "ログアウト",
       "Language": "言語(反映させるにはDIMをリフレッシュしてください)",
-      "HideUnfiltered": "フィルタリングされていない項目を非表示にする。",
-      "HideUnfilteredHelp": "フィルタ条件に一致しない項目は非表示になります。",
-      "AlwaysShowDetails": "常にアイテム詳細を表示",
-      "AlwaysShowDetailsHelp": "アイテムをクリックするとポップアップが表示され、perkとstatの詳細が表示されます。このオプションは、アイテムをクリックするとその詳細を常に表示します。",
-      "EnableAdvancedStats": "高度な品質比較機能を有効にする",
-      "EnableAdvancedStatsHelp": "移動ダイアログで高度な最小/最大機能を有効にして、装甲比較ビューを有効にします。",
-      "ShowOverlay": "オーバレイで新しいアイテムを表示する。",
-      "ShowOverlayHelp": "オーレイで新しいアイテムを表示します。",
-      "ShowAnimations": "新しいアイテムのオーバーレイアニメーションを表示する。",
-      "ShowAnimationsHelp": "新しいアイテムにアニメートされたオーバーレイが表示されます。これをオフにすると、CPUサイクルを節約できます。",
       "ShowReviews": "武器に関するレビュー評価を表示する",
-      "ShowReviewsHelp": "武器に関するユーザーの評価を表示します。 ",
       "ShowElemental": "武器の属性アイコンを表示する",
-      "ShowElementalHelp": "武器の属性アイコンを表示する。",
-      "AllowIdPostToDtr": "アカウント名を共有し、Destiny Trackerでアイテムを評価します。",
-      "SetSort": "アイテムを並べ替える",
-      "SortPrimary": "主要",
-      "SortRarity": "レア度",
-      "InventoryColumns": "キャラクターインベントリ欄",
-      "InventoryColumnsHelp": "キャラクターインベントリの欄数を選択して下さい.",
-      "VaultColumns": "保管庫の上限欄数",
-      "VaultColumnsHelp": "保管庫の上限欄数を選択して下さい.",
-      "SizeItem": "アイテムサイズ",
-      "SizeItemHelp": "アイテムの大きさどのぐらいがいいですか。",
-      "CharacterOrder": "キャラクター指名",
-      "CharacterOrderHelp": "キャラクターが最近のログイン順や作成順に整理できます.",
-      "CharacterOrderRecent": "最近使用したキャラクター順で",
-      "CharacterOrderReversed": "最近使用したキャラクター順で (反転)",
-      "CharacterOrderFixed": "固定 (作成順)",
-      "ExportSS": "スプレッドシートをダウンロードする",
       "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
-      "DIMPopups": "DIMの情報",
       "DIMPopupsReset": "以前非表示にしたヒントをリセットする"
    },
    "Stats": {
@@ -341,11 +311,11 @@
    "Storage": {
       "Enabled": "有効",
       "Disabled": "無効",
-      "DriveSync": "Google Driveにログイン",
       "ImportExport": "データのバックアップ",
-      "ImportFromExtension": "データのインポート",
+      "DriveSync": "Google Driveにログイン",
       "NoData": "データなし",
-      "Export": "DIMのデータをバックアップ"
+      "Export": "DIMのデータをバックアップ",
+      "ImportFromExtension": "データのインポート"
    },
    "StoreBucket": {
       "FillStack": "フルスタック ({amount})",
@@ -393,7 +363,6 @@
          "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
          "FAQKeyboardAnswer": "使えます！使用可能なショートカットリストを表示するには「？」を押してください。",
          "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
-         "FAQLogoutAnswer": "あなたのセッションはBungie.netと繋がっています。Bungie.netからログアウトするとDIMからもログアウトする事になります。",
          "FAQLostItem": "このツールを使っている間にアイテムを紛失してしまった！",
          "FAQLostItemAnswer": "アイテムの転送が失敗した可能性があります。保管庫か他のキャラクターに無いか確かめて下さい。DIMで検索してみて下さい。もし見つからないなら、ブラウザーの更新を。(F5かCommand+R) それでも見つからない場合は、Bungie.net かゲームで直接、探してみてください。どこかに必ず在るはずです。",
          "GitHub": "ギットハブ",

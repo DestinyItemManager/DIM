@@ -97,6 +97,7 @@ button.toast-close-button {
 
 #toast-container {
   position: fixed;
+  backface-visibility: hidden;
   z-index: 999999;
   top: 60px;
 

@@ -7,7 +7,7 @@ export const AppComponent = {
   controller: AppComponentCtrl
 };
 
-function AppComponentCtrl($window, $rootScope, dimInfoService, dimSettingsService, $translate) {
+function AppComponentCtrl($window, $rootScope, dimInfoService, dimSettingsService, $translate, toaster, $timeout) {
   'ngInject';
 
   this.$onInit = function() {
@@ -19,22 +19,40 @@ function AppComponentCtrl($window, $rootScope, dimInfoService, dimSettingsServic
     // TODO: do feature checks instead? Use Modernizr?
     const chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
     if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
-      dimInfoService.show('old-chrome', {
-        title: $translate.instant('Help.UpgradeChrome'),
-        body: $translate.instant('Views.UpgradeChrome'),
-        type: 'error',
-        hideable: false
-      }, 0);
+      $timeout(() => {
+        dimInfoService.show('old-chrome', {
+          title: $translate.instant('Help.UpgradeChrome'),
+          body: $translate.instant('Views.UpgradeChrome'),
+          type: 'error',
+          hideable: false
+        }, 0);
+      });
     }
 
     // Show the changelog
     if ($featureFlags.changelogToaster) {
-      dimInfoService.show(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
-        title: $translate.instant('Help.Version', {
-          version: $DIM_VERSION,
-          beta: $DIM_FLAVOR === 'beta'
-        }),
-        body: changelog
+      $timeout(() => {
+        dimInfoService.show(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
+          title: $translate.instant('Help.Version', {
+            version: $DIM_VERSION,
+            beta: $DIM_FLAVOR === 'beta'
+          }),
+          body: changelog
+        });
+      });
+    }
+
+    try {
+      localStorage.setItem('test', 'true');
+    } catch (e) {
+      console.log('storage test', e);
+      $timeout(() => {
+        dimInfoService.show('no-storage', {
+          title: $translate.instant('Help.NoStorage'),
+          body: $translate.instant('Help.NoStorageMessage'),
+          type: 'error',
+          hideable: false
+        }, 0);
       });
     }
   };

@@ -165,6 +165,7 @@
   z-index: 1;
   background-color: rgba(40,40,40,0.5);
   margin-top: 2px;
+  backface-visibility: hidden;
 }
 
 .ngdialog.vendor-move-popup {
