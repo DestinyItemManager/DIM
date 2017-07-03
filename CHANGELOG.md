@@ -1,5 +1,7 @@
 # Next
 
+* Scrolling should be smoother overall.
+
 # 4.2.2
 
 * Fix DIM being invisible on Firefox
