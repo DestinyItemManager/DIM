@@ -1,7 +1,7 @@
 import template from './item-review.html';
 import './item-review.scss';
 
-function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerService, $scope) {
+function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $scope) {
   'ngInject';
 
   const vm = this;
