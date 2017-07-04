@@ -387,7 +387,7 @@ export function ItemFactory(
       });
     } else if (createdItem.talentGrid) {
       createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
-      createdItem.complete = createdItem.talentGrid.complete;
+      createdItem.complete = createdItem.year === 1 ? createdItem.talentGrid.totalXP === createdItem.talentGrid.totalXPRequired : createdItem.talentGrid.complete;
     }
 
     // In debug mode, keep the original JSON around
