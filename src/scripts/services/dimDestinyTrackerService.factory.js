@@ -27,12 +27,6 @@ function DestinyTrackerService($q,
     }
   });
 
-  $rootScope.$on('review-submitted', (event, item) => {
-    if (dimSettingsService.allowIdPostToDtr) {
-      _reviewSubmitter.submitReview(item);
-    }
-  });
-
   return {
     reattachScoresFromCache: function(stores) {
       _bulkFetcher.attachRankings(null,
@@ -48,9 +42,14 @@ function DestinyTrackerService($q,
         _bulkFetcher.bulkFetch(vendors);
       }
     },
-    getItemReviews(item) {
+    getItemReviews: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
         _reviewsFetcher.getItemReviews(item);
+      }
+    },
+    submitReview: function(item) {
+      if (dimSettingsService.allowIdPostToDtr) {
+        _reviewSubmitter.submitReview(item);
       }
     }
   };
