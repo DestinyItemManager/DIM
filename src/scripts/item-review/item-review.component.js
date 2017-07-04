@@ -16,10 +16,10 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
     pros: ['fast', 'lol'],
     cons: ['ok']
   };
-//  vm.item.writtenReviews.forEach((review) => {
-//    aggregate.pros.push(review.pros);
-//    aggregate.cons.push(review.cons);
-//  });
+  //  vm.item.writtenReviews.forEach((review) => {
+  //    aggregate.pros.push(review.pros);
+  //    aggregate.cons.push(review.cons);
+  //  });
 
   vm.toggleEdit = function() {
     vm.expandReview = !vm.expandReview;
@@ -43,7 +43,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
     const userReview = vm.toUserReview(item);
 
     dimDestinyTrackerService.updateCachedUserRankings(item,
-                                                      userReview);
+      userReview);
   };
 
   vm.toUserReview = function(item) {
@@ -77,7 +77,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
     vm.canReview = dimSettingsService.allowIdPostToDtr;
 
     if (vm.canReview) {
-      $rootScope.$broadcast('item-clicked', vm.item);
+      dimDestinyTrackerService.getItemReviews(vm.item);
     }
   };
 }

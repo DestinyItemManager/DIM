@@ -9,23 +9,17 @@ angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
 
 function DestinyTrackerService($q,
-                               $http,
-                               $rootScope,
-                               dimPlatformService,
-                               dimSettingsService,
-                               $translate,
-                               loadingTracker) {
+  $http,
+  $rootScope,
+  dimPlatformService,
+  dimSettingsService,
+  $translate,
+  loadingTracker) {
   const _reviewDataCache = new ReviewDataCache();
   const _trackerErrorHandler = new TrackerErrorHandler($q, $translate);
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-
-  $rootScope.$on('item-clicked', (event, item) => {
-    if (dimSettingsService.allowIdPostToDtr) {
-      _reviewsFetcher.getItemReviews(item);
-    }
-  });
 
   $rootScope.$on('dim-stores-updated', (event, stores) => {
     if (dimSettingsService.showReviews) {
@@ -42,16 +36,21 @@ function DestinyTrackerService($q,
   return {
     reattachScoresFromCache: function(stores) {
       _bulkFetcher.attachRankings(null,
-                                  stores);
+        stores);
     },
     updateCachedUserRankings: function(item,
-                                       userReview) {
+      userReview) {
       _reviewDataCache.addUserReviewData(item,
-                                         userReview);
+        userReview);
     },
     updateVendorRankings: function(vendors) {
       if (dimSettingsService.showReviews) {
         _bulkFetcher.bulkFetch(vendors);
+      }
+    },
+    getItemReviews(item) {
+      if (dimSettingsService.allowIdPostToDtr) {
+        _reviewsFetcher.getItemReviews(item);
       }
     }
   };
