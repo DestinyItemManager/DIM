@@ -89,7 +89,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     vm.clicked = function clicked(item, e) {
       e.stopPropagation();
 
-      $rootScope.$broadcast('item-clicked', item);
       dimDestinyTrackerService.getItemReviews(item);
 
       if (vm.shiftClickCallback && e.shiftKey) {
