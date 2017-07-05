@@ -2,6 +2,7 @@
 
 * Scrolling should be smoother overall.
 * Vendor weapons now show reviews.
+* Add a "sort by name" option for item sorting.
 
 # 4.2.4
 
