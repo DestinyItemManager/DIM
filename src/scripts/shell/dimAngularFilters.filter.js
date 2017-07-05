@@ -75,7 +75,7 @@ mod.filter('sortStores', () => {
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-mod.filter('sortItems', () => {
+mod.filter('sortItems', (dimSettingsService) => {
   return function(items, sort) {
     // Don't resort postmaster items - that way people can see
     // what'll get bumped when it's full.
@@ -173,7 +173,7 @@ mod.filter('sortItems', () => {
     }
     if (sort === 'quality') {
       items = _.sortBy(items, (item) => {
-        return item.quality && item.quality.min ? -item.quality.min : (item.dtrRating ? -item.dtrRating : 1000);
+        return item.quality && item.quality.min ? -item.quality.min : (dimSettingsService.showReviews && item.dtrRating ? -item.dtrRating : 1000);
       });
     }
     if (sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {
