@@ -32,10 +32,10 @@ class BulkFetcher {
     }
 
     const promise = this.$q
-              .when(this._getBulkWeaponDataEndpointPost(weaponList))
-              .then(this.$http)
-              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
-              .then((response) => response.data);
+      .when(this._getBulkWeaponDataEndpointPost(weaponList))
+      .then(this.$http)
+      .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+      .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
 
@@ -50,24 +50,23 @@ class BulkFetcher {
    * @memberof BulkFetcher
    */
   bulkFetch(storesContainer) {
-    if (storesContainer.stores) {
-      const stores = storesContainer.stores;
+    const stores = _.values(storesContainer);
 
-      this._getBulkFetchPromise(stores)
-        .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                    stores));
-    }
-    else if (storesContainer) {
-      const vendors = _.values(storesContainer);
+    this._getBulkFetchPromise(stores)
+      .then((bulkRankings) => this.attachRankings(bulkRankings,
+        stores));
+  }
 
-      this._getBulkFetchPromise(vendors)
-        .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
-                                                          vendors));
-    }
+  bulkFetchVendorItems(vendorContainer) {
+    const vendors = _.values(vendorContainer);
+
+    this._getBulkFetchPromise(vendors)
+      .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
+        vendors));
   }
 
   attachRankings(bulkRankings,
-                 stores) {
+    stores) {
     if (!bulkRankings && !stores) {
       return;
     }
@@ -98,7 +97,7 @@ class BulkFetcher {
   }
 
   attachVendorRankings(bulkRankings,
-                       vendors) {
+    vendors) {
     if (!bulkRankings && !vendors) {
       return;
     }
