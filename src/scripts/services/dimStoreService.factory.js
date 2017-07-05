@@ -53,6 +53,8 @@ function StoreService(
       stores: _stores
     });
     loadingTracker.addPromise(service.reloadStores(true));
+
+    dimDestinyTrackerService.fetchReviews(_stores);
   });
 
   return service;
@@ -160,6 +162,8 @@ function StoreService(
         $rootScope.$broadcast('dim-stores-updated', {
           stores: stores
         });
+
+        dimDestinyTrackerService.fetchReviews(stores);
 
         itemInfoService.cleanInfos(stores);
 

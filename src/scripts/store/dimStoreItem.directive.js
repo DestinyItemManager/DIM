@@ -23,7 +23,7 @@ angular.module('dimApp')
     };
   });
 
-function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, NewItemsService) {
+function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, NewItemsService, dimDestinyTrackerService) {
   let otherDialog = null;
   let firstItemTimed = false;
 
@@ -89,7 +89,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     vm.clicked = function clicked(item, e) {
       e.stopPropagation();
 
-      $rootScope.$broadcast('item-clicked', item);
+      dimDestinyTrackerService.getItemReviews(item);
 
       if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(item);

@@ -32,9 +32,8 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
 
   vm.submitReview = function submitReview() {
     const item = vm.item;
-    const userReview = vm.toUserReview(item);
 
-    $rootScope.$broadcast('review-submitted', item, userReview);
+    dimDestinyTrackerService.submitReview(item);
 
     return false;
   };
