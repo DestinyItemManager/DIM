@@ -1,11 +1,9 @@
 import _ from 'underscore';
-import angular from 'angular';
-import { sum, count } from '../util';
 
 import template from './activities.html';
 import './activities.scss';
 
-function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettingsService, $filter) {
+function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettingsService) {
   'ngInject';
 
   const vm = this;
@@ -36,12 +34,12 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
 
     stores = stores.filter((s) => s.id !== 'vault');
 
-    var whitelist = [
+    const whitelist = [
       'vaultofglass',
       'crota',
       'kingsfall',
       'wrathofthemachine',
-//      'elderchallenge',
+      //      'elderchallenge',
       'nightfall',
       'heroicstrike',
     ];
@@ -56,7 +54,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
         .sortBy((a) => {
           const ix = whitelist.indexOf(a.identifier);
           return (ix === -1) ? 999 : ix;
-//          return -a.display.categoryHash;
+          //          return -a.display.categoryHash;
         })
         .map((a) => processActivities(defs, stores, a))
         .value();
@@ -67,7 +65,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
             a.featured = true;
           }
         });
-      })
+      });
     });
   }
 
@@ -92,7 +90,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       activity.skulls = rawActivity.extended.skullCategories.map((s) => {
         return s.skulls;
       }).reduce((a, b) => {
-        return a.concat(b)
+        return a.concat(b);
       });
     }
 
@@ -108,8 +106,8 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   function processActivity(defs, activityId, stores, tier, index) {
     const tierDef = defs.Activity[tier.activityHash];
 
-    const name = tier.activityData.recommendedLight === 390 ? 390 :
-      (tier.tierDisplayName ? tier.tierDisplayName : tierDef.activityName);
+    const name = tier.activityData.recommendedLight === 390 ? 390
+      : (tier.tierDisplayName ? tier.tierDisplayName : tierDef.activityName);
 
     const characters = stores.map((store) => {
       return {
