@@ -109,11 +109,11 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     const name = tier.activityData.recommendedLight === 390 ? 390
       : (tier.tierDisplayName ? tier.tierDisplayName : tierDef.activityName);
 
-    const characters = activityId !== 'heroicstrike' ? stores.map((store) => {
+    const characters = activityId === 'heroicstrike' ? [] : stores.map((store) => {
       let steps = store.advisors.activities[activityId].activityTiers[index].steps;
 
       if (!steps) {
-        steps = [store.advisors.activities[activityId].activityTiers[index].completion]
+        steps = [store.advisors.activities[activityId].activityTiers[index].completion];
       }
 
       return {
@@ -121,7 +121,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
         icon: store.icon,
         steps: steps
       };
-    }) : [];
+    });
 
     return {
       hash: tierDef.activityHash,
