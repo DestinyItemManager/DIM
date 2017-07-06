@@ -26,7 +26,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
   };
 
   vm.submitReview = function() {
-    dimDestinyTrackerService.getItemReviews(vm.item);
+    dimDestinyTrackerService.submitReview(vm.item);
     vm.expandReview = false;
     vm.submitted = true;
   };
@@ -77,7 +77,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
     vm.canReview = dimSettingsService.allowIdPostToDtr;
 
     if (vm.canReview) {
-      $rootScope.$broadcast('item-clicked', vm.item);
+      dimDestinyTrackerService.getItemReviews(vm.item);
     }
   };
 }

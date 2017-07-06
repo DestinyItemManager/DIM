@@ -21,21 +21,9 @@ function DestinyTrackerService($q,
   const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
 
-  $rootScope.$on('item-clicked', (event, item) => {
-    if (dimSettingsService.allowIdPostToDtr) {
-      _reviewsFetcher.getItemReviews(item);
-    }
-  });
-
   $rootScope.$on('dim-stores-updated', (event, stores) => {
     if (dimSettingsService.showReviews) {
       _bulkFetcher.bulkFetch(stores);
-    }
-  });
-
-  $rootScope.$on('review-submitted', (event, item) => {
-    if (dimSettingsService.allowIdPostToDtr) {
-      _reviewSubmitter.submitReview(item);
     }
   });
 
@@ -57,6 +45,11 @@ function DestinyTrackerService($q,
     getItemReviews: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
         _reviewsFetcher.getItemReviews(item);
+      }
+    },
+    submitReview: function(item) {
+      if (dimSettingsService.allowIdPostToDtr) {
+        _reviewSubmitter.submitReview(item);
       }
     }
   };
