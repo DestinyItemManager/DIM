@@ -1,11 +1,7 @@
 let apiKey;
 
 if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-  if (window.chrome && window.chrome.extension) {
-    apiKey = $DIM_API_KEY;
-  } else {
-    apiKey = $DIM_WEB_API_KEY;
-  }
+  apiKey = $DIM_WEB_API_KEY;
 } else {
   apiKey = localStorage.apiKey;
 }
@@ -37,11 +33,7 @@ function bungieApiQuery(path) {
 function oauthClientId() {
   let clientId;
   if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-    if (window.chrome && window.chrome.extension) {
-      clientId = $DIM_CLIENT_ID;
-    } else {
-      clientId = $DIM_WEB_CLIENT_ID;
-    }
+    clientId = $DIM_WEB_CLIENT_ID;
   } else {
     clientId = localStorage.oauthClientId;
   }
@@ -51,11 +43,7 @@ function oauthClientId() {
 function oauthClientSecret() {
   let clientSecret;
   if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-    if (window.chrome && window.chrome.extension) {
-      clientSecret = $DIM_CLIENT_SECRET;
-    } else {
-      clientSecret = $DIM_WEB_CLIENT_SECRET;
-    }
+    clientSecret = $DIM_WEB_CLIENT_SECRET;
   } else {
     clientSecret = localStorage.oauthClientSecret;
   }
