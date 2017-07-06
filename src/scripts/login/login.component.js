@@ -18,7 +18,15 @@ function LoginCtrl($stateParams) {
   const clientId = oauthClientId();
 
   const reauth = $stateParams.reauth;
+  const loginUrl = `/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${localStorage.authorizationState}`;
 
-  vm.authorizationURL = `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${localStorage.authorizationState}${reauth ? '&reauth=true' : ''}`;
+  if (reauth) {
+    // TEMPORARY: fully log out from Bungie.net by redirecting to a special logout/relogin page
+    // Soon, Bungie.net will respect the reauth parameter and we won't have to do this
+    const logoutUrl = `https://www.bungie.net/en/User/SignOut?bru=${encodeURIComponent(loginUrl)}`;
+    vm.authorizationURL = logoutUrl;
+  } else {
+    vm.authorizationURL = `https://www.bungie.net${loginUrl}${reauth ? '&reauth=true' : ''}`;
+  }
 }
 
