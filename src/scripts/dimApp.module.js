@@ -17,6 +17,7 @@ import bungieApiModule from './bungie-api/bungie-api.module';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
+import activitiesModule from './activities/activities.module';
 import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
@@ -48,6 +49,7 @@ const dependencies = [
   bungieApiModule,
   inventoryModule,
   recordBooksModule,
+  activitiesModule,
   vendorsModule,
   itemReviewModule,
   loadoutBuilderModule,

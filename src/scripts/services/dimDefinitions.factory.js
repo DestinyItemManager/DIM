@@ -19,7 +19,8 @@ const eagerTables = [
   'Class',
   'Race',
   'Faction',
-  'Vendor'
+  'Vendor',
+  'Activity'
 ];
 
 const mod = angular.module('dimApp');

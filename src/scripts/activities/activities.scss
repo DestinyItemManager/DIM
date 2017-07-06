@@ -1,0 +1,78 @@
+.activities {
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+
+  .activity {
+    margin: 20px;
+    width: 350px;
+  }
+
+  .activity-header {
+    position: relative;
+  }
+  .activity-image {
+    position: absolute;
+    width: 100%;
+  }
+  .activity-featured {
+    color: gold;
+  }
+  .activity-title {
+    padding: 0 16px;
+    line-height: 34px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+  }
+
+  .activity-skulls {
+    padding: 4px 0px;
+
+    .book-icon {
+      height: 18px;
+      padding: 0 4px;
+    }
+  }
+
+  .activity-progress {
+    position: relative;
+  }
+
+  .book-icon {
+    height: 26px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .tier-title {
+
+    padding: 0 16px;
+    background-color: #353535;
+    line-height: 34px;
+
+    text-transform: uppercase;
+  }
+
+  .tier-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .step-icon {
+    border-radius: 50%;
+    background-color: rgba(245, 245, 245, 0.1);
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border: 2px solid #fff;
+    margin: 2px;
+  }
+
+  .complete .step-icon {
+    border-color: #ffce1f;
+    background-color: rgba(255,206,31,0.4);
+  }
+}
