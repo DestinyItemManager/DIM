@@ -26,7 +26,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
   };
 
   vm.submitReview = function() {
-    $rootScope.$broadcast('review-submitted', vm.item);
+    dimDestinyTrackerService.getItemReviews(vm.item);
     vm.expandReview = false;
     vm.submitted = true;
   };

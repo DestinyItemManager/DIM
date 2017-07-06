@@ -53,6 +53,11 @@ function DestinyTrackerService($q,
       if (dimSettingsService.showReviews) {
         _bulkFetcher.bulkFetch(vendors);
       }
+    },
+    getItemReviews: function(item) {
+      if (dimSettingsService.allowIdPostToDtr) {
+        _reviewsFetcher.getItemReviews(item);
+      }
     }
   };
 }
