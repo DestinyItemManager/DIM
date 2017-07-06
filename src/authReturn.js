@@ -1,3 +1,1 @@
-require('./scripts/dimLogin.module');
-
-require('./scripts/login/return.component');
+import './scripts/auth-return/auth-return.module';

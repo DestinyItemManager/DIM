@@ -1,13 +1,14 @@
-import angular from 'angular';
 import simpleQueryString from 'simple-query-string';
 import template from './return.component.html';
 
-angular.module('dimLogin').component('dimReturn', {
+export const ReturnComponent = {
   controller: ReturnController,
   template: template
-});
+};
 
 function ReturnController($http, OAuthService, OAuthTokenService) {
+  'ngInject';
+
   const ctrl = this;
 
   ctrl.code = "";
