@@ -1,3 +1,9 @@
+back-link {
+  width: 1160px;
+  margin: 0 auto;
+  display: block;
+}
+
 .activities {
   width: 1200px;
   margin: 0 auto;
@@ -29,10 +35,13 @@
 
   .activity-skulls {
     padding: 4px 0px;
+    font-size: .8em;
 
-    .step-icon {
-      height: 18px;
-      padding: 0 4px;
+    .small-icon {
+      height: 13px;
+      padding: 2px 7px;
+      margin-right: 6px;
+      float: left;
     }
   }
 
@@ -40,7 +49,7 @@
     position: relative;
   }
 
-  .step-icon {
+  .small-icon {
     height: 26px;
     vertical-align: middle;
     position: relative;
@@ -48,8 +57,7 @@
   }
 
   .tier-title {
-
-    padding: 0 16px;
+    padding: 0 32px;
     background-color: #353535;
     line-height: 34px;
 
@@ -59,6 +67,10 @@
   .tier-row {
     display: flex;
     justify-content: space-between;
+
+    img {
+      padding-right: 4px;
+    }
   }
 
   .step-icon {
@@ -69,6 +81,7 @@
     display: inline-block;
     border: 2px solid #fff;
     margin: 2px;
+    margin-top: 6px;
   }
 
   .complete .step-icon {

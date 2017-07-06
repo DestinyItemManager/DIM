@@ -5,15 +5,15 @@
 
     <div class="activity-header">
       <div class="activity-title" style="background-image: url({{ ::activity.image | bungieIcon }})" ng-class="{ 'activity-featured': activity.featured }">
-        <img class="step-icon" ng-src="{{ ::activity.icon | bungieIcon }}" /> {{ ::activity.name }} <i ng-if="::activity.featured"  class="fa fa-star"></i>
+        <img class="small-icon" ng-src="{{ ::activity.icon | bungieIcon }}" /> {{ ::activity.name }} <i ng-if="::activity.featured"  class="fa fa-star"></i>
       </div>
     </div>
 
-    <div class="activity-progress" ng-class="{ complete: tier.complete }" ng-repeat="tier in activity.tiers track by $index">
+    <div class="activity-progress" ng-repeat="tier in activity.tiers track by $index">
       <div class="tier-title">{{ ::tier.name }}</div>
       <div class="tier-row" ng-if="tier.characters.length" ng-repeat="character in tier.characters track by $index">
         <span>
-          <img class="step-icon" ng-src="{{ ::character.icon }}" /> {{ ::character.name }}
+          <img class="small-icon" ng-src="{{ ::character.icon }}" /> {{ ::character.name }}
         </span>
         <span>
           <span class="step-icon" ng-class="{ complete: step.complete }" ng-repeat="step in character.steps track by $index"></span>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="activity-skulls" ng-if="::activity.skulls" ng-repeat="skull in activity.skulls">
-      <img class="step-icon" ng-src="{{ ::skull.icon | bungieIcon }}" />
+      <img class="small-icon" ng-src="{{ ::skull.icon | bungieIcon }}" />
       {{ ::skull.displayName }} - {{ ::skull.description }}
     </div>
   </div>
