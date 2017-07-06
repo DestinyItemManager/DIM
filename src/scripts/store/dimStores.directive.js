@@ -11,21 +11,9 @@ function Stores() {
     controllerAs: 'vm',
     bindToController: true,
     scope: {},
-    link: Link,
     template: template
   };
 
-  function Link($scope) {
-    function stickyHeader(e) {
-      $(document.body).toggleClass('something-is-sticky', document.body.scrollTop !== 0);
-    }
-
-    $(document).on('scroll', stickyHeader);
-
-    $scope.$on('$destroy', () => {
-      $(document).off('scroll', stickyHeader);
-    });
-  }
 }
 
 

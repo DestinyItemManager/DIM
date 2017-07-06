@@ -8,7 +8,9 @@ import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wa
 import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-optimized-wasm-raw.wasm';
 
 // For zip
-import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
+import 'imports-loader?this=>window!@destiny-item-manager/zip.js';
+import inflate from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/inflate.js';
+import zipWorker from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/z-worker.js';
 
 // Dynamic import splits up the sql library so the user only loads it
 // if they need it. So we can minify sql.js specifically (as explained
@@ -251,7 +253,9 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
   function unzipManifest(blob) {
     return $q((resolve, reject) => {
       zip.useWebWorkers = true;
-      zip.workerScriptsPath = 'static/zipjs/';
+      zip.workerScripts = {
+        inflater: [zipWorker, inflate]
+      };
       zip.createReader(new zip.BlobReader(blob), (zipReader) => {
         // get all entries from the zip
         zipReader.getEntries((entries) => {

@@ -1,12 +1,26 @@
 # Next
 
+* Scrolling should be smoother overall.
+* Vendor weapons now show reviews.
+* Add a "sort by name" option for item sorting.
 * In Google Chrome (and the next version of Firefox), your local DIM data won't be deleted by the browser in low storage situations if you visit DIM frequently.
-* Fixed a case where DIM could hang when you have very little free space on your computer, and added a warning when we can't store data.
+
+# 4.2.4
+
+* Work around a Chrome bug that marked the extension as "corrupted".
+
+# 4.2.3
+
+* Fix log out button.
+* Put back the accidentally removed hotkeys for setting tags on items.
+* Fixed some visual goofs on Firefox.
+* Fix a case where DIM would never finish loading.
 
 # 4.2.2
 
 * Fix DIM being invisible on Firefox
 * Fix a case where DIM would never finish loading.
+* Put back the accidentally removed hotkeys for setting tags on items.
 
 # 4.2.1
 

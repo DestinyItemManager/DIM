@@ -30,9 +30,9 @@
 
     <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.maxLightLoadout($event)">
+        <span class="light" ng-bind="::vm.maxLightValue"></span>
         <i class="fa fa-star"></i>
         <span translate="Loadouts.MaximizeLight"></span>
-        <span class="light" ng-bind="::vm.maxLightValue"></span>
       </span>
     </li>
 
