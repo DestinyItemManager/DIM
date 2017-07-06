@@ -4,6 +4,7 @@
       <div ng-show="$ctrl.featureFlags.reviewsEnabled">
         <div class="review-setting-table--name">
           <label for="showReviews" translate="Settings.ShowReviews"></label>
+          <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/RATINGS.md" target="_blank" rel="noopener noreferrer"></a>
         </div>
         <div class="review-setting-table--value">
           <input type="checkbox" id="showReviews" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.showReviews"/>
@@ -12,7 +13,10 @@
       <div ng-show="$ctrl.featureFlags.reviewsEnabled">
         <div class="review-setting-table--name">
           <label for="allowIdPostToDtr" translate="Settings.AllowIdPostToDtr"></label>
-          <div class="fineprint" translate="Settings.AllowIdPostToDtrLine2"></div>
+          <div>
+            <label class="fineprint" translate="Settings.AllowIdPostToDtrLine2"></label>
+            <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/PRIVACY.md" target="_blank" rel="noopener noreferrer"></a>
+          </div>
         </div>
         <div class="review-setting-table--value">
           <input type="checkbox" id="allowIdPostToDtr" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.allowIdPostToDtr"/>
@@ -22,7 +26,7 @@
   </form>
 </div>
 
-<div ng-if="$ctrl.canReview" class="user-review--header">
+<div ng-if="$ctrl.canCreateReview" class="user-review--header">
   <span translate="DtrReview.YourReview"></span>
   <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()"></star-rating>
 

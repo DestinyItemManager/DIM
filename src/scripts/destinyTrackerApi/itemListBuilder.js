@@ -23,6 +23,12 @@ class ItemListBuilder {
   }
 
   _getAllItems(stores) {
+    const firstItem = stores[0];
+
+    if (firstItem.allItems !== undefined) {
+      return _.pluck(flatMap(stores, (vendor) => vendor.allItems), 'item');
+    }
+
     return flatMap(stores, (store) => store.items);
   }
 

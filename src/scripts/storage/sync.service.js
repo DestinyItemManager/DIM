@@ -15,6 +15,17 @@ export function SyncService(
 ) {
   'ngInject';
 
+  // Request persistent storage.
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().then((persistent) => {
+      if (persistent) {
+        console.log("Sync: Storage will not be cleared except by explicit user action.");
+      } else {
+        console.log("Sync: Storage may be cleared under storage pressure.");
+      }
+    });
+  }
+
   let cached;
 
   const adapters = [

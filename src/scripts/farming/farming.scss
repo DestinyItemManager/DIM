@@ -2,6 +2,7 @@
 
 #item-farming {
   position: fixed;
+  backface-visibility: hidden;
   bottom: 6rem;
   background-color: rgba(0, 0, 0, 0.9);
   left: calc(50% - 21.5rem);

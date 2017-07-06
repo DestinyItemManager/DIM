@@ -142,6 +142,13 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   $scope.$on('$destroy', () => {
     window.removeEventListener('message', messageHandler);
   });
+
+  vm.browserMayClearData = true;
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persisted().then((persistent) => {
+      vm.browserMayClearData = !persistent;
+    });
+  }
 }
 
 export const StorageComponent = {

@@ -73,6 +73,7 @@
   right: 0;
   bottom: 0;
   left: 0;
+  backface-visibility: hidden;
 }
 
 .ngdialog-content {

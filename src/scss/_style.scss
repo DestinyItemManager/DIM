@@ -406,6 +406,7 @@ img {
 #drag-help {
   font-size: 1.5em;
   position: fixed;
+  backface-visibility: hidden;
   bottom: 2em;
   transition: transform .5s, opacity .5s, background-color .1s;
   background-color: rgba(0, 0, 0, 0.8);
@@ -1111,6 +1112,7 @@ rzslider, .rzslider {
 .objective-text {
   z-index: 2;
   margin-right: 4px;
+  backface-visibility: hidden;
 }
 
 .objective-boolean {
@@ -1177,6 +1179,7 @@ g {
 
 .store-bounds {
   position: fixed;
+  backface-visibility: hidden;
   pointer-events: none;
   bottom: -800px;
   left: 0;
@@ -1238,6 +1241,7 @@ g {
 
 .store-header {
   position: fixed;
+  backface-visibility: hidden;
   top: 53px;
   z-index: 10;
 }
@@ -1258,6 +1262,7 @@ g {
   left: 0;
   right: 0;
   position: fixed;
+  backface-visibility: hidden;
   z-index: 3;
   bottom: 0;
   background: #434444;
@@ -1458,6 +1463,7 @@ h2, h3, h4 {
   background-color: #434444;
   height: 82px;
   position: fixed;
+  backface-visibility: hidden;
   z-index: 4;
 
   .something-is-sticky & {
@@ -1518,6 +1524,7 @@ h2, h3, h4 {
   .show-new-items & {
     display: block;
     position: fixed;
+    backface-visibility: hidden;
     bottom: 2rem;
     right: 2rem;
 
@@ -1540,54 +1547,10 @@ h2, h3, h4 {
   }
 }
 
-dim-manifest-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  pointer-events: none;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .manifest-progress {
-    width: 24rem;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    font-size: 1rem;
-    padding: 1.5rem 1.5rem;
-    background-color: #222;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
-    white-space: pre-wrap;
-
-    i {
-      font-size: 2rem;
-      margin-bottom: .5rem;
-    }
-
-    &.ng-animate {
-      transition: opacity 0.3s ease-out;
-    }
-
-    &.ng-enter, &.ng-leave.ng-leave-active {
-      opacity: 0;
-    }
-
-    &.ng-leave, &.ng-enter.ng-enter-active {
-      opacity: 1;
-    }
-  }
-}
-
 .loadout {
   &.random {
     position: fixed;
+    backface-visibility: hidden;
     bottom: 0;
     right: 0;
     padding: .5rem;
@@ -1641,6 +1604,10 @@ dim-manifest-progress {
 .fineprint {
   font-size: .85em;
   color: #aaa;
+}
+
+.stylizedAnchor {
+  text-decoration: none;
 }
 
 .warning-block {
