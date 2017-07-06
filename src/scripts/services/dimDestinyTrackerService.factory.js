@@ -39,7 +39,7 @@ function DestinyTrackerService($q,
     },
     updateVendorRankings: function(vendors) {
       if (dimSettingsService.showReviews) {
-        _bulkFetcher.bulkFetch(vendors);
+        _bulkFetcher.bulkFetchVendorItems(vendors);
       }
     },
     getItemReviews: function(item) {
