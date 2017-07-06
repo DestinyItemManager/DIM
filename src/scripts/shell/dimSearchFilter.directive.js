@@ -2,6 +2,7 @@ import angular from 'angular';
 import _ from 'underscore';
 import template from './dimSearchFilter.directive.html';
 import 'jquery-textcomplete';
+import { flatMap } from '../util';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
@@ -426,11 +427,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     },
     dupe: function(predicate, item) {
       if (_duplicates === null) {
-        _duplicates = _.chain(dimStoreService.getStores())
-          .pluck('items')
-          .flatten()
-          .countBy('hash')
-          .value();
+        _duplicates = _.countBy(flatMap(dimStoreService.getStores(), 'items'), 'hash');
       }
 
       // We filter out the "Default Shader" because everybody has one per character

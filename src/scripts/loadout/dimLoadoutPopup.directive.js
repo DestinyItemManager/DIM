@@ -126,7 +126,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // A dynamic loadout set up to level weapons and armor
   vm.itemLevelingLoadout = function itemLevelingLoadout($event) {
-    const applicableItems = _.select(dimStoreService.getAllItems(), (i) => {
+    const applicableItems = _.filter(dimStoreService.getAllItems(), (i) => {
       return i.canBeEquippedBy(vm.store) &&
         i.talentGrid &&
         !i.talentGrid.xpComplete && // Still need XP
@@ -200,7 +200,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       'Artifact',
       'Ghost'];
 
-    const applicableItems = _.select(dimStoreService.getAllItems(), (i) => {
+    const applicableItems = _.filter(dimStoreService.getAllItems(), (i) => {
       return i.canBeEquippedBy(vm.store) &&
         i.primStat && // has a primary stat (sanity check)
         _.contains(lightTypes, i.type); // one of our selected types
@@ -237,7 +237,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // A dynamic loadout set up to level weapons and armor
   vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {
-    const engrams = _.select(dimStoreService.getAllItems(), (i) => {
+    const engrams = _.filter(dimStoreService.getAllItems(), (i) => {
       return i.isEngram() && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
     });
 
@@ -279,7 +279,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // Move items matching the current search. Max 9 per type.
   vm.searchLoadout = function searchLoadout($event) {
-    const items = _.select(dimStoreService.getAllItems(), (i) => {
+    const items = _.filter(dimStoreService.getAllItems(), (i) => {
       return i.visible && !i.location.inPostmaster;
     });
 
@@ -325,7 +325,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
           const numNeededToMove = Math.max(0, count + items.length - capacity);
           if (numNeededToMove > 0) {
             // We'll move the lowest-value item to the vault.
-            const candidates = _.sortBy(_.select(items, { equipped: false, notransfer: false }), (i) => {
+            const candidates = _.sortBy(_.filter(items, { equipped: false, notransfer: false }), (i) => {
               let value = {
                 Common: 0,
                 Uncommon: 1,
@@ -374,9 +374,9 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
           const vaultSpaceLeft = vault.spaceLeftForItem(item);
           if (vaultSpaceLeft <= 1) {
             // If we're down to one space, try putting it on other characters
-            const otherStores = _.select(dimStoreService.getStores(),
+            const otherStores = _.filter(dimStoreService.getStores(),
                                          (store) => !store.isVault && store.id !== vm.store.id);
-            const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
+            const otherStoresWithSpace = _.filter(otherStores, (store) => store.spaceLeftForItem(item));
 
             if (otherStoresWithSpace.length) {
               return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
@@ -409,7 +409,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     const exoticGroups = [['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']];
     _.each(exoticGroups, (group) => {
       const itemsInGroup = _.pick(items, group);
-      const numExotics = _.select(_.values(itemsInGroup), isExotic).length;
+      const numExotics = _.filter(_.values(itemsInGroup), isExotic).length;
       if (numExotics > 1) {
         const options = [];
 

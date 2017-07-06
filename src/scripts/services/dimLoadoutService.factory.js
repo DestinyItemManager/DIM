@@ -208,7 +208,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
       General: store.level === 40 ? .08 : .087
     };
     return (Math.floor(10 * _.reduce(loadout.items, (memo, items) => {
-      const item = _.findWhere(items, { equipped: true });
+      const item = _.find(items, { equipped: true });
 
       return memo + (item.primStat.value * itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
     }, 0)) / 10).toFixed(1);
@@ -404,7 +404,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
         while (amountNeeded > 0) {
           const source = _.max(storesByAmount, 'amount');
           const amountToMove = Math.min(source.amount, amountNeeded);
-          const sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
+          const sourceItem = _.find(source.store.items, { hash: pseudoItem.hash });
 
           if (amountToMove === 0 || !sourceItem) {
             promise = promise.then(() => {
@@ -424,7 +424,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
       }
     } else {
       if (item.type === 'Class') {
-        item = _.findWhere(store.items, {
+        item = _.find(store.items, {
           hash: pseudoItem.hash
         });
       }
