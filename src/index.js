@@ -60,7 +60,6 @@ require('./scripts/move-popup/dimItemTag.directive');
 if ($DIM_FLAVOR === 'dev') {
   require('./scripts/developer/dimDeveloper.controller');
 }
-require('./scripts/login/dimLogin.controller');
 
 require('./scss/main.scss');
 

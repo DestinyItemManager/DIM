@@ -235,7 +235,7 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
       gapi.auth2.getAuthInstance().signOut();
     },
 
-    supported: $featureFlags.gdrive && !(window.chrome && window.chrome.extension),
+    supported: $featureFlags.gdrive,
     enabled: Boolean(localStorage.getItem('gdrive-fileid')),
     name: 'GoogleDriveStorage'
   };

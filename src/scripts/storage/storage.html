@@ -37,6 +37,10 @@
       </div>
     </div>
 
+    <div ng-switch-when="IndexedDBStorage">
+      <p class="warning-block" ng-if="$ctrl.browserMayClearData" ng-i18next="Storage.BrowserMayClearData"></p>
+    </div>
+
     <p ng-i18next="Storage.StatLabel"></p>
     <ul>
       <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" ng-i18next="[i18next]({value: value})Storage.{{key}}"></li>

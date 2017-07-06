@@ -1,12 +1,17 @@
-import angular from 'angular';
 import uuidv4 from 'uuid/v4';
-import './login.scss';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
+import template from './login.html';
+import './login.scss';
 
-angular.module('dimApp')
-  .controller('dimLoginCtrl', dimLoginCtrl);
+export const LoginComponent = {
+  template,
+  controller: LoginCtrl,
+  controllerAs: 'vm'
+};
 
-function dimLoginCtrl($stateParams) {
+function LoginCtrl($stateParams) {
+  'ngInject';
+
   const vm = this;
 
   localStorage.authorizationState = uuidv4();

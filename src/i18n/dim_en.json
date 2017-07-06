@@ -355,6 +355,7 @@
     "SortPrimary": "primary stat",
     "SortRarity": "rarity",
     "SortRoll": "rating",
+    "SortName": "name",
     "InventoryColumns": "Character inventory width",
     "VaultColumns": "Vault maximum inventory width",
     "ColumnSize": "{{num}} items",
@@ -400,8 +401,9 @@
     "Details": {
       "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
       "ChromeSyncStorage": "If you are logged in to Chrome, this will sync your data to other Chrome instances. It does not work on the DIM website.",
-      "IndexedDBStorage": "Local storage will save your information only on this browser. The browser may delete this information if you run out of space or don't visit DIM frequently."
-    },
+      "IndexedDBStorage": "Local storage will save your information only on this browser."
+      },
+    "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
     "ForceSync": "Force sync data",
     "DriveSync": "Log in to Google Drive",
     "DriveLogout": "Log out of Google Drive",

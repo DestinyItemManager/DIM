@@ -24,6 +24,7 @@ import recordBooksModule from './record-books/record-books.module';
 import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
+import loginModule from './login/login.module';
 import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
@@ -58,6 +59,7 @@ const dependencies = [
   vendorsModule,
   itemReviewModule,
   loadoutBuilderModule,
+  loginModule,
   compareModule,
   infuseModule,
   farmingModule,
