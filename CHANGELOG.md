@@ -4,6 +4,7 @@
 * Vendor weapons now show reviews.
 * Add a "sort by name" option for item sorting.
 * In Google Chrome (and the next version of Firefox), your local DIM data won't be deleted by the browser in low storage situations if you visit DIM frequently.
+* Ratings will no longer disappear from the item details popup the second time it is shown.
 
 # 4.2.4
 
