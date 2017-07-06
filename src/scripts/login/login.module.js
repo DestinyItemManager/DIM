@@ -10,7 +10,6 @@ export default angular
 
     $stateProvider.state({
       name: 'login',
-      parent: 'shell',
       url: '/login',
       component: 'login',
       params: {
