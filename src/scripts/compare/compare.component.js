@@ -137,8 +137,10 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $trans
     }
 
     vm.comparisons.forEach((item) => {
-      item.stats.forEach(bucketStat);
-      bucketStat(item.primStat);
+      if (item.stats) {
+        item.stats.forEach(bucketStat);
+        bucketStat(item.primStat);
+      }
     });
 
     vm.statRanges = {};

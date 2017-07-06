@@ -5,7 +5,6 @@ angular.module('dimApp')
 
 function dimDeveloperCtrl() {
   const vm = this;
-  const isExtension = window.chrome && window.chrome.extension;
 
   vm.apiKey = localStorage.apiKey;
   vm.clientId = localStorage.oauthClientId;
@@ -13,7 +12,7 @@ function dimDeveloperCtrl() {
   vm.URL = window.location.origin;
   vm.URLRet = `${vm.URL}/return.html`;
 
-  if (!isExtension && window.location.protocol === 'http:') {
+  if (window.location.protocol === 'http:') {
     vm.warning = 'Bungie.net will not accept the http protocol. Serve over https:// and try again.';
   }
 

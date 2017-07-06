@@ -47,7 +47,8 @@ class ReviewsFetcher {
   _attachReviews(item, reviewData) {
     const userReview = this._getUserReview(reviewData);
 
-    item.totalReviews = reviewData.totalReviews;
+    // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
+    item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
     item.writtenReviews = _.filter(reviewData.reviews, 'review');
 
     if (userReview) {

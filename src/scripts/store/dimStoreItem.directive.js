@@ -89,8 +89,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     vm.clicked = function clicked(item, e) {
       e.stopPropagation();
 
-      $rootScope.$broadcast('item-clicked', item);
-
       if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(item);
         return;
@@ -115,6 +113,9 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       } else if (dimCompareService.dialogOpen) {
         dimCompareService.addItemToCompare(item, e);
       } else {
+        // TODO: remove this
+        $rootScope.$broadcast('item-clicked', item);
+
         dialogResult = ngDialog.open({
           template: dialogTemplate,
           plain: true,

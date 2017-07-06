@@ -100,6 +100,8 @@
       "UpgradeChrome": "Please Upgrade Chrome",
       "Version": "{beta, select, true{Beta has been updated to v{version}} other{DIM v{version} Released}}",
       "Xur": "Xûr is Here",
+      "ExtensionDeprecatedTitle": "DIM is just a website now!",
+      "ExtensionDeprecatedMessage": "The DIM Chrome extension now just opens our website - which works on every browser and on mobile devices! You can uninstall the extension, or leave it around as a convenient bookmark for the site. Your date (tags, notes, and settings) can be imported from the storage page (disk icon in the header).",
       "NoStorage": "DIM can't store data",
       "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue."
    },
@@ -330,6 +332,7 @@
       "SortPrimary": "primary stat",
       "SortRarity": "rarity",
       "SortRoll": "rating",
+      "SortName": "name",
       "InventoryColumns": "Character inventory width",
       "VaultColumns": "Vault maximum inventory width",
       "ColumnSize": "{num} items",
@@ -374,8 +377,9 @@
       "Details": {
         "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
         "ChromeSyncStorage": "If you are logged in to Chrome, this will sync your data to other Chrome instances. It does not work on the DIM website.",
-        "IndexedDBStorage": "Local storage will save your information only on this browser. The browser may delete this information if you run out of space or don't visit DIM frequently."
+        "IndexedDBStorage": "Local storage will save your information only on this browser."
       },
+      "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
       "ForceSync": "Force sync data",
       "DriveSync": "Log in to Google Drive",
       "DriveLogout": "Log out of Google Drive",
