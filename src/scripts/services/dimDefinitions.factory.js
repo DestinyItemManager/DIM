@@ -11,7 +11,9 @@ const lazyTables = [
   'Record',
   'ItemCategory',
   'VendorCategory',
-  'RecordBook'
+  'RecordBook',
+  'ActivityCategory',
+  'ScriptedSkull'
 ];
 
 const eagerTables = [

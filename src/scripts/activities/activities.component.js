@@ -3,7 +3,7 @@ import _ from 'underscore';
 import template from './activities.html';
 import './activities.scss';
 
-function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettingsService) {
+function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettingsService, $translate) {
   'ngInject';
 
   const vm = this;
@@ -76,14 +76,14 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   });
 
   function processActivities(defs, stores, rawActivity) {
-    const activityDef = defs.Activity[rawActivity.display.activityHash];
+    const categoryDef = defs.ActivityCategory.get(rawActivity.display.categoryHash);
+    //    const skullDef = defs.ScriptedSkull;
 
     const activity = {
       hash: rawActivity.display.activityHash,
-      name: rawActivity.display.advisorTypeCategory,
+      name: categoryDef.title,
       icon: rawActivity.display.icon,
       image: rawActivity.display.image,
-      description: activityDef.activityDescription,
     };
 
     if (rawActivity.extended) {
@@ -92,10 +92,16 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       }).reduce((a, b) => {
         return a.concat(b);
       });
+      //      .map((s) => {
+      //        return skullDef.get(s.hash);
+      //      });
     }
 
     if (rawActivity.activityTiers[0].skullCategories && rawActivity.activityTiers[0].skullCategories.length) {
       activity.skulls = rawActivity.activityTiers[0].skullCategories[0].skulls;
+      //      .map((s) => {
+      //        return skullDef.get(s.hash);
+      //      });
     }
 
     activity.tiers = rawActivity.activityTiers.map((r, i) => processActivity(defs, rawActivity.identifier, stores, r, i));
@@ -107,7 +113,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     const tierDef = defs.Activity[tier.activityHash];
 
     const name = tier.activityData.recommendedLight === 390 ? 390
-      : (tier.tierDisplayName ? tier.tierDisplayName : tierDef.activityName);
+      : (tier.tierDisplayName ? $translate.instant(`Activities.${tier.tierDisplayName}`) : tierDef.activityName);
 
     const characters = activityId === 'heroicstrike' ? [] : stores.map((store) => {
       let steps = store.advisors.activities[activityId].activityTiers[index].steps;
