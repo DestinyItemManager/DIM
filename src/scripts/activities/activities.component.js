@@ -48,7 +48,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       const rawActivities = stores[0].advisors.activities;
       vm.activities = _.filter(rawActivities, (a) => {
         return a.activityTiers && whitelist.includes(a.identifier);
-      })
+      });
       vm.activities = _.sortBy(vm.activities, (a) => {
         const ix = whitelist.indexOf(a.identifier);
         return (ix === -1) ? 999 : ix;
