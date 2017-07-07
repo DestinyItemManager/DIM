@@ -1,12 +1,12 @@
 import template from './item-review.html';
 import './item-review.scss';
 
-function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerService, $scope) {
+function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $scope) {
   'ngInject';
 
   const vm = this;
   vm.canReview = dimSettingsService.allowIdPostToDtr;
-  vm.canCreateReview = (vm.canReview && vm.item.instanceId);
+  vm.canCreateReview = (vm.canReview && vm.item.owner);
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
   vm.expandReview = vm.hasUserReview;
@@ -26,7 +26,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
   };
 
   vm.submitReview = function() {
-    $rootScope.$broadcast('review-submitted', vm.item);
+    dimDestinyTrackerService.submitReview(vm.item);
     vm.expandReview = false;
     vm.submitted = true;
   };
@@ -77,7 +77,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
     vm.canReview = dimSettingsService.allowIdPostToDtr;
 
     if (vm.canReview) {
-      $rootScope.$broadcast('item-clicked', vm.item);
+      dimDestinyTrackerService.getItemReviews(vm.item);
     }
   };
 }
