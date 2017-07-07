@@ -39,25 +39,20 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       'crota',
       'kingsfall',
       'wrathofthemachine',
-      //      'elderchallenge',
+      // 'elderchallenge',
       'nightfall',
       'heroicstrike',
     ];
 
     dimDefinitions.getDefinitions().then((defs) => {
       const rawActivities = stores[0].advisors.activities;
-      vm.activities = _.chain(rawActivities)
-        .filter('activityTiers') // exclude trials, iron banner, armsday, xur
-        .filter((a) => {
-          return whitelist.includes(a.identifier);
-        })
-        .sortBy((a) => {
-          const ix = whitelist.indexOf(a.identifier);
-          return (ix === -1) ? 999 : ix;
-          //          return -a.display.categoryHash;
-        })
-        .map((a) => processActivities(defs, stores, a))
-        .value();
+      vm.activities = _.filter(rawActivities, (a) => {
+        return a.activityTiers && whitelist.includes(a.identifier);
+      })
+      vm.activities = _.sortBy(vm.activities, (a) => {
+        const ix = whitelist.indexOf(a.identifier);
+        return (ix === -1) ? 999 : ix;
+      }).map((a) => processActivities(defs, stores, a));
 
       vm.activities.forEach((a) => {
         a.tiers.forEach((t) => {
@@ -76,12 +71,10 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   });
 
   function processActivities(defs, stores, rawActivity) {
-    const categoryDef = defs.ActivityCategory.get(rawActivity.display.categoryHash);
-    //    const skullDef = defs.ScriptedSkull;
-
     const activity = {
       hash: rawActivity.display.activityHash,
-      name: categoryDef.title,
+      // having trouble finding the i18n version of the name.
+      name: rawActivity.display.advisorTypeCategory,
       icon: rawActivity.display.icon,
       image: rawActivity.display.image,
     };
@@ -89,19 +82,18 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     if (rawActivity.extended) {
       activity.skulls = rawActivity.extended.skullCategories.map((s) => {
         return s.skulls;
-      }).reduce((a, b) => {
-        return a.concat(b);
       });
-      //      .map((s) => {
-      //        return skullDef.get(s.hash);
-      //      });
     }
 
-    if (rawActivity.activityTiers[0].skullCategories && rawActivity.activityTiers[0].skullCategories.length) {
-      activity.skulls = rawActivity.activityTiers[0].skullCategories[0].skulls;
-      //      .map((s) => {
-      //        return skullDef.get(s.hash);
-      //      });
+    const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;
+    if (rawSkullCategories && rawSkullCategories.length) {
+      activity.skulls = rawSkullCategories[0].skulls;
+    }
+
+    // flatten modifiers and bonuses for now.
+    // unfortunetly skulls don't have a hash w/ them so no i18n.
+    if (activity.skulls) {
+      activity.skulls = _.flatten(activity.skulls);
     }
 
     activity.tiers = rawActivity.activityTiers.map((r, i) => processActivity(defs, rawActivity.identifier, stores, r, i));
