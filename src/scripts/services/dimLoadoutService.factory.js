@@ -70,12 +70,11 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
     const loadoutGuids = new Set(_.pluck(loadouts, 'id'));
     const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
 
-    const orphanIds = _.chain(data)
-      .filter(objectTest)
-      .filter(hasGuid)
-      .reject(containsLoadoutGuids)
-      .pluck('id')
-      .value();
+    const orphanIds = _.pluck(Object.values(data).filter((item) => {
+      return objectTest(item) &&
+        hasGuid(item) &&
+        !containsLoadoutGuids(item);
+    }), 'id');
 
     if (orphanIds.length > 0) {
       return SyncService.remove(orphanIds).then(() => loadouts);
@@ -508,18 +507,15 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
       items: []
     };
 
-    result.items = _.chain(loadout.items)
-      .values()
-      .flatten()
-      .map((item) => {
-        return {
-          id: item.id,
-          hash: item.hash,
-          amount: item.amount,
-          equipped: item.equipped
-        };
-      })
-      .value();
+    const allItems = _.flatten(Object.values(loadout.items));
+    result.items = allItems.map((item) => {
+      return {
+        id: item.id,
+        hash: item.hash,
+        amount: item.amount,
+        equipped: item.equipped
+      };
+    });
 
     return result;
   }

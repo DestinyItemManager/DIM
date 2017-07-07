@@ -42,12 +42,13 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
         vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
-        vm.loadouts = _.chain(vm.loadouts)
-          .filter((item) => _.isUndefined(item.platform) || item.platform === platform.label)
-          .filter((item) => {
-            return vm.classTypeId === -1 || ((item.classType === -1) || (item.classType === vm.classTypeId));
-          })
-          .value();
+        vm.loadouts = vm.loadouts.filter((item) => {
+          return (_.isUndefined(item.platform) ||
+                  item.platform === platform.label) &&
+            (vm.classTypeId === -1 ||
+             item.classType === -1 ||
+             item.classType === vm.classTypeId);
+        });
       });
   }
   $scope.$on('dim-save-loadout', initLoadouts);
