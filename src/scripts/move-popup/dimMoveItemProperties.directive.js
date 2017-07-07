@@ -107,9 +107,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   vm.submitReview = function() {
     const item = vm.item;
 
-    const userReview = vm.toUserReview(item);
-
-    $rootScope.$broadcast('review-submitted', item, userReview);
+    dimDestinyTrackerService.submitReview(item);
 
     return false;
   };

@@ -50,20 +50,26 @@ class BulkFetcher {
    * @memberof BulkFetcher
    */
   bulkFetch(storesContainer) {
-    if (storesContainer.stores) {
-      const stores = storesContainer.stores;
+    const stores = _.values(storesContainer);
 
-      this._getBulkFetchPromise(stores)
-        .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                    stores));
-    }
-    else if (storesContainer) {
-      const vendors = _.values(storesContainer);
+    this._getBulkFetchPromise(stores)
+      .then((bulkRankings) => this.attachRankings(bulkRankings,
+                                                  stores));
+  }
 
-      this._getBulkFetchPromise(vendors)
-        .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
-                                                          vendors));
-    }
+  /**
+   * Fetch the DTR community scores for all weapon items found in the supplied vendors.
+   *
+   * @param {any} vendorContainer
+   *
+   * @memberof BulkFetcher
+   */
+  bulkFetchVendorItems(vendorContainer) {
+    const vendors = _.values(vendorContainer);
+
+    this._getBulkFetchPromise(vendors)
+      .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
+                                                        vendors));
   }
 
   attachRankings(bulkRankings,
