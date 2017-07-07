@@ -1,29 +1,44 @@
 <div id="header">
-  <div class="content">
-    <span class="header-right">
-      <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.currentPlatform" on-platform-change="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
-      <div class="header-right" id="actions">
-        <refresh-stores class="link"></refresh-stores>
-        <span class="link" ng-click="$ctrl.toggleState('storage')" translate-attr="{ title: 'Storage'}"><i class="fa fa-save"></i></span>
-        <span class="link" ng-click="$ctrl.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
-        <span class="link search-link">
-          <span class="filter-help" ng-click="$ctrl.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-question-circle-o"></i></span>
-          <dim-search-filter></dim-search-filter>
-        </span>
-      </div>
+  <span class="menu link" ng-click="$ctrl.dropdown = !$ctrl.dropdown" dim-click-anywhere-but-here="$ctrl.dropdown = false">
+    <i class="fa fa-bars"></i>
+    <div class="dropdown" ng-if="$ctrl.dropdown">
+      <span class="link" ng-click="$ctrl.toggleState('loadout-builder')" translate="LB.LB"></span>
+      <span class="link" ng-click="$ctrl.toggleState('record-books')" translate="RecordBooks"></span>
+      <span class="link" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleState('vendors')" translate="Vendors"></span>
+      <span class="link" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
+      <hr>
+      <span class="link" ng-click="$ctrl.toggleState('storage')" translate="Storage"></span>
+      <span class="link" ng-click="$ctrl.showSetting($event)" translate="Settings"></span>
+      <hr>
+      <span class="link" ng-click="$ctrl.showAbout($event)" translate="Header.About"></span>
+      <span class="link" ng-click="$ctrl.showSupport($event)" translate="Header.SupportDIM"></span>
+      <a class="link" target="_blank" rel="noopener noreferrer" href="https://teespring.com/stores/dim" translate="Header.Shop"></a>
+    </div>
+  </span>
+
+  <img class="logo link" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v{{::$ctrl.$DIM_VERSION}} ({{::$ctrl.$DIM_FLAVOR}})" src="~app/images/logo-type-right-light.svg" alt="DIM"/>
+  <span class="link first-to-go" ng-click="$ctrl.showAbout($event)" translate="Header.About"></span>
+  <span class="link first-to-go" ng-click="$ctrl.showSupport($event)" translate="Header.SupportDIM"></span>
+  <a class="link first-to-go" target="_blank" rel="noopener noreferrer" href="https://teespring.com/stores/dim" translate="Header.Shop"></a>
+  <span class="link first-to-go header-separator"></span>
+  <span class="link second-to-go" ng-click="$ctrl.toggleState('loadout-builder')" translate="LB.LB"></span>
+  <span class="link second-to-go" ng-click="$ctrl.toggleState('record-books')" translate="RecordBooks"></span>
+  <span class="link second-to-go" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleState('vendors')" translate="Vendors"></span>
+  <span class="link second-to-go" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
+
+  <span class="header-right">
+    <refresh-stores class="link"></refresh-stores>
+    <span class="link" ng-click="$ctrl.toggleState('storage')" translate-attr="{ title: 'Storage'}"><i class="fa fa-save"></i></span>
+    <span class="link" ng-click="$ctrl.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
+    <span class="link search-link">
+      <span class="filter-help" ng-click="$ctrl.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-question-circle-o"></i></span>
+      <dim-search-filter></dim-search-filter>
     </span>
-    <img class="logo link" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v{{::$ctrl.$DIM_VERSION}} ({{::$ctrl.$DIM_FLAVOR}})" src="~app/images/logo-type-right-light.svg" alt="DIM"/>
-    <span class="link" ng-click="$ctrl.showAbout($event)" translate="Header.About"></span>
-    <span class="link" ng-click="$ctrl.showSupport($event)" translate="Header.SupportDIM"></span>
-    <a class="link" target="_blank" rel="noopener noreferrer" href="https://teespring.com/stores/dim" translate="Header.Shop"></a>
-    <span class="link header-separator"></span>
-    <span class="link" ng-click="$ctrl.toggleState('loadout-builder')" translate="LB.LB"></span>
-    <span class="link" ng-click="$ctrl.toggleState('record-books')" translate="RecordBooks"></span>
-    <span class="link" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleState('vendors')" translate="Vendors"></span>
-    <span class="link" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
-  </div>
+    <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.currentPlatform" on-platform-change="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
+  </span>
 </div>
-<div id="content" class="content" ui-view></div>
+
+<div id="content" ui-view></div>
 <div class="store-bounds"></div>
 <dim-manifest-progress></dim-manifest-progress>
 <div class="random-loadout" ng-controller="dimRandomCtrl as random">

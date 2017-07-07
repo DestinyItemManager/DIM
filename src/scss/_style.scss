@@ -102,44 +102,46 @@ div:focus, span:focus {
 }
 
 #header {
-  #user {
-    color: white;
-  }
-  .fa {
-    font-size: 15px;
-    color: #fafafa;
-  }
-  .content {
-    margin: 0 auto;
-    padding: 8px 1em;
-    > {
-      .link, .header-right {
-        margin-top: 1px;
-      }
-    }
-    span, a, img {
-      vertical-align: middle;
-      margin: 0 6px;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 13px;
-      line-height: 25px;
-      text-align: center;
-      -webkit-touch-callout: none;
-      user-select: none;
-      outline: none;
-    }
-  }
+  padding: 0 1em;
   position: fixed;
-  z-index: 5;
+  z-index: 15;
   top: 0;
   left: 0;
   right: 0;
   height: 42px;
   background-color: #222;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  #user {
+    color: white;
+  }
+  .fa {
+    font-size: 20px;
+    color: #fafafa;
+    &:hover {
+      color: $orange;
+      cursor: pointer;
+    }
+  }
+
+  span, a, img {
+    margin: 0 6px;
+    text-decoration: none;
+    font-size: 13px;
+    -webkit-touch-callout: none;
+    user-select: none;
+    outline: none;
+    white-space: nowrap;
+  }
+
   .header-right {
     cursor: default;
-    float: right;
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+    flex-direction: row;
   }
   .header-separator {
       display: inline;
@@ -147,15 +149,53 @@ div:focus, span:focus {
       height: 16px;
       border-right: 1px solid #6f7070;
   }
-}
+  .dropdown {
+    position: absolute;
+    display: block;
+    overflow: auto;
+    top: 42px;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 150px;
+    background-color: #222;
+    padding-bottom: 4px;
 
-#actions {
-  margin-top: 1px;
-  .fa {
-    font-size: 20px;
-    &:hover {
-      color: $orange;
-      cursor: pointer;
+    hr {
+      margin: 2px 0;
+      border: none;
+      border-top: 1px solid #333;
+    }
+
+    .link {
+      display: block;
+      padding: 4px 1em;
+      margin: 0;
+
+      &:hover, &:focus {
+        background-color: #151515;
+      }
+    }
+  }
+
+  .first-to-go {
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
+
+  .second-to-go {
+    @media (max-width: 800px) {
+      display: none;
+    }
+  }
+
+  .menu {
+    display: none;
+    margin-right: none;
+
+    @media (max-width: 1100px) {
+      display: block;
     }
   }
 }
@@ -171,11 +211,15 @@ div:focus, span:focus {
 
 #filter-input {
   width: 250px;
-  margin-left: -3gpx;
-  margin-bottom: 4px;
+  margin-left: -3px;
+  margin-top: 4px;
   padding-right: 20px;
   border-radius: 0;
   -webkit-appearance: none;
+
+  @media (max-width: 1100px) {
+    width: 175px;
+  }
 }
 
 dt {
@@ -196,7 +240,7 @@ dd {
 .filter-help {
   position: absolute;
   right: -4px;
-  top: 1px;
+  top: 6px;
   .fa {
     font-size: 16px !important;
     color: #999 !important;
@@ -262,21 +306,16 @@ body {
 
 #system {
   outline: none;
-  margin-top: 1px;
   background-color: #fafafa;
-}
-
-input, select, option {
-  font-family: 'Open Sans', sans-serif;
-}
-
-#system {
   float: right;
-  margin-right: 5px;
   cursor: pointer;
   option {
     cursor: pointer;
   }
+}
+
+input, select, option {
+  font-family: 'Open Sans', sans-serif;
 }
 
 input[type="search"] {
@@ -1163,7 +1202,7 @@ g {
   user-select: none;
 }
 
-.content {
+.inventory-content {
   // This assumes 3 characters
   min-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 39px + 44px + (3 * (44px + 8px)));
   max-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 20px + (999 * (44px + 8px)));
@@ -1175,6 +1214,9 @@ g {
   display: block;
   // 84px margin to make room for the fixed header
   margin-top: 84px;
+  @supports (position: sticky) {
+    margin-top: 0;
+  }
 }
 
 .store-bounds {
@@ -1242,8 +1284,12 @@ g {
 .store-header {
   position: fixed;
   backface-visibility: hidden;
-  top: 53px;
+  top: 55px;
+  left: 0;
   z-index: 10;
+  @supports (position: sticky) {
+    position: sticky;
+  }
 }
 
 .store-header {
