@@ -242,7 +242,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
         return typedArray;
       });
     } else {
-      _gaq.push(['_trackEvent', 'Manifest', 'Need New Manifest']);
+      ga('send', 'event', 'Manifest', 'Need New Manifest');
       return $q.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }
   }
