@@ -89,6 +89,10 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       activity.skulls = rawSkullCategories[0].skulls;
     }
 
+    if (activity.skulls) {
+      activity.skulls = i18nActivitySkulls(activity.skulls, defs);
+    }
+
     // flatten modifiers and bonuses for now.
     // unfortunetly skulls don't have a hash w/ them so no i18n.
     if (activity.skulls) {
@@ -127,6 +131,83 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       complete: tier.activityData.isCompleted,
       characters: characters
     };
+  }
+
+  function i18nActivitySkulls(skulls, defs) {
+    for (let i = 0, hash; i < skulls[0].length; i++) {
+      hash = -1;
+      switch (skulls[0][i].displayName) {
+      case 'Heroic':
+        hash = 0;
+        break;
+      case 'Arc Burn':
+        hash = 1;
+        break;
+      case 'Solar Burn':
+        hash = 2;
+        break;
+      case 'Void Burn':
+        hash = 3;
+        break;
+      case 'Berserk':
+        hash = 4;
+        break;
+      case 'Brawler':
+        hash = 5;
+        break;
+      case 'Lightswitch':
+        hash = 6;
+        break;
+      case 'Small Arms':
+        hash = 7;
+        break;
+      case 'Specialist':
+        hash = 8;
+        break;
+      case 'Juggler':
+        hash = 9;
+        break;
+      case 'Grounded':
+        hash = 10;
+        break;
+      case 'Bloodthirsty':
+        hash = 11;
+        break;
+      case 'Chaff':
+        hash = 12;
+        break;
+      case 'Fresh Troops':
+        hash = 13;
+        break;
+      case 'Ironclad':
+        hash = 14;
+        break;
+      case 'Match Game':
+        hash = 15;
+        break;
+      case 'Exposure':
+        hash = 16;
+        break;
+      case 'Airborne':
+        hash = 17;
+        break;
+      case 'Catapult':
+        hash = 18;
+        break;
+      case 'Epic':
+        hash = 20;
+      }
+      if (hash > -1) {
+        if (hash < 20) { // set all skulls except for epic from heroic playlist...
+          skulls[0][i].displayName = defs.Activity[870614351].skulls[hash].displayName;
+          skulls[0][i].description = defs.Activity[870614351].skulls[hash].description;
+        } else { // Set Epic skull based off of a nightfall
+          skulls[0][i].displayName = defs.Activity[2234107290].skulls[0].displayName;
+          skulls[0][i].description = defs.Activity[2234107290].skulls[0].description;
+        }
+      }
+    }
+    return skulls;
   }
 }
 
