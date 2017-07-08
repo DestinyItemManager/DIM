@@ -72,6 +72,7 @@
       <star-rating rating="review.rating" read-only></star-rating>
       <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
       <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
+      <div ng-if="review.isReviewer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>
     </div>
     <div ng-bind="review.review"></div>
   </div>
