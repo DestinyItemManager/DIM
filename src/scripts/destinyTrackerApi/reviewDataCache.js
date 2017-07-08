@@ -135,7 +135,7 @@ class ReviewDataCache {
     const matchingItem = this._getMatchingItem(item);
 
     if (matchingItem.reviews) {
-      matchingItem.reviews = _.find(matchingItem.reviews, { isReviewer: false });
+      matchingItem.reviews = _.reject(matchingItem.reviews, { isReviewer: true });
     }
 
     if (!matchingItem.reviews) {
