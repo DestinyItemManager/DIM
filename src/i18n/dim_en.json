@@ -426,6 +426,11 @@
       "ShadersAndEmblems": "Shaders & Emblems",
       "Emotes": "Emotes"
    },
+   "Activities": {
+      "Activities": "Activities",
+      "Normal": "Normal",
+      "Hard": "Hard"
+   },
    "RecordBooks": {
       "RecordBooks": "Record Books",
       "HideCompleted": "Hide completed records"
