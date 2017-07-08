@@ -119,9 +119,9 @@ class ReviewDataCache {
 
   /**
    * Should we consider this item locally cached with changes?
-   * 
-   * @param {any} item 
-   * @param {bool} isCached 
+   *
+   * @param {any} item
+   * @param {bool} isCached
    * @memberof ReviewDataCache
    */
   _markItemAsLocallyCached(item,
