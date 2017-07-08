@@ -89,12 +89,11 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       activity.skulls = rawSkullCategories[0].skulls;
     }
 
-    if (activity.skulls) {
+    if (activity.skulls && vm.settings.language !== 'en') {
       activity.skulls = i18nActivitySkulls(activity.skulls, defs);
     }
 
     // flatten modifiers and bonuses for now.
-    // unfortunetly skulls don't have a hash w/ them so no i18n.
     if (activity.skulls) {
       activity.skulls = _.flatten(activity.skulls);
     }
@@ -134,69 +133,31 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   }
 
   function i18nActivitySkulls(skulls, defs) {
+    const skullHashes = [
+      { displayName: "Heroic", hash: 0 },
+      { displayName: "Arc Burn", hash: 1 },
+      { displayName: "Solar Burn", hash: 2 },
+      { displayName: "Void Burn", hash: 3 },
+      { displayName: "Berserk", hash: 4 },
+      { displayName: "Brawler", hash: 5 },
+      { displayName: "Lightswitch", hash: 6 },
+      { displayName: "Small Arms", hash: 7 },
+      { displayName: "Specialist", hash: 8 },
+      { displayName: "Juggler", hash: 9 },
+      { displayName: "Grounded", hash: 10 },
+      { displayName: "Bloodthirsty", hash: 11 },
+      { displayName: "Chaff", hash: 12 },
+      { displayName: "Fresh Troops", hash: 13 },
+      { displayName: "Ironclad", hash: 14 },
+      { displayName: "Match Game", hash: 15 },
+      { displayName: "Exposure", hash: 16 },
+      { displayName: "Airborne", hash: 17 },
+      { displayName: "Catapult", hash: 18 },
+      { displayName: "Epic", hash: 20 }];
+
     for (let i = 0, hash; i < skulls[0].length; i++) {
       hash = -1;
-      switch (skulls[0][i].displayName) {
-      case 'Heroic':
-        hash = 0;
-        break;
-      case 'Arc Burn':
-        hash = 1;
-        break;
-      case 'Solar Burn':
-        hash = 2;
-        break;
-      case 'Void Burn':
-        hash = 3;
-        break;
-      case 'Berserk':
-        hash = 4;
-        break;
-      case 'Brawler':
-        hash = 5;
-        break;
-      case 'Lightswitch':
-        hash = 6;
-        break;
-      case 'Small Arms':
-        hash = 7;
-        break;
-      case 'Specialist':
-        hash = 8;
-        break;
-      case 'Juggler':
-        hash = 9;
-        break;
-      case 'Grounded':
-        hash = 10;
-        break;
-      case 'Bloodthirsty':
-        hash = 11;
-        break;
-      case 'Chaff':
-        hash = 12;
-        break;
-      case 'Fresh Troops':
-        hash = 13;
-        break;
-      case 'Ironclad':
-        hash = 14;
-        break;
-      case 'Match Game':
-        hash = 15;
-        break;
-      case 'Exposure':
-        hash = 16;
-        break;
-      case 'Airborne':
-        hash = 17;
-        break;
-      case 'Catapult':
-        hash = 18;
-        break;
-      case 'Epic':
-        hash = 20;
-      }
+      hash = (_.where(skullHashes, { displayName: skulls[0][i].displayName }))[0].hash;
       if (hash > -1) {
         if (hash < 20) { // set all skulls except for epic from heroic playlist...
           skulls[0][i].displayName = defs.Activity[870614351].skulls[hash].displayName;
