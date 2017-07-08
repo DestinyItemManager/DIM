@@ -156,13 +156,13 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       { displayName: "Epic", hash: 20 }];
 
     for (let i = 0, hash; i < skulls[0].length; i++) {
-      hash = -1;
-      hash = (_.where(skullHashes, { displayName: skulls[0][i].displayName }))[0].hash;
-      if (hash > -1) {
+      hash = _.where(skullHashes, { displayName: skulls[0][i].displayName });
+      hash = hash.length ? hash[0].hash : -1;
+      if (hash >= 0) {
         if (hash < 20) { // set all skulls except for epic from heroic playlist...
           skulls[0][i].displayName = defs.Activity[870614351].skulls[hash].displayName;
           skulls[0][i].description = defs.Activity[870614351].skulls[hash].description;
-        } else { // Set Epic skull based off of a nightfall
+        } else { // set Epic skull based off of a nightfall
           skulls[0][i].displayName = defs.Activity[2234107290].skulls[0].displayName;
           skulls[0][i].description = defs.Activity[2234107290].skulls[0].description;
         }
