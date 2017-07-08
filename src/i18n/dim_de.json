@@ -10,6 +10,9 @@
       "Vault": "Tresor",
       "Weapons": "Waffen"
    },
+   "BungieAlert": {
+     "Title": "Eine Nachricht von Bungie:"
+   },
    "BungieService": {
       "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
       "Down": "Bungie.net ist nicht erreichbar.",
@@ -315,7 +318,7 @@
       "ShowOverlay": "Hebe neue Gegenstände mit einem glänzenden Icon hervor",
       "ShowAnimations": "Animiere den neuen, hervorgehobenen Gegenstand",
       "ShowAnimationsHelp": "Animiert die Hervorhebung bei neuen Gegenständen. Deaktivierung senkt CPU Belastung",
-      "ShowReviews": "Zeige Berichtwertungen bei Waffen an",
+      "ShowReviews": "Zeige Bewertungen bei Waffen an",
       "ShowElemental": "Zeige Elementarschaden bei Waffen an",
       "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen.",
       "AllowIdPostToDtrLine2": "Teile deinen Account-Namen und überprüfte Elemente mit Destiny Tracker.",
@@ -327,8 +330,10 @@
       "InventoryColumns": "Charakter Inventar Spalten",
       "VaultColumns": "Maximale Anzahl von Spalten des Tresors",
       "ColumnSize": "{num} Gegenstände",
+      "ColumnSizeAuto": "Auto",
       "SizeItem": "Item Größe",
       "ResetToDefault": "Zurücksetzen",
+      "ColorA11y": "Konfiguration für Farbenblinde",
       "CharacterOrder": "Charakter Reihenfolge",
       "CharacterOrderRecent": "Nach zuletzt aktivem Charakter",
       "CharacterOrderReversed": "Nach zuletzt aktivem Charakter (umgekehrt)",
@@ -365,8 +370,7 @@
       "IndexedDBStorage": "Lokaler Browser Speicher",
       "Details": {
         "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
-        "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
-        "IndexedDBStorage": "Lokales Speichern speichert deine Informationen nur in diesem Browser. Der Browser könnte diese Informationen löschen, wenn du keinen freien Speicher mehr hast oder DIM nicht regelmäßig besuchst."
+        "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite."
       },
       "ForceSync": "Erzwinge Synchronisation",
       "DriveSync": "Bei Google Drive anmelden",
@@ -414,6 +418,10 @@
       "ShadersAndEmblems": "Shader & Abzeichen",
       "Emotes": "Gesten"
    },
+   "Activities": {
+      "Activities": "Aktivitäten",
+      "Hard": "Schwer"
+   },
    "RecordBooks": {
       "RecordBooks": "Urkundenbücher",
       "HideCompleted": "Abgeschlossene Rekorde nicht anzeigen"
@@ -430,6 +438,7 @@
          "FAQKeyboard": "Unterstützt DIM Tastaturkürzel?",
          "FAQKeyboardAnswer": "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen.",
          "FAQLogout": "Wie kann ich mich von DIM abmelden?",
+         "FAQLogoutAnswer": "Gehe zu den Einstellungen (Zahnrad Symbol) und klicke \"Abmelden\"",
          "FAQLostItem": "Ich habe durch euer Tool einen Gegenstand verloren!",
          "FAQLostItemAnswer": "Sehr wahrscheinlich ist eine Übertragung fehlgeschlagen, so dass der Gegenstand im Tresor oder auf einem anderen Charakter gelandet ist. Du kannst nach dem Gegenstand suchen. Wenn du ihn trotzdem nicht findest, aktualisiere die App, indem du F5 drückst. Schau auf Bungie.net oder im Spiel nach, um zu sehen wo sich der Gegenstand befindet. Wir sind sicher, er ist da.",
          "GitHub": "GitHub",
