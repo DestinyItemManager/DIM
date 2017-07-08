@@ -76,6 +76,8 @@ class ReviewDataCache {
                     userReview) {
     const matchingItem = this._getMatchingItem(item);
 
+    this._markItemAsLocallyCached(item, true);
+
     const rating = matchingItem.rating;
 
     Object.assign(matchingItem,
@@ -115,8 +117,21 @@ class ReviewDataCache {
     return this._itemStores;
   }
 
+  /**
+   * Should we consider this item locally cached with changes?
+   * 
+   * @param {any} item 
+   * @param {bool} isCached 
+   * @memberof ReviewDataCache
+   */
+  _markItemAsLocallyCached(item,
+                           isCached) {
+    item.isLocallyCached = isCached;
+  }
+
   markItemAsReviewedAndSubmitted(item,
                                  userReview) {
+    this._markItemAsLocallyCached(item, false);
     const matchingItem = this._getMatchingItem(item);
 
     if (matchingItem.reviews) {

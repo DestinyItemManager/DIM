@@ -9,7 +9,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.canCreateReview = (vm.canReview && vm.item.owner);
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
-  vm.expandReview = false;
+  vm.expandReview = vm.item.isLocallyCached;
 
   vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
