@@ -73,8 +73,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   function processActivities(defs, stores, rawActivity) {
     const activity = {
       hash: rawActivity.display.activityHash,
-      // having trouble finding the i18n version of the name.
-      name: rawActivity.display.advisorTypeCategory,
+      name: defs.Activity[rawActivity.display.activityHash].activityName,
       icon: rawActivity.display.icon,
       image: rawActivity.display.image,
     };
