@@ -115,6 +115,21 @@ class ReviewDataCache {
     return this._itemStores;
   }
 
+  markItemAsReviewedAndSubmitted(item,
+                                 userReview) {
+    const matchingItem = this._getMatchingItem(item);
+
+    if (matchingItem.reviews) {
+      matchingItem.reviews = _.find(matchingItem.reviews, { isReviewer: false });
+    }
+
+    if (!matchingItem.reviews) {
+      matchingItem.reviews = [];
+    }
+
+    matchingItem.reviews.unshift(userReview);
+  }
+
   /**
    * There's a 10 minute delay between posting an item review to the DTR API
    * and being able to fetch that review from it.
