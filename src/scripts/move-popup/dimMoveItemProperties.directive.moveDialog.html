@@ -28,7 +28,7 @@
       <div ng-if="vm.item.objectives" translate-values="{ percent: vm.item.percentComplete }" translate="ItemService.PercentComplete"></div>
       <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
     </div>
-    <div ng-show="vm.item.reviewable && vm.item.totalReviews" class="item-review-average">
+    <div ng-if="vm.item.reviewable && vm.item.dtrRating" class="item-review-average">
       <star-rating rating="vm.item.dtrRating" read-only></star-rating>
       <span translate="DtrReview.AverageRating" translate-values="{ itemRating: vm.item.dtrRating, numRatings: vm.item.totalReviews }"></span>
     </div>
