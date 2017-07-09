@@ -202,7 +202,9 @@ module.exports = (env) => {
         // Use a WebAssembly version of SQLite, if possible
         '$featureFlags.wasm': JSON.stringify(false),
         // Enable color-blind a11y
-        '$featureFlags.colorA11y': JSON.stringify(env !== 'release')
+        '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
+        // Enable activities tab
+        '$featureFlags.activities': JSON.stringify(env !== 'release')
       }),
 
       new webpack.optimize.ModuleConcatenationPlugin(),
