@@ -262,7 +262,7 @@
       "Take": "Tomar",
       "Vault": "Cofre",
       "LockUnlock": "{locked, select, false{Travar} other{Destravar}} {itemType}",
-      "TrackUntrack": "{tracked, select, false{Seguir} other {No seguir}} {itemType}"
+      "TrackUntrack": "{tracked, select, false{Seguir} other{No seguir}} {itemType}"
    },
    "MoveAmount": {
       "Min": "Quantidade mínima (1)",
