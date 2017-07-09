@@ -28,8 +28,6 @@
         "Twitter": "Tenez-vous informer sur:",
         "ItemUniqueness": "Unicité d'un objet",
         "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
-        "ItemUniquenessExplanation_male": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
-        "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
         "VendorNotFound": "Les données du vendeur sont indisponible."
     },
     "Compare": {
@@ -69,13 +67,9 @@
     "FarmingMode": {
         "FarmingMode": "Mode Farming (transfert d'objets)",
         "Desc": "DIM est entrain de transférer des engrammes et objets pour Glimmer du {{store}} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
-        "Desc_male": "DIM est entrain de transférer des engrammes et objets pour Glimmer du {{store}} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
-        "Desc_female": "DIM est entrain de transférer des engrammes et objets pour Glimmer du {{store}} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
         "Configuration": "Configuration",
         "MakeRoom": {
             "Desc": "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {{store}} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
-            "Desc_male": "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {{store}} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
-            "Desc_female": "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {{store}} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
             "MakeRoom": "Faites de la place pour collecter des objets en déplaçant de l'équipement",
             "Tooltip": "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
         },
@@ -141,9 +135,7 @@
     "ItemService": {
         "BucketFull": {
             "Vault": "Il y a trop d'objet '{{itemtype}}' dans le {{store}}.",
-            "Guardian": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}.",
-            "Guardian_male": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}.",
-            "Guardian_female": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}."
+            "Guardian": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}."
         },
         "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
         "Classified2": "Objet classifié. Bungie n'a pas donné d'information à propos de cette objet. Cette objet n'est pas transférable pour le moment.",
@@ -249,20 +241,12 @@
         "AppliedAuto": "Constructeur de Loadout automatique",
         "Applied": "Votre loadout de {{amount}} objets a été transféré à votre {{store}}",
         "Applied_plural": "Votre loadout de {{amount}} objets a été transféré à votre {{store}}.",
-        "Applied_male": "Votre loadout de {{amount}} objets a été transféré à votre {{store}}",
-        "Applied_female": "Votre loadout de {{amount}} objets a été transféré à votre {{store}}",
-        "Applied_plural_male": "Votre loadout de {{amount}} objets a été transféré à votre {{store}}.",
-        "Applied_plural_female": "Votre loadout de {{amount}} objets a été transféré à votre {{store}}.",
         "AppliedError": "Aucun des objets de votre loadout n'a pu être transféré.",
         "AppliedWarn": "Votre loadout a été partiellement transféré, mais {{failed}} sur {{total}} objets ont échoué.",
         "NameRequired": "Un nom est requis.",
         "MakeRoom": "Faites de la place pour le Commit Des Postes",
         "MakeRoomDone": "À Fini de faire de la place pour 1 objet du Commit Des Postes en déplaçant 1 objet hors de {{store}}.",
         "MakeRoomDone_plural": "À Fini de faire de la place pour {{count}} objets du Commit Des Postes}} en déplaçant {{movedNum}} objets hors de {{store}}.",
-        "MakeRoomDone_male": "À Fini de faire de la place pour 1 objet du Commit Des Postes en déplaçant 1 objet hors de {{store}}.",
-        "MakeRoomDone_female": "À Fini de faire de la place pour 1 objet du Commit Des Postes en déplaçant 1 objet hors de {{store}}.",
-        "MakeRoomDone_plural_male": "À Fini de faire de la place pour {{count}} objets du Commit Des Postes}} en déplaçant {{movedNum}} objets hors de {{store}}.",
-        "MakeRoomDone_plural_female": "À Fini de faire de la place pour {{count}} objets du Commit Des Postes}} en déplaçant {{movedNum}} objets hors de {{store}}.",
         "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commit Des Postes: {{error}}.",
         "SaveErrorTitle": "Erreur lors de l'enregistrement du loadout",
         "SaveErrorDescription": "Impossible d'enregistrer le loadout {{loadoutName}}: {{error}}",

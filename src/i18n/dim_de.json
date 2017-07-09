@@ -28,8 +28,6 @@
         "Twitter": "Hol dir Statusupdates auf:",
         "ItemUniqueness": "Item Einzigartigkeit",
         "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
-        "ItemUniquenessExplanation_male": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
-        "ItemUniquenessExplanation_female": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
         "VendorNotFound": "Händler Daten nicht verfügbar."
     },
     "Compare": {
@@ -69,13 +67,9 @@
     "FarmingMode": {
         "FarmingMode": "Farm Modus (verschickt Items)",
         "Desc": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-        "Desc_male": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-        "Desc_female": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
         "Configuration": "Einstellungen",
         "MakeRoom": {
             "Desc": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} zum Tresor oder anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
-            "Desc_male": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} zum Tresor oder anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
-            "Desc_female": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} zum Tresor oder anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
             "MakeRoom": "Mache Platz durch verschieben von Ausrüstung, um Items aufnehmen zu können",
             "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
         },
@@ -252,10 +246,6 @@
         "MakeRoom": "Schaffe Platz für Posstellenitems",
         "MakeRoomDone": "Platz für 1 Poststellenitem durch verschieben von {{movedNum}} Item vom {{store}} geschaffen.",
         "MakeRoomDone_plural": "Platz für {{count}} Poststellenitems durch verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
-        "MakeRoomDone_male": "Platz für 1 Poststellenitem durch verschieben von {{movedNum}} Item vom {{store}} geschaffen.",
-        "MakeRoomDone_female": "Platz für 1 Poststellenitem durch verschieben von {{movedNum}} Item vom {{store}} geschaffen.",
-        "MakeRoomDone_plural_male": "Platz für {{count}} Poststellenitems durch verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
-        "MakeRoomDone_plural_female": "Platz für {{count}} Poststellenitems durch verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
         "MakeRoomError": "Es kann kein Platz für alle Posstellengegenstände geschaffen werden: {{error}}.",
         "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
         "SaveErrorDescription": "Speichern des Loadouts {{loadoutName}} nicht möglich: {{error}}.",
@@ -458,6 +448,7 @@
             "FAQKeyboard": "Unterstützt DIM Tastaturkürzel?",
             "FAQKeyboardAnswer": "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen.",
             "FAQLogout": "Wie kann ich mich von DIM abmelden?",
+            "FAQLogoutAnswer": "Gehe zu den Einstellungen (Zahnrad Symbol) und klicke \"Abmelden\"",
             "FAQLostItem": "Ich habe durch euer Tool einen Gegenstand verloren!",
             "FAQLostItemAnswer": "Sehr wahrscheinlich ist eine Übertragung fehlgeschlagen, so dass der Gegenstand im Tresor oder auf einem anderen Charakter gelandet ist. Du kannst nach dem Gegenstand suchen. Wenn du ihn trotzdem nicht findest, aktualisiere die App, indem du F5 drückst. Schau auf Bungie.net oder im Spiel nach, um zu sehen wo sich der Gegenstand befindet. Wir sind sicher, er ist da.",
             "GitHub": "GitHub",

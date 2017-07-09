@@ -7,7 +7,7 @@
     <p ng-i18next="[i18next]({ store: vm.service.store.name, context: vm.service.store.gender }){{ vm.settings.farming.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc' }}"></p>
     <div class="item-details"><span>
       <p ng-i18next="FarmingMode.Configuration"></p>
-      <p><input id="make-room-for-items" type="checkbox" ng-change="vm.settings.save()" ng-model="vm.settings.farming.makeRoomForItems" /><label for="make-room-for-items" ng-i18next="[title]FarmingMode.MakeRoom.Tooltip;FarmingMode.MakeRoom"></label></p>
+      <p><input id="make-room-for-items" type="checkbox" ng-change="vm.settings.save()" ng-model="vm.settings.farming.makeRoomForItems" /><label for="make-room-for-items" ng-i18next="[title]FarmingMode.MakeRoom.Tooltip;FarmingMode.MakeRoom.MakeRoom"></label></p>
     </span><span>
       <p ng-i18next="FarmingMode.Quickmove"></p>
       <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
