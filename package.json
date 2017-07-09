@@ -16,8 +16,8 @@
     "build-beta": "npm run bundle -s -- --env=beta",
     "build-dev": "npm run bundle -s -- --env=dev --watch",
     "start": "npm run build-dev -s",
-    "publish-beta": "grunt download_translations && npm run build-beta -s && ruby ./badfiles.rb && grunt publish_beta",
-    "publish-release": "grunt download_translations && npm run build-release -s && ruby ./badfiles.rb && grunt publish_release",
+    "publish-beta": "npm run build-beta -s && ruby ./badfiles.rb && grunt publish_beta",
+    "publish-release": "npm run build-release -s && ruby ./badfiles.rb && grunt publish_release",
     "server": "webpack-dev-server --config ./config/webpack.js --env=dev"
   },
   "repository": {
