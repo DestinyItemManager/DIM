@@ -1,7 +1,7 @@
 <div ng-if="$ctrl.canReview == false">
   <form class="settings">
-    <div class="review-setting-table">
-      <div ng-show="$ctrl.featureFlags.reviewsEnabled">
+    <div ng-if="$ctrl.featureFlags.reviewsEnabled" class="review-setting-table">
+      <div>
         <div class="review-setting-table--name">
           <label for="showReviews" ng-i18next="Settings.ShowReviews"></label>
           <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/RATINGS.md" target="_blank" rel="noopener noreferrer"></a>
@@ -10,7 +10,7 @@
           <input type="checkbox" id="showReviews" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.showReviews"/>
         </div>
       </div>
-      <div ng-show="$ctrl.featureFlags.reviewsEnabled">
+      <div>
         <div class="review-setting-table--name">
           <label for="allowIdPostToDtr" ng-i18next="Settings.AllowIdPostToDtr"></label>
           <div>
@@ -73,6 +73,6 @@
       <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
       <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
     </div>
-    <div ng-bind="review.review"></div>
+    <div class="community-review--review" ng-bind="review.review"></div>
   </div>
 </div>
