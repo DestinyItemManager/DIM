@@ -1,6 +1,6 @@
 # Next
 
-* Fixed a bug where item data would stay in English despite your language settings.
+* Fixed a bug where item data would not respect your language settings.
 
 # 4.3.0
 
