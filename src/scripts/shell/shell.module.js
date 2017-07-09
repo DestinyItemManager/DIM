@@ -59,12 +59,12 @@ export const ShellModule = angular
       component: 'content', // TODO: rename the component
       resolve: {
         // TODO: move this to platform/account service
-        account: ($transition$, dimPlatformService) => {
+        account: ($transition$, dimPlatformService, $state) => {
           'ngInject';
 
-          // TODO: shouldn't need to load all platforms for this!
           const { membershipId, platformType } = $transition$.params();
 
+          // TODO: shouldn't need to load all platforms for this. How can we avoid that?
           return dimPlatformService.getPlatforms()
             .then(() => {
               // TODO: getPlatformMatching should be able to load an account that we don't know
@@ -75,7 +75,10 @@ export const ShellModule = angular
                 destinyVersion: 1
               });
               if (!account) {
-                return null;
+                // If we didn't load an account, kick out and re-resolve
+                if (!account) {
+                  $state.go('destiny1');
+                }
               }
               dimPlatformService.setActive(account);
               return account;

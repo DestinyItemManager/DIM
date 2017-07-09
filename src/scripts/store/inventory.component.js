@@ -8,20 +8,12 @@ export default {
   controller: InventoryController
 };
 
-function InventoryController($scope, dimStoreService, $state) {
+function InventoryController($scope, dimStoreService) {
   'ngInject';
 
   const vm = this;
 
-  // TODO: This should probably be the top level destiny1 component
-
   this.$onInit = function() {
-    console.log(vm.account);
-
-    if (!vm.account) {
-      $state.go('destiny1');
-    }
-
     // TODO: can I get rid of all getStores?
     vm.stores = dimStoreService.getStores();
     // TODO: OK, need to push this check into store service

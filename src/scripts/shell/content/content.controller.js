@@ -38,20 +38,10 @@ export default class ContentController {
     $scope.$watch(() => vm.settings.vaultMaxCol, (cols) => {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
-    if ($featureFlags.colorA11y) {
-      $scope.$watch(() => vm.settings.colorA11y, (color) => {
-        if (color && color !== '-') {
-          document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
-        } else {
-          document.querySelector('html').style.removeProperty("--color-filter");
-        }
-      });
-    }
 
     vm.featureFlags = {
       vendorsEnabled: $featureFlags.vendorsEnabled,
-      activities: $featureFlags.activities,
-      colorA11y: $featureFlags.colorA11y
+      activities: $featureFlags.activities
     };
     vm.vendorService = dimVendorService;
 
