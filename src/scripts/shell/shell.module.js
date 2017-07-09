@@ -27,18 +27,10 @@ export const ShellModule = angular
   .config(($stateProvider, $urlServiceProvider) => {
     'ngInject';
 
-    // Content state is the base for "full" DIM views with a header
-    $stateProvider.state({
-      name: 'content',
-      abstract: true,
-      component: 'content'
-    });
-
     // TODO: move this out of the module
     // A dummy state that'll redirect to the selected character's inventory
     $stateProvider.state({
       name: 'destiny1',
-      parent: 'content',
       url: '/d1',
       resolve: {
         activeAccount: (dimPlatformService) => {
@@ -57,13 +49,14 @@ export const ShellModule = angular
       }
     });
 
+    // destiny1account state is the base for "full" DIM views with a header that operate in the context of a particular Destiny 1 account.
     // TODO: move this, and/or replace "content" with this
     // TODO: use https://github.com/angular-ui/ui-router/wiki/Multiple-Named-Views to inject stuff into header
     $stateProvider.state({
       name: 'destiny1account',
       abstract: true,
-      parent: 'content',
       url: '/d1/:membershipId-{platformType:int}',
+      component: 'content', // TODO: rename the component
       resolve: {
         // TODO: move this to platform/account service
         account: ($transition$, dimPlatformService) => {

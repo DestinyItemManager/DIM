@@ -12,7 +12,7 @@ export default angular
 
     $stateProvider.state({
       name: 'activities',
-      parent: 'content',
+      parent: 'destiny1content',
       component: 'activities',
       url: '/activities'
     });

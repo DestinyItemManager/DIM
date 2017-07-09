@@ -25,6 +25,7 @@ export function ActivityTrackerDirective($document, $interval, dimActivityTracke
       const ONE_HOUR = 60 * 60 * 1000;
 
       const refresh = _.throttle(() => {
+        // TODO: fire an event instead. Individual pages should decide what to refresh, and their services should decide how to cache/dedup refreshes
         loadingTracker.addPromise(dimStoreService.reloadStores());
       }, ONE_MINUTE);
 

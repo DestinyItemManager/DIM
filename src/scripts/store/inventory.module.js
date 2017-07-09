@@ -8,15 +8,11 @@ export default angular
   .config(($stateProvider) => {
     'ngInject';
 
-    const states = [{
+    $stateProvider.state({
       name: 'inventory',
       parent: 'destiny1account',
       component: 'inventory',
       url: '/inventory'
-    }];
-
-    states.forEach((state) => {
-      $stateProvider.state(state);
     });
   })
   .name;
