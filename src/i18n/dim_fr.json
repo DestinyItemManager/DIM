@@ -371,7 +371,7 @@
       "Import": "Importer des données DIM depuis un fichier",
       "ImportSuccess": "Données DIM importées!",
       "ImportNoFile": "Aucun fichier sélectionné! ",
-      "ImportFromExtensionButton": "Importer des données",
+      "ImportFromExtensionButton": "Importer des données"
    },
    "StoreBucket": {
       "FillStack": "Remplir la pile ({amount})",
