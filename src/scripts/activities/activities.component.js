@@ -26,7 +26,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       return;
     }
 
-    stores = stores.filter((s) => s.id !== 'vault');
+    vm.stores = stores = stores.filter((s) => s.id !== 'vault');
 
     const whitelist = [
       'vaultofglass',

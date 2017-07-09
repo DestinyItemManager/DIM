@@ -1,23 +1,33 @@
 .activities {
-  back-link {
-    width: 100%;
-    margin-left: 20px;
-    display: block;
-  }
-
-  max-width: 1053px;
+  width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 20px);
+  width: calc((40px + var(--item-size) + (3 * (var(--item-size) + 8px))) * var(--num-characters) + ((var(--num-characters) - 1) * 12px));
   margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
 
-  .activity {
-    margin: 20px;
-    width: 311px;
+  .activities-characters {
+    display: flex;
+    margin-top: 12px;
   }
 
-  .activity-header {
-    position: relative;
+  .activities-character {
+    flex-shrink: 0;
+    display: flex;
+    margin-right: 12px;
+    width: calc(40px + 44px + (3 * (44px + 8px)));
+    width: calc(40px + var(--item-size) + (3 * (var(--item-size) + 8px)));
+
+    .character {
+      height: 46px;
+    }
+
+    .character-box {
+      border-bottom: none;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
+
   .activity-name {
     text-shadow: 2px 2px 5px black;
   }
@@ -31,21 +41,35 @@
     letter-spacing: 2px;
     font-size: 14px;
   }
+  .activity-info {
+    padding: 8px 0;
+    margin-bottom: 8px;
+  }
+  .activity-type {
+    float: right;
+    font-size: 0.85em;
+    text-shadow: 2px 2px 5px black;
+  }
+  .activity-progress {
+    position: relative;
+  }
 
   .activity-skulls {
     padding: 4px 0px;
-    font-size: .8em;
+    max-width: 350px;
+    margin: 0 auto;
 
     .small-icon {
-      height: 13px;
+      height: 16px;
       padding: 2px 7px;
       margin-right: 6px;
       float: left;
     }
   }
 
-  .activity-progress {
-    position: relative;
+  .title {
+    background: #999;
+    background-blend-mode: multiply;
   }
 
   .small-icon {
@@ -56,17 +80,23 @@
   }
 
   .tier-title {
-    padding: 0 32px;
-    background-color: #353535;
-    line-height: 34px;
-
+    margin-top: 10px;
     text-transform: uppercase;
+    position: absolute;
+    font-size: 12px;
+    color: #CCC;
+    &:first-child {
+      margin-top: 0px;
+    }
   }
 
-  .tier-row {
+  .tier-characters {
     display: flex;
-    justify-content: space-between;
-
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .tier-row {
+    text-align: center;
     img {
       padding-right: 4px;
     }
@@ -80,11 +110,14 @@
     display: inline-block;
     border: 2px solid #fff;
     margin: 2px;
-    margin-top: 6px;
   }
 
   .step-icon.complete {
     border-color: #ffce1f;
     background-color: rgba(255,206,31,0.4);
+  }
+
+  .weak {
+    color: #AAA;
   }
 }
