@@ -190,6 +190,13 @@ div:focus, span:focus {
     }
   }
 
+  /* OK this is getting silly. Time for some real breakpoints! */
+  .third-to-go {
+    @media (max-width: 375px) {
+      display: none;
+    }
+  }
+
   .menu {
     display: none;
     margin-right: none;
@@ -235,6 +242,43 @@ dd {
 .search-link {
   position: relative;
   top: -2px;
+
+  // Yikes this is a hack
+  @media (max-width: 375px) {
+    display: none;
+
+    &.show {
+      position: absolute;
+      left: 40px;
+      top: 4px;
+      display: block;
+
+      #filter-input {
+        width: 185px;
+        height: 28px;
+      }
+
+      .filter-help {
+        top: 8px;
+      }
+
+      .dim-input {
+        &:hover, &:focus {
+          background-color: #222;
+        }
+      }
+
+      input, select:focus {
+        font-size: 16px; // so iOS doesn't zoom
+      }
+    }
+  }
+}
+.search-button {
+  display: none;
+  @media (max-width: 375px) {
+    display: inline-block;
+  }
 }
 
 .filter-help {
@@ -273,7 +317,6 @@ h2, h3 {
 
 body {
   overflow-y: auto;
-  min-width: 410px;
   margin: 0 auto;
   padding-top: 40px;
   background-color: #434444;
