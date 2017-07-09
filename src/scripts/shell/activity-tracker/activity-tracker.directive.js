@@ -25,7 +25,7 @@ export function ActivityTrackerDirective($document, $interval, dimActivityTracke
       const ONE_HOUR = 60 * 60 * 1000;
 
       const refresh = _.throttle(() => {
-        //loadingTracker.addPromise(dimStoreService.reloadStores());
+        loadingTracker.addPromise(dimStoreService.reloadStores());
       }, ONE_MINUTE);
 
       const activeWithinLastHour = dimActivityTrackerService.activeWithinTimespan
