@@ -45,7 +45,7 @@ mod.filter('bungieBackground', () => {
  */
 mod.filter('equipped', () => {
   return function(items, isEquipped) {
-    return _.select(items || [], (item) => {
+    return _.filter(items || [], (item) => {
       return item.equipped === isEquipped;
     });
   };

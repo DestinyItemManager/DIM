@@ -1,5 +1,5 @@
 
-function run($rootScope, SyncService) {
+function run($rootScope, SyncService, $transitions, $location) {
   'ngInject';
 
   SyncService.init();
@@ -11,6 +11,12 @@ function run($rootScope, SyncService) {
   $rootScope.$DIM_BUILD_DATE = new Date($DIM_BUILD_DATE).toLocaleString();
 
   console.log(`DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.reddit.com/r/destinyitemmanager`);
+
+  if ($featureFlags.googleAnalyticsForRouter) {
+    $transitions.onSuccess({ }, () => {
+      ga('send', 'pageview', $location.path());
+    });
+  }
 }
 
 export default run;

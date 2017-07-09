@@ -159,7 +159,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
 
       clone.amount = Math.min(clone.amount, $event.shiftKey ? 5 : 1);
 
-      const dupe = _.findWhere(typeInventory, { hash: clone.hash, id: clone.id });
+      const dupe = _.find(typeInventory, { hash: clone.hash, id: clone.id });
 
       let maxSlots = 10;
       if (item.type === 'Material') {
@@ -227,32 +227,25 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
       } else if (item.equipped) {
         item.equipped = false;
       } else {
+        const allItems = _.flatten(Object.values(vm.loadout.items));
         if (item.isExotic) {
-          const exotic = _.chain(vm.loadout.items)
-            .values()
-            .flatten()
-            .findWhere({
-              sort: item.bucket.sort,
-              isExotic: true,
-              equipped: true
-            })
-            .value();
+          const exotic = _.find(allItems, {
+            sort: item.bucket.sort,
+            isExotic: true,
+            equipped: true
+          });
 
           if (!_.isUndefined(exotic)) {
             exotic.equipped = false;
           }
         }
 
-        _.chain(vm.loadout.items)
-          .values()
-          .flatten()
-          .where({
-            type: item.type,
-            equipped: true
-          })
-          .each((i) => {
-            i.equipped = false;
-          });
+        _.filter(allItems, {
+          type: item.type,
+          equipped: true
+        }).forEach((i) => {
+          i.equipped = false;
+        });
 
         item.equipped = true;
       }
@@ -271,27 +264,22 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
     const interestingStats = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
 
     let numInterestingStats = 0;
-    const combinedStats = _.chain(items)
-      .values()
-      .flatten()
-      .filter('equipped')
-      .map('stats')
-      .flatten()
-      .filter()
-      .filter((stat) => interestingStats.has(stat.id))
-      .reduce((stats, stat) => {
-        numInterestingStats++;
-        if (stats[stat.id]) {
-          stats[stat.id].value += stat.value;
-        } else {
-          stats[stat.id] = {
-            statHash: stat.statHash,
-            value: stat.value
-          };
-        }
-        return stats;
-      }, {})
-      .value();
+    const allItems = _.flatten(Object.values(items));
+    const equipped = _.filter(allItems, 'equipped');
+    const stats = _.flatten(_.map(equipped, 'stats'));
+    const filteredStats = _.filter(stats, (stat) => stat && interestingStats.has(stat.id));
+    const combinedStats = _.reduce(filteredStats, (stats, stat) => {
+      numInterestingStats++;
+      if (stats[stat.id]) {
+        stats[stat.id].value += stat.value;
+      } else {
+        stats[stat.id] = {
+          statHash: stat.statHash,
+          value: stat.value
+        };
+      }
+      return stats;
+    }, {});
 
     // Seven types of things that contribute to these stats, times 3 stats, equals
     // a complete set of armor, ghost and artifact.

@@ -12,10 +12,11 @@ import _ from 'underscore';
  * load in the user's actual settings, so it is a good sidea to
  * always watch the settings you are using.
  */
-export function SettingsService($rootScope, SyncService, $window, $translate) {
+export function SettingsService($rootScope, SyncService, $window, $translate, $q) {
   'ngInject';
 
   let _loaded = false;
+  const _ready = $q.defer();
 
   const destinyLanguages = ['de', 'en', 'fr', 'es', 'it', 'ja', 'pt-br'];
 
@@ -82,7 +83,9 @@ export function SettingsService($rootScope, SyncService, $window, $translate) {
           'settings-v1.0': _.omit(settings, 'save', 'itemTags')
         });
       });
-    }
+    },
+
+    ready: _ready.promise
   };
 
   // Load settings async
@@ -101,6 +104,7 @@ export function SettingsService($rootScope, SyncService, $window, $translate) {
     ];
 
     _loaded = true;
+    _ready.resolve();
 
     $rootScope.$evalAsync(() => {
       angular.merge(settings, savedSettings);

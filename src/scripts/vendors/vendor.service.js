@@ -77,14 +77,13 @@ function VendorService(
 
   const service = {
     vendorsLoaded: false,
-    reloadVendors: reloadVendors,
+    reloadVendors,
     // By hash
     vendors: {},
     totalVendors: 0,
     loadedVendors: 0,
-    countCurrencies: countCurrencies,
-    requestRatings: requestRatings,
-    _fulfillRatingsRequest: _fulfillRatingsRequest
+    requestRatings,
+    countCurrencies
     // TODO: expose getVendor promise, idempotently?
   };
 
@@ -162,8 +161,9 @@ function VendorService(
         })));
       })
       .then(() => {
+        $rootScope.$broadcast('dim-vendors-updated');
         service.vendorsLoaded = true;
-        service._fulfillRatingsRequest();
+        fulfillRatingsRequest();
       })
       .finally(() => {
         // Clear the reload promise so this can be called again
@@ -232,10 +232,8 @@ function VendorService(
         return vendor;
       })
       .catch((e) => {
-        // TODO: ???
-
         service.loadedVendors++;
-        // console.log(e);
+        console.error(`Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`, e);
         return null;
       });
   }
@@ -419,7 +417,9 @@ function VendorService(
           categoryItems.forEach((saleItem) => {
             const item = saleItem.item;
             if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
-              item.dtrRoll = _.compact(_.pluck(item.talentGrid.nodes, 'dtrRoll')).join(';');
+              if (item.talentGrid) {
+                item.dtrRoll = _.compact(_.pluck(item.talentGrid.nodes, 'dtrRoll')).join(';');
+              }
               hasArmorWeaps = true;
             }
             if (item.type === 'Ship' || item.type === 'Vehicle') {
@@ -476,11 +476,11 @@ function VendorService(
 
   function requestRatings() {
     _ratingsRequested = true;
-    _fulfillRatingsRequest();
+    fulfillRatingsRequest();
   }
 
-  function _fulfillRatingsRequest() {
-    if ((service.vendorsLoaded) && (_ratingsRequested)) {
+  function fulfillRatingsRequest() {
+    if (service.vendorsLoaded && _ratingsRequested) {
       dimDestinyTrackerService.updateVendorRankings(service.vendors);
     }
   }
@@ -494,18 +494,12 @@ function VendorService(
     if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
       return {};
     }
-    const currencies = _.chain(vendors)
-          .values()
-          .pluck('categories')
-          .flatten()
-          .pluck('saleItems')
-          .flatten()
-          .pluck('costs')
-          .flatten()
-          .pluck('currency')
-          .pluck('itemHash')
-          .unique()
-          .value();
+
+    const categories = flatMap(Object.values(vendors), 'categories');
+    const saleItems = flatMap(categories, 'saleItems');
+    const costs = flatMap(saleItems, 'costs');
+    const currencies = costs.map((c) => c.currency.itemHash);
+
     const totalCoins = {};
     currencies.forEach((currencyHash) => {
       // Legendary marks and glimmer are special cases
