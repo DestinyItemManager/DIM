@@ -109,21 +109,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
       manifestPromise = Promise
         .all([
           requireSqlLib(), // load in the sql.js library
-          Destiny1Api.getManifest()
-            .then((data) => {
-              const language = dimSettingsService.language;
-              const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
-
-              // Use the path as the version, rather than the "version" field, because
-              // Bungie can update the manifest file without changing that version.
-              const version = path;
-              service.version = version;
-
-              return loadManifestFromCache(version)
-                .catch((e) => {
-                  return loadManifestRemote(version, language, path);
-                });
-            })
+          loadManifest()
         ])
         .then(([SQLLib, typedArray]) => {
           service.statusText = `${$translate.instant('Manifest.Build')}...`;
@@ -183,6 +169,27 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
   };
 
   return service;
+
+  function loadManifest() {
+    return $q.all([
+      Destiny1Api.getManifest(),
+      dimSettingsService.ready // wait for settings to be ready
+    ])
+      .then(([data]) => {
+        const language = dimSettingsService.language;
+        const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+
+        // Use the path as the version, rather than the "version" field, because
+        // Bungie can update the manifest file without changing that version.
+        const version = path;
+        service.version = version;
+
+        return loadManifestFromCache(version)
+          .catch((e) => {
+            return loadManifestRemote(version, language, path);
+          });
+      });
+  }
 
   /**
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
