@@ -7,30 +7,33 @@ export const AccountSelectComponent = {
   controller: AccountSelectController
 };
 
-function AccountSelectController($scope, dimPlatformService, dimState, loadingTracker, ngDialog, OAuthTokenService, $state) {
+function AccountSelectController($scope, dimPlatformService, loadingTracker, ngDialog, OAuthTokenService, $state) {
   'ngInject';
 
   const vm = this;
   let dialogResult = null;
 
-  // TODO: s/platform/account
-
   vm.loadingTracker = loadingTracker;
-  vm.platforms = [];
+  vm.accounts = [];
 
-  vm.platformChange = function platformChange(platform) {
-    loadingTracker.addPromise(dimPlatformService.setActive(platform));
+  vm.accountChange = function accountChange(account) {
+    loadingTracker.addPromise(dimPlatformService.setActive(account));
   };
 
   $scope.$on('dim-platforms-updated', (e, args) => {
-    vm.platforms = args.platforms;
+    vm.accounts = args.platforms;
   });
 
   $scope.$on('dim-active-platform-updated', (e, args) => {
-    vm.currentPlatform = args.platform;
+    vm.currentAccount = args.platform;
   });
 
-  loadingTracker.addPromise(dimPlatformService.getPlatforms());
+  const loadAccountsPromise = dimPlatformService.getPlatforms()
+    .then((accounts) => {
+      vm.accounts = accounts;
+      vm.currentAccount = dimPlatformService.getActive();
+    });
+  loadingTracker.addPromise(loadAccountsPromise);
 
   vm.logOut = function(e) {
     e.stopPropagation();
@@ -39,9 +42,9 @@ function AccountSelectController($scope, dimPlatformService, dimState, loadingTr
     $state.go('login', { reauth: true });
   };
 
-  vm.selectPlatform = function(e, platform) {
+  vm.selectAccount = function(e, account) {
     e.stopPropagation();
-    $state.go('inventory', platform);
+    $state.go('inventory', account);
   };
 
   vm.openDropdown = function(e) {
@@ -59,10 +62,10 @@ function AccountSelectController($scope, dimPlatformService, dimState, loadingTr
         controllerAs: '$ctrl',
         controller: function($scope) {
           'ngInject';
-          this.platforms = vm.platforms.filter((p) => p.membershipId !== vm.currentPlatform.membershipId || p.platformType !== vm.currentPlatform.platformType);
-          this.selectPlatform = (e, platform) => {
+          this.accounts = vm.accounts.filter((p) => p.membershipId !== vm.currentAccount.membershipId || p.platformType !== vm.currentAccount.platformType);
+          this.selectAccount = (e, account) => {
             $scope.closeThisDialog(); // eslint-disable-line angular/controller-as
-            vm.selectPlatform(e, platform);
+            vm.selectAccount(e, account);
           };
           this.logOut = (e) => {
             $scope.closeThisDialog(); // eslint-disable-line angular/controller-as
