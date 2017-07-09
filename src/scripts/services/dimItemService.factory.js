@@ -44,7 +44,7 @@ function ItemService(
       const stackable = item.maxStackSize > 1;
       // Items to be decremented
       const sourceItems = stackable
-            ? _.sortBy(_.select(source.buckets[item.location.id], (i) => {
+            ? _.sortBy(_.filter(source.buckets[item.location.id], (i) => {
               return i.hash === item.hash &&
                 i.id === item.id &&
                 !i.notransfer;
@@ -52,7 +52,7 @@ function ItemService(
       // Items to be incremented. There's really only ever at most one of these, but
       // it's easier to deal with as a list.
       const targetItems = stackable
-            ? _.sortBy(_.select(target.buckets[item.location.id], (i) => {
+            ? _.sortBy(_.filter(target.buckets[item.location.id], (i) => {
               return i.hash === item.hash &&
                 i.id === item.id &&
                 // Don't consider full stacks as targets

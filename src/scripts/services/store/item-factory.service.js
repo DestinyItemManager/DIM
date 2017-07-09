@@ -726,7 +726,7 @@ export function ItemFactory(
         return _.contains([1034209669, 1263323987, 193091484], node.hash); // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
       });
       if (armorNodes) {
-        activeArmorNode = _.findWhere(armorNodes, { activated: true }) || { hash: 0 };
+        activeArmorNode = _.find(armorNodes, { activated: true }) || { hash: 0 };
       }
     }
 

@@ -126,16 +126,14 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
 
     // Create a loadout from this store's equipped items
     loadoutFromCurrentlyEquipped: function(name) {
+      const allItems = this.items
+        .filter((item) => item.canBeInLoadout())
+        .map((i) => angular.copy(i));
       return {
         id: uuidv4(),
         classType: -1,
         name: name,
-        items: _(this.items)
-          .chain()
-          .select((item) => item.canBeInLoadout())
-          .map((i) => angular.copy(i))
-          .groupBy((i) => i.type.toLowerCase())
-          .value()
+        items: _.groupBy(allItems, (i) => i.type.toLowerCase())
       };
     },
 
