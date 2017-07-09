@@ -56,12 +56,12 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
 
   vm.downloadWeaponCsv = function() {
     dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
-    _gaq.push(['_trackEvent', 'Download CSV', 'Weapons']);
+    ga('send', 'event', 'Download CSV', 'Weapons');
   };
 
   vm.downloadArmorCsv = function() {
     dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Armor");
-    _gaq.push(['_trackEvent', 'Download CSV', 'Armor']);
+    ga('send', 'event', 'Download CSV', 'Armor');
   };
 
   vm.resetHiddenInfos = function() {

@@ -494,18 +494,12 @@ function VendorService(
     if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
       return {};
     }
-    const currencies = _.chain(vendors)
-          .values()
-          .pluck('categories')
-          .flatten()
-          .pluck('saleItems')
-          .flatten()
-          .pluck('costs')
-          .flatten()
-          .pluck('currency')
-          .pluck('itemHash')
-          .unique()
-          .value();
+
+    const categories = flatMap(Object.values(vendors), 'categories');
+    const saleItems = flatMap(categories, 'saleItems');
+    const costs = flatMap(saleItems, 'costs');
+    const currencies = costs.map((c) => c.currency.itemHash);
+
     const totalCoins = {};
     currencies.forEach((currencyHash) => {
       // Legendary marks and glimmer are special cases

@@ -28,7 +28,7 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
       return vm.store.percentToNextLevel;
     }
     if (vm.store.progression && vm.store.progression.progressions) {
-      const prestige = _.findWhere(vm.store.progression.progressions, {
+      const prestige = _.find(vm.store.progression.progressions, {
         progressionHash: 2030054750
       });
       vm.xpTillMote = $i18next.t('Stats.Prestige', {

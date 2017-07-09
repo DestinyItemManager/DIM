@@ -70,12 +70,11 @@ function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreServic
     const loadoutGuids = new Set(_.pluck(loadouts, 'id'));
     const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
 
-    const orphanIds = _.chain(data)
-      .filter(objectTest)
-      .filter(hasGuid)
-      .reject(containsLoadoutGuids)
-      .pluck('id')
-      .value();
+    const orphanIds = _.pluck(Object.values(data).filter((item) => {
+      return objectTest(item) &&
+        hasGuid(item) &&
+        !containsLoadoutGuids(item);
+    }), 'id');
 
     if (orphanIds.length > 0) {
       return SyncService.remove(orphanIds).then(() => loadouts);
@@ -208,7 +207,7 @@ function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreServic
       General: store.level === 40 ? .08 : .087
     };
     return (Math.floor(10 * _.reduce(loadout.items, (memo, items) => {
-      const item = _.findWhere(items, { equipped: true });
+      const item = _.find(items, { equipped: true });
 
       return memo + (item.primStat.value * itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
     }, 0)) / 10).toFixed(1);
@@ -404,7 +403,7 @@ function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreServic
         while (amountNeeded > 0) {
           const source = _.max(storesByAmount, 'amount');
           const amountToMove = Math.min(source.amount, amountNeeded);
-          const sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
+          const sourceItem = _.find(source.store.items, { hash: pseudoItem.hash });
 
           if (amountToMove === 0 || !sourceItem) {
             promise = promise.then(() => {
@@ -424,7 +423,7 @@ function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreServic
       }
     } else {
       if (item.type === 'Class') {
-        item = _.findWhere(store.items, {
+        item = _.find(store.items, {
           hash: pseudoItem.hash
         });
       }
@@ -508,18 +507,15 @@ function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreServic
       items: []
     };
 
-    result.items = _.chain(loadout.items)
-      .values()
-      .flatten()
-      .map((item) => {
-        return {
-          id: item.id,
-          hash: item.hash,
-          amount: item.amount,
-          equipped: item.equipped
-        };
-      })
-      .value();
+    const allItems = _.flatten(Object.values(loadout.items));
+    result.items = allItems.map((item) => {
+      return {
+        id: item.id,
+        hash: item.hash,
+        amount: item.amount,
+        equipped: item.equipped
+      };
+    });
 
     return result;
   }
