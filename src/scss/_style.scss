@@ -136,32 +136,11 @@ div:focus, span:focus {
     white-space: nowrap;
   }
 
-  .content {
-    margin: 0 auto;
-    padding: 8px 0 8px 1em;
-    > {
-      .link, .header-right {
-        margin-top: 1px;
-      }
-    }
-    span, a, img {
-      vertical-align: middle;
-      margin: 0 6px;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 13px;
-      line-height: 25px;
-      text-align: center;
-      -webkit-touch-callout: none;
-      user-select: none;
-      outline: none;
-    }
-  }
-
   .header-right {
     cursor: default;
     display: flex;
     margin-left: auto;
+    margin-right: 0;
     align-items: center;
     flex-direction: row;
   }

@@ -24,7 +24,7 @@ account {
   }
 
   &.selected-account {
-    margin: -9px 0 0 2px;
+    margin: 0 0 0 2px;
     padding-right: 19px;
 
     &::after {
@@ -51,18 +51,17 @@ account {
   display: block;
   overflow: auto;
   top: 42px;
-  right: 6px;
+  right: 12px;
   margin: 0;
   padding: 0;
   min-width: 150px;
+  height: fit-content;
 
   .ngdialog-content {
     background-color: #222;
   }
 
   account, .log-out {
-    width: 100%;
-
     &:hover, &:focus {
       background-color: #151515;
     }
