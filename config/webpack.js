@@ -212,7 +212,7 @@ module.exports = (env) => {
       new webpack.optimize.ModuleConcatenationPlugin(),
 
       // Enable if you want to debug the size of the chunks
-      //new Visualizer(),
+      // new Visualizer(),
     ],
 
     node: {

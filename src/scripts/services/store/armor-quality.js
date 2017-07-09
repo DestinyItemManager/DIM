@@ -125,8 +125,8 @@ function getQualityRange(light, quality) {
   }
 
   return `${(quality.min === quality.max || light === 335)
-          ? quality.min
-          : (`${quality.min}%-${quality.max}`)}%`;
+    ? quality.min
+    : (`${quality.min}%-${quality.max}`)}%`;
 }
 
 function fitValue(light) {

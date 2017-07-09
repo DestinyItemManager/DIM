@@ -16,10 +16,10 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     pros: ['fast', 'lol'],
     cons: ['ok']
   };
-//  vm.item.writtenReviews.forEach((review) => {
-//    aggregate.pros.push(review.pros);
-//    aggregate.cons.push(review.cons);
-//  });
+  //  vm.item.writtenReviews.forEach((review) => {
+  //    aggregate.pros.push(review.pros);
+  //    aggregate.cons.push(review.cons);
+  //  });
 
   vm.toggleEdit = function() {
     vm.expandReview = !vm.expandReview;

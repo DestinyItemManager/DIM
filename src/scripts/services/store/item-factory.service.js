@@ -668,8 +668,8 @@ export function ItemFactory(
       return {
         displayName: def.displayDescription ||
           (objective.isComplete
-           ? $translate.instant('Objectives.Complete')
-           : $translate.instant('Objectives.Incomplete')),
+            ? $translate.instant('Objectives.Complete')
+            : $translate.instant('Objectives.Incomplete')),
         progress: objective.progress,
         completionValue: def.completionValue,
         complete: objective.isComplete,
