@@ -203,6 +203,8 @@ module.exports = (env) => {
         '$featureFlags.wasm': JSON.stringify(false),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
+        // Whether to log page views for router events
+        '$featureFlags.googleAnalyticsForRouter': JSON.stringify(env !== 'release'),
         // Enable activities tab
         '$featureFlags.activities': JSON.stringify(env !== 'release')
       }),
