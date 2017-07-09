@@ -16,7 +16,7 @@ function InfoService(toaster, $i18next, SyncService) {
       content.func = content.func || function() {};
       content.hideable = content.hideable === undefined ? true : content.hideable;
 
-      function showToaster(body, save, timeout) {
+      function showToaster(body, timeout) {
         timeout = timeout || 0;
 
         body = `<p>${body}</p>`;
@@ -39,8 +39,9 @@ function InfoService(toaster, $i18next, SyncService) {
           },
           onHideCallback: function() {
             if ($(`#info-${id}`).is(':checked')) {
-              save[`info.${id}`] = 1;
-              SyncService.set(save);
+              SyncService.set({
+                [`info.${id}`]: 1
+              });
             }
           }
         });
@@ -51,11 +52,11 @@ function InfoService(toaster, $i18next, SyncService) {
           if (!data || data[`info.${id}`]) {
             return;
           }
-          showToaster(content.body, data, timeout);
+          showToaster(content.body, timeout);
           content.func();
         });
       } else {
-        showToaster(content.body, {}, timeout);
+        showToaster(content.body, timeout);
         content.func();
       }
     },

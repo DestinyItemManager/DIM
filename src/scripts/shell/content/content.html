@@ -19,7 +19,8 @@
     <a class="link" target="_blank" rel="noopener noreferrer" href="https://teespring.com/stores/dim" ng-i18next="Header.Shop"></a>
     <span class="link header-separator"></span>
     <span class="link" ng-click="$ctrl.toggleState('record-books')" ng-i18next="RecordBooks.RecordBooks"></span>
-    <span class="link" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{ disabled: !$ctrl.vendorService.vendorsLoaded }" ng-click="$ctrl.toggleState('vendors')" ng-i18next="Vendors.Vendors"></span>
+    <span class="link" ng-if="::$ctrl.featureFlags.activities" ng-click="$ctrl.toggleState('activities')" ng-i18next="Activities.Activities"></span>
+    <span class="link" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleState('vendors')" ng-i18next="Vendors.Vendors"></span>
     <span class="link" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
   </div>
 </div>

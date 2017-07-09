@@ -168,7 +168,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('update_chrome_release_manifest', function() {
-    var manifest = grunt.file.readJSON('dist/manifest.json');
+    var manifest = grunt.file.readJSON('extension-dist/manifest.json');
     manifest.version = pkg.version;
     grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
   });

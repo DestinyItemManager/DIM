@@ -381,6 +381,10 @@
         "ShadersAndEmblems": "Tonalizadores & Emblemas",
         "Emotes": "Gestos"
     },
+    "Activities": {
+        "Activities": "Atividades",
+        "Hard": "Difícil"
+    },
     "RecordBooks": {
         "RecordBooks": "Livro de Recordes",
         "HideCompleted": "Esconder os recordes completados"

@@ -10,6 +10,9 @@
         "Vault": "Coffres",
         "Weapons": "Armes"
     },
+    "BungieAlert": {
+        "Title": "Un message de Bungie:"
+    },
     "BungieService": {
         "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec bungie.net.",
         "Down": "Bungie.net est hors service.",
@@ -39,6 +42,7 @@
             "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {{class}}.",
             "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}."
         },
+        "ItemCount": "Vous avez {{num}} de ceci.",
         "Splits": "Comparer des parts similaires ({{quantity}})"
     },
     "Cooldown": {
@@ -88,7 +92,9 @@
         "About": "À propos",
         "Filters": "Filtres",
         "FilterHelp": "Rechercher objet/amélioration ou is:arc",
-        "Refresh": "Rafraîchir les données Destiny"
+        "Refresh": "Rafraîchir les données Destiny",
+        "SupportDIM": "Supporteurs",
+        "Shop": "Boutique"
     },
     "Help": {
         "BackToDIM": "Retour sur DIM",
@@ -161,6 +167,7 @@
         "LockedHelp": "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets",
         "FilterSets": "Filtrer les sets",
         "AdvancedOptions": "Options avancées",
+        "ContainsVendorItems": "Ce pré set contient des objets de marchand",
         "ProcessingMode": {
             "Fast": "Rapide",
             "Full": "Complet",
@@ -194,6 +201,7 @@
             "ChangeNodes": "Changer les nœuds d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque ensemble pré enregistré.",
             "StatsIncrease": "À mesure que le niveau de défense des objets augmente, les statistiques de cet objet (int/dis/for) augmentent également."
         },
+        "Equip": "Équiper sur {{character}}",
         "ShowAllConfigs": "Afficher toutes les configurations",
         "ShowConfigs": "Afficher les configurations",
         "HideAllConfigs": "Cacher toutes les configurations",
@@ -273,6 +281,8 @@
         "Unzip": "Désarchivage des dernières données de Destiny"
     },
     "MovePopup": {
+        "OverviewTab": "Vue d'ensemble",
+        "ReviewsTab": "Évaluations",
         "Consolidate": "Consolider",
         "DistributeEvenly": "Distribuer équitablement",
         "Equip": "Armer",
@@ -296,14 +306,21 @@
         "Help": "Ajouter des notes à cet objet"
     },
     "DtrReview": {
+        "ThankYou": "Merci d'avoir envoyé votre évaluation! Elle apparaitra bientôt.",
+        "Help": "Écrire une évaluation (optionnel)",
         "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
         "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
+        "YourReview": "Votre évaluation",
         "Edit": "Éditer",
         "Delete": "Supprimer",
         "Submit": "Envoyer",
         "Cancel": "Annuler",
         "Pros": "Avantages",
-        "Cons": "Désavantages"
+        "Cons": "Désavantages",
+        "NoReviews": "Il n'y a aucune évaluation pour cet objet, soyez le premier!",
+        "ServiceCallError": "Appel au service de Destiny tracker échoué.",
+        "ServiceSubmitError": "Envoie au service de Destiny tracker échoué",
+        "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations."
     },
     "Objectives": {
         "Complete": "Achevée",
@@ -315,7 +332,13 @@
     },
     "Settings": {
         "Settings": "Paramètres",
+        "LogOutDesc": "Se déconnecter de DIM, ou changer de compte Bungie.net",
+        "LogOut": "Se déconnecter",
         "Language": "Langue (redémarrez DIM pour prendre effet)",
+        "HideUnfiltered": "Cacher les objets qui ne correspondent pas à une recherche",
+        "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures",
+        "ShowOverlay": "Afficher les nouveaux items avec un overlay brillant",
+        "ShowAnimations": "Animer les nouveaux objets",
         "ShowElemental": "Afficher les icônes d'élément de dégât sur les armes",
         "SetSortHelp": "Ordonner les objets par rareté ou par la valeur de leur stat première.",
         "ResetToDefault": "Réinitialiser",
@@ -365,6 +388,10 @@
         "Bounties": "Contrats",
         "ShadersAndEmblems": "Revêtements & Emblèmes",
         "Emotes": "Intéractions"
+    },
+    "Activities": {
+        "Activities": "Activités",
+        "Hard": "Difficile"
     },
     "RecordBooks": {
         "RecordBooks": "Livre des Records",

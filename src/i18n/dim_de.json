@@ -10,6 +10,9 @@
         "Vault": "Tresor",
         "Weapons": "Waffen"
     },
+    "BungieAlert": {
+        "Title": "Eine Nachricht von Bungie:"
+    },
     "BungieService": {
         "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
         "Down": "Bungie.net ist nicht erreichbar.",
@@ -335,7 +338,7 @@
         "ShowOverlay": "Hebe neue Gegenstände mit einem glänzenden Icon hervor",
         "ShowAnimations": "Animiere den neuen, hervorgehobenen Gegenstand",
         "ShowAnimationsHelp": "Animiert die Hervorhebung bei neuen Gegenständen. Deaktivierung senkt CPU Belastung",
-        "ShowReviews": "Zeige Berichtwertungen bei Waffen an",
+        "ShowReviews": "Zeige Bewertungen bei Waffen an",
         "ShowElemental": "Zeige Elementarschaden bei Waffen an",
         "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen.",
         "AllowIdPostToDtrLine2": "Teile deinen Account-Namen und überprüfte Elemente mit Destiny Tracker.",
@@ -347,8 +350,10 @@
         "InventoryColumns": "Charakter Inventar Spalten",
         "VaultColumns": "Maximale Anzahl von Spalten des Tresors",
         "ColumnSize": "{{num}} Gegenstände",
+        "ColumnSizeAuto": "Auto",
         "SizeItem": "Item Größe",
         "ResetToDefault": "Zurücksetzen",
+        "ColorA11y": "Konfiguration für Farbenblinde",
         "CharacterOrder": "Charakter Reihenfolge",
         "CharacterOrderRecent": "Nach zuletzt aktivem Charakter",
         "CharacterOrderReversed": "Nach zuletzt aktivem Charakter (umgekehrt)",

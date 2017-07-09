@@ -10,7 +10,6 @@ angular.module('dimApp')
 
 function DestinyTrackerService($q,
                                $http,
-                               $rootScope,
                                dimPlatformService,
                                dimSettingsService,
                                $i18next,
@@ -20,24 +19,6 @@ function DestinyTrackerService($q,
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-
-  $rootScope.$on('item-clicked', (event, item) => {
-    if (dimSettingsService.allowIdPostToDtr) {
-      _reviewsFetcher.getItemReviews(item);
-    }
-  });
-
-  $rootScope.$on('dim-stores-updated', (event, stores) => {
-    if (dimSettingsService.showReviews) {
-      _bulkFetcher.bulkFetch(stores);
-    }
-  });
-
-  $rootScope.$on('review-submitted', (event, item) => {
-    if (dimSettingsService.allowIdPostToDtr) {
-      _reviewSubmitter.submitReview(item);
-    }
-  });
 
   return {
     reattachScoresFromCache: function(stores) {
@@ -51,7 +32,22 @@ function DestinyTrackerService($q,
     },
     updateVendorRankings: function(vendors) {
       if (dimSettingsService.showReviews) {
-        _bulkFetcher.bulkFetch(vendors);
+        _bulkFetcher.bulkFetchVendorItems(vendors);
+      }
+    },
+    getItemReviews: function(item) {
+      if (dimSettingsService.allowIdPostToDtr) {
+        _reviewsFetcher.getItemReviews(item);
+      }
+    },
+    submitReview: function(item) {
+      if (dimSettingsService.allowIdPostToDtr) {
+        _reviewSubmitter.submitReview(item);
+      }
+    },
+    fetchReviews: function(stores) {
+      if (dimSettingsService.showReviews) {
+        _bulkFetcher.bulkFetch(stores);
       }
     }
   };
