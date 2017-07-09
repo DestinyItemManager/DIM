@@ -6,20 +6,24 @@ export function ScrollClass() {
     restrict: 'A',
     scope: {},
     link: function($scope, elem, attrs) {
-      let prevScrolled;
+      const threshold = attrs.scrollClassThreshold || 0;
 
-      function stickyHeader(e) {
-        const scrolled = document.body.scrollTop !== 0;
-        if (scrolled !== prevScrolled) {
-          $(document.body).toggleClass(attrs.scrollClass, scrolled);
-        }
-        prevScrolled = scrolled;
+      function stickyHeader() {
+        const scrolled = document.body.scrollTop > threshold;
+        elem[0].classList.toggle(attrs.scrollClass, scrolled);
       }
 
-      $(document).on('scroll', stickyHeader);
+      let rafTimer;
+      function scrollHandler() {
+        cancelAnimationFrame(rafTimer);
+        rafTimer = requestAnimationFrame(stickyHeader);
+      }
+
+      document.addEventListener('scroll', scrollHandler, false);
 
       $scope.$on('$destroy', () => {
-        $(document).off('scroll', stickyHeader);
+        document.removeEventListener('scroll', scrollHandler);
+        cancelAnimationFrame(rafTimer);
       });
     }
   };
