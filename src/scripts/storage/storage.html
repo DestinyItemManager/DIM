@@ -62,7 +62,7 @@
     </button>
   </div>
 
-  <div class="storage-adapter">
+  <div class="storage-adapter" ng-if="$ctrl.supportsExport">
     <h2 ng-i18next="Storage.ImportExport"></h2>
     <p>
       <button class="dim-button" ng-click="$ctrl.exportData()">

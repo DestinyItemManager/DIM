@@ -76,6 +76,8 @@ class ReviewDataCache {
                     userReview) {
     const matchingItem = this._getMatchingItem(item);
 
+    this._markItemAsLocallyCached(item, true);
+
     const rating = matchingItem.rating;
 
     Object.assign(matchingItem,
@@ -113,6 +115,26 @@ class ReviewDataCache {
    */
   getItemStores() {
     return this._itemStores;
+  }
+
+  _markItemAsLocallyCached(item,
+                           isCached) {
+    item.isLocallyCached = isCached;
+  }
+
+  markItemAsReviewedAndSubmitted(item,
+                                 userReview) {
+    this._markItemAsLocallyCached(item, false);
+    const matchingItem = this._getMatchingItem(item);
+
+    if (matchingItem.reviews) {
+      matchingItem.reviews = _.reject(matchingItem.reviews, { isReviewer: true });
+    }
+    else {
+      matchingItem.reviews = [];
+    }
+
+    matchingItem.reviews.unshift(userReview);
   }
 
   /**

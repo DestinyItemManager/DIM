@@ -15,6 +15,9 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   vm.adapterStats = {};
   vm.googleApiBlocked = !window.gapi;
 
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  vm.supportsExport = !iOS;
+
   function dataStats(data) {
     const taggedItems = sum(Object.keys(data)
                             .filter((k) => k.startsWith('dimItemInfo'))

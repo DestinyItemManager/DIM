@@ -13,7 +13,9 @@ const lazyTables = [
   'VendorCategory',
   'RecordBook',
   'ActivityCategory',
-  'ScriptedSkull'
+  'ScriptedSkull',
+  'Activity',
+  'ActivityType'
 ];
 
 const eagerTables = [
@@ -21,8 +23,7 @@ const eagerTables = [
   'Class',
   'Race',
   'Faction',
-  'Vendor',
-  'Activity'
+  'Vendor'
 ];
 
 const mod = angular.module('dimApp');

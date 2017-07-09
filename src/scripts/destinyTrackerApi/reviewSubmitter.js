@@ -67,8 +67,19 @@ class ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
+  _markItemAsReviewedAndSubmitted(item) {
+    const review = this.toRatingAndReview(item);
+    review.isReviewer = true;
+    review.reviewer = this._getReviewer();
+    review.timestamp = new Date().toISOString();
+
+    this._reviewDataCache.markItemAsReviewedAndSubmitted(item,
+                                                         review);
+  }
+
   submitReview(item) {
     this._submitReviewPromise(item)
+      .then(this._markItemAsReviewedAndSubmitted(item))
       .then(this._eventuallyPurgeCachedData(item));
   }
 }
