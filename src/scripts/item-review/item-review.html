@@ -73,6 +73,6 @@
       <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
       <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
     </div>
-    <div ng-bind="review.review"></div>
+    <div class="community-review--review" ng-bind="review.review"></div>
   </div>
 </div>
