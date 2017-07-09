@@ -117,13 +117,6 @@ class ReviewDataCache {
     return this._itemStores;
   }
 
-  /**
-   * Should we consider this item locally cached with changes?
-   *
-   * @param {any} item
-   * @param {bool} isCached
-   * @memberof ReviewDataCache
-   */
   _markItemAsLocallyCached(item,
                            isCached) {
     item.isLocallyCached = isCached;
@@ -137,8 +130,7 @@ class ReviewDataCache {
     if (matchingItem.reviews) {
       matchingItem.reviews = _.reject(matchingItem.reviews, { isReviewer: true });
     }
-
-    if (!matchingItem.reviews) {
+    else {
       matchingItem.reviews = [];
     }
 
