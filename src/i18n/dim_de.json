@@ -390,8 +390,7 @@
         "IndexedDBStorage": "Lokaler Browser Speicher",
         "Details": {
           "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
-          "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
-          "IndexedDBStorage": "Lokales Speichern speichert deine Informationen nur in diesem Browser. Der Browser könnte diese Informationen löschen, wenn du keinen freien Speicher mehr hast oder DIM nicht regelmäßig besuchst."
+          "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite."
         },
         "ForceSync": "Erzwinge Synchronisation",
         "DriveSync": "Bei Google Drive anmelden",
@@ -438,6 +437,10 @@
         "Bounties": "Beutezüge",
         "ShadersAndEmblems": "Shader & Abzeichen",
         "Emotes": "Gesten"
+    },
+    "Activities": {
+        "Activities": "Aktivitäten",
+        "Hard": "Schwer"
     },
     "RecordBooks": {
         "RecordBooks": "Urkundenbücher",
