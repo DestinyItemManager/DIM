@@ -668,13 +668,8 @@ export function ItemFactory(
       return {
         displayName: def.displayDescription ||
           (objective.isComplete
-<<<<<<< HEAD
-           ? $i18next.t('Objectives.Complete')
-           : $i18next.t('Objectives.Incomplete')),
-=======
-            ? $translate.instant('Objectives.Complete')
-            : $translate.instant('Objectives.Incomplete')),
->>>>>>> refs/remotes/DestinyItemManager/master
+            ? $i18next.t('Objectives.Complete')
+            : $i18next.t('Objectives.Incomplete')),
         progress: objective.progress,
         completionValue: def.completionValue,
         complete: objective.isComplete,
