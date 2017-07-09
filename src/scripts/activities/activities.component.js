@@ -89,8 +89,11 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       activity.skulls = rawSkullCategories[0].skulls;
     }
 
+    if (activity.skulls && vm.settings.language !== 'en') {
+      activity.skulls = i18nActivitySkulls(activity.skulls, defs);
+    }
+
     // flatten modifiers and bonuses for now.
-    // unfortunetly skulls don't have a hash w/ them so no i18n.
     if (activity.skulls) {
       activity.skulls = _.flatten(activity.skulls);
     }
@@ -127,6 +130,45 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       complete: tier.activityData.isCompleted,
       characters: characters
     };
+  }
+
+  function i18nActivitySkulls(skulls, defs) {
+    const skullHashes = [
+      { displayName: "Heroic", hash: 0 },
+      { displayName: "Arc Burn", hash: 1 },
+      { displayName: "Solar Burn", hash: 2 },
+      { displayName: "Void Burn", hash: 3 },
+      { displayName: "Berserk", hash: 4 },
+      { displayName: "Brawler", hash: 5 },
+      { displayName: "Lightswitch", hash: 6 },
+      { displayName: "Small Arms", hash: 7 },
+      { displayName: "Specialist", hash: 8 },
+      { displayName: "Juggler", hash: 9 },
+      { displayName: "Grounded", hash: 10 },
+      { displayName: "Bloodthirsty", hash: 11 },
+      { displayName: "Chaff", hash: 12 },
+      { displayName: "Fresh Troops", hash: 13 },
+      { displayName: "Ironclad", hash: 14 },
+      { displayName: "Match Game", hash: 15 },
+      { displayName: "Exposure", hash: 16 },
+      { displayName: "Airborne", hash: 17 },
+      { displayName: "Catapult", hash: 18 },
+      { displayName: "Epic", hash: 20 }];
+
+    for (let i = 0, hash; i < skulls[0].length; i++) {
+      hash = _.where(skullHashes, { displayName: skulls[0][i].displayName });
+      hash = hash.length ? hash[0].hash : -1;
+      if (hash >= 0) {
+        if (hash < 20) { // set all skulls except for epic from heroic playlist...
+          skulls[0][i].displayName = defs.Activity[870614351].skulls[hash].displayName;
+          skulls[0][i].description = defs.Activity[870614351].skulls[hash].description;
+        } else { // set Epic skull based off of a nightfall
+          skulls[0][i].displayName = defs.Activity[2234107290].skulls[0].displayName;
+          skulls[0][i].description = defs.Activity[2234107290].skulls[0].description;
+        }
+      }
+    }
+    return skulls;
   }
 }
 

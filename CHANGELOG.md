@@ -1,5 +1,7 @@
 # Next
 
+# 4.3.0
+
 * DIM is now just a website - the extension now just sends you to our website. This gives us one, more cross-platform, place to focus on and enables features we couldn't do with just an extension. Don't forget to import your data from the storage page!
 * Scrolling should be smoother overall.
 * Vendor weapons now show reviews.
