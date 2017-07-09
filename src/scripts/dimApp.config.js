@@ -22,7 +22,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
 
   // See https://github.com/i18next/ng-i18next
   window.i18next.init({
-    debug: true,
+    debug: $DIM_FLAVOR === 'dev',
     fallbackLng: 'en',
     lowerCaseLng: true,
     interpolation: {
