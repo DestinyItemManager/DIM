@@ -407,6 +407,7 @@
          "Header": "Acerca de Destiny Item Manager (DIM)",
          "HowItsMade": "DIM fue construido sobre los mismos servicios que utiliza Bungie.net y la Aplicación complementaria de Destiny. DIM puede accesar los artículos dentro de el Inventario de tus Guardianes y el Depósito para ambos Xbox y PlayStation. Después puedes arrastrar y soltar los objetos a donde gustes moverlos.",
          "Reddit": "Reddit",
+         "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, háznoslas saber!",
          "Twitter": "Twitter",
          "TwitterHelp": "Asegúrate de seguirnos para estar informado de las actualizaciones e información de la aplicación en tiempo real.",
          "Version": "Versión {version} ({flavor}), built on {date}",
