@@ -95,7 +95,7 @@
     "angular-messages": "^1.6.5",
     "angular-native-dragdrop": "^1.2.2",
     "angular-promise-tracker": "^2.2.2",
-    "angular-sanitize": "^1.6.4",
+    "angular-sanitize": "^1.6.5",
     "angularjs-slider": "^5.9.0",
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
     "babel-polyfill": "^6.20.0",
