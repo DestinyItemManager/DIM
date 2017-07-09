@@ -27,7 +27,7 @@ function AccountSelectController($scope, dimPlatformService, dimState, loadingTr
   });
 
   $scope.$on('dim-active-platform-updated', (e, args) => {
-    dimState.active = vm.currentPlatform = args.platform;
+    vm.currentPlatform = args.platform;
   });
 
   loadingTracker.addPromise(dimPlatformService.getPlatforms());
@@ -41,11 +41,7 @@ function AccountSelectController($scope, dimPlatformService, dimState, loadingTr
 
   vm.selectPlatform = function(e, platform) {
     e.stopPropagation();
-    // dimPlatformService.setActive(platform);
-    $state.go('inventory', {
-      destinyMembershipId: platform.membershipId,
-      platformType: platform.platformType
-    });
+    $state.go('inventory', platform);
   };
 
   vm.openDropdown = function(e) {

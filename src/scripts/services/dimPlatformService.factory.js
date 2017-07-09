@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $state) {
+function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $state, $q, dimState) {
   let _platforms = [];
   let _active = null;
 
@@ -27,6 +27,10 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
    */
   // TODO: return a list of bungie accounts and associated destiny accounts?
   function getPlatforms() {
+    if (_platforms.length) {
+      return $q.resolve(_platforms);
+    }
+
     // TODO: wire this up with observables?
     return BungieAccountService.getBungieAccounts()
       .then((bungieAccounts) => {
@@ -83,6 +87,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
       promise = SyncService.set({ platformType: platform.platformType });
     }
 
+    dimState.active = platform;
     $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
     return promise;
   }
@@ -95,6 +100,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
       _platforms = _platforms.filter((p) => p !== platform);
       $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
       setActive(_platforms[0]);
+      $state.go('destiny1'); // try for another platform
     } else {
       // Nothing we can do
       throw e;

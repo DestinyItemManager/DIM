@@ -104,33 +104,22 @@ function StoreService(
    * If this is called while a reload is already happening, it'll return the promise
    * for the ongoing reload rather than kicking off a new reload.
    */
-  // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
   // TODO: this feels like a good use for observables
-  function reloadStores(platform) {
-    if (!platform) {
-      platform = {
-        destinyMembershipId: $stateParams.destinyMembershipId,
-        platformType: $stateParams.platformType
-      };
+  function reloadStores(account) {
+    // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
+    if (!account) {
+      console.error('reloadStores called without account');
+      if ($stateParams.membershipId && $stateParams.platformType) {
+        account = {
+          membershipId: $stateParams.membershipId,
+          platformType: $stateParams.platformType
+        };
+      } else {
+        throw new Error("Don't know membership ID and platform type");
+      }
     }
 
-    // TODO: shouldn't need any of this
-    let activePlatform = dimPlatformService.getPlatformMatching({
-      membershipId: platform.destinyMembershipId,
-      platformType: platform.platformType
-    });
-    if (!activePlatform) {
-      // TODO: gotta mark the difference between viewing somebody else's thing and yours
-      // disable tagging, rating, moving, etc
-      // if it's not one of ours, you shouldn't load vault
-
-      activePlatform = {
-        membershipId: platform.destinyMembershipId,
-        platformType: platform.platformType
-      };
-    }
-
-    const promiseCacheKey = `${platform.destinyMembershipId}-${platform.platformType}`;
+    const promiseCacheKey = `${account.membershipId}-${account.platformType}`;
     let reloadPromise = _reloadPromises[promiseCacheKey];
 
     if (reloadPromise) {
@@ -146,9 +135,9 @@ function StoreService(
     const dataDependencies = [
       dimDefinitions.getDefinitions(),
       dimBucketService.getBuckets(),
-      NewItemsService.loadNewItems(activePlatform),
-      dimItemInfoService(activePlatform),
-      Destiny1Api.getStores(activePlatform)
+      NewItemsService.loadNewItems(account),
+      dimItemInfoService(account),
+      Destiny1Api.getStores(account)
     ];
 
     reloadPromise = $q.all(dataDependencies)
@@ -177,7 +166,7 @@ function StoreService(
         }
 
         _stores = stores;
-        service.activePlatform = activePlatform;
+        service.activePlatform = account;
 
         // TODO: knock this out
         $rootScope.$broadcast('dim-stores-updated', {
@@ -198,8 +187,8 @@ function StoreService(
         return stores;
       })
       .catch((e) => {
-        if (e.code === 1601) { // DestinyAccountNotFound
-          return dimPlatformService.reportBadPlatform(activePlatform, e);
+        if (e.code === 1601 || e.code === 1618) { // DestinyAccountNotFound
+          return dimPlatformService.reportBadPlatform(account, e);
         }
         throw e;
       })

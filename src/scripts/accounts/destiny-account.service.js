@@ -49,7 +49,6 @@ export function DestinyAccountService(BungieUserApi, toaster) {
         membershipId: destinyAccount.membershipId
       };
       account.platformLabel = PLATFORMS[account.platformType].label;
-      account.platformIcon = PLATFORMS[account.platformType].icon;
       return account;
     });
   }

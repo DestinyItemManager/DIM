@@ -41,29 +41,16 @@ export const ShellModule = angular
       parent: 'content',
       url: '/d1',
       resolve: {
-        activePlatform: (dimPlatformService) => {
+        activeAccount: (dimPlatformService) => {
           'ngInject';
-          // TODO: this is a mess
-          const activePlatform = dimPlatformService.getActive();
-          if (activePlatform) {
-            return activePlatform;
-          }
           return dimPlatformService.getPlatforms().then(() => dimPlatformService.getActive());
         }
       },
-      controller: ($state, activePlatform) => {
+      controller: ($state, activeAccount) => {
         'ngInject';
         // TODO: make sure it's a D1 platform, replicate this at the top level
-        console.log('controller?', activePlatform);
-        if (activePlatform) {
-          console.log('go to destiny1account.inventory', {
-            destinyMembershipId: activePlatform.membershipId,
-            platformType: activePlatform.platformType
-          });
-          $state.go('inventory', {
-            destinyMembershipId: activePlatform.membershipId,
-            platformType: activePlatform.platformType
-          });
+        if (activeAccount) {
+          $state.go('inventory', activeAccount);
         } else {
           $state.go('login');
         }
@@ -76,22 +63,36 @@ export const ShellModule = angular
       name: 'destiny1account',
       abstract: true,
       parent: 'content',
-      url: '/d1/:destinyMembershipId-:platformType',
-      // TODO: unify this into a single "account"
+      url: '/d1/:membershipId-{platformType:int}',
       resolve: {
-        destinyMembershipId: ($transition$) => {
+        // TODO: move this to platform/account service
+        account: ($transition$, dimPlatformService) => {
           'ngInject';
-          return $transition$.params().destinyMembershipId;
-        },
-        platformType: ($transition$) => {
-          'ngInject';
-          return $transition$.params().platformType;
+
+          // TODO: shouldn't need to load all platforms for this!
+          const { membershipId, platformType } = $transition$.params();
+
+          return dimPlatformService.getPlatforms()
+            .then(() => {
+              // TODO: getPlatformMatching should be able to load an account that we don't know
+              // TODO: make sure it's a "real" account
+              const account = dimPlatformService.getPlatformMatching({
+                membershipId,
+                platformType,
+                destinyVersion: 1
+              });
+              if (!account) {
+                return null;
+              }
+              dimPlatformService.setActive(account);
+              return account;
+            });
         }
       }
     });
 
     $urlServiceProvider.rules.when('/d1/', '/d1');
-    $urlServiceProvider.rules.when('/d1/:destinyMembershipId-:platformType/', '/d1/:destinyMembershipId-:platformType/inventory');
-    $urlServiceProvider.rules.when('/d1/:destinyMembershipId-:platformType', '/d1/:destinyMembershipId-:platformType/inventory');
+    $urlServiceProvider.rules.when('/d1/:membershipId-:platformType/', '/d1/:membershipId-:platformType/inventory');
+    $urlServiceProvider.rules.when('/d1/:membershipId-:platformType', '/d1/:membershipId-:platformType/inventory');
   })
   .name;
