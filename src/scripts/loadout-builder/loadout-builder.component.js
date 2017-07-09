@@ -130,12 +130,12 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
 
   function getBestArmor(bucket, vendorBucket, locked, excluded, lockedPerks) {
     const statHashes = [
-        { stats: [144602215, 1735777505], type: 'intdis' },
-        { stats: [144602215, 4244567218], type: 'intstr' },
-        { stats: [1735777505, 4244567218], type: 'disstr' },
-        { stats: [144602215], type: 'int' },
-        { stats: [1735777505], type: 'dis' },
-        { stats: [4244567218], type: 'str' }
+      { stats: [144602215, 1735777505], type: 'intdis' },
+      { stats: [144602215, 4244567218], type: 'intstr' },
+      { stats: [1735777505, 4244567218], type: 'disstr' },
+      { stats: [144602215], type: 'int' },
+      { stats: [1735777505], type: 'dis' },
+      { stats: [4244567218], type: 'str' }
     ];
     const armor = {};
     let best = [];
@@ -557,8 +557,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
                           set.setHash = genSetHash(pieces);
                           calcArmorStats(pieces, set.stats);
                           const tiersString = `${set.stats.STAT_INTELLECT.tier
-                              }/${set.stats.STAT_DISCIPLINE.tier
-                              }/${set.stats.STAT_STRENGTH.tier}`;
+                          }/${set.stats.STAT_DISCIPLINE.tier
+                          }/${set.stats.STAT_STRENGTH.tier}`;
 
                           tiersSet.add(tiersString);
 
@@ -776,7 +776,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
           };
         }
 
-        initBuckets();  // Get items
+        initBuckets(); // Get items
         vm.onCharacterChange(); // Start processing
       }
     });
