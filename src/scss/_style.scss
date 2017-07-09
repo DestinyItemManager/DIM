@@ -190,13 +190,6 @@ div:focus, span:focus {
     }
   }
 
-  /* OK this is getting silly. Time for some real breakpoints! */
-  .third-to-go {
-    @media (max-width: 375px) {
-      display: none;
-    }
-  }
-
   .menu {
     display: none;
     margin-right: none;
