@@ -24,7 +24,7 @@
   <span class="link first-to-go header-separator"></span>
   <span class="link second-to-go" ng-click="$ctrl.toggleState('loadout-builder')" translate="LB.LB"></span>
   <span class="link second-to-go" ng-click="$ctrl.toggleState('record-books')" translate="RecordBooks"></span>
-  <span class="link" ng-if="::$ctrl.featureFlags.activities" ng-click="$ctrl.toggleState('activities')" translate="Activities"></span>
+  <span class="link second-to-go" ng-if="::$ctrl.featureFlags.activities" ng-click="$ctrl.toggleState('activities')" translate="Activities"></span>
   <span class="link second-to-go" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleState('vendors')" translate="Vendors"></span>
   <span class="link second-to-go" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
 
