@@ -71,6 +71,7 @@ export default class ContentController {
 
     vm.featureFlags = {
       vendorsEnabled: $featureFlags.vendorsEnabled,
+      activities: $featureFlags.activities,
       colorA11y: $featureFlags.colorA11y
     };
     vm.vendorService = dimVendorService;

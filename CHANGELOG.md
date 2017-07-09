@@ -1,11 +1,14 @@
 # Next
 
+# 4.3.0
+
 * DIM is now just a website - the extension now just sends you to our website. This gives us one, more cross-platform, place to focus on and enables features we couldn't do with just an extension. Don't forget to import your data from the storage page!
 * Scrolling should be smoother overall.
 * Vendor weapons now show reviews.
 * Add a "sort by name" option for item sorting.
 * In Google Chrome (and the next version of Firefox), your local DIM data won't be deleted by the browser in low storage situations if you visit DIM frequently.
 * Ratings will no longer disappear from the item details popup the second time it is shown.
+* Info popups should do a better job of hiding when you ask them to hide.
 
 # 4.2.4
 
