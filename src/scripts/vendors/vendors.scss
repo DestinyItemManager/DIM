@@ -1,32 +1,36 @@
 .vendor {
   max-width: 900px;
-  min-width: 450px;
   margin: 0 auto;
 
-  .vendors {
-    margin-top: 44px;
-  }
-  .vendorLabels h1 {
-    display: inline-block;
-    margin-bottom: 5px;
-    margin-top: 5px;
-  }
   .vendorTabs {
-    float:right;
-    display:inline-block;
-  }
-  .vendorTabs label {
-    display: inline-block;
-    margin-left: 20px;
-    margin-top: 15px;
-    font-weight:400;
-    font-size:1.3em;
-    cursor: pointer;
-    &.active {
-      color: #FB9F28
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin: 10px 0;
+
+    h1 {
+      display: inline-block;
+      margin: 0;
+      line-height: 1em;
     }
-    & input {
-      display: none;
+
+    label {
+      display: inline-block;
+      font-weight: 400;
+      font-size: 15px;
+      cursor: pointer;
+      text-align: center;
+      &.active {
+        color: #FB9F28
+      }
+      & input {
+        display: none;
+      }
+      @media (max-width: 680px) {
+        font-size: 12px;
+        margin-left: 8px;
+      }
     }
   }
   .vendor-char-items {
@@ -45,6 +49,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
   }
   .category-title {
     margin-top: 10px;
@@ -71,13 +76,18 @@
     z-index: 4;
   }
   .vendorHeaderWrapper {
-    position: absolute;
-    top: 72px;
     z-index: 4;
   }
   .vendorHeaderWrapper.sticky {
     position:fixed;
     top: 42px;
+    max-width: 900px;
+    width: 100%;
+
+    @supports (position: sticky) {
+      position: sticky;
+      top: 50px;
+    }
   }
   .vendor-headers-background.sticky {
     display: block;
@@ -161,6 +171,8 @@
   width: calc(var(--item-size) + 4px);
   height: calc(var(--item-size) + 4px);
   position: absolute;
+  top: 0;
+  left: 2px;
   pointer-events: none;
   z-index: 1;
   background-color: rgba(40,40,40,0.5);
