@@ -261,8 +261,8 @@
       "Subtitle": "{classType} {typeName} {light, select, null{} other{com {light}}} {statName, select, undefined{} other{de {statName}}}",
       "Take": "Tomar",
       "Vault": "Cofre",
-      "LockUnlock": "{locked, select, false{Lock} other{Unlock}} {itemType}",
-      "TrackUntrack": "{tracked, select, false{Track} other{Untrack}} {itemType}"
+      "LockUnlock": "{locked, select, false{Travar} other{Destravar}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Seguir} other {No seguir}} {itemType}"
    },
    "MoveAmount": {
       "Min": "Quantidade mínima (1)",

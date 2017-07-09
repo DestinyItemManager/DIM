@@ -99,7 +99,11 @@
       "NeverShow": "Ne plus jamais afficher.",
       "UpgradeChrome": "Veuillez Mettre à Jour Chrome",
       "Version": "{beta, select, true{Beta a été mis à jour à v{version}} other{DIM v{version} Publiée}}",
-      "Xur": "Xûr est Là"
+      "Xur": "Xûr est Là",
+      "ExtensionDeprecatedTitle": "DIM est juste un site web maintenant!",
+      "ExtensionDeprecatedMessage": "L'extension chrome DIM ouvre maintenant notre site web - lequel fonctionne sur chaque navigateur et téléphone! Vous pouvez désinstaller l'extension, ou la laisser en tant que signet pour ce site. Vos données (tags, notes, et paramètres) peuvent être importé depuis la page de stockage (icône de disque dans l'en-tête)",
+      "NoStorage": "DIM ne peut pas stocker de données",
+      "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible. DIM ne peut pas continuer."
    },
    "Hotkey": {
       "StartSearch": "Commencer une recherche",
@@ -267,7 +271,9 @@
       "Store": "Dépôt",
       "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "Faire",
-      "Vault": "Malle"
+      "Vault": "Malle",
+      "LockUnlock": "{locked, select, false{Bloquer} other{Débloquer}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Suivre} other{Ne plus suivre}} {itemType}"
    },
    "MoveAmount": {
       "Min": "Empilement minimum (1)",
@@ -315,8 +321,22 @@
       "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures",
       "ShowOverlay": "Afficher les nouveaux items avec un overlay brillant",
       "ShowAnimations": "Animer les nouveaux objets",
+      "ShowReviews": "Montrer les notes d'évaluation sur les armes",
       "ShowElemental": "Afficher les icônes d'élément de dégât sur les armes",
+      "SetSort": "Trier les objets par",
+      "SetSortHelp": "Trier les objets par note, rareté, ou la valeur de leur stat primaire.",
+      "SortPrimary": "stat primaire",
+      "SortRarity": "rareté",
+      "SortRoll": "note",
+      "SortName": "nom",
+      "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
+      "VaultColumns": "Nombre maximal de colonne de coffre",
+      "ColumnSize": "{num} objets",
       "ResetToDefault": "Réinitialiser",
+      "ColorA11y": "Option de daltonisme",
+      "CharacterOrder": "Trier les personnages par",
+      "CharacterOrderRecent": "personnage le plus récent",
+      "ExportSS": "Tableur de l'inventaire",
       "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
       "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes"
    },
@@ -331,6 +351,27 @@
       "Quality": "Qualité des stats",
       "Strength": "Force",
       "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 pour T{nextTier}}})\n"
+   },
+   "Storage": {
+      "Title": "Stockage DIM",
+      "Enabled": "Activé",
+      "Disabled": "Désactivé",
+      "StatLabel": "Cela contient actuellement:",
+      "Settings": "Vos paramètres et préférences DIM",
+      "TagNotes": "{value} objets avec des tags ou des notes",
+      "ChromeSyncStorage": "Synchronisation Chrome (Extension uniquement)",
+      "Details": {
+        "GoogleDriveStorage": "DIM peut sauvegarder des données sur le stockage Google Drive. Si vous vous connectez à Google Drive sur plusieurs navigateurs, vos données seront partagées entre ces navigateurs. Ces données sont sauvegarder par compte Bungie."
+      },
+      "ForceSync": "Forcer la synchronisation des données",
+      "DriveSync": "Se connecter à Google Drive",
+      "DriveLogout": "Se déconnecter de Google Drive",
+      "NoData": "Aucune donnée",
+      "Export": "Sauvegarder ses données DIM",
+      "Import": "Importer des données DIM depuis un fichier",
+      "ImportSuccess": "Données DIM importées!",
+      "ImportNoFile": "Aucun fichier sélectionné! ",
+      "ImportFromExtensionButton": "Importer des données",
    },
    "StoreBucket": {
       "FillStack": "Remplir la pile ({amount})",

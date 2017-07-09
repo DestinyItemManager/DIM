@@ -99,7 +99,11 @@
       "NeverShow": "Non mostrarmi più questo messaggio.",
       "UpgradeChrome": "Prego aggiornare Chrome",
       "Version": "{beta, select, true{La Beta è stata aggiornata alla versione v{version}} other{Rilasciata la versione v{version} di DIM}}",
-      "Xur": "Xûr è arrivato"
+      "Xur": "Xûr è arrivato",
+      "ExtensionDeprecatedTitle": "DIM è un sito web adesso!",
+      "ExtensionDeprecatedMessage": "L'estensione Chrome di DIM adesso apre il nostro sito internet, che funziona su tutti i browser e sui dispositivi mobili! Puoi disinstallare l'estensione, oppure lasciarla come comodo segnalibro per il sito. I tuoi dati (etichette, note e impostazioni) possono essere importati dalla pagina dei dati memorizzati (l'icona a forma di dischetto in alto).",
+      "NoStorage": "DIM non può salvare dati",
+      "NoStorageMessage": "DIM non può salvare dati nel tuo browser. Questo può essere causato dalla navigazione con privacy o in modalità in incognito, oppure se hai poco spazio libero in memoria. DIM non può continuare."
    },
    "Hotkey": {
       "StartSearch": "Inizia una ricerca",
@@ -328,6 +332,7 @@
       "SortPrimary": "Statistica primaria",
       "SortRarity": "Rarità",
       "SortRoll": "Giudizio",
+      "SortName": "nome",
       "InventoryColumns": "Larghezza dell'inventario",
       "VaultColumns": "Larghezza massima dell'inventario del deposito",
       "ColumnSize": "{num} oggetti",
@@ -371,8 +376,10 @@
       "IndexedDBStorage": "Memoria del browser locale",
       "Details": {
         "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",
-        "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM."
+        "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM.",
+        "IndexedDBStorage": "Memorizza dati in locale salva le informazioni solo su questo browser."
       },
+      "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
       "ForceSync": "Forza sincronizzazione dati",
       "DriveSync": "Effettua login con Google Drive",
       "DriveLogout": "Disconnetti da Google Drive",
