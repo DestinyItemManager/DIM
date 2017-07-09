@@ -1,11 +1,12 @@
-<back-link></back-link>
-
 <div class="activities">
+  <back-link></back-link>
   <div class="activity" ng-repeat="activity in $ctrl.activities track by $index">
 
     <div class="activity-header">
       <div class="activity-title" ng-style="::activity.image | bungieBackground" ng-class="{ 'activity-featured': activity.featured }">
-        <img class="small-icon" ng-src="{{ ::activity.icon | bungieIcon }}" /> {{ ::activity.name }} <i ng-if="::activity.featured"  class="fa fa-star"></i>
+        <img class="small-icon" ng-src="{{ ::activity.icon | bungieIcon }}" />
+        <span class="activity-name">{{ ::activity.name }}</span>
+        <i ng-if="::activity.featured"  class="fa fa-star"></i>
       </div>
     </div>
 

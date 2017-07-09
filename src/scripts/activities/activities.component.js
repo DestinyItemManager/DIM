@@ -10,12 +10,6 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
 
   vm.settings = dimSettingsService;
 
-  // TODO: it's time for a directive
-  vm.toggleSection = function(id) {
-    vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
-    vm.settings.save();
-  };
-
   vm.settingsChanged = function() {
     vm.settings.save();
   };
@@ -71,11 +65,13 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   });
 
   function processActivities(defs, stores, rawActivity) {
+    const def = defs.Activity.get(rawActivity.display.activityHash);
     const activity = {
       hash: rawActivity.display.activityHash,
-      name: defs.Activity[rawActivity.display.activityHash].activityName,
+      name: def.activityName,
       icon: rawActivity.display.icon,
       image: rawActivity.display.image,
+      type: defs.ActivityType.get(def.activityTypeHash).activityTypeName
     };
 
     if (rawActivity.extended) {
@@ -104,7 +100,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   }
 
   function processActivity(defs, activityId, stores, tier, index) {
-    const tierDef = defs.Activity[tier.activityHash];
+    const tierDef = defs.Activity.get(tier.activityHash);
 
     const name = tier.activityData.recommendedLight === 390 ? 390
       : (tier.tierDisplayName ? $translate.instant(`Activities.${tier.tierDisplayName}`) : tierDef.activityName);
@@ -160,11 +156,11 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       hash = hash.length ? hash[0].hash : -1;
       if (hash >= 0) {
         if (hash < 20) { // set all skulls except for epic from heroic playlist...
-          skulls[0][i].displayName = defs.Activity[870614351].skulls[hash].displayName;
-          skulls[0][i].description = defs.Activity[870614351].skulls[hash].description;
+          skulls[0][i].displayName = defs.Activity.get(870614351).skulls[hash].displayName;
+          skulls[0][i].description = defs.Activity.get(870614351).skulls[hash].description;
         } else { // set Epic skull based off of a nightfall
-          skulls[0][i].displayName = defs.Activity[2234107290].skulls[0].displayName;
-          skulls[0][i].description = defs.Activity[2234107290].skulls[0].description;
+          skulls[0][i].displayName = defs.Activity.get(2234107290).skulls[0].displayName;
+          skulls[0][i].description = defs.Activity.get(2234107290).skulls[0].description;
         }
       }
     }

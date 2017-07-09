@@ -1,26 +1,26 @@
-back-link {
-  width: 1160px;
-  margin: 0 auto;
-  display: block;
-}
 
 .activities {
-  max-width: 1200px;
+  back-link {
+    width: 100%;
+    margin-left: 20px;
+    display: block;
+  }
+
+  max-width: 1053px;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
 
   .activity {
     margin: 20px;
-    width: 350px;
+    width: 311px;
   }
 
   .activity-header {
     position: relative;
   }
-  .activity-image {
-    position: absolute;
-    width: 100%;
+  .activity-name {
+    text-shadow: 2px 2px 5px black;
   }
   .activity-featured {
     color: gold;
