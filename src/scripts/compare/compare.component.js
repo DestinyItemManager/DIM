@@ -81,10 +81,11 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $trans
 
     if (args.dupes) {
       vm.compare = args.item;
-      vm.similarTypes = _.where(dimStoreService.getAllItems(), { typeName: vm.compare.typeName });
+      const allItems = dimStoreService.getAllItems();
+      vm.similarTypes = _.filter(allItems, { typeName: vm.compare.typeName });
       let armorSplit;
       if (!vm.compare.location.inWeapons) {
-        vm.similarTypes = _.where(vm.similarTypes, { classType: vm.compare.classType });
+        vm.similarTypes = _.filter(vm.similarTypes, { classType: vm.compare.classType });
         armorSplit = _.reduce(vm.compare.stats, (memo, stat) => {
           return memo + (stat.base === 0 ? 0 : stat.statHash);
         }, 0);
@@ -102,7 +103,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $trans
           return memo + (stat.base === 0 ? 0 : stat.statHash);
         }, 0) === armorSplit;
       });
-      vm.comparisons = _.where(dimStoreService.getAllItems(), { hash: vm.compare.hash });
+      vm.comparisons = _.filter(allItems, { hash: vm.compare.hash });
     } else if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
       vm.comparisons.push(args.item);
     }

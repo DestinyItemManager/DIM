@@ -41,7 +41,8 @@
     "$DIM_CLIENT_SECRET": true,
     "$DIM_WEB_CLIENT_SECRET": true,
     "$GOOGLE_DRIVE_CLIENT_ID": true,
-    "$featureFlags": true
+    "$featureFlags": true,
+    "ga": true
   },
   "plugins": [
     "angular"
