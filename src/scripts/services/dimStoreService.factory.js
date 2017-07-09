@@ -21,14 +21,14 @@ function StoreService(
   dimDefinitions,
   dimBucketService,
   dimItemInfoService,
-  loadingTracker,
   dimManifestService,
   $translate,
   dimDestinyTrackerService,
   toaster,
   StoreFactory,
   ItemFactory,
-  NewItemsService
+  NewItemsService,
+  $stateParams
 ) {
   let _stores = [];
 
@@ -104,12 +104,20 @@ function StoreService(
    * If this is called while a reload is already happening, it'll return the promise
    * for the ongoing reload rather than kicking off a new reload.
    */
+  // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
   // TODO: this feels like a good use for observables
-  function reloadStores({ destinyMembershipId, platformType }) {
+  function reloadStores(platform) {
+    if (!platform) {
+      platform = {
+        destinyMembershipId: $stateParams.destinyMembershipId,
+        platformType: $stateParams.platformType
+      };
+    }
+
     // TODO: shouldn't need any of this
     let activePlatform = dimPlatformService.getPlatformMatching({
-      membershipId: destinyMembershipId,
-      platformType
+      membershipId: platform.destinyMembershipId,
+      platformType: platform.platformType
     });
     if (!activePlatform) {
       // TODO: gotta mark the difference between viewing somebody else's thing and yours
@@ -117,12 +125,12 @@ function StoreService(
       // if it's not one of ours, you shouldn't load vault
 
       activePlatform = {
-        membershipId: destinyMembershipId,
-        platformType
+        membershipId: platform.destinyMembershipId,
+        platformType: platform.platformType
       };
     }
 
-    const promiseCacheKey = `${destinyMembershipId}-${platformType}`;
+    const promiseCacheKey = `${platform.destinyMembershipId}-${platform.platformType}`;
     let reloadPromise = _reloadPromises[promiseCacheKey];
 
     if (reloadPromise) {

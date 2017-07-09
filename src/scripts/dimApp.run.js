@@ -1,8 +1,6 @@
 
-function run($rootScope, SyncService, $transitions, $location, $trace) {
+function run($rootScope, SyncService, $transitions, $location) {
   'ngInject';
-
-  $trace.enable('TRANSITION');
 
   SyncService.init();
 
