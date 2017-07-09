@@ -28,7 +28,7 @@ function StoreHeadingCtrl($scope, ngDialog, $translate) {
       return vm.store.percentToNextLevel;
     }
     if (vm.store.progression && vm.store.progression.progressions) {
-      const prestige = _.findWhere(vm.store.progression.progressions, {
+      const prestige = _.find(vm.store.progression.progressions, {
         progressionHash: 2030054750
       });
       vm.xpTillMote = $translate.instant('Stats.Prestige', {
