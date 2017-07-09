@@ -13,21 +13,21 @@ dim-manifest-progress {
   justify-content: center;
 
   .manifest-progress {
-    width: 24rem;
+    width: 327px;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
     text-align: center;
     font-size: 1rem;
-    padding: 1.5rem 1.5rem;
+    padding: 24px;
     background-color: #222;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
     white-space: pre-wrap;
 
     i {
-      font-size: 2rem;
-      margin-bottom: .5rem;
+      font-size: 32px;
+      margin-bottom: 8px;
     }
 
     &.ng-animate {
