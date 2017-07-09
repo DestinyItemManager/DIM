@@ -233,7 +233,9 @@ function VendorService(
       })
       .catch((e) => {
         service.loadedVendors++;
-        console.error(`Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`, e);
+        if (vendorDef.hash !== 2796397637) { // Xur
+          console.error(`Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`, e);
+        }
         return null;
       });
   }
