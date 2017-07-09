@@ -112,12 +112,6 @@ module.exports = function(grunt) {
 
     poeditor: {
       target1: {
-        commands: {
-          action: 'list_languages',
-          id: '9999'
-        }
-      },
-      target2: {
         upload: { // special case for uploads
           id: '<%= poeditor.options.project_id %>',
           languages: {'en':'en'},
@@ -128,7 +122,7 @@ module.exports = function(grunt) {
           fuzzy_trigger: 1
         }
       },
-      target3: {
+      target2: {
         download: {
           project_id: '<%= poeditor.options.project_id %>',
           type: 'key_value_json', // export type (check out the doc)
@@ -225,11 +219,11 @@ module.exports = function(grunt) {
   );
 
   grunt.registerTask('update_terms', [
-    'poeditor:target2:upload'
+    'poeditor:target1:upload'
   ]);
 
   grunt.registerTask('download_translations', [
-    'poeditor:target3:download'
+    'poeditor:target2:download'
   ]);
 
   grunt.registerTask('publish_beta', [
