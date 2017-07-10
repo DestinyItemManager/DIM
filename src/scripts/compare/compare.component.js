@@ -54,7 +54,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $trans
   };
 
   vm.compareSimilar = function(type) {
-    vm.comparisons = _.union(vm.comparisons, type === 'archetype' ? vm.archeTypes : vm.similarTypes);
+    vm.comparisons = type === 'archetype' ? vm.archeTypes : vm.similarTypes;
   };
 
   vm.sort = function(statHash) {
