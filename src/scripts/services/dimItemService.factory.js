@@ -44,21 +44,21 @@ function ItemService(
       const stackable = item.maxStackSize > 1;
       // Items to be decremented
       const sourceItems = stackable
-            ? _.sortBy(_.filter(source.buckets[item.location.id], (i) => {
-              return i.hash === item.hash &&
+        ? _.sortBy(_.filter(source.buckets[item.location.id], (i) => {
+          return i.hash === item.hash &&
                 i.id === item.id &&
                 !i.notransfer;
-            }), 'amount') : [item];
+        }), 'amount') : [item];
       // Items to be incremented. There's really only ever at most one of these, but
       // it's easier to deal with as a list.
       const targetItems = stackable
-            ? _.sortBy(_.filter(target.buckets[item.location.id], (i) => {
-              return i.hash === item.hash &&
+        ? _.sortBy(_.filter(target.buckets[item.location.id], (i) => {
+          return i.hash === item.hash &&
                 i.id === item.id &&
                 // Don't consider full stacks as targets
                 i.amount !== i.maxStackSize &&
                 !i.notransfer;
-            }), 'amount') : [];
+        }), 'amount') : [];
       // moveAmount could be more than maxStackSize if there is more than one stack on a character!
       const moveAmount = amount || item.amount;
       let addAmount = moveAmount;
@@ -420,8 +420,8 @@ function ItemService(
 
     // Start with candidates of the same type (or sort if it's vault)
     const allItems = store.isVault
-            ? _.filter(store.items, (i) => i.bucket.sort === item.bucket.sort)
-            : store.buckets[item.location.id];
+      ? _.filter(store.items, (i) => i.bucket.sort === item.bucket.sort)
+      : store.buckets[item.location.id];
     let moveAsideCandidates = _.filter(allItems, movable);
 
     // if there are no candidates at all, fail
@@ -440,8 +440,8 @@ function ItemService(
           // Find another store that has an appropriate stackable
           otherStore = otherStores.find(
             (otherStore) => _.any(otherStore.items, (otherItem) =>
-                                  // Same basic item
-                                  otherItem.hash === i.hash &&
+// Same basic item
+              otherItem.hash === i.hash &&
                                   // Enough space to absorb this stack
                                   (i.maxStackSize - otherItem.amount) >= i.amount));
         }

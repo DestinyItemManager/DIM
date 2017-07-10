@@ -13,7 +13,6 @@ function Stores() {
     scope: {},
     template: template
   };
-
 }
 
 

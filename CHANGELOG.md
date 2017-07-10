@@ -1,6 +1,11 @@
 # Next
 
 * Fixed a bug where item data would not respect your language settings.
+* Weapon reviews now show up immediately, and can be edited.
+  - If you have been less than friendly, now would be a very good time to edit yourself and put a better foot forward.
+* Logging out now brings you to Bungie's auth page, where you can choose to change account or not.
+* Fixed "Clear New Items" not working.
+* Adjusted the UI a bunch to make it work better on mobile. Just a start - there's still a long way to go.
 
 # 4.3.0
 

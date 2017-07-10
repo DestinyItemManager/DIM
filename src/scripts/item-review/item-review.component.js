@@ -9,20 +9,24 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.canCreateReview = (vm.canReview && vm.item.owner);
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
-  vm.expandReview = vm.hasUserReview;
+  vm.expandReview = vm.item.isLocallyCached;
 
   vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
     pros: ['fast', 'lol'],
     cons: ['ok']
   };
-//  vm.item.writtenReviews.forEach((review) => {
-//    aggregate.pros.push(review.pros);
-//    aggregate.cons.push(review.cons);
-//  });
+  //  vm.item.writtenReviews.forEach((review) => {
+  //    aggregate.pros.push(review.pros);
+  //    aggregate.cons.push(review.cons);
+  //  });
 
   vm.toggleEdit = function() {
     vm.expandReview = !vm.expandReview;
+  };
+
+  vm.editReview = function() {
+    vm.expandReview = true;
   };
 
   vm.submitReview = function() {

@@ -9,22 +9,6 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
 
   const vm = this;
 
-  const $window = $(window);
-  const $vendorHeaders = $('#vendorHeaderWrapper');
-  const $vendorHeadersBackground = $('#vendorHeadersBackground');
-  const vendorsTop = $vendorHeaders.offset().top - 50; // Subtract height of title and back link
-
-  function stickyHeader(e) {
-    $vendorHeaders.toggleClass('sticky', $window.scrollTop() > vendorsTop);
-    $vendorHeadersBackground.toggleClass('sticky', $window.scrollTop() > vendorsTop);
-  }
-
-  $window.on('scroll', stickyHeader);
-
-  $scope.$on('$destroy', () => {
-    $window.off('scroll', stickyHeader);
-  });
-
   vm.activeTab = 'hasArmorWeaps';
   vm.activeTypeDefs = {
     armorweaps: ['armor', 'weapons'],
