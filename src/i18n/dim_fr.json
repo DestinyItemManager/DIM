@@ -79,7 +79,38 @@
    },
    "Filter": {
       "EnterName": "Entrez un nom d'objet:",
-      "EnterNote": "Entrez vos notes:"
+      "EnterNote": "Entrez vos notes:",
+      "Vendors": {
+          "FWC": "Culte de la Guerre Future",
+          "DO": "L'Astre Mort",
+          "NM": "Nouvelle Monarchie",
+          "Speaker": "Le Guide",
+          "Shipwright": "Responsable de la flotte",
+          "CQ": "Brigadier de l'Épreuve",
+          "EV": "Everversum",
+          "Gunsmith": "Armurier"
+      },
+      "Releases": {
+          "tTK": "Le Roi des Corrompus",
+          "RoI": "Les Seigneurs de Fer"
+      },
+      "Activities": {
+          "QW": "Ire de la Reine",
+          "IB": "Bannière de Fer",
+          "VoG": "Le Caveau de verre",
+          "CE": "La chute de Cropta",
+          "PoE": "La Prison des vétérans",
+          "ToO": "Jugement d'Osiris",
+          "CoE": "Défi des vétérans",
+          "KF": "La Chute du roi",
+          "SRL": "Courses de Passereaux",
+          "WotM": "Fureur mécanique",
+          "AF": "La Forge de l'Archonte",
+          "Dawning": "L'Avènement",
+          "AoT": "Âge du triomphe",
+          "Nightfall": "Assaut « Nuit noire »",
+          "WeeklyHeroic": "Assaut « Épique » de la semaine"
+      }
    },
    "Header": {
       "About": "À propos",

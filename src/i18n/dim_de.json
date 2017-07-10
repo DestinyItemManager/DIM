@@ -79,7 +79,38 @@
    },
    "Filter": {
       "EnterName": "Trage einen Namen ein:",
-      "EnterNote": "Trage eine Beschreibung ein:"
+      "EnterNote": "Trage eine Beschreibung ein:",
+      "Vendors": {
+          "FWC": "Kriegskult der Zukunft",
+          "DO": "Toter Orbit",
+          "NM": "Neue Monarchie",
+          "Speaker": "Der Sprecher",
+          "Shipwright": "Schiffsmeisterin",
+          "CQ": "Schmelztiegel-Quartierwart",
+          "EV": "Everversum",
+          "Gunsmith": "Waffenmeister"
+      },
+      "Releases": {
+          "tTK": "König der Besessenen",
+          "RoI": "Das Erwachen der Eisernen Lords"
+      },
+      "Activities": {
+          "QW": "Zorn der Königin",
+          "IB": "Eisenbanner",
+          "VoG": "Gläserne Kammer",
+          "CE": "Crotas Ende",
+          "PoE": "Das Gefängnis der Alten",
+          "ToO": "Prüfungen von Osiris",
+          "CoE": "Herausforderung der Ältesten",
+          "KF": "Königsfall",
+          "SRL": "Sparrow-Rennen",
+          "WotM": "Zorn der Maschine",
+          "AF": "Archon-Schmiede",
+          "Dawning": "Der Anbruch",
+          "AoT": "Zeitalter des Triumphs",
+          "NightFall": "Dämmerung-Strike",
+          "WeeklyHeroic": "Wöchentliche Heroischer Strike"
+      }
    },
    "Header": {
       "About": "Über",

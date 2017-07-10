@@ -75,7 +75,39 @@
    },
    "Filter": {
       "EnterName": "Digite um nome de item:",
-      "EnterNote": "Digite a anotação:"
+      "EnterNote": "Digite a anotação:",
+      "Vendors": {
+          "FWC": "Culto à Guerra Futura",
+          "DO": "Órbita Morta",
+          "NM": "Nova Monarquia",
+          "Speaker": "O Porta-Voz",
+          "Shipwright": "Contramestre",
+          "CQ": "Quartel-mestre do Crisol",
+          "EV": "Eververso",
+          "Gunsmith": "Armeiro"
+      },
+      "Releases": {
+          "tTK": "O Rei dos Possuídos",
+          "RoI": "Ascensão do Ferro"
+      },
+      "Activities": {
+          "QW": "Fúria da Rainha",
+          "IB": "Bandeira de Ferro",
+          "VoG": "Câmara de Cristal",
+          "CE": "O Fim de Crota",
+          "PoE": "Prisão dos Anciões",
+          "ToO": "Desafios de Osíris",
+          "CoE": "Desafio dos Anciões",
+          "KF": "A Queda do Rei",
+          "SRL": "Corrida de Pardais",
+          "CD": "Crimson Doubles",
+          "WotM": "A ira da máquina",
+          "AF": "Forja do Arconte",
+          "Dawning": "A Alvorada",
+          "AoT": "Era do Triunfo",
+          "Nightfall": "Assalto do Anoitecer",
+          "WeeklyHeroic": "Assalto heroico semanal"
+      }
    },
    "Header": {
       "About": "Sobre",

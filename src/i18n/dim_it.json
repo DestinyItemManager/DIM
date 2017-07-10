@@ -79,7 +79,38 @@
    },
    "Filter": {
       "EnterName": "Inserisci il nome di un oggetto:",
-      "EnterNote": "Inserisci delle note:"
+      "EnterNote": "Inserisci delle note:",
+      "Vendors": {
+          "FWC": "Culto Guerra Futura",
+          "DO": "Orbita Morta",
+          "NM": "Nuova Monarchia",
+          "Speaker": "L'Oratore",
+          "Shipwright": "Nostromo",
+          "CQ": "Quartiermastro del Crogiolo",
+          "EV": "Everversum",
+          "Gunsmith": "Armaiolo"
+      },
+      "Releases": {
+          "tTK": "Il Re dei Corrotti",
+          "RoI": "I Signori del Ferro"
+      },
+      "Activities": {
+          "QW": "Ira della Regina",
+          "IB": "Stendardo di Ferro",
+          "VoG": "Volta di Vetro",
+          "CE": "La fine di Crota",
+          "PoE": "Prigione degli Anziani",
+          "ToO": "Prove di Osiride",
+          "CoE": "Sfida degli Anziani",
+          "KF": "La caduta di un Re",
+          "SRL": "Gare di Astori",
+          "WotM": "Furia meccanica",
+          "AF": "Forgia dell'Arconte",
+          "Dawning": "L'Aurora",
+          "AoT": "Era di Trionfo",
+          "Nightfall": "Assalto Cala la Notte",
+          "WeeklyHeroic": "Assalto Eroico Settimanale"
+      }
    },
    "Header": {
       "About": "Chi siamo",

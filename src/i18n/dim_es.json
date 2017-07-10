@@ -75,7 +75,38 @@
    },
    "Filter": {
       "EnterName": "Escribe el nombre de un objeto:",
-      "EnterNote": "Escribe texto de las notas:"
+      "EnterNote": "Escribe texto de las notas:",
+      "Vendors": {
+          "FWC": "Secta Guerra Futura",
+          "DO": "Órbita Muerta",
+          "NM": "Nueva Monarquía",
+          "Speaker": "El Orador",
+          "Shipwright": "Contramaestre",
+          "CQ": "Intendente del Crisol",
+          "EV": "Eververso",
+          "Gunsmith": "Armero"
+      },
+      "Releases": {
+          "tTK": "El Rey de los Poseídos",
+          "RoI": "Los Señores de Hierro"
+      },
+      "Activities": {
+          "QW": "La Ira de la Reina",
+          "IB": "Estandarte de Hierro",
+          "VoG": "Cámara de Cristal",
+          "CE": "El fin de Crota",
+          "PoE": "El Presidio de los Ancianos",
+          "ToO": "Las Pruebas de Osiris",
+          "CoE": "Desafío de los Ancianos",
+          "KF": "Caída del Rey",
+          "SRL": "Carreras de Colibríes",
+          "WotM": "La furia de las máquinas",
+          "AF": "Fragua del Arconte",
+          "Dawning": "La Aurora",
+          "AoT": "Era de Triunfo",
+          "Nightfall": "Asalto de Ocaso",
+          "WeeklyHeroic": "Asalto heroico semanal"
+      }
    },
    "Header": {
       "About": "Acerca de",

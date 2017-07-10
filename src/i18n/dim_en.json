@@ -138,7 +138,40 @@
       "Postmaster": "Items that are currently in the Postmaster.",
       "Vendor": "Item is available from vendor {vendor} {name}",
       "Release": "Available from release {release}",
-      "Activity": "Available from activity {activity}"
+      "Activity": "Available from activity {activity}",
+      "Vendors": {
+        "FWC": "Future War Cult",
+        "DO": "Dead Orbit",
+        "NM": "New Monarchy",
+        "Speaker": "Speaker",
+        "Shipwright": "Shipwright",
+        "CQ": "Crucible Quartermaster",
+        "EV": "Eververse",
+        "Gunsmith": "Gunsmith"
+      },
+      "Releases": {
+        "Vanilla": "Vanilla",
+        "tTK": "The Taken King",
+        "RoI": "Rise of Iron"
+      },
+      "Activities": {
+        "QW": "Queen's Wrath",
+        "IB": "Iron Banner",
+        "VoG": "Vault of Glass",
+        "CE": "Crota's End",
+        "PoE": "Prison of Elders",
+        "ToO": "Trials of Osiris",
+        "CoE": "Challenge of Elders",
+        "KF": "King's Fall",
+        "SRL": "Sparrow Racing",
+        "CD": "Crimson Doubles",
+        "WotM": "Wrath of the Machine",
+        "AF": "Archon's Forge",
+        "Dawning": "The Dawning",
+        "AoT": "Age of Triumph",
+        "Nightfall": "Nightfall Strike",
+        "WeeklyHeroic": "Weekly Heroic Strike"
+      }
    },
    "Header": {
       "About": "About",
