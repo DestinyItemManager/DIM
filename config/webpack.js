@@ -51,8 +51,6 @@ module.exports = (env) => {
       hot: false
     },
 
-    devtool: 'source-map',
-
     stats: 'errors-only',
 
     performance: {
@@ -207,6 +205,11 @@ module.exports = (env) => {
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(env !== 'release'),
         // Enable activities tab
         '$featureFlags.activities': JSON.stringify(env !== 'release')
+      }),
+
+      new webpack.SourceMapDevToolPlugin({
+        filename: '[file].map',
+        exclude: /(vendor|manifest|chunk-0-sqlLib)-\S{6}.js$/
       }),
 
       new webpack.optimize.ModuleConcatenationPlugin(),
