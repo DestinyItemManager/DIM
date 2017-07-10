@@ -7,7 +7,7 @@
       "Reputation": "Estime",
       "Show": "Afficher {bucket}",
       "Unknown": "Inconnu",
-      "Vault": "Coffres",
+      "Vault": "Coffre",
       "Weapons": "Armes"
    },
    "BungieAlert": {
@@ -21,7 +21,7 @@
       "Throttled": "La limite de connections à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
       "NotLoggedIn": "Veuillez vous connecter sur Bungie.net pour utiliser cette extension.",
       "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
-      "NoAccount": "Aucun compte Destiny n'a été trouvé pour {platform}. Avez-vous sélectionné la bonne platforme?",
+      "NoAccount": "Aucun compte Destiny n'a été trouvé sur {platform}. Avez-vous sélectionné la bonne platforme?",
       "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {platform}.",
       "NoCookies": "Aucun cookie trouvé.",
       "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
@@ -32,8 +32,8 @@
    },
    "Compare": {
       "ButtonHelp": "Comparer les objets",
-      "All": "{type} comparisons ({quantity})",
-      "Archetype": "Archetype comparisons ({quantity})",
+      "All": "Comparaison de {type} ({quantity})",
+      "Archetype": "Comparaison par archetype ({quantity})",
       "Compare": "Comparer",
       "Close": "Fermer",
       "Error": {
@@ -41,15 +41,15 @@
          "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {type}."
       },
       "ItemCount": "Vous avez {num} de ceci.",
-      "Splits": "Comparer des parts similaires ({quantity})"
+      "Splits": "Comparer des paliers similaires ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Régénération de Grenade: {cooldown}",
-      "Melee": "Régénération de Mêlée: {cooldown}",
-      "Super": "Régénération du Super: {cooldown}"
+      "Grenade": "Délai de la Grenade: {cooldown}",
+      "Melee": "Délai de la Mêlée: {cooldown}",
+      "Super": "Délai du Super: {cooldown}"
    },
    "Countdown": {
-      "Days": "{numDays, plural, =1{# Journée} other{# Journées}}"
+      "Days": "{numDays, plural, =1{# Jour} other{# Jours}}"
    },
    "Debug": {
       "Dump": "Envoyer les infos sur la console"
@@ -65,10 +65,10 @@
    },
    "FarmingMode": {
       "FarmingMode": "Mode Farming (transfert d'objets)",
-      "Desc": "DIM est entrain de transférer des engrammes et objets pour Glimmer du {store} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
+      "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {store} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
       "Configuration": "Configuration",
       "MakeRoom": {
-         "Desc": "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {store} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
+         "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {store} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
          "MakeRoom": "Faites de la place pour collecter des objets en déplaçant de l'équipement",
          "Tooltip": "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
       },
@@ -126,32 +126,32 @@
    },
    "ItemInfoService": {
       "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet",
-      "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations Spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockez - c'est pourquoi les tags et les notes n'ont pas était encore autorisé en dehors de la version beta. L'erreur était :{error}."
+      "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations Spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les tags et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était :{error}."
    },
    "ItemMove": {
       "Consolidate": "{name} consolidé",
-      "Distributed": "Distribué {name}\n{name} est maintenant divisé equitablement entre les personnages.",
-      "ToVault": "Tout/Toutes les {name} sont maintenant dans votre Coffres.",
+      "Distributed": "{name} a été distribué\n{name} est maintenant divisé équitablement entre les personnages.",
+      "ToVault": "Tout/Toutes les {name} sont maintenant dans votre coffre.",
       "ToStore": "Tout/Toutes les {name} sont maintenant dans votre {store}."
    },
    "ItemService": {
       "BucketFull": "Il y a trop d'objet '{itemtype}' dans {isVault, select, true{le} other{ton}} {store}.",
       "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
       "Classified2": "Objet classifié. Bungie n'a pas donné d'information à propos de cette objet. Cette objet n'est pas transférable pour le moment.",
-      "Deequip": "Ne peut pas trouver un autre objet pour pouvoir déséquiper {itemname}",
-      "ExoticError": "'{itemname}' ne peut pas être équippé {slot} l'emplacement ne peut pas être déséquipé. ({error})",
+      "Deequip": "Ne trouve pas d'autre objet à équiper pour pouvoir déséquiper {itemname}",
+      "ExoticError": "'{itemname}' ne peut pas être équipé dans{slot} l'emplacement ne peut pas être déséquipé. ({error})",
       "NotEnoughRoom": "Il n'y a rien qu'on puisse déplacer de {store} pour faire de la place pour {itemname}",
-      "OnlyEquippedLevel": "Cela ne peut être équippé que par les personnages de même niveaux ou au dessus {level}.",
-      "OnlyEquippedClassLevel": "Cela ne peut être équippé que par un/une {class} au même niveau ou au dessus {level}.",
-      "PercentComplete": "({ percent, number, percent } Achevée)",
+      "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {level} ou plus.",
+      "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un/une {class} de niveau {level} ou plus.",
+      "PercentComplete": "({ percent, number, percent } Achevé)",
       "TooMuch": "Il semblerait que vous avait demandé de déplacer plus d'objet qu'il en existe à la source.",
       "TwoExotics": "Ont ne sait pas comment tu a fait pour avoir plus de 2 exotiques équippé!"
    },
    "LB": {
       "LB": "Constructeur de Loadout",
       "Guardians": "Gardiens",
-      "ShowGear": "Afficher équipement de {class}",
-      "HideGear": "Cacher équipement de {class}",
+      "ShowGear": "Afficher l'équipement de {class}",
+      "HideGear": "Cacher l'équipement de {class}",
       "LockEquipped": "Verrouiller équipé",
       "ClearLocked": "Enlever verrouillés",
       "Locked": "Objets verrouillés",
@@ -216,7 +216,7 @@
       "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{name}'?",
       "ApplySearch": "Objets = \"{query}\"",
       "MaximizeLight": "Maximiser la Lumière",
-      "ItemLeveling": "Evolution d'objet",
+      "ItemLeveling": "Infusion d'objet",
       "GatherEngrams": "Réunir les Engrammes",
       "GatherEngramsExceptExotics": "Exotiques",
       "RestoreAllItems": "Tous les objets",
@@ -224,7 +224,7 @@
       "Randomize": "Randomisez vos armes, armures, spectres et artéfacts équipés?",
       "VendorsCannotEquip": "Ces objets de vendeurs ne peuvent pas être équipés:",
       "VendorsCanEquip": "Ces objets peuvent être équipés:",
-      "MaxSlots": "Tu peut uniquement avoir {slots} de ce type d'objet dans un loadout.",
+      "MaxSlots": "Tu peux uniquement avoir {slots} de ce type d'objet dans un loadout.",
       "OnlyItems": "Seulement les objets équipable, matériaux et consommables peuvent être ajoutés à un loadout.",
       "FilteredItems": "Objets filtrés",
       "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
@@ -235,25 +235,25 @@
       "Cancel": "Annuler",
       "ItemsWithIcon": "Les objets avec cet icone seront équipés. Cliquez sur un bouton d'objet pour l'équiper.",
       "CouldNotEquip": "Impossible d'équiper {itemname}",
-      "TooManyRequested": "Tu a {total} {itemname} mais ton loadout demande {requested} Nous avons transféré tout ce que tu avais.",
+      "TooManyRequested": "Vous avez {total} {itemname} mais votre loadout demande {requested} Nous avons transféré tout ce que vous aviez.",
       "DoesNotExist": "{itemname} n'existe pas dans votre compte.",
       "AppliedAuto": "Constructeur de Loadout automatique",
-      "Applied": "Votre loadout de {amount} objets a été transféré à votre {store}",
+      "Applied": "Votre loadout de {amount, plural, =1{objet} other {# objets}} a été transféré à votre {store}",
       "AppliedError": "Aucun des objets de votre loadout n'a pu être transféré.",
-      "AppliedWarn": "Votre loadout a été partiellement transféré, mais {failed} sur {total} objets ont échoué.",
+      "AppliedWarn": "Votre pré set a été partiellement transféré, mais {failed} objets sur {total} ont échoués.",
       "NameRequired": "Un nom est requis.",
-      "MakeRoom": "Faites de la place pour le Commit Des Postes",
-      "MakeRoomDone": "À Fini de faire de la place pour {postmasterNum, plural, =1{1 objet du Commit Des Postes} other{# objet du Commit Des Postes}} en déplaçant {movedNum, plural, =1{1 objet} other{# objets}} hors de {store}.",
-      "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commit Des Postes: {error}.",
+      "MakeRoom": "Faire de la place pour le Commis des postes",
+      "MakeRoomDone": "À Fini de faire de la place pour {postmasterNum, plural, =1{1 objet du commis des postes} other {# objets du Commis des postes}} en déplaçant {movedNum, plural, =1{1 objet} other {# objets}} hors du {store}.",
+      "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commis des postes: {error}.",
       "SaveErrorTitle": "Erreur lors de l'enregistrement du loadout",
-      "SaveErrorDescription": "Impossible d'enregistrer le loadout {loadoutName}: {error}",
+      "SaveErrorDescription": "Impossible d'enregistrer le pré set {loadoutName}: {error}",
       "DeleteErrorTitle": "Erreur lors de la suppression du loadout",
       "DeleteErrorDescription": "Impossible de supprimer le loadout {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Base de données d'info de Destiny en cours de construction",
       "Download": "Téléchargement en cours des derniers infos Destiny de Bungie",
-      "Error": "Erreur de chargement des infos Destiny:\n{error}\nRedémarrez pour rééssayer.",
+      "Error": "Erreur de chargement des infos de Destiny:\n{error}\nActualisez pour réessayer.",
       "Outdated": "Infos Destiny expirées",
       "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionalités de DIM puissent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
       "Load": "Chargement des données sauvegardées de Destiny",
@@ -271,7 +271,7 @@
       "Store": "Dépôt",
       "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "Faire",
-      "Vault": "Malle",
+      "Vault": "Coffre",
       "LockUnlock": "{locked, select, false{Bloquer} other{Débloquer}} {itemType}",
       "TrackUntrack": "{tracked, select, false{Suivre} other{Ne plus suivre}} {itemType}"
    },
@@ -288,7 +288,7 @@
       "Help": "Ajouter des notes à cet objet"
    },
    "DtrReview": {
-      "ThankYou": "Merci d'avoir envoyé votre évaluation! Elle apparaitra bientôt.",
+      "ThankYou": "Merci d'avoir envoyé une évaluation! Elle apparaitra bientôt.",
       "Help": "Écrire une évaluation (optionnel)",
       "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
       "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
@@ -309,8 +309,8 @@
       "Incomplete": "Incomplet"
    },
    "Postmaster": {
-      "Limit": "Limite du Commit Des Postes",
-      "Desc": "Il y a 20 objets perdus au Commit Des Postes sur votre {store}. Tous les nouveaux objets remplaceront les objets existants."
+      "Limit": "Limite du Commis Des Postes",
+      "Desc": "Il y a 20 objets perdus au Commis Des Postes sur votre {store}. Tous les nouveaux objets remplaceront les objets existants."
    },
    "Settings": {
       "Settings": "Paramètres",
@@ -318,11 +318,15 @@
       "LogOut": "Se déconnecter",
       "Language": "Langue (redémarrez DIM pour prendre effet)",
       "HideUnfiltered": "Cacher les objets qui ne correspondent pas à une recherche",
+      "AlwaysShowDetails": "Toujours afficher la fenêtre contextuelle étendue des objets",
       "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures",
-      "ShowOverlay": "Afficher les nouveaux items avec un overlay brillant",
-      "ShowAnimations": "Animer les nouveaux objets",
+      "ShowOverlay": "Afficher les nouveaux items avec une brillante",
+      "ShowAnimations": "Animer la brillance des nouveaux objets",
+      "ShowAnimationsHelp": "Montrera la brillance animé des nouveaux objets sur les nouveaux objets. Désactiver cette option peut améliorer les performances de votre processeur.",
       "ShowReviews": "Montrer les notes d'évaluation sur les armes",
-      "ShowElemental": "Afficher les icônes d'élément de dégât sur les armes",
+      "ShowElemental": "Afficher les icônes de dégâts élémentaire sur les armes",
+      "AllowIdPostToDtr": "Montrer les évaluations détaillés de l'arme et autoriser l'évaluation des armes",
+      "AllowIdPostToDtrLine2": "Cela partagera le nom de votre compte et vos items évalués avec Destiny Tracker.",
       "SetSort": "Trier les objets par",
       "SetSortHelp": "Trier les objets par note, rareté, ou la valeur de leur stat primaire.",
       "SortPrimary": "stat primaire",
@@ -332,12 +336,17 @@
       "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
       "VaultColumns": "Nombre maximal de colonne de coffre",
       "ColumnSize": "{num} objets",
+      "ColumnSizeAuto": "Auto",
+      "SizeItem": "Taille des objets",
       "ResetToDefault": "Réinitialiser",
       "ColorA11y": "Option de daltonisme",
       "CharacterOrder": "Trier les personnages par",
       "CharacterOrderRecent": "personnage le plus récent",
+      "CharacterOrderReversed": "personnage le plus récent (inversé)",
+      "CharacterOrderFixed": "âge du personnage",
       "ExportSS": "Tableur de l'inventaire",
       "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
+      "DIMPopups": "Popups d'info de DIM",
       "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes"
    },
    "Stats": {
@@ -347,31 +356,45 @@
       "NoBonus": "Pas de Bonus",
       "OfMaxRoll": "{range} des stats parfaites",
       "PercentHelp": "Cliquez pour plus d'informations sur ce qu'est la qualité des stats.",
-      "Prestige": "Niveau de prestige: {level}\n{exp}xp jusqu'à 5 particule de lumière.",
+      "Prestige": "Niveau de lumière: {level}\n{exp}xp jusqu'à avoir 5 particule de lumière.",
       "Quality": "Qualité des stats",
       "Strength": "Force",
       "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 pour T{nextTier}}})\n"
    },
    "Storage": {
       "Title": "Stockage DIM",
+      "Explain": "DIM stocke ses propres données séparément de vos données Destiny (lesquelles sont conservées par Bungie.net).",
       "Enabled": "Activé",
       "Disabled": "Désactivé",
       "StatLabel": "Cela contient actuellement:",
+      "Loadouts": "{value} pré sets",
       "Settings": "Vos paramètres et préférences DIM",
       "TagNotes": "{value} objets avec des tags ou des notes",
+      "ImportExport": "Sauvegarder les données",
+      "GoogleDriveStorage": "Google Drive",
       "ChromeSyncStorage": "Synchronisation Chrome (Extension uniquement)",
+      "IndexedDBStorage": "Stockage local du navigateur",
       "Details": {
-        "GoogleDriveStorage": "DIM peut sauvegarder des données sur le stockage Google Drive. Si vous vous connectez à Google Drive sur plusieurs navigateurs, vos données seront partagées entre ces navigateurs. Ces données sont sauvegarder par compte Bungie."
+        "GoogleDriveStorage": "DIM peut sauvegarder des données sur le stockage Google Drive. Si vous vous connectez à Google Drive sur plusieurs navigateurs, vos données seront partagées entre ces navigateurs. Ces données sont sauvegarder par compte Bungie.",
+        "ChromeSyncStorage": "Si vous êtes connecté à Chrome, cela synchronisera vos données vers vos autres session Chrome. Cela ne fonctionne pas avec le site web DIM.",
+        "IndexedDBStorage": "Le stockage local ne sauvegardera vos informations que sur ce navigateur."
       },
+      "BrowserMayClearData": "Votre navigateur peut supprimer cette information si vous n'avez plus d'espace ou si vous ne visitez pas DIM fréquemment.",
       "ForceSync": "Forcer la synchronisation des données",
       "DriveSync": "Se connecter à Google Drive",
       "DriveLogout": "Se déconnecter de Google Drive",
+      "GoogleApiBlocked": "Google Drive est indisponible car un bloqueur de contenu a bloqué le Javascript Google Drive. Veuillez exclure DIM de votre bloqueur de contenu et réessayer.",
       "NoData": "Aucune donnée",
       "Export": "Sauvegarder ses données DIM",
       "Import": "Importer des données DIM depuis un fichier",
       "ImportSuccess": "Données DIM importées!",
       "ImportNoFile": "Aucun fichier sélectionné! ",
+      "GDriveSignInWarning": "Si vous avez déjà sauvegardé des données DIM sur Google Drive, cela écrasera tout ce que vous avez sauvegarder localement. Vous voudrez peut-être sauvegardez vos données avant de vous connecter.\n\nContinuer la connexion vers Google Drive?",
+      "GDriveLogout": "Vos données sont toujours sur Google Drive - si vous vous connectez à nouveau, DIM les réutilisera.",
+      "ImportFromExtension": "Importer des données depuis l'extension DIM pour Chrome",
+      "ImportFromExtensionDetail": "Vous pouvez importer des données depuis l'extension DIM pour Chrome vers le site DIM.",
       "ImportFromExtensionButton": "Importer des données",
+      "ImportFromExtensionWarning": "Vos données de l'extension DIM pour Chrome vont écraser vos données actuelles. Continuer?"
    },
    "StoreBucket": {
       "FillStack": "Remplir la pile ({amount})",
@@ -405,10 +428,11 @@
    },
    "Activities": {
       "Activities": "Activités",
+      "Normal": "Normal",
       "Hard": "Difficile"
    },
    "RecordBooks": {
-      "RecordBooks": "Livre des Records",
+      "RecordBooks": "Carnet d'exploits",
       "HideCompleted": "Cacher les records complétés"
    },
    "Views": {
@@ -423,6 +447,7 @@
          "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
          "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
          "FAQLogout": "Comment puis-je me déconnecter de DIM?",
+         "FAQLogoutAnswer": "Allez vers la page de paramètre (icône d'engrenage) et cliquez sur \"Se déconnecter\".",
          "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
          "FAQLostItemAnswer": "Il est plus que probable que votre transfer a échoué, laissant votre objet dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
          "GitHub": "GitHub",
@@ -445,7 +470,9 @@
          "Backers": "Les Supporters",
          "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
          "Sponsors": "Partenaires",
-         "SponsorsDetail": "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site."
+         "SponsorsDetail": "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site.",
+         "Teespring": "Nous avons aussi des t-shirts avec notre nouveau logo en vente sur Teespring:",
+         "TeespringLink": "DIM sur Teespring"
       },
       "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM",
       "Login": {
