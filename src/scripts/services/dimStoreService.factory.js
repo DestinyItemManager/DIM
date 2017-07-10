@@ -32,8 +32,7 @@ function StoreService(
 ) {
   let _stores = [];
 
-  // A promise used to dedup parallel calls to reloadStores
-  // TODO: do this per-platform?
+  // A promise (per account) used to dedup parallel calls to reloadStores
   const _reloadPromises = {};
 
   const service = {
@@ -47,19 +46,6 @@ function StoreService(
     reloadStores,
     activePlatform: null // TODO: kind of a hack so consumers know when to re-fetch
   };
-
-  /*
-  $rootScope.$on('dim-active-platform-updated', () => {
-    _stores = [];
-    NewItemsService.hasNewItems = false;
-    $rootScope.$broadcast('dim-stores-updated', {
-      stores: _stores
-    });
-    loadingTracker.addPromise(service.reloadStores(true));
-
-    dimDestinyTrackerService.fetchReviews(_stores);
-  });
-  */
 
   return service;
 
@@ -83,11 +69,22 @@ function StoreService(
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  // TODO: update references to this
-  function updateCharacters(platform) {
+  function updateCharacters(account) {
+    // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
+    if (!account) {
+      if ($stateParams.membershipId && $stateParams.platformType) {
+        account = {
+          membershipId: $stateParams.membershipId,
+          platformType: $stateParams.platformType
+        };
+      } else {
+        throw new Error("Don't know membership ID and platform type");
+      }
+    }
+
     return $q.all([
       dimDefinitions.getDefinitions(),
-      Destiny1Api.getCharacters(platform)
+      Destiny1Api.getCharacters(account)
     ]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
@@ -108,7 +105,6 @@ function StoreService(
   function reloadStores(account) {
     // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
-      console.error('reloadStores called without account');
       if ($stateParams.membershipId && $stateParams.platformType) {
         account = {
           membershipId: $stateParams.membershipId,
