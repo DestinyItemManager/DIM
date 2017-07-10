@@ -27,8 +27,8 @@ mod.filter('bungieBackground', () => {
     // Hacky workaround so we can reference local images
     if (value.startsWith('~')) {
       const baseUrl = ($DIM_FLAVOR === 'dev')
-              ? ''
-              : 'https://beta.destinyitemmanager.com';
+        ? ''
+        : 'https://beta.destinyitemmanager.com';
       return {
         'background-image': `url(${baseUrl}${value.substr(1)})`
       };
@@ -92,27 +92,27 @@ mod.filter('sortItems', (dimSettingsService) => {
         1772853454, // blue-polyphage
         3783295803, // ether-seeds
         3446457162, // resupply-codes
-        269776572,  // house-banners
+        269776572, // house-banners
         3632619276, // silken-codex
         2904517731, // axiomatic-beads
         1932910919, // network-keys
         //
-        417308266,  // three of coins
+        417308266, // three of coins
         //
         2180254632, // ammo-synth
-        928169143,  // special-ammo-synth
-        211861343,  // heavy-ammo-synth
+        928169143, // special-ammo-synth
+        211861343, // heavy-ammo-synth
         //
-        705234570,  // primary telemetry
+        705234570, // primary telemetry
         3371478409, // special telemetry
         2929837733, // heavy telemetry
         4159731660, // auto rifle telemetry
-        846470091,  // hand cannon telemetry
+        846470091, // hand cannon telemetry
         2610276738, // pulse telemetry
-        323927027,  // scout telemetry
-        729893597,  // fusion rifle telemetry
+        323927027, // scout telemetry
+        729893597, // fusion rifle telemetry
         4141501356, // shotgun telemetry
-        927802664,  // sniper rifle telemetry
+        927802664, // sniper rifle telemetry
         1485751393, // machine gun telemetry
         3036931873, // rocket launcher telemetry
         //
@@ -122,7 +122,7 @@ mod.filter('sortItems', (dimSettingsService) => {
         //
         2575095887, // Splicer Intel Relay
         3815757277, // Splicer Cache Key
-        4244618453  // Splicer Key
+        4244618453 // Splicer Key
       ];
     }
 
@@ -136,7 +136,7 @@ mod.filter('sortItems', (dimSettingsService) => {
         3164836592, // Wormspore
         3164836593, // Hadium Flakes
         //
-        452597397,  // Exotic Shard
+        452597397, // Exotic Shard
         1542293174, // Armor Materials
         1898539128, // Weapon Materials
         //
@@ -144,16 +144,16 @@ mod.filter('sortItems', (dimSettingsService) => {
         //
         1738186005, // Strange Coins
         //
-        258181985,  // Ascendant Shards
+        258181985, // Ascendant Shards
         1893498008, // Ascendant Energy
-        769865458,  // Radiant Shards
-        616706469,  // Radiant Energy
+        769865458, // Radiant Shards
+        616706469, // Radiant Energy
         //
-        342707701,  // Reciprocal Rune
-        342707700,  // Stolen Rune
+        342707701, // Reciprocal Rune
+        342707700, // Stolen Rune
         2906158273, // Antiquated Rune
         2620224196, // Stolen Rune (Charging)
-        2906158273  // Antiquated Rune (Charging)
+        2906158273 // Antiquated Rune (Charging)
       ];
     }
 

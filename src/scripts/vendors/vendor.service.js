@@ -141,7 +141,7 @@ function VendorService(
 
           if (service.vendors[vendorDef.hash] &&
               _.all(stores, (store) =>
-                    cachedVendorUpToDate(service.vendors[vendorDef.hash].cacheKeys,
+                cachedVendorUpToDate(service.vendors[vendorDef.hash].cacheKeys,
                                          store,
                                          vendorDef))) {
             service.loadedVendors++;

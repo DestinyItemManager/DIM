@@ -455,7 +455,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         1043138475, // -black-wax-idol
         1772853454, // -blue-polyphage
         3783295803, // -ether-seeds
-        3446457162  // -resupply-codes
+        3446457162 // -resupply-codes
       ];
       const supplies = [
         269776572, // -house-banners
@@ -663,29 +663,29 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Eris Morn (eris)
     //   * Eververse (ev)
     vendor: function(predicate, item) {
-      const vendorHashes = {             // identifier
+      const vendorHashes = { // identifier
         required: {
-          fwc: [995344558],            // SOURCE_VENDOR_FUTURE_WAR_CULT
-          do: [103311758],             // SOURCE_VENDOR_DEAD_ORBIT
-          nm: [3072854931],            // SOURCE_VENDOR_NEW_MONARCHY
-          speaker: [4241664776],       // SOURCE_VENDOR_SPEAKER
-          variks: [512830513],         // SOURCE_VENDOR_FALLEN
-          shipwright: [3721473564],    // SOURCE_VENDOR_SHIPWRIGHT
-          vanguard: [1482793537],      // SOURCE_VENDOR_VANGUARD
-          osiris: [3378481830],        // SOURCE_VENDOR_OSIRIS
-          xur: [2179714245],           // SOURCE_VENDOR_BLACK_MARKET
-          shaxx: [4134961255],         // SOURCE_VENDOR_CRUCIBLE_HANDLER
-          cq: [1362425043],            // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER
-          eris: [1374970038],          // SOURCE_VENDOR_CROTAS_BANE
-          ev: [3559790162],            // SOURCE_VENDOR_SPECIAL_ORDERS
-          gunsmith: [353834582]        // SOURCE_VENDOR_GUNSMITH
+          fwc: [995344558], // SOURCE_VENDOR_FUTURE_WAR_CULT
+          do: [103311758], // SOURCE_VENDOR_DEAD_ORBIT
+          nm: [3072854931], // SOURCE_VENDOR_NEW_MONARCHY
+          speaker: [4241664776], // SOURCE_VENDOR_SPEAKER
+          variks: [512830513], // SOURCE_VENDOR_FALLEN
+          shipwright: [3721473564], // SOURCE_VENDOR_SHIPWRIGHT
+          vanguard: [1482793537], // SOURCE_VENDOR_VANGUARD
+          osiris: [3378481830], // SOURCE_VENDOR_OSIRIS
+          xur: [2179714245], // SOURCE_VENDOR_BLACK_MARKET
+          shaxx: [4134961255], // SOURCE_VENDOR_CRUCIBLE_HANDLER
+          cq: [1362425043], // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER
+          eris: [1374970038], // SOURCE_VENDOR_CROTAS_BANE
+          ev: [3559790162], // SOURCE_VENDOR_SPECIAL_ORDERS
+          gunsmith: [353834582] // SOURCE_VENDOR_GUNSMITH
         },
         restricted: {
-          fwc: [353834582],            // remove motes of light & strange coins
+          fwc: [353834582], // remove motes of light & strange coins
           do: [353834582],
           nm: [353834582],
           speaker: [353834582],
-          cq: [353834582, 2682516238]  // remove ammo synths and planetary materials
+          cq: [353834582, 2682516238] // remove ammo synths and planetary materials
         }
       };
       if (!item) {
@@ -717,34 +717,34 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     activity: function(predicate, item) {
       const activityHashes = { // identifier
         required: {
-          trials: [2650556703],  // SOURCE_TRIALS_OF_OSIRIS
-          ib: [1322283879],      // SOURCE_IRON_BANNER
-          qw: [1983234046],      // SOURCE_QUEENS_EMISSARY_QUEST
-          cd: [2775576620],      // SOURCE_CRIMSON_DOUBLES
-          srl: [1234918199],     // SOURCE_SRL
-          vog: [440710167],      // SOURCE_VAULT_OF_GLASS
-          ce: [2585003248],      // SOURCE_CROTAS_END
-          ttk: [2659839637],     // SOURCE_TTK
-          kf: [1662673928],      // SOURCE_KINGS_FALL
-          roi: [2964550958],     // SOURCE_RISE_OF_IRON
-          wotm: [4160622434],    // SOURCE_WRATH_OF_THE_MACHINE
-          poe: [2784812137],     // SOURCE_PRISON_ELDERS
-          coe: [1537575125],     // SOURCE_POE_ELDER_CHALLENGE
-          af: [3667653533],      // SOURCE_ARCHON_FORGE
+          trials: [2650556703], // SOURCE_TRIALS_OF_OSIRIS
+          ib: [1322283879], // SOURCE_IRON_BANNER
+          qw: [1983234046], // SOURCE_QUEENS_EMISSARY_QUEST
+          cd: [2775576620], // SOURCE_CRIMSON_DOUBLES
+          srl: [1234918199], // SOURCE_SRL
+          vog: [440710167], // SOURCE_VAULT_OF_GLASS
+          ce: [2585003248], // SOURCE_CROTAS_END
+          ttk: [2659839637], // SOURCE_TTK
+          kf: [1662673928], // SOURCE_KINGS_FALL
+          roi: [2964550958], // SOURCE_RISE_OF_IRON
+          wotm: [4160622434], // SOURCE_WRATH_OF_THE_MACHINE
+          poe: [2784812137], // SOURCE_PRISON_ELDERS
+          coe: [1537575125], // SOURCE_POE_ELDER_CHALLENGE
+          af: [3667653533], // SOURCE_ARCHON_FORGE
           dawning: [3131490494], // SOURCE_DAWNING
-          aot: [3068521220, 4161861381, 440710167]    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+          aot: [3068521220, 4161861381, 440710167] // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
         },
         restricted: {
-          trials: [2179714245, 2682516238, 560942287],    // remove xur exotics and patrol items
-          ib: [3602080346],                               // remove engrams and random blue drops (Strike)
-          qw: [3602080346],                               // remove engrams and random blue drops (Strike)
-          cd: [3602080346],                               // remove engrams and random blue drops (Strike)
-          kf: [2179714245, 2682516238, 560942287],        // remove xur exotics and patrol items
-          wotm: [2179714245, 2682516238, 560942287],      // remove xur exotics and patrol items
-          poe: [3602080346, 2682516238],                  // remove engrams
-          coe: [3602080346, 2682516238],                  // remove engrams
-          af: [2682516238],                               // remove engrams
-          dawning: [2682516238, 1111209135],              // remove engrams, planetary materials, & chroma
+          trials: [2179714245, 2682516238, 560942287], // remove xur exotics and patrol items
+          ib: [3602080346], // remove engrams and random blue drops (Strike)
+          qw: [3602080346], // remove engrams and random blue drops (Strike)
+          cd: [3602080346], // remove engrams and random blue drops (Strike)
+          kf: [2179714245, 2682516238, 560942287], // remove xur exotics and patrol items
+          wotm: [2179714245, 2682516238, 560942287], // remove xur exotics and patrol items
+          poe: [3602080346, 2682516238], // remove engrams
+          coe: [3602080346, 2682516238], // remove engrams
+          af: [2682516238], // remove engrams
+          dawning: [2682516238, 1111209135], // remove engrams, planetary materials, & chroma
           aot: [2964550958, 2659839637, 353834582, 560942287] // Remove ROI, TTK, motes, & glimmer items
         }
       };
