@@ -69,7 +69,7 @@
       "Configuration": "Configuration",
       "MakeRoom": {
          "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {store} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
-         "MakeRoom": "Faites de la place pour collecter des objets en déplaçant de l'équipement",
+         "MakeRoom": "Faire de la place pour collecter des objets en déplaçant de l'équipement",
          "Tooltip": "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
       },
       "OutOfRoomTitle": "Plus de Place",
@@ -126,7 +126,7 @@
    },
    "ItemInfoService": {
       "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet",
-      "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations Spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les tags et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était :{error}."
+      "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les tags et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était: {error}."
    },
    "ItemMove": {
       "Consolidate": "{name} consolidé",
@@ -139,7 +139,7 @@
       "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
       "Classified2": "Objet classifié. Bungie n'a pas donné d'information à propos de cette objet. Cette objet n'est pas transférable pour le moment.",
       "Deequip": "Ne trouve pas d'autre objet à équiper pour pouvoir déséquiper {itemname}",
-      "ExoticError": "'{itemname}' ne peut pas être équipé dans{slot} l'emplacement ne peut pas être déséquipé. ({error})",
+      "ExoticError": "'{itemname}' ne peut pas être équipé dans {slot} l'emplacement ne peut pas être déséquipé. ({error})",
       "NotEnoughRoom": "Il n'y a rien qu'on puisse déplacer de {store} pour faire de la place pour {itemname}",
       "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {level} ou plus.",
       "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un/une {class} de niveau {level} ou plus.",
@@ -148,7 +148,7 @@
       "TwoExotics": "Ont ne sait pas comment tu a fait pour avoir plus de 2 exotiques équippé!"
    },
    "LB": {
-      "LB": "Constructeur de Loadout",
+      "LB": "Constructeur de pré set",
       "Guardians": "Gardiens",
       "ShowGear": "Afficher l'équipement de {class}",
       "HideGear": "Cacher l'équipement de {class}",
@@ -170,8 +170,8 @@
       "Current": "Actuel",
       "LightMode": {
          "LightMode": "Mode lumière",
-         "HelpScaled": "Calcule les loadouts comme si tous les objets avaient 350 de défense.",
-         "HelpCurrent": "Calcule les loadouts à leur niveau de défense actuel."
+         "HelpScaled": "Calcule les pré sets comme si tous les objets avaient 350 de défense.",
+         "HelpCurrent": "Calcule les pré sets à leur niveau de défense actuel."
       },
       "IncludeRare": "Inclure les objets rares (bleus)",
       "Help": {
@@ -207,12 +207,12 @@
    },
    "Loadouts": {
       "Any": "Tout",
-      "Loadouts": "Loadouts",
+      "Loadouts": "Pré sets",
       "Before": "Avant '{name}'",
-      "Create": "Créer Loadout",
+      "Create": "Créer Pré set",
       "FromEquipped": "Equipé",
-      "Edit": "Modifier Loadout",
-      "Delete": "Effacer Loadout",
+      "Edit": "Modifier Pré set",
+      "Delete": "Effacer Pré set",
       "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{name}'?",
       "ApplySearch": "Objets = \"{query}\"",
       "MaximizeLight": "Maximiser la Lumière",
@@ -224,38 +224,38 @@
       "Randomize": "Randomisez vos armes, armures, spectres et artéfacts équipés?",
       "VendorsCannotEquip": "Ces objets de vendeurs ne peuvent pas être équipés:",
       "VendorsCanEquip": "Ces objets peuvent être équipés:",
-      "MaxSlots": "Tu peux uniquement avoir {slots} de ce type d'objet dans un loadout.",
-      "OnlyItems": "Seulement les objets équipable, matériaux et consommables peuvent être ajoutés à un loadout.",
+      "MaxSlots": "Tu peux uniquement avoir {slots} de ce type d'objet dans un pré set.",
+      "OnlyItems": "Seulement les objets équipable, matériaux et consommables peuvent être ajoutés à un pré set.",
       "FilteredItems": "Objets filtrés",
       "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
       "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
-      "LoadoutName": "Nom du loadout...",
+      "LoadoutName": "Nom du pré set...",
       "Save": "Sauvegarder",
       "SaveAsNew": "Sauvegarder comme nouveau",
       "Cancel": "Annuler",
       "ItemsWithIcon": "Les objets avec cet icone seront équipés. Cliquez sur un bouton d'objet pour l'équiper.",
       "CouldNotEquip": "Impossible d'équiper {itemname}",
-      "TooManyRequested": "Vous avez {total} {itemname} mais votre loadout demande {requested} Nous avons transféré tout ce que vous aviez.",
+      "TooManyRequested": "Vous avez {total} {itemname} mais votre pré set demande {requested} Nous avons transféré tout ce que vous aviez.",
       "DoesNotExist": "{itemname} n'existe pas dans votre compte.",
-      "AppliedAuto": "Constructeur de Loadout automatique",
-      "Applied": "Votre loadout de {amount, plural, =1{objet} other {# objets}} a été transféré à votre {store}",
-      "AppliedError": "Aucun des objets de votre loadout n'a pu être transféré.",
+      "AppliedAuto": "Constructeur de Pré set automatique",
+      "Applied": "Votre pré set de {amount, plural, =1{objet} other {# objets}} a été transféré à votre {store}",
+      "AppliedError": "Aucun des objets de votre pré set n'a pu être transféré.",
       "AppliedWarn": "Votre pré set a été partiellement transféré, mais {failed} objets sur {total} ont échoués.",
       "NameRequired": "Un nom est requis.",
       "MakeRoom": "Faire de la place pour le Commis des postes",
       "MakeRoomDone": "À Fini de faire de la place pour {postmasterNum, plural, =1{1 objet du commis des postes} other {# objets du Commis des postes}} en déplaçant {movedNum, plural, =1{1 objet} other {# objets}} hors du {store}.",
       "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commis des postes: {error}.",
-      "SaveErrorTitle": "Erreur lors de l'enregistrement du loadout",
+      "SaveErrorTitle": "Erreur lors de l'enregistrement du pré set",
       "SaveErrorDescription": "Impossible d'enregistrer le pré set {loadoutName}: {error}",
-      "DeleteErrorTitle": "Erreur lors de la suppression du loadout",
-      "DeleteErrorDescription": "Impossible de supprimer le loadout {loadoutName}: {error}."
+      "DeleteErrorTitle": "Erreur lors de la suppression du pré set",
+      "DeleteErrorDescription": "Impossible de supprimer le pré set {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Base de données d'info de Destiny en cours de construction",
       "Download": "Téléchargement en cours des derniers infos Destiny de Bungie",
       "Error": "Erreur de chargement des infos de Destiny:\n{error}\nActualisez pour réessayer.",
       "Outdated": "Infos Destiny expirées",
-      "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionalités de DIM puissent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
+      "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionnalités de DIM peuvent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
       "Load": "Chargement des données sauvegardées de Destiny",
       "LoadCharInv": "Chargement des persos et des inventaires de Destiny",
       "Save": "Sauvegarde des dernières données de Destiny",
@@ -403,8 +403,8 @@
    },
    "SyncService": {
       "GoogleDriveReAuth": "Pour réautoriser Google Drive, vous devez redémarrer votre navigateur.",
-      "OneItemTooLarge": "Votre fichier de sauvegarde a un objet trop volumineux. Probablement un loadout enregistré avec trop d'articles.",
-      "SaveTooLarge": "Votre fichier de sauvegarde est trop volumineux. Supprimez les loadouts enregistrés."
+      "OneItemTooLarge": "Votre fichier de sauvegarde a un objet trop volumineux. Probablement un pré set enregistré avec trop d'articles.",
+      "SaveTooLarge": "Votre fichier de sauvegarde est trop volumineux. Supprimez les pré sets enregistrés."
    },
    "Tags": {
       "TagItem": "Tagger Objet",
@@ -433,7 +433,7 @@
    },
    "RecordBooks": {
       "RecordBooks": "Carnet d'exploits",
-      "HideCompleted": "Cacher les records complétés"
+      "HideCompleted": "Cacher les exploits complétés"
    },
    "Views": {
       "About": {
@@ -449,7 +449,7 @@
          "FAQLogout": "Comment puis-je me déconnecter de DIM?",
          "FAQLogoutAnswer": "Allez vers la page de paramètre (icône d'engrenage) et cliquez sur \"Se déconnecter\".",
          "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
-         "FAQLostItemAnswer": "Il est plus que probable que votre transfer a échoué, laissant votre objet dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
+         "FAQLostItemAnswer": "Il est plus que probable que votre transfer ait échoué, laissant votre objet dans le coffre ou sur un autre personnage. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancez l'app en appuyant sur F5. Vérifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
          "GitHub": "GitHub",
          "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur Github.",
          "GitHubRepo": "DIM Git Repo",
