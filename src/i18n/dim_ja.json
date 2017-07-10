@@ -270,7 +270,10 @@
         "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
         "Take": "取る",
         "Vault": "保管庫",
-        "LockUnlock_Unlock": "解除 {{itemType}}"
+        "LockUnlock_Lock": "固定する {{itemType}}",
+        "LockUnlock_Unlock": "固定解除する {{itemType}}",
+        "TrackUntrack_Track": "このクエスト進捗を表示",
+        "TrackUntrack_Untrack": "このクエストの進行を隠す"
     },
     "MoveAmount": {
         "Min": "最小限 (1)",

@@ -1548,7 +1548,7 @@ h2, h3, h4 {
   backface-visibility: hidden;
   z-index: 4;
 
-  .something-is-sticky & {
+  &.something-is-sticky {
     box-shadow: 0 1px 6px 0px #222;
   }
 }

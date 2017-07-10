@@ -268,7 +268,11 @@
         "Subtitle_Consumable": "{{classType}} {{typeName}}",
         "Subtitle_Gear": "{{classType}} {{typeName}} com {{light}} de {{statName}}",
         "Take": "Tomar",
-        "Vault": "Cofre"
+        "Vault": "Cofre",
+        "LockUnlock_Lock": "Travar {{itemType}}",
+        "LockUnlock_Unlock": "Destravar {{itemType}}",
+        "TrackUntrack_Track": "Seguir {{itemType}}",
+        "TrackUntrack_Untrack": "No seguir {{itemType}}"
     },
     "MoveAmount": {
         "Min": "Quantidade mínima (1)",
