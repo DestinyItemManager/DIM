@@ -142,7 +142,7 @@
       "ExoticError": "'{itemname}' ne peut pas être équipé dans {slot} l'emplacement ne peut pas être déséquipé. ({error})",
       "NotEnoughRoom": "Il n'y a rien qu'on puisse déplacer de {store} pour faire de la place pour {itemname}",
       "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {level} ou plus.",
-      "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un/une {class} de niveau {level} ou plus.",
+      "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {class} de niveau {level} ou plus.",
       "PercentComplete": "({ percent, number, percent } Achevé)",
       "TooMuch": "Il semblerait que vous avait demandé de déplacer plus d'objet qu'il en existe à la source.",
       "TwoExotics": "Ont ne sait pas comment tu a fait pour avoir plus de 2 exotiques équippé!"
