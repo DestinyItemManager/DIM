@@ -1,8 +1,8 @@
 <div id="loadout-drawer" ng-if="vm.show">
   <div class="compare-options">
-    <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')" translate="{{ vm.compare.location.inWeapons ? 'Compare.Archetype' : 'Compare.Splits' }}" translate-values="{ quantity:  vm.archeTypes.length }"></label>
-    <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()" translate="Compare.All" translate-values="{ type: vm.compare.typeName, quantity: vm.similarTypes.length }"></label>
-    <label class="dim-button" ng-click="vm.cancel()" translate="Compare.Close"></label>
+    <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')" ng-i18next="[i18next]({ quantity: vm.archeTypes.length }){{ vm.compare.location.inWeapons ? 'Compare.Archetype' : 'Compare.Splits' }}"></label>
+    <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()" ng-i18next="[i18next]({ type: vm.compare.typeName, quantity: vm.similarTypes.length })Compare.All"></label>
+    <label class="dim-button" ng-click="vm.cancel()" ng-i18next="Compare.Close"></label>
   </div>
   <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
     <div class="compare-item fixed-left">

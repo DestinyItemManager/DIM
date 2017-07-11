@@ -7,10 +7,10 @@ import filtersTemplate from 'app/views/filters.html';
 // This is outside the class in order to make it a truly global
 // fire-once function, so no matter how many times they visit this
 // page, they'll only see the popup once per session.
-const showExtensionDeprecation = _.once(($translate, dimInfoService) => {
+const showExtensionDeprecation = _.once(($i18next, dimInfoService) => {
   dimInfoService.show('extension-deprecated', {
-    title: $translate.instant('Help.ExtensionDeprecatedTitle'),
-    body: $translate.instant('Help.ExtensionDeprecatedMessage'),
+    title: $i18next.t('Help.ExtensionDeprecatedTitle'),
+    body: $i18next.t('Help.ExtensionDeprecatedMessage'),
     type: 'info'
   }, 0);
 });
@@ -29,7 +29,7 @@ export default class ContentController {
     $scope,
     $state,
     dimVendorService,
-    $translate,
+    $i18next,
     dimInfoService
   ) {
     'ngInject';
@@ -62,7 +62,7 @@ export default class ContentController {
 
     hotkeys.add({
       combo: ['i'],
-      description: $translate.instant('Hotkey.ToggleDetails'),
+      description: $i18next.t('Hotkey.ToggleDetails'),
       callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
       }
@@ -73,8 +73,8 @@ export default class ContentController {
         if (tag.hotkey) {
           hotkeys.add({
             combo: [tag.hotkey],
-            description: $translate.instant('Hotkey.MarkItemAs', {
-              tag: $translate.instant(tag.label)
+            description: $i18next.t('Hotkey.MarkItemAs', {
+              tag: $i18next.t(tag.label)
             }),
             callback: function() {
               $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
@@ -141,7 +141,7 @@ export default class ContentController {
 
       switch (event.data.type) {
       case 'DIM_EXT_PONG':
-        showExtensionDeprecation($translate, dimInfoService);
+        showExtensionDeprecation($i18next, dimInfoService);
         break;
       }
     }

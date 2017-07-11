@@ -8,7 +8,7 @@ export const RandomLoadoutComponent = {
   controller: RandomLoadoutCtrl
 };
 
-function RandomLoadoutCtrl($window, $scope, dimStoreService, dimLoadoutService, $translate) {
+function RandomLoadoutCtrl($window, $scope, dimStoreService, dimLoadoutService, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -26,7 +26,7 @@ function RandomLoadoutCtrl($window, $scope, dimStoreService, dimLoadoutService, 
       return null;
     }
 
-    if (!$window.confirm($translate.instant('Loadouts.Randomize'))) {
+    if (!$window.confirm($i18next.t('Loadouts.Randomize'))) {
       return null;
     }
 
@@ -82,7 +82,7 @@ function RandomLoadoutCtrl($window, $scope, dimStoreService, dimLoadoutService, 
     return dimLoadoutService
       .applyLoadout(store, {
         classType: -1,
-        name: $translate.instant('Loadouts.Random'),
+        name: $i18next.t('Loadouts.Random'),
         items: items
       }, true)
       .finally(() => {

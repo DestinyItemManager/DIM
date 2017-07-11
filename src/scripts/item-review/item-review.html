@@ -3,7 +3,7 @@
     <div ng-if="$ctrl.featureFlags.reviewsEnabled" class="review-setting-table">
       <div>
         <div class="review-setting-table--name">
-          <label for="showReviews" translate="Settings.ShowReviews"></label>
+          <label for="showReviews" ng-i18next="Settings.ShowReviews"></label>
           <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/RATINGS.md" target="_blank" rel="noopener noreferrer"></a>
         </div>
         <div class="review-setting-table--value">
@@ -12,9 +12,9 @@
       </div>
       <div>
         <div class="review-setting-table--name">
-          <label for="allowIdPostToDtr" translate="Settings.AllowIdPostToDtr"></label>
+          <label for="allowIdPostToDtr" ng-i18next="Settings.AllowIdPostToDtr"></label>
           <div>
-            <label class="fineprint" translate="Settings.AllowIdPostToDtrLine2"></label>
+            <label class="fineprint" ng-i18next="Settings.AllowIdPostToDtrLine2"></label>
             <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/PRIVACY.md" target="_blank" rel="noopener noreferrer"></a>
           </div>
         </div>
@@ -27,24 +27,24 @@
 </div>
 
 <div ng-if="$ctrl.canCreateReview" class="user-review--header">
-  <span translate="DtrReview.YourReview"></span>
+  <span ng-i18next="DtrReview.YourReview"></span>
   <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()"></star-rating>
 
   <span ng-show="$ctrl.expandReview">
-    <span class="dim-button" ng-click="$ctrl.submitReview()" translate="DtrReview.Submit"></span>
-    <span class="dim-button" ng-click="$ctrl.toggleEdit()" translate="DtrReview.Cancel"></span>
+    <span class="dim-button" ng-click="$ctrl.submitReview()" ng-i18next="DtrReview.Submit"></span>
+    <span class="dim-button" ng-click="$ctrl.toggleEdit()" ng-i18next="DtrReview.Cancel"></span>
   </span>
 </div>
 
 <div ng-if="$ctrl.canReview" class="community-review--details" ng-show="$ctrl.expandReview">
-  <textarea translate-attr="{ placeholder: 'DtrReview.Help' }"
+  <textarea ng-i18next="[placeholder]DtrReview.Help"
             ng-model="$ctrl.item.userReview"
             ng-blur="$ctrl.reviewBlur()"></textarea>
   <div ng-if="$ctrl.procon" class="community-review--procon">
-    <textarea translate-attr="{ placeholder: 'DtrReview.HelpPros' }"
+    <textarea ng-i18next="[placeholder]DtrReview.HelpPros"
               ng-model="$ctrl.item.userReviewPros"
               ng-blur="$ctrl.reviewBlur()"></textarea>
-    <textarea translate-attr="{ placeholder: 'DtrReview.HelpCons' }"
+    <textarea ng-i18next="[placeholder]DtrReview.HelpCons"
               ng-model="$ctrl.item.userReviewCons"
               ng-blur="$ctrl.reviewBlur()"></textarea>
   </div>
@@ -53,17 +53,17 @@
 <div ng-if="$ctrl.canReview" class="community-review--reviews" ng-hide="$ctrl.expandReview">
   <div ng-if="$ctrl.submitted"
        class="community-review--message"
-       translate="DtrReview.ThankYou"></div>
+       ng-i18next="DtrReview.ThankYou"></div>
   <div ng-if="!$ctrl.item.writtenReviews.length && !$ctrl.submitted"
        class="community-review--message"
-       translate="DtrReview.NoReviews"></div>
+       ng-i18next="DtrReview.NoReviews"></div>
   <div ng-if="$ctrl.procon" class="community-review--procon">
     <div>
-      <div translate="DtrReview.Pros"></div>
+      <div ng-i18next="DtrReview.Pros"></div>
       <div ng-repeat="pro in $ctrl.aggregate.pros" ng-bind="pro"></div>
     </div>
     <div>
-      <div translate="DtrReview.Cons"></div>
+      <div ng-i18next="DtrReview.Cons"></div>
       <div ng-repeat="con in $ctrl.aggregate.cons" ng-bind="con"></div>
     </div>
   </div>

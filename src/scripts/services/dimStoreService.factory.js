@@ -22,7 +22,7 @@ function StoreService(
   dimBucketService,
   dimItemInfoService,
   dimManifestService,
-  $translate,
+  $i18next,
   dimDestinyTrackerService,
   toaster,
   StoreFactory,
@@ -270,7 +270,7 @@ function StoreService(
 
   function showErrorToaster(e) {
     const twitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
-    const twitter = `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`;
+    const twitter = `<div> ${$i18next.t('BungieService.Twitter')} ${twitterLink}</div>`;
 
     toaster.pop({
       type: 'error',

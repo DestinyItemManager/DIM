@@ -5,15 +5,15 @@ angular.module('dimApp')
   .factory('dimItemMoveService', ItemMoveService);
 
 
-function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $translate) {
-  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DragAndDrop')}</p>
-                              <p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
+function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
+  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.DragAndDrop')}</p>
+                              <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('movebox', {
-      title: $translate.instant('DidYouKnow'),
+      title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
-      hide: $translate.instant('DidYouKnow.DontShowAgain')
+      hide: $i18next.t('DidYouKnow.DontShowAgain')
     });
   });
 
@@ -78,11 +78,11 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     promise = promise.then(() => {
       let message;
       if (store.isVault) {
-        message = $translate.instant('ItemMove.ToVault', { name: actionableItem.name });
+        message = $i18next.t('ItemMove.ToVault', { name: actionableItem.name });
       } else {
-        message = $translate.instant('ItemMove.ToStore', { name: actionableItem.name, store: store.name });
+        message = $i18next.t('ItemMove.ToStore', { name: actionableItem.name, store: store.name });
       }
-      toaster.pop('success', $translate.instant('ItemMove.Consolidate', { name: actionableItem.name }), message);
+      toaster.pop('success', $i18next.t('ItemMove.Consolidate', { name: actionableItem.name }), message);
     })
     .catch((a) => {
       toaster.pop('error', actionableItem.name, a.message);
@@ -161,7 +161,7 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     });
 
     promise = promise.then(() => {
-      toaster.pop('success', $translate.instant('ItemMove.Distributed', { name: actionableItem.name }));
+      toaster.pop('success', $i18next.t('ItemMove.Distributed', { name: actionableItem.name }));
     })
     .catch((a) => {
       toaster.pop('error', actionableItem.name, a.message);

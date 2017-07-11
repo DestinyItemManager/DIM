@@ -11,7 +11,7 @@ export function Destiny1Api(
   $q,
   $http,
   dimState,
-  $translate) {
+  $i18next) {
   'ngInject';
   const { handleErrors, retryOnThrottled } = BungieServiceHelper;
 
@@ -43,7 +43,7 @@ export function Destiny1Api(
 
     function processBnetCharactersRequest(response) {
       if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
+        return $q.reject(new Error($i18next.t('BungieService.NoAccountForPlatform', {
           platform: platform.label
         })));
       }
@@ -180,11 +180,11 @@ export function Destiny1Api(
     // Handle "DestinyUniquenessViolation" (1648)
     function handleUniquenessViolation(e, item, store) {
       if (e && e.code === 1648) {
-        const error = Error($translate.instant('BungieService.ItemUniquenessExplanation', {
+        const error = Error($i18next.t('BungieService.ItemUniquenessExplanation', {
           name: item.name,
           type: item.type.toLowerCase(),
           character: store.name,
-          gender: store.gender
+          context: store.gender
         }));
         error.code = e.code;
         return $q.reject(error);

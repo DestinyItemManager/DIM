@@ -10,7 +10,7 @@ Due to what information is provided by Bungie about item names and descriptions 
 
 # Translating DIM
 
-We use [Angular translate](https://angular-translate.github.io/docs/#/guide/02_getting-started) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span translate="KEY"></span>` and then defining KEY in the i18n file. Within code, you need to use the `$translate` service - see `dimStoreService` for an example.
+We use [i18next](https://github.com/i18next/ng-i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span ng-i18next="KEY"></span>` and then defining KEY in the i18n file. Within code, you need to use the `$i18next.t` service - see `dimStoreService` for an example.
 
 # Join the translation team @ Transifex
 [Transifex](https://www.transifex.com/destiny-item-manager/destiny-item-manager/)
