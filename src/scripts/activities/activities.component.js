@@ -14,6 +14,13 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     vm.settings.save();
   };
 
+  // TODO: it's time for a directive
+  vm.toggleSection = function(id) {
+    console.log('toggle', id);
+    vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
+    vm.settings.save();
+  };
+
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info
   // here. Unfortunately we're also using advisor info to populate

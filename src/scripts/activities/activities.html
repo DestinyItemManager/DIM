@@ -26,7 +26,11 @@
   </div>
 
   <div class="activity section" ng-repeat="activity in $ctrl.activities track by $index">
-    <div class="title activity-header" ng-style="::activity.image | bungieBackground" ng-class="{ 'activity-featured': activity.featured }">
+    <div class="title activity-header"
+         ng-style="::activity.image | bungieBackground"
+         ng-class="{ 'activity-featured': activity.featured }"
+         ng-click="$ctrl.toggleSection('activities-' + activity.hash)">
+      <span class="collapse-handle" ><i class="fa collapse" ng-class="$ctrl.settings.collapsedSections['activities-' + activity.hash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
         <img class="small-icon" ng-src="{{ ::activity.icon | bungieIcon }}" />
         <span class="activity-name">{{ ::activity.name }}</span>
         <i ng-if="::activity.featured"  class="fa fa-star"></i>
@@ -34,7 +38,7 @@
       </span>
     </div>
 
-    <div class="activity-info">
+    <div class="activity-info" ng-if="!$ctrl.settings.collapsedSections['activities-' + activity.hash]">
       <div class="activity-progress" ng-repeat="tier in activity.tiers track by $index">
         <div class="tier-title" ng-if="activity.tiers.length > 1">{{ ::tier.name }}</div>
         <div class="tier-characters">
