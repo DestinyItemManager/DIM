@@ -6,6 +6,7 @@
 * Logging out now brings you to Bungie's auth page, where you can choose to change account or not.
 * Fixed "Clear New Items" not working.
 * Adjusted the UI a bunch to make it work better on mobile. Just a start - there's still a long way to go.
+* Fixed a case where you couldn't create a new class-specific loadout.
 
 # 4.3.0
 
