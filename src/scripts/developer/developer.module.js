@@ -7,7 +7,7 @@ export default angular
   .factory('developer', DeveloperComponent)
   .config(($stateProvider) => {
     'ngInject';
-    console.log("developer");
+
     $stateProvider.state({
       name: 'developer',
       url: '/developer',
