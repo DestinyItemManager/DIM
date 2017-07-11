@@ -306,7 +306,6 @@
         "Language": "言語(反映させるにはDIMをリフレッシュしてください)",
         "ShowReviews": "武器に関するレビュー評価を表示する",
         "ShowElemental": "武器の属性アイコンを表示する",
-        "SetSortHelp": "アイテムをレア度か統計量順で並べる.",
         "ResetToDefault": "リセット",
         "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
         "DIMPopups": "DIMの情報",

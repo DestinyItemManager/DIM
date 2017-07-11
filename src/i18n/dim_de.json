@@ -333,7 +333,6 @@
         "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen.",
         "AllowIdPostToDtrLine2": "Teile deinen Account-Namen und überprüfte Elemente mit Destiny Tracker.",
         "SetSort": "Sortiere Gegenstände nach",
-        "SetSortHelp": "Sortiere Gegenstände nach Bewertung, Seltenheit oder primärem Wert",
         "SortPrimary": "Primärer Wert",
         "SortRarity": "Seltenheit",
         "SortRoll": "Roll-Wert Prozent",

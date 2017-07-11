@@ -318,7 +318,6 @@
         "Language": "Lenguaje (recarga DIM para que se apliquen los cambios)",
         "ShowReviews": "Muestra la valuación de reseñas en las armas",
         "ShowElemental": "Mostrar ícono de daño elemental en armas",
-        "SetSortHelp": "Ordernar objetos por rareza o por sus valores estadísticos.",
         "ResetToDefault": "Reiniciar",
         "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
         "DIMPopups": "Ventanas emergentes de información de DIM",

@@ -354,7 +354,6 @@
         "AllowIdPostToDtr": "Mostra recensioni dettagliate delle armi e permetti di dare un giudizio",
         "AllowIdPostToDtrLine2": "Questo condividerà il tuo nome account e recensioni con Destiny Tracker.",
         "SetSort": "Ordina oggetti per",
-        "SetSortHelp": "Ordina gli oggetti per giudizio, rarità, oppure per valore della statistica primaria.",
         "SortPrimary": "Statistica primaria",
         "SortRarity": "Rarità",
         "SortRoll": "Giudizio",

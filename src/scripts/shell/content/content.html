@@ -3,7 +3,7 @@
     <i class="fa fa-bars"></i>
     <div class="dropdown" ng-if="$ctrl.dropdown">
       <span class="link" ui-sref="inventory" ng-i18next="Header.Inventory"></span>
-      <span class="link" ng-click="$ctrl.toggleState('loadout-builder')" ng-i18next="[title]LB.LB"></span>
+      <span class="link" ng-click="$ctrl.toggleState('loadout-builder')" ng-i18next="LB.LB"></span>
       <span class="link" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleState('vendors')" ng-i18next="Vendors.Vendors"></span>
       <span class="link" ng-click="$ctrl.toggleState('record-books')" ng-i18next="RecordBooks.RecordBooks"></span>
       <span class="link" ng-if="::$ctrl.featureFlags.activities" ng-click="$ctrl.toggleState('activities')" ng-i18next="Activities.Activities"></span>

@@ -338,7 +338,6 @@
         "AllowIdPostToDtr": "Montrer les évaluations détaillés de l'arme et autoriser l'évaluation des armes",
         "AllowIdPostToDtrLine2": "Cela partagera le nom de votre compte et vos items évalués avec Destiny Tracker.",
         "SetSort": "Trier les objets par",
-        "SetSortHelp": "Trier les objets par note, rareté, ou la valeur de leur stat primaire.",
         "SortPrimary": "stat primaire",
         "SortRarity": "rareté",
         "SortRoll": "note",
