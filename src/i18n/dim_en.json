@@ -207,7 +207,7 @@
       "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!"
    },
    "Loadouts": {
-      "Any": "Any",
+      "Any": "Any class",
       "Loadouts": "Loadouts",
       "Before": "Before '{name}'",
       "Create": "Create Loadout",

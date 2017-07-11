@@ -27,7 +27,7 @@ function Loadout(dimLoadoutService, $translate) {
       These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
       */
 
-      _.each(_.uniq(_.reject(data.stores, 'isVault'), false, (store) => { return store.classType; }), (store) => {
+      _.each(_.uniq(_.reject(data.stores, 'isVault'), false, (store) => store.classType), (store) => {
         let classType = 0;
 
         switch (parseInt(store.classType, 10)) {
@@ -49,12 +49,6 @@ function Loadout(dimLoadoutService, $translate) {
       });
     });
 
-    scope.$on('dim-create-new-loadout', () => {
-      vm.show = true;
-      dimLoadoutService.dialogOpen = true;
-      vm.loadout = angular.copy(vm.defaults);
-    });
-
     scope.$on('dim-delete-loadout', () => {
       vm.show = false;
       dimLoadoutService.dialogOpen = false;
@@ -71,6 +65,9 @@ function Loadout(dimLoadoutService, $translate) {
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
         vm.originalLoadout = args.loadout;
+        if (args.loadout.classType === undefined) {
+          args.loadout.classType = -1;
+        }
 
         // Filter out any vendor items and equip all if requested
         args.loadout.warnitems = _.reduce(args.loadout.items, (o, items) => {
