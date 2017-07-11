@@ -22,6 +22,12 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     vm.settings.save();
   };
 
+  // TODO: it's time for a directive
+  vm.toggleSection = function(id) {
+    vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
+    vm.settings.save();
+  };
+
   this.$onInit = function() {
     // TODO: this is a hack for loading stores - it should be just an observable
     vm.stores = dimStoreService.getStores();
@@ -48,7 +54,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       return;
     }
 
-    stores = stores.filter((s) => s.id !== 'vault');
+    vm.stores = stores = stores.filter((s) => s.id !== 'vault');
 
     const whitelist = [
       'vaultofglass',
