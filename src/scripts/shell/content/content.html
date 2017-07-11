@@ -38,11 +38,10 @@
       <dim-search-filter></dim-search-filter>
     </span>
     <span class="link search-button" ng-click="$ctrl.showSearch = !$ctrl.showSearch"><i class="fa fa-search"></i></span>
-    <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.currentPlatform" on-platform-change="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
+    <account-select></account-select>
   </span>
 </div>
 
 <div id="content" ui-view></div>
 <div class="store-bounds"></div>
 <dim-manifest-progress></dim-manifest-progress>
-<ng-include ng-if="::$ctrl.featureFlags.colorA11y" src="'data/color-a11y.svg'"></ng-include>

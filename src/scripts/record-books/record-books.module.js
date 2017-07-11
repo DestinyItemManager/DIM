@@ -12,7 +12,7 @@ export default angular
 
     $stateProvider.state({
       name: 'record-books',
-      parent: 'content',
+      parent: 'destiny1account',
       component: 'recordBooks',
       url: '/record-books'
     });

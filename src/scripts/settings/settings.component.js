@@ -48,12 +48,6 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   // Edge doesn't support these
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
 
-  vm.logout = function() {
-    OAuthTokenService.removeToken();
-    ngDialog.closeAll();
-    $state.go('login', { reauth: true });
-  };
-
   vm.downloadWeaponCsv = function() {
     dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
     ga('send', 'event', 'Download CSV', 'Weapons');

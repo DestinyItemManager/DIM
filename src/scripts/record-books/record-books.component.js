@@ -5,6 +5,14 @@ import { sum, count } from '../util';
 import template from './record-books.html';
 import './record-books.scss';
 
+export const RecordBooksComponent = {
+  controller: RecordBooksController,
+  template,
+  bindings: {
+    account: '<'
+  }
+};
+
 function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSettingsService, $filter) {
   'ngInject';
 
@@ -20,6 +28,20 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
 
   vm.settingsChanged = function() {
     vm.settings.save();
+  };
+
+  this.$onInit = function() {
+    // TODO: this is a hack for loading stores - it should be just an observable
+    vm.stores = dimStoreService.getStores();
+    // TODO: OK, need to push this check into store service
+    if (!vm.stores.length ||
+        dimStoreService.activePlatform.membershipId !== vm.account.membershipId ||
+        dimStoreService.activePlatform.platformType !== vm.account.platformType) {
+      dimStoreService.reloadStores(vm.account);
+      // TODO: currently this wires us up via the dim-stores-updated event
+    }
+
+    init();
   };
 
   // TODO: Ideally there would be an Advisors service that would
@@ -137,8 +159,3 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
     };
   }
 }
-
-export const RecordBooksComponent = {
-  controller: RecordBooksController,
-  template: template
-};
