@@ -1,6 +1,19 @@
+import _ from 'underscore';
+
 import aboutTemplate from 'app/views/about.html';
 import supportTemplate from 'app/views/support.html';
 import filtersTemplate from 'app/views/filters.html';
+
+// This is outside the class in order to make it a truly global
+// fire-once function, so no matter how many times they visit this
+// page, they'll only see the popup once per session.
+const showExtensionDeprecation = _.once(($translate, dimInfoService) => {
+  dimInfoService.show('extension-deprecated', {
+    title: $translate.instant('Help.ExtensionDeprecatedTitle'),
+    body: $translate.instant('Help.ExtensionDeprecatedMessage'),
+    type: 'info'
+  }, 0);
+});
 
 export default class ContentController {
   constructor(
@@ -159,11 +172,7 @@ export default class ContentController {
 
       switch (event.data.type) {
       case 'DIM_EXT_PONG':
-        dimInfoService.show('extension-deprecated', {
-          title: $translate.instant('Help.ExtensionDeprecatedTitle'),
-          body: $translate.instant('Help.ExtensionDeprecatedMessage'),
-          type: 'info'
-        }, 0);
+        showExtensionDeprecation($translate, dimInfoService);
         break;
       }
     }
