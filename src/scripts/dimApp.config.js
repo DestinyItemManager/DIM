@@ -10,7 +10,7 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
                 hotkeysProvider, ngHttpRateLimiterConfigProvider, ngDialogProvider) {
   'ngInject';
 
-  // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/CHANGELOG.md#breaking-changes-1
+  // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/docs/CHANGELOG.md#breaking-changes-1
   $compileProvider.preAssignBindingsEnabled(true);
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?:|data:image\/)/);
 
