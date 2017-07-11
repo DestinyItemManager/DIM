@@ -6,6 +6,7 @@
 * Logging out now brings you to Bungie's auth page, where you can choose to change account or not.
 * Fixed "Clear New Items" not working.
 * Adjusted the UI a bunch to make it work better on mobile. Just a start - there's still a long way to go.
+* The announcement about DIM being a website won't show more than once per app session.
 
 # 4.3.0
 
