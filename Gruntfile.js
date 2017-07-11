@@ -218,11 +218,11 @@ module.exports = function(grunt) {
   );
 
   grunt.registerTask('update_terms', [
-    'poeditor:target1:upload'
+    'poeditor:upload_terms:upload'
   ]);
 
   grunt.registerTask('download_translations', [
-    'poeditor:target2:download'
+    'poeditor:download_terms:download'
   ]);
 
   grunt.registerTask('publish_beta', [
