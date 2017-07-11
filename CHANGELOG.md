@@ -6,6 +6,7 @@
 * Logging out now brings you to Bungie's auth page, where you can choose to change account or not.
 * Fixed "Clear New Items" not working.
 * Adjusted the UI a bunch to make it work better on mobile. Just a start - there's still a long way to go.
+* On Firefox, the new-item shines don't extend past the item anymore.
 
 # 4.3.0
 
