@@ -30,7 +30,7 @@ export function ItemFactory(
   dimState,
   dimManifestService,
   dimSettingsService,
-  $translate,
+  $i18next,
   NewItemsService,
   ClassifiedDataService,
   dimDefinitions,
@@ -131,7 +131,7 @@ export function ItemFactory(
       ClassifiedDataService.getClassifiedData()])
       .then((args) => {
         const result = [];
-        dimManifestService.statusText = `${$translate.instant('Manifest.LoadCharInv')}...`;
+        dimManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;
         _.each(items, (item) => {
           let createdItem = null;
           try {
@@ -647,7 +647,7 @@ export function ItemFactory(
     function buildObjective(name, current, max, bool, style) {
       return {
         displayStyle: style,
-        displayName: $translate.instant(`TrialsCard.${name}`),
+        displayName: $i18next.t(`TrialsCard.${name}`),
         progress: current,
         completionValue: max,
         complete: bool ? current >= max : false,
@@ -675,8 +675,8 @@ export function ItemFactory(
       return {
         displayName: def.displayDescription ||
           (objective.isComplete
-            ? $translate.instant('Objectives.Complete')
-            : $translate.instant('Objectives.Incomplete')),
+            ? $i18next.t('Objectives.Complete')
+            : $i18next.t('Objectives.Incomplete')),
         progress: objective.progress,
         completionValue: def.completionValue,
         complete: objective.isComplete,
@@ -691,7 +691,7 @@ export function ItemFactory(
     if (klass) {
       return klass.className;
     } else {
-      return $translate.instant('Loadouts.Any');
+      return $i18next.t('Loadouts.Any');
     }
   }
 

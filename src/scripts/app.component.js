@@ -7,7 +7,7 @@ export const AppComponent = {
   controller: AppComponentCtrl
 };
 
-function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettingsService, $translate, toaster, $timeout) {
+function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettingsService, $i18next, toaster, $timeout) {
   'ngInject';
 
   this.$onInit = function() {
@@ -34,8 +34,8 @@ function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettin
     if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
       $timeout(() => {
         dimInfoService.show('old-chrome', {
-          title: $translate.instant('Help.UpgradeChrome'),
-          body: $translate.instant('Views.UpgradeChrome'),
+          title: $i18next.t('Help.UpgradeChrome'),
+          body: $i18next.t('Views.UpgradeChrome'),
           type: 'error',
           hideable: false
         }, 0);
@@ -46,7 +46,7 @@ function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettin
     if ($featureFlags.changelogToaster) {
       $timeout(() => {
         dimInfoService.show(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
-          title: $translate.instant('Help.Version', {
+          title: $i18next.t('Help.Version', {
             version: $DIM_VERSION,
             beta: $DIM_FLAVOR === 'beta'
           }),
@@ -61,8 +61,8 @@ function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettin
       console.log('storage test', e);
       $timeout(() => {
         dimInfoService.show('no-storage', {
-          title: $translate.instant('Help.NoStorage'),
-          body: $translate.instant('Help.NoStorageMessage'),
+          title: $i18next.t('Help.NoStorage'),
+          body: $i18next.t('Help.NoStorageMessage'),
           type: 'error',
           hideable: false
         }, 0);

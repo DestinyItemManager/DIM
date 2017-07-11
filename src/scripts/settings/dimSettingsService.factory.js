@@ -9,10 +9,10 @@ import _ from 'underscore';
  * "save()" on the settings object.
  *
  * Settings will start out with default values and asynchronously
- * load in the user's actual settings, so it is a good sidea to
+ * load in the user's actual settings, so it is a good idea to
  * always watch the settings you are using.
  */
-export function SettingsService($rootScope, SyncService, $window, $translate, $q) {
+export function SettingsService($rootScope, SyncService, $window, $i18next, $q) {
   'ngInject';
 
   let _loaded = false;
@@ -108,8 +108,9 @@ export function SettingsService($rootScope, SyncService, $window, $translate, $q
 
     $rootScope.$evalAsync(() => {
       angular.merge(settings, savedSettings);
-      $translate.use(settings.language);
-      $translate.fallbackLanguage('en');
+      window.i18next.init({
+        lng: settings.language,
+      });
       $rootScope.$emit('dim-settings-loaded', {});
     });
   });

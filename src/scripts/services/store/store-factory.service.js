@@ -30,7 +30,7 @@ const factionBadges = {
  * A factory service for producing "stores" (characters or the vault).
  * The job of filling in their items is left to other code - this is just the basic store itself.
  */
-export function StoreFactory($translate, dimInfoService, dimDefinitions) {
+export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
   'ngInject';
 
   // Prototype for Store objects - add methods to this to add them to all
@@ -116,9 +116,9 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
       if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
         dimInfoService.show('lostitems', {
           type: 'warning',
-          title: $translate.instant('Postmaster.Limit'),
-          body: $translate.instant('Postmaster.Desc', { store: this.name }),
-          hide: $translate.instant('Help.NeverShow')
+          title: $i18next.t('Postmaster.Limit'),
+          body: $i18next.t('Postmaster.Desc', { store: this.name }),
+          hide: $i18next.t('Help.NeverShow')
         });
       }
       item.owner = this.id;
@@ -235,10 +235,10 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
       let items = [];
       const store = angular.extend(Object.create(StoreProto), {
         id: 'vault',
-        name: $translate.instant('Bucket.Vault'),
+        name: $i18next.t('Bucket.Vault'),
         class: 'vault',
         current: false,
-        className: $translate.instant('Bucket.Vault'),
+        className: $i18next.t('Bucket.Vault'),
         lastPlayed: '2005-01-01T12:00:01Z',
         icon: require('app/images/vault.png'),
         background: require('app/images/vault-background.png'),

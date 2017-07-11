@@ -158,7 +158,7 @@ function SearchFilter(dimSearchService) {
 }
 
 
-function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $translate) {
+function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $i18next) {
   const vm = this;
   const filterInputSelector = '#filter-input';
   let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -188,7 +188,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
   hotkeys.bindTo($scope)
     .add({
       combo: ['f'],
-      description: $translate.instant('Hotkey.StartSearch'),
+      description: $i18next.t('Hotkey.StartSearch'),
       callback: function(event) {
         vm.focusFilterInput();
         event.preventDefault();

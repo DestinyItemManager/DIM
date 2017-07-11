@@ -8,7 +8,7 @@ export const RefreshStoresComponent = {
   controller: RefreshStoresController
 };
 
-function RefreshStoresController($scope, loadingTracker, hotkeys, dimStoreService, $translate) {
+function RefreshStoresController($scope, loadingTracker, hotkeys, dimStoreService, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -18,7 +18,7 @@ function RefreshStoresController($scope, loadingTracker, hotkeys, dimStoreServic
 
   hotkeys.add({
     combo: ['r'],
-    description: $translate.instant('Hotkey.RefreshInventory'),
+    description: $i18next.t('Hotkey.RefreshInventory'),
     callback: function() {
       vm.refresh();
     }

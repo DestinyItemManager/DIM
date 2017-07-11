@@ -12,7 +12,7 @@ export const InfuseComponent = {
   controllerAs: 'vm'
 };
 
-function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, toaster, $q, $translate) {
+function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, toaster, $q, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -113,7 +113,7 @@ function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, 
 
     transferItems: function() {
       if (vm.target.notransfer) {
-        toaster.pop('error', $translate.instant('Infusion.NoTransfer', { target: vm.target.name }));
+        toaster.pop('error', $i18next.t('Infusion.NoTransfer', { target: vm.target.name }));
         return $q.resolve();
       }
       const store = dimStoreService.getStore(vm.source.owner);
@@ -164,7 +164,7 @@ function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, 
 
       const loadout = {
         classType: -1,
-        name: $translate.instant('Infusion.InfusionMaterials'),
+        name: $i18next.t('Infusion.InfusionMaterials'),
         items: items
       };
 

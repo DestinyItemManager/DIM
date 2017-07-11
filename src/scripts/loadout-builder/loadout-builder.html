@@ -1,19 +1,19 @@
 <div class="loadout-builder" ng-class="::{ itemQuality: vm.qualityEnabled }">
   <back-link></back-link>
-  <h1 translate="LB"></h1>
+  <h1 ng-i18next="LB.LB"></h1>
 
   <loadout-builder-character-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></loadout-builder-character-select>
 
   <dim-loadout></dim-loadout>
 
   <p>
-    <span class="dim-button" ng-click="vm.showGear=!vm.showGear" translate-values="{ class: vm.i18nClassNames[vm.active] }" translate>{{ !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear' }}</span>
+    <span class="dim-button" ng-click="vm.showGear=!vm.showGear" ng-i18next="[i18next]({ class: vm.i18nClassNames[vm.active] }){{ !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear' }}"></span>
   </p>
   <div class="section" ng-show="vm.showGear">
-    <span translate="Bucket.Armor"></span>: <select ng-model="vm.type" ng-change="vm.testchange()" ng-options="val as type for (val, type) in vm.i18nItemNames"></select>
+    <span ng-i18next="Bucket.Armor"></span>: <select ng-model="vm.type" ng-change="vm.testchange()" ng-options="val as type for (val, type) in vm.i18nItemNames"></select>
     <label>
       <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="vm.includeVendors" ng-change="vm.onIncludeVendorsChange()">
-      <span translate="LB.Vendor"></span>
+      <span ng-i18next="LB.Vendor"></span>
     </label>
 
     <div class="loadout-builder-section">
@@ -33,9 +33,9 @@
 
   <div class="section">
     <p>
-      <span class="dim-button locked-button" ng-click="vm.lockEquipped()" translate="LB.LockEquipped"></span>
-      <span class="dim-button locked-button" ng-click="vm.clearLocked()" translate="LB.ClearLocked"></span>
-      <span translate="LB.Locked"></span> - <small translate="LB.LockedHelp"></small>
+      <span class="dim-button locked-button" ng-click="vm.lockEquipped()" ng-i18next="LB.LockEquipped"></span>
+      <span class="dim-button locked-button" ng-click="vm.clearLocked()" ng-i18next="LB.ClearLocked"></span>
+      <span ng-i18next="LB.Locked"></span> - <small ng-i18next="LB.LockedHelp"></small>
     </p>
     <loadout-builder-locks
       class="loadout-builder-section"
@@ -51,7 +51,7 @@
     </loadout-builder-locks>
   </div>
   <div class="section" ng-show="vm.excludeditems.length">
-    <p><span translate="LB.Exclude"></span> - <small translate="LB.ExcludeHelp"></small></p>
+    <p><span ng-i18next="LB.Exclude"></span> - <small ng-i18next="LB.ExcludeHelp"></small></p>
     <div class="loadout-builder-section">
       <div class="excluded-container">
         <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="vm.onExcludedDrop($data, $channel)" drop-validate="vm.excludedItemsValid($data, $channel)">
@@ -67,100 +67,101 @@
   </div>
   <p>
   </p>
+
   <div ng-show="vm.progress >= 1 && vm.hasSets">
-    <p><span translate="LB.FilterSets"></span> (<span translate="Stats.Intellect"></span>/<span translate="Stats.Discipline"></span>/<span translate="Stats.Strength"></span>):
+    <p><span ng-i18next="LB.FilterSets"></span> (<span ng-i18next="Stats.Intellect"></span>/<span ng-i18next="Stats.Discipline"></span>/<span ng-i18next="Stats.Strength"></span>):
       <select ng-model="vm.activesets" ng-change="vm.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in vm.allSetTiers"></select>
-      <span class="dim-button" ng-click="vm.showAdvanced=!vm.showAdvanced;vm.showHelp=false" translate="LB.AdvancedOptions"></span>
-      <span class="dim-button" ng-click="vm.showHelp=!vm.showHelp;vm.showAdvanced=false" translate="LB.Help"></span>
+      <span class="dim-button" ng-click="vm.showAdvanced=!vm.showAdvanced;vm.showHelp=false" ng-i18next="LB.AdvancedOptions"></span>
+      <span class="dim-button" ng-click="vm.showHelp=!vm.showHelp;vm.showAdvanced=false" ng-i18next="LB.Help.Help"></span>
       <span><div ng-show="vm.showAdvanced">
         <p>
           <label>
-            <select ng-model="vm.fullMode" ng-change="vm.onModeChange()" ng-options="(item ? 'LB.ProcessingMode.Full' : 'LB.ProcessingMode.Fast') | translate for item in [false, true]">
+            <select ng-model="vm.fullMode" ng-change="vm.onModeChange()" ng-options="(item ? 'LB.ProcessingMode.Full' : 'LB.ProcessingMode.Fast') | i18next for item in [false, true]">
             </select>
-            <span translate="LB.ProcessingMode"></span>
+            <span ng-i18next="LB.ProcessingMode.ProcessingMode"></span>
           </label>
           <small>-
-            <span ng-hide="vm.fullMode" translate="LB.ProcessingMode.HelpFast"></span>
-            <span ng-show="vm.fullMode" translate="LB.ProcessingMode.HelpFull"></span></small>
+            <span ng-hide="vm.fullMode" ng-i18next="LB.ProcessingMode.HelpFast"></span>
+            <span ng-show="vm.fullMode" ng-i18next="LB.ProcessingMode.HelpFull"></span></small>
         </p>
         <p>
           <label>
             <select ng-model="vm.scaleType" ng-change="vm.onModeChange()">
-              <option ng-if="::vm.qualityEnabled" value="scaled" translate="LB.Scaled"></option>
-              <option value="base" translate="LB.Current"></option>
+              <option ng-if="::vm.qualityEnabled" value="scaled" ng-i18next="LB.Scaled"></option>
+              <option value="base" ng-i18next="LB.Current"></option>
             </select>
-            <span translate="LB.LightMode"></span>
+            <span ng-i18next="LB.LightMode.LightMode"></span>
           </label>
           <small>-
-            <span ng-show="vm.scaleType === 'scaled'" translate="LB.LightMode.HelpScaled"></span>
-            <span ng-show="vm.scaleType === 'base'" translate="LB.LightMode.HelpCurrent"></span></small>
+            <span ng-show="vm.scaleType === 'scaled'" ng-i18next="LB.LightMode.HelpScaled"></span>
+            <span ng-show="vm.scaleType === 'base'" ng-i18next="LB.LightMode.HelpCurrent"></span></small>
         </p>
         <p>
           <label>
             <input id="includeRares" type="checkbox" ng-model="vm.showBlues" ng-change="vm.onModeChange()">
-            <span translate="LB.IncludeRare"></span>
+            <span ng-i18next="LB.IncludeRare"></span>
           </label>
         </p>
       </div></span>
       <span><div ng-show="vm.showHelp">
         <ul>
-          <li translate="LB.Help.Lock"></li>
+          <li ng-i18next="LB.Help.Lock"></li>
           <ul>
-            <li translate="LB.Help.NoPerk"></li>
-            <li translate="LB.Help.MultiPerk"></li>
-            <li><div class="example ex-or"></div> - <span translate="LB.Help.Or"></span></li>
-            <li><div class="example ex-and"></div> - <span translate="LB.Help.And"></span></li>
+            <li ng-i18next="LB.Help.NoPerk"></li>
+            <li ng-i18next="LB.Help.MultiPerk"></li>
+            <li><div class="example ex-or"></div> - <span ng-i18next="LB.Help.Or"></span></li>
+            <li><div class="example ex-and"></div> - <span ng-i18next="LB.Help.And"></span></li>
           </ul>
-          <li translate="LB.Help.DragAndDrop"></li>
-          <li translate="LB.Help.ShiftClick"></li>
-          <li translate="LB.Help.HigherTiers"></li>
+          <li ng-i18next="LB.Help.DragAndDrop"></li>
+          <li ng-i18next="LB.Help.ShiftClick"></li>
+          <li ng-i18next="LB.Help.HigherTiers"></li>
           <ul>
-            <li translate="LB.Help.Tier11Example"></li>
-            <li translate="LB.Help.Intellect"></li>
-            <li translate="LB.Help.Discipline"></li>
-            <li translate="LB.Help.Strength"></li>
+            <li ng-i18next="LB.Help.Tier11Example"></li>
+            <li ng-i18next="LB.Help.Intellect"></li>
+            <li ng-i18next="LB.Help.Discipline"></li>
+            <li ng-i18next="LB.Help.Strength"></li>
           </ul>
-          <li translate="LB.Help.Synergy"></li>
-          <li translate="LB.Help.ChangeNodes"></li>
-          <li translate="LB.Help.StatsIncrease"></li>
+          <li ng-i18next="LB.Help.Synergy"></li>
+          <li ng-i18next="LB.Help.ChangeNodes"></li>
+          <li ng-i18next="LB.Help.StatsIncrease"></li>
         </ul>
       </div></span>
     </p>
   </div>
   <div ng-show="vm.progress >= 1 && !vm.hasSets">
-    <p ng-show="!vm.showBlues" translate="LB.Missing1"></p>
-    <p ng-show="vm.showBlues" translate="LB.Missing2"></p>
+    <p ng-show="!vm.showBlues" ng-i18next="LB.Missing1"></p>
+    <p ng-show="vm.showBlues" ng-i18next="LB.Missing2"></p>
     <p>
       <label>
         <input class="includeRares" type="checkbox" ng-model="vm.showBlues" ng-change="vm.onModeChange()">
-        <span translate="LB.IncludeRare"></span>
+        <span ng-i18next="LB.IncludeRare"></span>
       </label>
     </p>
   </div>
   <div ng-show="vm.progress < 1 && vm.hasSets">
-    <p><span translate="LB.Loading"></span> <span>({{ vm.progress*100 | number:2 }}%)</span></p>
+    <p><span ng-i18next="[i18next]({ percent: vm.progress })LB.Loading"></span></p>
   </div>
   <div ng-show="vm.progress >= 1">
     <div class="section loadout" ng-repeat="setType in vm.activeHighestSets track by setType.set.setHash">
       <div class="loadout-builder-controls">
-        <span ng-if="setType.set.includesVendorItems" translate="LB.ContainsVendorItems"></span>
-        <span ng-if="!setType.set.includesVendorItems" class="dim-button" ng-click="vm.newLoadout(setType.set)" translate="Loadouts.Create"></span>
-        <span ng-if="!setType.set.includesVendorItems" class="dim-button equip-button" ng-click="vm.equipItems(setType.set)" translate="LB.Equip" translate-values="{ character: vm.activeCharacters[vm.selectedCharacter].name }"></span>
+        <span ng-if="setType.set.includesVendorItems" ng-i18next="LB.ContainsVendorItems"></span>
+        <span ng-if="!setType.set.includesVendorItems" class="dim-button" ng-click="vm.newLoadout(setType.set)" ng-i18next="Loadouts.Create"></span>
+        <span ng-if="!setType.set.includesVendorItems" class="dim-button equip-button" ng-click="vm.equipItems(setType.set)" ng-i18next="[i18next]({ character: vm.activeCharacters[vm.selectedCharacter].name })LB.Equip"></span>
         <dim-stats stats="setType.tiers[vm.activesets].stats"></dim-stats>
       </div>
       <div class="loadout-builder-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <loadout-builder-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item"></loadout-builder-item>
           <dim-talent-grid class="smaller" talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-          <div class="label"><small translate="{{ setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus' }}"></small></div>
+          <div class="label"><small ng-i18next="{{setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small></div>
           <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[vm.activesets].configs">
-            <small translate="{{ config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus' }}"></small>
+            <small ng-i18next="{{config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small>
           </div>
         </div>
       </div>
       <div ng-show="setType.tiers[vm.activesets].configs.length > 1" class="expand-configs" ng-model="collapsedConfigs[$index]" ng-click="collapsedConfigs[$index]=!collapsedConfigs[$index]">
-        <div ng-show="!collapsedConfigs[$index]"><span translate-attr="{ title: 'LB.ShowConfigs'}"><i class="fa fa-caret-right"></i></span> <span translate="LB.ShowAllConfigs"></span></div>
-        <div ng-show="collapsedConfigs[$index]"><span translate-attr="{ title: 'LB.HideConfigs'}"><i class="fa fa-caret-up"></i></span> <span translate="LB.HideAllConfigs"></span></div>
+        <div ng-show="!collapsedConfigs[$index]"><span ng-i18next="[title]LB.ShowConfigs"><i class="fa fa-caret-right"></i></span> <span ng-i18next="LB.ShowAllConfigs"></span></div>
+        <div ng-show="collapsedConfigs[$index]"><span ng-i18next="[title]LB.HideConfigs"><i class="fa fa-caret-up"></i></span> <span ng-i18next="LB.HideAllConfigs"></span></div>
       </div>
     </div>
   </div>
