@@ -111,9 +111,9 @@ module.exports = function(grunt) {
     },
 
     poeditor: {
-      target1: {
+      update_terms: {
         upload: { // special case for uploads
-          id: '<%= poeditor.options.project_id %>',
+          id: '116191',
           languages: {'en':'en'},
           file: 'src/i18n/dim_?.json',
           updating: 'terms_definitions',
@@ -122,11 +122,11 @@ module.exports = function(grunt) {
           fuzzy_trigger: 1
         }
       },
-      target2: {
+      download_terms: {
         download: {
-          project_id: '<%= poeditor.options.project_id %>',
+          project_id: '116191',
           type: 'key_value_json', // export type (check out the doc)
-          filters: ["translated"], // https://poeditor.com/api_reference/#export
+          filters: ["translated", "proofread"], // https://poeditor.com/api_reference/#export
           dest: 'src/i18n/dim_?.json',
           languages: {
             'de': 'de',
@@ -139,7 +139,6 @@ module.exports = function(grunt) {
         }
       },
       options: {
-        project_id: '116191',
         api_token: process.env.POEDITOR_API
       }
     }
