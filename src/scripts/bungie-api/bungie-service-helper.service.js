@@ -23,7 +23,7 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
       return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
     }
     if (response.status >= 503 && response.status <= 526 /* cloudflare */) {
-      return $q.reject(new Error($translate.instant('BungieService.Down')));
+      return $q.reject(new Error($translate.instant('BungieService.Difficulties')));
     }
     if (response.status < 200 || response.status >= 400) {
       return $q.reject(new Error($translate.instant('BungieService.NetworkError', {
@@ -38,6 +38,9 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
     switch (errorCode) {
     case 1: // Success
       return response;
+    case 22: // WebAuthModuleAsyncFailed
+      // We've only seen this when B.net is down
+      return $q.reject(new Error($translate.instant('BungieService.Difficulties')));
     case 1627: // DestinyVendorNotFound
       return $q.reject(new Error($translate.instant('BungieService.VendorNotFound')));
     case 2106: // AuthorizationCodeInvalid
@@ -76,7 +79,7 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
     // Any other error
     if (errorCode > 1) {
       if (response.data.Message) {
-        const error = new Error(response.data.Message);
+        const error = new Error($translate.instant('BungieService.UnknownError', { message: response.data.Message }));
         error.code = response.data.ErrorCode;
         error.status = response.data.ErrorStatus;
         return $q.reject(error);

@@ -15,7 +15,6 @@
    },
    "BungieService": {
       "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
-      "Down": "Bungie.net is down.",
       "Difficulties": "The Bungie API is currently experiencing difficulties.",
       "NetworkError": "Network error - {status} {statusText}",
       "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
@@ -28,7 +27,8 @@
       "Twitter": "Get status updates on:",
       "ItemUniqueness": "Item Uniqueness",
       "ItemUniquenessExplanation": "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one.",
-      "VendorNotFound": "Vendor data is unavailable."
+      "VendorNotFound": "Vendor data is unavailable.",
+      "UnknownError": "Bungie.net message: {message}"
    },
    "Compare": {
       "ButtonHelp": "Compare Items",

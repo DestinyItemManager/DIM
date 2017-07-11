@@ -138,6 +138,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
 
           manifestPromise = null;
           service.isError = true;
+          console.error("Manifest loading error", { error: e }, e);
           throw new Error(message);
         });
 
