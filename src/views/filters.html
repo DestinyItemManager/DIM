@@ -1,406 +1,406 @@
 <div id="filter-view" ng-controller="dimSettingsCtrl as vm">
   <h1 translate="Header.Filters"></h1>
   <div class="ngdialog-inner-content">
-  <p translate="Filter.ClickFilters"></p>
-  <p translate="Filter.Combine"></p>
-  <table>
-    <tr>
-      <td translate="Filter.Filter"></td>
-      <td translate="Filter.Description"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="item name"></dim-filter-link>
-      </td>
-      <td translate="Filter.PartialMatch"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:arc"></dim-filter-link>
-        <dim-filter-link filter="is:solar"></dim-filter-link>
-        <dim-filter-link filter="is:void"></dim-filter-link>
-        <dim-filter-link filter="is:kinetic"></dim-filter-link>
-      </td>
-      <td translate="Filter.DamageType"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="light:value"></dim-filter-link>
-        <dim-filter-link filter="light:&gt;=value"></dim-filter-link>
-        <dim-filter-link filter="light:&gt;value"></dim-filter-link>
-        <dim-filter-link filter="light:&lt;value"></dim-filter-link>
-        <dim-filter-link filter="light:&lt;=value"></dim-filter-link>
-      </td>
-      <td translate="Filter.LightLevel"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="stat:impact:value"></dim-filter-link>
-        <dim-filter-link filter="stat:impact:&gt;=value"></dim-filter-link>
-        <dim-filter-link filter="stat:impact:&gt;value"></dim-filter-link>
-        <dim-filter-link filter="stat:impact:&lt;value"></dim-filter-link>
-        <dim-filter-link filter="stat:impact:&lt;=value"></dim-filter-link>
-      </td>
-      <td translate="Filter.Stats">
-        <ul>
-          <li>stat:rof:</li>
-          <li>stat:impact:</li>
-          <li>stat:range:</li>
-          <li>stat:stability:</li>
-          <li>stat:reload:</li>
-          <li>stat:magazine:</li>
-          <li>stat:aimassist: or stat:aa:</li>
-          <li>stat:equipspeed:</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="quality:value"></dim-filter-link>
-        <dim-filter-link filter="quality:&gt;=value"></dim-filter-link>
-        <dim-filter-link filter="quality:&gt;value"></dim-filter-link>
-        <dim-filter-link filter="quality:&lt;value"></dim-filter-link>
-        <dim-filter-link filter="quality:&lt;=value"></dim-filter-link>
-      </td>
-      <td translate="Filter.Quality"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:light"></dim-filter-link>
-        <dim-filter-link filter="has:light"></dim-filter-link>
-      </td>
-      <td translate="Filter.ContributeLight"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:weapon"></dim-filter-link>
-        <dim-filter-link filter="is:armor"></dim-filter-link>
-        <dim-filter-link filter="is:cosmetic"></dim-filter-link>
-      </td>
-      <td translate="Filter.Categories"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:equipment"></dim-filter-link>
-        <dim-filter-link filter="is:equippable"></dim-filter-link>
-      </td>
-      <td translate="Filter.Equipment"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:transferable"></dim-filter-link>
-        <dim-filter-link filter="is:movable"></dim-filter-link>
-      </td>
-      <td translate="Filter.Transferable"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:equipped"></dim-filter-link>
-      </td>
-      <td translate="Filter.Equipped"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:weapon"></dim-filter-link>
-        <dim-filter-link filter="is:class"></dim-filter-link>
-        <dim-filter-link filter="is:primary"></dim-filter-link>
-        <dim-filter-link filter="is:special"></dim-filter-link>
-        <dim-filter-link filter="is:heavy"></dim-filter-link>
-      </td>
-      <td translate="Filter.WeaponClass"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:armor"></dim-filter-link>
-        <dim-filter-link filter="is:helmet"></dim-filter-link>
-        <dim-filter-link filter="is:gauntlets"></dim-filter-link>
-        <dim-filter-link filter="is:chest"></dim-filter-link>
-        <dim-filter-link filter="is:leg"></dim-filter-link>
-        <dim-filter-link filter="is:classitem"></dim-filter-link>
-      </td>
-      <td translate="Filter.ArmorCategory"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:common"></dim-filter-link>
-        <dim-filter-link filter="is:uncommon"></dim-filter-link>
-        <dim-filter-link filter="is:rare"></dim-filter-link>
-        <dim-filter-link filter="is:legendary"></dim-filter-link>
-        <dim-filter-link filter="is:sublime"></dim-filter-link>
-        <dim-filter-link filter="is:exotic"></dim-filter-link>
-        <dim-filter-link filter="is:white"></dim-filter-link>
-        <dim-filter-link filter="is:green"></dim-filter-link>
-        <dim-filter-link filter="is:blue"></dim-filter-link>
-        <dim-filter-link filter="is:purple"></dim-filter-link>
-        <dim-filter-link filter="is:yellow"></dim-filter-link>
-      </td>
-      <td translate="Filter.RarityTier"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:intellect"></dim-filter-link>
-        <dim-filter-link filter="is:discipline"></dim-filter-link>
-        <dim-filter-link filter="is:strength"></dim-filter-link>
-      </td>
-      <td translate="Filter.NamedStat"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:infusable"></dim-filter-link>
-        <dim-filter-link filter="is:infuse"></dim-filter-link>
-      </td>
-      <td translate="Filter.Infusable"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:ascended"></dim-filter-link>
-        <dim-filter-link filter="is:unascended"></dim-filter-link>
-      </td>
-      <td translate="Filter.Ascended"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:reforgeable"></dim-filter-link>
-        <dim-filter-link filter="is:reforge"></dim-filter-link>
-        <dim-filter-link filter="is:rerollable"></dim-filter-link>
-        <dim-filter-link filter="is:reroll"></dim-filter-link>
-      </td>
-      <td translate="Filter.Reforgeable"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:complete"></dim-filter-link>
-        <dim-filter-link filter="is:incomplete"></dim-filter-link>
-        <dim-filter-link filter="is:xpincomplete, is:needsxp"></dim-filter-link>
-        <dim-filter-link filter="is:xpcomplete"></dim-filter-link>
-        <dim-filter-link filter="is:upgraded"></dim-filter-link>
-      </td>
-      <td translate="Filter.Leveling.Leveling">
-        <ul>
-          <li translate="Filter.Leveling.Complete"></li>
-          <li translate="Filter.Leveling.Incomplete"></li>
-          <li translate="Filter.Leveling.NeedsXP"></li>
-          <li translate="Filter.Leveling.XPComplete"></li>
-          <li translate="Filter.Leveling.Upgraded"></li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:titan"></dim-filter-link>
-        <dim-filter-link filter="is:hunter"></dim-filter-link>
-        <dim-filter-link filter="is:warlock"></dim-filter-link>
-      </td>
-      <td translate="Filter.Class"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:dupe"></dim-filter-link>
-        <dim-filter-link filter="is:duplicate"></dim-filter-link>
-      </td>
-      <td translate="Filter.Dupe"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:locked"></dim-filter-link>
-        <dim-filter-link filter="is:unlocked"></dim-filter-link>
-      </td>
-      <td translate="Filter.Locked"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:tracked"></dim-filter-link>
-        <dim-filter-link filter="is:untracked"></dim-filter-link>
-      </td>
-      <td translate="Filter.Tracked"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:stackable"></dim-filter-link>
-      </td>
-      <td translate="Filter.Stackable"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:pulserifle"></dim-filter-link>
-        <dim-filter-link filter="is:scoutrifle"></dim-filter-link>
-        <dim-filter-link filter="is:handcannon"></dim-filter-link>
-        <dim-filter-link filter="is:autorifle"></dim-filter-link>
-        <dim-filter-link filter="is:sniperrifle"></dim-filter-link>
-        <dim-filter-link filter="is:shotgun"></dim-filter-link>
-        <dim-filter-link filter="is:fusionrifle"></dim-filter-link>
-        <dim-filter-link filter="is:sidearm"></dim-filter-link>
-        <dim-filter-link filter="is:rocketlauncher"></dim-filter-link>
-        <dim-filter-link filter="is:machinegun"></dim-filter-link>
-        <dim-filter-link filter="is:sword"></dim-filter-link>
-        <dim-filter-link filter="is:primaryweaponengram"></dim-filter-link>
-        <dim-filter-link filter="is:specialweaponengram"></dim-filter-link>
-        <dim-filter-link filter="is:heavyweaponengram"></dim-filter-link>
-      </td>
-      <td translate="Filter.WeaponType"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:engram"></dim-filter-link>
-      </td>
-      <td translate="Filter.Engrams"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:glimmeritem"></dim-filter-link>
-        <dim-filter-link filter="is:glimmerboost"></dim-filter-link>
-        <dim-filter-link filter="is:glimmersupply"></dim-filter-link>
-      </td>
-      <td translate="Filter.Glimmer.Glimmer">
-        <ul>
-          <li translate="Filter.Glimmer.Any"></li>
-          <li translate="Filter.Glimmer.Boost"></li>
-          <li translate="Filter.Glimmer.Item"></li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:new"></dim-filter-link>
-      </td>
-      <td translate="Filter.NewItems"></td>
-    </tr>
-    <span ng-if="vm.featureFlags.tagsEnabled">
+    <p translate="Filter.ClickFilters"></p>
+    <p translate="Filter.Combine"></p>
+    <table>
       <tr>
-        <td>
-          <dim-filter-link filter="tag:none"></dim-filter-link>
-          <dim-filter-link filter="tag:favorite"></dim-filter-link>
-          <dim-filter-link filter="tag:keep"></dim-filter-link>
-          <dim-filter-link filter="tag:junk"></dim-filter-link>
-          <dim-filter-link filter="tag:infuse"></dim-filter-link>
-        </td>
-        <td><ul>
-          <li translate="Filter.Tags.NoTag"></li>
-          <li translate="Filter.Tags.Favorite"></li>
-          <li translate="Filter.Tags.Keep"></li>
-          <li translate="Filter.Tags.Dismantle"></li>
-          <li translate="Filter.Tags.Infuse"></li>
-        </ul></td>
+        <td translate="Filter.Filter"></td>
+        <td translate="Filter.Description"></td>
       </tr>
       <tr>
         <td>
-          <dim-filter-link filter="notes:value"></dim-filter-link>
+          <dim-filter-link filter="item name"></dim-filter-link>
         </td>
-        <td translate="Filter.Notes"></td>
-      </tr>
-    </span>
-    <span ng-if="vm.featureFlags.reviewsEnabled">
-      <tr>
-        <td>
-          <dim-filter-link filter="is:rated"></dim-filter-link>
-        </td>
-        <td translate="Filter.Rated"></td>
+        <td translate="Filter.PartialMatch"></td>
       </tr>
       <tr>
         <td>
-          <dim-filter-link filter="rating:value"></dim-filter-link>
-          <dim-filter-link filter="rating:&gt;=value"></dim-filter-link>
-          <dim-filter-link filter="rating:&gt;value"></dim-filter-link>
-          <dim-filter-link filter="rating:&lt;value"></dim-filter-link>
-          <dim-filter-link filter="rating:&lt;=value"></dim-filter-link>
+          <dim-filter-link filter="is:arc"></dim-filter-link>
+          <dim-filter-link filter="is:solar"></dim-filter-link>
+          <dim-filter-link filter="is:void"></dim-filter-link>
+          <dim-filter-link filter="is:kinetic"></dim-filter-link>
         </td>
-        <td translate="Filter.Rating"></td>
+        <td translate="Filter.DamageType"></td>
       </tr>
-    </span>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:year1"></dim-filter-link>
-        <dim-filter-link filter="is:year2"></dim-filter-link>
-        <dim-filter-link filter="is:year3"></dim-filter-link>
-      </td>
-      <td translate="Filter.Year"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:inloadout"></dim-filter-link>
-        <dim-filter-link filter="not:inloadout"></dim-filter-link>
-      </td>
-      <td translate="Filter.InLoadout"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:postmaster"></dim-filter-link>
-        <dim-filter-link filter="is:inpostmaster"></dim-filter-link>
-      </td>
-      <td translate="Filter.Postmaster"></td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:fwc"></dim-filter-link>
-        <dim-filter-link filter="is:do"></dim-filter-link>
-        <dim-filter-link filter="is:nm"></dim-filter-link>
-        <dim-filter-link filter="is:speaker"></dim-filter-link>
-        <dim-filter-link filter="is:variks"></dim-filter-link>
-        <dim-filter-link filter="is:shipwright"></dim-filter-link>
-        <dim-filter-link filter="is:osiris"></dim-filter-link>
-        <dim-filter-link filter="is:xur"></dim-filter-link>
-        <dim-filter-link filter="is:shaxx"></dim-filter-link>
-        <dim-filter-link filter="is:cq"></dim-filter-link>
-        <dim-filter-link filter="is:eris"></dim-filter-link>
-        <dim-filter-link filter="is:ev"></dim-filter-link>
-        <dim-filter-link filter="is:gunsmith"></dim-filter-link>
-      </td>
-      <td>
-        <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.FWC, name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.DO, name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.NM, name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Speaker, name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: 'Variks', name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Shipwright, name: '(Amanda Holliday)' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: 'Osiris', name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: 'Xûr', name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: 'Shaxx', name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.CQ, name: '(Arcite-99)' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: 'Eris Morn', name: '' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.EV, name: '(Tess Everis)' }"></span>
-        <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' }"></span>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <dim-filter-link filter="is:vanilla"></dim-filter-link>
-        <dim-filter-link filter="is:qw"></dim-filter-link>
-        <dim-filter-link filter="is:ib"></dim-filter-link>
-        <dim-filter-link filter="is:vog"></dim-filter-link>
-        <dim-filter-link filter="is:ce"></dim-filter-link>
-        <dim-filter-link filter="is:poe"></dim-filter-link>
-        <dim-filter-link filter="is:trials"></dim-filter-link>
-        <dim-filter-link filter="is:ttk"></dim-filter-link>
-        <dim-filter-link filter="is:coe"></dim-filter-link>
-        <dim-filter-link filter="is:kf"></dim-filter-link>
-        <dim-filter-link filter="is:srl"></dim-filter-link>
-        <dim-filter-link filter="is:cd"></dim-filter-link>
-        <dim-filter-link filter="is:roi"></dim-filter-link>
-        <dim-filter-link filter="is:af"></dim-filter-link>
-        <dim-filter-link filter="is:wotm"></dim-filter-link>
-        <dim-filter-link filter="is:dawning"></dim-filter-link>
-        <dim-filter-link filter="is:aot"></dim-filter-link>
-      </td>
-      <td>
-        <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.Vanilla }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.QW }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.IB }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.VoG }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CE }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.PoE }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.ToO }"></span>
-        <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.tTK }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CoE }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.KF }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.SRL }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CD }"></span>
-        <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.RoI }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.AF }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.WotM }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.Dawning }"></span>
-        <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.AoT }"></span>
-      </td>
-    </tr>
-  </table>
+      <tr>
+        <td>
+          <dim-filter-link filter="light:value"></dim-filter-link>
+          <dim-filter-link filter="light:&gt;=value"></dim-filter-link>
+          <dim-filter-link filter="light:&gt;value"></dim-filter-link>
+          <dim-filter-link filter="light:&lt;value"></dim-filter-link>
+          <dim-filter-link filter="light:&lt;=value"></dim-filter-link>
+        </td>
+        <td translate="Filter.LightLevel"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="stat:impact:value"></dim-filter-link>
+          <dim-filter-link filter="stat:impact:&gt;=value"></dim-filter-link>
+          <dim-filter-link filter="stat:impact:&gt;value"></dim-filter-link>
+          <dim-filter-link filter="stat:impact:&lt;value"></dim-filter-link>
+          <dim-filter-link filter="stat:impact:&lt;=value"></dim-filter-link>
+        </td>
+        <td translate="Filter.Stats">
+          <ul>
+            <li>stat:rof:</li>
+            <li>stat:impact:</li>
+            <li>stat:range:</li>
+            <li>stat:stability:</li>
+            <li>stat:reload:</li>
+            <li>stat:magazine:</li>
+            <li>stat:aimassist: or stat:aa:</li>
+            <li>stat:equipspeed:</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="quality:value"></dim-filter-link>
+          <dim-filter-link filter="quality:&gt;=value"></dim-filter-link>
+          <dim-filter-link filter="quality:&gt;value"></dim-filter-link>
+          <dim-filter-link filter="quality:&lt;value"></dim-filter-link>
+          <dim-filter-link filter="quality:&lt;=value"></dim-filter-link>
+        </td>
+        <td translate="Filter.Quality"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:light"></dim-filter-link>
+          <dim-filter-link filter="has:light"></dim-filter-link>
+        </td>
+        <td translate="Filter.ContributeLight"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:weapon"></dim-filter-link>
+          <dim-filter-link filter="is:armor"></dim-filter-link>
+          <dim-filter-link filter="is:cosmetic"></dim-filter-link>
+        </td>
+        <td translate="Filter.Categories"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:equipment"></dim-filter-link>
+          <dim-filter-link filter="is:equippable"></dim-filter-link>
+        </td>
+        <td translate="Filter.Equipment"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:transferable"></dim-filter-link>
+          <dim-filter-link filter="is:movable"></dim-filter-link>
+        </td>
+        <td translate="Filter.Transferable"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:equipped"></dim-filter-link>
+        </td>
+        <td translate="Filter.Equipped"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:weapon"></dim-filter-link>
+          <dim-filter-link filter="is:class"></dim-filter-link>
+          <dim-filter-link filter="is:primary"></dim-filter-link>
+          <dim-filter-link filter="is:special"></dim-filter-link>
+          <dim-filter-link filter="is:heavy"></dim-filter-link>
+        </td>
+        <td translate="Filter.WeaponClass"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:armor"></dim-filter-link>
+          <dim-filter-link filter="is:helmet"></dim-filter-link>
+          <dim-filter-link filter="is:gauntlets"></dim-filter-link>
+          <dim-filter-link filter="is:chest"></dim-filter-link>
+          <dim-filter-link filter="is:leg"></dim-filter-link>
+          <dim-filter-link filter="is:classitem"></dim-filter-link>
+        </td>
+        <td translate="Filter.ArmorCategory"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:common"></dim-filter-link>
+          <dim-filter-link filter="is:uncommon"></dim-filter-link>
+          <dim-filter-link filter="is:rare"></dim-filter-link>
+          <dim-filter-link filter="is:legendary"></dim-filter-link>
+          <dim-filter-link filter="is:sublime"></dim-filter-link>
+          <dim-filter-link filter="is:exotic"></dim-filter-link>
+          <dim-filter-link filter="is:white"></dim-filter-link>
+          <dim-filter-link filter="is:green"></dim-filter-link>
+          <dim-filter-link filter="is:blue"></dim-filter-link>
+          <dim-filter-link filter="is:purple"></dim-filter-link>
+          <dim-filter-link filter="is:yellow"></dim-filter-link>
+        </td>
+        <td translate="Filter.RarityTier"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:intellect"></dim-filter-link>
+          <dim-filter-link filter="is:discipline"></dim-filter-link>
+          <dim-filter-link filter="is:strength"></dim-filter-link>
+        </td>
+        <td translate="Filter.NamedStat"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:infusable"></dim-filter-link>
+          <dim-filter-link filter="is:infuse"></dim-filter-link>
+        </td>
+        <td translate="Filter.Infusable"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:ascended"></dim-filter-link>
+          <dim-filter-link filter="is:unascended"></dim-filter-link>
+        </td>
+        <td translate="Filter.Ascended"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:reforgeable"></dim-filter-link>
+          <dim-filter-link filter="is:reforge"></dim-filter-link>
+          <dim-filter-link filter="is:rerollable"></dim-filter-link>
+          <dim-filter-link filter="is:reroll"></dim-filter-link>
+        </td>
+        <td translate="Filter.Reforgeable"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:complete"></dim-filter-link>
+          <dim-filter-link filter="is:incomplete"></dim-filter-link>
+          <dim-filter-link filter="is:xpincomplete, is:needsxp"></dim-filter-link>
+          <dim-filter-link filter="is:xpcomplete"></dim-filter-link>
+          <dim-filter-link filter="is:upgraded"></dim-filter-link>
+        </td>
+        <td translate="Filter.Leveling.Leveling">
+          <ul>
+            <li translate="Filter.Leveling.Complete"></li>
+            <li translate="Filter.Leveling.Incomplete"></li>
+            <li translate="Filter.Leveling.NeedsXP"></li>
+            <li translate="Filter.Leveling.XPComplete"></li>
+            <li translate="Filter.Leveling.Upgraded"></li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:titan"></dim-filter-link>
+          <dim-filter-link filter="is:hunter"></dim-filter-link>
+          <dim-filter-link filter="is:warlock"></dim-filter-link>
+        </td>
+        <td translate="Filter.Class"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:dupe"></dim-filter-link>
+          <dim-filter-link filter="is:duplicate"></dim-filter-link>
+        </td>
+        <td translate="Filter.Dupe"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:locked"></dim-filter-link>
+          <dim-filter-link filter="is:unlocked"></dim-filter-link>
+        </td>
+        <td translate="Filter.Locked"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:tracked"></dim-filter-link>
+          <dim-filter-link filter="is:untracked"></dim-filter-link>
+        </td>
+        <td translate="Filter.Tracked"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:stackable"></dim-filter-link>
+        </td>
+        <td translate="Filter.Stackable"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:pulserifle"></dim-filter-link>
+          <dim-filter-link filter="is:scoutrifle"></dim-filter-link>
+          <dim-filter-link filter="is:handcannon"></dim-filter-link>
+          <dim-filter-link filter="is:autorifle"></dim-filter-link>
+          <dim-filter-link filter="is:sniperrifle"></dim-filter-link>
+          <dim-filter-link filter="is:shotgun"></dim-filter-link>
+          <dim-filter-link filter="is:fusionrifle"></dim-filter-link>
+          <dim-filter-link filter="is:sidearm"></dim-filter-link>
+          <dim-filter-link filter="is:rocketlauncher"></dim-filter-link>
+          <dim-filter-link filter="is:machinegun"></dim-filter-link>
+          <dim-filter-link filter="is:sword"></dim-filter-link>
+          <dim-filter-link filter="is:primaryweaponengram"></dim-filter-link>
+          <dim-filter-link filter="is:specialweaponengram"></dim-filter-link>
+          <dim-filter-link filter="is:heavyweaponengram"></dim-filter-link>
+        </td>
+        <td translate="Filter.WeaponType"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:engram"></dim-filter-link>
+        </td>
+        <td translate="Filter.Engrams"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:glimmeritem"></dim-filter-link>
+          <dim-filter-link filter="is:glimmerboost"></dim-filter-link>
+          <dim-filter-link filter="is:glimmersupply"></dim-filter-link>
+        </td>
+        <td translate="Filter.Glimmer.Glimmer">
+          <ul>
+            <li translate="Filter.Glimmer.Any"></li>
+            <li translate="Filter.Glimmer.Boost"></li>
+            <li translate="Filter.Glimmer.Item"></li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:new"></dim-filter-link>
+        </td>
+        <td translate="Filter.NewItems"></td>
+      </tr>
+      <span ng-if="vm.featureFlags.tagsEnabled">
+        <tr>
+          <td>
+            <dim-filter-link filter="tag:none"></dim-filter-link>
+            <dim-filter-link filter="tag:favorite"></dim-filter-link>
+            <dim-filter-link filter="tag:keep"></dim-filter-link>
+            <dim-filter-link filter="tag:junk"></dim-filter-link>
+            <dim-filter-link filter="tag:infuse"></dim-filter-link>
+          </td>
+          <td><ul>
+            <li translate="Filter.Tags.NoTag"></li>
+            <li translate="Filter.Tags.Favorite"></li>
+            <li translate="Filter.Tags.Keep"></li>
+            <li translate="Filter.Tags.Dismantle"></li>
+            <li translate="Filter.Tags.Infuse"></li>
+          </ul></td>
+        </tr>
+        <tr>
+          <td>
+            <dim-filter-link filter="notes:value"></dim-filter-link>
+          </td>
+          <td translate="Filter.Notes"></td>
+        </tr>
+      </span>
+      <span ng-if="vm.featureFlags.reviewsEnabled">
+        <tr>
+          <td>
+            <dim-filter-link filter="is:rated"></dim-filter-link>
+          </td>
+          <td translate="Filter.Rated"></td>
+        </tr>
+        <tr>
+          <td>
+            <dim-filter-link filter="rating:value"></dim-filter-link>
+            <dim-filter-link filter="rating:&gt;=value"></dim-filter-link>
+            <dim-filter-link filter="rating:&gt;value"></dim-filter-link>
+            <dim-filter-link filter="rating:&lt;value"></dim-filter-link>
+            <dim-filter-link filter="rating:&lt;=value"></dim-filter-link>
+          </td>
+          <td translate="Filter.Rating"></td>
+        </tr>
+      </span>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:year1"></dim-filter-link>
+          <dim-filter-link filter="is:year2"></dim-filter-link>
+          <dim-filter-link filter="is:year3"></dim-filter-link>
+        </td>
+        <td translate="Filter.Year"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:inloadout"></dim-filter-link>
+          <dim-filter-link filter="not:inloadout"></dim-filter-link>
+        </td>
+        <td translate="Filter.InLoadout"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:postmaster"></dim-filter-link>
+          <dim-filter-link filter="is:inpostmaster"></dim-filter-link>
+        </td>
+        <td translate="Filter.Postmaster"></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:fwc"></dim-filter-link>
+          <dim-filter-link filter="is:do"></dim-filter-link>
+          <dim-filter-link filter="is:nm"></dim-filter-link>
+          <dim-filter-link filter="is:speaker"></dim-filter-link>
+          <dim-filter-link filter="is:variks"></dim-filter-link>
+          <dim-filter-link filter="is:shipwright"></dim-filter-link>
+          <dim-filter-link filter="is:osiris"></dim-filter-link>
+          <dim-filter-link filter="is:xur"></dim-filter-link>
+          <dim-filter-link filter="is:shaxx"></dim-filter-link>
+          <dim-filter-link filter="is:cq"></dim-filter-link>
+          <dim-filter-link filter="is:eris"></dim-filter-link>
+          <dim-filter-link filter="is:ev"></dim-filter-link>
+          <dim-filter-link filter="is:gunsmith"></dim-filter-link>
+        </td>
+        <td>
+          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.FWC, name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.DO, name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.NM, name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Speaker, name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: 'Variks', name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Shipwright, name: '(Amanda Holliday)' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: 'Osiris', name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: 'Xûr', name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: 'Shaxx', name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.CQ, name: '(Arcite-99)' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: 'Eris Morn', name: '' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.EV, name: '(Tess Everis)' }"></span>
+          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' }"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="is:vanilla"></dim-filter-link>
+          <dim-filter-link filter="is:qw"></dim-filter-link>
+          <dim-filter-link filter="is:ib"></dim-filter-link>
+          <dim-filter-link filter="is:vog"></dim-filter-link>
+          <dim-filter-link filter="is:ce"></dim-filter-link>
+          <dim-filter-link filter="is:poe"></dim-filter-link>
+          <dim-filter-link filter="is:trials"></dim-filter-link>
+          <dim-filter-link filter="is:ttk"></dim-filter-link>
+          <dim-filter-link filter="is:coe"></dim-filter-link>
+          <dim-filter-link filter="is:kf"></dim-filter-link>
+          <dim-filter-link filter="is:srl"></dim-filter-link>
+          <dim-filter-link filter="is:cd"></dim-filter-link>
+          <dim-filter-link filter="is:roi"></dim-filter-link>
+          <dim-filter-link filter="is:af"></dim-filter-link>
+          <dim-filter-link filter="is:wotm"></dim-filter-link>
+          <dim-filter-link filter="is:dawning"></dim-filter-link>
+          <dim-filter-link filter="is:aot"></dim-filter-link>
+        </td>
+        <td>
+          <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.Vanilla }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.QW }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.IB }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.VoG }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CE }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.PoE }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.ToO }"></span>
+          <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.tTK }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CoE }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.KF }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.SRL }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CD }"></span>
+          <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.RoI }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.AF }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.WotM }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.Dawning }"></span>
+          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.AoT }"></span>
+        </td>
+      </tr>
+    </table>
   </div>
 </div>
