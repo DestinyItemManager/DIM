@@ -138,6 +138,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i
 
           manifestPromise = null;
           service.isError = true;
+          console.error("Manifest loading error", { error: e }, e);
           throw new Error(message);
         });
 
@@ -214,8 +215,8 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i
           .catch((e) => {
             console.error('Error saving manifest file', e);
             toaster.pop({
-              title: $translate.instant('Help.NoStorage'),
-              body: $translate.instant('Help.NoStorageMessage'),
+              title: $i18next.t('Help.NoStorage'),
+              body: $i18next.t('Help.NoStorageMessage'),
               type: 'error'
             }, 0);
           });
