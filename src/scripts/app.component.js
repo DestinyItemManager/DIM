@@ -7,13 +7,26 @@ export const AppComponent = {
   controller: AppComponentCtrl
 };
 
-function AppComponentCtrl($window, $rootScope, dimInfoService, dimSettingsService, $i18next, toaster, $timeout) {
+function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettingsService, $i18next, toaster, $timeout) {
   'ngInject';
 
   this.$onInit = function() {
     this.qualityEnabled = $featureFlags.qualityEnabled;
     this.reviewsEnabled = $featureFlags.reviewsEnabled;
     this.settings = dimSettingsService;
+    this.featureFlags = {
+      colorA11y: $featureFlags.colorA11y
+    };
+
+    if ($featureFlags.colorA11y) {
+      $scope.$watch(() => this.settings.colorA11y, (color) => {
+        if (color && color !== '-') {
+          document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
+        } else {
+          document.querySelector('html').style.removeProperty("--color-filter");
+        }
+      });
+    }
 
     // Check for old Chrome versions
     // TODO: do feature checks instead? Use Modernizr?

@@ -21,19 +21,19 @@ function StoreService(
   dimDefinitions,
   dimBucketService,
   dimItemInfoService,
-  loadingTracker,
   dimManifestService,
   $i18next,
   dimDestinyTrackerService,
   toaster,
   StoreFactory,
   ItemFactory,
-  NewItemsService
+  NewItemsService,
+  $stateParams
 ) {
   let _stores = [];
 
-  // A promise used to dedup parallel calls to reloadStores
-  let _reloadPromise;
+  // A promise (per account) used to dedup parallel calls to reloadStores
+  const _reloadPromises = {};
 
   const service = {
     getActiveStore: () => _.find(_stores, 'current'),
@@ -43,19 +43,9 @@ function StoreService(
     getAllItems: () => flatMap(_stores, 'items'),
     getItemAcrossStores,
     updateCharacters,
-    reloadStores
+    reloadStores,
+    activePlatform: null // TODO: kind of a hack so consumers know when to re-fetch
   };
-
-  $rootScope.$on('dim-active-platform-updated', () => {
-    _stores = [];
-    NewItemsService.hasNewItems = false;
-    $rootScope.$broadcast('dim-stores-updated', {
-      stores: _stores
-    });
-    loadingTracker.addPromise(service.reloadStores(true));
-
-    dimDestinyTrackerService.fetchReviews(_stores);
-  });
 
   return service;
 
@@ -79,10 +69,22 @@ function StoreService(
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  function updateCharacters() {
+  function updateCharacters(account) {
+    // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
+    if (!account) {
+      if ($stateParams.membershipId && $stateParams.platformType) {
+        account = {
+          membershipId: $stateParams.membershipId,
+          platformType: $stateParams.platformType
+        };
+      } else {
+        throw new Error("Don't know membership ID and platform type");
+      }
+    }
+
     return $q.all([
       dimDefinitions.getDefinitions(),
-      Destiny1Api.getCharacters(dimPlatformService.getActive())
+      Destiny1Api.getCharacters(account)
     ]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
@@ -99,15 +101,25 @@ function StoreService(
    * If this is called while a reload is already happening, it'll return the promise
    * for the ongoing reload rather than kicking off a new reload.
    */
-  function reloadStores() {
-    const activePlatform = dimPlatformService.getActive();
-    if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
-      return _reloadPromise;
+  // TODO: this feels like a good use for observables
+  function reloadStores(account) {
+    // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
+    if (!account) {
+      if ($stateParams.membershipId && $stateParams.platformType) {
+        account = {
+          membershipId: $stateParams.membershipId,
+          platformType: $stateParams.platformType
+        };
+      } else {
+        throw new Error("Don't know membership ID and platform type");
+      }
     }
 
-    // #786 Exiting early when finding no activePlatform.
-    if (!activePlatform) {
-      return $q.reject("Cannot find active platform.");
+    const promiseCacheKey = `${account.membershipId}-${account.platformType}`;
+    let reloadPromise = _reloadPromises[promiseCacheKey];
+
+    if (reloadPromise) {
+      return reloadPromise;
     }
 
     // Save a snapshot of all the items before we update
@@ -119,17 +131,13 @@ function StoreService(
     const dataDependencies = [
       dimDefinitions.getDefinitions(),
       dimBucketService.getBuckets(),
-      NewItemsService.loadNewItems(activePlatform),
-      dimItemInfoService(activePlatform),
-      Destiny1Api.getStores(activePlatform)
+      NewItemsService.loadNewItems(account),
+      dimItemInfoService(account),
+      Destiny1Api.getStores(account)
     ];
 
-    _reloadPromise = $q.all(dataDependencies)
+    reloadPromise = $q.all(dataDependencies)
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
-        if (activePlatform !== dimPlatformService.getActive()) {
-          throw new Error("Active platform mismatch");
-        }
-
         NewItemsService.applyRemovedNewItems(newItems);
 
         const lastPlayedDate = findLastPlayedDate(rawStores);
@@ -146,10 +154,6 @@ function StoreService(
         return $q.all([newItems, itemInfoService, ...processStorePromises]);
       })
       .then(([newItems, itemInfoService, ...stores]) => {
-        if (activePlatform !== dimPlatformService.getActive()) {
-          throw new Error("Active platform mismatch");
-        }
-
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -158,7 +162,9 @@ function StoreService(
         }
 
         _stores = stores;
+        service.activePlatform = account;
 
+        // TODO: knock this out
         $rootScope.$broadcast('dim-stores-updated', {
           stores: stores
         });
@@ -177,12 +183,8 @@ function StoreService(
         return stores;
       })
       .catch((e) => {
-        if (e.message === 'Active platform mismatch') {
-          // no problem, just canceling the request
-          return null;
-        }
-        if (e.code === 1601) { // DestinyAccountNotFound
-          return dimPlatformService.reportBadPlatform(activePlatform, e);
+        if (e.code === 1601 || e.code === 1618) { // DestinyAccountNotFound
+          return dimPlatformService.reportBadPlatform(account, e);
         }
         throw e;
       })
@@ -192,14 +194,12 @@ function StoreService(
       })
       .finally(() => {
         // Clear the reload promise so this can be called again
-        if (_reloadPromise.activePlatform === activePlatform) {
-          _reloadPromise = null;
-        }
+        _reloadPromises[promiseCacheKey] = null;
         dimManifestService.isLoaded = true;
       });
 
-    _reloadPromise.activePlatform = activePlatform;
-    return _reloadPromise;
+    _reloadPromises[promiseCacheKey] = reloadPromise;
+    return reloadPromise;
   }
 
   /**

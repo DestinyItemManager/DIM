@@ -8,4 +8,5 @@
   <ui-view></ui-view>
   <bungie-alerts></bungie-alerts>
   <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
+  <ng-include ng-if="::$ctrl.featureFlags.colorA11y" src="'data/color-a11y.svg'"></ng-include>
 </div>

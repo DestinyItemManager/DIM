@@ -547,9 +547,16 @@ export function ItemFactory(
 
       const dtrRoll = generateNodeDtrRoll(node, talentNodeSelected);
 
+      // hacky way to determine if the node is a weapon ornament
+      let ornamentComplete = null;
+      if (talentNodeGroup.column > 1 && !xpRequired && !exclusiveInColumn && item.primaryStat) {
+        ornamentComplete = node.isActivated;
+      }
+
       // There's a lot more here, but we're taking just what we need
       return {
         name: nodeName,
+        ornament: ornamentComplete,
         hash: talentNodeSelected.nodeStepHash,
         description: talentNodeSelected.nodeStepDescription,
         icon: talentNodeSelected.icon,

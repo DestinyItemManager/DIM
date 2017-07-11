@@ -55,9 +55,9 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   $scope.$on('dim-delete-loadout', initLoadouts);
   initLoadouts();
 
-  vm.newLoadout = function newLoadout() {
+  vm.newLoadout = function newLoadout($event) {
     ngDialog.closeAll();
-    $rootScope.$broadcast('dim-create-new-loadout', { });
+    vm.editLoadout({}, $event);
   };
 
   vm.newLoadoutFromEquipped = function newLoadoutFromEquipped($event) {

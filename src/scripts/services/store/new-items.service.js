@@ -86,7 +86,7 @@ export function NewItemsService(dimPlatformService, $q) {
 
   function newItemsKey() {
     const platform = dimPlatformService.getActive();
-    return `newItems-${platform ? platform.type : ''}`;
+    return `newItems-${platform ? platform.platformType : ''}`;
   }
 
   function buildItemSet(stores) {

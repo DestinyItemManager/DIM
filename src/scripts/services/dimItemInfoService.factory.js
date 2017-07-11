@@ -61,7 +61,7 @@ function ItemInfoService(SyncService, $i18next, toaster, $q) {
 
   // Returns a function that, when given a platform, returns the item info source for that platform
   return function(platform) {
-    const key = `dimItemInfo-${platform.type}`;
+    const key = `dimItemInfo-${platform.platformType}`;
     return getInfos(key).then((infos) => {
       return {
         infoForItem: function(hash, id) {

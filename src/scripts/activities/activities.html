@@ -1,30 +1,57 @@
 <div class="activities">
   <back-link></back-link>
-  <div class="activity" ng-repeat="activity in $ctrl.activities track by $index">
 
-    <div class="activity-header">
-      <div class="activity-title" ng-style="::activity.image | bungieBackground" ng-class="{ 'activity-featured': activity.featured }">
+  <!-- TODO: need a more generic character-tile directive -->
+  <div class="activities-characters">
+    <div class="activities-character" ng-repeat="store in $ctrl.stores | sortStores:$ctrl.settings.characterOrder track by store.id">
+      <div class="character" ng-class="{ current: store.current }">
+        <div class="character-box">
+          <div class="background" ng-style="{ 'background-image': 'url(' + store.background + ')' }"></div>
+          <div class="details">
+            <div class="emblem" ng-style="{ 'background-image': 'url(' + store.icon + ')' }"></div>
+            <div class="character-text">
+              <div class="top">
+                <div class="class">{{ ::store.className }}</div>
+                <div class="powerLevel" ng-if="::!store.isVault">{{ store.powerLevel }}</div>
+              </div>
+              <div class="bottom">
+                <div class="race-gender" ng-if="::!store.isVault">{{ ::store.genderRace }}</div>
+                <div class="level" ng-if="::!store.isVault">{{ store.level }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="activity section" ng-repeat="activity in $ctrl.activities track by $index">
+    <div class="title activity-header"
+         ng-style="::activity.image | bungieBackground"
+         ng-class="{ 'activity-featured': activity.featured }"
+         ng-click="$ctrl.toggleSection('activities-' + activity.hash)">
+      <span class="collapse-handle" ><i class="fa collapse" ng-class="$ctrl.settings.collapsedSections['activities-' + activity.hash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
         <img class="small-icon" ng-src="{{ ::activity.icon | bungieIcon }}" />
         <span class="activity-name">{{ ::activity.name }}</span>
         <i ng-if="::activity.featured"  class="fa fa-star"></i>
-      </div>
+        <span class="activity-type" ng-bind="::activity.type"></span>
+      </span>
     </div>
 
-    <div class="activity-progress" ng-repeat="tier in activity.tiers track by $index">
-      <div class="tier-title">{{ ::tier.name }}</div>
-      <div class="tier-row" ng-if="tier.characters.length" ng-repeat="character in tier.characters track by $index">
-        <span>
-          <img class="small-icon" ng-src="{{ ::character.icon }}" /> {{ ::character.name }}
-        </span>
-        <span>
-          <span class="step-icon" ng-class="{ complete: step.complete }" ng-repeat="step in character.steps track by $index"></span>
-        </span>
+    <div class="activity-info" ng-if="!$ctrl.settings.collapsedSections['activities-' + activity.hash]">
+      <div class="activity-progress" ng-repeat="tier in activity.tiers track by $index">
+        <div class="tier-title" ng-if="activity.tiers.length > 1">{{ ::tier.name }}</div>
+        <div class="tier-characters">
+          <div class="tier-row" ng-if="tier.characters.length" ng-repeat="character in tier.characters track by $index">
+            <span class="step-icon" ng-class="{ complete: step.complete }" ng-repeat="step in character.steps track by $index"></span>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="activity-skulls" ng-if="::activity.skulls" ng-repeat="skull in activity.skulls">
-      <img class="small-icon" ng-src="{{ ::skull.icon | bungieIcon }}" />
-      {{ ::skull.displayName }} - {{ ::skull.description }}
+      <div class="activity-skulls" ng-if="::activity.skulls" ng-repeat="skull in activity.skulls">
+        <img class="small-icon" ng-src="{{ ::skull.icon | bungieIcon }}" />
+        {{ ::skull.displayName }}<span class="weak"> - {{ ::skull.description }}</span>
+      </div>
     </div>
   </div>
 </div>

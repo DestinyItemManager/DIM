@@ -45,6 +45,7 @@ function SearchService(dimSettingsService) {
     unascended: ['unascended', 'unassended', 'unasscended'],
     ascended: ['ascended', 'assended', 'asscended'],
     reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+    ornament: ['ornament', 'ornamentmissing', 'ornamentunlocked'],
     tracked: ['tracked'],
     untracked: ['untracked'],
     locked: ['locked'],
@@ -408,6 +409,18 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     },
     reforgeable: function(predicate, item) {
       return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
+    },
+    ornament: function(predicate, item) {
+      const complete = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: true });
+      const missing = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: false });
+
+      if (predicate === 'ornamentunlocked') {
+        return complete;
+      } else if (predicate === 'ornamentmissing') {
+        return missing;
+      } else {
+        return complete || missing;
+      }
     },
     untracked: function(predicate, item) {
       return item.trackable &&

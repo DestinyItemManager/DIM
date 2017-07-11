@@ -34,7 +34,7 @@ export function Destiny1Api(
 
   function getCharacters(platform) {
     const charactersPromise = $http(bungieApiQuery(
-      `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/`
+      `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/`
     ))
         .then(handleErrors, handleErrors)
         .then(processBnetCharactersRequest);
@@ -91,7 +91,7 @@ export function Destiny1Api(
       // Guardians
       const promises = characters.map((character) => {
         return $http(bungieApiQuery(
-          `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
+          `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
         ))
           .then(handleErrors, handleErrors)
           .then((response) => processInventoryResponse(character, response));
@@ -103,7 +103,7 @@ export function Destiny1Api(
         base: null
       };
 
-      const vaultPromise = $http(bungieApiQuery(`/D1/Platform/Destiny/${platform.type}/MyAccount/Vault/`))
+      const vaultPromise = $http(bungieApiQuery(`/D1/Platform/Destiny/${platform.platformType}/MyAccount/Vault/`))
         .then(handleErrors, handleErrors)
           .then((response) => processInventoryResponse(vault, response));
 
@@ -116,7 +116,7 @@ export function Destiny1Api(
   function getDestinyProgression(platform, characters) {
     const promises = characters.map((character) => {
       return $http(bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
+        `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
       ))
         .then(handleErrors, handleErrors)
         .then((response) => processProgressionResponse(character, response));
@@ -133,7 +133,7 @@ export function Destiny1Api(
   function getDestinyAdvisors(platform, characters) {
     const promises = characters.map((character) => {
       return $http(bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
+        `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
       ))
         .then(handleErrors, handleErrors)
         .then((response) => processAdvisorsResponse(character, response));
@@ -150,7 +150,7 @@ export function Destiny1Api(
   function getVendorForCharacter(character, vendorHash) {
     const platform = dimState.active;
     return $http(bungieApiQuery(
-      `/D1/Platform/Destiny/${platform.type}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
+      `/D1/Platform/Destiny/${platform.platformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
     ))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response.data);
@@ -162,7 +162,7 @@ export function Destiny1Api(
       '/D1/Platform/Destiny/TransferItem/',
       {
         characterId: store.isVault ? item.owner : store.id,
-        membershipType: platform.type,
+        membershipType: platform.platformType,
         itemId: item.id,
         itemReferenceHash: item.hash,
         stackSize: amount || item.amount,
@@ -199,7 +199,7 @@ export function Destiny1Api(
       '/D1/Platform/Destiny/EquipItem/',
       {
         characterId: item.owner,
-        membershipType: platform.type,
+        membershipType: platform.platformType,
         itemId: item.id
       }
     ))
@@ -219,7 +219,7 @@ export function Destiny1Api(
       '/D1/Platform/Destiny/EquipItems/',
       {
         characterId: store.id,
-        membershipType: platform.type,
+        membershipType: platform.platformType,
         itemIds: _.pluck(items, 'id')
       }))
       .then(retryOnThrottled)
@@ -251,7 +251,7 @@ export function Destiny1Api(
       `/D1/Platform/Destiny/${type}/`,
       {
         characterId: store.isVault ? item.owner : store.id,
-        membershipType: platform.type,
+        membershipType: platform.platformType,
         itemId: item.id,
         state: lockState
       }

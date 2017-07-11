@@ -28,7 +28,8 @@ export default angular
 
     $stateProvider.state({
       name: 'vendors',
-      parent: 'content',
+      // TODO: It'd be interesting to separate general and character-specific vendor info
+      parent: 'destiny1account',
       component: 'vendors',
       url: '/vendors'
     });

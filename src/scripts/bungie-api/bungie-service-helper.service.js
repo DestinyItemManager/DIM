@@ -58,10 +58,11 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
     case 1618: // DestinyUnexpectedError
       if (response.config.url.indexOf('/Account/') >= 0 &&
           response.config.url.indexOf('/Character/') < 0) {
-        const error = new Error($i18next.t('BungieService.NoAccount', { platform: dimState.active.label }));
+        const error = new Error($i18next.t('BungieService.NoAccount', { platform: dimState.active.platformLabel }));
         error.code = errorCode;
         return $q.reject(error);
       }
+      break;
     case 2101: // ApiInvalidOrExpiredKey
     case 2102: // ApiKeyMissingFromRequest
     case 2107: // OriginHeaderDoesNotMatchKey

@@ -18,6 +18,7 @@ import 'angular-hotkeys';
 import 'angular-promise-tracker';
 
 import bungieApiModule from './bungie-api/bungie-api.module';
+import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
@@ -55,6 +56,7 @@ const dependencies = [
   ToasterModule,
   UIRouterModule,
   bungieApiModule,
+  accountsModule,
   inventoryModule,
   recordBooksModule,
   activitiesModule,
