@@ -1,5 +1,6 @@
 # Next
 
+* New filters for ornaments - is:ornament, is:ornamentmissing, is:ornamentunlocked
 * Fixed a bug where item data would not respect your language settings.
 * Weapon reviews now show up immediately, and can be edited.
   - If you have been less than friendly, now would be a very good time to edit yourself and put a better foot forward.
@@ -7,6 +8,7 @@
 * Fixed "Clear New Items" not working.
 * Adjusted the UI a bunch to make it work better on mobile. Just a start - there's still a long way to go.
 * Fixed a case where you couldn't create a new class-specific loadout.
+* On Firefox, the new-item shines don't extend past the item anymore.
 
 # 4.3.0
 
