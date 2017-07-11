@@ -94,7 +94,8 @@
         "FilterHelp": "Cerca oggetti/perk o is:arc",
         "Refresh": "Aggiorna i Dati di Destiny",
         "SupportDIM": "Donatori",
-        "Shop": "Negozio"
+        "Shop": "Negozio",
+        "Inventory": "Messaggio Bungie.net: {{message}}"
     },
     "Help": {
         "BackToDIM": "Torna a DIM",
@@ -219,7 +220,7 @@
         "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo"
     },
     "Loadouts": {
-        "Any": "Qualsiasi",
+        "Any": "Qualsiasi classe",
         "Loadouts": "Loadouts",
         "Before": "Prima '{{name}}'",
         "Create": "Creare Loadout",

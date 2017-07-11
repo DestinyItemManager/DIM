@@ -28,7 +28,8 @@
         "Twitter": "Hol dir Statusupdates auf:",
         "ItemUniqueness": "Item Einzigartigkeit",
         "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
-        "VendorNotFound": "Händler Daten nicht verfügbar."
+        "VendorNotFound": "Händler Daten nicht verfügbar.",
+        "UnknownError": "Bungie.net Nachricht: {{message}}"
     },
     "Compare": {
         "ButtonHelp": "Gegenstände vergleichen",
@@ -87,7 +88,9 @@
         "Filters": "Filter",
         "FilterHelp": "Suche nach Item/Perk oder is:arc",
         "Refresh": "Aktualisiere Destiny Daten",
-        "SupportDIM": "Unterstützer"
+        "SupportDIM": "Unterstützer",
+        "Shop": "Shop",
+        "Inventory": "Inventar"
     },
     "Help": {
         "BackToDIM": "Zurück zu DIM",
@@ -100,7 +103,9 @@
         "UpgradeChrome": "Bitte aktualisiere Chrome",
         "Xur": "Xûr ist da",
         "Version_release": "DIM v{{version} veröffentlicht",
-        "Version_beta": "Beta wurde auf v{{version}} aktualisiert"
+        "Version_beta": "Beta wurde auf v{{version}} aktualisiert",
+        "ExtensionDeprecatedTitle": "DIM kann die Daten nicht speichern",
+        "ExtensionDeprecatedMessage": "DIM kann die Daten nicht in deinem Browser speichern. Das kann durch das Surfen im Privatem- oder Inkognito-Modus, oder bei geringem, freien Speicher passieren. DIM kann nicht weiter machen."
     },
     "Hotkey": {
         "StartSearch": "Starte eine Suche",
@@ -206,7 +211,7 @@
         "Missing2": "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!"
     },
     "Loadouts": {
-        "Any": "Irgendein",
+        "Any": "Jede Klasse",
         "Loadouts": "Loadouts",
         "Before": "Bevor '{{name}}'",
         "Create": "Loadout erstellen",
@@ -243,10 +248,10 @@
         "AppliedError": "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
         "AppliedWarn": "Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} Gegenständen hatten Fehler.",
         "NameRequired": "Ein Name ist erforderlich.",
-        "MakeRoom": "Schaffe Platz für Posstellenitems",
+        "MakeRoom": "Schaffe Platz für Poststellenitems",
         "MakeRoomDone": "Platz für 1 Poststellenitem durch verschieben von {{movedNum}} Item vom {{store}} geschaffen.",
         "MakeRoomDone_plural": "Platz für {{count}} Poststellenitems durch verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
-        "MakeRoomError": "Es kann kein Platz für alle Posstellengegenstände geschaffen werden: {{error}}.",
+        "MakeRoomError": "Es kann kein Platz für alle Postellengegenstände geschaffen werden: {{error}}.",
         "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
         "SaveErrorDescription": "Speichern des Loadouts {{loadoutName}} nicht möglich: {{error}}.",
         "DeleteErrorTitle": "Fehler beim Löschen des Loadouts",
@@ -336,6 +341,7 @@
         "SortPrimary": "Primärer Wert",
         "SortRarity": "Seltenheit",
         "SortRoll": "Roll-Wert Prozent",
+        "SortName": "Name",
         "InventoryColumns": "Charakter Inventar Spalten",
         "VaultColumns": "Maximale Anzahl von Spalten des Tresors",
         "ColumnSize": "{{num}} Gegenstände",
@@ -379,8 +385,10 @@
         "IndexedDBStorage": "Lokaler Browser Speicher",
         "Details": {
           "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
-          "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite."
+          "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
+          "IndexedDBStorage": "Lokales speichern wird die Daten nur in diesem Browser speichern."
         },
+        "BrowserMayClearData": "Der Browser könnte eventuell diese Informationen löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
         "ForceSync": "Erzwinge Synchronisation",
         "DriveSync": "Bei Google Drive anmelden",
         "DriveLogout": "Bei Google Drive abmelden",
@@ -429,6 +437,7 @@
     },
     "Activities": {
         "Activities": "Aktivitäten",
+        "Normal": "Normal",
         "Hard": "Schwer"
     },
     "RecordBooks": {

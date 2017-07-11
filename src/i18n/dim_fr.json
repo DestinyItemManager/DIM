@@ -28,7 +28,8 @@
         "Twitter": "Tenez-vous informé sur:",
         "ItemUniqueness": "Unicité d'un objet",
         "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
-        "VendorNotFound": "Les données du vendeur sont indisponible."
+        "VendorNotFound": "Les données du vendeur sont indisponible.",
+        "UnknownError": "Message de Bungie.net: {{message}}"
     },
     "Compare": {
         "ButtonHelp": "Comparer des objets",
@@ -88,7 +89,8 @@
         "FilterHelp": "Rechercher objet/amélioration ou is:arc",
         "Refresh": "Rafraîchir les données Destiny",
         "SupportDIM": "Supporteurs",
-        "Shop": "Boutique"
+        "Shop": "Boutique",
+        "Inventory": "Inventaire"
     },
     "Help": {
         "BackToDIM": "Retour sur DIM",
