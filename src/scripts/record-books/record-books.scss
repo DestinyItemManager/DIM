@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .record-books {
   max-width: 900px;
   margin: 0 auto;
@@ -68,7 +70,7 @@
     display: flex;
     flex-direction: row;
 
-    @media (max-width: 375px) {
+    @include phone-portrait {
       width: 100%;
     }
 

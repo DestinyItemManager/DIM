@@ -174,7 +174,7 @@ div:focus, span:focus {
       display: block;
       padding: 4px 2em;
       font-size: 12px;
-      @media (max-width: 375px) {
+      @include phone-portrait {
         font-size: 14px;
         padding: 6px 2em;
       }
@@ -245,7 +245,7 @@ dd {
   top: -2px;
 
   // Yikes this is a hack
-  @media (max-width: 375px) {
+  @include phone-portrait {
     display: none;
 
     &.show {
@@ -277,7 +277,7 @@ dd {
 }
 .search-button {
   display: none;
-  @media (max-width: 375px) {
+  @include phone-portrait {
     display: inline-block;
   }
 }
