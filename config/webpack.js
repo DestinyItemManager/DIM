@@ -209,7 +209,7 @@ module.exports = (env) => {
 
       new webpack.SourceMapDevToolPlugin({
         filename: '[file].map',
-        exclude: /(vendor|manifest|chunk-0-sqlLib)-\S{6}.js$/
+        exclude: /(manifest|chunk-0-sqlLib)-\S{6}.js$/
       }),
 
       new webpack.optimize.ModuleConcatenationPlugin(),
