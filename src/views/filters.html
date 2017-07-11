@@ -1,18 +1,18 @@
 <div id="filter-view" ng-controller="dimSettingsCtrl as vm">
-  <h1 translate="Header.Filters"></h1>
+  <h1 ng-i18next="Header.Filters"></h1>
   <div class="ngdialog-inner-content">
-    <p translate="Filter.ClickFilters"></p>
-    <p translate="Filter.Combine"></p>
+    <p ng-i18next="Filter.ClickFilters"></p>
+    <p ng-i18next="Filter.Combine"></p>
     <table>
       <tr>
-        <td translate="Filter.Filter"></td>
-        <td translate="Filter.Description"></td>
+        <td ng-i18next="Filter.Filter"></td>
+        <td ng-i18next="Filter.Description"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="item name"></dim-filter-link>
         </td>
-        <td translate="Filter.PartialMatch"></td>
+        <td ng-i18next="Filter.PartialMatch"></td>
       </tr>
       <tr>
         <td>
@@ -21,7 +21,7 @@
           <dim-filter-link filter="is:void"></dim-filter-link>
           <dim-filter-link filter="is:kinetic"></dim-filter-link>
         </td>
-        <td translate="Filter.DamageType"></td>
+        <td ng-i18next="Filter.DamageType"></td>
       </tr>
       <tr>
         <td>
@@ -31,7 +31,7 @@
           <dim-filter-link filter="light:&lt;value"></dim-filter-link>
           <dim-filter-link filter="light:&lt;=value"></dim-filter-link>
         </td>
-        <td translate="Filter.LightLevel"></td>
+        <td ng-i18next="Filter.LightLevel"></td>
       </tr>
       <tr>
         <td>
@@ -41,7 +41,7 @@
           <dim-filter-link filter="stat:impact:&lt;value"></dim-filter-link>
           <dim-filter-link filter="stat:impact:&lt;=value"></dim-filter-link>
         </td>
-        <td><span translate="Filter.Stats"></span>
+        <td><span ng-i18next="Filter.Stats"></span>
           <ul>
             <li>stat:rof:</li>
             <li>stat:impact:</li>
@@ -62,14 +62,14 @@
           <dim-filter-link filter="quality:&lt;value"></dim-filter-link>
           <dim-filter-link filter="quality:&lt;=value"></dim-filter-link>
         </td>
-        <td translate="Filter.Quality"></td>
+        <td ng-i18next="Filter.Quality"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:light"></dim-filter-link>
           <dim-filter-link filter="has:light"></dim-filter-link>
         </td>
-        <td translate="Filter.ContributeLight"></td>
+        <td ng-i18next="Filter.ContributeLight"></td>
       </tr>
       <tr>
         <td>
@@ -77,27 +77,27 @@
           <dim-filter-link filter="is:armor"></dim-filter-link>
           <dim-filter-link filter="is:cosmetic"></dim-filter-link>
         </td>
-        <td translate="Filter.Categories"></td>
+        <td ng-i18next="Filter.Categories"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:equipment"></dim-filter-link>
           <dim-filter-link filter="is:equippable"></dim-filter-link>
         </td>
-        <td translate="Filter.Equipment"></td>
+        <td ng-i18next="Filter.Equipment"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:transferable"></dim-filter-link>
           <dim-filter-link filter="is:movable"></dim-filter-link>
         </td>
-        <td translate="Filter.Transferable"></td>
+        <td ng-i18next="Filter.Transferable"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:equipped"></dim-filter-link>
         </td>
-        <td translate="Filter.Equipped"></td>
+        <td ng-i18next="Filter.Equipped"></td>
       </tr>
       <tr>
         <td>
@@ -107,7 +107,7 @@
           <dim-filter-link filter="is:special"></dim-filter-link>
           <dim-filter-link filter="is:heavy"></dim-filter-link>
         </td>
-        <td translate="Filter.WeaponClass"></td>
+        <td ng-i18next="Filter.WeaponClass"></td>
       </tr>
       <tr>
         <td>
@@ -118,7 +118,7 @@
           <dim-filter-link filter="is:leg"></dim-filter-link>
           <dim-filter-link filter="is:classitem"></dim-filter-link>
         </td>
-        <td translate="Filter.ArmorCategory"></td>
+        <td ng-i18next="Filter.ArmorCategory"></td>
       </tr>
       <tr>
         <td>
@@ -134,7 +134,7 @@
           <dim-filter-link filter="is:purple"></dim-filter-link>
           <dim-filter-link filter="is:yellow"></dim-filter-link>
         </td>
-        <td translate="Filter.RarityTier"></td>
+        <td ng-i18next="Filter.RarityTier"></td>
       </tr>
       <tr>
         <td>
@@ -142,21 +142,21 @@
           <dim-filter-link filter="is:discipline"></dim-filter-link>
           <dim-filter-link filter="is:strength"></dim-filter-link>
         </td>
-        <td translate="Filter.NamedStat"></td>
+        <td ng-i18next="Filter.NamedStat"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:infusable"></dim-filter-link>
           <dim-filter-link filter="is:infuse"></dim-filter-link>
         </td>
-        <td translate="Filter.Infusable"></td>
+        <td ng-i18next="Filter.Infusable"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:ascended"></dim-filter-link>
           <dim-filter-link filter="is:unascended"></dim-filter-link>
         </td>
-        <td translate="Filter.Ascended"></td>
+        <td ng-i18next="Filter.Ascended"></td>
       </tr>
       <tr>
         <td>
@@ -165,7 +165,7 @@
           <dim-filter-link filter="is:rerollable"></dim-filter-link>
           <dim-filter-link filter="is:reroll"></dim-filter-link>
         </td>
-        <td translate="Filter.Reforgeable"></td>
+        <td ng-i18next="Filter.Reforgeable"></td>
       </tr>
       <tr>
         <td>
@@ -175,13 +175,13 @@
           <dim-filter-link filter="is:xpcomplete"></dim-filter-link>
           <dim-filter-link filter="is:upgraded"></dim-filter-link>
         </td>
-        <td><span translate="Filter.Leveling.Leveling"></span>
+        <td><span ng-i18next="Filter.Leveling.Leveling"></span>
           <ul>
-            <li translate="Filter.Leveling.Complete"></li>
-            <li translate="Filter.Leveling.Incomplete"></li>
-            <li translate="Filter.Leveling.NeedsXP"></li>
-            <li translate="Filter.Leveling.XPComplete"></li>
-            <li translate="Filter.Leveling.Upgraded"></li>
+            <li ng-i18next="Filter.Leveling.Complete"></li>
+            <li ng-i18next="Filter.Leveling.Incomplete"></li>
+            <li ng-i18next="Filter.Leveling.NeedsXP"></li>
+            <li ng-i18next="Filter.Leveling.XPComplete"></li>
+            <li ng-i18next="Filter.Leveling.Upgraded"></li>
           </ul>
         </td>
       </tr>
@@ -191,34 +191,34 @@
           <dim-filter-link filter="is:hunter"></dim-filter-link>
           <dim-filter-link filter="is:warlock"></dim-filter-link>
         </td>
-        <td translate="Filter.Class"></td>
+        <td ng-i18next="Filter.Class"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:dupe"></dim-filter-link>
           <dim-filter-link filter="is:duplicate"></dim-filter-link>
         </td>
-        <td translate="Filter.Dupe"></td>
+        <td ng-i18next="Filter.Dupe"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:locked"></dim-filter-link>
           <dim-filter-link filter="is:unlocked"></dim-filter-link>
         </td>
-        <td translate="Filter.Locked"></td>
+        <td ng-i18next="Filter.Locked"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:tracked"></dim-filter-link>
           <dim-filter-link filter="is:untracked"></dim-filter-link>
         </td>
-        <td translate="Filter.Tracked"></td>
+        <td ng-i18next="Filter.Tracked"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:stackable"></dim-filter-link>
         </td>
-        <td translate="Filter.Stackable"></td>
+        <td ng-i18next="Filter.Stackable"></td>
       </tr>
       <tr>
         <td>
@@ -237,13 +237,13 @@
           <dim-filter-link filter="is:specialweaponengram"></dim-filter-link>
           <dim-filter-link filter="is:heavyweaponengram"></dim-filter-link>
         </td>
-        <td translate="Filter.WeaponType"></td>
+        <td ng-i18next="Filter.WeaponType"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:engram"></dim-filter-link>
         </td>
-        <td translate="Filter.Engrams"></td>
+        <td ng-i18next="Filter.Engrams"></td>
       </tr>
       <tr>
         <td>
@@ -251,11 +251,11 @@
           <dim-filter-link filter="is:glimmerboost"></dim-filter-link>
           <dim-filter-link filter="is:glimmersupply"></dim-filter-link>
         </td>
-        <td translate="Filter.Glimmer.Glimmer">
+        <td ng-i18next="Filter.Glimmer.Glimmer">
           <ul>
-            <li translate="Filter.Glimmer.Any"></li>
-            <li translate="Filter.Glimmer.Boost"></li>
-            <li translate="Filter.Glimmer.Item"></li>
+            <li ng-i18next="Filter.Glimmer.Any"></li>
+            <li ng-i18next="Filter.Glimmer.Boost"></li>
+            <li ng-i18next="Filter.Glimmer.Item"></li>
           </ul>
         </td>
       </tr>
@@ -263,7 +263,7 @@
         <td>
           <dim-filter-link filter="is:new"></dim-filter-link>
         </td>
-        <td translate="Filter.NewItems"></td>
+        <td ng-i18next="Filter.NewItems"></td>
       </tr>
       <span ng-if="vm.featureFlags.tagsEnabled">
         <tr>
@@ -275,18 +275,18 @@
             <dim-filter-link filter="tag:infuse"></dim-filter-link>
           </td>
           <td><ul>
-            <li translate="Filter.Tags.NoTag"></li>
-            <li translate="Filter.Tags.Favorite"></li>
-            <li translate="Filter.Tags.Keep"></li>
-            <li translate="Filter.Tags.Dismantle"></li>
-            <li translate="Filter.Tags.Infuse"></li>
+            <li ng-i18next="Filter.Tags.NoTag"></li>
+            <li ng-i18next="Filter.Tags.Favorite"></li>
+            <li ng-i18next="Filter.Tags.Keep"></li>
+            <li ng-i18next="Filter.Tags.Dismantle"></li>
+            <li ng-i18next="Filter.Tags.Infuse"></li>
           </ul></td>
         </tr>
         <tr>
           <td>
             <dim-filter-link filter="notes:value"></dim-filter-link>
           </td>
-          <td translate="Filter.Notes"></td>
+          <td ng-i18next="Filter.Notes"></td>
         </tr>
       </span>
       <span ng-if="vm.featureFlags.reviewsEnabled">
@@ -294,7 +294,7 @@
           <td>
             <dim-filter-link filter="is:rated"></dim-filter-link>
           </td>
-          <td translate="Filter.Rated"></td>
+          <td ng-i18next="Filter.Rated"></td>
         </tr>
         <tr>
           <td>
@@ -304,7 +304,7 @@
             <dim-filter-link filter="rating:&lt;value"></dim-filter-link>
             <dim-filter-link filter="rating:&lt;=value"></dim-filter-link>
           </td>
-          <td translate="Filter.Rating"></td>
+          <td ng-i18next="Filter.Rating"></td>
         </tr>
       </span>
       <tr>
@@ -313,21 +313,21 @@
           <dim-filter-link filter="is:year2"></dim-filter-link>
           <dim-filter-link filter="is:year3"></dim-filter-link>
         </td>
-        <td translate="Filter.Year"></td>
+        <td ng-i18next="Filter.Year"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:inloadout"></dim-filter-link>
           <dim-filter-link filter="not:inloadout"></dim-filter-link>
         </td>
-        <td translate="Filter.InLoadout"></td>
+        <td ng-i18next="Filter.InLoadout"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:postmaster"></dim-filter-link>
           <dim-filter-link filter="is:inpostmaster"></dim-filter-link>
         </td>
-        <td translate="Filter.Postmaster"></td>
+        <td ng-i18next="Filter.Postmaster"></td>
       </tr>
       <tr>
         <td>
@@ -346,19 +346,19 @@
           <dim-filter-link filter="is:gunsmith"></dim-filter-link>
         </td>
         <td>
-          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.FWC, name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.DO, name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.NM, name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Speaker, name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: 'Variks', name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Shipwright, name: '(Amanda Holliday)' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: 'Osiris', name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: 'Xûr', name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: 'Shaxx', name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.CQ, name: '(Arcite-99)' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: 'Eris Morn', name: '' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.EV, name: '(Tess Everis)' }"></span>
-          <span translate="Filter.Vendor" translate-values="{ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' }"></span>
+          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.FWC, context: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.DO, context: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.NM, context: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Speaker, context: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: 'Variks', context: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Shipwright, name: '(Amanda Holliday)' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: 'Osiris', ncontext: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: 'Xûr', context: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: 'Shaxx', context: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.CQ, name: '(Arcite-99)' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: 'Eris Morn', context: 'noname' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.EV, name: '(Tess Everis)' })Filter.Vendor"></span>
+          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' })Filter.Vendor"></span>
         </td>
       </tr>
       <tr>
@@ -382,23 +382,23 @@
           <dim-filter-link filter="is:aot"></dim-filter-link>
         </td>
         <td>
-          <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.Vanilla }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.QW }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.IB }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.VoG }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CE }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.PoE }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.ToO }"></span>
-          <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.tTK }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CoE }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.KF }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.SRL }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.CD }"></span>
-          <span translate="Filter.Release" translate-values="{ release: vm.filters.releases.RoI }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.AF }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.WotM }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.Dawning }"></span>
-          <span translate="Filter.Activity" translate-values="{ activity: vm.filters.activities.AoT }"></span>
+          <span ng-i18next="[html:i18next]({ release: vm.filters.releases.Vanilla })Filter.Release"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.QW })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.IB })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.VoG })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.CE })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.PoE })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.ToO })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ release: vm.filters.releases.tTK })Filter.Release"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.CoE })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.KF })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.SRL })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.CD })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ release: vm.filters.releases.RoI })Filter.Release"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.AF })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.WotM })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.Dawning })Filter.Activity"></span>
+          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.AoT })Filter.Activity"></span>
         </td>
       </tr>
     </table>

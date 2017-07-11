@@ -13,3 +13,10 @@ $xp: #5EA16A;
 $gold: #f5dc56;
 
 $character-box-height: 46px;
+
+// Based on the CSS width of an iPhone 6+
+@mixin phone-portrait {
+  @media (max-width: 375px) {
+    @content;
+  }
+}

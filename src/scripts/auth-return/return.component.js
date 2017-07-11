@@ -20,9 +20,9 @@ function ReturnController($http, OAuthService, OAuthTokenService) {
 
     ctrl.code = queryString.code;
     ctrl.state = queryString.state;
-    ctrl.authorized = (ctrl.code.length > 0);
+    ctrl.authorized = (ctrl.code && ctrl.code.length > 0);
 
-    if (ctrl.state !== localStorage.authorizationState) {
+    if (!ctrl.authorized || ctrl.state !== localStorage.authorizationState) {
       window.location = "/index.html#!/login";
       return;
     }
@@ -34,6 +34,7 @@ function ReturnController($http, OAuthService, OAuthTokenService) {
       })
       .catch((error) => {
         console.error(error);
+        ctrl.error = error.message || error.data.error_description;
       });
   };
 }

@@ -12,7 +12,7 @@ export const LoadoutBuilderComponent = {
   controllerAs: 'vm'
 };
 
-function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
+function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18next, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
   'ngInject';
 
   const vm = this;
@@ -466,7 +466,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
       },
       equipItems: function(set) {
         ngDialog.closeAll();
-        let loadout = { items: {}, name: $translate.instant('Loadouts.AppliedAuto') };
+        let loadout = { items: {}, name: $i18next.t('Loadouts.AppliedAuto') };
         const items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
         loadout.items.helmet = [items.Helmet.item];
         loadout.items.chest = [items.Chest.item];
@@ -580,7 +580,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
 
                         processedCount++;
                         if (processedCount % 50000 === 0) { // do this so the page doesn't lock up
-                          if (vm.active !== activeGuardian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || $location.path() !== '/loadout-builder') {
+                          if (vm.active !== activeGuardian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || !$location.path().endsWith('/loadout-builder')) {
                             // If active guardian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;

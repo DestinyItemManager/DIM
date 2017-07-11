@@ -20,7 +20,7 @@ export default angular
 
     $stateProvider.state({
       name: 'loadout-builder',
-      parent: 'content',
+      parent: 'destiny1account',
       component: 'loadoutBuilder',
       url: '/loadout-builder'
     });

@@ -25,7 +25,7 @@ export const CompareComponent = {
   template
 };
 
-function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $translate) {
+function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -72,10 +72,10 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $trans
 
     if (vm.comparisons.length && vm.comparisons[0].typeName && args.item.typeName !== vm.comparisons[0].typeName) {
       if (vm.comparisons[0].classType && args.item.classType !== vm.comparisons[0].classType) {
-        toaster.pop('warning', args.item.name, $translate.instant('Compare.Error.Class', { class: vm.comparisons[0].classTypeNameLocalized }));
+        toaster.pop('warning', args.item.name, $i18next.t('Compare.Error.Class', { class: vm.comparisons[0].classTypeNameLocalized }));
         return;
       }
-      toaster.pop('warning', args.item.name, $translate.instant('Compare.Error.Archetype', { type: vm.comparisons[0].typeName }));
+      toaster.pop('warning', args.item.name, $i18next.t('Compare.Error.Archetype', { type: vm.comparisons[0].typeName }));
       return;
     }
 

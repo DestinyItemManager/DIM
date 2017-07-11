@@ -45,6 +45,7 @@ function SearchService(dimSettingsService) {
     unascended: ['unascended', 'unassended', 'unasscended'],
     ascended: ['ascended', 'assended', 'asscended'],
     reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+    ornament: ['ornament', 'ornamentmissing', 'ornamentunlocked'],
     tracked: ['tracked'],
     untracked: ['untracked'],
     locked: ['locked'],
@@ -157,7 +158,7 @@ function SearchFilter(dimSearchService) {
 }
 
 
-function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $translate) {
+function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $i18next) {
   const vm = this;
   const filterInputSelector = '#filter-input';
   let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -187,7 +188,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
   hotkeys.bindTo($scope)
     .add({
       combo: ['f'],
-      description: $translate.instant('Hotkey.StartSearch'),
+      description: $i18next.t('Hotkey.StartSearch'),
       callback: function(event) {
         vm.focusFilterInput();
         event.preventDefault();
@@ -408,6 +409,18 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     },
     reforgeable: function(predicate, item) {
       return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
+    },
+    ornament: function(predicate, item) {
+      const complete = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: true });
+      const missing = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: false });
+
+      if (predicate === 'ornamentunlocked') {
+        return complete;
+      } else if (predicate === 'ornamentmissing') {
+        return missing;
+      } else {
+        return complete || missing;
+      }
     },
     untracked: function(predicate, item) {
       return item.trackable &&

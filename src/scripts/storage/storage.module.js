@@ -14,9 +14,12 @@ export default angular
   .config(($stateProvider) => {
     'ngInject';
 
+    // TODO: This should probably inherit from a sort of "general" state that has nothing to do with a specific account
+    // By doing it this way (parenting on "destiny1account") we preserve a lot of existing behavior around the header
+    // but we will have to re-declare storage separately for destiny2account.
     $stateProvider.state({
       name: 'storage',
-      parent: 'content',
+      parent: 'destiny1account',
       component: 'storage',
       url: '/storage'
     });

@@ -8,7 +8,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $translate, ngDialog) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -25,44 +25,44 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     dimSettingsService.save();
   });
 
-  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $translate.instant('Settings.ColumnSize', { num }) }));
-  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $translate.instant('Settings.ColumnSize', { num }) }));
-  vm.vaultColOptions.unshift({ id: 999, name: $translate.instant('Settings.ColumnSizeAuto') });
+  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
+  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
+  vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
   vm.filters = {};
 
   vm.filters.vendors = {
-    FWC: $translate.instant('Filter.Vendors.FWC'),
-    DO: $translate.instant('Filter.Vendors.DO'),
-    NM: $translate.instant('Filter.Vendors.NM'),
-    Speaker: $translate.instant('Filter.Vendors.Speaker'),
-    Shipwright: $translate.instant('Filter.Vendors.Shipwright'),
-    CQ: $translate.instant('Filter.Vendors.CQ'),
-    EV: $translate.instant('Filter.Vendors.EV'),
-    Gunsmith: $translate.instant('Filter.Vendors.Gunsmith'),
+    FWC: $i18next.t('Filter.Vendors.FWC'),
+    DO: $i18next.t('Filter.Vendors.DO'),
+    NM: $i18next.t('Filter.Vendors.NM'),
+    Speaker: $i18next.t('Filter.Vendors.Speaker'),
+    Shipwright: $i18next.t('Filter.Vendors.Shipwright'),
+    CQ: $i18next.t('Filter.Vendors.CQ'),
+    EV: $i18next.t('Filter.Vendors.EV'),
+    Gunsmith: $i18next.t('Filter.Vendors.Gunsmith'),
   };
 
   vm.filters.releases = {
-    Vanilla: $translate.instant('Filter.Releases.Vanilla'),
-    tTK: $translate.instant('Filter.Releases.tTK'),
-    RoI: $translate.instant('Filter.Releases.RoI')
+    Vanilla: $i18next.t('Filter.Releases.Vanilla'),
+    tTK: $i18next.t('Filter.Releases.tTK'),
+    RoI: $i18next.t('Filter.Releases.RoI')
   };
 
   vm.filters.activities = {
-    QW: $translate.instant('Filter.Activities.QW'),
-    IB: $translate.instant('Filter.Activities.IB'),
-    VoG: $translate.instant('Filter.Activities.VoG'),
-    CE: $translate.instant('Filter.Activities.CE'),
-    PoE: $translate.instant('Filter.Activities.PoE'),
-    ToO: $translate.instant('Filter.Activities.ToO'),
-    CoE: $translate.instant('Filter.Activities.CoE'),
-    KF: $translate.instant('Filter.Activities.KF'),
-    SRL: $translate.instant('Filter.Activities.SRL'),
-    CD: $translate.instant('Filter.Activities.CD'),
-    AF: $translate.instant('Filter.Activities.AF'),
-    WotM: $translate.instant('Filter.Activities.WotM'),
-    Dawning: $translate.instant('Filter.Activities.Dawning'),
-    AoT: $translate.instant('Filter.Activities.AoT')
+    QW: $i18next.t('Filter.Activities.QW'),
+    IB: $i18next.t('Filter.Activities.IB'),
+    VoG: $i18next.t('Filter.Activities.VoG'),
+    CE: $i18next.t('Filter.Activities.CE'),
+    PoE: $i18next.t('Filter.Activities.PoE'),
+    ToO: $i18next.t('Filter.Activities.ToO'),
+    CoE: $i18next.t('Filter.Activities.CoE'),
+    KF: $i18next.t('Filter.Activities.KF'),
+    SRL: $i18next.t('Filter.Activities.SRL'),
+    CD: $i18next.t('Filter.Activities.CD'),
+    AF: $i18next.t('Filter.Activities.AF'),
+    WotM: $i18next.t('Filter.Activities.WotM'),
+    Dawning: $i18next.t('Filter.Activities.Dawning'),
+    AoT: $i18next.t('Filter.Activities.AoT')
   };
   vm.languageOptions = {
     de: 'Deutsch',
@@ -82,12 +82,6 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
 
   // Edge doesn't support these
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
-
-  vm.logout = function() {
-    OAuthTokenService.removeToken();
-    ngDialog.closeAll();
-    $state.go('login', { reauth: true });
-  };
 
   vm.downloadWeaponCsv = function() {
     dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
