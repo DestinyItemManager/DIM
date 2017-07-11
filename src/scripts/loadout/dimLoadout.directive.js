@@ -49,13 +49,6 @@ function Loadout(dimLoadoutService, $translate) {
       });
     });
 
-    scope.$on('dim-create-new-loadout', () => {
-      vm.show = true;
-      vm.showClass = true;
-      dimLoadoutService.dialogOpen = true;
-      vm.loadout = angular.copy(vm.defaults);
-    });
-
     scope.$on('dim-delete-loadout', () => {
       vm.show = false;
       dimLoadoutService.dialogOpen = false;
@@ -72,6 +65,9 @@ function Loadout(dimLoadoutService, $translate) {
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
         vm.originalLoadout = args.loadout;
+        if (args.loadout.classType === undefined) {
+          args.loadout.classType = -1;
+        }
 
         // Filter out any vendor items and equip all if requested
         args.loadout.warnitems = _.reduce(args.loadout.items, (o, items) => {
