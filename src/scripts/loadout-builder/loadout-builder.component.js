@@ -580,7 +580,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
 
                         processedCount++;
                         if (processedCount % 50000 === 0) { // do this so the page doesn't lock up
-                          if (vm.active !== activeGuardian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || $location.path() !== '/loadout-builder') {
+                          if (vm.active !== activeGuardian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || !$location.path().endsWith('/loadout-builder')) {
                             // If active guardian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;
