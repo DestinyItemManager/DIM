@@ -25,7 +25,7 @@
 
   .record-book-page {
     background: #555;
-    margin: 10px 10px 0 10px;
+    margin: 8px 0 0 0;
     padding: 8px;
 
     .record-book-page-title {
@@ -68,6 +68,10 @@
     display: flex;
     flex-direction: row;
 
+    @media(max-width: 375px) {
+      width: 100%;
+    }
+
     h3 {
       margin: 0;
       font-size: 16px;
@@ -103,6 +107,7 @@
     background-size: 75%;
     width: 60px;
     height: 60px;
+    flex-shrink: 0;
     border: 2px solid #fff;
   }
 
