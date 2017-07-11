@@ -2,14 +2,15 @@
   <span class="menu link" ng-click="$ctrl.dropdown = !$ctrl.dropdown" dim-click-anywhere-but-here="$ctrl.dropdown = false">
     <i class="fa fa-bars"></i>
     <div class="dropdown" ng-if="$ctrl.dropdown">
+      <span class="link" ui-sref="inventory" translate="Header.Inventory"></span>
       <span class="link" ng-click="$ctrl.toggleState('loadout-builder')" translate="LB.LB"></span>
       <span class="link" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleState('vendors')" translate="Vendors"></span>
       <span class="link" ng-click="$ctrl.toggleState('record-books')" translate="RecordBooks"></span>
       <span class="link" ng-if="::$ctrl.featureFlags.activities" ng-click="$ctrl.toggleState('activities')" translate="Activities"></span>
       <span class="link" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
       <hr>
-      <span class="link" ng-click="$ctrl.toggleState('storage')" translate="Storage"></span>
-      <span class="link" ng-click="$ctrl.showSetting($event)" translate="Settings"></span>
+      <span class="link" ng-click="$ctrl.toggleState('storage')" translate="Storage.Title"></span>
+      <span class="link" ng-click="$ctrl.showSetting($event)" translate="Settings.Settings"></span>
       <hr>
       <span class="link" ng-click="$ctrl.showAbout($event)" translate="Header.About"></span>
       <span class="link" ng-click="$ctrl.showSupport($event)" translate="Header.SupportDIM"></span>
@@ -31,7 +32,7 @@
   <span class="header-right">
     <refresh-stores ng-if="!$ctrl.showSearch" class="link"></refresh-stores>
     <span class="link" ng-if="!$ctrl.showSearch" ng-click="$ctrl.toggleState('storage')" translate-attr="{ title: 'Storage.Title'}"><i class="fa fa-save"></i></span>
-    <span class="link" ng-if="!$ctrl.showSearch" ng-click="$ctrl.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
+    <span class="link" ng-if="!$ctrl.showSearch" ng-click="$ctrl.showSetting($event)" translate-attr="{ title: 'Settings.Settings'}"><i class="fa fa-cog"></i></span>
     <span class="link search-link" ng-class="{ show: $ctrl.showSearch }">
       <span class="filter-help" ng-click="$ctrl.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-question-circle-o"></i></span>
       <dim-search-filter></dim-search-filter>
