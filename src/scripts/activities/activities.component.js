@@ -24,11 +24,10 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
 
   // TODO: it's time for a directive
   vm.toggleSection = function(id) {
-    console.log('toggle', id);
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
     vm.settings.save();
-  }
-  
+  };
+
   this.$onInit = function() {
     // TODO: this is a hack for loading stores - it should be just an observable
     vm.stores = dimStoreService.getStores();
