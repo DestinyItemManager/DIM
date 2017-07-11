@@ -56,10 +56,10 @@ div:focus, span:focus {
 }
 
 .new_overlay {
-  @include item-size;
+  @include item-size-padded;
   position: absolute;
-  top: 2px;
-  left: 2px;
+  top: 0;
+  left: 0;
   pointer-events: none;
   .new-item-animated & {
     will-change: transform;
@@ -71,7 +71,10 @@ div:focus, span:focus {
   display: none;
   .show-new-items & {
     display: block;
-    @include item-size;
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include item-size-padded;
     overflow: hidden;
   }
 }
