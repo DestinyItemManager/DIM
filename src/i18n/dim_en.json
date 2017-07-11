@@ -87,7 +87,8 @@
       "FilterHelp": "Search item/perk or is:arc",
       "Refresh": "Refresh Destiny Data",
       "SupportDIM": "Backers",
-      "Shop": "Shop"
+      "Shop": "Shop",
+      "Inventory": "Inventory"
    },
    "Help": {
       "BackToDIM": "Back to DIM",
@@ -206,7 +207,7 @@
       "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!"
    },
    "Loadouts": {
-      "Any": "Any",
+      "Any": "Any class",
       "Loadouts": "Loadouts",
       "Before": "Before '{name}'",
       "Create": "Create Loadout",
@@ -314,7 +315,6 @@
    },
    "Settings": {
       "Settings": "Settings",
-      "LogOutDesc": "Log out of DIM, or switch Bungie.net accounts",
       "LogOut": "Log out",
       "Language": "Language (reload DIM to take effect)",
       "HideUnfiltered": "Hide items that don't match a search",

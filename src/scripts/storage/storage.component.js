@@ -63,7 +63,7 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
 
   vm.driveSync = function() {
     if ($window.confirm($translate.instant('Storage.GDriveSignInWarning'))) {
-      return GoogleDriveStorage.authorize();
+      return GoogleDriveStorage.authorize().then(vm.forceSync);
     }
     return null;
   };

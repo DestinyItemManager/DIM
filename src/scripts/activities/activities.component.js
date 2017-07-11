@@ -3,6 +3,14 @@ import _ from 'underscore';
 import template from './activities.html';
 import './activities.scss';
 
+export const ActivitiesComponent = {
+  controller: ActivitiesController,
+  template,
+  bindings: {
+    account: '<'
+  }
+};
+
 function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettingsService, $translate) {
   'ngInject';
 
@@ -19,6 +27,20 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     console.log('toggle', id);
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
     vm.settings.save();
+  }
+  
+  this.$onInit = function() {
+    // TODO: this is a hack for loading stores - it should be just an observable
+    vm.stores = dimStoreService.getStores();
+    // TODO: OK, need to push this check into store service
+    if (!vm.stores.length ||
+        dimStoreService.activePlatform.membershipId !== vm.account.membershipId ||
+        dimStoreService.activePlatform.platformType !== vm.account.platformType) {
+      dimStoreService.reloadStores(vm.account);
+      // TODO: currently this wires us up via the dim-stores-updated event
+    }
+
+    init();
   };
 
   // TODO: Ideally there would be an Advisors service that would
@@ -174,8 +196,3 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     return skulls;
   }
 }
-
-export const ActivitiesComponent = {
-  controller: ActivitiesController,
-  template: template
-};

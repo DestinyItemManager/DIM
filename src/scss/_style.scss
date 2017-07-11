@@ -56,10 +56,10 @@ div:focus, span:focus {
 }
 
 .new_overlay {
-  @include item-size;
+  @include item-size-padded;
   position: absolute;
-  top: 2px;
-  left: 2px;
+  top: 0;
+  left: 0;
   pointer-events: none;
   .new-item-animated & {
     will-change: transform;
@@ -71,7 +71,10 @@ div:focus, span:focus {
   display: none;
   .show-new-items & {
     display: block;
-    @include item-size;
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include item-size-padded;
     overflow: hidden;
   }
 }
@@ -102,7 +105,7 @@ div:focus, span:focus {
 }
 
 #header {
-  padding: 0 1em;
+  padding: 0 2px;
   position: fixed;
   z-index: 15;
   top: 0;
@@ -140,6 +143,7 @@ div:focus, span:focus {
     cursor: default;
     display: flex;
     margin-left: auto;
+    margin-right: 0;
     align-items: center;
     flex-direction: row;
   }
@@ -169,7 +173,12 @@ div:focus, span:focus {
 
     .link {
       display: block;
-      padding: 4px 1em;
+      padding: 4px 2em;
+      font-size: 12px;
+      @include phone-portrait {
+        font-size: 14px;
+        padding: 6px 2em;
+      }
       margin: 0;
 
       &:hover, &:focus {
@@ -237,7 +246,7 @@ dd {
   top: -2px;
 
   // Yikes this is a hack
-  @media (max-width: 375px) {
+  @include phone-portrait {
     display: none;
 
     &.show {
@@ -269,7 +278,7 @@ dd {
 }
 .search-button {
   display: none;
-  @media (max-width: 375px) {
+  @include phone-portrait {
     display: inline-block;
   }
 }
@@ -1233,7 +1242,7 @@ g {
 
 #content {
   margin: 15px auto;
-  padding: 0 1em;
+  padding: 0 8px;
   margin-top: 15px;
   user-select: none;
 }
@@ -1626,19 +1635,6 @@ h2, h3, h4 {
     }
 
     @include pop-in;
-  }
-}
-
-.loadout {
-  &.random {
-    position: fixed;
-    backface-visibility: hidden;
-    bottom: 0;
-    right: 0;
-    padding: .5rem;
-    color: #222;
-    text-decoration: none;
-    font-weight: normal;
   }
 }
 

@@ -1,10 +1,22 @@
+import _ from 'underscore';
+
 import aboutTemplate from 'app/views/about.html';
 import supportTemplate from 'app/views/support.html';
 import filtersTemplate from 'app/views/filters.html';
 
+// This is outside the class in order to make it a truly global
+// fire-once function, so no matter how many times they visit this
+// page, they'll only see the popup once per session.
+const showExtensionDeprecation = _.once(($translate, dimInfoService) => {
+  dimInfoService.show('extension-deprecated', {
+    title: $translate.instant('Help.ExtensionDeprecatedTitle'),
+    body: $translate.instant('Help.ExtensionDeprecatedMessage'),
+    type: 'info'
+  }, 0);
+});
+
 export default class ContentController {
   constructor(
-    dimActivityTrackerService,
     dimState,
     ngDialog,
     $rootScope,
@@ -12,11 +24,8 @@ export default class ContentController {
     dimPlatformService,
     $interval,
     hotkeys,
-    $timeout,
-    dimStoreService,
     dimXurService,
     dimSettingsService,
-    $window,
     $scope,
     $state,
     dimVendorService,
@@ -32,23 +41,6 @@ export default class ContentController {
     vm.$DIM_FLAVOR = $DIM_FLAVOR;
     vm.$DIM_CHANGELOG = $DIM_CHANGELOG;
 
-    vm.loadingTracker = loadingTracker;
-    vm.platforms = [];
-
-    vm.platformChange = function platformChange(platform) {
-      loadingTracker.addPromise(dimPlatformService.setActive(platform));
-    };
-
-    $scope.$on('dim-platforms-updated', (e, args) => {
-      vm.platforms = args.platforms;
-    });
-
-    $scope.$on('dim-active-platform-updated', (e, args) => {
-      dimState.active = vm.currentPlatform = args.platform;
-    });
-
-    loadingTracker.addPromise(dimPlatformService.getPlatforms());
-
     vm.settings = dimSettingsService;
     $scope.$watch(() => vm.settings.itemSize, (size) => {
       document.querySelector('html').style.setProperty("--item-size", `${size}px`);
@@ -59,20 +51,10 @@ export default class ContentController {
     $scope.$watch(() => vm.settings.vaultMaxCol, (cols) => {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
-    if ($featureFlags.colorA11y) {
-      $scope.$watch(() => vm.settings.colorA11y, (color) => {
-        if (color && color !== '-') {
-          document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
-        } else {
-          document.querySelector('html').style.removeProperty("--color-filter");
-        }
-      });
-    }
 
     vm.featureFlags = {
       vendorsEnabled: $featureFlags.vendorsEnabled,
-      activities: $featureFlags.activities,
-      colorA11y: $featureFlags.colorA11y
+      activities: $featureFlags.activities
     };
     vm.vendorService = dimVendorService;
 
@@ -159,11 +141,7 @@ export default class ContentController {
 
       switch (event.data.type) {
       case 'DIM_EXT_PONG':
-        dimInfoService.show('extension-deprecated', {
-          title: $translate.instant('Help.ExtensionDeprecatedTitle'),
-          body: $translate.instant('Help.ExtensionDeprecatedMessage'),
-          type: 'info'
-        }, 0);
+        showExtensionDeprecation($translate, dimInfoService);
         break;
       }
     }
