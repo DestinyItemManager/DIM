@@ -411,8 +411,8 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
     },
     ornament: function(predicate, item) {
-      let complete = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: true });
-      let missing = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: false });
+      const complete = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: true });
+      const missing = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: false });
 
       if (predicate === 'ornamentunlocked') {
         return complete;
@@ -421,7 +421,6 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       } else {
         return complete || missing;
       }
-
     },
     untracked: function(predicate, item) {
       return item.trackable &&
