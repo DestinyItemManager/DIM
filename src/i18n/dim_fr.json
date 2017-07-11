@@ -18,20 +18,20 @@
         "Down": "Bungie.net est hors service.",
         "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
         "NetworkError": "Erreur de réseau - {{status}} {{statusText}}",
-        "Throttled": "La limite de connections à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
+        "Throttled": "La limite de connexions à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
         "NotLoggedIn": "Veuillez vous connecter sur Bungie.net pour utiliser cette extension.",
         "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
-        "NoAccount": "Aucun compte Destiny n'a été trouvé sur {{platform}}. Avez-vous sélectionné la bonne platforme?",
+        "NoAccount": "Aucun compte Destiny n'a été trouvé sur {{platform}}. Avez-vous sélectionné la bonne plateforme?",
         "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {{platform}}.",
         "NoCookies": "Aucun cookie trouvé.",
         "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
-        "Twitter": "Tenez-vous informer sur:",
+        "Twitter": "Tenez-vous informé sur:",
         "ItemUniqueness": "Unicité d'un objet",
         "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
         "VendorNotFound": "Les données du vendeur sont indisponible."
     },
     "Compare": {
-        "ButtonHelp": "Comparer les objets",
+        "ButtonHelp": "Comparer des objets",
         "All": "Comparaison de {{type}} ({{quantity}})",
         "Archetype": "Comparaison par archetype ({{quantity}})",
         "Compare": "Comparer",
@@ -53,15 +53,15 @@
         "Days_plural": "{{count}} Jours"
     },
     "Debug": {
-        "Dump": "Envoyer les infos sur la console"
+        "Dump": "Envoyer les infos vers la console"
     },
     "DidYouKnow": {
         "DidYouKnow": "Le saviez-vous?",
         "Collapse": "Vous venez de réduire une section dans DIM! Il peut être utile de cache des parties de DIM que vous n'avez pas besoin d'utiliser normalement.",
         "DontShowAgain": "Ne plus jamais afficher cette astuce",
-        "DoubleClick": "Si vous déplacez un objet vers votre perso actuellement actif (dernière connexion), vous pouvez double-cliquer cet objet pour l'équiper instantanément.",
-        "DragAndDrop": "Les objets peuvent être glissés et déposés entre différentes colonnes de persos/coffres.",
-        "Expand": "Pour re-élargir une section, cliquez simplement l'icône \"plus\" sur la gauche de la catégorie vous avez réduite.",
+        "DoubleClick": "Si vous déplacez un objet vers votre personnage actuellement actif (dernière connexion), vous pouvez double-cliquer cet objet pour l'équiper instantanément.",
+        "DragAndDrop": "Les objets peuvent être glissés et déposés entre différentes colonnes de personnages/coffre.",
+        "Expand": "Pour ré-élargir une section, cliquez simplement l'icône \"plus\" sur la gauche de la catégorie que vous avez réduite.",
         "TryNext": "Essayez ultérieurement"
     },
     "FarmingMode": {
@@ -71,7 +71,7 @@
         "MakeRoom": {
             "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {store} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
             "MakeRoom": "Faire de la place pour collecter des objets en déplaçant de l'équipement",
-            "Tooltip": "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
+            "Tooltip": "Si activé, DIM déplacera les armes et armures afin de faire de la place dans le coffre pour les engrammes."
         },
         "OutOfRoomTitle": "Plus de Place",
         "OutOfRoom": "Vous n'avez plus d'espace pour déplacer des objets hors de {{character}}. Il serait temps de décrypter quelques engrammes et de faire le tri!",
@@ -109,7 +109,7 @@
     },
     "Hotkey": {
         "StartSearch": "Commencer une recherche",
-        "RefreshInventory": "Rafraîchir l'inventaire",
+        "RefreshInventory": "Actualiser l'inventaire",
         "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet",
         "MarkItemAs": "Marquer objet comme '{{tag}}'",
         "ClearNewItems": "Effacer les nouveaux objets"
@@ -120,10 +120,10 @@
         "Calc": "Calculateur d'infusion",
         "InfuseItems": "Sélectionner un objet avec lequel infuser:",
         "InfusionMaterials": "Matériels d'Infusion",
-        "LockedItems": "Inclure objets \"verrouillés\"",
-        "NoItems": "Pas d'objets infusables disponibles",
+        "LockedItems": "Inclure les objets \"verrouillés\"",
+        "NoItems": "Pas d'objets infusibles disponibles.",
         "NoTransfer": "Transférer matériel d'infusion\n{{target}} ne peut pas être déplacé.",
-        "ShowItems": "Afficher les objets infusables sur tous les persos et dans tous les coffres ",
+        "ShowItems": "Afficher les objets infusibles sur tous les personnages et le coffre",
         "TransferItems": "Transférer objets"
     },
     "ItemInfoService": {
@@ -133,8 +133,8 @@
     "ItemMove": {
         "Consolidate": "{{name}} consolidé",
         "Distributed": "{{name}} a été distribué\n{{name}} est maintenant divisé équitablement entre les personnages.",
-        "ToVault": "Tout/Toutes les {{name}} sont maintenant dans votre coffre.",
-        "ToStore": "Tout/Toutes les {{name}} sont maintenant dans votre {{store}}."
+        "ToVault": "Tout(e)(s) les {{name}} sont maintenant dans votre coffre.",
+        "ToStore": "Tout(e)(s) les {{name}} sont maintenant dans votre {{store}}."
     },
     "ItemService": {
         "BucketFull": {
@@ -143,14 +143,14 @@
         },
         "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
         "Classified2": "Objet classifié. Bungie n'a pas donné d'information à propos de cette objet. Cette objet n'est pas transférable pour le moment.",
-        "Deequip": "Ne trouve pas d'autre objet à équiper pour pouvoir déséquiper {{itemname}}",
-        "ExoticError": "'{{itemname}}' ne peut pas être équipé dans {{slot}} l'emplacement ne peut pas être déséquipé. ({{error}})",
+        "Deequip": "Aucun autre objet à équiper n'a été trouvé pour pouvoir déséquiper {{itemname}}",
+        "ExoticError": "'{{itemname}}' ne peut pas être équipé car l'exotique dans le {{slot}} ne peut pas être déséquipé. ({{error}})",
         "NotEnoughRoom": "Il n'y a rien qu'on puisse déplacer de {{store}} pour faire de la place pour {{itemname}}",
         "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
-        "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un/une {{class}} de niveau {{level}} ou plus.",
+        "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
         "PercentComplete": "({{percent, pct}} Achevé)",
-        "TooMuch": "Il semblerait que vous avait demandé de déplacer plus d'objet qu'il en existe à la source.",
-        "TwoExotics": "Ont ne sait pas comment tu a fait pour avoir plus de 2 exotiques équippé!"
+        "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source.",
+        "TwoExotics": "On ne sait pas comment tu as fait pour avoir plus de 2 exotiques équipés!"
     },
     "LB": {
         "LB": "Constructeur de pré set",
@@ -183,18 +183,18 @@
             "Help": "Besoin d'aide?",
             "Lock": "Protéger une série d'atouts en cliquant sur le seau à verrou et en sélectionnant atouts",
             "NoPerk": "Si un atout n'apparaît pas, cela veut dire que vous n'avez pas d'armure avec cette atout",
-            "MultiPerk": "Pour utilisez une armure avec plusieurs atouts réunis faite shift+click sur les atouts désiré",
+            "MultiPerk": "Pour utilisez une armure avec plusieurs atouts réunis faite shift+click sur les atouts désirés",
             "Or": "L'armure avec n'importe lequel de ces atouts sera utilisé (\"ou\")",
             "And": "L'armure avec n'importe lequel de ces atouts sera utilisé (\"et\")",
             "DragAndDrop": "Faites glisser et déposez les objets dans les seaux verrouillés pour construire des ensembles avec cette équipement seulement",
-            "ShiftClick": "Shift click sur un élément pour construire des ensembles sans cette équipement",
-            "HigherTiers": "Les Tiers supérieurs sont meilleurs",
-            "Tier11Example": "4/5/2 (un ensemble Tier 11) est 4 Intelligence 5 Discipline, 2 Force (4+5+2 = Tier 11)",
+            "ShiftClick": "Shift click sur un élément pour construire des ensembles sans cet équipement",
+            "HigherTiers": "Les paliers supérieurs sont meilleurs",
+            "Tier11Example": "4/5/2 (un ensemble Palier 11) est 4 Intelligence 5 Discipline, 2 Force (4+5+2 = Palier 11)",
             "Intellect": "L'intelligence accélère le temps de recharge du super chargé",
             "Discipline": "La Discipline accélère le temps de recharge des Grenades",
             "Strength": "La Force accélère le temps de recharge de la mêlée",
             "Synergy": "Essayez de trouver une armure qui a des atouts augmentant le nombre de munitions pour les types d'armes que vous utilisez.",
-            "ChangeNodes": "Changer les nœuds d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque ensemble pré enregistré.",
+            "ChangeNodes": "Changer les bulles d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque ensemble pré enregistré.",
             "StatsIncrease": "À mesure que le niveau de défense des objets augmente, les statistiques de cet objet (int/dis/for) augmentent également."
         },
         "Equip": "Équiper sur {{character}}",
@@ -207,15 +207,15 @@
         "Exclude": "Objets exclus",
         "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
         "LockPerk": "Verrouiller amélioration",
-        "Missing1": "Pièces légendaires ou éxotiques manquantes pour construire un set complet!",
-        "Missing2": "Pièces rares, légendaires ou éxotiques manquantes pour construire un set complet!"
+        "Missing1": "Pièces légendaires ou exotiques manquantes pour construire un set complet!",
+        "Missing2": "Pièces rares, légendaires ou exotiques manquantes pour construire un set complet!"
     },
     "Loadouts": {
         "Any": "Tout",
         "Loadouts": "Pré sets",
         "Before": "Avant '{{name}}'",
         "Create": "Créer Pré set",
-        "FromEquipped": "Equipé",
+        "FromEquipped": "Équipé",
         "Edit": "Modifier Pré set",
         "Delete": "Effacer Pré set",
         "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{{name}}'?",
@@ -230,7 +230,7 @@
         "VendorsCannotEquip": "Ces objets de vendeurs ne peuvent pas être équipés:",
         "VendorsCanEquip": "Ces objets peuvent être équipés:",
         "MaxSlots": "Tu peux uniquement avoir {{slots}} de ce type d'objet dans un pré set.",
-        "OnlyItems": "Seulement les objets équipable, matériaux et consommables peuvent être ajoutés à un pré set.",
+        "OnlyItems": "Seulement les objets équipables, matériaux et consommables peuvent être ajoutés à un pré set.",
         "FilteredItems": "Objets filtrés",
         "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
         "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
@@ -238,7 +238,7 @@
         "Save": "Sauvegarder",
         "SaveAsNew": "Sauvegarder comme nouveau",
         "Cancel": "Annuler",
-        "ItemsWithIcon": "Les objets avec cet icone seront équipés. Cliquez sur un bouton d'objet pour l'équiper.",
+        "ItemsWithIcon": "Les objets avec cette icône seront équipés. Cliquez sur un bouton d'objet pour l'équiper.",
         "CouldNotEquip": "Impossible d'équiper {{itemname}}",
         "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}} Nous avons transféré tout ce que vous aviez.",
         "DoesNotExist": "{{itemname}} n'existe pas dans votre compte.",
@@ -264,21 +264,21 @@
         "Outdated": "Infos Destiny expirées",
         "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionnalités de DIM peuvent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
         "Load": "Chargement des données sauvegardées de Destiny",
-        "LoadCharInv": "Chargement des persos et des inventaires de Destiny",
+        "LoadCharInv": "Chargement des personnages et des inventaires de Destiny",
         "Save": "Sauvegarde des dernières données de Destiny",
-        "Unzip": "Désarchivage des dernières données de Destiny"
+        "Unzip": "Dés-archivage des dernières données de Destiny"
     },
     "MovePopup": {
         "OverviewTab": "Vue d'ensemble",
         "ReviewsTab": "Évaluations",
-        "Consolidate": "Consolider",
+        "Consolidate": "Réunir",
         "DistributeEvenly": "Distribuer équitablement",
         "Equip": "Armer",
-        "Split": "Coupé",
+        "Split": "Couper",
         "Store": "Dépôt",
         "Subtitle_Consumable": "{{classType}} {{typeName}}",
         "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-        "Take": "Faire",
+        "Take": "Prendre",
         "Vault": "Coffre",
         "LockUnlock_Lock": "Bloquer {{itemType}}",
         "LockUnlock_Unlock": "Débloquer {{itemType}}",
@@ -294,7 +294,7 @@
         "Decrement": "Un de moins"
     },
     "Notes": {
-        "Error": "Erreur! Max 120 charactères pour les notes.",
+        "Error": "Erreur! Max 120 caractères pour les notes.",
         "Help": "Ajouter des notes à cet objet"
     },
     "DtrReview": {
@@ -315,7 +315,7 @@
         "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations."
     },
     "Objectives": {
-        "Complete": "Achevée",
+        "Complete": "Achevé",
         "Incomplete": "Incomplet"
     },
     "Postmaster": {
@@ -357,7 +357,7 @@
         "ExportSS": "Tableur de l'inventaire",
         "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
         "DIMPopups": "Popups d'info de DIM",
-        "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes"
+        "DIMPopupsReset": "Réinitialiser les astuces cachées précédemment"
     },
     "Stats": {
         "Discipline": "Discipline",
@@ -452,8 +452,8 @@
             "ContactUs": "Nous Contacter",
             "FAQ": "FAQ",
             "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
-            "FAQAccessAnswer": "N'importe quelle extension chrome peut demander accès aux données d'un site web stockées sur votre ordinateur. Quand vous vous connectez sur Bungie.net, vous êtes attribué un jeton (un cookie) qui est généré uniquement pour votre compte. Vous utilisez ce jeton pour communiquer avec Bungie en sécurité. Ce jeton est plus sécurisé que d'envoyer votre pseudo and mot de passe avec chaque requête au serveur de Bungie. DIM utilise ce jeton pour communiquer avec Bungie en votre nom.",
-            "FAQDupeGally": "Hey, DIM a dupliqué mon Gjallahorn!",
+            "FAQAccessAnswer": "N'importe quelle extension chrome peut demander accès aux données d'un site web stockées sur votre ordinateur. Quand vous vous connectez sur Bungie.net, vous vous voyez attribué un jeton (un cookie) qui est généré uniquement pour votre compte. Vous utilisez ce jeton pour communiquer avec Bungie en sécurité. Ce jeton est plus sécurisé que d'envoyer votre pseudo et mot de passe avec chaque requête au serveur de Bungie. DIM utilise ce jeton pour communiquer avec Bungie en votre nom.",
+            "FAQDupeGally": "Hé, DIM a dupliqué mon Gjallahorn!",
             "FAQDupeGallyAnswer": "Non, non. Promis.",
             "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
             "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
@@ -465,7 +465,7 @@
             "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur Github.",
             "GitHubRepo": "DIM Git Repo",
             "Header": "À propos de Destiny Item Manager (DIM)",
-            "HowItsMade": "DIM est construit à partir des mêmes services que Bungie.net et l'application Compagnon de Destiny. DIM peut accéder aux objets dans l'inventaire de vos Gardiens et de vos coffres sur Playstation et Xbox. Vous pouvez dès lors glisser-déposer des objets n'importe où vous les voulez.",
+            "HowItsMade": "DIM est construit à partir des mêmes services que Bungie.net et l'application Compagnon de Destiny. DIM peut accéder aux objets dans l'inventaire de vos Gardiens et de votre coffre sur Playstation et Xbox. Vous pouvez dès lors glisser-déposer des objets n'importe où vous les voulez.",
             "Reddit": "Reddit",
             "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
             "Twitter": "Twitter",
@@ -478,7 +478,7 @@
             "Support": "Soutenir DIM",
             "FreeToDownload": "DIM est un produit à télécharger et à utiliser gratuitement. Le code source pour DIM est open source, et gratuit pour toute personne voulant l'améliorer. Vous ne verrez jamais une publicité dans DIM. C'est notre engagement.",
             "OpenCollective": "Nous utilisons OpenCollective comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
-            "Backers": "Les Supporters",
+            "Backers": "Les Supporteurs",
             "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
             "Sponsors": "Partenaires",
             "SponsorsDetail": "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site.",
@@ -487,7 +487,7 @@
         },
         "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM",
         "Login": {
-            "Permission": "Nous avons besoin de votre permission ...",
+            "Permission": "Nous avons besoin de votre permission...",
             "Explanation": "Permettre à DIM de visualiser et de modifier vos personnages Destiny, coffre et sa progression.",
             "Auth": "Autoriser avec Bungie.net",
             "LearnMore": "Voulez-vous en savoir plus?"
