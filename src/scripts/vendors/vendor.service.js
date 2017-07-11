@@ -233,7 +233,7 @@ function VendorService(
       })
       .catch((e) => {
         service.loadedVendors++;
-        if (vendorDef.hash !== 2796397637) { // Xur
+        if (vendorDef.hash !== 2796397637 && vendorDef.hash !== 2610555297) { // Xur, IB
           console.error(`Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`, e);
         }
         return null;
