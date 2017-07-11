@@ -75,7 +75,7 @@
         <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
         <div ng-if="review.isReviewer" class="fa fa-pencil-square-o" aria-hidden="true"></div>
       </div>
-      <div ng-bind="review.review"></div>
     </div>
+    <div class="community-review--review" ng-bind="review.review"></div>
   </div>
 </div>
