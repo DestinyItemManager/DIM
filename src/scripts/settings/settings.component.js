@@ -29,41 +29,40 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
   vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
-  vm.filters = {};
-
-  vm.filters.vendors = {
-    FWC: $i18next.t('Filter.Vendors.FWC'),
-    DO: $i18next.t('Filter.Vendors.DO'),
-    NM: $i18next.t('Filter.Vendors.NM'),
-    Speaker: $i18next.t('Filter.Vendors.Speaker'),
-    Shipwright: $i18next.t('Filter.Vendors.Shipwright'),
-    CQ: $i18next.t('Filter.Vendors.CQ'),
-    EV: $i18next.t('Filter.Vendors.EV'),
-    Gunsmith: $i18next.t('Filter.Vendors.Gunsmith'),
+  vm.filters = {
+    vendors: {
+      FWC: $i18next.t('Filter.Vendors.FWC'),
+      DO: $i18next.t('Filter.Vendors.DO'),
+      NM: $i18next.t('Filter.Vendors.NM'),
+      Speaker: $i18next.t('Filter.Vendors.Speaker'),
+      Shipwright: $i18next.t('Filter.Vendors.Shipwright'),
+      CQ: $i18next.t('Filter.Vendors.CQ'),
+      EV: $i18next.t('Filter.Vendors.EV'),
+      Gunsmith: $i18next.t('Filter.Vendors.Gunsmith'),
+    },
+    releases: {
+      Vanilla: $i18next.t('Filter.Releases.Vanilla'),
+      tTK: $i18next.t('Filter.Releases.tTK'),
+      RoI: $i18next.t('Filter.Releases.RoI')
+    },
+    activities: {
+      QW: $i18next.t('Filter.Activities.QW'),
+      IB: $i18next.t('Filter.Activities.IB'),
+      VoG: $i18next.t('Filter.Activities.VoG'),
+      CE: $i18next.t('Filter.Activities.CE'),
+      PoE: $i18next.t('Filter.Activities.PoE'),
+      ToO: $i18next.t('Filter.Activities.ToO'),
+      CoE: $i18next.t('Filter.Activities.CoE'),
+      KF: $i18next.t('Filter.Activities.KF'),
+      SRL: $i18next.t('Filter.Activities.SRL'),
+      CD: $i18next.t('Filter.Activities.CD'),
+      AF: $i18next.t('Filter.Activities.AF'),
+      WotM: $i18next.t('Filter.Activities.WotM'),
+      Dawning: $i18next.t('Filter.Activities.Dawning'),
+      AoT: $i18next.t('Filter.Activities.AoT')
+    }
   };
 
-  vm.filters.releases = {
-    Vanilla: $i18next.t('Filter.Releases.Vanilla'),
-    tTK: $i18next.t('Filter.Releases.tTK'),
-    RoI: $i18next.t('Filter.Releases.RoI')
-  };
-
-  vm.filters.activities = {
-    QW: $i18next.t('Filter.Activities.QW'),
-    IB: $i18next.t('Filter.Activities.IB'),
-    VoG: $i18next.t('Filter.Activities.VoG'),
-    CE: $i18next.t('Filter.Activities.CE'),
-    PoE: $i18next.t('Filter.Activities.PoE'),
-    ToO: $i18next.t('Filter.Activities.ToO'),
-    CoE: $i18next.t('Filter.Activities.CoE'),
-    KF: $i18next.t('Filter.Activities.KF'),
-    SRL: $i18next.t('Filter.Activities.SRL'),
-    CD: $i18next.t('Filter.Activities.CD'),
-    AF: $i18next.t('Filter.Activities.AF'),
-    WotM: $i18next.t('Filter.Activities.WotM'),
-    Dawning: $i18next.t('Filter.Activities.Dawning'),
-    AoT: $i18next.t('Filter.Activities.AoT')
-  };
   vm.languageOptions = {
     de: 'Deutsch',
     en: 'English',
