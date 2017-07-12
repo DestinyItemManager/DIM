@@ -132,6 +132,26 @@ module.exports = function(grunt) {
       }
     },
 
+    upload_file: {
+      poeditor: {
+        src: ['src/i18n/dim_en.json'],
+        options: {
+          url: 'https://poeditor.com/api/',
+          method: 'POST',
+          paramObj: {
+            api_token: process.env.POEDITOR_API,
+            action: 'upload',
+            id: '116191',
+            updating: 'terms_definitions',
+            language: 'en',
+            overwrite: 1,
+            sync_terms: 0,
+            fuzzy_trigger: 1
+          },
+        }
+      }
+    },
+
     'json-pretty': {
       options: {
         files: 'src/i18n/',
@@ -146,6 +166,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('grunt-poeditor-ab');
   grunt.loadNpmTasks('grunt-json-pretty');
+  grunt.loadNpmTasks('grunt-upload-file');
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
     var manifest = grunt.file.readJSON('extension-dist/manifest.json');
@@ -221,6 +242,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('publish_beta', [
+    'upload_file:poeditor',
     'update_chrome_beta_manifest',
     'compress:chrome',
     'log_beta_version',

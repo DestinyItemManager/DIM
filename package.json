@@ -16,7 +16,7 @@
     "build-beta": "npm run bundle -s -- --env=beta",
     "build-dev": "npm run bundle -s -- --env=dev --watch",
     "start": "npm run build-dev -s",
-    "publish-beta": "./update_terms.sh && npm run build-beta -s && ruby ./badfiles.rb && grunt publish_beta",
+    "publish-beta": "npm run build-beta -s && ruby ./badfiles.rb && grunt publish_beta",
     "publish-release": "npm run build-release -s && ruby ./badfiles.rb && grunt publish_release",
     "server": "webpack-dev-server --config ./config/webpack.js --env=dev"
   },
@@ -62,6 +62,7 @@
     "grunt-json-pretty": "github:delphiactual/grunt-json-pretty",
     "grunt-poeditor-ab": "github:delphiactual/grunt-poeditor-ab",
     "grunt-rsync": "^2.0.1",
+    "grunt-upload-file": "0.0.2",
     "grunt-webstore-upload": "^0.9.12",
     "handlebars": "^4.0.6",
     "handlebars-loader": "^1.4.0",
