@@ -36,7 +36,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
       .then((bungieAccounts) => {
         if (!bungieAccounts.length) {
           // We're not logged in, don't bother
-          $state.go('login');
+          $rootScope.$broadcast('dim-no-token-found');
           return [];
         }
 
