@@ -160,7 +160,7 @@ function SearchFilter(dimSearchService) {
 
 function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $i18next) {
   const vm = this;
-  const filterInputSelector = '#filter-input';
+  const filterInputId = 'filter-input';
   let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
   vm.search = dimSearchService;
@@ -215,11 +215,11 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
   };
 
   vm.focusFilterInput = function() {
-    $(filterInputSelector).focus();
+    document.getElementById(filterInputId).focus();
   };
 
   vm.blurFilterInput = function() {
-    $(filterInputSelector).blur();
+    document.getElementById(filterInputId).blur();
   };
 
   vm.clearFilter = function() {
