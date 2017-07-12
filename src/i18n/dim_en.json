@@ -136,6 +136,7 @@
       "Rating": "Shows weapons based on their rating from Destiny Tracker.",
       "Year": "Shows items from which year of Destiny they appeared in.",
       "InLoadout": "Shows items that are included in any loadout.",
+      "Ornament": "Shows items with ornaments and filters for their status.",
       "Postmaster": "Items that are currently in the Postmaster.",
       "Vendor": "Item is available from vendor <i>{{vendor}}</i> {{name}}",
       "Vendor_noname": "Item is available from vendor <i>{{vendor}}</i>",
@@ -206,7 +207,8 @@
     "RefreshInventory": "Refresh inventory",
     "ToggleDetails": "Toggle showing full item details",
     "MarkItemAs": "Mark item as '{{tag}}'",
-    "ClearNewItems": "Clear new items"
+    "ClearNewItems": "Clear new items",
+    "ClearNewItemsTitle": "Keyboard shortcut: X"
   },
   "Infusion": {
     "Infusion": "Infusion Fuel Finder",
