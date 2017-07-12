@@ -456,7 +456,7 @@
       "FAQKeyboard": "Does DIM support keyboard shortcuts?",
       "FAQKeyboardAnswer": "Yes! Press \"?\" to see a list of available shortcuts.",
       "FAQLogout": "How can I log out of DIM?",
-      "FAQLogoutAnswer": "Go to the settings page (gear icon) and click \"Log out\"",
+      "FAQLogoutAnswer": "Click on your account and choose \"Log out\"",
       "FAQLostItem": "I lost my item using your tool!",
       "FAQLostItemAnswer": "More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check Bungie.net or in game to see if your item still exists. We're sure it's still there.",
       "GitHub": "GitHub",
