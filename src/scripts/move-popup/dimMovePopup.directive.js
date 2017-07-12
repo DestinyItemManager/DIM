@@ -50,30 +50,30 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     const element = $scope.$parent.ngDialogData;
     if (element) {
       if (popper) {
-        popper.update();
+        popper.scheduleUpdate();
       } else {
+        const boundariesElement = document.getElementsByClassName('store-bounds')[0];
         popper = new Popper(element, dialog, {
-          placement: 'bottom-start',
+          placement: 'top-start',
           eventsEnabled: false,
           modifiers: {
             preventOverflow: {
-              boundariesElement: document.getElementsByClassName('store-bounds')[0],
-              escapeWithReference: true
+              priority: ['bottom', 'top', 'right', 'left'],
+              boundariesElement
             },
             flip: {
-              behavior: ['left', 'right', 'top']
+              behavior: ['top', 'bottom', 'right', 'left'],
+              boundariesElement
             },
             offset: {
               offset: '0,5px'
             },
             arrow: {
               element: '.arrow'
-            },
-            keepTogether: {
-              enabled: true
             }
           }
         });
+        popper.scheduleUpdate(); // helps fix arrow position
       }
     }
   };
