@@ -104,9 +104,7 @@
           "WotM": "A ira da máquina",
           "AF": "Forja do Arconte",
           "Dawning": "A Alvorada",
-          "AoT": "Era do Triunfo",
-          "Nightfall": "Assalto do Anoitecer",
-          "WeeklyHeroic": "Assalto heroico semanal"
+          "AoT": "Era do Triunfo"
       }
     },
     "Header": {
@@ -402,7 +400,9 @@
     },
     "Activities": {
         "Activities": "Atividades",
-        "Hard": "Difícil"
+        "Hard": "Difícil",
+        "Nightfall": "Assalto do Anoitecer",
+        "WeeklyHeroic": "Assalto heroico semanal"
     },
     "RecordBooks": {
         "RecordBooks": "Livro de Recordes",

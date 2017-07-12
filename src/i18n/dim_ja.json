@@ -103,9 +103,7 @@
           "WotM": "機械の天罰",
           "AF": "アルコンの炉",
           "Dawning": "暁旦",
-          "AoT": "勝利の時代",
-          "Nightfall": "ナイトフォールストライク",
-          "WeeklyHeroic": "週間英雄ストライク"
+          "AoT": "勝利の時代"
       }
     },
     "Header": {
@@ -395,7 +393,9 @@
         "Emotes": "感情表現"
     },
     "Activities": {
-        "Activities": "アクティビティ"
+        "Activities": "アクティビティ",
+        "Nightfall": "ナイトフォールストライク",
+        "WeeklyHeroic": "週間英雄ストライク"
     },
     "RecordBooks": {
         "RecordBooks": "記録ブック",

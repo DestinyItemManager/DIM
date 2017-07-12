@@ -108,9 +108,7 @@
           "WotM": "Fureur mécanique",
           "AF": "La Forge de l'Archonte",
           "Dawning": "L'Avènement",
-          "AoT": "Âge du triomphe",
-          "Nightfall": "Assaut « Nuit noire »",
-          "WeeklyHeroic": "Assaut « Épique » de la semaine"
+          "AoT": "Âge du triomphe"
       }
     },
     "Header": {
@@ -470,7 +468,9 @@
     "Activities": {
         "Activities": "Activités",
         "Normal": "Normal",
-        "Hard": "Difficile"
+        "Hard": "Difficile",
+        "Nightfall": "Assaut « Nuit noire »",
+        "WeeklyHeroic": "Assaut « Épique » de la semaine"
     },
     "RecordBooks": {
         "RecordBooks": "Carnet d'exploits",

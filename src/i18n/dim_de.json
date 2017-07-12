@@ -108,9 +108,7 @@
           "WotM": "Zorn der Maschine",
           "AF": "Archon-Schmiede",
           "Dawning": "Der Anbruch",
-          "AoT": "Zeitalter des Triumphs",
-          "NightFall": "Dämmerung-Strike",
-          "WeeklyHeroic": "Wöchentliche Heroischer Strike"
+          "AoT": "Zeitalter des Triumphs"
       }
     },
     "Header": {
@@ -470,7 +468,9 @@
     "Activities": {
         "Activities": "Aktivitäten",
         "Normal": "Normal",
-        "Hard": "Schwer"
+        "Hard": "Schwer",
+        "NightFall": "Dämmerung-Strike",
+        "WeeklyHeroic": "Wöchentliche Heroischer Strike"
     },
     "RecordBooks": {
         "RecordBooks": "Urkundenbücher",

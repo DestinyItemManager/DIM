@@ -103,9 +103,7 @@
           "WotM": "La furia de las máquinas",
           "AF": "Fragua del Arconte",
           "Dawning": "La Aurora",
-          "AoT": "Era de Triunfo",
-          "Nightfall": "Asalto de Ocaso",
-          "WeeklyHeroic": "Asalto heroico semanal"
+          "AoT": "Era de Triunfo"
       }
     },
     "Header": {
@@ -422,7 +420,9 @@
     },
     "Activities": {
         "Activities": "Actividades",
-        "Hard": "Difícil"
+        "Hard": "Difícil",
+        "Nightfall": "Asalto de Ocaso",
+        "WeeklyHeroic": "Asalto heroico semanal"
     },
     "RecordBooks": {
         "RecordBooks": "Libros de records",

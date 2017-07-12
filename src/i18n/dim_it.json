@@ -114,9 +114,7 @@
           "WotM": "Furia meccanica",
           "AF": "Forgia dell'Arconte",
           "Dawning": "L'Aurora",
-          "AoT": "Era di Trionfo",
-          "Nightfall": "Assalto Cala la Notte",
-          "WeeklyHeroic": "Assalto Eroico Settimanale"
+          "AoT": "Era di Trionfo"
       }
     },
     "Header": {
@@ -486,7 +484,9 @@
     "Activities": {
         "Activities": "Attività",
         "Normal": "Normale",
-        "Hard": "Difficile"
+        "Hard": "Difficile",
+        "Nightfall": "Assalto Cala la Notte",
+        "WeeklyHeroic": "Assalto Eroico Settimanale"
     },
     "RecordBooks": {
         "RecordBooks": "Registri",
