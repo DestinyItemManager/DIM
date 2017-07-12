@@ -65,7 +65,7 @@ angular.module('dimApp')
   .factory('dimManifestService', ManifestService);
 
 
-function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $translate, $rootScope) {
+function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   // Testing flags
   const alwaysLoadRemote = false;
 
@@ -93,8 +93,8 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
           // The manifest has updated!
           if (path !== service.version) {
             toaster.pop('error',
-                        $translate.instant('Manifest.Outdated'),
-                        $translate.instant('Manifest.OutdatedExplanation'));
+                        $i18next.t('Manifest.Outdated'),
+                        $i18next.t('Manifest.OutdatedExplanation'));
           }
         });
     }, 10000, true),
@@ -112,7 +112,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
           loadManifest()
         ])
         .then(([SQLLib, typedArray]) => {
-          service.statusText = `${$translate.instant('Manifest.Build')}...`;
+          service.statusText = `${$i18next.t('Manifest.Build')}...`;
           const db = new SQLLib.Database(typedArray);
           // do a small request, just to test it out
           service.getAllRecords(db, 'DestinyRaceDefinition');
@@ -120,14 +120,14 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
         })
         .catch((e) => {
           let message = e.message || e;
-          service.statusText = $translate.instant('Manifest.Error', { error: message });
+          service.statusText = $i18next.t('Manifest.Error', { error: message });
 
           if (e.status === -1) {
-            message = $translate.instant('BungieService.NotConnected');
+            message = $i18next.t('BungieService.NotConnected');
           } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-            message = $translate.instant('BungieService.Down');
+            message = $i18next.t('BungieService.Down');
           } else if (e.status < 200 || e.status >= 400) {
-            message = $translate.instant('BungieService.NetworkError', {
+            message = $i18next.t('BungieService.NetworkError', {
               status: e.status,
               statusText: e.statusText
             });
@@ -138,6 +138,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
 
           manifestPromise = null;
           service.isError = true;
+          console.error("Manifest loading error", { error: e }, e);
           throw new Error(message);
         });
 
@@ -195,15 +196,15 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
   function loadManifestRemote(version, language, path) {
-    service.statusText = `${$translate.instant('Manifest.Download')}...`;
+    service.statusText = `${$i18next.t('Manifest.Download')}...`;
 
     return $http.get(`https://www.bungie.net${path}?host=${window.location.hostname}`, { responseType: "blob" })
       .then((response) => {
-        service.statusText = `${$translate.instant('Manifest.Unzip')}...`;
+        service.statusText = `${$i18next.t('Manifest.Unzip')}...`;
         return unzipManifest(response.data);
       })
       .then((arraybuffer) => {
-        service.statusText = `${$translate.instant('Manifest.Save')}...`;
+        service.statusText = `${$i18next.t('Manifest.Save')}...`;
 
         const typedArray = new Uint8Array(arraybuffer);
         idbKeyval.set('dimManifest', typedArray)
@@ -214,8 +215,8 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
           .catch((e) => {
             console.error('Error saving manifest file', e);
             toaster.pop({
-              title: $translate.instant('Help.NoStorage'),
-              body: $translate.instant('Help.NoStorageMessage'),
+              title: $i18next.t('Help.NoStorage'),
+              body: $i18next.t('Help.NoStorageMessage'),
               type: 'error'
             }, 0);
           });
@@ -239,7 +240,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $t
       return $q.reject(new Error("Testing - always load remote"));
     }
 
-    service.statusText = `${$translate.instant('Manifest.Load')}...`;
+    service.statusText = `${$i18next.t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem('manifest-version');
     if (currentManifestVersion === version) {
       return idbKeyval.get('dimManifest').then((typedArray) => {

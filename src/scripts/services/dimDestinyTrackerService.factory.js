@@ -12,10 +12,10 @@ function DestinyTrackerService($q,
                                $http,
                                dimPlatformService,
                                dimSettingsService,
-                               $translate,
+                               $i18next,
                                loadingTracker) {
   const _reviewDataCache = new ReviewDataCache();
-  const _trackerErrorHandler = new TrackerErrorHandler($q, $translate);
+  const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);

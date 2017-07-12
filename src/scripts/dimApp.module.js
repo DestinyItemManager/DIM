@@ -3,17 +3,22 @@ import angular from 'angular';
 import AriaModule from 'angular-aria';
 import DialogModule from 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
+import ngSanitize from 'angular-sanitize';
+
+import i18next from 'i18next';
+
 import MessagesModule from 'angular-messages';
+
 import RateLimiterModule from 'ng-http-rate-limiter';
 import SliderModule from 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
-import TranslateModule from 'angular-translate';
-import TranslateMessageFormatModule from 'angular-translate-interpolation-messageformat';
 import UIRouterModule from '@uirouter/angularjs';
+import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
 
 import bungieApiModule from './bungie-api/bungie-api.module';
+import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
@@ -35,19 +40,23 @@ import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
+// required to make ng-i18next work
+window.i18next = i18next;
+
 const dependencies = [
   AriaModule,
   DialogModule,
   DragAndDropModule,
   MessagesModule,
+  ngI18Next,
+  ngSanitize,
   RateLimiterModule,
   ShellModule,
   SliderModule,
   ToasterModule,
-  TranslateModule,
-  TranslateMessageFormatModule,
   UIRouterModule,
   bungieApiModule,
+  accountsModule,
   inventoryModule,
   recordBooksModule,
   activitiesModule,
@@ -64,6 +73,10 @@ const dependencies = [
   'ajoslin.promise-tracker',
   'cfp.hotkeys'
 ];
+
+if ($DIM_FLAVOR === 'dev') {
+  dependencies.push(require('./developer/developer.module').default);
+}
 
 export const DimAppModule = angular
   .module('dimApp', dependencies)

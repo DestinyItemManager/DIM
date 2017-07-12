@@ -34,7 +34,6 @@ require('./scripts/services/dimItemInfoService.factory');
 
 require('./scripts/loadout/dimLoadout.directive');
 require('./scripts/loadout/dimLoadoutPopup.directive');
-require('./scripts/loadout/random/dimRandom.controller');
 require('./scripts/shell/dimAngularFilters.filter');
 require('./scripts/shell/dimSearchFilter.directive');
 require('./scripts/shell/dimClickAnywhereButHere.directive');
@@ -56,10 +55,6 @@ require('./scripts/move-popup/dimMovePopup.directive');
 require('./scripts/move-popup/dimTalentGrid.directive');
 require('./scripts/move-popup/dimMoveItemProperties.directive');
 require('./scripts/move-popup/dimItemTag.directive');
-
-if ($DIM_FLAVOR === 'dev') {
-  require('./scripts/developer/dimDeveloper.controller');
-}
 
 require('./scss/main.scss');
 

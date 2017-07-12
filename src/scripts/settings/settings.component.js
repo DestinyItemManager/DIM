@@ -8,7 +8,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $translate, ngDialog) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -25,9 +25,9 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     dimSettingsService.save();
   });
 
-  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $translate.instant('Settings.ColumnSize', { num }) }));
-  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $translate.instant('Settings.ColumnSize', { num }) }));
-  vm.vaultColOptions.unshift({ id: 999, name: $translate.instant('Settings.ColumnSizeAuto') });
+  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
+  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
+  vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
   vm.languageOptions = {
     de: 'Deutsch',
@@ -47,12 +47,6 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
 
   // Edge doesn't support these
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
-
-  vm.logout = function() {
-    OAuthTokenService.removeToken();
-    ngDialog.closeAll();
-    $state.go('login', { reauth: true });
-  };
 
   vm.downloadWeaponCsv = function() {
     dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");

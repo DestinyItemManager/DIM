@@ -47,11 +47,9 @@ module.exports = (env) => {
       contentBase: path.resolve(__dirname, './src'),
       publicPath: '/',
       https: true,
-      host: '0.0.0.0',
+      host: 'localhost',
       hot: false
     },
-
-    devtool: 'source-map',
 
     stats: 'errors-only',
 
@@ -207,6 +205,11 @@ module.exports = (env) => {
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(env !== 'release'),
         // Enable activities tab
         '$featureFlags.activities': JSON.stringify(env !== 'release')
+      }),
+
+      new webpack.SourceMapDevToolPlugin({
+        filename: '[file].map',
+        exclude: /(manifest|chunk-0-sqlLib)-\S{6}.js$/
       }),
 
       new webpack.optimize.ModuleConcatenationPlugin(),

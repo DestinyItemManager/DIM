@@ -4,7 +4,7 @@
        dim-compare-item="vm.compareItem"></div>
   <div class="item-details more-item-details"
        ng-if="vm.item.equipment && vm.compareItems.length">
-    <div translate="Vendors.Compare"></div>
+    <div ng-i18next="Vendors.Compare"></div>
     <div class="compare-items">
       <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index"
                        item-data="ownedItem"
@@ -14,13 +14,12 @@
   </div>
   <div class="item-description"
        ng-if="!vm.item.equipment && vm.compareItemCount"
-       translate="Compare.ItemCount"
-       translate-values="{ num: vm.compareItemCount }"></div>
+       ng-i18next="[i18next]({ num: vm.compareItemCount })Compare.ItemCount"></div>
   <div class="item-details"
        ng-if="vm.saleItem.failureStrings">{{ vm.saleItem.failureStrings }}</div>
   <div class="item-details"
        ng-if="vm.unlockStores.length">
-    <div translate="Vendors.Available"></div>
+    <div ng-i18next="Vendors.Available"></div>
     <div class="unlocked-character"
          ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">
       <div class="emblem"

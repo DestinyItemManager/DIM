@@ -4,10 +4,10 @@
        ng-style="{ 'background-image': 'url(' + vm.activeCharacters[vm.selectedCharacter].icon + ')' }"></div>
   <div class="class">{{ vm.activeCharacters[vm.selectedCharacter].className }}</div>
   <div class="race-gender">{{ vm.activeCharacters[vm.selectedCharacter].genderRace }}</div>
-  <div class="level"><span translate="Stats.Level"></span> {{ vm.activeCharacters[vm.selectedCharacter].level }}</div>
+  <div class="level"><span ng-i18next="Stats.Level"></span> {{ vm.activeCharacters[vm.selectedCharacter].level }}</div>
   <div class="level powerLevel">{{ vm.activeCharacters[vm.selectedCharacter].powerLevel }}</div>
   <div class="loadout-builder-select-button"
-       translate-attr="{ title: 'LB.Guardians' }"
+       ng-i18next="[title]LB.Guardians"
        ng-click="vm.openCharSelectPopup($event)"><i class="fa fa-chevron-down"></i></div>
 </div>
 <div id="char-select"></div>

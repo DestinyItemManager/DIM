@@ -1,9 +1,11 @@
-import angular from 'angular';
+import template from './developer.html';
 
-angular.module('dimApp')
-  .controller('dimDeveloperCtrl', dimDeveloperCtrl);
+export const DeveloperComponent = {
+  template,
+  controller: DeveloperCtrl
+};
 
-function dimDeveloperCtrl() {
+function DeveloperCtrl() {
   const vm = this;
 
   vm.apiKey = localStorage.apiKey;

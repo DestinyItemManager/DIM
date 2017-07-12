@@ -30,7 +30,7 @@ function TalentGrid() {
 }
 
 
-function TalentGridCtrl(dimInfoService, $translate) {
+function TalentGridCtrl(dimInfoService, $i18next) {
   const infuseHash = 1270552711;
   const vm = this;
   vm.nodeSize = 34;
@@ -45,9 +45,9 @@ function TalentGridCtrl(dimInfoService, $translate) {
       // popup warning
       dimInfoService.show('changeperks', {
         type: 'warning',
-        title: $translate.instant('Help.ChangingPerks'),
-        body: $translate.instant('Help.ChangingPerksInfo'),
-        hide: $translate.instant('Help.NeverShow')
+        title: $i18next.t('Help.ChangingPerks'),
+        body: $i18next.t('Help.ChangingPerksInfo'),
+        hide: $i18next.t('Help.NeverShow')
       });
     }
   };
