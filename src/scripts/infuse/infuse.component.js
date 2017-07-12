@@ -27,7 +27,7 @@ function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, 
       1898539128,
       1542293174
     ].forEach((hash) => {
-      vm.items[hash] = defs.InventoryItem.get(452597397);
+      vm.items[hash] = defs.InventoryItem.get(hash);
     });
   });
 
