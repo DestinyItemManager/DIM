@@ -12,7 +12,6 @@
     },
     "BungieService": {
         "DevVersion": "¿Estás corriendo una versión de desarrollo de DIM? Debes primero registrar tu extensión de Chrome con Bungie.net.",
-        "Down": "Bungie.net no esta disponible.",
         "Difficulties": "La API de Bungie esta teniendo dificultades.",
         "NetworkError": "Error de red - {{status}} {{statusText}}",
         "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelva a intentarlo.",
@@ -201,7 +200,6 @@
         "Missing2": "Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!"
     },
     "Loadouts": {
-        "Any": "Alguna",
         "Loadouts": "Equipos",
         "Before": "Antes '{{name}}'",
         "Create": "Crear Equipo",

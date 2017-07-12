@@ -15,7 +15,6 @@
     },
     "BungieService": {
         "DevVersion": "Stai eseguendo una versione di DIM in via di sviluppo? Devi registrare la tua estensione per chrome con bungie.net.",
-        "Down": "Bungie.net è offline.",
         "Difficulties": "Al momento le API di Bungie hanno dei problemi.",
         "NetworkError": "Errore Network - {{status}} {{statusText}}",
         "Throttled": "Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.",
@@ -30,7 +29,8 @@
         "ItemUniquenessExplanation": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
         "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
         "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
-        "VendorNotFound": "I dati dei mercanti non sono disponibili."
+        "VendorNotFound": "I dati dei mercanti non sono disponibili.",
+        "UnknownError": "Messaggio Bungie.net: {{message}}"
     },
     "Compare": {
         "ButtonHelp": "Confronta Oggetti",
@@ -341,7 +341,6 @@
     },
     "Settings": {
         "Settings": "Impostazioni",
-        "LogOutDesc": "Esci da DIM, oppure cambia account Bungie.net",
         "LogOut": "Disconnetti",
         "Language": "Lingua (ricarica DIM per apportare la modifica)",
         "HideUnfiltered": "Nascondi gli oggetti che non corrispondono a una ricerca",
@@ -402,9 +401,9 @@
         "ChromeSyncStorage": "Chrome Sync (Solo estensione)",
         "IndexedDBStorage": "Memoria del browser locale",
         "Details": {
-          "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",
-          "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM.",
-          "IndexedDBStorage": "Memorizza dati in locale salva le informazioni solo su questo browser."
+            "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",
+            "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM.",
+            "IndexedDBStorage": "Memorizza dati in locale salva le informazioni solo su questo browser."
         },
         "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
         "ForceSync": "Forza sincronizzazione dati",

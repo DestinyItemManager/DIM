@@ -12,7 +12,6 @@
     },
     "BungieService": {
         "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
-        "Down": "Bungie.net に接続不可。",
         "Difficulties": "Bungie APIに問題が発生しています。",
         "NetworkError": "ネットワークエラー。{{status}} {{statusText}}",
         "Throttled": "Bungie APIの制限が超えました。しばらくしてからお待ちください。",
@@ -201,7 +200,6 @@
         "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！"
     },
     "Loadouts": {
-        "Any": "どれか",
         "Loadouts": "ロードアウト",
         "Before": "前 '{{name}}'",
         "Create": "ロードアウトを作成",

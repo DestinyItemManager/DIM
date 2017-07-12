@@ -15,7 +15,6 @@
     },
     "BungieService": {
         "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
-        "Down": "Bungie.net ist nicht erreichbar.",
         "Difficulties": "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
         "NetworkError": "Netzwerk Fehler - {{status}} {{statusText}}",
         "Throttled": "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.",
@@ -102,10 +101,12 @@
         "NeverShow": "Diesen Tipp nicht erneut zeigen",
         "UpgradeChrome": "Bitte aktualisiere Chrome",
         "Xur": "Xûr ist da",
-        "Version_release": "DIM v{{version} veröffentlicht",
-        "Version_beta": "Beta wurde auf v{{version}} aktualisiert",
         "ExtensionDeprecatedTitle": "DIM kann die Daten nicht speichern",
-        "ExtensionDeprecatedMessage": "DIM kann die Daten nicht in deinem Browser speichern. Das kann durch das Surfen im Privatem- oder Inkognito-Modus, oder bei geringem, freien Speicher passieren. DIM kann nicht weiter machen."
+        "ExtensionDeprecatedMessage": "DIM kann die Daten nicht in deinem Browser speichern. Das kann durch das Surfen im Privatem- oder Inkognito-Modus, oder bei geringem, freien Speicher passieren. DIM kann nicht weiter machen.",
+        "NoStorage": "DIM kann die Daten nicht speichern",
+        "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. DIM kann nicht fortfahren.",
+        "Version_release": "DIM v{{version} veröffentlicht",
+        "Version_beta": "Beta wurde auf v{{version}} aktualisiert"
     },
     "Hotkey": {
         "StartSearch": "Starte eine Suche",
@@ -324,7 +325,6 @@
     },
     "Settings": {
         "Settings": "Einstellungen",
-        "LogOutDesc": "Melde dich von DIM ab, oder wechsel das Bungie.net Konto",
         "LogOut": "Abmelden",
         "Language": "Sprache (lade DIM neu zum Übernehmnen)",
         "HideUnfiltered": "Verstecke Gegenstände die nicht der Suche entsprechen",
@@ -353,6 +353,7 @@
         "CharacterOrderRecent": "Nach zuletzt aktivem Charakter",
         "CharacterOrderReversed": "Nach zuletzt aktivem Charakter (umgekehrt)",
         "CharacterOrderFixed": "Fest (Nach Alter des Charakters)",
+        "ExportSS": "Inventar Tabellen",
         "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
         "DIMPopups": "DIM info popups",
         "DIMPopupsReset": "Zeige zuvor versteckte info tipps"
@@ -384,9 +385,9 @@
         "ChromeSyncStorage": "Chrome Sync (nur Erweiterung)",
         "IndexedDBStorage": "Lokaler Browser Speicher",
         "Details": {
-          "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
-          "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
-          "IndexedDBStorage": "Lokales speichern wird die Daten nur in diesem Browser speichern."
+            "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
+            "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
+            "IndexedDBStorage": "Lokales speichern wird die Daten nur in diesem Browser speichern."
         },
         "BrowserMayClearData": "Der Browser könnte eventuell diese Informationen löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
         "ForceSync": "Erzwinge Synchronisation",
