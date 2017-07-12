@@ -393,6 +393,7 @@
     "ForceSync": "Force sync data",
     "DriveSync": "Log in to Google Drive",
     "DriveLogout": "Log out of Google Drive",
+    "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
     "NoData": "No data",
     "Export": "Back up DIM data",
     "Import": "Import DIM data from file",
@@ -458,10 +459,9 @@
       "FAQLogout": "How can I log out of DIM?",
       "FAQLogoutAnswer": "Click on your account and choose \"Log out\"",
       "FAQLostItem": "I lost my item using your tool!",
-      "FAQLostItemAnswer": "More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check Bungie.net or in game to see if your item still exists. We're sure it's still there.",
+      "FAQLostItemAnswer": "More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check {{link}} or in game to see if your item still exists. We're sure it's still there.",
       "GitHub": "GitHub",
-      "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on GitHub.",
-      "GitHubRepo": "DIM Git Repo",
+      "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "About Destiny Item Manager (DIM)",
       "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
@@ -469,19 +469,18 @@
       "Twitter": "Twitter",
       "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
-      "Transifex": "Join the Translation Team!",
-      "TransifexText": "We use Transifex for ease of translation. If you want to improve one of DIM's translations, join the team."
+      "Translation": "Join the Translation Team!",
+      "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team."
     },
     "Support": {
       "Support": "Supporting DIM",
       "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open sourced, and free to anyone to enhance. You will never see an ad in DIM. That is our commitment.",
-      "OpenCollective": "We are using OpenCollective as a service to provide compensation to our developers for their dedication and time spent on this project.",
+      "OpenCollective": "We are using {{link}} as a service to provide compensation to our developers for their dedication and time spent on this project.",
       "Backers": "Backers",
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
       "Sponsors": "Sponsors",
       "SponsorsDetail": "Become a sponsor and get your logo here with a link to your site.",
-      "Teespring": "We also have shirts with our new logo for sale on Teespring:",
-      "TeespringLink": "DIM on Teespring"
+      "Teespring": "We also have shirts with our new logo for sale on {{link}}"
     },
     "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM.",
     "Login": {
