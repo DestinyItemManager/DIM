@@ -266,7 +266,7 @@
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}} Nous avons transféré tout ce que vous aviez.",
     "DoesNotExist": "{{itemname}} n'existe pas dans votre compte.",
     "AppliedAuto": "Constructeur de Pré set automatique",
-    "Applied": "Votre pré set de un objet a été transféré à votre {{store}}",
+    "Applied": "Votre pré set de un objet a été transféré à votre {{store}}.",
     "Applied_plural": "Votre pré set de {{amount}} objets a été transféré à votre {{store}}.",
     "AppliedError": "Aucun des objets de votre pré set n'a pu être transféré.",
     "AppliedWarn": "Votre pré set a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
@@ -377,8 +377,8 @@
     "Prestige": "Niveau de lumière: {{level}}\n{{exp}}xp jusqu'à avoir 5 particule de lumière.",
     "Quality": "Qualité des stats",
     "Strength": "Force",
-    "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 pour T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
+    "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "Storage": {
     "Title": "Stockage DIM",

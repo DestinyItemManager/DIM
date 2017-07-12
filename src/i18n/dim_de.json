@@ -31,14 +31,14 @@
     "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
     "Twitter": "Hol dir Statusupdates auf:",
     "ItemUniqueness": "Item Einzigartigkeit",
-    "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
+    "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "VendorNotFound": "Händler Daten nicht verfügbar.",
     "UnknownError": "Bungie.net Nachricht: {{message}}"
   },
   "Compare": {
     "ButtonHelp": "Gegenstände vergleichen",
     "All": "{{type}} Vergleich ({{quantity}})",
-    "Archetype": "Vergleiche im Urzustand ({{quantity}})",
+    "Archetype": "Prototyp-Vergleiche ({{quantity}})",
     "Compare": "Vergleiche",
     "Close": "Schließen",
     "Error": {
@@ -65,7 +65,7 @@
     "Collapse": "Du hast gerade eine Sektion in DIM eingeklappt! Das kann nützlich sein um Teile von DIM zu verstecken, die du normalerweise nicht verwendest.",
     "DontShowAgain": "Diesen Tipp nicht erneut zeigen",
     "DoubleClick": "Wenn du ein Item zu deinem aktiven (zuletzt eingeloggt) Charakter bewegst, kannst du es stattdessen doppelt anklicken um es sofort auszurüsten.",
-    "DragAndDrop": "Gegenstände können zwischen verschiedenen Charackteren und dem Tresor per \"Drag and Drop\" verschoben werden",
+    "DragAndDrop": "Gegenstände können zwischen verschiedenen Charakteren und dem Tresor per \"Drag and Drop\" verschoben werden.",
     "Expand": "Klicke das Plus-Zeichen auf der linken Seite der eingeklappten Kategorie an, um diese wieder aufzuklappen.",
     "TryNext": "Probiere es das nächste Mal aus!"
   },
@@ -87,16 +87,16 @@
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen."
   },
   "FarmingMode": {
-    "FarmingMode": "Farm Modus (verschickt Items)",
+    "FarmingMode": "Farm Modus (bewegt Items)",
     "Desc": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "Configuration": "Einstellungen",
     "MakeRoom": {
-      "Desc": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} zum Tresor oder anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
-      "MakeRoom": "Mache Platz durch verschieben von Ausrüstung, um Items aufnehmen zu können",
+      "Desc": "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} zum Tresor oder zu anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
+      "MakeRoom": "Schaffe Platz durch Verschieben von Ausrüstung, um Items aufnehmen zu können",
       "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
     },
-    "OutOfRoomTitle": "Kein Platz",
-    "OutOfRoom": "Dir ist der Platz ausgegangen um Gegenstände von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll auszusortieren.",
+    "OutOfRoomTitle": "Kein Platz mehr",
+    "OutOfRoom": "Dir ist der Platz ausgegangen um Gegenstände von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll rauszuräumen.",
     "Quickmove": "Schnelles Verschieben",
     "Stop": "Stop"
   },
@@ -123,8 +123,8 @@
     "NeverShow": "Diesen Tipp nicht erneut zeigen",
     "UpgradeChrome": "Bitte aktualisiere Chrome",
     "Xur": "Xûr ist da",
-    "ExtensionDeprecatedTitle": "DIM kann die Daten nicht speichern",
-    "ExtensionDeprecatedMessage": "DIM kann die Daten nicht in deinem Browser speichern. Das kann durch das Surfen im Privatem- oder Inkognito-Modus, oder bei geringem, freien Speicher passieren. DIM kann nicht weiter machen.",
+    "ExtensionDeprecatedTitle": "DIM ist jetzt nur noch eine Webseite!",
+    "ExtensionDeprecatedMessage": "Die DIM Chrome Erweiterung öffnet jetzt direkt unsere Webseite - welche mit jedem Browser und mobilem Gerät funktioniert! Du kannst die Erweiterung deinstallieren, oder als praktisches Lesezeichen für die Seite verwenden. Deine Daten (Markierungen, Notizen und Einstellungen) können über die Speicher Seite (Disketten Symbol) importiert werden.",
     "NoStorage": "DIM kann die Daten nicht speichern",
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. DIM kann nicht fortfahren.",
     "Version_release": "DIM v{{version} veröffentlicht",
@@ -141,9 +141,9 @@
     "Infusion": "Finde Infusions-Material",
     "BringGear": "Bringt die Ausrüstung auf:",
     "Calc": "Infusionsrechner",
-    "InfuseItems": "Item auswählen zum Infundieren mit:",
+    "InfuseItems": "Item zum Infundieren auswählen:",
     "InfusionMaterials": "Infusions Material",
-    "LockedItems": "Beziehe 'gesperrte' Items ein",
+    "LockedItems": "'Gesperrte' Items einbeziehen",
     "NoItems": "Keine infundierbaren Items verfügbar.",
     "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
     "ShowItems": "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
@@ -181,7 +181,7 @@
     "ShowGear": "Zeige {{class}} Ausrüstung",
     "HideGear": "Verstecke {{class}} Ausrüstung",
     "LockEquipped": "Ausgerüstetes sperren",
-    "ClearLocked": "Gesperrte entfernen",
+    "ClearLocked": "Gesperrte entsperren",
     "Locked": "Gesperrte Gegenstände",
     "LockedHelp": "Ziehe einen beliebigen Gegenstand in sein Feld, um ihn in den Loadouts zu verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren.",
     "FilterSets": "Filter setzen",
@@ -194,10 +194,10 @@
       "HelpFast": "Nur die beste Ausrüstung wird einbezogen.",
       "HelpFull": "Bezieht mehr Ausrüstung ein, braucht dafür länger."
     },
-    "Scaled": "Skaliertes",
+    "Scaled": "Skaliert",
     "Current": "Aktuelles",
     "LightMode": {
-      "LightMode": "Lichtlevel",
+      "LightMode": "Licht Modus",
       "HelpScaled": "Berechne Loadouts als ob alle Gegenstände 350 Verteidigung hätten.",
       "HelpCurrent": "Berechnet Loadouts mit dem aktuellen Verteidigungswert."
     },
@@ -213,7 +213,7 @@
       "ShiftClick": "Shift+Klick ein Item um Sets ohne diese Ausrüstung zu erstellen",
       "HigherTiers": "Höhere Stufen sind besser",
       "Tier11Example": "4/5/2 (ein Stufe 11 Set) ist 4 Intellekt, 5 Disziplin, 2 Stärke (4+5+2 = Stufe 11)",
-      "Intellect": "Intellekt beschleunigt die Super Abklingzeit",
+      "Intellect": "Intellekt beschleunigt die Super Aufladezeit",
       "Discipline": "Disziplin  beschleunigt die Granaten Aufladezeit",
       "Strength": "Stärke beschleunigt die Nahkampf Aufladezeit",
       "Synergy": "Versuche Rüstung zu finden, welche dir mehr Munition für Waffenklassen geben, die du benutzt.",
@@ -246,7 +246,7 @@
     "MaximizeLight": "Licht maximieren",
     "ItemLeveling": "Gegenstand aufwerten",
     "GatherEngrams": "Engramme sammeln",
-    "GatherEngramsExceptExotics": "Exo",
+    "GatherEngramsExceptExotics": "Exos",
     "RestoreAllItems": "Alle Gegenstände",
     "Random": "Zufällig",
     "Randomize": "Sollen deine ausgerüsteten Waffen und Rüstungen, sowie Geist und Artefakt zufällig ausgewählt werden?",
@@ -271,10 +271,10 @@
     "AppliedError": "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
     "AppliedWarn": "Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} Gegenständen hatten Fehler.",
     "NameRequired": "Ein Name ist erforderlich.",
-    "MakeRoom": "Schaffe Platz für Poststellenitems",
-    "MakeRoomDone": "Platz für 1 Poststellenitem durch verschieben von {{movedNum}} Item vom {{store}} geschaffen.",
-    "MakeRoomDone_plural": "Platz für {{count}} Poststellenitems durch verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
-    "MakeRoomError": "Es kann kein Platz für alle Postellengegenstände geschaffen werden: {{error}}.",
+    "MakeRoom": "Schaffe Platz für Poststellen-Items",
+    "MakeRoomDone": "Platz für 1 Poststellen-Item durch verschieben von {{movedNum}} Item vom {{store}} geschaffen.",
+    "MakeRoomDone_plural": "Platz für {{count}} Poststellen-Items durch verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
+    "MakeRoomError": "Es kann kein Platz für alle Postellen-Items geschaffen werden: {{error}}.",
     "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
     "SaveErrorDescription": "Speichern des Loadouts {{loadoutName}} nicht möglich: {{error}}.",
     "DeleteErrorTitle": "Fehler beim Löschen des Loadouts",
@@ -285,7 +285,7 @@
     "Download": "Lade neueste Daten von Bungie herunter",
     "Error": "Fehler beim Laden von Destiny Daten:\n{{error}}\nApp neu laden, um es nochmals zu versuchen.",
     "Outdated": "Veraltete Destiny Daten",
-    "OutdatedExplanation": "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu laden. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreiten werden.",
+    "OutdatedExplanation": "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu bekommen. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreitet werden.",
     "Load": "Lade gespeicherte Daten",
     "LoadCharInv": "Lade Destiny Charaktere und Inventar",
     "Save": "Speichere neueste Daten",
@@ -310,7 +310,7 @@
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
     "Take": "Take",
-    "Vault": "Vault",
+    "Vault": "Tresor",
     "LockUnlock_Lock": "{{itemType}} sperren",
     "LockUnlock_Unlock": "{{itemType}} entsperren",
     "TrackUntrack_Track": "{{itemType}} verfolgen",
@@ -330,7 +330,7 @@
   },
   "RecordBooks": {
     "RecordBooks": "Urkundenbücher",
-    "HideCompleted": "Abgeschlossene Rekorde nicht anzeigen"
+    "HideCompleted": "Abgeschlossene Urkunden nicht anzeigen"
   },
   "Settings": {
     "Settings": "Einstellungen",
@@ -340,16 +340,16 @@
     "AlwaysShowDetails": "Zeige immer erweitertes Pop-Up an",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen",
     "ShowOverlay": "Hebe neue Gegenstände mit einem glänzenden Icon hervor",
-    "ShowAnimations": "Animiere den neuen, hervorgehobenen Gegenstand",
+    "ShowAnimations": "Animiere die Hervorhebung des neuen Gegenstands",
     "ShowAnimationsHelp": "Animiert die Hervorhebung bei neuen Gegenständen. Deaktivierung senkt CPU Belastung",
     "ShowReviews": "Zeige Bewertungen bei Waffen an",
     "ShowElemental": "Zeige Elementarschaden bei Waffen an",
     "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen.",
-    "AllowIdPostToDtrLine2": "Teile deinen Account-Namen und überprüfte Elemente mit Destiny Tracker.",
+    "AllowIdPostToDtrLine2": "Hiermit teilst du deinen Account-Namen und bewertete Elemente mit Destiny Tracker.",
     "SetSort": "Sortiere Gegenstände nach",
     "SortPrimary": "Primärer Wert",
     "SortRarity": "Seltenheit",
-    "SortRoll": "Roll-Wert Prozent",
+    "SortRoll": "Bewertung",
     "SortName": "Name",
     "InventoryColumns": "Charakter Inventar Spalten",
     "VaultColumns": "Maximale Anzahl von Spalten des Tresors",
@@ -359,13 +359,13 @@
     "ResetToDefault": "Zurücksetzen",
     "ColorA11y": "Konfiguration für Farbenblinde",
     "CharacterOrder": "Charakter Reihenfolge",
-    "CharacterOrderRecent": "Nach zuletzt aktivem Charakter",
-    "CharacterOrderReversed": "Nach zuletzt aktivem Charakter (umgekehrt)",
-    "CharacterOrderFixed": "Fest (Nach Alter des Charakters)",
+    "CharacterOrderRecent": "zuletzt aktiver Charakter",
+    "CharacterOrderReversed": "zuletzt aktiver Charakter (umgekehrt)",
+    "CharacterOrderFixed": "Alter des Charakters",
     "ExportSS": "Inventar Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
     "DIMPopups": "DIM info popups",
-    "DIMPopupsReset": "Zeige zuvor versteckte info tipps"
+    "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps"
   },
   "Stats": {
     "Discipline": "Disziplin",
@@ -396,7 +396,7 @@
     "Details": {
       "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
       "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
-      "IndexedDBStorage": "Lokales speichern wird die Daten nur in diesem Browser speichern."
+      "IndexedDBStorage": "Lokales Speichern wird die Daten nur in diesem Browser speichern."
     },
     "BrowserMayClearData": "Der Browser könnte eventuell diese Informationen löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
     "ForceSync": "Erzwinge Synchronisation",
@@ -422,12 +422,12 @@
   },
   "SyncService": {
     "GoogleDriveReAuth": "Um Google Drive wieder zu authorisieren musst du deinen Browser neustarten.",
-    "OneItemTooLarge": "Ein Teil deiner Speicherdatei ist zu groß. Wahrscheinlich hast du ein Loadout mir zuvielen Gegenständen.",
+    "OneItemTooLarge": "Ein Teil deiner Speicherdatei ist zu groß. Wahrscheinlich hast du ein Loadout mir zu vielen Gegenständen.",
     "SaveTooLarge": "Deine Speicherdatei ist zu groß. Bitte entferne gespeicherte Loadouts."
   },
   "Tags": {
     "TagItem": "Item markieren",
-    "Favorite": "Favorit",
+    "Favorite": "Favorisieren",
     "Junk": "Müll",
     "Infuse": "Infundieren",
     "Keep": "Behalten"
@@ -462,6 +462,7 @@
       "FAQKeyboard": "Unterstützt DIM Tastaturkürzel?",
       "FAQKeyboardAnswer": "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen.",
       "FAQLogout": "Wie kann ich mich von DIM abmelden?",
+      "FAQLogoutAnswer": "Gehe zu den Einstellungen (Zahnrad Symbol) und klicke \"Abmelden\"",
       "FAQLostItem": "Ich habe durch euer Tool einen Gegenstand verloren!",
       "FAQLostItemAnswer": "Sehr wahrscheinlich ist eine Übertragung fehlgeschlagen, so dass der Gegenstand im Tresor oder auf einem anderen Charakter gelandet ist. Du kannst nach dem Gegenstand suchen. Wenn du ihn trotzdem nicht findest, aktualisiere die App, indem du F5 drückst. Schau auf {{link}} oder im Spiel nach, um zu sehen wo sich der Gegenstand befindet. Wir sind sicher, er ist da.",
       "GitHub": "GitHub",

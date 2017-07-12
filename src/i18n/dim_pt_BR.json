@@ -14,6 +14,9 @@
     "Vault": "Cofre",
     "Weapons": "Armas"
   },
+  "BungieAlert": {
+    "Title": "Uma mensagem da Bungie:"
+  },
   "BungieService": {
     "DevVersion": "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
     "Difficulties": "A API da Bungie está atualmente passando por dificuldades.",
@@ -250,7 +253,7 @@
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set de itens busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "DoesNotExist": "{{itemname}} não existe em sua conta.",
     "AppliedAuto": "Construtor automático de sets",
-    "Applied": "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
+    "Applied": "Seu set de 1 iten foi transferido para seu {{store}}.",
     "Applied_plural": "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
