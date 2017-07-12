@@ -111,22 +111,11 @@ module.exports = function(grunt) {
     },
 
     poeditor: {
-      update_terms: {
-        upload: { // special case for uploads
-          id: '116191',
-          languages: {'en':'en'},
-          file: 'src/i18n/dim_?.json',
-          updating: 'terms_definitions',
-          overwrite: 1, // set any POE's API option
-          sync_terms: 1,
-          fuzzy_trigger: 1
-        }
-      },
       download_terms: {
         download: {
           project_id: '116191',
           type: 'key_value_json', // export type (check out the doc)
-          filters: ["translated", "proofread"], // https://poeditor.com/api_reference/#export
+          filters: ["translated", "proofread", "not_fuzzy"], // https://poeditor.com/api_reference/#export
           dest: 'src/i18n/dim_?.json',
           languages: {
             'de': 'de',
@@ -225,10 +214,6 @@ module.exports = function(grunt) {
       Promise.all(promises).then(done);
     }
   );
-
-  grunt.registerTask('update_terms', [
-    'poeditor:upload_terms:upload'
-  ]);
 
   grunt.registerTask('download_translations', [
     'poeditor:download_terms:download',
