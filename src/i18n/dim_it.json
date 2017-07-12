@@ -498,8 +498,7 @@
             "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
             "Sponsors": "Sponsors",
             "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito.",
-            "Teespring": "Abbiamo anche magliette con il nostro nuovo logo in vendita su Teespring:",
-            "TeespringLink": "DIM su Teespring"
+            "Teespring": "Abbiamo anche magliette con il nostro nuovo logo in vendita su {{link}}"
         },
         "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM.",
         "Login": {
