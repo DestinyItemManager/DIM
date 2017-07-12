@@ -402,8 +402,8 @@
             "Twitter": "Twitter",
             "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
             "Version": "Versão {{version}} ({{flavor}}), built on {{date}}",
-            "Transifex": "Junte-se à equipe de tradução!",
-            "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
+            "Translation": "Junte-se à equipe de tradução!",
+            "TranslationText": "Nós usamos o {{link}} para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
         },
         "Support": {
             "Support": "Apoie o DIM",

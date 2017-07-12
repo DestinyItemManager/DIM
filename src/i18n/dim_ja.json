@@ -396,8 +396,8 @@
             "Twitter": "ツイッター",
             "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
             "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
-            "Transifex": "翻訳チームに参加してください！",
-            "TransifexText": "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
+            "Translation": "翻訳チームに参加してください！",
+            "TranslationText": "翻訳には {{link}} を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
         },
         "Support": {
             "Support": "DIMを支援する",

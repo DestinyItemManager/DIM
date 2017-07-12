@@ -469,8 +469,8 @@
             "Twitter": "Twitter",
             "TwitterHelp": "Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten Stand zu sein.",
             "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}",
-            "Transifex": "Trete dem Übersetzer-Team bei!",
-            "TransifexText": "Wir benutzen Transifex für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei."
+            "Translation": "Trete dem Übersetzer-Team bei!",
+            "TranslationText": "Wir benutzen {{link}} für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei."
         },
         "Support": {
             "Support": "Unterstütze DIM",
