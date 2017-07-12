@@ -51,6 +51,10 @@ class ReviewsFetcher {
     item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
     item.writtenReviews = _.filter(reviewData.reviews, 'review');
 
+    if (item.writtenReviews) {
+      item.writtenReviews.sort(this._sortReviews);
+    }
+
     if (userReview) {
       item.userRating = userReview.rating;
       item.userReview = userReview.review;
@@ -59,6 +63,35 @@ class ReviewsFetcher {
     }
 
     this._reviewDataCache.addReviewsData(item, reviewData);
+  }
+
+  _sortReviews(a, b) {
+    if (a.isReviewer) {
+      return -1;
+    }
+
+    if (b.isReviewer) {
+      return 1;
+    }
+
+    if (a.isHighlighted) {
+      return -1;
+    }
+
+    if (b.isHighlighted) {
+      return 1;
+    }
+
+    const ratingDiff = b.rating - a.rating;
+
+    if (ratingDiff !== 0) {
+      return ratingDiff;
+    }
+
+    const aDate = new Date(a.timestamp);
+    const bDate = new Date(b.timestamp);
+
+    return bDate - aDate;
   }
 
   _attachCachedReviews(item,

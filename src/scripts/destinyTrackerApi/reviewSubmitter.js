@@ -22,7 +22,7 @@ class ReviewSubmitter {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,
-      displayName: membershipInfo.id
+      displayName: membershipInfo.displayName
     };
   }
 
