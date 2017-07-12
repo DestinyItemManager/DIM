@@ -4,7 +4,7 @@ import { DeveloperComponent } from './developer.component';
 
 export default angular
   .module('developerModule', [])
-  .factory('developer', DeveloperComponent)
+  .component('developer', DeveloperComponent)
   .config(($stateProvider) => {
     'ngInject';
 
