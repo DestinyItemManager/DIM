@@ -1,7 +1,7 @@
 /**
  * Helpers for interacting with Bungie APIs.
  */
-export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dimState, $translate) {
+export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dimState, $i18next) {
   'ngInject';
 
   return {
@@ -15,18 +15,18 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
    */
   function handleErrors(response) {
     if (response.status === -1) {
-      return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
+      return $q.reject(new Error($i18next.t('BungieService.NotConnected')));
     }
     // Token expired and other auth maladies
     if (response.status === 401 || response.status === 403) {
       $rootScope.$broadcast('dim-no-token-found');
-      return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
+      return $q.reject(new Error($i18next.t('BungieService.NotLoggedIn')));
     }
     if (response.status >= 503 && response.status <= 526 /* cloudflare */) {
-      return $q.reject(new Error($translate.instant('BungieService.Down')));
+      return $q.reject(new Error($i18next.t('BungieService.Difficulties')));
     }
     if (response.status < 200 || response.status >= 400) {
-      return $q.reject(new Error($translate.instant('BungieService.NetworkError', {
+      return $q.reject(new Error($i18next.t('BungieService.NetworkError', {
         status: response.status,
         statusText: response.statusText
       })));
@@ -38,27 +38,30 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
     switch (errorCode) {
     case 1: // Success
       return response;
+    case 22: // WebAuthModuleAsyncFailed
+      // We've only seen this when B.net is down
+      return $q.reject(new Error($i18next.t('BungieService.Difficulties')));
     case 1627: // DestinyVendorNotFound
-      return $q.reject(new Error($translate.instant('BungieService.VendorNotFound')));
+      return $q.reject(new Error($i18next.t('BungieService.VendorNotFound')));
     case 2106: // AuthorizationCodeInvalid
     case 2108: // AccessNotPermittedByApplicationScope
       $rootScope.$broadcast('dim-no-token-found');
       return $q.reject("DIM does not have permission to perform this action.");
     case 5: // SystemDisabled
-      return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
+      return $q.reject(new Error($i18next.t('BungieService.Maintenance')));
     case 35: // ThrottleLimitExceededMinutes
     case 36: // ThrottleLimitExceededMomentarily
     case 37: // ThrottleLimitExceededSeconds
-      return $q.reject(new Error($translate.instant('BungieService.Throttled')));
+      return $q.reject(new Error($i18next.t('BungieService.Throttled')));
     case 2111: // token expired
     case 99: // WebAuthRequired
       $rootScope.$broadcast('dim-no-token-found');
-      return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
+      return $q.reject(new Error($i18next.t('BungieService.NotLoggedIn')));
     case 1601: // DestinyAccountNotFound
     case 1618: // DestinyUnexpectedError
       if (response.config.url.indexOf('/Account/') >= 0 &&
           response.config.url.indexOf('/Character/') < 0) {
-        const error = new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.platformLabel }));
+        const error = new Error($i18next.t('BungieService.NoAccount', { platform: dimState.active.platformLabel }));
         error.code = errorCode;
         return $q.reject(error);
       }
@@ -68,21 +71,21 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
     case 2107: // OriginHeaderDoesNotMatchKey
       if ($DIM_FLAVOR === 'dev') {
         $state.go('developer');
-        return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
+        return $q.reject(new Error($i18next.t('BungieService.DevVersion')));
       } else {
-        return $q.reject(new Error($translate.instant('BungieService.Difficulties')));
+        return $q.reject(new Error($i18next.t('BungieService.Difficulties')));
       }
     }
 
     // Any other error
     if (errorCode > 1) {
       if (response.data.Message) {
-        const error = new Error(response.data.Message);
+        const error = new Error($i18next.t('BungieService.UnknownError', { message: response.data.Message }));
         error.code = response.data.ErrorCode;
         error.status = response.data.ErrorStatus;
         return $q.reject(error);
       } else {
-        return $q.reject(new Error($translate.instant('BungieService.Difficulties')));
+        return $q.reject(new Error($i18next.t('BungieService.Difficulties')));
       }
     }
 

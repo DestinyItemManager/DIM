@@ -8,7 +8,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $translate, ngDialog) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -25,9 +25,9 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     dimSettingsService.save();
   });
 
-  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $translate.instant('Settings.ColumnSize', { num }) }));
-  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $translate.instant('Settings.ColumnSize', { num }) }));
-  vm.vaultColOptions.unshift({ id: 999, name: $translate.instant('Settings.ColumnSizeAuto') });
+  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
+  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
+  vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
   vm.languageOptions = {
     de: 'Deutsch',

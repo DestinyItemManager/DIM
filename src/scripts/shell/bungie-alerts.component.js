@@ -8,7 +8,7 @@ export const BungieAlertsComponent = {
  * A component that will check for Bungie alerts every 5 minutes and publish them as toasts.
  * Each alert will only be shown once per session.
  */
-function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $translate) {
+function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $i18next) {
   'ngInject';
 
   this.$onInit = function() {
@@ -25,11 +25,11 @@ function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $translate) {
   const showAlertToaster = _.memoize((alert) => {
     const bungieTwitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp">@BungieHelp Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp"></a>';
     const dimTwitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">@ThisIsDIM Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"></a>';
-    const twitter = `<div>${$translate.instant('BungieService.Twitter')} ${bungieTwitterLink} | ${dimTwitterLink}</div>`;
+    const twitter = `<div>${$i18next.t('BungieService.Twitter')} ${bungieTwitterLink} | ${dimTwitterLink}</div>`;
 
     toaster.pop({
       type: alert.type,
-      title: $translate.instant('BungieAlert.Title'),
+      title: $i18next.t('BungieAlert.Title'),
       bodyOutputType: 'trustedHtml',
       body: `<p>${alert.body}</p>${twitter}`
     });

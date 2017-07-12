@@ -1,12 +1,12 @@
 class TrackerErrorHandler {
-  constructor($q, $translate) {
+  constructor($q, $i18next) {
     this.$q = $q;
-    this.$translate = $translate;
+    this.$i18next = $i18next;
   }
 
   handleErrors(response) {
     if (response.status !== 200) {
-      return this.$q.reject(new Error(this.$translate.instant('DtrReview.ServiceCallError')));
+      return this.$q.reject(new Error(this.$i18next.t('DtrReview.ServiceCallError')));
     }
 
     return response;
@@ -14,7 +14,7 @@ class TrackerErrorHandler {
 
   handleSubmitErrors(response) {
     if (response.status !== 204) {
-      return this.$q.reject(new Error(this.$translate.instant('DtrReview.ServiceSubmitError')));
+      return this.$q.reject(new Error(this.$i18next.t('DtrReview.ServiceSubmitError')));
     }
 
     return response;

@@ -4,10 +4,10 @@ import de from '../i18n/dim_de.json';
 import fr from '../i18n/dim_fr.json';
 import es from '../i18n/dim_es.json';
 import ja from '../i18n/dim_ja.json';
-import ptBr from '../i18n/dim_pt_BR.json';
+import ptBR from '../i18n/dim_pt_BR.json';
 
-function config($compileProvider, $httpProvider, $translateProvider, $translateMessageFormatInterpolationProvider,
-                hotkeysProvider, ngHttpRateLimiterConfigProvider, ngDialogProvider) {
+function config($compileProvider, $httpProvider, hotkeysProvider,
+                ngHttpRateLimiterConfigProvider, ngDialogProvider) {
   'ngInject';
 
   // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/docs/CHANGELOG.md#breaking-changes-1
@@ -18,26 +18,33 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
   $httpProvider.interceptors.push('http-refresh-token');
   $httpProvider.useApplyAsync(true);
 
-  // See https://angular-translate.github.io/docs/#/guide
-  $translateProvider.useSanitizeValueStrategy('escape');
-  $translateProvider.useMessageFormatInterpolation();
-  $translateProvider.preferredLanguage('en');
-
-  $translateMessageFormatInterpolationProvider.messageFormatConfigurer((mf) => {
-    mf.setIntlSupport(true);
-  });
-
-  $translateProvider
-    .translations('en', en)
-    .translations('it', it)
-    .translations('de', de)
-    .translations('fr', fr)
-    .translations('es', es)
-    .translations('ja', ja)
-    .translations('pt-br', ptBr)
-    .fallbackLanguage('en');
-
   hotkeysProvider.includeCheatSheet = true;
+
+  // See https://github.com/i18next/ng-i18next
+  window.i18next.init({
+    debug: $DIM_FLAVOR === 'dev',
+    fallbackLng: 'en',
+    lowerCaseLng: true,
+    interpolation: {
+      escapeValue: false,
+      format: function(val, format) {
+        if (format === 'pct') {
+          return `${Math.min(100.0, Math.floor(100.0 * val))}%`;
+        }
+        return val;
+      }
+    },
+    resources: {
+      en: { translation: en },
+      it: { translation: it },
+      de: { translation: de },
+      fr: { translation: fr },
+      es: { translation: es },
+      ja: { translation: ja },
+      'pt-br': { translation: ptBR }
+    },
+    returnObjects: true
+  });
 
   // Bungie's API will start throttling an API if it's called more than once per second. It does this
   // by making responses take 2s to return, not by sending an error code or throttling response. Choosing

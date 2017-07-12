@@ -1,8 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[destiny-item-manager.dim]
-file_filter = src/i18n/dim_<lang>.json
-source_file = src/i18n/dim_en.json
-source_lang = en
-type = KEYVALUEJSON

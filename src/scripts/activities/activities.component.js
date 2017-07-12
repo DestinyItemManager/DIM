@@ -11,7 +11,7 @@ export const ActivitiesComponent = {
   }
 };
 
-function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettingsService, $translate) {
+function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettingsService, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -131,7 +131,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     const tierDef = defs.Activity.get(tier.activityHash);
 
     const name = tier.activityData.recommendedLight === 390 ? 390
-      : (tier.tierDisplayName ? $translate.instant(`Activities.${tier.tierDisplayName}`) : tierDef.activityName);
+      : (tier.tierDisplayName ? $i18next.t(`Activities.${tier.tierDisplayName}`) : tierDef.activityName);
 
     const characters = activityId === 'heroicstrike' ? [] : stores.map((store) => {
       let steps = store.advisors.activities[activityId].activityTiers[index].steps;

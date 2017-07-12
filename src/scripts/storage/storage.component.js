@@ -5,7 +5,7 @@ import { sum } from '../util';
 import template from './storage.html';
 import './storage.scss';
 
-function StorageController($scope, dimSettingsService, SyncService, GoogleDriveStorage, $timeout, $window, $q, $translate) {
+function StorageController($scope, dimSettingsService, SyncService, GoogleDriveStorage, $timeout, $window, $q, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -62,14 +62,14 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   };
 
   vm.driveSync = function() {
-    if ($window.confirm($translate.instant('Storage.GDriveSignInWarning'))) {
+    if ($window.confirm($i18next.t('Storage.GDriveSignInWarning'))) {
       return GoogleDriveStorage.authorize().then(vm.forceSync);
     }
     return null;
   };
 
   vm.driveLogout = function() {
-    $window.alert($translate.instant('Storage.GDriveLogout'));
+    $window.alert($i18next.t('Storage.GDriveLogout'));
     return GoogleDriveStorage.revokeDrive();
   };
 
@@ -102,18 +102,18 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
         SyncService.set(JSON.parse(reader.result), true)
           .then(() => $q.all(SyncService.adapters.forEach(refreshAdapter)));
       });
-      $window.alert($translate.instant('Storage.ImportSuccess'));
+      $window.alert($i18next.t('Storage.ImportSuccess'));
     };
     const file = angular.element('#importFile')[0].files[0];
     if (file) {
       reader.readAsText(file);
     } else {
-      $window.alert($translate.instant('Storage.ImportNoFile'));
+      $window.alert($i18next.t('Storage.ImportNoFile'));
     }
   };
 
   vm.importDataFromExtension = function() {
-    if ($window.confirm($translate.instant('Storage.ImportFromExtensionWarning'))) {
+    if ($window.confirm($i18next.t('Storage.ImportFromExtensionWarning'))) {
       return SyncService.set(vm.extensionData, true)
         .then(() => $q.all(SyncService.adapters.map(refreshAdapter)));
     }
