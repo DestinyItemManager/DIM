@@ -462,7 +462,6 @@
       "FAQKeyboard": "Unterstützt DIM Tastaturkürzel?",
       "FAQKeyboardAnswer": "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen.",
       "FAQLogout": "Wie kann ich mich von DIM abmelden?",
-      "FAQLogoutAnswer": "Gehe zu den Einstellungen (Zahnrad Symbol) und klicke \"Abmelden\"",
       "FAQLostItem": "Ich habe durch euer Tool einen Gegenstand verloren!",
       "FAQLostItemAnswer": "Sehr wahrscheinlich ist eine Übertragung fehlgeschlagen, so dass der Gegenstand im Tresor oder auf einem anderen Charakter gelandet ist. Du kannst nach dem Gegenstand suchen. Wenn du ihn trotzdem nicht findest, aktualisiere die App, indem du F5 drückst. Schau auf {{link}} oder im Spiel nach, um zu sehen wo sich der Gegenstand befindet. Wir sind sicher, er ist da.",
       "GitHub": "GitHub",
