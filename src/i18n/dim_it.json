@@ -476,7 +476,7 @@
             "FAQLogout": "Come posso effettuare il log out da DIM?",
             "FAQLogoutAnswer": "Vai alla pagina delle importazioni (icona ingranaggio) e clicca \"Disconnetti\".",
             "FAQLostItem": "Ho perso un mio oggetto utilizzando DIM!",
-            "FAQLostItemAnswer": "Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o a un altro personaggio. Puoi cercare quell'oggetto. Se ciò non dovesse funzionare, aggiorna l'applicazione premendo F5. Controlla su Bungie.net oppure nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
+            "FAQLostItemAnswer": "Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o a un altro personaggio. Puoi cercare quell'oggetto. Se ciò non dovesse funzionare, aggiorna l'applicazione premendo F5. Controlla su {{link}} oppure nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
             "GitHub": "GitHub",
             "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su GitHub.",
             "GitHubRepo": "DIM Git Repo",

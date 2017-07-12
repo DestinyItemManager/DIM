@@ -458,7 +458,7 @@
       "FAQLogout": "How can I log out of DIM?",
       "FAQLogoutAnswer": "Go to the settings page (gear icon) and click \"Log out\"",
       "FAQLostItem": "I lost my item using your tool!",
-      "FAQLostItemAnswer": "More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check Bungie.net or in game to see if your item still exists. We're sure it's still there.",
+      "FAQLostItemAnswer": "More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check {{link}} or in game to see if your item still exists. We're sure it's still there.",
       "GitHub": "GitHub",
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on GitHub.",
       "GitHubRepo": "DIM Git Repo",

@@ -391,7 +391,7 @@
             "FAQKeyboardAnswer": "Sim! Pressione \"?\" para ver a lista de teclas de atalhos disponíveis.",
             "FAQLogout": "Como posso fazer logout do DIM?",
             "FAQLostItem": "Eu perdi um item usando a ferramenta de vocês!",
-            "FAQLostItemAnswer": "Muito provavelmente sua transferência falhou e seu item está no Cofre ou em outro personagem. Você pode usar o campo de busca para encontrá-lo. Caso não encontre, pressione F5 para atualizar a página. Verifique no Bungie.net ou no próprio jogo se o item realmente existe. Temos plena certeza que ele está em algum lugar.",
+            "FAQLostItemAnswer": "Muito provavelmente sua transferência falhou e seu item está no Cofre ou em outro personagem. Você pode usar o campo de busca para encontrá-lo. Caso não encontre, pressione F5 para atualizar a página. Verifique no {{link}} ou no próprio jogo se o item realmente existe. Temos plena certeza que ele está em algum lugar.",
             "GitHub": "GitHub",
             "GitHubHelp": "Se você está interessado em contribuir com o projeto, visite nossa página no GitHub.",
             "GitHubRepo": "Repositório no GitHub",

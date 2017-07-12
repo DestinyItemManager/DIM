@@ -461,7 +461,7 @@
             "FAQLogout": "Comment puis-je me déconnecter de DIM?",
             "FAQLogoutAnswer": "Allez vers la page de paramètre (icône d'engrenage) et cliquez sur \"Se déconnecter\".",
             "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
-            "FAQLostItemAnswer": "Il est plus que probable que votre transfer ait échoué, laissant votre objet dans le coffre ou sur un autre personnage. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancez l'app en appuyant sur F5. Vérifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
+            "FAQLostItemAnswer": "Il est plus que probable que votre transfer ait échoué, laissant votre objet dans le coffre ou sur un autre personnage. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancez l'app en appuyant sur F5. Vérifiez {{link}} ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
             "GitHub": "GitHub",
             "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur Github.",
             "GitHubRepo": "DIM Git Repo",

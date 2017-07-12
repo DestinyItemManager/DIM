@@ -412,7 +412,7 @@
             "FAQKeyboardAnswer": "Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
             "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
             "FAQLostItem": "¡Perdí mi artículo usando tu herramienta!",
-            "FAQLostItemAnswer": "Es muy probable que la transferencia falló, lo cual deja tu artículo en el Depósito o en otro personaje. Puedes buscar ese objeto. Si incluso así no aparece, actualiza la aplicación presionando F5. Asegúrate de revisar Bungie.net o en el juego para verificar que tu objeto todavía existe. Estamos seguros de que todavía esta ahí.",
+            "FAQLostItemAnswer": "Es muy probable que la transferencia falló, lo cual deja tu artículo en el Depósito o en otro personaje. Puedes buscar ese objeto. Si incluso así no aparece, actualiza la aplicación presionando F5. Asegúrate de revisar {{link}} o en el juego para verificar que tu objeto todavía existe. Estamos seguros de que todavía esta ahí.",
             "GitHub": "GitHub",
             "GitHubHelp": "Si estas interesado en contribuir al proyecto, visíta la página del proyecto en GitHub.",
             "GitHubRepo": "DIM Git Repo",
