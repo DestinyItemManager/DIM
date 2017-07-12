@@ -141,6 +141,14 @@ module.exports = function(grunt) {
       options: {
         api_token: process.env.POEDITOR_API
       }
+    },
+
+    'json-pretty': {
+      options: {
+        files: 'src/i18n/',
+        sort: true,
+        indent: 2
+      }
     }
   });
 
@@ -148,6 +156,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('grunt-poeditor-ab');
+  grunt.loadNpmTasks('grunt-json-pretty');
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
     var manifest = grunt.file.readJSON('extension-dist/manifest.json');
@@ -222,7 +231,8 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('download_translations', [
-    'poeditor:download_terms:download'
+    'poeditor:download_terms:download',
+    'json-pretty'
   ]);
 
   grunt.registerTask('publish_beta', [

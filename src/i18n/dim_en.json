@@ -1,4 +1,9 @@
 {
+  "Activities": {
+    "Activities": "Activities",
+    "Normal": "Normal",
+    "Hard": "Hard"
+  },
   "Bucket": {
     "Armor": "Armor",
     "General": "General",
@@ -63,6 +68,23 @@
     "DragAndDrop": "Items can be dragged and dropped between different characters/vault columns.",
     "Expand": "To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.",
     "TryNext": "Try it out next time!"
+  },
+  "DtrReview": {
+    "ThankYou": "Thank you for submitting a review! It will go live shortly.",
+    "Help": "Write a review (optional)",
+    "HelpPros": "Describe the positives of this weapon (optional)",
+    "HelpCons": "Describe the negatives of this weapon (optional)",
+    "YourReview": "Your Review",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Submit": "Submit",
+    "Cancel": "Cancel",
+    "Pros": "Pros",
+    "Cons": "Cons",
+    "NoReviews": "There are no reviews for this item, be the first!",
+    "ServiceCallError": "Destiny tracker service call failed.",
+    "ServiceSubmitError": "Destiny tracker service submit failed.",
+    "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings."
   },
   "FarmingMode": {
     "FarmingMode": "Farming Mode (move items)",
@@ -269,6 +291,14 @@
     "Save": "Saving latest Destiny info",
     "Unzip": "Unzipping latest Destiny info"
   },
+  "MoveAmount": {
+    "Min": "Minimum stack (1)",
+    "Max": "Total amount in this location",
+    "UpStack": "Increase up to the next full stack",
+    "DownStack": "Decrease down to the next full stack",
+    "Increment": "One more",
+    "Decrement": "One fewer"
+  },
   "MovePopup": {
     "OverviewTab": "Overview",
     "ReviewsTab": "Reviews",
@@ -286,34 +316,9 @@
     "TrackUntrack_Track": "Track {{itemType}}",
     "TrackUntrack_Untrack": "Untrack {{itemType}}"
   },
-  "MoveAmount": {
-    "Min": "Minimum stack (1)",
-    "Max": "Total amount in this location",
-    "UpStack": "Increase up to the next full stack",
-    "DownStack": "Decrease down to the next full stack",
-    "Increment": "One more",
-    "Decrement": "One fewer"
-  },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
     "Help": "Add notes to this item"
-  },
-  "DtrReview": {
-    "ThankYou": "Thank you for submitting a review! It will go live shortly.",
-    "Help": "Write a review (optional)",
-    "HelpPros": "Describe the positives of this weapon (optional)",
-    "HelpCons": "Describe the negatives of this weapon (optional)",
-    "YourReview": "Your Review",
-    "Edit": "Edit",
-    "Delete": "Delete",
-    "Submit": "Submit",
-    "Cancel": "Cancel",
-    "Pros": "Pros",
-    "Cons": "Cons",
-    "NoReviews": "There are no reviews for this item, be the first!",
-    "ServiceCallError": "Destiny tracker service call failed.",
-    "ServiceSubmitError": "Destiny tracker service submit failed.",
-    "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings."
   },
   "Objectives": {
     "Complete": "Complete",
@@ -322,6 +327,10 @@
   "Postmaster": {
     "Limit": "Postmaster Limit",
     "Desc": "There are 20 lost items at the Postmaster on your {{store}}. Any new items will overwrite the existing."
+  },
+  "RecordBooks": {
+    "RecordBooks": "Record Books",
+    "HideCompleted": "Hide completed records"
   },
   "Settings": {
     "Settings": "Settings",
@@ -388,7 +397,7 @@
       "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
       "ChromeSyncStorage": "If you are logged in to Chrome, this will sync your data to other Chrome instances. It does not work on the DIM website.",
       "IndexedDBStorage": "Local storage will save your information only on this browser."
-      },
+    },
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
     "ForceSync": "Force sync data",
     "DriveSync": "Log in to Google Drive",
@@ -423,6 +432,11 @@
     "Infuse": "Infuse",
     "Keep": "Keep"
   },
+  "TrialsCard": {
+    "FiveWins": "5 Win Reward (Armor)",
+    "SevenWins": "7 Win Reward (Weapon)",
+    "Flawless": "Flawless"
+  },
   "Vendors": {
     "Vendors": "Vendors",
     "All": "All",
@@ -435,15 +449,6 @@
     "Bounties": "Bounties",
     "ShadersAndEmblems": "Shaders & Emblems",
     "Emotes": "Emotes"
-  },
-  "Activities": {
-    "Activities": "Activities",
-    "Normal": "Normal",
-    "Hard": "Hard"
-  },
-  "RecordBooks": {
-    "RecordBooks": "Record Books",
-    "HideCompleted": "Hide completed records"
   },
   "Views": {
     "About": {
@@ -489,10 +494,5 @@
       "Auth": "Authorize with Bungie.net",
       "LearnMore": "Do you want to know more?"
     }
-  },
-  "TrialsCard": {
-    "FiveWins": "5 Win Reward (Armor)",
-    "SevenWins": "7 Win Reward (Weapon)",
-    "Flawless": "Flawless"
   }
 }
