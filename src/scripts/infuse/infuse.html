@@ -45,7 +45,7 @@
             <span> + 250 <span class="currency"><img alt="{{ ::vm.items[3159615086].itemName }}" title="{{ ::vm.items[3159615086].itemName }}" ng-src="{{ vm.items[3159615086].icon | bungieIcon }}"></span></span>
             <span> + {{ vm.wildcardMaterialCost | number }} <span class="currency"><img alt="{{ ::vm.items[vm.wildcardMaterialHash].itemName }}" title="{{::vm.items[vm.wildcardMaterialHash].itemName }}" ng-src="{{ vm.items[vm.wildcardMaterialHash].icon | bungieIcon }}"></span></span>
           </div>
-          <button ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()" ng-i18next="Infusion.TransferItems" />
+          <button ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()" ng-i18next="Infusion.TransferItems" class="infuse-btn"></button>
         </div>
       </div>
     </div>
