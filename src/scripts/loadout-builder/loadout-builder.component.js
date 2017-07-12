@@ -12,7 +12,7 @@ export const LoadoutBuilderComponent = {
   controllerAs: 'vm'
 };
 
-function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18next, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
+function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
   'ngInject';
 
   const vm = this;
@@ -580,7 +580,11 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
 
                         processedCount++;
                         if (processedCount % 50000 === 0) { // do this so the page doesn't lock up
-                          if (vm.active !== activeGuardian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || !$location.path().endsWith('/loadout-builder')) {
+                          if (vm.active !== activeGuardian ||
+                              vm.lockedchanged ||
+                              vm.excludedchanged ||
+                              vm.perkschanged ||
+                              !$state.is('loadout-builder')) {
                             // If active guardian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;
