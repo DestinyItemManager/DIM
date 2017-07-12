@@ -42,12 +42,12 @@ If you just apply a comment stating something is wrong, the only way someone wou
 # Discord
 Also ensure you join the [Discord](https://discord.gg/NV2YeC8) and PM DelphiActual for an invite to the translation channel(#i18n). If you have any questions about translating/translations do not hesititate to ask in the #i18n channel.
 
-# Plurals, & Gender
+# Plurals & Gender
 Plurals, and gender are handled by strings that end in _plural, _male, or _female. If your language does not require the plural or gender form just copy the singular or neutral form and mark the translation as 'Fuzzy' and 'Proofread'. By marking it 'Fuzzy' it will not be downloaded automatically.
 
 If your language requires plural or gender support for a translation do not hesitiate to ask!
 
-#List of Plural & Gender keys
+# List of Plural & Gender keys
  - BungieService.ItemUniquenessExplanation
  - FarmingMode.Desc 
  - FarmingMode.MakeRoom.Desc
@@ -70,10 +70,10 @@ If your language requires plural or gender support for a translation do not hesi
 | Portuguese (pt-br) | SiLeNtWaLkEr, brunnopleffken |  |
 | Spanish (es)       | JaviG1105 | Bec04015, Jakio, Pochev, tsps_03 |
 
-Translation Coordinator
+# Translation Coordinator
 
 delphiactual
 
-Translation Managers
+# Translation Managers
 
 bhollis, eutral, Sunburned_Goose
