@@ -1,6 +1,6 @@
 import angular from 'angular';
 import template from './dimMovePopup.directive.html';
-import 'jquery-ui/ui/position';
+import Popper from 'popper.js';
 
 angular.module('dimApp')
   .directive('dimMovePopup', MovePopup);
@@ -31,8 +31,6 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     vm.maximum = store.amountOfItem(vm.item);
   }
 
-  let shown = false;
-
   // Capture the dialog element
   let dialog = null;
   $scope.$on('ngDialog.opened', (event, $dialog) => {
@@ -40,25 +38,43 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     vm.reposition();
   });
 
+  let popper;
+  $scope.$on('$destroy', () => {
+    if (popper) {
+      popper.destroy();
+    }
+  });
+
   // Reposition the popup as it is shown or if its size changes
   vm.reposition = function() {
     const element = $scope.$parent.ngDialogData;
     if (element) {
-      if (!shown) {
-        dialog.hide();
+      if (popper) {
+        popper.update();
+      } else {
+        popper = new Popper(element, dialog, {
+          placement: 'bottom-start',
+          eventsEnabled: false,
+          modifiers: {
+            preventOverflow: {
+              boundariesElement: document.getElementsByClassName('store-bounds')[0],
+              escapeWithReference: true
+            },
+            flip: {
+              behavior: ['left', 'right', 'top']
+            },
+            offset: {
+              offset: '0,5px'
+            },
+            arrow: {
+              element: '.arrow'
+            },
+            keepTogether: {
+              enabled: true
+            }
+          }
+        });
       }
-      shown = true;
-      $timeout(() => {
-        dialog
-          .position({
-            my: 'left bottom',
-            at: 'left top-2',
-            of: element,
-            collision: 'flip flip',
-            within: '.store-bounds'
-          })
-          .show();
-      });
     }
   };
 
