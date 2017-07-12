@@ -12,7 +12,6 @@
     },
     "BungieService": {
         "DevVersion": "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
-        "Down": "Bungie.net está fora do ar.",
         "Difficulties": "A API da Bungie está atualmente passando por dificuldades.",
         "NetworkError": "Erro de rede - {{status}} {{statusText}}",
         "Throttled": "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
@@ -232,7 +231,6 @@
         "Missing2": "Faltam itens raros, lendários ou exóticos para construir um set completo!"
     },
     "Loadouts": {
-        "Any": "Qualquer",
         "Loadouts": "Sets",
         "Before": "Antes '{{name}}'",
         "Create": "Criar set",
@@ -423,10 +421,9 @@
             "FAQKeyboardAnswer": "Sim! Pressione \"?\" para ver a lista de teclas de atalhos disponíveis.",
             "FAQLogout": "Como posso fazer logout do DIM?",
             "FAQLostItem": "Eu perdi um item usando a ferramenta de vocês!",
-            "FAQLostItemAnswer": "Muito provavelmente sua transferência falhou e seu item está no Cofre ou em outro personagem. Você pode usar o campo de busca para encontrá-lo. Caso não encontre, pressione F5 para atualizar a página. Verifique no Bungie.net ou no próprio jogo se o item realmente existe. Temos plena certeza que ele está em algum lugar.",
+            "FAQLostItemAnswer": "Muito provavelmente sua transferência falhou e seu item está no Cofre ou em outro personagem. Você pode usar o campo de busca para encontrá-lo. Caso não encontre, pressione F5 para atualizar a página. Verifique no {{link}} ou no próprio jogo se o item realmente existe. Temos plena certeza que ele está em algum lugar.",
             "GitHub": "GitHub",
-            "GitHubHelp": "Se você está interessado em contribuir com o projeto, visite nossa página no GitHub.",
-            "GitHubRepo": "Repositório no GitHub",
+            "GitHubHelp": "Se você está interessado em contribuir com o projeto, visite nossa página no {{link}}.",
             "Header": "Sobre o Destiny Item Manager (DIM)",
             "HowItsMade": "O DIM tem como base os mesmos serviços do Bungie.net e o aplicativo Destiny Companion. O DIM pode acessar os itens em seu inventário e cofre em ambas as plataformas PlayStation e Xbox. Você pode então arrastar e soltar os itens para qualquer personagem ou local que deseja mover.",
             "Reddit": "Reddit",
@@ -434,13 +431,13 @@
             "Twitter": "Twitter",
             "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
             "Version": "Versão {{version}} ({{flavor}}), built on {{date}}",
-            "Transifex": "Junte-se à equipe de tradução!",
-            "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
+            "Translation": "Junte-se à equipe de tradução!",
+            "TranslationText": "Nós usamos o {{link}} para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
         },
         "Support": {
             "Support": "Apoie o DIM",
             "FreeToDownload": "O DIM é gratuito para baixar e usar. O código-fonte do DIM é open-source e livre para qualquer um aperfeiçoá-lo. Você nunca verá propagandas no DIM, essa é nossa promessa.",
-            "OpenCollective": "Estamos utilizando o OpenCollective como serviço para providenciar uma compensação para os nossos desenvolvedores pela sua dedicação e tempo gasto nesse projeto.",
+            "OpenCollective": "Estamos utilizando o {{link}} como serviço para providenciar uma compensação para os nossos desenvolvedores pela sua dedicação e tempo gasto nesse projeto.",
             "Backers": "Apoiantes",
             "BackersDetail": "Apoie-nos com uma única doação, ou doação mensal e ajude-nos a continuar o nosso desenvolvimento ativo.",
             "Sponsors": "Patrocinadores",

@@ -15,7 +15,6 @@
     },
     "BungieService": {
         "DevVersion": "Stai eseguendo una versione di DIM in via di sviluppo? Devi registrare la tua estensione per chrome con bungie.net.",
-        "Down": "Bungie.net è offline.",
         "Difficulties": "Al momento le API di Bungie hanno dei problemi.",
         "NetworkError": "Errore Network - {{status}} {{statusText}}",
         "Throttled": "Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.",
@@ -30,7 +29,8 @@
         "ItemUniquenessExplanation": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
         "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
         "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
-        "VendorNotFound": "I dati dei mercanti non sono disponibili."
+        "VendorNotFound": "I dati dei mercanti non sono disponibili.",
+        "UnknownError": "Messaggio Bungie.net: {{message}}"
     },
     "Compare": {
         "ButtonHelp": "Confronta Oggetti",
@@ -125,7 +125,8 @@
         "FilterHelp": "Cerca oggetti/perk o is:arc",
         "Refresh": "Aggiorna i Dati di Destiny",
         "SupportDIM": "Donatori",
-        "Shop": "Negozio"
+        "Shop": "Negozio",
+        "Inventory": "Messaggio Bungie.net: {{message}}"
     },
     "Help": {
         "BackToDIM": "Torna a DIM",
@@ -250,7 +251,7 @@
         "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo"
     },
     "Loadouts": {
-        "Any": "Qualsiasi",
+        "Any": "Qualsiasi classe",
         "Loadouts": "Loadouts",
         "Before": "Prima '{{name}}'",
         "Create": "Creare Loadout",
@@ -371,7 +372,6 @@
     },
     "Settings": {
         "Settings": "Impostazioni",
-        "LogOutDesc": "Esci da DIM, oppure cambia account Bungie.net",
         "LogOut": "Disconnetti",
         "Language": "Lingua (ricarica DIM per apportare la modifica)",
         "HideUnfiltered": "Nascondi gli oggetti che non corrispondono a una ricerca",
@@ -432,9 +432,9 @@
         "ChromeSyncStorage": "Chrome Sync (Solo estensione)",
         "IndexedDBStorage": "Memoria del browser locale",
         "Details": {
-          "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",
-          "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM.",
-          "IndexedDBStorage": "Memorizza dati in locale salva le informazioni solo su questo browser."
+            "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",
+            "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM.",
+            "IndexedDBStorage": "Memorizza dati in locale salva le informazioni solo su questo browser."
         },
         "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
         "ForceSync": "Forza sincronizzazione dati",
@@ -504,12 +504,10 @@
             "FAQKeyboard": "Su DIM funzionano le scelte rapide da tastiera (scorciatoie)?",
             "FAQKeyboardAnswer": "Sì! Premi \"?\" per vedere una lista delle scelte rapide disponibili.",
             "FAQLogout": "Come posso effettuare il log out da DIM?",
-            "FAQLogoutAnswer": "Vai alla pagina delle importazioni (icona ingranaggio) e clicca \"Disconnetti\".",
             "FAQLostItem": "Ho perso un mio oggetto utilizzando DIM!",
-            "FAQLostItemAnswer": "Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o a un altro personaggio. Puoi cercare quell'oggetto. Se ciò non dovesse funzionare, aggiorna l'applicazione premendo F5. Controlla su Bungie.net oppure nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
+            "FAQLostItemAnswer": "Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o a un altro personaggio. Puoi cercare quell'oggetto. Se ciò non dovesse funzionare, aggiorna l'applicazione premendo F5. Controlla su {{link}} oppure nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
             "GitHub": "GitHub",
-            "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su GitHub.",
-            "GitHubRepo": "DIM Git Repo",
+            "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su {{link}}.",
             "Header": "Riguardo Destiny Item Manager (DIM)",
             "HowItsMade": "DIM si basa sui servizi usati da Bungie.net e dalla Destiny Companion App. DIM può accedere agli oggetti all'interno dell'inventario e del deposito del tuo Guardiano, sia su Playstation che su Xbox. Tu puoi trascinarli e rilasciarli ovunque tu voglia muoverli.",
             "Reddit": "Reddit",
@@ -517,19 +515,18 @@
             "Twitter": "Twitter",
             "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
             "Version": "Versione {{version}} ({{flavor}}), pubblicata il {{date}}",
-            "Transifex": "Unisciti al Team Traduzione!",
-            "TransifexText": "Utilizziamo Transifex per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team."
+            "Translation": "Unisciti al Team Traduzione!",
+            "TranslationText": "Utilizziamo {{link}} per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team."
         },
         "Support": {
             "Support": "Supportare DIM",
             "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
-            "OpenCollective": "Utilizziamo OpenCollective come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto.",
+            "OpenCollective": "Utilizziamo {{link}} come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto.",
             "Backers": "Donatori",
             "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
             "Sponsors": "Sponsors",
             "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito.",
-            "Teespring": "Abbiamo anche magliette con il nostro nuovo logo in vendita su Teespring:",
-            "TeespringLink": "DIM su Teespring"
+            "Teespring": "Abbiamo anche magliette con il nostro nuovo logo in vendita su {{link}}"
         },
         "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM.",
         "Login": {

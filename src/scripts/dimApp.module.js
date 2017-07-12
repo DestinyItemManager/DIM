@@ -74,6 +74,10 @@ const dependencies = [
   'cfp.hotkeys'
 ];
 
+if ($DIM_FLAVOR === 'dev') {
+  dependencies.push(require('./developer/developer.module').default);
+}
+
 export const DimAppModule = angular
   .module('dimApp', dependencies)
   .config(config)

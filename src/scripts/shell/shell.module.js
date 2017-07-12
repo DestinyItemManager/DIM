@@ -44,7 +44,7 @@ export const ShellModule = angular
         if (activeAccount) {
           $state.go('inventory', activeAccount);
         } else {
-          $state.go('login');
+          // A bit awkward, but getPlatforms should already have redirected to login
         }
       }
     });

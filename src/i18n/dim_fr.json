@@ -15,7 +15,6 @@
     },
     "BungieService": {
         "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec bungie.net.",
-        "Down": "Bungie.net est hors service.",
         "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
         "NetworkError": "Erreur de réseau - {{status}} {{statusText}}",
         "Throttled": "La limite de connexions à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
@@ -28,7 +27,8 @@
         "Twitter": "Tenez-vous informé sur:",
         "ItemUniqueness": "Unicité d'un objet",
         "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
-        "VendorNotFound": "Les données du vendeur sont indisponible."
+        "VendorNotFound": "Les données du vendeur sont indisponible.",
+        "UnknownError": "Message de Bungie.net: {{message}}"
     },
     "Compare": {
         "ButtonHelp": "Comparer des objets",
@@ -119,7 +119,8 @@
         "FilterHelp": "Rechercher objet/amélioration ou is:arc",
         "Refresh": "Rafraîchir les données Destiny",
         "SupportDIM": "Supporteurs",
-        "Shop": "Boutique"
+        "Shop": "Boutique",
+        "Inventory": "Inventaire"
     },
     "Help": {
         "BackToDIM": "Retour sur DIM",
@@ -131,12 +132,12 @@
         "NeverShow": "Ne plus jamais afficher.",
         "UpgradeChrome": "Veuillez Mettre à Jour Chrome",
         "Xur": "Xûr est Là",
-        "Version_release": "DIM v{{version}} Publiée",
-        "Version_beta": "Beta a été mis à jour à v{{version}}",
         "ExtensionDeprecatedTitle": "DIM est juste un site web maintenant!",
         "ExtensionDeprecatedMessage": "L'extension chrome DIM ouvre maintenant notre site web - lequel fonctionne sur chaque navigateur et téléphone! Vous pouvez désinstaller l'extension, ou la laisser en tant que signet pour ce site. Vos données (tags, notes, et paramètres) peuvent être importé depuis la page de stockage (icône de disque dans l'en-tête)",
         "NoStorage": "DIM ne peut pas stocker de données",
-        "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible. DIM ne peut pas continuer."
+        "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible. DIM ne peut pas continuer.",
+        "Version_release": "DIM v{{version}} Publiée",
+        "Version_beta": "Beta a été mis à jour à v{{version}}"
     },
     "Hotkey": {
         "StartSearch": "Commencer une recherche",
@@ -186,7 +187,7 @@
     "LB": {
         "LB": "Constructeur de pré set",
         "Guardians": "Gardiens",
-        "ShowGear": "Afficher l'équipement de {{class}",
+        "ShowGear": "Afficher l'équipement de {{class}}",
         "HideGear": "Cacher l'équipement de {{class}}",
         "LockEquipped": "Verrouiller équipé",
         "ClearLocked": "Enlever verrouillés",
@@ -274,7 +275,7 @@
         "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}} Nous avons transféré tout ce que vous aviez.",
         "DoesNotExist": "{{itemname}} n'existe pas dans votre compte.",
         "AppliedAuto": "Constructeur de Pré set automatique",
-        "Applied": "Votre pré set de objet a été transféré à votre {{store}}",
+        "Applied": "Votre pré set de un objet a été transféré à votre {{store}}",
         "Applied_plural": "Votre pré set de {{amount}} objets a été transféré à votre {{store}}.",
         "AppliedError": "Aucun des objets de votre pré set n'a pu être transféré.",
         "AppliedWarn": "Votre pré set a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
@@ -355,7 +356,6 @@
     },
     "Settings": {
         "Settings": "Paramètres",
-        "LogOutDesc": "Se déconnecter de DIM, ou changer de compte Bungie.net",
         "LogOut": "Se déconnecter",
         "Language": "Langue (redémarrez DIM pour prendre effet)",
         "HideUnfiltered": "Cacher les objets qui ne correspondent pas à une recherche",
@@ -424,7 +424,7 @@
         "ForceSync": "Forcer la synchronisation des données",
         "DriveSync": "Se connecter à Google Drive",
         "DriveLogout": "Se déconnecter de Google Drive",
-        "GoogleApiBlocked": "Google Drive est indisponible car un bloqueur de contenu a bloqué le Javascript Google Drive. Veuillez exclure DIM de votre bloqueur de contenu et réessayer.",
+        "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il Java Script di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
         "NoData": "Aucune donnée",
         "Export": "Sauvegarder ses données DIM",
         "Import": "Importer des données DIM depuis un fichier",
@@ -483,17 +483,16 @@
             "FAQ": "FAQ",
             "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
             "FAQAccessAnswer": "N'importe quelle extension chrome peut demander accès aux données d'un site web stockées sur votre ordinateur. Quand vous vous connectez sur Bungie.net, vous vous voyez attribué un jeton (un cookie) qui est généré uniquement pour votre compte. Vous utilisez ce jeton pour communiquer avec Bungie en sécurité. Ce jeton est plus sécurisé que d'envoyer votre pseudo et mot de passe avec chaque requête au serveur de Bungie. DIM utilise ce jeton pour communiquer avec Bungie en votre nom.",
-            "FAQDupeGally": "Hé, DIM a dupliqué mon Gjallahorn!",
+            "FAQDupeGally": "Hé, DIM a dupliqué mon Gjallarhorn!",
             "FAQDupeGallyAnswer": "Non, non. Promis.",
             "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
             "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
             "FAQLogout": "Comment puis-je me déconnecter de DIM?",
-            "FAQLogoutAnswer": "Allez vers la page de paramètre (icône d'engrenage) et cliquez sur \"Se déconnecter\".",
+            "FAQLogoutAnswer": "Cliquez sur votre compte et choisissez \"Se déconnecter\".",
             "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
-            "FAQLostItemAnswer": "Il est plus que probable que votre transfer ait échoué, laissant votre objet dans le coffre ou sur un autre personnage. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancez l'app en appuyant sur F5. Vérifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
+            "FAQLostItemAnswer": "Il est plus que probable que votre transfer ait échoué, laissant votre objet dans le coffre ou sur un autre personnage. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancez l'app en appuyant sur F5. Vérifiez {{link}} ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
             "GitHub": "GitHub",
-            "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur Github.",
-            "GitHubRepo": "DIM Git Repo",
+            "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur {{link}}.",
             "Header": "À propos de Destiny Item Manager (DIM)",
             "HowItsMade": "DIM est construit à partir des mêmes services que Bungie.net et l'application Compagnon de Destiny. DIM peut accéder aux objets dans l'inventaire de vos Gardiens et de votre coffre sur Playstation et Xbox. Vous pouvez dès lors glisser-déposer des objets n'importe où vous les voulez.",
             "Reddit": "Reddit",
@@ -501,19 +500,18 @@
             "Twitter": "Twitter",
             "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
             "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
-            "Transifex": "Rejoignez l'équipe de traduction!",
-            "TransifexText": "Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe."
+            "Translation": "Rejoignez l'équipe de traduction!",
+            "TranslationText": "Nous utilisons {{link}} pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe."
         },
         "Support": {
             "Support": "Soutenir DIM",
             "FreeToDownload": "DIM est un produit à télécharger et à utiliser gratuitement. Le code source pour DIM est open source, et gratuit pour toute personne voulant l'améliorer. Vous ne verrez jamais une publicité dans DIM. C'est notre engagement.",
-            "OpenCollective": "Nous utilisons OpenCollective comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
-            "Backers": "Les Supporteurs",
+            "OpenCollective": "Nous utilisons {{link}} comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
+            "Backers": "Supporteurs",
             "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
             "Sponsors": "Partenaires",
             "SponsorsDetail": "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site.",
-            "Teespring": "Nous avons aussi des t-shirts avec notre nouveau logo en vente sur Teespring:",
-            "TeespringLink": "DIM sur Teespring"
+            "Teespring": "Nous avons aussi des t-shirts avec notre nouveau logo en vente sur {{link}}"
         },
         "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM",
         "Login": {

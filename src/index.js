@@ -56,10 +56,6 @@ require('./scripts/move-popup/dimTalentGrid.directive');
 require('./scripts/move-popup/dimMoveItemProperties.directive');
 require('./scripts/move-popup/dimItemTag.directive');
 
-if ($DIM_FLAVOR === 'dev') {
-  require('./scripts/developer/dimDeveloper.controller');
-}
-
 require('./scss/main.scss');
 
 if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
