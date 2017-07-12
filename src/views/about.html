@@ -17,9 +17,7 @@
         <td><span ng-i18next="Views.About.RedditHelp"></span>
           <br><a href="https://destinyitemmanager.reddit.com" target="_blank" rel="noopener noreferrer">/r/destinyitemmanager</a>
         </td>
-        <td><span ng-i18next="Views.About.GitHubHelp"></span>
-          <br><a href="https://github.com/DestinyItemManager/DIM/" target="_blank" rel="noopener noreferrer"><span ng-i18next="Views.About.GitHubRepo"></span></a>
-        </td>
+        <td ng-i18next="[html:i18next]({ link: '<a href=\'https://github.com/DestinyItemManager/DIM/\' target=\'_blank\' rel=\'noopener noreferrer\'>GitHub</a>' })Views.About.GitHubHelp"></td>
       </tr>
     </table>
     <h2 ng-i18next="Views.About.FAQ"></h2>
