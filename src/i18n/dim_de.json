@@ -474,7 +474,7 @@
         "Support": {
             "Support": "Unterstütze DIM",
             "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
-            "OpenCollective": "Wir benutzen den OpenCollective Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
+            "OpenCollective": "Wir benutzen den {{link}} Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
             "Backers": "Unterstützer",
             "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln",
             "Sponsors": "Sponsoren",
