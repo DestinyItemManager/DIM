@@ -92,7 +92,6 @@
     "Inventory": "Inventory"
   },
   "Help": {
-    "BackToDIM": "Back to DIM",
     "CannotMove": "Cannot move that item off this character.",
     "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
     "ChangingPerks": "Changing Perks Not Supported",

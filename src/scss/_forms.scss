@@ -56,12 +56,10 @@ textarea.textarea-error {
 
 .link {
   color: white;
-  &:hover {
-    color: $orange;
-    cursor: pointer;
-  }
-}
+  cursor: pointer;
 
-.back-link i {
-  margin-right: .25em;
+  &:hover, &.active {
+    color: $orange;
+    transition: color .2s linear;
+  }
 }

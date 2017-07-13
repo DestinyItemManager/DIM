@@ -92,7 +92,6 @@
         "Inventory": "Inventar"
     },
     "Help": {
-        "BackToDIM": "Zurück zu DIM",
         "CannotMove": "Item kann nicht von diesem Charakter wegbewegt werden.",
         "Drag": "Halte Shift oder pausiere über dem Ziel, um einen Teilstapel zu übertragen",
         "ChangingPerks": "Verändern der Perks wird nicht unterstützt",

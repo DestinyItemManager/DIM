@@ -1,7 +1,4 @@
-<div class="loadout-builder" ng-class="::{ itemQuality: vm.qualityEnabled }">
-  <back-link></back-link>
-  <h1 ng-i18next="LB.LB"></h1>
-
+<div class="loadout-builder dim-page" ng-class="::{ itemQuality: vm.qualityEnabled }">
   <loadout-builder-character-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></loadout-builder-character-select>
 
   <dim-loadout></dim-loadout>

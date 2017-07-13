@@ -98,7 +98,6 @@
         "Inventory": "Messaggio Bungie.net: {{message}}"
     },
     "Help": {
-        "BackToDIM": "Torna a DIM",
         "CannotMove": "Non posso spostare quell'oggetto da questo personaggio.",
         "Drag": "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità",
         "ChangingPerks": "Selezione dei Perk non supportata",

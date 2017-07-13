@@ -92,7 +92,6 @@
         "Inventory": "Inventaire"
     },
     "Help": {
-        "BackToDIM": "Retour sur DIM",
         "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
         "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile.",
         "ChangingPerks": "Changement d'Abilités Non Supporté",

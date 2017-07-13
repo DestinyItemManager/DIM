@@ -85,7 +85,6 @@
         "SupportDIM": "Apoiantes"
     },
     "Help": {
-        "BackToDIM": "Voltar para o DIM",
         "CannotMove": "Não é possível mover o item para fora deste personagem.",
         "Drag": "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente.",
         "ChangingPerks": "Mudança de perks não é suportado.",

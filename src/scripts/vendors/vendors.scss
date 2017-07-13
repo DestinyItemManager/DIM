@@ -1,7 +1,6 @@
-.vendor {
-  max-width: 900px;
-  margin: 0 auto;
+@import '../../scss/variables.scss';
 
+.vendor {
   .vendorTabs {
     display: flex;
     flex-direction: row;
