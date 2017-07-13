@@ -84,7 +84,7 @@
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
-    "AverageRating": "{{numRatings}}を基にした評価({{itemRating}})"
+    "AverageRating": "{{numRatings}}人の評価({{itemRating}})"
   },
   "FarmingMode": {
     "FarmingMode": "アイテム収集モード (アイテム移動)",
@@ -111,7 +111,7 @@
     "Refresh": "デスティニーデータを更新",
     "SupportDIM": "支持者",
     "Shop": "店",
-    "Inventory": "保管庫"
+    "Inventory": "インベントリー"
   },
   "Help": {
     "BackToDIM": "DIMに戻る",
@@ -343,7 +343,7 @@
     "ShowReviews": "武器に関するレビュー評価を表示する",
     "ShowElemental": "武器の属性アイコンを表示する",
     "AllowIdPostToDtr": "武器のレビュー詳細を表示、評価を許可する",
-    "AllowIdPostToDtrLine2": "Destinyのトラッカー上でアカウントの名前とレビューしたアイテムが共有されます。",
+    "AllowIdPostToDtrLine2": "Destinyトラッカー上でアカウントの名前とレビューしたアイテムが共有されます。",
     "SetSort": "アイテムのソート",
     "SortPrimary": "メインのステータス",
     "SortRarity": "希少性",
@@ -356,9 +356,9 @@
     "SizeItem": "アイテムサイズ",
     "ResetToDefault": "リセット",
     "ColorA11y": "色覚設定",
-    "CharacterOrder": "キャラ別にソート",
+    "CharacterOrder": "キャラ別のソート",
     "CharacterOrderRecent": "最近使ったキャラ",
-    "CharacterOrderReversed": "以前に使ったキャラ",
+    "CharacterOrderReversed": "最近使ったキャラ(逆順)",
     "CharacterOrderFixed": "キャラ年齢",
     "ExportSS": "保管庫のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
@@ -383,8 +383,8 @@
     "Explain": "DIMはBungie.netとは違う独自のDestinyのデータを保管しています。",
     "Enabled": "有効",
     "Disabled": "無効",
-    "StatLabel": "現在所持:",
-    "Loadouts": "{{value}} 装備\n ",
+    "StatLabel": "現在の使用:",
+    "Loadouts": "{{value}} 装備",
     "Settings": "DIMの設定と選択",
     "TagNotes": "{{value}}個のタグ、メモ付きのアイテム",
     "ImportExport": "データのバックアップ",
@@ -403,8 +403,8 @@
     "GoogleApiBlocked": "コンテンツブロッカーによりグーグルドライブにアクセスできません。DIMをコンテンツブロッカー設定より解除して、お試しください。",
     "NoData": "データなし",
     "Export": "DIMのデータをバックアップ",
-    "Import": "DIMデータを転送する。",
-    "ImportSuccess": "DIMデータを転送しました！",
+    "Import": "DIMデータを取り込む。",
+    "ImportSuccess": "DIMデータを取り込みました！",
     "ImportNoFile": "ファイルが選択されていません！",
     "GDriveSignInWarning": "既にグーグルドライブにDIMのデータをセーブしている場合、機器にセーブされたデータに上書きされます。サインインする前にデータをバックアップしたほうがいいかも知れません。\n\nグーグルドライブにサインインしますか？",
     "GDriveLogout": "データがグーグルドライブにまだあります。次回のサインイン時にはこのデータが使用されます。",
