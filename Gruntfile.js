@@ -152,12 +152,16 @@ module.exports = function(grunt) {
       }
     },
 
-    'json-pretty': {
-      options: {
-        files: 'src/i18n/',
-        sort: true,
-        indent: 2
-      }
+    sortJSON: {
+      src: [
+        'src/i18n/dim_de.json',
+        'src/i18n/dim_en.json',
+        'src/i18n/dim_es.json',
+        'src/i18n/dim_fr.json',
+        'src/i18n/dim_it.json',
+        'src/i18n/dim_ja.json',
+        'src/i18n/dim_pt_BR.json',
+      ],
     }
   });
 
@@ -165,7 +169,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('grunt-poeditor-ab');
-  grunt.loadNpmTasks('grunt-json-pretty');
+  grunt.loadNpmTasks('grunt-sort-json');
   grunt.loadNpmTasks('grunt-upload-file');
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
@@ -238,7 +242,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('download_translations', [
     'poeditor:download_terms:download',
-    'json-pretty'
+    'sortJSON'
   ]);
 
   grunt.registerTask('publish_beta', [
