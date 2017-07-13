@@ -144,9 +144,11 @@ module.exports = function(grunt) {
             id: '116191',
             updating: 'terms_definitions',
             language: 'en',
-            overwrite: 1,
-            sync_terms: 0,
-            fuzzy_trigger: 1
+            overwrite: 1,  // overwrite old strings
+            // This must be set to 0 otherwise gender contexts will be deleted from other languages,
+            // so deletion of terms must happen both in the dim_en.json and at POEditor manually.
+            sync_terms: 0,  // delete non-matched keys
+            fuzzy_trigger: 1  // set updated keys to fuzzy on other langs, so translators know to re-translate string
           },
         }
       }
