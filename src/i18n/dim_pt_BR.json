@@ -31,9 +31,9 @@
     "NotConnected": "Você deve estar sem conexão com a Internet.",
     "Twitter": "Veja atualizações em:",
     "ItemUniqueness": "Unicidade de itens",
-    "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui um item do tipo.",
-    "VendorNotFound": "Informação do vendedor não disponível.",
-    "UnknownError": "Alerta Bungie.net: {{message}}"
+    "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
+    "VendorNotFound": "Dados do vendedor não disponíveis.",
+    "UnknownError": "Mensagem de Bungie.net: {{message}}"
   },
   "Compare": {
     "ButtonHelp": "Comparar itens",
@@ -42,8 +42,8 @@
     "Compare": "Comparar",
     "Close": "Fechar",
     "Error": {
-      "Class": "Incapaz de comparar o item, pois não é um item de {{class}}.",
-      "Archetype": "Incapaz de comaprar o item, pois não é um {{type}}."
+      "Class": "Incapaz de comparar o item, pois ele não é para {{class}}.",
+      "Archetype": "Incapaz de comparar o item, pois não é um {{type}}."
     },
     "ItemCount": "Você tem {{num}} disso.",
     "Splits": "Compare com atributos similares ({{quantity}})"
@@ -109,7 +109,7 @@
     "Filters": "Filtros",
     "FilterHelp": "Buscar por item/perk ou is:arc",
     "Refresh": "Atualizar dados do Destiny",
-    "SupportDIM": "Apoiantes",
+    "SupportDIM": "Apoiadores",
     "Shop": "Loja",
     "Inventory": "Inventário"
   },
@@ -121,11 +121,11 @@
     "ChangingPerksInfo": "Desculpe, não há maneira de alterar perks fora do jogo. Bem que gostaríamos!",
     "HidePopup": "Esconder este Popup",
     "NeverShow": "Não mostre isso novamente.",
-    "UpgradeChrome": "Por favor, atualizar o Chrome.",
+    "UpgradeChrome": "Por favor, atualize o Chrome.",
     "Xur": "Xûr chegou",
     "ExtensionDeprecatedTitle": "DIM agora é um site!",
     "ExtensionDeprecatedMessage": "A extensão DIM do Chrome agora abre o nosso site - que funciona em qualquer navegador ou dispositivo móvel! Você pode remover a extensão ou deixá-la como um atalho pro site. Seus dados (marcações, notas e configurações) podem ser importados da pagina de armazenamento (ícone de disco no cabeçalho).",
-    "NoStorage": "DIM não pode salvar dados",
+    "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não pode salvar dados no navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco. DIM não pode prosseguir.",
     "Version_release": "DIM v{{version}} lançado",
     "Version_beta": "Beta foi atualizado para v{{version}}"
@@ -145,13 +145,13 @@
     "InfusionMaterials": "Materiais de infusão",
     "LockedItems": "Incluir itens travados",
     "NoItems": "Nenhum item para infusão encontrado.",
-    "NoTransfer": "Transferência de materia para infusão\n {{target}} não pôde ser movido.",
+    "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
     "ShowItems": "Exibir itens infundíveis de outros personagens e cofre",
     "TransferItems": "Transferir itens"
   },
   "ItemInfoService": {
     "SaveInfoErrorTitle": "Erro salvando informação de item.",
-    "SaveInfoErrorDescription": "Houve um problema ao salvar uma informação específica do DIM sobre um item. O problema é que há um limite de dados que podem salvos - é por isso que tags e notas não são permitidos fora da versão Beta. O erro era: {{error}}."
+    "SaveInfoErrorDescription": "Houve um problema ao salvar uma informação específica do DIM sobre um item. O problema é que há um limite de dados que podem salvos - é por isso que tags e notas não são permitidos fora da versão Beta. O erro foi: {{error}}."
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidado",
@@ -172,7 +172,7 @@
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
     "OnlyEquippedClassLevel": "Este item só pode ser equipado em um {{class}} igual ou acima do nível {{level}}.",
     "PercentComplete": "({{percent, pct}} Completo)",
-    "TooMuch": "Parece que você quis mover mais deste item do que ele existe!",
+    "TooMuch": "Parece que você quis mover mais deste item do que existe na fonte!",
     "TwoExotics": "Nós não sabemos como você conseguiu equipar mais de 2 equipamentos exóticos!"
   },
   "LB": {
