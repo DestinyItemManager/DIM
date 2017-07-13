@@ -1,6 +1,7 @@
 {
   "Activities": {
     "Activities": "Actividades",
+    "Normal": "Normal",
     "Hard": "Difícil"
   },
   "Bucket": {
@@ -14,6 +15,9 @@
     "Vault": "Depósito",
     "Weapons": "Armas"
   },
+  "BungieAlert": {
+    "Title": "Un mensaje de Bungie:"
+  },
   "BungieService": {
     "DevVersion": "¿Estás corriendo una versión de desarrollo de DIM? Debes primero registrar tu extensión de Chrome con Bungie.net.",
     "Difficulties": "La API de Bungie esta teniendo dificultades.",
@@ -26,9 +30,10 @@
     "NoCookies": "No se encontraron cookies.",
     "NotConnected": "Es posible que no tengas conexión a Internet.",
     "Twitter": "Entérate de los estados de actualizaciones en:",
-    "ItemUniqueness": "Unicidad de objeto",
-    "ItemUniquenessExplanation": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo puede tener uno.",
-    "VendorNotFound": "Los datos del proveedor no están disponibles."
+    "ItemUniqueness": "Singularidad del objeto",
+    "ItemUniquenessExplanation": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese personaje ya cuenta con ese objeto y solo puede tener uno.",
+    "VendorNotFound": "Los datos del proveedor no están disponibles.",
+    "UnknownError": "Mensaje de Bungie.net: {{message}}"
   },
   "Compare": {
     "ButtonHelp": "Compara Elementos",
@@ -40,6 +45,7 @@
       "Class": "No se puede comparar este objeto ya que no es para {{class}}.",
       "Archetype": "No se puede comparar este objeto ya que no es {{type}}."
     },
+    "ItemCount": "Tienes {{num}} de esto",
     "Splits": "Comparar partes similares ({{quantity}})"
   },
   "Cooldown": {
@@ -78,7 +84,7 @@
     "NoReviews": "No hay reseñas para este objeto, sé el primero!",
     "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker",
     "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker",
-    "AverageRating": "({{itemRating}}) basado en {{numReviews}} reseñas."
+    "AverageRating": "({{itemRating}}) basado en {{numRatings}} reseñas."
   },
   "FarmingMode": {
     "FarmingMode": "Modo recolector (mover objetos)",
@@ -103,7 +109,9 @@
     "Filters": "Filtros",
     "FilterHelp": "Buscar objeto/beneficio o is:arc",
     "Refresh": "Actualizar datos de Destiny",
-    "SupportDIM": "Partidarios"
+    "SupportDIM": "Partidarios",
+    "Shop": "Tienda",
+    "Inventory": "Inventario"
   },
   "Help": {
     "BackToDIM": "Regresar a DIM",
@@ -115,6 +123,10 @@
     "NeverShow": "Nunca mostrar esto de nuevo.",
     "UpgradeChrome": "Por favor actualice Chrome",
     "Xur": "Xûr esta aquí.",
+    "ExtensionDeprecatedTitle": "DIM es un solo sitio web ahora",
+    "ExtensionDeprecatedMessage": "La extensión DIM de Chrome ahora solamente abre nuestro sitio web - el cual funciona en cualquier navegador y dispositivos móviles. Puedes remover la extensión, o dejarla como un conveniente acceso para el sitio. Tu información (etiquetas, notas y ajustes) pueden ser importadas desde la pagina de almacenamiento (icono de disco en la cabecera)",
+    "NoStorage": "DIM no puede almacenar información",
+    "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tienes poco espacio en disco. DIM no puede continuar.",
     "Version_release": "DIM v{{version}} ha sido Publicado",
     "Version_beta": "La Beta ha sido actualizada a la v{{version}}"
   },
@@ -174,6 +186,7 @@
     "LockedHelp": "Arrastrar y soltar cualquier objeto en su cubeta para crear conjunto con ese equipamiento específico. Shift + click para excluir objetos.",
     "FilterSets": "Conjuntos de filtros",
     "AdvancedOptions": "Opciones avanzadas",
+    "ContainsVendorItems": "Esta carga contiene artículos de vendedores",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -221,6 +234,7 @@
     "Missing2": "Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!"
   },
   "Loadouts": {
+    "Any": "Cualquier clase",
     "Loadouts": "Equipos",
     "Before": "Antes '{{name}}'",
     "Create": "Crear Equipo",
@@ -322,9 +336,33 @@
     "Settings": "Configuración",
     "LogOut": "Cerrar sesión",
     "Language": "Lenguaje (recarga DIM para que se apliquen los cambios)",
+    "HideUnfiltered": "Esconder artículos que no coincidan con la búsqueda",
+    "AlwaysShowDetails": "Mostrar siempre la ventana expandida de los artículos",
+    "EnableAdvancedStats": "Mostrar la estadística de ranking de calidad en armadura",
+    "ShowOverlay": "Mostrar artículos nuevos con capa brillante",
+    "ShowAnimations": "Animar el brillo de artículos nuevos",
+    "ShowAnimationsHelp": "Muestra el brillo de artículo nuevo en nuevos art. Si apagas esto puede ahorrar ciclos en el CPU.",
     "ShowReviews": "Muestra la valuación de reseñas en las armas",
     "ShowElemental": "Mostrar ícono de daño elemental en armas",
+    "AllowIdPostToDtr": "Mostrar reseña detallada de armas y permitir calificación de armas",
+    "AllowIdPostToDtrLine2": "Esto comparte tu nombre de usuario y artículos con reseña en Destiny Tracker",
+    "SetSort": "Ordenar objectos por",
+    "SortPrimary": "Estadística principal",
+    "SortRarity": "Rareza",
+    "SortRoll": "Calificación",
+    "SortName": "nombre",
+    "InventoryColumns": "Espacio de inventario de personaje",
+    "VaultColumns": "Máximo inventario en boveda",
+    "ColumnSize": "{{num}} artículos",
+    "ColumnSizeAuto": "Auto",
+    "SizeItem": "Tamaño de artículo",
     "ResetToDefault": "Reiniciar",
+    "ColorA11y": "Configuración de daltonismo",
+    "CharacterOrder": "Acomodar personajes por",
+    "CharacterOrderRecent": "Personaje más reciente",
+    "CharacterOrderReversed": "Personaje más reciente (al revés)",
+    "CharacterOrderFixed": "Edad de personaje",
+    "ExportSS": "Hojas de cálculo de inventario",
     "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
     "DIMPopups": "Ventanas emergentes de información de DIM",
     "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos"
@@ -348,20 +386,30 @@
     "Enabled": "Habilitado",
     "Disabled": "Deshabilitado",
     "StatLabel": "Esto contiene:",
+    "Loadouts": "{{value}} cargas",
     "Settings": "Tus ajustes y preferencias de DIM",
+    "TagNotes": "{{value}} artículos etiquetados o con notas",
     "ImportExport": "Respaldar datos",
+    "GoogleDriveStorage": "Google Drive",
+    "ChromeSyncStorage": "Sincronización de Chrome (extensión solamente)",
     "IndexedDBStorage": "Almacenamiento local del Navegador",
     "Details": {
-      "GoogleDriveStorage": "DIM puede guardar datos en la app de Google Drive. Si inicias sesión en Google Drive en navegadores multiples, tus datos serán compartidos por todas partes. Estos datos son almacenados por cada cuenta de Bungie."
+      "GoogleDriveStorage": "DIM puede guardar datos en la app de Google Drive. Si inicias sesión en Google Drive en navegadores multiples, tus datos serán compartidos por todas partes. Estos datos son almacenados por cada cuenta de Bungie.",
+      "ChromeSyncStorage": "Si haz iniciado sesión en Chrome, tu información sera sincronizada con otras instancias de Chrome. Esto no funciona en el sitio web de DIM",
+      "IndexedDBStorage": "El almacenamiento local guardará tu información solo en este navegador"
     },
+    "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente",
     "ForceSync": "Forzar sincronización de datos",
     "DriveSync": "Iniciar sesión en Google Drive",
     "DriveLogout": "Cerrar sesión de Google Drive",
+    "GoogleApiBlocked": "Google Drive no esta disponible porque un bloqueador de contenido ha bloqueado el Javascript de Google Drive. Por favor excluye DIM de los bloqueadores de contenido y intente nuevamente",
     "NoData": "No hay datos",
     "Export": "Respaldar datos de DIM",
     "Import": "Importar datos de DIM desde un archivo",
     "ImportSuccess": "Datos de DIM importados!",
     "ImportNoFile": "Ningún archivo ha sido seleccionado!",
+    "GDriveSignInWarning": "Si ya haz guardado la información de DIM en Google Drive, esto sobre-escribirá cualquier cosa que hayas guardado de forma local. Tal vez quisieras resguardar tu información antes de iniciar sesión. \n\n¿Quieres iniciar sesión en Google Drive?",
+    "GDriveLogout": "Tu información sigue en Google Drive - Si vuele a iniciar sesión, DIM volverá a usarla.",
     "ImportFromExtension": "Importar datos desde la extensión de Chrome de DIM",
     "ImportFromExtensionDetail": "Puedes importar datos desde la extensión de Chrome de DIM a la página web de DIM.",
     "ImportFromExtensionButton": "Importar Datos",
@@ -414,6 +462,7 @@
       "FAQKeyboard": "¿Cuenta DIM con soporte para atajos de teclado (shortcuts)?",
       "FAQKeyboardAnswer": "Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
       "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
+      "FAQLogoutAnswer": "Da click en tu cuenta y selecciona \"cerrar sesión\"",
       "FAQLostItem": "¡Perdí mi artículo usando tu herramienta!",
       "FAQLostItemAnswer": "Es muy probable que la transferencia falló, lo cual deja tu artículo en el Depósito o en otro personaje. Puedes buscar ese objeto. Si incluso así no aparece, actualiza la aplicación presionando F5. Asegúrate de revisar {{link}} o en el juego para verificar que tu objeto todavía existe. Estamos seguros de que todavía esta ahí.",
       "GitHub": "GitHub",
@@ -435,7 +484,8 @@
       "Backers": "Partidarios",
       "BackersDetail": "Apóyanos con una donación única o mensual y ayuda a que podamos continuar nuestro desarrollo activo.",
       "Sponsors": "Patrocinadores",
-      "SponsorsDetail": "Conviértete en un patrocinador y obtendrás tu logo aquí con una liga a tu página web."
+      "SponsorsDetail": "Conviértete en un patrocinador y obtendrás tu logo aquí con una liga a tu página web.",
+      "Teespring": "También tenemos playeras en venta con nuestro nuevo logo {{link}}"
     },
     "UpgradeChrome": "Tu versión de Chrome es muy vieja para correr DIM. Por favor actualiza Chrome para poder usarlo.",
     "Login": {
