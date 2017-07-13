@@ -149,21 +149,26 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('grunt-poeditor-ab');
 
-  grunt.registerTask('update_chrome_beta_manifest', function() {
+  function rewrite(dist) {
     var manifest = grunt.file.readJSON('extension-dist/manifest.json');
-    manifest.name = manifest.name + " Beta";
-    manifest.version = betaVersion;
-    manifest.content_scripts[0].matches = ['https://beta.destinyitemmanager.com/*'];
+    if (dist === 'beta') {
+      manifest.name += ' Beta';
+    }
+    manifest.version = dist === 'beta' ? betaVersion : pkg.version;
+
+    manifest.content_scripts[0].matches = [`https://${dist}.destinyitemmanager.com/*`];
     grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
     var mainjs = grunt.file.read('extension-dist/main.js');
-    mainjs = mainjs.replace('app.destinyitemmanager.com', 'beta.destinyitemmanager.com');
+    mainjs = mainjs.replace('localhost:8080', `${dist}.destinyitemmanager.com`);
     grunt.file.write('extension-dist/main.js', mainjs);
+  }
+
+  grunt.registerTask('update_chrome_beta_manifest', function() {
+    rewrite('beta');
   });
 
   grunt.registerTask('update_chrome_release_manifest', function() {
-    var manifest = grunt.file.readJSON('extension-dist/manifest.json');
-    manifest.version = pkg.version;
-    grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
+    rewrite('app');
   });
 
   grunt.registerMultiTask(
