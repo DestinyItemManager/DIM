@@ -78,7 +78,7 @@
     "NoReviews": "No hay reseñas para este objeto, sé el primero!",
     "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker",
     "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker",
-    "AverageRating": "({itemRating}) basado en {numReviews} reseñas."
+    "AverageRating": "({{itemRating}}) basado en {{numReviews}} reseñas."
   },
   "FarmingMode": {
     "FarmingMode": "Modo recolector (mover objetos)",
@@ -142,7 +142,7 @@
     "SaveInfoErrorDescription": "Ha habido un problema al guardar información específica de DIM para un objeto.\nUn problema es del límite de datos que pueden ser guardados - es por esto que etiquetas y notas no han salido de la versión Beta. El error fue: {{error}}."
   },
   "ItemMove": {
-    "Consolidate": "Consolidado {{name}} ",
+    "Consolidate": "Consolidado {{name}}",
     "Distributed": "{{name}} distribuidos. Ahora {{name}} se encuentra dividido entre los personajes de manera equitativa.",
     "ToVault": "Todos los {{name}} ahora están en tu Depósito",
     "ToStore": "Todos los {{name}} ahora están en tu {{store}}"
@@ -157,7 +157,7 @@
     "Deequip": "No se encontró otro objeto a equipar para desequipar {{itemname}}",
     "ExoticError": "'{{itemname}}' no puede ser equipado porque el objeto exótico en el espacio {{slot}} no puede ser desequipado. ({{error}})",
     "NotEnoughRoom": "No hay nada que podamos sacar fuera de {{store}} para hacerle espacio a {{itemname}}",
-    "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}",
+    "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
     "OnlyEquippedClassLevel": "Esto solo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "PercentComplete": "({{percent, pct}} Completar)",
     "TooMuch": "Parece que pediste mover más objetos de los que existen en la fuente!",

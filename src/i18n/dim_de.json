@@ -45,7 +45,7 @@
       "Class": "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist.",
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist."
     },
-    "ItemCount": "Du hast {num} davon.",
+    "ItemCount": "Du hast {{num}} davon.",
     "Splits": "Vergleiche mit selben Werten ({{quantity}})"
   },
   "Cooldown": {
@@ -127,7 +127,7 @@
     "ExtensionDeprecatedMessage": "Die DIM Chrome Erweiterung öffnet jetzt direkt unsere Webseite - welche mit jedem Browser und mobilem Gerät funktioniert! Du kannst die Erweiterung deinstallieren, oder als praktisches Lesezeichen für die Seite verwenden. Deine Daten (Markierungen, Notizen und Einstellungen) können über die Speicher Seite (Disketten Symbol) importiert werden.",
     "NoStorage": "DIM kann die Daten nicht speichern",
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. DIM kann nicht fortfahren.",
-    "Version_release": "DIM v{{version} veröffentlicht",
+    "Version_release": "DIM v{{version}} veröffentlicht",
     "Version_beta": "Beta wurde auf v{{version}} aktualisiert"
   },
   "Hotkey": {

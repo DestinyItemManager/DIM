@@ -1,6 +1,8 @@
 {
   "Activities": {
-    "Activities": "アクティビティ"
+    "Activities": "アクティビティ",
+    "Normal": "ノーマル",
+    "Hard": "ハード"
   },
   "Bucket": {
     "Armor": "防具",
@@ -12,6 +14,9 @@
     "Unknown": "不明",
     "Vault": "保管庫",
     "Weapons": "武器"
+  },
+  "BungieAlert": {
+    "Title": "Bungieからのメッセージです。"
   },
   "BungieService": {
     "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
@@ -27,7 +32,8 @@
     "Twitter": "最新情報に更新します。:",
     "ItemUniqueness": "アイテムのレア度",
     "ItemUniquenessExplanation": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
-    "VendorNotFound": "ベンダー情報ありません"
+    "VendorNotFound": "ベンダー情報ありません",
+    "UnknownError": "Bungie.netからのメッセージ: {{message}}"
   },
   "Compare": {
     "ButtonHelp": "アイテムを比較する",
@@ -39,6 +45,7 @@
       "Class": "このアイテム {{class}} 用のため、比較できません。",
       "Archetype": "このアイテムは {{type}} ではないため、比較できません。"
     },
+    "ItemCount": "{{num}} を所持していません。",
     "Splits": "同様の分割を比較する（{{quantity}}）"
   },
   "Cooldown": {
@@ -63,9 +70,21 @@
     "TryNext": "今度お試しください。"
   },
   "DtrReview": {
+    "ThankYou": "レビューの提出ありがとうございます！　間もなく表示されます。",
+    "Help": "レビューを書く(オプション)",
+    "HelpPros": "この武器の良いところを書いてください(オプション)",
+    "HelpCons": "この武器の悪いところを書いてください(オプション)",
+    "YourReview": "レビュー",
     "Edit": "編集",
     "Delete": "削除",
-    "Cancel": "キャンセル"
+    "Submit": "提出",
+    "Cancel": "キャンセル",
+    "Pros": "長所",
+    "Cons": "短所",
+    "NoReviews": "このアイテムのレビューがありません。最初になってください！",
+    "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
+    "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
+    "AverageRating": "{{numRatings}}を基にした評価({{itemRating}})"
   },
   "FarmingMode": {
     "FarmingMode": "アイテム収集モード (アイテム移動)",
@@ -91,7 +110,8 @@
     "FilterHelp": "アイテム／パークを検索",
     "Refresh": "デスティニーデータを更新",
     "SupportDIM": "支持者",
-    "Shop": "店"
+    "Shop": "店",
+    "Inventory": "保管庫"
   },
   "Help": {
     "BackToDIM": "DIMに戻る",
@@ -103,6 +123,10 @@
     "NeverShow": "次回から表示しない",
     "UpgradeChrome": "クロームをアップデートしてください",
     "Xur": "Xûrはここです",
+    "ExtensionDeprecatedTitle": "DIMがウェブサイトになりました！",
+    "ExtensionDeprecatedMessage": "DIMのエクステンションからどのブラウザー、携帯機器でもウェブサイトを開くことが出来るようになりました！　エクステンションを削除するか、ブックマークとして使用することが出来ます。データ(タグ、メモ、設定)はストレージのページ(上部のディスクのアイコン)から転送できます。",
+    "NoStorage": "DIMがデータを保管できません。",
+    "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
     "Version_release": "DIM v{{version}} がリリースされました",
     "Version_beta": "ベータがv{{version}}にアップデートされました"
   },
@@ -162,6 +186,7 @@
     "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
     "FilterSets": "フィルタセット",
     "AdvancedOptions": "高度なオプション",
+    "ContainsVendorItems": "装備にベンダーアイテムが含まれています。",
     "ProcessingMode": {
       "Fast": "最速",
       "Full": "すべて",
@@ -195,6 +220,7 @@
       "ChangeNodes": "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい.",
       "StatsIncrease": "アイテムの防御レベルが上昇するとともに、アイテムのステータス(知性/鍛錬/腕力)も上昇します。"
     },
+    "Equip": "{{character}}に装備する",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
     "HideAllConfigs": "全ての設定を隠す",
@@ -208,6 +234,7 @@
     "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！"
   },
   "Loadouts": {
+    "Any": "全てのクラス",
     "Loadouts": "ロードアウト",
     "Before": "前 '{{name}}'",
     "Create": "ロードアウトを作成",
@@ -284,8 +311,8 @@
     "Vault": "保管庫",
     "LockUnlock_Lock": "固定する {{itemType}}",
     "LockUnlock_Unlock": "固定解除する {{itemType}}",
-    "TrackUntrack_Track": "このクエスト進捗を表示",
-    "TrackUntrack_Untrack": "このクエストの進行を隠す"
+    "TrackUntrack_Track": "{{itemType}}を追跡する",
+    "TrackUntrack_Untrack": "{{itemType}}を追跡しない"
   },
   "Notes": {
     "Error": "エラー！ノートは120文字が上限です。",
@@ -307,9 +334,33 @@
     "Settings": "設定",
     "LogOut": "ログアウト",
     "Language": "言語(反映させるにはDIMをリフレッシュしてください)",
+    "HideUnfiltered": "検索に合致しないアイテムを非表示にする",
+    "AlwaysShowDetails": "アイテムのポップアップを常に表示",
+    "EnableAdvancedStats": "防具のステータス評価を表示する",
+    "ShowOverlay": "新しいアイテムを光るように表示する",
+    "ShowAnimations": "新しいアイテムを光らせる",
+    "ShowAnimationsHelp": "新しいアイテムを光らせます。この機能をオフにすればCPUを節約できます。",
     "ShowReviews": "武器に関するレビュー評価を表示する",
     "ShowElemental": "武器の属性アイコンを表示する",
+    "AllowIdPostToDtr": "武器のレビュー詳細を表示、評価を許可する",
+    "AllowIdPostToDtrLine2": "Destinyのトラッカー上でアカウントの名前とレビューしたアイテムが共有されます。",
+    "SetSort": "アイテムのソート",
+    "SortPrimary": "メインのステータス",
+    "SortRarity": "希少性",
+    "SortRoll": "評価",
+    "SortName": "名前",
+    "InventoryColumns": "キャラ毎のアイテム幅",
+    "VaultColumns": "保管庫の最大幅",
+    "ColumnSize": "\n {{num}}個",
+    "ColumnSizeAuto": "オート",
+    "SizeItem": "アイテムサイズ",
     "ResetToDefault": "リセット",
+    "ColorA11y": "色覚設定",
+    "CharacterOrder": "キャラ別にソート",
+    "CharacterOrderRecent": "最近使ったキャラ",
+    "CharacterOrderReversed": "以前に使ったキャラ",
+    "CharacterOrderFixed": "キャラ年齢",
+    "ExportSS": "保管庫のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
     "DIMPopups": "DIMの情報",
     "DIMPopupsReset": "以前非表示にしたヒントをリセットする"
@@ -329,14 +380,38 @@
   },
   "Storage": {
     "Title": "DIMのストレージ\n",
+    "Explain": "DIMはBungie.netとは違う独自のDestinyのデータを保管しています。",
     "Enabled": "有効",
     "Disabled": "無効",
+    "StatLabel": "現在所持:",
+    "Loadouts": "{{value}} 装備\n ",
+    "Settings": "DIMの設定と選択",
+    "TagNotes": "{{value}}個のタグ、メモ付きのアイテム",
     "ImportExport": "データのバックアップ",
     "GoogleDriveStorage": "Google Drive",
+    "ChromeSyncStorage": "クロームの同調(エクステンション限定)",
+    "IndexedDBStorage": "ローカルブラウザストレージ",
+    "Details": {
+      "GoogleDriveStorage": "DIMはグーグルドライブのアプリにデータをセーブできます。複数のブラウザからグーグルドライブにサインインすれば、データを共有します。このデータは各Bungie毎に保管されます。",
+      "ChromeSyncStorage": "クロームにログインした場合データが他の機器のクロームにも同調されます。DIMのウェブサイトでは同調できません。",
+      "IndexedDBStorage": "ローカルストレージはこのブラウザにのみ情報をセーブします。"
+    },
+    "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
+    "ForceSync": "データの同調を強制する",
     "DriveSync": "Google Driveにログイン",
+    "DriveLogout": "グーグルドライブからログアウトする",
+    "GoogleApiBlocked": "コンテンツブロッカーによりグーグルドライブにアクセスできません。DIMをコンテンツブロッカー設定より解除して、お試しください。",
     "NoData": "データなし",
     "Export": "DIMのデータをバックアップ",
-    "ImportFromExtensionButton": "データのインポート"
+    "Import": "DIMデータを転送する。",
+    "ImportSuccess": "DIMデータを転送しました！",
+    "ImportNoFile": "ファイルが選択されていません！",
+    "GDriveSignInWarning": "既にグーグルドライブにDIMのデータをセーブしている場合、機器にセーブされたデータに上書きされます。サインインする前にデータをバックアップしたほうがいいかも知れません。\n\nグーグルドライブにサインインしますか？",
+    "GDriveLogout": "データがグーグルドライブにまだあります。次回のサインイン時にはこのデータが使用されます。",
+    "ImportFromExtension": "クロームのDIMエクステンションからデータを転送する",
+    "ImportFromExtensionDetail": "クロームのDIMエクステンションからDIMのウェブサイトにデータを転送できます。",
+    "ImportFromExtensionButton": "データのインポート",
+    "ImportFromExtensionWarning": "クロームのDIMエクステンションのデータが現在のデータに上書きされます。\nいいですか？"
   },
   "StoreBucket": {
     "FillStack": "フルスタック ({{amount}})",
@@ -385,6 +460,7 @@
       "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
       "FAQKeyboardAnswer": "使えます！使用可能なショートカットリストを表示するには「？」を押してください。",
       "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
+      "FAQLogoutAnswer": "アカウントから「ログアウト」をクリックしてください。",
       "FAQLostItem": "このツールを使っている間にアイテムを紛失してしまった！",
       "FAQLostItemAnswer": "アイテムの転送が失敗した可能性があります。保管庫か他のキャラクターに無いか確かめて下さい。DIMで検索してみて下さい。もし見つからないなら、ブラウザーの更新を。(F5かCommand+R) それでも見つからない場合は、{{link}} かゲームで直接、探してみてください。どこかに必ず在るはずです。",
       "GitHub": "ギットハブ",
@@ -406,7 +482,8 @@
       "Backers": "支援者",
       "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",
       "Sponsors": "スポンサー",
-      "SponsorsDetail": "スポンサーになってあなたのロゴやホームページをここに記載しましょう。"
+      "SponsorsDetail": "スポンサーになってあなたのロゴやホームページをここに記載しましょう。",
+      "Teespring": "{{link}}で新しいロゴの入ったシャツをセール中"
     },
     "UpgradeChrome": "古いバージョンのクロームはDIMに対応していません。クロームのアップデートをしてください。",
     "Login": {

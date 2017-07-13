@@ -124,7 +124,7 @@
     "UpgradeChrome": "Please Upgrade Chrome",
     "Xur": "Xûr is Here",
     "ExtensionDeprecatedTitle": "DIM is just a website now!",
-    "ExtensionDeprecatedMessage": "The DIM Chrome extension now just opens our website - which works on every browser and on mobile devices! You can uninstall the extension, or leave it around as a convenient bookmark for the site. Your date (tags, notes, and settings) can be imported from the storage page (disk icon in the header).",
+    "ExtensionDeprecatedMessage": "The DIM Chrome extension now just opens our website - which works on every browser and on mobile devices! You can uninstall the extension, or leave it around as a convenient bookmark for the site. Your data (tags, notes, and settings) can be imported from the storage page (disk icon in the header).",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
     "Version_release": "DIM v{{version}} Released",

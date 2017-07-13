@@ -88,10 +88,10 @@
   },
   "FarmingMode": {
     "FarmingMode": "Mode Farming (transfert d'objets)",
-    "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {store} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
+    "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "Configuration": "Configuration",
     "MakeRoom": {
-      "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {store} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
+      "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
       "MakeRoom": "Faire de la place pour collecter des objets en déplaçant de l'équipement",
       "Tooltip": "Si activé, DIM déplacera les armes et armures afin de faire de la place dans le coffre pour les engrammes."
     },
@@ -273,7 +273,7 @@
     "NameRequired": "Un nom est requis.",
     "MakeRoom": "Faire de la place pour le Commis des postes",
     "MakeRoomDone": "À Fini de faire de la place pour 1 objet du commis des postes en déplaçant 1 objet hors du {{store}}.",
-    "MakeRoomDone_plural": "À Fini de faire de la place pour {{postmasterNum}} objets du Commis des postes en déplaçant {{movedNum}} objets hors du {store}.",
+    "MakeRoomDone_plural": "À Fini de faire de la place pour {{postmasterNum}} objets du Commis des postes en déplaçant {{movedNum}} objets hors du {{store}}.",
     "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commit Des Postes: {{error}}.",
     "SaveErrorTitle": "Erreur lors de l'enregistrement du pré set",
     "SaveErrorDescription": "Impossible d'enregistrer le pré set {{loadoutName}}: {{error}}",
