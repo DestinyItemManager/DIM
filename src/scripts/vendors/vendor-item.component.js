@@ -91,7 +91,7 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
       dialogResult = ngDialog.open({
         template: dialogTemplate,
         overlay: false,
-        className: `move-popup vendor-move-popup ${vm.extraMovePopupClass || ''}`,
+        className: `move-popup-dialog vendor-move-popup ${vm.extraMovePopupClass || ''}`,
         showClose: false,
         scope: angular.extend($scope.$new(true), {
         }),

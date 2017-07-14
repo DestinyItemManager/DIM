@@ -3,7 +3,7 @@ import _ from 'underscore';
 import { sum, flatMap } from '../util';
 import template from './loadout-builder-item.html';
 import dialogTemplate from './loadout-builder-item-dialog.html';
-import 'jquery-ui/ui/position';
+import Popper from 'popper.js';
 
 export const LoadoutBuilderItem = {
   controller: LoadoutBuilderItemCtrl,
@@ -15,45 +15,65 @@ export const LoadoutBuilderItem = {
   template: template
 };
 
-function LoadoutBuilderItemCtrl($scope, ngDialog, dimStoreService) {
+function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
   'ngInject';
 
   const vm = this;
   let dialogResult = null;
-  let detailItem = null;
-  let detailItemElement = null;
 
+  let dialog = null;
   $scope.$on('ngDialog.opened', (event, $dialog) => {
-    if (dialogResult && $dialog[0].id === dialogResult.id) {
-      $dialog.position({
-        my: 'left top',
-        at: 'left bottom+2',
-        of: detailItemElement,
-        collision: 'flip flip'
-      });
-    }
+    dialog = $dialog;
+    vm.reposition();
   });
+
+  let popper;
+
+  // TODO: gotta make a popup directive
+
+  // Reposition the popup as it is shown or if its size changes
+  vm.reposition = function() {
+    if (dialogResult && dialog[0].id === dialogResult.id) {
+      if (popper) {
+        popper.scheduleUpdate();
+      } else {
+        popper = new Popper($element[0].getElementsByClassName('item')[0], dialog, {
+          placement: 'top-start',
+          eventsEnabled: false,
+          modifiers: {
+            preventOverflow: {
+              priority: ['bottom', 'top', 'right', 'left']
+            },
+            flip: {
+              behavior: ['top', 'bottom', 'right', 'left']
+            },
+            offset: {
+              offset: '0,7px'
+            },
+            arrow: {
+              element: '.arrow'
+            }
+          }
+        });
+        popper.scheduleUpdate(); // helps fix arrow position
+      }
+    }
+  };
 
   angular.extend(vm, {
     itemClicked: function(item, e) {
       e.stopPropagation();
+
       if (dialogResult) {
-        dialogResult.close();
-      }
-
-      if (vm.shiftClickCallback && e.shiftKey) {
+        if (ngDialog.isOpen(dialogResult.id)) {
+          dialogResult.close();
+          dialogResult = null;
+          popper.destroy();
+          popper = null;
+        }
+      } else if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(vm.itemData);
-        return;
-      }
-
-      if (detailItem === item) {
-        detailItem = null;
-        dialogResult = null;
-        detailItemElement = null;
       } else {
-        detailItem = item;
-        detailItemElement = angular.element(e.currentTarget);
-
         const compareItems = flatMap(dimStoreService.getStores(), (store) => {
           return _.filter(store.items, { hash: item.hash });
         });
@@ -63,7 +83,7 @@ function LoadoutBuilderItemCtrl($scope, ngDialog, dimStoreService) {
         dialogResult = ngDialog.open({
           template: dialogTemplate,
           overlay: false,
-          className: 'move-popup vendor-move-popup',
+          className: 'move-popup-dialog vendor-move-popup',
           showClose: false,
           scope: angular.extend($scope.$new(true), {
           }),
@@ -85,6 +105,12 @@ function LoadoutBuilderItemCtrl($scope, ngDialog, dimStoreService) {
           trapFocus: false,
           preserveFocus: false
         });
+
+        dialogResult.closePromise.then(() => {
+          dialogResult = null;
+          popper.destroy();
+          popper = null;
+        });
       }
     },
     close: function() {
@@ -92,7 +118,17 @@ function LoadoutBuilderItemCtrl($scope, ngDialog, dimStoreService) {
         dialogResult.close();
       }
       $scope.closeThisDialog();
+    },
+
+    $onDestroy() {
+      if (dialogResult) {
+        dialogResult.close();
+      }
+      if (popper) {
+        popper.destroy();
+      }
     }
   });
+
 }
 
