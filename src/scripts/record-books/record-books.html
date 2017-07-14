@@ -1,8 +1,5 @@
-<div class="record-books" ng-class="{ 'hide-complete': $ctrl.settings.hideCompletedRecords }">
-  <back-link></back-link>
-
+<div class="record-books dim-page" ng-class="{ 'hide-complete': $ctrl.settings.hideCompletedRecords }">
   <h1>
-    <span ng-i18next="RecordBooks.RecordBooks"></span>
     <div class="hide-completed">
       <label>
         <input type="checkbox" ng-model="$ctrl.settings.hideCompletedRecords" ng-change="$ctrl.settingsChanged()">
