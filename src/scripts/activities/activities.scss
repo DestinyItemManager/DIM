@@ -66,6 +66,8 @@
   }
 
   .title {
+    cursor: pointer;
+
     &:hover {
       background-blend-mode: multiply;
       background: #aaa;
