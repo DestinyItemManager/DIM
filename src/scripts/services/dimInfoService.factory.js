@@ -38,7 +38,7 @@ function InfoService(toaster, $i18next, SyncService) {
             return Boolean(closeButton);
           },
           onHideCallback: function() {
-            if ($(`#info-${id}`).is(':checked')) {
+            if (document.getElementById(`info-${id}`).checked) {
               SyncService.set({
                 [`info.${id}`]: 1
               });
