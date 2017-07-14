@@ -23,6 +23,8 @@
     "Difficulties": "The Bungie API is currently experiencing difficulties.",
     "ItemUniqueness": "Item Uniqueness",
     "ItemUniquenessExplanation": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
+    "ItemUniquenessExplanation_female": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
+    "ItemUniquenessExplanation_male": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
     "Maintenance": "Bungie.net servers are down for maintenance.",
     "NetworkError": "Network error - {{status}} {{statusText}}",
     "NoAccount": "No Destiny account was found on {{platform}}. Do you have the right platform selected?",
@@ -89,9 +91,13 @@
   "FarmingMode": {
     "Configuration": "Configuration",
     "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "FarmingMode": "Farming Mode (move items)",
     "MakeRoom": {
       "Desc": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
+      "Desc_female": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
+      "Desc_male": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
       "MakeRoom": "Make room to pick up items by moving equipment",
       "Tooltip": "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
     },
@@ -162,6 +168,8 @@
   "ItemService": {
     "BucketFull": {
       "Guardian": "There are too many '{{itemtype}}' items on your {{store}}.",
+      "Guardian_female": "There are too many '{{itemtype}}' items on your {{store}}.",
+      "Guardian_male": "There are too many '{{itemtype}}' items on your {{store}}.",
       "Vault": "There are too many '{{itemtype}}' items in the {{store}}."
     },
     "Classified": "This item is classified and cannot be transferred at this time.",
@@ -239,7 +247,11 @@
     "AppliedAuto": "Automatic Loadout Builder",
     "AppliedError": "None of the items in your loadout could be transferred.",
     "AppliedWarn": "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors.",
+    "Applied_female": "Your single item loadout has been transferred to your {{store}}.",
+    "Applied_male": "Your single item loadout has been transferred to your {{store}}.",
     "Applied_plural": "Your loadout of {{count}} items have been transferred to your {{store}}.",
+    "Applied_plural_female": "Your loadout of {{count}} items have been transferred to your {{store}}.",
+    "Applied_plural_male": "Your loadout of {{count}} items have been transferred to your {{store}}.",
     "ApplySearch": "Items = \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "Cancel": "Cancel",
@@ -261,7 +273,11 @@
     "Loadouts": "Loadouts",
     "MakeRoom": "Make Room for Postmaster",
     "MakeRoomDone": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
+    "MakeRoomDone_female": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
+    "MakeRoomDone_male": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
     "MakeRoomDone_plural": "Finished making room for {{count}} Postmaster items by moving {{movedNum}} items off of {{store}}.",
+    "MakeRoomDone_plural_female": "Finished making room for {{count}} Postmaster items by moving {{movedNum}} items off of {{store}}.",
+    "MakeRoomDone_plural_male": "Finished making room for {{count}} Postmaster items by moving {{movedNum}} items off of {{store}}.",
     "MakeRoomError": "Unable to make room for all Postmaster items: {{error}}.",
     "MaxSlots": "You can only have {{slots}} of that kind of item in a loadout.",
     "MaximizeLight": "Maximize Light",
