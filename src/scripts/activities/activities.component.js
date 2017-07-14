@@ -142,6 +142,8 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
 
       return {
         name: store.name,
+        lastPlayed: store.lastPlayed,
+        id: store.id,
         icon: store.icon,
         steps: steps
       };

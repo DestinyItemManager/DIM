@@ -294,9 +294,20 @@
   dim-stats {
     display: inline-block;
     margin-left: 22px;
+    @media (max-width: 680px) {
+      margin-left: 4px;
+    }
+
     .stat-bars {
       width: 375px;
       margin-top: 0;
+      @media (max-width: 680px) {
+        width: 150px;
+        display: inline-block;
+        .stat {
+          margin-right: 0;
+        }
+      }
     }
   }
   .set-item {
