@@ -42,7 +42,7 @@
       <div class="activity-progress" ng-repeat="tier in activity.tiers track by $index">
         <div class="tier-title" ng-if="activity.tiers.length > 1">{{ ::tier.name }}</div>
         <div class="tier-characters">
-          <div class="tier-row" ng-if="tier.characters.length" ng-repeat="character in tier.characters track by $index">
+          <div class="tier-row" ng-if="tier.characters.length" ng-repeat="character in tier.characters | sortStores:$ctrl.settings.characterOrder track by character.id">
             <span class="step-icon" ng-class="{ complete: step.complete }" ng-repeat="step in character.steps track by $index"></span>
           </div>
         </div>
