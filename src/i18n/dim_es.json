@@ -2,7 +2,9 @@
   "Activities": {
     "Activities": "Actividades",
     "Hard": "Difícil",
-    "Normal": "Normal"
+    "Nightfall": "Asalto de Ocaso",
+    "Normal": "Normal",
+    "WeeklyHeroic": "Asalto heroico semanal"
   },
   "Bucket": {
     "Armor": "Armadura",
@@ -101,6 +103,21 @@
     "Stop": "Detener"
   },
   "Filter": {
+    "Activities": {
+      "AF": "Fragua del Arconte",
+      "AoT": "Era de Triunfo",
+      "CE": "El fin de Crota",
+      "CoE": "Desafío de los Ancianos",
+      "Dawning": "La Aurora",
+      "IB": "Estandarte de Hierro",
+      "KF": "Caída del Rey",
+      "PoE": "El Presidio de los Ancianos",
+      "QW": "La Ira de la Reina",
+      "SRL": "Carreras de Colibríes",
+      "ToO": "Las Pruebas de Osiris",
+      "VoG": "Cámara de Cristal",
+      "WotM": "La furia de las máquinas"
+    },
     "EnterName": "Escribe el nombre de un objeto:",
     "EnterNote": "Escribe texto de las notas:"
   },
@@ -118,6 +135,7 @@
     "ChangingPerks": "Cambio de beneficios no soportado",
     "ChangingPerksInfo": "Lo sentimos, no hay forma de cambiar beneficios afuera del juego. ¡Quisiéramos poder hacerlo!",
     "Drag": "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial",
+    "ExtensionDeprecatedMessage": "La extensión DIM de Chrome ahora solamente abre nuestro sitio web - el cual funciona en cualquier navegador y dispositivos móviles. Puedes remover la extensión, o dejarla como un conveniente acceso para el sitio. Tu información (etiquetas, notas y ajustes) pueden ser importadas desde la pagina de almacenamiento (icono de disco en la cabecera)",
     "ExtensionDeprecatedTitle": "DIM es un solo sitio web ahora",
     "HidePopup": "Esconde Esta Ventana",
     "NeverShow": "Nunca mostrar esto de nuevo.",

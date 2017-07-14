@@ -2,7 +2,9 @@
   "Activities": {
     "Activities": "Activités",
     "Hard": "Difficile",
-    "Normal": "Normal"
+    "Nightfall": "Assaut « Nuit noire »",
+    "Normal": "Normal",
+    "WeeklyHeroic": "Assaut « Épique » de la semaine"
   },
   "Bucket": {
     "Armor": "Armure",
@@ -88,8 +90,10 @@
   },
   "FarmingMode": {
     "Configuration": "Configuration",
+    "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "FarmingMode": "Mode Farming (transfert d'objets)",
     "MakeRoom": {
+      "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
       "MakeRoom": "Faire de la place pour collecter des objets en déplaçant de l'équipement",
       "Tooltip": "Si activé, DIM déplacera les armes et armures afin de faire de la place dans le coffre pour les engrammes."
     },
@@ -99,8 +103,37 @@
     "Stop": "Stop"
   },
   "Filter": {
+    "Activities": {
+      "AF": "La Forge de l'Archonte",
+      "AoT": "Âge du triomphe",
+      "CE": "La chute de Cropta",
+      "CoE": "Défi des vétérans",
+      "Dawning": "L'Avènement",
+      "IB": "Bannière de Fer",
+      "KF": "La Chute du roi",
+      "PoE": "La Prison des vétérans",
+      "QW": "Ire de la Reine",
+      "SRL": "Courses de Passereaux",
+      "ToO": "Jugement d'Osiris",
+      "VoG": "Le Caveau de verre",
+      "WotM": "Fureur mécanique"
+    },
     "EnterName": "Entrez un nom d'objet:",
-    "EnterNote": "Entrez vos notes:"
+    "EnterNote": "Entrez vos notes:",
+    "Releases": {
+      "RoI": "Les Seigneurs de Fer",
+      "tTK": "Le Roi des Corrompus"
+    },
+    "Vendors": {
+      "CQ": "Brigadier de l'Épreuve",
+      "DO": "L'Astre Mort",
+      "EV": "Everversum",
+      "FWC": "Culte de la Guerre Future",
+      "Gunsmith": "Armurier",
+      "NM": "Nouvelle Monarchie",
+      "Shipwright": "Responsable de la flotte",
+      "Speaker": "Le Guide"
+    }
   },
   "Header": {
     "About": "À propos",
@@ -116,6 +149,7 @@
     "ChangingPerks": "Changement d'Abilités Non Supporté",
     "ChangingPerksInfo": "Désolé, ce n'est pas possible de changer d'abilités en dehors du jeu. On aurait aimé!",
     "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile.",
+    "ExtensionDeprecatedMessage": "L'extension chrome DIM ouvre maintenant notre site web - lequel fonctionne sur chaque navigateur et téléphone! Vous pouvez désinstaller l'extension, ou la laisser en tant que signet pour ce site. Vos données (tags, notes, et paramètres) peuvent être importé depuis la page de stockage (icône de disque dans l'en-tête)",
     "ExtensionDeprecatedTitle": "DIM est juste un site web maintenant!",
     "HidePopup": "Cacher Ce Popup",
     "NeverShow": "Ne plus jamais afficher.",
@@ -231,6 +265,7 @@
   },
   "Loadouts": {
     "Any": "Tout",
+    "Applied": "Votre pré set de un objet a été transféré à votre {{store}}.",
     "AppliedAuto": "Constructeur de Pré set automatique",
     "AppliedError": "Aucun des objets de votre pré set n'a pu être transféré.",
     "AppliedWarn": "Votre pré set a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
@@ -256,6 +291,7 @@
     "Loadouts": "Pré sets",
     "MakeRoom": "Faire de la place pour le Commis des postes",
     "MakeRoomDone": "À Fini de faire de la place pour 1 objet du commis des postes en déplaçant 1 objet hors du {{store}}.",
+    "MakeRoomDone_plural": "À Fini de faire de la place pour {{postmasterNum}} objets du Commis des postes en déplaçant {{movedNum}} objets hors du {{store}}.",
     "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commit Des Postes: {{error}}.",
     "MaxSlots": "Tu peux uniquement avoir {{slots}} de ce type d'objet dans un pré set.",
     "MaximizeLight": "Maximiser la Lumière",
@@ -370,7 +406,9 @@
     "PercentHelp": "Cliquez pour plus d'informations sur ce qu'est la qualité des stats.",
     "Prestige": "Niveau de lumière: {{level}}\n{{exp}}xp jusqu'à avoir 5 particule de lumière.",
     "Quality": "Qualité des stats",
-    "Strength": "Force"
+    "Strength": "Force",
+    "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
+    "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "Storage": {
     "BrowserMayClearData": "Votre navigateur peut supprimer cette information si vous n'avez plus d'espace ou si vous ne visitez pas DIM fréquemment.",

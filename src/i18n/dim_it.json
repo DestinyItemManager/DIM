@@ -2,7 +2,9 @@
   "Activities": {
     "Activities": "Attività",
     "Hard": "Difficile",
-    "Normal": "Normale"
+    "Nightfall": "Assalto Cala la Notte",
+    "Normal": "Normale",
+    "WeeklyHeroic": "Assalto Eroico Settimanale"
   },
   "Bucket": {
     "Armor": "Armatura",
@@ -107,8 +109,37 @@
     "Stop": "Stop"
   },
   "Filter": {
+    "Activities": {
+      "AF": "Forgia dell'Arconte",
+      "AoT": "Era di Trionfo",
+      "CE": "La fine di Crota",
+      "CoE": "Sfida degli Anziani",
+      "Dawning": "L'Aurora",
+      "IB": "Stendardo di Ferro",
+      "KF": "La caduta di un Re",
+      "PoE": "Prigione degli Anziani",
+      "QW": "Ira della Regina",
+      "SRL": "Gare di Astori",
+      "ToO": "Prove di Osiride",
+      "VoG": "Volta di Vetro",
+      "WotM": "Furia meccanica"
+    },
     "EnterName": "Inserisci il nome di un oggetto:",
-    "EnterNote": "Inserisci delle note:"
+    "EnterNote": "Inserisci delle note:",
+    "Releases": {
+      "RoI": "I Signori del Ferro",
+      "tTK": "Il Re dei Corrotti"
+    },
+    "Vendors": {
+      "CQ": "Quartiermastro del Crogiolo",
+      "DO": "Orbita Morta",
+      "EV": "Everversum",
+      "FWC": "Culto Guerra Futura",
+      "Gunsmith": "Armaiolo",
+      "NM": "Nuova Monarchia",
+      "Shipwright": "Nostromo",
+      "Speaker": "L'Oratore"
+    }
   },
   "Header": {
     "About": "Chi siamo",
@@ -124,6 +155,7 @@
     "ChangingPerks": "Selezione dei Perk non supportata",
     "ChangingPerksInfo": "Scusa, non è possibile cambiare i perk dall'esterno del gioco. Ci piacerebbe poterlo fare!",
     "Drag": "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità",
+    "ExtensionDeprecatedMessage": "L'estensione Chrome di DIM adesso apre il nostro sito internet, che funziona su tutti i browser e sui dispositivi mobili! Puoi disinstallare l'estensione, oppure lasciarla come comodo segnalibro per il sito. I tuoi dati (etichette, note e impostazioni) possono essere importati dalla pagina dei dati memorizzati (l'icona a forma di dischetto in alto).",
     "ExtensionDeprecatedTitle": "DIM è un sito web adesso!",
     "HidePopup": "Nascondi Questo Popup",
     "NeverShow": "Non mostrarmi più questo messaggio.",
