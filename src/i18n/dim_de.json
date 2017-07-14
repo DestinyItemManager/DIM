@@ -106,6 +106,7 @@
     "Activities": {
       "AF": "Archon-Schmiede",
       "AoT": "Zeitalter des Triumphs",
+      "CD": "Scharlach Doppel",
       "CE": "Crotas Ende",
       "CoE": "Herausforderung der Ältesten",
       "Dawning": "Der Anbruch",
@@ -118,8 +119,34 @@
       "VoG": "Gläserne Kammer",
       "WotM": "Zorn der Maschine"
     },
+    "Activity": "Verfügbar durch Aktivität <i>{{Activity}}</i>",
+    "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
+    "Class": "Zeige Items basierend auf deren Klassenbezug.",
+    "ClickFilters": "Klick unten auf Filter um diese anzuwenden oder benutze die Suchfunktion.",
+    "Combine": "Filter werden nach 'and'-Logik kombiniert, zum Beispiel wird '{{example}}' alle Arkus-Gegenstände mit einem Licht über 300 zurückgeben. Filter können durch '{{not}}' negiert werden, zum Beispiel findet '{{notexample}}' alle Nicht-Engramm Items.",
+    "ContributeLight": "Items die zu deinem Lichtlevel beitragen.",
+    "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
+    "Description": "Beschreibung",
+    "Dupe": "Zeige Item-Duplikate",
+    "Engrams": "Zeige Engramme.",
     "EnterName": "Trage einen Namen ein:",
     "EnterNote": "Trage eine Beschreibung ein:",
+    "Equipment": "Items die ausgerüstet werden können.",
+    "Equipped": "Items die aktuell von einem Charakter ausgerüstet sind.",
+    "Filter": "Filter",
+    "Glimmer": {
+      "Any": "Jeder Typ Glimmer-Item.",
+      "Boost": "Items die den Glimmer-Verdienst für 10 Minuten erhöhen.",
+      "Glimmer": "Zeigt verzehrbare Items die mit dem Verdienst von Glimmer in Verbindung stehen:",
+      "Item": "Items die bei Rahool für 200 Glimmer abgegeben werden können."
+    },
+    "InLoadout": "Zeigt Items die in einem Loadout verwendet werden.",
+    "Infusable": "Zeigt Items die infundiert werden können.",
+    "Leveling": {
+      "Complete": "{{term}} - zeigt Items die fertig sind - jedes Upgrade freigeschaltet.",
+      "Incomplete": "{{term}} - zeigt Items die nicht fertig sind - es gibt noch mindestens ein freischalten Upgrade."
+    },
+    "NewItems": "Zeigt neue Items.",
     "Releases": {
       "RoI": "Das Erwachen der Eisernen Lords",
       "tTK": "König der Besessenen"
