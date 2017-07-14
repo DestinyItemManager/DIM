@@ -38,9 +38,6 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
     switch (errorCode) {
     case 1: // Success
       return response;
-    case 22: // WebAuthModuleAsyncFailed
-      // We've only seen this when B.net is down
-      return $q.reject(new Error($i18next.t('BungieService.Difficulties')));
     case 1627: // DestinyVendorNotFound
       return $q.reject(new Error($i18next.t('BungieService.VendorNotFound')));
     case 2106: // AuthorizationCodeInvalid
@@ -55,6 +52,7 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
       return $q.reject(new Error($i18next.t('BungieService.Throttled')));
     case 2111: // token expired
     case 99: // WebAuthRequired
+    case 22: // WebAuthModuleAsyncFailed (means the access token has expired)
       $rootScope.$broadcast('dim-no-token-found');
       return $q.reject(new Error($i18next.t('BungieService.NotLoggedIn')));
     case 1601: // DestinyAccountNotFound
