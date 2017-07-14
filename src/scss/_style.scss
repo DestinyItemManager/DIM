@@ -80,9 +80,16 @@ div:focus, span:focus {
 }
 
 /**
+  Misc DIM page
+ **/
+.dim-page { // non-inventory page settings
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/**
   Header Area
 **/
-
 .currency img {
   vertical-align: text-bottom;
   height: 17px;
@@ -175,14 +182,15 @@ div:focus, span:focus {
       display: block;
       padding: 4px 2em;
       font-size: 12px;
+
       @include phone-portrait {
         font-size: 14px;
         padding: 6px 2em;
       }
-      margin: 0;
 
       &:hover, &:focus {
         background-color: #151515;
+        transition: none;
       }
     }
   }

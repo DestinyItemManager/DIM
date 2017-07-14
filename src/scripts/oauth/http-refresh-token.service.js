@@ -9,7 +9,8 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
   const matcher = /www\.bungie\.net\/(D1\/)?Platform\/(User|Destiny)\//;
 
   return {
-    request: requestHandler
+    request: requestHandler,
+    response: responseHandler
   };
 
   function requestHandler(config) {
@@ -81,12 +82,53 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
   }
 
   function isTokenValid(token) {
-    // TODO: private oauth apps don't have refresh tokens!
     // reject refresh tokens from the old auth process
     if (token && token.name === 'refresh' && token.readyin) {
       return false;
     }
     const expired = OAuthTokenService.hasTokenExpired(token);
     return !expired;
+  }
+
+  /**
+   * A limited version of the error handler in bungie-service-helper.service.js,
+   * which can detect errors related to auth (expired token, etc), refresh and retry.
+   */
+  function responseHandler(response) {
+    if (response.config.url.match(matcher) &&
+        !response.config.triedRefresh && // Only try once, to avoid infinite loop
+        response.data &&
+        (response.data.ErrorCode === 2111 || // Auth token expired
+         response.data.ErrorCode === 99 || // WebAuthRequired
+         response.data.ErrorCode === 22)) { // WebAuthModuleAsyncFailed (also means the access token has expired)
+      // OK, Bungie has told us our access token is expired or
+      // invalid. Refresh it and try again.
+      console.log(`Access token expired (code ${response.data.ErrorCode}), refreshing`);
+      const token = OAuthTokenService.getToken();
+      const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
+
+      if (refreshTokenIsValid) {
+        response.config.triedRefresh = true;
+        cache = cache || OAuthService.getAccessTokenFromRefreshToken(token.refreshToken);
+        return cache
+          .then((token) => {
+            OAuthTokenService.setToken(token);
+
+            console.log("Successfully updated auth token from refresh token after failed request.");
+            response.config.headers.Authorization = `Bearer ${token.accessToken.value}`;
+            return $injector.get('$http')(response.config);
+          })
+          .catch(handleRefreshTokenError)
+          .finally(() => {
+            cache = null;
+          });
+      } else {
+        console.warn("Refresh token invalid, clearing auth tokens & going to login");
+        OAuthTokenService.removeToken();
+        $rootScope.$broadcast('dim-no-token-found');
+      }
+    }
+
+    return response;
   }
 }
