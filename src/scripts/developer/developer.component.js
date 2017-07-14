@@ -2,7 +2,8 @@ import template from './developer.html';
 
 export const DeveloperComponent = {
   template,
-  controller: DeveloperCtrl
+  controller: DeveloperCtrl,
+  controllerAs: 'vm'
 };
 
 function DeveloperCtrl() {

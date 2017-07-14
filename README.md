@@ -90,7 +90,7 @@ Become a sponsor and get your logo here with a link to your site.
 <a href="https://opencollective.com/dim/sponsor/3/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/3/avatar.svg"></a>
 
 ## Translation
-If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, or Portuguese), a great way to help with DIM development is to provide translations. See [translation guide](https://github.com/DestinyItemManager/DIM/blob/master/TRANSLATIONS.md) for more info on how to help.
+If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, or Portuguese), a great way to help with DIM development is to provide translations. See [translation guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/TRANSLATIONS.md) for more info on how to help.
 
 ## Developer Quick start
 Clone the repo:

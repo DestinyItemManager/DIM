@@ -1,5 +1,5 @@
 (function() {
   chrome.browserAction.onClicked.addListener(() => {
-    chrome.tabs.create({ url: 'https://app.destinyitemmanager.com/?utm_source=extension' });
+    chrome.tabs.create({ url: 'https://localhost:8080/?utm_source=extension' });
   });
 })();

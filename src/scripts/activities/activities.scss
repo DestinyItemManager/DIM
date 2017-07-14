@@ -20,6 +20,7 @@
     }
 
     .character-box {
+      cursor: default;
       border-bottom: none;
     }
 
@@ -68,8 +69,12 @@
   }
 
   .title {
-    background: #999;
+    background: #666;
     background-blend-mode: multiply;
+
+    &:hover {
+      background: #aaa;
+    }
   }
 
   .small-icon {
