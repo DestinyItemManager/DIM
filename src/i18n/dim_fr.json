@@ -137,7 +137,7 @@
   },
   "Header": {
     "About": "À propos",
-    "FilterHelp": "Rechercher objet/amélioration ou is:arc",
+    "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
     "Filters": "Filtres",
     "Inventory": "Inventaire",
     "Refresh": "Rafraîchir les données Destiny",

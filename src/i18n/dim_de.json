@@ -137,7 +137,7 @@
   },
   "Header": {
     "About": "Über",
-    "FilterHelp": "Suche nach Item/Perk oder is:arc",
+    "FilterHelp": "Suche nach Item/Perk oder {{example}}",
     "Filters": "Filter",
     "Inventory": "Inventar",
     "Refresh": "Aktualisiere Destiny Daten",
