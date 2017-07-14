@@ -2,7 +2,9 @@
   "Activities": {
     "Activities": "Activités",
     "Hard": "Difficile",
-    "Normal": "Normal"
+    "Nightfall": "Assaut « Nuit noire »",
+    "Normal": "Normal",
+    "WeeklyHeroic": "Assaut « Épique » de la semaine"
   },
   "Bucket": {
     "Armor": "Armure",
@@ -101,8 +103,37 @@
     "Stop": "Stop"
   },
   "Filter": {
+    "Activities": {
+      "AF": "La Forge de l'Archonte",
+      "AoT": "Âge du triomphe",
+      "CE": "La chute de Cropta",
+      "CoE": "Défi des vétérans",
+      "Dawning": "L'Avènement",
+      "IB": "Bannière de Fer",
+      "KF": "La Chute du roi",
+      "PoE": "La Prison des vétérans",
+      "QW": "Ire de la Reine",
+      "SRL": "Courses de Passereaux",
+      "ToO": "Jugement d'Osiris",
+      "VoG": "Le Caveau de verre",
+      "WotM": "Fureur mécanique"
+    },
     "EnterName": "Entrez un nom d'objet:",
-    "EnterNote": "Entrez vos notes:"
+    "EnterNote": "Entrez vos notes:",
+    "Releases": {
+      "RoI": "Les Seigneurs de Fer",
+      "tTK": "Le Roi des Corrompus"
+    },
+    "Vendors": {
+      "CQ": "Brigadier de l'Épreuve",
+      "DO": "L'Astre Mort",
+      "EV": "Everversum",
+      "FWC": "Culte de la Guerre Future",
+      "Gunsmith": "Armurier",
+      "NM": "Nouvelle Monarchie",
+      "Shipwright": "Responsable de la flotte",
+      "Speaker": "Le Guide"
+    }
   },
   "Header": {
     "About": "À propos",

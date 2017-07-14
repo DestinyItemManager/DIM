@@ -2,7 +2,9 @@
   "Activities": {
     "Activities": "Activities",
     "Hard": "Hard",
-    "Normal": "Normal"
+    "Nightfall": "Nightfall Strike",
+    "Normal": "Normal",
+    "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Bucket": {
     "Armor": "Armor",
@@ -107,8 +109,100 @@
     "Stop": "Stop"
   },
   "Filter": {
+    "Activities": {
+      "AF": "Archon's Forge",
+      "AoT": "Age of Triumph",
+      "CD": "Crimson Doubles",
+      "CE": "Crota's End",
+      "CoE": "Challenge of Elders",
+      "Dawning": "The Dawning",
+      "IB": "Iron Banner",
+      "KF": "King's Fall",
+      "PoE": "Prison of Elders",
+      "QW": "Queen's Wrath",
+      "SRL": "Sparrow Racing",
+      "ToO": "Trials of Osiris",
+      "VoG": "Vault of Glass",
+      "WotM": "Wrath of the Machine"
+    },
+    "Activity": "Available from activity <i>{{activity}}</i>",
+    "ArmorCategory": "Shows armors based on their category.",
+    "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
+    "Categories": "High level item categories.",
+    "Class": "Shows items based on their class affinty.",
+    "ClickFilters": "Click filters below to apply, or by typing in the search box.",
+    "Combine": "Filters are combined using 'and' logic, for example 'is:arc light:>300' will return all arc items with over 300 light. Filters can be negated using 'not:', for example 'not:engram' will find all non-engram items.",
+    "ContributeLight": "Items that contribute to your light level.",
+    "DamageType": "Shows items based on their damage type.",
+    "Description": "Description",
+    "Dupe": "Shows duplicate items",
+    "Engrams": "Shows engrams.",
     "EnterName": "Enter an item name:",
-    "EnterNote": "Enter notes text:"
+    "EnterNote": "Enter notes text:",
+    "Equipment": "Items that can be equipped.",
+    "Equipped": "Items that are currently equipped on a character.",
+    "Filter": "Filter",
+    "Glimmer": {
+      "Any": "Any type of glimmer item.",
+      "Boost": "Items that boost the amount glimmer gaied for 10 minutes.",
+      "Glimmer": "Shows items that are consumables that are related to gaining glimmer:",
+      "Item": "Items that are exchangable with Rahool for 200 glimmer."
+    },
+    "InLoadout": "Shows items that are included in any loadout.",
+    "Infusable": "Shows items that can be infused.",
+    "Leveling": {
+      "Complete": "complete - shows items that are totally complete - every upgrade unlocked.",
+      "Incomplete": "incomplete - shows items that are not complete - there's still at least one upgrade to unlock.",
+      "Leveling": "Shows items at various states of leveling:",
+      "NeedsXP": "xpincomplete/needsxp - shows items that can still have XP put into them.",
+      "Upgraded": "upgraded - shows items that have enough XP to unlock all their nodes, but not all the nodes have been unlocked.",
+      "XPComplete": "xpcomplete - shows items that cannot have XP put into them (whether or not their upgrades have been unlocked)."
+    },
+    "LightLevel": "Shows items based on their light level (Attack for Weapons; Defense for Armor). 'level' is an alias for 'light'.",
+    "Locked": "Shows items based on their locked status.",
+    "NamedStat": "Shows armor that has points in the named stat.",
+    "NewItems": "Shows new items.",
+    "Notes": "Search for items that you have tagged with custom notes",
+    "Ornament": "Shows items with ornaments and filters for their status.",
+    "PartialMatch": "Shows items where their name has a partial match to the filter text.",
+    "Postmaster": "Items that are currently in the Postmaster.",
+    "Quality": "Shows items based on their total stat quality percentage. 'percentage' is an alias for 'quality'.",
+    "RarityTier": "Shows items based on their rarity tier.",
+    "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
+    "Rating": "Shows weapons based on their rating from Destiny Tracker.",
+    "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
+    "Release": "Available from release <i>{{release}}</i>",
+    "Releases": {
+      "RoI": "Rise of Iron",
+      "Vanilla": "Vanilla",
+      "tTK": "The Taken King"
+    },
+    "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
+    "Stats": "Shows items based on their stat value. The available filters are:",
+    "Tags": {
+      "Dismantle": "Shows items you wish to eventually dismantle.",
+      "Favorite": "Shows favorite items.",
+      "Infuse": "Shows items you wish to eventually infuse.",
+      "Keep": "Shows keep items.",
+      "NoTag": "Shows items with out a tag."
+    },
+    "Tracked": "Shows quests/bounties based on their tracked status.",
+    "Transferable": "Items that can be moved between characters.",
+    "Vendor": "Item is available from vendor <i>{{vendor}}</i> {{name}}",
+    "Vendor_noname": "Item is available from vendor <i>{{vendor}}</i>",
+    "Vendors": {
+      "CQ": "Crucible Quartermaster",
+      "DO": "Dead Orbit",
+      "EV": "Eververse",
+      "FWC": "Future War Cult",
+      "Gunsmith": "Gunsmith",
+      "NM": "New Monarchy",
+      "Shipwright": "Shipwright",
+      "Speaker": "Speaker"
+    },
+    "WeaponClass": "Shows items based on their weapon classes.",
+    "WeaponType": "Shows weapons based on their weapon type.",
+    "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Header": {
     "About": "About",
@@ -137,6 +231,7 @@
   },
   "Hotkey": {
     "ClearNewItems": "Clear new items",
+    "ClearNewItemsTitle": "Keyboard shortcut: X",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "RefreshInventory": "Refresh inventory",
     "StartSearch": "Start a search",

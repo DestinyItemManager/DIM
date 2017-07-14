@@ -2,7 +2,9 @@
   "Activities": {
     "Activities": "Atividades",
     "Hard": "Difícil",
-    "Normal": "Normal"
+    "Nightfall": "Assalto do Anoitecer",
+    "Normal": "Normal",
+    "WeeklyHeroic": "Assalto heroico semanal"
   },
   "Bucket": {
     "Armor": "Armaduras",
@@ -101,8 +103,38 @@
     "Stop": "Parar"
   },
   "Filter": {
+    "Activities": {
+      "AF": "Forja do Arconte",
+      "AoT": "Era do Triunfo",
+      "CD": "Crimson Doubles",
+      "CE": "O Fim de Crota",
+      "CoE": "Desafio dos Anciões",
+      "Dawning": "A Alvorada",
+      "IB": "Bandeira de Ferro",
+      "KF": "A Queda do Rei",
+      "PoE": "Prisão dos Anciões",
+      "QW": "Fúria da Rainha",
+      "SRL": "Corrida de Pardais",
+      "ToO": "Desafios de Osíris",
+      "VoG": "Câmara de Cristal",
+      "WotM": "A ira da máquina"
+    },
     "EnterName": "Digite um nome de item:",
-    "EnterNote": "Digite a anotação:"
+    "EnterNote": "Digite a anotação:",
+    "Releases": {
+      "RoI": "Ascensão do Ferro",
+      "tTK": "O Rei dos Possuídos"
+    },
+    "Vendors": {
+      "CQ": "Quartel-mestre do Crisol",
+      "DO": "Órbita Morta",
+      "EV": "Eververso",
+      "FWC": "Culto à Guerra Futura",
+      "Gunsmith": "Armeiro",
+      "NM": "Nova Monarquia",
+      "Shipwright": "Contramestre",
+      "Speaker": "O Porta-Voz"
+    }
   },
   "Header": {
     "About": "Sobre",

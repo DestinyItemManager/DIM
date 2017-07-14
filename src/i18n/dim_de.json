@@ -2,7 +2,9 @@
   "Activities": {
     "Activities": "Aktivitäten",
     "Hard": "Schwer",
-    "Normal": "Normal"
+    "Nightfall": "Dämmerung-Strike",
+    "Normal": "Normal",
+    "WeeklyHeroic": "Wöchentliche Heroischer Strike"
   },
   "Bucket": {
     "Armor": "Rüstung",
@@ -101,8 +103,37 @@
     "Stop": "Stop"
   },
   "Filter": {
+    "Activities": {
+      "AF": "Archon-Schmiede",
+      "AoT": "Zeitalter des Triumphs",
+      "CE": "Crotas Ende",
+      "CoE": "Herausforderung der Ältesten",
+      "Dawning": "Der Anbruch",
+      "IB": "Eisenbanner",
+      "KF": "Königsfall",
+      "PoE": "Das Gefängnis der Alten",
+      "QW": "Zorn der Königin",
+      "SRL": "Sparrow-Rennen",
+      "ToO": "Prüfungen von Osiris",
+      "VoG": "Gläserne Kammer",
+      "WotM": "Zorn der Maschine"
+    },
     "EnterName": "Trage einen Namen ein:",
-    "EnterNote": "Trage eine Beschreibung ein:"
+    "EnterNote": "Trage eine Beschreibung ein:",
+    "Releases": {
+      "RoI": "Das Erwachen der Eisernen Lords",
+      "tTK": "König der Besessenen"
+    },
+    "Vendors": {
+      "CQ": "Schmelztiegel-Quartierwart",
+      "DO": "Toter Orbit",
+      "EV": "Everversum",
+      "FWC": "Kriegskult der Zukunft",
+      "Gunsmith": "Waffenmeister",
+      "NM": "Neue Monarchie",
+      "Shipwright": "Schiffsmeisterin",
+      "Speaker": "Der Sprecher"
+    }
   },
   "Header": {
     "About": "Über",
