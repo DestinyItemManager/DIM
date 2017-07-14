@@ -119,7 +119,21 @@
       "WotM": "La furia de las máquinas"
     },
     "EnterName": "Escribe el nombre de un objeto:",
-    "EnterNote": "Escribe texto de las notas:"
+    "EnterNote": "Escribe texto de las notas:",
+    "Releases": {
+      "RoI": "Los Señores de Hierro",
+      "tTK": "El Rey de los Poseídos"
+    },
+    "Vendors": {
+      "CQ": "Intendente del Crisol",
+      "DO": "Órbita Muerta",
+      "EV": "Eververso",
+      "FWC": "Secta Guerra Futura",
+      "Gunsmith": "Armero",
+      "NM": "Nueva Monarquía",
+      "Shipwright": "Contramaestre",
+      "Speaker": "El Orador"
+    }
   },
   "Header": {
     "About": "Acerca de",
