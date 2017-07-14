@@ -3,7 +3,7 @@ import _ from 'underscore';
 import { sum } from '../util';
 import template from './vendor-item.html';
 import dialogTemplate from './vendor-item-dialog.html';
-import 'jquery-ui/ui/position';
+import Popper from 'popper.js';
 
 export const VendorItem = {
   bindings: {
@@ -16,31 +16,54 @@ export const VendorItem = {
 
 let otherDialog = null;
 
-function VendorItemCtrl($scope, ngDialog, dimStoreService, dimDestinyTrackerService) {
+function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyTrackerService) {
   'ngInject';
 
   const vm = this;
 
   let dialogResult = null;
-  let detailItem = null;
-  let detailItemElement = null;
 
+  let dialog = null;
   $scope.$on('ngDialog.opened', (event, $dialog) => {
-    if (dialogResult && $dialog[0].id === dialogResult.id) {
-      $dialog.position({
-        my: 'left top',
-        at: 'left bottom+2',
-        of: detailItemElement,
-        collision: 'flip flip'
-      });
-    }
+    dialog = $dialog;
+    vm.reposition();
   });
+
+  let popper;
+
+  // TODO: gotta make a vendor item popup directive
+
+  // Reposition the popup as it is shown or if its size changes
+  vm.reposition = function() {
+    if (dialogResult && dialog[0].id === dialogResult.id) {
+      if (popper) {
+        popper.scheduleUpdate();
+      } else {
+        popper = new Popper($element[0].getElementsByClassName('item')[0], dialog, {
+          placement: 'top-start',
+          eventsEnabled: false,
+          modifiers: {
+            preventOverflow: {
+              priority: ['bottom', 'top', 'right', 'left']
+            },
+            flip: {
+              behavior: ['top', 'bottom', 'right', 'left']
+            },
+            offset: {
+              offset: '0,7px'
+            },
+            arrow: {
+              element: '.arrow'
+            }
+          }
+        });
+        popper.scheduleUpdate(); // helps fix arrow position
+      }
+    }
+  };
 
   vm.clicked = function(e) {
     e.stopPropagation();
-    if (dialogResult) {
-      dialogResult.close();
-    }
 
     if (otherDialog) {
       if (ngDialog.isOpen(otherDialog.id)) {
@@ -49,14 +72,15 @@ function VendorItemCtrl($scope, ngDialog, dimStoreService, dimDestinyTrackerServ
       otherDialog = null;
     }
 
-    const item = vm.saleItem.item;
-    if (detailItem === item) {
-      detailItem = null;
-      dialogResult = null;
-      detailItemElement = null;
+    if (dialogResult) {
+      if (ngDialog.isOpen(dialogResult.id)) {
+        dialogResult.close();
+        dialogResult = null;
+        popper.destroy();
+        popper = null;
+      }
     } else {
-      detailItem = item;
-      detailItemElement = angular.element(e.currentTarget);
+      const item = vm.saleItem.item;
 
       const compareItems = _.flatten(dimStoreService.getStores().map((store) => {
         return _.filter(store.items, { hash: item.hash });
@@ -84,7 +108,8 @@ function VendorItemCtrl($scope, ngDialog, dimStoreService, dimDestinyTrackerServ
             compareItemCount: compareItemCount,
             setCompareItem: function(item) {
               this.compareItem = item;
-            }
+            },
+            reposition: vm.reposition
           });
         },
         // Setting these focus options prevents the page from
@@ -97,6 +122,8 @@ function VendorItemCtrl($scope, ngDialog, dimStoreService, dimDestinyTrackerServ
 
       dialogResult.closePromise.then(() => {
         dialogResult = null;
+        popper.destroy();
+        popper = null;
       });
 
       dimDestinyTrackerService.getItemReviews(item);
@@ -106,6 +133,9 @@ function VendorItemCtrl($scope, ngDialog, dimStoreService, dimDestinyTrackerServ
   vm.$onDestroy = function() {
     if (dialogResult) {
       dialogResult.close();
+    }
+    if (popper) {
+      popper.destroy();
     }
   };
 }

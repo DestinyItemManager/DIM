@@ -3,25 +3,22 @@ import template from './dimMovePopup.directive.html';
 import Popper from 'popper.js';
 
 angular.module('dimApp')
-  .directive('dimMovePopup', MovePopup);
+  .component('dimMovePopup', movePopup());
 
-function MovePopup() {
+function movePopup() {
   return {
     controller: MovePopupController,
     controllerAs: 'vm',
-    bindToController: true,
-    restrict: 'E',
-    scope: {
-      store: '=',
-      item: '='
+    bindings: {
+      store: '<',
+      item: '<'
     },
-    replace: true,
-    template: template
+    template
   };
 }
 
-
 function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
+  'ngInject';
   const vm = this;
   vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
