@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import $ from 'jquery';
 
 import template from './vendors.html';
 import './vendors.scss';
