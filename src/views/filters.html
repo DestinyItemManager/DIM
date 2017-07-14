@@ -2,7 +2,7 @@
   <h1 ng-i18next="Header.Filters"></h1>
   <div class="ngdialog-inner-content">
     <p ng-i18next="Filter.ClickFilters"></p>
-    <p ng-i18next="Filter.Combine"></p>
+    <p ng-i18next="[i18next]({ example: 'is:arc light:>300', not: 'not:', notexample: 'not:engram' })Filter.Combine"></p>
     <table>
       <tr>
         <td ng-i18next="Filter.Filter"></td>
@@ -31,7 +31,7 @@
           <dim-filter-link filter="light:&lt;value"></dim-filter-link>
           <dim-filter-link filter="light:&lt;=value"></dim-filter-link>
         </td>
-        <td ng-i18next="Filter.LightLevel"></td>
+        <td ng-i18next="[i18next]({ level: 'level', light: 'light' })Filter.LightLevel"></td>
       </tr>
       <tr>
         <td>
@@ -62,7 +62,7 @@
           <dim-filter-link filter="quality:&lt;value"></dim-filter-link>
           <dim-filter-link filter="quality:&lt;=value"></dim-filter-link>
         </td>
-        <td ng-i18next="Filter.Quality"></td>
+        <td ng-i18next="[i18next]({ percentage: 'percentage', quality: 'quality' })Filter.Quality"></td>
       </tr>
       <tr>
         <td>
@@ -177,11 +177,11 @@
         </td>
         <td><span ng-i18next="Filter.Leveling.Leveling"></span>
           <ul>
-            <li ng-i18next="Filter.Leveling.Complete"></li>
-            <li ng-i18next="Filter.Leveling.Incomplete"></li>
-            <li ng-i18next="Filter.Leveling.NeedsXP"></li>
-            <li ng-i18next="Filter.Leveling.XPComplete"></li>
-            <li ng-i18next="Filter.Leveling.Upgraded"></li>
+            <li ng-i18next="[i18next]({ term: 'complete' })Filter.Leveling.Complete"></li>
+            <li ng-i18next="[i18next]({ term: 'incomplete' })Filter.Leveling.Incomplete"></li>
+            <li ng-i18next="[i18next]({ term: 'xpincomplete/needsxp' })Filter.Leveling.NeedsXP"></li>
+            <li ng-i18next="[i18next]({ term: 'xpcomplete' })Filter.Leveling.XPComplete"></li>
+            <li ng-i18next="[i18next]({ term: 'upgraded' })Filter.Leveling.Upgraded"></li>
           </ul>
         </td>
       </tr>
