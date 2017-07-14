@@ -124,10 +124,6 @@ export default class ContentController {
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
     vm.showXur = showPopupFunction('xur', '<xur></xur>');
 
-    // TODO: make this into a ui-sref-toggle attribute directive
-    vm.toggleState = function(name) {
-      $state.go($state.is(name) ? 'inventory' : name);
-    };
 
     vm.xur = dimXurService;
 

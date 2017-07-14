@@ -99,7 +99,9 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       name: def.activityName,
       icon: rawActivity.display.icon,
       image: rawActivity.display.image,
-      type: defs.ActivityType.get(def.activityTypeHash).activityTypeName
+      type: rawActivity.identifier === "nightfall" ? $i18next.t('Activities.Nightfall')
+        : rawActivity.identifier === "heroicstrike" ? $i18next.t('Activities.WeeklyHeroic')
+          : defs.ActivityType.get(def.activityTypeHash).activityTypeName
     };
 
     if (rawActivity.extended) {
@@ -142,6 +144,8 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
 
       return {
         name: store.name,
+        lastPlayed: store.lastPlayed,
+        id: store.id,
         icon: store.icon,
         steps: steps
       };

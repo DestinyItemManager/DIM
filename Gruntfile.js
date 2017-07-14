@@ -111,22 +111,11 @@ module.exports = function(grunt) {
     },
 
     poeditor: {
-      update_terms: {
-        upload: { // special case for uploads
-          id: '116191',
-          languages: {'en':'en'},
-          file: 'src/i18n/dim_?.json',
-          updating: 'terms_definitions',
-          overwrite: 1, // set any POE's API option
-          sync_terms: 1,
-          fuzzy_trigger: 1
-        }
-      },
       download_terms: {
         download: {
           project_id: '116191',
           type: 'key_value_json', // export type (check out the doc)
-          filters: ["translated", "proofread"], // https://poeditor.com/api_reference/#export
+          filters: ["translated", "proofread", "not_fuzzy"], // https://poeditor.com/api_reference/#export
           dest: 'src/i18n/dim_?.json',
           languages: {
             'de': 'de',
@@ -141,6 +130,38 @@ module.exports = function(grunt) {
       options: {
         api_token: process.env.POEDITOR_API
       }
+    },
+
+    upload_file: {
+      poeditor: {
+        src: ['src/i18n/dim_en.json'],
+        options: {
+          url: 'https://poeditor.com/api/',
+          method: 'POST',
+          paramObj: {
+            api_token: process.env.POEDITOR_API,
+            action: 'upload',
+            id: '116191',
+            updating: 'terms_definitions',
+            language: 'en',
+            overwrite: 1,  // overwrite old strings
+            sync_terms: 1,  // delete non-matched keys
+            fuzzy_trigger: 1  // set updated keys to fuzzy on other langs, so translators know to re-translate string
+          },
+        }
+      }
+    },
+
+    sortJSON: {
+      src: [
+        'src/i18n/dim_de.json',
+        'src/i18n/dim_en.json',
+        'src/i18n/dim_es.json',
+        'src/i18n/dim_fr.json',
+        'src/i18n/dim_it.json',
+        'src/i18n/dim_ja.json',
+        'src/i18n/dim_pt_BR.json',
+      ],
     }
   });
 
@@ -148,22 +169,29 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('grunt-poeditor-ab');
+  grunt.loadNpmTasks('grunt-sort-json');
+  grunt.loadNpmTasks('grunt-upload-file');
 
-  grunt.registerTask('update_chrome_beta_manifest', function() {
+  function rewrite(dist) {
     var manifest = grunt.file.readJSON('extension-dist/manifest.json');
-    manifest.name = manifest.name + " Beta";
-    manifest.version = betaVersion;
-    manifest.content_scripts[0].matches = ['https://beta.destinyitemmanager.com/*'];
+    if (dist === 'beta') {
+      manifest.name += ' Beta';
+    }
+    manifest.version = dist === 'beta' ? betaVersion : pkg.version;
+
+    manifest.content_scripts[0].matches = [`https://${dist}.destinyitemmanager.com/*`];
     grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
     var mainjs = grunt.file.read('extension-dist/main.js');
-    mainjs = mainjs.replace('app.destinyitemmanager.com', 'beta.destinyitemmanager.com');
+    mainjs = mainjs.replace('localhost:8080', `${dist}.destinyitemmanager.com`);
     grunt.file.write('extension-dist/main.js', mainjs);
+  }
+
+  grunt.registerTask('update_chrome_beta_manifest', function() {
+    rewrite('beta');
   });
 
   grunt.registerTask('update_chrome_release_manifest', function() {
-    var manifest = grunt.file.readJSON('extension-dist/manifest.json');
-    manifest.version = pkg.version;
-    grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
+    rewrite('app');
   });
 
   grunt.registerMultiTask(
@@ -217,15 +245,13 @@ module.exports = function(grunt) {
     }
   );
 
-  grunt.registerTask('update_terms', [
-    'poeditor:upload_terms:upload'
-  ]);
-
   grunt.registerTask('download_translations', [
-    'poeditor:download_terms:download'
+    'poeditor:download_terms:download',
+    'sortJSON'
   ]);
 
   grunt.registerTask('publish_beta', [
+    'upload_file:poeditor',
     'update_chrome_beta_manifest',
     'compress:chrome',
     'log_beta_version',

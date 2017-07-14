@@ -1,11 +1,9 @@
-<div class="vendor">
+<div class="vendor dim-page">
   <div ng-if="!vm.vendorService.vendorsLoaded" class="vendor-loading"><i class="fa-spin fa fa-refresh"></i> <span ng-i18next="Vendors.Load"></span>...</div>
-  <back-link></back-link>
 
   <div id="vendorHeadersBackground" class="vendor-headers-background" scroll-class="sticky" scroll-class-threshold="30"></div>
   <div id="vendorHeaderWrapper" class="vendorHeaderWrapper" scroll-class="sticky" scroll-class-threshold="30">
     <div class="vendorTabs">
-      <h1 ng-i18next="Vendors.Vendors"></h1>
       <label ng-class="{ active: vm.activeTab === '' }">
         <input type="radio" ng-model="vm.activeTab" value=""><span ng-i18next="Vendors.All"></span>
       </label>
