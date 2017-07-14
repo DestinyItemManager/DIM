@@ -119,8 +119,27 @@
       "VoG": "Câmara de Cristal",
       "WotM": "A ira da máquina"
     },
+    "ArmorCategory": "Mostrar armaduras baseadas na sua categoria.",
+    "Categories": "Categoria de items de Alto Nível",
+    "Class": "Mostrar items baseado em sua afinidade por classe.",
+    "ClickFilters": "Clique em filtros em baixo para aplicar, ou para escrever na caixa de pesquisa.",
+    "ContributeLight": "Items que contribuem para o seu nível de luz.",
+    "DamageType": "Mostrar items baseado no seu tipo de dano.",
+    "Description": "Descrição",
+    "Dupe": "Mostrar items duplicados",
+    "Engrams": "Mostrar engramas.",
     "EnterName": "Digite um nome de item:",
     "EnterNote": "Digite a anotação:",
+    "Equipment": "Items que podem ser equipados.",
+    "Equipped": "Items que de momento estão equipados em outra personagem.",
+    "Filter": "Filtro",
+    "Glimmer": {
+      "Any": "Qualquer tipo de item de glimmer.",
+      "Boost": "Item que aumenta a quanitdade de glimmer ganho por 10 minutos.",
+      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de glimmer.",
+      "Item": "Items que podem ser trocados no Rahool por 200 glimmer."
+    },
+    "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de layout.",
     "Releases": {
       "RoI": "Ascensão do Ferro",
       "tTK": "O Rei dos Possuídos"

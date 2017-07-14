@@ -106,6 +106,7 @@
     "Activities": {
       "AF": "Fragua del Arconte",
       "AoT": "Era de Triunfo",
+      "CD": "Dobles Escarlata",
       "CE": "El fin de Crota",
       "CoE": "Desafío de los Ancianos",
       "Dawning": "La Aurora",
@@ -118,8 +119,15 @@
       "VoG": "Cámara de Cristal",
       "WotM": "La furia de las máquinas"
     },
+    "ArmorCategory": "Muestra armaduras basadas en su categoria.",
+    "Description": "Descripcion",
+    "Engrams": "Muestra engramas.",
     "EnterName": "Escribe el nombre de un objeto:",
     "EnterNote": "Escribe texto de las notas:",
+    "Filter": "Filtro",
+    "Glimmer": {
+      "Any": "Cualquier tipo de lumen"
+    },
     "Releases": {
       "RoI": "Los Señores de Hierro",
       "tTK": "El Rey de los Poseídos"
