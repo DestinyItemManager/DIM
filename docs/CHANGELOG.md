@@ -13,6 +13,7 @@
 * Fixed a case where you couldn't create a new class-specific loadout.
 * On Firefox, the new-item shines don't extend past the item anymore.
 * Do a better job of refreshing your authentication credentials - before, we'd sometimes show errors for a few minutes after you'd used DIM for a while.
+* The filters help page has been localalized.
 
 # 4.3.0
 
