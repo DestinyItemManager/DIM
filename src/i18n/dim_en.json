@@ -144,7 +144,7 @@
     "Filter": "Filter",
     "Glimmer": {
       "Any": "Any type of glimmer item.",
-      "Boost": "Items that boost the amount glimmer gaied for 10 minutes.",
+      "Boost": "Items that boost the amount glimmer gained for 10 minutes.",
       "Glimmer": "Shows items that are consumables that are related to gaining glimmer:",
       "Item": "Items that are exchangable with Rahool for 200 glimmer."
     },
@@ -184,7 +184,7 @@
       "Favorite": "Shows favorite items.",
       "Infuse": "Shows items you wish to eventually infuse.",
       "Keep": "Shows keep items.",
-      "NoTag": "Shows items with out a tag."
+      "NoTag": "Shows items without a tag."
     },
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",

@@ -106,6 +106,7 @@
     "Activities": {
       "AF": "La Forge de l'Archonte",
       "AoT": "Âge du triomphe",
+      "CD": "Tandem garancé",
       "CE": "La chute de Cropta",
       "CoE": "Défi des vétérans",
       "Dawning": "L'Avènement",
@@ -118,12 +119,71 @@
       "VoG": "Le Caveau de verre",
       "WotM": "Fureur mécanique"
     },
+    "Activity": "Disponible dans l'activité <i>{{activity}}</i>",
+    "ArmorCategory": "Montre les armures selon leur catégorie.",
+    "Ascended": "Montre les item qui ont une bulle ascension et si l'ascension a été faite ou non.",
+    "Categories": "Grand catégories d'arme.",
+    "Class": "Montre les objets en fonction de leur affinité de classe.",
+    "ClickFilters": "Cliquez sur les filtres ci-dessous ou écrivez les dans la barre de recherche pour les appliquer",
+    "Combine": "Les filtres sont combinés en utilisant la logique 'ET', par exemple '{{example}}' affichera tout les objets cryo-électriques avec au moins 300 de lumière. Les filtres peuvent être inversé en utilisant '{{not}}', par example '{{notexample}}' trouvera tout les objets qui ne sont pas des engrammes.",
+    "ContributeLight": "Objets qui améliorent votre niveau de lumière.",
+    "DamageType": "Montre les objets selon leur type de dégât.",
+    "Description": "Description",
+    "Dupe": "Montre les objets dupliqués",
+    "Engrams": "Montre les engrammes.",
     "EnterName": "Entrez un nom d'objet:",
     "EnterNote": "Entrez vos notes:",
+    "Equipment": "Objets qui peuvent être équipés.",
+    "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
+    "Filter": "Filtre",
+    "Glimmer": {
+      "Any": "N'importe quel type d'objet de lumen.",
+      "Boost": "Objets qui augmentent le nombre de lumen obtenus pendant 10 minutes.",
+      "Glimmer": "Montre les objets consommables qui font gagner des lumens.",
+      "Item": "Objets échangeable avec Rahol contre 200 lumens."
+    },
+    "InLoadout": "Montre les objets qui sont dans un pré set.",
+    "Infusable": "Montre les objets qui peuvent être infusés.",
+    "Leveling": {
+      "Complete": "{{term}} - Montre les objets qui sont complétés - toutes les améliorations débloqués.",
+      "Incomplete": "{{term}} - Montre les objets qui ne sont pas complétés - il manque au moins une amélioration à débloquer.",
+      "Leveling": "Montre les objets à différents niveaux d'évolution:",
+      "NeedsXP": "{{term}} - Montre les objets qui peuvent toujours recevoir de l'xp.",
+      "Upgraded": "{{term}} - Montre les objets qui ont accès d'xp pour débloquer toutes leurs bulles, mais pas toutes les bulles ont été débloquées.",
+      "XPComplete": "{{term}} - Montre les objets qui ne peuvent plus recevoir d'xp (que leurs améliorations aient été débloqués ou non)."
+    },
+    "LightLevel": "Montre les objets selon leur niveau de lumière (Attaque pour les Armes; Défense pour les Armures). '{{level}}' est un alias pour '{{light}}'.",
+    "Locked": "Montre les objets selon leur verrouillage.",
+    "NamedStat": "Montre les armures qui ont des points dans la statistique sélectionée.",
+    "NewItems": "Montre les nouveaux objets.",
+    "Notes": "Cherche les objets que vous avez marqué avec des notes personnalisés.",
+    "Ornament": "Montre les objets avec des ornements et filtre leur statut.",
+    "PartialMatch": "Montre les objets qui ont une partie du texte filtré dans leur nom.",
+    "Postmaster": "Objets actuellement au commis des postes",
+    "Quality": "Montre les objets selon leur pourcentage de statistiques total. '{{percentage}}' est un alias pour '{{quality}}'.",
+    "RarityTier": "Montre les objets selon leur rareté.",
+    "Rated": "Montre toutes les armes qui ont une note de Destiny Tracker.",
+    "Rating": "Montre toutes les armures qui ont une note de Destiny Tracker.",
+    "Reforgeable": "Montre les objets qui peuvent être reforgés à l'armurier.",
+    "Release": "Disponible depuis la sortie de <i>{{release}}</i>",
     "Releases": {
       "RoI": "Les Seigneurs de Fer",
+      "Vanilla": "Jeu de base",
       "tTK": "Le Roi des Corrompus"
     },
+    "Stackable": "Montre les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
+    "Stats": "Montre les objets selon la valeur de leur statistique. Les filtres disponibles sont:",
+    "Tags": {
+      "Dismantle": "Montre les objets que vous voudriez éventuellement démanteler.",
+      "Favorite": "Montre vos objets favoris.",
+      "Infuse": "Montre les objets que vous voudriez éventuellement infuser.",
+      "Keep": "Montre les objets à garder.",
+      "NoTag": "Montre les objets sans tag."
+    },
+    "Tracked": "Montre les quêtes/contrats selon si elles sont suivis ou non.",
+    "Transferable": "Objets qui peuvent êtres déplacés entre les personnages.",
+    "Vendor": "Objet disponible au vendeur <i>{{vendor}}</i> {{name}}",
+    "Vendor_noname": "Objet disponible au vendeur <i>{{vendor}}</i>",
     "Vendors": {
       "CQ": "Brigadier de l'Épreuve",
       "DO": "L'Astre Mort",
@@ -133,7 +193,10 @@
       "NM": "Nouvelle Monarchie",
       "Shipwright": "Responsable de la flotte",
       "Speaker": "Le Guide"
-    }
+    },
+    "WeaponClass": "Montre les objets selon leur classe d'arme.",
+    "WeaponType": "Montre les armes selon leur type d'arme.",
+    "Year": "Montre les objets selon l'année à laquelle ils sont apparus."
   },
   "Header": {
     "About": "À propos",
@@ -162,6 +225,7 @@
   },
   "Hotkey": {
     "ClearNewItems": "Effacer les nouveaux objets",
+    "ClearNewItemsTitle": "Raccourci clavier: X",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
     "RefreshInventory": "Actualiser l'inventaire",
     "StartSearch": "Commencer une recherche",

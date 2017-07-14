@@ -158,7 +158,7 @@
       "Upgraded": "{{term}} - mostra oggetti che hanno abbastanza XP per sbloccare tutti i potenziamenti, ma questi non sono ancora stati sbloccati.",
       "XPComplete": "{{term}} - mostra oggetti che non possono ricevere XP (sia che i potenziamenti siano sbloccati o no)."
     },
-    "LightLevel": "Mostra oggetti basandosi sul loro livello luce (Attacco per le armi; Difesa per le armature). '{{level}}' sta per '{{light}}'.",
+    "LightLevel": "Mostra oggetti basandosi sul loro livello luce (Attacco per le armi; Difesa per le armature). '{{light}}' sta per '{{level}}'.",
     "Locked": "Mostra oggetti basandosi sullo stato del loro blocco.",
     "NamedStat": "Mostra armature che hanno punti nella statistica specificata.",
     "NewItems": "Mostra i nuovi oggetti.",
@@ -166,7 +166,7 @@
     "Ornament": "Mostra oggetti con ornamenti e li filtra in base allo stato.",
     "PartialMatch": "Mostra oggetti il cui nome ha un riscontro parziale con il testo inserito.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
-    "Quality": "Mostra oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{percentage}}' sta per '{{quality}}'.",
+    "Quality": "Mostra oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' sta per '{{percentage}}'.",
     "RarityTier": "Mostra oggetti basandosi sulla loro rarità.",
     "Rated": "Mostra tutte le armi che hanno un giudizio su Destiny Tracker.",
     "Rating": "Mostra le armi basandosi sul loro giudizio di Destiny Tracker.",
@@ -208,7 +208,7 @@
     "About": "Chi siamo",
     "FilterHelp": "Cerca oggetti/potenziamenti o {{example}}",
     "Filters": "Filtri",
-    "Inventory": "Messaggio Bungie.net: {{message}}",
+    "Inventory": "Inventario",
     "Refresh": "Aggiorna i Dati di Destiny",
     "Shop": "Negozio",
     "SupportDIM": "Donatori"
