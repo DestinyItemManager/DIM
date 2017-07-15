@@ -47,7 +47,7 @@
       "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
       "Class": "No se puede comparar este objeto ya que no es para {{class}}."
     },
-    "ItemCount": "Tienes {{num}} de esto",
+    "ItemCount": "Tienes {{num}} de esto.",
     "Splits": "Comparar partes similares ({{quantity}})"
   },
   "Cooldown": {
@@ -63,7 +63,7 @@
     "Dump": "Tirar información a la consola"
   },
   "DidYouKnow": {
-    "Collapse": "Acabas de colapsar una seccion en DIM!. Esto puede ser util para ocultar partes de DIM que no necesitas usar normalmente.",
+    "Collapse": "¡Acabas de colapsar una seccion en DIM!. Esto puede ser util para ocultar partes de DIM que no necesitas usar normalmente.",
     "DidYouKnow": "¿Sabias que?",
     "DontShowAgain": "No muestres este consejo de vuelta",
     "DoubleClick": "Si estas moviendo un objeto a tu personaje activo (último al que iniciaste sesión), puedes darle doble click al objeto para equiparlo instantáneamente.",
@@ -80,12 +80,11 @@
     "Help": "Escribir una reseña (opcional)",
     "HelpCons": "Describe las cosas negativas de esta arma (opcional)",
     "HelpPros": "Describe las cosas positivas de esta arma (opcional)",
-    "NoReviews": "No hay reseñas para este objeto, sé el primero!",
+    "NoReviews": "¡No hay reseñas para este objeto, sé el primero!",
     "Pros": "Pros",
-    "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker",
-    "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker",
+    "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker.",
+    "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker.",
     "Submit": "Enviar",
-    "ThankYou": "Gracias por enviar una reseña! ",
     "YourReview": "Tu Reseña"
   },
   "FarmingMode": {
@@ -120,13 +119,13 @@
       "WotM": "La furia de las máquinas"
     },
     "ArmorCategory": "Muestra armaduras basadas en su categoria.",
-    "Description": "Descripcion",
+    "Description": "Descripción",
     "Engrams": "Muestra engramas.",
     "EnterName": "Escribe el nombre de un objeto:",
     "EnterNote": "Escribe texto de las notas:",
     "Filter": "Filtro",
     "Glimmer": {
-      "Any": "Cualquier tipo de lumen"
+      "Any": "Cualquier tipo de lumen."
     },
     "Releases": {
       "RoI": "Los Señores de Hierro",
@@ -156,9 +155,9 @@
     "CannotMove": "No puedes mover este objeto de este personaje.",
     "ChangingPerks": "Cambio de beneficios no soportado",
     "ChangingPerksInfo": "Lo sentimos, no hay forma de cambiar beneficios afuera del juego. ¡Quisiéramos poder hacerlo!",
-    "Drag": "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial",
-    "ExtensionDeprecatedMessage": "La extensión DIM de Chrome ahora solamente abre nuestro sitio web - el cual funciona en cualquier navegador y dispositivos móviles. Puedes remover la extensión, o dejarla como un conveniente acceso para el sitio. Tu información (etiquetas, notas y ajustes) pueden ser importadas desde la pagina de almacenamiento (icono de disco en la cabecera)",
-    "ExtensionDeprecatedTitle": "DIM es un solo sitio web ahora",
+    "Drag": "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial.",
+    "ExtensionDeprecatedMessage": "La extensión DIM de Chrome ahora solamente abre nuestro sitio web - el cual funciona en cualquier navegador y dispositivos móviles. Puedes remover la extensión, o dejarla como un conveniente acceso para el sitio. Tu información (etiquetas, notas y ajustes) pueden ser importadas desde la pagina de almacenamiento (icono de disco en la cabecera).",
+    "ExtensionDeprecatedTitle": "¡DIM es un solo sitio web ahora!",
     "HidePopup": "Esconde Esta Ventana",
     "NeverShow": "Nunca mostrar esto de nuevo.",
     "NoStorage": "DIM no puede almacenar información",
@@ -179,7 +178,7 @@
     "BringGear": "Traerá el equipo a:",
     "Calc": "Calculador de Infusión",
     "InfuseItems": "Selecciona un objeto para infusionar:",
-    "Infusion": "Buscador de Combustible de Infusión.",
+    "Infusion": "Buscador de Combustible de Infusión",
     "InfusionMaterials": "Materiales para Infusionar",
     "LockedItems": "Incluir objetos 'bloqueados'",
     "NoItems": "No hay objetos disponibles para infusionar.",
@@ -194,35 +193,35 @@
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
     "Distributed": "{{name}} distribuidos. Ahora {{name}} se encuentra dividido entre los personajes de manera equitativa.",
-    "ToStore": "Todos los {{name}} ahora están en tu {{store}}",
-    "ToVault": "Todos los {{name}} ahora están en tu Depósito"
+    "ToStore": "Todos los {{name}} ahora están en tu {{store}}.",
+    "ToVault": "Todos los {{name}} ahora están en tu Depósito."
   },
   "ItemService": {
     "BucketFull": {
       "Guardian": "Hay muchos objetos de tipo '{{itemtype}}' en tu {{store}}.",
       "Vault": "Hay muchos objetos de tipo '{{itemtype}}' en la {{store}}."
     },
-    "Classified": "Este objeto es 'clasificado' y no puede transferirse en este momento",
-    "Classified2": "Objeto 'clasificado'. Bungie no a entregado información acerca de este objeto.  Este objeto todavía no es transferible.",
+    "Classified": "Este objeto es 'clasificado' y no puede transferirse en este momento.",
+    "Classified2": "Objeto 'clasificado'. Bungie no a entregado información acerca de este objeto. Este objeto todavía no es transferible.",
     "Deequip": "No se encontró otro objeto a equipar para desequipar {{itemname}}",
     "ExoticError": "'{{itemname}}' no puede ser equipado porque el objeto exótico en el espacio {{slot}} no puede ser desequipado. ({{error}})",
     "NotEnoughRoom": "No hay nada que podamos sacar fuera de {{store}} para hacerle espacio a {{itemname}}",
     "OnlyEquippedClassLevel": "Esto solo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
     "PercentComplete": "({{percent, pct}} Completar)",
-    "TooMuch": "Parece que pediste mover más objetos de los que existen en la fuente!",
-    "TwoExotics": "No sabemos cómo conseguiste equipar más de 2 exóticas!"
+    "TooMuch": "¡Parece que pediste mover más objetos de los que existen en la fuente!",
+    "TwoExotics": "¡No sabemos cómo conseguiste equipar más de 2 exóticas!"
   },
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
     "ClearLocked": "Quitar bloqueo",
     "ContainsVendorItems": "Esta carga contiene artículos de vendedores",
     "Current": "Actual",
-    "Equip": "Equipar al personaje actual",
+    "Equip": "Equipar al {{character}}",
     "Exclude": "Objetos excluidos",
     "ExcludeHelp": "Shift + click en un objeto (o arrástralo y suéltalo en esta cubeta) para crear un conjunto sin equipo específico.",
     "FilterSets": "Conjuntos de filtros",
-    "Guardians": " Guardianes",
+    "Guardians": "Guardianes",
     "Help": {
       "And": "Armadura con todas éstas mejoras será usada (\"y\")",
       "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
@@ -256,8 +255,8 @@
     "LockPerk": "Bloquear mejora",
     "Locked": "Objetos bloqueados",
     "LockedHelp": "Arrastrar y soltar cualquier objeto en su cubeta para crear conjunto con ese equipamiento específico. Shift + click para excluir objetos.",
-    "Missing1": "Faltan piezas legendarias o exóticas para crear un conjunto completo!",
-    "Missing2": "Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!",
+    "Missing1": "¡Faltan piezas legendarias o exóticas para crear un conjunto completo!",
+    "Missing2": "¡Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -355,7 +354,7 @@
     "Vault": "Bóveda"
   },
   "Notes": {
-    "Error": "Error! Máximo 120 caracteres por notas.",
+    "Error": "¡Error! Máximo 120 caracteres por notas.",
     "Help": "Agregar notas a este artículo"
   },
   "Objectives": {
@@ -443,8 +442,8 @@
     "ImportFromExtensionButton": "Importar Datos",
     "ImportFromExtensionDetail": "Puedes importar datos desde la extensión de Chrome de DIM a la página web de DIM.",
     "ImportFromExtensionWarning": "Tus datos de la extensión de Chrome de DIM van a ser sobreescritos con tus datos actuales. ¿Deseas continuar?",
-    "ImportNoFile": "Ningún archivo ha sido seleccionado!",
-    "ImportSuccess": "Datos de DIM importados!",
+    "ImportNoFile": "¡Ningún archivo ha sido seleccionado!",
+    "ImportSuccess": "¡Datos de DIM importados!",
     "IndexedDBStorage": "Almacenamiento local del Navegador",
     "Loadouts": "{{value}} cargas",
     "NoData": "No hay datos",
@@ -495,10 +494,10 @@
       "FAQ": "Preguntas Frecuentes",
       "FAQAccess": "¿Cómo accede DIM a mis datos de Destiny?",
       "FAQAccessAnswer": "Cualquier extensión de Chrome puede pedir acceso a los datos que una página web guarda en tu computadora. Cuando inicias sesión en Bungie.net, se te proporciona un  token (una cookie) que es generada únicamente para tu cuenta. Utilizas este token para comunicarte con Bungie de manera segura. El token es mas seguro que estar enviando tus credenciales con cada requisito hecho a los servidores de Bungie. DIM utiliza este token para comunicarse con Bungie por ti.",
-      "FAQDupeGally": "Oye, DIM duplicó mi Gjallarhorn!",
+      "FAQDupeGally": "¡Oye, DIM duplicó mi Gjallarhorn!",
       "FAQDupeGallyAnswer": "No, no lo hicimos. Lo prometo.",
       "FAQKeyboard": "¿Cuenta DIM con soporte para atajos de teclado (shortcuts)?",
-      "FAQKeyboardAnswer": "Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
+      "FAQKeyboardAnswer": "¡Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
       "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
       "FAQLogoutAnswer": "Da click en tu cuenta y selecciona \"cerrar sesión\"",
       "FAQLostItem": "¡Perdí mi artículo usando tu herramienta!",
@@ -508,8 +507,8 @@
       "Header": "Acerca de Destiny Item Manager (DIM)",
       "HowItsMade": "DIM fue construido sobre los mismos servicios que utiliza Bungie.net y la Aplicación complementaria de Destiny. DIM puede accesar los artículos dentro de el Inventario de tus Guardianes y el Depósito para ambos Xbox y PlayStation. Después puedes arrastrar y soltar los objetos a donde gustes moverlos.",
       "Reddit": "Reddit",
-      "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, háznoslas saber!",
-      "Translation": "Únete al Equipo Traductor!",
+      "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, ¡háznoslas saber!",
+      "Translation": "¡Únete al Equipo Traductor!",
       "TranslationText": "Utilizamos {{link}} para facilitar la traducción. Si quieres mejorar alguna de las traducciones de DIM, únete al equipo.",
       "Twitter": "Twitter",
       "TwitterHelp": "Asegúrate de seguirnos para estar informado de las actualizaciones e información de la aplicación en tiempo real.",
