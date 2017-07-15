@@ -30,11 +30,13 @@ function PressTip() {
         tooltip.show();
       }
 
-      $element.on('mousedown', () => {
+      $element.on('mousedown touchstart', (e) => {
+        e.preventDefault();
         showTip();
       });
 
-      $element.on('mouseup mouseleave', () => {
+      $element.on('mouseup mouseleave touchend', (e) => {
+        e.preventDefault();
         if (tooltip) {
           tooltip.hide();
         }
