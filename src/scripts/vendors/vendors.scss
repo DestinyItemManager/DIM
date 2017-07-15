@@ -63,7 +63,6 @@
     padding-right: 5px;
   }
   .vendor-headers-background {
-    display: none;
     position: fixed;
     height: 44px;
     left: 0;
@@ -71,11 +70,14 @@
     top: 42px;
     background-color: #434444;
     z-index: 4;
+    &.sticky {
+      box-shadow: 0 1px 6px 0px #222;
+    }
   }
   .vendorHeaderWrapper {
     z-index: 4;
   }
-  .vendorHeaderWrapper.sticky {
+  .vendorHeaderWrapper {
     position:fixed;
     top: 42px;
     max-width: 900px;
@@ -83,12 +85,8 @@
 
     @supports (position: sticky) {
       position: sticky;
-      top: 50px;
+      top: 55px;
     }
-  }
-  .vendor-headers-background.sticky {
-    display: block;
-    box-shadow: 0 1px 6px 0px #222;
   }
   .vendor-headers {
     display: flex;

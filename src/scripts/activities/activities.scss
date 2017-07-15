@@ -1,8 +1,11 @@
 .activities {
+  width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 20px);
+  width: calc((40px + var(--item-size) + (3 * (var(--item-size) + 8px))) * var(--num-characters) + ((var(--num-characters) - 1) * 12px));
+  margin: 0 auto;
+
   .activities-characters {
     display: flex;
     margin-top: 12px;
-    justify-content: space-evenly;
   }
 
   .activities-character {
