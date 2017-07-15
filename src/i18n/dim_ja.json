@@ -38,7 +38,7 @@
     "VendorNotFound": "ベンダー情報ありません"
   },
   "Compare": {
-    "All": "{{type}} 比較  ({{quantity}})",
+    "All": "{{type}} 比較 ({{quantity}})",
     "Archetype": "原型と比較 ({{quantity}})",
     "ButtonHelp": "アイテムを比較する",
     "Close": "終了",
@@ -48,7 +48,7 @@
       "Class": "このアイテム {{class}} 用のため、比較できません。"
     },
     "ItemCount": "{{num}} を所持していません。",
-    "Splits": "同様の分割を比較する（{{quantity}}）"
+    "Splits": "同様の分割を比較する ({{quantity}})"
   },
   "Cooldown": {
     "Grenade": "グレネードのクールダウン: {{cooldown}}",
@@ -57,7 +57,7 @@
   },
   "Countdown": {
     "Days": "{{count}} 日間",
-    "Days_plural": "{{count}} 日間 "
+    "Days_plural": "{{count}} 日間"
   },
   "Debug": {
     "Dump": "ゲーム機に情報を転送する"
@@ -264,7 +264,7 @@
   },
   "Loadouts": {
     "Any": "全てのクラス",
-    "Applied": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+    "Applied": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
     "AppliedAuto": "自動ロードアウトビルダー",
     "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
     "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}}の{{failed}}アイテムにエラーがありました。",
@@ -368,7 +368,7 @@
     "CharacterOrderRecent": "最近使ったキャラ",
     "CharacterOrderReversed": "最近使ったキャラ(逆順)",
     "ColorA11y": "色覚設定",
-    "ColumnSize": "\n {{num}}個",
+    "ColumnSize": "{{num}}個",
     "ColumnSizeAuto": "オート",
     "DIMPopups": "DIMの情報",
     "DIMPopupsReset": "以前非表示にしたヒントをリセットする",
@@ -399,9 +399,9 @@
     "Intellect": "知性",
     "Level": "レベル",
     "NoBonus": "ボーナスなし。",
-    "OfMaxRoll": "統計量の  {{range}}",
+    "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、をクリックしてください。",
-    "Prestige": "評判レベル：  {{level}}\n光の欠片5個までは後  {{exp}}xp",
+    "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
     "Quality": "品質",
     "Strength": "腕力",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
@@ -440,7 +440,7 @@
     "Settings": "DIMの設定と選択",
     "StatLabel": "現在の使用:",
     "TagNotes": "{{value}}個のタグ、メモ付きのアイテム",
-    "Title": "DIMのストレージ\n"
+    "Title": "DIMのストレージ"
   },
   "StoreBucket": {
     "FillStack": "フルスタック ({{amount}})",

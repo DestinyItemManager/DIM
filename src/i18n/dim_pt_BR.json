@@ -65,7 +65,7 @@
   "DidYouKnow": {
     "Collapse": "Você ocultou uma seção no DIM! Isso pode ser útil para esconder partes do DIM que você normalmente não usa.",
     "DidYouKnow": "Você sabia?",
-    "DontShowAgain": "Não exibir esta dica novamente.",
+    "DontShowAgain": "Não exibir esta dica novamente",
     "DoubleClick": "Se você está movendo um item para o seu personagem ativo atualmente (último logado), você pode dar um duplo clique para equipá-lo instantaneamente.",
     "DragAndDrop": "Itens podem ser arrastados e soltados entre diferentes colunas de personagens/cofre.",
     "Expand": "Para re-expandir uma seção simplesmente clique no sinal de mais, no lado esquerdo da categoria que você ocultou.",
@@ -120,7 +120,7 @@
       "WotM": "A ira da máquina"
     },
     "ArmorCategory": "Mostrar armaduras baseadas na sua categoria.",
-    "Categories": "Categoria de items de Alto Nível",
+    "Categories": "Categoria de items de Alto Nível.",
     "Class": "Mostrar items baseado em sua afinidade por classe.",
     "ClickFilters": "Clique em filtros em baixo para aplicar, ou para escrever na caixa de pesquisa.",
     "ContributeLight": "Items que contribuem para o seu nível de luz.",
@@ -136,7 +136,7 @@
     "Glimmer": {
       "Any": "Qualquer tipo de item de glimmer.",
       "Boost": "Item que aumenta a quanitdade de glimmer ganho por 10 minutos.",
-      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de glimmer.",
+      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de glimmer:",
       "Item": "Items que podem ser trocados no Rahool por 200 glimmer."
     },
     "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de layout.",
@@ -166,7 +166,7 @@
   },
   "Help": {
     "CannotMove": "Não é possível mover o item para fora deste personagem.",
-    "ChangingPerks": "Mudança de perks não é suportado.",
+    "ChangingPerks": "Mudança de perks não é suportado",
     "ChangingPerksInfo": "Desculpe, não há maneira de alterar perks fora do jogo. Bem que gostaríamos!",
     "Drag": "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente.",
     "ExtensionDeprecatedMessage": "A extensão DIM do Chrome agora abre o nosso site - que funciona em qualquer navegador ou dispositivo móvel! Você pode remover a extensão ou deixá-la como um atalho pro site. Seus dados (marcações, notas e configurações) podem ser importados da pagina de armazenamento (ícone de disco no cabeçalho).",
@@ -175,7 +175,7 @@
     "NeverShow": "Não mostre isso novamente.",
     "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não pode salvar dados no navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco. DIM não pode prosseguir.",
-    "UpgradeChrome": "Por favor, atualize o Chrome.",
+    "UpgradeChrome": "Por favor, atualize o Chrome",
     "Version_beta": "Beta foi atualizado para v{{version}}",
     "Version_release": "DIM v{{version}} lançado",
     "Xur": "Xûr chegou"
@@ -201,7 +201,7 @@
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Houve um problema ao salvar uma informação específica do DIM sobre um item. O problema é que há um limite de dados que podem salvos - é por isso que tags e notas não são permitidos fora da versão Beta. O erro foi: {{error}}.",
-    "SaveInfoErrorTitle": "Erro salvando informação de item."
+    "SaveInfoErrorTitle": "Erro salvando informação de item"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidado",
@@ -238,18 +238,18 @@
     "Help": {
       "And": "Armadura com todos esses perks será usada (\"e\")",
       "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada set.",
-      "Discipline": "Disciplina acelera o tempo de recarga de granadas.",
-      "DragAndDrop": "Arraste e solte itens nas caixas para construir sets somente com aquele equipamento.",
+      "Discipline": "Disciplina acelera o tempo de recarga de granadas",
+      "DragAndDrop": "Arraste e solte itens nas caixas para construir sets somente com aquele equipamento",
       "Help": "Precisa de ajuda?",
       "HigherTiers": "Tiers mais altos são melhores",
-      "Intellect": "Intelecto acelera o tempo de recarga da Super.",
-      "Lock": "Trave um conjunto de perks clicando na caixa e selecionando os perks.",
-      "MultiPerk": "Se você quiser usar uma armadura com múltiplos perks juntos, Shift+clique nos perks desejados.",
-      "NoPerk": "Se um perk não aparece, significa que você não tem armaduras com este perk.",
+      "Intellect": "Intelecto acelera o tempo de recarga da Super",
+      "Lock": "Trave um conjunto de perks clicando na caixa e selecionando os perks",
+      "MultiPerk": "Se você quiser usar uma armadura com múltiplos perks juntos, Shift+clique nos perks desejados",
+      "NoPerk": "Se um perk não aparece, significa que você não tem armaduras com este perk",
       "Or": "Armadura com qualquer um destes perks será usada (\"ou\")",
       "ShiftClick": "Shift+clique em um item para construir sets sem aquele equipamento",
       "StatsIncrease": "Quando o nível de defesa de um item aumenta, os atributos deste item (intelecto, disciplina e força) também aumentam.",
-      "Strength": "Força acelera o tempo de recarga do corpo-a-corpo.",
+      "Strength": "Força acelera o tempo de recarga do corpo-a-corpo",
       "Synergy": "Tente encontrar uma armadura com perks que aumentem a quantidade de munição das armas que você mais usa.",
       "Tier11Example": "4/5/2 (um set Tier 11) significa 4 Intelecto, 5 Disciplina, 2 Força (4+5+2 = Tier 11)"
     },
@@ -289,7 +289,7 @@
     "AppliedAuto": "Construtor automático de sets",
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
-    "Applied_plural": "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
+    "Applied_plural": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
     "ApplySearch": "Itens = \"{{query}}\"",
     "Before": "Antes '{{name}}'",
     "Cancel": "Cancelar",
@@ -337,8 +337,8 @@
     "Load": "Carregando informações salvas",
     "LoadCharInv": "Carregando personagens e inventário",
     "Outdated": "Informações desatualizadas",
-    "OutdatedExplanation": "A Bungie atualizou seu banco de dados de informações de Destny. Reinicie o DIM para obter as novas informações. Esteja ciente que algumas coisas no DIM podem não funcionar por algumas horas após a Bungie atualizar o Destiny, já que as novas informações ainda estão sendo implementadas em seus servidores.",
-    "Save": "Salvando últimas informações ",
+    "OutdatedExplanation": "A Bungie atualizou seu banco de dados de informações de Destiny. Reinicie o DIM para obter as novas informações. Esteja ciente que algumas coisas no DIM podem não funcionar por algumas horas após a Bungie atualizar o Destiny, já que as novas informações ainda estão sendo implementadas em seus servidores.",
+    "Save": "Salvando últimas informações",
     "Unzip": "Descompactando últimas informações"
   },
   "MoveAmount": {
@@ -384,12 +384,12 @@
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análises detalhadas das armas e permitir avaliação de armas",
-    "AllowIdPostToDtrLine2": "Isso irá compartilhar seu nome de conta e itens analisados com o Destiny Tracker",
+    "AllowIdPostToDtrLine2": "Isso irá compartilhar seu nome de conta e itens analisados com o Destiny Tracker.",
     "AlwaysShowDetails": "Sempre mostrar o popup expandido do item",
     "CharacterOrder": "Ordenar personagens por",
-    "CharacterOrderFixed": "Idade do personagem",
-    "CharacterOrderRecent": "Personagem mais recente",
-    "CharacterOrderReversed": "Personagem mais recente (inverso)",
+    "CharacterOrderFixed": "idade do personagem",
+    "CharacterOrderRecent": "personagem mais recente",
+    "CharacterOrderReversed": "personagem mais recente (inverso)",
     "ColorA11y": "Configuração de cegueira de cores",
     "ColumnSize": "{{num}} itens",
     "ColumnSizeAuto": "Auto",
@@ -409,7 +409,7 @@
     "ShowAnimationsHelp": "Mostrará o brilho animado de item novo em novos itens. Desativar isso pode poupar ciclos da CPU.",
     "ShowElemental": "Exibir ícone de dano elemental em armas",
     "ShowOverlay": "Mostrar novos itens com um efeito brilhante",
-    "ShowReviews": "Mostrar classificações das armas em análise.",
+    "ShowReviews": "Mostrar classificações das armas em análise",
     "SizeItem": "Tamanho do item",
     "SortName": "Nome",
     "SortPrimary": "Estatisticas primárias",
