@@ -10,7 +10,7 @@
     "test": "echo \"No tests\"",
     "dev-chrome": "npm start -s",
     "generate-css": "echo \"No need to run this any more. Just run 'npm start'!\n\"",
-    "lint": "eslint --fix . && htmlhint",
+    "lint": "eslint --fix . && grunt lintJSON && htmlhint",
     "bundle": "webpack --config ./config/webpack.js --hide-modules",
     "build-release": "npm run bundle -s -- --env=release",
     "build-beta": "npm run bundle -s -- --env=beta",
