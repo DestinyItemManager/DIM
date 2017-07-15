@@ -1590,11 +1590,14 @@ h2, h3, h4 {
 .dropdown-menu {
   border: 1px solid #ddd;
   background-color: white;
-  transform: translate(-11px, 5px);
+  transform: translate(0, -1px);
+  .textcomplete-header, .textcomplete-footer {
+    display: none;
+  }
   li {
     border-top: 1px solid #ddd;
     padding: 2px 5px;
-    &:first-child {
+    &:nth-child(2) {
       border-top: none;
     }
     &:hover {

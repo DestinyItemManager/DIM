@@ -1,8 +1,9 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimSearchFilter.directive.html';
-import 'jquery-textcomplete';
 import { flatMap } from '../util';
+import Textcomplete from 'textcomplete/lib/textcomplete';
+import Textarea from 'textcomplete/lib/textarea';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
@@ -132,7 +133,9 @@ function SearchFilter(dimSearchService) {
     controller: SearchFilterCtrl,
     controllerAs: 'vm',
     link: function link(scope, element) {
-      element.find('input').textcomplete([
+      const editor = new Textarea(element[0].getElementsByTagName('input')[0]);
+      const textcomplete = new Textcomplete(editor);
+      textcomplete.register([
         {
           words: dimSearchService.keywords,
           match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
@@ -149,6 +152,10 @@ function SearchFilter(dimSearchService) {
         }
       ], {
         zIndex: 1000
+      });
+
+      scope.$on('$destroy', () => {
+        textcomplete.destroy();
       });
     },
     bindToController: true,
