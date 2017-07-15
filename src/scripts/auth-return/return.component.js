@@ -33,8 +33,12 @@ function ReturnController($http, OAuthService, OAuthTokenService) {
         window.location = "/index.html";
       })
       .catch((error) => {
+        if (error.status === -1) {
+          ctrl.error = 'A content blocker is interfering with either DIM or Bungie.net, or you are not connected to the internet.';
+          return;
+        }
         console.error(error);
-        ctrl.error = error.message || error.data.error_description;
+        ctrl.error = error.message || (error.data && error.data.error_description) || "Unknown";
       });
   };
 }
