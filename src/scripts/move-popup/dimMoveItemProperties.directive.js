@@ -168,9 +168,9 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
   if (vm.item.primStat) {
     vm.light = vm.item.primStat.value.toString();
-    if (vm.item.dmg) {
-      vm.classes[`is-${vm.item.dmg}`] = true;
-    }
+  }
+  if (vm.item.dmg) {
+    vm.classes[`is-${vm.item.dmg}`] = true;
   }
 
   if (vm.item.classTypeName !== 'unknown' &&
