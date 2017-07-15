@@ -3,7 +3,6 @@ import _ from 'underscore';
 import { sum } from '../util';
 import template from './vendor-item.html';
 import dialogTemplate from './vendor-item-dialog.html';
-import Popper from 'popper.js';
 
 export const VendorItem = {
   bindings: {
