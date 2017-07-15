@@ -9,7 +9,8 @@
        ng-repeat="node in vm.talentGrid.nodes | talentGridNodes:vm.hiddenColumns track by $index"
        ng-class="{ 'talent-node-activated': node.activated, 'talent-node-showxp': (!node.activated && node.xpRequired), 'talent-node-default': (node.activated && !node.xpRequired && !node.exclusiveInColumn && node.column < 1) }"
        ng-click="node.hash == 1270552711 ? vm.infuse({ '$event': $event }) : true"
-       press-tip="{{ node.name }}&#10;{{ node.description }}">
+       press-tip="{{ node.description }}"
+       press-tip-title="{{ node.name }}">
       <circle r="16"
               cx="-17"
               cy="17"

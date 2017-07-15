@@ -6,8 +6,15 @@
     border-radius: 3px;
     box-shadow: 0 0 2px rgba(0,0,0,0.5);
     padding: 8px;
-    text-align: center;
+    text-align: left;
     z-index: 99999;
+
+    h2 {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      letter-spacing: 1px;
+      font-weight: normal;
+    }
 }
 
 .tooltip .tooltip-arrow {

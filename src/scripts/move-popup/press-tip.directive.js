@@ -5,27 +5,24 @@ import './press-tip.scss';
 angular.module('dimApp')
   .directive('pressTip', PressTip);
 
-function PressTip($timeout) {
+function PressTip() {
   'ngInject';
 
   return {
     restrict: 'A',
     link($scope, $element, $attrs) {
-      'ngInject';
-      console.log('link');
-
       let tooltip = null;
-      let timer = null;
 
       function showTip() {
-        console.log('show');
-        if (timer) {
-          timer.cancel();
-        }
         if (!tooltip) {
+          let title = $attrs.pressTip;
+          if ($attrs.pressTipTitle) {
+            title = `<h2>${$attrs.pressTipTitle}</h2>${title}`;
+          }
           tooltip = new Tooltip($element[0], {
             placement: 'top', // or bottom, left, right, and variations
-            title: $attrs.pressTip,
+            title,
+            html: true,
             trigger: 'manual',
             container: 'body'
           });
@@ -37,23 +34,13 @@ function PressTip($timeout) {
         showTip();
       });
 
-      $element.on('mouseenter', () => {
-        timer = $timeout(showTip, 2000);
-      });
-
       $element.on('mouseup mouseleave', () => {
-        if (timer) {
-          timer.cancel();
-        }
         if (tooltip) {
           tooltip.hide();
         }
       });
 
       $scope.$on('$destroy', () => {
-        if (timer) {
-          timer.cancel();
-        }
         if (tooltip) {
           tooltip.dispose();
           tooltip = null;
