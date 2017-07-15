@@ -42,12 +42,12 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
         vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
-        vm.loadouts = vm.loadouts.filter((item) => {
-          return (_.isUndefined(item.platform) ||
-                  item.platform === platform.label) &&
+        vm.loadouts = vm.loadouts.filter((loadout) => {
+          return (_.isUndefined(loadout.platform) ||
+                  loadout.platform === platform.platformLabel) &&
             (vm.classTypeId === -1 ||
-             item.classType === -1 ||
-             item.classType === vm.classTypeId);
+             loadout.classType === -1 ||
+             loadout.classType === vm.classTypeId);
         });
       });
   }
