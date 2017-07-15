@@ -1,5 +1,7 @@
 # Next
 
+* On mobile, tapping outside of dialogs and dropdowns to dismiss them now works.
+
 # 4.4.0
 
 * New filters for ornaments - is:ornament, is:ornamentmissing, is:ornamentunlocked
