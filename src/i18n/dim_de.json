@@ -122,7 +122,7 @@
     "Activity": "Verfügbar durch Aktivität <i>{{activity}}</i>",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
     "Ascended": "Zeigt Items, die eine aufwertbare Eigenschaft haben und ob sie aufgewertet wurden oder nicht.",
-    "Categories": "Item Hauptkategorien",
+    "Categories": "Item Hauptkategorien.",
     "Class": "Zeige Items basierend auf deren Klassenbezug.",
     "ClickFilters": "Klick unten auf Filter um diese anzuwenden oder benutze die Suchfunktion.",
     "Combine": "Filter werden nach 'and'-Logik kombiniert, zum Beispiel wird '{{example}}' alle Arkus-Gegenstände mit einem Licht über 300 zurückgeben. Filter können durch '{{not}}' negiert werden, zum Beispiel findet '{{notexample}}' alle Nicht-Engramm Items.",
