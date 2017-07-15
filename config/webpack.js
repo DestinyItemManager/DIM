@@ -20,8 +20,7 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 const preMinifiedDeps = [
   'underscore/underscore-min.js',
   'indexeddbshim/dist/indexeddbshim.min.js',
-  'messageformat/messageformat.min.js',
-  'jquery/dist/jquery.min.js'
+  'messageformat/messageformat.min.js'
 ];
 
 module.exports = (env) => {
@@ -110,9 +109,6 @@ module.exports = (env) => {
 
     plugins: [
       new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery',
         MessageFormat: 'messageformat'
       }),
 

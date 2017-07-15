@@ -50,7 +50,7 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
         popper.scheduleUpdate();
       } else {
         const boundariesElement = document.getElementsByClassName('store-bounds')[0];
-        popper = new Popper(element, dialog, {
+        popper = new Popper(element[0], dialog[0], {
           placement: 'top-start',
           eventsEnabled: false,
           modifiers: {

@@ -62,7 +62,7 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
               });
             }
           }
-          $document.keyup(keyup);
+          $document.on('keyup', keyup);
 
           function keydown(e) {
             if (vmd.shiftHeld === false && e.shiftKey) {
@@ -71,7 +71,7 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
               });
             }
           }
-          $document.keydown(keydown);
+          $document.on('keydown', keydown);
 
           $scope.$on('$destroy', () => {
             $document.off('keyup', keyup);

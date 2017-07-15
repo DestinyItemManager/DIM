@@ -39,7 +39,7 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
       if (popper) {
         popper.scheduleUpdate();
       } else {
-        popper = new Popper($element[0].getElementsByClassName('item')[0], dialog, {
+        popper = new Popper($element[0].getElementsByClassName('item')[0], dialog[0], {
           placement: 'top-start',
           eventsEnabled: false,
           modifiers: {
