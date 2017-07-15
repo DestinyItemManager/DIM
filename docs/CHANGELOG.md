@@ -1,5 +1,7 @@
 # Next
 
+# 4.4.0
+
 * New filters for ornaments - is:ornament, is:ornamentmissing, is:ornamentunlocked
 * Fixed a bug where item data would not respect your language settings.
 * Weapon reviews now show up immediately, and can be edited.
