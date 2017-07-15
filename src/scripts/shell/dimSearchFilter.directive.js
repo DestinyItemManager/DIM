@@ -332,6 +332,44 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     });
   };
 
+  function compareByOperand(compare, predicate) {
+    if (predicate.length === 0 || !compare) {
+      return false;
+    }
+
+    const operands = ['<=', '>=', '=', '>', '<'];
+    let operand = 'none';
+    let result = false;
+
+    operands.forEach((element) => {
+      if (predicate.substring(0, element.length) === element) {
+        operand = element;
+        predicate = predicate.substring(element.length);
+        return false;
+      } else {
+        return true;
+      }
+    }, this);
+
+    predicate = parseFloat(predicate);
+
+    switch (operand) {
+    case 'none':
+      return compare === predicate;
+    case '=':
+      return compare === predicate;
+    case '<':
+      return compare < predicate;
+    case '<=':
+      return compare <= predicate;
+    case '>':
+      return compare > predicate;
+    case '>=':
+      return compare >= predicate;
+    }
+    return result;
+  }
+
   // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
   // make the for(...) loop for filterTrans a little more bearable for the readability tradeoff.
   const _cachedFilters = {};
@@ -523,180 +561,25 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         }));
     },
     light: function(predicate, item) {
-      if (predicate.length === 0 || !item.primStat) {
+      if (!item.primStat) {
         return false;
       }
-
-      const operands = ['<=', '>=', '=', '>', '<'];
-      let operand = 'none';
-      let result = false;
-
-      operands.forEach((element) => {
-        if (predicate.substring(0, element.length) === element) {
-          operand = element;
-          predicate = predicate.substring(element.length);
-          return false;
-        } else {
-          return true;
-        }
-      }, this);
-
-      predicate = parseInt(predicate, 10);
-
-      switch (operand) {
-      case 'none':
-        result = (item.primStat.value === predicate);
-        break;
-      case '=':
-        result = (item.primStat.value === predicate);
-        break;
-      case '<':
-        result = (item.primStat.value < predicate);
-        break;
-      case '<=':
-        result = (item.primStat.value <= predicate);
-        break;
-      case '>':
-        result = (item.primStat.value > predicate);
-        break;
-      case '>=':
-        result = (item.primStat.value >= predicate);
-        break;
-      }
-      return result;
+      return compareByOperand(item.primStat.value, predicate);
     },
     level: function(predicate, item) {
-      if (predicate.length === 0 || !item.equipRequiredLevel) {
-        return false;
-      }
-
-      const operands = ['<=', '>=', '=', '>', '<'];
-      let operand = 'none';
-      let result = false;
-
-      operands.forEach((element) => {
-        if (predicate.substring(0, element.length) === element) {
-          operand = element;
-          predicate = predicate.substring(element.length);
-          return false;
-        } else {
-          return true;
-        }
-      }, this);
-
-      predicate = parseInt(predicate, 10);
-
-      switch (operand) {
-      case 'none':
-        result = (item.equipRequiredLevel === predicate);
-        break;
-      case '=':
-        result = (item.equipRequiredLevel === predicate);
-        break;
-      case '<':
-        result = (item.equipRequiredLevel < predicate);
-        break;
-      case '<=':
-        result = (item.equipRequiredLevel <= predicate);
-        break;
-      case '>':
-        result = (item.equipRequiredLevel > predicate);
-        break;
-      case '>=':
-        result = (item.equipRequiredLevel >= predicate);
-        break;
-      }
-      return result;
+      return compareByOperand(item.equipRequiredLevel, predicate);
     },
     quality: function(predicate, item) {
-      if (predicate.length === 0 || !item.quality) {
+      if (!item.quality) {
         return false;
       }
-
-      const operands = ['<=', '>=', '=', '>', '<'];
-      let operand = 'none';
-      let result = false;
-
-      operands.forEach((element) => {
-        if (predicate.substring(0, element.length) === element) {
-          operand = element;
-          predicate = predicate.substring(element.length);
-          return false;
-        } else {
-          return true;
-        }
-      }, this);
-
-      predicate = parseInt(predicate, 10);
-
-      switch (operand) {
-      case 'none':
-        result = (item.quality.min === predicate);
-        break;
-      case '=':
-        result = (item.quality.min === predicate);
-        break;
-      case '<':
-        result = (item.quality.min < predicate);
-        break;
-      case '<=':
-        result = (item.quality.min <= predicate);
-        break;
-      case '>':
-        result = (item.quality.min > predicate);
-        break;
-      case '>=':
-        result = (item.quality.min >= predicate);
-        break;
-      }
-      return result;
+      return compareByOperand(item.quality.min, predicate);
     },
     hasRating: function(predicate, item) {
       return predicate.length !== 0 && item.dtrRating;
     },
     rating: function(predicate, item) {
-      if (predicate.length === 0 || !item.dtrRating) {
-        return false;
-      }
-
-      const operands = ['<=', '>=', '=', '>', '<'];
-      let operand = 'none';
-      let result = false;
-
-      operands.forEach((element) => {
-        if (predicate.substring(0, element.length) === element) {
-          operand = element;
-          predicate = predicate.substring(element.length);
-          return false;
-        } else {
-          return true;
-        }
-      }, this);
-
-      predicate = parseFloat(predicate);
-      const itemRating = parseFloat(item.dtrRating);
-
-      switch (operand) {
-      case 'none':
-        result = (itemRating === predicate);
-        break;
-      case '=':
-        result = (itemRating === predicate);
-        break;
-      case '<':
-        result = (itemRating < predicate);
-        break;
-      case '<=':
-        result = (itemRating <= predicate);
-        break;
-      case '>':
-        result = (itemRating > predicate);
-        break;
-      case '>=':
-        result = (itemRating >= predicate);
-        break;
-      }
-      return result;
+      return compareByOperand(item.dtrRating, predicate);
     },
     year: function(predicate, item) {
       if (predicate === 'year1') {
