@@ -586,7 +586,9 @@
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
       "Twitter": "Twitter",
       "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
-      "Version": "Version {{version}} ({{flavor}}), built on {{date}}"
+      "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
+      "ReleaseSchedule": "This version of DIM is updated once a week, in the afternoon on Saturdays, US Pacific time.",
+      "BetaSchedule": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!"
     },
     "Login": {
       "Auth": "Authorize with Bungie.net",
