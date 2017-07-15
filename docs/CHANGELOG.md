@@ -1,5 +1,8 @@
 # Next
 
+* The item detail popup now does a better job of fitting itself onto the screen - it may appear to the left or right of an item now!
+* Press on a talent grid node to read its description. The same goes for the stats under your character.
+
 # 4.4.0
 
 * New filters for ornaments - is:ornament, is:ornamentmissing, is:ornamentunlocked
