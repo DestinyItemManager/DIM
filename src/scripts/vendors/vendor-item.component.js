@@ -23,45 +23,6 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
 
   let dialogResult = null;
 
-  let dialog = null;
-  $scope.$on('ngDialog.opened', (event, $dialog) => {
-    dialog = $dialog;
-    vm.reposition();
-  });
-
-  let popper;
-
-  // TODO: gotta make a vendor item popup directive
-
-  // Reposition the popup as it is shown or if its size changes
-  vm.reposition = function() {
-    if (dialogResult && dialog[0].id === dialogResult.id) {
-      if (popper) {
-        popper.scheduleUpdate();
-      } else {
-        popper = new Popper($element[0].getElementsByClassName('item')[0], dialog[0], {
-          placement: 'top-start',
-          eventsEnabled: false,
-          modifiers: {
-            preventOverflow: {
-              priority: ['bottom', 'top', 'right', 'left']
-            },
-            flip: {
-              behavior: ['top', 'bottom', 'right', 'left']
-            },
-            offset: {
-              offset: '0,7px'
-            },
-            arrow: {
-              element: '.arrow'
-            }
-          }
-        });
-        popper.scheduleUpdate(); // helps fix arrow position
-      }
-    }
-  };
-
   vm.clicked = function(e) {
     e.stopPropagation();
 
@@ -76,8 +37,6 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
       if (ngDialog.isOpen(dialogResult.id)) {
         dialogResult.close();
         dialogResult = null;
-        popper.destroy();
-        popper = null;
       }
     } else {
       const item = vm.saleItem.item;
@@ -88,6 +47,8 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
 
       const compareItemCount = sum(compareItems, 'amount');
 
+      const itemElement = $element[0].getElementsByClassName('item')[0];
+
       dialogResult = ngDialog.open({
         template: dialogTemplate,
         overlay: false,
@@ -95,6 +56,7 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
         showClose: false,
         scope: angular.extend($scope.$new(true), {
         }),
+        data: itemElement, // Dialog anchor
         controllerAs: 'vm',
         controller: function() {
           const innerVm = this;
@@ -122,8 +84,6 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
 
       dialogResult.closePromise.then(() => {
         dialogResult = null;
-        popper.destroy();
-        popper = null;
       });
 
       dimDestinyTrackerService.getItemReviews(item);
@@ -133,9 +93,6 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
   vm.$onDestroy = function() {
     if (dialogResult) {
       dialogResult.close();
-    }
-    if (popper) {
-      popper.destroy();
     }
   };
 }

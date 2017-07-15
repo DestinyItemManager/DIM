@@ -21,45 +21,6 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
   const vm = this;
   let dialogResult = null;
 
-  let dialog = null;
-  $scope.$on('ngDialog.opened', (event, $dialog) => {
-    dialog = $dialog;
-    vm.reposition();
-  });
-
-  let popper;
-
-  // TODO: gotta make a popup directive
-
-  // Reposition the popup as it is shown or if its size changes
-  vm.reposition = function() {
-    if (dialogResult && dialog[0].id === dialogResult.id) {
-      if (popper) {
-        popper.scheduleUpdate();
-      } else {
-        popper = new Popper($element[0].getElementsByClassName('item')[0], dialog[0], {
-          placement: 'top-start',
-          eventsEnabled: false,
-          modifiers: {
-            preventOverflow: {
-              priority: ['bottom', 'top', 'right', 'left']
-            },
-            flip: {
-              behavior: ['top', 'bottom', 'right', 'left']
-            },
-            offset: {
-              offset: '0,7px'
-            },
-            arrow: {
-              element: '.arrow'
-            }
-          }
-        });
-        popper.scheduleUpdate(); // helps fix arrow position
-      }
-    }
-  };
-
   angular.extend(vm, {
     itemClicked: function(item, e) {
       e.stopPropagation();
@@ -68,8 +29,6 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
         if (ngDialog.isOpen(dialogResult.id)) {
           dialogResult.close();
           dialogResult = null;
-          popper.destroy();
-          popper = null;
         }
       } else if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(vm.itemData);
@@ -79,6 +38,7 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
         });
 
         const compareItemCount = sum(compareItems, 'amount');
+        const itemElement = $element[0].getElementsByClassName('item')[0];
 
         dialogResult = ngDialog.open({
           template: dialogTemplate,
@@ -87,6 +47,7 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
           showClose: false,
           scope: angular.extend($scope.$new(true), {
           }),
+          data: itemElement,
           controllerAs: 'vm',
           controller: [function() {
             const vm = this;
@@ -108,8 +69,6 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
 
         dialogResult.closePromise.then(() => {
           dialogResult = null;
-          popper.destroy();
-          popper = null;
         });
       }
     },
@@ -123,9 +82,6 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
     $onDestroy() {
       if (dialogResult) {
         dialogResult.close();
-      }
-      if (popper) {
-        popper.destroy();
       }
     }
   });

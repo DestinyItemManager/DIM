@@ -1,6 +1,5 @@
 import angular from 'angular';
 import template from './dimMovePopup.directive.html';
-import Popper from 'popper.js';
 
 angular.module('dimApp')
   .component('dimMovePopup', movePopup());
@@ -27,53 +26,6 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     const store = dimStoreService.getStore(vm.item.owner);
     vm.maximum = store.amountOfItem(vm.item);
   }
-
-  // Capture the dialog element
-  let dialog = null;
-  $scope.$on('ngDialog.opened', (event, $dialog) => {
-    dialog = $dialog;
-    vm.reposition();
-  });
-
-  let popper;
-  $scope.$on('$destroy', () => {
-    if (popper) {
-      popper.destroy();
-    }
-  });
-
-  // Reposition the popup as it is shown or if its size changes
-  vm.reposition = function() {
-    const element = $scope.$parent.ngDialogData;
-    if (element) {
-      if (popper) {
-        popper.scheduleUpdate();
-      } else {
-        const boundariesElement = document.getElementsByClassName('store-bounds')[0];
-        popper = new Popper(element[0], dialog[0], {
-          placement: 'top-start',
-          eventsEnabled: false,
-          modifiers: {
-            preventOverflow: {
-              priority: ['bottom', 'top', 'right', 'left'],
-              boundariesElement
-            },
-            flip: {
-              behavior: ['top', 'bottom', 'right', 'left'],
-              boundariesElement
-            },
-            offset: {
-              offset: '0,5px'
-            },
-            arrow: {
-              element: '.arrow'
-            }
-          }
-        });
-        popper.scheduleUpdate(); // helps fix arrow position
-      }
-    }
-  };
 
   /*
   * Open up the dialog for infusion by passing
