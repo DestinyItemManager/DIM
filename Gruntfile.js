@@ -245,6 +245,10 @@ module.exports = function(grunt) {
     }
   );
 
+  grunt.registerTask('lintJSON', [
+    'sortJSON'
+  ]);
+
   grunt.registerTask('download_translations', [
     'poeditor:download_terms:download',
     'sortJSON'
