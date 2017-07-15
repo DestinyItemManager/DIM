@@ -24,7 +24,7 @@
     "DevVersion": "¿Estás corriendo una versión de desarrollo de DIM? Debes primero registrar tu extensión de Chrome con Bungie.net.",
     "Difficulties": "La API de Bungie esta teniendo dificultades.",
     "ItemUniqueness": "Singularidad del objeto",
-    "ItemUniquenessExplanation": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese personaje ya cuenta con ese objeto y solo puede tener uno.",
+    "ItemUniquenessExplanation": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
     "Maintenance": "Los servidores de Bungie.net se encuentran en mantenimiento.",
     "NetworkError": "Error de red - {{status}} {{statusText}}",
     "NoAccount": "No se encontró una cuenta de Destiny para {{platform}}. Seleccionaste la plataforma correcta?",
@@ -35,12 +35,12 @@
     "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelva a intentarlo.",
     "Twitter": "Entérate de los estados de actualizaciones en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
-    "VendorNotFound": "Los datos del proveedor no están disponibles."
+    "VendorNotFound": "Los datos del vendedor no están disponibles."
   },
   "Compare": {
     "All": "Comparaciones de {{type}} ({{quantity}})",
     "Archetype": "Comparaciones de arquetipo ({{quantity}})",
-    "ButtonHelp": "Compara Elementos",
+    "ButtonHelp": "Compara Objetos",
     "Close": "Cerrar",
     "Compare": "Comparar",
     "Error": {
@@ -60,14 +60,14 @@
     "Days_plural": "{{count}} Días"
   },
   "Debug": {
-    "Dump": "Tirar información a la consola"
+    "Dump": "Descargar información a la consola"
   },
   "DidYouKnow": {
     "Collapse": "¡Acabas de colapsar una seccion en DIM!. Esto puede ser util para ocultar partes de DIM que no necesitas usar normalmente.",
     "DidYouKnow": "¿Sabias que?",
-    "DontShowAgain": "No muestres este consejo de vuelta",
+    "DontShowAgain": "No mostrar esta sugerencia de nuevo.",
     "DoubleClick": "Si estas moviendo un objeto a tu personaje activo (último al que iniciaste sesión), puedes darle doble click al objeto para equiparlo instantáneamente.",
-    "DragAndDrop": "Los objetos pueden ser arrastrados y soltados entre diferentes columnas de personajes o bóveda.",
+    "DragAndDrop": "Los objetos pueden ser arrastrados y soltados entre diferentes columnas de personajes/depósito.",
     "Expand": "Para expandir de nuevo una sección, simplemente da click en el símbolo de más a la izquierda de la categoría que colapsaste.",
     "TryNext": "¡Pruébalo la próxima vez!"
   },
@@ -85,11 +85,12 @@
     "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker.",
     "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker.",
     "Submit": "Enviar",
+    "ThankYou": "¡Gracias por enviar un comentario! Estará en vivo pronto.",
     "YourReview": "Tu Reseña"
   },
   "FarmingMode": {
     "Configuration": "Configuración",
-    "Desc": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depísoto y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
+    "Desc": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "FarmingMode": "Modo recolector (mover objetos)",
     "MakeRoom": {
       "Desc": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
@@ -118,19 +119,72 @@
       "VoG": "Cámara de Cristal",
       "WotM": "La furia de las máquinas"
     },
+    "Activity": "Disponible en la actividad <i>{{activity}}</i>",
     "ArmorCategory": "Muestra armaduras basadas en su categoria.",
+    "Ascended": "Muestra objetos que tienen un nodo ascendente y si han sido ascendidos o no.",
+    "Categories": "Categorías de objetos de nivel alto.",
+    "Class": "Muestra objetos basado en su tipo de afinidad.",
+    "ClickFilters": "Haz click en los filtros abajo para aplicar, o escribiendo en la casilla de búsqueda.",
+    "Combine": "Los filtros son combinados usando la lógica \"y\", por ejemplo '{{example}}' mostrará todos los objetos de arco que tengan más de 300 de nivel de luz. Los filtros pueden ser negados usando '{{not}}', por ejemplo '{{notexample}}' va a encontrar todos los objetos que no son engramas.",
+    "ContributeLight": "Objetos que contribuyen a tu nivel de luz.",
+    "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
+    "Dupe": "Muestra los objetos duplicados",
     "Engrams": "Muestra engramas.",
     "EnterName": "Escribe el nombre de un objeto:",
-    "EnterNote": "Escribe texto de las notas:",
+    "EnterNote": "Inserta notas de texto:",
+    "Equipment": "Objetos que pueden ser equipados.",
+    "Equipped": "Objetos que estan equipados actualmente en un personaje.",
     "Filter": "Filtro",
     "Glimmer": {
-      "Any": "Cualquier tipo de lumen."
+      "Any": "Cualquier tipo de objeto de lúmen.",
+      "Boost": "Objetos que incrementan la cantidad de lúmen obtenido por 10 minutos.",
+      "Glimmer": "Muestra objetos que son consumibles y que están relacionados con la recolección de lúmen:",
+      "Item": "Objetos que son intercambiables con Rahool por 200 de lúmen."
     },
+    "InLoadout": "Muestra objetos que están incluidos en cualquier equipamiento.",
+    "Infusable": "Muestra objetos que pueden ser infundidos.",
+    "Leveling": {
+      "Complete": "{{term}} - muestra objetos que están completamente mejorados - todas las mejoras desbloqueadas.",
+      "Incomplete": "{{term}} - muestra objetos que no están completados - aún queda al menos una mejora por desbloquear.",
+      "Leveling": "Muestra objetos en diferentes estados de nivel:",
+      "NeedsXP": "{{term}} - muestra objetos que aun pueden adquirir más XP en ellos.",
+      "Upgraded": "{{term}} - muestra objetos que tienen suficiente XP para desbloquear todos sus nodos, pero no todos sus nodos han sido desbloqueados.",
+      "XPComplete": "{{term}} - muestra objetos que no pueden adquirir mas XP en ellos (sin importar si las mejoras han sido o no desbloqueadas)."
+    },
+    "LightLevel": "Muestra objetos basado en su nivel de luz (Ataque para armas; Defensa para armaduras).",
+    "Locked": "Muestra objetos basado en su estado de bloqueo.",
+    "NamedStat": "Muestra armadura que tiene puntos en la estadística nombrada.",
+    "NewItems": "Muestra objetos nuevos.",
+    "Notes": "Busca los objetos que has etiquetado con notas personalizadas",
+    "Ornament": "Muestra objetos con ornamentos y filtros para sus estadísticas.",
+    "PartialMatch": "Muestra objetos que en su nombre coinciden parcialmente al filtro de texto.",
+    "Postmaster": "Objetos que están actualmente en la administración.",
+    "Quality": "Muestra objetos basado en el porcentaje de calidad de su estadística total. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
+    "RarityTier": "Muestra objetos basado en su nivel de rareza.",
+    "Rated": "Muestra todas las armas que tienen calificación en Destiny Tracker.",
+    "Rating": "Muestra armas basado en su calificación en Destiny Tracker.",
+    "Reforgeable": "Muestra objetos que pueden ser forjados de nuevo con el armero.",
+    "Release": "Disponible desde el lanzamiento <i>{{release}}</i>",
     "Releases": {
       "RoI": "Los Señores de Hierro",
+      "Vanilla": "Vainilla",
       "tTK": "El Rey de los Poseídos"
     },
+    "RequiredLevel": "Muestra objetos basado en su nivel requerido.",
+    "Stackable": "Muestra objetos que pueden ser almacenados (municiones sintéticas, monedas extrañas, etc)",
+    "Stats": "Muestra objetos basados en el valor de su estadística. Los filtros disponibles son:",
+    "Tags": {
+      "Dismantle": "Muestra objetos que tú deseas desmantelar eventualmente.",
+      "Favorite": "Muestra tus objetos favoritos.",
+      "Infuse": "Muestra objetos que tú deseas infundir eventualmente.",
+      "Keep": "Muestra los objetos debes quedarte.",
+      "NoTag": "Muestra objetos sin una etiqueta."
+    },
+    "Tracked": "Muestra búsquedas/contratos basado en su estado de seguimiento.",
+    "Transferable": "Objetos que pueden moverse entre personajes.",
+    "Vendor": "El objeto está disponible con el vendedor <i>{{vendor}}</i> {{name}}",
+    "Vendor_noname": "El objeto está disponible con el vendedor <i>{{vendor}}</i>",
     "Vendors": {
       "CQ": "Intendente del Crisol",
       "DO": "Órbita Muerta",
@@ -140,23 +194,26 @@
       "NM": "Nueva Monarquía",
       "Shipwright": "Contramaestre",
       "Speaker": "El Orador"
-    }
+    },
+    "WeaponClass": "Muestra objetos basado en las clases de arma.",
+    "WeaponType": "Muestra armas basado en su tipo de daño.",
+    "Year": "Muestra los objetos con su respectivo año de aparición en Destiny."
   },
   "Header": {
     "About": "Acerca de",
-    "FilterHelp": "Buscar objeto/beneficio o {{example}}",
+    "FilterHelp": "Buscar objeto/mejora o {{example}}",
     "Filters": "Filtros",
     "Inventory": "Inventario",
     "Refresh": "Actualizar datos de Destiny",
     "Shop": "Tienda",
-    "SupportDIM": "Partidarios"
+    "SupportDIM": "Respaldos"
   },
   "Help": {
-    "CannotMove": "No puedes mover este objeto de este personaje.",
-    "ChangingPerks": "Cambio de beneficios no soportado",
-    "ChangingPerksInfo": "Lo sentimos, no hay forma de cambiar beneficios afuera del juego. ¡Quisiéramos poder hacerlo!",
-    "Drag": "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial.",
-    "ExtensionDeprecatedMessage": "La extensión DIM de Chrome ahora solamente abre nuestro sitio web - el cual funciona en cualquier navegador y dispositivos móviles. Puedes remover la extensión, o dejarla como un conveniente acceso para el sitio. Tu información (etiquetas, notas y ajustes) pueden ser importadas desde la pagina de almacenamiento (icono de disco en la cabecera).",
+    "CannotMove": "No puedes mover ese objeto de este personaje.",
+    "ChangingPerks": "Cambio de mejoras no soportado",
+    "ChangingPerksInfo": "Lo sentimos, no hay forma de cambiar mejoras afuera del juego. ¡Quisiéramos poder hacerlo!",
+    "Drag": "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un monto parcial.",
+    "ExtensionDeprecatedMessage": "La extensión DIM de Chrome ahora solamente abre nuestro sitio web - el cual funciona en cualquier navegador y en dispositivos móviles. Puedes remover la extensión, o dejarla como un conveniente acceso para el sitio. Tu información (etiquetas, notas y ajustes) pueden ser importadas desde la pagina de almacenamiento (icono de disco en la cabecera).",
     "ExtensionDeprecatedTitle": "¡DIM es un solo sitio web ahora!",
     "HidePopup": "Esconde Esta Ventana",
     "NeverShow": "Nunca mostrar esto de nuevo.",
@@ -169,6 +226,7 @@
   },
   "Hotkey": {
     "ClearNewItems": "Despejar objetos nuevos",
+    "ClearNewItemsTitle": "Atajo de teclado: X",
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "RefreshInventory": "Actualizar inventario",
     "StartSearch": "Empezar una búsqueda",
@@ -183,16 +241,16 @@
     "LockedItems": "Incluir objetos 'bloqueados'",
     "NoItems": "No hay objetos disponibles para infusionar.",
     "NoTransfer": "El material para infusionar\n{{target}} no puede ser movido.",
-    "ShowItems": "Mostrar objetos infundibles en el Depósito y todos los personajes",
+    "ShowItems": "Mostrar objetos de infusión en el Depósito y todos los personajes",
     "TransferItems": "Transferir objetos"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Ha habido un problema al guardar información específica de DIM para un objeto.\nUn problema es del límite de datos que pueden ser guardados - es por esto que etiquetas y notas no han salido de la versión Beta. El error fue: {{error}}.",
-    "SaveInfoErrorTitle": "Error al salvar información del objeto"
+    "SaveInfoErrorTitle": "Error al guardar información del objeto"
   },
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
-    "Distributed": "{{name}} distribuidos. Ahora {{name}} se encuentra dividido entre los personajes de manera equitativa.",
+    "Distributed": "{{name}} Distribuidos.\nAhora {{name}} se encuentra dividido entre los personajes de manera equitativa.",
     "ToStore": "Todos los {{name}} ahora están en tu {{store}}.",
     "ToVault": "Todos los {{name}} ahora están en tu Depósito."
   },
@@ -201,21 +259,21 @@
       "Guardian": "Hay muchos objetos de tipo '{{itemtype}}' en tu {{store}}.",
       "Vault": "Hay muchos objetos de tipo '{{itemtype}}' en la {{store}}."
     },
-    "Classified": "Este objeto es 'clasificado' y no puede transferirse en este momento.",
-    "Classified2": "Objeto 'clasificado'. Bungie no a entregado información acerca de este objeto. Este objeto todavía no es transferible.",
+    "Classified": "Este objeto es \"clasificado\" y no puede transferirse en este momento.",
+    "Classified2": "Objeto \"clasificado\". Bungie no a entregado información acerca de este objeto. Este objeto todavía no es transferible.",
     "Deequip": "No se encontró otro objeto a equipar para desequipar {{itemname}}",
     "ExoticError": "'{{itemname}}' no puede ser equipado porque el objeto exótico en el espacio {{slot}} no puede ser desequipado. ({{error}})",
     "NotEnoughRoom": "No hay nada que podamos sacar fuera de {{store}} para hacerle espacio a {{itemname}}",
     "OnlyEquippedClassLevel": "Esto solo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
-    "PercentComplete": "({{percent, pct}} Completar)",
+    "PercentComplete": "({{percent, pct}} Completado)",
     "TooMuch": "¡Parece que pediste mover más objetos de los que existen en la fuente!",
     "TwoExotics": "¡No sabemos cómo conseguiste equipar más de 2 exóticas!"
   },
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
     "ClearLocked": "Quitar bloqueo",
-    "ContainsVendorItems": "Esta carga contiene artículos de vendedores",
+    "ContainsVendorItems": "Esta carga contiene objetos de vendedores",
     "Current": "Actual",
     "Equip": "Equipar al {{character}}",
     "Exclude": "Objetos excluidos",
@@ -260,8 +318,8 @@
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
-      "HelpFast": "Solo ve tu mejor equipo.",
-      "HelpFull": "Ve más equipo, pero tarda más.",
+      "HelpFast": "Solo mira tu mejor equipamiento.",
+      "HelpFull": "Mira más equipamiento, pero tarda más.",
       "ProcessingMode": "Modo de procesamiento"
     },
     "Scaled": "Escalado",
@@ -378,7 +436,7 @@
     "CharacterOrderRecent": "Personaje más reciente",
     "CharacterOrderReversed": "Personaje más reciente (al revés)",
     "ColorA11y": "Configuración de daltonismo",
-    "ColumnSize": "{{num}} artículos",
+    "ColumnSize": "{{num}} objetos",
     "ColumnSizeAuto": "Auto",
     "DIMPopups": "Ventanas emergentes de información de DIM",
     "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos",
@@ -390,19 +448,19 @@
     "Language": "Lenguaje (recarga DIM para que se apliquen los cambios)",
     "LogOut": "Cerrar sesión",
     "ResetToDefault": "Reiniciar",
-    "SetSort": "Ordenar objectos por",
+    "SetSort": "Ordenar objetos por",
     "Settings": "Configuración",
     "ShowAnimations": "Animar el brillo de artículos nuevos",
     "ShowAnimationsHelp": "Muestra el brillo de artículo nuevo en nuevos art. Si apagas esto puede ahorrar ciclos en el CPU.",
     "ShowElemental": "Mostrar ícono de daño elemental en armas",
     "ShowOverlay": "Mostrar artículos nuevos con capa brillante",
     "ShowReviews": "Muestra la valuación de reseñas en las armas",
-    "SizeItem": "Tamaño de artículo",
+    "SizeItem": "Tamaño de objeto",
     "SortName": "nombre",
     "SortPrimary": "Estadística principal",
     "SortRarity": "Rareza",
     "SortRoll": "Calificación",
-    "VaultColumns": "Máximo inventario en boveda"
+    "VaultColumns": "Máximo inventario en depósito"
   },
   "Stats": {
     "Discipline": "Disciplina",
@@ -459,7 +517,7 @@
   },
   "SyncService": {
     "GoogleDriveReAuth": "Para re-autorizar google drive, debe reiniciar su navegador",
-    "OneItemTooLarge": "Su archivo de guardado tiene un elemento muy grande. Probablemente un equipo guardado tiene demasiados elementos.",
+    "OneItemTooLarge": "Su archivo de guardado tiene un elemento muy grande. Probablemente un equipo guardado tiene demasiados objetos.",
     "SaveTooLarge": "Su archivo de guardado es muy grande. Elimine equipos guardados."
   },
   "Tags": {
@@ -467,7 +525,7 @@
     "Infuse": "Infundir",
     "Junk": "Basura",
     "Keep": "Guardar",
-    "TagItem": "Elemento de Etiqueta"
+    "TagItem": "Etiqueta de objeto"
   },
   "TrialsCard": {
     "FiveWins": "Recompensa de 5 victorias (Armadura)",
@@ -500,23 +558,25 @@
       "FAQKeyboardAnswer": "¡Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
       "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
       "FAQLogoutAnswer": "Da click en tu cuenta y selecciona \"cerrar sesión\"",
-      "FAQLostItem": "¡Perdí mi artículo usando tu herramienta!",
-      "FAQLostItemAnswer": "Es muy probable que la transferencia falló, lo cual deja tu artículo en el Depósito o en otro personaje. Puedes buscar ese objeto. Si incluso así no aparece, actualiza la aplicación presionando F5. Asegúrate de revisar {{link}} o en el juego para verificar que tu objeto todavía existe. Estamos seguros de que todavía esta ahí.",
+      "FAQLostItem": "¡Perdí mi objeto usando tu herramienta!",
+      "FAQLostItemAnswer": "Es muy probable que la transferencia falló, lo cual deja tu objeto en el Depósito o en otro personaje. Puedes buscar ese objeto. Si incluso así no aparece, actualiza la aplicación presionando F5. Asegúrate de revisar {{link}} o en el juego para verificar que tu objeto todavía existe. Estamos seguros de que todavía esta ahí.",
       "GitHub": "GitHub",
       "GitHubHelp": "Si estas interesado en contribuir al proyecto, visíta la página del proyecto en {{link}}.",
       "Header": "Acerca de Destiny Item Manager (DIM)",
-      "HowItsMade": "DIM fue construido sobre los mismos servicios que utiliza Bungie.net y la Aplicación complementaria de Destiny. DIM puede accesar los artículos dentro de el Inventario de tus Guardianes y el Depósito para ambos Xbox y PlayStation. Después puedes arrastrar y soltar los objetos a donde gustes moverlos.",
+      "HowItsMade": "DIM fue construido sobre los mismos servicios que utiliza Bungie.net y la Aplicación complementaria de Destiny. DIM puede acceder a los objetos dentro del inventario de tus Guardianes y el Depósito para PlayStation y Xbox. Después puedes arrastrar y soltar los objetos a cualquier lugar que desees moverlos.",
       "Reddit": "Reddit",
       "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, ¡háznoslas saber!",
+      "Schedule_beta": "Esta versión beta de DIM es actualizada todo el tiempo que cambiamos su codificación - obtiene las últimas características y arreglos, pero también los últimos bugs!",
+      "Schedule_release": "Esta versión de DIM es actualizada una vez a la semana, los sábados por la tarde, Tiempo del Pacífico de E.U.",
       "Translation": "¡Únete al Equipo Traductor!",
       "TranslationText": "Utilizamos {{link}} para facilitar la traducción. Si quieres mejorar alguna de las traducciones de DIM, únete al equipo.",
       "Twitter": "Twitter",
       "TwitterHelp": "Asegúrate de seguirnos para estar informado de las actualizaciones e información de la aplicación en tiempo real.",
-      "Version": "Versión {{version}} ({{flavor}}), built on {{date}}"
+      "Version": "Versión {{version}} ({{flavor}}), construida en {{date}}"
     },
     "Login": {
       "Auth": "Autorizar con Bungie.net",
-      "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, bóveda y progreso.",
+      "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "Quieres saber más?",
       "Permission": "Necesitamos tu permiso..."
     },
