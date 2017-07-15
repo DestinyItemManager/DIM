@@ -158,7 +158,7 @@
       "Upgraded": "{{term}} - shows items that have enough XP to unlock all their nodes, but not all the nodes have been unlocked.",
       "XPComplete": "{{term}} - shows items that cannot have XP put into them (whether or not their upgrades have been unlocked)."
     },
-    "LightLevel": "Shows items based on their light level (Attack for Weapons; Defense for Armor). '{{level}}' is an alias for '{{light}}'.",
+    "LightLevel": "Shows items based on their light level (Attack for Weapons; Defense for Armor).",
     "Locked": "Shows items based on their locked status.",
     "NamedStat": "Shows armor that has points in the named stat.",
     "NewItems": "Shows new items.",
@@ -177,6 +177,7 @@
       "Vanilla": "Vanilla",
       "tTK": "The Taken King"
     },
+    "RequiredLevel": "Shows items based on their required level.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
     "Tags": {

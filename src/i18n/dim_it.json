@@ -158,7 +158,7 @@
       "Upgraded": "{{term}} - mostra oggetti che hanno abbastanza XP per sbloccare tutti i potenziamenti, ma questi non sono ancora stati sbloccati.",
       "XPComplete": "{{term}} - mostra oggetti che non possono ricevere XP (sia che i potenziamenti siano sbloccati o no)."
     },
-    "LightLevel": "Mostra oggetti basandosi sul loro livello luce (Attacco per le armi; Difesa per le armature). '{{light}}' può essere usato al posto di '{{level}}'.",
+    "LightLevel": "Mostra oggetti basandosi sul loro livello luce (Attacco per le armi; Difesa per le armature).",
     "Locked": "Mostra oggetti basandosi sullo stato del loro blocco.",
     "NamedStat": "Mostra armature che hanno punti nella statistica specificata.",
     "NewItems": "Mostra i nuovi oggetti.",

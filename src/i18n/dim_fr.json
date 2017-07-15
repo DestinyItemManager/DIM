@@ -152,7 +152,7 @@
       "Upgraded": "{{term}} - Montre les objets qui ont accès d'xp pour débloquer toutes leurs bulles, mais pas toutes les bulles ont été débloquées.",
       "XPComplete": "{{term}} - Montre les objets qui ne peuvent plus recevoir d'xp (que leurs améliorations aient été débloqués ou non)."
     },
-    "LightLevel": "Montre les objets selon leur niveau de lumière (Attaque pour les Armes; Défense pour les Armures). '{{level}}' est un alias pour '{{light}}'.",
+    "LightLevel": "Montre les objets selon leur niveau de lumière (Attaque pour les Armes; Défense pour les Armures).",
     "Locked": "Montre les objets selon leur verrouillage.",
     "NamedStat": "Montre les armures qui ont des points dans la statistique sélectionée.",
     "NewItems": "Montre les nouveaux objets.",
