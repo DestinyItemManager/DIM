@@ -171,6 +171,7 @@
       "Vanilla": "Jeu de base",
       "tTK": "Le Roi des Corrompus"
     },
+    "RequiredLevel": "Montre les objets selon leur niveau requis.",
     "Stackable": "Montre les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
     "Stats": "Montre les objets selon la valeur de leur statistique. Les filtres disponibles sont:",
     "Tags": {
@@ -565,6 +566,8 @@
       "HowItsMade": "DIM est construit à partir des mêmes services que Bungie.net et l'application Compagnon de Destiny. DIM peut accéder aux objets dans l'inventaire de vos Gardiens et de votre coffre sur Playstation et Xbox. Vous pouvez dès lors glisser-déposer des objets n'importe où vous les voulez.",
       "Reddit": "Reddit",
       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
+      "Schedule_beta": "Cette version bêta de DIM est mise à jour à chaque fois que nous changeons le code - elle a les dernières fonctionnalités et corrections mais aussi les derniers bugs!",
+      "Schedule_release": "Cette version de DIM est mise à jour une fois par semaine, dans l'après-midi de Samedi, heure du pacifique.",
       "Translation": "Rejoignez l'équipe de traduction!",
       "TranslationText": "Nous utilisons {{link}} pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe.",
       "Twitter": "Twitter",
