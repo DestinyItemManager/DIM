@@ -48,7 +48,7 @@ function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettin
         dimInfoService.show(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
           title: $i18next.t('Help.Version', {
             version: $DIM_VERSION,
-            beta: $DIM_FLAVOR === 'beta'
+            context: $DIM_FLAVOR
           }),
           body: changelog
         });
