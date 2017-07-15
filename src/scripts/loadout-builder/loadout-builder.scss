@@ -341,44 +341,49 @@
   }
 }
 
-.ngdialog.perk-select-popup .perk-select-box {
-  user-select: none;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  position: absolute;
-  left: 0;
+.ngdialog.perk-select-popup {
+  left: 6px;
   top: 0;
-  width: calc(((var(--item-size) + 20px) * 5) + 14px);
-  min-height: calc((var(--item-size) * 5) + 10px);
-  overflow-y: auto;
-  background-color: #656565;
-  border: 2px solid #DDD;
-  z-index: 3;
-  & .perk {
-    width: calc(var(--item-size) + 20px);
-    padding-left: 3px;
-    padding-right: 3px;
-    cursor: pointer;
-  }
 
-  & .perk:hover, & .active-perk-or {
-    background-color: $orange;
-  }
+  .perk-select-box {
+    user-select: none;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(((var(--item-size) + 20px) * 5) + 14px);
+    min-height: calc((var(--item-size) * 5) + 10px);
+    overflow-y: auto;
+    background-color: #656565;
+    border: 2px solid #DDD;
+    z-index: 3;
+    & .perk {
+      width: calc(var(--item-size) + 20px);
+      padding-left: 3px;
+      padding-right: 3px;
+      cursor: pointer;
+    }
 
-  &.shift-held .perk:hover, & .active-perk-and {
-    background-color: $void;
-  }
+    & .perk:hover, & .active-perk-or {
+      background-color: $orange;
+    }
 
-  & .perk img {
-    width: var(--item-size);
-    height: var(--item-size);
-    display: block;
-    margin: auto;
-  }
+    &.shift-held .perk:hover, & .active-perk-and {
+      background-color: $void;
+    }
 
-  & .perk small {
-    text-align: center;
-    display: block;
+    & .perk img {
+      width: var(--item-size);
+      height: var(--item-size);
+      display: block;
+      margin: auto;
+    }
+
+    & .perk small {
+      text-align: center;
+      display: block;
+    }
   }
 }
