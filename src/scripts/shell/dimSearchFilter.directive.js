@@ -339,7 +339,6 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
 
     const operands = ['<=', '>=', '=', '>', '<'];
     let operand = 'none';
-    let result = false;
 
     operands.forEach((element) => {
       if (predicate.substring(0, element.length) === element) {
@@ -367,7 +366,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     case '>=':
       return compare >= predicate;
     }
-    return result;
+    return false;
   }
 
   // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
