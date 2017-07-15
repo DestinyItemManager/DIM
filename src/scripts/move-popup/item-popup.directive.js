@@ -21,13 +21,12 @@ function ItemPopup() {
 
 function ItemPopupLink($scope, $element, $attrs) {
   'ngInject';
-  const vm = this;
 
   // Capture the dialog element
   let dialog = null;
   $scope.$on('ngDialog.opened', (event, $dialog) => {
     dialog = $dialog;
-    vm.reposition();
+    reposition();
   });
 
   let popper;
@@ -36,6 +35,8 @@ function ItemPopupLink($scope, $element, $attrs) {
       popper.destroy();
     }
   });
+
+  $scope.$on('popup-size-changed', reposition);
 
   function findDialogData() {
     let scope = $scope;
@@ -48,7 +49,7 @@ function ItemPopupLink($scope, $element, $attrs) {
   }
 
   // Reposition the popup as it is shown or if its size changes
-  vm.reposition = function() {
+  function reposition() {
     const element = findDialogData();
     if (element) {
       if (popper) {
@@ -83,5 +84,5 @@ function ItemPopupLink($scope, $element, $attrs) {
         popper.scheduleUpdate(); // helps fix arrow position
       }
     }
-  };
+  }
 }

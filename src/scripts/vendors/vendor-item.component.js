@@ -70,8 +70,7 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
             compareItemCount: compareItemCount,
             setCompareItem: function(item) {
               this.compareItem = item;
-            },
-            reposition: vm.reposition
+            }
           });
         },
         // Setting these focus options prevents the page from

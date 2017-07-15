@@ -1,5 +1,5 @@
 <div class="move-popup" item-popup item-popup-boundary-class="store-bounds">
-  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse" change-details="vm.reposition()"></div>
+  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>
   <dim-move-amount ng-if="vm.maximum > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>
   <div class="interaction">
     <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
