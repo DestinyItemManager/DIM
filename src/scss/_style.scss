@@ -1342,6 +1342,7 @@ g {
   backface-visibility: hidden;
   top: 55px;
   left: 0;
+  width: auto;
   z-index: 10;
   @supports (position: sticky) {
     position: sticky;

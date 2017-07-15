@@ -1,5 +1,7 @@
 # Next
 
+* Fix slight horizontal scroll on inventory view.
+
 # 4.4.0
 
 * New filters for ornaments - is:ornament, is:ornamentmissing, is:ornamentunlocked
