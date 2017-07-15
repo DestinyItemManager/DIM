@@ -56,6 +56,7 @@ require('./scripts/move-popup/dimTalentGrid.directive');
 require('./scripts/move-popup/dimMoveItemProperties.directive');
 require('./scripts/move-popup/dimItemTag.directive');
 require('./scripts/move-popup/item-popup.directive');
+require('./scripts/move-popup/press-tip.directive');
 
 require('./scss/main.scss');
 
