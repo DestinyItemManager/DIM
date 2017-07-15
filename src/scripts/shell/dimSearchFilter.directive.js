@@ -62,6 +62,7 @@ function SearchService(dimSettingsService) {
     vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
     activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
     hasLight: ['light', 'haslight'],
+    level: ['level'],
     weapon: ['weapon'],
     armor: ['armor'],
     cosmetic: ['cosmetic'],
@@ -285,9 +286,12 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       } else if (term.startsWith('notes:')) {
         filter = term.replace('notes:', '');
         addPredicate("notes", filter);
-      } else if (term.startsWith('light:') || term.startsWith('level:')) {
-        filter = term.replace('light:', '').replace('level:', '');
+      } else if (term.startsWith('light:')) {
+        filter = term.replace('light:', '');
         addPredicate("light", filter);
+      } else if (term.startsWith('level:')) {
+        filter = term.replace('level:', '');
+        addPredicate("level", filter);
       } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
         filter = term.replace('quality:', '').replace('percentage:', '');
         addPredicate("quality", filter);
@@ -557,6 +561,49 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         break;
       case '>=':
         result = (item.primStat.value >= predicate);
+        break;
+      }
+      return result;
+    },
+    level: function(predicate, item) {
+      if (predicate.length === 0 || !item.equipRequiredLevel) {
+        return false;
+      }
+
+      const operands = ['<=', '>=', '=', '>', '<'];
+      let operand = 'none';
+      let result = false;
+
+      operands.forEach((element) => {
+        if (predicate.substring(0, element.length) === element) {
+          operand = element;
+          predicate = predicate.substring(element.length);
+          return false;
+        } else {
+          return true;
+        }
+      }, this);
+
+      predicate = parseInt(predicate, 10);
+
+      switch (operand) {
+      case 'none':
+        result = (item.equipRequiredLevel === predicate);
+        break;
+      case '=':
+        result = (item.equipRequiredLevel === predicate);
+        break;
+      case '<':
+        result = (item.equipRequiredLevel < predicate);
+        break;
+      case '<=':
+        result = (item.equipRequiredLevel <= predicate);
+        break;
+      case '>':
+        result = (item.equipRequiredLevel > predicate);
+        break;
+      case '>=':
+        result = (item.equipRequiredLevel >= predicate);
         break;
       }
       return result;

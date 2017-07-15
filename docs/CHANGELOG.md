@@ -14,6 +14,7 @@
 * On Firefox, the new-item shines don't extend past the item anymore.
 * Do a better job of refreshing your authentication credentials - before, we'd sometimes show errors for a few minutes after you'd used DIM for a while.
 * The filters help page has been localalized.
+* Separate the light: and level: filters. level now returns items matching required item level, light returns items matching the light level.
 
 # 4.3.0
 
