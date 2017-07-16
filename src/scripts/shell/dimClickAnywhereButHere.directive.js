@@ -11,13 +11,12 @@ function ClickAnywhereButHere($document) {
       const handler = function(event) {
         if (!element[0].contains(event.target)) {
           scope.$apply(attr.dimClickAnywhereButHere);
-          // scope.callback(event);
         }
       };
 
-      $document.on('click', handler);
+      $document.on('click touchstart', handler);
       scope.$on('$destroy', () => {
-        $document.off('click', handler);
+        $document.off('click touchstart', handler);
       });
     }
   };
