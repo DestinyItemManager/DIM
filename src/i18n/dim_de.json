@@ -100,7 +100,7 @@
     "OutOfRoom": "Dir ist der Platz ausgegangen um Gegenstände von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll rauszuräumen!",
     "OutOfRoomTitle": "Kein Platz mehr",
     "Quickmove": "Schnelles Verschieben",
-    "Stop": "Stop"
+    "Stop": "Halt"
   },
   "Filter": {
     "Activities": {
@@ -156,7 +156,7 @@
     "Locked": "Zeigt Items basierend auf deren Sperr-Status.",
     "NamedStat": "Zeigt Rüstung, die Punkte in der jeweiligen Kategorie hat.",
     "NewItems": "Zeigt neue Items.",
-    "Notes": "Zeigt Items, denen du eine eigene Notiz hinzugefügt hast.",
+    "Notes": "Zeigt Items, denen du eine eigene Notiz hinzugefügt hast",
     "Ornament": "Zeigt Gegenstände mit Ornamenten und filtert nach ihrem Status.",
     "PartialMatch": "Zeigt Gegenstände, deren Name eine partielle Übereinstimmung mit dem Filtertext hat.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
@@ -172,7 +172,7 @@
       "tTK": "König der Besessenen"
     },
     "RequiredLevel": "Zeigt Items basierend auf deren Mindestlevel.",
-    "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.).",
+    "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "Stats": "Zeigt Items basierend auf ihrem statischen Wert an. Verfügbare Filter sind:",
     "Tags": {
       "Dismantle": "Zeigt Items an, die du eventuell zerlegen willst.",
@@ -245,7 +245,7 @@
     "TransferItems": "Übertrage Items"
   },
   "ItemInfoService": {
-    "SaveInfoErrorDescription": "Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item aufgetreten. Es gibt ein Limit wie viel Daten gepeichert werden können. Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {{error}}.",
+    "SaveInfoErrorDescription": "Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item aufgetreten. Es gibt ein Limit wie viel Daten gespeichert werden können. Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {{error}}.",
     "SaveInfoErrorTitle": "Fehler beim Speichern der Item-Infos"
   },
   "ItemMove": {
@@ -355,7 +355,7 @@
     "LoadoutName": "Loadout Name...",
     "Loadouts": "Loadouts",
     "MakeRoom": "Schaffe Platz für Poststellen-Items",
-    "MakeRoomDone": "Platz für 1 Poststellen-Item durch verschieben von {{movedNum}} Item vom {{store}} geschaffen.",
+    "MakeRoomDone": "Platz für 1 Poststellen-Item durch verschieben von 1 Item vom {{store}} geschaffen.",
     "MakeRoomDone_plural": "Platz für {{count}} Poststellen-Items durch verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
     "MakeRoomError": "Es kann kein Platz für alle Postellen-Items geschaffen werden: {{error}}.",
     "MaxSlots": "Du kannst nur {{slots}} Gegenstände dieser Art in einem Loadout haben.",
@@ -390,7 +390,7 @@
     "Decrement": "Einer weniger",
     "DownStack": "Auf letzten vollen Stapel verringern",
     "Increment": "Einer mehr",
-    "Max": "Gesamtmenge in dieser Stelle.",
+    "Max": "Gesamtmenge an dieser Stelle",
     "Min": "Mindest-Stapel (1)",
     "UpStack": "Auf nächsten vollen Stapel erhöhen"
   },
@@ -428,7 +428,7 @@
     "RecordBooks": "Urkundenbücher"
   },
   "Settings": {
-    "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen.",
+    "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen",
     "AllowIdPostToDtrLine2": "Hiermit teilst du deinen Account-Namen und bewertete Elemente mit Destiny Tracker.",
     "AlwaysShowDetails": "Zeige immer erweitertes Pop-Up an",
     "CharacterOrder": "Charakter Reihenfolge",
@@ -451,13 +451,13 @@
     "SetSort": "Sortiere Gegenstände nach",
     "Settings": "Einstellungen",
     "ShowAnimations": "Animiere die Hervorhebung des neuen Gegenstands",
-    "ShowAnimationsHelp": "Animiert die Hervorhebung bei neuen Gegenständen. Deaktivierung senkt CPU Belastung",
+    "ShowAnimationsHelp": "Animiert die Hervorhebung bei neuen Gegenständen. Deaktivierung senkt CPU Belastung.",
     "ShowElemental": "Zeige Elementarschaden bei Waffen an",
     "ShowOverlay": "Hebe neue Gegenstände mit einem glänzenden Icon hervor",
     "ShowReviews": "Zeige Bewertungen bei Waffen an",
     "SizeItem": "Item Größe",
     "SortName": "Name",
-    "SortPrimary": "Primärer Wert",
+    "SortPrimary": "primärer Wert",
     "SortRarity": "Seltenheit",
     "SortRoll": "Bewertung",
     "VaultColumns": "Maximale Anzahl von Spalten des Tresors"
@@ -487,7 +487,7 @@
     "DriveLogout": "Bei Google Drive abmelden",
     "DriveSync": "Bei Google Drive anmelden",
     "Enabled": "Aktiviert",
-    "Explain": "Dim speichert seine eigenen Daten separat von den Destiny Daten (welche von Bungie.net verwaltet werden).",
+    "Explain": "DIM speichert seine eigenen Daten separat von den Destiny Daten (welche von Bungie.net verwaltet werden).",
     "Export": "Sichere DIM Daten",
     "ForceSync": "Erzwinge Synchronisation",
     "GDriveLogout": "Deine Daten sind noch immer in Google Drive - wenn du dich wieder anmeldest, wird DIM diese wieder verwenden.",
@@ -516,7 +516,7 @@
     "Move": "Verschieben"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "Um Google Drive wieder zu authorisieren musst du deinen Browser neustarten.",
+    "GoogleDriveReAuth": "Um Google Drive wieder zu autorisieren musst du deinen Browser neu starten.",
     "OneItemTooLarge": "Ein Teil deiner Speicherdatei ist zu groß. Wahrscheinlich hast du ein Loadout mir zu vielen Gegenständen.",
     "SaveTooLarge": "Deine Speicherdatei ist zu groß. Bitte entferne gespeicherte Loadouts."
   },
@@ -576,13 +576,13 @@
     },
     "Login": {
       "Auth": "Autorisiere mit Bungie.net",
-      "Explanation": "Erlaube DIM deinen Destiny Charakter,  Tresor und Fortschritt einzusehen und zu bearbeiten.",
+      "Explanation": "Erlaube DIM deine Destiny Charaktere, Tresor und Fortschritt einzusehen und zu bearbeiten.",
       "LearnMore": "Willst du mehr wissen?",
-      "Permission": "Wir brauchen dein Einverständnis...."
+      "Permission": "Wir brauchen dein Einverständnis..."
     },
     "Support": {
       "Backers": "Unterstützer",
-      "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln",
+      "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln.",
       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
       "OpenCollective": "Wir benutzen den {{link}} Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
       "Sponsors": "Sponsoren",
