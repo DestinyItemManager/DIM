@@ -1,27 +1,23 @@
 import angular from 'angular';
 import template from './dimMovePopup.directive.html';
-import 'jquery-ui/ui/position';
 
 angular.module('dimApp')
-  .directive('dimMovePopup', MovePopup);
+  .component('dimMovePopup', movePopup());
 
-function MovePopup() {
+function movePopup() {
   return {
     controller: MovePopupController,
     controllerAs: 'vm',
-    bindToController: true,
-    restrict: 'E',
-    scope: {
-      store: '=',
-      item: '='
+    bindings: {
+      store: '<',
+      item: '<'
     },
-    replace: true,
-    template: template
+    template
   };
 }
 
-
 function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
+  'ngInject';
   const vm = this;
   vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
@@ -30,37 +26,6 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     const store = dimStoreService.getStore(vm.item.owner);
     vm.maximum = store.amountOfItem(vm.item);
   }
-
-  let shown = false;
-
-  // Capture the dialog element
-  let dialog = null;
-  $scope.$on('ngDialog.opened', (event, $dialog) => {
-    dialog = $dialog;
-    vm.reposition();
-  });
-
-  // Reposition the popup as it is shown or if its size changes
-  vm.reposition = function() {
-    const element = $scope.$parent.ngDialogData;
-    if (element) {
-      if (!shown) {
-        dialog.hide();
-      }
-      shown = true;
-      $timeout(() => {
-        dialog
-          .position({
-            my: 'left bottom',
-            at: 'left top-2',
-            of: element,
-            collision: 'flip flip',
-            within: '.store-bounds'
-          })
-          .show();
-      });
-    }
-  };
 
   /*
   * Open up the dialog for infusion by passing

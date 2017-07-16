@@ -3,7 +3,6 @@ import _ from 'underscore';
 import { sum } from '../util';
 import template from './vendor-item.html';
 import dialogTemplate from './vendor-item-dialog.html';
-import 'jquery-ui/ui/position';
 
 export const VendorItem = {
   bindings: {
@@ -16,31 +15,15 @@ export const VendorItem = {
 
 let otherDialog = null;
 
-function VendorItemCtrl($scope, ngDialog, dimStoreService, dimDestinyTrackerService) {
+function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyTrackerService) {
   'ngInject';
 
   const vm = this;
 
   let dialogResult = null;
-  let detailItem = null;
-  let detailItemElement = null;
-
-  $scope.$on('ngDialog.opened', (event, $dialog) => {
-    if (dialogResult && $dialog[0].id === dialogResult.id) {
-      $dialog.position({
-        my: 'left top',
-        at: 'left bottom+2',
-        of: detailItemElement,
-        collision: 'flip flip'
-      });
-    }
-  });
 
   vm.clicked = function(e) {
     e.stopPropagation();
-    if (dialogResult) {
-      dialogResult.close();
-    }
 
     if (otherDialog) {
       if (ngDialog.isOpen(otherDialog.id)) {
@@ -49,14 +32,13 @@ function VendorItemCtrl($scope, ngDialog, dimStoreService, dimDestinyTrackerServ
       otherDialog = null;
     }
 
-    const item = vm.saleItem.item;
-    if (detailItem === item) {
-      detailItem = null;
-      dialogResult = null;
-      detailItemElement = null;
+    if (dialogResult) {
+      if (ngDialog.isOpen(dialogResult.id)) {
+        dialogResult.close();
+        dialogResult = null;
+      }
     } else {
-      detailItem = item;
-      detailItemElement = angular.element(e.currentTarget);
+      const item = vm.saleItem.item;
 
       const compareItems = _.flatten(dimStoreService.getStores().map((store) => {
         return _.filter(store.items, { hash: item.hash });
@@ -64,13 +46,16 @@ function VendorItemCtrl($scope, ngDialog, dimStoreService, dimDestinyTrackerServ
 
       const compareItemCount = sum(compareItems, 'amount');
 
+      const itemElement = $element[0].getElementsByClassName('item')[0];
+
       dialogResult = ngDialog.open({
         template: dialogTemplate,
         overlay: false,
-        className: `move-popup vendor-move-popup ${vm.extraMovePopupClass || ''}`,
+        className: `move-popup-dialog vendor-move-popup ${vm.extraMovePopupClass || ''}`,
         showClose: false,
         scope: angular.extend($scope.$new(true), {
         }),
+        data: itemElement, // Dialog anchor
         controllerAs: 'vm',
         controller: function() {
           const innerVm = this;

@@ -19,8 +19,7 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
 const preMinifiedDeps = [
   'underscore/underscore-min.js',
-  'indexeddbshim/dist/indexeddbshim.min.js',
-  'jquery/dist/jquery.min.js'
+  'indexeddbshim/dist/indexeddbshim.min.js'
 ];
 
 module.exports = (env) => {
@@ -109,9 +108,6 @@ module.exports = (env) => {
 
     plugins: [
       new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery',
         i18next: 'i18next',
         'window.i18next': 'i18next'
       }),

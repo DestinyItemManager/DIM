@@ -279,7 +279,7 @@ mod.directive('svgBindViewbox', () => {
   return {
     link: function(scope, element, attrs) {
       attrs.$observe('svgBindViewbox', (value) => {
-        element.get(0).setAttribute('viewBox', value);
+        element[0].setAttribute('viewBox', value);
       });
     }
   };

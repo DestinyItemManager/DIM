@@ -122,7 +122,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
           overlay: false,
           className: 'move-popup-dialog',
           showClose: false,
-          data: element,
+          data: element[0],
           controllerAs: 'vm',
           controller: function() {
             'ngInject';

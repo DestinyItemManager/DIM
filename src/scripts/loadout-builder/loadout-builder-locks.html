@@ -1,6 +1,7 @@
 <div class="locked-item"
      ng-repeat="(type, lockeditem) in vm.lockedItems"
      ng-switch="lockeditem"
+     id="locked-perks-{{type}}"
      ui-on-drop="vm.onDrop({ $data: $data, type: type })"
      drag-channel="{{ type }}"
      drop-channel="{{ type }}"

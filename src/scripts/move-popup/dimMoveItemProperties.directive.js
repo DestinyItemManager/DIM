@@ -24,8 +24,7 @@ function MoveItemProperties() {
     scope: {
       item: '=dimMoveItemProperties',
       compareItem: '=dimCompareItem',
-      infuse: '=dimInfuse',
-      changeDetails: '&'
+      infuse: '=dimInfuse'
     },
     restrict: 'A',
     replace: true,
@@ -56,7 +55,12 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   // The 'i' keyboard shortcut toggles full details
   $scope.$on('dim-toggle-item-details', () => {
     vm.itemDetails = !vm.itemDetails;
-    vm.changeDetails();
+  });
+
+  $scope.$watch('vm.itemDetails', (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      $scope.$emit('popup-size-changed');
+    }
   });
 
   vm.openCompare = function() {
@@ -163,9 +167,9 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
   if (vm.item.primStat) {
     vm.light = vm.item.primStat.value.toString();
-    if (vm.item.dmg) {
-      vm.classes[`is-${vm.item.dmg}`] = true;
-    }
+  }
+  if (vm.item.dmg) {
+    vm.classes[`is-${vm.item.dmg}`] = true;
   }
 
   if (vm.item.classTypeName !== 'unknown' &&

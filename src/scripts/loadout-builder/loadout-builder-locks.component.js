@@ -2,7 +2,6 @@ import angular from 'angular';
 import _ from 'underscore';
 import template from './loadout-builder-locks.html';
 import dialogTemplate from './loadout-builder-locks-dialog.html';
-import 'jquery-ui/ui/position';
 
 export const LoadoutBuilderLocks = {
   controller: LoadoutBuilderLocksCtrl,
@@ -28,18 +27,6 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
   let dialogResult = null;
   let detailItemElement = null;
 
-  $scope.$on('ngDialog.opened', (event, $dialog) => {
-    if (dialogResult && $dialog[0].id === dialogResult.id) {
-      $dialog.position({
-        my: 'left-2 top-2',
-        at: 'left top',
-        of: detailItemElement,
-        collision: 'flip flip',
-        within: '.store-bounds'
-      });
-    }
-  });
-
   angular.extend(vm, {
     getFirstPerk: function(lockedPerks, type) {
       return vm.lockedPerks[type][_.keys(vm.lockedPerks[type])[0]];
@@ -60,26 +47,35 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
         overlay: false,
         className: 'perk-select-popup',
         showClose: false,
+        appendTo: `#locked-perks-${type}`,
         scope: angular.extend($scope.$new(true), {}),
         controllerAs: 'vmd',
-        controller: function($document) {
+        controller: function($document, $scope) {
           'ngInject';
           const vmd = this;
 
-          $document.keyup((e) => {
+          function keyup(e) {
+            console.log('keyup');
             if (vmd.shiftHeld) {
               $scope.$apply(() => {
                 vmd.shiftHeld = e.shiftKey;
               });
             }
-          });
+          }
+          $document.on('keyup', keyup);
 
-          $document.keydown((e) => {
+          function keydown(e) {
             if (vmd.shiftHeld === false && e.shiftKey) {
               $scope.$apply(() => {
                 vmd.shiftHeld = e.shiftKey;
               });
             }
+          }
+          $document.on('keydown', keydown);
+
+          $scope.$on('$destroy', () => {
+            $document.off('keyup', keyup);
+            $document.off('keyup', keydown);
           });
 
           angular.extend(vmd, {
