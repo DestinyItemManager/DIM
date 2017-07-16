@@ -532,7 +532,7 @@
     "Move": "Move"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "To re-authorize google drive, must restart your browser.",
+    "GoogleDriveReAuth": "To re-authorize google drive, you must restart your browser.",
     "OneItemTooLarge": "Your save file has an item that is too large. Most likely a saved loadout has too many items.",
     "SaveTooLarge": "Your save file is too large.  Remove saved loadouts."
   },

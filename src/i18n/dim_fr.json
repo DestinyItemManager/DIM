@@ -125,7 +125,7 @@
     "Categories": "Grand catégories d'arme.",
     "Class": "Montre les objets en fonction de leur affinité de classe.",
     "ClickFilters": "Cliquez sur les filtres ci-dessous ou écrivez les dans la barre de recherche pour les appliquer.",
-    "Combine": "Les filtres sont combinés en utilisant la logique 'ET', par exemple '{{example}}' affichera tout les objets cryo-électriques avec au moins 300 de lumière. Les filtres peuvent être inversé en utilisant '{{not}}', par example '{{notexample}}' trouvera tout les objets qui ne sont pas des engrammes.",
+    "Combine": "Les filtres sont combinés en utilisant la logique 'ET', par exemple '{{example}}' affichera tout les objets cryo-électriques avec au moins 300 de lumière. Les filtres peuvent être inversé en utilisant '{{not}}', par exemple '{{notexample}}' trouvera tout les objets qui ne sont pas des engrammes.",
     "ContributeLight": "Objets qui améliorent votre niveau de lumière.",
     "DamageType": "Montre les objets selon leur type de dégât.",
     "Description": "Description",
@@ -154,7 +154,7 @@
     },
     "LightLevel": "Montre les objets selon leur niveau de lumière (Attaque pour les Armes; Défense pour les Armures).",
     "Locked": "Montre les objets selon leur verrouillage.",
-    "NamedStat": "Montre les armures qui ont des points dans la statistique sélectionée.",
+    "NamedStat": "Montre les armures qui ont des points dans la statistique sélectionnée.",
     "NewItems": "Montre les nouveaux objets.",
     "Notes": "Cherche les objets que vous avez marqué avec des notes personnalisés",
     "Ornament": "Montre les objets avec des ornements et filtre leur statut.",
@@ -356,7 +356,7 @@
     "Loadouts": "Pré sets",
     "MakeRoom": "Faire de la place pour le Commis des postes",
     "MakeRoomDone": "À Fini de faire de la place pour 1 objet du commis des postes en déplaçant 1 objet hors du {{store}}.",
-    "MakeRoomDone_plural": "À Fini de faire de la place pour {{postmasterNum}} objets du Commis des postes en déplaçant {{movedNum}} objets hors du {{store}}.",
+    "MakeRoomDone_plural": "À Fini de faire de la place pour {{count}} objets du Commis des postes en déplaçant {{movedNum}} objets hors du {{store}}.",
     "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commit Des Postes: {{error}}.",
     "MaxSlots": "Tu peux uniquement avoir {{slots}} de ce type d'objet dans un pré set.",
     "MaximizeLight": "Maximiser la Lumière",
@@ -500,7 +500,7 @@
     "ImportFromExtensionButton": "Importer des données",
     "ImportFromExtensionDetail": "Vous pouvez importer des données depuis l'extension DIM pour Chrome vers le site DIM.",
     "ImportFromExtensionWarning": "Vos données de l'extension DIM pour Chrome vont écraser vos données actuelles. Continuer?",
-    "ImportNoFile": "Aucun fichier sélectionné! ",
+    "ImportNoFile": "Aucun fichier sélectionné!",
     "ImportSuccess": "Données DIM importées!",
     "IndexedDBStorage": "Stockage local du navigateur",
     "Loadouts": "{{value}} pré sets",
@@ -557,7 +557,7 @@
       "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
       "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
       "FAQLogout": "Comment puis-je me déconnecter de DIM?",
-      "FAQLogoutAnswer": "Cliquez sur votre compte et choisissez \"Se déconnecter\".",
+      "FAQLogoutAnswer": "Cliquez sur votre compte et choisissez \"Se déconnecter\"",
       "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
       "FAQLostItemAnswer": "Il est plus que probable que votre transfer ait échoué, laissant votre objet dans le coffre ou sur un autre personnage. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancez l'app en appuyant sur F5. Vérifiez {{link}} ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
       "GitHub": "GitHub",
@@ -590,6 +590,6 @@
       "Support": "Soutenir DIM",
       "Teespring": "Nous avons aussi des t-shirts avec notre nouveau logo en vente sur {{link}}"
     },
-    "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM"
+    "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM."
   }
 }

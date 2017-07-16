@@ -34,7 +34,7 @@
     "NotLoggedIn": "Por favor, faça seu login no Bungie.net para utilizar esta extensão.",
     "Throttled": "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
     "Twitter": "Veja atualizações em:",
-    "UnknownError": "Mensagem de Bungie.net: {{message}}",
+    "UnknownError": "Mensagem da Bungie.net: {{message}}",
     "VendorNotFound": "Dados do vendedor não disponíveis."
   },
   "Compare": {
@@ -138,7 +138,7 @@
     "Filter": "Filtro",
     "Glimmer": {
       "Any": "Qualquer tipo de item de glimmer.",
-      "Boost": "Item que aumenta a quanitdade de glimmer ganho por 10 minutos.",
+      "Boost": "Item que aumenta a quantidade de glimmer ganho por 10 minutos.",
       "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de glimmer:",
       "Item": "Items que podem ser trocados no Rahool por 200 glimmer."
     },
@@ -173,6 +173,18 @@
     },
     "RequiredLevel": "Mostra itens baseado em seu nível necessário.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
+    "Stats": "Exibir itens baseados em suas estatísticas. Os filtros disponíveis são:",
+    "Tags": {
+      "Dismantle": "Exibir itens que deseja desmontar futuramente.",
+      "Favorite": "Exibir itens favoritos.",
+      "Infuse": "Exibir itens que deseja infundir futuramente.",
+      "Keep": "Exibir itens para manter.",
+      "NoTag": "Exibir itens sem tag."
+    },
+    "Tracked": "Exibir jornadas/contratos baseados em seu status de rastreamento.",
+    "Transferable": "Itens que podem ser movidos entre personagens.",
+    "Vendor": "O item está disponível no vendedor <i>{{vendor}}</i> {{name}}",
+    "Vendor_noname": "O item está disponível no vendedor <i>{{vendor}}</i>",
     "Vendors": {
       "CQ": "Quartel-mestre do Crisol",
       "DO": "Órbita Morta",
@@ -182,7 +194,10 @@
       "NM": "Nova Monarquia",
       "Shipwright": "Contramestre",
       "Speaker": "O Porta-Voz"
-    }
+    },
+    "WeaponClass": "Exibir itens baseado na sua classe de arma.",
+    "WeaponType": "Exibir armas baseado no seu tipo de arma.",
+    "Year": "Exibir itens a partir de qual ano foi inserido em Destiny."
   },
   "Header": {
     "About": "Sobre",
@@ -195,7 +210,7 @@
   },
   "Help": {
     "CannotMove": "Não é possível mover o item para fora deste personagem.",
-    "ChangingPerks": "Mudança de perks não é suportado",
+    "ChangingPerks": "Mudança de perks não é suportada",
     "ChangingPerksInfo": "Desculpe, não há maneira de alterar perks fora do jogo. Bem que gostaríamos!",
     "Drag": "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente.",
     "ExtensionDeprecatedMessage": "A extensão DIM do Chrome agora abre o nosso site - que funciona em qualquer navegador ou dispositivo móvel! Você pode remover a extensão ou deixá-la como um atalho pro site. Seus dados (marcações, notas e configurações) podem ser importados da pagina de armazenamento (ícone de disco no cabeçalho).",
@@ -211,6 +226,7 @@
   },
   "Hotkey": {
     "ClearNewItems": "Limpar novos itens",
+    "ClearNewItemsTitle": "Tecla de atalho: X",
     "MarkItemAs": "Marcar item como '{{tag}}'",
     "RefreshInventory": "Atualizar inventário",
     "StartSearch": "Iniciar uma busca",
@@ -223,7 +239,7 @@
     "Infusion": "Buscador de Item para Infusão",
     "InfusionMaterials": "Materiais de infusão",
     "LockedItems": "Incluir itens travados",
-    "NoItems": "Nenhum item para infusão encontrado.",
+    "NoItems": "Nenhum item para infusão disponível.",
     "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
     "ShowItems": "Exibir itens infundíveis de outros personagens e cofre",
     "TransferItems": "Transferir itens"
@@ -465,13 +481,13 @@
     "Details": {
       "ChromeSyncStorage": "Se você estiver logado no Chrome, isso vai sincronizar seus dados com outras instâncias do Chrome. Isso não funciona no site do DIM.",
       "GoogleDriveStorage": "DIM pode salvar dados no armazenamento do Google Drive. Se você logar no Google Drive em múltiplos navegadores, seus dados serão compartilhados em todos. Esses dados são guardados por conta da Bungie.",
-      "IndexedDBStorage": "Armazenamento local salvará sua informação apenas nesse navegador"
+      "IndexedDBStorage": "Armazenamento local salvará sua informação apenas nesse navegador."
     },
     "Disabled": "Desabilitado",
     "DriveLogout": "Terminar sessão no Google Drive",
     "DriveSync": "Iniciar sessão no Google Drive",
     "Enabled": "Ativado",
-    "Explain": "DIM guarda seus proprios dados separadamente de seus dados de Destiny (que são mantidos pela Bungie.net)",
+    "Explain": "DIM guarda seus próprios dados separadamente de seus dados de Destiny (que são mantidos pela Bungie.net).",
     "Export": "Fazer Back up dos dados do DIM",
     "ForceSync": "Forçar sincronização de dados",
     "GDriveLogout": "Seus dados continuam no Google Drive - se você logar de novo, DIM voltará a usá-los.",
@@ -556,7 +572,7 @@
       "TranslationText": "Nós usamos o {{link}} para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time.",
       "Twitter": "Twitter",
       "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
-      "Version": "Versão {{version}} ({{flavor}}), built on {{date}}"
+      "Version": "Versão {{version}} ({{flavor}}), construído em {{date}}"
     },
     "Login": {
       "Auth": "Autorize com Bungie.net",
