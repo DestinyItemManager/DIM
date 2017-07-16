@@ -68,7 +68,7 @@
     "handlebars-loader": "^1.4.0",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.29.0",
-    "htmlhint": "^0.9.13",
+    "htmlhint": "github:delphiactual/HTMLHint",
     "imports-loader": "^0.7.0",
     "load-grunt-tasks": "^3.5.0",
     "node-sass": "^4.5.0",
