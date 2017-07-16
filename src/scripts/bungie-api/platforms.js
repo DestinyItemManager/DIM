@@ -16,6 +16,14 @@ export const PLATFORMS = {
     label: 'PlayStation'
   },
 
+  4: {
+    label: 'Blizzard'
+  },
+
+  10: {
+    label: 'Demon'
+  },
+
   254: {
     label: 'Bungie.net'
   }
