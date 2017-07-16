@@ -158,7 +158,6 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   };
 
   vm.light = null;
-  vm.classType = ' ';
   vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
   vm.itemDetails = vm.showDetailsByDefault;
   vm.settings = dimSettingsService;
