@@ -647,7 +647,7 @@ export function ItemFactory(
     function buildObjective(name, current, max, bool, style) {
       return {
         displayStyle: style,
-        displayName: $i18next.t(`TrialsCard.${name}`),
+        displayName: name !== 'Wins' && name !== 'Losses' ? $i18next.t(`TrialsCard.${name}`) : '',
         progress: current,
         completionValue: max,
         complete: bool ? current >= max : false,
