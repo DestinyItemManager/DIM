@@ -1,1 +1,1 @@
-import './scripts/auth-return/auth-return.module';
+import './app/auth-return/auth-return.module';
