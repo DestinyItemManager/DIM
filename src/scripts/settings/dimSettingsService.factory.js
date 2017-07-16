@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import i18next from 'i18next';
+import { changeLanguage } from 'i18next';
 
 /**
  * The settings service provides a settings object which contains
@@ -109,9 +109,7 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
 
     $rootScope.$evalAsync(() => {
       angular.merge(settings, savedSettings);
-      i18next.init({
-        lng: settings.language
-      });
+      changeLanguage(settings.language);
       $rootScope.$emit('dim-settings-loaded', {});
     });
   });

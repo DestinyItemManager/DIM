@@ -6,7 +6,7 @@ import es from '../i18n/dim_es.json';
 import ja from '../i18n/dim_ja.json';
 import ptBR from '../i18n/dim_pt_BR.json';
 
-import i18next from 'i18next';
+import { init as i18init } from 'i18next';
 
 function config($compileProvider, $httpProvider, hotkeysProvider,
                 ngHttpRateLimiterConfigProvider, ngDialogProvider) {
@@ -23,7 +23,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
   hotkeysProvider.includeCheatSheet = true;
 
   // See https://github.com/i18next/ng-i18next
-  i18next.init({
+  i18init({
     debug: $DIM_FLAVOR === 'dev',
     fallbackLng: 'en',
     lowerCaseLng: true,
