@@ -200,7 +200,7 @@ module.exports = (env) => {
         // Whether to log page views for router events
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(env !== 'release'),
         // Enable activities tab
-        '$featureFlags.activities': JSON.stringify(env !== 'release')
+        '$featureFlags.activities': JSON.stringify(true)
       }),
 
       new webpack.SourceMapDevToolPlugin({
