@@ -20,7 +20,6 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 const preMinifiedDeps = [
   'underscore/underscore-min.js',
   'indexeddbshim/dist/indexeddbshim.min.js',
-  'messageformat/messageformat.min.js',
   'jquery/dist/jquery.min.js'
 ];
 
@@ -113,7 +112,8 @@ module.exports = (env) => {
         $: 'jquery',
         jQuery: 'jquery',
         'window.jQuery': 'jquery',
-        MessageFormat: 'messageformat'
+        i18next: 'i18next',
+        'window.i18next': 'i18next'
       }),
 
       new CleanWebpackPlugin(['dist'], {
