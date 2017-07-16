@@ -1,6 +1,7 @@
 # Next
 
 * Fix slight horizontal scroll on inventory view.
+* On mobile, tapping outside of dialogs and dropdowns to dismiss them now works.
 
 # 4.4.0
 

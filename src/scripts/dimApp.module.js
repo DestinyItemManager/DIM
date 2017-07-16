@@ -40,9 +40,6 @@ import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
-// required to make ng-i18next work
-window.i18next = i18next;
-
 const dependencies = [
   AriaModule,
   DialogModule,

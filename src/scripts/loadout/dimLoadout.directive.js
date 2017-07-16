@@ -68,6 +68,7 @@ function Loadout(dimLoadoutService, $i18next) {
         if (args.loadout.classType === undefined) {
           args.loadout.classType = -1;
         }
+        args.loadout.items = args.loadout.items || [];
 
         // Filter out any vendor items and equip all if requested
         args.loadout.warnitems = _.reduce(args.loadout.items, (o, items) => {
