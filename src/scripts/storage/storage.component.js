@@ -104,7 +104,7 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
       });
       $window.alert($i18next.t('Storage.ImportSuccess'));
     };
-    const file = angular.element('#importFile')[0].files[0];
+    const file = angular.element(document.getElementById('importFile'))[0].files[0];
     if (file) {
       reader.readAsText(file);
     } else {
