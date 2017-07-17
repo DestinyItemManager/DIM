@@ -168,7 +168,7 @@
     "Release": "Disponível na versão <i>{{release}}</i>",
     "Releases": {
       "RoI": "Ascensão do Ferro",
-      "Vanilla": "Base",
+      "Vanilla": "Jogo Base",
       "tTK": "O Rei dos Possuídos"
     },
     "RequiredLevel": "Mostra itens baseado em seu nível necessário.",
@@ -273,7 +273,7 @@
   "LB": {
     "AdvancedOptions": "Opções avançadas",
     "ClearLocked": "Limpar itens equipados",
-    "ContainsVendorItems": "Essa carga contém itens dos vendedores",
+    "ContainsVendorItems": "Essa carga contém itens de vendedores",
     "Current": "Atual",
     "Equip": "Equipe em {{character}}",
     "Exclude": "Itens ignorados",
