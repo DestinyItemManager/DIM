@@ -34,7 +34,7 @@
     "NotLoggedIn": "Por favor, faça seu login no Bungie.net para utilizar esta extensão.",
     "Throttled": "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
     "Twitter": "Veja atualizações em:",
-    "UnknownError": "Mensagem de Bungie.net: {{message}}",
+    "UnknownError": "Mensagem da Bungie.net: {{message}}",
     "VendorNotFound": "Dados do vendedor não disponíveis."
   },
   "Compare": {
@@ -65,7 +65,7 @@
   "DidYouKnow": {
     "Collapse": "Você ocultou uma seção no DIM! Isso pode ser útil para esconder partes do DIM que você normalmente não usa.",
     "DidYouKnow": "Você sabia?",
-    "DontShowAgain": "Não exibir esta dica novamente.",
+    "DontShowAgain": "Não exibir esta dica novamente",
     "DoubleClick": "Se você está movendo um item para o seu personagem ativo atualmente (último logado), você pode dar um duplo clique para equipá-lo instantaneamente.",
     "DragAndDrop": "Itens podem ser arrastados e soltados entre diferentes colunas de personagens/cofre.",
     "Expand": "Para re-expandir uma seção simplesmente clique no sinal de mais, no lado esquerdo da categoria que você ocultou.",
@@ -119,10 +119,13 @@
       "VoG": "Câmara de Cristal",
       "WotM": "A ira da máquina"
     },
+    "Activity": "Disponível através da atividade <i>{{activity}}</i>",
     "ArmorCategory": "Mostrar armaduras baseadas na sua categoria.",
-    "Categories": "Categoria de items de Alto Nível",
+    "Ascended": "Mostra itens que tenham um nódulo de ascensão e se eles foram ascendidos ou não.",
+    "Categories": "Categoria de items de Alto Nível.",
     "Class": "Mostrar items baseado em sua afinidade por classe.",
     "ClickFilters": "Clique em filtros em baixo para aplicar, ou para escrever na caixa de pesquisa.",
+    "Combine": "Os filtros são combinados usando a lógica \"e\", por exemplo '{{example}}' vai retornar todos os itens de arco com mais de 300 de luz. Filtros podem ser negados usando '{{not}}', por exemplo '{{notexample}}' vai trazer todos os itens que não forem engramas.",
     "ContributeLight": "Items que contribuem para o seu nível de luz.",
     "DamageType": "Mostrar items baseado no seu tipo de dano.",
     "Description": "Descrição",
@@ -135,15 +138,53 @@
     "Filter": "Filtro",
     "Glimmer": {
       "Any": "Qualquer tipo de item de glimmer.",
-      "Boost": "Item que aumenta a quanitdade de glimmer ganho por 10 minutos.",
-      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de glimmer.",
+      "Boost": "Item que aumenta a quantidade de glimmer ganho por 10 minutos.",
+      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de glimmer:",
       "Item": "Items que podem ser trocados no Rahool por 200 glimmer."
     },
     "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de layout.",
+    "Infusable": "Mostra itens que podem ser infundidos.",
+    "Leveling": {
+      "Complete": "{{term}} - mostra itens que estão totalmente completos - todos os aprimoramentos destravados.",
+      "Incomplete": "{{term}} - mostra itens que não estão completos - ainda existe pelo menos um aprimoramento a destravar.",
+      "Leveling": "Mostra itens em vários estados de evolução:",
+      "NeedsXP": "{{term}} - mostra itens que ainda podem ganhar XP.",
+      "Upgraded": "{{term}} - mostra itens que tem XP suficiente pra destravar todos os seus nódulos, mas nem todos eles foram destravados.",
+      "XPComplete": "{{term}} - mostra itens que não podem mais ganhar XP (estando com seus todos os seus aprimoramentos destravados ou não)."
+    },
+    "LightLevel": "Mostra itens baseado em seus níveis de Luz (Ataque para Armas; Defesa para Armaduras).",
+    "Locked": "Mostra itens baseado em seu estado de travamento.",
+    "NamedStat": "Mostra armaduras que tem pontos no atributo nomeado.",
+    "NewItems": "Mostra novos itens.",
+    "Notes": "Procura por itens que você marcou com notas customizadas",
+    "Ornament": "Mostra itens com ornamentos e filtros pra seus estados.",
+    "PartialMatch": "Mostra itens onde seus nomes combinam parcialmente com o texto do filtro.",
+    "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
+    "Quality": "Mostra itens baseado na porcentagem total da qualidade de seus atributos. '{{percentage}}' é um apelido pra '{{quality}}'.",
+    "RarityTier": "Mostra itens baseado na raridade deles.",
+    "Rated": "Mostra todas as armas que tem uma avaliação vinda do Destiny Tracker.",
+    "Rating": "Mostra armas baseado em suas avaliações no Destiny Tracker.",
+    "Reforgeable": "Mostra itens que podem ser reforjados no Armeiro.",
+    "Release": "Disponível na versão <i>{{release}}</i>",
     "Releases": {
       "RoI": "Ascensão do Ferro",
+      "Vanilla": "Jogo Base",
       "tTK": "O Rei dos Possuídos"
     },
+    "RequiredLevel": "Mostra itens baseado em seu nível necessário.",
+    "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
+    "Stats": "Exibir itens baseados em suas estatísticas. Os filtros disponíveis são:",
+    "Tags": {
+      "Dismantle": "Exibir itens que deseja desmontar futuramente.",
+      "Favorite": "Exibir itens favoritos.",
+      "Infuse": "Exibir itens que deseja infundir futuramente.",
+      "Keep": "Exibir itens para manter.",
+      "NoTag": "Exibir itens sem tag."
+    },
+    "Tracked": "Exibir jornadas/contratos baseados em seu status de rastreamento.",
+    "Transferable": "Itens que podem ser movidos entre personagens.",
+    "Vendor": "O item está disponível no vendedor <i>{{vendor}}</i> {{name}}",
+    "Vendor_noname": "O item está disponível no vendedor <i>{{vendor}}</i>",
     "Vendors": {
       "CQ": "Quartel-mestre do Crisol",
       "DO": "Órbita Morta",
@@ -153,7 +194,10 @@
       "NM": "Nova Monarquia",
       "Shipwright": "Contramestre",
       "Speaker": "O Porta-Voz"
-    }
+    },
+    "WeaponClass": "Exibir itens baseado na sua classe de arma.",
+    "WeaponType": "Exibir armas baseado no seu tipo de arma.",
+    "Year": "Exibir itens a partir de qual ano foi inserido em Destiny."
   },
   "Header": {
     "About": "Sobre",
@@ -166,7 +210,7 @@
   },
   "Help": {
     "CannotMove": "Não é possível mover o item para fora deste personagem.",
-    "ChangingPerks": "Mudança de perks não é suportado.",
+    "ChangingPerks": "Mudança de perks não é suportada",
     "ChangingPerksInfo": "Desculpe, não há maneira de alterar perks fora do jogo. Bem que gostaríamos!",
     "Drag": "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente.",
     "ExtensionDeprecatedMessage": "A extensão DIM do Chrome agora abre o nosso site - que funciona em qualquer navegador ou dispositivo móvel! Você pode remover a extensão ou deixá-la como um atalho pro site. Seus dados (marcações, notas e configurações) podem ser importados da pagina de armazenamento (ícone de disco no cabeçalho).",
@@ -175,13 +219,14 @@
     "NeverShow": "Não mostre isso novamente.",
     "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não pode salvar dados no navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco. DIM não pode prosseguir.",
-    "UpgradeChrome": "Por favor, atualize o Chrome.",
+    "UpgradeChrome": "Por favor, atualize o Chrome",
     "Version_beta": "Beta foi atualizado para v{{version}}",
     "Version_release": "DIM v{{version}} lançado",
     "Xur": "Xûr chegou"
   },
   "Hotkey": {
     "ClearNewItems": "Limpar novos itens",
+    "ClearNewItemsTitle": "Tecla de atalho: X",
     "MarkItemAs": "Marcar item como '{{tag}}'",
     "RefreshInventory": "Atualizar inventário",
     "StartSearch": "Iniciar uma busca",
@@ -194,14 +239,14 @@
     "Infusion": "Buscador de Item para Infusão",
     "InfusionMaterials": "Materiais de infusão",
     "LockedItems": "Incluir itens travados",
-    "NoItems": "Nenhum item para infusão encontrado.",
+    "NoItems": "Nenhum item para infusão disponível.",
     "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
     "ShowItems": "Exibir itens infundíveis de outros personagens e cofre",
     "TransferItems": "Transferir itens"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Houve um problema ao salvar uma informação específica do DIM sobre um item. O problema é que há um limite de dados que podem salvos - é por isso que tags e notas não são permitidos fora da versão Beta. O erro foi: {{error}}.",
-    "SaveInfoErrorTitle": "Erro salvando informação de item."
+    "SaveInfoErrorTitle": "Erro salvando informação de item"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidado",
@@ -228,7 +273,7 @@
   "LB": {
     "AdvancedOptions": "Opções avançadas",
     "ClearLocked": "Limpar itens equipados",
-    "ContainsVendorItems": "Essa carga contém itens dos vendedores",
+    "ContainsVendorItems": "Essa carga contém itens de vendedores",
     "Current": "Atual",
     "Equip": "Equipe em {{character}}",
     "Exclude": "Itens ignorados",
@@ -238,18 +283,18 @@
     "Help": {
       "And": "Armadura com todos esses perks será usada (\"e\")",
       "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada set.",
-      "Discipline": "Disciplina acelera o tempo de recarga de granadas.",
-      "DragAndDrop": "Arraste e solte itens nas caixas para construir sets somente com aquele equipamento.",
+      "Discipline": "Disciplina acelera o tempo de recarga de granadas",
+      "DragAndDrop": "Arraste e solte itens nas caixas para construir sets somente com aquele equipamento",
       "Help": "Precisa de ajuda?",
       "HigherTiers": "Tiers mais altos são melhores",
-      "Intellect": "Intelecto acelera o tempo de recarga da Super.",
-      "Lock": "Trave um conjunto de perks clicando na caixa e selecionando os perks.",
-      "MultiPerk": "Se você quiser usar uma armadura com múltiplos perks juntos, Shift+clique nos perks desejados.",
-      "NoPerk": "Se um perk não aparece, significa que você não tem armaduras com este perk.",
+      "Intellect": "Intelecto acelera o tempo de recarga da Super",
+      "Lock": "Trave um conjunto de perks clicando na caixa e selecionando os perks",
+      "MultiPerk": "Se você quiser usar uma armadura com múltiplos perks juntos, Shift+clique nos perks desejados",
+      "NoPerk": "Se um perk não aparece, significa que você não tem armaduras com este perk",
       "Or": "Armadura com qualquer um destes perks será usada (\"ou\")",
       "ShiftClick": "Shift+clique em um item para construir sets sem aquele equipamento",
       "StatsIncrease": "Quando o nível de defesa de um item aumenta, os atributos deste item (intelecto, disciplina e força) também aumentam.",
-      "Strength": "Força acelera o tempo de recarga do corpo-a-corpo.",
+      "Strength": "Força acelera o tempo de recarga do corpo-a-corpo",
       "Synergy": "Tente encontrar uma armadura com perks que aumentem a quantidade de munição das armas que você mais usa.",
       "Tier11Example": "4/5/2 (um set Tier 11) significa 4 Intelecto, 5 Disciplina, 2 Força (4+5+2 = Tier 11)"
     },
@@ -289,7 +334,7 @@
     "AppliedAuto": "Construtor automático de sets",
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
-    "Applied_plural": "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
+    "Applied_plural": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
     "ApplySearch": "Itens = \"{{query}}\"",
     "Before": "Antes '{{name}}'",
     "Cancel": "Cancelar",
@@ -337,8 +382,8 @@
     "Load": "Carregando informações salvas",
     "LoadCharInv": "Carregando personagens e inventário",
     "Outdated": "Informações desatualizadas",
-    "OutdatedExplanation": "A Bungie atualizou seu banco de dados de informações de Destny. Reinicie o DIM para obter as novas informações. Esteja ciente que algumas coisas no DIM podem não funcionar por algumas horas após a Bungie atualizar o Destiny, já que as novas informações ainda estão sendo implementadas em seus servidores.",
-    "Save": "Salvando últimas informações ",
+    "OutdatedExplanation": "A Bungie atualizou seu banco de dados de informações de Destiny. Reinicie o DIM para obter as novas informações. Esteja ciente que algumas coisas no DIM podem não funcionar por algumas horas após a Bungie atualizar o Destiny, já que as novas informações ainda estão sendo implementadas em seus servidores.",
+    "Save": "Salvando últimas informações",
     "Unzip": "Descompactando últimas informações"
   },
   "MoveAmount": {
@@ -384,12 +429,12 @@
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análises detalhadas das armas e permitir avaliação de armas",
-    "AllowIdPostToDtrLine2": "Isso irá compartilhar seu nome de conta e itens analisados com o Destiny Tracker",
+    "AllowIdPostToDtrLine2": "Isso irá compartilhar seu nome de conta e itens analisados com o Destiny Tracker.",
     "AlwaysShowDetails": "Sempre mostrar o popup expandido do item",
     "CharacterOrder": "Ordenar personagens por",
-    "CharacterOrderFixed": "Idade do personagem",
-    "CharacterOrderRecent": "Personagem mais recente",
-    "CharacterOrderReversed": "Personagem mais recente (inverso)",
+    "CharacterOrderFixed": "idade do personagem",
+    "CharacterOrderRecent": "personagem mais recente",
+    "CharacterOrderReversed": "personagem mais recente (inverso)",
     "ColorA11y": "Configuração de cegueira de cores",
     "ColumnSize": "{{num}} itens",
     "ColumnSizeAuto": "Auto",
@@ -409,7 +454,7 @@
     "ShowAnimationsHelp": "Mostrará o brilho animado de item novo em novos itens. Desativar isso pode poupar ciclos da CPU.",
     "ShowElemental": "Exibir ícone de dano elemental em armas",
     "ShowOverlay": "Mostrar novos itens com um efeito brilhante",
-    "ShowReviews": "Mostrar classificações das armas em análise.",
+    "ShowReviews": "Mostrar classificações das armas em análise",
     "SizeItem": "Tamanho do item",
     "SortName": "Nome",
     "SortPrimary": "Estatisticas primárias",
@@ -436,13 +481,13 @@
     "Details": {
       "ChromeSyncStorage": "Se você estiver logado no Chrome, isso vai sincronizar seus dados com outras instâncias do Chrome. Isso não funciona no site do DIM.",
       "GoogleDriveStorage": "DIM pode salvar dados no armazenamento do Google Drive. Se você logar no Google Drive em múltiplos navegadores, seus dados serão compartilhados em todos. Esses dados são guardados por conta da Bungie.",
-      "IndexedDBStorage": "Armazenamento local salvará sua informação apenas nesse navegador"
+      "IndexedDBStorage": "Armazenamento local salvará sua informação apenas nesse navegador."
     },
     "Disabled": "Desabilitado",
     "DriveLogout": "Terminar sessão no Google Drive",
     "DriveSync": "Iniciar sessão no Google Drive",
     "Enabled": "Ativado",
-    "Explain": "DIM guarda seus proprios dados separadamente de seus dados de Destiny (que são mantidos pela Bungie.net)",
+    "Explain": "DIM guarda seus próprios dados separadamente de seus dados de Destiny (que são mantidos pela Bungie.net).",
     "Export": "Fazer Back up dos dados do DIM",
     "ForceSync": "Forçar sincronização de dados",
     "GDriveLogout": "Seus dados continuam no Google Drive - se você logar de novo, DIM voltará a usá-los.",
@@ -521,11 +566,13 @@
       "HowItsMade": "O DIM tem como base os mesmos serviços do Bungie.net e o aplicativo Destiny Companion. O DIM pode acessar os itens em seu inventário e cofre em ambas as plataformas PlayStation e Xbox. Você pode então arrastar e soltar os itens para qualquer personagem ou local que deseja mover.",
       "Reddit": "Reddit",
       "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
+      "Schedule_beta": "Essa versão beta do DIM é atualizada toda vez que mudamos o código - ele pega as funcionalidades mais atuais, mas pega os bugs mais atuais também!",
+      "Schedule_release": "Essa versão do DIM é atualizada uma vez por semana, as sábados pela manhã, horário do Pacífico.",
       "Translation": "Junte-se à equipe de tradução!",
       "TranslationText": "Nós usamos o {{link}} para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time.",
       "Twitter": "Twitter",
       "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
-      "Version": "Versão {{version}} ({{flavor}}), built on {{date}}"
+      "Version": "Versão {{version}} ({{flavor}}), construído em {{date}}"
     },
     "Login": {
       "Auth": "Autorize com Bungie.net",

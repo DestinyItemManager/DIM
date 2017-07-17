@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "engines": {
@@ -10,7 +10,7 @@
     "test": "echo \"No tests\"",
     "dev-chrome": "npm start -s",
     "generate-css": "echo \"No need to run this any more. Just run 'npm start'!\n\"",
-    "lint": "eslint --fix . && htmlhint",
+    "lint": "eslint --fix . && grunt lintJSON && htmlhint",
     "bundle": "webpack --config ./config/webpack.js --hide-modules",
     "build-release": "npm run bundle -s -- --env=release",
     "build-beta": "npm run bundle -s -- --env=beta",
@@ -82,10 +82,10 @@
     "uglify-js": "^2.7.0",
     "unzip": "^0.1.11",
     "url-loader": "^0.5.7",
-    "webpack": "^3.1.0",
-    "webpack-bundle-analyzer": "^2.8.2",
+    "webpack": "^3.2.0",
+    "webpack-bundle-analyzer": "^2.8.3",
     "webpack-dev-server": "^2.5.1",
-    "workbox-webpack-plugin": "^1.0.1"
+    "workbox-webpack-plugin": "^1.1.0"
   },
   "dependencies": {
     "@destiny-item-manager/zip.js": "github:DestinyItemManager/zip.js",
@@ -107,14 +107,14 @@
     "i18next": "^8.4.3",
     "idb-keyval": "^2.3.0",
     "indexeddbshim": "^2.2.1",
-    "jquery": "^3.1.1",
-    "jquery-textcomplete": "^1.8.1",
-    "jquery-ui": "^1.12.1",
     "ng-dialog": "^1.3.0",
     "ng-http-rate-limiter": "^1.0.1",
     "ng-i18next": "^1.0.5",
+    "popper.js": "^1.10.8",
     "simple-query-string": "^1.3.0",
     "sql.js": "github:DestinyItemManager/sql.js",
+    "textcomplete": "^0.13.1",
+    "tooltip.js": "^1.1.4",
     "underscore": "^1.8.3",
     "uuid": "^3.1.0"
   }

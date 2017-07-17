@@ -38,7 +38,7 @@
     "VendorNotFound": "ベンダー情報ありません"
   },
   "Compare": {
-    "All": "{{type}} 比較  ({{quantity}})",
+    "All": "{{type}} 比較 ({{quantity}})",
     "Archetype": "原型と比較 ({{quantity}})",
     "ButtonHelp": "アイテムを比較する",
     "Close": "終了",
@@ -48,7 +48,7 @@
       "Class": "このアイテム {{class}} 用のため、比較できません。"
     },
     "ItemCount": "{{num}} を所持していません。",
-    "Splits": "同様の分割を比較する（{{quantity}}）"
+    "Splits": "同様の分割を比較する ({{quantity}})"
   },
   "Cooldown": {
     "Grenade": "グレネードのクールダウン: {{cooldown}}",
@@ -57,7 +57,7 @@
   },
   "Countdown": {
     "Days": "{{count}} 日間",
-    "Days_plural": "{{count}} 日間 "
+    "Days_plural": "{{count}} 日間"
   },
   "Debug": {
     "Dump": "ゲーム機に情報を転送する"
@@ -106,6 +106,7 @@
     "Activities": {
       "AF": "アルコンの炉",
       "AoT": "勝利の時代",
+      "CD": "深紅の日々",
       "CE": "クロタの最期",
       "CoE": "エルダーの挑戦",
       "Dawning": "暁旦",
@@ -118,12 +119,72 @@
       "VoG": "ガラスの間",
       "WotM": "機械の天罰"
     },
+    "Activity": "<i>{{activity}}</i>から入手可能",
+    "ArmorCategory": "カテゴリー別に防具を表示",
+    "Ascended": "ノードの開放完了の有無に関わらず、アップグレード可能なアイテムを表示",
+    "Categories": "高レベル・アイテムカテゴリー",
+    "Class": "クラス別にアイテムを表示",
+    "ClickFilters": "下のフィルターをクリック、もしくは検索ボックスに入力して探すことができます。",
+    "Combine": "フィルターは複合することが出来ます。例えば'{{example}}'は光が300以上の全アークアイテムを検索します。'{{not}}'を使って除外することもできます。例えば'{{notexample}}'はエングラム以外の全アイテムを検索します。",
+    "ContributeLight": "光レベル上昇に必要なアイテム",
+    "DamageType": "ダメージタイプ別にアイテムを表示",
+    "Description": "説明",
+    "Dupe": "重複するアイテムを表示",
+    "Engrams": "エングラムを表示",
     "EnterName": "アイテム名を入力してください。",
     "EnterNote": "ここにノート入力:",
+    "Equipment": "装備できるアイテム",
+    "Equipped": "現在装備中のアイテム",
+    "Filter": "フィルター",
+    "Glimmer": {
+      "Any": "グリマー関係のアイテム",
+      "Boost": "10分間グリマーをより多く入手できるようになるアイテム",
+      "Glimmer": "グリマー入手に関係するアイテムを表示",
+      "Item": "ラフールから200グリマーと交換可能なアイテム"
+    },
+    "InLoadout": "装備品に含まれるアイテムを表示",
+    "Infusable": "融合可能なアイテムを表示",
+    "Leveling": {
+      "Complete": "{{term}} - アップグレードを完了したアイテムを表示",
+      "Incomplete": "{{term}} - アップグレードが完了してないアイテムを表示",
+      "Leveling": "アイテムのレベル過程の表示",
+      "NeedsXP": "{{term}} - 経験値を積むことができるアイテムを表示",
+      "Upgraded": "{{term}} - 全ノードを開放できるが、まだ開放していないアイテムを表示",
+      "XPComplete": "{{term}} - 経験値を積むことが出来ないアイテム(アップグレードの完了に関わらず)を表示"
+    },
+    "LightLevel": "光レベルを基にアイテムを表示(武器の攻撃力、防具の防御力)",
+    "Locked": "アイテムの固定有無を基に表示",
+    "NamedStat": "ステータスのある防具を表示",
+    "NewItems": "新しいアイテムを表示",
+    "Notes": "メモを付けたアイテムを検索",
+    "Ornament": "装飾可能なアイテム、装飾状況を表示",
+    "PartialMatch": "アイテム名の一部合致から検索できます",
+    "Postmaster": "現在ポストマスターにあるアイテム",
+    "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
+    "RarityTier": "希少性を基に表示",
+    "Rated": "Destiny トラッカーから評価をされた武器を全て表示",
+    "Rating": "ユーザーからの評価を基に武器を表示",
+    "Reforgeable": "銃器技師で融合可能なアイテムを表示",
+    "Release": "<i>{{release}}</i>から入手可能",
     "Releases": {
       "RoI": "鉄の章",
+      "Vanilla": "本編",
       "tTK": "降り立ちし邪神"
     },
+    "RequiredLevel": "必要なレベルに応じてアイテムを表示",
+    "Stackable": "一纏め可能なアイテム(弾合成アイテム、奇妙なコインなど)を表示",
+    "Stats": "アイテムのステータスを基に表示。各フィルターは以下の通りです。",
+    "Tags": {
+      "Dismantle": "後で分解した方が良いアイテムを表示",
+      "Favorite": "お気に入りのアイテムを表示",
+      "Infuse": "後で融合した方が良いアイテムを表示",
+      "Keep": "「保管」したアイテムを表示",
+      "NoTag": "タグのついてないアイテムを表示"
+    },
+    "Tracked": "クエスト、バウンティのステータスを基に表示",
+    "Transferable": "キャラ間で移動可能なアイテムを表示",
+    "Vendor": "ベンダーから入手可能なアイテム<i>{{vendor}}</i> {{name}}",
+    "Vendor_noname": "ベンダーから入手可能なアイテム<i>{{vendor}}</i>",
     "Vendors": {
       "CQ": "クルーシブル補給担当官",
       "DO": "デッドオービット",
@@ -133,10 +194,14 @@
       "NM": "ニューモナーキー",
       "Shipwright": "造船工",
       "Speaker": "預言者"
-    }
+    },
+    "WeaponClass": "武器のクラスを基に表示",
+    "WeaponType": "武器の種類を基に表示",
+    "Year": "Destinyの何年目にでてきたかを表示"
   },
   "Header": {
     "About": "情報",
+    "FilterHelp": "アイテム、効果または{{example}}から検索",
     "Filters": "フィルター",
     "Inventory": "インベントリー",
     "Refresh": "デスティニーデータを更新",
@@ -161,6 +226,7 @@
   },
   "Hotkey": {
     "ClearNewItems": "新しいアイテムをクリアする",
+    "ClearNewItemsTitle": "キーボード　ショートカット: X",
     "MarkItemAs": "アイテムを '{{tag}}' とマークする",
     "RefreshInventory": "インベントリーを更新",
     "StartSearch": "検索開始",
@@ -264,10 +330,11 @@
   },
   "Loadouts": {
     "Any": "全てのクラス",
-    "Applied": "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+    "Applied": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
     "AppliedAuto": "自動ロードアウトビルダー",
     "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
     "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}}の{{failed}}アイテムにエラーがありました。",
+    "Applied_plural": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
     "ApplySearch": "アイテム = \"{{query}}\"",
     "Before": "前 '{{name}}'",
     "Cancel": "キャンセル",
@@ -289,6 +356,7 @@
     "Loadouts": "ロードアウト",
     "MakeRoom": "ポストマスターのための部屋を作る",
     "MakeRoomDone": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
+    "MakeRoomDone_plural": "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした.",
     "MakeRoomError": "ポストマスターの全アイテム用のスペースを確保できませんでした: {{error}} 。",
     "MaxSlots": "ロードアウトでは、その種のアイテムの{{slots}}しか持てません。",
     "MaximizeLight": "光レベルを最大化",
@@ -368,7 +436,7 @@
     "CharacterOrderRecent": "最近使ったキャラ",
     "CharacterOrderReversed": "最近使ったキャラ(逆順)",
     "ColorA11y": "色覚設定",
-    "ColumnSize": "\n {{num}}個",
+    "ColumnSize": "{{num}}個",
     "ColumnSizeAuto": "オート",
     "DIMPopups": "DIMの情報",
     "DIMPopupsReset": "以前非表示にしたヒントをリセットする",
@@ -399,9 +467,9 @@
     "Intellect": "知性",
     "Level": "レベル",
     "NoBonus": "ボーナスなし。",
-    "OfMaxRoll": "統計量の  {{range}}",
+    "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、をクリックしてください。",
-    "Prestige": "評判レベル：  {{level}}\n光の欠片5個までは後  {{exp}}xp",
+    "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
     "Quality": "品質",
     "Strength": "腕力",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
@@ -438,9 +506,9 @@
     "Loadouts": "{{value}} 装備",
     "NoData": "データなし",
     "Settings": "DIMの設定と選択",
-    "StatLabel": "現在の使用:",
+    "StatLabel": "現在の仕様:",
     "TagNotes": "{{value}}個のタグ、メモ付きのアイテム",
-    "Title": "DIMのストレージ\n"
+    "Title": "DIMのストレージ"
   },
   "StoreBucket": {
     "FillStack": "フルスタック ({{amount}})",
@@ -498,6 +566,8 @@
       "HowItsMade": "DIMはBungie.netとDestinyコンパニオンアプリが使っている同じサービスを素にして作られたクロームエクステンションです。DIMはPlayStationとXboxのアカウント両方対応で、キャラクターや保管庫に入っているアイテムにアクセスすることができます。アイテムはドラッグアンドドロップで自由自在に移動できます。",
       "Reddit": "レディット",
       "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
+      "Schedule_beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
+      "Schedule_release": "DIMは週に一回アップデートされます。太平洋時間、土曜の午後です。",
       "Translation": "翻訳チームに参加してください！",
       "TranslationText": "翻訳には {{link}} を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう.",
       "Twitter": "ツイッター",

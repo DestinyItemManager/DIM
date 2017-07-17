@@ -917,340 +917,6 @@ dim-store-heading {
   cursor: pointer;
 }
 
-.move-amount {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  margin: 10px 0;
-}
-
-.move-amount-slider {
-  flex: 1;
-  margin: 0 10px;
-}
-
-.move-amount input {
-  margin-left: 10px;
-  width: 3em;
-}
-
-.move-amount-arrow {
-  font-size: 16px;
-  cursor: pointer;
-  color: gray;
-  margin: 0 4px;
-  &:first-child {
-    margin-left: 0;
-  }
-  &:last-child {
-    margin-right: 0;
-  }
-  &:hover {
-    color: white;
-  }
-}
-
-.move-amount-popup {
-  .ngdialog-content {
-    width: 40em;
-    background-color: #222;
-    height: fit-content !important;
-  }
-  .ngdialog-inner-content {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  h1 {
-    display: flex;
-    align-items: center;
-    padding-top: 10px;
-    padding-bottom: 14px;
-    padding-left: 10px !important;
-    font-size: 1.65em;
-  }
-  .item {
-    margin-right: .5em;
-  }
-  .buttons {
-    text-align: center;
-    margin-top: 1em;
-  }
-  button {
-    border: 1px solid #3e3e3e;
-    color: #e0e0e0;
-    background-color: #101010;
-    padding: 8px 16px;
-    font-size: 1.4em;
-    &:hover {
-      background-color: #444;
-      border-color: black;
-    }
-  }
-}
-
-/* rzslider */
-
-rzslider, .rzslider {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 4px;
-  top: -2px;
-  vertical-align: middle;
-  user-select: none;
-  span {
-    position: absolute;
-    display: inline-block;
-    white-space: nowrap;
-  }
-  .rz-base {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-  }
-  .rz-bar-wrapper {
-    left: 0;
-    z-index: 1;
-    width: 100%;
-    height: 32px;
-    padding-top: 16px;
-    margin-top: -16px;
-    box-sizing: border-box;
-    &.rz-draggable {
-      cursor: move;
-    }
-  }
-  .rz-bar {
-    left: 0;
-    z-index: 1;
-    width: 100%;
-    height: 4px;
-    background: gray;
-    border-radius: 2px;
-    &.rz-selection {
-      z-index: 2;
-      background: white;
-      border-radius: 2px;
-    }
-  }
-  .rz-pointer {
-    top: -6px;
-    z-index: 3;
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    border: 5px solid white;
-    background-color: white;
-    border-radius: 50%;
-    &:focus {
-      outline: none;
-      background-color: #0db9f0;
-    }
-  }
-  .rz-bubble {
-    display: none;
-    &.rz-selection {
-      top: 16px;
-    }
-    &.rz-limit {
-      color: #55637d;
-    }
-  }
-}
-
-/**
- * Move Popup - Details
- */
-
-.item-details {
-  margin: 10px;
-}
-
-.item-description {
-  margin: 5px 10px;
-  white-space: pre-wrap;
-}
-
-.item-perks {
-  margin: 5px 10px;
-}
-
-.talent-grid {
-  max-width: 100%;
-}
-
-.stats {
-  width: 100%;
-  display: table;
-  border-spacing: 0 4px;
-
-  .stat-box-row {
-    overflow: hidden;
-    margin-bottom: 4px;
-    display: table-row;
-  }
-  .stat-box-wrap {
-    white-space: normal !important;
-  }
-  .stat-box-cell {
-    display: table-cell;
-    line-height: 14px;
-    white-space: nowrap;
-    vertical-align: middle;
-  }
-  .stat-box-text {
-    padding-right: 8px;
-    padding-left: 10px;
-    text-align: right;
-  }
-  .stat-box-val {
-    text-align: left;
-    padding-right: 10px;
-    padding-left: 5px;
-  }
-  .higher-stats {
-    color: #7DC878;
-  }
-  .lower-stats {
-    color: #985C58;
-  }
-  .stat-box-outer {
-    display: table-cell;
-    height: 14px;
-    line-height: 14px;
-    background-color: #333;
-    width: 100%;
-  }
-  .stat-box-container {
-    display: flex;
-    width: 100%;
-    height: 100%;
-  }
-  .stat-box-inner {
-    display: block;
-    height: 100%;
-    float: left;
-    line-height: 14px;
-    background-color: #333;
-    background-color: white;
-    color: black;
-    line-height: 20px;
-    &.higher-stats {
-      background-color: #7DC878;
-    }
-    &.lower-stats {
-      background-color: #985C58;
-    }
-  }
-}
-
-.objective-row {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 4px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.objective-checkbox {
-  width: 17px;
-  height: 17px;
-  border: 1px solid #999;
-  margin-right: 4px;
-  box-sizing: border-box;
-}
-
-.objective-complete {
-  opacity: 0.5;
-  .objective-progress {
-    background-color: #111;
-  }
-  .objective-progress-bar {
-    display: none;
-  }
-  .objective-checkbox div {
-    margin: 2px;
-    height: 11px;
-    width: 11px;
-    background-color: #7DC878;
-  }
-}
-
-.objective-progress {
-  flex: 1;
-  background-color: black;
-  position: relative;
-  min-height: 17px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: white;
-}
-
-.objective-progress-bar {
-  background-color: #7DC878;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-}
-
-.objective-description {
-  position: relative;
-  padding: 0 4px;
-  flex: 1;
-}
-
-.objective-text {
-  z-index: 2;
-  margin-right: 4px;
-  backface-visibility: hidden;
-}
-
-.objective-boolean {
-  .objective-progress-bar, .objective-text {
-    display: none;
-  }
-  .objective-progress {
-    background-color: transparent;
-  }
-  .objective-description {
-    padding: 0;
-  }
-}
-
-.talent-node-xp {
-  fill: rgba(255, 255, 255, 0.1);
-  stroke: none;
-}
-
-.talent-node-showxp .talent-node-xp {
-  stroke: $xp;
-}
-
-.talent-node-activated .talent-node-xp {
-  fill: #4887ba;
-}
-
-.talent-node-img {
-  opacity: 0.25;
-}
-
-.talent-node-activated .talent-node-img {
-  opacity: 1;
-}
-
-.talent-node-default .talent-node-xp {
-  fill: rgba(255, 255, 255, 0.4);
-}
-
-g {
-  outline-width: 0;
-}
-
 #content {
   margin: 15px auto;
   padding: 0 8px;
@@ -1279,10 +945,10 @@ g {
   position: fixed;
   backface-visibility: hidden;
   pointer-events: none;
-  bottom: -800px;
+  bottom: 0px;
   left: 0;
   right: 0;
-  top: 141px;
+  top: 124px;
 }
 
 .collapse {
@@ -1342,6 +1008,7 @@ g {
   backface-visibility: hidden;
   top: 55px;
   left: 0;
+  width: auto;
   z-index: 10;
   @supports (position: sticky) {
     position: sticky;
@@ -1590,11 +1257,14 @@ h2, h3, h4 {
 .dropdown-menu {
   border: 1px solid #ddd;
   background-color: white;
-  transform: translate(-11px, 5px);
+  transform: translate(0, -1px);
+  .textcomplete-header, .textcomplete-footer {
+    display: none;
+  }
   li {
     border-top: 1px solid #ddd;
     padding: 2px 5px;
-    &:first-child {
+    &:nth-child(2) {
       border-top: none;
     }
     &:hover {

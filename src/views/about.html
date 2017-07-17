@@ -3,6 +3,7 @@
   <div class="ngdialog-inner-content">
     <a ng-href="{{ $DIM_CHANGELOG }}" target="_blank" rel="noopener noreferrer"><span ng-i18next="[i18next]({ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE })Views.About.Version"></span></a>
     <p ng-i18next="Views.About.HowItsMade"></p>
+    <p ng-if="$DIM_FLAVOR != 'dev'" ng-i18next="[i18next]({ context: $DIM_FLAVOR })Views.About.Schedule"></p>
     <h2 ng-i18next="Views.About.ContactUs"></h2>
     <table>
       <tr>

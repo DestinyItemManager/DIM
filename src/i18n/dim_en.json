@@ -158,7 +158,7 @@
       "Upgraded": "{{term}} - shows items that have enough XP to unlock all their nodes, but not all the nodes have been unlocked.",
       "XPComplete": "{{term}} - shows items that cannot have XP put into them (whether or not their upgrades have been unlocked)."
     },
-    "LightLevel": "Shows items based on their light level (Attack for Weapons; Defense for Armor). '{{level}}' is an alias for '{{light}}'.",
+    "LightLevel": "Shows items based on their light level (Attack for Weapons; Defense for Armor).",
     "Locked": "Shows items based on their locked status.",
     "NamedStat": "Shows armor that has points in the named stat.",
     "NewItems": "Shows new items.",
@@ -177,6 +177,7 @@
       "Vanilla": "Vanilla",
       "tTK": "The Taken King"
     },
+    "RequiredLevel": "Shows items based on their required level.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
     "Tags": {
@@ -531,7 +532,7 @@
     "Move": "Move"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "To re-authorize google drive, must restart your browser.",
+    "GoogleDriveReAuth": "To re-authorize google drive, you must restart your browser.",
     "OneItemTooLarge": "Your save file has an item that is too large. Most likely a saved loadout has too many items.",
     "SaveTooLarge": "Your save file is too large.  Remove saved loadouts."
   },
@@ -581,6 +582,8 @@
       "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
       "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
+      "Schedule_beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",
+      "Schedule_release": "This version of DIM is updated once a week, in the afternoon on Saturdays, US Pacific time.",
       "Translation": "Join the Translation Team!",
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
       "Twitter": "Twitter",

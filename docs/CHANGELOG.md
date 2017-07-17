@@ -1,5 +1,13 @@
 # Next
 
+* Fix slight horizontal scroll on inventory view.
+* On mobile, tapping outside of dialogs and dropdowns to dismiss them now works.
+* The item detail popup now does a better job of fitting itself onto the screen - it may appear to the left or right of an item now!
+* Press on a talent grid node to read its description. The same goes for the stats under your character.
+* Subclasses now have the correct elemental type in their header color.
+
+# 4.4.0
+
 * New filters for ornaments - is:ornament, is:ornamentmissing, is:ornamentunlocked
 * Fixed a bug where item data would not respect your language settings.
 * Weapon reviews now show up immediately, and can be edited.
@@ -13,6 +21,8 @@
 * Fixed a case where you couldn't create a new class-specific loadout.
 * On Firefox, the new-item shines don't extend past the item anymore.
 * Do a better job of refreshing your authentication credentials - before, we'd sometimes show errors for a few minutes after you'd used DIM for a while.
+* The filters help page has been localalized.
+* Separate the light: and level: filters. level now returns items matching required item level, light returns items matching the light level.
 
 # 4.3.0
 

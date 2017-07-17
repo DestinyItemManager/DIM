@@ -1,6 +1,6 @@
 require('babel-polyfill');
 
-require('./scripts/google');
+require('./app/google');
 
 // Drag and drop
 const iosDragDropShim = require('drag-drop-webkit-mobile');
@@ -16,45 +16,39 @@ window.addEventListener('touchmove', () => {});
 require('indexeddbshim');
 
 // Initialize the main DIM app
-require('./scripts/app.module');
+require('./app/app.module');
 
-require('./scripts/services/dimActionQueue.factory');
-require('./scripts/services/dimDefinitions.factory');
-require('./scripts/services/dimManifestService.factory');
-require('./scripts/services/dimBucketService.factory');
-require('./scripts/services/dimInfoService.factory');
-require('./scripts/services/dimPlatformService.factory');
-require('./scripts/services/dimLoadoutService.factory');
-require('./scripts/services/dimStoreService.factory');
-require('./scripts/services/dimCsvService.factory');
-require('./scripts/services/dimDestinyTrackerService.factory');
-require('./scripts/services/dimItemService.factory');
-require('./scripts/services/dimItemMoveService.factory');
-require('./scripts/services/dimItemInfoService.factory');
+require('./app/services/dimActionQueue.factory');
+require('./app/services/dimDefinitions.factory');
+require('./app/services/dimManifestService.factory');
+require('./app/services/dimBucketService.factory');
+require('./app/services/dimInfoService.factory');
+require('./app/services/dimPlatformService.factory');
+require('./app/services/dimLoadoutService.factory');
+require('./app/services/dimStoreService.factory');
+require('./app/services/dimCsvService.factory');
+require('./app/services/dimDestinyTrackerService.factory');
+require('./app/services/dimItemService.factory');
+require('./app/services/dimItemMoveService.factory');
+require('./app/services/dimItemInfoService.factory');
 
-require('./scripts/loadout/dimLoadout.directive');
-require('./scripts/loadout/dimLoadoutPopup.directive');
-require('./scripts/shell/dimAngularFilters.filter');
-require('./scripts/shell/dimSearchFilter.directive');
-require('./scripts/shell/dimClickAnywhereButHere.directive');
-require('./scripts/shell/dimFilterLink.directive');
-require('./scripts/shell/dimManifestProgress.directive');
-require('./scripts/store/dimPercentWidth.directive');
-require('./scripts/store/dimStores.directive');
-require('./scripts/store/dimStoreBucket.directive');
-require('./scripts/store/dimStoreReputation.directive');
-require('./scripts/store/dimStoreItem.directive');
-require('./scripts/store/dimStoreHeading.directive');
-require('./scripts/store/dimSimpleItem.directive');
-require('./scripts/store/dimStats.directive');
-require('./scripts/store/dimClearNewItems.directive');
-require('./scripts/item-review/item-review.component');
-require('./scripts/move-popup/dimItemStats.component');
-require('./scripts/move-popup/dimMoveAmount.directive');
-require('./scripts/move-popup/dimMovePopup.directive');
-require('./scripts/move-popup/dimTalentGrid.directive');
-require('./scripts/move-popup/dimMoveItemProperties.directive');
-require('./scripts/move-popup/dimItemTag.directive');
+require('./app/loadout/dimLoadout.directive');
+require('./app/loadout/dimLoadoutPopup.directive');
+require('./app/shell/dimAngularFilters.filter');
+require('./app/shell/dimSearchFilter.directive');
+require('./app/shell/dimClickAnywhereButHere.directive');
+require('./app/shell/dimFilterLink.directive');
+require('./app/shell/dimManifestProgress.directive');
+require('./app/store/dimPercentWidth.directive');
+require('./app/store/dimStores.directive');
+require('./app/store/dimStoreBucket.directive');
+require('./app/store/dimStoreReputation.directive');
+require('./app/store/dimStoreItem.directive');
+require('./app/store/dimStoreHeading.directive');
+require('./app/store/dimSimpleItem.directive');
+require('./app/store/dimStats.directive');
+require('./app/store/dimClearNewItems.directive');
+require('./app/item-review/item-review.component');
 
 require('./scss/main.scss');
 
