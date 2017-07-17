@@ -54,7 +54,7 @@ function VendorService(
     3917130357, // Eververse
     4269570979 // Cryptarch (Tower)
   ];
-   */
+  */
 
   // Vendors we don't want to load by default
   const vendorBlackList = [
@@ -161,6 +161,8 @@ function VendorService(
         })));
       })
       .then(() => {
+        // Look at a list of kiosks, figure out which you don't have that are being sold
+        calculateCollectibles();
         $rootScope.$broadcast('dim-vendors-updated');
         service.vendorsLoaded = true;
         fulfillRatingsRequest();
@@ -174,6 +176,33 @@ function VendorService(
 
     _reloadPromise.activePlatform = activePlatform;
     return _reloadPromise;
+  }
+
+  function calculateCollectibles() {
+    // TODO: do this while building
+    const lockedItems = new Set();
+    // Calculate set of hashes of things you can't buy
+    Object.values(service.vendors).forEach((vendor) => {
+      vendor.categories.forEach((category) => {
+        category.saleItems.forEach((saleItem) => {
+          if (!saleItem.unlocked && !saleItem.item.isEngram()) {
+            lockedItems.add(saleItem.item.hash);
+          }
+        });
+      });
+    });
+
+    Object.values(service.vendors).forEach((vendor) => {
+      vendor.categories.forEach((category) => {
+        category.saleItems.forEach((saleItem) => {
+          if (saleItem.unlocked && lockedItems.has(saleItem.item.hash)) {
+            // TODO: new property, on the saleItem?
+            saleItem.item.complete = true;
+          }
+        });
+      });
+    });
+
   }
 
   function mergeVendors([firstVendor, ...otherVendors]) {
