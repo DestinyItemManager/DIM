@@ -89,7 +89,7 @@ Clone the repo:
 
 Install dependencies:
 
-* Install [NodeJS].
+* Install [NodeJS](https://nodejs.org/en/).
 * Run `npm install`
 * Windows-based developers will need to install `windows-build-tools` (`npm install --global windows-build-tools`) globally prior to running `npm install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
 
