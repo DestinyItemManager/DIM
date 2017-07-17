@@ -1,17 +1,17 @@
-import angular from 'angular';
 import _ from 'underscore';
-import template from './dimItemTag.directive.html';
+import template from './item-tag.html';
+import './item-tag.scss';
 
-angular.module('dimApp').component('dimItemTag', {
+export const ItemTagComponent = {
   controller: ItemTagController,
   bindings: {
     item: '='
   },
   template: template
-});
-
+};
 
 function ItemTagController($scope, $rootScope, dimSettingsService) {
+  'ngInject';
   const vm = this;
 
   vm.settings = dimSettingsService;

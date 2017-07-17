@@ -1,10 +1,8 @@
-import angular from 'angular';
-import template from './dimMoveAmount.directive.html';
+import template from './move-amount.html';
+import './move-amount.scss';
 
-angular.module('dimApp')
-  .directive('dimMoveAmount', MoveAmount);
-
-function MoveAmount($timeout) {
+export function MoveAmount($timeout) {
+  'ngInject';
   return {
     controller: MoveAmountController,
     controllerAs: 'vm',
@@ -20,9 +18,9 @@ function MoveAmount($timeout) {
     link: function(scope, element) {
       $timeout(() => {
         scope.$broadcast('rzSliderForceRender');
-        const input = element.find('input');
+        const input = element[0].getElementsByTagName('input')[0];
         input.focus();
-        input.get(0).setSelectionRange(0, input.get(0).value.length);
+        input.setSelectionRange(0, input.value.length);
       });
     }
   };

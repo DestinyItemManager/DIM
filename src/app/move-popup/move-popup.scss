@@ -4,7 +4,7 @@
 // The popup displaying info and actions for an single item.
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-@import 'variables.scss';
+@import '../../scss/variables.scss';
 
 .move-popup-dialog {
   height: fit-content;
@@ -145,10 +145,10 @@
     background-position: center;
     background-color: #4887ba;
     &.Weapons {
-      background-image: url('../images/Weapons.png');
+      background-image: url('../../images/Weapons.png');
     }
     &.Armor {
-      background-image: url('../images/Armor.png');
+      background-image: url('../../images/Armor.png');
     }
   }
 
@@ -159,24 +159,17 @@
   .interaction {
     margin: 0 6px;
   }
-  dim-item-tag {
-    select {
-      background: transparent;
-      border: none;
-      outline: none;
-    }
-  }
 }
 
 .move-button {
   &.move-vault {
-    background-image: url('../images/vault.png');
+    background-image: url('../../images/vault.png');
   }
   &.move-distribute {
-    background-image: url('../images/arrows-out.png');
+    background-image: url('../../images/arrows-out.png');
   }
   &.move-consolidate {
-    background-image: url('../images/arrows-in.png');
+    background-image: url('../../images/arrows-in.png');
   }
 }
 
@@ -259,13 +252,13 @@ $item-header-spacing: 5px;
     width: 1rem;
     background-size: contain;
     &.void {
-      background-image: url('../images/void.png');
+      background-image: url('../../images/void.png');
     }
     &.arc {
-      background-image: url('../images/arc.png');
+      background-image: url('../../images/arc.png');
     }
     &.solar {
-      background-image: url('../images/solar.png');
+      background-image: url('../../images/solar.png');
     }
   }
   .info {
@@ -276,6 +269,19 @@ $item-header-spacing: 5px;
   }
 }
 
-dim-objectives {
-  display: block;
+/**
+ * Move Popup - Details
+ */
+
+.item-details {
+  margin: 10px;
+}
+
+.item-description {
+  margin: 5px 10px;
+  white-space: pre-wrap;
+}
+
+.item-perks {
+  margin: 5px 10px;
 }

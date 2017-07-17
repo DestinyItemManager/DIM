@@ -33,6 +33,7 @@ import farmingModule from './farming/farming.module';
 import settingsModule from './settings/settings.module';
 import oauthModule from './oauth/oauth.module';
 import storageModule from './storage/storage.module';
+import movePopupModule from './move-popup/move-popup.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -67,6 +68,7 @@ const dependencies = [
   settingsModule,
   oauthModule,
   storageModule,
+  movePopupModule,
   'ajoslin.promise-tracker',
   'cfp.hotkeys'
 ];

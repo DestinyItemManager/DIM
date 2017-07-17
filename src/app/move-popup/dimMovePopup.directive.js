@@ -1,20 +1,15 @@
-import angular from 'angular';
 import template from './dimMovePopup.directive.html';
+import './move-popup.scss';
 
-angular.module('dimApp')
-  .component('dimMovePopup', movePopup());
-
-function movePopup() {
-  return {
-    controller: MovePopupController,
-    controllerAs: 'vm',
-    bindings: {
-      store: '<',
-      item: '<'
-    },
-    template
-  };
-}
+export const MovePopupComponent = {
+  controller: MovePopupController,
+  controllerAs: 'vm',
+  bindings: {
+    store: '<',
+    item: '<'
+  },
+  template
+};
 
 function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
   'ngInject';
