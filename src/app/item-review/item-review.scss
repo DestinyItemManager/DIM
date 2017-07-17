@@ -59,6 +59,10 @@
     color: gold;
   }
 
+  &--clickable {
+    cursor: pointer;
+  }
+
   &--review {
     word-wrap: break-word;
   }

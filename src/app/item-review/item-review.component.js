@@ -25,6 +25,20 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     vm.expandReview = !vm.expandReview;
   };
 
+  vm.clickReview = function(isReviewer,
+                            reviewId) {
+    if (isReviewer) {
+      vm.editReview();
+    }
+    else {
+      vm.flagReview(reviewId);
+    }
+  };
+
+  vm.flagReview = function(reviewId) {
+    console.log(reviewId);
+  };
+
   vm.editReview = function() {
     vm.expandReview = true;
   };

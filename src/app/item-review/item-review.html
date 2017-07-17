@@ -68,12 +68,13 @@
     </div>
   </div>
   <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews">
-    <div ng-click="!review.isReviewer || $ctrl.editReview()">
+    <div class="community-review--clickable" ng-click="$ctrl.clickReview(review.isReviewer, review.reviewId)">
       <div class="community-review--who">
         <star-rating rating="review.rating" read-only></star-rating>
         <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
         <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
         <div ng-if="review.isReviewer" class="fa fa-pencil-square-o" aria-hidden="true"></div>
+        <div ng-if="!review.isReviewer" class="fa fa-flag" aria-hidden="true"></div>
       </div>
       <div class="community-review--review" ng-bind="review.review"></div>
     </div>
