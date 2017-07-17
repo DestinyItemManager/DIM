@@ -159,13 +159,6 @@
   .interaction {
     margin: 0 6px;
   }
-  dim-item-tag {
-    select {
-      background: transparent;
-      border: none;
-      outline: none;
-    }
-  }
 }
 
 .move-button {
@@ -276,6 +269,19 @@ $item-header-spacing: 5px;
   }
 }
 
-dim-objectives {
-  display: block;
+/**
+ * Move Popup - Details
+ */
+
+.item-details {
+  margin: 10px;
+}
+
+.item-description {
+  margin: 5px 10px;
+  white-space: pre-wrap;
+}
+
+.item-perks {
+  margin: 5px 10px;
 }

@@ -1,0 +1,81 @@
+
+dim-objectives {
+  display: block;
+}
+
+.objective-row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 4px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.objective-checkbox {
+  width: 17px;
+  height: 17px;
+  border: 1px solid #999;
+  margin-right: 4px;
+  box-sizing: border-box;
+}
+
+.objective-complete {
+  opacity: 0.5;
+  .objective-progress {
+    background-color: #111;
+  }
+  .objective-progress-bar {
+    display: none;
+  }
+  .objective-checkbox div {
+    margin: 2px;
+    height: 11px;
+    width: 11px;
+    background-color: #7DC878;
+  }
+}
+
+.objective-progress {
+  flex: 1;
+  background-color: black;
+  position: relative;
+  min-height: 17px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+}
+
+.objective-progress-bar {
+  background-color: #7DC878;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.objective-description {
+  position: relative;
+  padding: 0 4px;
+  flex: 1;
+}
+
+.objective-text {
+  z-index: 2;
+  margin-right: 4px;
+  backface-visibility: hidden;
+}
+
+.objective-boolean {
+  .objective-progress-bar, .objective-text {
+    display: none;
+  }
+  .objective-progress {
+    background-color: transparent;
+  }
+  .objective-description {
+    padding: 0;
+  }
+}

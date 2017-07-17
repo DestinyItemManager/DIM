@@ -1,4 +1,5 @@
-import template from './dimMoveAmount.directive.html';
+import template from './move-amount.html';
+import './move-amount.scss';
 
 export function MoveAmount($timeout) {
   'ngInject';

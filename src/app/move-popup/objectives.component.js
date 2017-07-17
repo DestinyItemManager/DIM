@@ -1,4 +1,5 @@
-import template from './dimMoveItemProperties.directive.html';
+import template from './objectives.html';
+import './objectives.scss';
 
 export const ObjectivesComponent = {
   bindings: {

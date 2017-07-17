@@ -1,5 +1,6 @@
 import _ from 'underscore';
-import template from './dimTalentGrid.directive.html';
+import template from './talent-grid.html';
+import './talent-grid.scss';
 
 export function talentGridNodesFilter(nodes, hiddenColumns) {
   return _.filter(nodes || [], (node) => {
@@ -7,22 +8,16 @@ export function talentGridNodesFilter(nodes, hiddenColumns) {
   });
 }
 
-export function TalentGrid() {
-  return {
-    bindToController: true,
-    controller: TalentGridCtrl,
-    controllerAs: 'vm',
-    scope: {
-      talentGrid: '=',
-      perksOnly: '=',
-      infuse: '&dimInfuse'
-    },
-    restrict: 'E',
-    replace: true,
-    template: template
-  };
-}
-
+export const TalentGridComponent = {
+  controller: TalentGridCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    talentGrid: '<',
+    perksOnly: '<',
+    infuse: '&dimInfuse'
+  },
+  template
+};
 
 function TalentGridCtrl(dimInfoService, $i18next) {
   'ngInject';

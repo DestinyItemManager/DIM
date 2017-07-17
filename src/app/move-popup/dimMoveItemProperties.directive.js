@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import moveDialogTemplate from './dimMoveItemProperties.directive.moveDialog.html';
+import template from './dimMoveItemProperties.html';
 
 export function MoveItemProperties() {
   return {
@@ -14,7 +14,7 @@ export function MoveItemProperties() {
     },
     restrict: 'A',
     replace: true,
-    template: moveDialogTemplate
+    template
   };
 }
 

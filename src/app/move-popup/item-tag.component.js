@@ -1,5 +1,6 @@
 import _ from 'underscore';
-import template from './dimItemTag.directive.html';
+import template from './item-tag.html';
+import './item-tag.scss';
 
 export const ItemTagComponent = {
   controller: ItemTagController,

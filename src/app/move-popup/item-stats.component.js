@@ -1,4 +1,5 @@
 import template from './item-stats.html';
+import './item-stats.scss';
 
 function ItemStatsController(dimSettingsService) {
   'ngInject';
