@@ -275,7 +275,7 @@
     "ClearLocked": "Gesperrte entsperren",
     "ContainsVendorItems": "Dieses Loadout enthält Gegenstände von Händlern",
     "Current": "Aktuelles",
-    "Equip": "Ausrüsten beim {{character}}",
+    "Equip": "Anlegen an {{character}}",
     "Exclude": "Ignorierte Gegenstände",
     "ExcludeHelp": "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld) um Sets ohne diesen Gegenstand zu generieren.",
     "FilterSets": "Filter setzen",
