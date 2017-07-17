@@ -31,6 +31,23 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
     });
   }
 
+  function getCurrentDestinyVersion() {
+    // TODO there must be a better way of doing this?
+    if ($state.includes('destiny1')) {
+      return 1;
+    } else if ($state.includes('destiny2')) {
+      return 2;
+    }
+    // Default to Destiny 1
+    return 1;
+  }
+
+  // TODO: will we need some event to change this when the destiny version changes? Or evaluate on state changes?
+  // TODO: save this in the account service, or some other global state, so we don't flip flop
+  function setCurrentAccount(currentAccount) {
+    vm.currentAccount = Object.assign({}, currentAccount, { destinyVersion: getCurrentDestinyVersion() });
+  }
+
   vm.accountChange = function accountChange(account) {
     loadingTracker.addPromise(dimPlatformService.setActive(account));
   };
@@ -40,13 +57,13 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
   });
 
   $scope.$on('dim-active-platform-updated', (e, args) => {
-    vm.currentAccount = args.platform;
+    setCurrentAccount(args.platform);
   });
 
   const loadAccountsPromise = dimPlatformService.getPlatforms()
     .then((accounts) => {
       setAccounts(accounts);
-      vm.currentAccount = dimPlatformService.getActive();
+      setCurrentAccount(dimPlatformService.getActive());
     });
   loadingTracker.addPromise(loadAccountsPromise);
 
@@ -60,7 +77,7 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
   vm.selectAccount = function(e, account) {
     e.stopPropagation();
     // TODO: but what version??
-    //$state.go('destiny1.inventory', account);
+    $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
   };
 
   vm.openDropdown = function(e) {
@@ -78,7 +95,12 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
         controllerAs: '$ctrl',
         controller: function($scope) {
           'ngInject';
-          this.accounts = vm.accounts.filter((p) => p.membershipId !== vm.currentAccount.membershipId || p.platformType !== vm.currentAccount.platformType);
+          // TODO: reorder accounts by LRU?
+          this.accounts = vm.accounts.filter((p) => {
+            return p.membershipId !== vm.currentAccount.membershipId ||
+            p.platformType !== vm.currentAccount.platformType ||
+            p.destinyVersion !== getCurrentDestinyVersion();
+          });
           this.selectAccount = (e, account) => {
             $scope.closeThisDialog(); // eslint-disable-line angular/controller-as
             vm.selectAccount(e, account);

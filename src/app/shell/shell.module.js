@@ -89,7 +89,7 @@ export const ShellModule = angular
       parent: 'destiny-account',
       redirectTo: 'destiny1.inventory',
       url: '/d1',
-      component: 'content', // TODO: rename the component
+      component: 'content' // TODO: rename the component
     });
   })
   .name;
