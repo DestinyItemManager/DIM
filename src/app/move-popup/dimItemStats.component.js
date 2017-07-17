@@ -1,4 +1,3 @@
-import angular from 'angular';
 import template from './item-stats.html';
 
 function ItemStatsController(dimSettingsService) {
@@ -8,13 +7,10 @@ function ItemStatsController(dimSettingsService) {
   this.qualityEnabled = $featureFlags.qualityEnabled;
 }
 
-const ItemStatsComponent = {
+export const ItemStatsComponent = {
   bindings: {
     item: '<'
   },
   controller: ItemStatsController,
   template: template
 };
-
-angular.module('dimApp')
-  .component('dimItemStats', ItemStatsComponent);

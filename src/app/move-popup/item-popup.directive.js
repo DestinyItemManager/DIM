@@ -1,8 +1,4 @@
-import angular from 'angular';
 import Popper from 'popper.js';
-
-angular.module('dimApp')
-  .directive('itemPopup', ItemPopup);
 
 /**
  * Common functionality for positioning a popup next to an item (or
@@ -12,7 +8,7 @@ angular.module('dimApp')
  * an arrow to show, also include a (properly styled) element with the
  * class "arrow" somewhere in your popup template.
  */
-function ItemPopup() {
+export function ItemPopup() {
   return {
     restrict: 'A',
     link: ItemPopupLink

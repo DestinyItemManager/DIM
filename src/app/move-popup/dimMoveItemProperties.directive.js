@@ -1,22 +1,8 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimMoveItemProperties.directive.html';
 import moveDialogTemplate from './dimMoveItemProperties.directive.moveDialog.html';
 
-angular.module('dimApp')
-  .component('dimObjectives', objectives())
-  .directive('dimMoveItemProperties', MoveItemProperties);
-
-function objectives() {
-  return {
-    bindings: {
-      objectives: '<'
-    },
-    template: template
-  };
-}
-
-function MoveItemProperties() {
+export function MoveItemProperties() {
   return {
     bindToController: true,
     controller: MoveItemPropertiesCtrl,
@@ -34,6 +20,7 @@ function MoveItemProperties() {
 
 
 function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, Destiny1Api) {
+  'ngInject';
   const vm = this;
 
   vm.tab = 'default';

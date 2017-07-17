@@ -49,14 +49,6 @@ require('./app/store/dimSimpleItem.directive');
 require('./app/store/dimStats.directive');
 require('./app/store/dimClearNewItems.directive');
 require('./app/item-review/item-review.component');
-require('./app/move-popup/dimItemStats.component');
-require('./app/move-popup/dimMoveAmount.directive');
-require('./app/move-popup/dimMovePopup.directive');
-require('./app/move-popup/dimTalentGrid.directive');
-require('./app/move-popup/dimMoveItemProperties.directive');
-require('./app/move-popup/dimItemTag.directive');
-require('./app/move-popup/item-popup.directive');
-require('./app/move-popup/press-tip.directive');
 
 require('./scss/main.scss');
 

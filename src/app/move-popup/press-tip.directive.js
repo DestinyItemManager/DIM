@@ -1,11 +1,7 @@
-import angular from 'angular';
 import Tooltip from 'tooltip.js';
 import './press-tip.scss';
 
-angular.module('dimApp')
-  .directive('pressTip', PressTip);
-
-function PressTip() {
+export function PressTip() {
   'ngInject';
 
   return {

@@ -1,10 +1,7 @@
-import angular from 'angular';
 import template from './dimMoveAmount.directive.html';
 
-angular.module('dimApp')
-  .directive('dimMoveAmount', MoveAmount);
-
-function MoveAmount($timeout) {
+export function MoveAmount($timeout) {
+  'ngInject';
   return {
     controller: MoveAmountController,
     controllerAs: 'vm',
