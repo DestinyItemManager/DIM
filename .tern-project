@@ -6,7 +6,7 @@
     "angular"
   ],
   "loadEagerly": [
-    "app/scripts/**/*.js"
+    "app/app/**/*.js"
   ],
   "plugins": {
     "angular": {},
