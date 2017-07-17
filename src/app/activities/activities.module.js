@@ -11,8 +11,7 @@ export default angular
     'ngInject';
 
     $stateProvider.state({
-      name: 'activities',
-      parent: 'destiny1account',
+      name: 'destiny1.activities',
       component: 'activities',
       url: '/activities'
     });

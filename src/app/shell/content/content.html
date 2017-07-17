@@ -2,12 +2,12 @@
   <span class="menu link" ng-click="$ctrl.dropdown = !$ctrl.dropdown" dim-click-anywhere-but-here="$ctrl.dropdown = false">
     <i class="fa fa-bars"></i>
     <div class="dropdown" ng-if="$ctrl.dropdown">
-      <a class="link" ui-sref-active="active" ui-sref="inventory" ng-i18next="Header.Inventory"></a>
-      <a class="link" ui-sref-active="active" ui-sref="loadout-builder" ng-i18next="LB.LB"></a>
-      <a class="link"  ui-sref-active="active" ui-sref="vendors" ng-i18next="Vendors.Vendors"
+      <a class="link" ui-sref-active="active" ui-sref="destiny1.inventory" ng-i18next="Header.Inventory"></a>
+      <a class="link" ui-sref-active="active" ui-sref="destiny1.loadout-builder" ng-i18next="LB.LB"></a>
+      <a class="link"  ui-sref-active="active" ui-sref="destiny1.vendors" ng-i18next="Vendors.Vendors"
          ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}"></a>
-      <a class="link" ui-sref-active="active" ui-sref="record-books" ng-i18next="RecordBooks.RecordBooks"></a>
-      <a class="link" ui-sref-active="active" ui-sref="activities" ng-if="::$ctrl.featureFlags.activities" ng-i18next="Activities.Activities"></a>
+      <a class="link" ui-sref-active="active" ui-sref="destiny1.record-books" ng-i18next="RecordBooks.RecordBooks"></a>
+      <a class="link" ui-sref-active="active" ui-sref="destiny1.activities" ng-if="::$ctrl.featureFlags.activities" ng-i18next="Activities.Activities"></a>
       <span class="link" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
       <hr>
       <a class="link" ui-sref-active="active" ui-sref="storage" ng-i18next="Storage.Title"></a>
@@ -19,17 +19,17 @@
     </div>
   </span>
 
-  <img class="logo link" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v{{::$ctrl.$DIM_VERSION}} ({{::$ctrl.$DIM_FLAVOR}})" src="~app/images/logo-type-right-light.svg" alt="DIM"/>
+  <img class="logo link" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="destiny1.inventory" title="v{{::$ctrl.$DIM_VERSION}} ({{::$ctrl.$DIM_FLAVOR}})" src="~app/images/logo-type-right-light.svg" alt="DIM"/>
   <span class="link first-to-go" ng-click="$ctrl.showAbout($event)" ng-i18next="Header.About"></span>
   <span class="link first-to-go" ng-click="$ctrl.showSupport($event)" ng-i18next="Header.SupportDIM"></span>
   <a class="link first-to-go" target="_blank" rel="noopener noreferrer" href="https://teespring.com/stores/dim" ng-i18next="Header.Shop"></a>
   <span class="link first-to-go header-separator"></span>
-  <a class="link second-to-go" ui-sref-active="active" ui-sref="inventory" ng-i18next="Header.Inventory"></a>
-  <a class="link second-to-go" ui-sref-active="active" ui-sref="loadout-builder" ng-i18next="LB.LB"></a>
-  <a class="link second-to-go" ui-sref-active="active" ui-sref="record-books" ng-i18next="RecordBooks.RecordBooks"></a>
-  <a class="link second-to-go" ui-sref-active="active" ui-sref="activities" ng-i18next="Activities.Activities"
+  <a class="link second-to-go" ui-sref-active="active" ui-sref="destiny1.inventory" ng-i18next="Header.Inventory"></a>
+  <a class="link second-to-go" ui-sref-active="active" ui-sref="destiny1.loadout-builder" ng-i18next="LB.LB"></a>
+  <a class="link second-to-go" ui-sref-active="active" ui-sref="destiny1.record-books" ng-i18next="RecordBooks.RecordBooks"></a>
+  <a class="link second-to-go" ui-sref-active="active" ui-sref="destiny1.activities" ng-i18next="Activities.Activities"
         ng-if="::$ctrl.featureFlags.activities"></a>
-  <a class="link second-to-go" ui-sref-active="active" ui-sref="vendors" ng-i18next="Vendors.Vendors"
+  <a class="link second-to-go" ui-sref-active="active" ui-sref="destiny1.vendors" ng-i18next="Vendors.Vendors"
      ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}"></a>
   <span class="link second-to-go" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
 

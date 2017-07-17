@@ -27,9 +27,8 @@ export default angular
     'ngInject';
 
     $stateProvider.state({
-      name: 'vendors',
+      name: 'destiny1.vendors',
       // TODO: It'd be interesting to separate general and character-specific vendor info
-      parent: 'destiny1account',
       component: 'vendors',
       url: '/vendors'
     });

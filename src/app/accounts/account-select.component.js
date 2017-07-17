@@ -1,3 +1,5 @@
+import { flatMap } from '../util';
+
 import template from './account-select.html';
 import dialogTemplate from './account-select.dialog.html';
 import './account-select.scss';
@@ -16,12 +18,25 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
   vm.loadingTracker = loadingTracker;
   vm.accounts = [];
 
+  function setAccounts(accounts) {
+    vm.accounts = flatMap(accounts, (account) => {
+      // TODO: this doesn't really work. Should we have a version switch instead?
+
+      // Duplicate each Destiny account, since they may have played either D1 or D2.
+      // TODO: Maybe push this into the account service, and allow people to "hide" accounts?
+      return [
+        Object.assign({}, account, { destinyVersion: 1 }),
+        Object.assign({}, account, { destinyVersion: 2 })
+      ];
+    });
+  }
+
   vm.accountChange = function accountChange(account) {
     loadingTracker.addPromise(dimPlatformService.setActive(account));
   };
 
   $scope.$on('dim-platforms-updated', (e, args) => {
-    vm.accounts = args.platforms;
+    setAccounts(args.platforms);
   });
 
   $scope.$on('dim-active-platform-updated', (e, args) => {
@@ -30,7 +45,7 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
 
   const loadAccountsPromise = dimPlatformService.getPlatforms()
     .then((accounts) => {
-      vm.accounts = accounts;
+      setAccounts(accounts);
       vm.currentAccount = dimPlatformService.getActive();
     });
   loadingTracker.addPromise(loadAccountsPromise);
@@ -44,7 +59,8 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
 
   vm.selectAccount = function(e, account) {
     e.stopPropagation();
-    $state.go('inventory', account);
+    // TODO: but what version??
+    //$state.go('destiny1.inventory', account);
   };
 
   vm.openDropdown = function(e) {

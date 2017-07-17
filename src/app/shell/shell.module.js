@@ -22,14 +22,13 @@ export const ShellModule = angular
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
   .directive('scrollClass', ScrollClass)
-  .config(($stateProvider, $urlServiceProvider) => {
+  .config(($stateProvider) => {
     'ngInject';
 
     // TODO: move this out of the module
-    // A dummy state that'll redirect to the selected character's inventory
+    // A dummy state that'll redirect to the selected character's Destiny 1 inventory
     $stateProvider.state({
-      name: 'destiny1',
-      url: '/d1',
+      name: 'default-account',
       resolve: {
         activeAccount: (dimPlatformService) => {
           'ngInject';
@@ -38,23 +37,24 @@ export const ShellModule = angular
       },
       controller: ($state, activeAccount) => {
         'ngInject';
-        // TODO: make sure it's a D1 platform, replicate this at the top level
+
         if (activeAccount) {
-          $state.go('inventory', activeAccount);
+          // TODO: we won't know D1 vs. D1 until we try to load characters - load to a selection screen?
+          $state.go('destiny1.inventory', activeAccount);
         } else {
           // A bit awkward, but getPlatforms should already have redirected to login
         }
       }
     });
 
-    // destiny1account state is the base for "full" DIM views with a header that operate in the context of a particular Destiny 1 account.
+    // destiny-account state is the base for "full" DIM views with a header that operate in the context of a particular Destiny account.
     // TODO: move this, and/or replace "content" with this
     // TODO: use https://github.com/angular-ui/ui-router/wiki/Multiple-Named-Views to inject stuff into header
+    // TODO: make an actual page for this, with a version selector
     $stateProvider.state({
-      name: 'destiny1account',
-      abstract: true,
-      url: '/d1/:membershipId-{platformType:int}',
-      component: 'content', // TODO: rename the component
+      name: 'destiny-account',
+      redirectTo: 'destiny1.inventory',
+      url: '/:membershipId-{platformType:int}',
       resolve: {
         // TODO: move this to platform/account service
         account: ($transition$, dimPlatformService, $state) => {
@@ -69,13 +69,12 @@ export const ShellModule = angular
               // TODO: make sure it's a "real" account
               const account = dimPlatformService.getPlatformMatching({
                 membershipId,
-                platformType,
-                destinyVersion: 1
+                platformType
               });
               if (!account) {
                 // If we didn't load an account, kick out and re-resolve
                 if (!account) {
-                  $state.go('destiny1');
+                  $state.go('default-account');
                 }
               }
               dimPlatformService.setActive(account);
@@ -85,8 +84,12 @@ export const ShellModule = angular
       }
     });
 
-    $urlServiceProvider.rules.when('/d1/', '/d1');
-    $urlServiceProvider.rules.when('/d1/:membershipId-:platformType/', '/d1/:membershipId-:platformType/inventory');
-    $urlServiceProvider.rules.when('/d1/:membershipId-:platformType', '/d1/:membershipId-:platformType/inventory');
+    $stateProvider.state({
+      name: 'destiny1',
+      parent: 'destiny-account',
+      redirectTo: 'destiny1.inventory',
+      url: '/d1',
+      component: 'content', // TODO: rename the component
+    });
   })
   .name;
