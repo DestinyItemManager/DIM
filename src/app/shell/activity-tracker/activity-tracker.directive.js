@@ -33,6 +33,7 @@ export function ActivityTrackerDirective(
       const refresh = _.throttle(() => {
         // Individual pages should listen to this event and decide what to refresh,
         // and their services should decide how to cache/dedup refreshes.
+        // This event should *NOT* be listened to by services!
         // TODO: replace this with an observable?
         $rootScope.$broadcast('dim-refresh');
       }, ONE_MINUTE);

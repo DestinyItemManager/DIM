@@ -34,7 +34,7 @@
   <span class="link second-to-go" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
 
   <span class="header-right">
-    <refresh-stores ng-if="!$ctrl.showSearch" class="link"></refresh-stores>
+    <refresh ng-if="!$ctrl.showSearch" class="link"></refresh>
     <span class="link fa fa-save" ng-if="!$ctrl.showSearch" ui-sref="storage" ng-i18next="[title]Storage.Title"></span>
     <span class="link fa fa-cog" ng-if="!$ctrl.showSearch" ng-click="$ctrl.showSetting($event)" ng-i18next="[title]Settings.Settings"></span>
     <span class="link search-link" ng-class="{ show: $ctrl.showSearch }">
