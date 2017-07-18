@@ -27,13 +27,10 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
     if (vm.currentAccount) {
       vm.currentAccount.destinyVersion = vm.destinyVersion;
     }
-    console.log(changes.destinyVersion, vm.destinyVersion);
   };
 
   function setAccounts(accounts) {
     vm.accounts = flatMap(accounts, (account) => {
-      // TODO: this doesn't really work. Should we have a version switch instead?
-
       // Duplicate each Destiny account, since they may have played either D1 or D2.
       // TODO: Maybe push this into the account service, and allow people to "hide" accounts?
       return [
@@ -43,8 +40,7 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
     });
   }
 
-  // TODO: will we need some event to change this when the destiny version changes? Or evaluate on state changes?
-  // TODO: save this in the account service, or some other global state, so we don't flip flop
+    // TODO: save this in the account service, or some other global state, so we don't flip flop
   function setCurrentAccount(currentAccount) {
     vm.currentAccount = Object.assign({}, currentAccount, { destinyVersion: vm.destinyVersion });
   }
@@ -77,7 +73,6 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
 
   vm.selectAccount = function(e, account) {
     e.stopPropagation();
-    // TODO: but what version??
     $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
   };
 

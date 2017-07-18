@@ -32,6 +32,7 @@ import settingsModule from './settings/settings.module';
 import oauthModule from './oauth/oauth.module';
 import storageModule from './storage/storage.module';
 import movePopupModule from './move-popup/move-popup.module';
+import destiny1Module from './destiny1/destiny1.module';
 import destiny2Module from './destiny2/destiny2.module';
 
 import config from './dimApp.config';
@@ -68,6 +69,7 @@ const dependencies = [
   oauthModule,
   storageModule,
   movePopupModule,
+  destiny1Module,
   destiny2Module,
   'ajoslin.promise-tracker',
   'cfp.hotkeys'
