@@ -3,7 +3,6 @@ import _ from 'underscore';
 import aboutTemplate from 'app/views/about.html';
 import supportTemplate from 'app/views/support.html';
 import filtersTemplate from 'app/views/filters.html';
-import { subscribeOnScope } from '../../rx-utils';
 
 // This is outside the class in order to make it a truly global
 // fire-once function, so no matter how many times they visit this

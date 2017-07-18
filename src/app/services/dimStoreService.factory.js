@@ -1,10 +1,13 @@
 import angular from 'angular';
 import _ from 'underscore';
+import { ReplaySubject } from 'rxjs';
+
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { flatMap } from '../util';
+
 
 angular.module('dimApp')
   .factory('dimStoreService', StoreService)
@@ -34,6 +37,7 @@ function StoreService(
 
   // A promise (per account) used to dedup parallel calls to reloadStores
   const _reloadPromises = {};
+  let cachedStream = null;
 
   const service = {
     getActiveStore: () => _.find(_stores, 'current'),
@@ -41,6 +45,7 @@ function StoreService(
     getStore: (id) => _.find(_stores, { id: id }),
     getVault: () => _.find(_stores, { id: 'vault' }),
     getAllItems: () => flatMap(_stores, 'items'),
+    storesStream,
     getItemAcrossStores,
     updateCharacters,
     reloadStores,
@@ -96,12 +101,32 @@ function StoreService(
     });
   }
 
+  function storesStream(account) {
+    if (cachedStream) {
+      if (cachedStream.account === account) {
+        return cachedStream.stream;
+      } else {
+        cachedStream.stream.complete();
+      }
+    }
+    cachedStream = {
+      // TODO: observable.create().publishReplay with a time window instead?
+      stream: new ReplaySubject(1),
+      // stream: Observable.defer(() => reloadStores(account)).publishReplay(1),
+      account
+    };
+
+    reloadStores(account);
+
+    return cachedStream.stream.asObservable();
+  }
+
   /**
    * Returns a promise for a fresh view of the stores and their items.
    * If this is called while a reload is already happening, it'll return the promise
    * for the ongoing reload rather than kicking off a new reload.
    */
-  // TODO: this feels like a good use for observables
+  // TODO: better way to ping the observable?
   function reloadStores(account) {
     // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
@@ -168,6 +193,13 @@ function StoreService(
         $rootScope.$broadcast('dim-stores-updated', {
           stores: stores
         });
+
+        if (cachedStream &&
+            // TODO: compare-accounts function
+            cachedStream.account.platformType === account.platformType &&
+            cachedStream.account.membershipId === account.membershipId) {
+          cachedStream.stream.next(stores);
+        }
 
         dimDestinyTrackerService.fetchReviews(_stores);
 
