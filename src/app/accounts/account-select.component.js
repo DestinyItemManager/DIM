@@ -92,7 +92,6 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
         controller: function($scope) {
           'ngInject';
           // TODO: reorder accounts by LRU?
-          console.log('destinyVersion', vm.destinyVersion);
           this.accounts = vm.accounts.filter((p) => {
             return p.membershipId !== vm.currentAccount.membershipId ||
             p.platformType !== vm.currentAccount.platformType ||

@@ -5,7 +5,6 @@
 export function defaultAccountRoute($stateProvider) {
   'ngInject';
 
-  // TODO: move this out of the module
   // A dummy state that'll redirect to the selected character's Destiny 1 inventory
   $stateProvider.state({
     name: 'default-account',
