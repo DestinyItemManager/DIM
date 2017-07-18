@@ -3,7 +3,7 @@ import angular from 'angular';
 import UIRouterModule from '@uirouter/angularjs';
 
 import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
-import contentComponent from './content/content.component';
+import { ContentComponent } from './content/content.component';
 import { RefreshComponent } from './refresh.component';
 import { CountdownComponent } from './countdown.component';
 import { BungieAlertsComponent } from './bungie-alerts.component';
@@ -18,7 +18,7 @@ export const ShellModule = angular
   .service('dimActivityTrackerService', ActivityTrackerService)
   .component('bungieAlerts', BungieAlertsComponent)
   .component('refresh', RefreshComponent)
-  .component('content', contentComponent)
+  .component('content', ContentComponent)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
   .directive('scrollClass', ScrollClass)

@@ -1,0 +1,33 @@
+<div id="header">
+  <span class="menu link" ng-click="$ctrl.dropdown = !$ctrl.dropdown" dim-click-anywhere-but-here="$ctrl.dropdown = false">
+    <i class="fa fa-bars"></i>
+    <div class="dropdown" ng-if="$ctrl.dropdown">
+      <a class="link" ui-sref-active="active" ui-sref="storage" ng-i18next="Storage.Title"></a>
+      <span class="link" ng-click="$ctrl.showSetting($event)" ng-i18next="Settings.Settings"></span>
+      <hr>
+      <span class="link" ng-click="$ctrl.showAbout($event)" ng-i18next="Header.About"></span>
+      <span class="link" ng-click="$ctrl.showSupport($event)" ng-i18next="Header.SupportDIM"></span>
+      <a class="link" target="_blank" rel="noopener noreferrer" href="https://teespring.com/stores/dim" ng-i18next="Header.Shop"></a>
+    </div>
+  </span>
+
+  <img class="logo link" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="destiny1.inventory" title="v{{::$ctrl.$DIM_VERSION}} ({{::$ctrl.$DIM_FLAVOR}})" src="~app/images/logo-type-right-light.svg" alt="DIM"/>
+  <span class="link first-to-go" ng-click="$ctrl.showAbout($event)" ng-i18next="Header.About"></span>
+  <span class="link first-to-go" ng-click="$ctrl.showSupport($event)" ng-i18next="Header.SupportDIM"></span>
+  <a class="link first-to-go" target="_blank" rel="noopener noreferrer" href="https://teespring.com/stores/dim" ng-i18next="Header.Shop"></a>
+
+  <span class="header-right">
+    <span class="link fa fa-save" ng-if="!$ctrl.showSearch" ui-sref="storage" ng-i18next="[title]Storage.Title"></span>
+    <span class="link fa fa-cog" ng-if="!$ctrl.showSearch" ng-click="$ctrl.showSetting($event)" ng-i18next="[title]Settings.Settings"></span>
+    <account-select></account-select>
+  </span>
+</div>
+
+<div id="content">
+  <div id="destiny2comingsoon" class="dim-page">
+    <h1 ng-i18next="Destiny2.Banner"></h1>
+    <p ng-i18next="Destiny2.ComingSoon"></p>
+
+    <countdown class="destiny2-timer" end-time="'2017-09-06T00:00-0700'"></countdown>
+  </div>
+</div>

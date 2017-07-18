@@ -64,6 +64,10 @@
   "Debug": {
     "Dump": "Dump info to console"
   },
+  "Destiny2": {
+    "Banner": "DIM will support Destiny 2",
+    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
+  },
   "DidYouKnow": {
     "Collapse": "You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don't need to normally use.",
     "DidYouKnow": "Did you know?",
