@@ -6,7 +6,10 @@ import './account-select.scss';
 
 export const AccountSelectComponent = {
   template,
-  controller: AccountSelectController
+  controller: AccountSelectController,
+  bindings: {
+    destinyVersion: '<'
+  }
 };
 
 function AccountSelectController($scope, dimPlatformService, loadingTracker, ngDialog, OAuthTokenService, $state) {
@@ -17,6 +20,15 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
 
   vm.loadingTracker = loadingTracker;
   vm.accounts = [];
+
+  vm.$onChanges = function(changes) {
+    // If we go to a non-destiny-account page, leave it, or default to D1
+    vm.destinyVersion = changes.destinyVersion.currentValue || vm.destinyVersion || 1;
+    if (vm.currentAccount) {
+      vm.currentAccount.destinyVersion = vm.destinyVersion;
+    }
+    console.log(changes.destinyVersion, vm.destinyVersion);
+  };
 
   function setAccounts(accounts) {
     vm.accounts = flatMap(accounts, (account) => {
@@ -31,21 +43,10 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
     });
   }
 
-  function getCurrentDestinyVersion() {
-    // TODO there must be a better way of doing this?
-    if ($state.includes('destiny1')) {
-      return 1;
-    } else if ($state.includes('destiny2')) {
-      return 2;
-    }
-    // Default to Destiny 1
-    return 1;
-  }
-
   // TODO: will we need some event to change this when the destiny version changes? Or evaluate on state changes?
   // TODO: save this in the account service, or some other global state, so we don't flip flop
   function setCurrentAccount(currentAccount) {
-    vm.currentAccount = Object.assign({}, currentAccount, { destinyVersion: getCurrentDestinyVersion() });
+    vm.currentAccount = Object.assign({}, currentAccount, { destinyVersion: vm.destinyVersion });
   }
 
   vm.accountChange = function accountChange(account) {
@@ -96,10 +97,11 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
         controller: function($scope) {
           'ngInject';
           // TODO: reorder accounts by LRU?
+          console.log('destinyVersion', vm.destinyVersion);
           this.accounts = vm.accounts.filter((p) => {
             return p.membershipId !== vm.currentAccount.membershipId ||
             p.platformType !== vm.currentAccount.platformType ||
-            p.destinyVersion !== getCurrentDestinyVersion();
+            p.destinyVersion !== vm.destinyVersion;
           });
           this.selectAccount = (e, account) => {
             $scope.closeThisDialog(); // eslint-disable-line angular/controller-as

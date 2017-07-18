@@ -8,8 +8,6 @@ function CountdownController($interval, $i18next) {
 
   vm.endTime = new Date(vm.endTime);
 
-  console.log(vm.endTime);
-
   function update() {
     const diff = vm.endTime.getTime() - Date.now();
     vm.text = dhms(diff / 1000);

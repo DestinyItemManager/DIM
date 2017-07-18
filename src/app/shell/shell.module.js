@@ -9,6 +9,7 @@ import { CountdownComponent } from './countdown.component';
 import { BungieAlertsComponent } from './bungie-alerts.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { ScrollClass } from './scroll-class.directive';
+import { HeaderComponent } from './header.component';
 
 export const ShellModule = angular
   .module('dimShell', [
@@ -21,6 +22,7 @@ export const ShellModule = angular
   .component('content', ContentComponent)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
+  .component('header', HeaderComponent)
   .directive('scrollClass', ScrollClass)
   .config(($stateProvider) => {
     'ngInject';
