@@ -42,6 +42,11 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
     init();
   };
 
+  $scope.$on('dim-refresh', () => {
+    // TODO: Reload vendor data independently
+    dimStoreService.reloadStores(vm.account);
+  });
+
   // TODO: break characters out into their own thing!
   $scope.$on('dim-stores-updated', (e, stores) => {
     vm.stores = stores.stores;

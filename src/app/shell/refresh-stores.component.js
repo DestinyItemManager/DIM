@@ -8,7 +8,7 @@ export const RefreshStoresComponent = {
   controller: RefreshStoresController
 };
 
-function RefreshStoresController($scope, loadingTracker, hotkeys, dimStoreService, $i18next) {
+function RefreshStoresController($rootScope, $scope, loadingTracker, hotkeys, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -25,6 +25,6 @@ function RefreshStoresController($scope, loadingTracker, hotkeys, dimStoreServic
   });
 
   vm.refresh = function() {
-    loadingTracker.addPromise(dimStoreService.reloadStores());
+    $rootScope.$broadcast('dim-refresh');
   };
 }
