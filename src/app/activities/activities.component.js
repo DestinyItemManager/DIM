@@ -42,6 +42,10 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     init();
   };
 
+  $scope.$on('dim-refresh', () => {
+    dimStoreService.reloadStores(vm.account);
+  });
+
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info
   // here. Unfortunately we're also using advisor info to populate

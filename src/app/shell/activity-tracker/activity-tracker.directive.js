@@ -1,6 +1,12 @@
 import _ from 'underscore';
 
-export function ActivityTrackerDirective($document, $interval, dimActivityTrackerService, dimStoreService, loadingTracker) {
+export function ActivityTrackerDirective(
+  $document,
+  $timeout,
+  dimActivityTrackerService,
+  loadingTracker,
+  $rootScope
+) {
   'ngInject';
 
   return {
@@ -25,8 +31,11 @@ export function ActivityTrackerDirective($document, $interval, dimActivityTracke
       const ONE_HOUR = 60 * 60 * 1000;
 
       const refresh = _.throttle(() => {
-        // TODO: fire an event instead. Individual pages should decide what to refresh, and their services should decide how to cache/dedup refreshes
-        loadingTracker.addPromise(dimStoreService.reloadStores());
+        // Individual pages should listen to this event and decide what to refresh,
+        // and their services should decide how to cache/dedup refreshes.
+        // This event should *NOT* be listened to by services!
+        // TODO: replace this with an observable?
+        $rootScope.$broadcast('dim-refresh');
       }, ONE_MINUTE);
 
       const activeWithinLastHour = dimActivityTrackerService.activeWithinTimespan
@@ -43,12 +52,18 @@ export function ActivityTrackerDirective($document, $interval, dimActivityTracke
         }
       }
 
-      const refreshAccountDataInterval = $interval(refreshAccountData, FIVE_MINUTES);
+      let refreshAccountDataInterval = $timeout(refreshAccountData, FIVE_MINUTES);
 
       scope.$on('$destroy', () => {
         $document.off('click', clickHandler);
         $document.off('visibilitychange', visibilityHandler);
-        $interval.cancel(refreshAccountDataInterval);
+        $timeout.cancel(refreshAccountDataInterval);
+      });
+
+      // Every time we refresh for any reason, reset the timer
+      scope.$on('dim-refresh', () => {
+        $timeout.cancel(refreshAccountDataInterval);
+        refreshAccountDataInterval = $timeout(refreshAccountData, FIVE_MINUTES);
       });
     }
   };
