@@ -28,7 +28,8 @@ function StoreService(
   StoreFactory,
   ItemFactory,
   NewItemsService,
-  $stateParams
+  $stateParams,
+  loadingTracker
 ) {
   let _stores = [];
 
@@ -102,6 +103,7 @@ function StoreService(
    * for the ongoing reload rather than kicking off a new reload.
    */
   // TODO: this feels like a good use for observables
+  // TODO: maintain a cache w/ expiry and force-updates, rather than having stuff like activity-tracker handle pacing
   function reloadStores(account) {
     // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
@@ -199,6 +201,7 @@ function StoreService(
       });
 
     _reloadPromises[promiseCacheKey] = reloadPromise;
+    loadingTracker.addPromise(reloadPromise);
     return reloadPromise;
   }
 
