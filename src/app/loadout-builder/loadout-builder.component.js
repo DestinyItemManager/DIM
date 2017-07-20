@@ -20,7 +20,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
   vm.reviewsEnabled = $featureFlags.reviewsEnabled;
 
   if (dimStoreService.getStores().length === 0) {
-    $state.go('inventory');
+    $state.go('destiny1.inventory');
     return;
   }
 
@@ -636,7 +636,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
         const stores = dimStoreService.getStores();
 
         if (stores.length === 0) {
-          $state.go('inventory');
+          $state.go('destiny1.inventory');
           return;
         }
 

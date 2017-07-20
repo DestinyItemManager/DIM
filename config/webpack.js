@@ -6,6 +6,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const WebpackNotifierPlugin = require('webpack-notifier');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -200,7 +201,9 @@ module.exports = (env) => {
         // Whether to log page views for router events
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(env !== 'release'),
         // Enable activities tab
-        '$featureFlags.activities': JSON.stringify(true)
+        '$featureFlags.activities': JSON.stringify(true),
+        // Debug ui-router
+        '$featureFlags.debugRouter': JSON.stringify(false)
       }),
 
       new webpack.SourceMapDevToolPlugin({
@@ -231,7 +234,9 @@ module.exports = (env) => {
     config.module.noParse.push(new RegExp(depPath));
   });
 
-  if (!isDev) {
+  if (isDev) {
+    config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true }));
+  } else {
     // Bail and fail hard on first error
     config.bail = true;
     config.stats = 'verbose';
