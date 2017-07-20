@@ -19,8 +19,7 @@ export default angular
     'ngInject';
 
     $stateProvider.state({
-      name: 'loadout-builder',
-      parent: 'destiny1account',
+      name: 'destiny1.loadout-builder',
       component: 'loadoutBuilder',
       url: '/loadout-builder'
     });

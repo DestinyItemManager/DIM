@@ -42,6 +42,10 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
     init();
   };
 
+  $scope.$on('dim-refresh', () => {
+    dimStoreService.reloadStores(vm.account);
+  });
+
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info
   // here. Unfortunately we're also using advisor info to populate
@@ -78,7 +82,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
 
       vm.activities.forEach((a) => {
         a.tiers.forEach((t) => {
-          if (t.hash === stores[0].advisors.activities.weeklyfeaturedraid.display.activityHash || t.hash === 1387993552) {
+          if (t.hash === stores[0].advisors.activities.weeklyfeaturedraid.display.activityHash) {
             a.featured = true;
             t.name = t.hash === 1387993552 ? '390' : t.name;
           }

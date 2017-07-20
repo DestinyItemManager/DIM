@@ -84,6 +84,5 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
       }
     }
   });
-
 }
 
