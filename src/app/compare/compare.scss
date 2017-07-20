@@ -38,7 +38,7 @@ dim-compare {
 
 .compare-item {
   border-left: 1px solid $lightgray;
-  width: 150px;
+  min-width: 150px;
 
   .item {
     float: right;
