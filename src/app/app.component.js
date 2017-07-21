@@ -7,7 +7,18 @@ export const AppComponent = {
   controller: AppComponentCtrl
 };
 
-function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettingsService, $i18next, toaster, $timeout) {
+function AppComponentCtrl(
+  $window,
+  $rootScope,
+  $scope,
+  dimInfoService,
+  dimSettingsService,
+  $i18next,
+  toaster,
+  $timeout,
+  hotkeys,
+  dimState
+) {
   'ngInject';
 
   this.$onInit = function() {
@@ -17,6 +28,28 @@ function AppComponentCtrl($window, $rootScope, $scope, dimInfoService, dimSettin
     this.featureFlags = {
       colorA11y: $featureFlags.colorA11y
     };
+
+    this.settings = dimSettingsService;
+    $scope.$watch(() => this.settings.itemSize, (size) => {
+      document.querySelector('html').style.setProperty("--item-size", `${size}px`);
+    });
+    $scope.$watch(() => this.settings.charCol, (cols) => {
+      document.querySelector('html').style.setProperty("--character-columns", cols);
+    });
+    $scope.$watch(() => this.settings.vaultMaxCol, (cols) => {
+      document.querySelector('html').style.setProperty("--vault-max-columns", cols);
+    });
+
+    hotkeys = hotkeys.bindTo($scope);
+
+    hotkeys.add({
+      combo: ['ctrl+alt+shift+d'],
+      callback: function() {
+        dimState.debug = true;
+        console.log("***** DIM DEBUG MODE ENABLED *****");
+      }
+    });
+
 
     if ($featureFlags.colorA11y) {
       $scope.$watch(() => this.settings.colorA11y, (color) => {

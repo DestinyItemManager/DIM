@@ -1,8 +1,12 @@
-
-function run($rootScope, SyncService, $transitions, $location) {
+function run($rootScope, SyncService, $transitions, $location, $trace, $uiRouter) {
   'ngInject';
 
   SyncService.init();
+
+  if ($featureFlags.debugRouter) {
+    $trace.enable('TRANSITION');
+    $uiRouter.plugin(require('@uirouter/visualizer').Visualizer);
+  }
 
   // Variables for templates that webpack does not automatically correct.
   $rootScope.$DIM_VERSION = $DIM_VERSION;

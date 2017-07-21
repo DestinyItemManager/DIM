@@ -18,6 +18,7 @@ dim-compare {
     border-left: none;
     position: fixed;
     left: 1em;
+    min-width: 100px;
     width: 100px;
   }
   .compare-stat-label {
@@ -38,7 +39,7 @@ dim-compare {
 
 .compare-item {
   border-left: 1px solid $lightgray;
-  width: 150px;
+  min-width: 150px;
 
   .item {
     float: right;

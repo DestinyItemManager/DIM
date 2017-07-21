@@ -25,6 +25,8 @@
     "Difficulties": "A API da Bungie está atualmente passando por dificuldades.",
     "ItemUniqueness": "Unicidade de itens",
     "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
+    "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
+    "ItemUniquenessExplanation_male": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
     "NetworkError": "Erro de rede - {{status}} {{statusText}}",
     "NoAccount": "Nenhuma conta de Destiny foi encontrada no {{platform}}. Você selecionou a plataforma correta?",
@@ -91,9 +93,13 @@
   "FarmingMode": {
     "Configuration": "Configuração",
     "Desc": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
+    "Desc_female": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
+    "Desc_male": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "FarmingMode": "Modo Farm (mover itens)",
     "MakeRoom": {
       "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+      "Desc_female": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+      "Desc_male": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
       "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
     },
@@ -257,6 +263,8 @@
   "ItemService": {
     "BucketFull": {
       "Guardian": "Há muitos '{{itemtype}}' em seu {{store}}.",
+      "Guardian_female": "Há muitos '{{itemtype}}' em seu {{store}}.",
+      "Guardian_male": "Há muitos '{{itemtype}}' em seu {{store}}.",
       "Vault": "Há muitos '{{itemtype}}' no {{store}}."
     },
     "Classified": "Este item é confidencial e não pode ser transferido no momento.",
@@ -334,7 +342,11 @@
     "AppliedAuto": "Construtor automático de sets",
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
+    "Applied_female": "Seu set de 1 iten foi transferido para seu {{store}}.",
+    "Applied_male": "Seu set de 1 iten foi transferido para seu {{store}}.",
     "Applied_plural": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
+    "Applied_plural_female": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
+    "Applied_plural_male": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
     "ApplySearch": "Itens = \"{{query}}\"",
     "Before": "Antes '{{name}}'",
     "Cancel": "Cancelar",
@@ -356,7 +368,11 @@
     "Loadouts": "Sets",
     "MakeRoom": "Abrir espaço para itens do Correio",
     "MakeRoomDone": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
+    "MakeRoomDone_female": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
+    "MakeRoomDone_male": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
     "MakeRoomDone_plural": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
+    "MakeRoomDone_plural_female": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
+    "MakeRoomDone_plural_male": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
     "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {{error}}.",
     "MaxSlots": "Você só pode ter {{slots}} desde tipo de item em seu set.",
     "MaximizeLight": "Maximizar Luz",

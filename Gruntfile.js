@@ -110,67 +110,38 @@ module.exports = function(grunt) {
       }
     },
 
-    poeditor: {
-      download_terms: {
-        download: {
-          project_id: '116191',
-          type: 'key_value_json', // export type (check out the doc)
-          filters: ["translated", "proofread", "not_fuzzy"], // https://poeditor.com/api_reference/#export
-          dest: 'src/i18n/dim_?.json',
-          languages: {
-            'de': 'de',
-            'es': 'es',
-            'fr': 'fr',
-            'it': 'it',
-            'ja': 'ja',
-            'pt-BR': 'pt_BR'
-          }
-        }
-      },
-      options: {
-        api_token: process.env.POEDITOR_API
-      }
-    },
-
-    upload_file: {
-      poeditor: {
-        src: ['src/i18n/dim_en.json'],
+    'crowdin-request': {
         options: {
-          url: 'https://poeditor.com/api/',
-          method: 'POST',
-          paramObj: {
-            api_token: process.env.POEDITOR_API,
-            action: 'upload',
-            id: '116191',
-            updating: 'terms_definitions',
-            language: 'en',
-            overwrite: 1,  // overwrite old strings
-            sync_terms: 1,  // delete non-matched keys
-            fuzzy_trigger: 1  // set updated keys to fuzzy on other langs, so translators know to re-translate string
-          },
+            'api-key': process.env.CROWDIN_API,
+            'project-identifier': 'destiny-item-manager',
+            filename: 'dim.json'
+        },
+        upload: {
+            srcFile: 'src/locale/dim.json'
+        },
+        download: {
+            outputDir: 'src/locale'
         }
-      }
     },
 
     sortJSON: {
-      src: [
-        'src/i18n/dim_de.json',
-        'src/i18n/dim_en.json',
-        'src/i18n/dim_es.json',
-        'src/i18n/dim_fr.json',
-        'src/i18n/dim_it.json',
-        'src/i18n/dim_ja.json',
-        'src/i18n/dim_pt_BR.json',
-      ],
+      i18n: [
+        'src/locale/dim.json',
+        'src/locale/de/dim.json',
+        'src/locale/es-ES/dim.json',
+        'src/locale/fr/dim.json',
+        'src/locale/it/dim.json',
+        'src/locale/ja/dim.json',
+        'src/locale/pt-BR/dim.json',
+      ]
     }
   });
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-rsync');
-  grunt.loadNpmTasks('grunt-poeditor-ab');
+  grunt.loadNpmTasks('grunt-crowdin-request');
   grunt.loadNpmTasks('grunt-sort-json');
-  grunt.loadNpmTasks('grunt-upload-file');
 
   function rewrite(dist) {
     var manifest = grunt.file.readJSON('extension-dist/manifest.json');
@@ -250,12 +221,12 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('download_translations', [
-    'poeditor:download_terms:download',
-    'sortJSON'
+    'crowdin-request:download',
+    'sortJSON:i18n'
   ]);
 
   grunt.registerTask('publish_beta', [
-    'upload_file:poeditor',
+    'crowdin-request:upload',
     'update_chrome_beta_manifest',
     'compress:chrome',
     'log_beta_version',

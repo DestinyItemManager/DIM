@@ -25,6 +25,8 @@
     "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
     "ItemUniqueness": "Unicité d'un objet",
     "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
+    "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
+    "ItemUniquenessExplanation_male": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
     "NetworkError": "Erreur de réseau - {{status}} {{statusText}}",
     "NoAccount": "Aucun compte Destiny n'a été trouvé sur {{platform}}. Avez-vous sélectionné la bonne plateforme?",
@@ -91,9 +93,13 @@
   "FarmingMode": {
     "Configuration": "Configuration",
     "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
+    "Desc_female": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
+    "Desc_male": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "FarmingMode": "Mode Farming (transfert d'objets)",
     "MakeRoom": {
       "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
+      "Desc_female": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
+      "Desc_male": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
       "MakeRoom": "Faire de la place pour collecter des objets en déplaçant de l'équipement",
       "Tooltip": "Si activé, DIM déplacera les armes et armures afin de faire de la place dans le coffre pour les engrammes."
     },
@@ -257,6 +263,8 @@
   "ItemService": {
     "BucketFull": {
       "Guardian": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}.",
+      "Guardian_female": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}.",
+      "Guardian_male": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}.",
       "Vault": "Il y a trop d'objet '{{itemtype}}' dans le {{store}}."
     },
     "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
@@ -334,7 +342,11 @@
     "AppliedAuto": "Constructeur de Pré set automatique",
     "AppliedError": "Aucun des objets de votre pré set n'a pu être transféré.",
     "AppliedWarn": "Votre pré set a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
+    "Applied_female": "Votre pré set de un objet a été transféré à votre {{store}}.",
+    "Applied_male": "Votre pré set de un objet a été transféré à votre {{store}}.",
     "Applied_plural": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
+    "Applied_plural_female": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
+    "Applied_plural_male": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
     "ApplySearch": "Objets = \"{{query}}\"",
     "Before": "Avant '{{name}}'",
     "Cancel": "Annuler",
@@ -356,7 +368,11 @@
     "Loadouts": "Pré sets",
     "MakeRoom": "Faire de la place pour le Commis des postes",
     "MakeRoomDone": "À Fini de faire de la place pour 1 objet du commis des postes en déplaçant 1 objet hors du {{store}}.",
+    "MakeRoomDone_female": "À Fini de faire de la place pour 1 objet du commis des postes en déplaçant 1 objet hors du {{store}}.",
+    "MakeRoomDone_male": "À Fini de faire de la place pour 1 objet du commis des postes en déplaçant 1 objet hors du {{store}}.",
     "MakeRoomDone_plural": "À Fini de faire de la place pour {{count}} objets du Commis des postes en déplaçant {{movedNum}} objets hors du {{store}}.",
+    "MakeRoomDone_plural_female": "À Fini de faire de la place pour {{count}} objets du Commis des postes en déplaçant {{movedNum}} objets hors du {{store}}.",
+    "MakeRoomDone_plural_male": "À Fini de faire de la place pour {{count}} objets du Commis des postes en déplaçant {{movedNum}} objets hors du {{store}}.",
     "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commit Des Postes: {{error}}.",
     "MaxSlots": "Tu peux uniquement avoir {{slots}} de ce type d'objet dans un pré set.",
     "MaximizeLight": "Maximiser la Lumière",
@@ -406,7 +422,7 @@
     "Store": "Dépôt",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Take": "Prendre",
+    "Take": "Réunir",
     "TrackUntrack_Track": "Suivre {{itemType}}",
     "TrackUntrack_Untrack": "Ne plus suivre {{itemType}}",
     "Vault": "Coffre"
