@@ -484,6 +484,8 @@ function VendorService(
 
   function fulfillRatingsRequest() {
     if (service.vendorsLoaded && _ratingsRequested) {
+      // TODO: Throttle this. Right now we reload this on every page
+      // view and refresh of the vendors page.
       dimDestinyTrackerService.updateVendorRankings(service.vendors);
     }
   }

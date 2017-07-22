@@ -49,11 +49,11 @@ function StoreService(
   const storesStream = accountStream
         // Only emit when the account changes
         .distinctUntilChanged(compareAccounts)
-        // But also re-emit the value of the account stream whenever the
-        // force reload triggers
-        .merge(forceReloadTrigger.switchMap(() => accountStream))
+        // But also re-emit the current value of the account stream
+        // whenever the force reload triggers
+        .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
         // Whenever either trigger happens, load stores
-        .switchMap((account) => Observable.from(loadStores(account)))
+        .switchMap((account) => loadStores(account))
         // Keep track of the last value for new subscribers
         .publishReplay(1)
         // Connect when the first subscription happens, and only disconnect

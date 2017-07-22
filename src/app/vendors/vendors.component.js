@@ -32,6 +32,8 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
     dimStoreService.getStoresStream(vm.account).subscribe((stores) => {
       init(stores);
     });
+
+    init();
   };
 
   $scope.$on('dim-refresh', () => {
@@ -51,8 +53,6 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
 
     dimVendorService.requestRatings();
   }
-
-  init();
 
   // TODO: vendors observable!
   $scope.$on('dim-vendors-updated', () => {
