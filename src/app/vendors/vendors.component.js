@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { subscribeOnScope } from '../rx-utils';
 
 import template from './vendors.html';
 import './vendors.scss';
@@ -29,7 +30,7 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
   vm.vendorService = dimVendorService;
 
   this.$onInit = function() {
-    dimStoreService.getStoresStream(vm.account).subscribe(init);
+    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
 
     // TODO: get rid of this when we subscribe to *vendors*, not *stores*
     init();

@@ -1,4 +1,5 @@
 import template from './inventory.html';
+import { subscribeOnScope } from '../rx-utils';
 
 export default {
   template,
@@ -14,7 +15,7 @@ function InventoryController($scope, dimStoreService) {
   const vm = this;
 
   this.$onInit = function() {
-    dimStoreService.getStoresStream(vm.account).subscribe((stores) => {
+    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), (stores) => {
       vm.stores = stores;
     });
   };

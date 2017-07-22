@@ -55,10 +55,7 @@ function StoreService(
         // Whenever either trigger happens, load stores
         .switchMap((account) => loadStores(account))
         // Keep track of the last value for new subscribers
-        .publishReplay(1)
-        // Connect when the first subscription happens, and only disconnect
-        // when they're all done.
-        .refCount();
+        .publishReplay(1);
 
   // TODO: If we can make the store structures immutable, we could use
   //       distinctUntilChanged to avoid emitting store updates when
@@ -135,6 +132,9 @@ function StoreService(
    */
   function getStoresStream(account) {
     accountStream.next(account);
+    // Start the stream the first time it's asked for. Repeated calls
+    // won't do anything.
+    storesStream.connect();
     return storesStream;
   }
 
@@ -150,11 +150,9 @@ function StoreService(
 
   /**
    * Returns a promise for a fresh view of the stores and their items.
-   * If this is called while a reload is already happening, it'll
-   * return the promise for the ongoing reload rather than kicking off
-   * a new reload.
    */
   function loadStores(account) {
+    console.log('reload stores');
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);

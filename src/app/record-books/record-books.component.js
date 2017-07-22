@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import angular from 'angular';
 import { sum, count } from '../util';
+import { subscribeOnScope } from '../rx-utils';
 
 import template from './record-books.html';
 import './record-books.scss';
@@ -31,7 +32,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
   };
 
   this.$onInit = function() {
-    dimStoreService.getStoresStream(vm.account).subscribe(init);
+    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
   };
 
   $scope.$on('dim-refresh', () => {

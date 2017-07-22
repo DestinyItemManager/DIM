@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { subscribeOnScope } from '../rx-utils';
 
 import template from './activities.html';
 import './activities.scss';
@@ -29,7 +30,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   };
 
   this.$onInit = function() {
-    dimStoreService.getStoresStream(vm.account).subscribe(init);
+    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
   };
 
   $scope.$on('dim-refresh', () => {
