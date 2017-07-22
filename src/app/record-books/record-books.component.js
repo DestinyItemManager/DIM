@@ -31,9 +31,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
   };
 
   this.$onInit = function() {
-    dimStoreService.getStoresStream(vm.account).subscribe((stores) => {
-      init(stores);
-    });
+    dimStoreService.getStoresStream(vm.account).subscribe(init);
   };
 
   $scope.$on('dim-refresh', () => {

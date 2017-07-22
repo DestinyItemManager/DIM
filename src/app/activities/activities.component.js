@@ -29,9 +29,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   };
 
   this.$onInit = function() {
-    dimStoreService.getStoresStream(vm.account).subscribe((stores) => {
-      init(stores);
-    });
+    dimStoreService.getStoresStream(vm.account).subscribe(init);
   };
 
   $scope.$on('dim-refresh', () => {

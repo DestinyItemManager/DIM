@@ -29,10 +29,9 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
   vm.vendorService = dimVendorService;
 
   this.$onInit = function() {
-    dimStoreService.getStoresStream(vm.account).subscribe((stores) => {
-      init(stores);
-    });
+    dimStoreService.getStoresStream(vm.account).subscribe(init);
 
+    // TODO: get rid of this when we subscribe to *vendors*, not *stores*
     init();
   };
 
