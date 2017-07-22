@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
