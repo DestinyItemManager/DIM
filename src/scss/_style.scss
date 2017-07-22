@@ -20,6 +20,15 @@
   }
 }
 
+// Phone portrait - make 'em big!
+@include phone-portrait {
+  :root {
+    // TODO: do something better based on screen size??
+    // vw units are bugged in safari
+    --item-size: 64px !important;
+  }
+}
+
 @mixin item-size {
   width: 44px;
   height: 44px;
@@ -801,6 +810,11 @@ dim-store-heading {
   min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
   max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
   margin: 0 auto;
+
+  &.phone-portrait {
+    min-width: auto;
+    max-width: auto;
+  }
 }
 
 .stores {

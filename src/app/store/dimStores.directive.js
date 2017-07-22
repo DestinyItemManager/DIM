@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStores.directive.html';
+import Dragend from 'dragend';
 
 angular.module('dimApp')
   .component('dimStores', stores());
@@ -39,6 +40,26 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     vm.settings.save();
   };
 
+  // TODO: angular media-query-switch directive
+  const phoneWidthQuery = window.matchMedia('(max-width: 375px)');
+  function phoneWidthHandler(e) {
+    $scope.$apply(() => {
+      vm.isPhonePortrait = e.matches;
+      console.log('phone width', e);
+    });
+  }
+  phoneWidthQuery.addListener(phoneWidthHandler);
+  vm.isPhonePortrait = phoneWidthQuery.matches;
+
+  this.$onInit = function() {
+    setTimeout(() => {
+      // TODO: gotta put this in a component/directive
+  new Dragend(document.getElementById("characters"), {
+    pageClass: 'character'
+  });
+    }, 1000);
+  }
+
   vm.$onChanges = function() {
     vm.vault = dimStoreService.getVault();
 
@@ -47,6 +68,15 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
       dimBucketService.getBuckets().then((buckets) => {
         vm.buckets = buckets;
       });
+    }
+
+    // TODO: save this?
+    if (vm.stores.length) {
+      vm.currentStore = vm.stores[0];
+      console.log('currentStore', vm.currentStore);
+    } else {
+      console.log('currentStore', vm.stores);
+      vm.currentStore = null;
     }
   };
 }
