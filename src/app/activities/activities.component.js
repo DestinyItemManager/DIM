@@ -36,7 +36,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
 
   $scope.$on('dim-refresh', () => {
     // TODO: refresh just advisors
-    dimStoreService.reloadStores(vm.account);
+    dimStoreService.reloadStores();
   });
 
   // TODO: Ideally there would be an Advisors service that would

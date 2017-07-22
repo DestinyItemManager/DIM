@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
@@ -37,26 +37,28 @@ function StoreService(
 ) {
   let _stores = [];
 
-  // A subject that keeps track of the current account
+  // A subject that keeps track of the current account. Because it's a
+  // behavior subject, any new subscriber will always see its last
+  // value.
   const accountStream = new BehaviorSubject(null);
-  // A force reload trigger
-  const reloadTrigger = new Subject();
-  const theStoresStream = accountStream
+
+  // The triggering observable for force-reloading stores.
+  const forceReloadTrigger = new Subject();
+
+  // A stream of stores that switches on account changes and supports reloading.
+  const storesStream = accountStream
         // Only emit when the account changes
         .distinctUntilChanged(compareAccounts)
-        // But also emit the value of the account stream whenever the force reload triggers
-        .merge(reloadTrigger.switchMap(() => accountStream))
-        // Whenever the trigger happens, load stores
-        .switchMap((account) => {
-          console.log('switchMap!', account);
-          return Observable.from(doReloadStores(account));
-        })
+        // But also re-emit the value of the account stream whenever the
+        // force reload triggers
+        .merge(forceReloadTrigger.switchMap(() => accountStream))
+        // Whenever either trigger happens, load stores
+        .switchMap((account) => loadStores(account))
         // Keep track of the last value for new subscribers
         .publishReplay(1)
         // Connect when the first subscription happens, and only disconnect
         // when they're all done.
         .refCount();
-        // TODO: retry
 
   // TODO: If we can make the store structures immutable, we could use
   //       distinctUntilChanged to avoid emitting store updates when
@@ -68,7 +70,7 @@ function StoreService(
     getStore: (id) => _.find(_stores, { id: id }),
     getVault: () => _.find(_stores, { id: 'vault' }),
     getAllItems: () => flatMap(_stores, 'items'),
-    storesStream,
+    getStoresStream,
     getItemAcrossStores,
     updateCharacters,
     reloadStores
@@ -123,35 +125,37 @@ function StoreService(
     });
   }
 
-  function storesStream(account) {
+  /**
+   * Set the current account, and get a stream of stores updates.
+   * This will keep returning stores even if something else changes
+   * the account by also calling "storesStream". This won't force the
+   * stores to reload unless they haven't been loaded at all.
+   *
+   * @return {Observable} a stream of store updates
+   */
+  function getStoresStream(account) {
     accountStream.next(account);
-    return theStoresStream;
+    return storesStream;
   }
 
+  /**
+   * Force the inventory and characters to reload.
+   * @return {Promise} the new stores
+   */
   function reloadStores() {
-    // TODO: this should return a promise still
-    reloadTrigger.next();
+    forceReloadTrigger.next(); // signal the force reload
+    // adhere to the old contract by returning the next value as a promise
+    return storesStream.take(1).toPromise();
   }
 
   /**
    * Returns a promise for a fresh view of the stores and their items.
-   * If this is called while a reload is already happening, it'll return the promise
-   * for the ongoing reload rather than kicking off a new reload.
+   * If this is called while a reload is already happening, it'll
+   * return the promise for the ongoing reload rather than kicking off
+   * a new reload.
    */
-  // TODO: better way to ping the observable?
-  function doReloadStores(account) {
+  function loadStores(account) {
     console.log("reloading stores");
-    // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
-    if (!account) {
-      if ($stateParams.membershipId && $stateParams.platformType) {
-        account = {
-          membershipId: $stateParams.membershipId,
-          platformType: $stateParams.platformType
-        };
-      } else {
-        throw new Error("Don't know membership ID and platform type");
-      }
-    }
 
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
@@ -218,7 +222,10 @@ function StoreService(
       })
       .catch((e) => {
         showErrorToaster(e);
-        throw e;
+        // It's important that we swallow all errors here - otherwise
+        // our observable will fail on the first error. We could work
+        // around that with some rxjs operators, but it's easier to
+        // just make this never fail.
       })
       .finally(() => {
         dimManifestService.isLoaded = true;
@@ -305,5 +312,7 @@ function StoreService(
       body: e.message + twitter,
       showCloseButton: false
     });
+
+    console.error('Error loading stores', e);
   }
 }
