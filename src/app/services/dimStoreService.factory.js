@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
@@ -53,7 +53,7 @@ function StoreService(
         // force reload triggers
         .merge(forceReloadTrigger.switchMap(() => accountStream))
         // Whenever either trigger happens, load stores
-        .switchMap((account) => loadStores(account))
+        .switchMap((account) => Observable.from(loadStores(account)))
         // Keep track of the last value for new subscribers
         .publishReplay(1)
         // Connect when the first subscription happens, and only disconnect
