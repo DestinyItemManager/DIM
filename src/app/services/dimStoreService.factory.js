@@ -155,8 +155,6 @@ function StoreService(
    * a new reload.
    */
   function loadStores(account) {
-    console.log("reloading stores");
-
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
