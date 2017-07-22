@@ -6,6 +6,8 @@
 * The item detail popup now does a better job of fitting itself onto the screen - it may appear to the left or right of an item now!
 * Press on a talent grid node to read its description. The same goes for the stats under your character.
 * Subclasses now have the correct elemental type in their header color.
+* Drag and drop should be much smoother now.
+* You can select Destiny 2 accounts from the account dropdown now - but won't do much until Destiny 2 is released and we have a chance to update DIM to support it!
 
 # 4.4.0
 
