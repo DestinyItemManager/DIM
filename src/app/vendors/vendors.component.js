@@ -29,7 +29,7 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
   vm.vendorService = dimVendorService;
 
   this.$onInit = function() {
-    dimStoreService.storesStream(vm.account).subscribe((stores) => {
+    dimStoreService.getStoresStream(vm.account).subscribe((stores) => {
       init(stores);
     });
   };

@@ -14,7 +14,7 @@ function InventoryController($scope, dimStoreService) {
   const vm = this;
 
   this.$onInit = function() {
-    dimStoreService.storesStream(vm.account).subscribe((stores) => {
+    dimStoreService.getStoresStream(vm.account).subscribe((stores) => {
       vm.stores = stores;
     });
   };
