@@ -1,5 +1,7 @@
 # Next
 
+# 4.5.0
+
 * Added "reviewcount" filter to filter on the number of reviews on an item.
 * Fix slight horizontal scroll on inventory view.
 * On mobile, tapping outside of dialogs and dropdowns to dismiss them now works.
