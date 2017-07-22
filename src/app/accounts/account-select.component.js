@@ -1,10 +1,15 @@
+import { flatMap } from '../util';
+
 import template from './account-select.html';
 import dialogTemplate from './account-select.dialog.html';
 import './account-select.scss';
 
 export const AccountSelectComponent = {
   template,
-  controller: AccountSelectController
+  controller: AccountSelectController,
+  bindings: {
+    destinyVersion: '<'
+  }
 };
 
 function AccountSelectController($scope, dimPlatformService, loadingTracker, ngDialog, OAuthTokenService, $state) {
@@ -16,22 +21,46 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
   vm.loadingTracker = loadingTracker;
   vm.accounts = [];
 
+  vm.$onChanges = function(changes) {
+    // If we go to a non-destiny-account page, leave it, or default to D1
+    vm.destinyVersion = changes.destinyVersion.currentValue || vm.destinyVersion || 1;
+    if (vm.currentAccount) {
+      vm.currentAccount.destinyVersion = vm.destinyVersion;
+    }
+  };
+
+  function setAccounts(accounts) {
+    vm.accounts = flatMap(accounts, (account) => {
+      // Duplicate each Destiny account, since they may have played either D1 or D2.
+      // TODO: Maybe push this into the account service, and allow people to "hide" accounts?
+      return [
+        Object.assign({}, account, { destinyVersion: 1 }),
+        Object.assign({}, account, { destinyVersion: 2 })
+      ];
+    });
+  }
+
+    // TODO: save this in the account service, or some other global state, so we don't flip flop
+  function setCurrentAccount(currentAccount) {
+    vm.currentAccount = Object.assign({}, currentAccount, { destinyVersion: vm.destinyVersion });
+  }
+
   vm.accountChange = function accountChange(account) {
     loadingTracker.addPromise(dimPlatformService.setActive(account));
   };
 
   $scope.$on('dim-platforms-updated', (e, args) => {
-    vm.accounts = args.platforms;
+    setAccounts(args.platforms);
   });
 
   $scope.$on('dim-active-platform-updated', (e, args) => {
-    vm.currentAccount = args.platform;
+    setCurrentAccount(args.platform);
   });
 
   const loadAccountsPromise = dimPlatformService.getPlatforms()
     .then((accounts) => {
-      vm.accounts = accounts;
-      vm.currentAccount = dimPlatformService.getActive();
+      setAccounts(accounts);
+      setCurrentAccount(dimPlatformService.getActive());
     });
   loadingTracker.addPromise(loadAccountsPromise);
 
@@ -44,7 +73,7 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
 
   vm.selectAccount = function(e, account) {
     e.stopPropagation();
-    $state.go('inventory', account);
+    $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
   };
 
   vm.openDropdown = function(e) {
@@ -62,7 +91,12 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
         controllerAs: '$ctrl',
         controller: function($scope) {
           'ngInject';
-          this.accounts = vm.accounts.filter((p) => p.membershipId !== vm.currentAccount.membershipId || p.platformType !== vm.currentAccount.platformType);
+          // TODO: reorder accounts by LRU?
+          this.accounts = vm.accounts.filter((p) => {
+            return p.membershipId !== vm.currentAccount.membershipId ||
+            p.platformType !== vm.currentAccount.platformType ||
+            p.destinyVersion !== vm.destinyVersion;
+          });
           this.selectAccount = (e, account) => {
             $scope.closeThisDialog(); // eslint-disable-line angular/controller-as
             vm.selectAccount(e, account);

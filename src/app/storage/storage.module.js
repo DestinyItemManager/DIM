@@ -19,7 +19,6 @@ export default angular
     // but we will have to re-declare storage separately for destiny2account.
     $stateProvider.state({
       name: 'storage',
-      parent: 'destiny1account',
       component: 'storage',
       url: '/storage'
     });

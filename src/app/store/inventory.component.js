@@ -18,4 +18,8 @@ function InventoryController($scope, dimStoreService) {
       vm.stores = stores;
     });
   };
+
+  $scope.$on('dim-refresh', () => {
+    dimStoreService.reloadStores(vm.account);
+  });
 }

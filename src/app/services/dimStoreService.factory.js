@@ -31,7 +31,8 @@ function StoreService(
   StoreFactory,
   ItemFactory,
   NewItemsService,
-  $stateParams
+  $stateParams,
+  loadingTracker
 ) {
   let _stores = [];
 
@@ -231,6 +232,7 @@ function StoreService(
       });
 
     _reloadPromises[promiseCacheKey] = reloadPromise;
+    loadingTracker.addPromise(reloadPromise);
     return reloadPromise;
   }
 
