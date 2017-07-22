@@ -29,20 +29,13 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   };
 
   this.$onInit = function() {
-    // TODO: this is a hack for loading stores - it should be just an observable
-    vm.stores = dimStoreService.getStores();
-    // TODO: OK, need to push this check into store service
-    if (!vm.stores.length ||
-        dimStoreService.activePlatform.membershipId !== vm.account.membershipId ||
-        dimStoreService.activePlatform.platformType !== vm.account.platformType) {
-      dimStoreService.reloadStores(vm.account);
-      // TODO: currently this wires us up via the dim-stores-updated event
-    }
-
-    init();
+    dimStoreService.storesStream(vm.account).subscribe((stores) => {
+      init(stores);
+    });
   };
 
   $scope.$on('dim-refresh', () => {
+    // TODO: refresh just advisors
     dimStoreService.reloadStores(vm.account);
   });
 
@@ -52,8 +45,7 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   // extra info in Trials cards in Store service, and it's more
   // efficient to just fish the info out of there.
 
-  // TODO: it'll be nice to replace this pattern with RxJS observables
-  function init(stores = dimStoreService.getStores()) {
+  function init(stores) {
     if (_.isEmpty(stores)) {
       return;
     }
@@ -90,12 +82,6 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
       });
     });
   }
-
-  init();
-
-  $scope.$on('dim-stores-updated', (e, args) => {
-    init(args.stores);
-  });
 
   function processActivities(defs, stores, rawActivity) {
     const def = defs.Activity.get(rawActivity.display.activityHash);

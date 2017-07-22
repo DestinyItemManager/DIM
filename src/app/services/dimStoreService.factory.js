@@ -1,12 +1,13 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { ReplaySubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { flatMap } from '../util';
+import { compareAccounts } from '../accounts/destiny-account.service';
 
 
 angular.module('dimApp')
@@ -36,9 +37,30 @@ function StoreService(
 ) {
   let _stores = [];
 
-  // A promise (per account) used to dedup parallel calls to reloadStores
-  const _reloadPromises = {};
-  let cachedStream = null;
+  // A subject that keeps track of the current account
+  const accountStream = new BehaviorSubject(null);
+  // A force reload trigger
+  const reloadTrigger = new Subject();
+  const theStoresStream = accountStream
+        // Only emit when the account changes
+        .distinctUntilChanged(compareAccounts)
+        // But also emit the value of the account stream whenever the force reload triggers
+        .merge(reloadTrigger.switchMap(() => accountStream))
+        // Whenever the trigger happens, load stores
+        .switchMap((account) => {
+          console.log('switchMap!', account);
+          return Observable.from(doReloadStores(account));
+        })
+        // Keep track of the last value for new subscribers
+        .publishReplay(1)
+        // Connect when the first subscription happens, and only disconnect
+        // when they're all done.
+        .refCount();
+        // TODO: retry
+
+  // TODO: If we can make the store structures immutable, we could use
+  //       distinctUntilChanged to avoid emitting store updates when
+  //       nothing changed!
 
   const service = {
     getActiveStore: () => _.find(_stores, 'current'),
@@ -49,8 +71,7 @@ function StoreService(
     storesStream,
     getItemAcrossStores,
     updateCharacters,
-    reloadStores,
-    activePlatform: null // TODO: kind of a hack so consumers know when to re-fetch
+    reloadStores
   };
 
   return service;
@@ -103,24 +124,13 @@ function StoreService(
   }
 
   function storesStream(account) {
-    if (cachedStream) {
-      if (cachedStream.account === account) {
-        return cachedStream.stream;
-      } else {
-        cachedStream.stream.complete();
-      }
-    }
-    cachedStream = {
-      // TODO: observable.create().publishReplay with a time window instead?
-      // TODO: use a second subject and switchMap to implement refresh?
-      // stream: Observable.defer(() => reloadStores(account)).publishReplay(1),
-      stream: new ReplaySubject(1),
-      account
-    };
+    accountStream.next(account);
+    return theStoresStream;
+  }
 
-    reloadStores(account);
-
-    return cachedStream.stream.asObservable();
+  function reloadStores() {
+    // TODO: this should return a promise still
+    reloadTrigger.next();
   }
 
   /**
@@ -129,7 +139,8 @@ function StoreService(
    * for the ongoing reload rather than kicking off a new reload.
    */
   // TODO: better way to ping the observable?
-  function reloadStores(account) {
+  function doReloadStores(account) {
+    console.log("reloading stores");
     // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
       if ($stateParams.membershipId && $stateParams.platformType) {
@@ -140,13 +151,6 @@ function StoreService(
       } else {
         throw new Error("Don't know membership ID and platform type");
       }
-    }
-
-    const promiseCacheKey = `${account.membershipId}-${account.platformType}`;
-    let reloadPromise = _reloadPromises[promiseCacheKey];
-
-    if (reloadPromise) {
-      return reloadPromise;
     }
 
     // Save a snapshot of all the items before we update
@@ -163,7 +167,7 @@ function StoreService(
       Destiny1Api.getStores(account)
     ];
 
-    reloadPromise = $q.all(dataDependencies)
+    const reloadPromise = $q.all(dataDependencies)
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
@@ -189,19 +193,6 @@ function StoreService(
         }
 
         _stores = stores;
-        service.activePlatform = account;
-
-        // TODO: knock this out
-        $rootScope.$broadcast('dim-stores-updated', {
-          stores: stores
-        });
-
-        if (cachedStream &&
-            // TODO: compare-accounts function
-            cachedStream.account.platformType === account.platformType &&
-            cachedStream.account.membershipId === account.membershipId) {
-          cachedStream.stream.next(stores);
-        }
 
         dimDestinyTrackerService.fetchReviews(_stores);
 
@@ -210,10 +201,13 @@ function StoreService(
         // Let our styling know how many characters there are
         document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
 
-        return stores;
-      })
-      .then((stores) => {
         dimDestinyTrackerService.reattachScoresFromCache(stores);
+
+        // TODO: this is still useful, but not in as many situations
+        $rootScope.$broadcast('dim-stores-updated', {
+          stores: stores
+        });
+
         return stores;
       })
       .catch((e) => {
@@ -227,12 +221,9 @@ function StoreService(
         throw e;
       })
       .finally(() => {
-        // Clear the reload promise so this can be called again
-        _reloadPromises[promiseCacheKey] = null;
         dimManifestService.isLoaded = true;
       });
 
-    _reloadPromises[promiseCacheKey] = reloadPromise;
     loadingTracker.addPromise(reloadPromise);
     return reloadPromise;
   }

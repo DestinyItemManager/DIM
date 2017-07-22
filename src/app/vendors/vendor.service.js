@@ -87,6 +87,7 @@ function VendorService(
     // TODO: expose getVendor promise, idempotently?
   };
 
+  // TODO: make this a dependent observable instead
   $rootScope.$on('dim-stores-updated', (e, stores) => {
     // TODO: trigger on characters, not stores
     if (stores.stores.length) {

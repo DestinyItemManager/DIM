@@ -29,27 +29,14 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
   vm.vendorService = dimVendorService;
 
   this.$onInit = function() {
-    // TODO: this is a hack for loading stores - it should be just an observable
-    vm.stores = dimStoreService.getStores();
-    // TODO: OK, need to push this check into store service
-    if (!vm.stores.length ||
-        dimStoreService.activePlatform.membershipId !== vm.account.membershipId ||
-        dimStoreService.activePlatform.platformType !== vm.account.platformType) {
-      dimStoreService.reloadStores(vm.account);
-      // TODO: currently this wires us up via the dim-stores-updated event
-    }
-
-    init();
+    dimStoreService.storesStream(vm.account).subscribe((stores) => {
+      init(stores);
+    });
   };
 
   $scope.$on('dim-refresh', () => {
     // TODO: Reload vendor data independently
-    dimStoreService.reloadStores(vm.account);
-  });
-
-  // TODO: break characters out into their own thing!
-  $scope.$on('dim-stores-updated', (e, stores) => {
-    vm.stores = stores.stores;
+    dimStoreService.reloadStores();
   });
 
   function init(stores = dimStoreService.getStores()) {
@@ -67,12 +54,8 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
 
   init();
 
-  // TODO: watch vendors instead?
+  // TODO: vendors observable!
   $scope.$on('dim-vendors-updated', () => {
     init();
-  });
-
-  $scope.$on('dim-stores-updated', (e, args) => {
-    init(args.stores);
   });
 }
