@@ -46,6 +46,7 @@ function StoreService(
   const forceReloadTrigger = new Subject();
 
   // A stream of stores that switches on account changes and supports reloading.
+  // This is a ConnectableObservable that must be connected to start.
   const storesStream = accountStream
         // Only emit when the account changes
         .distinctUntilChanged(compareAccounts)
@@ -152,7 +153,6 @@ function StoreService(
    * Returns a promise for a fresh view of the stores and their items.
    */
   function loadStores(account) {
-    console.log('reload stores');
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
