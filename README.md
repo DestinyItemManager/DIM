@@ -117,6 +117,6 @@ Get your own API key:
 * Paste your extension url into the `Origin Header` section on bungie.net
 * Copy your API-key from bungie.net into DIM developer settings panel when it is loaded.
 
-Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/master/CONTRIBUTING.md) for more tips.
+Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/CONTRIBUTING.md) for more tips.
 
 Code released under the [MIT license](http://choosealicense.com/licenses/mit/).
