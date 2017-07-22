@@ -112,8 +112,9 @@ function StoreService(
     }
     cachedStream = {
       // TODO: observable.create().publishReplay with a time window instead?
-      stream: new ReplaySubject(1),
+      // TODO: use a second subject and switchMap to implement refresh?
       // stream: Observable.defer(() => reloadStores(account)).publishReplay(1),
+      stream: new ReplaySubject(1),
       account
     };
 
