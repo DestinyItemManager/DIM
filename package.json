@@ -96,7 +96,7 @@
     "angular-duration-format": "^1.0.1",
     "angular-hotkeys": "^1.7.0",
     "angular-messages": "^1.6.5",
-    "angular-native-dragdrop": "^1.2.2",
+    "angular-native-dragdrop": "github:DestinyItemManager/angular-dragdrop",
     "angular-promise-tracker": "^2.2.2",
     "angular-sanitize": "^1.6.5",
     "angularjs-slider": "^5.9.0",
