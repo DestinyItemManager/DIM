@@ -28,7 +28,7 @@
          ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.activities"
          ng-i18next="Activities.Activities"></a>
       <span class="link"
-            ng-if="$ctrl.xur.available"
+            ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
             ng-click="$ctrl.showXur($event)">Xûr</span>
 
       <hr>
@@ -104,7 +104,7 @@
      ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.vendorsEnabled"
      ng-i18next="Vendors.Vendors"></a>
   <span class="link second-to-go"
-        ng-if="$ctrl.xur.available"
+        ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
         ng-click="$ctrl.showXur($event)">Xûr</span>
 
   <span class="header-right">
