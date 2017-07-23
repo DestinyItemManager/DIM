@@ -3,6 +3,10 @@
     <i class="fa fa-bars"></i>
     <div class="dropdown" ng-if="$ctrl.dropdown">
       <a class="link"
+         ng-if="!$ctrl.destinyVersion"
+         ui-sref-active="active"
+         ui-sref="default-account">DIM</a>
+      <a class="link"
          ng-if="$ctrl.destinyVersion == 1"
          ui-sref-active="active"
          ui-sref="destiny1.inventory"
@@ -75,6 +79,13 @@
      rel="noopener noreferrer"
      href="https://teespring.com/stores/dim"
      ng-i18next="Header.Shop"></a>
+
+  <span ng-if="!$ctrl.destinyVersion" class="link first-to-go header-separator"></span>
+
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="default-account"
+     ng-if="!$ctrl.destinyVersion">DIM</a>
 
   <span ng-if="$ctrl.destinyVersion == 1" class="link first-to-go header-separator"></span>
 
