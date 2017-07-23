@@ -4,7 +4,7 @@
     "Hard": "Difícil",
     "Nightfall": "Assalto do Anoitecer",
     "Normal": "Normal",
-    "WeeklyHeroic": "Assalto heroico semanal"
+    "WeeklyHeroic": "Assalto Heroico Semanal"
   },
   "Bucket": {
     "Armor": "Armaduras",
@@ -64,6 +64,10 @@
   "Debug": {
     "Dump": "Enviar informação ao console"
   },
+  "Destiny2": {
+    "Banner": "DIM será compatível com Destiny 2",
+    "ComingSoon": "Daremos suporte aos seus personagens em Destiny 2 dentro das nossas capacidades assim que o jogo sair nos consoles. Nos deem algumas semanas pra aprendermos sobre o jogo (e jogá-lo também!)."
+  },
   "DidYouKnow": {
     "Collapse": "Você ocultou uma seção no DIM! Isso pode ser útil para esconder partes do DIM que você normalmente não usa.",
     "DidYouKnow": "Você sabia?",
@@ -112,7 +116,7 @@
     "Activities": {
       "AF": "Forja do Arconte",
       "AoT": "Era do Triunfo",
-      "CD": "Crimson Doubles",
+      "CD": "Duplas Carmesins",
       "CE": "O Fim de Crota",
       "CoE": "Desafio dos Anciões",
       "Dawning": "A Alvorada",
@@ -130,7 +134,7 @@
     "Ascended": "Mostra itens que tenham um nódulo de ascensão e se eles foram ascendidos ou não.",
     "Categories": "Categoria de items de Alto Nível.",
     "Class": "Mostrar items baseado em sua afinidade por classe.",
-    "ClickFilters": "Clique em filtros em baixo para aplicar, ou para escrever na caixa de pesquisa.",
+    "ClickFilters": "Clique nos filtros abaixo para aplicar, ou para escrever na caixa de pesquisa.",
     "Combine": "Os filtros são combinados usando a lógica \"e\", por exemplo '{{example}}' vai retornar todos os itens de arco com mais de 300 de luz. Filtros podem ser negados usando '{{not}}', por exemplo '{{notexample}}' vai trazer todos os itens que não forem engramas.",
     "ContributeLight": "Items que contribuem para o seu nível de luz.",
     "DamageType": "Mostrar items baseado no seu tipo de dano.",
@@ -140,15 +144,15 @@
     "EnterName": "Digite um nome de item:",
     "EnterNote": "Digite a anotação:",
     "Equipment": "Items que podem ser equipados.",
-    "Equipped": "Items que de momento estão equipados em outra personagem.",
+    "Equipped": "Items que no momento estão equipados em outra personagem.",
     "Filter": "Filtro",
     "Glimmer": {
-      "Any": "Qualquer tipo de item de glimmer.",
-      "Boost": "Item que aumenta a quantidade de glimmer ganho por 10 minutos.",
-      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de glimmer:",
-      "Item": "Items que podem ser trocados no Rahool por 200 glimmer."
+      "Any": "Qualquer tipo de item de lúmem.",
+      "Boost": "Item que aumenta a quantidade de lúmem ganho por 10 minutos.",
+      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de lúmem:",
+      "Item": "Items que podem ser trocados no Rahool por 200 lúmem."
     },
-    "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de layout.",
+    "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de set pré-configurado.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "Leveling": {
       "Complete": "{{term}} - mostra itens que estão totalmente completos - todos os aprimoramentos destravados.",
@@ -463,7 +467,7 @@
     "InventoryColumns": "Largura do inventário de personagem",
     "Language": "Idioma (reinicie o DIM para aplicar)",
     "LogOut": "Sair",
-    "ResetToDefault": "Reset",
+    "ResetToDefault": "Resetar",
     "SetSort": "Ordenar itens por",
     "Settings": "Configurações",
     "ShowAnimations": "Animar o brilho do item novo",

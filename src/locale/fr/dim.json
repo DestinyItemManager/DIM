@@ -64,6 +64,10 @@
   "Debug": {
     "Dump": "Envoyer les infos vers la console"
   },
+  "Destiny2": {
+    "Banner": "DIM aura un support pour Destiny 2",
+    "ComingSoon": "Nous aurons un support pour vos personnages de Destiny 2 sur DIM le plus vite possible après la sorti du jeu sur consoles. Donnez nous quelques semaines pour apprendre des choses sur le jeu."
+  },
   "DidYouKnow": {
     "Collapse": "Vous venez de réduire une section dans DIM! Il peut être utile de cache des parties de DIM que vous n'avez pas besoin d'utiliser normalement.",
     "DidYouKnow": "Le saviez-vous?",
