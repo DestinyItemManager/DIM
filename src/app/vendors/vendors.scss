@@ -177,6 +177,10 @@
 
 .ngdialog.vendor-move-popup {
   position: absolute;
+  // TODO: this is here so popups will show over the Xur popup, but it
+  // makes vendor item popups go over the header. Remove this when Xur
+  // is its own page instead of a popup.
+  z-index: 1000;
   height: fit-content;
   .compare-items {
     margin-top: 0;

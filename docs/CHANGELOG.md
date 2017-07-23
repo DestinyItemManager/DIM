@@ -1,5 +1,7 @@
 # Next
 
+* Fix a bug where the popup for Xur items was below Xur's own popup.
+
 # 4.5.0
 
 * Added "reviewcount" filter to filter on the number of reviews on an item.
