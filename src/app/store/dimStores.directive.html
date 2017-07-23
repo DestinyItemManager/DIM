@@ -1,12 +1,16 @@
 <div ng-if="vm.stores.length" class="inventory-content" ng-class="{ 'hide-filtered': vm.settings.hideFilteredItems, 'phone-portrait': vm.isPhonePortrait }">
   <div ng-if="vm.isPhonePortrait && vm.currentStore">
     <!-- TODO: move most of these into their own components? -->
-    <div class="store-row store-header">
-      <!-- dim-store-pager -->
-      <div class="store-cell" id="characters">
-        <dim-store-heading class="character" ng-class="{ current: vm.currentStore.current }" store-data="vm.currentStore"></dim-store-heading>
-      </div>
+    <div class="store-header">
+      <store-pager>
+        <dim-store-heading
+          class="character-swipe"
+          ng-class="{ current: vm.currentStore.current }"
+          store-data="store"
+          ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id"></dim-store-heading>
+      </store-pager>
     </div>
+    <!--
     <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">
       <div class="title">
         <span class="collapse-handle" ng-click="vm.toggleSection(category)"><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.{{ ::category }}"></span></span>
@@ -27,6 +31,7 @@
         <dim-store-reputation store-data="vm.currentStore"></dim-store-reputation>
       </div>
     </div>
+    -->
   </div>
 
   <div ng-if="!vm.isPhonePortrait">

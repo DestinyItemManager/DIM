@@ -797,9 +797,8 @@ dim-store-heading {
 }
 
 #content {
-  margin: 15px auto;
+  margin: 8px auto;
   padding: 0 8px;
-  margin-top: 15px;
   user-select: none;
 }
 
@@ -819,8 +818,8 @@ dim-store-heading {
 
 .stores {
   display: block;
-  // 84px margin to make room for the fixed header
-  margin-top: 84px;
+  // 77px margin to make room for the fixed header
+  margin-top: 77px;
   @supports (position: sticky) {
     margin-top: 0;
   }
@@ -891,7 +890,7 @@ dim-store-heading {
 .store-header {
   position: fixed;
   backface-visibility: hidden;
-  top: 55px;
+  top: 50px;
   left: 0;
   width: auto;
   z-index: 10;

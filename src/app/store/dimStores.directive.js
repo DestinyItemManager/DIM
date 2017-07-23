@@ -1,7 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStores.directive.html';
-import Dragend from 'dragend';
 
 angular.module('dimApp')
   .component('dimStores', stores());
@@ -50,15 +49,6 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
   }
   phoneWidthQuery.addListener(phoneWidthHandler);
   vm.isPhonePortrait = phoneWidthQuery.matches;
-
-  this.$onInit = function() {
-    setTimeout(() => {
-      // TODO: gotta put this in a component/directive
-  new Dragend(document.getElementById("characters"), {
-    pageClass: 'character'
-  });
-    }, 1000);
-  }
 
   vm.$onChanges = function() {
     vm.vault = dimStoreService.getVault();
