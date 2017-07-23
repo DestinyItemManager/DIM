@@ -584,7 +584,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
                               vm.lockedchanged ||
                               vm.excludedchanged ||
                               vm.perkschanged ||
-                              !$state.is('loadout-builder')) {
+                              !$state.is('destiny1.loadout-builder')) {
                             // If active guardian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;
