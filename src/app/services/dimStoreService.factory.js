@@ -1,10 +1,14 @@
 import angular from 'angular';
 import _ from 'underscore';
+import { Subject, BehaviorSubject } from 'rxjs';
+
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { flatMap } from '../util';
+import { compareAccounts } from '../accounts/destiny-account.service';
+
 
 angular.module('dimApp')
   .factory('dimStoreService', StoreService)
@@ -33,8 +37,30 @@ function StoreService(
 ) {
   let _stores = [];
 
-  // A promise (per account) used to dedup parallel calls to reloadStores
-  const _reloadPromises = {};
+  // A subject that keeps track of the current account. Because it's a
+  // behavior subject, any new subscriber will always see its last
+  // value.
+  const accountStream = new BehaviorSubject(null);
+
+  // The triggering observable for force-reloading stores.
+  const forceReloadTrigger = new Subject();
+
+  // A stream of stores that switches on account changes and supports reloading.
+  // This is a ConnectableObservable that must be connected to start.
+  const storesStream = accountStream
+        // Only emit when the account changes
+        .distinctUntilChanged(compareAccounts)
+        // But also re-emit the current value of the account stream
+        // whenever the force reload triggers
+        .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
+        // Whenever either trigger happens, load stores
+        .switchMap((account) => loadStores(account))
+        // Keep track of the last value for new subscribers
+        .publishReplay(1);
+
+  // TODO: If we can make the store structures immutable, we could use
+  //       distinctUntilChanged to avoid emitting store updates when
+  //       nothing changed!
 
   const service = {
     getActiveStore: () => _.find(_stores, 'current'),
@@ -42,10 +68,10 @@ function StoreService(
     getStore: (id) => _.find(_stores, { id: id }),
     getVault: () => _.find(_stores, { id: 'vault' }),
     getAllItems: () => flatMap(_stores, 'items'),
+    getStoresStream,
     getItemAcrossStores,
     updateCharacters,
-    reloadStores,
-    activePlatform: null // TODO: kind of a hack so consumers know when to re-fetch
+    reloadStores
   };
 
   return service;
@@ -98,32 +124,35 @@ function StoreService(
   }
 
   /**
-   * Returns a promise for a fresh view of the stores and their items.
-   * If this is called while a reload is already happening, it'll return the promise
-   * for the ongoing reload rather than kicking off a new reload.
+   * Set the current account, and get a stream of stores updates.
+   * This will keep returning stores even if something else changes
+   * the account by also calling "storesStream". This won't force the
+   * stores to reload unless they haven't been loaded at all.
+   *
+   * @return {Observable} a stream of store updates
    */
-  // TODO: this feels like a good use for observables
-  // TODO: maintain a cache w/ expiry and force-updates, rather than having stuff like activity-tracker handle pacing
-  function reloadStores(account) {
-    // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
-    if (!account) {
-      if ($stateParams.membershipId && $stateParams.platformType) {
-        account = {
-          membershipId: $stateParams.membershipId,
-          platformType: $stateParams.platformType
-        };
-      } else {
-        throw new Error("Don't know membership ID and platform type");
-      }
-    }
+  function getStoresStream(account) {
+    accountStream.next(account);
+    // Start the stream the first time it's asked for. Repeated calls
+    // won't do anything.
+    storesStream.connect();
+    return storesStream;
+  }
 
-    const promiseCacheKey = `${account.membershipId}-${account.platformType}`;
-    let reloadPromise = _reloadPromises[promiseCacheKey];
+  /**
+   * Force the inventory and characters to reload.
+   * @return {Promise} the new stores
+   */
+  function reloadStores() {
+    forceReloadTrigger.next(); // signal the force reload
+    // adhere to the old contract by returning the next value as a promise
+    return storesStream.take(1).toPromise();
+  }
 
-    if (reloadPromise) {
-      return reloadPromise;
-    }
-
+  /**
+   * Returns a promise for a fresh view of the stores and their items.
+   */
+  function loadStores(account) {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
@@ -138,7 +167,7 @@ function StoreService(
       Destiny1Api.getStores(account)
     ];
 
-    reloadPromise = $q.all(dataDependencies)
+    const reloadPromise = $q.all(dataDependencies)
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
@@ -164,12 +193,6 @@ function StoreService(
         }
 
         _stores = stores;
-        service.activePlatform = account;
-
-        // TODO: knock this out
-        $rootScope.$broadcast('dim-stores-updated', {
-          stores: stores
-        });
 
         dimDestinyTrackerService.fetchReviews(_stores);
 
@@ -178,10 +201,13 @@ function StoreService(
         // Let our styling know how many characters there are
         document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
 
-        return stores;
-      })
-      .then((stores) => {
         dimDestinyTrackerService.reattachScoresFromCache(stores);
+
+        // TODO: this is still useful, but not in as many situations
+        $rootScope.$broadcast('dim-stores-updated', {
+          stores: stores
+        });
+
         return stores;
       })
       .catch((e) => {
@@ -192,15 +218,15 @@ function StoreService(
       })
       .catch((e) => {
         showErrorToaster(e);
-        throw e;
+        // It's important that we swallow all errors here - otherwise
+        // our observable will fail on the first error. We could work
+        // around that with some rxjs operators, but it's easier to
+        // just make this never fail.
       })
       .finally(() => {
-        // Clear the reload promise so this can be called again
-        _reloadPromises[promiseCacheKey] = null;
         dimManifestService.isLoaded = true;
       });
 
-    _reloadPromises[promiseCacheKey] = reloadPromise;
     loadingTracker.addPromise(reloadPromise);
     return reloadPromise;
   }
@@ -282,5 +308,7 @@ function StoreService(
       body: e.message + twitter,
       showCloseButton: false
     });
+
+    console.error('Error loading stores', e);
   }
 }

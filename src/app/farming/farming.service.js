@@ -203,6 +203,7 @@ export function FarmingService($rootScope,
 
         // Whenever the store is reloaded, run the farming algo
         // That way folks can reload manually too
+        // TODO: subscribe to stores!
         cancelReloadListener = $rootScope.$on('dim-stores-updated', () => {
           // prevent some recursion...
           if (self.active && !self.movingItems && !self.makingRoom) {

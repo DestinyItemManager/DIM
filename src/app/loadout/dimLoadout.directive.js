@@ -19,6 +19,7 @@ function Loadout(dimLoadoutService, $i18next) {
   function Link(scope) {
     const vm = scope.vm;
 
+    // TODO: subscribe to stores on show, unsubscribe on hide
     scope.$on('dim-stores-updated', (evt, data) => {
       vm.classTypeValues = [{ label: $i18next.t('Loadouts.Any'), value: -1 }];
 

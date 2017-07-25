@@ -54,3 +54,11 @@ export function DestinyAccountService(BungieUserApi, toaster) {
     });
   }
 }
+
+/**
+ * @return {boolean} whether the accounts represent the same account
+ */
+export function compareAccounts(account1, account2) {
+  return account1.platformType === account2.platformType &&
+         account1.membershipId === account2.membershipId;
+}
