@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { subscribeOnScope } from '../rx-utils';
 
 import template from './vendors.html';
 import './vendors.scss';
@@ -29,27 +30,15 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
   vm.vendorService = dimVendorService;
 
   this.$onInit = function() {
-    // TODO: this is a hack for loading stores - it should be just an observable
-    vm.stores = dimStoreService.getStores();
-    // TODO: OK, need to push this check into store service
-    if (!vm.stores.length ||
-        dimStoreService.activePlatform.membershipId !== vm.account.membershipId ||
-        dimStoreService.activePlatform.platformType !== vm.account.platformType) {
-      dimStoreService.reloadStores(vm.account);
-      // TODO: currently this wires us up via the dim-stores-updated event
-    }
+    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
 
+    // TODO: get rid of this when we subscribe to *vendors*, not *stores*
     init();
   };
 
   $scope.$on('dim-refresh', () => {
     // TODO: Reload vendor data independently
-    dimStoreService.reloadStores(vm.account);
-  });
-
-  // TODO: break characters out into their own thing!
-  $scope.$on('dim-stores-updated', (e, stores) => {
-    vm.stores = stores.stores;
+    dimStoreService.reloadStores();
   });
 
   function init(stores = dimStoreService.getStores()) {
@@ -65,14 +54,8 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
     dimVendorService.requestRatings();
   }
 
-  init();
-
-  // TODO: watch vendors instead?
+  // TODO: vendors observable!
   $scope.$on('dim-vendors-updated', () => {
     init();
-  });
-
-  $scope.$on('dim-stores-updated', (e, args) => {
-    init(args.stores);
   });
 }

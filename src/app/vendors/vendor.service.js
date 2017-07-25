@@ -87,6 +87,7 @@ function VendorService(
     // TODO: expose getVendor promise, idempotently?
   };
 
+  // TODO: make this a dependent observable instead
   $rootScope.$on('dim-stores-updated', (e, stores) => {
     // TODO: trigger on characters, not stores
     if (stores.stores.length) {
@@ -483,6 +484,8 @@ function VendorService(
 
   function fulfillRatingsRequest() {
     if (service.vendorsLoaded && _ratingsRequested) {
+      // TODO: Throttle this. Right now we reload this on every page
+      // view and refresh of the vendors page.
       dimDestinyTrackerService.updateVendorRankings(service.vendors);
     }
   }

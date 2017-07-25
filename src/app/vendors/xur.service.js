@@ -20,7 +20,7 @@ function XurService($rootScope, dimVendorService, dimStoreService) {
     });
   });
 
-
+  // TODO: compute this in the xur component, not here
   $rootScope.$on('dim-stores-updated', (e, args) => {
     const stores = _.reject(args.stores, (s) => s.isVault);
     $rootScope.$applyAsync(() => {

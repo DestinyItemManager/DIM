@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import angular from 'angular';
 import { sum, count } from '../util';
+import { subscribeOnScope } from '../rx-utils';
 
 import template from './record-books.html';
 import './record-books.scss';
@@ -31,22 +32,12 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
   };
 
   this.$onInit = function() {
-    // TODO: this is a hack for loading stores - it should be just an observable
-    vm.stores = dimStoreService.getStores();
-    // TODO: OK, need to push this check into store service
-    if (!vm.stores.length ||
-        dimStoreService.activePlatform.membershipId !== vm.account.membershipId ||
-        dimStoreService.activePlatform.platformType !== vm.account.platformType) {
-      dimStoreService.reloadStores(vm.account);
-      // TODO: currently this wires us up via the dim-stores-updated event
-    }
-
-    init();
+    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
   };
 
   $scope.$on('dim-refresh', () => {
-    // TODO: just load/reload record book data
-    dimStoreService.reloadStores(vm.account);
+    // TODO: refresh just advisors
+    dimStoreService.reloadStores();
   });
 
   // TODO: Ideally there would be an Advisors service that would
@@ -55,8 +46,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
   // extra info in Trials cards in Store service, and it's more
   // efficient to just fish the info out of there.
 
-  // TODO: it'll be nice to replace this pattern with RxJS observables
-  function init(stores = dimStoreService.getStores()) {
+  function init(stores) {
     if (_.isEmpty(stores)) {
       return;
     }
@@ -66,12 +56,6 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
       vm.recordBooks = _.map(rawRecordBooks, (rb) => processRecordBook(defs, rb));
     });
   }
-
-  init();
-
-  $scope.$on('dim-stores-updated', (e, args) => {
-    init(args.stores);
-  });
 
   function processRecordBook(defs, rawRecordBook) {
     // TODO: rewards are in "spotlights"
