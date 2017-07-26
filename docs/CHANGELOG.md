@@ -1,6 +1,7 @@
 # Next
 
 * Fix a bug where the popup for Xur items was below Xur's own popup.
+* You can flag reviews for being offensive or arguing or whatever. Be helpful but also be nice.
 
 # 4.5.0
 
