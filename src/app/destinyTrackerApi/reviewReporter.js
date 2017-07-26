@@ -12,7 +12,6 @@ class ReviewReporter {
     this._loadingTracker = loadingTracker;
   }
 
-
   /**
    * Report a written review.
    * Also quietly adds the associated user to a block list.
