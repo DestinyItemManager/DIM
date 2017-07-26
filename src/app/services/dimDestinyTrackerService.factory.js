@@ -4,6 +4,7 @@ import { TrackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler';
 import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
 import { ReviewsFetcher } from '../destinyTrackerApi/reviewsFetcher';
 import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
+import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
 
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
@@ -19,6 +20,7 @@ function DestinyTrackerService($q,
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _reviewReporter = new ReviewReporter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker);
 
   return {
     reattachScoresFromCache: function(stores) {
@@ -48,6 +50,11 @@ function DestinyTrackerService($q,
     fetchReviews: function(stores) {
       if (dimSettingsService.showReviews) {
         _bulkFetcher.bulkFetch(stores);
+      }
+    },
+    reportReview: function(review) {
+      if (dimSettingsService.allowIdPostToDtr) {
+        _reviewReporter.reportReview(review);
       }
     }
   };

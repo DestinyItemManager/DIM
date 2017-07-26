@@ -33,12 +33,12 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
       vm.editReview();
     }
     else if (!review.isHighlighted) {
-      vm.flagReview(reviewId);
+      vm.flagReview(review);
     }
   };
 
-  vm.flagReview = function(reviewId) {
-    console.log(reviewId);
+  vm.flagReview = function(review) {
+    dimDestinyTrackerService.reportReview(review);
   };
 
   vm.editReview = function() {
