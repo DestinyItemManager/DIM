@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import template from './item-review.html';
 import './item-review.scss';
 
@@ -25,12 +26,13 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     vm.expandReview = !vm.expandReview;
   };
 
-  vm.clickReview = function(isReviewer,
-                            reviewId) {
-    if (isReviewer) {
+  vm.clickReview = function(reviewId) {
+    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+
+    if (review.isReviewer) {
       vm.editReview();
     }
-    else {
+    else if (!review.isHighlighted) {
       vm.flagReview(reviewId);
     }
   };

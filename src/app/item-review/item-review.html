@@ -68,7 +68,7 @@
     </div>
   </div>
   <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews">
-    <div ng-class="{'community-review--clickable' : !review.isHighlighted || review.isReviewer}" ng-click="$ctrl.clickReview(review.isReviewer, review.reviewId)">
+    <div ng-class="{'community-review--clickable' : !review.isHighlighted || review.isReviewer}" ng-click="$ctrl.clickReview(review.reviewId)">
       <div class="community-review--who">
         <star-rating rating="review.rating" read-only></star-rating>
         <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
