@@ -8,24 +8,30 @@ class UserFilter {
     this._syncService = syncService;
   }
 
-  _getIgnoredUsers() {
+  _getIgnoredUsersPromise() {
     const ignoredUsersKey = 'ignoredUsers';
-    return this._syncService.get(ignoredUsersKey);
+    return this._syncService.get()
+      .then((data) => {
+        return data[ignoredUsersKey] || [];
+      });
   }
 
-  ignoreUser(membershipId) {
-    const ignoredUsers = this._getIgnoredUsers();
+  ignoreUser(reportedMembershipId) {
+    this._getIgnoredUsersPromise()
+      .then((ignoredUsers) => {
+        ignoredUsers.push(reportedMembershipId);
 
-    ignoredUsers.add(membershipId);
-
-    const ignoredUsersKey = 'ignoredUsers';
-    this._syncService.put({ ignoredUsersKey, ignoredUsers });
+        this._syncService.set({ ignoredUsers });
+      });
   }
 
-  isUserIgnored(membershipId) {
-    const ignoredUsers = this._getIgnoredUsers();
+  conditionallyIgnoreReview(review) {
+    const membershipId = review.reviewer.membershipId;
 
-    return (ignoredUsers.indexOf(membershipId) !== -1);
+    this._getIgnoredUsersPromise()
+      .then((ignoredUsers) => {
+        review.isIgnored = (ignoredUsers.indexOf(membershipId) !== -1);
+      });
   }
 }
 

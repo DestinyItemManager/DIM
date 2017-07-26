@@ -50,9 +50,7 @@ class ReviewsFetcher {
       item.writtenReviews.sort(this._sortReviews);
 
       item.writtenReviews.forEach((writtenReview) => {
-        const membershipId = writtenReview.reviewer.membershipId;
-
-        writtenReview.isIgnored = this._userFilter.isUserIgnored(membershipId);
+        writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
   }

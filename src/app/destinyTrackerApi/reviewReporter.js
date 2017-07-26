@@ -4,13 +4,14 @@
  * @class ReviewReporter
  */
 class ReviewReporter {
-  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, reviewDataCache) {
+  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
     this.$q = $q;
     this.$http = $http;
     this._trackerErrorHandler = trackerErrorHandler;
     this._dimPlatformService = dimPlatformService;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
+    this._userFilter = userFilter;
   }
 
   _getReporter() {
@@ -55,6 +56,11 @@ class ReviewReporter {
     return promise;
   }
 
+  _ignoreReportedUser(review) {
+    const reportedMembershipId = review.reviewer.membershipId;
+    this._userFilter.ignoreUser(reportedMembershipId);
+  }
+
   /**
    * Report a written review.
    * Also quietly adds the associated user to a block list.
@@ -68,7 +74,8 @@ class ReviewReporter {
     }
 
     this._submitReportReviewPromise(review.reviewId)
-      .then(this._reviewDataCache.markReviewAsIgnored(review));
+      .then(this._reviewDataCache.markReviewAsIgnored(review))
+      .then(this._ignoreReportedUser(review));
   }
 }
 
