@@ -67,7 +67,7 @@
       <div ng-repeat="con in $ctrl.aggregate.cons" ng-bind="con"></div>
     </div>
   </div>
-  <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews">
+  <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews | filter : { isIgnored: '!true' }">
     <div ng-class="{'community-review--clickable' : !review.isHighlighted || review.isReviewer}" ng-click="$ctrl.clickReview(review.reviewId)">
       <div class="community-review--who">
         <star-rating rating="review.rating" read-only></star-rating>

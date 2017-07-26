@@ -122,6 +122,10 @@ class ReviewDataCache {
     item.isLocallyCached = isCached;
   }
 
+  markReviewAsIgnored(writtenReview) {
+    writtenReview.isIgnored = true;
+  }
+
   markItemAsReviewedAndSubmitted(item,
                                  userReview) {
     this._markItemAsLocallyCached(item, false);
