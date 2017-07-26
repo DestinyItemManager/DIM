@@ -33,7 +33,7 @@ class ReviewReporter {
   }
 
   _generateReviewReport(reviewId) {
-    const reporter = this._getReporter;
+    const reporter = this._getReporter();
 
     return {
       reviewId: reviewId,
