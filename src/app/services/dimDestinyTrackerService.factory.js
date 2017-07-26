@@ -15,9 +15,10 @@ function DestinyTrackerService($q,
                                dimPlatformService,
                                dimSettingsService,
                                $i18next,
-                               loadingTracker) {
+                               loadingTracker,
+                               SyncService) {
   const _reviewDataCache = new ReviewDataCache();
-  const _userFilter = new UserFilter();
+  const _userFilter = new UserFilter(SyncService);
   const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
