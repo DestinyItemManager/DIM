@@ -92,7 +92,9 @@
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
-    "YourReview": "Your Review"
+    "YourReview": "Your Review",
+    "VerifyReport": "Are you sure you want to flag this review?",
+    "ReallyReport": "Report"
   },
   "FarmingMode": {
     "Configuration": "Configuration",

@@ -78,5 +78,16 @@
       </div>
       <div class="community-review--review" ng-bind="review.review"></div>
     </div>
+    <div class="community-revew--report-container" ng-show="$ctrl.toggledFlags.indexOf(review.reviewId) != -1">
+      <div class="community-review--report"
+           ng-i18next="DtrReview.VerifyReport">
+      </div>
+      <div class="community-review--report-buttons">
+        <button class="community-review--report-yes"
+                ng-i18next="DtrReview.ReallyReport"></button>
+        <button class="community-review--report-cancel"
+                ng-i18next="DtrReview.Cancel"></button>
+      </div>
+    </div>
   </div>
 </div>

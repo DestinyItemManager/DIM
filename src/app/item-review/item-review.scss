@@ -66,4 +66,28 @@
   &--review {
     word-wrap: break-word;
   }
+
+  &--report-container {
+    display: flex;
+  }
+
+  &--report {
+    flex-direction: row;
+    display: inline-flex;
+    color: red;
+  }
+
+  &--report-buttons {
+    flex-direction: row;
+  }
+
+  &--report-yes {
+    display: inline-flex;
+    align-self: flex-start;
+  }
+
+  &--report-cancel {
+    display: inline-flex;
+    margin-left: auto;
+  }
 }

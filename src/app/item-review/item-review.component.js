@@ -11,6 +11,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
   vm.expandReview = vm.item.isLocallyCached;
+  vm.toggledFlags = [];
 
   vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
@@ -38,7 +39,13 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.flagReview = function(review) {
-    dimDestinyTrackerService.reportReview(review);
+    const toggledReviewIndex = vm.toggledFlags.indexOf(review.reviewId);
+
+    if (toggledReviewIndex === -1) {
+      vm.toggledFlags.push(review.reviewId);
+    } else {
+      vm.toggledFlags.splice(toggledReviewIndex);
+    }
   };
 
   vm.editReview = function() {
@@ -64,6 +71,12 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
     dimDestinyTrackerService.updateCachedUserRankings(item,
                                                       userReview);
+  };
+
+  vm.reportReview = function(reviewId) {
+    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+
+    dimDestinyTrackerService.reportReview(review);
   };
 
   vm.toUserReview = function(item) {
