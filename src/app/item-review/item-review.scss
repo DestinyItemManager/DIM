@@ -75,19 +75,14 @@
     flex-direction: row;
     display: inline-flex;
     color: red;
+    font-size: larger;
   }
 
   &--report-buttons {
-    flex-direction: row;
-  }
-
-  &--report-yes {
-    display: inline-flex;
-    align-self: flex-start;
+    display: flex;
   }
 
   &--report-cancel {
-    display: inline-flex;
     margin-left: auto;
   }
 }

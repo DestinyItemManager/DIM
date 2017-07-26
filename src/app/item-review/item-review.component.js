@@ -34,15 +34,15 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
       vm.editReview();
     }
     else if (!review.isHighlighted) {
-      vm.flagReview(review);
+      vm.flagReview(reviewId);
     }
   };
 
-  vm.flagReview = function(review) {
-    const toggledReviewIndex = vm.toggledFlags.indexOf(review.reviewId);
+  vm.flagReview = function(reviewId) {
+    const toggledReviewIndex = vm.toggledFlags.indexOf(reviewId);
 
     if (toggledReviewIndex === -1) {
-      vm.toggledFlags.push(review.reviewId);
+      vm.toggledFlags.push(reviewId);
     } else {
       vm.toggledFlags.splice(toggledReviewIndex);
     }
