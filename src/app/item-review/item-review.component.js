@@ -34,18 +34,22 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
       vm.editReview();
     }
     else if (!review.isHighlighted) {
-      vm.flagReview(reviewId);
+      vm.openFlagContext(reviewId);
     }
   };
 
-  vm.flagReview = function(reviewId) {
+  vm.openFlagContext = function(reviewId) {
     const toggledReviewIndex = vm.toggledFlags.indexOf(reviewId);
 
     if (toggledReviewIndex === -1) {
       vm.toggledFlags.push(reviewId);
-    } else {
-      vm.toggledFlags.splice(toggledReviewIndex);
     }
+  };
+
+  vm.closeFlagContext = function(reviewId) {
+    const toggledReviewIndex = vm.toggledFlags.indexOf(reviewId);
+
+    vm.toggledFlags.splice(toggledReviewIndex);
   };
 
   vm.editReview = function() {
