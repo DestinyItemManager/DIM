@@ -21,7 +21,7 @@ class ReviewReporter {
    * @memberof ReviewReporter
    */
   reportReview(review) {
-    if (review.isHighlighted) {
+    if (review.isHighlighted || review.isReviewer) {
       return;
     }
 
