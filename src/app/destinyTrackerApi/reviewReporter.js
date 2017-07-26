@@ -37,6 +37,7 @@ class ReviewReporter {
 
     return {
       reviewId: reviewId,
+      report: "",
       reporter: reporter
     };
   }
