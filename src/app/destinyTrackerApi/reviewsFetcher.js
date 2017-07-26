@@ -49,7 +49,7 @@ class ReviewsFetcher {
     if (item.writtenReviews) {
       item.writtenReviews.sort(this._sortReviews);
 
-      item.writtenReviews.forEach(function(writtenReview) {
+      item.writtenReviews.forEach((writtenReview) => {
         const membershipId = writtenReview.reviewer.membershipId;
 
         writtenReview.isIgnored = this._userFilter.isUserIgnored(membershipId);
