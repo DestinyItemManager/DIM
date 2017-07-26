@@ -26,7 +26,8 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
     return {
       Loadouts: _.size(data['loadouts-v3.0']),
       TagNotes: taggedItems,
-      Settings: _.size(data['settings-v1.0'])
+      Settings: _.size(data['settings-v1.0']),
+      IgnoredUsers: _.size(data['ignoredUsers'])
     };
   }
 
