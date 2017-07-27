@@ -21,7 +21,7 @@ class UserFilter {
       .then((ignoredUsers) => {
         ignoredUsers.push(reportedMembershipId);
 
-        this._syncService.set({ ignoredUsers });
+        this._syncService.set({ ignoredUsers: ignoredUsers });
       });
   }
 
