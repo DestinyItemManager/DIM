@@ -55,7 +55,7 @@ class UserFilter {
    * @memberof UserFilter
    */
   clearIgnoredUsers() {
-    this.syncService.set({ ignoredUsers: [] });
+    this._syncService.set({ ignoredUsers: [] });
   }
 }
 

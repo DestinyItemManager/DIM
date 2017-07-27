@@ -14,7 +14,10 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   vm.syncService = SyncService;
   vm.adapterStats = {};
   vm.googleApiBlocked = !window.gapi;
-  vm.canClearIgnoredUsers = ($DIM_FLAVOR === 'DEV');
+  vm.canClearIgnoredUsers = ($DIM_FLAVOR === 'dev');
+
+  console.log($DIM_FLAVOR);
+  console.log(vm.canClearIgnoredUsers);
 
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   vm.supportsExport = !iOS;

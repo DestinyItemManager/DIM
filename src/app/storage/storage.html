@@ -7,6 +7,13 @@
     <span ng-i18next="Storage.ForceSync"></span>
   </button>
 
+  <button class="dim-button"
+          ng-click="$ctrl.clearIgnoredUsers()"
+          ng-show="$ctrl.canClearIgnoredUsers">
+    <i class="fa fa-eraser"></i>
+    <span ng-i18next="Storage.ClearIgnoredUsers"></span>
+  </button>
+
   <div ng-repeat="adapter in $ctrl.syncService.adapters | orderBy:'-' track by adapter.name"
        ng-switch="adapter.name"
        class="storage-adapter">
@@ -58,7 +65,6 @@
       <i class="fa fa-upload"></i>
       <span ng-i18next="Storage.ImportFromExtensionButton"></span>
     </button>
-    <button ng-click="$ctrl.clearIgnoredUsers()" ng-show="$ctrl.canClearIgnoredUsers" ng-i18next="Storage.ClearIgnoredUsers"></button>
   </div>
 
   <div class="storage-adapter" ng-if="$ctrl.supportsExport">
