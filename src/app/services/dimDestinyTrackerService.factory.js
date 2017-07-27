@@ -59,6 +59,9 @@ function DestinyTrackerService($q,
       if (dimSettingsService.allowIdPostToDtr) {
         _reviewReporter.reportReview(review);
       }
+    },
+    clearIgnoredUsers: function() {
+      _userFilter.clearIgnoredUsers();
     }
   };
 }

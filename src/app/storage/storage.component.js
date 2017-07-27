@@ -5,7 +5,7 @@ import { sum } from '../util';
 import template from './storage.html';
 import './storage.scss';
 
-function StorageController($scope, dimSettingsService, SyncService, GoogleDriveStorage, $timeout, $window, $q, $i18next) {
+function StorageController($scope, dimSettingsService, SyncService, GoogleDriveStorage, dimDestinyTrackerService, $timeout, $window, $q, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -14,6 +14,7 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   vm.syncService = SyncService;
   vm.adapterStats = {};
   vm.googleApiBlocked = !window.gapi;
+  vm.canClearIgnoredUsers = ($DIM_FLAVOR === 'DEV');
 
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   vm.supportsExport = !iOS;
@@ -153,6 +154,14 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
       vm.browserMayClearData = !persistent;
     });
   }
+
+  vm.clearIgnoredUsers = function() {
+    if (!vm.canClearIgnoredUsers) {
+      return;
+    }
+
+    dimDestinyTrackerService.clearIgnoredUsers();
+  };
 }
 
 export const StorageComponent = {

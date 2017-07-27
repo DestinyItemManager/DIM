@@ -58,6 +58,7 @@
       <i class="fa fa-upload"></i>
       <span ng-i18next="Storage.ImportFromExtensionButton"></span>
     </button>
+    <button ng-click="$ctrl.clearIgnoredUsers()" ng-show="$ctrl.canClearIgnoredUsers" ng-i18next="Storage.ClearIgnoredUsers"></button>
   </div>
 
   <div class="storage-adapter" ng-if="$ctrl.supportsExport">

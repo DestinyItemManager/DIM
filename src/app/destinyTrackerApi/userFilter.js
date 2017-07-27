@@ -16,6 +16,13 @@ class UserFilter {
       });
   }
 
+  /**
+   * Note a problem user's membership ID so that we can ignore their reviews in the future.
+   * Persists the list of ignored users across sessions.
+   * 
+   * @param {any} reportedMembershipId 
+   * @memberof UserFilter
+   */
   ignoreUser(reportedMembershipId) {
     this._getIgnoredUsersPromise()
       .then((ignoredUsers) => {
@@ -25,6 +32,13 @@ class UserFilter {
       });
   }
 
+  /**
+   * Conditionally set the isIgnored flag on a review.
+   * Sets it if the review was written by someone that's already on the ignore list.
+   * 
+   * @param {any} review 
+   * @memberof UserFilter
+   */
   conditionallyIgnoreReview(review) {
     const membershipId = review.reviewer.membershipId;
 
@@ -32,6 +46,16 @@ class UserFilter {
       .then((ignoredUsers) => {
         review.isIgnored = (ignoredUsers.indexOf(membershipId) !== -1);
       });
+  }
+
+  /**
+   * Resets the list of ignored users.
+   * This is in for development, but maybe someone else will eventually want?
+   * 
+   * @memberof UserFilter
+   */
+  clearIgnoredUsers() {
+    this.syncService.set({ ignoredUsers: [] });
   }
 }
 

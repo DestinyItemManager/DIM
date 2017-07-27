@@ -531,7 +531,8 @@
     "StatLabel": "This currently contains:",
     "TagNotes": "{{value}} items with tags or notes",
     "Title": "DIM Storage",
-    "IgnoredUsers": "{{value}} ignored users"
+    "IgnoredUsers": "{{value}} ignored users",
+    "ClearIgnoredUsers": "Clear Ignored Users"
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",
