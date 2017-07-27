@@ -8,37 +8,36 @@
     <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
     <link href="/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="styles/main.css">
   </head>
   <body>
     <header>
       <nav class="row">
-        <div class="logo col-6"><img class="logo link release" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v4.3.0 (release)" src="images/DIM-menu.svg" alt="DIM" href="#"></div>
-        <ul class="menu col-6">
+        <div class="col-2 logo"><img class="logo link release" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v4.3.0 (release)" src="images/DIM-menu.svg" alt="DIM" href="#"></div>
+        <ul class="col-10 menu">
           <li><a href="#">About</a></li>
           <li><a href="#">Backers</a></li>
           <li><a href="https://teespring.com/stores/dim">Shop</a></li>
-          <li><a href="#">Support</a></li>
+          <li><a href="https://github.com/DestinyItemManager/DIM/issues">Support</a></li>
           <li class="vertical-break">|</li>
           <li><a href="https://app.destinyitemmanager.com">Launch App</a></li>
         </ul>
       </nav>
-      <button class="mobile-menu">Mobile Menu</button>
+      <button class="mobile-menu">Mobile Menu<span></span><span></span><span> </span></button>
       <nav class="sliding-panel-content">
         <ul class="menu">
+          <li class="mobile-heading"><img class="logo link release" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v4.3.0 (release)" src="images/DIM-menu.svg" alt="DIM" href="#"></li>
           <li><a href="#">About</a></li>
           <li><a href="#">Backers</a></li>
           <li><a href="https://teespring.com/stores/dim">Shop</a></li>
-          <li><a href="#">Support</a></li>
-          <li class="vertical-break">|</li>
+          <li><a href="https://github.com/DestinyItemManager/DIM/issues">Support</a></li>
           <li><a href="https://app.destinyitemmanager.com">Launch App</a></li>
         </ul>
       </nav>
     </header>
     <div class="hero">
       <div class="row">
-        <h1>Manage weapons and gear like a pro.</h1><a class="launch" href="https://app.destinyitemmanager.com">Launch app</a><a class="beta"> <em>try the beta</em></a><img class="browser" src="images/Browser.png" width="654px" alt="Browser running Destiny Item Manager">
+        <h1>Manage weapons and gear like a pro.</h1><a class="launch" href="https://app.destinyitemmanager.com">Launch app</a><a class="beta" href="https://beta.destinyitemmanager.com"><em>try the beta</em></a><img class="browser" src="images/Browser.png" width="654px" alt="Browser running Destiny Item Manager">
       </div>
     </div>
     <section class="whats-dim">
@@ -47,11 +46,11 @@
           <div class="text-wrap">
             <h2>What's DIM?</h2>
             <h3>Weapons</h3>
-            <p>This is going to be some detailed text about how awesome it is to use Destiny Item Manager.</p>
+            <p>Forgot to grab your favorite hand cannon? Just click and drag it to your active charcter.</p>
             <h3>Gear</h3>
-            <p>This is going to be some detailed text about how awesome it is to use Destiny Item Manager.</p>
+            <p>Need those Bones of Eao for the jumping puzzle? Fire up DIM and grab them.</p>
             <h3>Loadouts</h3>
-            <p>This is going to be some detailed text about how awesome it is to use Destiny Item Manager.</p>
+            <p>Create the perfect loadout for Raids, Strikes, Trails, and any other layout that woud be helpful.</p>
           </div>
         </div>
         <div class="col-5"><img class="image-shadow" alt="Gear Square" src="images/GearSquare@2x.jpg" width="379px"></div>
@@ -64,11 +63,11 @@
           <div class="text-wrap">
             <h2>It really is that easy.</h2>
             <h3>Ratings</h3>
-            <p>This is going to be some detailed text about how awesome it is to use Destiny Item Manager.</p>
+            <p>Rate your favorite guns, and armor. Help others know which guns are the ones to use.</p>
             <h3>Reviews</h3>
-            <p>This is going to be some detailed text about how awesome it is to use Destiny Item Manager.</p>
+            <p>Let everyone else know why certain guns are so good or why they just don't make the cut.</p>
             <h3>Tagging</h3>
-            <p>This is going to be some detailed text about how awesome it is to use Destiny Item Manager.</p>
+            <p>Organize your stuff by what to keep, your favorite, to infuse and to get rid of.</p>
           </div>
         </div>
       </div>
@@ -78,7 +77,7 @@
         <div class="col-6">
           <h2>One account. Access everywhere.</h2>
           <div class="devices"><span class="device-text">Mobile</span><span class="spacer text-dark"> </span><span class="device-text">Laptop</span><span class="spacer text-dark"> </span><span class="device-text">Tablet</span></div>
-          <div class="systems"><span class="xbox device-text">Xbox</span><span class="spacer text-dark"> </span><span class="playstation device-text">Playstation</span></div><a class="launch" href="https://app.destinyitemmanager.com">Launch app</a><a class="beta"> <em>try the beta</em></a>
+          <div class="systems"><span class="xbox device-text">Xbox</span><span class="spacer text-dark"> </span><span class="playstation device-text">Playstation</span></div><a class="launch" href="https://app.destinyitemmanager.com">Launch app</a><a class="beta" href="https://beta.destinyitemmanager.com"> <em>try the beta</em></a>
         </div>
         <div class="col-6"><img class="vertical-full-height" alt="Gear Square" src="images/devices@2x.png" width="538"></div>
       </div>
@@ -109,10 +108,10 @@
         <div class="col-2 nav">
           <ul>
             <li class="link-headings">Useful Links</li>
-            <li><a class="link-text">Support</a></li>
-            <li><a class="link-text">Beta</a></li>
-            <li><a class="link-text">Launch App</a></li>
-            <li><a class="link-text">Contact</a></li>
+            <li><a class="link-text" href="https://github.com/DestinyItemManager/DIM/issues">Support</a></li>
+            <li><a class="link-text" href="https://beta.destinyitemmanager.com">Beta</a></li>
+            <li><a class="link-text" href="https://app.destinyitemmanager.com">Launch App</a></li>
+            <li><a class="link-text">Contact (Need link)</a></li>
           </ul>
         </div>
         <div class="col-2 nav">
@@ -133,9 +132,9 @@
             <li><a class="link-text">Contact</a></li>
           </ul>
         </div>
-        <div class="col-4 social"><a class="icon-button" href="#"><img src="images/icons_dTwitter.png" alt="Twitter"></a><a class="icon-button" href="#"><img src="images/icons_dReddit.png" alt="Reddit"></a><a class="icon-button" href="#"><img src="images/icons_dGithub.png" alt="GitHub"></a><a class="icon-button" href="#"><img src="images/icons_dDiscord.png" alt="Discord"></a></div>
+        <div class="col-4 social"><a class="icon-button" href="https://twitter.com/ThisIsDIM"><img src="images/icons_dTwitter.png" alt="Twitter"></a><a class="icon-button" href="https://www.reddit.com/r/DestinyItemManager/"><img src="images/icons_dReddit.png" alt="Reddit"></a><a class="icon-button" href="https://github.com/DestinyItemManager/DIM/"><img src="images/icons_dGithub.png" alt="GitHub"></a><a class="icon-button" href="https://discordapp.com/invite/UK2GWC7"><img src="images/icons_dDiscord.png" alt="Discord"></a></div>
       </div>
-      <div class="row">
+      <div class="row"> 
         <div class="col-6">
           <ul class="footer-bottom-nav">
             <li><a class="footer-text" href="#">Legal</a></li>
