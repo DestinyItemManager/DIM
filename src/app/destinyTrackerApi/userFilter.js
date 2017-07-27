@@ -1,6 +1,6 @@
 /**
  * Class to support registering (and remembering) displeasure with other reviewers.
- * 
+ *
  * @class UserFilter
  */
 class UserFilter {
@@ -19,8 +19,8 @@ class UserFilter {
   /**
    * Note a problem user's membership ID so that we can ignore their reviews in the future.
    * Persists the list of ignored users across sessions.
-   * 
-   * @param {any} reportedMembershipId 
+   *
+   * @param {any} reportedMembershipId
    * @memberof UserFilter
    */
   ignoreUser(reportedMembershipId) {
@@ -35,8 +35,8 @@ class UserFilter {
   /**
    * Conditionally set the isIgnored flag on a review.
    * Sets it if the review was written by someone that's already on the ignore list.
-   * 
-   * @param {any} review 
+   *
+   * @param {any} review
    * @memberof UserFilter
    */
   conditionallyIgnoreReview(review) {
@@ -51,7 +51,7 @@ class UserFilter {
   /**
    * Resets the list of ignored users.
    * This is in for development, but maybe someone else will eventually want?
-   * 
+   *
    * @memberof UserFilter
    */
   clearIgnoredUsers() {

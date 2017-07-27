@@ -64,8 +64,8 @@ class ReviewReporter {
   /**
    * Report a written review.
    * Also quietly adds the associated user to a block list.
-   * 
-   * @param {review} review 
+   *
+   * @param {review} review
    * @memberof ReviewReporter
    */
   reportReview(review) {
