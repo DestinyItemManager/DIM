@@ -57,6 +57,7 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
             .catch((resp) => {
               // TODO: error handling
               // this.revokeDrive();
+              console.error('Error saving to Google Drive', resp);
               throw new Error(`error saving. ${resp.error}`);
             });
         });

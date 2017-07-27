@@ -21,9 +21,9 @@
     "Title": "Un messaggio da Bungie:"
   },
   "BungieService": {
-    "DevVersion": "Stai usando una versione di DIM in via di sviluppo? Devi registrare la tua estensione per chrome con Bungie.net.",
+    "DevVersion": "Stai usando una versione di DIM in via di sviluppo? Devi registrare la tua estensione per Chrome con Bungie.net.",
     "Difficulties": "Al momento le API di Bungie hanno dei problemi.",
-    "ItemUniqueness": "Unicità dell elemento",
+    "ItemUniqueness": "Unicità dell'elemento",
     "ItemUniquenessExplanation": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già uno e solo uno è concesso.",
     "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
     "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già uno e solo uno è concesso.",
@@ -46,8 +46,8 @@
     "Close": "Chiudi",
     "Compare": "Confronta",
     "Error": {
-      "Archetype": "Impossibile confrontare questo oggetto, poichè non è un {{type}}.",
-      "Class": "Impossibile confrontare questo oggetto, poichè non è per {{class}}."
+      "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
+      "Class": "Impossibile confrontare questo oggetto, poiché non è per {{class}}."
     },
     "ItemCount": "Tu hai {{num}} di questi.",
     "Splits": "Confronta suddivisioni simili ({{quantity}})"
@@ -63,6 +63,10 @@
   },
   "Debug": {
     "Dump": "Svuota informazioni nella console"
+  },
+  "Destiny2": {
+    "Banner": "DIM supporterà Destiny 2",
+    "ComingSoon": "Supporteremo i tuoi personaggi in Destiny 2 con DIM al massimo delle nostre possibilità poco dopo l'uscita del gioco su console. Dacci qualche settimana per capire come funziona il gioco (e per giocarlo!)."
   },
   "DidYouKnow": {
     "Collapse": "Hai appena chiuso una sezione in DIM! Questo può essere utile per nascondere parti di DIM che non utilizzi solitamente.",
@@ -267,10 +271,10 @@
       "Guardian_male": "Il {{store}} ha troppe '{{itemtype}}'.",
       "Vault": "Il {{store}} ha troppe '{{itemtype}}'."
     },
-    "Classified": "Questo oggetto è classificato e non può essere trasferito attualemente.",
+    "Classified": "Questo oggetto è classificato e non può essere trasferito attualmente.",
     "Classified2": "Oggetto classificato. Bungie non fornisce informazioni riguardo questo oggetto. Questo oggetto non è ancora trasferibile.",
     "Deequip": "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
-    "ExoticError": "'{{itemname}}' non può essere equipaggiato, poichè l'esotico nello slot {{slot}} non può essere rimosso. ({{error}})",
+    "ExoticError": "'{{itemname}}' non può essere equipaggiato, poiché l'esotico nello slot {{slot}} non può essere rimosso. ({{error}})",
     "NotEnoughRoom": "Non c'è nulla che possiamo spostare dal {{store}} per fare spazio per {{itemname}}",
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
@@ -310,7 +314,7 @@
     "HideConfigs": "Nascondi configurazioni",
     "HideGear": "Nascondi equipaggiamento {{class}}",
     "IncludeRare": "Includi oggetti rari (blu)",
-    "LB": "Costruttore di Loadout",
+    "LB": "Costruttore di loadout",
     "LightMode": {
       "HelpCurrent": "Calcola i loadout con i livelli di difesa correnti.",
       "HelpScaled": "Calcola i loadout, supponendo che tutti gli oggetti abbiano 350 di difesa.",
@@ -339,7 +343,7 @@
   "Loadouts": {
     "Any": "Qualsiasi classe",
     "Applied": "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
-    "AppliedAuto": "Costruttore Automatico di Loadout",
+    "AppliedAuto": "Costruttore Automatico di loadout",
     "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
     "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
     "Applied_female": "Il tuo loadout di un oggetto è stato trasferito alla tua {{store}}.",
@@ -352,19 +356,19 @@
     "Cancel": "Cancella",
     "ConfirmDelete": "Sei sicuro di voler eliminare '{{name}}'?",
     "CouldNotEquip": "Impossibile equipaggiare {{itemname}}",
-    "Create": "Creare Loadout",
-    "Delete": "Cancellare Loadout",
+    "Create": "Creare loadout",
+    "Delete": "Cancellare loadout",
     "DeleteErrorDescription": "Impossibile cancellare il loadout {{loadoutName}}: {{error}}.",
     "DeleteErrorTitle": "Si è presentato un errore cancellando un loadout",
     "DoesNotExist": "{{itemname}} non esiste sul tuo account.",
-    "Edit": "Modifica Loadout",
+    "Edit": "Modifica loadout",
     "FilteredItems": "Oggetti Filtrati",
     "FromEquipped": "Equipaggiato",
     "GatherEngrams": "Raccogliere Engrammi",
     "GatherEngramsExceptExotics": "Esotici",
     "ItemLeveling": "Elementi da Livellare",
     "ItemsWithIcon": "Gli oggetti con questa icona verranno equipaggiati. Clicca su un oggetto per scegliere se equipaggiarli o meno.",
-    "LoadoutName": "Nome Loadout...",
+    "LoadoutName": "Nome loadout...",
     "Loadouts": "Loadouts",
     "MakeRoom": "Crea spazio per l'Amministratore",
     "MakeRoomDone": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dal {{store}}.",
@@ -398,7 +402,7 @@
     "Load": "Carico le informazioni su Destiny salvate",
     "LoadCharInv": "Carico i personaggi e l'inventario di Destiny",
     "Outdated": "Informazioni su Destiny datate",
-    "OutdatedExplanation": "Bungie ha aggiornato il suo database di informazioni su Destiny. Ricarica DIM per raccogliere le nuove informazioni. Nota che alcune cose su DIM potrebbero non funzionare per alcune ore, dopo che Bungie ha aggiornato Destiny, poichè i nuovi dati vengono diffusi dai loro sistemi.",
+    "OutdatedExplanation": "Bungie ha aggiornato il suo database di informazioni su Destiny. Ricarica DIM per raccogliere le nuove informazioni. Nota che alcune cose su DIM potrebbero non funzionare per alcune ore, dopo che Bungie ha aggiornato Destiny, poiché i nuovi dati vengono diffusi dai loro sistemi.",
     "Save": "Salvo le ultime informazioni su Destiny",
     "Unzip": "Decomprimo le ultime informazioni su Destiny"
   },
@@ -453,7 +457,7 @@
     "CharacterOrderReversed": "Personaggio più recente (ordine inverso)",
     "ColorA11y": "Impostazioni per daltonici",
     "ColumnSize": "{{num}} oggetti",
-    "ColumnSizeAuto": "Auto",
+    "ColumnSizeAuto": "Automatico",
     "DIMPopups": "Popup informativi di DIM",
     "DIMPopupsReset": "Ripristina i consigli precedentemente nascosti",
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature",
@@ -532,7 +536,7 @@
     "Move": "Sposta"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "Per autorizzare nuovamente google drive, devi riavviare il browser.",
+    "GoogleDriveReAuth": "Per autorizzare nuovamente Google drive, devi riavviare il browser.",
     "OneItemTooLarge": "Il tuo file di salvataggio contiene un elemento troppo grande. Molto probabilmente un loadout possiede troppi oggetti.",
     "SaveTooLarge": "Il tuo file di salvataggio è troppo grande. Rimuovi i loadout salvati."
   },
@@ -565,7 +569,7 @@
     "About": {
       "BungieCopyright": "Tutte le immagini e i contenuti sono proprietà di Bungie. Contattaci se ci dovessero essere problemi.",
       "ContactUs": "Contattaci",
-      "FAQ": "FAQ",
+      "FAQ": "Domande frequenti",
       "FAQAccess": "Come fa DIM ad avere accesso ai miei dati di Destiny?",
       "FAQAccessAnswer": "Qualsiasi estensione di Chrome può richiedere i dati, che un sito web salva sul tuo computer. Quando effettui l'accesso su Bungie.net, ti viene dato un gettone (un cookie), che viene generato unicamente per il tuo account. Si usa questo gettone per comunicare con Bungie in modo sicuro. Questo gettone è più sicuro rispetto al mandare il tuo nome utente e la tua password allegati a ogni richiesta ai server di Bungie. DIM usa questo gettone per comunicare con Bungie a tuo nome.",
       "FAQDupeGally": "Hey, DIM ha duplicato il mio Gjallarhorn!",

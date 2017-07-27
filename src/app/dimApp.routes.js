@@ -1,8 +1,8 @@
 function routes($stateProvider, $urlServiceProvider) {
   'ngInject';
 
-  $urlServiceProvider.rules.initial('/d1');
-  $urlServiceProvider.rules.otherwise('/d1');
+  $urlServiceProvider.rules.initial({ state: 'default-account' });
+  $urlServiceProvider.rules.otherwise({ state: 'default-account' });
 }
 
 export default routes;

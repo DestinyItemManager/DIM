@@ -25,7 +25,6 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
 
   const vm = this;
   let dialogResult = null;
-  let detailItemElement = null;
 
   angular.extend(vm, {
     getFirstPerk: function(lockedPerks, type) {
@@ -39,8 +38,6 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
       if (dialogResult) {
         dialogResult.close();
       }
-
-      detailItemElement = angular.element(e.currentTarget);
 
       dialogResult = ngDialog.open({
         template: dialogTemplate,

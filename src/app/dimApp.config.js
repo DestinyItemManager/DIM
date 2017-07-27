@@ -1,10 +1,10 @@
-import en from '../i18n/dim_en.json';
-import it from '../i18n/dim_it.json';
-import de from '../i18n/dim_de.json';
-import fr from '../i18n/dim_fr.json';
-import es from '../i18n/dim_es.json';
-import ja from '../i18n/dim_ja.json';
-import ptBR from '../i18n/dim_pt_BR.json';
+import en from '../locale/dim.json';
+import it from '../locale/it/dim.json';
+import de from '../locale/de/dim.json';
+import fr from '../locale/fr/dim.json';
+import es from '../locale/es-ES/dim.json';
+import ja from '../locale/ja/dim.json';
+import ptBR from '../locale/pt-BR/dim.json';
 
 import { init as i18init } from 'i18next';
 

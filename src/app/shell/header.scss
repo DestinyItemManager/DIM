@@ -1,0 +1,127 @@
+@import '../../scss/variables.scss';
+
+.logo {
+  height: 24px;
+  color: #999;
+  font-size: 16px !important;
+  font-weight: bold;
+  color: $orange !important;
+  font-weight: 400;
+  &.dev {
+    filter: grayscale(100%);
+  }
+  &.beta {
+    filter: hue-rotate(153deg) saturate(60%);
+  }
+}
+
+#header {
+  padding: 0 2px;
+  position: fixed;
+  z-index: 15;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 42px;
+  background-color: #222;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  #user {
+    color: white;
+  }
+  .fa {
+    font-size: 20px;
+    color: #fafafa;
+    &:hover {
+      color: $orange;
+      cursor: pointer;
+    }
+  }
+
+  span, a, img {
+    margin: 0 6px;
+    text-decoration: none;
+    font-size: 13px;
+    -webkit-touch-callout: none;
+    user-select: none;
+    outline: none;
+    white-space: nowrap;
+  }
+
+  .header-right {
+    cursor: default;
+    display: flex;
+    margin-left: auto;
+    margin-right: 0;
+    align-items: center;
+    flex-direction: row;
+  }
+  .header-separator {
+      display: inline;
+      width: 0;
+      height: 16px;
+      border-right: 1px solid #6f7070;
+  }
+  .dropdown {
+    position: absolute;
+    display: block;
+    overflow: auto;
+    top: 42px;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 150px;
+    background-color: #222;
+    padding-bottom: 4px;
+
+    hr {
+      margin: 2px 0;
+      border: none;
+      border-top: 1px solid #333;
+    }
+
+    .link {
+      display: block;
+      padding: 4px 2em;
+      font-size: 12px;
+
+      @include phone-portrait {
+        font-size: 14px;
+        padding: 6px 2em;
+      }
+
+      &:hover, &:focus {
+        background-color: #151515;
+        transition: none;
+      }
+    }
+  }
+
+  .first-to-go {
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
+
+  .second-to-go {
+    @media (max-width: 800px) {
+      display: none;
+    }
+  }
+
+  .menu {
+    display: none;
+    margin-right: none;
+
+    @media (max-width: 1100px) {
+      display: block;
+    }
+  }
+}
+
+.pull-right {
+  float: right;
+  text-align: right;
+}

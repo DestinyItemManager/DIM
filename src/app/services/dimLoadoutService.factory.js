@@ -10,6 +10,7 @@ function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreServic
   let _loadouts = [];
   const _previousLoadouts = {}; // by character ID
 
+  // TODO: load this on demand!
   $rootScope.$on('dim-stores-updated', () => {
     getLoadouts(true);
   });

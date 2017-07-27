@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/DestinyItemManager/DIM.svg?branch=master)](https://travis-ci.org/DestinyItemManager/DIM)
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/destiny-item-manager/localized.svg)](https://crowdin.com/project/destiny-item-manager)
 [![OpenCollective](https://opencollective.com/dim/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/dim/sponsors/badge.svg)](#sponsors)
 
@@ -116,6 +117,6 @@ Get your own API key:
 * Paste your extension url into the `Origin Header` section on bungie.net
 * Copy your API-key from bungie.net into DIM developer settings panel when it is loaded.
 
-Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/master/CONTRIBUTING.md) for more tips.
+Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/CONTRIBUTING.md) for more tips.
 
 Code released under the [MIT license](http://choosealicense.com/licenses/mit/).

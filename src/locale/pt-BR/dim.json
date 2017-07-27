@@ -4,7 +4,7 @@
     "Hard": "Difícil",
     "Nightfall": "Assalto do Anoitecer",
     "Normal": "Normal",
-    "WeeklyHeroic": "Assalto heroico semanal"
+    "WeeklyHeroic": "Assalto Heroico Semanal"
   },
   "Bucket": {
     "Armor": "Armaduras",
@@ -25,6 +25,8 @@
     "Difficulties": "A API da Bungie está atualmente passando por dificuldades.",
     "ItemUniqueness": "Unicidade de itens",
     "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
+    "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
+    "ItemUniquenessExplanation_male": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
     "NetworkError": "Erro de rede - {{status}} {{statusText}}",
     "NoAccount": "Nenhuma conta de Destiny foi encontrada no {{platform}}. Você selecionou a plataforma correta?",
@@ -62,6 +64,10 @@
   "Debug": {
     "Dump": "Enviar informação ao console"
   },
+  "Destiny2": {
+    "Banner": "DIM será compatível com Destiny 2",
+    "ComingSoon": "Daremos suporte aos seus personagens em Destiny 2 dentro das nossas capacidades assim que o jogo sair nos consoles. Nos deem algumas semanas pra aprendermos sobre o jogo (e jogá-lo também!)."
+  },
   "DidYouKnow": {
     "Collapse": "Você ocultou uma seção no DIM! Isso pode ser útil para esconder partes do DIM que você normalmente não usa.",
     "DidYouKnow": "Você sabia?",
@@ -91,9 +97,13 @@
   "FarmingMode": {
     "Configuration": "Configuração",
     "Desc": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
+    "Desc_female": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
+    "Desc_male": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "FarmingMode": "Modo Farm (mover itens)",
     "MakeRoom": {
       "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+      "Desc_female": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+      "Desc_male": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
       "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
     },
@@ -106,7 +116,7 @@
     "Activities": {
       "AF": "Forja do Arconte",
       "AoT": "Era do Triunfo",
-      "CD": "Crimson Doubles",
+      "CD": "Duplas Carmesins",
       "CE": "O Fim de Crota",
       "CoE": "Desafio dos Anciões",
       "Dawning": "A Alvorada",
@@ -124,7 +134,7 @@
     "Ascended": "Mostra itens que tenham um nódulo de ascensão e se eles foram ascendidos ou não.",
     "Categories": "Categoria de items de Alto Nível.",
     "Class": "Mostrar items baseado em sua afinidade por classe.",
-    "ClickFilters": "Clique em filtros em baixo para aplicar, ou para escrever na caixa de pesquisa.",
+    "ClickFilters": "Clique nos filtros abaixo para aplicar, ou para escrever na caixa de pesquisa.",
     "Combine": "Os filtros são combinados usando a lógica \"e\", por exemplo '{{example}}' vai retornar todos os itens de arco com mais de 300 de luz. Filtros podem ser negados usando '{{not}}', por exemplo '{{notexample}}' vai trazer todos os itens que não forem engramas.",
     "ContributeLight": "Items que contribuem para o seu nível de luz.",
     "DamageType": "Mostrar items baseado no seu tipo de dano.",
@@ -134,15 +144,15 @@
     "EnterName": "Digite um nome de item:",
     "EnterNote": "Digite a anotação:",
     "Equipment": "Items que podem ser equipados.",
-    "Equipped": "Items que de momento estão equipados em outra personagem.",
+    "Equipped": "Items que no momento estão equipados em outra personagem.",
     "Filter": "Filtro",
     "Glimmer": {
-      "Any": "Qualquer tipo de item de glimmer.",
-      "Boost": "Item que aumenta a quantidade de glimmer ganho por 10 minutos.",
-      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de glimmer:",
-      "Item": "Items que podem ser trocados no Rahool por 200 glimmer."
+      "Any": "Qualquer tipo de item de lúmem.",
+      "Boost": "Item que aumenta a quantidade de lúmem ganho por 10 minutos.",
+      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de lúmem:",
+      "Item": "Items que podem ser trocados no Rahool por 200 lúmem."
     },
-    "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de layout.",
+    "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de set pré-configurado.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "Leveling": {
       "Complete": "{{term}} - mostra itens que estão totalmente completos - todos os aprimoramentos destravados.",
@@ -257,6 +267,8 @@
   "ItemService": {
     "BucketFull": {
       "Guardian": "Há muitos '{{itemtype}}' em seu {{store}}.",
+      "Guardian_female": "Há muitos '{{itemtype}}' em seu {{store}}.",
+      "Guardian_male": "Há muitos '{{itemtype}}' em seu {{store}}.",
       "Vault": "Há muitos '{{itemtype}}' no {{store}}."
     },
     "Classified": "Este item é confidencial e não pode ser transferido no momento.",
@@ -334,7 +346,11 @@
     "AppliedAuto": "Construtor automático de sets",
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
+    "Applied_female": "Seu set de 1 iten foi transferido para seu {{store}}.",
+    "Applied_male": "Seu set de 1 iten foi transferido para seu {{store}}.",
     "Applied_plural": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
+    "Applied_plural_female": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
+    "Applied_plural_male": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
     "ApplySearch": "Itens = \"{{query}}\"",
     "Before": "Antes '{{name}}'",
     "Cancel": "Cancelar",
@@ -356,7 +372,11 @@
     "Loadouts": "Sets",
     "MakeRoom": "Abrir espaço para itens do Correio",
     "MakeRoomDone": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
+    "MakeRoomDone_female": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
+    "MakeRoomDone_male": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
     "MakeRoomDone_plural": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
+    "MakeRoomDone_plural_female": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
+    "MakeRoomDone_plural_male": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
     "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {{error}}.",
     "MaxSlots": "Você só pode ter {{slots}} desde tipo de item em seu set.",
     "MaximizeLight": "Maximizar Luz",
@@ -447,7 +467,7 @@
     "InventoryColumns": "Largura do inventário de personagem",
     "Language": "Idioma (reinicie o DIM para aplicar)",
     "LogOut": "Sair",
-    "ResetToDefault": "Reset",
+    "ResetToDefault": "Resetar",
     "SetSort": "Ordenar itens por",
     "Settings": "Configurações",
     "ShowAnimations": "Animar o brilho do item novo",

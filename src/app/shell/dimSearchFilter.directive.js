@@ -106,6 +106,7 @@ function SearchService(dimSettingsService) {
 
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
+    ranges.push('ratingcount');
   }
 
   ranges.forEach((range) => {
@@ -140,7 +141,7 @@ function SearchFilter(dimSearchService) {
           words: dimSearchService.keywords,
           match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
           search: function(term, callback) {
-            callback(this.words.map((word) => {
+            callback(this.words.filter((word) => {
               return word.indexOf(term) === 0 ? word : null;
             }));
           },
@@ -305,6 +306,9 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       } else if (term.startsWith('rating:')) {
         filter = term.replace('rating:', '');
         addPredicate("rating", filter);
+      } else if (term.startsWith('ratingcount:')) {
+        filter = term.replace('ratingcount:', '');
+        addPredicate("ratingcount", filter);
       } else if (term.startsWith('stat:')) {
         // Avoid console.error by checking if all parameters are typed
         const pieces = term.split(':');
@@ -339,8 +343,8 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     });
   };
 
-  function compareByOperand(compare, predicate) {
-    if (predicate.length === 0 || !compare) {
+  function compareByOperand(compare = 0, predicate) {
+    if (predicate.length === 0) {
       return false;
     }
 
@@ -586,6 +590,9 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     },
     rating: function(predicate, item) {
       return compareByOperand(item.dtrRating, predicate);
+    },
+    ratingcount: function(predicate, item) {
+      return compareByOperand(item.dtrRatingCount, predicate);
     },
     year: function(predicate, item) {
       if (predicate === 'year1') {

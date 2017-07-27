@@ -1,0 +1,141 @@
+<div id="header">
+  <span class="menu link" ng-click="$ctrl.dropdown = !$ctrl.dropdown" dim-click-anywhere-but-here="$ctrl.dropdown = false">
+    <i class="fa fa-bars"></i>
+    <div class="dropdown" ng-if="$ctrl.dropdown">
+      <a class="link"
+         ng-if="$ctrl.destinyVersion == 1"
+         ui-sref-active="active"
+         ui-sref="destiny1.inventory"
+         ng-i18next="Header.Inventory"></a>
+      <a class="link"
+         ng-if="$ctrl.destinyVersion == 1"
+         ui-sref-active="active"
+         ui-sref="destiny1.loadout-builder"
+         ng-i18next="LB.LB"></a>
+      <a class="link"
+         ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.vendorsEnabled"
+         ui-sref-active="active"
+         ui-sref="destiny1.vendors"
+         ng-i18next="Vendors.Vendors"></a>
+      <a class="link"
+         ng-if="$ctrl.destinyVersion == 1"
+         ui-sref-active="active"
+         ui-sref="destiny1.record-books"
+         ng-i18next="RecordBooks.RecordBooks"></a>
+      <a class="link"
+         ui-sref-active="active"
+         ui-sref="destiny1.activities"
+         ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.activities"
+         ng-i18next="Activities.Activities"></a>
+      <span class="link"
+            ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
+            ng-click="$ctrl.showXur($event)">Xûr</span>
+
+      <hr>
+
+      <a class="link"
+         ui-sref-active="active"
+         ui-sref="storage"
+         ng-i18next="Storage.Title"></a>
+      <span class="link"
+            ng-click="$ctrl.showSetting($event)"
+            ng-i18next="Settings.Settings"></span>
+
+      <hr>
+
+      <span class="link"
+            ng-click="$ctrl.showAbout($event)"
+            ng-i18next="Header.About"></span>
+      <span class="link"
+            ng-click="$ctrl.showSupport($event)"
+            ng-i18next="Header.SupportDIM"></span>
+      <a class="link"
+         target="_blank"
+         rel="noopener noreferrer"
+         href="https://teespring.com/stores/dim"
+         ng-i18next="Header.Shop"></a>
+    </div>
+  </span>
+
+  <img class="logo link"
+       ng-class="::$ctrl.$DIM_FLAVOR"
+       ui-sref="default-account"
+       title="v{{::$ctrl.$DIM_VERSION}} ({{::$ctrl.$DIM_FLAVOR}})"
+       src="~app/images/logo-type-right-light.svg"
+       alt="DIM"/>
+
+  <span class="link first-to-go"
+        ng-click="$ctrl.showAbout($event)"
+        ng-i18next="Header.About"></span>
+  <span class="link first-to-go"
+        ng-click="$ctrl.showSupport($event)"
+        ng-i18next="Header.SupportDIM"></span>
+  <a class="link first-to-go"
+     target="_blank"
+     rel="noopener noreferrer"
+     href="https://teespring.com/stores/dim"
+     ng-i18next="Header.Shop"></a>
+
+  <span ng-if="$ctrl.destinyVersion == 1" class="link first-to-go header-separator"></span>
+
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny1.inventory"
+     ng-if="$ctrl.destinyVersion == 1"
+     ng-i18next="Header.Inventory"></a>
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny1.loadout-builder"
+     ng-if="$ctrl.destinyVersion == 1"
+     ng-i18next="LB.LB"></a>
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny1.record-books"
+     ng-if="$ctrl.destinyVersion == 1"
+     ng-i18next="RecordBooks.RecordBooks"></a>
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny1.activities"
+     ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.activities"
+     ng-i18next="Activities.Activities"></a>
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny1.vendors"
+     ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.vendorsEnabled"
+     ng-i18next="Vendors.Vendors"></a>
+  <span class="link second-to-go"
+        ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
+        ng-click="$ctrl.showXur($event)">Xûr</span>
+
+  <span class="header-right">
+    <refresh
+      ng-if="!$ctrl.showSearch && $ctrl.destinyVersion == 1"
+      class="link"></refresh>
+    <span class="link fa fa-save"
+          ng-if="!$ctrl.showSearch"
+          ui-sref="storage"
+          ng-i18next="[title]Storage.Title"></span>
+    <span class="link fa fa-cog"
+          ng-if="!$ctrl.showSearch"
+          ng-click="$ctrl.showSetting($event)"
+          ng-i18next="[title]Settings.Settings"></span>
+    <span class="link search-link"
+          ng-if="$ctrl.destinyVersion == 1"
+          ng-class="{ show: $ctrl.showSearch }">
+      <span class="filter-help"
+            ng-click="$ctrl.showFilters($event)"
+            ng-i18next="[title]Header.Filters">
+        <i class="fa fa-question-circle-o"></i>
+      </span>
+      <dim-search-filter></dim-search-filter>
+    </span>
+    <span class="link search-button"
+          ng-if="$ctrl.destinyVersion == 1"
+          ng-click="$ctrl.showSearch = !$ctrl.showSearch">
+      <i class="fa fa-search"></i>
+    </span>
+    <account-select ng-if="$ctrl.destinyVersion"
+                    destiny-version="$ctrl.destinyVersion">
+    </account-select>
+  </span>
+</div>

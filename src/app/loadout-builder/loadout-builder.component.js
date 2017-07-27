@@ -20,7 +20,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
   vm.reviewsEnabled = $featureFlags.reviewsEnabled;
 
   if (dimStoreService.getStores().length === 0) {
-    $state.go('inventory');
+    $state.go('destiny1.inventory');
     return;
   }
 
@@ -584,7 +584,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
                               vm.lockedchanged ||
                               vm.excludedchanged ||
                               vm.perkschanged ||
-                              !$state.is('loadout-builder')) {
+                              !$state.is('destiny1.loadout-builder')) {
                             // If active guardian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;
@@ -636,7 +636,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
         const stores = dimStoreService.getStores();
 
         if (stores.length === 0) {
-          $state.go('inventory');
+          $state.go('destiny1.inventory');
           return;
         }
 

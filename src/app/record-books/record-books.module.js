@@ -11,8 +11,7 @@ export default angular
     'ngInject';
 
     $stateProvider.state({
-      name: 'record-books',
-      parent: 'destiny1account',
+      name: 'destiny1.record-books',
       component: 'recordBooks',
       url: '/record-books'
     });
