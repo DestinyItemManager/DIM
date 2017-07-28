@@ -74,7 +74,7 @@
         <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
         <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
         <div ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
-                        'fa fa-flag' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"></div>
+                        'fa fa-bars' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"></div>
       </div>
       <div class="community-review--review" ng-bind="review.review"></div>
     </div>
