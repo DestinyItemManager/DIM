@@ -1,6 +1,7 @@
 # Next
 
 * Fix a bug where the popup for Xur items was below Xur's own popup.
+* Hiding community rating for items with only one (non-highlighted) review.
 
 # 4.5.0
 
