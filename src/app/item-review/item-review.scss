@@ -72,11 +72,13 @@
   }
 
   &--report {
-    flex-direction: row;
-    display: inline-flex;
-    color: red;
+    color:black;
+    border-radius:10px;
+    padding:10px 10px 10px 36px;
+    margin:10px;
+    border:1px solid #ff0000;
+    background: #ff9999;
     font-size: larger;
-    font-weight: bolder;
   }
 
   &--report-buttons {

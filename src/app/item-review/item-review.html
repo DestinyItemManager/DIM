@@ -79,8 +79,9 @@
       <div class="community-review--review" ng-bind="review.review"></div>
     </div>
     <div class="community-revew--report-container" ng-show="$ctrl.toggledFlags.indexOf(review.reviewId) != -1">
-      <div class="community-review--report"
-           ng-i18next="DtrReview.VerifyReport">
+      <div class="community-review--report">
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        <span ng-i18next="DtrReview.VerifyReport"></span>
       </div>
       <div class="community-review--report-buttons">
         <button class="dim-button community-review--report-yes" ng-click="$ctrl.reportReview(review.reviewId)">
