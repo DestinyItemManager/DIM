@@ -1,25 +1,25 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimLoadout.directive.html';
+import template from './loadout-drawer.html';
 import { getCharacterStatsData } from '../services/store/character-utils';
-import { subscribeOnScope } from '../rx-utils';
 
-const Loadout = {
-  controller: LoadoutCtrl,
+export const LoadoutDrawerComponent = {
+  controller: LoadoutDrawerCtrl,
   controllerAs: 'vm',
   bindings: {
-    account: '<'
+    account: '<',
+    stores: '<'
   },
   template
 };
 
-angular.module('dimApp').component('dimLoadout', Loadout);
-
-function LoadoutCtrl($scope, dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $i18next, dimStoreService, dimDefinitions) {
+function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimSettingsService, $i18next, dimDefinitions) {
+  'ngInject';
   const vm = this;
 
-  this.$onInit = function() {
-    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), (stores) => {
+  this.$onChanges = function(changes) {
+    if (changes.stores) {
+      const stores = vm.stores || [];
       vm.classTypeValues = [{ label: $i18next.t('Loadouts.Any'), value: -1 }];
 
       /*
@@ -47,7 +47,7 @@ function LoadoutCtrl($scope, dimLoadoutService, dimCategory, toaster, dimPlatfor
 
         vm.classTypeValues.push({ label: store.className, value: classType });
       });
-    });
+    }
   };
 
   $scope.$on('dim-delete-loadout', () => {
@@ -113,8 +113,7 @@ function LoadoutCtrl($scope, dimLoadoutService, dimCategory, toaster, dimPlatfor
   vm.loadout = angular.copy(vm.defaults);
 
   vm.save = function save() {
-    const platform = dimPlatformService.getActive();
-    vm.loadout.platform = platform.platformLabel; // Playstation or Xbox
+    vm.loadout.platform = vm.account.platformLabel; // Playstation or Xbox
     dimLoadoutService
       .saveLoadout(vm.loadout)
       .catch((e) => {

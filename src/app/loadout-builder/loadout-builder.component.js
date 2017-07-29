@@ -637,6 +637,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
       getStore: dimStoreService.getStore,
       getItems: function() {
         const stores = dimStoreService.getStores();
+        vm.stores = stores;
 
         if (stores.length === 0) {
           $state.go('destiny1.inventory');

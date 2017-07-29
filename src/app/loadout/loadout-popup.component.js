@@ -1,9 +1,9 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { sum, flatMap } from '../util';
-import template from './dimLoadoutPopup.directive.html';
+import template from './loadout-popup.html';
 
-const LoadoutPopupComponent = {
+export const LoadoutPopupComponent = {
   controller: LoadoutPopupCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -12,10 +12,8 @@ const LoadoutPopupComponent = {
   template
 };
 
-angular.module('dimApp')
-  .component('dimLoadoutPopup', LoadoutPopupComponent);
-
 function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService) {
+  'ngInject';
   const vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
