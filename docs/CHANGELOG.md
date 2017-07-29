@@ -1,5 +1,7 @@
 # Next
 
+# 4.6.0
+
 * Fix a bug where the popup for Xur items was below Xur's own popup.
 * The first item in the search autocompleter is once again selected automatically.
 * If you don't have the vault width set to "auto", the inventory is once again centered.
