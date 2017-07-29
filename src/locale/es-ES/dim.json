@@ -30,7 +30,7 @@
     "Maintenance": "Los servidores de Bungie.net se encuentran en mantenimiento.",
     "NetworkError": "Error de red - {{status}} {{statusText}}",
     "NoAccount": "No se encontró una cuenta de Destiny para {{platform}}. Seleccionaste la plataforma correcta?",
-    "NoAccountForPlatform": "No encontramos una cuenta de Destiny para {{platform}}.",
+    "NoAccountForPlatform": "No encontramos tu cuenta de Destiny en {{platform}}.",
     "NoCookies": "No se encontraron cookies.",
     "NotConnected": "Es posible que no tengas conexión a Internet.",
     "NotLoggedIn": "Por favor inicie sesión en Bungie.net para poder usar esta extensión.",
@@ -63,6 +63,10 @@
   },
   "Debug": {
     "Dump": "Descargar información a la consola"
+  },
+  "Destiny2": {
+    "Banner": "DIM proveerá soporte Destiny 2",
+    "ComingSoon": "Proveeremos soporte para tus personajes de Destiny 2 en cuanto el juego se encuentre disponible en consolas, de acuerdo a nuestras capacidades. Danos algunas semanas para conocer el juego (y entretenernos!)."
   },
   "DidYouKnow": {
     "Collapse": "¡Acabas de colapsar una sección en DIM!. Esto puede ser útil para ocultar partes de DIM que no necesitas usar normalmente.",
