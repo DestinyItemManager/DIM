@@ -34,15 +34,15 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
       // Duplicate each Destiny account, since they may have played either D1 or D2.
       // TODO: Maybe push this into the account service, and allow people to "hide" accounts?
       return [
-        Object.assign({}, account, { destinyVersion: 1 }),
-        Object.assign({}, account, { destinyVersion: 2 })
+        { ...account, destinyVersion: 1 },
+        { ...account, destinyVersion: 2 }
       ];
     });
   }
 
-    // TODO: save this in the account service, or some other global state, so we don't flip flop
+  // TODO: save this in the account service, or some other global state, so we don't flip flop
   function setCurrentAccount(currentAccount) {
-    vm.currentAccount = Object.assign({}, currentAccount, { destinyVersion: vm.destinyVersion });
+    vm.currentAccount = { ...currentAccount, destinyVersion: vm.destinyVersion };
   }
 
   vm.accountChange = function accountChange(account) {
