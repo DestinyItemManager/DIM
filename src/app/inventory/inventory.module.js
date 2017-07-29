@@ -9,7 +9,7 @@ import { NewItemsService } from './store/new-items.service';
 import { StoreService } from './dimStoreService.factory';
 import { StoresComponent } from './dimStores.directive';
 import { StoreReputation } from './dimStoreReputation.directive';
-import { tagIconFilter, StoreItem } from './dimStoreItem.directive';
+import { tagIconFilter, StoreItemComponent } from './dimStoreItem.directive';
 import { StoreHeadingComponent } from './dimStoreHeading.directive';
 import { StoreBucketComponent } from './dimStoreBucket.directive';
 import { StatsComponent } from './dimStats.directive';
@@ -23,28 +23,28 @@ import { ClearNewItemsComponent } from './dimClearNewItems.directive';
 
 export default angular
   .module('inventoryModule', [])
-  .component('inventory', inventoryComponent)
-  .component('randomLoadout', RandomLoadoutComponent)
   .factory('dimStoreService', StoreService)
   .factory('ClassifiedDataService', ClassifiedDataService)
   .factory('StoreFactory', StoreFactory)
   .factory('ItemFactory', ItemFactory)
   .factory('NewItemsService', NewItemsService)
-  .component('dimStores', StoresComponent)
-  .component('dimStoreReputation', StoreReputation)
-  .directive('dimStoreItem', StoreItem)
-  .filter('tagIcon', tagIconFilter)
-  .component('dimStoreHeading', StoreHeadingComponent)
-  .component('dimStoreBucket', StoreBucketComponent)
-  .component('dimStats', StatsComponent)
-  .component('dimSimpleItem', SimpleItemComponent)
-  .directive('dimPercentWidth', PercentWidth)
-  .filter('percent', () => { return percent; })
   .factory('dimItemService', ItemService)
   .factory('dimItemMoveService', ItemMoveService)
   .factory('dimItemInfoService', ItemInfoService)
   .factory('dimCsvService', CsvService)
+  .component('inventory', inventoryComponent)
+  .component('randomLoadout', RandomLoadoutComponent)
+  .component('dimStores', StoresComponent)
+  .component('dimStoreReputation', StoreReputation)
+  .component('dimStoreHeading', StoreHeadingComponent)
+  .component('dimStoreBucket', StoreBucketComponent)
+  .component('dimStats', StatsComponent)
+  .component('dimSimpleItem', SimpleItemComponent)
   .component('dimClearNewItems', ClearNewItemsComponent)
+  .component('dimStoreItem', StoreItemComponent)
+  .directive('dimPercentWidth', PercentWidth)
+  .filter('tagIcon', tagIconFilter)
+  .filter('percent', () => percent)
   .config(($stateProvider) => {
     'ngInject';
 

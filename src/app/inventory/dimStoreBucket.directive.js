@@ -63,7 +63,7 @@ function StoreBucketCtrl($scope,
     }
   };
   vm.onDrop = function(id, $event, equip) {
-    vm.moveDroppedItem(angular.element(document.getElementById(id)).scope().item, equip, $event, hovering);
+    vm.moveDroppedItem(angular.element(document.getElementById(id)).scope().vm.item, equip, $event, hovering);
     hovering = false;
     dragHelp.classList.remove('drag-dwell-activated');
     $timeout.cancel(dragTimer);
