@@ -1,6 +1,7 @@
 # Next
 
 * Fix a bug where the popup for Xur items was below Xur's own popup.
+* The first item in the search autocompleter is once again selected automatically.
 
 # 4.5.0
 
