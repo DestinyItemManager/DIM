@@ -28,7 +28,7 @@
 
 <div ng-if="$ctrl.canCreateReview" class="user-review--header">
   <span ng-i18next="DtrReview.YourReview"></span>
-  <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()"></star-rating>
+  <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>
 
   <span ng-show="$ctrl.expandReview">
     <span class="dim-button" ng-click="$ctrl.submitReview()" ng-i18next="DtrReview.Submit"></span>
