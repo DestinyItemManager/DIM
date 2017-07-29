@@ -84,7 +84,7 @@
         <span ng-i18next="DtrReview.VerifyReport"></span>
       </div>
       <div class="community-review--report-buttons">
-        <button class="dim-button community-review--report-yes" ng-click="$ctrl.reportReview(review.reviewId)">
+        <button class="dim-button community-review--report-yes" ng-click="$ctrl.reportReview(review.reviewId); $event.stopPropagation();">
           <i class="fa fa-flag" aria-hidden="true"></i>
           <span ng-i18next="DtrReview.ReallyReport"></span>
         </button>
