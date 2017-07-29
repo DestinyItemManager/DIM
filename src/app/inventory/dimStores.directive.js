@@ -1,20 +1,14 @@
-import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStores.directive.html';
 
-angular.module('dimApp')
-  .component('dimStores', stores());
-
-function stores() {
-  return {
-    controller: StoresCtrl,
-    controllerAs: 'vm',
-    bindings: {
-      stores: '<'
-    },
-    template
-  };
-}
+export const StoresComponent = {
+  controller: StoresCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    stores: '<'
+  },
+  template
+};
 
 function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
   'ngInject';

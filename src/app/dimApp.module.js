@@ -18,7 +18,7 @@ import 'angular-promise-tracker';
 import bungieApiModule from './bungie-api/bungie-api.module';
 import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';
-import inventoryModule from './store/inventory.module';
+import inventoryModule from './inventory/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
 import activitiesModule from './activities/activities.module';
 import vendorsModule from './vendors/vendors.module';

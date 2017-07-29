@@ -3,24 +3,16 @@ import _ from 'underscore';
 import template from './dimStoreBucket.directive.html';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 
-angular.module('dimApp')
-  .directive('dimStoreBucket', StoreBucket);
-
-function StoreBucket() {
-  return {
-    controller: StoreBucketCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    replace: true,
-    restrict: 'E',
-    scope: {
-      store: '=storeData',
-      items: '=bucketItems',
-      bucket: '=bucket'
-    },
-    template: template
-  };
-}
+export const StoreBucketComponent = {
+  controller: StoreBucketCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    store: '<storeData',
+    items: '<bucketItems',
+    bucket: '<bucket'
+  },
+  template
+};
 
 function StoreBucketCtrl($scope,
                          loadingTracker,
@@ -35,6 +27,7 @@ function StoreBucketCtrl($scope,
                          dimActionQueue,
                          dimInfoService,
                          $i18next) {
+  'ngInject';
   const vm = this;
 
   vm.settings = dimSettingsService;

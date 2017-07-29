@@ -1,11 +1,9 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-angular.module('dimApp')
-  .factory('dimItemMoveService', ItemMoveService);
+export function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
+  'ngInject';
 
-
-function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
   const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.DragAndDrop')}</p>
                               <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session

@@ -419,6 +419,10 @@ img {
   }
 }
 
+dim-simple-item {
+  outline: none;
+}
+
 .item {
   @include item-size-padded;
   margin: 2px;

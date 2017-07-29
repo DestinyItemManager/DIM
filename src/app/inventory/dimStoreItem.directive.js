@@ -1,29 +1,29 @@
-import angular from 'angular';
 import template from './dimStoreItem.directive.html';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
 
-angular.module('dimApp')
-  .directive('dimStoreItem', StoreItem)
-  .filter('tagIcon', (dimSettingsService) => {
-    const iconType = {};
+export function tagIconFilter(dimSettingsService) {
+  'ngInject';
+  const iconType = {};
 
-    dimSettingsService.itemTags.forEach((tag) => {
-      if (tag.type) {
-        iconType[tag.type] = tag.icon;
-      }
-    });
-
-    return function tagIcon(value) {
-      const icon = iconType[value];
-      if (icon) {
-        return `item-tag fa fa-${icon}`;
-      } else {
-        return "item-tag no-tag";
-      }
-    };
+  dimSettingsService.itemTags.forEach((tag) => {
+    if (tag.type) {
+      iconType[tag.type] = tag.icon;
+    }
   });
 
-function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, dimDestinyTrackerService, NewItemsService) {
+  return function tagIcon(value) {
+    const icon = iconType[value];
+    if (icon) {
+      return `item-tag fa fa-${icon}`;
+    } else {
+      return "item-tag no-tag";
+    }
+  };
+}
+
+export function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, dimDestinyTrackerService, NewItemsService) {
+  'ngInject';
+
   let otherDialog = null;
   let firstItemTimed = false;
 

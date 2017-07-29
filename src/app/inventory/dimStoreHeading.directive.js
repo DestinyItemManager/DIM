@@ -1,25 +1,19 @@
-import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStoreHeading.directive.html';
 import dialogTemplate from './dimStoreHeading.directive.dialog.html';
 
-angular.module('dimApp')
-  .directive('dimStoreHeading', StoreHeading);
-
-function StoreHeading() {
-  return {
-    controller: StoreHeadingCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    scope: {
-      store: '=storeData'
-    },
-    restrict: 'E',
-    template: template
-  };
-}
+export const StoreHeadingComponent = {
+  controller: StoreHeadingCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    store: '<storeData'
+  },
+  template
+};
 
 function StoreHeadingCtrl($scope, ngDialog, $i18next) {
+  'ngInject';
+
   const vm = this;
   let dialogResult = null;
 

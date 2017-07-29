@@ -1,19 +1,18 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-angular.module('dimApp')
-  .factory('dimItemService', ItemService);
-
 /**
  * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
  */
-function ItemService(
+export function ItemService(
   dimStoreService,
   ItemFactory,
   Destiny1Api,
   $q,
   $i18next
 ) {
+  'ngInject';
+
   // We'll reload the stores to check if things have been
   // thrown away or moved and we just don't have up to date info. But let's
   // throttle these calls so we don't just keep refreshing over and over.

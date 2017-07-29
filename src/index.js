@@ -27,12 +27,7 @@ require('./app/services/dimBucketService.factory');
 require('./app/services/dimInfoService.factory');
 require('./app/services/dimPlatformService.factory');
 require('./app/services/dimLoadoutService.factory');
-require('./app/services/dimStoreService.factory');
-require('./app/services/dimCsvService.factory');
 require('./app/services/dimDestinyTrackerService.factory');
-require('./app/services/dimItemService.factory');
-require('./app/services/dimItemMoveService.factory');
-require('./app/services/dimItemInfoService.factory');
 
 require('./app/loadout/dimLoadout.directive');
 require('./app/loadout/dimLoadoutPopup.directive');
@@ -41,15 +36,6 @@ require('./app/shell/dimSearchFilter.directive');
 require('./app/shell/dimClickAnywhereButHere.directive');
 require('./app/shell/dimFilterLink.directive');
 require('./app/shell/dimManifestProgress.directive');
-require('./app/store/dimPercentWidth.directive');
-require('./app/store/dimStores.directive');
-require('./app/store/dimStoreBucket.directive');
-require('./app/store/dimStoreReputation.directive');
-require('./app/store/dimStoreItem.directive');
-require('./app/store/dimStoreHeading.directive');
-require('./app/store/dimSimpleItem.directive');
-require('./app/store/dimStats.directive');
-require('./app/store/dimClearNewItems.directive');
 
 require('./scss/main.scss');
 
