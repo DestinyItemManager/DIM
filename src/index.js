@@ -50,7 +50,6 @@ require('./app/store/dimStoreHeading.directive');
 require('./app/store/dimSimpleItem.directive');
 require('./app/store/dimStats.directive');
 require('./app/store/dimClearNewItems.directive');
-require('./app/item-review/item-review.component');
 
 require('./scss/main.scss');
 
