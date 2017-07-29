@@ -3,22 +3,17 @@ import _ from 'underscore';
 import { sum, flatMap } from '../util';
 import template from './dimLoadoutPopup.directive.html';
 
-angular.module('dimApp')
-  .directive('dimLoadoutPopup', LoadoutPopup);
+const LoadoutPopupComponent = {
+  controller: LoadoutPopupCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    store: '<'
+  },
+  template
+};
 
-function LoadoutPopup() {
-  return {
-    controller: LoadoutPopupCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    restrict: 'A',
-    scope: {
-      store: '=dimLoadoutPopup'
-    },
-    replace: true,
-    template: template
-  };
-}
+angular.module('dimApp')
+  .component('dimLoadoutPopup', LoadoutPopupComponent);
 
 function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService) {
   const vm = this;
