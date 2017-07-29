@@ -155,6 +155,13 @@ function SearchFilter(dimSearchService) {
         zIndex: 1000
       });
 
+      textcomplete.on('rendered', () => {
+        if (textcomplete.dropdown.items.length) {
+          // Activate the first item by default.
+          textcomplete.dropdown.items[0].activate();
+        }
+      });
+
       scope.$on('$destroy', () => {
         textcomplete.destroy();
       });

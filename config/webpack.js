@@ -194,8 +194,8 @@ module.exports = (env) => {
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(false),
-        // Use a WebAssembly version of SQLite, if possible
-        '$featureFlags.wasm': JSON.stringify(false),
+        // Use a WebAssembly version of SQLite, if possible (this crashes on Android Chrome right now)
+        '$featureFlags.wasm': `${JSON.stringify(env !== 'release')} && !window.navigator.userAgent.includes("Android")`,
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
         // Whether to log page views for router events
