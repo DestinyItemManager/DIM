@@ -1,3 +1,4 @@
+import angular from 'angular';
 import 'babel-polyfill';
 
 require('./app/google');
@@ -55,3 +56,5 @@ if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
       console.error('Unable to register service worker.', err);
     });
 }
+
+angular.bootstrap(document.body, ['app'], { strictDi: true });
