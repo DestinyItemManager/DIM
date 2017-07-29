@@ -1,5 +1,6 @@
 import template from './dimStoreItem.directive.html';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
+import './dimStoreItem.scss';
 
 export function tagIconFilter(dimSettingsService) {
   'ngInject';

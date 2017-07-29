@@ -2,6 +2,7 @@ import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStoreBucket.directive.html';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
+import './dimStoreBucket.scss';
 
 export const StoreBucketComponent = {
   controller: StoreBucketCtrl,

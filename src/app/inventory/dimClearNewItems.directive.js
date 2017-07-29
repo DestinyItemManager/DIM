@@ -1,4 +1,5 @@
 import template from './dimClearNewItems.directive.html';
+import './dimClearNewItems.scss';
 
 /**
  * A button that marks all new items as "seen".

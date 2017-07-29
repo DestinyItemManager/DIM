@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import template from './dimStoreHeading.directive.html';
 import dialogTemplate from './dimStoreHeading.directive.dialog.html';
+import './dimStoreHeading.scss';
 
 export const StoreHeadingComponent = {
   controller: StoreHeadingCtrl,

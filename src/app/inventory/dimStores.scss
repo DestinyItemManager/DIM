@@ -1,0 +1,64 @@
+
+
+.inventory-content {
+  // This assumes 3 characters
+  min-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 39px + 44px + (3 * (44px + 8px)));
+  max-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 20px + (999 * (44px + 8px)));
+  min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
+}
+
+.store-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  // Bit of a hack to make things line up
+  &.items:last-child .store-cell {
+    padding-bottom: 14px;
+  }
+
+  i.collapse {
+    outline: none;
+    padding: 8px 7px 8px 10px;
+    align-self: flex-start;
+  }
+}
+
+.store-cell {
+  flex-shrink: 0;
+  display: flex;
+  margin-right: 12px;
+  width: calc(40px + 44px + (3 * (44px + 8px)));
+  width: calc(40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+
+  &.vault {
+    max-width: calc(8px + (999 * (44px + 8px)));
+    max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
+    background-color: rgba(245, 245, 245, 0.25);
+    padding: 0 12px 1px;
+    margin-left: -12px;
+    margin-right: 0;
+    width: auto;
+    flex: 1;
+  }
+}
+.store-text {
+  padding-top: 5px;
+}
+
+.store-header {
+  position: fixed;
+  backface-visibility: hidden;
+  top: 55px;
+  left: 0;
+  width: auto;
+  z-index: 10;
+  @supports (position: sticky) {
+    position: sticky;
+  }
+}
+
+.store-header {
+  margin-left: 28px;
+}

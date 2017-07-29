@@ -1,0 +1,38 @@
+/* INT/DIS/STR bars */
+.stat-bars {
+  width: 100%;
+  opacity: .8;
+  display: flex;
+  flex-direction: row;
+  margin-top: 3px;
+  .stat {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 8px;
+    &:last-child {
+      margin-right: 0;
+    }
+    .bar {
+      flex: 1;
+      height: 7px;
+      margin-left: 1px;
+      border-radius: 1px;
+      background-color: gray;
+      overflow: hidden;
+      .progress {
+        height: 100%;
+        background-color: white;
+        &.complete {
+          background-color: #FB9F28;
+        }
+      }
+    }
+    img {
+      height: 16px;
+      width: 16px;
+      margin-right: 2px;
+    }
+  }
+}

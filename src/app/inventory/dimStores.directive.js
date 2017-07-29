@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import template from './dimStores.directive.html';
+import './dimStores.scss';
 
 export const StoresComponent = {
   controller: StoresCtrl,

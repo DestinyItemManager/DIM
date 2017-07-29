@@ -1,4 +1,5 @@
 import template from './dimStats.directive.html';
+import './dimStats.scss';
 
 export const StatsComponent = {
   controller: StatsCtrl,
