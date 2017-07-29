@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './loadout-drawer.html';
+import './loadout-drawer.scss';
 import { getCharacterStatsData } from '../services/store/character-utils';
 
 export const LoadoutDrawerComponent = {

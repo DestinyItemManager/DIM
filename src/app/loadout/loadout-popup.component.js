@@ -2,6 +2,7 @@ import angular from 'angular';
 import _ from 'underscore';
 import { sum, flatMap } from '../util';
 import template from './loadout-popup.html';
+import './loadout-popup.scss';
 
 export const LoadoutPopupComponent = {
   controller: LoadoutPopupCtrl,
