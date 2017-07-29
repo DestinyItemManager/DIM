@@ -45,7 +45,7 @@ var browsersSupported = browserslist($BROWSERS);
 var browser = getBrowserVersionFromUserAgent(navigator.userAgent);
 var supported = browsersSupported.indexOf(browser) >= 0;
 
-if (supported) {
-  console.log('Browser ' + browser + ' is not supported by DIM.');
+if (!supported) {
+  console.warn('Browser ' + browser + ' is not supported by DIM. Supported browsers:', browsersSupported);
   document.getElementById('browser-warning').className = '';
 }
