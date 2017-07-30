@@ -211,8 +211,6 @@ module.exports = (env) => {
         exclude: /(manifest|chunk-0-sqlLib)-\S{6}.js$/
       }),
 
-      new webpack.optimize.ModuleConcatenationPlugin(),
-
       // Enable if you want to debug the size of the chunks
       // new Visualizer(),
     ],
@@ -250,6 +248,8 @@ module.exports = (env) => {
       output: { comments: false },
       sourceMap: true
     }));
+
+    config.plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
 
     // Generate a service worker
     config.plugins.push(new WorkboxPlugin({
