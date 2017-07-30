@@ -40,7 +40,7 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
     });
   }
 
-    // TODO: save this in the account service, or some other global state, so we don't flip flop
+  // TODO: save this in the account service, or some other global state, so we don't flip flop
   function setCurrentAccount(currentAccount) {
     vm.currentAccount = Object.assign({}, currentAccount, { destinyVersion: vm.destinyVersion });
   }
