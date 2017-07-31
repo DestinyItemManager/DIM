@@ -39,6 +39,12 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.openFlagContext = function(reviewId) {
+    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+
+    if ((review.isReviewer) || (review.isHighlighted)) {
+      return;
+    }
+
     const toggledReviewIndex = vm.toggledFlags.indexOf(reviewId);
 
     if (toggledReviewIndex === -1) {
@@ -52,7 +58,13 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     vm.toggledFlags.splice(toggledReviewIndex);
   };
 
-  vm.editReview = function() {
+  vm.editReview = function(reviewId) {
+    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+
+    if (!review.isReviewer) {
+      return;
+    }
+
     vm.expandReview = true;
   };
 
