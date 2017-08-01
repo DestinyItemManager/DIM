@@ -16,5 +16,9 @@
       }
     }]
   ],
-  "plugins": ["angularjs-annotate", "syntax-dynamic-import"]
+  "plugins": [
+    "angularjs-annotate",
+    "syntax-dynamic-import",
+    ["transform-object-rest-spread", { "useBuiltIns": true }]
+  ]
 }
