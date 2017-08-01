@@ -1,4 +1,5 @@
 build/
 dist/
 Gruntfile.js
+src/browsercheck.js
 

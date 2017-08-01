@@ -8,8 +8,11 @@ import { getBonus } from '../inventory/store/character-utils';
 
 export const LoadoutBuilderComponent = {
   controller: LoadoutBuilderController,
-  template: template,
-  controllerAs: 'vm'
+  template,
+  controllerAs: 'vm',
+  bindings: {
+    account: '<'
+  }
 };
 
 function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
@@ -634,6 +637,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
       getStore: dimStoreService.getStore,
       getItems: function() {
         const stores = dimStoreService.getStores();
+        vm.stores = stores;
 
         if (stores.length === 0) {
           $state.go('destiny1.inventory');
