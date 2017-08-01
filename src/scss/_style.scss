@@ -46,6 +46,19 @@ div:focus, span:focus {
   display: none;
 }
 
+#browser-warning {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #990000;
+  padding: 8px;
+  text-align: center;
+  &.hidden {
+    display: none;
+  }
+}
+
 /**
   New Item overlay area
 **/
