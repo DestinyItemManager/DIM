@@ -1,0 +1,48 @@
+.equipped {
+  width: 56px;
+  width: calc(var(--item-size) + 8px);
+  margin-right: 12px;
+}
+
+.unequipped {
+  flex: 1;
+  margin-right: 20px;
+
+  .vault & {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.on-drag-enter > div, .on-drag-hover > div {
+  background-color: rgba(200, 200, 200, 0.2);
+}
+
+.sub-section {
+  flex: 1;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+
+  > div {
+    white-space: normal;
+  }
+}
+
+.sub-bucket {
+  min-height: 48px;
+  min-height: calc(var(--item-size) + 4px);
+  background-size: 44px;
+  background-size: var(--item-size);
+  background-position: 4px 4px;
+  background-image: url('../../images/bg_inventory_bucket_single_crop.png');
+  background-repeat: no-repeat;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  &.on-drag-hover {
+    box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
+  }
+}

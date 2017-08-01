@@ -1,15 +1,17 @@
-import angular from 'angular';
 import template from './dimClearNewItems.directive.html';
+import './dimClearNewItems.scss';
+
 /**
  * A button that marks all new items as "seen".
  */
-angular.module('dimApp')
-  .component('dimClearNewItems', {
-    template: template,
-    controller: ClearNewItemsCtrl
-  });
+export const ClearNewItemsComponent = {
+  template,
+  controller: ClearNewItemsCtrl
+};
 
 function ClearNewItemsCtrl($scope, NewItemsService, dimSettingsService, hotkeys, $i18next, dimStoreService) {
+  'ngInject';
+
   this.settings = dimSettingsService;
   this.newItemsService = NewItemsService;
 
