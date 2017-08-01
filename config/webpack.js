@@ -197,8 +197,8 @@ module.exports = (env) => {
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(false),
-        // Use a WebAssembly version of SQLite, if possible
-        '$featureFlags.wasm': JSON.stringify(false),
+        // Use a WebAssembly version of SQLite, if possible (this crashes on Android Chrome right now)
+        '$featureFlags.wasm': '!window.navigator.userAgent.includes("Android")',
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
         // Whether to log page views for router events
@@ -238,7 +238,7 @@ module.exports = (env) => {
   });
 
   if (isDev) {
-    config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true }));
+    config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
   } else {
     // Bail and fail hard on first error
     config.bail = true;

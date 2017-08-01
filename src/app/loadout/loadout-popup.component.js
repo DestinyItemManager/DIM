@@ -1,26 +1,20 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { sum, flatMap } from '../util';
-import template from './dimLoadoutPopup.directive.html';
+import template from './loadout-popup.html';
+import './loadout-popup.scss';
 
-angular.module('dimApp')
-  .directive('dimLoadoutPopup', LoadoutPopup);
-
-function LoadoutPopup() {
-  return {
-    controller: LoadoutPopupCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    restrict: 'A',
-    scope: {
-      store: '=dimLoadoutPopup'
-    },
-    replace: true,
-    template: template
-  };
-}
+export const LoadoutPopupComponent = {
+  controller: LoadoutPopupCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    store: '<'
+  },
+  template
+};
 
 function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService) {
+  'ngInject';
   const vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 

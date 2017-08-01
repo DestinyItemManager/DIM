@@ -1,3 +1,5 @@
+import angular from 'angular';
+
 require('babel-polyfill');
 
 require('./app/google');
@@ -24,7 +26,6 @@ require('./app/services/dimManifestService.factory');
 require('./app/services/dimBucketService.factory');
 require('./app/services/dimInfoService.factory');
 require('./app/services/dimPlatformService.factory');
-require('./app/services/dimLoadoutService.factory');
 require('./app/services/dimStoreService.factory');
 require('./app/services/dimCsvService.factory');
 require('./app/services/dimDestinyTrackerService.factory');
@@ -32,8 +33,6 @@ require('./app/services/dimItemService.factory');
 require('./app/services/dimItemMoveService.factory');
 require('./app/services/dimItemInfoService.factory');
 
-require('./app/loadout/dimLoadout.directive');
-require('./app/loadout/dimLoadoutPopup.directive');
 require('./app/shell/dimAngularFilters.filter');
 require('./app/shell/dimSearchFilter.directive');
 require('./app/shell/dimClickAnywhereButHere.directive');
@@ -58,3 +57,5 @@ if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
       console.error('Unable to register service worker.', err);
     });
 }
+
+angular.bootstrap(document.body, ['app'], { strictDi: true });
