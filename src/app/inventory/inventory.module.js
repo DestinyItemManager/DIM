@@ -1,7 +1,6 @@
 import angular from 'angular';
 
 import { InventoryComponent } from './inventory.component';
-import { RandomLoadoutComponent } from '../loadout/random/random-loadout.component';
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
@@ -33,7 +32,6 @@ export default angular
   .factory('dimItemInfoService', ItemInfoService)
   .factory('dimCsvService', CsvService)
   .component('inventory', InventoryComponent)
-  .component('randomLoadout', RandomLoadoutComponent)
   .component('dimStores', StoresComponent)
   .component('dimStoreReputation', StoreReputation)
   .component('dimStoreHeading', StoreHeadingComponent)
