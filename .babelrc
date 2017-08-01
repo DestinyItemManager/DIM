@@ -10,7 +10,7 @@
           "last 2 ChromeAndroid versions",
           "last 2 Firefox versions",
           "last 1 Safari versions",
-          "iOS >= 9",
+          "last 1 iOS versions",
           "last 2 Edge versions"
         ]
       }

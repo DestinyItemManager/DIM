@@ -1,6 +1,5 @@
 import angular from 'angular';
-
-require('babel-polyfill');
+import 'babel-polyfill';
 
 require('./app/google');
 
@@ -13,9 +12,6 @@ iosDragDropShim({
 });
 // https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
 window.addEventListener('touchmove', () => {});
-
-// Shim IndexedDB using WebSQL for iOS 9
-require('indexeddbshim');
 
 // Initialize the main DIM app
 require('./app/app.module');
