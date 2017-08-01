@@ -1,5 +1,7 @@
 # Next
 
+* Made loadout builder talent grids tiny again.
+
 # 4.6.0
 
 * Fix a bug where the popup for Xur items was below Xur's own popup.
