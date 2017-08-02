@@ -2,11 +2,9 @@ import angular from 'angular';
 import uuidv4 from 'uuid/v4';
 import _ from 'underscore';
 
-angular.module('dimApp')
-  .factory('dimLoadoutService', LoadoutService);
+export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, toaster, loadingTracker, SyncService, dimActionQueue) {
+  'ngInject';
 
-
-function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, toaster, loadingTracker, SyncService, dimActionQueue) {
   let _loadouts = [];
   const _previousLoadouts = {}; // by character ID
 

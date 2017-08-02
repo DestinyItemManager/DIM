@@ -1,8 +1,15 @@
 # Next
 
+* Made loadout builder talent grids tiny again.
+* If you autocomplete the entire filter name and hit enter, it will no longer hang the browser.
+
+# 4.6.0
+
 * Fix a bug where the popup for Xur items was below Xur's own popup.
 * You can flag reviews for being offensive or arguing or whatever. Be helpful but also be nice.
+* Hiding community rating for items with only one (non-highlighted) review.
 * The first item in the search autocompleter is once again selected automatically.
+* If you don't have the vault width set to "auto", the inventory is once again centered.
 
 # 4.5.0
 

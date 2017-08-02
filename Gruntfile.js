@@ -79,7 +79,6 @@ module.exports = function(grunt) {
         host: process.env.REMOTE_HOST,
         port: 2222,
         recursive: true,
-        deleteAll: true,
         ssh: true,
         privateKey: 'config/dim_travis.rsa',
         sshCmdArgs: ["-o StrictHostKeyChecking=no"]

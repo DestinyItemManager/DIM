@@ -1,7 +1,7 @@
 import template from './inventory.html';
 import { subscribeOnScope } from '../rx-utils';
 
-export default {
+export const InventoryComponent = {
   template,
   bindings: {
     account: '<'

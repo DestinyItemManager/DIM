@@ -94,6 +94,7 @@ class BulkFetcher {
           if (matchingItem) {
             storeItem.dtrRating = matchingItem.rating;
             storeItem.dtrRatingCount = matchingItem.ratingCount;
+            storeItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
             storeItem.userRating = matchingItem.userRating;
             storeItem.userReview = matchingItem.review;
             storeItem.pros = matchingItem.pros;
@@ -127,6 +128,7 @@ class BulkFetcher {
         if (matchingItem) {
           vendorItem.dtrRating = matchingItem.rating;
           vendorItem.dtrRatingCount = matchingItem.ratingCount;
+          vendorItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
           vendorItem.userRating = matchingItem.userRating;
           vendorItem.userReview = matchingItem.review;
           vendorItem.pros = matchingItem.pros;

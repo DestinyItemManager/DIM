@@ -1,23 +1,10 @@
-import angular from 'angular';
 import _ from 'underscore';
 import { Subject, BehaviorSubject } from 'rxjs';
 
-import { ClassifiedDataService } from './store/classified-data.service';
-import { StoreFactory } from './store/store-factory.service';
-import { ItemFactory } from './store/item-factory.service';
-import { NewItemsService } from './store/new-items.service';
 import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
 
-
-angular.module('dimApp')
-  .factory('dimStoreService', StoreService)
-  .factory('ClassifiedDataService', ClassifiedDataService)
-  .factory('StoreFactory', StoreFactory)
-  .factory('ItemFactory', ItemFactory)
-  .factory('NewItemsService', NewItemsService);
-
-function StoreService(
+export function StoreService(
   $rootScope,
   $q,
   Destiny1Api,
@@ -35,6 +22,8 @@ function StoreService(
   $stateParams,
   loadingTracker
 ) {
+  'ngInject';
+
   let _stores = [];
 
   // A subject that keeps track of the current account. Because it's a
