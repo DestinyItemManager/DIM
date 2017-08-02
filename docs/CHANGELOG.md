@@ -1,6 +1,7 @@
 # Next
 
 * Made loadout builder talent grids tiny again.
+* If you autocomplete the entire filter name and hit enter, it will no longer hang the browser.
 
 # 4.6.0
 
