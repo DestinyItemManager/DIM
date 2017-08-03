@@ -1,24 +1,19 @@
-import angular from 'angular';
 import template from './dimStats.directive.html';
+import './dimStats.scss';
 
-angular.module('dimApp')
-  .directive('dimStats', Stats);
-
-
-function Stats() {
-  return {
-    controller: StatsCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    scope: {
-      stats: '<'
-    },
-    template: template
-  };
-}
+export const StatsComponent = {
+  controller: StatsCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    stats: '<'
+  },
+  template
+};
 
 
 function StatsCtrl($scope, $i18next) {
+  'ngInject';
+
   const vm = this;
 
   $scope.$watch('vm.stats', () => {

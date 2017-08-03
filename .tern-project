@@ -1,7 +1,6 @@
 {
   "libs": [
     "browser",
-    "jquery",
     "underscore",
     "angular"
   ],

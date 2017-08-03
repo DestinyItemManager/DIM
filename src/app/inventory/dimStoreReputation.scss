@@ -1,0 +1,11 @@
+.reputation {
+  & .store-cell:first-child {
+    margin-left: 28px;
+  }
+}
+
+.factionrep {
+  margin: 2px 2px -2px 2px;
+  position: relative;
+  display: inline-block;
+}

@@ -2,25 +2,18 @@ import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStoreBucket.directive.html';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
+import './dimStoreBucket.scss';
 
-angular.module('dimApp')
-  .directive('dimStoreBucket', StoreBucket);
-
-function StoreBucket() {
-  return {
-    controller: StoreBucketCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    replace: true,
-    restrict: 'E',
-    scope: {
-      store: '=storeData',
-      items: '=bucketItems',
-      bucket: '=bucket'
-    },
-    template: template
-  };
-}
+export const StoreBucketComponent = {
+  controller: StoreBucketCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    store: '<storeData',
+    items: '<bucketItems',
+    bucket: '<bucket'
+  },
+  template
+};
 
 function StoreBucketCtrl($scope,
                          loadingTracker,
@@ -35,6 +28,7 @@ function StoreBucketCtrl($scope,
                          dimActionQueue,
                          dimInfoService,
                          $i18next) {
+  'ngInject';
   const vm = this;
 
   vm.settings = dimSettingsService;
@@ -70,7 +64,7 @@ function StoreBucketCtrl($scope,
     }
   };
   vm.onDrop = function(id, $event, equip) {
-    vm.moveDroppedItem(angular.element(document.getElementById(id)).scope().item, equip, $event, hovering);
+    vm.moveDroppedItem(angular.element(document.getElementById(id)).scope().vm.item, equip, $event, hovering);
     hovering = false;
     dragHelp.classList.remove('drag-dwell-activated');
     $timeout.cancel(dragTimer);

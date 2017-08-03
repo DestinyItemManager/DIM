@@ -1,26 +1,26 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimLoadout.directive.html';
-import { getCharacterStatsData } from '../services/store/character-utils';
+import template from './loadout-drawer.html';
+import './loadout-drawer.scss';
+import { getCharacterStatsData } from '../inventory/store/character-utils';
 
-angular.module('dimApp').directive('dimLoadout', Loadout);
+export const LoadoutDrawerComponent = {
+  controller: LoadoutDrawerCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    account: '<',
+    stores: '<'
+  },
+  template
+};
 
+function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimSettingsService, $i18next, dimDefinitions) {
+  'ngInject';
+  const vm = this;
 
-function Loadout(dimLoadoutService, $i18next) {
-  return {
-    controller: LoadoutCtrl,
-    controllerAs: 'vm',
-    bindToController: true,
-    link: Link,
-    scope: {},
-    template: template
-  };
-
-  function Link(scope) {
-    const vm = scope.vm;
-
-    // TODO: subscribe to stores on show, unsubscribe on hide
-    scope.$on('dim-stores-updated', (evt, data) => {
+  this.$onChanges = function(changes) {
+    if (changes.stores) {
+      const stores = vm.stores || [];
       vm.classTypeValues = [{ label: $i18next.t('Loadouts.Any'), value: -1 }];
 
       /*
@@ -28,7 +28,7 @@ function Loadout(dimLoadoutService, $i18next) {
       These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
       */
 
-      _.each(_.uniq(_.reject(data.stores, 'isVault'), false, (store) => store.classType), (store) => {
+      _.each(_.uniq(_.reject(stores, 'isVault'), false, (store) => store.classType), (store) => {
         let classType = 0;
 
         switch (parseInt(store.classType, 10)) {
@@ -48,73 +48,62 @@ function Loadout(dimLoadoutService, $i18next) {
 
         vm.classTypeValues.push({ label: store.className, value: classType });
       });
-    });
+    }
+  };
 
-    scope.$on('dim-delete-loadout', () => {
-      vm.show = false;
-      dimLoadoutService.dialogOpen = false;
-      vm.loadout = angular.copy(vm.defaults);
-    });
+  $scope.$on('dim-delete-loadout', () => {
+    vm.show = false;
+    dimLoadoutService.dialogOpen = false;
+    vm.loadout = angular.copy(vm.defaults);
+  });
 
-    scope.$watchCollection('vm.originalLoadout.items', () => {
-      vm.loadout = angular.copy(vm.originalLoadout);
-    });
+  $scope.$watchCollection('vm.originalLoadout.items', () => {
+    vm.loadout = angular.copy(vm.originalLoadout);
+  });
 
-    scope.$on('dim-edit-loadout', (event, args) => {
-      vm.showClass = args.showClass;
-      if (args.loadout) {
-        vm.show = true;
-        dimLoadoutService.dialogOpen = true;
-        vm.originalLoadout = args.loadout;
-        if (args.loadout.classType === undefined) {
-          args.loadout.classType = -1;
-        }
-        args.loadout.items = args.loadout.items || [];
-
-        // Filter out any vendor items and equip all if requested
-        args.loadout.warnitems = _.reduce(args.loadout.items, (o, items) => {
-          const vendorItems = _.filter(items, (item) => { return !item.owner; });
-          o = o.concat(...vendorItems);
-          return o;
-        }, []);
-
-        _.each(args.loadout.items, (items, type) => {
-          args.loadout.items[type] = _.filter(items, (item) => { return item.owner; });
-          if (args.equipAll && args.loadout.items[type][0]) {
-            args.loadout.items[type][0].equipped = true;
-          }
-        });
-        vm.loadout = angular.copy(args.loadout);
+  $scope.$on('dim-edit-loadout', (event, args) => {
+    vm.showClass = args.showClass;
+    if (args.loadout) {
+      vm.show = true;
+      dimLoadoutService.dialogOpen = true;
+      vm.originalLoadout = args.loadout;
+      if (args.loadout.classType === undefined) {
+        args.loadout.classType = -1;
       }
-    });
+      args.loadout.items = args.loadout.items || [];
 
-    scope.$on('dim-store-item-clicked', (event, args) => {
-      vm.add(args.item, args.clickEvent);
-    });
+      // Filter out any vendor items and equip all if requested
+      args.loadout.warnitems = _.reduce(args.loadout.items, (o, items) => {
+        const vendorItems = _.filter(items, (item) => { return !item.owner; });
+        o = o.concat(...vendorItems);
+        return o;
+      }, []);
 
-    scope.$on('dim-active-platform-updated', () => {
-      vm.show = false;
-    });
+      _.each(args.loadout.items, (items, type) => {
+        args.loadout.items[type] = _.filter(items, (item) => { return item.owner; });
+        if (args.equipAll && args.loadout.items[type][0]) {
+          args.loadout.items[type][0].equipped = true;
+        }
+      });
+      vm.loadout = angular.copy(args.loadout);
+    }
+  });
 
-    scope.$watchCollection('vm.loadout.items', () => {
-      vm.recalculateStats();
-    });
-  }
-}
+  $scope.$on('dim-store-item-clicked', (event, args) => {
+    vm.add(args.item, args.clickEvent);
+  });
 
+  $scope.$on('dim-active-platform-updated', () => {
+    vm.show = false;
+  });
 
-function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $i18next, dimStoreService, dimDefinitions) {
-  const vm = this;
+  $scope.$watchCollection('vm.loadout.items', () => {
+    vm.recalculateStats();
+  });
 
   vm.settings = dimSettingsService;
 
-  vm.types = _.chain(dimCategory)
-    .values()
-    .flatten()
-    .map((t) => {
-      return t.toLowerCase();
-    })
-    .value();
+  vm.types = _.flatten(Object.values(dimCategory)).map((t) => t.toLowerCase());
 
   vm.show = false;
   dimLoadoutService.dialogOpen = false;
@@ -125,8 +114,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
   vm.loadout = angular.copy(vm.defaults);
 
   vm.save = function save() {
-    const platform = dimPlatformService.getActive();
-    vm.loadout.platform = platform.platformLabel; // Playstation or Xbox
+    vm.loadout.platform = vm.account.platformLabel; // Playstation or Xbox
     dimLoadoutService
       .saveLoadout(vm.loadout)
       .catch((e) => {

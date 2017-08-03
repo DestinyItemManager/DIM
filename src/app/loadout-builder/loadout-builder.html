@@ -1,7 +1,7 @@
 <div class="loadout-builder dim-page" ng-class="::{ itemQuality: vm.qualityEnabled }">
   <loadout-builder-character-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></loadout-builder-character-select>
 
-  <dim-loadout></dim-loadout>
+  <loadout-drawer stores="vm.stores" account="vm.account"></loadout-drawer>
 
   <p>
     <span class="dim-button" ng-click="vm.showGear=!vm.showGear" ng-i18next="[i18next]({ class: vm.i18nClassNames[vm.active] }){{ !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear' }}"></span>

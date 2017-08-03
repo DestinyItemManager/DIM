@@ -33,6 +33,7 @@ module.exports = (env) => {
   const config = {
     entry: {
       main: './src/index.js',
+      browsercheck: './src/browsercheck.js',
       authReturn: './src/authReturn.js'
     },
 
@@ -125,7 +126,7 @@ module.exports = (env) => {
         inject: false,
         filename: 'index.html',
         template: '!handlebars-loader!src/index.html',
-        chunks: ['manifest', 'vendor', 'main']
+        chunks: ['manifest', 'vendor', 'main', 'browsercheck']
       }),
 
       new HtmlWebpackPlugin({
@@ -177,6 +178,8 @@ module.exports = (env) => {
 
         $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify('22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'),
 
+        $BROWSERS: JSON.stringify(packageJson.browserslist),
+
         // Feature flags!
 
         // Tags are off in release right now
@@ -195,7 +198,7 @@ module.exports = (env) => {
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(false),
         // Use a WebAssembly version of SQLite, if possible (this crashes on Android Chrome right now)
-        '$featureFlags.wasm': `${JSON.stringify(env !== 'release')} && !window.navigator.userAgent.includes("Android")`,
+        '$featureFlags.wasm': '!window.navigator.userAgent.includes("Android")',
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
         // Whether to log page views for router events
@@ -235,7 +238,7 @@ module.exports = (env) => {
   });
 
   if (isDev) {
-    config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true }));
+    config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
   } else {
     // Bail and fail hard on first error
     config.bail = true;

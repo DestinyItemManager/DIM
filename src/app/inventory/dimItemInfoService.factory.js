@@ -1,15 +1,13 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-angular.module('dimApp')
-  .factory('dimItemInfoService', ItemInfoService);
-
-
 /**
  * The item info service maintains a map of extra, DIM-specific, synced data about items (per platform).
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
-function ItemInfoService(SyncService, $i18next, toaster, $q) {
+export function ItemInfoService(SyncService, $i18next, toaster, $q) {
+  'ngInject';
+
   /**
    * Rebuild infos from partitioned info keys.
    */
