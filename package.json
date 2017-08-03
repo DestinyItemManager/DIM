@@ -119,8 +119,8 @@
     "textcomplete": "^0.13.1",
     "tooltip.js": "^1.1.4",
     "ua-parser-js": "^0.7.14",
+    "undate": "github:bhollis/undate",
     "underscore": "^1.8.3",
-    "undate": "github:bhollis/undate#patch-1",
     "uuid": "^3.1.0"
   }
 }
