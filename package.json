@@ -31,12 +31,12 @@
   },
   "homepage": "https://destinyitemmanager.com",
   "browserslist": [
-    "last 2 Chrome versions",
-    "last 2 ChromeAndroid versions",
-    "last 2 Firefox versions",
-    "last 1 Safari versions",
-    "last 1 iOS versions",
-    "last 2 Edge versions"
+    "Chrome >= 58",
+    "ChromeAndroid >= 59",
+    "Firefox >= 53",
+    "Safari >= 10",
+    "iOS >= 10",
+    "Edge >= 14"
   ],
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -119,8 +119,8 @@
     "textcomplete": "^0.13.1",
     "tooltip.js": "^1.1.4",
     "ua-parser-js": "^0.7.14",
+    "undate": "github:bhollis/undate",
     "underscore": "^1.8.3",
-    "undate": "github:bhollis/undate#patch-1",
     "uuid": "^3.1.0"
   }
 }

@@ -18,10 +18,12 @@ function getBrowserName(agent) {
     return 'ie_mob';
   } else if (agent.browser.name === 'Opera Mobi') {
     return 'op_mob';
-  } else if (agent.browser.name === 'Safari' && agent.os.name === 'iOS') {
+  } else if (agent.browser.name === 'Mobile Safari' || (agent.browser.name === 'Safari' && agent.os.name === 'iOS')) {
     return 'ios_saf';
   } else if (agent.browser.name === 'UCBrowser') {
     return 'and_uc';
+  } else if (agent.browser.name === 'Chromium') {
+    return 'chrome';
   }
   return agent.browser.name;
 }
