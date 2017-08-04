@@ -22,8 +22,16 @@ function ReturnController($http, OAuthService, OAuthTokenService) {
     ctrl.state = queryString.state;
     ctrl.authorized = (ctrl.code && ctrl.code.length > 0);
 
-    if (!ctrl.authorized || ctrl.state !== localStorage.authorizationState) {
-      window.location = "/index.html#!/login";
+    if (!ctrl.authorized) {
+      ctrl.error = "We expected an authorization code parameter from Bungie.net, but didn't get one.";
+      return;
+    }
+
+    if (ctrl.state !== localStorage.authorizationState) {
+      ctrl.error = "We expected the state parameter to match what we stored, but it didn't.";
+      if (!localStorage.authorizationState) {
+        ctrl.error += " There was no stored state at all - your browser may not support (or may be blocking) localStorage.";
+      }
       return;
     }
 
