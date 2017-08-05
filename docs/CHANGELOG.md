@@ -2,6 +2,11 @@
 
 * Made loadout builder talent grids tiny again.
 * If you autocomplete the entire filter name and hit enter, it will no longer hang the browser.
+* Updated the About page and FAQ.
+* Fixed a case where DIM would fail to load the latest version, or would load to a blank page unless force-reloaded.
+* Added some helpful info for cases where DIM might fail to load or auth with Bungie.net.
+* Added a warning when your browser is not supported by DIM.
+* DIM no longer supports iOS 9.
 
 # 4.6.0
 
