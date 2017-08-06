@@ -264,7 +264,7 @@ module.exports = (env) => {
         'return.html',
       ],
       // swSrc: './src/sw.js',
-      swDest: './dist/sw.js'
+      swDest: './dist/service-worker.js'
     }));
   }
 

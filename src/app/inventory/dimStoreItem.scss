@@ -45,6 +45,13 @@ dim-simple-item {
   outline: none;
 }
 
+dim-store-item {
+  width: 52px;
+  height: 52px;
+  width: calc(var(--item-size) + 8px);
+  height: calc(var(--item-size) + 8px);
+}
+
 .item {
   @include item-size-padded;
   margin: 2px;

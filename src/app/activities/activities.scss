@@ -70,9 +70,10 @@
 
   .title {
     cursor: pointer;
+    background-blend-mode: multiply;
+    background: #666;
 
     &:hover {
-      background-blend-mode: multiply;
       background: #aaa;
     }
   }
