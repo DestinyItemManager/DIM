@@ -33,7 +33,7 @@ require('./app/shell/dimManifestProgress.directive');
 require('./scss/main.scss');
 
 if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
-  navigator.serviceWorker.register('/sw.js')
+  navigator.serviceWorker.register('/service-worker.js')
     .catch((err) => {
       console.error('Unable to register service worker.', err);
     });

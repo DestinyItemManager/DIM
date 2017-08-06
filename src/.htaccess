@@ -958,3 +958,15 @@ FileETag None
     </FilesMatch>
 
 </IfModule>
+
+# Do not cache the service worker!
+
+<Files "service-worker.js">
+    FileETag None
+    <IfModule mod_headers.c>
+        Header unset ETag
+        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header unset Expires
+    </IfModule>
+</Files>
