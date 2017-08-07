@@ -326,6 +326,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
         vm.excludeditems = _.filter(vm.excludeditems, (item) => { return item.hash === 2672107540; });
+        vm.activesets = null;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onActiveSetsChange: function() {
@@ -447,6 +448,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
       },
       clearLocked: function() {
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+        vm.activesets = null;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
           vm.lockedchanged = true;
@@ -619,7 +621,9 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
             }
           }
 
-          vm.activesets = vm.allSetTiers[1];
+          if (!vm.allSetTiers.includes(vm.activesets)) {
+            vm.activesets = vm.allSetTiers[1];
+          }
           vm.activeHighestSets = getActiveHighestSets(setMap, vm.activesets);
           vm.collapsedConfigs = [false, false, false, false, false, false, false, false, false, false];
 
