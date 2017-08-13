@@ -1,5 +1,7 @@
 # Next
 
+# 4.8.0
+
 # 4.7.0
 
 * Made loadout builder talent grids tiny again.

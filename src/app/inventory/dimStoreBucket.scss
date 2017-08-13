@@ -19,16 +19,21 @@
 }
 
 .sub-section {
-  flex: 1;
   margin-top: 6px;
   margin-bottom: 6px;
   position: relative;
   display: flex;
   flex-direction: row;
+  height: calc(100% - 12px);
 
   > div {
     white-space: normal;
   }
+}
+
+dim-store-bucket {
+  display: block;
+  flex: 1;
 }
 
 .sub-bucket {
