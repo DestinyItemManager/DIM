@@ -43,14 +43,13 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
     const labels = vm.reviewLabels;
 
-    return _.map(labels, (label) => {
-      console.log(label);
-      console.log(vm.item.writtenReviews);
-      return _.where(vm.item.writtenReviews, (writtenReview) => {
-        console.log(writtenReview);
-        return writtenReview.rating === label;
-      }).length;
+    const mapData = _.map(labels, (label) => {
+      const matchingReviews = _.where(vm.item.writtenReviews, { rating: label });
+
+      return matchingReviews.length;
     });
+
+    return mapData;
   };
 
   vm.reviewData = vm.getReviewData();
