@@ -26,6 +26,11 @@
   </form>
 </div>
 
+<div ng-if="$ctrl.canCreateReview" class="user-revew--review-chart">
+  <canvas id="bar" class="chart chart-bar" chart-data="$ctrl.reviewData" chart-labels="$ctrl.reviewLabels">
+  </canvas>
+</div>
+
 <div ng-if="$ctrl.canCreateReview" class="user-review--header">
   <span ng-i18next="DtrReview.YourReview"></span>
   <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>

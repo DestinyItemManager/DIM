@@ -1,5 +1,6 @@
 import template from './item-review.html';
 import './item-review.scss';
+import _ from 'underscore';
 
 function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $scope) {
   'ngInject';
@@ -10,6 +11,10 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
   vm.expandReview = vm.item.isLocallyCached;
+
+  $scope.$watchCollection('vm.item.writtenReviews', () => {
+    vm.reviewData = vm.getReviewData();
+  });
 
   vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
@@ -28,6 +33,27 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.editReview = function() {
     vm.expandReview = true;
   };
+
+  vm.reviewLabels = [5, 4, 3, 2, 1];
+
+  vm.getReviewData = function() {
+    if (!vm.item.writtenReviews) {
+      return [];
+    }
+
+    const labels = vm.reviewLabels;
+
+    return _.map(labels, (label) => {
+      console.log(label);
+      console.log(vm.item.writtenReviews);
+      return _.where(vm.item.writtenReviews, (writtenReview) => {
+        console.log(writtenReview);
+        return writtenReview.rating === label;
+      }).length;
+    });
+  };
+
+  vm.reviewData = vm.getReviewData();
 
   vm.submitReview = function() {
     dimDestinyTrackerService.submitReview(vm.item);
@@ -82,6 +108,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);
+      vm.reviewData = vm.getReviewData();
     }
   };
 }
