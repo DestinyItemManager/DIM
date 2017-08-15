@@ -12,10 +12,6 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.hasUserReview = vm.item.userRating;
   vm.expandReview = vm.item.isLocallyCached;
 
-  if (vm.canReview) {
-    dimDestinyTrackerService.getItemReviews(vm.item);
-  }
-
   vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
     pros: ['fast', 'lol'],
