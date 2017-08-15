@@ -12,9 +12,9 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.hasUserReview = vm.item.userRating;
   vm.expandReview = vm.item.isLocallyCached;
 
-  $scope.$watchCollection('vm.item.writtenReviews', () => {
-    vm.reviewData = vm.getReviewData();
-  });
+  if (vm.canReview) {
+    dimDestinyTrackerService.getItemReviews(vm.item);
+  }
 
   vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
@@ -45,14 +45,19 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
     const mapData = _.map(labels, (label) => {
       const matchingReviews = _.where(vm.item.writtenReviews, { rating: label });
+      const highlightedReviews = _.where(matchingReviews, { isHighlighted: true });
 
-      return matchingReviews.length;
+      return matchingReviews.length + (highlightedReviews.length * 4);
     });
 
     return mapData;
   };
 
   vm.reviewData = vm.getReviewData();
+
+  vm.shouldDrawChart = function() {
+    return (vm.reviewData.length > 0);
+  };
 
   vm.submitReview = function() {
     dimDestinyTrackerService.submitReview(vm.item);
@@ -102,12 +107,15 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     dimSettingsService.save();
   });
 
+  $scope.$watchCollection('vm.item.writtenReviews', () => {
+    vm.reviewData = vm.getReviewData();
+  });
+
   vm.valueChanged = function() {
     vm.canReview = dimSettingsService.allowIdPostToDtr;
 
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);
-      vm.reviewData = vm.getReviewData();
     }
   };
 }
