@@ -1,6 +1,10 @@
 # Next
 
+* Remove the browser compatibility warning for Opera and prerelease Chrome versions.
+
 # 4.8.0
+
+* No changes!
 
 # 4.7.0
 
