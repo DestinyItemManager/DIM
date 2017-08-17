@@ -12,6 +12,12 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.hasUserReview = vm.item.userRating;
   vm.expandReview = vm.item.isLocallyCached;
 
+  vm.isCollapsed = false;
+
+  vm.toggleChart = function() {
+    vm.isCollapsed = !vm.isCollapsed;
+  };
+
   vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
     pros: ['fast', 'lol'],
@@ -105,7 +111,6 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   });
 
   $rootScope.$on('dim-item-reviews-fetched', () => {
-    console.log(vm.item.writtenReviews);
     vm.reviewData = vm.getReviewData();
   });
 

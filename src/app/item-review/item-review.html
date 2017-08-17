@@ -26,9 +26,18 @@
   </form>
 </div>
 
-<div ng-if="$ctrl.canCreateReview && $ctrl.shouldDrawChart()" class="user-revew--review-chart">
-  <canvas id="bar" class="chart chart-horizontalBar" chart-data="$ctrl.reviewData" chart-labels="$ctrl.reviewLabels">
-  </canvas>
+<div class="link user-review--chart-container" ng-click="$ctrl.toggleChart()">
+  <div class="collapse-handle">
+    <i class="fa collapse" ng-class="$ctrl.isCollapsed ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
+  </div>
+  <div ng-if="$ctrl.canCreateReview && $ctrl.shouldDrawChart()" class="user-revew--review-chart" ng-show="!$ctrl.isCollapsed">
+    <canvas id="bar"
+            class="chart chart-horizontalBar"
+            chart-data="$ctrl.reviewData"
+            chart-labels="$ctrl.reviewLabels"
+            chart-colors="['#E8A534', '#E8A534', '#E8A534', '#E8A534', '#E8A534']">
+    </canvas>
+  </div>
 </div>
 
 <div ng-if="$ctrl.canCreateReview" class="user-review--header">
