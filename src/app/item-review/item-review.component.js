@@ -2,7 +2,7 @@ import template from './item-review.html';
 import './item-review.scss';
 import _ from 'underscore';
 
-function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $scope) {
+function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $scope, $rootScope) {
   'ngInject';
 
   const vm = this;
@@ -52,7 +52,8 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.reviewData = vm.getReviewData();
 
   vm.shouldDrawChart = function() {
-    return (vm.reviewData.length > 0);
+    return ((vm.reviewData.length > 0) &&
+            (_.some(vm.reviewData, (item) => { return item > 0; })));
   };
 
   vm.submitReview = function() {
@@ -103,7 +104,8 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     dimSettingsService.save();
   });
 
-  $scope.$watchCollection('vm.item.writtenReviews', () => {
+  $rootScope.$on('dim-item-reviews-fetched', () => {
+    console.log(vm.item.writtenReviews);
     vm.reviewData = vm.getReviewData();
   });
 

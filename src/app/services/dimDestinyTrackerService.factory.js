@@ -8,7 +8,8 @@ import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
 
-function DestinyTrackerService($q,
+function DestinyTrackerService($rootScope,
+                               $q,
                                $http,
                                dimPlatformService,
                                dimSettingsService,
@@ -17,7 +18,7 @@ function DestinyTrackerService($q,
   const _reviewDataCache = new ReviewDataCache();
   const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _reviewsFetcher = new ReviewsFetcher($rootScope, $q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
 
   return {

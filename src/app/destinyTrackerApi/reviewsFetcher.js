@@ -8,7 +8,8 @@ import { ItemTransformer } from './itemTransformer';
  * @class ReviewsFetcher
  */
 class ReviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
+  constructor($rootScope, $q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
+    this.$rootScope = $rootScope;
     this.$q = $q;
     this.$http = $http;
     this._itemTransformer = new ItemTransformer();
@@ -63,6 +64,8 @@ class ReviewsFetcher {
     }
 
     this._reviewDataCache.addReviewsData(item, reviewData);
+
+    this.$rootScope.$broadcast('dim-item-reviews-fetched');
   }
 
   _sortReviews(a, b) {
