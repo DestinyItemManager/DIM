@@ -1,4 +1,5 @@
 # Next
+* Charting weapon reviews.
 
 # 4.8.0
 
