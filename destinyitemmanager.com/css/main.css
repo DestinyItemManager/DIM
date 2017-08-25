@@ -1,5 +1,3 @@
-@charset "UTF-8";
-@import url(../node_modules/normalize.css/normalize.css);
 html {
   box-sizing: border-box; }
 
@@ -435,6 +433,25 @@ section.access {
       margin: 12px auto 20px;
       text-align: left; }
 
+section.d2 {
+  background: linear-gradient(
+      rgba(41, 41, 47, 0.75),
+      rgba(41, 41, 47, 0.75)),
+      url(../images/Destiny-2-Official-Reveal-Art.jpg) no-repeat 0px -142px;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 150px 0; }
+  section.d2 .d2-support svg {
+    display: inline-block;
+    float: left; }
+  section.d2 .d2-support h4 {
+    display: inline-block;
+    color: #fff;
+    margin-left: 15px; }
+
+
 footer {
   background: #292929;
   padding: 5em 0 2em 0; }
@@ -486,7 +503,9 @@ footer {
       footer .footer-nav .social .icon-button {
         margin-right: 5px; }
   footer .footer-bottom-nav li {
-    display: inline-block; }
+    display: inline-block;
+    color: #b9b9b9;
+    font-size: 12px;}
     footer .footer-bottom-nav li a {
       color: #b9b9b9;
       font-weight: 600;
@@ -501,7 +520,7 @@ footer {
     font-size: 10px; }
 
 /**
- * Media Quierys
+ * media queries
  */
 @media screen and (min-width: 635px) {
   header .mobile-menu {
@@ -567,7 +586,7 @@ footer {
     float: left;
     display: block;
     margin-right: 2.35765%;
-    width: 14.70196%; }
+    width: 48.82117%; }
     footer .footer-nav .nav:last-child {
       margin-right: 0; } }
 
