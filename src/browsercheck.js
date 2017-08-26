@@ -6,22 +6,12 @@ import parser from 'ua-parser-js';
 // This is also intentionally written in es5.
 
 function getBrowserName(agent) {
-  if (agent.browser.name === 'Android Browser') {
-    return 'android';
-  } else if (agent.os.name === 'BlackBerry') {
-    return 'bb';
-  } else if (agent.browser.name === 'Chrome' && agent.os.name === 'Android') {
+  if (agent.browser.name === 'Chrome' && agent.os.name === 'Android') {
     return 'and_chr';
   } else if (agent.browser.name === 'Firefox' && agent.os.name === 'Android') {
     return 'and_ff';
-  } else if (agent.browser.name === 'IEMobile') {
-    return 'ie_mob';
-  } else if (agent.browser.name === 'Opera Mobi') {
-    return 'op_mob';
   } else if (agent.browser.name === 'Mobile Safari' || (agent.browser.name === 'Safari' && agent.os.name === 'iOS')) {
     return 'ios_saf';
-  } else if (agent.browser.name === 'UCBrowser') {
-    return 'and_uc';
   } else if (agent.browser.name === 'Chromium') {
     return 'chrome';
   }
