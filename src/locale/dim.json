@@ -92,7 +92,9 @@
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
-    "YourReview": "Your Review"
+    "YourReview": "Your Review",
+    "VerifyReport": "Are you sure you want to flag this review?",
+    "ReallyReport": "Report"
   },
   "FarmingMode": {
     "Configuration": "Configuration",
@@ -528,7 +530,9 @@
     "Settings": "Your DIM settings and preferences",
     "StatLabel": "This currently contains:",
     "TagNotes": "{{value}} items with tags or notes",
-    "Title": "DIM Storage"
+    "Title": "DIM Storage",
+    "IgnoredUsers": "{{value}} ignored users",
+    "ClearIgnoredUsers": "Clear Ignored Users"
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",
