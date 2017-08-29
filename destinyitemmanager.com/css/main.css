@@ -74,6 +74,13 @@ h4 {
   color: #265BAD;
   text-transform: uppercase; }
 
+.blizzard {
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 17px;
+  color: #0C50A0;
+  text-transform: uppercase;}
+
 span.spacer:before {
   margin-left: 8px;
   content: "• "; }
@@ -314,8 +321,8 @@ header {
   .hero .row {
     background: url("../images/dim-bg.png") no-repeat center top;
     padding: 75px 0 0 0; }
-    .hero .row h1 {
-      margin: 0 0 70px; }
+    .hero .row p {
+      margin: 10px 0 70px; }
       .hero .row h1 span {
         font-weight: 700; }
     .hero .row a {
