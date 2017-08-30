@@ -88,10 +88,12 @@
     "HelpPros": "Descrivi gli aspetti positivi di quest'arma (facoltativo)",
     "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
     "Pros": "Pro",
+    "ReallyReport": "Segnala",
     "ServiceCallError": "Richiesta di servizio di Destiny Tracker fallita.",
     "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker.",
     "Submit": "Invia",
     "ThankYou": "Grazie per aver inviato la recensione! Sarà online a breve.",
+    "VerifyReport": "Sei sicuro di voler segnalare questa recensione?",
     "YourReview": "La tua recensione"
   },
   "FarmingMode": {
@@ -498,6 +500,7 @@
   "Storage": {
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
     "ChromeSyncStorage": "Chrome Sync (Solo estensione)",
+    "ClearIgnoredUsers": "Cancella utenti ignorati",
     "Details": {
       "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM.",
       "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",
@@ -514,6 +517,7 @@
     "GDriveSignInWarning": "Se ci sono già dati di DIM salvati su Google Drive, quelli salvati localmente verranno sovrascritti. Potresti voler salvare questi dati prima di effettuare l'accesso.\n\nContinuare con l'accesso a Google Drive?",
     "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il JavaScript di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
     "GoogleDriveStorage": "Google Drive",
+    "IgnoredUsers": "{{value}} utenti ignorati",
     "Import": "Importa i dati di DIM da un file",
     "ImportExport": "Back up dati",
     "ImportFromExtension": "Importa dati dall'estensione di DIM per Chrome",
