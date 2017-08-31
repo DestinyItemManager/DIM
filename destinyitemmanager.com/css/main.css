@@ -322,7 +322,8 @@ header {
     background: url("../images/dim-bg.png") no-repeat center top;
     padding: 75px 0 0 0; }
     .hero .row p {
-      margin: 10px 0 70px; }
+      margin: 10px 0 70px;
+      font-size: 24px; }
       .hero .row h1 span {
         font-weight: 700; }
     .hero .row a {
@@ -343,8 +344,7 @@ header {
         color: #ffffff;
         width: 220px;
         line-height: 18px;
-        margin: 7px auto;
-        text-align: left; }
+        margin: 7px auto; }
     .hero .row .browser {
       position: relative;
       bottom: -20px;
