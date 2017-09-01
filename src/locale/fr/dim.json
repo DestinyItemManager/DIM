@@ -88,10 +88,12 @@
     "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
     "NoReviews": "Il n'y a aucune évaluation pour cet objet, soyez le premier!",
     "Pros": "Avantages",
+    "ReallyReport": "Signaler",
     "ServiceCallError": "Appel au service de Destiny tracker échoué.",
     "ServiceSubmitError": "Envoie au service de Destiny tracker échoué.",
     "Submit": "Envoyer",
     "ThankYou": "Merci d'avoir envoyé une évaluation! Elle apparaitra bientôt.",
+    "VerifyReport": "Êtes vous sure de vouloir signaler cette évaluation?",
     "YourReview": "Votre évaluation"
   },
   "FarmingMode": {
@@ -498,6 +500,7 @@
   "Storage": {
     "BrowserMayClearData": "Votre navigateur peut supprimer cette information si vous n'avez plus d'espace ou si vous ne visitez pas DIM fréquemment.",
     "ChromeSyncStorage": "Synchronisation Chrome (Extension uniquement)",
+    "ClearIgnoredUsers": "Effacer les utilisateurs ignorés",
     "Details": {
       "ChromeSyncStorage": "Si vous êtes connecté à Chrome, cela synchronisera vos données vers vos autres session Chrome. Cela ne fonctionne pas avec le site web DIM.",
       "GoogleDriveStorage": "DIM peut sauvegarder des données sur le stockage Google Drive. Si vous vous connectez à Google Drive sur plusieurs navigateurs, vos données seront partagées entre ces navigateurs. Ces données sont sauvegarder par compte Bungie.",
@@ -514,6 +517,7 @@
     "GDriveSignInWarning": "Si vous avez déjà sauvegardé des données DIM sur Google Drive, cela écrasera tout ce que vous avez sauvegarder localement. Vous voudrez peut-être sauvegardez vos données avant de vous connecter.\n\nContinuer la connexion vers Google Drive?",
     "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il Java Script di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
     "GoogleDriveStorage": "Google Drive",
+    "IgnoredUsers": "{{value}} utilisateurs ignorés",
     "Import": "Importer des données DIM depuis un fichier",
     "ImportExport": "Sauvegarder les données",
     "ImportFromExtension": "Importer des données depuis l'extension DIM pour Chrome",

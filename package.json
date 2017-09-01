@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "4.8.0",
+  "version": "4.10.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "engines": {
@@ -31,12 +31,14 @@
   },
   "homepage": "https://destinyitemmanager.com",
   "browserslist": [
-    "Chrome >= 58",
-    "ChromeAndroid >= 59",
-    "Firefox >= 53",
-    "Safari >= 10",
-    "iOS >= 10",
-    "Edge >= 14"
+    "last 2 Chrome versions",
+    "last 2 ChromeAndroid versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 iOS versions",
+    "last 2 Edge versions",
+    "last 2 Opera versions",
+    "unreleased versions"
   ],
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -104,8 +106,7 @@
     "angularjs-slider": "^5.9.0",
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
     "babel-polyfill": "^6.20.0",
-    "browserslist": "^2.3.0",
-    "chart.js": "^2.6.0",
+    "browserslist": "^2.3.3",
     "components-font-awesome": "^4.7.0",
     "drag-drop-webkit-mobile": "^1.4.1",
     "file-loader": "^0.11.1",

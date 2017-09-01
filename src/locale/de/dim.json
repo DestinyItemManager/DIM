@@ -88,10 +88,12 @@
     "HelpPros": "Beschreibe die positiven Eigenschaften dieser Waffe (Optional)",
     "NoReviews": "Bisher gibt es keine Berichte für diesen Item, sei der Erste!",
     "Pros": "Vorteile",
+    "ReallyReport": "Melden",
     "ServiceCallError": "Destiny-Tracker-Service-Aufruf fehlgeschlagen.",
     "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen.",
     "Submit": "Absenden",
     "ThankYou": "Vielen Dank für den eingereichten Bericht! Er wird bald veröffentlicht.",
+    "VerifyReport": "Bist du dir sicher dass du diesen Bericht melden möchtest?",
     "YourReview": "Dein Bericht"
   },
   "FarmingMode": {
@@ -498,6 +500,7 @@
   "Storage": {
     "BrowserMayClearData": "Der Browser könnte diese Informationen eventuell löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
     "ChromeSyncStorage": "Chrome Sync (nur Erweiterung)",
+    "ClearIgnoredUsers": "Ignorierte Benutzer löschen",
     "Details": {
       "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
       "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
@@ -514,6 +517,7 @@
     "GDriveSignInWarning": "Wenn du bereits DIM Daten in Google Drive gespeichert hast, wird alles überschrieben was du lokal gespeichert hast. Du solltest eventuell deine Daten sichern, bevor du dich anmeldest.\n\nGoogle Drive Anmeldung fortsetzen?",
     "GoogleApiBlocked": "Google Drive ist nicht erreichbar, weil ein Inhaltsblocker JavaScript für Google Drive deaktiviert hat.",
     "GoogleDriveStorage": "Google Drive",
+    "IgnoredUsers": "{{value}} ignorierte Benutzer",
     "Import": "Importiere DIM Daten aus Datei",
     "ImportExport": "Back Up Dateien",
     "ImportFromExtension": "Importiere Daten von der DIM Chrome Erweiterung",

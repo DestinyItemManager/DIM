@@ -59,7 +59,33 @@
     color: gold;
   }
 
+  &--clickable {
+    cursor: pointer;
+  }
+
   &--review {
     word-wrap: break-word;
+  }
+
+  &--report-container {
+    display: flex;
+  }
+
+  &--report {
+    color:black;
+    border-radius:10px;
+    padding:10px 10px 10px 36px;
+    margin:10px;
+    border:1px solid #ff0000;
+    background: #ff9999;
+    font-size: larger;
+  }
+
+  &--report-buttons {
+    display: flex;
+  }
+
+  &--report-cancel {
+    margin-left: auto;
   }
 }

@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import template from './item-review.html';
 import './item-review.scss';
 import _ from 'underscore';
@@ -11,6 +12,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
   vm.expandReview = vm.item.isLocallyCached;
+  vm.toggledFlags = [];
 
   vm.isCollapsed = false;
 
@@ -32,7 +34,44 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     vm.expandReview = !vm.expandReview;
   };
 
-  vm.editReview = function() {
+  vm.clickReview = function(reviewId) {
+    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+
+    if (review.isReviewer) {
+      vm.editReview();
+    }
+    else if (!review.isHighlighted) {
+      vm.openFlagContext(reviewId);
+    }
+  };
+
+  vm.openFlagContext = function(reviewId) {
+    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+
+    if ((review.isReviewer) || (review.isHighlighted)) {
+      return;
+    }
+
+    const toggledReviewIndex = vm.toggledFlags.indexOf(reviewId);
+
+    if (toggledReviewIndex === -1) {
+      vm.toggledFlags.push(reviewId);
+    }
+  };
+
+  vm.closeFlagContext = function(reviewId) {
+    const toggledReviewIndex = vm.toggledFlags.indexOf(reviewId);
+
+    vm.toggledFlags.splice(toggledReviewIndex);
+  };
+
+  vm.editReview = function(reviewId) {
+    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+
+    if (!review.isReviewer) {
+      return;
+    }
+
     vm.expandReview = true;
   };
 
@@ -81,6 +120,12 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
     dimDestinyTrackerService.updateCachedUserRankings(item,
                                                       userReview);
+  };
+
+  vm.reportReview = function(reviewId) {
+    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+
+    dimDestinyTrackerService.reportReview(review);
   };
 
   vm.toUserReview = function(item) {

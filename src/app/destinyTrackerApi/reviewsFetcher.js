@@ -8,7 +8,7 @@ import { ItemTransformer } from './itemTransformer';
  * @class ReviewsFetcher
  */
 class ReviewsFetcher {
-  constructor($rootScope, $q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
+  constructor($rootScope, $q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
     this.$rootScope = $rootScope;
     this.$q = $q;
     this.$http = $http;
@@ -16,6 +16,7 @@ class ReviewsFetcher {
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
+    this._userFilter = userFilter;
   }
 
   _getItemReviewsCall(item) {
@@ -45,6 +46,16 @@ class ReviewsFetcher {
     return _.find(reviewData.reviews, { isReviewer: true });
   }
 
+  _sortAndIgnoreReviews(item) {
+    if (item.writtenReviews) {
+      item.writtenReviews.sort(this._sortReviews);
+
+      item.writtenReviews.forEach((writtenReview) => {
+        writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
+      });
+    }
+  }
+
   _attachReviews(item, reviewData) {
     const userReview = this._getUserReview(reviewData);
 
@@ -52,9 +63,7 @@ class ReviewsFetcher {
     item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
     item.writtenReviews = _.filter(reviewData.reviews, 'review');
 
-    if (item.writtenReviews) {
-      item.writtenReviews.sort(this._sortReviews);
-    }
+    this._sortAndIgnoreReviews(item);
 
     if (userReview) {
       item.userRating = userReview.rating;
