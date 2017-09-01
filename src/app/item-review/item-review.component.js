@@ -93,7 +93,6 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     });
 
     vm.totalReviews = mapData.reduce((sum, cur) => { return sum + cur; }, 0);
-    console.log(vm.totalReviews);
 
     return mapData;
   };
