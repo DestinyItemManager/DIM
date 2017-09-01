@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import template from './item-review.html';
 import './item-review.scss';
-import _ from 'underscore';
 
 function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $scope, $rootScope) {
   'ngInject';
@@ -75,6 +74,8 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     vm.expandReview = true;
   };
 
+  vm.maxReviews = 0;
+
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
   vm.getReviewData = function() {
@@ -90,6 +91,8 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
       return matchingReviews.length + (highlightedReviews.length * 4);
     });
+
+    vm.maxReviews = _.max(mapData);
 
     return mapData;
   };
