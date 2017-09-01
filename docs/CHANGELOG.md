@@ -1,5 +1,7 @@
 # Next
 
+* Fix a case where DIM wouldn't work because auth tokens had expired.
+
 # 4.10.0
 
 * You can flag reviews for being offensive or arguing or whatever. Be helpful but also be nice.
