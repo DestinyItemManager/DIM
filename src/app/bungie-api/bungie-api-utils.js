@@ -19,10 +19,11 @@ function bungieApiUpdate(path, data) {
   };
 }
 
-function bungieApiQuery(path) {
+function bungieApiQuery(path, params) {
   return {
     method: 'GET',
     url: `https://www.bungie.net${path}`,
+    params,
     headers: {
       'X-API-Key': apiKey
     },
