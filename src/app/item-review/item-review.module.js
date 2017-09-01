@@ -1,6 +1,4 @@
 import angular from 'angular';
-import 'chart.js';
-import 'angular-chart.js';
 
 import { ItemReviewComponent } from './item-review.component';
 

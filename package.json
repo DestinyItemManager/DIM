@@ -96,7 +96,6 @@
     "@uirouter/visualizer": "^4.0.0",
     "angular": "^1.6.5",
     "angular-aria": "^1.6.5",
-    "angular-chart.js": "^1.1.1",
     "angular-duration-format": "^1.0.1",
     "angular-hotkeys": "^1.7.0",
     "angular-messages": "^1.6.5",
