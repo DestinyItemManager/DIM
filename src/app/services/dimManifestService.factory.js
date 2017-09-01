@@ -4,68 +4,30 @@ import angular from 'angular';
 import _ from 'underscore';
 import idbKeyval from 'idb-keyval';
 
-import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wasm.js';
-import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-optimized-wasm-raw.wasm';
-
 // For zip
 import 'imports-loader?this=>window!@destiny-item-manager/zip.js';
 import inflate from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/inflate.js';
 import zipWorker from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/z-worker.js';
 
-// Dynamic import splits up the sql library so the user only loads it
-// if they need it. So we can minify sql.js specifically (as explained
-// in the Webpack config, we need to explicitly name this chunk, which
-// can only be done using the dynamic import method.
-function requireSqlLib() {
-  function importAsmJs() {
-    return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
-  }
-
-  if ($featureFlags.wasm && typeof WebAssembly === 'object') {
-    return new Promise((resolve, reject) => {
-      let loaded = false;
-
-      window.Module = {
-        wasmBinaryFile: sqlWasmBinaryPath
-      };
-      window.SQL = {
-        onRuntimeInitialized: function() {
-          if (!loaded) {
-            console.info("Using WASM SQLite");
-            loaded = true;
-            resolve(window.SQL);
-            delete window.SQL;
-          }
-        }
-      };
-
-      // Give it 10 seconds to load
-      setTimeout(() => {
-        if (!loaded) {
-          loaded = true;
-
-          // Fall back to the old one
-          importAsmJs.then(resolve, reject);
-        }
-      }, 10000);
-
-      const head = document.getElementsByTagName('head')[0];
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = sqlWasmPath;
-      script.async = true;
-      head.appendChild(script);
-    });
-  } else {
-    return importAsmJs();
-  }
-}
+import { requireSqlLib } from './sql';
 
 angular.module('dimApp')
-  .factory('dimManifestService', ManifestService);
+  .factory('dimManifestService', ManifestService)
+  .factory('D2ManifestService', D2ManifestService);
 
+// Two separate copies of the service, with separate state and separate storage
 
 function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+  'ngInject';
+  return makeManifestService('manifest-version', 'dimManifest', $q, Destiny1Api, $http, toaster, dimSettingsService, $i18next, $rootScope);
+}
+
+function D2ManifestService($q, Destiny2Api, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+  'ngInject';
+  return makeManifestService('d2-manifest-version', 'd2-manifest', $q, Destiny2Api, $http, toaster, dimSettingsService, $i18next, $rootScope);
+}
+
+function makeManifestService(localStorageKey, idbKey, $q, DestinyApi, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   // Testing flags
   const alwaysLoadRemote = false;
 
@@ -81,11 +43,13 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i
     statusText: null,
     version: null,
 
+    // TODO: we probably want a way to unload this service
+
     // This tells users to reload the extension. It fires no more
     // often than every 10 seconds, and only warns if the manifest
     // version has actually changed.
     warnMissingDefinition: _.debounce(() => {
-      Destiny1Api.getManifest()
+      DestinyApi.getManifest()
         .then((data) => {
           const language = dimSettingsService.language;
           const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
@@ -99,6 +63,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i
         });
     }, 10000, true),
 
+    // TODO: redo all this with rxjs
     getManifest: function() {
       if (manifestPromise) {
         return manifestPromise;
@@ -173,7 +138,7 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i
 
   function loadManifest() {
     return $q.all([
-      Destiny1Api.getManifest(),
+      DestinyApi.getManifest(),
       dimSettingsService.ready // wait for settings to be ready
     ])
       .then(([data]) => {
@@ -207,10 +172,10 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i
         service.statusText = `${$i18next.t('Manifest.Save')}...`;
 
         const typedArray = new Uint8Array(arraybuffer);
-        idbKeyval.set('dimManifest', typedArray)
+        idbKeyval.set(idbKey, typedArray)
           .then(() => {
             console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
-            localStorage.setItem('manifest-version', version);
+            localStorage.setItem(localStorageKey, version);
           })
           .catch((e) => {
             console.error('Error saving manifest file', e);
@@ -227,8 +192,8 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i
   }
 
   function deleteManifestFile() {
-    localStorage.removeItem('manifest-version');
-    idbKeyval.delete('dimManifest');
+    localStorage.removeItem(localStorageKey);
+    idbKeyval.delete(idbKey);
   }
 
   /**
@@ -241,9 +206,9 @@ function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i
     }
 
     service.statusText = `${$i18next.t('Manifest.Load')}...`;
-    const currentManifestVersion = localStorage.getItem('manifest-version');
+    const currentManifestVersion = localStorage.getItem(localStorageKey);
     if (currentManifestVersion === version) {
-      return idbKeyval.get('dimManifest').then((typedArray) => {
+      return idbKeyval.get(idbKey).then((typedArray) => {
         if (!typedArray) {
           throw new Error("Empty cached manifest file");
         }
