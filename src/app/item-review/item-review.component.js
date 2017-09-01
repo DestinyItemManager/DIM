@@ -74,7 +74,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     vm.expandReview = true;
   };
 
-  vm.maxReviews = 0;
+  vm.totalReviews = 0;
 
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
@@ -92,7 +92,8 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
       return matchingReviews.length + (highlightedReviews.length * 4);
     });
 
-    vm.maxReviews = _.max(mapData);
+    vm.totalReviews = mapData.reduce((sum, cur) => { return sum + cur; }, 0);
+    console.log(vm.totalReviews);
 
     return mapData;
   };
