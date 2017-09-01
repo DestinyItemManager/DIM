@@ -3,7 +3,7 @@ import angular from 'angular';
 import { ItemReviewComponent } from './item-review.component';
 
 export default angular
-  .module('ReviewModule', ['chart.js'])
+  .module('ReviewModule', [])
   .component('dimItemReview', ItemReviewComponent)
   // http://jasonwatmore.com/post/2016/03/31/angularjs-utc-to-local-date-time-filter
   .filter('utcToLocal', ($filter) => {
