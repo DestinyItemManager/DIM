@@ -26,15 +26,15 @@
   </form>
 </div>
 
-<div class="link user-review--chart-container" ng-click="$ctrl.toggleChart()">
+<div class="link community-review--chart-container" ng-click="$ctrl.toggleChart()">
   <div class="collapse-handle">
     <i class="fa collapse" ng-class="$ctrl.isCollapsed ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
   </div>
-  <div ng-if="$ctrl.canCreateReview && $ctrl.shouldDrawChart()" class="user-revew--review-chart stats" ng-show="!$ctrl.isCollapsed">
+  <div ng-if="$ctrl.canCreateReview && $ctrl.shouldDrawChart()" class="community-review--review-chart stats" ng-show="!$ctrl.isCollapsed">
     <div class="stat-box-row" ng-repeat="rating in $ctrl.reviewLabels track by $index">
       <span class="stat-box-text stat-box-cell"> {{ rating }} </span>
       <span class="stat-box-outer"><span class="stat-box-container">
-        <span class="stat-box-inner" dim-percent-width="{{ $ctrl.reviewData[$index] / $ctrl.maxReviews }}"></span>
+        <span class="stat-box-inner rating-chart-bar-color" dim-percent-width="{{ $ctrl.reviewData[$index] / $ctrl.maxReviews }}"></span>
       </span></span>
     </div>  
   </div>
