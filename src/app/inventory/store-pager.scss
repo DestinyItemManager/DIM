@@ -3,7 +3,9 @@ store-pager {
 }
 
 .character-swipe {
-
+  overflow-x: initial !important;
+  overflow-y: initial !important;
+  height: 100vh !important;
 }
 
 .phone-portrait {
