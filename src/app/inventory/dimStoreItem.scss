@@ -1,0 +1,196 @@
+@import '../../scss/variables.scss';
+
+@mixin item-size {
+  width: 44px;
+  height: 44px;
+  width: var(--item-size);
+  height: var(--item-size);
+}
+
+@mixin item-size-padded {
+  width: 48px;
+  height: 48px;
+  width: calc(var(--item-size) + 4px);
+  height: calc(var(--item-size) + 4px);
+}
+
+.item-stat {
+  opacity: .85;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 9.5px;
+  padding: 0 2px;
+  background: #ddd;
+  color: #000;
+  min-width: 10px;
+  text-align: center;
+  -webkit-user-select: none;
+  box-sizing: content-box;
+}
+.itemQuality .item-quality ~ .item-stat, .show-reviews .item-review ~ .item-stat {
+  background-color: transparent;
+}
+
+.item-quality {
+  left: 0;
+  text-align: left;
+  display: none;
+  .itemQuality & {
+    display: block;
+  }
+}
+
+dim-simple-item {
+  outline: none;
+}
+
+dim-store-item {
+  width: 52px;
+  height: 52px;
+  width: calc(var(--item-size) + 8px);
+  height: calc(var(--item-size) + 8px);
+}
+
+.item {
+  @include item-size-padded;
+  margin: 2px;
+  position: relative;
+  contain: strict;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.search-hidden {
+  opacity: .2;
+}
+
+.item-xp-bar-small {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: $xp;
+}
+
+.item-img {
+  @include item-size;
+  background-color: #5c7183;
+  border: 2px solid #DDD;
+  background-size: cover;
+  display: block;
+  box-sizing: content-box;
+  &:focus {
+    outline: none;
+  }
+  &.complete {
+    border-color: $gold;
+  }
+}
+
+.item-element {
+  display: block;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  pointer-events: none;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-color: transparent;
+    border-style: solid;
+  }
+  &::before {
+    border-width: 5px;
+  }
+  &.void::before {
+    border-left-color: $void;
+    border-top-color: $void;
+  }
+  &.arc::before {
+    border-left-color: $arc;
+    border-top-color: $arc;
+  }
+  &.solar::before {
+    border-left-color: $solar;
+    border-top-color: $solar;
+  }
+
+  .show-elements & {
+    top: 35%;
+    left: auto;
+    right: 1px;
+    height: 35%;
+    width: 35%;
+    filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    &::before {
+      content: none;
+    }
+
+    &.void {
+      background-image: url('../../images/void.png');
+    }
+    &.arc {
+      background-image: url('../../images/arc.png');
+    }
+    &.solar {
+      background-image: url('../../images/solar.png');
+    }
+  }
+}
+
+.item-tag {
+  text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  color: gold;
+  pointer-events: none;
+  &.no-tag {
+    display: none;
+  }
+}
+
+.complete {
+  border-color: $gold;
+}
+
+/**
+  New Item overlay area
+**/
+
+@keyframes new_overlay {
+  0%   { transform: translate(calc(-1.5*var(--item-size)), calc(-1.5*var(--item-size))) scale(2)}
+  100% { transform: translate(calc(1.5*var(--item-size)), calc(1.5*var(--item-size))) scale(2)}
+}
+
+.new_overlay {
+  @include item-size-padded;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  .new-item-animated & {
+    will-change: transform;
+    animation: new_overlay 4s linear infinite;
+  }
+}
+
+.new_overlay_overflow {
+  display: none;
+  .show-new-items & {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include item-size-padded;
+    overflow: hidden;
+  }
+}

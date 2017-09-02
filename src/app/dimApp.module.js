@@ -18,7 +18,7 @@ import 'angular-promise-tracker';
 import bungieApiModule from './bungie-api/bungie-api.module';
 import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';
-import inventoryModule from './store/inventory.module';
+import inventoryModule from './inventory/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
 import activitiesModule from './activities/activities.module';
 import vendorsModule from './vendors/vendors.module';
@@ -31,6 +31,7 @@ import farmingModule from './farming/farming.module';
 import settingsModule from './settings/settings.module';
 import oauthModule from './oauth/oauth.module';
 import storageModule from './storage/storage.module';
+import loadoutModule from './loadout/loadout.module';
 import movePopupModule from './move-popup/move-popup.module';
 import destiny1Module from './destiny1/destiny1.module';
 import destiny2Module from './destiny2/destiny2.module';
@@ -68,6 +69,7 @@ const dependencies = [
   settingsModule,
   oauthModule,
   storageModule,
+  loadoutModule,
   movePopupModule,
   destiny1Module,
   destiny2Module,

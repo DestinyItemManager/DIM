@@ -9,12 +9,17 @@
           "last 2 Chrome versions",
           "last 2 ChromeAndroid versions",
           "last 2 Firefox versions",
-          "last 1 Safari versions",
-          "iOS >= 9",
-          "last 2 Edge versions"
+          "last 2 Safari versions",
+          "last 2 iOS versions",
+          "last 2 Edge versions",
+          "last 2 Opera versions"
         ]
       }
     }]
   ],
-  "plugins": ["angularjs-annotate", "syntax-dynamic-import"]
+  "plugins": [
+    "angularjs-annotate",
+    "syntax-dynamic-import",
+    ["transform-object-rest-spread", { "useBuiltIns": true }]
+  ]
 }

@@ -33,6 +33,7 @@ module.exports = (env) => {
   const config = {
     entry: {
       main: './src/index.js',
+      browsercheck: './src/browsercheck.js',
       authReturn: './src/authReturn.js'
     },
 
@@ -125,7 +126,7 @@ module.exports = (env) => {
         inject: false,
         filename: 'index.html',
         template: '!handlebars-loader!src/index.html',
-        chunks: ['manifest', 'vendor', 'main']
+        chunks: ['manifest', 'vendor', 'main', 'browsercheck']
       }),
 
       new HtmlWebpackPlugin({
@@ -176,6 +177,8 @@ module.exports = (env) => {
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
 
         $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify('22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'),
+
+        $BROWSERS: JSON.stringify(packageJson.browserslist),
 
         // Feature flags!
 
@@ -261,7 +264,7 @@ module.exports = (env) => {
         'return.html',
       ],
       // swSrc: './src/sw.js',
-      swDest: './dist/sw.js'
+      swDest: './dist/service-worker.js'
     }));
   }
 

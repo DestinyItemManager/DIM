@@ -24,18 +24,18 @@
     "DevVersion": "¿Estás corriendo una versión de desarrollo de DIM? Debes primero registrar tu extensión de Chrome con Bungie.net.",
     "Difficulties": "La API de Bungie esta teniendo dificultades.",
     "ItemUniqueness": "Singularidad del objeto",
-    "ItemUniquenessExplanation": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
-    "ItemUniquenessExplanation_female": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
-    "ItemUniquenessExplanation_male": "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
+    "ItemUniquenessExplanation": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
+    "ItemUniquenessExplanation_female": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
+    "ItemUniquenessExplanation_male": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
     "Maintenance": "Los servidores de Bungie.net se encuentran en mantenimiento.",
     "NetworkError": "Error de red - {{status}} {{statusText}}",
-    "NoAccount": "No se encontró una cuenta de Destiny para {{platform}}. Seleccionaste la plataforma correcta?",
+    "NoAccount": "No se encontró esta cuenta de Destiny en {{platform}}. ¿Seleccionaste la plataforma correcta?",
     "NoAccountForPlatform": "No encontramos tu cuenta de Destiny en {{platform}}.",
     "NoCookies": "No se encontraron cookies.",
     "NotConnected": "Es posible que no tengas conexión a Internet.",
     "NotLoggedIn": "Por favor inicie sesión en Bungie.net para poder usar esta extensión.",
-    "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelva a intentarlo.",
-    "Twitter": "Entérate de los estados de actualizaciones en:",
+    "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelve a intentarlo.",
+    "Twitter": "Entérate de las actualizaciones de estados en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
     "VendorNotFound": "Los datos del vendedor no están disponibles."
   },
@@ -65,7 +65,7 @@
     "Dump": "Descargar información a la consola"
   },
   "Destiny2": {
-    "Banner": "DIM proveerá soporte Destiny 2",
+    "Banner": "DIM proveerá soporte para Destiny 2",
     "ComingSoon": "Proveeremos soporte para tus personajes de Destiny 2 en cuanto el juego se encuentre disponible en consolas, de acuerdo a nuestras capacidades. Danos algunas semanas para conocer el juego (y entretenernos!)."
   },
   "DidYouKnow": {
@@ -75,7 +75,7 @@
     "DoubleClick": "Si estas moviendo un objeto a tu personaje activo (último al que iniciaste sesión), puedes darle doble click al objeto para equiparlo instantáneamente.",
     "DragAndDrop": "Los objetos pueden ser arrastrados y soltados entre diferentes columnas de personajes/depósito.",
     "Expand": "Para expandir de nuevo una sección, simplemente da click en el símbolo de más a la izquierda de la categoría que colapsaste.",
-    "TryNext": "¡Pruébalo la próxima vez!"
+    "TryNext": "¡Inténtalo nuevamente!"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} reseñas.",
@@ -127,13 +127,13 @@
       "SRL": "Carreras de Colibríes",
       "ToO": "Las Pruebas de Osiris",
       "VoG": "Cámara de Cristal",
-      "WotM": "La furia de las máquinas"
+      "WotM": "La Furia de las Máquinas"
     },
     "Activity": "Disponible en la actividad <i>{{activity}}</i>",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
     "Ascended": "Muestra objetos que tienen un nodo ascendente y si han sido ascendidos o no.",
     "Categories": "Categorías de objetos de nivel alto.",
-    "Class": "Muestra objetos basado en su tipo de afinidad.",
+    "Class": "Muestra objetos basados en su afinidad de clase.",
     "ClickFilters": "Haz click en los filtros abajo para aplicar, o escribiendo en la casilla de búsqueda.",
     "Combine": "Los filtros son combinados usando la lógica \"y\", por ejemplo '{{example}}' mostrará todos los objetos de arco que tengan más de 300 de nivel de luz. Los filtros pueden ser negados usando '{{not}}', por ejemplo '{{notexample}}' va a encontrar todos los objetos que no son engramas.",
     "ContributeLight": "Objetos que contribuyen a tu nivel de luz.",
@@ -144,12 +144,12 @@
     "EnterName": "Escribe el nombre de un objeto:",
     "EnterNote": "Inserta notas de texto:",
     "Equipment": "Objetos que pueden ser equipados.",
-    "Equipped": "Objetos que estan equipados actualmente en un personaje.",
+    "Equipped": "Objetos que actualmente están equipados en un personaje.",
     "Filter": "Filtro",
     "Glimmer": {
       "Any": "Cualquier tipo de objeto de lúmen.",
       "Boost": "Objetos que incrementan la cantidad de lúmen obtenido por 10 minutos.",
-      "Glimmer": "Muestra objetos que son consumibles y que están relacionados con la recolección de lúmen:",
+      "Glimmer": "Muestra objetos que son consumibles y que están relacionados a la obtención de lúmen:",
       "Item": "Objetos que son intercambiables con Rahool por 200 de lúmen."
     },
     "InLoadout": "Muestra objetos que están incluidos en cualquier equipamiento.",
@@ -157,10 +157,10 @@
     "Leveling": {
       "Complete": "{{term}} - muestra objetos que están completamente mejorados - todas las mejoras desbloqueadas.",
       "Incomplete": "{{term}} - muestra objetos que no están completados - aún queda al menos una mejora por desbloquear.",
-      "Leveling": "Muestra objetos en diferentes estados de nivel:",
+      "Leveling": "Muestra objetos en diferentes estados de nivelación:",
       "NeedsXP": "{{term}} - muestra objetos que aun pueden adquirir más XP en ellos.",
       "Upgraded": "{{term}} - muestra objetos que tienen suficiente XP para desbloquear todos sus nodos, pero no todos sus nodos han sido desbloqueados.",
-      "XPComplete": "{{term}} - muestra objetos que no pueden adquirir mas XP en ellos (sin importar si las mejoras han sido o no desbloqueadas)."
+      "XPComplete": "{{term}} - muestra objetos que no pueden adquirir mas XP en ellos (sin importar si sus mejoras han sido o no desbloqueadas)."
     },
     "LightLevel": "Muestra objetos basado en su nivel de luz (Ataque para armas; Defensa para armaduras).",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
@@ -569,17 +569,20 @@
     "About": {
       "BungieCopyright": "Todas las imágenes y contenido son propiedad de Bungie. Por favor contáctanos si hay algún problema.",
       "ContactUs": "Contáctanos",
+      "Discord": "Discord",
+      "DiscordHelp": "Haz preguntas y recibe soporte en nuestro canal de Discord.",
       "FAQ": "Preguntas Frecuentes",
       "FAQAccess": "¿Cómo accede DIM a mis datos de Destiny?",
-      "FAQAccessAnswer": "Cualquier extensión de Chrome puede pedir acceso a los datos que una página web guarda en tu computadora. Cuando inicias sesión en Bungie.net, se te proporciona un token (una cookie) que es generada únicamente para tu cuenta. Utilizas este token para comunicarte con Bungie de manera segura. El token es mas seguro que estar enviando tus credenciales con cada requisito hecho a los servidores de Bungie. DIM utiliza este token para comunicarse con Bungie por ti.",
+      "FAQAccessAnswer": "Utilizamos la autenticación de la app de Bungie para permitir a DIM ver y mover tus objetos. DIM nunca ve tu usuario o contraseña. Funciona del mismo modo que la App Acompañante.",
+      "FAQD2": "¿Será DIM compatible con Destiny 2?",
       "FAQDupeGally": "¡Oye, DIM duplicó mi Gjallarhorn!",
       "FAQDupeGallyAnswer": "No, no lo hicimos. Lo prometo.",
       "FAQKeyboard": "¿DIM soporta atajos de teclado?",
       "FAQKeyboardAnswer": "¡Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
       "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
-      "FAQLogoutAnswer": "Da click en tu cuenta y selecciona \"cerrar sesión\"",
       "FAQLostItem": "¡Perdí mi objeto usando tu herramienta!",
-      "FAQLostItemAnswer": "Es muy probable que la transferencia falló, lo cual deja tu objeto en el Depósito o en otro personaje. Puedes buscar ese objeto. Si incluso así no aparece, actualiza la aplicación presionando F5. Asegúrate de revisar {{link}} o en el juego para verificar que tu objeto todavía existe. Estamos seguros de que todavía esta ahí.",
+      "FAQMobile": "¿DIM tendrá soporte móvil? ¿Habrá una app?",
+      "FAQMobileAnswer": "¡El sitio web de DIM puede ser cargado en los teléfonos y tabletas desde hoy!. Sin embargo, aún trabajamos para lograr que la amplia información de nuestra interfaz sea cómoda de usar en teléfonos móviles. Asegúrese crear in vínculo de DIM en su pantalla de inicio. Es posible que lancemos una apicación en el futuro, pero será casi exacta al sitio Web.",
       "GitHub": "GitHub",
       "GitHubHelp": "Si estas interesado en contribuir al proyecto, visíta la página del proyecto en {{link}}.",
       "Header": "Acerca de Destiny Item Manager (DIM)",

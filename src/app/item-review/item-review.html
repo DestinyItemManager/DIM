@@ -67,15 +67,33 @@
       <div ng-repeat="con in $ctrl.aggregate.cons" ng-bind="con"></div>
     </div>
   </div>
-  <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews">
-    <div ng-click="!review.isReviewer || $ctrl.editReview()">
+  <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews | filter : { isIgnored: '!true' }">
+    <div ng-class="{'link community-review--clickable' : review.isReviewer}" ng-click="$ctrl.editReview(review.reviewId)">
       <div class="community-review--who">
         <star-rating rating="review.rating" read-only></star-rating>
         <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
         <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
-        <div ng-if="review.isReviewer" class="fa fa-pencil-square-o" aria-hidden="true"></div>
+        <div ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
+                        'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"
+             ng-click="$ctrl.openFlagContext(review.reviewId)"></div>
       </div>
       <div class="community-review--review" ng-bind="review.review"></div>
+    </div>
+    <div class="community-revew--report-container" ng-show="$ctrl.toggledFlags.indexOf(review.reviewId) != -1">
+      <div class="community-review--report">
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        <span ng-i18next="DtrReview.VerifyReport"></span>
+      </div>
+      <div class="community-review--report-buttons">
+        <button class="dim-button community-review--report-yes" ng-click="$ctrl.reportReview(review.reviewId); $event.stopPropagation();">
+          <i class="fa fa-flag" aria-hidden="true"></i>
+          <span ng-i18next="DtrReview.ReallyReport"></span>
+        </button>
+        <button class="dim-button community-review--report-cancel" ng-click="$ctrl.closeFlagContext(review.reviewId)">
+          <i class="fa fa-ban" aria-hidden="true"></i>
+          <span ng-i18next="DtrReview.Cancel"></span>
+        </button>
+      </div>
     </div>
   </div>
 </div>

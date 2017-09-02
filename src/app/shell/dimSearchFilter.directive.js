@@ -141,14 +141,12 @@ function SearchFilter(dimSearchService) {
           words: dimSearchService.keywords,
           match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
           search: function(term, callback) {
-            callback(this.words.filter((word) => {
-              return word.indexOf(term) === 0 ? word : null;
-            }));
+            callback(this.words.filter((word) => word.startsWith(term)));
           },
           index: 1,
           replace: function(word) {
-            return (word.indexOf('is:') === 0 && word.indexOf('not:') === 0)
-              ? (`${word} `) : word;
+            return (word.startsWith('is:') && word.startsWith('not:'))
+              ? `${word} ` : word;
           }
         }
       ], {

@@ -1,0 +1,35 @@
+<div ui-draggable="{{ ::vm.draggable }}"
+     id="{{ ::vm.item.index }}"
+     drag-channel="{{ ::vm.dragChannel }}"
+     title="{{ ::vm.item.name }}"
+     drag="::vm.item.index"
+     class="item"
+     ng-click="vm.clicked(vm.item, $event)"
+     ng-class="{ 'search-hidden': !vm.item.visible }">
+  <div class="item-xp-bar-small"
+       ng-if="::vm.item.percentComplete && !vm.item.complete"
+       dim-percent-width="::vm.item.percentComplete"></div>
+  <div class="item-img"
+       ng-class="::{ complete: vm.item.complete }"
+       ng-style="::vm.item.icon | bungieBackground"
+       ng-dblclick="vm.doubleClicked(vm.item, $event)"></div>
+  <div ng-if="::vm.item.quality"
+       class="item-stat item-quality"
+       ng-style="::vm.item.quality.min | qualityColor">{{ ::vm.item.quality.min }}%</div>
+  <div ng-if="vm.item.dtrRating && (vm.item.dtrRatingCount > 1 || vm.item.dtrHighlightedRatingCount > 0)"
+       class="item-stat item-review"
+       ng-style="vm.item.dtrRating | dtrRatingColor">{{ vm.item.dtrRating }}<i class="fa fa-star"></i></div>
+  <div class="item-element"
+       ng-class="::vm.item.dmg"></div>
+  <div ng-class="vm.item.dimInfo.tag | tagIcon"></div>
+  <div ng-if="vm.item.isNew"
+       class="new_overlay_overflow">
+    <img class="new_overlay"
+         src="~app/images/overlay.svg"
+         height="44"
+         width="44" />
+  </div>
+  <div ng-class="::vm.badgeClassNames"
+       ng-if="::vm.showBadge"
+       ng-bind="::vm.badgeCount"></div>
+</div>

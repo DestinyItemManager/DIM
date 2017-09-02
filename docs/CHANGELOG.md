@@ -1,8 +1,34 @@
 # Next
 
+* Fix a case where DIM wouldn't work because auth tokens had expired.
+
+# 4.10.0
+
+* You can flag reviews for being offensive or arguing or whatever. Be helpful but also be nice.
+* Remove the browser compatibility warning for Opera and prerelease Chrome versions.
+
+# 4.9.0
+
+* No changes!
+
+# 4.8.0
+
+* No changes!
+
+# 4.7.0
+
+* Made loadout builder talent grids tiny again.
+* If you autocomplete the entire filter name and hit enter, it will no longer hang the browser.
+* Updated the About page and FAQ.
+* Fixed a case where DIM would fail to load the latest version, or would load to a blank page unless force-reloaded.
+* Added some helpful info for cases where DIM might fail to load or auth with Bungie.net.
+* Added a warning when your browser is not supported by DIM.
+* DIM no longer supports iOS 9.
+
 # 4.6.0
 
 * Fix a bug where the popup for Xur items was below Xur's own popup.
+* Hiding community rating for items with only one (non-highlighted) review.
 * The first item in the search autocompleter is once again selected automatically.
 * If you don't have the vault width set to "auto", the inventory is once again centered.
 

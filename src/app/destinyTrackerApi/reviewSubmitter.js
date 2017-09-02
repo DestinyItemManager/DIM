@@ -6,14 +6,14 @@ import { ItemTransformer } from './itemTransformer';
  * @class ReviewSubmitter
  */
 class ReviewSubmitter {
-  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, scoreMaintainer) {
+  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;
     this._itemTransformer = new ItemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._dimPlatformService = dimPlatformService;
     this._loadingTracker = loadingTracker;
-    this._reviewDataCache = scoreMaintainer;
+    this._reviewDataCache = reviewDataCache;
   }
 
   _getReviewer() {

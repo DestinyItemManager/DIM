@@ -2,13 +2,13 @@ import _ from 'underscore';
 import { ItemListBuilder } from './itemListBuilder';
 
 class BulkFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, scoreMaintainer) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;
     this._itemListBuilder = new ItemListBuilder();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
-    this._reviewDataCache = scoreMaintainer;
+    this._reviewDataCache = reviewDataCache;
   }
 
   _getBulkWeaponDataEndpointPost(gunList) {
@@ -94,6 +94,7 @@ class BulkFetcher {
           if (matchingItem) {
             storeItem.dtrRating = matchingItem.rating;
             storeItem.dtrRatingCount = matchingItem.ratingCount;
+            storeItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
             storeItem.userRating = matchingItem.userRating;
             storeItem.userReview = matchingItem.review;
             storeItem.pros = matchingItem.pros;
@@ -127,6 +128,7 @@ class BulkFetcher {
         if (matchingItem) {
           vendorItem.dtrRating = matchingItem.rating;
           vendorItem.dtrRatingCount = matchingItem.ratingCount;
+          vendorItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
           vendorItem.userRating = matchingItem.userRating;
           vendorItem.userReview = matchingItem.review;
           vendorItem.pros = matchingItem.pros;

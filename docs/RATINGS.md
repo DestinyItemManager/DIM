@@ -33,6 +33,10 @@ For a given item that we're looking to fetch ratings/reviews for (currently only
   - For the sake of ratings, we don't see a difference between a Stellar Vestige with void burn and solar burn.
 * Scopes are currently being ignored.
   - This is a known issue; there's no perk hashes associated with them. Technical details are fun.
+* New reviews take a little time to show up.
+  - tl;dr - caching
+* Items with one review (from a non-featured reviewer) don't show up on the summary view.
+  - It'll show up on the detail view, we just want a little consensus before telling you it's a 5 star weapon.
 
 You won't necessarily have the exact same roll as every item every reviewer mentions, but your available perks should match the perks they had selected when they reviewed it. If you see reviews mentioning auto-fire or some other perk your item definitely doesn't have, let us know.
 
