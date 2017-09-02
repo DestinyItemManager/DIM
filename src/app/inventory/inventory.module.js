@@ -3,9 +3,12 @@ import angular from 'angular';
 import { InventoryComponent } from './inventory.component';
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
+import { D2StoreFactory } from './store/d2-store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
+import { D2ItemFactory } from './store/d2-item-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { StoreService } from './dimStoreService.factory';
+import { D2StoresService } from './d2-stores.service';
 import { StoresComponent } from './dimStores.directive';
 import { StoreReputation } from './dimStoreReputation.directive';
 import { tagIconFilter, StoreItemComponent } from './dimStoreItem.directive';
@@ -23,9 +26,12 @@ import { ClearNewItemsComponent } from './dimClearNewItems.directive';
 export default angular
   .module('inventoryModule', [])
   .factory('dimStoreService', StoreService)
+  .factory('D2StoresService', D2StoresService)
   .factory('ClassifiedDataService', ClassifiedDataService)
   .factory('StoreFactory', StoreFactory)
+  .factory('D2StoreFactory', D2StoreFactory)
   .factory('ItemFactory', ItemFactory)
+  .factory('D2ItemFactory', D2ItemFactory)
   .factory('NewItemsService', NewItemsService)
   .factory('dimItemService', ItemService)
   .factory('dimItemMoveService', ItemMoveService)

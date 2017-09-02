@@ -1,9 +1,14 @@
 import angular from 'angular';
 
 import { Destiny2Component } from './destiny2.component';
+import { D2BucketsService, D2Categories } from './d2-buckets.service';
+import { D2Definitions } from './d2-definitions.service';
 
 export default angular
   .module('destiny2Module', [])
+  .factory('D2BucketsService', D2BucketsService)
+  .factory('D2Definitions', D2Definitions)
+  .value('D2Categories', D2Categories)
   .component('destiny2', Destiny2Component)
   .config(($stateProvider) => {
     'ngInject';

@@ -17,11 +17,14 @@ export function Destiny2Api(
 
   return {
     getManifest,
-    getProfile,
+    getStores,
+    getCharacters,
     transfer,
     equip,
     equipItems,
     setLockState
+
+    // TODO: getMilestones, replaces Activities
   };
 
   function getManifest() {
@@ -31,33 +34,53 @@ export function Destiny2Api(
   }
 
   /**
-   * Get the user's whole profile on this platform. This includes characters, vault, and item information.
+   * Get the user's stores on this platform. This includes characters, vault, and item information.
    */
-  // TODO: allow for selecting specific components, or maybe make a few different calls? for example vendors vs activities vs inventory
-  function getProfile(platform) {
+  function getStores(platform) {
+    return getProfile(platform,
+      // TODO: this is a guess - when the game launches, dial these in. DIM uses a lot.
+      DestinyComponentType.Profiles, // TODO: Don't think we need this
+      DestinyComponentType.ProfileInventories,
+      DestinyComponentType.ProfileCurrencies,
+      DestinyComponentType.Characters,
+      DestinyComponentType.CharacterInventories,
+      DestinyComponentType.CharacterProgressions,
+      DestinyComponentType.CharacterActivities,
+      DestinyComponentType.CharacterEquipment,
+      // TODO: consider loading less item data, and then loading item details on click? Makes searches hard though.
+      DestinyComponentType.ItemInstances,
+      DestinyComponentType.ItemObjectives,
+      DestinyComponentType.ItemPerks,
+      DestinyComponentType.ItemStats,
+      DestinyComponentType.ItemSockets,
+      DestinyComponentType.ItemTalentGrids,
+      DestinyComponentType.ItemCommonData,
+      DestinyComponentType.ItemPlugStates
+    );
+  }
+
+  /**
+   * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh stats.
+   */
+  function getCharacters(platform) {
+    return getProfile(platform,
+      DestinyComponentType.Characters,
+      DestinyComponentType.CharacterInventories
+    );
+  }
+
+  /**
+   * Get parameterized profile information for the whole account. Pass in components to select what
+   * you want. This can handle just characters, full inventory, vendors, kiosks, activities, etc.
+   *
+   * @param {DestinyAccount} platform the account to query
+   * @param {DestinyComponentType[]} components the list of components to retrieve
+   */
+  function getProfile(platform, ...components) {
     return $http(bungieApiQuery(
       `/Platform/Destiny2/${platform.platformType}/Profile/${platform.membershipId}/`,
       {
-        components: [
-          // TODO: this is a guess - when the game launches, dial these in. DIM uses a lot.
-          DestinyComponentType.Profiles, // TODO: Don't think we need this
-          DestinyComponentType.ProfileInventories,
-          DestinyComponentType.ProfileCurrencies,
-          DestinyComponentType.Characters,
-          DestinyComponentType.CharacterInventories,
-          DestinyComponentType.CharacterProgressions,
-          DestinyComponentType.CharacterActivities,
-          DestinyComponentType.CharacterEquipment,
-          // TODO: consider loading less item data, and then loading item details on click? Makes searches hard though.
-          DestinyComponentType.ItemInstances,
-          DestinyComponentType.ItemObjectives,
-          DestinyComponentType.ItemPerks,
-          DestinyComponentType.ItemStats,
-          DestinyComponentType.ItemSockets,
-          DestinyComponentType.ItemTalentGrids,
-          DestinyComponentType.ItemCommonData,
-          DestinyComponentType.ItemPlugStates,
-        ].join(',')
+        components: components.join(',')
       }
     ))
     .then(handleErrors, handleErrors)
