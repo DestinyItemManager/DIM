@@ -63,7 +63,7 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
   function handleRefreshTokenError(response) {
     if (response.status === -1) {
       console.warn("Error getting auth token from refresh token because there's no internet connection. Not clearing token.", response);
-    } else if (response.status === 401 || response.status === 403) {
+    } else if (response.status === 400 || response.status === 401 || response.status === 403) {
       console.warn("Refresh token expired or not valid, clearing auth tokens & going to login", response);
       OAuthTokenService.removeToken();
       $rootScope.$broadcast('dim-no-token-found');
