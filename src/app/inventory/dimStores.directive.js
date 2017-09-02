@@ -56,7 +56,7 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     }
 
     // TODO: save this?
-    if (vm.stores.length) {
+    if (vm.stores && vm.stores.length) {
       vm.currentStore = vm.stores[0];
       console.log('currentStore', vm.currentStore);
     } else {

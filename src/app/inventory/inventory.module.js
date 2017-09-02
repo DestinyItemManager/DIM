@@ -19,6 +19,7 @@ import { ItemMoveService } from './dimItemMoveService.factory';
 import { ItemInfoService } from './dimItemInfoService.factory';
 import { CsvService } from './dimCsvService.factory';
 import { ClearNewItemsComponent } from './dimClearNewItems.directive';
+import { StorePagerComponent } from './store-pager.component';
 
 export default angular
   .module('inventoryModule', [])
@@ -33,6 +34,7 @@ export default angular
   .factory('dimCsvService', CsvService)
   .component('inventory', InventoryComponent)
   .component('dimStores', StoresComponent)
+  .component('storePager', StorePagerComponent)
   .component('dimStoreReputation', StoreReputation)
   .component('dimStoreHeading', StoreHeadingComponent)
   .component('dimStoreBucket', StoreBucketComponent)
