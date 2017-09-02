@@ -1,6 +1,7 @@
 import angular from 'angular';
 
 import { Destiny2Component } from './destiny2.component';
+import { D2InventoryComponent } from './d2-inventory.component';
 import { D2BucketsService, D2Categories } from './d2-buckets.service';
 import { D2Definitions } from './d2-definitions.service';
 
@@ -10,6 +11,7 @@ export default angular
   .factory('D2Definitions', D2Definitions)
   .value('D2Categories', D2Categories)
   .component('destiny2', Destiny2Component)
+  .component('d2-inventory', D2InventoryComponent)
   .config(($stateProvider) => {
     'ngInject';
 
@@ -17,8 +19,15 @@ export default angular
     $stateProvider.state({
       name: 'destiny2',
       parent: 'destiny-account',
+      redirectTo: 'destiny2.inventory',
       url: '/d2',
       component: 'destiny2'
+    });
+
+    $stateProvider.state({
+      name: 'destiny2.inventory',
+      url: '/inventory',
+      component: 'd2-inventory'
     });
   })
   .name;
