@@ -1,5 +1,7 @@
 # Next
 
+# 4.11.0
+
 * Fix a case where DIM wouldn't work because auth tokens had expired.
 
 # 4.10.0
