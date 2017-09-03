@@ -1,5 +1,8 @@
 # Next
 
+* There's a new phone-optimized display for your inventory. See one character at a time, with larger items. Swipe between characters by dragging the character header directly.
+* Info popups aren't gigantic on mobile anymore.
+
 # 4.11.0
 
 * Fix a case where DIM wouldn't work because auth tokens had expired.
