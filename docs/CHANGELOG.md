@@ -1,5 +1,7 @@
 # Next
 
+* Fix a case where changes to preferences may not be saved.
+
 # 4.11.0
 
 * Fix a case where DIM wouldn't work because auth tokens had expired.
