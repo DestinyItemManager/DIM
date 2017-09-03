@@ -17,7 +17,7 @@ function StorePagerCtrl($element, $scope) {
   this.$onInit = function() {
     this.dragend = new Dragend($element[0], {
       pageClass: 'character-swipe',
-      onSwipeEnd: (pager, page, index) => {
+      onSwipeEnd: (pager, page) => {
         $scope.$apply(() => {
           this.onStoreChange({ store: angular.element(page).scope().store });
         });
