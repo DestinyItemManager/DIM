@@ -7,8 +7,10 @@
           class="character-swipe"
           ng-class="{ current: vm.currentStore.current }"
           store-data="store"
+          internal-loadout-menu="false"
           ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id"></dim-store-heading>
       </store-pager>
+      <div class="detached" loadout-id="{{vm.currentStore.id}}"></div>
     </div>
 
     <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">
@@ -37,7 +39,7 @@
   <div ng-if="!vm.isPhonePortrait">
     <div class="store-row store-header">
       <div class="store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
-        <dim-store-heading class="character" ng-class="{ current: store.current }" store-data="store"></dim-store-heading>
+        <dim-store-heading internal-loadout-menu="true" class="character" ng-class="{ current: store.current }" store-data="store"></dim-store-heading>
       </div>
     </div>
     <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">

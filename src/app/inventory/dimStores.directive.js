@@ -35,11 +35,10 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
   };
 
   // TODO: angular media-query-switch directive
-  const phoneWidthQuery = window.matchMedia('(max-width: 375px)');
+  const phoneWidthQuery = window.matchMedia('(max-width: 414px)');
   function phoneWidthHandler(e) {
     $scope.$apply(() => {
       vm.isPhonePortrait = e.matches;
-      console.log('phone width', e);
     });
   }
   phoneWidthQuery.addListener(phoneWidthHandler);
@@ -55,12 +54,9 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
       });
     }
 
-    // TODO: save this?
     if (vm.stores && vm.stores.length) {
       vm.currentStore = vm.stores[0];
-      console.log('currentStore', vm.currentStore);
     } else {
-      console.log('currentStore', vm.stores);
       vm.currentStore = null;
     }
   };

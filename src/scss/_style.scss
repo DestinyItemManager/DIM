@@ -341,6 +341,11 @@ img {
   color: rgba(245, 245, 245, 0.6);
   margin-bottom: 10px;
   cursor: pointer;
+
+  .detached & {
+    top: 48px;
+    max-height: calc(100vh - 221px);
+  }
 }
 
 #content {
