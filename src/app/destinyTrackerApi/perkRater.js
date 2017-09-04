@@ -18,7 +18,28 @@ class PerkRater {
       return null;
     }
 
-    return undefined;
+    const matchingReviews = this._getMatchingReviews(item);
+
+    return matchingReviews.length;
+  }
+
+  _getMatchingReviews(item) {
+    return _.filter(item.reviews, (review) => { return this._allSelectedPerksApply(item, review); });
+  }
+
+  _allSelectedPerksApply(item,
+                         review) {
+    const reviewSelectedPerks = this._getSelectedPerks(review);
+
+    const availablePerks = item.roll.split(';');
+
+    return _.every(reviewSelectedPerks, (reviewSelectedPerk) => { return _.contains(availablePerks, reviewSelectedPerk); });
+  }
+
+  _getSelectedPerks(review) {
+    const allSelectedPerks = _.where(review.roll.split(';'), ((str) => { return str.indexOf('o') > -1; }));
+
+    return allSelectedPerks;
   }
 }
 
