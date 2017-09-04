@@ -79,10 +79,8 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
       if (!_loaded) {
         throw new Error("Settings haven't loaded - they can't be saved.");
       }
-      $rootScope.$evalAsync(() => {
-        SyncService.set({
-          'settings-v1.0': _.omit(settings, 'save', 'itemTags')
-        });
+      SyncService.set({
+        'settings-v1.0': _.omit(settings, 'save', 'itemTags')
       });
     },
 
