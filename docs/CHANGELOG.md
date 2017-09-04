@@ -2,6 +2,7 @@
 
 * There's a new phone-optimized display for your inventory. See one character at a time, with larger items. Swipe between characters by dragging the character header directly.
 * Info popups aren't gigantic on mobile anymore.
+* Fix a case where changes to preferences may not be saved.
 
 # 4.11.0
 
