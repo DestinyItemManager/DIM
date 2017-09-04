@@ -1,6 +1,23 @@
 # Next
 
+* Fix a case where changes to preferences may not be saved.
+
+# 4.11.0
+
+* Fix a case where DIM wouldn't work because auth tokens had expired.
+
+# 4.10.0
+
+* You can flag reviews for being offensive or arguing or whatever. Be helpful but also be nice.
+* Remove the browser compatibility warning for Opera and prerelease Chrome versions.
+
+# 4.9.0
+
+* No changes!
+
 # 4.8.0
+
+* No changes!
 
 # 4.7.0
 

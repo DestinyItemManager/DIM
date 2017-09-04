@@ -29,7 +29,10 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
   vm.buckets = null;
   vm.settings = dimSettingsService;
   vm.toggleSection = function(id) {
-    didYouKnow();
+    // Only tip when collapsing
+    if (!vm.settings.collapsedSections[id]) {
+      didYouKnow();
+    }
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
     vm.settings.save();
   };

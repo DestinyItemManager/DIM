@@ -53,9 +53,9 @@ export function SyncService(
 
     // use replace to override the data. normally we're doing a PATCH
     if (PUT) { // update our data
-      cached = value;
+      cached = angular.copy(value);
     } else {
-      angular.extend(cached, value);
+      angular.extend(cached, angular.copy(value));
     }
 
     return adapters.reduce((promise, adapter) => {
@@ -122,7 +122,7 @@ export function SyncService(
       }, $q.when())
       .then((value) => {
         cached = value || {};
-        return value;
+        return angular.copy(cached);
       })
       .finally(() => {
         _getPromise = null;

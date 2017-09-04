@@ -4,6 +4,8 @@ import { TrackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler';
 import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
 import { ReviewsFetcher } from '../destinyTrackerApi/reviewsFetcher';
 import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
+import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
+import { UserFilter } from '../destinyTrackerApi/userFilter';
 
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
@@ -13,12 +15,15 @@ function DestinyTrackerService($q,
                                dimPlatformService,
                                dimSettingsService,
                                $i18next,
-                               loadingTracker) {
+                               loadingTracker,
+                               SyncService) {
   const _reviewDataCache = new ReviewDataCache();
+  const _userFilter = new UserFilter(SyncService);
   const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _reviewReporter = new ReviewReporter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
   return {
     reattachScoresFromCache: function(stores) {
@@ -49,6 +54,14 @@ function DestinyTrackerService($q,
       if (dimSettingsService.showReviews) {
         _bulkFetcher.bulkFetch(stores);
       }
+    },
+    reportReview: function(review) {
+      if (dimSettingsService.allowIdPostToDtr) {
+        _reviewReporter.reportReview(review);
+      }
+    },
+    clearIgnoredUsers: function() {
+      _userFilter.clearIgnoredUsers();
     }
   };
 }

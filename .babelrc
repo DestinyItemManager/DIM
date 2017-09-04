@@ -6,12 +6,13 @@
       "targets": {
         "uglify": true,
         "browsers": [
-          "Chrome >= 58",
-          "ChromeAndroid >= 59",
-          "Firefox >= 53",
-          "Safari >= 10",
-          "iOS >= 10",
-          "Edge >= 14"
+          "last 2 Chrome versions",
+          "last 2 ChromeAndroid versions",
+          "last 2 Firefox versions",
+          "last 2 Safari versions",
+          "last 2 iOS versions",
+          "last 2 Edge versions",
+          "last 2 Opera versions"
         ]
       }
     }]
