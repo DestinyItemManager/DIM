@@ -1,24 +1,24 @@
 import _ from 'underscore';
 
 const lazyTables = [
-  'Items', // DestinyInventoryItemDefinition
-  'Objectives', // DestinyObjectiveDefinition
-  'SandboxPerks', // DestinySandboxPerksDefinition
-  'Stats', // DestinyStatDefinition
-  'Talents', // DestinyTalentGridDefinition
-  'Progressions', // DestinyProgressionDefinition
-  'ItemCategories', // DestinyItemCategoryDefinition
-  'Activities', // DestinyActivityDefinition
-  'ActivityTypes' // DestinyActivityTypeDefinition
+  'InventoryItem', // DestinyInventoryItemDefinition
+  'Objective', // DestinyObjectiveDefinition
+  'SandboxPerk', // DestinySandboxPerkDefinition
+  'Stat', // DestinyStatDefinition
+  'TalentGrid', // DestinyTalentGridDefinition
+  'Progression', // DestinyProgressionDefinition
+  'ItemCategory', // DestinyItemCategoryDefinition
+  'Activity', // DestinyActivityDefinition
+  'ActivityType' // DestinyActivityTypeDefinition
 ];
 
 const eagerTables = [
-  'InventoryBuckets', // DestinyInventoryBucketDefinition
-  'Classes', // DestinyClassDefinition
-  'Genders', // DestinyGenderDefinition
-  'Races', // DestinyRaceDefinition
-  'Factions', // DestinyFactionDefinition
-  'ItemTierTypes' // DestinyItemTierTypeDefinition
+  'InventoryBucket', // DestinyInventoryBucketDefinition
+  'Class', // DestinyClassDefinition
+  'Gender', // DestinyGenderDefinition
+  'Race', // DestinyRaceDefinition
+  'Faction', // DestinyFactionDefinition
+  'ItemTierType' // DestinyItemTierTypeDefinition
 ];
 
 /**
@@ -36,8 +36,9 @@ export function D2Definitions($q, D2ManifestService) {
           const defs = {};
 
           // Load objects that lazily load their properties from the sqlite DB.
-          lazyTables.forEach((table) => {
-            defs[table] = {
+          lazyTables.forEach((tableShort) => {
+            const table = `Destiny${tableShort}Definition`;
+            defs[tableShort] = {
               get: function(name) {
                 if (this.hasOwnProperty(name)) {
                   return this[name];
@@ -50,8 +51,9 @@ export function D2Definitions($q, D2ManifestService) {
           });
 
           // Resources that need to be fully loaded (because they're iterated over)
-          eagerTables.forEach((table) => {
-            defs[table] = D2ManifestService.getAllRecords(db, table);
+          eagerTables.forEach((tableShort) => {
+            const table = `Destiny${tableShort}Definition`;
+            defs[tableShort] = D2ManifestService.getAllRecords(db, table);
           });
 
           return defs;

@@ -31,6 +31,8 @@ function StoreBucketCtrl($scope,
   'ngInject';
   const vm = this;
 
+ console.log('storeBucket', vm.bucket);
+
   vm.settings = dimSettingsService;
 
   vm.dropChannel = `${vm.bucket.type},${vm.store.id}${vm.bucket.type}`;

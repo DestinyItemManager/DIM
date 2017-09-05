@@ -4,35 +4,30 @@ import _ from 'underscore';
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
   Weapons: [
-    'Class',
-    'Kinetic',
-    'Elemental',
-    'Power'
+    'Subclass',
+    'Kinetic Weapons',
+    'Energy Weapons',
+    'Power Weapons'
   ],
   Armor: [
     'Helmet',
     'Gauntlets',
-    'Chest',
-    'Leg',
-    'ClassItem'
+    'Chest Armor',
+    'Leg Armor',
+    'Class Armor'
   ],
   General: [
-    'Artifact',
     'Ghost',
-    'Consumable',
-    'Material',
-    'Ornaments',
-    'Emblem',
-    'Shader',
-    'Emote',
-    'Ship',
+    'General',
+    'Consumables',
+    'Modifications',
+    'Emblems',
+    'Shaders',
+    'Emotes',
+    'Ships',
     'Vehicle',
-    'Horn'
-  ],
-  Progress: [
-    'Bounties',
-    'Quests',
-    'Missions'
+    'Auras',
+    'Clan Banners'
   ],
   Postmaster: [
     'Lost Items',
@@ -46,44 +41,43 @@ export const D2Categories = {
 // TODO: These have to change
 // TODO: retire "DIM types" in favor of DestinyItemCategoryDefinitions
 // TODO: there are no more bucket IDs... gotta update all this
+// bucket hash to DIM type
 const bucketToType = {
-  BUCKET_CHEST: "Chest",
-  BUCKET_LEGS: "Leg",
-  BUCKET_RECOVERY: "Lost Items",
-  BUCKET_SHIP: "Ship",
-  BUCKET_MISSION: "Missions",
-  BUCKET_ARTIFACT: "Artifact",
-  BUCKET_HEAVY_WEAPON: "Heavy",
-  BUCKET_COMMERCIALIZATION: "Special Orders",
-  BUCKET_CONSUMABLES: "Consumable",
-  BUCKET_PRIMARY_WEAPON: "Primary",
-  BUCKET_CLASS_ITEMS: "ClassItem",
-  BUCKET_BOOK_LARGE: "RecordBook",
-  BUCKET_BOOK_SMALL: "RecordBookLegacy",
-  BUCKET_QUESTS: "Quests",
-  BUCKET_VEHICLE: "Vehicle",
-  BUCKET_BOUNTIES: "Bounties",
-  BUCKET_SPECIAL_WEAPON: "Special",
-  BUCKET_SHADER: "Shader",
-  BUCKET_MODS: "Ornaments",
-  BUCKET_EMOTES: "Emote",
-  BUCKET_MAIL: "Messages",
-  BUCKET_BUILD: "Class",
-  BUCKET_HEAD: "Helmet",
-  BUCKET_ARMS: "Gauntlets",
-  BUCKET_HORN: "Horn",
-  BUCKET_MATERIALS: "Material",
-  BUCKET_GHOST: "Ghost",
-  BUCKET_EMBLEM: "Emblem"
+  2465295065: "Energy Weapons",
+  2689798304: "Upgrade Point",
+  2689798305: "Strange Coin",
+  2689798308: "Glimmer",
+  2689798309: "Legendary Shards",
+  2689798310: "Silver",
+  2689798311: "Bright Dust",
+  2973005342: "Shaders",
+  3054419239: "Emotes",
+  3161908920: "Messages",
+  3284755031: "Subclass",
+  3313201758: "Modifications",
+  3448274439: "Helmet",
+  3551918588: "Gauntlets",
+  3865314626: "Materials",
+  4023194814: "Ghost",
+  4274335291: "Emblems",
+  4292445962: "Clan Banners",
+  14239492: "Chest Armor",
+  18606351: "Shaders",
+  20886954: "Leg Armor",
+  138197802: "General",
+  215593132: "Lost Items",
+  284967655: "Ships",
+  375726501: "Engrams",
+  953998645: "Power Weapons",
+  1269569095: "Auras",
+  1367666825: "Special Orders",
+  1469714392: "Consumables",
+  1498876634: "Kinetic Weapons",
+  1585787867: "Class Armor",
+  2025709351: "Vehicle"
 };
 
-const vaultTypes = {
-  BUCKET_VAULT_ARMOR: 'Armor',
-  BUCKET_VAULT_WEAPONS: 'Weapons',
-  BUCKET_VAULT_ITEMS: 'General'
-};
-
-export function D2BucketsService(dimDefinitions, D2Categories) {
+export function D2BucketsService(D2Definitions, D2Categories) {
   'ngInject';
 
   const typeToSort = {};
@@ -95,14 +89,13 @@ export function D2BucketsService(dimDefinitions, D2Categories) {
 
   return {
     getBuckets: _.memoize(() => {
-      return dimDefinitions.getDefinitions().then((defs) => {
+      return D2Definitions.getDefinitions().then((defs) => {
         const buckets = {
           byHash: {}, // numeric hash -> bucket
-          byId: {}, // BUCKET_LEGS -> bucket
-          byType: {}, // DIM types ("ClassItem, Special") -> bucket
+          byType: {}, // names ("ClassItem, Special") -> bucket
+          byId: {}, // TODO hack
           byCategory: {}, // Mirrors the dimCategory heirarchy
           unknown: {
-            id: 'BUCKET_UNKNOWN',
             description: 'Unknown items. DIM needs a manifest update.',
             name: 'Unknown',
             hash: -1,
@@ -113,35 +106,30 @@ export function D2BucketsService(dimDefinitions, D2Categories) {
           },
           setHasUnknown: function() {
             this.byCategory[this.unknown.sort] = [this.unknown];
-            this.byId[this.unknown.id] = this.unknown;
             this.byType[this.unknown.type] = this.unknown;
           }
         };
-        _.each(defs.InventoryBuckets, (def) => {
+
+        _.each(defs.InventoryBucket, (def) => {
           if (def.enabled) {
             const bucket = {
-              id: def.bucketIdentifier,
-              description: def.bucketDescription,
-              name: def.bucketName,
+              id: def.hash,
+              description: def.displayProperties.description,
+              name: def.displayProperties.name,
               hash: def.hash,
               hasTransferDestination: def.hasTransferDestination,
               capacity: def.itemCount
             };
 
-            bucket.type = bucketToType[bucket.id];
-            if (bucket.type) {
-              bucket.sort = typeToSort[bucket.type];
-              buckets.byType[bucket.type] = bucket;
-            } else if (vaultTypes[bucket.id]) {
-              bucket.sort = vaultTypes[bucket.id];
-              buckets[bucket.sort] = bucket;
-            }
+            bucket.type = bucketToType[bucket.hash];
+            bucket.sort = typeToSort[bucket.type];
+            buckets.byType[bucket.type] = bucket;
+            buckets.byId[bucket.id] = bucket;
 
             // Add an easy helper property like "inPostmaster"
             bucket[`in${bucket.sort}`] = true;
 
             buckets.byHash[bucket.hash] = bucket;
-            buckets.byId[bucket.id] = bucket;
           }
         });
 

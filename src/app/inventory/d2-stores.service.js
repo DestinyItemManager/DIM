@@ -161,13 +161,16 @@ export function D2StoresService(
 
     const reloadPromise = $q.all(dataDependencies)
       .then(([defs, buckets, newItems, itemInfoService, profileInfo]) => {
+        console.log(profileInfo);
         NewItemsService.applyRemovedNewItems(newItems);
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);
 
+        // TODO: components may be hidden (privacy)
+
         const processVaultPromise = processVault(defs,
-          profileInfo.profileInventory.data.items,
-          profileInfo.profileCurrencies.data.items,
+          profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
+          profileInfo.profileInventory.data ? profileInfo.profileCurrencies.data.items : [],
           profileInfo.itemComponents,
           buckets,
           previousItems,
@@ -175,11 +178,11 @@ export function D2StoresService(
           itemInfoService,
           lastPlayedDate);
 
-        const processStorePromises = Object.keys(profileInfo.characters).map((characterId) => processCharacter(
+        const processStorePromises = Object.keys(profileInfo.characters.data).map((characterId) => processCharacter(
           defs,
-          profileInfo.characters[characterId].data,
-          profileInfo.characterInventories[characterId].data.items,
-          profileInfo.characterEquipment[characterId].data.items,
+          profileInfo.characters.data[characterId],
+          profileInfo.characterInventories[characterId] && profileInfo.characterInventories[characterId].data ? profileInfo.characterInventories[characterId].data.items : [],
+          profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId] ? profileInfo.characterEquipment.data[characterId].items : [],
           profileInfo.itemComponents,
           buckets,
           previousItems,
@@ -205,10 +208,10 @@ export function D2StoresService(
         document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
 
         // TODO: this is still useful, but not in as many situations
-        $rootScope.$broadcast('dim-stores-updated', {
+        $rootScope.$broadcast('d2-stores-updated', {
           stores: stores
         });
-
+console.log(stores);
         return stores;
       })
       .catch((e) => {
@@ -245,6 +248,7 @@ export function D2StoresService(
     newItems,
     itemInfoService,
     lastPlayedDate) {
+      console.log(character);
     const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
 
     return D2ItemFactory.processItems(store, characterInventory.concat(characterEquipment), itemComponents, previousItems, newItems, itemInfoService).then((items) => {

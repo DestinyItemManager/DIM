@@ -11,7 +11,7 @@ export default angular
   .factory('D2Definitions', D2Definitions)
   .value('D2Categories', D2Categories)
   .component('destiny2', Destiny2Component)
-  .component('d2-inventory', D2InventoryComponent)
+  .component('inventory2', D2InventoryComponent)
   .config(($stateProvider) => {
     'ngInject';
 
@@ -27,7 +27,7 @@ export default angular
     $stateProvider.state({
       name: 'destiny2.inventory',
       url: '/inventory',
-      component: 'd2-inventory'
+      component: 'inventory2'
     });
   })
   .name;

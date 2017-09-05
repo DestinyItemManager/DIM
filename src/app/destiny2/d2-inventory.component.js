@@ -9,18 +9,21 @@ export const D2InventoryComponent = {
   controller: D2InventoryController
 };
 
-function D2InventoryController($scope, D2StoreService) {
+function D2InventoryController($scope, D2StoresService, D2BucketsService) {
   'ngInject';
 
   const vm = this;
 
   this.$onInit = function() {
-    subscribeOnScope($scope, D2StoreService.getStoresStream(vm.account), (stores) => {
-      vm.stores = stores;
+    D2BucketsService.getBuckets().then((buckets) => {
+      vm.buckets = buckets;
+      subscribeOnScope($scope, D2StoresService.getStoresStream(vm.account), (stores) => {
+        vm.stores = stores;
+      });
     });
   };
 
   $scope.$on('dim-refresh', () => {
-    D2StoreService.reloadStores();
+    D2StoresService.reloadStores();
   });
 }

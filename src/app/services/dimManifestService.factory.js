@@ -9,7 +9,7 @@ import 'imports-loader?this=>window!@destiny-item-manager/zip.js';
 import inflate from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/inflate.js';
 import zipWorker from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/z-worker.js';
 
-import { requireSqlLib } from './sql';
+import { requireSqlLib } from './database';
 
 angular.module('dimApp')
   .factory('dimManifestService', ManifestService)
@@ -79,6 +79,7 @@ function makeManifestService(localStorageKey, idbKey, $q, DestinyApi, $http, toa
         .then(([SQLLib, typedArray]) => {
           service.statusText = `${$i18next.t('Manifest.Build')}...`;
           const db = new SQLLib.Database(typedArray);
+          console.log("Got Manifest!");
           // do a small request, just to test it out
           service.getAllRecords(db, 'DestinyRaceDefinition');
           return db;

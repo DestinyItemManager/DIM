@@ -116,7 +116,7 @@ export function D2ItemFactory(
    * @param {string} owner the ID of the owning store.
    */
   function makeItem(defs, buckets, previousItems, newItems, itemInfoService, itemComponents, item, owner) {
-    let itemDef = defs.InventoryItems.get(item.itemHash);
+    let itemDef = defs.InventoryItem.get(item.itemHash);
     const instanceDef = itemComponents.instances.data[item.itemInstanceId];
     // Missing definition?
     if (!itemDef) {
@@ -159,6 +159,8 @@ export function D2ItemFactory(
       buckets.setHasUnknown();
     }
 
+    console.log(itemDef, normalBucket, currentBucket, buckets);
+
     // We cheat a bit for items in the vault, since we treat the
     // vault as a character. So put them in the bucket they would
     // have been in if they'd been on a character.
@@ -169,7 +171,7 @@ export function D2ItemFactory(
     const itemType = normalBucket.type || 'Unknown';
 
     const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
-      const category = defs.ItemCategories.get(c);
+      const category = defs.ItemCategory.get(c);
       return category ? category.hash : null; // Uh oh, no more readable IDs!
     })) : [];
 
@@ -226,7 +228,7 @@ export function D2ItemFactory(
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
 
     if (createdItem.primStat) {
-      createdItem.primStat.stat = defs.Stats.get(createdItem.primStat.statHash);
+      createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
     }
 
     // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
@@ -282,7 +284,7 @@ export function D2ItemFactory(
   }
 
   function getClassTypeNameLocalized(defs, type) {
-    const klass = _.find(_.values(defs.Classes), { classType: type });
+    const klass = _.find(_.values(defs.Class), { classType: type });
     if (klass) {
       return klass.className;
     } else {

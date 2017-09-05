@@ -117,11 +117,11 @@ export function D2StoreFactory($i18next, dimInfoService) {
 
   return {
     makeCharacter(defs, character, lastPlayedDate) {
-      const race = defs.Races[character.raceHash];
-      const gender = defs.Genders[character.genderHash];
-      const classy = defs.Classes[character.classHash];
-      const genderRace = race.genderedRaceNames[gender.genderType];
-      const className = classy.genderedClassNames[gender.genderType];
+      const race = defs.Race[character.raceHash];
+      const gender = defs.Gender[character.genderHash];
+      const classy = defs.Class[character.classHash];
+      const genderRace = race.genderedRaceNames[gender.displayProperties.name];
+      const className = classy.genderedClassNames[gender.displayProperties.name];
       const genderName = gender.displayProperties.name;
 
       const store = angular.extend(Object.create(StoreProto), {
@@ -131,7 +131,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         lastPlayed: character.dateLastPlayed,
         background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
         level: character.levelProgression.level, // Maybe?
-        light: character.light,
+        powerLevel: character.light,
         // stats: getCharacterStatsData(defs.Stat, character.characterBase),
         class: getClass(classy.classType),
         classType: classy.classType,
@@ -149,9 +149,9 @@ export function D2StoreFactory($i18next, dimInfoService) {
     makeVault(buckets, profileCurrencies) {
       // TODO: get this right
       const currencies = {
-        glimmer: _.find(profileCurrencies, (cur) => { return cur.itemHash === 3159615086; }).quantity,
-        marks: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2534352370; }).quantity,
-        silver: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2749350776; }).quantity
+        // glimmer: _.find(profileCurrencies, (cur) => { return cur.itemHash === 3159615086; }).quantity,
+        // marks: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2534352370; }).quantity,
+        // silver: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2749350776; }).quantity
       };
 
       return angular.extend(Object.create(StoreProto), {
@@ -169,6 +169,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         silver: currencies.silver,
         isVault: true,
         // Vault has different capacity rules
+        /*
         capacityForItem: function(item) {
           let sort = item.sort;
           if (item.bucket) {
@@ -179,6 +180,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
           }
           return buckets[sort].capacity;
         },
+        */
         spaceLeftForItem: function(item) {
           let sort = item.sort;
           if (item.bucket) {

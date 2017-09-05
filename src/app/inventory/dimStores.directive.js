@@ -6,7 +6,8 @@ export const StoresComponent = {
   controller: StoresCtrl,
   controllerAs: 'vm',
   bindings: {
-    stores: '<'
+    stores: '<',
+    buckets: '<'
   },
   template
 };
