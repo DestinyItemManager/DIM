@@ -117,7 +117,7 @@ export function D2ItemFactory(
    */
   function makeItem(defs, buckets, previousItems, newItems, itemInfoService, itemComponents, item, owner) {
     let itemDef = defs.InventoryItem.get(item.itemHash);
-    const instanceDef = itemComponents.instances.data[item.itemInstanceId];
+    const instanceDef = itemComponents.instances.data[item.itemInstanceId] || {};
     // Missing definition?
     if (!itemDef) {
       // maybe it is redacted...

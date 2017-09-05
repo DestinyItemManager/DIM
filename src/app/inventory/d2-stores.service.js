@@ -161,11 +161,12 @@ export function D2StoresService(
 
     const reloadPromise = $q.all(dataDependencies)
       .then(([defs, buckets, newItems, itemInfoService, profileInfo]) => {
-        console.log(profileInfo);
         NewItemsService.applyRemovedNewItems(newItems);
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);
 
+
+        console.log(profileInfo);
         // TODO: components may be hidden (privacy)
 
         const processVaultPromise = processVault(defs,
@@ -181,7 +182,7 @@ export function D2StoresService(
         const processStorePromises = Object.keys(profileInfo.characters.data).map((characterId) => processCharacter(
           defs,
           profileInfo.characters.data[characterId],
-          profileInfo.characterInventories[characterId] && profileInfo.characterInventories[characterId].data ? profileInfo.characterInventories[characterId].data.items : [],
+          profileInfo.characterInventories.data && profileInfo.characterInventories.data[characterId] ? profileInfo.characterInventories.data[characterId].items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId] ? profileInfo.characterEquipment.data[characterId].items : [],
           profileInfo.itemComponents,
           buckets,
@@ -211,7 +212,7 @@ export function D2StoresService(
         $rootScope.$broadcast('d2-stores-updated', {
           stores: stores
         });
-console.log(stores);
+        console.log(stores);
         return stores;
       })
       .catch((e) => {
@@ -248,10 +249,9 @@ console.log(stores);
     newItems,
     itemInfoService,
     lastPlayedDate) {
-      console.log(character);
     const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
 
-    return D2ItemFactory.processItems(store, characterInventory.concat(characterEquipment), itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    return D2ItemFactory.processItems(store, characterInventory.concat(_.values(characterEquipment)), itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
@@ -293,7 +293,7 @@ console.log(stores);
     itemInfoService) {
     const store = D2StoreFactory.makeVault(buckets, profileCurrencies);
 
-    return D2ItemFactory.processItems(store, profileInventory, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    return D2ItemFactory.processItems(store, _.values(profileInventory), itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
