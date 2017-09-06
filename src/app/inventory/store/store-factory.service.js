@@ -174,6 +174,7 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
       }
 
       const store = angular.extend(Object.create(StoreProto), {
+        destinyVersion: 1,
         id: raw.id,
         icon: `https://www.bungie.net/${character.emblemPath}`,
         current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
@@ -234,6 +235,7 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
     makeVault(raw, buckets, currencies) {
       let items = [];
       const store = angular.extend(Object.create(StoreProto), {
+        destinyVersion: 1,
         id: 'vault',
         name: $i18next.t('Bucket.Vault'),
         class: 'vault',

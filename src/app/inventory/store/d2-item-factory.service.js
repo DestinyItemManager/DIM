@@ -286,7 +286,7 @@ export function D2ItemFactory(
   function getClassTypeNameLocalized(defs, type) {
     const klass = _.find(_.values(defs.Class), { classType: type });
     if (klass) {
-      return klass.className;
+      return klass.displayProperties.name;
     } else {
       return $i18next.t('Loadouts.Any');
     }

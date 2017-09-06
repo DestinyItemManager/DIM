@@ -125,6 +125,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
       const genderName = gender.displayProperties.name;
 
       const store = angular.extend(Object.create(StoreProto), {
+        destinyVersion: 2,
         id: character.characterId,
         icon: `https://www.bungie.net/${character.emblemPath}`,
         current: lastPlayedDate.getTime() === (new Date(character.dateLastPlayed)).getTime(),
@@ -155,6 +156,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
       };
 
       return angular.extend(Object.create(StoreProto), {
+        destinyVersion: 2,
         id: 'vault',
         name: $i18next.t('Bucket.Vault'),
         class: 'vault',
