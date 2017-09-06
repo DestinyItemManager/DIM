@@ -108,6 +108,7 @@
     "browserslist": "^2.3.3",
     "components-font-awesome": "^4.7.0",
     "drag-drop-webkit-mobile": "^1.4.1",
+    "dragend": "github:Stereobit/dragend",
     "file-loader": "^0.11.1",
     "i18next": "^8.4.3",
     "idb-keyval": "^2.3.0",

@@ -4,13 +4,16 @@ angular.module('dimApp')
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere);
 
 
-function ClickAnywhereButHere($document) {
+function ClickAnywhereButHere($document, $timeout) {
   return {
     restrict: 'A',
     link: function(scope, element, attr) {
       const handler = function(event) {
         if (!element[0].contains(event.target)) {
-          scope.$apply(attr.dimClickAnywhereButHere);
+          // This fixes an event ordering bug in Safari that can cause closed dialogs to reopen
+          $timeout(() => {
+            scope.$apply(attr.dimClickAnywhereButHere);
+          }, 150);
         }
       };
 

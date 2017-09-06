@@ -37,6 +37,16 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     vm.settings.save();
   };
 
+  // TODO: angular media-query-switch directive
+  const phoneWidthQuery = window.matchMedia('(max-width: 414px)');
+  function phoneWidthHandler(e) {
+    $scope.$apply(() => {
+      vm.isPhonePortrait = e.matches;
+    });
+  }
+  phoneWidthQuery.addListener(phoneWidthHandler);
+  vm.isPhonePortrait = phoneWidthQuery.matches;
+
   vm.$onChanges = function() {
     vm.vault = dimStoreService.getVault();
 
@@ -45,6 +55,12 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
       dimBucketService.getBuckets().then((buckets) => {
         vm.buckets = buckets;
       });
+    }
+
+    if (vm.stores && vm.stores.length) {
+      vm.currentStore = vm.stores[0];
+    } else {
+      vm.currentStore = null;
     }
   };
 }

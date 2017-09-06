@@ -7,6 +7,11 @@
   min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
   max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
   margin: 0 auto;
+
+  &.phone-portrait {
+    min-width: auto;
+    max-width: auto;
+  }
 }
 
 .store-row {
@@ -55,11 +60,10 @@
   left: 0;
   width: auto;
   z-index: 10;
+  margin-left: 28px;
+  height: 82px;
+
   @supports (position: sticky) {
     position: sticky;
   }
-}
-
-.store-header {
-  margin-left: 28px;
 }
