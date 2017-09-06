@@ -11,6 +11,7 @@ export function Destiny2Api(
   BungieServiceHelper,
   $q,
   $http,
+  dimState,
   $i18next) {
   'ngInject';
   const { handleErrors, retryOnThrottled } = BungieServiceHelper;
@@ -96,7 +97,8 @@ export function Destiny2Api(
     });
   }
 
-  function transfer(platform, store, item, amount) {
+  function transfer(item, store, amount) {
+    const platform = dimState.active;
     return $http(bungieApiUpdate(
       '/Platform/Destiny2/Actions/Items/TransferItem/',
       {
@@ -128,7 +130,8 @@ export function Destiny2Api(
     }
   }
 
-  function equip(platform, item) {
+  function equip(item) {
+    const platform = dimState.active;
     return $http(bungieApiUpdate(
       '/Platform/Destiny2/Actions/Items/EquipItem/',
       {
@@ -142,11 +145,12 @@ export function Destiny2Api(
   }
 
   // Returns a list of items that were successfully equipped
-  function equipItems(platform, store, items) {
+  function equipItems(store, items) {
     // TODO: test if this is still broken in D2
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
     items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
+    const platform = dimState.active;
     return $http(bungieApiUpdate(
       '/Platform/Destiny2/Actions/Items/EquipItems/',
       {

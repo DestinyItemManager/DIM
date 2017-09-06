@@ -197,7 +197,7 @@ export function D2ItemFactory(
       notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
       id: item.itemInstanceId,
       equipped: instanceDef.isEquipped,
-      equipment: Boolean(item.equippingBlock), // TODO: this has a ton of good info for the item move logic
+      equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
       complete: false, // TODO: what's the deal w/ item progression?
       amount: item.quantity,
       primStat: instanceDef.primaryStat || null,
