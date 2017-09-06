@@ -266,7 +266,7 @@ export function ItemFactory(
 
     const createdItem = angular.extend(Object.create(ItemProto), {
       // figure out what year this item is probably from
-
+      destinyVersion: 1,
       // The bucket the item is currently in
       location: currentBucket,
       // The bucket the item normally resides in (even though it may be in the vault/postmaster)

@@ -159,7 +159,7 @@ export function D2ItemFactory(
       buckets.setHasUnknown();
     }
 
-    console.log(itemDef, normalBucket, currentBucket, buckets);
+    console.log({ itemDef, instanceDef, item, normalBucket, currentBucket });
 
     // We cheat a bit for items in the vault, since we treat the
     // vault as a character. So put them in the bucket they would
@@ -179,7 +179,7 @@ export function D2ItemFactory(
 
     const createdItem = angular.extend(Object.create(ItemProto), {
       // figure out what year this item is probably from
-
+      destinyVersion: 2,
       // The bucket the item is currently in
       location: currentBucket,
       // The bucket the item normally resides in (even though it may be in the vault/postmaster)
@@ -200,7 +200,7 @@ export function D2ItemFactory(
       equipment: Boolean(item.equippingBlock), // TODO: this has a ton of good info for the item move logic
       complete: false, // TODO: what's the deal w/ item progression?
       amount: item.quantity,
-      primStat: item.primaryStat || null,
+      primStat: instanceDef.primaryStat || null,
       typeName: itemDef.itemTypeDisplayName,
       equipRequiredLevel: instanceDef.equipRequiredLevel,
       maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
