@@ -6,8 +6,11 @@ import _ from 'underscore';
  */
 export function ItemService(
   dimStoreService,
+  D2StoresService,
   ItemFactory,
+  D2ItemFactory,
   Destiny1Api,
+  Destiny2Api,
   $q,
   $i18next
 ) {
@@ -27,15 +30,28 @@ export function ItemService(
     equipItems
   };
 
+  function api(item) {
+    return item.destinyVersion === 2 ? Destiny2Api : Destiny1Api;
+  }
+
+  function itemFactory(item) {
+    return item.destinyVersion === 2 ? D2ItemFactory : ItemFactory;
+  }
+
+  function getStoreService(item) {
+    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
+
   /**
    * Update our item and store models after an item has been moved (or equipped/dequipped).
    * @return the new or updated item (it may create a new item!)
    */
   function updateItemModel(item, source, target, equip, amount) {
     // Refresh all the items - they may have been reloaded!
-    source = dimStoreService.getStore(source.id);
-    target = dimStoreService.getStore(target.id);
-    item = dimStoreService.getItemAcrossStores(item);
+    const storeService = getStoreService(item);
+    source = storeService.getStore(source.id);
+    target = storeService.getStore(target.id);
+    item = storeService.getItemAcrossStores(item);
 
     // If we've moved to a new place
     if (source.id !== target.id) {
@@ -86,7 +102,7 @@ export function ItemService(
           source.removeItem(sourceItem);
           sourceItem = angular.copy(sourceItem);
           sourceItem.amount -= amountToRemove;
-          sourceItem.index = ItemFactory.createItemIndex(sourceItem);
+          sourceItem.index = itemFactory(sourceItem).createItemIndex(sourceItem);
           source.addItem(sourceItem);
         }
 
@@ -102,7 +118,7 @@ export function ItemService(
           targetItem = item;
           if (!removedSourceItem) {
             targetItem = angular.copy(item);
-            targetItem.index = ItemFactory.createItemIndex(targetItem);
+            targetItem.index = itemFactory(targetItem).createItemIndex(targetItem);
           }
           removedSourceItem = false; // only move without cloning once
           targetItem.amount = 0; // We'll increment amount below
@@ -118,7 +134,7 @@ export function ItemService(
         target.removeItem(targetItem);
         targetItem = angular.copy(targetItem);
         targetItem.amount += amountToAdd;
-        targetItem.index = ItemFactory.createItemIndex(targetItem);
+        targetItem.index = itemFactory(targetItem).createItemIndex(targetItem);
         target.addItem(targetItem);
         addAmount -= amountToAdd;
       }
@@ -137,8 +153,9 @@ export function ItemService(
   }
 
   function getSimilarItem(item, exclusions, excludeExotic = false) {
-    const target = dimStoreService.getStore(item.owner);
-    const sortedStores = _.sortBy(dimStoreService.getStores(), (store) => {
+    const storeService = getStoreService(item);
+    const target = storeService.getStore(item.owner);
+    const sortedStores = _.sortBy(storeService.getStores(), (store) => {
       if (target.id === store.id) {
         return 0;
       } else if (store.isVault) {
@@ -220,6 +237,7 @@ export function ItemService(
    * Bulk equip items. Only use for multiple equips at once.
    */
   function equipItems(store, items) {
+    const storeService = getStoreService(items[0]);
     // Check for (and move aside) exotics
     const extraItemsToEquip = _.compact(items.map((i) => {
       if (i.isExotic) {
@@ -230,7 +248,7 @@ export function ItemService(
           if (!similarItem) {
             return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: otherExotic.name })));
           }
-          const target = dimStoreService.getStore(similarItem.owner);
+          const target = storeService.getStore(similarItem.owner);
 
           if (store.id === target.id) {
             return similarItem;
@@ -249,7 +267,7 @@ export function ItemService(
       if (items.length === 1) {
         return equipItem(items[0]);
       }
-      return Destiny1Api.equipItems(store, items)
+      return api(items[0]).equipItems(store, items)
         .then((equippedItems) => {
           return equippedItems.map((i) => {
             return updateItemModel(i, store, store, true);
@@ -259,23 +277,25 @@ export function ItemService(
   }
 
   function equipItem(item) {
+    const storeService = getStoreService(item);
     if ($featureFlags.debugMoves) {
-      console.log('Equip', item.name, item.type, 'to', dimStoreService.getStore(item.owner).name);
+      console.log('Equip', item.name, item.type, 'to', storeService.getStore(item.owner).name);
     }
-    return Destiny1Api.equip(item)
+    return api(item).equip(item)
       .then(() => {
-        const store = dimStoreService.getStore(item.owner);
+        const store = storeService.getStore(item.owner);
         return updateItemModel(item, store, store, true);
       });
   }
 
   function dequipItem(item, excludeExotic = false) {
+    const storeService = getStoreService(item);
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
       return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: item.name })));
     }
-    const source = dimStoreService.getStore(item.owner);
-    const target = dimStoreService.getStore(similarItem.owner);
+    const source = storeService.getStore(item.owner);
+    const target = storeService.getStore(similarItem.owner);
 
     let p = $q.when();
     if (source.id !== target.id) {
@@ -288,16 +308,16 @@ export function ItemService(
   }
 
   function moveToVault(item, amount) {
-    return moveToStore(item, dimStoreService.getVault(), false, amount);
+    return moveToStore(item, getStoreService(item).getVault(), false, amount);
   }
 
   function moveToStore(item, store, equip, amount) {
     if ($featureFlags.debugMoves) {
-      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
+      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', getStoreService(item).getStore(item.owner).name);
     }
-    return Destiny1Api.transfer(item, store, amount)
+    return api(item).transfer(item, store, amount)
       .then(() => {
-        const source = dimStoreService.getStore(item.owner);
+        const source = getStoreService(item).getStore(item.owner);
         const newItem = updateItemModel(item, source, store, false, amount);
         if ((newItem.owner !== 'vault') && equip) {
           return equipItem(newItem);
@@ -414,7 +434,7 @@ export function ItemService(
       return value;
     }
 
-    const stores = dimStoreService.getStores();
+    const stores = getStoreService(item).getStores();
     const otherStores = _.reject(stores, { id: store.id });
 
     // Start with candidates of the same type (or sort if it's vault)
@@ -474,7 +494,8 @@ export function ItemService(
 
     let moveAsideCandidate;
 
-    const vault = dimStoreService.getVault();
+    const storeService = getStoreService(item);
+    const vault = storeService.getVault();
     moveAsideCandidates.find((candidate) => {
       // Other, non-vault stores, with the item's current
       // owner ranked last, but otherwise sorted by the
@@ -482,7 +503,7 @@ export function ItemService(
       const otherNonVaultStores = _.sortBy(
         _.filter(otherStores, (s) => !s.isVault && s.id !== item.owner),
         (s) => cachedSpaceLeft(s, candidate)).reverse();
-      otherNonVaultStores.push(dimStoreService.getStore(item.owner));
+      otherNonVaultStores.push(storeService.getStore(item.owner));
       const otherCharacterWithSpace = _.find(otherNonVaultStores,
                                              (s) => cachedSpaceLeft(s, candidate));
 
@@ -544,6 +565,7 @@ export function ItemService(
    */
   function canMoveToStore(item, store, options = {}) {
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
+    const storeService = getStoreService(item);
 
     function spaceLeftWithReservations(s, i) {
       let left = s.spaceLeftForItem(i);
@@ -562,7 +584,7 @@ export function ItemService(
       return $q.resolve(true);
     }
 
-    const stores = dimStoreService.getStores();
+    const stores = storeService.getStores();
 
     // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
     const storeReservations = {};
@@ -601,7 +623,7 @@ export function ItemService(
       const moves = _.pairs(movesNeeded)
             .reverse()
             .find(([_, moveAmount]) => moveAmount > 0);
-      const moveAsideSource = dimStoreService.getStore(moves[0]);
+      const moveAsideSource = storeService.getStore(moves[0]);
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
       if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
@@ -627,7 +649,7 @@ export function ItemService(
       }
     } else {
       // Refresh the stores to see if anything has changed
-      const reloadPromise = throttledReloadStores() || $q.when(dimStoreService.getStores());
+      const reloadPromise = throttledReloadStores() || $q.when(storeService.getStores());
       const storeId = store.id;
       return reloadPromise.then((stores) => {
         const store = _.find(stores, { id: storeId });
@@ -687,9 +709,10 @@ export function ItemService(
   function moveTo(item, target, equip, amount, excludes, reservations) {
     return isValidTransfer(equip, target, item, excludes, reservations)
       .then(() => {
+        const storeService = getStoreService(item);
         // Replace the target store - isValidTransfer may have reloaded it
-        target = dimStoreService.getStore(target.id);
-        const source = dimStoreService.getStore(item.owner);
+        target = storeService.getStore(target.id);
+        const source = storeService.getStore(item.owner);
 
         let promise = $q.when(item);
 

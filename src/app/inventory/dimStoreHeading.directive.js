@@ -46,6 +46,10 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
   vm.openLoadoutPopup = function openLoadoutPopup(e) {
     e.stopPropagation();
 
+    if (vm.store.destinyVersion === 2) {
+      return;
+    }
+
     if (dialogResult === null) {
       ngDialog.closeAll();
 
