@@ -14,9 +14,9 @@ $gold: #f5dc56;
 
 $character-box-height: 46px;
 
-// Based on the CSS width of an iPhone 6+
+// Based on the CSS width of an iPhone 6 Plus
 @mixin phone-portrait {
-  @media (max-width: 375px) {
+  @media (max-width: 414px) {
     @content;
   }
 }

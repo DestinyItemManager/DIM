@@ -7,7 +7,8 @@ export const StoreHeadingComponent = {
   controller: StoreHeadingCtrl,
   controllerAs: 'vm',
   bindings: {
-    store: '<storeData'
+    store: '<storeData',
+    internalLoadoutMenu: '<internalLoadoutMenu'
   },
   template
 };

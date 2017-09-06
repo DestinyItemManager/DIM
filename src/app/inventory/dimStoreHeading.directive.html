@@ -20,7 +20,7 @@
     <i ng-if="vm.store.destinyVersion === 1" class="loadout-button fa fa-chevron-circle-down" ng-i18next="[title]Loadouts.Loadouts"></i>
   </div>
 </div>
-<div class="loadout-menu" loadout-id="{{ ::vm.store.id }}"></div>
+<div ng-if="::vm.internalLoadoutMenu" class="loadout-menu" loadout-id="{{ ::vm.store.id }}"></div>
 <dim-stats stats="vm.store.stats" ng-if="::!vm.store.isVault"></dim-stats>
 <div ng-if="::vm.store.isVault" class="vault-capacity">
   <div class="vault-bucket" title="{{ ::bucket | i18next }}: {{ size }}/{{ ::capacity }}" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = 999; bucket = 'Bucket.' + sort">
