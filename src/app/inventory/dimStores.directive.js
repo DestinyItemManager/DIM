@@ -12,7 +12,7 @@ export const StoresComponent = {
   template
 };
 
-function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
+function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -39,7 +39,7 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
   };
 
   vm.$onChanges = function() {
-    vm.vault = dimStoreService.getVault();
+    vm.vault = _.find(vm.stores, 'isVault');
 
     if (!vm.buckets) {
       // TODO: deferring this to prevent manifest load... wise?

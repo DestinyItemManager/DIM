@@ -150,7 +150,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
     makeVault(buckets, profileCurrencies) {
       // TODO: get this right
       const currencies = {
-        // glimmer: _.find(profileCurrencies, (cur) => { return cur.itemHash === 3159615086; }).quantity,
+        glimmer: _.find(profileCurrencies, (cur) => { return cur.itemHash === 3159615086; }).quantity
         // marks: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2534352370; }).quantity,
         // silver: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2749350776; }).quantity
       };
@@ -171,7 +171,6 @@ export function D2StoreFactory($i18next, dimInfoService) {
         silver: currencies.silver,
         isVault: true,
         // Vault has different capacity rules
-        /*
         capacityForItem: function(item) {
           let sort = item.sort;
           if (item.bucket) {
@@ -180,9 +179,9 @@ export function D2StoreFactory($i18next, dimInfoService) {
           if (!sort) {
             throw new Error("item needs a 'sort' field");
           }
-          return buckets[sort].capacity;
+          return 100; // TODO: this isn't right
+          // return buckets[sort].capacity;
         },
-        */
         spaceLeftForItem: function(item) {
           let sort = item.sort;
           if (item.bucket) {

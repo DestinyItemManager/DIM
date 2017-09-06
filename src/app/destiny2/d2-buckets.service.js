@@ -18,8 +18,6 @@ export const D2Categories = {
   ],
   General: [
     'Ghost',
-    'General',
-    'Consumables',
     'Modifications',
     'Emblems',
     'Shaders',
@@ -34,6 +32,11 @@ export const D2Categories = {
     'Special Orders',
     'Messages'
   ]
+};
+
+const vaultTypes = {
+  1469714392: 'Consumables',
+  138197802: "General",
 };
 
 // A mapping from the bucket names to DIM item types
@@ -122,14 +125,19 @@ export function D2BucketsService(D2Definitions, D2Categories) {
             };
 
             bucket.type = bucketToType[bucket.hash];
-            bucket.sort = typeToSort[bucket.type];
-            buckets.byType[bucket.type] = bucket;
-            buckets.byId[bucket.id] = bucket;
+            if (bucket.type) {
+              bucket.sort = typeToSort[bucket.type];
+              buckets.byType[bucket.type] = bucket;
+            } else if (vaultTypes[bucket.id]) {
+              bucket.sort = vaultTypes[bucket.id];
+              buckets[bucket.sort] = bucket;
+            }
 
             // Add an easy helper property like "inPostmaster"
             bucket[`in${bucket.sort}`] = true;
 
             buckets.byHash[bucket.hash] = bucket;
+            buckets.byId[bucket.id] = bucket;
           }
         });
 

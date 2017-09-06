@@ -266,18 +266,6 @@ export function D2StoresService(
         }
       });
 
-      if (store.isVault) {
-        store.vaultCounts = {};
-        ['Weapons', 'Armor', 'General'].forEach((category) => {
-          store.vaultCounts[category] = 0;
-          buckets.byCategory[category].forEach((bucket) => {
-            if (store.buckets[bucket.id]) {
-              store.vaultCounts[category] += store.buckets[bucket.id].length;
-            }
-          });
-        });
-      }
-
       return store;
     });
   }
@@ -308,17 +296,15 @@ export function D2StoresService(
         }
       });
 
-      if (store.isVault) {
-        store.vaultCounts = {};
-        ['Weapons', 'Armor', 'General'].forEach((category) => {
-          store.vaultCounts[category] = 0;
-          buckets.byCategory[category].forEach((bucket) => {
-            if (store.buckets[bucket.id]) {
-              store.vaultCounts[category] += store.buckets[bucket.id].length;
-            }
-          });
+      store.vaultCounts = {};
+      ['Weapons', 'Armor', 'General'].forEach((category) => {
+        store.vaultCounts[category] = 0;
+        buckets.byCategory[category].forEach((bucket) => {
+          if (store.buckets[bucket.id]) {
+            store.vaultCounts[category] += store.buckets[bucket.id].length;
+          }
         });
-      }
+      });
 
       return store;
     });
