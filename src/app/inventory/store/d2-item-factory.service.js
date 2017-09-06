@@ -166,10 +166,6 @@ export function D2ItemFactory(
       currentBucket = normalBucket;
     }
 
-    if (!normalBucket) {
-    console.log({ itemDef, instanceDef, item, normalBucket, currentBucket });
-    }
-
     // We cheat a bit for items in the vault, since we treat the
     // vault as a character. So put them in the bucket they would
     // have been in if they'd been on a character.
