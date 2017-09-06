@@ -149,8 +149,10 @@ export function D2StoreFactory($i18next, dimInfoService) {
 
     makeVault(buckets, profileCurrencies) {
       // TODO: get this right
+      console.log(profileCurrencies);
+      const glimmer = _.find(profileCurrencies, (cur) => { return cur.itemHash === 3159615086; });
       const currencies = {
-        glimmer: _.find(profileCurrencies, (cur) => { return cur.itemHash === 3159615086; }).quantity
+        glimmer: glimmer ? glimmer.quantity : 0
         // marks: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2534352370; }).quantity,
         // silver: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2749350776; }).quantity
       };
