@@ -179,8 +179,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
           if (!sort) {
             throw new Error("item needs a 'sort' field");
           }
-          return 100; // TODO: this isn't right
-          // return buckets[sort].capacity;
+          return buckets[sort].capacity;
         },
         spaceLeftForItem: function(item) {
           let sort = item.sort;

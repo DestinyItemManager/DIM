@@ -35,8 +35,8 @@ export const D2Categories = {
 };
 
 const vaultTypes = {
-  1469714392: 'Consumables',
-  138197802: "General",
+  1469714392: 'Weapons',
+  138197802: 'General',
 };
 
 // A mapping from the bucket names to DIM item types
@@ -67,14 +67,12 @@ const bucketToType = {
   14239492: "Chest Armor",
   18606351: "Shaders",
   20886954: "Leg Armor",
-  138197802: "General",
   215593132: "Lost Items",
   284967655: "Ships",
   375726501: "Engrams",
   953998645: "Power Weapons",
   1269569095: "Auras",
   1367666825: "Special Orders",
-  1469714392: "Consumables",
   1498876634: "Kinetic Weapons",
   1585787867: "Class Armor",
   2025709351: "Vehicle"
@@ -140,6 +138,9 @@ export function D2BucketsService(D2Definitions, D2Categories) {
             buckets.byId[bucket.id] = bucket;
           }
         });
+
+        // Hack in the fact that weapons and armor share vault space now
+        buckets.Armor = buckets.byHash[138197802];
 
         _.each(D2Categories, (types, category) => {
           buckets.byCategory[category] = _.compact(types.map((type) => {
