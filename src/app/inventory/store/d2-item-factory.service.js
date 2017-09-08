@@ -304,8 +304,8 @@ export function D2ItemFactory(
   }
 
   function buildStats(item, itemDef, statDefs, stats, type) {
-    var itemStats = stats[item.itemInstanceId];
-    if(itemStats) {
+    let itemStats = stats[item.itemInstanceId];
+    if (itemStats) {
       itemStats = stats[item.itemInstanceId].stats;
     }
     if (!itemDef.stats || !itemStats) {
@@ -318,16 +318,16 @@ export function D2ItemFactory(
         return undefined;
       }
 
-      let itemStat = itemStats[stat.statHash];
+      const itemStat = itemStats[stat.statHash];
       if (!itemStat) {
         return undefined;
       }
 
-      let maximumValue = itemStat.maximumValue || 100;
+      const maximumValue = itemStat.maximumValue || 100;
       const val = itemStat ? itemStat.value : stat.value;
-      let base = val;
-      let bonus = 0;
-      let sort = 1;
+      const base = val;
+      const bonus = 0;
+      const sort = 1;
 
       return {
         base: base,
