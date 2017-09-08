@@ -253,7 +253,7 @@ export function D2ItemFactory(
     }
 
     try {
-      createdItem.stats = buildStats(item, itemDef, defs.Stat, itemComponents.stats.data, itemType);
+      createdItem.stats = buildStats(item, itemDef, defs.Stat, itemComponents.stats.data);
     } catch (e) {
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     }
@@ -303,7 +303,7 @@ export function D2ItemFactory(
     }
   }
 
-  function buildStats(item, itemDef, statDefs, stats, type) {
+  function buildStats(item, itemDef, statDefs, stats) {
     let itemStats = stats[item.itemInstanceId];
     if (itemStats) {
       itemStats = stats[item.itemInstanceId].stats;
