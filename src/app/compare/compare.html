@@ -7,7 +7,7 @@
   <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
     <div class="compare-item fixed-left">
       <div class="spacer" ng-class="::{withTags: vm.tagsEnabled}"></div>
-      <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === vm.comparisons[0].primStat.statHash, sorted: vm.sortedHash === vm.comparisons[0].primStat.statHash }" ng-mouseover="vm.highlight = vm.comparisons[0].primStat.statHash" ng-click="vm.sort(vm.comparisons[0].primStat.statHash)" ng-bind="vm.comparisons[0].primStat.stat.statName"></div>
+      <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === vm.comparisons[0].primStat.statHash, sorted: vm.sortedHash === vm.comparisons[0].primStat.statHash }" ng-mouseover="vm.highlight = vm.comparisons[0].primStat.statHash" ng-click="vm.sort(vm.comparisons[0].primStat.statHash)" ng-bind="vm.comparisons[0].primStat.stat.statName || vm.comparisons[0].primStat.stat.displayProperties.name"></div>
       <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash }" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by stat.statHash" ng-bind="::stat.name"></div>
     </div>
     <div ng-repeat="item in vm.comparisons track by item.id" class="compare-item">

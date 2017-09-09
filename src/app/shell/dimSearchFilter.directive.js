@@ -172,8 +172,13 @@ function SearchFilter(dimSearchService) {
 }
 
 
-function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $i18next) {
+function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresService, dimVendorService, dimSearchService, hotkeys, $i18next) {
   const vm = this;
+
+  function getStoreService() {
+    return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
+
   const filterInputId = 'filter-input';
   let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
@@ -333,7 +338,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       });
     };
 
-    _.each(dimStoreService.getStores(), (store) => {
+    _.each(getStoreService().getStores(), (store) => {
       _.each(store.items, (item) => {
         item.visible = (filters.length > 0) ? filterFn(item) : true;
       });
@@ -497,7 +502,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     },
     dupe: function(predicate, item) {
       if (_duplicates === null) {
-        _duplicates = _.countBy(flatMap(dimStoreService.getStores(), 'items'), 'hash');
+        _duplicates = _.countBy(flatMap(getStoreService().getStores(), 'items'), 'hash');
       }
 
       // We filter out the "Default Shader" because everybody has one per character
