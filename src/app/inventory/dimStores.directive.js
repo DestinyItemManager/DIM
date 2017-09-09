@@ -6,12 +6,13 @@ export const StoresComponent = {
   controller: StoresCtrl,
   controllerAs: 'vm',
   bindings: {
-    stores: '<'
+    stores: '<',
+    buckets: '<'
   },
   template
 };
 
-function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
+function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -37,14 +38,30 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     vm.settings.save();
   };
 
+  // TODO: angular media-query-switch directive
+  const phoneWidthQuery = window.matchMedia('(max-width: 414px)');
+  function phoneWidthHandler(e) {
+    $scope.$apply(() => {
+      vm.isPhonePortrait = e.matches;
+    });
+  }
+  phoneWidthQuery.addListener(phoneWidthHandler);
+  vm.isPhonePortrait = phoneWidthQuery.matches;
+
   vm.$onChanges = function() {
-    vm.vault = dimStoreService.getVault();
+    vm.vault = _.find(vm.stores, 'isVault');
 
     if (!vm.buckets) {
       // TODO: deferring this to prevent manifest load... wise?
       dimBucketService.getBuckets().then((buckets) => {
         vm.buckets = buckets;
       });
+    }
+
+    if (vm.stores && vm.stores.length) {
+      vm.currentStore = vm.stores[0];
+    } else {
+      vm.currentStore = null;
     }
   };
 }

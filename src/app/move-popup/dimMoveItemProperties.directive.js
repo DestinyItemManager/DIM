@@ -151,6 +151,9 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   $scope.$watch('vm.settings.itemDetails', (show) => {
     vm.itemDetails = vm.itemDetails || show;
   });
+  vm.destinyDBLink = vm.item.destinyVersion === 2
+    ? `http://db.destinytracker.com/d2/en/items/${vm.item.hash}`
+    : `http://db.destinytracker.com/inventory/item/${vm.item.hash}#${vm.item.talentGrid.dtrPerks}`;
 
   if (vm.item.primStat) {
     vm.light = vm.item.primStat.value.toString();

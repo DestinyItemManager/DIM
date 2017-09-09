@@ -1,3 +1,4 @@
+@import 'variables.scss';
 
 .toast-title {
   font-weight: bold;
@@ -262,4 +263,11 @@ button.toast-close-button {
     transition: width 0s linear !important;
     width: 0px !important;
   }
+}
+
+
+@include phone-portrait {
+    .toast-info {
+        width: 95vw !important;
+    }
 }

@@ -7,7 +7,8 @@ export const StoreHeadingComponent = {
   controller: StoreHeadingCtrl,
   controllerAs: 'vm',
   bindings: {
-    store: '<storeData'
+    store: '<storeData',
+    internalLoadoutMenu: '<internalLoadoutMenu'
   },
   template
 };
@@ -44,6 +45,10 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
 
   vm.openLoadoutPopup = function openLoadoutPopup(e) {
     e.stopPropagation();
+
+    if (vm.store.destinyVersion === 2) {
+      return;
+    }
 
     if (dialogResult === null) {
       ngDialog.closeAll();

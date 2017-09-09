@@ -2,35 +2,13 @@ import angular from 'angular';
 import _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { sum, count } from '../../util';
-import { getCharacterStatsData, getClass } from './character-utils';
-
-// Label isn't used, but it helps us understand what each one is
-const progressionMeta = {
-  529303302: { label: "Cryptarch", order: 0 },
-  3233510749: { label: "Vanguard", order: 1 },
-  1357277120: { label: "Crucible", order: 2 },
-  2778795080: { label: "Dead Orbit", order: 3 },
-  1424722124: { label: "Future War Cult", order: 4 },
-  3871980777: { label: "New Monarchy", order: 5 },
-  2161005788: { label: "Iron Banner", order: 6 },
-  174528503: { label: "Crota's Bane", order: 7 },
-  807090922: { label: "Queen's Wrath", order: 8 },
-  3641985238: { label: "House of Judgment", order: 9 },
-  2335631936: { label: "Gunsmith", order: 10 },
-  2576753410: { label: "SRL", order: 11 }
-};
-
-const factionBadges = {
-  969832704: 'Future War Cult',
-  27411484: 'Dead Orbit',
-  2954371221: 'New Monarchy'
-};
+import { getClass } from './character-utils';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
  * The job of filling in their items is left to other code - this is just the basic store itself.
  */
-export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
+export function D2StoreFactory($i18next, dimInfoService) {
   'ngInject';
 
   // Prototype for Store objects - add methods to this to add them to all
@@ -79,17 +57,12 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
       }
     },
 
-    updateCharacterInfoFromEquip: function(characterInfo) {
-      dimDefinitions.getDefinitions().then((defs) => this.updateCharacterInfo(defs, characterInfo));
-    },
-
-    updateCharacterInfo: function(defs, characterInfo) {
-      this.level = characterInfo.characterLevel;
-      this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
-      this.powerLevel = characterInfo.characterBase.powerLevel;
-      this.background = `https://www.bungie.net/${characterInfo.backgroundPath}`;
-      this.icon = `https://www.bungie.net/${characterInfo.emblemPath}`;
-      this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
+    updateCharacterInfo: function(defs, character) {
+      this.level = character.levelProgression.level; // Maybe?
+      this.light = character.light;
+      this.background = `https://www.bungie.net/${character.emblemBackgroundPath}`;
+      this.icon = `https://www.bungie.net/${character.emblemPath}`;
+      // this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
     },
 
     // Remove an item from this store. Returns whether it actually removed anything.
@@ -138,104 +111,54 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
     },
 
     factionAlignment: function() {
-      const badge = this.buckets.BUCKET_MISSION.find((i) => factionBadges[i.hash]);
-      if (!badge) {
-        return null;
-      }
-
-      return factionBadges[badge.hash];
+      return null;
     }
   };
 
   return {
-    makeCharacter(raw, defs, lastPlayedDate, currencies) {
-      let items = [];
-      const character = raw.character.base;
-      try {
-        currencies.glimmer = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 3159615086; }).value;
-        currencies.marks = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 2534352370; }).value;
-        currencies.silver = _.find(character.inventory.currencies, (cur) => { return cur.itemHash === 2749350776; }).value;
-      } catch (e) {
-        console.log("error", e);
-      }
-
-      const race = defs.Race[character.characterBase.raceHash];
-      let genderRace = "";
-      let className = "";
-      let gender = "";
-      if (character.characterBase.genderType === 0) {
-        gender = 'male';
-        genderRace = race.raceNameMale;
-        className = defs.Class[character.characterBase.classHash].classNameMale;
-      } else {
-        gender = 'female';
-        genderRace = race.raceNameFemale;
-        className = defs.Class[character.characterBase.classHash].classNameFemale;
-      }
+    makeCharacter(defs, character, lastPlayedDate) {
+      const race = defs.Race[character.raceHash];
+      const gender = defs.Gender[character.genderHash];
+      const classy = defs.Class[character.classHash];
+      const genderRace = race.genderedRaceNames[gender.displayProperties.name];
+      const className = classy.genderedClassNames[gender.displayProperties.name];
+      const genderName = gender.displayProperties.name;
 
       const store = angular.extend(Object.create(StoreProto), {
-        destinyVersion: 1,
-        id: raw.id,
+        destinyVersion: 2,
+        id: character.characterId,
         icon: `https://www.bungie.net/${character.emblemPath}`,
-        current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
-        lastPlayed: character.characterBase.dateLastPlayed,
-        background: `https://www.bungie.net/${character.backgroundPath}`,
-        level: character.characterLevel,
-        powerLevel: character.characterBase.powerLevel,
-        stats: getCharacterStatsData(defs.Stat, character.characterBase),
-        class: getClass(character.characterBase.classType),
-        classType: character.characterBase.classType,
+        current: lastPlayedDate.getTime() === (new Date(character.dateLastPlayed)).getTime(),
+        lastPlayed: character.dateLastPlayed,
+        background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
+        level: character.levelProgression.level, // Maybe?
+        powerLevel: character.light,
+        // stats: getCharacterStatsData(defs.Stat, character.characterBase),
+        class: getClass(classy.classType),
+        classType: classy.classType,
         className: className,
-        gender: gender,
+        gender: genderName,
         genderRace: genderRace,
-        percentToNextLevel: character.percentToNextLevel / 100.0,
-        progression: raw.character.progression,
-        advisors: raw.character.advisors,
         isVault: false
       });
 
       store.name = `${store.genderRace} ${store.className}`;
 
-      if (store.progression) {
-        store.progression.progressions.forEach((prog) => {
-          angular.extend(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
-          const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
-          if (faction) {
-            prog.faction = faction;
-          }
-        });
-      }
-
-      _.each(raw.data.buckets, (bucket) => {
-        _.each(bucket, (pail) => {
-          _.each(pail.items, (item) => {
-            item.bucket = pail.bucketHash;
-          });
-
-          items = items.concat(pail.items);
-        });
-      });
-
-      if (_.has(character.inventory.buckets, 'Invisible')) {
-        _.each(character.inventory.buckets.Invisible, (pail) => {
-          _.each(pail.items, (item) => {
-            item.bucket = pail.bucketHash;
-          });
-
-          items = items.concat(pail.items);
-        });
-      }
-
-      return {
-        store,
-        items
-      };
+      return store;
     },
 
-    makeVault(raw, buckets, currencies) {
-      let items = [];
-      const store = angular.extend(Object.create(StoreProto), {
-        destinyVersion: 1,
+    makeVault(buckets, profileCurrencies) {
+      // TODO: get this right
+      console.log(profileCurrencies);
+      const glimmer = _.find(profileCurrencies, (cur) => { return cur.itemHash === 3159615086; });
+      const currencies = {
+        glimmer: glimmer ? glimmer.quantity : 0
+        // marks: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2534352370; }).quantity,
+        // silver: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2749350776; }).quantity
+      };
+
+      return angular.extend(Object.create(StoreProto), {
+        destinyVersion: 2,
         id: 'vault',
         name: $i18next.t('Bucket.Vault'),
         class: 'vault',
@@ -289,19 +212,6 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
           this.vaultCounts[item.location.sort]++;
         }
       });
-
-      _.each(raw.data.buckets, (bucket) => {
-        _.each(bucket.items, (item) => {
-          item.bucket = bucket.bucketHash;
-        });
-
-        items = items.concat(bucket.items);
-      });
-
-      return {
-        store,
-        items
-      };
     }
   };
 }

@@ -156,6 +156,7 @@ function StoreBucketCtrl($scope,
     }).catch((e) => {
       if (e.message !== 'move-canceled') {
         toaster.pop('error', item.name, e.message);
+        console.error("error moving", e, item);
       }
     });
 
