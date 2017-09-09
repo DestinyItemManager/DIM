@@ -64,6 +64,10 @@
   "Debug": {
     "Dump": "ゲーム機に情報を転送する"
   },
+  "Destiny2": {
+    "Banner": "DIM will support Destiny 2",
+    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
+  },
   "DidYouKnow": {
     "Collapse": "あなたは、ちょうどDIMでセクションを崩壊させました！\nこれは、あなたが通常使う必要はないDIMの部分を隠すために役に立つかもしれません。",
     "DidYouKnow": "知っていますか？",
@@ -84,10 +88,12 @@
     "HelpPros": "この武器の良いところを書いてください(オプション)",
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "Pros": "長所",
+    "ReallyReport": "Report",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
     "Submit": "提出",
     "ThankYou": "レビューの提出ありがとうございます！　間もなく表示されます。",
+    "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "レビュー"
   },
   "FarmingMode": {
@@ -494,6 +500,7 @@
   "Storage": {
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
     "ChromeSyncStorage": "クロームの同調(エクステンション限定)",
+    "ClearIgnoredUsers": "Clear Ignored Users",
     "Details": {
       "ChromeSyncStorage": "クロームにログインした場合データが他の機器のクロームにも同調されます。DIMのウェブサイトでは同調できません。",
       "GoogleDriveStorage": "DIMはグーグルドライブのアプリにデータをセーブできます。複数のブラウザからグーグルドライブにサインインすれば、データを共有します。このデータは各Bungie毎に保管されます。",
@@ -510,6 +517,7 @@
     "GDriveSignInWarning": "既にグーグルドライブにDIMのデータをセーブしている場合、機器にセーブされたデータに上書きされます。サインインする前にデータをバックアップしたほうがいいかも知れません。\n\nグーグルドライブにサインインしますか？",
     "GoogleApiBlocked": "コンテンツブロッカーによりグーグルドライブにアクセスできません。DIMをコンテンツブロッカー設定より解除して、お試しください。",
     "GoogleDriveStorage": "Google Drive",
+    "IgnoredUsers": "{{value}} ignored users",
     "Import": "DIMデータを取り込む。",
     "ImportExport": "データのバックアップ",
     "ImportFromExtension": "クロームのDIMエクステンションからデータを転送する",
@@ -565,17 +573,27 @@
     "About": {
       "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
       "ContactUs": "お問い合わせ",
+      "Discord": "Discord",
+      "DiscordHelp": "Ask questions and get support in our Discord channels.",
       "FAQ": "よくある質問",
       "FAQAccess": "DIMはどのようにデスティニーのデータを入手しますか？",
+      "FAQAccessAnswer": "We use Bungie's app authentication to grant access to DIM to see and move your items. DIM never sees your username or password. This is the same way the Companion app works.",
+      "FAQD2": "Will DIM support Destiny 2?",
+      "FAQD2Answer": "Yes! We expect to support Destiny 2 shortly after it's launched (and we've had a chance to play the game ourselves). Expect DIM to start with the easy stuff (showing and moving your items) and working up to cooler features as we all discover what D2 has in store for us. The same DIM website will support Destiny 2 and Destiny 1 at the same time, and you'll be able to switch back and forth between your D1 and D2 characters.",
       "FAQDupeGally": "ちょっと、DIMが私のギャラルホルンを複製しました！",
       "FAQDupeGallyAnswer": "いいえ、こちらでは何もしていません。 約束します。",
       "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
       "FAQKeyboardAnswer": "使えます！使用可能なショートカットリストを表示するには「？」を押してください。",
       "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
+      "FAQLogoutAnswer": "Click on your account in the top right of the screen and choose \"Log out\".",
       "FAQLostItem": "このツールを使っている間にアイテムを紛失してしまった！",
+      "FAQLostItemAnswer": "Bungie doesn't allow apps to delete items (even their own app!). More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, reload the page. Check {{link}} or in game to see if your item still exists. We're sure it's still there.",
+      "FAQMobile": "Does DIM support mobile? Will there be an app?",
+      "FAQMobileAnswer": "The DIM website can be loaded on phones and tablets today! We're still working on making our information-rich interface comfortable on phones, though. Make sure to bookmark DIM to your home screen. We may release an app in the future, but it'll be almost exactly the same as the website.",
       "GitHub": "ギットハブ",
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}}へ。",
       "Header": "デスティニー・アイテム・マネージャー「DIM」 について",
+      "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "レディット",
       "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
       "Schedule_beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",

@@ -88,10 +88,12 @@
     "HelpPros": "Describe las cosas positivas de esta arma (opcional)",
     "NoReviews": "¡No hay reseñas para este objeto, sé el primero!",
     "Pros": "Pros",
+    "ReallyReport": "Reportar",
     "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker.",
     "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker.",
     "Submit": "Enviar",
     "ThankYou": "¡Gracias por enviar un comentario! Estará en vivo pronto.",
+    "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Tu Reseña"
   },
   "FarmingMode": {
@@ -231,7 +233,7 @@
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tienes poco espacio en disco. DIM no puede continuar.",
     "UpgradeChrome": "Por favor actualice Chrome",
     "Version_beta": "La Beta ha sido actualizada a la v{{version}}",
-    "Version_release": "DIM v{{version}} ha sido Publicado",
+    "Version_release": "DIM v{{version}} ha sido Publicada",
     "Xur": "Xûr esta aquí"
   },
   "Hotkey": {
@@ -316,7 +318,7 @@
     "IncludeRare": "Incluir objetos raros (azules)",
     "LB": "Creador de equipo",
     "LightMode": {
-      "HelpCurrent": "Calcula los equipos con los nieveles de defensa actuales.",
+      "HelpCurrent": "Calcula los equipos con los niveles de defensa actuales.",
       "HelpScaled": "Calcula los equipos como si todos los objetos tuvieran 350 de defensa.",
       "LightMode": "Modo ligero"
     },
@@ -343,7 +345,7 @@
   "Loadouts": {
     "Any": "Cualquier clase",
     "Applied": "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
-    "AppliedAuto": "Crear automático de equipo",
+    "AppliedAuto": "Creador de equipo automático",
     "AppliedError": "Ninguno de los objetos en tu equipo pudo ser transferido.",
     "AppliedWarn": "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores.",
     "Applied_female": "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
@@ -498,6 +500,7 @@
   "Storage": {
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
     "ChromeSyncStorage": "Sincronización de Chrome (extensión solamente)",
+    "ClearIgnoredUsers": "Clear Ignored Users",
     "Details": {
       "ChromeSyncStorage": "Si haz iniciado sesión en Chrome, tu información será sincronizada con otras instancias de Chrome. Esto no funciona en el sitio web de DIM.",
       "GoogleDriveStorage": "DIM puede guardar datos en la app de Google Drive. Si inicias sesión en Google Drive en navegadores multiples, tus datos serán compartidos por todas partes. Estos datos son almacenados por cada cuenta de Bungie.",
@@ -514,6 +517,7 @@
     "GDriveSignInWarning": "Si ya haz guardado la información de DIM en Google Drive, esto sobre-escribirá cualquier cosa que hayas guardado de forma local. Tal vez quisieras resguardar tu información antes de iniciar sesión. \n\n¿Quieres iniciar sesión en Google Drive?",
     "GoogleApiBlocked": "Google Drive no esta disponible porque un bloqueador de contenido ha bloqueado el JavaScript de Google Drive. Por favor excluye DIM de los bloqueadores de contenido y intente nuevamente.",
     "GoogleDriveStorage": "Google Drive",
+    "IgnoredUsers": "{{value}} ignored users",
     "Import": "Importar datos de DIM desde un archivo",
     "ImportExport": "Respaldar datos",
     "ImportFromExtension": "Importar datos desde la extensión de Chrome de DIM",
@@ -575,12 +579,15 @@
       "FAQAccess": "¿Cómo accede DIM a mis datos de Destiny?",
       "FAQAccessAnswer": "Utilizamos la autenticación de la app de Bungie para permitir a DIM ver y mover tus objetos. DIM nunca ve tu usuario o contraseña. Funciona del mismo modo que la App Acompañante.",
       "FAQD2": "¿Será DIM compatible con Destiny 2?",
+      "FAQD2Answer": "Yes! We expect to support Destiny 2 shortly after it's launched (and we've had a chance to play the game ourselves). Expect DIM to start with the easy stuff (showing and moving your items) and working up to cooler features as we all discover what D2 has in store for us. The same DIM website will support Destiny 2 and Destiny 1 at the same time, and you'll be able to switch back and forth between your D1 and D2 characters.",
       "FAQDupeGally": "¡Oye, DIM duplicó mi Gjallarhorn!",
       "FAQDupeGallyAnswer": "No, no lo hicimos. Lo prometo.",
       "FAQKeyboard": "¿DIM soporta atajos de teclado?",
       "FAQKeyboardAnswer": "¡Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
       "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
+      "FAQLogoutAnswer": "Click on your account in the top right of the screen and choose \"Log out\".",
       "FAQLostItem": "¡Perdí mi objeto usando tu herramienta!",
+      "FAQLostItemAnswer": "Bungie doesn't allow apps to delete items (even their own app!). More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, reload the page. Check {{link}} or in game to see if your item still exists. We're sure it's still there.",
       "FAQMobile": "¿DIM tendrá soporte móvil? ¿Habrá una app?",
       "FAQMobileAnswer": "¡El sitio web de DIM puede ser cargado en los teléfonos y tabletas desde hoy!. Sin embargo, aún trabajamos para lograr que la amplia información de nuestra interfaz sea cómoda de usar en teléfonos móviles. Asegúrese crear in vínculo de DIM en su pantalla de inicio. Es posible que lancemos una apicación en el futuro, pero será casi exacta al sitio Web.",
       "GitHub": "GitHub",
