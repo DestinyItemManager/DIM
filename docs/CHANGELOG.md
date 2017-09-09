@@ -1,5 +1,8 @@
 # Next
 
+* DIM will remember whether you last used D2 or D1.
+* Lots of DIM functionality is back for D2.
+
 # 4.12.0
 
 * Early Destiny 2 support! We have really basic support for your Destiny 2 characters. Select your D2 account from the dropdown on the right. This support was built before we even got to start playing, so expect some rough edges.
