@@ -11,14 +11,19 @@ export const MovePopupComponent = {
   template
 };
 
-function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
+function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
   'ngInject';
   const vm = this;
+
+  function getStoreService(item) {
+    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
+
   vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
 
   if (vm.item.maxStackSize > 1) {
-    const store = dimStoreService.getStore(vm.item.owner);
+    const store = getStoreService(vm.item).getStore(vm.item.owner);
     vm.maximum = store.amountOfItem(vm.item);
   }
 
@@ -60,7 +65,7 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     dimItemMoveService.moveItemTo(vm.item, store, equip, vm.moveAmount, closeThisDialog);
   };
 
-  vm.stores = dimStoreService.getStores();
+  vm.stores = getStoreService(vm.item).getStores();
 
   vm.canShowVault = function canShowVault(item, itemStore, buttonStore) {
     // If my itemStore is the vault, don't show a vault button.

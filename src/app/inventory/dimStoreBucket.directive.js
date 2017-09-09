@@ -18,6 +18,7 @@ export const StoreBucketComponent = {
 function StoreBucketCtrl($scope,
                          loadingTracker,
                          dimStoreService,
+                         D2StoresService,
                          dimItemService,
                          $q,
                          $timeout,
@@ -30,6 +31,10 @@ function StoreBucketCtrl($scope,
                          $i18next) {
   'ngInject';
   const vm = this;
+
+  function getStoreService(item) {
+    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
 
   vm.settings = dimSettingsService;
 
@@ -111,7 +116,7 @@ function StoreBucketCtrl($scope,
           const vm = this;
           vm.item = $scope.ngDialogData;
           vm.moveAmount = vm.item.amount;
-          vm.maximum = dimStoreService.getStore(vm.item.owner).amountOfItem(item);
+          vm.maximum = getStoreService(vm.item).getStore(vm.item.owner).amountOfItem(item);
           vm.stacksWorth = Math.min(Math.max(item.maxStackSize - target.amountOfItem(item), 0), vm.maximum);
           vm.stacksWorthClick = function() {
             vm.moveAmount = vm.stacksWorth;
@@ -142,14 +147,14 @@ function StoreBucketCtrl($scope,
 
     promise = promise.then((moveAmount) => {
       if ($featureFlags.debugMoves) {
-        console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', dimStoreService.getStore(item.owner).name);
+        console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', getStoreService(item).getStore(item.owner).name);
       }
       let movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
       const reload = item.equipped || equip;
       if (reload) {
         movePromise = movePromise.then(() => {
-          return dimStoreService.updateCharacters();
+          return getStoreService(item).updateCharacters();
         });
       }
       return movePromise;

@@ -1,8 +1,12 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-export function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
+export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
   'ngInject';
+
+  function getStoreService(item) {
+    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
 
   const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.DragAndDrop')}</p>
                               <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
@@ -27,7 +31,7 @@ export function ItemMoveService($q, loadingTracker, toaster, dimStoreService, di
     if (reload) {
       // Refresh light levels and such
       promise = promise.then(() => {
-        return dimStoreService.updateCharacters();
+        return getStoreService(item).updateCharacters();
       });
     }
 
@@ -44,8 +48,8 @@ export function ItemMoveService($q, loadingTracker, toaster, dimStoreService, di
   });
 
   const consolidate = dimActionQueue.wrap((actionableItem, store, callback) => {
-    const stores = _.filter(dimStoreService.getStores(), (s) => { return !s.isVault; });
-    const vault = dimStoreService.getVault();
+    const stores = _.filter(getStoreService(actionableItem).getStores(), (s) => { return !s.isVault; });
+    const vault = getStoreService(actionableItem).getVault();
 
     let promise = $q.all(stores.map((s) => {
       // First move everything into the vault
@@ -95,7 +99,7 @@ export function ItemMoveService($q, loadingTracker, toaster, dimStoreService, di
 
   const distribute = dimActionQueue.wrap((actionableItem, store, callback) => {
     // Sort vault to the end
-    const stores = _.sortBy(dimStoreService.getStores(), (s) => { return s.id === 'vault' ? 2 : 1; });
+    const stores = _.sortBy(getStoreService(actionableItem).getStores(), (s) => { return s.id === 'vault' ? 2 : 1; });
 
     let total = 0;
     const amounts = stores.map((store) => {

@@ -38,7 +38,7 @@ let firstItemTimed = false;
 export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, dimDestinyTrackerService, NewItemsService) {
   'ngInject';
 
-  function storeService(item) {
+  function getStoreService(item) {
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
@@ -74,14 +74,14 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
   vm.doubleClicked = dimActionQueue.wrap((item, e) => {
     if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
       e.stopPropagation();
-      const active = storeService(item).getActiveStore();
+      const active = getStoreService(item).getActiveStore();
 
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;
 
       dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount)
         .then(() => {
-          return storeService(item).updateCharacters();
+          return getStoreService(item).updateCharacters();
         });
     }
   });
@@ -127,7 +127,7 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
         controller: function() {
           'ngInject';
           this.item = vm.item;
-          this.store = storeService(item).getStore(this.item.owner);
+          this.store = getStoreService(item).getStore(this.item.owner);
         },
 
         // Setting these focus options prevents the page from
