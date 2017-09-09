@@ -19,7 +19,7 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
   let _loaded = false;
   const _ready = $q.defer();
 
-  const destinyLanguages = ['de', 'en', 'fr', 'es', 'it', 'ja', 'pt-br'];
+  const destinyLanguages = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'pl', 'pt-br', 'ru', 'zh-cht'];
 
   // Try to pick a nice default language
   function defaultLanguage() {
@@ -109,7 +109,11 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
 
     $rootScope.$evalAsync(() => {
       angular.merge(settings, savedSettings);
-      changeLanguage(settings.language);
+      changeLanguage(settings.language, () => {
+        $rootScope.$applyAsync(() => {
+          $rootScope.$broadcast('i18nextLanguageChange');
+        });
+      });
       $rootScope.$emit('dim-settings-loaded', {});
     });
   });

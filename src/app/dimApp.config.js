@@ -42,8 +42,12 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       de: { translation: de },
       fr: { translation: fr },
       es: { translation: es },
+      'es-mx': { translation: es }, // TODO: separate es-mx translation
       ja: { translation: ja },
-      'pt-br': { translation: ptBR }
+      'pt-br': { translation: ptBR },
+      pl: { translation: en },
+      ru: { translation: en },
+      'zh-cht': { translation: en }
     },
     returnObjects: true
   });
