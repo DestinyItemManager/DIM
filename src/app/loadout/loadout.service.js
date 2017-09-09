@@ -5,7 +5,7 @@ import _ from 'underscore';
 export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, D2StoresService, dimSettingsService, toaster, loadingTracker, SyncService, dimActionQueue) {
   'ngInject';
 
-  function getStoreService(item) {
+  function getStoreService() {
     return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
