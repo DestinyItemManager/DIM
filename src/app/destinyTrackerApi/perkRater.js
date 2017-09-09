@@ -23,7 +23,6 @@ class PerkRater {
     const selectedPerksAndRatings = _.map(item.writtenReviews, (review) => { this._getSelectedPerksAndRating(review); });
 
     const maxColumn = this._getMaxColumn(item);
-    console.log(maxColumn);
 
     for (let i = 1; i < maxColumn; i++) {
       const perksInColumn = this._getNodesInColumn(item, i);
@@ -48,8 +47,9 @@ class PerkRater {
 
   _getNodesInColumn(item,
                     column) {
-    const nodesInColumn = _.where(item.talentGrid.nodes, (node) => { return node.column === column; });
-    return _.map(nodesInColumn, (nodeInColumn) => nodeInColumn.roll);
+    const nodesInColumn = _.where(item.talentGrid.nodes, { column: column });
+
+    return _.map(nodesInColumn, (nodeInColumn) => nodeInColumn.dtrRoll);
   }
 
   _getPerkRatingAndReviewCount(perk,
