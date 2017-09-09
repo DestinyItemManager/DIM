@@ -17,10 +17,6 @@ dim-store-heading {
   height: 46px;
   cursor: pointer;
 
-  * {
-    //box-sizing: border-box;
-  }
-
   .details {
     display: flex;
     flex-direction: row;
@@ -34,7 +30,7 @@ dim-store-heading {
     height: 100%;
     filter: brightness(70%);
     background-size: cover;
-    background-position: right center;
+    background-position: left center;
     background-repeat: no-repeat;
     z-index: -1;
   }
@@ -113,6 +109,15 @@ dim-store-heading {
     font-weight: 200;
     font-size: 14px;
   }
+
+  &.destiny2 {
+    .emblem {
+      visibility: hidden;
+    }
+    .background {
+      filter: none;
+    }
+  }
 }
 
 .levelBar {
@@ -177,7 +182,7 @@ dim-store-heading {
 .loadout-button {
   color: white;
   text-align: center;
-  font-size: 18px;
+  font-size: 18px !important;
   cursor: pointer;
   outline: none;
   margin-left: 6px;

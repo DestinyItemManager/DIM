@@ -9,14 +9,17 @@ export const InventoryComponent = {
   controller: InventoryController
 };
 
-function InventoryController($scope, dimStoreService) {
+function InventoryController($scope, dimStoreService, dimBucketService) {
   'ngInject';
 
   const vm = this;
 
   this.$onInit = function() {
-    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), (stores) => {
-      vm.stores = stores;
+    dimBucketService.getBuckets().then((buckets) => {
+      vm.buckets = buckets;
+      subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), (stores) => {
+        vm.stores = stores;
+      });
     });
   };
 

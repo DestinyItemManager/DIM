@@ -51,15 +51,8 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
   vm.$onChanges = function() {
     vm.vault = _.find(vm.stores, 'isVault');
 
-    if (!vm.buckets) {
-      // TODO: deferring this to prevent manifest load... wise?
-      dimBucketService.getBuckets().then((buckets) => {
-        vm.buckets = buckets;
-      });
-    }
-
     if (vm.stores && vm.stores.length) {
-      vm.currentStore = vm.stores[0];
+      vm.currentStore = _.find(vm.stores, 'current');
     } else {
       vm.currentStore = null;
     }

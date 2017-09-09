@@ -148,7 +148,7 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
   };
 
   return {
-    makeCharacter(raw, defs, lastPlayedDate, currencies) {
+    makeCharacter(raw, defs, mostRecentLastPlayed, currencies) {
       let items = [];
       const character = raw.character.base;
       try {
@@ -173,12 +173,14 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
         className = defs.Class[character.characterBase.classHash].classNameFemale;
       }
 
+      const lastPlayed = new Date(character.characterBase.dateLastPlayed);
+
       const store = angular.extend(Object.create(StoreProto), {
         destinyVersion: 1,
         id: raw.id,
         icon: `https://www.bungie.net/${character.emblemPath}`,
-        current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
-        lastPlayed: character.characterBase.dateLastPlayed,
+        current: mostRecentLastPlayed.getTime() === lastPlayed.getTime(),
+        lastPlayed,
         background: `https://www.bungie.net/${character.backgroundPath}`,
         level: character.characterLevel,
         powerLevel: character.characterBase.powerLevel,
@@ -241,7 +243,7 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
         class: 'vault',
         current: false,
         className: $i18next.t('Bucket.Vault'),
-        lastPlayed: '2005-01-01T12:00:01Z',
+        lastPlayed: new Date('2005-01-01T12:00:01Z'),
         icon: require('app/images/vault.png'),
         background: require('app/images/vault-background.png'),
         items: [],

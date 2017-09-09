@@ -234,6 +234,7 @@ export function D2ItemFactory(
 
     if (createdItem.primStat) {
       createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
+      createdItem.primStat.stat.statName = createdItem.primStat.stat.displayProperties.name;
     }
 
     // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
