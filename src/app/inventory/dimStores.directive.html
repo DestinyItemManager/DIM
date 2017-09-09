@@ -2,7 +2,7 @@
   <div ng-if="vm.isPhonePortrait && vm.currentStore">
     <!-- TODO: move most of these into their own components? -->
     <div class="store-header">
-      <store-pager on-store-change="vm.currentStore = store">
+      <store-pager on-store-change="vm.currentStore = store" initial-index="vm.currentStoreIndex">
         <dim-store-heading
           class="character-swipe"
           ng-class="{ current: vm.currentStore.current }"
