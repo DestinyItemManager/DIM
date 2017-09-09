@@ -51,11 +51,9 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
   vm.$onChanges = function() {
     vm.vault = _.find(vm.stores, 'isVault');
 
-    console.log(vm.stores, vm.currentStore);
     if (vm.stores && vm.stores.length) {
       vm.currentStore = _.find(vm.stores, 'current');
       vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
-      console.log(vm.currentStoreIndex, $filter('sortStores')(vm.stores, dimSettingsService.characterOrder))
     } else {
       vm.currentStore = null;
     }
