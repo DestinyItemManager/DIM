@@ -116,7 +116,8 @@ function StoreBucketCtrl($scope,
           const vm = this;
           vm.item = $scope.ngDialogData;
           vm.moveAmount = vm.item.amount;
-          vm.maximum = getStoreService(vm.item).getStore(vm.item.owner).amountOfItem(item);
+          vm.maximum = getStoreService(vm.item).getStore(vm.item.owner)
+            .amountOfItem(item);
           vm.stacksWorth = Math.min(Math.max(item.maxStackSize - target.amountOfItem(item), 0), vm.maximum);
           vm.stacksWorthClick = function() {
             vm.moveAmount = vm.stacksWorth;
