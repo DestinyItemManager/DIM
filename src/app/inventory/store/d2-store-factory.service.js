@@ -175,14 +175,10 @@ export function D2StoreFactory($i18next, dimInfoService) {
         isVault: true,
         // Vault has different capacity rules
         capacityForItem: function(item) {
-          let sort = item.sort;
-          if (item.bucket) {
-            sort = item.bucket.sort;
+          if (!item.bucket) {
+            throw new Error("item needs a 'bucket' field");
           }
-          if (!sort) {
-            throw new Error("item needs a 'sort' field");
-          }
-          return buckets[sort].capacity;
+          return buckets.byHash[item.bucket.hash].vaultBucket.capacity;
         },
         spaceLeftForItem: function(item) {
           let sort = item.sort;

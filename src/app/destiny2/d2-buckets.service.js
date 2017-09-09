@@ -18,25 +18,24 @@ export const D2Categories = {
   ],
   General: [
     'Ghost',
-    'Modifications',
-    'Emblems',
-    'Shaders',
-    'Emotes',
-    'Ships',
+    'Clan Banners',
     'Vehicle',
-    'Auras',
-    'Clan Banners'
+    'Ships',
+    'Emblems',
+    'Emotes',
+    'Engrams',
+    'Auras'
+  ],
+  Inventory: [
+    'Consumables',
+    'Modifications',
+    'Shaders'
   ],
   Postmaster: [
     'Lost Items',
-    'Special Orders',
-    'Messages'
+    'Messages',
+    'Special Orders'
   ]
-};
-
-const vaultTypes = {
-  1469714392: 'Weapons',
-  138197802: 'General',
 };
 
 // A mapping from the bucket names to DIM item types
@@ -75,7 +74,9 @@ const bucketToType = {
   1367666825: "Special Orders",
   1498876634: "Kinetic Weapons",
   1585787867: "Class Armor",
-  2025709351: "Vehicle"
+  2025709351: "Vehicle",
+  1469714392: "Consumables",
+  138197802: "General"
 };
 
 export function D2BucketsService(D2Definitions, D2Categories) {
@@ -112,35 +113,39 @@ export function D2BucketsService(D2Definitions, D2Categories) {
         };
 
         _.each(defs.InventoryBucket, (def) => {
-          if (def.enabled) {
-            const bucket = {
-              id: def.hash,
-              description: def.displayProperties.description,
-              name: def.displayProperties.name,
-              hash: def.hash,
-              hasTransferDestination: def.hasTransferDestination,
-              capacity: def.itemCount
-            };
+          const bucket = {
+            id: def.hash,
+            description: def.displayProperties.description,
+            name: def.displayProperties.name,
+            hash: def.hash,
+            hasTransferDestination: def.hasTransferDestination,
+            capacity: def.itemCount,
+            accountWide: def.scope === 1
+          };
 
-            bucket.type = bucketToType[bucket.hash];
-            if (bucket.type) {
-              bucket.sort = typeToSort[bucket.type];
-              buckets.byType[bucket.type] = bucket;
-            } else if (vaultTypes[bucket.id]) {
-              bucket.sort = vaultTypes[bucket.id];
-              buckets[bucket.sort] = bucket;
-            }
-
-            // Add an easy helper property like "inPostmaster"
-            bucket[`in${bucket.sort}`] = true;
-
-            buckets.byHash[bucket.hash] = bucket;
-            buckets.byId[bucket.id] = bucket;
+          bucket.type = bucketToType[bucket.hash];
+          if (bucket.type) {
+            bucket.sort = typeToSort[bucket.type];
+            buckets.byType[bucket.type] = bucket;
           }
+
+          // Add an easy helper property like "inPostmaster"
+          bucket[`in${bucket.sort}`] = true;
+
+          buckets.byHash[bucket.hash] = bucket;
+          buckets.byId[bucket.id] = bucket;
         });
 
-        // Hack in the fact that weapons and armor share vault space now
-        buckets.Armor = buckets.byHash[138197802];
+        const vaultMappings = {};
+        defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {
+          vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
+        });
+
+        _.each(buckets.byHash, (bucket) => {
+          if (vaultMappings[bucket.hash]) {
+            bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
+          }
+        });
 
         _.each(D2Categories, (types, category) => {
           buckets.byCategory[category] = _.compact(types.map((type) => {
