@@ -79,7 +79,11 @@ export function FarmingService($rootScope,
           // reserve one space in the active character
           reservations[this.store.id] = {};
           makeRoomTypes.forEach((type) => {
-            reservations[this.store.id][buckets.byId[type].type] = 1;
+            if (dimSettingsService.destinyVersion === 2) {
+              reservations[this.store.id][buckets.byHash[type].type] = 1;
+            } else {
+              reservations[this.store.id][buckets.byId[type].type] = 1;
+            }
           });
         }
 
