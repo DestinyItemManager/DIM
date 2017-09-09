@@ -7,7 +7,7 @@
     <g class="talent-node"
        ng-attr-transform="translate({{ (node.column - vm.hiddenColumns) * (vm.totalNodeSize) }},{{ node.row * (vm.totalNodeSize) }})"
        ng-repeat="node in vm.talentGrid.nodes | talentGridNodes:vm.hiddenColumns track by $index"
-       ng-class="{ 'talent-node-activated': node.activated, 'talent-node-showxp': (!node.activated && node.xpRequired), 'talent-node-default': (node.activated && !node.xpRequired && !node.exclusiveInColumn && node.column < 1) }"
+       ng-class="{ 'talent-node-activated': node.activated, 'talent-node-showxp': (!node.activated && node.xpRequired), 'talent-node-default': (node.activated && !node.xpRequired && !node.exclusiveInColumn && node.column < 1), 'talent-node-best-rated': (node.bestRated) }"
        ng-click="node.hash == 1270552711 ? vm.infuse({ '$event': $event }) : true"
        press-tip="{{ node.description }}"
        press-tip-title="{{ node.name }}">

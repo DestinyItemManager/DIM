@@ -13,6 +13,10 @@
   stroke: $xp;
 }
 
+.talent-node-best-rated .talent-node-xp {
+  fill: rgba(0, 255, 0, 0.4);
+}
+
 .talent-node-activated .talent-node-xp {
   fill: #4887ba;
 }
