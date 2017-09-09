@@ -13,14 +13,10 @@ class PerkRater {
    * @memberof PerkRater
    */
   ratePerks(item) {
-    console.log(item);
-
     if ((!item.writtenReviews) ||
         (!item.writtenReviews.length)) {
-      return null;
+      return;
     }
-
-    const selectedPerksAndRatings = _.map(item.writtenReviews, (review) => { this._getSelectedPerksAndRating(review); });
 
     const maxColumn = this._getMaxColumn(item);
 
@@ -31,15 +27,16 @@ class PerkRater {
 
       const maxReview = this._getMaxReview(ratingsAndReviews);
 
-      console.log('max');
-      console.log(maxReview);
+      this._markNodeAsBest(maxReview);
+    }
+  }
+
+  _markNodeAsBest(maxReview) {
+    if (!maxReview) {
+      return;
     }
 
-    const availablePerks = item.talentGrid.dtrRoll.replace('o', '').split(';');
-
-    _.each(availablePerks, (availablePerk) => { this._getPerkRatingsAndReviewCount(availablePerk, item.reviews); });
-
-    const matchingReviews = this._getMatchingReviews(item);
+    maxReview.perkNode.bestRated = true;
   }
 
   _getMaxReview(ratingsAndReviews) {
