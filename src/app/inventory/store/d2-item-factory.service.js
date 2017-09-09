@@ -252,6 +252,12 @@ export function D2ItemFactory(
       }
     }
 
+    try {
+      createdItem.stats = buildStats(item, itemDef, defs.Stat, itemComponents.stats.data);
+    } catch (e) {
+      console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
+    }
+
     createdItem.index = createItemIndex(createdItem);
 
     return createdItem;
@@ -295,5 +301,45 @@ export function D2ItemFactory(
     } else {
       return $i18next.t('Loadouts.Any');
     }
+  }
+
+  function buildStats(item, itemDef, statDefs, stats) {
+    let itemStats = stats[item.itemInstanceId];
+    if (itemStats) {
+      itemStats = stats[item.itemInstanceId].stats;
+    }
+    if (!itemDef.stats || !itemStats) {
+      return undefined;
+    }
+
+    return _.sortBy(_.compact(_.map(itemStats, (stat) => {
+      const def = statDefs.get(stat.statHash);
+      if (!def) {
+        return undefined;
+      }
+
+      const itemStat = itemStats[stat.statHash];
+      if (!itemStat) {
+        return undefined;
+      }
+
+      const maximumValue = itemStat.maximumValue || 100;
+      const val = itemStat ? itemStat.value : stat.value;
+      const base = val;
+      const bonus = 0;
+      const sort = 1;
+
+      return {
+        base: base,
+        bonus: bonus,
+        statHash: stat.statHash,
+        name: def.displayProperties.name,
+        id: item.itemInstanceId,
+        sort: sort,
+        value: val,
+        maximumValue: maximumValue,
+        bar: stat.statHash !== 4284893193
+      };
+    })), 'sort');
   }
 }
