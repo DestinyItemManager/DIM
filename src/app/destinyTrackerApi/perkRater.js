@@ -27,7 +27,7 @@ class PerkRater {
     for (let i = 1; i < maxColumn; i++) {
       const perksInColumn = this._getNodesInColumn(item, i);
 
-      console.log(perksInColumn);
+      _.each(perksInColumn, (perk) => this._getPerkRatingAndReviewCount(perk, item.writtenReviews));
     }
 
     console.log(selectedPerksAndRatings);
@@ -47,9 +47,7 @@ class PerkRater {
 
   _getNodesInColumn(item,
                     column) {
-    const nodesInColumn = _.where(item.talentGrid.nodes, { column: column });
-
-    return _.map(nodesInColumn, (nodeInColumn) => nodeInColumn.dtrRoll);
+    return _.pluck(_.where(item.talentGrid.nodes, { column: column }), 'dtrRoll');
   }
 
   _getPerkRatingAndReviewCount(perk,
