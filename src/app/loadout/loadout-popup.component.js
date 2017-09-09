@@ -13,10 +13,9 @@ export const LoadoutPopupComponent = {
   template
 };
 
-function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService, dimSettingsService) {
+function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService) {
   'ngInject';
   const vm = this;
-  vm.destinyVersion = dimSettingsService.destinyVersion;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
   vm.classTypeId = {
