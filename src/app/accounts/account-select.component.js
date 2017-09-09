@@ -12,7 +12,7 @@ export const AccountSelectComponent = {
   }
 };
 
-function AccountSelectController($scope, dimPlatformService, loadingTracker, ngDialog, OAuthTokenService, $state) {
+function AccountSelectController($scope, dimPlatformService, dimSettingsService, loadingTracker, ngDialog, OAuthTokenService, $state) {
   'ngInject';
 
   const vm = this;
@@ -74,6 +74,7 @@ function AccountSelectController($scope, dimPlatformService, loadingTracker, ngD
   vm.selectAccount = function(e, account) {
     e.stopPropagation();
     $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
+    dimSettingsService.destinyVersion = account.destinyVersion;
   };
 
   vm.openDropdown = function(e) {

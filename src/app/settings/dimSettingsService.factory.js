@@ -61,6 +61,8 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
       // Whether to keep one slot per item type open
       makeRoomForItems: true
     },
+    // Active destiny version
+    destinyVersion: 2,
 
     // Predefined item tags. Maybe eventually allow to add more (also i18n?)
     itemTags: [
