@@ -12,7 +12,7 @@ export const StoresComponent = {
   template
 };
 
-function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
+function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next, $filter) {
   'ngInject';
 
   const vm = this;
@@ -53,6 +53,7 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
 
     if (vm.stores && vm.stores.length) {
       vm.currentStore = _.find(vm.stores, 'current');
+      vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
     } else {
       vm.currentStore = null;
     }

@@ -7,6 +7,10 @@ Due to what information is provided by Bungie about item names and descriptions 
   - Japanese
   - Portuguese (BR)
   - Spanish
+  - Spanish (Latin America)
+  - Polish
+  - Russian
+  - Chinese (Traditional)
 
 # Translating DIM
 
@@ -49,7 +53,7 @@ If your language requires plural or gender support for a translation do not hesi
 
 # List of Plural & Gender keys
  - BungieService.ItemUniquenessExplanation
- - FarmingMode.Desc 
+ - FarmingMode.Desc
  - FarmingMode.MakeRoom.Desc
  - ItemService.BucketFull.Guardian
  - Loadouts.Applied

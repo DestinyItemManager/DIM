@@ -120,8 +120,8 @@ export function D2StoreFactory($i18next, dimInfoService) {
       const race = defs.Race[character.raceHash];
       const gender = defs.Gender[character.genderHash];
       const classy = defs.Class[character.classHash];
-      const genderRace = race.genderedRaceNames[gender.displayProperties.name];
-      const className = classy.genderedClassNames[gender.displayProperties.name];
+      const genderRace = race.genderedRaceNames[gender.genderType === 1 ? 'Female' : 'Male'];
+      const className = classy.genderedClassNames[gender.genderType === 1 ? 'Female' : 'Male'];
       const genderName = gender.displayProperties.name;
       const lastPlayed = new Date(character.dateLastPlayed);
 

@@ -3,8 +3,12 @@ import it from '../locale/it/dim.json';
 import de from '../locale/de/dim.json';
 import fr from '../locale/fr/dim.json';
 import es from '../locale/es-ES/dim.json';
+import esMX from '../locale/es-MX/dim.json';
 import ja from '../locale/ja/dim.json';
+import pl from '../locale/pl/dim.json';
 import ptBR from '../locale/pt-BR/dim.json';
+import ru from '../locale/ru/dim.json';
+import zhCN from '../locale/zh-CN/dim.json';
 
 import { init as i18init } from 'i18next';
 
@@ -42,8 +46,12 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       de: { translation: de },
       fr: { translation: fr },
       es: { translation: es },
+      'es-mx': { translation: esMX },
       ja: { translation: ja },
-      'pt-br': { translation: ptBR }
+      'pt-br': { translation: ptBR },
+      pl: { translation: pl },
+      ru: { translation: ru },
+      'zh-cht': { translation: zhCN }
     },
     returnObjects: true
   });
