@@ -6,10 +6,13 @@ import './dimClearNewItems.scss';
  */
 export const ClearNewItemsComponent = {
   template,
-  controller: ClearNewItemsCtrl
+  controller: ClearNewItemsCtrl,
+  bindings: {
+    destinyVersion: '<'
+  }
 };
 
-function ClearNewItemsCtrl($scope, NewItemsService, dimSettingsService, hotkeys, $i18next, dimStoreService) {
+function ClearNewItemsCtrl($scope, NewItemsService, dimSettingsService, D2StoresService, hotkeys, $i18next, dimStoreService) {
   'ngInject';
 
   this.settings = dimSettingsService;
@@ -26,6 +29,6 @@ function ClearNewItemsCtrl($scope, NewItemsService, dimSettingsService, hotkeys,
   });
 
   this.clearNewItems = function() {
-    NewItemsService.clearNewItems(dimStoreService.getStores());
+    NewItemsService.clearNewItems((this.destinyVersion === 2 ? D2StoresService : dimStoreService).getStores());
   };
 }

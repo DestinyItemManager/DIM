@@ -19,9 +19,13 @@ export function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, Destiny1Api) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, Destiny1Api) {
   'ngInject';
   const vm = this;
+
+  function getStoreService(item) {
+    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
 
   vm.tab = 'default';
 
@@ -110,9 +114,9 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
     let store;
     if (item.owner === 'vault') {
-      store = dimStoreService.getStores()[0];
+      store = getStoreService(item).getStores()[0];
     } else {
-      store = dimStoreService.getStore(item.owner);
+      store = getStoreService(item).getStore(item.owner);
     }
 
     vm.locking = true;

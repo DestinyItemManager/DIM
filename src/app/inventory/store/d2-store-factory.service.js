@@ -116,20 +116,21 @@ export function D2StoreFactory($i18next, dimInfoService) {
   };
 
   return {
-    makeCharacter(defs, character, lastPlayedDate) {
+    makeCharacter(defs, character, mostRecentLastPlayed) {
       const race = defs.Race[character.raceHash];
       const gender = defs.Gender[character.genderHash];
       const classy = defs.Class[character.classHash];
       const genderRace = race.genderedRaceNames[gender.displayProperties.name];
       const className = classy.genderedClassNames[gender.displayProperties.name];
       const genderName = gender.displayProperties.name;
+      const lastPlayed = new Date(character.dateLastPlayed);
 
       const store = angular.extend(Object.create(StoreProto), {
         destinyVersion: 2,
         id: character.characterId,
         icon: `https://www.bungie.net/${character.emblemPath}`,
-        current: lastPlayedDate.getTime() === (new Date(character.dateLastPlayed)).getTime(),
-        lastPlayed: character.dateLastPlayed,
+        current: mostRecentLastPlayed.getTime() === lastPlayed.getTime(),
+        lastPlayed,
         background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
         level: character.levelProgression.level, // Maybe?
         powerLevel: character.light,
@@ -164,7 +165,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         class: 'vault',
         current: false,
         className: $i18next.t('Bucket.Vault'),
-        lastPlayed: '2005-01-01T12:00:01Z',
+        lastPlayed: new Date('2005-01-01T12:00:01Z'),
         icon: require('app/images/vault.png'),
         background: require('app/images/vault-background.png'),
         items: [],

@@ -25,10 +25,15 @@ export const CompareComponent = {
   template
 };
 
-function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $i18next) {
+function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2StoresService, $i18next) {
   'ngInject';
 
   const vm = this;
+
+  function getStoreService(item) {
+    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
+
   vm.tagsEnabled = $featureFlags.tagsEnabled;
   vm.show = dimCompareService.dialogOpen;
 
@@ -66,7 +71,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $i18ne
   };
 
   vm.add = function add(args) {
-    if (!args.item.talentGrid || !args.item.equipment) {
+    if (!args.item.equipment) {
       return;
     }
 
@@ -81,7 +86,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, $i18ne
 
     if (args.dupes) {
       vm.compare = args.item;
-      const allItems = dimStoreService.getAllItems();
+      const allItems = getStoreService(args.item).getAllItems();
       vm.similarTypes = _.filter(allItems, { typeName: vm.compare.typeName });
       let armorSplit;
       if (!vm.compare.location.inWeapons) {

@@ -7,10 +7,17 @@ import './dimManifestProgress.scss';
  */
 angular.module('dimApp')
   .component('dimManifestProgress', {
-    template: template,
-    controller: ManifestProgressCtrl
+    template,
+    controller: ManifestProgressCtrl,
+    bindings: {
+      destinyVersion: '<'
+    }
   });
 
-function ManifestProgressCtrl(dimManifestService) {
-  this.manifest = dimManifestService;
+function ManifestProgressCtrl(dimManifestService, D2ManifestService) {
+  if (this.destinyVersion === 2) {
+    this.manifest = D2ManifestService;
+  } else {
+    this.manifest = dimManifestService;
+  }
 }

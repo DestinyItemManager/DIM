@@ -107,7 +107,7 @@ export function D2StoresService(
     ]).then(([defs, profileInfo]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
-          const bStore = profileInfo.characters[dStore.id].data;
+          const bStore = profileInfo.characters.data[dStore.id];
           dStore.updateCharacterInfo(defs, bStore);
         }
       });
@@ -314,7 +314,7 @@ export function D2StoresService(
    * Find the date of the most recently played character.
    */
   function findLastPlayedDate(profileInfo) {
-    return _.reduce(_.values(profileInfo.characters), (memo, character) => {
+    return _.reduce(_.values(profileInfo.characters.data), (memo, character) => {
       const d1 = new Date(character.dateLastPlayed);
       return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
     }, null);

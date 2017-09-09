@@ -25,6 +25,18 @@
   }
 }
 
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.notloaded {
+  opacity: 0;
+  margin: 2em;
+  animation: 1s linear 3s forwards fade-in;
+}
+
 h1, h2, h3, h4, h5 {
   font-weight: normal;
 }
