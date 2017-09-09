@@ -132,6 +132,11 @@ module.exports = function(grunt) {
         'src/locale/it/dim.json',
         'src/locale/ja/dim.json',
         'src/locale/pt-BR/dim.json',
+        'src/locale/es-MX/dim.json',
+        'src/locale/pl/dim.json',
+        'src/locale/ru/dim.json',
+        'src/locale/zh-CN/dim.json',
+        'src/locale/zh-TW/dim.json',
       ]
     }
   });
