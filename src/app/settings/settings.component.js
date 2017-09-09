@@ -67,10 +67,14 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     de: 'Deutsch',
     en: 'English',
     es: 'Español',
+    'es-mx': 'Español (América Latina)',
     fr: 'Français',
     it: 'Italiano',
+    pl: 'Polszczyzna',
     'pt-br': 'Português (Brasil)',
-    ja: '日本語'
+    ru: 'ру́сский',
+    ja: '日本語',
+    'zh-cht': '正體字'
   };
 
   if ($featureFlags.colorA11y) {
