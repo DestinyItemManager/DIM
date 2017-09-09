@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
-import { PerkRater } from './perkRater';
 
 /**
  * Cache of review data.
@@ -12,7 +11,6 @@ class ReviewDataCache {
   constructor() {
     this._itemTransformer = new ItemTransformer();
     this._itemStores = [];
-    this._perkRater = new PerkRater();
   }
 
   _getMatchingItem(item) {
@@ -104,7 +102,6 @@ class ReviewDataCache {
     const matchingItem = this._getMatchingItem(item);
     if (matchingItem) {
       matchingItem.reviews = reviewsData.reviews;
-      this._perkRater.ratePerks(matchingItem);
       matchingItem.reviewsDataFetched = true;
     }
   }

@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
+import { PerkRater } from './perkRater';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -16,6 +17,7 @@ class ReviewsFetcher {
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;
+    this._perkRater = new PerkRater();
   }
 
   _getItemReviewsCall(item) {
@@ -72,6 +74,8 @@ class ReviewsFetcher {
     }
 
     this._reviewDataCache.addReviewsData(item, reviewData);
+
+    this._perkRater.ratePerks(item);
   }
 
   _sortReviews(a, b) {
