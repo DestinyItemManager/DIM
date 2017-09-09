@@ -25,16 +25,16 @@ class PerkRater {
     const maxColumn = this._getMaxColumn(item);
 
     for (let i = 1; i < maxColumn; i++) {
-      const perksInColumn = this._getNodesInColumn(item, i);
+      const perkNodesInColumn = this._getPerkNodesInColumn(item, i);
 
-      _.each(perksInColumn, (perk) => this._getPerkRatingAndReviewCount(perk, item.writtenReviews));
+      _.each(perkNodesInColumn, (perkNode) => this._getPerkRatingsAndReviewCount(perkNode, item.writtenReviews));
     }
 
-    console.log(selectedPerksAndRatings);
+    //console.log(selectedPerksAndRatings);
 
     const availablePerks = item.talentGrid.dtrRoll.replace('o', '').split(';');
 
-    _.each(availablePerks, (availablePerk) => { this._getPerkRatingAndReviewCount(availablePerk, item.reviews); });
+    _.each(availablePerks, (availablePerk) => { this._getPerkRatingsAndReviewCount(availablePerk, item.reviews); });
 
     const matchingReviews = this._getMatchingReviews(item);
 
@@ -45,16 +45,19 @@ class PerkRater {
     return _.max(item.talentGrid.nodes, (node) => { return node.column; }).column;
   }
 
-  _getNodesInColumn(item,
-                    column) {
-    return _.pluck(_.where(item.talentGrid.nodes, { column: column }), 'dtrRoll');
+  _getPerkNodesInColumn(item,
+                        column) {
+    return _.where(item.talentGrid.nodes, { column: column });
   }
 
-  _getPerkRatingAndReviewCount(perk,
-                               reviews) {
-    const matchingReviews = this._getMatchingReviews(perk, reviews);
+  _getPerkRatingsAndReviewCount(perkNode,
+                                reviews) {
+    const matchingReviews = this._getMatchingReviews(perkNode,
+                                                     reviews);
 
-    console.log(reviews.length, matchingReviews.length);
+    //console.log(reviews.length, matchingReviews.length);
+
+    //console.log(matchingReviews);
 
     const ratingCount = matchingReviews.length;
     const averageReview = matchingReviews.reduce((memo, num) => memo + num, 0) / matchingReviews.length || 1;
@@ -64,7 +67,7 @@ class PerkRater {
       averageReview: averageReview
     };
 
-    console.log(perk, ratingAndReview);
+    //console.log(perkNode, ratingAndReview);
 
     return ratingAndReview;
   }
@@ -79,22 +82,30 @@ class PerkRater {
     };
   }
 
-  _getMatchingReviews(perk,
+  _getMatchingReviews(perkNode,
                       reviews) {
-    return _.filter(reviews, (review) => { return this._allSelectedPerksApply(perk, review); });
+    const perkRoll = perkNode.dtrRoll.replace('o', '');
+    return _.filter(reviews, (review) => { return this._selectedPerkNodeApplies(perkRoll, review); });
   }
 
-  _allSelectedPerksApply(perk,
-                         review) {
+  _selectedPerkNodeApplies(perkRoll,
+                           review) {
     const reviewSelectedPerks = this._getSelectedPerks(review);
 
-    return _.every(reviewSelectedPerks, (reviewSelectedPerk) => { return _.contains(perk, reviewSelectedPerk); });
+    console.log(reviewSelectedPerks);
+    console.log(perkRoll);
+    console.log(_.some(reviewSelectedPerks, (reviewSelectedPerk) => { return perkRoll === reviewSelectedPerk; }));
+    console.log(_.some(reviewSelectedPerks, (reviewSelectedPerk) => { return perkRoll == reviewSelectedPerk; }));
+
+    return _.some(reviewSelectedPerks, (reviewSelectedPerk) => { return perkRoll === reviewSelectedPerk; });
   }
 
   _getSelectedPerks(review) {
-    const allSelectedPerks = _.where(review.roll.split(';'), ((str) => { return str.indexOf('o') > -1; }));
+    console.log(review.roll.split(';'));
+    const allSelectedPerks = _.filter(review.roll.split(';'), ((str) => { return str.indexOf('o') > -1; }));
+    console.log(allSelectedPerks);
 
-    return _.select(allSelectedPerks, (selectedPerk) => { selectedPerk.replace('o', ''); });
+    return _.map(allSelectedPerks, (selectedPerk) => { return selectedPerk.replace('o', ''); });
   }
 }
 
