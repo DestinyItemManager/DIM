@@ -12,12 +12,16 @@ export const ActivitiesComponent = {
   }
 };
 
-function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettingsService, $i18next) {
+function ActivitiesController($scope, D2StoresService, dimStoreService, dimDefinitions, dimSettingsService, $i18next) {
   'ngInject';
 
   const vm = this;
 
   vm.settings = dimSettingsService;
+
+  function getStoreService() {
+    return vm.settings.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
 
   vm.settingsChanged = function() {
     vm.settings.save();
@@ -30,12 +34,12 @@ function ActivitiesController($scope, dimStoreService, dimDefinitions, dimSettin
   };
 
   this.$onInit = function() {
-    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
+    subscribeOnScope($scope, getStoreService().getStoresStream(vm.account), init);
   };
 
   $scope.$on('dim-refresh', () => {
     // TODO: refresh just advisors
-    dimStoreService.reloadStores();
+    getStoreService().reloadStores();
   });
 
   // TODO: Ideally there would be an Advisors service that would

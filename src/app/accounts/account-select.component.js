@@ -75,6 +75,7 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
     e.stopPropagation();
     $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
     dimSettingsService.destinyVersion = account.destinyVersion;
+    dimSettingsService.save();
   };
 
   vm.openDropdown = function(e) {

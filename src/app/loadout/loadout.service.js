@@ -2,8 +2,12 @@ import angular from 'angular';
 import uuidv4 from 'uuid/v4';
 import _ from 'underscore';
 
-export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, toaster, loadingTracker, SyncService, dimActionQueue) {
+export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, D2StoresService, dimSettingsService, toaster, loadingTracker, SyncService, dimActionQueue) {
   'ngInject';
+
+  function getStoreService(item) {
+    return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  }
 
   let _loadouts = [];
   const _previousLoadouts = {}; // by character ID
@@ -52,7 +56,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       loadouts = ids.map((id) => {
         // Mark all the items as being in loadouts
         data[id].items.forEach((item) => {
-          const itemFromStore = dimStoreService.getItemAcrossStores({
+          const itemFromStore = getStoreService().getItemAcrossStores({
             id: item.id,
             hash: item.hash
           });
@@ -184,7 +188,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
   // A special getItem that takes into account the fact that
   // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
   function getLoadoutItem(pseudoItem, store) {
-    let item = dimStoreService.getItemAcrossStores(pseudoItem);
+    let item = getStoreService().getItemAcrossStores(pseudoItem);
     if (!item) {
       return null;
     }
@@ -286,7 +290,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
 
       // Stuff that's equipped on another character. We can bulk-dequip these
       const itemsToDequip = _.filter(items, (pseudoItem) => {
-        const item = dimStoreService.getItemAcrossStores(pseudoItem);
+        const item = getStoreService().getItemAcrossStores(pseudoItem);
         return item.owner !== store.id && item.equipped;
       });
 
@@ -300,13 +304,13 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
 
       if (itemsToDequip.length > 1) {
         const realItemsToDequip = itemsToDequip.map((i) => {
-          return dimStoreService.getItemAcrossStores(i);
+          return getStoreService().getItemAcrossStores(i);
         });
         const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
           const equipItems = _.compact(realItemsToDequip.map((i) => {
             return dimItemService.getSimilarItem(i, loadoutItemIds);
           }));
-          return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems);
+          return dimItemService.equipItems(getStoreService().getStore(owner), equipItems);
         });
         promise = $q.all(dequips);
       }
@@ -345,7 +349,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
           // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
           // is fixed on Bungie's end. When that happens, just remove this call.
           if (scope.successfulItems.length > 0) {
-            return dimStoreService.updateCharacters();
+            return getStoreService().updateCharacters();
           }
           return undefined;
         })
@@ -388,7 +392,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       const amountAlreadyHave = store.amountOfItem(pseudoItem);
       let amountNeeded = pseudoItem.amount - amountAlreadyHave;
       if (amountNeeded > 0) {
-        const otherStores = _.reject(dimStoreService.getStores(), (otherStore) => {
+        const otherStores = _.reject(getStoreService().getStores(), (otherStore) => {
           return store.id === otherStore.id;
         });
         const storesByAmount = _.sortBy(otherStores.map((store) => {
@@ -467,7 +471,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
     };
 
     _.each(loadoutPrimitive.items, (itemPrimitive) => {
-      let item = angular.copy(dimStoreService.getItemAcrossStores({
+      let item = angular.copy(getStoreService().getItemAcrossStores({
         id: itemPrimitive.id,
         hash: itemPrimitive.hash
       }));
