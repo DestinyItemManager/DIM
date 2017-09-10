@@ -9,7 +9,8 @@ const lazyTables = [
   'Progression', // DestinyProgressionDefinition
   'ItemCategory', // DestinyItemCategoryDefinition
   'Activity', // DestinyActivityDefinition
-  'ActivityType' // DestinyActivityTypeDefinition
+  'ActivityType', // DestinyActivityTypeDefinition
+  'Vendor'
 ];
 
 const eagerTables = [

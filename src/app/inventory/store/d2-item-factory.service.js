@@ -162,14 +162,7 @@ export function D2ItemFactory(
     // We cheat a bit for items in the vault, since we treat the
     // vault as a character. So put them in the bucket they would
     // have been in if they'd been on a character.
-    if (currentBucket.id === 1469714392 || currentBucket.id === 138197802) {
-      currentBucket = normalBucket;
-    }
-
-    // We cheat a bit for items in the vault, since we treat the
-    // vault as a character. So put them in the bucket they would
-    // have been in if they'd been on a character.
-    if (instanceDef.location === 2 /* vault */) {
+    if (owner.isVault || instanceDef.location === 2 /* Vault */) {
       currentBucket = normalBucket;
     }
 
@@ -180,7 +173,7 @@ export function D2ItemFactory(
       return category ? category.hash : null; // Uh oh, no more readable IDs!
     })) : [];
 
-    const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType];
+    const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
     const createdItem = angular.extend(Object.create(ItemProto), {
       // figure out what year this item is probably from
@@ -199,15 +192,15 @@ export function D2ItemFactory(
       name: itemDef.displayProperties.name,
       description: itemDef.displayProperties.description,
       icon: itemDef.displayProperties.icon,
-      notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
-      id: item.itemInstanceId,
-      equipped: instanceDef.isEquipped,
+      notransfer: Boolean(currentBucket.accountWide || currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
+      id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
+      equipped: Boolean(instanceDef.isEquipped),
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
       complete: false, // TODO: what's the deal w/ item progression?
       amount: item.quantity,
       primStat: instanceDef.primaryStat || null,
       typeName: itemDef.itemTypeDisplayName,
-      equipRequiredLevel: instanceDef.equipRequiredLevel,
+      equipRequiredLevel: instanceDef.equipRequiredLevel || 0,
       maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
       // 0: titan, 1: hunter, 2: warlock, 3: any
       classType: itemDef.classType,

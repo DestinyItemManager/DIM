@@ -297,7 +297,7 @@ export function D2StoresService(
       });
 
       store.vaultCounts = {};
-      ['Weapons', 'Armor', 'General'].forEach((category) => {
+      ['Weapons', 'Armor', 'General', 'Inventory'].forEach((category) => {
         store.vaultCounts[category] = 0;
         buckets.byCategory[category].forEach((bucket) => {
           if (store.buckets[bucket.id]) {
