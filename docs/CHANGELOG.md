@@ -1,5 +1,7 @@
 # Next
 
+# 4.13.0
+
 * DIM will remember whether you last used D2 or D1.
 * Lots of DIM functionality is back for D2.
 
