@@ -276,8 +276,8 @@ export function D2StoresService(
         const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
         if (faction) {
           prog.faction = faction;
-          prog.faction.factionName = prog.faction.factionName || faction.displayProperties.name;
-          prog.faction.factionIcon = prog.faction.factionIcon || faction.displayProperties.icon;
+          prog.faction.factionName = faction.displayProperties.name;
+          prog.faction.factionIcon = faction.displayProperties.icon;
         }
       });
     }
