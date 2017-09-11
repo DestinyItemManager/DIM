@@ -270,9 +270,9 @@ export function D2StoresService(
       store.progression = {
         progressions
       };
-      store.progression.progressions = _.map(store.progression.progressions)
+      store.progression.progressions = _.map(store.progression.progressions);
       store.progression.progressions.forEach((prog) => {
-        angular.extend(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
+        Object.assign(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
         const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
         if (faction) {
           prog.faction = faction;
