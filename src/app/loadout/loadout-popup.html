@@ -21,14 +21,14 @@
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="vm.search.query">
+    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && vm.search.query">
       <span ng-click="vm.searchLoadout($event)">
         <i class="fa fa-search"></i>
         <span ng-i18next="[i18next]({ query: vm.search.query })Loadouts.ApplySearch"></span>
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="!vm.store.isVault">
+    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && !vm.store.isVault">
       <span ng-click="vm.maxLightLoadout($event)">
         <span class="light" ng-bind="::vm.maxLightValue"></span>
         <i class="fa fa-star"></i>
@@ -36,14 +36,14 @@
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="!vm.store.isVault">
+    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && !vm.store.isVault">
       <span ng-click="vm.itemLevelingLoadout($event)">
         <i class="fa fa-level-up"></i>
         <span ng-i18next="Loadouts.ItemLeveling"></span>
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="!vm.store.isVault">
+    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && !vm.store.isVault">
       <span ng-click="vm.makeRoomForPostmaster($event)">
         <i class="fa fa-envelope"></i>
         <span ng-i18next="Loadouts.MakeRoom"></span>
@@ -68,7 +68,7 @@
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="vm.previousLoadout">
+    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && vm.previousLoadout">
       <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)">
         <i class="fa fa-undo"></i>
         {{ vm.previousLoadout.name }}

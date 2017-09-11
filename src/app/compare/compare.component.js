@@ -98,17 +98,17 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
 
       // 4284893193 is RPM in D2
       const archetypeStat = _.find(vm.compare.stats, {
-        statHash: (vm.compare.destinyVersion === 1 ?
-                   vm.compare.stats[0].statHash :
-                   4284893193)
+        statHash: (vm.compare.destinyVersion === 1
+          ? vm.compare.stats[0].statHash
+          : 4284893193)
       });
       if (archetypeStat) {
         vm.archeTypes = _.filter(vm.similarTypes, (item) => {
           if (item.location.inWeapons) {
             const archetypeMatch = _.find(item.stats, {
-              statHash: (vm.compare.destinyVersion === 1 ?
-                   vm.compare.stats[0].statHash :
-                   4284893193)
+              statHash: (vm.compare.destinyVersion === 1
+                ? vm.compare.stats[0].statHash
+                : 4284893193)
             });
             if (!archetypeMatch) {
               return false;
