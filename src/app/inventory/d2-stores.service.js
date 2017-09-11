@@ -268,9 +268,8 @@ export function D2StoresService(
 
     if (progressions) {
       store.progression = {
-        progressions
+        progressions: _.map(progressions)
       };
-      store.progression.progressions = _.map(store.progression.progressions);
       store.progression.progressions.forEach((prog) => {
         Object.assign(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
         const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
