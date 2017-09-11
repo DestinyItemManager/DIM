@@ -459,7 +459,7 @@ export function ItemService(
           // Find another store that has an appropriate stackable
           otherStore = otherStores.find(
             (otherStore) => _.any(otherStore.items, (otherItem) =>
-// Same basic item
+              // Same basic item
               otherItem.hash === i.hash &&
                                   // Enough space to absorb this stack
                                   (i.maxStackSize - otherItem.amount) >= i.amount));
