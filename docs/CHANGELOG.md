@@ -1,4 +1,5 @@
 # Next
+* Added back in Repuation for D2.
 
 # 4.13.0
 

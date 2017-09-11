@@ -29,10 +29,10 @@
         <div ng-if="vm.settings.collapsedSections[bucket.id]" ng-click="vm.toggleSection(bucket.id)" class="store-text collapse"><span ng-i18next="[i18next]({ bucket: bucket.name })Bucket.Show"></span></div>
       </div>
     </div>
-    <div ng-if="vm.stores[0].destinyVersion != 2" class="title" ng-click="vm.toggleSection('Reputation')">
+    <div class="title" ng-click="vm.toggleSection('Reputation')">
       <span><i class="fa collapse" ng-class="vm.settings.collapsedSections['Reputation'] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.Reputation"></span></span>
     </div>
-    <div ng-if="vm.stores[0].destinyVersion != 2" class="store-row items reputation" ng-if="!vm.settings.collapsedSections['Reputation']">
+    <div class="store-row items reputation" ng-if="!vm.settings.collapsedSections['Reputation']">
       <div class="store-cell" ng-class="::{ vault: vm.currentStore.isVault }">
         <dim-store-reputation store-data="vm.currentStore"></dim-store-reputation>
       </div>
@@ -71,10 +71,10 @@
         <div ng-if="vm.settings.collapsedSections[bucket.id]" ng-click="vm.toggleSection(bucket.id)" class="store-text collapse"><span ng-i18next="[i18next]({ bucket: bucket.name })Bucket.Show"></span></div>
       </div>
     </div>
-    <div ng-if="vm.stores[0].destinyVersion != 2" class="title" ng-click="vm.toggleSection('Reputation')">
+    <div class="title" ng-click="vm.toggleSection('Reputation')">
       <span><i class="fa collapse" ng-class="vm.settings.collapsedSections['Reputation'] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.Reputation"></span></span>
     </div>
-    <div ng-if="vm.stores[0].destinyVersion != 2" class="store-row items reputation" ng-if="!vm.settings.collapsedSections['Reputation']">
+    <div class="store-row items reputation" ng-if="!vm.settings.collapsedSections['Reputation']">
       <div class="store-cell" ng-class="::{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
         <dim-store-reputation store-data="store"></dim-store-reputation>
       </div>

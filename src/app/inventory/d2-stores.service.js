@@ -185,6 +185,7 @@ export function D2StoresService(
           profileInfo.characterInventories.data && profileInfo.characterInventories.data[characterId] ? profileInfo.characterInventories.data[characterId].items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId] ? profileInfo.characterEquipment.data[characterId].items : [],
           profileInfo.itemComponents,
+          Object.assign(profileInfo.characterProgressions.data[characterId].progressions, profileInfo.characterProgressions.data[characterId].factions),
           buckets,
           previousItems,
           newItems,
@@ -244,12 +245,41 @@ export function D2StoresService(
     characterInventory,
     characterEquipment,
     itemComponents,
+    progressions,
     buckets,
     previousItems,
     newItems,
     itemInfoService,
     lastPlayedDate) {
     const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
+
+    /* Label isn't used, but it helps us understand what each one is */
+    const progressionMeta = {
+      611314723: { label: "Vanguard", order: 0 },
+      697030790: { label: "Crucible", order: 1 },
+      828982195: { label: "Researcher", order: 2 },
+      1021210278: { label: "Gunsmith", order: 3 },
+      1660497607: { label: "AI", order: 4 },
+      1761642340: { label: "Unknown", order: -1 },
+      3231773039: { label: "Vanguard Research", order: 6 },
+      4196149087: { label: "Field Commander", order: 7 },
+      4235119312: { label: "Deadzone Scout", order: 8 }
+    };
+
+    if (progressions) {
+      store.progression = {
+        progressions: _.map(progressions)
+      };
+      store.progression.progressions.forEach((prog) => {
+        Object.assign(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
+        const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
+        if (faction) {
+          prog.faction = faction;
+          prog.faction.factionName = faction.displayProperties.name;
+          prog.faction.factionIcon = faction.displayProperties.icon;
+        }
+      });
+    }
 
     return D2ItemFactory.processItems(store, characterInventory.concat(_.values(characterEquipment)), itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
