@@ -96,18 +96,31 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
         }, 0);
       }
 
-      vm.archeTypes = _.filter(vm.similarTypes, (item) => {
-        if (item.location.inWeapons) {
-          const arch = _.find(item.stats, { statHash: vm.compare.stats[0].statHash });
-          if (!arch) {
-            return false;
-          }
-          return arch.base === _.find(vm.compare.stats, { statHash: vm.compare.stats[0].statHash }).base;
-        }
-        return _.reduce(item.stats, (memo, stat) => {
-          return memo + (stat.base === 0 ? 0 : stat.statHash);
-        }, 0) === armorSplit;
+      // 4284893193 is RPM in D2
+      const archetypeStat = _.find(vm.compare.stats, {
+        statHash: (vm.compare.destinyVersion === 1 ?
+                   vm.compare.stats[0].statHash :
+                   4284893193)
       });
+      if (archetypeStat) {
+        vm.archeTypes = _.filter(vm.similarTypes, (item) => {
+          if (item.location.inWeapons) {
+            const archetypeMatch = _.find(item.stats, {
+              statHash: (vm.compare.destinyVersion === 1 ?
+                   vm.compare.stats[0].statHash :
+                   4284893193)
+            });
+            if (!archetypeMatch) {
+              return false;
+            }
+            return archetypeMatch.base === archetypeStat.base;
+          }
+          return _.reduce(item.stats, (memo, stat) => {
+            return memo + (stat.base === 0 ? 0 : stat.statHash);
+          }, 0) === armorSplit;
+        });
+      }
+
       vm.comparisons = _.filter(allItems, { hash: vm.compare.hash });
     } else if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
       vm.comparisons.push(args.item);
