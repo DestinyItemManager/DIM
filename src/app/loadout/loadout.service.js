@@ -209,11 +209,18 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       Armor: store.level === 40 ? .10 : .1087,
       General: store.level === 40 ? .08 : .087
     };
-    return (Math.floor(10 * _.reduce(loadout.items, (memo, items) => {
-      const item = _.find(items, { equipped: true });
 
-      return memo + (item.primStat.value * itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
-    }, 0)) / 10).toFixed(1);
+    const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
+
+    if (store.destinyVersion === 1) {
+      return (Math.floor(items.length * _.reduce(items, (memo, item) => {
+        return memo + (item.primStat.value * itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
+      }, 0)) / items.length).toFixed(1);
+    } else {
+      return (_.reduce(items, (memo, item) => {
+        return memo + item.primStat.value;
+      }, 0) / items.length).toFixed(1);
+    }
   }
 
   /**

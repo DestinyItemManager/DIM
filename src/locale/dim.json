@@ -113,7 +113,10 @@
     "OutOfRoom": "You're out of space to move items off of {{character}}. Time to decrypt some engrams and clear out the trash!",
     "OutOfRoomTitle": "Out of Room",
     "Quickmove": "Quick Move",
-    "Stop": "Stop"
+    "Stop": "Stop",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room."
   },
   "Filter": {
     "Activities": {

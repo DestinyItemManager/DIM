@@ -1,0 +1,6 @@
+<div ng-if="vm.service.active" id="item-farming" class="d2-farming">
+  <span>
+    <p ng-i18next="[i18next]({ store: vm.service.store.name, context: vm.service.store.gender })FarmingMode.D2Desc"></p>
+  </span>
+  <span><button ng-click="vm.stop($event)" ng-i18next="FarmingMode.Stop"></button></span>
+</div>

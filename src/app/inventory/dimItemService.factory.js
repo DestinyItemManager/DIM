@@ -24,6 +24,10 @@ export function ItemService(
     return dimStoreService.reloadStores();
   }, 10000, { trailing: false });
 
+  const throttledD2ReloadStores = _.throttle(() => {
+    return D2StoresService.reloadStores();
+  }, 10000, { trailing: false });
+
   return {
     getSimilarItem,
     moveTo,
@@ -649,7 +653,8 @@ export function ItemService(
       }
     } else {
       // Refresh the stores to see if anything has changed
-      const reloadPromise = throttledReloadStores() || $q.when(storeService.getStores());
+      const reloadPromise = (item.destinyVersion === 2 ? throttledD2ReloadStores() : throttledReloadStores()) ||
+            $q.when(storeService.getStores());
       const storeId = store.id;
       return reloadPromise.then((stores) => {
         const store = _.find(stores, { id: storeId });

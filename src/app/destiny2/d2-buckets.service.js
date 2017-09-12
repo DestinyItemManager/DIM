@@ -120,7 +120,8 @@ export function D2BucketsService(D2Definitions, D2Categories) {
             hash: def.hash,
             hasTransferDestination: def.hasTransferDestination,
             capacity: def.itemCount,
-            accountWide: def.scope === 1
+            accountWide: def.scope === 1,
+            category: def.category
           };
 
           bucket.type = bucketToType[bucket.hash];
@@ -130,7 +131,9 @@ export function D2BucketsService(D2Definitions, D2Categories) {
           }
 
           // Add an easy helper property like "inPostmaster"
-          bucket[`in${bucket.sort}`] = true;
+          if (bucket.sort) {
+            bucket[`in${bucket.sort}`] = true;
+          }
 
           buckets.byHash[bucket.hash] = bucket;
           buckets.byId[bucket.id] = bucket;
