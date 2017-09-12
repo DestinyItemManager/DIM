@@ -21,7 +21,7 @@
       </span>
     </li>
 
-    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && vm.search.query">
+    <li class="loadout-set" ng-if="vm.search.query">
       <span ng-click="vm.searchLoadout($event)">
         <i class="fa fa-search"></i>
         <span ng-i18next="[i18next]({ query: vm.search.query })Loadouts.ApplySearch"></span>
@@ -43,7 +43,7 @@
       </span>
     </li>
 
-    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && !vm.store.isVault">
+    <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.makeRoomForPostmaster($event)">
         <i class="fa fa-envelope"></i>
         <span ng-i18next="Loadouts.MakeRoom"></span>

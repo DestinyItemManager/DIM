@@ -13,7 +13,7 @@ export const LoadoutPopupComponent = {
   template
 };
 
-function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, D2FarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService, D2StoresService, $stateParams) {
+function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, D2FarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, D2BucketsService, $q, dimStoreService, D2StoresService, $stateParams) {
   'ngInject';
   const vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
@@ -302,7 +302,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   vm.makeRoomForPostmaster = function makeRoomForPostmaster() {
     ngDialog.closeAll();
 
-    dimBucketService.getBuckets().then((buckets) => {
+    (vm.store.destinyVersion === 1 ? dimBucketService : D2BucketsService).getBuckets().then((buckets) => {
       const postmasterItems = flatMap(buckets.byCategory.Postmaster,
                                       (bucket) => vm.store.buckets[bucket.id]);
       const postmasterItemCountsByType = _.countBy(postmasterItems,
