@@ -13,7 +13,7 @@ export const LoadoutPopupComponent = {
   template
 };
 
-function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService) {
+function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, D2FarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService, $stateParams) {
   'ngInject';
   const vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
@@ -109,6 +109,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
     ngDialog.closeAll();
     dimFarmingService.stop();
+    D2FarmingService.stop();
 
     if (filterToEquipped) {
       loadout = filterLoadoutToEquipped(loadout);
@@ -385,6 +386,18 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   vm.startFarming = function startFarming() {
     ngDialog.closeAll();
     dimFarmingService.start(vm.store);
+  };
+
+  vm.startFarming = function startFarming() {
+    ngDialog.closeAll();
+    if (vm.store.destinyVersion === 2) {
+      D2FarmingService.start({
+        membershipId: $stateParams.membershipId,
+        platformType: $stateParams.platformType
+      }, vm.store.id);
+    } else {
+      dimFarmingService.start(vm.store);
+    }
   };
 
   // Generate an optimized loadout based on a filtered set of items and a value function

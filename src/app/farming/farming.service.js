@@ -10,17 +10,12 @@ export function FarmingService($rootScope,
                         $q,
                         dimItemService,
                         dimStoreService,
-                        D2StoresService,
                         $interval,
                         toaster,
                         dimSettingsService,
                         $i18next,
                         dimBucketService) {
   'ngInject';
-
-  function getStoreService() {
-    return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
 
   let intervalId;
   let cancelReloadListener;
@@ -91,23 +86,23 @@ export function FarmingService($rootScope,
           // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
           return promise
             .then(() => {
-              const vault = getStoreService().getVault();
+              const vault = dimStoreService.getVault();
               const vaultSpaceLeft = vault.spaceLeftForItem(item);
               if (vaultSpaceLeft <= 1) {
                 // If we're down to one space, try putting it on other characters
-                const otherStores = _.select(getStoreService().getStores(),
+                const otherStores = _.select(dimStoreService.getStores(),
                                              (store) => !store.isVault && store.id !== this.store.id);
                 const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
 
                 if (otherStoresWithSpace.length) {
                   if ($featureFlags.debugMoves) {
-                    console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', getStoreService().getStore(item.owner).name);
+                    console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
                   }
                   return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
                 }
               }
               if ($featureFlags.debugMoves) {
-                console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', getStoreService().getStore(item.owner).name);
+                console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
               }
               return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
             })
@@ -128,7 +123,7 @@ export function FarmingService($rootScope,
       });
     },
     farmItems: function() {
-      const store = getStoreService().getStore(this.store.id);
+      const store = dimStoreService.getStore(this.store.id);
       const toMove = _.select(store.items, (i) => {
         return !i.notransfer && (
           i.isEngram() ||
@@ -149,7 +144,7 @@ export function FarmingService($rootScope,
     // Ensure that there's one open space in each category that could
     // hold an item, so they don't go to the postmaster.
     makeRoomForItems: function() {
-      const store = getStoreService().getStore(this.store.id);
+      const store = dimStoreService.getStore(this.store.id);
 
       // If any category is full, we'll move one aside
       const itemsToMove = [];
@@ -198,11 +193,11 @@ export function FarmingService($rootScope,
         ];
 
         self.consolidate = _.compact(consolidateHashes.map((hash) => {
-          const ret = angular.copy(getStoreService().getItemAcrossStores({
+          const ret = angular.copy(dimStoreService.getItemAcrossStores({
             hash: hash
           }));
           if (ret) {
-            ret.amount = sum(getStoreService().getStores(), (s) => s.amountOfItem(ret));
+            ret.amount = sum(dimStoreService.getStores(), (s) => s.amountOfItem(ret));
           }
           return ret;
         }));
@@ -232,7 +227,7 @@ export function FarmingService($rootScope,
         });
         intervalId = $interval(() => {
           // just start reloading stores more often
-          getStoreService().reloadStores();
+          dimStoreService.reloadStores();
         }, 60000);
         farm();
       }
