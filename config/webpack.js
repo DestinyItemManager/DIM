@@ -109,6 +109,8 @@ module.exports = (env) => {
     },
 
     plugins: [
+      new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
+
       new webpack.ProvidePlugin({
         i18next: 'i18next',
         'window.i18next': 'i18next'
