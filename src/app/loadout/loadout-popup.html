@@ -28,7 +28,7 @@
       </span>
     </li>
 
-    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && !vm.store.isVault">
+    <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.maxLightLoadout($event)">
         <span class="light" ng-bind="::vm.maxLightValue"></span>
         <i class="fa fa-star"></i>

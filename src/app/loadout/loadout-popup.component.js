@@ -13,7 +13,7 @@ export const LoadoutPopupComponent = {
   template
 };
 
-function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, D2FarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService, $stateParams) {
+function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, D2FarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService, D2StoresService, $stateParams) {
   'ngInject';
   const vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
@@ -28,6 +28,8 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   }
 
   vm.search = dimSearchService;
+
+  const storeService = this.store.destinyVersion === 1 ? dimStoreService : D2StoresService;
 
   function initLoadouts() {
     dimLoadoutService.getLoadouts()
@@ -122,7 +124,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // A dynamic loadout set up to level weapons and armor
   vm.itemLevelingLoadout = function itemLevelingLoadout($event) {
-    const applicableItems = _.filter(dimStoreService.getAllItems(), (i) => {
+    const applicableItems = _.filter(storeService.getAllItems(), (i) => {
       return i.canBeEquippedBy(vm.store) &&
         i.talentGrid &&
         !i.talentGrid.xpComplete && // Still need XP
@@ -184,22 +186,16 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   vm.maxLightLoadout = function maxLightLoadout($event) {
-    // These types contribute to light level
-    const lightTypes = ['Primary',
-      'Special',
-      'Heavy',
-      'Helmet',
-      'Gauntlets',
-      'Chest',
-      'Leg',
-      'ClassItem',
-      'Artifact',
-      'Ghost'];
+    const statHashes = new Set([
+      1480404414, // D2 Attack
+      3897883278, // D1 & D2 Defense
+      368428387 // D1 Attack
+    ]);
 
-    const applicableItems = _.filter(dimStoreService.getAllItems(), (i) => {
+    const applicableItems = _.filter(storeService.getAllItems(), (i) => {
       return i.canBeEquippedBy(vm.store) &&
         i.primStat && // has a primary stat (sanity check)
-        _.contains(lightTypes, i.type); // one of our selected types
+        statHashes.has(i.primStat.statHash); // one of our selected stats
     });
 
     const bestItemFn = function(item) {
@@ -233,7 +229,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // A dynamic loadout set up to level weapons and armor
   vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {
-    const engrams = _.filter(dimStoreService.getAllItems(), (i) => {
+    const engrams = _.filter(storeService.getAllItems(), (i) => {
       return i.isEngram() && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
     });
 
@@ -275,7 +271,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // Move items matching the current search. Max 9 per type.
   vm.searchLoadout = function searchLoadout($event) {
-    const items = _.filter(dimStoreService.getAllItems(), (i) => {
+    const items = _.filter(storeService.getAllItems(), (i) => {
       return i.visible && !i.location.inPostmaster;
     });
 
@@ -366,11 +362,11 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
       return promise
         .then(() => {
-          const vault = dimStoreService.getVault();
+          const vault = storeService.getVault();
           const vaultSpaceLeft = vault.spaceLeftForItem(item);
           if (vaultSpaceLeft <= 1) {
             // If we're down to one space, try putting it on other characters
-            const otherStores = _.filter(dimStoreService.getStores(),
+            const otherStores = _.filter(storeService.getStores(),
                                          (store) => !store.isVault && store.id !== vm.store.id);
             const otherStoresWithSpace = _.filter(otherStores, (store) => store.spaceLeftForItem(item));
 
