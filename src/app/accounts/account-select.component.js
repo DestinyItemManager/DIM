@@ -33,10 +33,15 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
     vm.accounts = flatMap(accounts, (account) => {
       // Duplicate each Destiny account, since they may have played either D1 or D2.
       // TODO: Maybe push this into the account service, and allow people to "hide" accounts?
-      return [
-        { ...account, destinyVersion: 1 },
-        { ...account, destinyVersion: 2 }
-      ];
+      if (account.platformType === 4) {
+        // Blizzard only has D2
+        return [{ ...account, destinyVersion: 2 }];
+      } else {
+        return [
+          { ...account, destinyVersion: 1 },
+          { ...account, destinyVersion: 2 }
+        ];
+      }
     });
   }
 
