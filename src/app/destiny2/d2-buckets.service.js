@@ -5,16 +5,16 @@ import _ from 'underscore';
 export const D2Categories = {
   Weapons: [
     'Subclass',
-    'Kinetic Weapons',
-    'Energy Weapons',
-    'Power Weapons'
+    'Kinetic',
+    'Energy',
+    'Power'
   ],
   Armor: [
     'Helmet',
     'Gauntlets',
-    'Chest Armor',
-    'Leg Armor',
-    'Class Armor'
+    'Chest',
+    'Leg',
+    'ClassItem'
   ],
   General: [
     'Ghost',
@@ -45,7 +45,7 @@ export const D2Categories = {
 // TODO: there are no more bucket IDs... gotta update all this
 // bucket hash to DIM type
 const bucketToType = {
-  2465295065: "Energy Weapons",
+  2465295065: "Energy",
   2689798304: "Upgrade Point",
   2689798305: "Strange Coin",
   2689798308: "Glimmer",
@@ -63,17 +63,17 @@ const bucketToType = {
   4023194814: "Ghost",
   4274335291: "Emblems",
   4292445962: "Clan Banners",
-  14239492: "Chest Armor",
+  14239492: "Chest",
   18606351: "Shaders",
-  20886954: "Leg Armor",
+  20886954: "Leg",
   215593132: "Lost Items",
   284967655: "Ships",
   375726501: "Engrams",
-  953998645: "Power Weapons",
+  953998645: "Power",
   1269569095: "Auras",
   1367666825: "Special Orders",
-  1498876634: "Kinetic Weapons",
-  1585787867: "Class Armor",
+  1498876634: "Kinetic",
+  1585787867: "ClassItem",
   2025709351: "Vehicle",
   1469714392: "Consumables",
   138197802: "General"
