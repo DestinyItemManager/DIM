@@ -55,6 +55,9 @@ export function D2ItemFactory(
     },
     canBeInLoadout: function() {
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
+    },
+    hasLifeExotic() {
+      return false;
     }
   };
 
@@ -191,8 +194,8 @@ export function D2ItemFactory(
       isVendorItem: (!owner || owner.id === null),
       name: itemDef.displayProperties.name,
       description: itemDef.displayProperties.description,
-      icon: itemDef.displayProperties.icon,
-      notransfer: Boolean(currentBucket.accountWide || currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
+      icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
+      notransfer: Boolean(currentBucket.accountWide || currentBucket.inPostmaster || itemDef.nonTransferrable),
       id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
       equipped: Boolean(instanceDef.isEquipped),
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
