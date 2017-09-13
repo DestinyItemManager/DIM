@@ -55,6 +55,9 @@ export function D2ItemFactory(
     },
     canBeInLoadout: function() {
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
+    },
+    hasLifeExotic() {
+      return false;
     }
   };
 
