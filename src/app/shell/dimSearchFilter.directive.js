@@ -10,7 +10,6 @@ angular.module('dimApp')
   .directive('dimSearchFilter', SearchFilter);
 
 function SearchService(dimSettingsService) {
-
   const categoryFilters = {
     pulserifle: ['CATEGORY_PULSE_RIFLE', '.*_pulse_rifle'],
     scoutrifle: ['CATEGORY_SCOUT_RIFLE', '.*_scout_rifle'],

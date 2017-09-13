@@ -253,7 +253,7 @@ export function D2ItemFactory(
       if (itemDef.stats && itemDef.stats.stats) {
         createdItem.stats = _.sortBy((buildStats(item, itemComponents.stats.data, defs.Stat)).concat(
           buildHiddenStats(item, itemDef, defs.Stat)
-        ), 'sort');;
+        ), 'sort');
       }
     } catch (e) {
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
@@ -308,13 +308,13 @@ export function D2ItemFactory(
     const hiddenStatWhiteList = [
       1345609583, // Aim Assistance
       3555269338, // Zoom
-//    2715839340, // Recoil Direction (people like to see this, but it's confusing)
-//    1935470627, // Power (what is power....)
-//    1931675084, //  Inventory Size
+      //    2715839340, // Recoil Direction (people like to see this, but it's confusing)
+      //    1935470627, // Power (what is power....)
+      //    1931675084, //  Inventory Size
       // there are a few others (even an `undefined` stat)
     ];
 
-    let itemStats = itemDef.stats.stats;
+    const itemStats = itemDef.stats.stats;
 
     if (!itemStats) {
       return undefined;
@@ -325,7 +325,7 @@ export function D2ItemFactory(
       const whitelistIndex = hiddenStatWhiteList.indexOf(stat.statHash);
 
       if (whitelistIndex < 0 || !stat.value) {
-        return;
+        return undefined;
       }
 
       return {
@@ -352,7 +352,7 @@ export function D2ItemFactory(
       const def = statDefs.get(stat.statHash);
       const itemStat = itemStats[stat.statHash];
       if (!def || !itemStat) {
-        return;
+        return undefined;
       }
 
       const val = itemStat ? itemStat.value : stat.value;
@@ -363,7 +363,7 @@ export function D2ItemFactory(
         statHash: stat.statHash,
         name: def.displayProperties.name,
         id: item.itemInstanceId,
-        sort: stat.statHash === 4284893193 ? -1 : (stat.statHash !== 3871231066 ? 1 : 10),
+        sort: stat.statHash === 4284893193 ? -1 : (stat.statHash === 3871231066 ? 10 : 1),
         value: val,
         maximumValue: itemStat.maximumValue,
         bar: stat.statHash !== 4284893193 && stat.statHash !== 3871231066
