@@ -51,7 +51,7 @@ export function D2ItemFactory(
       return _.contains(this.categories, categoryName);
     },
     isEngram: function() {
-      return this.inCategory('CATEGORY_ENGRAM');
+      return false;
     },
     canBeInLoadout: function() {
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
@@ -173,7 +173,7 @@ export function D2ItemFactory(
 
     const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
       const category = defs.ItemCategory.get(c);
-      return category ? category.hash : null; // Uh oh, no more readable IDs!
+      return category ? category.itemTypeRegex : null; // Uh oh, no more readable IDs!
     })) : [];
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
@@ -250,7 +250,11 @@ export function D2ItemFactory(
     }
 
     try {
-      createdItem.stats = buildStats(item, itemDef, defs.Stat, itemComponents.stats.data);
+      if (itemDef.stats && itemDef.stats.stats) {
+        createdItem.stats = _.sortBy((buildStats(item, itemComponents.stats.data, defs.Stat)).concat(
+          buildHiddenStats(item, itemDef, defs.Stat)
+        ), 'sort');;
+      }
     } catch (e) {
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     }
@@ -300,43 +304,70 @@ export function D2ItemFactory(
     }
   }
 
-  function buildStats(item, itemDef, statDefs, stats) {
+  function buildHiddenStats(item, itemDef, statDefs) {
+    const hiddenStatWhiteList = [
+      1345609583, // Aim Assistance
+      3555269338, // Zoom
+//    2715839340, // Recoil Direction (people like to see this, but it's confusing)
+//    1935470627, // Power (what is power....)
+//    1931675084, //  Inventory Size
+      // there are a few others (even an `undefined` stat)
+    ];
+
+    let itemStats = itemDef.stats.stats;
+
+    if (!itemStats) {
+      return undefined;
+    }
+
+    return _.compact(_.map(itemStats, (stat) => {
+      const def = statDefs.get(stat.statHash);
+      const whitelistIndex = hiddenStatWhiteList.indexOf(stat.statHash);
+
+      if (whitelistIndex < 0 || !stat.value) {
+        return;
+      }
+
+      return {
+        base: stat.value,
+        bonus: 0,
+        statHash: stat.statHash,
+        name: def.displayProperties.name,
+        id: item.itemInstanceId,
+        sort: whitelistIndex + 1,
+        value: stat.value,
+        maximumValue: 100,
+        bar: true
+      };
+    }));
+  }
+
+  function buildStats(item, stats, statDefs) {
     let itemStats = stats[item.itemInstanceId];
     if (itemStats) {
       itemStats = stats[item.itemInstanceId].stats;
     }
-    if (!itemDef.stats || !itemStats) {
-      return undefined;
-    }
 
-    return _.sortBy(_.compact(_.map(itemStats, (stat) => {
+    return _.compact(_.map(itemStats, (stat) => {
       const def = statDefs.get(stat.statHash);
-      if (!def) {
-        return undefined;
-      }
-
       const itemStat = itemStats[stat.statHash];
-      if (!itemStat) {
-        return undefined;
+      if (!def || !itemStat) {
+        return;
       }
 
-      const maximumValue = itemStat.maximumValue || 100;
       const val = itemStat ? itemStat.value : stat.value;
-      const base = val;
-      const bonus = 0;
-      const sort = 1;
 
       return {
-        base: base,
-        bonus: bonus,
+        base: val,
+        bonus: 0,
         statHash: stat.statHash,
         name: def.displayProperties.name,
         id: item.itemInstanceId,
-        sort: sort,
+        sort: stat.statHash === 4284893193 ? -1 : (stat.statHash !== 3871231066 ? 1 : 10),
         value: val,
-        maximumValue: maximumValue,
-        bar: stat.statHash !== 4284893193
+        maximumValue: itemStat.maximumValue,
+        bar: stat.statHash !== 4284893193 && stat.statHash !== 3871231066
       };
-    })), 'sort');
+    }));
   }
 }
