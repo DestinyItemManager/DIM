@@ -373,7 +373,9 @@ export function D2ItemFactory(
         sort: statWhiteList.indexOf(stat.statHash),
         value: val,
         maximumValue: itemStat.maximumValue,
-        bar: stat.statHash !== 4284893193 && stat.statHash !== 3871231066
+        bar: stat.statHash !== 4284893193 &&
+        stat.statHash !== 3871231066 &&
+        stat.statHash !== 2961396640
       };
     }));
   }
