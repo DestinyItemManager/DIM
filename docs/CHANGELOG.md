@@ -2,7 +2,9 @@
 
 * Added back in Repuation for D2.
 * Max Light Loadout, Make Room for Postmaster, Farming Mode, and Search Loadout are all reenabled for D2.
-* Classified items can be transferred.
+* Classified items can be transferred!
+* Fixed search filters for D2.
+* Show hidden stats on D2 items.
 
 # 4.13.0
 
