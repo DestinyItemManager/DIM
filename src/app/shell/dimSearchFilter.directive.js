@@ -36,7 +36,7 @@ function SearchService(dimSettingsService) {
     itemTypes.push(...['primary', 'special', 'heavy', 'horn', 'bounties', 'quests', 'messages', 'missions']);
   } else {
     Object.assign(categoryFilters, {
-      grenadelauncher: ['.*_rocket_launcher'],
+      grenadelauncher: ['.*_grenade_launcher'],
     });
     itemTypes.push(...['energy', 'power']);
   }
