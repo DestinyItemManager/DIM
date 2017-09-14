@@ -53,7 +53,9 @@
         </td>
         <td><span ng-i18next="Filter.Stats"></span>
           <ul>
-            <li>stat:rof:</li>
+            <li ng-if="vm.settings.destinyVersion === 2">stat:rpm:</li>
+            <li ng-if="vm.settings.destinyVersion === 1">stat:rof:</li>
+            <li>stat:charge:</li>
             <li>stat:impact:</li>
             <li>stat:range:</li>
             <li>stat:stability:</li>

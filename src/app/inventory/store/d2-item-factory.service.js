@@ -190,10 +190,7 @@ export function D2ItemFactory(
 
     const itemType = normalBucket.type || 'Unknown';
 
-    const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
-      const category = defs.ItemCategory.get(c);
-      return category ? category.itemTypeRegex : null; // Uh oh, no more readable IDs!
-    })) : [];
+    const categories = itemDef.quality ? [itemDef.quality.infusionCategoryName.replace('v300.', 'category_').toUpperCase()] : [];
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
