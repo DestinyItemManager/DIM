@@ -1,6 +1,6 @@
 <div class="stat-box-row" ng-repeat="stat in $ctrl.item.stats track by $index">
   <span class="stat-box-text stat-box-cell"> {{ stat.name }} </span>
-  <span class="stat-box-outer" ng-class="{ 'stat-box-outer--no-bar': stat.bar }"><span class="stat-box-container">
+  <span class="stat-box-outer" ng-class="{ 'stat-box-outer--no-bar': !stat.bar }"><span class="stat-box-container">
     <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>
     <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>
     <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" dim-percent-width="(stat.equippedStatsValue - stat.value) / stat.maximumValue"></span>
