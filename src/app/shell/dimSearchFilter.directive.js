@@ -11,21 +11,35 @@ angular.module('dimApp')
 
 function SearchService(dimSettingsService) {
   const categoryFilters = {
-    pulserifle: ['CATEGORY_PULSE_RIFLE'],
-    scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
-    handcannon: ['CATEGORY_HAND_CANNON'],
-    autorifle: ['CATEGORY_AUTO_RIFLE'],
-    primaryweaponengram: ['CATEGORY_PRIMARY_WEAPON', 'CATEGORY_ENGRAM'],
-    sniperrifle: ['CATEGORY_SNIPER_RIFLE'],
-    shotgun: ['CATEGORY_SHOTGUN'],
-    fusionrifle: ['CATEGORY_FUSION_RIFLE'],
-    specialweaponengram: ['CATEGORY_SPECIAL_WEAPON', 'CATEGORY_ENGRAM'],
-    rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
-    machinegun: ['CATEGORY_MACHINE_GUN'],
-    heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
-    sidearm: ['CATEGORY_SIDEARM'],
-    sword: ['CATEGORY_SWORD']
+    pulserifle: ['CATEGORY_PULSE_RIFLE', '.*_pulse_rifle'],
+    scoutrifle: ['CATEGORY_SCOUT_RIFLE', '.*_scout_rifle'],
+    handcannon: ['CATEGORY_HAND_CANNON', '.*_hand_cannon'],
+    autorifle: ['CATEGORY_AUTO_RIFLE', '.*_auto_rifle'],
+    sniperrifle: ['CATEGORY_SNIPER_RIFLE', '.*_sniper_rifle'],
+    shotgun: ['CATEGORY_SHOTGUN', '.*_shotgun'],
+    sidearm: ['CATEGORY_SIDEARM', '.*_sidearm'],
+    rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER', '.*_rocket_launcher'],
+    fusionrifle: ['CATEGORY_FUSION_RIFLE', '.*_fusion_rifle'],
+    sword: ['CATEGORY_SWORD', 'type_weapon_sword'],
   };
+
+  const itemTypes = ['helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'emote'];
+
+  // don't have access to dimSettingService yet here.
+  if (dimSettingsService.destinyVersion === 1) {
+    Object.assign(categoryFilters, {
+      primaryweaponengram: ['CATEGORY_PRIMARY_WEAPON', 'CATEGORY_ENGRAM'],
+      specialweaponengram: ['CATEGORY_SPECIAL_WEAPON', 'CATEGORY_ENGRAM'],
+      heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
+      machinegun: ['CATEGORY_MACHINE_GUN'],
+    });
+    itemTypes.push(...['primary', 'special', 'heavy', 'horn', 'bounties', 'quests', 'messages', 'missions']);
+  } else {
+    Object.assign(categoryFilters, {
+      grenadelauncher: ['.*_grenade_launcher'],
+    });
+    itemTypes.push(...['energy', 'power']);
+  }
 
   /**
    * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
@@ -33,45 +47,50 @@ function SearchService(dimSettingsService) {
    */
   const filterTrans = {
     dmg: ['arc', 'solar', 'void', 'kinetic'],
-    type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
+    type: itemTypes,
     tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
-    sublime: ['sublime'],
-    incomplete: ['incomplete'],
-    complete: ['complete'],
-    xpcomplete: ['xpcomplete'],
-    xpincomplete: ['xpincomplete', 'needsxp'],
-    upgraded: ['upgraded'],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate'],
-    unascended: ['unascended', 'unassended', 'unasscended'],
-    ascended: ['ascended', 'assended', 'asscended'],
-    reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-    ornament: ['ornament', 'ornamentmissing', 'ornamentunlocked'],
     tracked: ['tracked'],
     untracked: ['untracked'],
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
-    engram: ['engram'],
     category: _.keys(categoryFilters),
-    infusable: ['infusable', 'infuse'],
-    stattype: ['intellect', 'discipline', 'strength'],
     inloadout: ['inloadout'],
     new: ['new'],
-    glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
-    year: ['year1', 'year2', 'year3'],
-    vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
-    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
     hasLight: ['light', 'haslight'],
     level: ['level'],
     weapon: ['weapon'],
     armor: ['armor'],
-    cosmetic: ['cosmetic'],
     equipment: ['equipment', 'equippable'],
     postmaster: ['postmaster', 'inpostmaster'],
     equipped: ['equipped'],
     transferable: ['transferable', 'movable']
   };
+
+  if (dimSettingsService.destinyVersion === 1) {
+    Object.assign(filterTrans, {
+      sublime: ['sublime'],
+      incomplete: ['incomplete'],
+      complete: ['complete'],
+      xpcomplete: ['xpcomplete'],
+      xpincomplete: ['xpincomplete', 'needsxp'],
+      upgraded: ['upgraded'],
+      unascended: ['unascended', 'unassended', 'unasscended'],
+      ascended: ['ascended', 'assended', 'asscended'],
+      reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+      ornament: ['ornament', 'ornamentmissing', 'ornamentunlocked'],
+      engram: ['engram'],
+      infusable: ['infusable', 'infuse'],
+      stattype: ['intellect', 'discipline', 'strength'],
+      glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
+      year: ['year1', 'year2', 'year3'],
+      vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
+      activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
+      cosmetic: ['cosmetic'],
+    });
+  }
 
   if ($featureFlags.reviewsEnabled) {
     filterTrans.hasRating = ['rated', 'hasrating'];
@@ -569,8 +588,14 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     },
     category: function(predicate, item) {
       const categories = dimSearchService.categoryFilters[predicate.toLowerCase().replace(/\s/g, '')];
-      return categories && categories.length &&
-        _.all(categories, (c) => item.inCategory(c));
+
+      if (!categories || !categories.length) {
+        return false;
+      }
+      if (dimSettingsService.destinyVersion === 1) {
+        return _.all(categories, (c) => item.inCategory(c));
+      }
+      return _.any(categories, (c) => item.inCategory(c));
     },
     keyword: function(predicate, item) {
       return item.name.toLowerCase().indexOf(predicate) >= 0 ||
