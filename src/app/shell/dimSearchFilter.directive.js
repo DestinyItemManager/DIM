@@ -23,7 +23,7 @@ function SearchService(dimSettingsService) {
     sword: ['CATEGORY_SWORD', 'type_weapon_sword'],
   };
 
-  const itemTypes = ['helmet', 'leg', 'gauntlets', 'chest', 'subclass', 'classitem', 'artifact', 'ghost', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'emote'];
+  const itemTypes = ['helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'emote'];
 
   // don't have access to dimSettingService yet here.
   if (dimSettingsService.destinyVersion === 1) {

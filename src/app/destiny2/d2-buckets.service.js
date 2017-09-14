@@ -4,7 +4,7 @@ import _ from 'underscore';
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
   Weapons: [
-    'Subclass',
+    'Class',
     'Kinetic',
     'Energy',
     'Power'
@@ -55,7 +55,7 @@ const bucketToType = {
   2973005342: "Shaders",
   3054419239: "Emotes",
   3161908920: "Messages",
-  3284755031: "Subclass",
+  3284755031: "Class",
   3313201758: "Modifications",
   3448274439: "Helmet",
   3551918588: "Gauntlets",

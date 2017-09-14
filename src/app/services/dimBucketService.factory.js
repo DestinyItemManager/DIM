@@ -6,7 +6,7 @@ angular.module('dimApp')
   // Categories (sorts) and the types within them
   .value('dimCategory', {
     Weapons: [
-      'Subclass',
+      'Class',
       'Primary',
       'Special',
       'Heavy'
@@ -69,7 +69,7 @@ function BucketService(dimDefinitions, dimCategory) {
     BUCKET_MODS: "Ornaments",
     BUCKET_EMOTES: "Emote",
     BUCKET_MAIL: "Messages",
-    BUCKET_BUILD: "Subclass",
+    BUCKET_BUILD: "Class",
     BUCKET_HEAD: "Helmet",
     BUCKET_ARMS: "Gauntlets",
     BUCKET_HORN: "Horn",
