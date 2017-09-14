@@ -28,10 +28,10 @@
     padding-left: 5px;
   }
   .higher-stats {
-    color: #7DC878;
+    color: #6dcc66;
   }
   .lower-stats {
-    color: #985C58;
+    color: #cc6666;
   }
   .stat-box-outer {
     display: table-cell;
@@ -58,10 +58,10 @@
     color: black;
     line-height: 20px;
     &.higher-stats {
-      background-color: #7DC878;
+      background-color: #6dcc66;
     }
     &.lower-stats {
-      background-color: #985C58;
+      background-color: #cc6666;
     }
   }
 }
