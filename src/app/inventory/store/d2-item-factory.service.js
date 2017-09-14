@@ -29,6 +29,22 @@ export function D2ItemFactory(
 
   let _idTracker = {};
 
+  const statWhiteList = [
+    4284893193, // Rounds Per Minute
+    4043523819, // Impact
+    1240592695, // Range
+    155624089, // Stability
+    943549884, // Handling
+    4188031367, // Reload Speed
+    1345609583, // Aim Assistance
+    3555269338, // Zoom
+    3871231066, // Magazine
+    //    2715839340, // Recoil Direction (people like to see this, but it's confusing)
+    //    1935470627, // Power (what is power....)
+    //    1931675084, //  Inventory Size
+    // there are a few others (even an `undefined` stat)
+  ];
+
   // Prototype for Item objects - add methods to this to add them to all
   // items.
   const ItemProto = {
@@ -305,14 +321,6 @@ export function D2ItemFactory(
   }
 
   function buildHiddenStats(item, itemDef, statDefs) {
-    const hiddenStatWhiteList = [
-      1345609583, // Aim Assistance
-      3555269338, // Zoom
-      //    2715839340, // Recoil Direction (people like to see this, but it's confusing)
-      //    1935470627, // Power (what is power....)
-      //    1931675084, //  Inventory Size
-      // there are a few others (even an `undefined` stat)
-    ];
 
     const itemStats = itemDef.stats.stats;
 
@@ -322,9 +330,9 @@ export function D2ItemFactory(
 
     return _.compact(_.map(itemStats, (stat) => {
       const def = statDefs.get(stat.statHash);
-      const whitelistIndex = hiddenStatWhiteList.indexOf(stat.statHash);
 
-      if (whitelistIndex < 0 || !stat.value) {
+      // only aim assist and zoom for now
+      if (![1345609583, 3555269338].includes(stat.statHash) || !stat.value) {
         return undefined;
       }
 
@@ -334,7 +342,7 @@ export function D2ItemFactory(
         statHash: stat.statHash,
         name: def.displayProperties.name,
         id: item.itemInstanceId,
-        sort: whitelistIndex + 1,
+        sort: statWhiteList.indexOf(stat.statHash),
         value: stat.value,
         maximumValue: 100,
         bar: true
@@ -363,7 +371,7 @@ export function D2ItemFactory(
         statHash: stat.statHash,
         name: def.displayProperties.name,
         id: item.itemInstanceId,
-        sort: stat.statHash === 4284893193 ? -1 : (stat.statHash === 3871231066 ? 10 : 1),
+        sort: statWhiteList.indexOf(stat.statHash),
         value: val,
         maximumValue: itemStat.maximumValue,
         bar: stat.statHash !== 4284893193 && stat.statHash !== 3871231066
