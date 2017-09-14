@@ -31,6 +31,9 @@ export function D2ItemFactory(
 
   const statWhiteList = [
     4284893193, // Rounds Per Minute
+    2961396640, // Charge Time
+    3614673599, // Blast Radius
+    2523465841, // Velocity
     4043523819, // Impact
     1240592695, // Range
     155624089, // Stability

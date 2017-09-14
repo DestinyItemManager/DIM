@@ -40,6 +40,9 @@
     background-color: #333;
     width: 100%;
   }
+  .stat-box-outer--no-bar {
+    background-color: transparent;
+  }
   .stat-box-container {
     display: flex;
     width: 100%;
