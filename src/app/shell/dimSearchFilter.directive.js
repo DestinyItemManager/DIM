@@ -24,7 +24,6 @@ function SearchService(dimSettingsService) {
   };
 
   const itemTypes = ['helmet', 'leg', 'gauntlets', 'chest', 'subclass', 'classitem', 'artifact', 'ghost', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'emote'];
-  const activities = [];
 
   // don't have access to dimSettingService yet here.
   if (dimSettingsService.destinyVersion === 1) {
