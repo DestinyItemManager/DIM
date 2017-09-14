@@ -321,7 +321,6 @@ export function D2ItemFactory(
   }
 
   function buildHiddenStats(item, itemDef, statDefs) {
-
     const itemStats = itemDef.stats.stats;
 
     if (!itemStats) {
