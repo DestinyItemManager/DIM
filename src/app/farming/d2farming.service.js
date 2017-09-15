@@ -133,7 +133,7 @@ export function D2FarmingService($rootScope,
         // That way folks can reload manually too
         subscription = D2StoresService.getStoresStream(account).subscribe((stores) => {
           // prevent some recursion...
-          if (this.active && !this.movingItems && !this.makingRoom) {
+          if (this.active && !this.movingItems && !this.makingRoom && stores) {
             const store = stores.find((s) => s.id === storeId);
             this.store = store;
             this.makeRoomForItems(store);

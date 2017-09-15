@@ -7,7 +7,7 @@ export function destinyAccountRoute($stateProvider) {
 
   $stateProvider.state({
     name: 'destiny-account',
-    redirectTo: 'destiny1.inventory',
+    redirectTo: 'destiny2.inventory',
     url: '/:membershipId-{platformType:int}',
     resolve: {
       // TODO: move this to platform/account service
@@ -27,9 +27,8 @@ export function destinyAccountRoute($stateProvider) {
             });
             if (!account) {
               // If we didn't load an account, kick out and re-resolve
-              if (!account) {
-                $state.go('default-account');
-              }
+              $state.go('default-account');
+              return undefined;
             }
             dimPlatformService.setActive(account);
             return account;
