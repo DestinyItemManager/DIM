@@ -14,9 +14,11 @@ export const LoadoutDrawerComponent = {
   template
 };
 
-function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimSettingsService, $i18next, dimDefinitions) {
+function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, D2Categories, toaster, dimSettingsService, $i18next, dimDefinitions) {
   'ngInject';
   const vm = this;
+
+  const dimItemCategories = dimSettingsService.destinyVersion === 2 ? D2Categories : dimCategory;
 
   this.$onChanges = function(changes) {
     if (changes.stores) {
@@ -103,7 +105,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
 
   vm.settings = dimSettingsService;
 
-  vm.types = _.flatten(Object.values(dimCategory)).map((t) => t.toLowerCase());
+  vm.types = _.flatten(Object.values(dimItemCategories)).map((t) => t.toLowerCase());
 
   vm.show = false;
   dimLoadoutService.dialogOpen = false;
@@ -115,6 +117,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
 
   vm.save = function save() {
     vm.loadout.platform = vm.account.platformLabel; // Playstation or Xbox
+    vm.loadout.destinyVersion = dimSettingsService.destinyVersion; // D1 or D2
     dimLoadoutService
       .saveLoadout(vm.loadout)
       .catch((e) => {

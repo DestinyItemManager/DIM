@@ -470,6 +470,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       id: loadoutPrimitive.id,
       name: loadoutPrimitive.name,
       platform: loadoutPrimitive.platform,
+      destinyVersion: loadoutPrimitive.destinyVersion,
       classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
       version: 'v3.0',
       items: {
@@ -514,6 +515,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       classType: loadout.classType,
       version: 'v3.0',
       platform: loadout.platform,
+      destinyVersion: loadout.destinyVersion,
       items: []
     };
 
