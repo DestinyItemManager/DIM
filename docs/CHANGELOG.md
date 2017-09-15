@@ -5,6 +5,7 @@
 * Classified items can be transferred!
 * Fixed search filters for D2.
 * Show hidden stats on D2 items.
+* D2 inventory (mods, shaders, etc) now take the full width of the screen.
 
 # 4.13.0
 
