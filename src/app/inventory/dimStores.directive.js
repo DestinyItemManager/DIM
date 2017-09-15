@@ -27,6 +27,23 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
     });
   });
 
+  vm.swipeLeft = () => {
+    const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
+    const currentIndex = sortedStores.indexOf(vm.currentStore);
+
+    if (currentIndex < (sortedStores.length - 1)) {
+      vm.currentStore = sortedStores[currentIndex + 1];
+    }
+  };
+
+  vm.swipeRight = () => {
+    const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
+    const currentIndex = sortedStores.indexOf(vm.currentStore);
+
+    if (currentIndex > 0) {
+      vm.currentStore = sortedStores[currentIndex - 1];
+    }
+  };
   vm.buckets = null;
   vm.settings = dimSettingsService;
   vm.toggleSection = function(id) {
