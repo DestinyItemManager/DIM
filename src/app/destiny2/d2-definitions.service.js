@@ -10,7 +10,9 @@ const lazyTables = [
   'ItemCategory', // DestinyItemCategoryDefinition
   'Activity', // DestinyActivityDefinition
   'ActivityType', // DestinyActivityTypeDefinition
-  'Vendor'
+  'Vendor',
+  'SocketCategory',
+  'SocketType'
 ];
 
 const eagerTables = [

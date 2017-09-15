@@ -1,0 +1,15 @@
+.item-sockets {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.item-socket {
+  margin-right: 4px;
+  margin-bottom: 4px;
+  img {
+    width: 34px;
+    height: 34px;
+  }
+}

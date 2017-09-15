@@ -1,0 +1,11 @@
+<div class="item-socket-category" ng-repeat="category in $ctrl.sockets.categories">
+  {{category.category.displayProperties.name}}
+
+  <div class="item-sockets">
+    <div class="item-socket" ng-repeat="socket in category.sockets">
+      <img class="item-mod" ng-src="{{ socket.plug.displayProperties.icon | bungieIcon }}"
+        press-tip="{{ socket.plug.displayProperties.description }}"
+        press-tip-title="{{ socket.plug.displayProperties.name }}">
+    </div>
+  </div>
+</div>
