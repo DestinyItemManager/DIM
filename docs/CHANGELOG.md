@@ -1,5 +1,7 @@
 # Next
 
+* D2 items with objectives now show them, and quests + milestones are displayed for your characters.
+
 # 4.14.0
 
 * Added back in Repuation for D2.
