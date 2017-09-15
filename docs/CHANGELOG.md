@@ -1,6 +1,7 @@
 # Next
 
 * D2 items with objectives now show them, and quests + milestones are displayed for your characters.
+* D2 items now display their perks and mods.
 
 # 4.14.0
 
