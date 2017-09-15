@@ -48,6 +48,9 @@
     <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">
       <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>
     </div>
+    <div class="item-details item-sockets" ng-if="vm.item.sockets && vm.itemDetails">
+      <sockets sockets="vm.item.sockets" infuse="vm.infuse(vm.item, $event)"></sockets>
+    </div>
     <dim-objectives class="item-details" ng-if="vm.itemDetails" objectives="vm.item.objectives"></dim-objectives>
     <div ng-if="vm.featureFlags.debugMode" class="item-details">
       <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump" />

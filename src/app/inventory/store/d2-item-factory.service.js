@@ -243,7 +243,7 @@ export function D2ItemFactory(
     });
 
     // *able
-    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable);
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
 
     if (createdItem.primStat) {
@@ -285,6 +285,17 @@ export function D2ItemFactory(
     } catch (e) {
       console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
     }
+
+    try {
+      console.log(itemDef.displayProperties.name, { itemDef, item, itemComponents });
+      createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
+      if (createdItem.objectives) {
+        console.log(createdItem.name, createdItem.bucket.hash, createdItem, createdItem.objectives, createdItem.objectives.progress, createdItem.objectives.completionValue, createdItem.objectives.progress / createdItem.objectives.completionValue);
+      }
+    } catch (e) {
+      console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
+    }
+
     createdItem.index = createItemIndex(createdItem);
 
     if (createdItem.objectives) {
@@ -426,5 +437,53 @@ export function D2ItemFactory(
         display: `${objective.progress || 0}/${def.completionValue}`
       };
     });
+  }
+
+
+  function buildSockets(item, socketsMap, defs, itemDef) {
+    if (!itemDef.sockets || !itemDef.sockets.socketEntries.length) {
+      return null;
+    }
+    let sockets = socketsMap[item.itemInstanceId];
+    if (sockets) {
+      sockets = socketsMap[item.itemInstanceId].sockets;
+    }
+    if (!sockets || !sockets.length) {
+      return null;
+    }
+
+    const realSockets = sockets.map((socket) => {
+      const plug = defs.InventoryItem.get(socket.plugHash);
+      let failReasons = (socket.enableFailIndexes || []).map((index) => plug.plug.enabledRules[index].failureMessage).join("\n");
+      if (failReasons.length) {
+        failReasons = `\n\n${failReasons}`;
+      }
+      const dimSocket = {
+        plug,
+        reusablePlugs: (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash)),
+        enabled: socket.isEnabled,
+        enableFailReasons: failReasons
+      };
+      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 ? dimSocket.reusablePlugs : [dimSocket.plug];
+      return dimSocket;
+    });
+
+    const categories = itemDef.sockets.socketCategories.map((category) => {
+      return {
+        category: defs.SocketCategory.get(category.socketCategoryHash),
+        sockets: category.socketIndexes.map((index) => realSockets[index])
+      };
+    });
+
+    const dimSockets = {
+      // itemDef,
+      // defSockets: itemDef.sockets,
+      // rawSockets: sockets,
+      sockets: realSockets, // Flat list of sockets
+      categories // Sockets organized by category
+    };
+    console.log(dimSockets);
+
+    return dimSockets;
   }
 }

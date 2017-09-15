@@ -8,6 +8,7 @@ export function PressTip() {
     restrict: 'A',
     link($scope, $element, $attrs) {
       let tooltip = null;
+      let timer = null;
 
       function showTip() {
         if (!tooltip) {
@@ -26,6 +27,12 @@ export function PressTip() {
         tooltip.show();
       }
 
+      $element.on('mouseenter', (e) => {
+        timer = setTimeout(() => {
+          showTip();
+        }, 300);
+      });
+
       $element.on('mousedown touchstart', (e) => {
         e.preventDefault();
         showTip();
@@ -36,6 +43,7 @@ export function PressTip() {
         if (tooltip) {
           tooltip.hide();
         }
+        clearTimeout(timer);
       });
 
       $scope.$on('$destroy', () => {
