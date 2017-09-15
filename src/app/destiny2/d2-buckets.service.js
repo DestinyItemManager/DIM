@@ -4,7 +4,7 @@ import _ from 'underscore';
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
   Weapons: [
-    'Subclass',
+    'Class',
     'Kinetic',
     'Energy',
     'Power'
@@ -31,6 +31,9 @@ export const D2Categories = {
     'Modifications',
     'Shaders'
   ],
+  Progress: [
+    'Quests',
+  ],
   Postmaster: [
     'Lost Items',
     'Messages',
@@ -55,7 +58,7 @@ const bucketToType = {
   2973005342: "Shaders",
   3054419239: "Emotes",
   3161908920: "Messages",
-  3284755031: "Subclass",
+  3284755031: "Class",
   3313201758: "Modifications",
   3448274439: "Helmet",
   3551918588: "Gauntlets",
@@ -76,7 +79,8 @@ const bucketToType = {
   1585787867: "ClassItem",
   2025709351: "Vehicle",
   1469714392: "Consumables",
-  138197802: "General"
+  138197802: "General",
+  1801258597: "Quests"
 };
 
 export function D2BucketsService(D2Definitions, D2Categories) {

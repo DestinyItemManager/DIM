@@ -39,7 +39,9 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
         vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
         vm.loadouts = vm.loadouts.filter((loadout) => {
-          return (_.isUndefined(loadout.platform) ||
+          return (vm.store.destinyVersion === 2
+            ? loadout.destinyVersion === 2 : loadout.destinyVersion !== 2) &&
+            (_.isUndefined(loadout.platform) ||
                   loadout.platform === platform.platformLabel) &&
             (vm.classTypeId === -1 ||
              loadout.classType === -1 ||
@@ -64,6 +66,9 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     // like emblems and ships and horns.
     loadout.items = _.pick(loadout.items,
                            'class',
+                           'kinetic',
+                           'energy',
+                           'power',
                            'primary',
                            'special',
                            'heavy',
@@ -378,11 +383,6 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
         });
     }, $q.resolve());
   }
-
-  vm.startFarming = function startFarming() {
-    ngDialog.closeAll();
-    dimFarmingService.start(vm.store);
-  };
 
   vm.startFarming = function startFarming() {
     ngDialog.closeAll();

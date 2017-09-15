@@ -1,0 +1,10 @@
+<div class="item-socket-category" ng-repeat="category in $ctrl.sockets.categories | orderBy:'category.index' track by category.category.hash">
+  <div class="item-socket-category-name">{{category.category.displayProperties.name}}</div>
+  <div class="item-sockets">
+    <div class="item-socket" ng-class="{ disabled: !socketInfo.enabled }" ng-repeat="socketInfo in category.sockets">
+      <img class="item-mod" ng-src="{{ socket.displayProperties.icon | bungieIcon }}" ng-class="{ notChosen: socket != socketInfo.plug }" ng-repeat="socket in socketInfo.plugOptions"
+        press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}"
+        press-tip-title="{{ socket.displayProperties.name }}">
+    </div>
+  </div>
+</div>

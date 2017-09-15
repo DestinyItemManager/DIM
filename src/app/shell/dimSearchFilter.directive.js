@@ -11,19 +11,21 @@ angular.module('dimApp')
 
 function SearchService(dimSettingsService) {
   const categoryFilters = {
-    pulserifle: ['CATEGORY_PULSE_RIFLE', '.*_pulse_rifle'],
-    scoutrifle: ['CATEGORY_SCOUT_RIFLE', '.*_scout_rifle'],
-    handcannon: ['CATEGORY_HAND_CANNON', '.*_hand_cannon'],
-    autorifle: ['CATEGORY_AUTO_RIFLE', '.*_auto_rifle'],
-    sniperrifle: ['CATEGORY_SNIPER_RIFLE', '.*_sniper_rifle'],
-    shotgun: ['CATEGORY_SHOTGUN', '.*_shotgun'],
-    sidearm: ['CATEGORY_SIDEARM', '.*_sidearm'],
-    rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER', '.*_rocket_launcher'],
-    fusionrifle: ['CATEGORY_FUSION_RIFLE', '.*_fusion_rifle'],
-    sword: ['CATEGORY_SWORD', 'type_weapon_sword'],
+    pulserifle: ['CATEGORY_PULSE_RIFLE'],
+    scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
+    handcannon: ['CATEGORY_HAND_CANNON'],
+    autorifle: ['CATEGORY_AUTO_RIFLE'],
+    sniperrifle: ['CATEGORY_SNIPER_RIFLE'],
+    shotgun: ['CATEGORY_SHOTGUN'],
+    sidearm: ['CATEGORY_SIDEARM'],
+    rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
+    fusionrifle: ['CATEGORY_FUSION_RIFLE'],
+    sword: ['CATEGORY_SWORD'],
   };
 
-  const itemTypes = ['helmet', 'leg', 'gauntlets', 'chest', 'subclass', 'classitem', 'artifact', 'ghost', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'emote'];
+  const itemTypes = ['helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'emote'];
+
+  const stats = ['charge', 'impact', 'range', 'stability', 'reload', 'magazine', 'aimassist', 'equipspeed'];
 
   // don't have access to dimSettingService yet here.
   if (dimSettingsService.destinyVersion === 1) {
@@ -34,11 +36,14 @@ function SearchService(dimSettingsService) {
       machinegun: ['CATEGORY_MACHINE_GUN'],
     });
     itemTypes.push(...['primary', 'special', 'heavy', 'horn', 'bounties', 'quests', 'messages', 'missions']);
+    stats.push(...['rof']);
   } else {
     Object.assign(categoryFilters, {
-      grenadelauncher: ['.*_rocket_launcher'],
+      grenadelauncher: ['CATEGORY_GRENADE_LAUNCHER'],
+      submachine: ['CATEGORY_SUBMACHINEGUN'],
     });
     itemTypes.push(...['energy', 'power']);
+    stats.push(...['rpm']);
   }
 
   /**
@@ -113,7 +118,6 @@ function SearchService(dimSettingsService) {
   // Filters that operate on ranges (>, <, >=, <=)
   const comparisons = [":<", ":>", ":<=", ":>=", ":"];
 
-  const stats = ['rof', 'impact', 'range', 'stability', 'reload', 'magazine', 'aimassist', 'equipspeed'];
   stats.forEach((word) => {
     const filter = `stat:${word}`;
     comparisons.forEach((comparison) => {
@@ -798,6 +802,12 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     transferable: function(predicate, item) {
       return !item.notransfer;
     },
+    rpm: function(predicate, item) {
+      return filterByStats(predicate, item, 'rpm');
+    },
+    charge: function(predicate, item) {
+      return filterByStats(predicate, item, 'charge');
+    },
     rof: function(predicate, item) {
       return filterByStats(predicate, item, 'rof');
     },
@@ -847,6 +857,8 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     }, this);
 
     statHash = {
+      rpm: 4284893193,
+      charge: 2961396640,
       impact: 4043523819,
       range: 1240592695,
       stability: 155624089,

@@ -1,8 +1,17 @@
 # Next
 
+* D2 items with objectives now show them, and quests + milestones are displayed for your characters.
+* Custom loadouts return for D2.
+* D2 items now display their perks and mods.
+
+# 4.14.0
+
 * Added back in Repuation for D2.
 * Max Light Loadout, Make Room for Postmaster, Farming Mode, and Search Loadout are all reenabled for D2.
-* Classified items can be transferred.
+* Classified items can be transferred!
+* Fixed search filters for D2.
+* Show hidden stats on D2 items.
+* D2 inventory (mods, shaders, etc) now take the full width of the screen.
 
 # 4.13.0
 

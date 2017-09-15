@@ -1,7 +1,7 @@
 <div class="loadout-popup-content">
   <ul class="loadout-list">
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set">
+    <li class="loadout-set">
       <span ng-click="vm.newLoadout($event)">
         <i class="fa fa-plus-circle"></i>
         <span ng-i18next="Loadouts.Create"></span>
@@ -9,7 +9,7 @@
       <span ng-click="vm.newLoadoutFromEquipped($event)" ng-i18next="Loadouts.FromEquipped"></span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">
+    <li ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">
       <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">
         {{ loadout.name }}
       </span>
@@ -68,7 +68,7 @@
       </span>
     </li>
 
-    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && vm.previousLoadout">
+    <li class="loadout-set" ng-if="vm.previousLoadout">
       <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)">
         <i class="fa fa-undo"></i>
         {{ vm.previousLoadout.name }}
