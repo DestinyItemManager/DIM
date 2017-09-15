@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { getClass } from './character-utils';
+import { sum } from '../../util';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -165,7 +166,7 @@ export function D2ItemFactory(
     }
 
     if (itemDef.redacted) {
-      console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
+      console.warn('Missing Item Definition:\n\n', { item, itemDef, instanceDef }, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
     }
 
     if (!itemDef || !itemDef.displayProperties.name) {
@@ -180,6 +181,7 @@ export function D2ItemFactory(
       currentBucket = normalBucket = buckets.unknown;
       buckets.setHasUnknown();
     }
+
 
     // We cheat a bit for items in the vault, since we treat the
     // vault as a character. So put them in the bucket they would
@@ -275,7 +277,26 @@ export function D2ItemFactory(
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     }
 
+    try {
+      createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
+      if (createdItem.objectives) {
+        console.log(createdItem.name, createdItem.bucket.hash, createdItem, createdItem.objectives, createdItem.objectives.progress, createdItem.objectives.completionValue, createdItem.objectives.progress / createdItem.objectives.completionValue);
+      }
+    } catch (e) {
+      console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
+    }
     createdItem.index = createItemIndex(createdItem);
+
+    if (createdItem.objectives) {
+      createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
+      createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
+        if (objective.completionValue) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
+        } else {
+          return 0;
+        }
+      });
+    }
 
     return createdItem;
   }
@@ -378,5 +399,32 @@ export function D2ItemFactory(
         stat.statHash !== 2961396640
       };
     }));
+  }
+
+  function buildObjectives(item, objectivesMap, objectiveDefs) {
+    let objectives = objectivesMap[item.itemInstanceId];
+    if (objectives) {
+      objectives = objectivesMap[item.itemInstanceId].objectives;
+    }
+    if (!objectives || !objectives.length) {
+      return null;
+    }
+
+    return objectives.map((objective) => {
+      const def = objectiveDefs.get(objective.objectiveHash);
+
+      return {
+        displayName: def.displayProperties.name ||
+          (objective.isComplete
+            ? $i18next.t('Objectives.Complete')
+            : $i18next.t('Objectives.Incomplete')),
+        description: def.displayProperties.description,
+        progress: objective.progress || 0,
+        completionValue: def.completionValue,
+        complete: objective.isComplete,
+        boolean: def.completionValue === 1,
+        display: `${objective.progress || 0}/${def.completionValue}`
+      };
+    });
   }
 }
