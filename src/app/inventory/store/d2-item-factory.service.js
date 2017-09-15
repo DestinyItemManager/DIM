@@ -454,12 +454,17 @@ export function D2ItemFactory(
 
     const realSockets = sockets.map((socket) => {
       const plug = defs.InventoryItem.get(socket.plugHash);
+      let failReasons = (socket.enableFailIndexes || []).map((index) => plug.plug.enabledRules[index].failureMessage).join("\n");
+      if (failReasons.length) {
+        failReasons = `\n\n${failReasons}`;
+      }
       const dimSocket = {
         plug,
         reusablePlugs: (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash)),
         enabled: socket.isEnabled,
-        enableFailIndexes: (socket.enableFailIndexes || []).map((index) => plug.plug.enabledRules[index])
+        enableFailReasons: failReasons
       };
+      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 ? dimSocket.reusablePlugs : [dimSocket.plug];
       return dimSocket;
     });
 

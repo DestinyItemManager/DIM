@@ -2,14 +2,33 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-bottom: 8px;
+}
+
+.item-socket-category {
+  margin-bottom: 4px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.item-socket-category-name {
+  text-transform: uppercase;
+  margin-bottom: 2px;
 }
 
 .item-socket {
   margin-right: 4px;
-  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+
   img {
     width: 34px;
     height: 34px;
+    &.notChosen {
+      opacity: .4;
+    }
+  }
+  &.disabled {
+    opacity: .4;
   }
 }
