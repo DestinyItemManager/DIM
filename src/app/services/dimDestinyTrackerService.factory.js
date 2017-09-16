@@ -39,17 +39,32 @@ function DestinyTrackerService($q,
       return (dimSettingsService.destinyVersion === 2);
     },
     reattachScoresFromCache: function(stores) {
-      _bulkFetcher.attachRankings(null,
-                                  stores);
+      if (this.isDestinyOne()) {
+        _bulkFetcher.attachRankings(null,
+          stores);
+      }
+      else if (this.isDestinyTwo()) {
+        console.log("reattach D2 called");
+      }
     },
     updateCachedUserRankings: function(item,
                                        userReview) {
-      _reviewDataCache.addUserReviewData(item,
-                                         userReview);
+      if (this.isDestinyOne()) {
+        _reviewDataCache.addUserReviewData(item,
+                                          userReview);
+      }
+      else if (this.isDestinyTwo()) {
+        console.log("update cached D2 called");
+      }
     },
     updateVendorRankings: function(vendors) {
       if (dimSettingsService.showReviews) {
-        _bulkFetcher.bulkFetchVendorItems(vendors);
+        if (this.isDestinyOne()) {
+          _bulkFetcher.bulkFetchVendorItems(vendors);
+        }
+        else if (this.isDestinyTwo()) {
+          console.log("update vendor for D2 called");
+        }
       }
     },
     getItemReviews: function(item) {
@@ -59,7 +74,12 @@ function DestinyTrackerService($q,
     },
     submitReview: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
-        _reviewSubmitter.submitReview(item);
+        if (this.isDestinyOne()) {
+          _reviewSubmitter.submitReview(item);
+        }
+        else if (this.isDestinyTwo()) {
+          console.log("submit review for D2 called");
+        }
       }
     },
     fetchReviews: function(stores) {
