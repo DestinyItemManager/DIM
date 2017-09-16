@@ -8,11 +8,13 @@ export const StorePagerComponent = {
   template: '<ng-transclude></ng-transclude>',
   bindings: {
     onStoreChange: '&',
-    initialIndex: '<'
+    initialIndex: '<',
+    currentStore: '<',
+    stores: '<'
   }
 };
 
-function StorePagerCtrl($element, $scope) {
+function StorePagerCtrl($element, $scope, $filter, dimSettingsService) {
   'ngInject';
 
   this.$onInit = function() {
@@ -25,5 +27,12 @@ function StorePagerCtrl($element, $scope) {
         });
       }
     });
+  };
+
+  this.$onChanges = () => {
+    if (this.dragend && this.currentStore) {
+      const storeIndex = $filter('sortStores')(this.stores, dimSettingsService.characterOrder).indexOf(this.currentStore);
+      this.dragend.jumpToPage(storeIndex + 1);
+    }
   };
 }
