@@ -26,6 +26,12 @@ function DestinyTrackerService($q,
   const _reviewReporter = new ReviewReporter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
   return {
+    isDestinyOne: function() {
+      return (dimSettingsService.destinyVersion === 1);
+    },
+    isDestinyTwo: function() {
+      return (dimSettingsService.destinyVersion === 2);
+    },
     reattachScoresFromCache: function(stores) {
       _bulkFetcher.attachRankings(null,
                                   stores);
@@ -52,7 +58,12 @@ function DestinyTrackerService($q,
     },
     fetchReviews: function(stores) {
       if (dimSettingsService.showReviews) {
-        _bulkFetcher.bulkFetch(stores);
+        if (this.isDestinyOne()) {
+          _bulkFetcher.bulkFetch(stores);
+        }
+        else if (this.isDestinyTwo()) {
+          console.log("Would call D2 fetch here.");
+        }
       }
     },
     reportReview: function(review) {

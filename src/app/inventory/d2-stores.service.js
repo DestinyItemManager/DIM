@@ -23,7 +23,8 @@ export function D2StoresService(
   D2ItemFactory,
   NewItemsService,
   $stateParams,
-  loadingTracker
+  loadingTracker,
+  dimDestinyTrackerService
 ) {
   'ngInject';
 
@@ -204,10 +205,14 @@ export function D2StoresService(
 
         _stores = stores;
 
+        dimDestinyTrackerService.fetchReviews(_stores);
+
         itemInfoService.cleanInfos(stores);
 
         // Let our styling know how many characters there are
         document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
+
+        dimDestinyTrackerService.reattachScoresFromCache(stores);
 
         // TODO: this is still useful, but not in as many situations
         $rootScope.$broadcast('d2-stores-updated', {
