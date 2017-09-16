@@ -165,8 +165,6 @@ export function D2StoresService(
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);
 
-
-        console.log(profileInfo);
         // TODO: components may be hidden (privacy)
 
         const processVaultPromise = processVault(defs,
@@ -213,7 +211,6 @@ export function D2StoresService(
         $rootScope.$broadcast('d2-stores-updated', {
           stores: stores
         });
-        console.log(stores);
         return stores;
       })
       .catch((e) => {

@@ -279,19 +279,12 @@ export function D2ItemFactory(
 
     try {
       createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
-      if (createdItem.objectives) {
-        console.log(createdItem.name, createdItem.bucket.hash, createdItem, createdItem.objectives, createdItem.objectives.progress, createdItem.objectives.completionValue, createdItem.objectives.progress / createdItem.objectives.completionValue);
-      }
     } catch (e) {
       console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
     }
 
     try {
-      console.log(itemDef.displayProperties.name, { itemDef, item, itemComponents });
       createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
-      if (createdItem.objectives) {
-        console.log(createdItem.name, createdItem.bucket.hash, createdItem, createdItem.objectives, createdItem.objectives.progress, createdItem.objectives.completionValue, createdItem.objectives.progress / createdItem.objectives.completionValue);
-      }
     } catch (e) {
       console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
     }
@@ -476,13 +469,9 @@ export function D2ItemFactory(
     });
 
     const dimSockets = {
-      // itemDef,
-      // defSockets: itemDef.sockets,
-      // rawSockets: sockets,
       sockets: realSockets, // Flat list of sockets
       categories // Sockets organized by category
     };
-    console.log(dimSockets);
 
     return dimSockets;
   }
