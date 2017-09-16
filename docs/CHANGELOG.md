@@ -3,6 +3,9 @@
 * D2 items with objectives now show them, and quests + milestones are displayed for your characters.
 * Custom loadouts return for D2.
 * D2 items now display their perks and mods.
+* DIM won't log you out if you've been idle too long.
+* Swipe left or right anywhere on the page in mobile mode to switch characters.
+* If you have lots of inventory, it won't make the page scroll anymore.
 
 # 4.14.0
 
