@@ -12,6 +12,7 @@
 * Farming mode looks better on mobile.
 * If you're viewing a non-current character in mobile, it won't mess up on reload anymore.
 * You can tag and write notes on classified items to help remember which they are.
+* The Infusion Fuel Finder is back for D2.
 
 # 4.14.0
 
