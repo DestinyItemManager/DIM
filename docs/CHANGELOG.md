@@ -6,6 +6,7 @@
 * DIM won't log you out if you've been idle too long.
 * Swipe left or right anywhere on the page in mobile mode to switch characters.
 * If you have lots of inventory, it won't make the page scroll anymore.
+* Power level will update when you change equipment again.
 * Searches will stay searched when you reload info.
 * Max light loadout won't try to use two exotics.
 * Farming mode looks better on mobile.

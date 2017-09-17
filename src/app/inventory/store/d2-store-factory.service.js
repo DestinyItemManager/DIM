@@ -59,7 +59,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
 
     updateCharacterInfo: function(defs, character) {
       this.level = character.levelProgression.level; // Maybe?
-      this.light = character.light;
+      this.powerLevel = character.light;
       this.background = `https://www.bungie.net/${character.emblemBackgroundPath}`;
       this.icon = `https://www.bungie.net/${character.emblemPath}`;
       // this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
