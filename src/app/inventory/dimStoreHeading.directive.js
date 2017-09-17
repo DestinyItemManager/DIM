@@ -48,7 +48,7 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
   vm.openLoadoutPopup = function openLoadoutPopup(e) {
     e.stopPropagation();
 
-    if (vm.store !== vm.currentStore) {
+    if (vm.store !== vm.currentStore && !vm.internalLoadoutMenu) {
       vm.onTapped();
       return;
     }
