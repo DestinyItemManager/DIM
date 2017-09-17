@@ -154,6 +154,7 @@ module.exports = (env) => {
       // Extract a stable "vendor" chunk
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
+        chunks: ['main', 'authReturn'],
         minChunks: function(module) {
           // this assumes your vendor imports exist in the node_modules directory
           return module.context && module.context.indexOf('node_modules') !== -1;
