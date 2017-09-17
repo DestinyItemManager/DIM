@@ -357,8 +357,11 @@ img {
   cursor: pointer;
 
   .detached & {
-    top: 48px;
+    top: 103px;
+    z-index: 1000;
     max-height: calc(100vh - 221px);
+    max-width: 230px;
+    left: calc((100% - 230px) / 2);
   }
 }
 
