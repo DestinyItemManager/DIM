@@ -307,6 +307,12 @@ export function D2ItemFactory(
       });
     }
 
+    // Infusion
+    const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
+    createdItem.infusionProcess = tier && tier.infusionProcess;
+    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName.length);
+    createdItem.infusionQuality = itemDef.quality || null;
+
     return createdItem;
   }
 

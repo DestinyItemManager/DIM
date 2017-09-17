@@ -258,7 +258,8 @@
     "NoItems": "No infusable items available.",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
     "ShowItems": "Show infusable items across all characters and vault",
-    "TransferItems": "Transfer items"
+    "TransferItems": "Transfer items",
+    "ModWarning": "This item has legendary mods on it, which may cause its power to display higher than what will transfer in infusion. Make sure to check before infusing!"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {{error}}.",

@@ -593,7 +593,7 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
       return item.isEngram();
     },
     infusable: function(predicate, item) {
-      return item.talentGrid && item.talentGrid.infusable;
+      return item.infusable;
     },
     category: function(predicate, item) {
       const categories = dimSearchService.categoryFilters[predicate.toLowerCase().replace(/\s/g, '')];

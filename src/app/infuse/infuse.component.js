@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import { flatMap } from '../util';
 import template from './infuse.html';
 import './infuse.scss';
 
@@ -12,24 +13,26 @@ export const InfuseComponent = {
   controllerAs: 'vm'
 };
 
-function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, toaster, $q, $i18next) {
+function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2Definitions, dimLoadoutService, toaster, $q, $i18next) {
   'ngInject';
 
   const vm = this;
 
   vm.items = {};
-  dimDefinitions.getDefinitions().then((defs) => {
-    [
-      452597397,
-      2534352370,
-      3159615086,
-      937555249,
-      1898539128,
-      1542293174
-    ].forEach((hash) => {
-      vm.items[hash] = defs.InventoryItem.get(hash);
+  if (vm.source.destinyVersion === 1) {
+    dimDefinitions.getDefinitions().then((defs) => {
+      [
+        452597397,
+        2534352370,
+        3159615086,
+        937555249,
+        1898539128,
+        1542293174
+      ].forEach((hash) => {
+        vm.items[hash] = defs.InventoryItem.get(hash);
+      });
     });
-  });
+  }
 
   angular.extend(vm, {
     getAllItems: true,
@@ -66,12 +69,22 @@ function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, 
       }
       vm.target = item;
       vm.infused = vm.target.primStat.value;
+
+      if (vm.source.destinyVersion === 2) {
+        // Rules taken from  https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
+        const powerDiff = Math.max(0, vm.target.primStat.value - vm.source.primStat.value);
+        const quality = vm.target.infusionProcess;
+        const transferAmount = powerDiff * quality.baseQualityTransferRatio;
+        const increase = Math.min(powerDiff, Math.max(transferAmount, quality.minimumQualityIncrement));
+        vm.infused = vm.source.primStat.value + increase;
+      }
+
+      vm.modWarning = item.sockets && _.any(item.sockets.sockets, (s) => s.plug && s.plug.inventory.tierType > 4);
     },
 
     // get Items for infusion
     getItems: function() {
-      let stores = dimStoreService.getStores();
-      let allItems = [];
+      let stores = vm.source.destinyVersion === 1 ? dimStoreService.getStores() : D2StoresService.getStores();
 
       // If we want ALL our weapons, including vault's one
       if (!vm.getAllItems) {
@@ -81,21 +94,24 @@ function InfuseCtrl($scope, dimStoreService, dimDefinitions, dimLoadoutService, 
       }
 
       // all stores
-      stores.forEach((store) => {
+      let allItems = flatMap(stores, (store) => {
         // all items in store
-        const items = _.filter(store.items, (item) => {
+        return _.filter(store.items, (item) => {
+          if (item.name === 'Rat King') {
+            console.log(item.name, item.infusionQuality);
+          }
           return item.primStat &&
             item.year !== 1 &&
             (!item.locked || vm.showLockedItems) &&
-            item.type === vm.source.type &&
+            (vm.source.destinyVersion === 1
+              ? (item.type === vm.source.type)
+              : (item.infusionQuality && (item.infusionQuality.infusionCategoryName === vm.source.infusionQuality.infusionCategoryName))) &&
             item.primStat.value > vm.source.primStat.value;
         });
-
-        allItems = allItems.concat(items);
       });
 
       allItems = _.sortBy(allItems, (item) => {
-        return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
+        return item.primStat.value + (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0);
       });
 
       vm.infusable = allItems;
