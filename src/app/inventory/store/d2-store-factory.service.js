@@ -60,6 +60,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
     updateCharacterInfo: function(defs, character) {
       this.level = character.levelProgression.level; // Maybe?
       this.powerLevel = character.light;
+      this.maxPowerMinusMods = character.stats[1885944937];
       this.background = `https://www.bungie.net/${character.emblemBackgroundPath}`;
       this.icon = `https://www.bungie.net/${character.emblemPath}`;
       // this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
@@ -134,6 +135,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
         level: character.levelProgression.level, // Maybe?
         powerLevel: character.light,
+        maxPowerMinusMods: character.stats[1885944937],
         // stats: getCharacterStatsData(defs.Stat, character.characterBase),
         class: getClass(classy.classType),
         classType: classy.classType,
