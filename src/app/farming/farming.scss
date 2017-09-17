@@ -3,30 +3,29 @@
 #item-farming {
   position: fixed;
   backface-visibility: hidden;
-  bottom: 6rem;
-  background-color: rgba(0, 0, 0, 0.9);
-  left: calc(50% - 21.5rem);
+  bottom: 0;
+  background-color: rgba(34, 34, 34, 0.9);
+  @supports(backdrop-filter: blur(10px)) {
+    background-color: rgba(34, 34, 34, 0.6);
+    backdrop-filter: blur(10px);
+  }
   width: 43rem;
-  right: 0;
-  border-radius: .5rem;
   padding: .5rem 1rem;
   color: #e0e0e0;
   align-items: center;
   text-align: left;
   display: flex;
   flex-direction: row;
-
-  &.d2-farming {
-    bottom: 1rem;
-  }
+  max-width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
 
   button {
     color: white;
-    background-color: rgba(128, 128, 128, .8);
-    border-radius: 4px;
+    background-color: rgba(128, 128, 128, .4);
     border: none;
-    width: 6rem;
-    height: 3rem;
+    padding: .5rem 1rem;
     text-align: center;
     font-size: 1.5em;
     margin-left: 1rem;
