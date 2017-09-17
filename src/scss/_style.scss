@@ -22,6 +22,8 @@
 @include phone-portrait {
   :root {
     --item-size: 64px !important;
+    --character-columns: 3 !important;
+    --vault-max-columns: 999 !important;
   }
 }
 
@@ -362,8 +364,11 @@ img {
   cursor: pointer;
 
   .detached & {
-    top: 48px;
+    top: 103px;
+    z-index: 1000;
     max-height: calc(100vh - 221px);
+    max-width: 230px;
+    left: calc((100% - 230px) / 2);
   }
 }
 
