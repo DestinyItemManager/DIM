@@ -499,7 +499,8 @@
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "PowerMinusMods": "✦{{power}} max power w/o mods"
   },
   "Storage": {
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
