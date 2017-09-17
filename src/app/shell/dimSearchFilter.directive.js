@@ -93,7 +93,11 @@ function SearchService(dimSettingsService) {
       year: ['year1', 'year2', 'year3'],
       vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
       activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
-      cosmetic: ['cosmetic'],
+      cosmetic: ['cosmetic']
+    });
+  } else {
+    Object.assign(filterTrans, {
+      powermod: ['powermod', 'haspowermod']
     });
   }
 
@@ -806,6 +810,9 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     },
     transferable: function(predicate, item) {
       return !item.notransfer;
+    },
+    powermod: function(predicate, item) {
+      return item.primStat && (item.primStat.value !== item.basePower);
     },
     rpm: function(predicate, item) {
       return filterByStats(predicate, item, 'rpm');

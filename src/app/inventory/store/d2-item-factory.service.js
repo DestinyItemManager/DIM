@@ -327,6 +327,13 @@ export function D2ItemFactory(
     createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName.length);
     createdItem.infusionQuality = itemDef.quality || null;
 
+    if (createdItem.primStat) {
+      createdItem.basePower = getBasePowerLevel(createdItem);
+      if (createdItem.basePower !== createdItem.primStat.value) {
+        createdItem.complete = true;
+      }
+    }
+
     return createdItem;
   }
 
@@ -521,5 +528,19 @@ export function D2ItemFactory(
     };
 
     return dimSockets;
+  }
+
+  function getBasePowerLevel(item) {
+    const MOD_CATEGORY = 59;
+    const POWER_STAT_HASH = 1935470627;
+    const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
+      return plug &&
+        plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
+        plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
+    }) : [];
+
+    const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH).value);
+
+    return item.primStat.value - modPower;
   }
 }
