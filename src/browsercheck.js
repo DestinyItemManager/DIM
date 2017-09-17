@@ -18,8 +18,7 @@ function getBrowserName(agent) {
   return agent.browser.name;
 }
 
-function getBrowserVersionFromUserAgent(userAgent) {
-  var agent = parser(userAgent);
+function getBrowserVersionFromUserAgent(agent) {
   var version = (agent.browser.version || agent.os.version || '').split('.');
   var browserName = getBrowserName(agent);
   while (version.length > 0) {
@@ -33,11 +32,14 @@ function getBrowserVersionFromUserAgent(userAgent) {
   return 'unknown';
 }
 
-var browsersSupported = browserslist($BROWSERS);
-var browser = getBrowserVersionFromUserAgent(navigator.userAgent);
-var supported = browsersSupported.indexOf(browser) >= 0;
+var agent = parser(navigator.userAgent);
+if (agent !== 'Vivaldi') { // Vivaldi users can just live on the edge
+  var browsersSupported = browserslist($BROWSERS);
+  var browser = getBrowserVersionFromUserAgent(agent);
+  var supported = browsersSupported.indexOf(browser) >= 0;
 
-if (!supported) {
-  console.warn('Browser ' + browser + ' is not supported by DIM. Supported browsers:', browsersSupported);
-  document.getElementById('browser-warning').className = '';
+  if (!supported) {
+    console.warn('Browser ' + browser + ' is not supported by DIM. Supported browsers:', browsersSupported);
+    document.getElementById('browser-warning').className = '';
+  }
 }

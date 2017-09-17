@@ -7,6 +7,11 @@
 * Swipe left or right anywhere on the page in mobile mode to switch characters.
 * If you have lots of inventory, it won't make the page scroll anymore.
 * Power level will update when you change equipment again.
+* Searches will stay searched when you reload info.
+* Max light loadout won't try to use two exotics.
+* Farming mode looks better on mobile.
+* If you're viewing a non-current character in mobile, it won't mess up on reload anymore.
+* You can tag and write notes on classified items to help remember which they are.
 
 # 4.14.0
 

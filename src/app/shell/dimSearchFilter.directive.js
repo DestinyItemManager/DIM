@@ -216,6 +216,11 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     vm.filter();
   });
 
+  $scope.$on('d2-stores-updated', () => {
+    _duplicates = null;
+    vm.filter();
+  });
+
   $scope.$on('dim-vendors-updated', () => {
     _duplicates = null;
     vm.filter();
