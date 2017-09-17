@@ -243,7 +243,7 @@ export function D2ItemFactory(
     });
 
     // *able
-    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable);
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
 
     if (createdItem.primStat) {
