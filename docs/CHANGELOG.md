@@ -6,6 +6,7 @@
 * DIM won't log you out if you've been idle too long.
 * Swipe left or right anywhere on the page in mobile mode to switch characters.
 * If you have lots of inventory, it won't make the page scroll anymore.
+* You can tag and write notes on classified items to help remember which they are.
 
 # 4.14.0
 
