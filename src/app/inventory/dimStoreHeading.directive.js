@@ -8,7 +8,9 @@ export const StoreHeadingComponent = {
   controllerAs: 'vm',
   bindings: {
     store: '<storeData',
-    internalLoadoutMenu: '<internalLoadoutMenu'
+    internalLoadoutMenu: '<internalLoadoutMenu',
+    currentStore: '<',
+    onTapped: '&'
   },
   template
 };
@@ -45,6 +47,11 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
 
   vm.openLoadoutPopup = function openLoadoutPopup(e) {
     e.stopPropagation();
+
+    if (vm.store !== vm.currentStore) {
+      vm.onTapped();
+      return;
+    }
 
     if (dialogResult === null) {
       ngDialog.closeAll();

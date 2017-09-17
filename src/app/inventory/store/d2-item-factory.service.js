@@ -196,6 +196,11 @@ export function D2ItemFactory(
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
+    // https://github.com/Bungie-net/api/issues/134
+    if (instanceDef.primaryStat && itemType === 'Class') {
+      delete instanceDef.primaryStat;
+    }
+
     const createdItem = angular.extend(Object.create(ItemProto), {
       // figure out what year this item is probably from
       destinyVersion: 2,
@@ -243,7 +248,7 @@ export function D2ItemFactory(
     });
 
     // *able
-    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable);
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
 
     if (createdItem.primStat) {
