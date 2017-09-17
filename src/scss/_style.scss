@@ -49,6 +49,12 @@ div:focus, span:focus {
   display: none;
 }
 
+@keyframes browser-warning {
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
 #browser-warning {
   position: fixed;
   bottom: 0;
@@ -60,6 +66,7 @@ div:focus, span:focus {
   &.hidden {
     display: none;
   }
+  animation: 1s linear 10s forwards browser-warning;
 }
 
 /**
