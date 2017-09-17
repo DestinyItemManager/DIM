@@ -69,8 +69,13 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
     vm.vault = _.find(vm.stores, 'isVault');
 
     if (vm.stores && vm.stores.length) {
-      vm.currentStore = _.find(vm.stores, 'current');
-      vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
+      if (!vm.currentStore || !_.find(vm.stores, { id: vm.currentStore.id })) {
+        vm.currentStore = _.find(vm.stores, 'current');
+        vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
+      } else {
+        vm.currentStore = _.find(vm.stores, { id: vm.currentStore.id });
+        vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
+      }
     } else {
       vm.currentStore = null;
     }

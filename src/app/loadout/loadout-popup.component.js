@@ -410,7 +410,10 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     });
 
     // Solve for the case where our optimizer decided to equip two exotics
-    const exoticGroups = [['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']];
+    // TODO: D2 gives us a way better way to do this with equippingBlock info, but it's too complex to figure out now
+    const exoticGroups = vm.store.destinyVersion === 1
+      ? [['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']]
+      : [['Kinetic', 'Energy', 'Power'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']];
     _.each(exoticGroups, (group) => {
       const itemsInGroup = _.pick(items, group);
       const numExotics = _.filter(_.values(itemsInGroup), isExotic).length;
