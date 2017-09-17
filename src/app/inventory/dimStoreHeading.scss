@@ -18,6 +18,10 @@ dim-store-heading {
   max-width: 230px;
   cursor: pointer;
 
+  store-pager & {
+    margin: 0 auto;
+  }
+
   .details {
     display: flex;
     flex-direction: row;
