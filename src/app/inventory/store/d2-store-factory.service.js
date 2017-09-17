@@ -134,6 +134,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
         level: character.levelProgression.level, // Maybe?
         powerLevel: character.light,
+        maxPowerMinusMods: character.stats[1885944937],
         // stats: getCharacterStatsData(defs.Stat, character.characterBase),
         class: getClass(classy.classType),
         classType: classy.classType,
