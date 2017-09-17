@@ -93,7 +93,6 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         const transferAmount = powerDiff * quality.baseQualityTransferRatio;
         const increase = Math.min(powerDiff, Math.max(transferAmount, quality.minimumQualityIncrement));
         vm.infused = vm.source.primStat.value + increase;
-        vm.modPower = vm.target.primStat.value - targetBasePower;
       }
     },
 
