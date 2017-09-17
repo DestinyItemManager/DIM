@@ -40,8 +40,8 @@
             <div ng-i18next="Infusion.BringGear"></div>
             <span class="bigValue">{{ vm.infused }}</span>
             <span class="green">(+ {{ vm.infused - vm.source.primStat.value }})</span>
+            <span class="note" ng-i18next="[i18next]({ power: vm.modPower })Infusion.ModPower" ng-if="vm.modPower"></span>
           </div>
-          <p class="warning-block" ng-if="vm.modWarning" ng-i18next="Infusion.ModWarning"></p>
           <div ng-if="vm.source.destinyVersion === 1">
             <span> 3 <span class="currency"><img alt="{{ ::vm.items[2534352370].itemName }}" title="{{ ::vm.items[2534352370].itemName }}" ng-src="{{ vm.items[2534352370].icon | bungieIcon }}"></span></span>
             <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="{{ ::vm.items[452597397].itemName }}" title="{{ ::vm.items[452597397].itemName }}" ng-src="{{ vm.items[452597397].icon | bungieIcon }}"></span></span>

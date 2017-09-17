@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { flatMap } from '../util';
+import { flatMap, sum } from '../util';
 import template from './infuse.html';
 import './infuse.scss';
 
@@ -32,6 +32,20 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         vm.items[hash] = defs.InventoryItem.get(hash);
       });
     });
+  }
+
+  function getBasePowerLevel(item) {
+    const MOD_CATEGORY = 59;
+    const POWER_STAT_HASH = 1935470627;
+    const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
+      return plug &&
+        plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
+        plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
+    }) : [];
+
+    const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH).value);
+
+    return item.primStat.value - modPower;
   }
 
   angular.extend(vm, {
@@ -72,14 +86,15 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
 
       if (vm.source.destinyVersion === 2) {
         // Rules taken from  https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
-        const powerDiff = Math.max(0, vm.target.primStat.value - vm.source.primStat.value);
+        const sourceBasePower = getBasePowerLevel(vm.source);
+        const targetBasePower = getBasePowerLevel(vm.target);
+        const powerDiff = Math.max(0, targetBasePower - sourceBasePower);
         const quality = vm.target.infusionProcess;
         const transferAmount = powerDiff * quality.baseQualityTransferRatio;
         const increase = Math.min(powerDiff, Math.max(transferAmount, quality.minimumQualityIncrement));
         vm.infused = vm.source.primStat.value + increase;
+        vm.modPower = vm.target.primStat.value - targetBasePower;
       }
-
-      vm.modWarning = item.sockets && _.any(item.sockets.sockets, (s) => s.plug && s.plug.inventory.tierType > 4);
     },
 
     // get Items for infusion
