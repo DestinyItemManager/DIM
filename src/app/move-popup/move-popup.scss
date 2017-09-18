@@ -139,7 +139,6 @@
   }
   .infuse-perk {
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1);
     background-size: 80%;
     background-repeat: no-repeat;
     background-position: center;
@@ -149,6 +148,12 @@
     }
     &.Armor {
       background-image: url('../../images/Armor.png');
+    }
+    &.destiny2 {
+      background-size: 100%;
+      border-radius: 0;
+      background-color: transparent;
+      background-image: url('../../images/d2infuse.png');
     }
   }
 

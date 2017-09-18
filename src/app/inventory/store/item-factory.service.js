@@ -351,6 +351,9 @@ export function ItemFactory(
     } catch (e) {
       console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
     }
+
+    item.infusable = createdItem.talentGrid && createdItem.talentGrid.infusable;
+
     try {
       createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
 
@@ -365,7 +368,7 @@ export function ItemFactory(
     } catch (e) {
       console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
     }
-    if (createdItem.talentGrid && createdItem.talentGrid.infusable) {
+    if (createdItem.talentGrid && createdItem.infusable) {
       try {
         createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
       } catch (e) {
@@ -708,10 +711,9 @@ export function ItemFactory(
     // year 1
 
     let year = 1;
-    const infusable = (item.talentGrid && item.talentGrid.infusable);
     const ttk = item.sourceHashes.includes(yearHashes.year2[0]);
     const roi = item.sourceHashes.includes(yearHashes.year3[0]);
-    if (ttk || infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
+    if (ttk || item.infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
       year = 2;
     }
     if (!ttk && (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)) {

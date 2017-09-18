@@ -12,8 +12,4 @@ export const SocketsComponent = {
 
 function SocketsCtrl() {
   'ngInject';
-
-  const vm = this;
-
-  console.log(vm.sockets);
 }
