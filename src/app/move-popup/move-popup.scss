@@ -290,3 +290,24 @@ $item-header-spacing: 5px;
 .item-perks {
   margin: 5px 10px;
 }
+
+.item-perk {
+  display: flex;
+  flex-direction: row;
+
+  img {
+    height: 48px;
+    width: 48px;
+  }
+}
+
+.item-perk-info {
+  margin-left: 8px;
+}
+.item-perk-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+.item-perk-description {
+
+}

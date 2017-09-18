@@ -278,6 +278,9 @@ export function D2ItemFactory(
           buildHiddenStats(item, itemDef, defs.Stat)
         ), 'sort');
       }
+      if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
+        createdItem.stats = _.sortBy(buildInvestmentStats(item, itemDef.investmentStats, defs.Stat));
+      }
     } catch (e) {
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     }
@@ -292,6 +295,17 @@ export function D2ItemFactory(
       createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
     } catch (e) {
       console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
+    }
+
+    if (itemDef.perks && itemDef.perks.length) {
+      createdItem.perks = itemDef.perks.map((p) => {
+        return Object.assign({
+          requirement: p.requirementDisplayString
+        }, defs.SandboxPerk.get(p.perkHash));
+      }).filter((p) => p.isDisplayable);
+      if (createdItem.perks.length === 0) {
+        createdItem.perks = null;
+      }
     }
 
     createdItem.index = createItemIndex(createdItem);
@@ -412,6 +426,28 @@ export function D2ItemFactory(
         bar: stat.statHash !== 4284893193 &&
         stat.statHash !== 3871231066 &&
         stat.statHash !== 2961396640
+      };
+    }));
+  }
+
+
+  function buildInvestmentStats(item, itemStats, statDefs) {
+    return _.compact(_.map(itemStats, (itemStat) => {
+      const def = statDefs.get(itemStat.statTypeHash);
+      if (!def || !itemStat || itemStat.statTypeHash === 1935470627 /* Power */) {
+        return undefined;
+      }
+
+      return {
+        base: itemStat.value,
+        bonus: 0,
+        statHash: itemStat.statHash,
+        name: def.displayProperties.name,
+        id: item.itemInstanceId,
+        sort: statWhiteList.indexOf(itemStat.statHash),
+        value: itemStat.value,
+        maximumValue: 0,
+        bar: false
       };
     }));
   }
