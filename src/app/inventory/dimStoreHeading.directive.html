@@ -11,7 +11,7 @@
         <div class="race-gender" ng-if="::!vm.store.isVault">{{ ::vm.store.genderRace }}</div>
         <div class="level" ng-if="::!vm.store.isVault">{{ vm.store.level }}</div>
       </div>
-      <div class="levelBar" ng-class="{ moteProgress: !vm.store.percentToNextLevel }" ng-if="::!vm.store.isVault" title="{{ vm.xpTillMote }}" dim-percent-width="vm.levelBar"></div>
+      <div class="levelBar" ng-class="{ moteProgress: !vm.store.percentToNextLevel }" ng-if="::!vm.store.isVault" press-tip="{{ vm.xpTillMote }}" dim-percent-width="vm.levelBar"></div>
     </div>
     <div class="currencies">
       <div class="currency" ng-if="::!!vm.store.isVault"> {{ vm.store.glimmer }} <img src="~app/images/glimmer.png"></div>
