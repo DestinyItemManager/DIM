@@ -1,5 +1,7 @@
 # Next
 
+# 4.15.0
+
 * D2 items with objectives now show them, and quests + milestones are displayed for your characters.
 * Custom loadouts return for D2.
 * D2 items now display their perks and mods.
