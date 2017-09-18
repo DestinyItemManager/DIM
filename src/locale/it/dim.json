@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "Armatura",
     "General": "Generale",
+    "Inventory": "Inventario",
     "Postmaster": "Amministratrice",
     "Progress": "Progesso",
     "Reputation": "Reputazione",
@@ -98,6 +99,9 @@
   },
   "FarmingMode": {
     "Configuration": "Configurazione",
+    "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
+    "D2Desc_female": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sulla {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
+    "D2Desc_male": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sul {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
     "Desc": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
     "Desc_female": "DIM sposta Engrammi e consumabili per Lumen dalla {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
     "Desc_male": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
@@ -372,7 +376,7 @@
     "ItemsWithIcon": "Gli oggetti con questa icona verranno equipaggiati. Clicca su un oggetto per scegliere se equipaggiarli o meno.",
     "LoadoutName": "Nome loadout...",
     "Loadouts": "Loadouts",
-    "MakeRoom": "Crea spazio per l'Amministratore",
+    "MakeRoom": "Crea spazio per l'Amministratrice",
     "MakeRoomDone": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dal {{store}}.",
     "MakeRoomDone_female": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dalla {{store}}.",
     "MakeRoomDone_male": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dal {{store}}.",

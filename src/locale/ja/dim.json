@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
+    "Inventory": "Inventory",
     "Postmaster": "ポストマスター",
     "Progress": "進行状況",
     "Reputation": "ランク",
@@ -98,6 +99,9 @@
   },
   "FarmingMode": {
     "Configuration": "設定",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
     "Desc_female": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
     "Desc_male": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
