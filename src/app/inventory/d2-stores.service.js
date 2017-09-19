@@ -154,7 +154,7 @@ export function D2StoresService(
     const dataDependencies = [
       D2Definitions.getDefinitions(),
       D2BucketsService.getBuckets(),
-      NewItemsService.loadNewItems(account),
+      NewItemsService.loadNewItems(account, 2),
       dimItemInfoService(account, 2),
       Destiny2Api.getStores(account)
     ];
@@ -197,7 +197,7 @@ export function D2StoresService(
         if (!firstLoad) {
           // Save the list of new item IDs
           NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems);
+          NewItemsService.saveNewItems(newItems, account, 2);
         }
 
         _stores = stores;
