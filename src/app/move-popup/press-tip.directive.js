@@ -30,7 +30,7 @@ export function PressTip() {
       $element.on('mouseenter', (e) => {
         timer = setTimeout(() => {
           showTip();
-        }, 300);
+        }, 100);
       });
 
       $element.on('mousedown touchstart', (e) => {
