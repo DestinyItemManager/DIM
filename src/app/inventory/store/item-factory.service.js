@@ -352,7 +352,7 @@ export function ItemFactory(
       console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
     }
 
-    item.infusable = createdItem.talentGrid && createdItem.talentGrid.infusable;
+    createdItem.infusable = createdItem.talentGrid && createdItem.talentGrid.infusable;
 
     try {
       createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
