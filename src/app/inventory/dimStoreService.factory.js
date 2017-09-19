@@ -151,8 +151,8 @@ export function StoreService(
     const dataDependencies = [
       dimDefinitions.getDefinitions(),
       dimBucketService.getBuckets(),
-      NewItemsService.loadNewItems(account),
-      dimItemInfoService(account),
+      NewItemsService.loadNewItems(account, 1),
+      dimItemInfoService(account, 1),
       Destiny1Api.getStores(account)
     ];
 
@@ -178,7 +178,7 @@ export function StoreService(
         if (!firstLoad) {
           // Save the list of new item IDs
           NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems);
+          NewItemsService.saveNewItems(newItems, account, 1);
         }
 
         _stores = stores;
