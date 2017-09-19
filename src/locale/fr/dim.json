@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "Armure",
     "General": "Général",
+    "Inventory": "Inventaire",
     "Postmaster": "Commis des postes",
     "Progress": "Progrès",
     "Reputation": "Estime",
@@ -98,6 +99,9 @@
   },
   "FarmingMode": {
     "Configuration": "Configuration",
+    "D2Desc": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
+    "D2Desc_female": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
+    "D2Desc_male": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
     "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "Desc_female": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "Desc_male": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
@@ -475,7 +479,7 @@
     "ShowAnimations": "Animer la brillance des nouveaux objets",
     "ShowAnimationsHelp": "Montrera la brillance animé des nouveaux objets sur les nouveaux objets. Désactiver cette option peut améliorer les performances de votre processeur.",
     "ShowElemental": "Afficher les icônes de dégâts élémentaire sur les armes",
-    "ShowOverlay": "Afficher les nouveaux items avec une brillante",
+    "ShowOverlay": "Afficher les nouveaux objets en surbrillance",
     "ShowReviews": "Montrer les notes d'évaluation sur les armes",
     "SizeItem": "Taille des objets",
     "SortName": "nom",

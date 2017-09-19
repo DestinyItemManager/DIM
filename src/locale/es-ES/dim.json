@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "Armadura",
     "General": "General",
+    "Inventory": "Inventory",
     "Postmaster": "Administración",
     "Progress": "Progreso",
     "Reputation": "Reputación",
@@ -98,6 +99,9 @@
   },
   "FarmingMode": {
     "Configuration": "Configuración",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "Desc_female": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "Desc_male": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",

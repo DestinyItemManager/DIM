@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "Armaduras",
     "General": "Geral",
+    "Inventory": "Inventário",
     "Postmaster": "Chefe do Correio",
     "Progress": "Progresso",
     "Reputation": "Reputação",
@@ -88,16 +89,19 @@
     "HelpPros": "Descreva os aspetos positivos desta arma (opcional)",
     "NoReviews": "Ainda não há análises para este item, sê o primeiro!",
     "Pros": "Prós",
-    "ReallyReport": "Report",
+    "ReallyReport": "Informar problema",
     "ServiceCallError": "O serviço de chamada do Destiny tracker falhou.",
     "ServiceSubmitError": "O serviço de submissão do Destiny tracker falhou.",
     "Submit": "Enviar",
     "ThankYou": "Obrigado por submeteres a tua análise! Ficará disponível dentro de momentos.",
-    "VerifyReport": "Are you sure you want to flag this review?",
+    "VerifyReport": "Tem certeza que deseja sinalizar esta revisão?",
     "YourReview": "A sua análise"
   },
   "FarmingMode": {
     "Configuration": "Configuração",
+    "D2Desc": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
+    "D2Desc_female": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
+    "D2Desc_male": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "Desc": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "Desc_female": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "Desc_male": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
@@ -500,7 +504,7 @@
   "Storage": {
     "BrowserMayClearData": "O navegador pode apagar esses dados se você ficar sem espaço ou não visitar DIM frequentemente.",
     "ChromeSyncStorage": "Chrome Sync (apenas Extensão)",
-    "ClearIgnoredUsers": "Clear Ignored Users",
+    "ClearIgnoredUsers": "Limpar Usuários Ignorados",
     "Details": {
       "ChromeSyncStorage": "Se você estiver logado no Chrome, isso vai sincronizar seus dados com outras instâncias do Chrome. Isso não funciona no site do DIM.",
       "GoogleDriveStorage": "DIM pode salvar dados no armazenamento do Google Drive. Se você logar no Google Drive em múltiplos navegadores, seus dados serão compartilhados em todos. Esses dados são guardados por conta da Bungie.",
@@ -517,7 +521,7 @@
     "GDriveSignInWarning": "Se você já salvou os dados do DIM no Google Drive, eles vão sobrescrever qualquer coisa salva localmente. Você pode querer salvar seus dados antes de logar.\n\nContinuar a logar no Google Drive?",
     "GoogleApiBlocked": "Google Drive não está disponível por que um bloqueador de conteúdo bloqueou o JavaScript. Por favor remova o DIM do bloqueio e tente novamente.",
     "GoogleDriveStorage": "Google Drive",
-    "IgnoredUsers": "{{value}} ignored users",
+    "IgnoredUsers": "{{value}} usuários ignorados",
     "Import": "Importar dados do DIM do arquivo",
     "ImportExport": "Dados de Back up",
     "ImportFromExtension": "Importar dados da extensão do Chrome DIM",

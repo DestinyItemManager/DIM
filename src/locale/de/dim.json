@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "Rüstung",
     "General": "Allgemein",
+    "Inventory": "Inventar",
     "Postmaster": "Poststelle",
     "Progress": "Fortschritt",
     "Reputation": "Ruf",
@@ -98,6 +99,9 @@
   },
   "FarmingMode": {
     "Configuration": "Einstellungen",
+    "D2Desc": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
+    "D2Desc_female": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
+    "D2Desc_male": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
     "Desc": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "Desc_female": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "Desc_male": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
