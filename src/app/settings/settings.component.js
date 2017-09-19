@@ -30,7 +30,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
   // TODO: angular media-query-switch directive
-  const phoneWidthQuery = window.matchMedia('(max-width: 414px)');
+  const phoneWidthQuery = window.matchMedia('(orientation: portrait) and (max-device-width: 750px)');
   function phoneWidthHandler(e) {
     $scope.$apply(() => {
       vm.isPhonePortrait = e.matches;
