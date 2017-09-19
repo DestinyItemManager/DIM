@@ -71,7 +71,8 @@ function SearchService(dimSettingsService) {
     equipment: ['equipment', 'equippable'],
     postmaster: ['postmaster', 'inpostmaster'],
     equipped: ['equipped'],
-    transferable: ['transferable', 'movable']
+    transferable: ['transferable', 'movable'],
+    infusable: ['infusable', 'infuse']
   };
 
   if (dimSettingsService.destinyVersion === 1) {
@@ -87,7 +88,6 @@ function SearchService(dimSettingsService) {
       reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
       ornament: ['ornament', 'ornamentmissing', 'ornamentunlocked'],
       engram: ['engram'],
-      infusable: ['infusable', 'infuse'],
       stattype: ['intellect', 'discipline', 'strength'],
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
       year: ['year1', 'year2', 'year3'],
