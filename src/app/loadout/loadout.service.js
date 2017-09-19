@@ -298,7 +298,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       // Stuff that's equipped on another character. We can bulk-dequip these
       const itemsToDequip = _.filter(items, (pseudoItem) => {
         const item = getStoreService().getItemAcrossStores(pseudoItem);
-        return item.owner !== store.id && item.equipped;
+        return item && item.owner !== store.id && item.equipped;
       });
 
       const scope = {
@@ -310,9 +310,9 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       let promise = $q.when();
 
       if (itemsToDequip.length > 1) {
-        const realItemsToDequip = itemsToDequip.map((i) => {
+        const realItemsToDequip = _.compact(itemsToDequip.map((i) => {
           return getStoreService().getItemAcrossStores(i);
-        });
+        }));
         const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
           const equipItems = _.compact(realItemsToDequip.map((i) => {
             return dimItemService.getSimilarItem(i, loadoutItemIds);
@@ -332,9 +332,9 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
             itemsToEquip = _.filter(itemsToEquip, (i) => {
               return _.find(scope.successfulItems, { id: i.id });
             });
-            const realItemsToEquip = itemsToEquip.map((i) => {
+            const realItemsToEquip = _.compact(itemsToEquip.map((i) => {
               return getLoadoutItem(i, store);
-            });
+            }));
 
             return dimItemService.equipItems(store, realItemsToEquip);
           } else {
@@ -394,55 +394,57 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
     const pseudoItem = items.shift();
     let item = getLoadoutItem(pseudoItem, store);
 
-    if (item.type === 'Material' || item.type === 'Consumable') {
-      // handle consumables!
-      const amountAlreadyHave = store.amountOfItem(pseudoItem);
-      let amountNeeded = pseudoItem.amount - amountAlreadyHave;
-      if (amountNeeded > 0) {
-        const otherStores = _.reject(getStoreService().getStores(), (otherStore) => {
-          return store.id === otherStore.id;
-        });
-        const storesByAmount = _.sortBy(otherStores.map((store) => {
-          return {
-            store: store,
-            amount: store.amountOfItem(pseudoItem)
-          };
-        }), 'amount').reverse();
+    if (item) {
+      if (item.type === 'Material' || item.type === 'Consumable') {
+        // handle consumables!
+        const amountAlreadyHave = store.amountOfItem(pseudoItem);
+        let amountNeeded = pseudoItem.amount - amountAlreadyHave;
+        if (amountNeeded > 0) {
+          const otherStores = _.reject(getStoreService().getStores(), (otherStore) => {
+            return store.id === otherStore.id;
+          });
+          const storesByAmount = _.sortBy(otherStores.map((store) => {
+            return {
+              store: store,
+              amount: store.amountOfItem(pseudoItem)
+            };
+          }), 'amount').reverse();
 
-        let totalAmount = amountAlreadyHave;
-        while (amountNeeded > 0) {
-          const source = _.max(storesByAmount, 'amount');
-          const amountToMove = Math.min(source.amount, amountNeeded);
-          const sourceItem = _.find(source.store.items, { hash: pseudoItem.hash });
+          let totalAmount = amountAlreadyHave;
+          while (amountNeeded > 0) {
+            const source = _.max(storesByAmount, 'amount');
+            const amountToMove = Math.min(source.amount, amountNeeded);
+            const sourceItem = _.find(source.store.items, { hash: pseudoItem.hash });
 
-          if (amountToMove === 0 || !sourceItem) {
-            promise = promise.then(() => {
-              const error = new Error($i18next.t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
-              error.level = 'warn';
-              return $q.reject(error);
-            });
-            break;
+            if (amountToMove === 0 || !sourceItem) {
+              promise = promise.then(() => {
+                const error = new Error($i18next.t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
+                error.level = 'warn';
+                return $q.reject(error);
+              });
+              break;
+            }
+
+            source.amount -= amountToMove;
+            amountNeeded -= amountToMove;
+            totalAmount += amountToMove;
+
+            promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove));
           }
-
-          source.amount -= amountToMove;
-          amountNeeded -= amountToMove;
-          totalAmount += amountToMove;
-
-          promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove));
         }
-      }
-    } else {
-      if (item.type === 'Class') {
-        item = _.find(store.items, {
-          hash: pseudoItem.hash
-        });
-      }
-
-      if (item) {
-        // Pass in the list of items that shouldn't be moved away
-        promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
       } else {
-        promise = $q.reject(new Error($i18next.t('Loadouts.DoesNotExist', { itemname: item.name })));
+        if (item.type === 'Class') {
+          item = _.find(store.items, {
+            hash: pseudoItem.hash
+          });
+        }
+
+        if (item) {
+          // Pass in the list of items that shouldn't be moved away
+          promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
+        } else {
+          promise = $q.reject(new Error($i18next.t('Loadouts.DoesNotExist', { itemname: item.name })));
+        }
       }
     }
 
