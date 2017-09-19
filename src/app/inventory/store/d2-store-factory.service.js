@@ -200,12 +200,12 @@ export function D2StoreFactory($i18next, dimInfoService) {
         },
         removeItem: function(item) {
           const result = StoreProto.removeItem.call(this, item);
-          this.vaultCounts[item.location.sort]--;
+          this.vaultCounts[item.location.vaultBucket.id].count--;
           return result;
         },
         addItem: function(item) {
           StoreProto.addItem.call(this, item);
-          this.vaultCounts[item.location.sort]++;
+          this.vaultCounts[item.location.vaultBucket.id].count++;
         }
       });
     }

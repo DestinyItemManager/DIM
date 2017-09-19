@@ -334,10 +334,19 @@ export function D2StoresService(
         return i.location.id;
       });
 
+      store.d2VaultCounts = {};
+
       // Fill in any missing buckets
       _.values(buckets.byType).forEach((bucket) => {
         if (!store.buckets[bucket.id]) {
           store.buckets[bucket.id] = [];
+        } else {
+          const vaultBucketId = bucket.accountWide ? bucket.id : bucket.vaultBucket.id;
+          store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
+            count: 0,
+            bucket: bucket.accountWide ? bucket : bucket.vaultBucket
+          };
+          store.d2VaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
         }
       });
 
