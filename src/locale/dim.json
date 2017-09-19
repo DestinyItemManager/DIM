@@ -176,6 +176,7 @@
     "Ornament": "Shows items with ornaments and filters for their status.",
     "PartialMatch": "Shows items where their name has a partial match to the filter text.",
     "Postmaster": "Items that are currently in the Postmaster.",
+    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",

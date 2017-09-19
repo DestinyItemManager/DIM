@@ -71,7 +71,8 @@ function SearchService(dimSettingsService) {
     equipment: ['equipment', 'equippable'],
     postmaster: ['postmaster', 'inpostmaster'],
     equipped: ['equipped'],
-    transferable: ['transferable', 'movable']
+    transferable: ['transferable', 'movable'],
+    infusable: ['infusable', 'infuse']
   };
 
   if (dimSettingsService.destinyVersion === 1) {
@@ -87,13 +88,16 @@ function SearchService(dimSettingsService) {
       reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
       ornament: ['ornament', 'ornamentmissing', 'ornamentunlocked'],
       engram: ['engram'],
-      infusable: ['infusable', 'infuse'],
       stattype: ['intellect', 'discipline', 'strength'],
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
       year: ['year1', 'year2', 'year3'],
       vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
       activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
-      cosmetic: ['cosmetic'],
+      cosmetic: ['cosmetic']
+    });
+  } else {
+    Object.assign(filterTrans, {
+      powermod: ['powermod', 'haspowermod']
     });
   }
 
@@ -806,6 +810,9 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     },
     transferable: function(predicate, item) {
       return !item.notransfer;
+    },
+    powermod: function(predicate, item) {
+      return item.primStat && (item.primStat.value !== item.basePower);
     },
     rpm: function(predicate, item) {
       return filterByStats(predicate, item, 'rpm');

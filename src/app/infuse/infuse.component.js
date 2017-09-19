@@ -34,20 +34,6 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
     });
   }
 
-  function getBasePowerLevel(item) {
-    const MOD_CATEGORY = 59;
-    const POWER_STAT_HASH = 1935470627;
-    const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
-      return plug &&
-        plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
-        plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
-    }) : [];
-
-    const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH).value);
-
-    return item.primStat.value - modPower;
-  }
-
   angular.extend(vm, {
     getAllItems: true,
     showLockedItems: false,
@@ -86,8 +72,8 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
 
       if (vm.source.destinyVersion === 2) {
         // Rules taken from  https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
-        const sourceBasePower = getBasePowerLevel(vm.source);
-        const targetBasePower = getBasePowerLevel(vm.target);
+        const sourceBasePower = vm.source.basePower;
+        const targetBasePower = vm.target.basePower;
         const powerDiff = Math.max(0, targetBasePower - sourceBasePower);
         const quality = vm.target.infusionProcess;
         const transferAmount = powerDiff * quality.baseQualityTransferRatio;
