@@ -511,7 +511,7 @@ export function D2ItemFactory(
         enabled: socket.isEnabled,
         enableFailReasons: failReasons
       };
-      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 ? dimSocket.reusablePlugs : [dimSocket.plug];
+      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 && (!plug || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? dimSocket.reusablePlugs : [dimSocket.plug];
       return dimSocket;
     });
 

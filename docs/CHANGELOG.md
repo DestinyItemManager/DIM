@@ -1,6 +1,7 @@
 # Next
 
 * Reputation emblems are the same size as items now, however you have item size set.
+* Shaders show up in an item's mods now.
 
 # 4.15.0
 
