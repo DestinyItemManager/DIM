@@ -1,5 +1,7 @@
 # Next
 
+* Reputation emblems are the same size as items now, however you have item size set.
+
 # 4.15.0
 
 * D2 items with objectives now show them, and quests + milestones are displayed for your characters.
