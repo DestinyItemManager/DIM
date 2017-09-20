@@ -218,7 +218,6 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
     const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
 
     return (Math.floor(items.length * _.reduce(items, (memo, item) => {
-      console.log(item.name, item.primStat.value, item.type === 'ClassItem' ? 'General' : item.location.sort, itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
       return memo + (item.primStat.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
     }, 0)) / items.length).toFixed(1);
   }
