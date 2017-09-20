@@ -277,7 +277,10 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   // Move items matching the current search. Max 9 per type.
   vm.searchLoadout = function searchLoadout($event) {
     const items = _.filter(storeService.getAllItems(), (i) => {
-      return i.visible && !i.location.inPostmaster;
+      return i.visible &&
+        !i.location.inPostmaster &&
+        !i.notransfer &&
+        i.owner !== vm.store.id;
     });
 
     const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) => {
