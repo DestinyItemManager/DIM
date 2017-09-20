@@ -10,7 +10,7 @@
   display: inline-block;
 
   svg {
-    width: var(--item-size);
-    height: var(--item-size);
+    width: calc(var(--item-size) + 4px);
+    height: calc(var(--item-size) + 4px);
   }
 }
