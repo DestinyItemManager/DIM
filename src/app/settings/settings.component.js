@@ -29,6 +29,16 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
   vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
+  // TODO: angular media-query-switch directive
+  const phoneWidthQuery = window.matchMedia('(orientation: portrait) and (max-device-width: 750px)');
+  function phoneWidthHandler(e) {
+    $scope.$apply(() => {
+      vm.isPhonePortrait = e.matches;
+    });
+  }
+  phoneWidthQuery.addListener(phoneWidthHandler);
+  vm.isPhonePortrait = phoneWidthQuery.matches;
+
   vm.filters = {
     vendors: {
       FWC: $i18next.t('Filter.Vendors.FWC'),

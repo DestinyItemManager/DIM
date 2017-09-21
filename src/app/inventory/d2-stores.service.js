@@ -155,8 +155,8 @@ export function D2StoresService(
     const dataDependencies = [
       D2Definitions.getDefinitions(),
       D2BucketsService.getBuckets(),
-      NewItemsService.loadNewItems(account),
-      dimItemInfoService(account),
+      NewItemsService.loadNewItems(account, 2),
+      dimItemInfoService(account, 2),
       Destiny2Api.getStores(account)
     ];
 
@@ -166,8 +166,6 @@ export function D2StoresService(
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);
 
-
-        console.log(profileInfo);
         // TODO: components may be hidden (privacy)
 
         const processVaultPromise = processVault(defs,
@@ -200,7 +198,7 @@ export function D2StoresService(
         if (!firstLoad) {
           // Save the list of new item IDs
           NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems);
+          NewItemsService.saveNewItems(newItems, account, 2);
         }
 
         _stores = stores;
@@ -218,7 +216,6 @@ export function D2StoresService(
         $rootScope.$broadcast('d2-stores-updated', {
           stores: stores
         });
-        console.log(stores);
         return stores;
       })
       .catch((e) => {

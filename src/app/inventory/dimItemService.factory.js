@@ -241,7 +241,6 @@ export function ItemService(
    * Bulk equip items. Only use for multiple equips at once.
    */
   function equipItems(store, items) {
-    const storeService = getStoreService(items[0]);
     // Check for (and move aside) exotics
     const extraItemsToEquip = _.compact(items.map((i) => {
       if (i.isExotic) {
@@ -252,7 +251,7 @@ export function ItemService(
           if (!similarItem) {
             return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: otherExotic.name })));
           }
-          const target = storeService.getStore(similarItem.owner);
+          const target = getStoreService(similarItem).getStore(similarItem.owner);
 
           if (store.id === target.id) {
             return similarItem;
@@ -268,6 +267,9 @@ export function ItemService(
     return $q.all(extraItemsToEquip).then((extraItems) => {
       items = items.concat(extraItems);
 
+      if (items.length === 0) {
+        return $q.when([]);
+      }
       if (items.length === 1) {
         return equipItem(items[0]);
       }

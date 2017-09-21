@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "Rüstung",
     "General": "Allgemein",
+    "Inventory": "Inventar",
     "Postmaster": "Poststelle",
     "Progress": "Fortschritt",
     "Reputation": "Ruf",
@@ -98,6 +99,9 @@
   },
   "FarmingMode": {
     "Configuration": "Einstellungen",
+    "D2Desc": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
+    "D2Desc_female": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
+    "D2Desc_male": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
     "Desc": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "Desc_female": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "Desc_male": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
@@ -172,6 +176,7 @@
     "Ornament": "Zeigt Items mit Ornamenten und filtert nach ihrem Status.",
     "PartialMatch": "Zeigt Items, deren Name eine partielle Übereinstimmung mit dem Filtertext hat.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
+    "PowerMod": "Items, die ein Mod haben, um das Powerlevel zu erhöhen.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
     "Rated": "Zeigt alle Waffen, die eine Bewertung auf Destiny Tracker haben.",
@@ -492,6 +497,7 @@
     "OfMaxRoll": "{{range}} des max. Rolls",
     "PercentHelp": "Klicke um mehr Informationen über die Wert-Qualität zu erhalten.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp bis 5 Lichtpartikel.",
+    "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp bis zum glänzenden Engramm.",
     "Quality": "Wert-Qualität",
     "Strength": "Stärke",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",

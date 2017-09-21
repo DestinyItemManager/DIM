@@ -27,6 +27,23 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
     });
   });
 
+  vm.swipeLeft = () => {
+    const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
+    const currentIndex = sortedStores.indexOf(vm.currentStore);
+
+    if (currentIndex < (sortedStores.length - 1)) {
+      vm.currentStore = sortedStores[currentIndex + 1];
+    }
+  };
+
+  vm.swipeRight = () => {
+    const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
+    const currentIndex = sortedStores.indexOf(vm.currentStore);
+
+    if (currentIndex > 0) {
+      vm.currentStore = sortedStores[currentIndex - 1];
+    }
+  };
   vm.buckets = null;
   vm.settings = dimSettingsService;
   vm.toggleSection = function(id) {
@@ -39,7 +56,7 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
   };
 
   // TODO: angular media-query-switch directive
-  const phoneWidthQuery = window.matchMedia('(max-width: 414px)');
+  const phoneWidthQuery = window.matchMedia('(orientation: portrait) and (max-device-width: 750px)');
   function phoneWidthHandler(e) {
     $scope.$apply(() => {
       vm.isPhonePortrait = e.matches;
@@ -52,8 +69,13 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
     vm.vault = _.find(vm.stores, 'isVault');
 
     if (vm.stores && vm.stores.length) {
-      vm.currentStore = _.find(vm.stores, 'current');
-      vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
+      if (!vm.currentStore || !_.find(vm.stores, { id: vm.currentStore.id })) {
+        vm.currentStore = _.find(vm.stores, 'current');
+        vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
+      } else {
+        vm.currentStore = _.find(vm.stores, { id: vm.currentStore.id });
+        vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
+      }
     } else {
       vm.currentStore = null;
     }

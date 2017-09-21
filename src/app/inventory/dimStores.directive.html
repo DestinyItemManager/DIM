@@ -2,42 +2,44 @@
   <div ng-if="vm.isPhonePortrait && vm.currentStore">
     <!-- TODO: move most of these into their own components? -->
     <div class="store-header">
-      <store-pager on-store-change="vm.currentStore = store" initial-index="vm.currentStoreIndex">
+      <store-pager on-store-change="vm.currentStore = store" initial-index="vm.currentStoreIndex" stores="vm.stores" current-store="vm.currentStore">
         <dim-store-heading
           class="character-swipe"
+          current-store="vm.currentStore"
           ng-class="{ current: vm.currentStore.current }"
           store-data="store"
           internal-loadout-menu="false"
-          ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id"></dim-store-heading>
+          ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id"
+          on-tapped="vm.currentStore = store"></dim-store-heading>
       </store-pager>
-      <div class="detached" loadout-id="{{vm.currentStore.id}}"></div>
     </div>
-
-    <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">
-      <div class="title">
-        <span class="collapse-handle" ng-click="vm.toggleSection(category)"><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.{{ ::category }}"></span></span>
-        <span ng-if="::vm.stores[0].destinyVersion != 2 && vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{ ::vm.vault.capacityForItem({sort: category}) }}</span>
-      </div>
-      <div class="store-row items" ng-if="!vm.settings.collapsedSections[category]" ng-repeat="bucket in ::buckets track by bucket.id"><i ng-click="vm.toggleSection(bucket.id)" class="fa collapse" ng-class="vm.settings.collapsedSections[bucket.id] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
-        <div ng-if="!vm.settings.collapsedSections[bucket.id]" class="store-cell" ng-class="{ vault: vm.currentStore.isVault }">
-          <dim-store-bucket
-            ng-if="::!store.isVault || (vm.vault.vaultCounts[category] !== undefined && (store.destinyVersion ==1 || bucket.vaultBucket))"
-            store-data="bucket.accountWide ? vm.vault : vm.currentStore"
-            bucket-items="(bucket.accountWide ? vm.vault : vm.currentStore).buckets[bucket.id]"
-            bucket="bucket"></dim-store-bucket>
+    <div class="detached" loadout-id="{{vm.currentStore.id}}"></div>
+    <div ng-swipe-right="vm.swipeRight($event)" ng-swipe-left="vm.swipeLeft($event)">
+      <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">
+        <div class="title">
+          <span class="collapse-handle" ng-click="vm.toggleSection(category)"><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.{{ ::category }}"></span></span>
+          <span ng-if="::vm.stores[0].destinyVersion != 2 && vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{ ::vm.vault.capacityForItem({sort: category}) }}</span>
         </div>
-        <div ng-if="vm.settings.collapsedSections[bucket.id]" ng-click="vm.toggleSection(bucket.id)" class="store-text collapse"><span ng-i18next="[i18next]({ bucket: bucket.name })Bucket.Show"></span></div>
+        <div class="store-row items" ng-if="!vm.settings.collapsedSections[category]" ng-repeat="bucket in ::buckets track by bucket.id"><i ng-click="vm.toggleSection(bucket.id)" class="fa collapse" ng-class="vm.settings.collapsedSections[bucket.id] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
+          <div ng-if="!vm.settings.collapsedSections[bucket.id]" class="store-cell" ng-class="{ vault: vm.currentStore.isVault }">
+            <dim-store-bucket
+              ng-if="::!store.isVault || (vm.vault.vaultCounts[category] !== undefined && (store.destinyVersion ==1 || bucket.vaultBucket))"
+              store-data="bucket.accountWide ? vm.vault : vm.currentStore"
+              bucket-items="(bucket.accountWide ? vm.vault : vm.currentStore).buckets[bucket.id]"
+              bucket="bucket"></dim-store-bucket>
+          </div>
+          <div ng-if="vm.settings.collapsedSections[bucket.id]" ng-click="vm.toggleSection(bucket.id)" class="store-text collapse"><span ng-i18next="[i18next]({ bucket: bucket.name })Bucket.Show"></span></div>
+        </div>
+      </div>
+      <div class="title" ng-click="vm.toggleSection('Reputation')">
+        <span><i class="fa collapse" ng-class="vm.settings.collapsedSections['Reputation'] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.Reputation"></span></span>
+      </div>
+      <div class="store-row items reputation" ng-if="!vm.settings.collapsedSections['Reputation']">
+        <div class="store-cell" ng-class="::{ vault: vm.currentStore.isVault }">
+          <dim-store-reputation store-data="vm.currentStore"></dim-store-reputation>
+        </div>
       </div>
     </div>
-    <div class="title" ng-click="vm.toggleSection('Reputation')">
-      <span><i class="fa collapse" ng-class="vm.settings.collapsedSections['Reputation'] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.Reputation"></span></span>
-    </div>
-    <div class="store-row items reputation" ng-if="!vm.settings.collapsedSections['Reputation']">
-      <div class="store-cell" ng-class="::{ vault: vm.currentStore.isVault }">
-        <dim-store-reputation store-data="vm.currentStore"></dim-store-reputation>
-      </div>
-    </div>
-
   </div>
 
   <div ng-if="!vm.isPhonePortrait">

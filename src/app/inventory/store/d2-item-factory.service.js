@@ -196,6 +196,11 @@ export function D2ItemFactory(
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
+    // https://github.com/Bungie-net/api/issues/134
+    if (instanceDef.primaryStat && itemType === 'Class') {
+      delete instanceDef.primaryStat;
+    }
+
     const createdItem = angular.extend(Object.create(ItemProto), {
       // figure out what year this item is probably from
       destinyVersion: 2,
@@ -243,7 +248,7 @@ export function D2ItemFactory(
     });
 
     // *able
-    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable);
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
     createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 1480404414);
 
@@ -274,27 +279,34 @@ export function D2ItemFactory(
           buildHiddenStats(item, itemDef, defs.Stat)
         ), 'sort');
       }
+      if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
+        createdItem.stats = _.sortBy(buildInvestmentStats(item, itemDef.investmentStats, defs.Stat));
+      }
     } catch (e) {
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     }
 
     try {
       createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
-      if (createdItem.objectives) {
-        console.log(createdItem.name, createdItem.bucket.hash, createdItem, createdItem.objectives, createdItem.objectives.progress, createdItem.objectives.completionValue, createdItem.objectives.progress / createdItem.objectives.completionValue);
-      }
     } catch (e) {
       console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
     }
 
     try {
-      console.log(itemDef.displayProperties.name, { itemDef, item, itemComponents });
       createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
-      if (createdItem.objectives) {
-        console.log(createdItem.name, createdItem.bucket.hash, createdItem, createdItem.objectives, createdItem.objectives.progress, createdItem.objectives.completionValue, createdItem.objectives.progress / createdItem.objectives.completionValue);
-      }
     } catch (e) {
       console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
+    }
+
+    if (itemDef.perks && itemDef.perks.length) {
+      createdItem.perks = itemDef.perks.map((p) => {
+        return Object.assign({
+          requirement: p.requirementDisplayString
+        }, defs.SandboxPerk.get(p.perkHash));
+      }).filter((p) => p.isDisplayable);
+      if (createdItem.perks.length === 0) {
+        createdItem.perks = null;
+      }
     }
 
     createdItem.index = createItemIndex(createdItem);
@@ -308,6 +320,19 @@ export function D2ItemFactory(
           return 0;
         }
       });
+    }
+
+    // Infusion
+    const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
+    createdItem.infusionProcess = tier && tier.infusionProcess;
+    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName.length);
+    createdItem.infusionQuality = itemDef.quality || null;
+
+    if (createdItem.primStat) {
+      createdItem.basePower = getBasePowerLevel(createdItem);
+      if (createdItem.basePower !== createdItem.primStat.value) {
+        createdItem.complete = true;
+      }
     }
 
     return createdItem;
@@ -413,6 +438,28 @@ export function D2ItemFactory(
     }));
   }
 
+
+  function buildInvestmentStats(item, itemStats, statDefs) {
+    return _.compact(_.map(itemStats, (itemStat) => {
+      const def = statDefs.get(itemStat.statTypeHash);
+      if (!def || !itemStat || itemStat.statTypeHash === 1935470627 /* Power */) {
+        return undefined;
+      }
+
+      return {
+        base: itemStat.value,
+        bonus: 0,
+        statHash: itemStat.statHash,
+        name: def.displayProperties.name,
+        id: item.itemInstanceId,
+        sort: statWhiteList.indexOf(itemStat.statHash),
+        value: itemStat.value,
+        maximumValue: 0,
+        bar: false
+      };
+    }));
+  }
+
   function buildObjectives(item, objectivesMap, objectiveDefs) {
     let objectives = objectivesMap[item.itemInstanceId];
     if (objectives) {
@@ -465,7 +512,7 @@ export function D2ItemFactory(
         enabled: socket.isEnabled,
         enableFailReasons: failReasons
       };
-      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 ? dimSocket.reusablePlugs : [dimSocket.plug];
+      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 && (!plug || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? dimSocket.reusablePlugs : [dimSocket.plug];
       return dimSocket;
     });
 
@@ -477,14 +524,24 @@ export function D2ItemFactory(
     });
 
     const dimSockets = {
-      // itemDef,
-      // defSockets: itemDef.sockets,
-      // rawSockets: sockets,
       sockets: realSockets, // Flat list of sockets
       categories // Sockets organized by category
     };
-    console.log(dimSockets);
 
     return dimSockets;
+  }
+
+  function getBasePowerLevel(item) {
+    const MOD_CATEGORY = 59;
+    const POWER_STAT_HASH = 1935470627;
+    const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
+      return plug &&
+        plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
+        plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
+    }) : [];
+
+    const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH).value);
+
+    return item.primStat.value - modPower;
   }
 }

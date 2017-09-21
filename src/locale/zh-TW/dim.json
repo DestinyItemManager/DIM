@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "Armor",
     "General": "General",
+    "Inventory": "Inventory",
     "Postmaster": "Postmaster",
     "Progress": "Progress",
     "Reputation": "Reputation",
@@ -98,6 +99,9 @@
   },
   "FarmingMode": {
     "Configuration": "Configuration",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
@@ -172,6 +176,7 @@
     "Ornament": "Shows items with ornaments and filters for their status.",
     "PartialMatch": "Shows items where their name has a partial match to the filter text.",
     "Postmaster": "Items that are currently in the Postmaster.",
+    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
@@ -492,6 +497,7 @@
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
+    "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",

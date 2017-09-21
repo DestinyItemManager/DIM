@@ -8,7 +8,7 @@
 
         <div class="infuseSourceDetailsRow">
           <div><strong>{{ vm.source.name }}</strong></div>
-          <div>{{ vm.source.type }}</div>
+          <div>{{ vm.source.destinyVersion === 1 ? vm.source.type : vm.source.typeName }}</div>
         </div>
 
         <div class="infuseSourceDetailsRow">
@@ -36,10 +36,12 @@
       <div ng-show="vm.infused != 0">
         <dim-simple-item class="infusedItem" item-data="vm.target"></dim-simple-item>
         <div class="result">
-          <div ng-i18next="Infusion.BringGear"></div>
-          <span class="bigValue">{{ vm.infused }}</span>
-          <span class="green">(+ {{ vm.infused - vm.source.primStat.value }})</span>
           <div>
+            <div ng-i18next="Infusion.BringGear"></div>
+            <span class="bigValue">{{ vm.infused }}</span>
+            <span class="green">(+ {{ vm.infused - vm.source.primStat.value }})</span>
+          </div>
+          <div ng-if="vm.source.destinyVersion === 1">
             <span> 3 <span class="currency"><img alt="{{ ::vm.items[2534352370].itemName }}" title="{{ ::vm.items[2534352370].itemName }}" ng-src="{{ vm.items[2534352370].icon | bungieIcon }}"></span></span>
             <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="{{ ::vm.items[452597397].itemName }}" title="{{ ::vm.items[452597397].itemName }}" ng-src="{{ vm.items[452597397].icon | bungieIcon }}"></span></span>
             <span> + 250 <span class="currency"><img alt="{{ ::vm.items[3159615086].itemName }}" title="{{ ::vm.items[3159615086].itemName }}" ng-src="{{ vm.items[3159615086].icon | bungieIcon }}"></span></span>

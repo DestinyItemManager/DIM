@@ -6,6 +6,7 @@ import DragAndDropModule from 'angular-native-dragdrop';
 import ngSanitize from 'angular-sanitize';
 
 import MessagesModule from 'angular-messages';
+import TouchModule from 'angular-touch';
 
 import RateLimiterModule from 'ng-http-rate-limiter';
 import SliderModule from 'angularjs-slider';
@@ -47,6 +48,7 @@ const dependencies = [
   DialogModule,
   DragAndDropModule,
   MessagesModule,
+  TouchModule,
   ngI18Next,
   ngSanitize,
   RateLimiterModule,

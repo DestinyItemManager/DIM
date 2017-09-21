@@ -99,6 +99,9 @@
   },
   "FarmingMode": {
     "Configuration": "Configuration",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
@@ -113,10 +116,7 @@
     "OutOfRoom": "You're out of space to move items off of {{character}}. Time to decrypt some engrams and clear out the trash!",
     "OutOfRoomTitle": "Out of Room",
     "Quickmove": "Quick Move",
-    "Stop": "Stop",
-    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room."
+    "Stop": "Stop"
   },
   "Filter": {
     "Activities": {
@@ -176,6 +176,7 @@
     "Ornament": "Shows items with ornaments and filters for their status.",
     "PartialMatch": "Shows items where their name has a partial match to the filter text.",
     "Postmaster": "Items that are currently in the Postmaster.",
+    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
@@ -278,7 +279,7 @@
       "Vault": "There are too many '{{itemtype}}' items in the {{store}}."
     },
     "Classified": "This item is classified and cannot be transferred at this time.",
-    "Classified2": "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
+    "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
     "Deequip": "Cannot find another item to equip in order to dequip {{itemname}}",
     "ExoticError": "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
@@ -496,6 +497,7 @@
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
+    "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
