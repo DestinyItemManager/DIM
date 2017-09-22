@@ -145,6 +145,12 @@ dim-store-heading {
   align-items: center;
   justify-content: space-between;
   opacity: 0.8;
+  max-width: 230px;
+
+  store-pager & {
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   height: 16px;
   margin-top: 3px;
