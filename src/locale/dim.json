@@ -490,6 +490,7 @@
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {
+    "MaxBasePower": "Max Base Power (w/o mods)",
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",

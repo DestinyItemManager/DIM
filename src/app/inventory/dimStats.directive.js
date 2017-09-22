@@ -28,6 +28,7 @@ function StatsCtrl($scope, $i18next) {
       vm.stats.STAT_DISCIPLINE,
       vm.stats.STAT_STRENGTH
     ] : [
+      vm.stats.maxBasePower,
       vm.stats[2996146975],
       vm.stats[392767087],
       vm.stats[1943323491]
@@ -44,7 +45,7 @@ function StatsCtrl($scope, $i18next) {
           }
           stat.tooltip = next + cooldown;
         } else {
-          stat.tooltip = `${stat.name}: ${stat.value}/${stat.tierMax}`;
+          stat.tooltip = `${stat.name}: ${stat.value} / ${stat.tierMax}`;
         }
       }
     });
