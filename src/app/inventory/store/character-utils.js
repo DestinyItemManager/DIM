@@ -103,6 +103,7 @@ export function getCharacterStatsData(statDefs, data) {
     if (statsWithTiers.has(statId)) {
       statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
       statHash.tier = Math.floor(statHash.normalized / 60);
+      statHash.tierMax = 60;
       statHash.tiers = [];
       statHash.remaining = statHash.value;
       for (let t = 0; t < 5; t++) {
