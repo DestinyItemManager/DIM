@@ -23,9 +23,9 @@
         <div class="store-row items" ng-if="!vm.settings.collapsedSections[category]" ng-repeat="bucket in ::buckets track by bucket.id"><i ng-click="vm.toggleSection(bucket.id)" class="fa collapse" ng-class="vm.settings.collapsedSections[bucket.id] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
           <div ng-if="!vm.settings.collapsedSections[bucket.id]" class="store-cell" ng-class="{ vault: vm.selectedStore.isVault }">
             <dim-store-bucket
-              ng-if="::!store.isVault || (vm.vault.vaultCounts[category] !== undefined && (store.destinyVersion ==1 || bucket.vaultBucket))"
-              store-data="bucket.accountWide ? vm.vault : vm.selectedStore"
-              bucket-items="(bucket.accountWide ? vm.vault : vm.selectedStore).buckets[bucket.id]"
+              ng-if="::(vm.vault.vaultCounts[category] !== undefined && (store.destinyVersion == 1 || bucket.vaultBucket))"
+              store-data="bucket.accountWide && !vm.selectedStore.isVault ? vm.currentStore : vm.selectedStore"
+              bucket-items="(bucket.accountWide && !vm.selectedStore.isVault ? vm.currentStore : vm.selectedStore).buckets[bucket.id]"
               bucket="bucket"></dim-store-bucket>
           </div>
           <div ng-if="vm.settings.collapsedSections[bucket.id]" ng-click="vm.toggleSection(bucket.id)" class="store-text collapse"><span ng-i18next="[i18next]({ bucket: bucket.name })Bucket.Show"></span></div>
@@ -55,6 +55,12 @@
       </div>
       <div class="store-row items" ng-if="!vm.settings.collapsedSections[category]" ng-repeat="bucket in ::buckets track by bucket.id"><i ng-click="vm.toggleSection(bucket.id)" class="fa collapse" ng-class="vm.settings.collapsedSections[bucket.id] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
         <div ng-if="bucket.accountWide && !vm.settings.collapsedSections[bucket.id]" class="store-cell account-wide">
+          <dim-store-bucket
+            store-data="vm.currentStore"
+            bucket-items="vm.currentStore.buckets[bucket.id]"
+            bucket="bucket"></dim-store-bucket>
+        </div>
+        <div ng-if="bucket.accountWide && !vm.settings.collapsedSections[bucket.id]" class="store-cell vault">
           <dim-store-bucket
             store-data="vm.vault"
             bucket-items="vm.vault.buckets[bucket.id]"
