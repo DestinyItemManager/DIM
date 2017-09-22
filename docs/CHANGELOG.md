@@ -2,6 +2,13 @@
 
 * Reputation emblems are the same size as items now, however you have item size set.
 * Shaders show up in an item's mods now.
+* Transfering search loadouts is more reliable.
+* Fixed a serious bug with storage that may have deleted your tags and notes. It's fixed now, but hopefully you had a backup...
+* Highlight mods that increase an item's power with a gold border. New 'is:powermod' search keyword can find them all.
+* Phone mode should trigger even on really big phones.
+* More places can be pressed to show a tooltip.
+* Fixed showing quality for D1 items.
+* D2 subclasses are diamonds instead of squares.
 
 # 4.15.0
 
