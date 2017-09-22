@@ -1,8 +1,12 @@
-<div class="stat-bars">
+<div class="stat-bars" ng-class="{ destiny2: vm.destinyVersion == 2 }">
   <div class="stat" press-tip="{{ stat.tooltip }}" ng-repeat="stat in vm.statList track by stat.name">
     <img ng-src="{{ ::stat.icon }}">
-    <div class="bar" ng-repeat="n in stat.tiers track by $index">
+    <div ng-if="stat.tiers.length == 1">
+      {{ stat.value }}
+    </div>
+    <div ng-if="stat.tiers.length > 1" class="bar" ng-repeat="n in stat.tiers track by $index">
       <div class="progress" ng-class="{ complete: vm.destinyVersion == 2 || (n / stat.tierMax) === 1 }" dim-percent-width="n / stat.tierMax"></div>
+    </div>
     </div>
   </div>
 </div>
