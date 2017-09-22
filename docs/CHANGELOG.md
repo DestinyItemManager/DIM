@@ -9,6 +9,7 @@
 * More places can be pressed to show a tooltip.
 * Fixed showing quality for D1 items.
 * D2 subclasses are diamonds instead of squares.
+* Max Base Power, Mobility, Resilience, and Recovery are now shown for each character.
 
 # 4.15.0
 
