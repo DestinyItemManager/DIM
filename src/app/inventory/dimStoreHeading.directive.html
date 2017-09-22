@@ -15,7 +15,7 @@
     </div>
     <div class="currencies">
       <div class="currency" ng-if="::!!vm.store.isVault"> {{ vm.store.glimmer }} <img src="~app/images/glimmer.png"></div>
-      <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img src="~app/images/legendaryMarks.png"></div>
+      <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img ng-if="vm.store.destinyVersion == 1" src="~app/images/legendaryMarks.png"><img ng-if="vm.store.destinyVersion == 2" src="~app/images/legendaryShards.png"></div>
     </div>
     <i class="loadout-button fa fa-chevron-circle-down" ng-i18next="[title]Loadouts.Loadouts"></i>
   </div>
