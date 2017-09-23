@@ -7,7 +7,7 @@
 @import '../../scss/variables.scss';
 
 .move-popup-dialog {
-  height: fit-content;
+  bottom: initial !important;
 
   .arrow {
     width: 0;

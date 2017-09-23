@@ -16,6 +16,7 @@
 * Search keywords are now case-insensitive.
 * You can now lock and unlock D2 items.
 * Equipping an exotic emote won't unequip your exotic sparrow and vice versa.
+* Item popups aren't weirdly tall on Firefox anymore.
 
 # 4.15.0
 
