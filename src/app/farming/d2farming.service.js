@@ -26,9 +26,7 @@ export function D2FarmingService($rootScope,
 
   function getMakeRoomBuckets() {
     return D2BucketsService.getBuckets().then((buckets) => {
-      const makeRoomBuckets = Object.values(buckets.byHash).filter((b) => b.category === 3 && b.type);
-      console.log({ makeRoomBuckets });
-      return makeRoomBuckets;
+      return Object.values(buckets.byHash).filter((b) => b.category === 3 && b.type);
     });
   }
 

@@ -134,7 +134,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
         level: character.levelProgression.level, // Maybe?
         powerLevel: character.light,
-        // stats: getCharacterStatsData(defs.Stat, character.characterBase),
+        stats: getCharacterStatsData(defs.Stat, character.stats),
         class: getClass(classy.classType),
         classType: classy.classType,
         className: className,
@@ -149,7 +149,6 @@ export function D2StoreFactory($i18next, dimInfoService) {
     },
 
     makeVault(buckets, profileCurrencies) {
-      // TODO: get this right
       const glimmer = _.find(profileCurrencies, (cur) => cur.itemHash === 3159615086);
       const legendary = _.find(profileCurrencies, (cur) => cur.itemHash === 1022552290);
       const currencies = {
@@ -211,4 +210,30 @@ export function D2StoreFactory($i18next, dimInfoService) {
       });
     }
   };
+
+  /**
+   * Compute character-level stats.
+   */
+  function getCharacterStatsData(statDefs, stats) {
+    const statWhitelist = [2996146975, 392767087, 1943323491];
+    const ret = {};
+
+    // Fill in missing stats
+    statWhitelist.forEach((statHash) => {
+      const def = statDefs.get(statHash);
+      const value = stats[statHash] || 0;
+      const stat = {
+        id: statHash,
+        name: def.displayProperties.name,
+        description: def.displayProperties.description,
+        value,
+        icon: `https://www.bungie.net${def.displayProperties.icon}`,
+        tiers: [value],
+        tierMax: 10,
+        tier: 0
+      };
+      ret[statHash] = stat;
+    });
+    return ret;
+  }
 }

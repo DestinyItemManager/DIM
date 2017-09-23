@@ -95,6 +95,7 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
    * which can detect errors related to auth (expired token, etc), refresh and retry.
    */
   function responseHandler(response) {
+    console.log('responseHandler', response);
     if (response.config.url.match(matcher) &&
         !response.config.triedRefresh && // Only try once, to avoid infinite loop
         (response.status === 401 ||

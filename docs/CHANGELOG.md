@@ -9,6 +9,7 @@
 * More places can be pressed to show a tooltip.
 * Fixed showing quality for D1 items.
 * D2 subclasses are diamonds instead of squares.
+* Max Base Power, Mobility, Resilience, and Recovery are now shown for each character.
 * Legendary shards have the right icon now.
 * Fix newly created loadouts showing no items.
 * Inventory (mods, shaders, and consumables) in your vault now show up separated into the vault, and you can transfer them to and from the vault.
