@@ -491,10 +491,10 @@
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {
-    "MaxBasePower": "Max Base Power (w/o mods)",
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",
+    "MaxBasePower": "Max Base Power (w/o mods)",
     "NoBonus": "No Bonus",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
