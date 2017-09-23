@@ -31,12 +31,12 @@
     <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.maxLightLoadout($event)">
         <span class="light" ng-bind="::vm.maxLightValue"></span>
-        <i class="fa fa-star"></i>
-        <span ng-i18next="Loadouts.MaximizeLight"></span>
+        <i class="fa">✦</i>
+        <span ng-i18next="{{ vm.store.destinyVersion == 2 ? 'Loadouts.MaximizePower' : 'Loadouts.MaximizeLight' }}"></span>
       </span>
     </li>
 
-    <li class="loadout-set" ng-if="vm.store.destinyVersion === 1 && !vm.store.isVault">
+    <li class="loadout-set" ng-if="vm.store.destinyVersion == 1 && !vm.store.isVault">
       <span ng-click="vm.itemLevelingLoadout($event)">
         <i class="fa fa-level-up"></i>
         <span ng-i18next="Loadouts.ItemLeveling"></span>

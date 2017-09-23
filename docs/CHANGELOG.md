@@ -2,6 +2,21 @@
 
 * Reputation emblems are the same size as items now, however you have item size set.
 * Shaders show up in an item's mods now.
+* Transfering search loadouts is more reliable.
+* Fixed a serious bug with storage that may have deleted your tags and notes. It's fixed now, but hopefully you had a backup...
+* Highlight mods that increase an item's power with a gold border. New 'is:powermod' search keyword can find them all.
+* Phone mode should trigger even on really big phones.
+* More places can be pressed to show a tooltip.
+* Fixed showing quality for D1 items.
+* D2 subclasses are diamonds instead of squares.
+* Max Base Power, Mobility, Resilience, and Recovery are now shown for each character.
+* Legendary shards have the right icon now.
+* Fix newly created loadouts showing no items.
+* Inventory (mods, shaders, and consumables) in your vault now show up separated into the vault, and you can transfer them to and from the vault.
+* Search keywords are now case-insensitive.
+* You can now lock and unlock D2 items.
+* Equipping an exotic emote won't unequip your exotic sparrow and vice versa.
+* Item popups aren't weirdly tall on Firefox anymore.
 
 # 4.15.0
 

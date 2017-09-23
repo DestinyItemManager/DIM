@@ -693,7 +693,7 @@ export function ItemService(
 
     if (equip) {
       promises.push(canEquip(item, store));
-      if (item.isExotic) {
+      if (item.isExotic && item.location.sort !== 'General') {
         promises.push(canEquipExotic(item, store));
       }
     }

@@ -166,12 +166,13 @@ function SearchFilter(dimSearchService) {
       textcomplete.register([
         {
           words: dimSearchService.keywords,
-          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
+          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/i,
           search: function(term, callback) {
-            callback(this.words.filter((word) => word.startsWith(term)));
+            callback(this.words.filter((word) => word.startsWith(term.toLowerCase())));
           },
           index: 1,
           replace: function(word) {
+            word = word.toLowerCase();
             return (word.startsWith('is:') && word.startsWith('not:'))
               ? `${word} ` : word;
           }

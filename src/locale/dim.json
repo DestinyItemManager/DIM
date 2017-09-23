@@ -387,6 +387,7 @@
     "MakeRoomError": "Unable to make room for all Postmaster items: {{error}}.",
     "MaxSlots": "You can only have {{slots}} of that kind of item in a loadout.",
     "MaximizeLight": "Maximize Light",
+    "MaximizePower": "Maximize Power",
     "NameRequired": "A name is required.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
@@ -490,6 +491,7 @@
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {
+    "MaxBasePower": "Max Base Power (w/o mods)",
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",

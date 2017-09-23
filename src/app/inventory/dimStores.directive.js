@@ -29,19 +29,19 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
 
   vm.swipeLeft = () => {
     const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
-    const currentIndex = sortedStores.indexOf(vm.currentStore);
+    const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
     if (currentIndex < (sortedStores.length - 1)) {
-      vm.currentStore = sortedStores[currentIndex + 1];
+      vm.selectedStore = sortedStores[currentIndex + 1];
     }
   };
 
   vm.swipeRight = () => {
     const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
-    const currentIndex = sortedStores.indexOf(vm.currentStore);
+    const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
     if (currentIndex > 0) {
-      vm.currentStore = sortedStores[currentIndex - 1];
+      vm.selectedStore = sortedStores[currentIndex - 1];
     }
   };
   vm.buckets = null;
@@ -69,14 +69,18 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
     vm.vault = _.find(vm.stores, 'isVault');
 
     if (vm.stores && vm.stores.length) {
-      if (!vm.currentStore || !_.find(vm.stores, { id: vm.currentStore.id })) {
-        vm.currentStore = _.find(vm.stores, 'current');
-        vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
+      // This is the character that was last played
+      vm.currentStore = _.find(vm.stores, 'current');
+
+      // This is the character selected to display in mobile view
+      if (!vm.selectedStore || !_.find(vm.stores, { id: vm.selectedStore.id })) {
+        vm.selectedStore = vm.currentStore;
       } else {
-        vm.currentStore = _.find(vm.stores, { id: vm.currentStore.id });
-        vm.currentStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.currentStore);
+        vm.selectedStore = _.find(vm.stores, { id: vm.selectedStore.id });
       }
+      vm.selectedStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.selectedStore);
     } else {
+      vm.selectedStore = null;
       vm.currentStore = null;
     }
   };

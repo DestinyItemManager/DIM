@@ -15,18 +15,33 @@
     </div>
     <div class="currencies">
       <div class="currency" ng-if="::!!vm.store.isVault"> {{ vm.store.glimmer }} <img src="~app/images/glimmer.png"></div>
-      <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img src="~app/images/legendaryMarks.png"></div>
+      <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img ng-if="vm.store.destinyVersion == 1" src="~app/images/legendaryMarks.png"><img ng-if="vm.store.destinyVersion == 2" src="~app/images/legendaryShards.png"></div>
     </div>
     <i class="loadout-button fa fa-chevron-circle-down" ng-i18next="[title]Loadouts.Loadouts"></i>
   </div>
 </div>
 <div ng-if="::vm.internalLoadoutMenu" class="loadout-menu" loadout-id="{{ ::vm.store.id }}"></div>
-<dim-stats stats="vm.store.stats" ng-if="::!vm.store.isVault"></dim-stats>
-<div ng-if="::vm.store.isVault && vm.store.destinyVersion === 1" class="vault-capacity">
-  <div class="vault-bucket" title="{{ ::bucket | i18next }}: {{ size }}/{{ ::capacity }}" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({ sort: sort }); bucket = 'Bucket.' + sort">
-    <div class="vault-bucket-tag">{{ ::bucket | i18next | firstLetter }}</div>
+<dim-stats destiny-version="vm.store.destinyVersion" stats="vm.store.stats" ng-if="::!vm.store.isVault"></dim-stats>
+    <div ng-if="::vm.store.isVault" class="vault-capacity">
+      <div class="vault-bucket"
+           ng-if="::vm.store.destinyVersion === 1"
+           press-tip="{{ size }}/{{ ::capacity }}"
+           press-tip-title="{{ ::bucket | i18next }}"
+           ng-repeat="(sort, size) in vm.store.vaultCounts"
+           ng-init="capacity = vm.store.capacityForItem({ sort: sort }); bucket = 'Bucket.' + sort">
+        <div class="vault-bucket-tag">{{ ::bucket | i18next | firstLetter }}</div>
     <div class="vault-fill-bar">
       <div class="fill-bar" ng-class="{ 'vault-full': size == capacity }" dim-percent-width="size / capacity"></div>
     </div>
+  </div>
+
+  <div class="vault-bucket"
+       ng-repeat="(bucketId, vaultCount) in vm.store.d2VaultCounts"
+       ng-if="::vm.store.destinyVersion === 2"
+       ng-init="capacity = vaultCount.bucket.capacity"
+       press-tip="{{ vaultCount.count }}/{{ ::capacity }}"
+       press-tip-title="{{ ::vaultCount.bucket.name }}">
+    <div class="vault-bucket-tag">{{ ::vaultCount.bucket.name | firstLetter }}</div>
+    {{ vaultCount.count }}/{{ ::capacity }}
   </div>
 </div>

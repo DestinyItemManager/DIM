@@ -11,19 +11,18 @@ export function PressTip() {
       let timer = null;
 
       function showTip() {
-        if (!tooltip) {
-          let title = $attrs.pressTip;
-          if ($attrs.pressTipTitle) {
-            title = `<h2>${$attrs.pressTipTitle}</h2>${title}`;
-          }
-          tooltip = new Tooltip($element[0], {
-            placement: 'top', // or bottom, left, right, and variations
-            title,
-            html: true,
-            trigger: 'manual',
-            container: 'body'
-          });
+        let title = $attrs.pressTip;
+        console.log($attrs, title);
+        if ($attrs.pressTipTitle) {
+          title = `<h2>${$attrs.pressTipTitle}</h2>${title}`;
         }
+        tooltip = new Tooltip($element[0], {
+          placement: 'top', // or bottom, left, right, and variations
+          title,
+          html: true,
+          trigger: 'manual',
+          container: 'body'
+        });
         tooltip.show();
       }
 
@@ -41,7 +40,8 @@ export function PressTip() {
       $element.on('mouseup mouseleave touchend', (e) => {
         e.preventDefault();
         if (tooltip) {
-          tooltip.hide();
+          tooltip.dispose();
+          tooltip = null;
         }
         clearTimeout(timer);
       });

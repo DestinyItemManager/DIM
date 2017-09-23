@@ -3,6 +3,7 @@ import { Subject, BehaviorSubject } from 'rxjs';
 
 import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
+import { optimalLoadout } from '../loadout/loadout-utils';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
@@ -170,7 +171,7 @@ export function D2StoresService(
 
         const processVaultPromise = processVault(defs,
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
-          profileInfo.profileInventory.data ? profileInfo.profileCurrencies.data.items : [],
+          profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
           profileInfo.itemComponents,
           buckets,
           previousItems,
@@ -182,6 +183,7 @@ export function D2StoresService(
           defs,
           profileInfo.characters.data[characterId],
           profileInfo.characterInventories.data && profileInfo.characterInventories.data[characterId] ? profileInfo.characterInventories.data[characterId].items : [],
+          profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId] ? profileInfo.characterEquipment.data[characterId].items : [],
           profileInfo.itemComponents,
           Object.assign(profileInfo.characterProgressions.data[characterId].progressions, profileInfo.characterProgressions.data[characterId].factions),
@@ -191,9 +193,9 @@ export function D2StoresService(
           itemInfoService,
           lastPlayedDate));
 
-        return $q.all([newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
+        return $q.all([defs, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
-      .then(([newItems, itemInfoService, ...stores]) => {
+      .then(([defs, newItems, itemInfoService, ...stores]) => {
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -206,6 +208,8 @@ export function D2StoresService(
         dimDestinyTrackerService.fetchReviews(_stores);
 
         itemInfoService.cleanInfos(stores);
+
+        stores.forEach((s) => updateBasePower(stores, s, defs));
 
         // Let our styling know how many characters there are
         document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
@@ -245,6 +249,7 @@ export function D2StoresService(
   function processCharacter(defs,
     character,
     characterInventory,
+    profileInventory,
     characterEquipment,
     itemComponents,
     progressions,
@@ -283,7 +288,16 @@ export function D2StoresService(
       });
     }
 
-    return D2ItemFactory.processItems(store, characterInventory.concat(_.values(characterEquipment)), itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    // We work around the weird account-wide buckets by assigning them to the current character
+    let items = characterInventory.concat(_.values(characterEquipment));
+    if (store.current) {
+      items = items.concat(Object.values(profileInventory).filter((i) => {
+        // items that can be stored in a vault
+        return buckets.byHash[i.bucketHash].vaultBucket;
+      }));
+    }
+
+    return D2ItemFactory.processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
@@ -313,17 +327,28 @@ export function D2StoresService(
     itemInfoService) {
     const store = D2StoreFactory.makeVault(buckets, profileCurrencies);
 
-    return D2ItemFactory.processItems(store, _.values(profileInventory), itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    const items = Object.values(profileInventory).filter((i) => {
+      // items that cannot be stored in the vault, and are therefore *in* a vault
+      return !buckets.byHash[i.bucketHash].vaultBucket;
+    });
+    return D2ItemFactory.processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
-      store.buckets = _.groupBy(items, (i) => {
-        return i.location.id;
-      });
+      store.buckets = _.groupBy(items, (i) => i.location.id);
+
+      store.d2VaultCounts = {};
 
       // Fill in any missing buckets
       _.values(buckets.byType).forEach((bucket) => {
-        if (!store.buckets[bucket.id]) {
+        if (store.buckets[bucket.id]) {
+          const vaultBucketId = bucket.accountWide ? bucket.id : bucket.vaultBucket.id;
+          store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
+            count: 0,
+            bucket: bucket.accountWide ? bucket : bucket.vaultBucket
+          };
+          store.d2VaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
+        } else {
           store.buckets[bucket.id] = [];
         }
       });
@@ -365,5 +390,74 @@ export function D2StoresService(
     });
 
     console.error('Error loading stores', e);
+  }
+
+  // Add a fake stat for "max base power"
+  function updateBasePower(stores, store, defs) {
+    if (!store.isVault) {
+      const def = defs.Stat.get(1935470627);
+      const maxBasePower = getBasePower(store, maxBasePowerLoadout(stores, store));
+      store.stats.maxBasePower = {
+        id: 'maxBasePower',
+        name: $i18next.t('Stats.MaxBasePower'),
+        description: def.displayProperties.description,
+        value: maxBasePower,
+        icon: `https://www.bungie.net${def.displayProperties.icon}`,
+        tiers: [maxBasePower],
+        tierMax: 300,
+        tier: 0
+      };
+    }
+  }
+
+  function maxBasePowerLoadout(stores, store) {
+    const statHashes = new Set([
+      1480404414, // Attack
+      3897883278, // Defense
+    ]);
+
+    const applicableItems = _.filter(flatMap(stores, 'items'), (i) => {
+      return i.canBeEquippedBy(store) &&
+        i.primStat && // has a primary stat (sanity check)
+        statHashes.has(i.primStat.statHash); // one of our selected stats
+    });
+
+    const bestItemFn = function(item) {
+      let value = item.basePower;
+
+      // Break ties when items have the same stats. Note that this should only
+      // add less than 0.25 total, since in the exotics special case there can be
+      // three items in consideration and you don't want to go over 1 total.
+      if (item.owner === store.id) {
+        // Prefer items owned by this character
+        value += 0.1;
+        if (item.equipped) {
+          // Prefer them even more if they're already equipped
+          value += 0.1;
+        }
+      } else if (item.owner === 'vault') {
+        // Prefer items in the vault over items owned by a different character
+        // (but not as much as items owned by this character)
+        value += 0.05;
+      }
+      return value;
+    };
+
+    return optimalLoadout(store, applicableItems, bestItemFn, '');
+  }
+
+  function getBasePower(store, loadout) {
+    // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
+    const itemWeight = {
+      Weapons: 3 / 21,
+      Armor: 5 / 42,
+      General: 2 / 21
+    };
+
+    const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
+
+    return (Math.floor(items.length * _.reduce(items, (memo, item) => {
+      return memo + (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
+    }, 0)) / items.length).toFixed(1);
   }
 }
