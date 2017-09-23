@@ -15,6 +15,7 @@
 * Inventory (mods, shaders, and consumables) in your vault now show up separated into the vault, and you can transfer them to and from the vault.
 * Search keywords are now case-insensitive.
 * You can now lock and unlock D2 items.
+* Equipping an exotic emote won't unequip your exotic sparrow and vice versa.
 
 # 4.15.0
 
