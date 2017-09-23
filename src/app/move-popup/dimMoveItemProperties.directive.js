@@ -19,7 +19,7 @@ export function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, Destiny1Api) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, Destiny1Api, Destiny2Api) {
   'ngInject';
   const vm = this;
 
@@ -114,7 +114,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
 
     let store;
     if (item.owner === 'vault') {
-      store = getStoreService(item).getStores()[0];
+      store = getStoreService(item).getActiveStore();
     } else {
       store = getStoreService(item).getStore(item.owner);
     }
@@ -128,18 +128,29 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
       state = !item.tracked;
     }
 
-    Destiny1Api.setItemState(item, store, state, type)
-      .then(() => {
-        if (type === 'lock') {
+    if (item.destinyVersion === 2) {
+      Destiny2Api.setLockState(store, item, state)
+        .then(() => {
           item.locked = state;
-        } else if (type === 'track') {
-          item.tracked = state;
-        }
-        $rootScope.$broadcast('dim-filter-invalidate');
-      })
-      .finally(() => {
-        vm.locking = false;
-      });
+          $rootScope.$broadcast('dim-filter-invalidate');
+        })
+        .finally(() => {
+          vm.locking = false;
+        });
+    } else {
+      Destiny1Api.setItemState(item, store, state, type)
+        .then(() => {
+          if (type === 'lock') {
+            item.locked = state;
+          } else if (type === 'track') {
+            item.tracked = state;
+          }
+          $rootScope.$broadcast('dim-filter-invalidate');
+        })
+        .finally(() => {
+          vm.locking = false;
+        });
+    }
   };
 
   vm.classes = {
