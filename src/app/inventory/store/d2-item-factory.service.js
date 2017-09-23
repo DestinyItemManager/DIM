@@ -218,7 +218,7 @@ export function D2ItemFactory(
       name: itemDef.displayProperties.name,
       description: itemDef.displayProperties.description,
       icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
-      notransfer: Boolean(currentBucket.accountWide || currentBucket.inPostmaster || itemDef.nonTransferrable),
+      notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable),
       id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
       equipped: Boolean(instanceDef.isEquipped),
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
