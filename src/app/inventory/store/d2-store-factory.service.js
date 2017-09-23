@@ -200,12 +200,14 @@ export function D2StoreFactory($i18next, dimInfoService) {
         },
         removeItem: function(item) {
           const result = StoreProto.removeItem.call(this, item);
-          this.vaultCounts[item.location.sort]--;
+          const bucket = item.location.accountWide ? item.location : item.location.vaultBucket;
+          this.d2VaultCounts[bucket.id].count--;
           return result;
         },
         addItem: function(item) {
           StoreProto.addItem.call(this, item);
-          this.vaultCounts[item.location.sort]++;
+          const bucket = item.location.accountWide ? item.location : item.location.vaultBucket;
+          this.d2VaultCounts[bucket.id].count++;
         }
       });
     }
