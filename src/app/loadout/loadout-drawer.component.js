@@ -59,35 +59,30 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, D2Categories,
     vm.loadout = angular.copy(vm.defaults);
   });
 
-  $scope.$watchCollection('vm.originalLoadout.items', () => {
-    vm.loadout = angular.copy(vm.originalLoadout);
-  });
-
   $scope.$on('dim-edit-loadout', (event, args) => {
     vm.showClass = args.showClass;
     if (args.loadout) {
+      vm.loadout = args.loadout;
       vm.show = true;
       dimLoadoutService.dialogOpen = true;
-      vm.originalLoadout = args.loadout;
-      if (args.loadout.classType === undefined) {
-        args.loadout.classType = -1;
+      if (vm.loadout.classType === undefined) {
+        vm.loadout.classType = -1;
       }
-      args.loadout.items = args.loadout.items || [];
+      vm.loadout.items = vm.loadout.items || [];
 
       // Filter out any vendor items and equip all if requested
-      args.loadout.warnitems = _.reduce(args.loadout.items, (o, items) => {
+      vm.loadout.warnitems = _.reduce(vm.loadout.items, (o, items) => {
         const vendorItems = _.filter(items, (item) => { return !item.owner; });
         o = o.concat(...vendorItems);
         return o;
       }, []);
 
-      _.each(args.loadout.items, (items, type) => {
-        args.loadout.items[type] = _.filter(items, (item) => { return item.owner; });
-        if (args.equipAll && args.loadout.items[type][0]) {
-          args.loadout.items[type][0].equipped = true;
+      _.each(vm.loadout.items, (items, type) => {
+        vm.loadout.items[type] = _.filter(items, (item) => { return item.owner; });
+        if (args.equipAll && vm.loadout.items[type][0]) {
+          vm.loadout.items[type][0].equipped = true;
         }
       });
-      vm.loadout = angular.copy(args.loadout);
     }
   });
 
@@ -115,7 +110,8 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, D2Categories,
   };
   vm.loadout = angular.copy(vm.defaults);
 
-  vm.save = function save() {
+  vm.save = function save($event) {
+    $event.preventDefault();
     vm.loadout.platform = vm.account.platformLabel; // Playstation or Xbox
     vm.loadout.destinyVersion = dimSettingsService.destinyVersion; // D1 or D2
     dimLoadoutService
@@ -126,15 +122,17 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, D2Categories,
                     $i18next.t('Loadouts.SaveErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
         console.error(e);
       });
-    vm.cancel();
+    vm.cancel($event);
   };
 
-  vm.saveAsNew = function saveAsNew() {
+  vm.saveAsNew = function saveAsNew($event) {
+    $event.preventDefault();
     delete vm.loadout.id; // Let it be a new ID
-    vm.save();
+    vm.save($event);
   };
 
-  vm.cancel = function cancel() {
+  vm.cancel = function cancel($event) {
+    $event.preventDefault();
     vm.loadout = angular.copy(vm.defaults);
     dimLoadoutService.dialogOpen = false;
     vm.show = false;
