@@ -42,8 +42,6 @@
        press-tip="{{ vaultCount.count }}/{{ ::capacity }}"
        press-tip-title="{{ ::vaultCount.bucket.name }}">
     <div class="vault-bucket-tag">{{ ::vaultCount.bucket.name | firstLetter }}</div>
-    <div class="vault-fill-bar">
-      <div class="fill-bar" ng-class="{ 'vault-full': vaultCount.count == capacity }" dim-percent-width="vaultCount.count / capacity"></div>
-    </div>
+    {{ vaultCount.count }}/{{ ::capacity }}
   </div>
 </div>

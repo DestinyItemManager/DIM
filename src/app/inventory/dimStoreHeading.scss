@@ -165,11 +165,13 @@ dim-store-heading {
     &:last-child {
       margin-right: 0;
     }
+    color: #AAA;
   }
 
   .vault-bucket-tag {
     height: 16px;
     width: 16px;
+    font-weight: bold;
     text-align: center;
   }
 
