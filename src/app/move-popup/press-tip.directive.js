@@ -12,7 +12,6 @@ export function PressTip() {
 
       function showTip() {
         let title = $attrs.pressTip;
-        console.log($attrs, title);
         if ($attrs.pressTipTitle) {
           title = `<h2>${$attrs.pressTipTitle}</h2>${title}`;
         }
