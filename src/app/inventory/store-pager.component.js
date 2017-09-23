@@ -9,7 +9,7 @@ export const StorePagerComponent = {
   bindings: {
     onStoreChange: '&',
     initialIndex: '<',
-    currentStore: '<',
+    selectedStore: '<',
     stores: '<'
   }
 };
@@ -30,8 +30,8 @@ function StorePagerCtrl($element, $scope, $filter, dimSettingsService) {
   };
 
   this.$onChanges = () => {
-    if (this.dragend && this.currentStore) {
-      const storeIndex = $filter('sortStores')(this.stores, dimSettingsService.characterOrder).indexOf(this.currentStore);
+    if (this.dragend && this.selectedStore) {
+      const storeIndex = $filter('sortStores')(this.stores, dimSettingsService.characterOrder).indexOf(this.selectedStore);
       this.dragend.jumpToPage(storeIndex + 1);
     }
   };
