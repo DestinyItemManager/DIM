@@ -169,7 +169,7 @@ export function D2StoresService(
 
         const processVaultPromise = processVault(defs,
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
-          profileInfo.profileInventory.data ? profileInfo.profileCurrencies.data.items : [],
+          profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
           profileInfo.itemComponents,
           buckets,
           previousItems,
@@ -181,6 +181,7 @@ export function D2StoresService(
           defs,
           profileInfo.characters.data[characterId],
           profileInfo.characterInventories.data && profileInfo.characterInventories.data[characterId] ? profileInfo.characterInventories.data[characterId].items : [],
+          profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId] ? profileInfo.characterEquipment.data[characterId].items : [],
           profileInfo.itemComponents,
           Object.assign(profileInfo.characterProgressions.data[characterId].progressions, profileInfo.characterProgressions.data[characterId].factions),
@@ -240,6 +241,7 @@ export function D2StoresService(
   function processCharacter(defs,
     character,
     characterInventory,
+    profileInventory,
     characterEquipment,
     itemComponents,
     progressions,
@@ -278,7 +280,16 @@ export function D2StoresService(
       });
     }
 
-    return D2ItemFactory.processItems(store, characterInventory.concat(_.values(characterEquipment)), itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    // We work around the weird account-wide buckets by assigning them to the current character
+    let items = characterInventory.concat(_.values(characterEquipment));
+    if (store.current) {
+      items = items.concat(Object.values(profileInventory).filter((i) => {
+        // items that can be stored in a vault
+        return buckets.byHash[i.bucketHash].vaultBucket;
+      }));
+    }
+
+    return D2ItemFactory.processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
@@ -308,7 +319,11 @@ export function D2StoresService(
     itemInfoService) {
     const store = D2StoreFactory.makeVault(buckets, profileCurrencies);
 
-    return D2ItemFactory.processItems(store, _.values(profileInventory), itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    const items = Object.values(profileInventory).filter((i) => {
+      // items that cannot be stored in the vault, and are therefore *in* a vault
+      return !buckets.byHash[i.bucketHash].vaultBucket;
+    });
+    return D2ItemFactory.processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
