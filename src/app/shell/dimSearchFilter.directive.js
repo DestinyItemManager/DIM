@@ -617,6 +617,9 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
         (item.talentGrid && _.any(item.talentGrid.nodes, (node) => {
           // Fixed #798 by searching on the description too.
           return (`${node.name} ${node.description}`).toLowerCase().indexOf(predicate) >= 0;
+        })) ||
+        (item.sockets && _.any(item.sockets.sockets, (socket) => {
+          return socket.plug && (`${socket.plug.displayProperties.name} ${socket.plug.displayProperties.description}`).toLowerCase().indexOf(predicate) >= 0;
         }));
     },
     light: function(predicate, item) {
