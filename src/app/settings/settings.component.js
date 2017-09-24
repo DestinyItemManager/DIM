@@ -8,7 +8,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $i18next) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, OAuthTokenService, $state, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -97,12 +97,12 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
 
   vm.downloadWeaponCsv = function() {
-    dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
+    dimCsvService.downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Weapons");
     ga('send', 'event', 'Download CSV', 'Weapons');
   };
 
   vm.downloadArmorCsv = function() {
-    dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Armor");
+    dimCsvService.downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Armor");
     ga('send', 'event', 'Download CSV', 'Armor');
   };
 

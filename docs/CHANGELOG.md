@@ -20,6 +20,7 @@
 * Armor stats now match the order in the game.
 * Infusion calculator now always gives you the full value of your infusion.
 * Show a warning that your max light may be wrong if you have classified items.
+* CSV export for D2 weapons and armor is back.
 
 # 4.15.0
 

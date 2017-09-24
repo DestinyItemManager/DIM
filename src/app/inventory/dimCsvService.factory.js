@@ -219,7 +219,7 @@ export function CsvService() {
         return;
       }
       if (type === "Weapons") {
-        if (item.primStat.statHash === 368428387) {
+        if (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414) {
           items.push(item);
         }
       }
