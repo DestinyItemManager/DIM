@@ -231,7 +231,14 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     }
     return loadout;
   };
-  vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout());
+
+  vm.hasClassified = storeService.getAllItems().some((i) => {
+    return i.classified &&
+      (i.location.sort === 'Weapons' ||
+       i.location.sort === 'Armor' ||
+       i.type === 'Ghost');
+  });
+  vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout()) + (vm.hasClassified ? '*' : '');
 
   // A dynamic loadout set up to level weapons and armor
   vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {
