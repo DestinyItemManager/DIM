@@ -71,7 +71,8 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
       vm.infused = vm.target.primStat.value;
 
       if (vm.source.destinyVersion === 2) {
-        // Rules taken from  https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
+        /*
+        // Rules taken from https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
         const sourceBasePower = vm.source.basePower;
         const targetBasePower = vm.target.basePower;
         const powerDiff = Math.max(0, targetBasePower - sourceBasePower);
@@ -79,6 +80,13 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         const transferAmount = powerDiff * quality.baseQualityTransferRatio;
         const increase = Math.min(powerDiff, Math.max(transferAmount, quality.minimumQualityIncrement));
         vm.infused = vm.source.primStat.value + increase;
+        */
+
+        // Folks report that that formula isn't really what's used,
+        // and that you just always get the full value.
+        // https://github.com/DestinyItemManager/DIM/issues/2215
+        console.log(vm.target.infusionProcess.baseQualityTransferRatio);
+        vm.infused = vm.source.basePower;
       }
     },
 
