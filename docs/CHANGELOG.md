@@ -18,6 +18,7 @@
 * Equipping an exotic emote won't unequip your exotic sparrow and vice versa.
 * Item popups aren't weirdly tall on Firefox anymore.
 * Armor stats now match the order in the game.
+* Show a warning that your max light may be wrong if you have classified items.
 
 # 4.15.0
 
