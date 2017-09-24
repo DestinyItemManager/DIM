@@ -489,6 +489,7 @@
     "SortPrimary": "primary stat",
     "SortRarity": "rarity",
     "SortRoll": "rating",
+    "SortType": "item type",
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {

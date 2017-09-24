@@ -194,6 +194,14 @@ mod.filter('sortItems', (dimSettingsService) => {
         }
       });
     }
+    if (sort === 'type') {
+      items = _.sortBy(items, (item) => {
+        return item.classType;
+      });
+      items = _.sortBy(items, (item) => {
+        return item.typeName;
+      });
+    }
     return items;
   };
 });
