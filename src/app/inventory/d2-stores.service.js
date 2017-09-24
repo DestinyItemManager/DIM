@@ -399,11 +399,20 @@ export function D2StoresService(
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getBasePower(store, maxBasePowerLoadout(stores, store));
+
+      const hasClassified = flatMap(_stores, 'items').some((i) => {
+        return i.classified &&
+          (i.location.sort === 'Weapons' ||
+           i.location.sort === 'Armor' ||
+           i.type === 'Ghost');
+      });
+
       store.stats.maxBasePower = {
         id: 'maxBasePower',
         name: $i18next.t('Stats.MaxBasePower'),
+        hasClassified,
         description: def.displayProperties.description,
-        value: maxBasePower,
+        value: hasClassified ? `${maxBasePower}*` : maxBasePower,
         icon: `https://www.bungie.net${def.displayProperties.icon}`,
         tiers: [maxBasePower],
         tierMax: 300,
