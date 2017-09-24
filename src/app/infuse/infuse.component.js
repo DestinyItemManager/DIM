@@ -85,8 +85,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         // Folks report that that formula isn't really what's used,
         // and that you just always get the full value.
         // https://github.com/DestinyItemManager/DIM/issues/2215
-        console.log(vm.target.infusionProcess.baseQualityTransferRatio);
-        vm.infused = vm.source.basePower;
+        vm.infused = vm.target.basePower;
       }
     },
 
