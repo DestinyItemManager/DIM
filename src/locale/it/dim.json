@@ -278,7 +278,7 @@
       "Guardian_male": "Il {{store}} ha troppe '{{itemtype}}'.",
       "Vault": "Il {{store}} ha troppe '{{itemtype}}'."
     },
-    "Classified": "Questo oggetto è classificato e non può essere trasferito attualmente.",
+    "Classified": "Questo oggetto è nascosto e non può essere trasferito attualmente.",
     "Classified2": "Oggetto nascosto. Bungie non fornisce ancora informazioni su questo oggetto. Aggiungi delle note a questo oggetto ed utilizza il filtro di ricerca \"notes:\" per trovarlo.",
     "Deequip": "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
     "ExoticError": "'{{itemname}}' non può essere equipaggiato, poiché l'esotico nello slot {{slot}} non può essere rimosso. ({{error}})",
@@ -361,6 +361,7 @@
     "ApplySearch": "Elementi = \"{{query}}\"",
     "Before": "Prima '{{name}}'",
     "Cancel": "Cancella",
+    "Classified": "Alcuni dei tuoi oggetti sono nascosti, e non possono essere usati nel calcolo per il massimo Potere.",
     "ConfirmDelete": "Sei sicuro di voler eliminare '{{name}}'?",
     "CouldNotEquip": "Impossibile equipaggiare {{itemname}}",
     "Create": "Creare loadout",

@@ -361,6 +361,7 @@
     "ApplySearch": "Items= \"{{query}}\"",
     "Before": "Bevor '{{name}}'",
     "Cancel": "Abbrechen",
+    "Classified": "Einige deiner Items sind klassifiziert und können nicht in die Max-Power-Berechnung einbezogen werden.",
     "ConfirmDelete": "'{{name}}' wirklich löschen?",
     "CouldNotEquip": "{{itemname}} konnte nicht ausgerüstet werden",
     "Create": "Loadout erstellen",

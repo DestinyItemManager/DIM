@@ -279,7 +279,7 @@
       "Vault": "Il y a trop d'objet '{{itemtype}}' dans le {{store}}."
     },
     "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
-    "Classified2": "Objet confidentiel. Bungie n'a pas encore fourni d'information sur cet objet. Ajoutez des notes à cet objet et utilisez le filtre de recherche \"notes:\" pour le trouver.",
+    "Classified2": "Objet classifié. Bungie n'a pas encore fourni d'information sur cet objet. Ajoutez des notes à cet objet et utilisez le filtre de recherche \"notes:\" pour le trouver.",
     "Deequip": "Aucun autre objet à équiper n'a été trouvé pour pouvoir déséquiper {{itemname}}",
     "ExoticError": "'{{itemname}}' ne peut pas être équipé car l'exotique dans le {{slot}} ne peut pas être déséquipé. ({{error}})",
     "NotEnoughRoom": "Il n'y a rien qu'on puisse déplacer de {{store}} pour faire de la place pour {{itemname}}",
@@ -361,6 +361,7 @@
     "ApplySearch": "Objets = \"{{query}}\"",
     "Before": "Avant '{{name}}'",
     "Cancel": "Annuler",
+    "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
     "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{{name}}'?",
     "CouldNotEquip": "Impossible d'équiper {{itemname}}",
     "Create": "Créer Pré set",
