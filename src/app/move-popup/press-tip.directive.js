@@ -11,18 +11,20 @@ export function PressTip() {
       let timer = null;
 
       function showTip() {
-        let title = $attrs.pressTip;
-        if ($attrs.pressTipTitle) {
-          title = `<h2>${$attrs.pressTipTitle}</h2>${title}`;
+        if (!tooltip) {
+          let title = $attrs.pressTip;
+          if ($attrs.pressTipTitle) {
+            title = `<h2>${$attrs.pressTipTitle}</h2>${title}`;
+          }
+          tooltip = new Tooltip($element[0], {
+            placement: 'top', // or bottom, left, right, and variations
+            title,
+            html: true,
+            trigger: 'manual',
+            container: 'body'
+          });
+          tooltip.show();
         }
-        tooltip = new Tooltip($element[0], {
-          placement: 'top', // or bottom, left, right, and variations
-          title,
-          html: true,
-          trigger: 'manual',
-          container: 'body'
-        });
-        tooltip.show();
       }
 
       $element.on('mouseenter', (e) => {
