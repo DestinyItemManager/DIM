@@ -23,6 +23,7 @@
 * Show a warning that your max light may be wrong if you have classified items.
 * CSV export for D2 weapons and armor is back.
 * Add text search for mods and perks.
+* Add "Random Loadout" to D2. You gotta find it though...
 
 # 4.15.0
 
