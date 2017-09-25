@@ -17,9 +17,7 @@ function RandomLoadoutCtrl($window, $scope, dimStoreService, D2StoresService, di
   const vm = this;
 
   vm.$onChanges = function() {
-    console.log('$onChanges');
     if (vm.stores && vm.stores.length) {
-      console.log('setting');
       vm.showRandomLoadout = true;
     }
   };
