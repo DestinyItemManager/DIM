@@ -22,6 +22,7 @@
 * Infusion calculator now always gives you the full value of your infusion.
 * Show a warning that your max light may be wrong if you have classified items.
 * Add text search for mods and perks.
+* Add "Random Loadout" to D2. You gotta find it though...
 
 # 4.15.0
 

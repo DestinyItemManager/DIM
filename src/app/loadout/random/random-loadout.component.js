@@ -5,20 +5,24 @@ import './random-loadout.scss';
 
 export const RandomLoadoutComponent = {
   template,
-  controller: RandomLoadoutCtrl
+  controller: RandomLoadoutCtrl,
+  bindings: {
+    stores: '<'
+  }
 };
 
-function RandomLoadoutCtrl($window, $scope, dimStoreService, dimLoadoutService, $i18next) {
+function RandomLoadoutCtrl($window, $scope, dimStoreService, D2StoresService, dimLoadoutService, $i18next) {
   'ngInject';
 
   const vm = this;
 
-  const deregister = $scope.$on('dim-stores-updated', () => {
-    vm.showRandomLoadout = true;
-    deregister();
-  });
-
-  vm.showRandomLoadout = dimStoreService.getStores().length > 0 ? true : undefined;
+  vm.$onChanges = function() {
+    console.log('$onChanges');
+    if (vm.stores && vm.stores.length) {
+      console.log('setting');
+      vm.showRandomLoadout = true;
+    }
+  };
   vm.disableRandomLoadout = false;
 
   vm.applyRandomLoadout = function() {
@@ -32,7 +36,7 @@ function RandomLoadoutCtrl($window, $scope, dimStoreService, dimLoadoutService, 
 
     vm.disableRandomLoadout = true;
 
-    const store = dimStoreService.getActiveStore();
+    const store = _.find(vm.stores, 'current');
     if (!store) {
       return null;
     }
@@ -41,7 +45,7 @@ function RandomLoadoutCtrl($window, $scope, dimStoreService, dimLoadoutService, 
       return ((classType === 3) || (classType === store.classType));
     };
 
-    const types = [
+    const types = store.destinyVersion === 1 ? [
       'Class',
       'Primary',
       'Special',
@@ -53,18 +57,27 @@ function RandomLoadoutCtrl($window, $scope, dimStoreService, dimLoadoutService, 
       'ClassItem',
       'Artifact',
       'Ghost'
+    ] : [
+      'Class',
+      'Kinetic',
+      'Energy',
+      'Power',
+      'Helmet',
+      'Gauntlets',
+      'Chest',
+      'Leg',
+      'ClassItem',
+      'Ghost',
     ];
 
-    const accountItems = dimStoreService.getAllItems().filter((item) => checkClassType(item.classType));
+    const accountItems = (store.destinyVersion === 2 ? D2StoresService : dimStoreService).getAllItems();
     const items = {};
 
     const foundExotic = {};
 
-    const fn = (type) => (item) => ((item.type === type) &&
-                                    item.equipment &&
-                                    (store.level >= item.equipRequiredLevel) &&
+    const fn = (type) => (item) => (item.type === type &&
+                                    item.canBeEquippedBy(store) &&
                                     (item.typeName !== 'Mask' || ((item.typeName === 'Mask') && (item.tier === 'Legendary'))) &&
-                                    (!item.notransfer || (item.notransfer && (item.owner === store.id))) &&
                                     (!foundExotic[item.bucket.sort] || (foundExotic[item.bucket.sort] && !item.isExotic)));
 
     _.each(types, (type) => {
