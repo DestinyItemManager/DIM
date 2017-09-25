@@ -255,7 +255,7 @@ module.exports = (env) => {
       output: { comments: false },
       sourceMap: true
     }));
-  }
+
     // Generate a service worker
     config.plugins.push(new WorkboxPlugin({
       maximumFileSizeToCacheInBytes: 5000000,
@@ -264,12 +264,12 @@ module.exports = (env) => {
         'authReturn*',
         'extension-scripts/*',
         'return.html',
-        'service-worker\.js'
+        'service-worker.js'
       ],
       swSrc: './dist/service-worker.js',
       swDest: './dist/service-worker.js'
     }));
-  //}
+  }
 
   // Build the service worker in an entirely separate configuration so
   // it doesn't get name-mangled. It'll be used by the
