@@ -166,7 +166,7 @@ mod.filter('sortItems', (dimSettingsService) => {
     }
 
     items = _.sortBy(items || [], 'name');
-    if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality') {
+    if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality' || sort === 'type') {
       items = _.sortBy(items, (item) => {
         return (item.primStat) ? (-1 * item.primStat.value) : 1000;
       });
