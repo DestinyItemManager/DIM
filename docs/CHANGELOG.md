@@ -1,5 +1,7 @@
 # Next
 
+# 4.16.0
+
 * Added item type sort to settings group items by type (e.g. all Sniper Rifles together).
 * Reputation emblems are the same size as items now, however you have item size set.
 * Shaders show up in an item's mods now.
