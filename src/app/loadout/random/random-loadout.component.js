@@ -39,10 +39,6 @@ function RandomLoadoutCtrl($window, $scope, dimStoreService, D2StoresService, di
       return null;
     }
 
-    const checkClassType = function(classType) {
-      return ((classType === 3) || (classType === store.classType));
-    };
-
     const types = store.destinyVersion === 1 ? [
       'Class',
       'Primary',
