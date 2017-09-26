@@ -146,11 +146,9 @@ export function ItemService(
     }
 
     if (equip) {
-      const equipped = _.find(target.buckets[item.location.id], { equipped: true });
-      if (equipped) {
-        equipped.equipped = false;
-      }
-      item.equipped = true;
+      target.buckets[item.location.id].forEach((i) => {
+        i.equipped = (i.index === item.index);
+      });
     }
 
     return item;
