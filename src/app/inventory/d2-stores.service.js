@@ -340,18 +340,18 @@ export function D2StoresService(
 
       // Fill in any missing buckets
       _.values(buckets.byType).forEach((bucket) => {
-        if (store.buckets[bucket.id]) {
-          // TODO: don't even update them for account-wide
-          if (!bucket.accountWide && bucket.vaultBucket) {
-            const vaultBucketId = bucket.vaultBucket.id;
-            store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
-              count: 0,
-              bucket: bucket.accountWide ? bucket : bucket.vaultBucket
-            };
-            store.d2VaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
-          }
-        } else {
+        if (!store.buckets[bucket.id]) {
           store.buckets[bucket.id] = [];
+        }
+
+        // TODO: don't even update them for account-wide
+        if (!bucket.accountWide && bucket.vaultBucket) {
+          const vaultBucketId = bucket.vaultBucket.id;
+          store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
+            count: 0,
+            bucket: bucket.accountWide ? bucket : bucket.vaultBucket
+          };
+          store.d2VaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
         }
       });
 
