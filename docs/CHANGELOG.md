@@ -1,5 +1,7 @@
 # Next
 
+# 4.16.1
+
 * Bugfixes for iOS 10.0 - 10.2.
 
 # 4.16.0
