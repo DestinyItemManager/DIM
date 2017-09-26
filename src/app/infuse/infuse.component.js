@@ -119,7 +119,8 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
       });
 
       allItems = _.sortBy(allItems, (item) => {
-        return item.primStat.value + (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0);
+        return -((item.basePower || item.primStat.value) +
+                 (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
       });
 
       vm.infusable = allItems;
