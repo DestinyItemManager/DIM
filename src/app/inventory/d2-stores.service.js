@@ -342,7 +342,7 @@ export function D2StoresService(
       _.values(buckets.byType).forEach((bucket) => {
         if (store.buckets[bucket.id]) {
           // TODO: don't even update them for account-wide
-          if (!bucket.accountWide) {
+          if (!bucket.accountWide && bucket.vaultBucket) {
             const vaultBucketId = bucket.vaultBucket.id;
             store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
               count: 0,
