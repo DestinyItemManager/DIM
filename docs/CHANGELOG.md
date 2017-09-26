@@ -1,5 +1,7 @@
 # Next
 
+* Bugfixes for iOS 10.0 - 10.2.
+
 # 4.16.0
 
 * Added item type sort to settings group items by type (e.g. all Sniper Rifles together).
