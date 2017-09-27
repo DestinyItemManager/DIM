@@ -1,4 +1,5 @@
 # Next
+* Fix in infusion calculator to correctly consider +5 mod
 
 # 4.16.1
 

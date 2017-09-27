@@ -39,7 +39,7 @@
           <div>
             <div ng-i18next="Infusion.BringGear"></div>
             <span class="bigValue">{{ vm.infused }}</span>
-            <span class="green">(+ {{ vm.infused - (vm.source.basePower || vm.source.primStat.value) }})</span>
+            <span class="green">(+ {{ vm.infused - vm.source.primStat.value }})</span>
           </div>
           <div ng-if="vm.source.destinyVersion === 1">
             <span> 3 <span class="currency"><img alt="{{ ::vm.items[2534352370].itemName }}" title="{{ ::vm.items[2534352370].itemName }}" ng-src="{{ vm.items[2534352370].icon | bungieIcon }}"></span></span>
