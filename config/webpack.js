@@ -19,7 +19,8 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
 const preMinifiedDeps = [
-  'underscore/underscore-min.js'
+  'underscore/underscore-min.js',
+  'indexeddbshim/dist/indexeddbshim.min.js'
 ];
 
 module.exports = (env) => {
@@ -264,28 +265,11 @@ module.exports = (env) => {
         'authReturn*',
         'extension-scripts/*',
         'return.html',
-        'service-worker.js'
       ],
-      swSrc: './dist/service-worker.js',
+      // swSrc: './src/sw.js',
       swDest: './dist/service-worker.js'
     }));
   }
 
-  // Build the service worker in an entirely separate configuration so
-  // it doesn't get name-mangled. It'll be used by the
-  // WorkboxPlugin. This lets us inline the dependencies.
-  const serviceWorker = {
-    entry: {
-      'service-worker': './src/service-worker.js'
-    },
-
-    output: {
-      path: path.resolve('./dist'),
-      filename: '[name].js'
-    },
-
-    stats: 'errors-only'
-  };
-
-  return [serviceWorker, config];
+  return config;
 };
