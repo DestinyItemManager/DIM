@@ -491,8 +491,8 @@
     "SortPrimary": "Statistica primaria",
     "SortRarity": "Rarità",
     "SortRoll": "Giudizio",
-    "SortTypeThenName": "item type then name",
-    "SortTypeThenPrimary": "item type then primary stat",
+    "SortTypeThenName": "tipo di oggetto e poi nome",
+    "SortTypeThenPrimary": "tipo di oggetto e poi statistica primaria",
     "VaultColumns": "Larghezza massima dell'inventario del deposito"
   },
   "Stats": {
