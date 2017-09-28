@@ -133,9 +133,14 @@ export function StoreService(
    * @return {Promise} the new stores
    */
   function reloadStores() {
+    // adhere to the old contract by returning the next value as a
+    // promise We take 2 from the stream because the publishReplay
+    // will always return the latest value instantly, and we want the
+    // next value (the refreshed value). toPromise returns the last
+    // value in the sequence.
+    const promise = storesStream.take(2).toPromise();
     forceReloadTrigger.next(); // signal the force reload
-    // adhere to the old contract by returning the next value as a promise
-    return storesStream.take(1).toPromise();
+    return promise;
   }
 
   /**

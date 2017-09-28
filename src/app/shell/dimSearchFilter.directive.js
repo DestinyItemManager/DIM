@@ -1,7 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimSearchFilter.directive.html';
-import { flatMap } from '../util';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 
@@ -535,7 +534,7 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     },
     dupe: function(predicate, item) {
       if (_duplicates === null) {
-        _duplicates = _.countBy(flatMap(getStoreService().getStores(), 'items'), 'hash');
+        _duplicates = _.countBy(getStoreService().getAllItems(), 'hash');
       }
 
       // We filter out the "Default Shader" because everybody has one per character
@@ -617,6 +616,9 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
         (item.talentGrid && _.any(item.talentGrid.nodes, (node) => {
           // Fixed #798 by searching on the description too.
           return (`${node.name} ${node.description}`).toLowerCase().indexOf(predicate) >= 0;
+        })) ||
+        (item.sockets && _.any(item.sockets.sockets, (socket) => {
+          return socket.plug && (`${socket.plug.displayProperties.name} ${socket.plug.displayProperties.description}`).toLowerCase().indexOf(predicate) >= 0;
         }));
     },
     light: function(predicate, item) {

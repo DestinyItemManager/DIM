@@ -19,8 +19,7 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
 const preMinifiedDeps = [
-  'underscore/underscore-min.js',
-  'indexeddbshim/dist/indexeddbshim.min.js'
+  'underscore/underscore-min.js'
 ];
 
 module.exports = (env) => {
@@ -200,8 +199,8 @@ module.exports = (env) => {
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(false),
-        // Use a WebAssembly version of SQLite, if possible (this crashes on Android Chrome right now)
-        '$featureFlags.wasm': '!window.navigator.userAgent.includes("Android")',
+        // Use a WebAssembly version of SQLite, if possible (this crashes on Chrome 58 on Android though)
+        '$featureFlags.wasm': JSON.stringify(true),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
         // Whether to log page views for router events
@@ -265,11 +264,28 @@ module.exports = (env) => {
         'authReturn*',
         'extension-scripts/*',
         'return.html',
+        'service-worker.js'
       ],
-      // swSrc: './src/sw.js',
+      swSrc: './dist/service-worker.js',
       swDest: './dist/service-worker.js'
     }));
   }
 
-  return config;
+  // Build the service worker in an entirely separate configuration so
+  // it doesn't get name-mangled. It'll be used by the
+  // WorkboxPlugin. This lets us inline the dependencies.
+  const serviceWorker = {
+    entry: {
+      'service-worker': './src/service-worker.js'
+    },
+
+    output: {
+      path: path.resolve('./dist'),
+      filename: '[name].js'
+    },
+
+    stats: 'errors-only'
+  };
+
+  return [serviceWorker, config];
 };

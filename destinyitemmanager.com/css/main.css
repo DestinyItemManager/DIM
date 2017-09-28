@@ -320,7 +320,7 @@ header {
   text-align: center; }
   .hero .row {
     background: url("../images/dim-bg.png") no-repeat center top;
-    padding: 75px 0 0 0; }
+    padding: 75px 8px 0 8px; }
     .hero .row p {
       margin: 10px 0 70px;
       font-size: 24px; }

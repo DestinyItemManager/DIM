@@ -239,7 +239,9 @@
     "UpgradeChrome": "Please Upgrade Chrome",
     "Version_beta": "Beta has been updated to v{{version}}",
     "Version_release": "DIM v{{version}} Released",
-    "Xur": "Xûr is Here"
+    "Xur": "Xûr is Here",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update."
   },
   "Hotkey": {
     "ClearNewItems": "Clear new items",
@@ -361,6 +363,7 @@
     "ApplySearch": "Items = \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "Cancel": "Cancel",
+    "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "CouldNotEquip": "Could not equip {{itemname}}",
     "Create": "Create Loadout",
@@ -488,13 +491,14 @@
     "SortPrimary": "primary stat",
     "SortRarity": "rarity",
     "SortRoll": "rating",
+    "SortType": "item type",
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {
-    "MaxBasePower": "Max Base Power (w/o mods)",
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",
+    "MaxBasePower": "Max Base Power (w/o mods)",
     "NoBonus": "No Bonus",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",

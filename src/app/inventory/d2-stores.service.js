@@ -138,9 +138,14 @@ export function D2StoresService(
    * @return {Promise} the new stores
    */
   function reloadStores() {
+    // adhere to the old contract by returning the next value as a
+    // promise We take 2 from the stream because the publishReplay
+    // will always return the latest value instantly, and we want the
+    // next value (the refreshed value). toPromise returns the last
+    // value in the sequence.
+    const promise = storesStream.take(2).toPromise();
     forceReloadTrigger.next(); // signal the force reload
-    // adhere to the old contract by returning the next value as a promise
-    return storesStream.take(1).toPromise();
+    return promise;
   }
 
   /**
@@ -193,9 +198,9 @@ export function D2StoresService(
           itemInfoService,
           lastPlayedDate));
 
-        return $q.all([defs, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
+        return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
-      .then(([defs, newItems, itemInfoService, ...stores]) => {
+      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]) => {
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -203,7 +208,11 @@ export function D2StoresService(
           NewItemsService.saveNewItems(newItems, account, 2);
         }
 
+        const stores = [...characters, vault];
         _stores = stores;
+
+        // TODO: update vault counts for character account-wide
+        updateVaultCounts(buckets, _.find(characters, 'current'), vault);
 
         dimDestinyTrackerService.fetchReviews(_stores);
 
@@ -341,15 +350,18 @@ export function D2StoresService(
 
       // Fill in any missing buckets
       _.values(buckets.byType).forEach((bucket) => {
-        if (store.buckets[bucket.id]) {
-          const vaultBucketId = bucket.accountWide ? bucket.id : bucket.vaultBucket.id;
+        if (!store.buckets[bucket.id]) {
+          store.buckets[bucket.id] = [];
+        }
+
+        // TODO: don't even update them for account-wide
+        if (!bucket.accountWide && bucket.vaultBucket) {
+          const vaultBucketId = bucket.vaultBucket.id;
           store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
             count: 0,
             bucket: bucket.accountWide ? bucket : bucket.vaultBucket
           };
           store.d2VaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
-        } else {
-          store.buckets[bucket.id] = [];
         }
       });
 
@@ -397,11 +409,20 @@ export function D2StoresService(
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getBasePower(store, maxBasePowerLoadout(stores, store));
+
+      const hasClassified = flatMap(_stores, 'items').some((i) => {
+        return i.classified &&
+          (i.location.sort === 'Weapons' ||
+           i.location.sort === 'Armor' ||
+           i.type === 'Ghost');
+      });
+
       store.stats.maxBasePower = {
         id: 'maxBasePower',
         name: $i18next.t('Stats.MaxBasePower'),
+        hasClassified,
         description: def.displayProperties.description,
-        value: maxBasePower,
+        value: hasClassified ? `${maxBasePower}*` : maxBasePower,
         icon: `https://www.bungie.net${def.displayProperties.icon}`,
         tiers: [maxBasePower],
         tierMax: 300,
@@ -459,5 +480,21 @@ export function D2StoresService(
     return (Math.floor(items.length * _.reduce(items, (memo, item) => {
       return memo + (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
     }, 0)) / items.length).toFixed(1);
+  }
+
+  // TODO: vault counts are silly and convoluted. We really need an
+  // object to represent a Profile.
+  function updateVaultCounts(buckets, activeStore, vault) {
+    // Fill in any missing buckets
+    _.values(buckets.byType).forEach((bucket) => {
+      if (bucket.accountWide && bucket.vaultBucket) {
+        const vaultBucketId = bucket.id;
+        vault.d2VaultCounts[vaultBucketId] = vault.d2VaultCounts[vaultBucketId] || {
+          count: 0,
+          bucket
+        };
+        vault.d2VaultCounts[vaultBucketId].count += vault.buckets[bucket.id].length;
+      }
+    });
   }
 }

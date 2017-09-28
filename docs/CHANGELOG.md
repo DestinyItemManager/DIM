@@ -1,5 +1,13 @@
 # Next
+* Fix in infusion calculator to correctly consider +5 mod
 
+# 4.16.1
+
+* Bugfixes for iOS 10.0 - 10.2.
+
+# 4.16.0
+
+* Added item type sort to settings group items by type (e.g. all Sniper Rifles together).
 * Reputation emblems are the same size as items now, however you have item size set.
 * Shaders show up in an item's mods now.
 * Transfering search loadouts is more reliable.
@@ -17,6 +25,12 @@
 * You can now lock and unlock D2 items.
 * Equipping an exotic emote won't unequip your exotic sparrow and vice versa.
 * Item popups aren't weirdly tall on Firefox anymore.
+* Armor stats now match the order in the game.
+* Infusion calculator now always gives you the full value of your infusion.
+* Show a warning that your max light may be wrong if you have classified items.
+* CSV export for D2 weapons and armor is back.
+* Add text search for mods and perks.
+* Add "Random Loadout" to D2. You gotta find it though...
 
 # 4.15.0
 

@@ -44,7 +44,7 @@ export function CsvService() {
       "% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n";
     let data = "";
     items.forEach((item) => {
-      data += `${item.name},`;
+      data += `"${item.name}",`;
       data += `${item.dimInfo.tag || ''},`;
       data += `${item.tier},`;
       data += `${item.typeName},`;
@@ -100,7 +100,7 @@ export function CsvService() {
       "Notes,Nodes\n";
     let data = "";
     guns.forEach((gun) => {
-      data += `${gun.name},`;
+      data += `"${gun.name}",`;
       data += `${gun.dimInfo.tag || ''},`;
       data += `${gun.tier},`;
       data += `${gun.typeName},`;
@@ -219,7 +219,7 @@ export function CsvService() {
         return;
       }
       if (type === "Weapons") {
-        if (item.primStat.statHash === 368428387) {
+        if (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414) {
           items.push(item);
         }
       }

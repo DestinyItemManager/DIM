@@ -43,8 +43,11 @@ export function D2ItemFactory(
     1345609583, // Aim Assistance
     3555269338, // Zoom
     3871231066, // Magazine
+    2996146975, // Mobility
+    392767087, // Resilience
+    1943323491 // Recovery
     //    2715839340, // Recoil Direction (people like to see this, but it's confusing)
-    //    1935470627, // Power (what is power....)
+    //    1935470627, // Power
     //    1931675084, //  Inventory Size
     // there are a few others (even an `undefined` stat)
   ];

@@ -71,7 +71,8 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
       vm.infused = vm.target.primStat.value;
 
       if (vm.source.destinyVersion === 2) {
-        // Rules taken from  https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
+        /*
+        // Rules taken from https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
         const sourceBasePower = vm.source.basePower;
         const targetBasePower = vm.target.basePower;
         const powerDiff = Math.max(0, targetBasePower - sourceBasePower);
@@ -79,6 +80,12 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         const transferAmount = powerDiff * quality.baseQualityTransferRatio;
         const increase = Math.min(powerDiff, Math.max(transferAmount, quality.minimumQualityIncrement));
         vm.infused = vm.source.primStat.value + increase;
+        */
+
+        // Folks report that that formula isn't really what's used,
+        // and that you just always get the full value.
+        // https://github.com/DestinyItemManager/DIM/issues/2215
+        vm.infused = vm.target.basePower + (vm.source.primStat.value - vm.source.basePower);
       }
     },
 
@@ -106,12 +113,14 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
             (vm.source.destinyVersion === 1
               ? (item.type === vm.source.type)
               : (item.infusionQuality && (item.infusionQuality.infusionCategoryName === vm.source.infusionQuality.infusionCategoryName))) &&
-            item.primStat.value > vm.source.primStat.value;
+            ((item.destinyVersion === 1 && item.primStat.value > vm.source.primStat.value) ||
+             (item.destinyVersion === 2 && item.basePower > vm.source.basePower));
         });
       });
 
       allItems = _.sortBy(allItems, (item) => {
-        return item.primStat.value + (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0);
+        return -((item.basePower || item.primStat.value) +
+                 (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
       });
 
       vm.infusable = allItems;

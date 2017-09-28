@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "4.15.0",
+  "version": "4.16.1",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "engines": {
@@ -35,7 +35,7 @@
     "last 2 ChromeAndroid versions",
     "last 2 Firefox versions",
     "last 2 Safari versions",
-    "last 2 iOS versions",
+    "iOS >= 10",
     "last 2 Edge versions",
     "last 2 Opera versions",
     "unreleased versions"

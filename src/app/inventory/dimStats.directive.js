@@ -47,6 +47,10 @@ function StatsCtrl($scope, $i18next) {
         } else {
           stat.tooltip = `${stat.name}: ${stat.value} / ${stat.tierMax}`;
         }
+
+        if (stat.hasClassified) {
+          stat.tooltip += `\n\n${$i18next.t('Loadouts.Classified')}`;
+        }
       }
     });
   });

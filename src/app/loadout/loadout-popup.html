@@ -30,7 +30,7 @@
 
     <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.maxLightLoadout($event)">
-        <span class="light" ng-bind="::vm.maxLightValue"></span>
+        <span class="light" ng-bind="::vm.maxLightValue" press-tip="{{ vm.hasClassified ? 'Loadouts.Classified' : '' | i18next }}"></span>
         <i class="fa">✦</i>
         <span ng-i18next="{{ vm.store.destinyVersion == 2 ? 'Loadouts.MaximizePower' : 'Loadouts.MaximizeLight' }}"></span>
       </span>
