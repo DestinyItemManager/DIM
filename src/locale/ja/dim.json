@@ -236,6 +236,8 @@
     "NeverShow": "次回から表示しない",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "クロームをアップデートしてください",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
     "Version_release": "DIM v{{version}} がリリースされました",
@@ -489,6 +491,8 @@
     "SortPrimary": "メインのステータス",
     "SortRarity": "希少性",
     "SortRoll": "評価",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "保管庫の最大幅"
   },
   "Stats": {

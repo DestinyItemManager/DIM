@@ -236,6 +236,8 @@
     "NeverShow": "Never show me this again.",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "Please Upgrade Chrome",
     "Version_beta": "Beta has been updated to v{{version}}",
     "Version_release": "DIM v{{version}} Released",
@@ -489,6 +491,8 @@
     "SortPrimary": "primary stat",
     "SortRarity": "редкость",
     "SortRoll": "рейтинг",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {

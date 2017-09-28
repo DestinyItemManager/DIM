@@ -236,6 +236,8 @@
     "NeverShow": "Não mostre isso novamente.",
     "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não pode salvar dados no navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco. DIM não pode prosseguir.",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "Por favor, atualize o Chrome",
     "Version_beta": "Beta foi atualizado para v{{version}}",
     "Version_release": "DIM v{{version}} lançado",
@@ -489,6 +491,8 @@
     "SortPrimary": "Estatisticas primárias",
     "SortRarity": "Raridade",
     "SortRoll": "avaliação",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "Largura máxima do inventário do cofre"
   },
   "Stats": {
