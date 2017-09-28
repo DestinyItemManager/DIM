@@ -166,7 +166,7 @@ mod.filter('sortItems', (dimSettingsService) => {
     }
 
     items = _.sortBy(items || [], 'name');
-    if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality' || sort === 'type') {
+    if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality' || sort === 'typeThenPrimary') {
       items = _.sortBy(items, (item) => {
         return (item.primStat) ? (-1 * item.primStat.value) : 1000;
       });
@@ -194,7 +194,7 @@ mod.filter('sortItems', (dimSettingsService) => {
         }
       });
     }
-    if (sort === 'type') {
+    if (sort === 'typeThenPrimary' || sort === 'typeThenName') {
       items = _.sortBy(items, (item) => {
         return item.classType;
       });
