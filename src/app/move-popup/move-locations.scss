@@ -1,0 +1,54 @@
+.drag-locations {
+  position: fixed;
+  backface-visibility: hidden;
+  bottom: 20%;
+  transition: transform .5s, opacity .5s, background-color .1s;
+  background-color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  padding: .5em .5em;
+  color: #e0e0e0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  left: 0;
+  width: 100%;
+}
+
+dim-move-locations {
+  display: flex;
+
+  .locations {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.move-button {
+  background-size: cover;
+  width: 37px;
+  height: 37px;
+  text-align: center;
+  line-height: 10px;
+  margin: 6px 4px 6px 0;
+  cursor: pointer;
+  user-select: none;
+  &:last-child {
+    margin-right: 10px;
+  }
+  &:focus {
+    outline-width: 5px;
+  }
+  span {
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+}

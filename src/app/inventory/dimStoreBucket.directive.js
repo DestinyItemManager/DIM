@@ -43,7 +43,7 @@ function StoreBucketCtrl($scope,
   // Detect when we're hovering a dragged item over a target
   let dragTimer = null;
   let hovering = false;
-  const dragHelp = document.getElementById('drag-help');
+  const dragHelp = document.getElementById('item-drag-box');
   let entered = 0;
   vm.onDragEnter = function() {
     if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {

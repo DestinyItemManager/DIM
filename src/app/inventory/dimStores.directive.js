@@ -12,7 +12,7 @@ export const StoresComponent = {
   template
 };
 
-function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next, $filter) {
+function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next, $filter) {
   'ngInject';
 
   const vm = this;
@@ -28,6 +28,10 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
   });
 
   vm.swipeLeft = () => {
+    if ($rootScope.dragItem) {
+      return;
+    }
+
     const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
@@ -37,6 +41,10 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
   };
 
   vm.swipeRight = () => {
+    if ($rootScope.dragItem) {
+      return;
+    }
+
     const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 

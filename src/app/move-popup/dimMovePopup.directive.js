@@ -15,15 +15,15 @@ function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog,
   'ngInject';
   const vm = this;
 
-  function getStoreService(item) {
-    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  function getStoreService() {
+    return vm.item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
   vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
 
   if (vm.item.maxStackSize > 1) {
-    const store = getStoreService(vm.item).getStore(vm.item.owner);
+    const store = getStoreService().getStore(vm.item.owner);
     vm.maximum = store.amountOfItem(vm.item);
   }
 
@@ -59,47 +59,5 @@ function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog,
 
   vm.distribute = function() {
     dimItemMoveService.distribute(vm.item, vm.store, closeThisDialog);
-  };
-
-  vm.moveItemTo = function(store, equip) {
-    dimItemMoveService.moveItemTo(vm.item, store, equip, vm.moveAmount, closeThisDialog);
-  };
-
-  vm.stores = getStoreService(vm.item).getStores();
-
-  vm.canShowVault = function canShowVault(item, itemStore, buttonStore) {
-    // If my itemStore is the vault, don't show a vault button.
-    // Can't vault a vaulted item.
-    if (itemStore.isVault) {
-      return false;
-    }
-
-    // If my buttonStore is the vault, then show a vault button.
-    if (!buttonStore.isVault) {
-      return false;
-    }
-
-    // Can't move this item away from the current itemStore.
-    if (item.notransfer) {
-      return false;
-    }
-
-    return true;
-  };
-
-  vm.canShowStore = function canShowStore(item, itemStore, buttonStore) {
-    if (buttonStore.isVault) {
-      return false;
-    }
-
-    if (item.notransfer) {
-      if (item.equipped && itemStore.id === buttonStore.id) {
-        return true;
-      }
-    } else if (itemStore.id !== buttonStore.id || item.equipped) {
-      return true;
-    }
-
-    return false;
   };
 }

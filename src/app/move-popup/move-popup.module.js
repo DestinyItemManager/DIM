@@ -5,6 +5,7 @@ import { MoveAmount } from './move-amount.directive';
 import { ObjectivesComponent } from './objectives.component';
 import { MoveItemProperties } from './dimMoveItemProperties.directive';
 import { MovePopupComponent } from './dimMovePopup.directive';
+import { MoveLocationsComponent } from './move-locations.component';
 import { talentGridNodesFilter, TalentGridComponent } from './talent-grid.component';
 import { SocketsComponent } from './sockets.component';
 import { ItemPopup } from './item-popup.directive';
@@ -17,6 +18,7 @@ export default angular
   .directive('dimMoveAmount', MoveAmount)
   .component('dimObjectives', ObjectivesComponent)
   .directive('dimMoveItemProperties', MoveItemProperties)
+  .component('dimMoveLocations', MoveLocationsComponent)
   .component('dimMovePopup', MovePopupComponent)
   .component('dimTalentGrid', TalentGridComponent)
   .component('sockets', SocketsComponent)

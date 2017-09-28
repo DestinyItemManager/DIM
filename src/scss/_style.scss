@@ -308,7 +308,7 @@ img {
 }
 
 
-#drag-help {
+.drag-help {
   font-size: 1.5em;
   position: fixed;
   backface-visibility: hidden;
@@ -329,7 +329,7 @@ img {
   opacity: 0;
 }
 
-#drag-help {
+.drag-help {
   &.drag-shift-activated, &.drag-dwell-activated {
     background-color: rgba(0, 60, 0, 0.8);
   }
