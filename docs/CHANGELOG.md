@@ -1,4 +1,5 @@
 # Next
+* Added missing factions to the reputation section.
 * Fix in infusion calculator to correctly consider +5 mod
 * Fix for CSV export (e.g.: First In, Last Out in 2 columns)
 
