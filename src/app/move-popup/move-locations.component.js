@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import template from './move-locations.html';
 import './move-locations.scss';
 
