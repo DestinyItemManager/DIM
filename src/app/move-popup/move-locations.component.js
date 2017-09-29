@@ -2,15 +2,14 @@ import template from './move-locations.html';
 import './move-locations.scss';
 
 export const MoveLocationsComponent = {
-  controller: MoveLocationsController,
-  controllerAs: 'vm',
+  template,
+  controller,
   bindings: {
     item: '<'
-  },
-  template: template
+  }
 };
 
-function MoveLocationsController($rootScope, dimSettingsService, dimItemMoveService, dimStoreService, D2StoresService) {
+function controller($rootScope, dimSettingsService, dimItemMoveService, dimStoreService, D2StoresService) {
   'ngInject';
   const vm = this;
 
@@ -18,12 +17,15 @@ function MoveLocationsController($rootScope, dimSettingsService, dimItemMoveServ
     return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
+  const dragHelp = document.getElementById('item-drag-box');
   vm.settings = dimSettingsService;
 
   $rootScope.$on('drag-start-item', (event, args) => {
     vm.item = args.item;
     vm.store = getStoreService().getStore(vm.item.owner);
     vm.stores = getStoreService().getStores();
+    dragHelp.style.top = `${args.element.target.getBoundingClientRect().top + args.element.target.offsetHeight}px`;
+    $rootScope.$digest();
   });
 
   if (vm.item) {
@@ -72,15 +74,8 @@ function MoveLocationsController($rootScope, dimSettingsService, dimItemMoveServ
   };
 
   // drag stuff
-  const dragHelp = document.getElementById('item-drag-box');
-  vm.onDragEnter = function() {
-    dragHelp.classList.add('drag-dwell-activated');
-  };
-  vm.onDragLeave = function() {
-    dragHelp.classList.remove('drag-dwell-activated');
-  };
-  vm.onDrop = function(store, event, equip) {
+  vm.onDrop = function(store, $event, equip) {
     vm.moveItemTo(store, equip);
-    dragHelp.classList.remove('drag-dwell-activated');
+    $event.target.parentElement.classList.remove('activated');
   };
 }

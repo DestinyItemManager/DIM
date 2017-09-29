@@ -1,9 +1,8 @@
 .drag-locations {
   position: fixed;
   backface-visibility: hidden;
-  bottom: 40%;
-  transition: transform .5s, opacity .5s, background-color .1s;
-  background-color: rgba(0, 0, 0, 0.7);
+  transition: transform .2s, opacity .2s;
+  background-color: black;
   text-align: center;
   padding: .5em .5em;
   color: #e0e0e0;
@@ -38,6 +37,9 @@ dim-move-locations {
   }
   &:focus {
     outline-width: 5px;
+  }
+  &.on-drag-hover span {
+    border: 1px solid white;
   }
   span {
     text-transform: uppercase;
