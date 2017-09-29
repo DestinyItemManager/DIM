@@ -1,5 +1,7 @@
 # Next
 
+* Fix bug that prevented pinned apps in iOS from authenticating with Bungie.net.
+
 # 4.16.2
 
 * Added `is:dupelower` to search filters for easier trashing.
