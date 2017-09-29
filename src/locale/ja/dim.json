@@ -146,6 +146,7 @@
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "重複するアイテムを表示",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "エングラムを表示",
     "EnterName": "アイテム名を入力してください。",
     "EnterNote": "ここにノート入力:",

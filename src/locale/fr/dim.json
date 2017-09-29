@@ -146,6 +146,7 @@
     "DamageType": "Montre les objets selon leur type de dégât.",
     "Description": "Description",
     "Dupe": "Montre les objets dupliqués",
+    "DupeInPostmaster": "Certains doublons sont au commis des postes.",
     "Engrams": "Montre les engrammes.",
     "EnterName": "Entrez un nom d'objet:",
     "EnterNote": "Entrez vos notes:",

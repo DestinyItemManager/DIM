@@ -146,6 +146,7 @@
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
     "Description": "Descrizione",
     "Dupe": "Mostra oggetti doppioni",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "Mostra engrammi.",
     "EnterName": "Inserisci il nome di un oggetto:",
     "EnterNote": "Inserisci delle note:",
