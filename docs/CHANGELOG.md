@@ -1,5 +1,7 @@
 # Next
 
+# 4.17.0
+
 * Fix bug that prevented pinned apps in iOS from authenticating with Bungie.net.
 
 # 4.16.2
