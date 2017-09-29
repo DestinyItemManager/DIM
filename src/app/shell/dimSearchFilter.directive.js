@@ -545,11 +545,12 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
         _duplicates = _.groupBy(getStoreService().getAllItems(), 'hash');
         _.each(_duplicates, (dupes) => {
           if (dupes.length > 1) {
-            const bestBasePower = _.max(_.pluck(dupes, 'basePower'));
+            let bestBasePower = _.max(dupes, 'basePower');
+            if (bestBasePower === -Infinity) {
+              bestBasePower = dupes[0];
+            }
 
-            _.filter(dupes, (dupe) => {
-              return dupe.basePower < bestBasePower;
-            }).forEach((dupe) => {
+            _.reject(dupes, (dupe) => dupe.id === bestBasePower.id).forEach((dupe) => {
               _lowerDupes[dupe.id] = 1;
             });
 
