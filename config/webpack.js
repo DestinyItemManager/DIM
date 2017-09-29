@@ -241,6 +241,7 @@ module.exports = (env) => {
 
   if (isDev) {
     config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
+    return config;
   } else {
     // Bail and fail hard on first error
     config.bail = true;
