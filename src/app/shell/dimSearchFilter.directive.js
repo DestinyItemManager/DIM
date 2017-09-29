@@ -54,7 +54,7 @@ function SearchService(dimSettingsService) {
     type: itemTypes,
     tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
     classType: ['titan', 'hunter', 'warlock'],
-    dupe: ['dupe', 'duplicate'],
+    dupe: ['dupe', 'duplicate', 'dupelower'],
     tracked: ['tracked'],
     untracked: ['untracked'],
     locked: ['locked'],
@@ -208,6 +208,7 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
 
   const filterInputId = 'filter-input';
   let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
+  let _lowerDupes = {};
 
   vm.search = dimSearchService;
 
@@ -217,22 +218,26 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
 
   $scope.$on('dim-stores-updated', () => {
     _duplicates = null;
+    _lowerDupes = {};
     vm.filter();
   });
 
   $scope.$on('d2-stores-updated', () => {
     _duplicates = null;
+    _lowerDupes = {};
     vm.filter();
   });
 
   $scope.$on('dim-vendors-updated', () => {
     _duplicates = null;
+    _lowerDupes = {};
     vm.filter();
   });
 
   // Something has changed that could invalidate filters
   $scope.$on('dim-filter-invalidate', () => {
     _duplicates = null;
+    _lowerDupes = {};
     vm.filter();
   });
 
@@ -534,11 +539,26 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     },
     dupe: function(predicate, item) {
       if (_duplicates === null) {
-        _duplicates = _.countBy(getStoreService().getAllItems(), 'hash');
+        _duplicates = _.groupBy(getStoreService().getAllItems(), 'hash');
+        _.each(_duplicates, (dupes) => {
+          const bestBasePower = _.max(_.pluck(dupes, 'basePower'));
+
+          if (dupes.length > 1) {
+            _.filter(dupes, (dupe) => {
+              return dupe.basePower < bestBasePower;
+            }).forEach((dupe) => {
+              _lowerDupes[dupe.id] = 1;
+            });
+          }
+        });
+      }
+
+      if (predicate === 'dupelower') {
+        return _lowerDupes[item.id];
       }
 
       // We filter out the "Default Shader" because everybody has one per character
-      return item.hash !== 4248210736 && _duplicates[item.hash] > 1;
+      return item.hash !== 4248210736 && _duplicates[item.hash].length > 1;
     },
     classType: function(predicate, item) {
       let value;
