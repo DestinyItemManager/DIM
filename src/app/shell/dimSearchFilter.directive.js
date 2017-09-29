@@ -554,8 +554,8 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
             });
 
             if (!_dupeInPost) {
-              if(_.any(dupes, (dupe) => dupe.location.inPostmaster)) {
-                toaster.pop('warn', $i18next.t('Filter.DupeInPostmaster'),);
+              if (_.any(dupes, (dupe) => dupe.location.inPostmaster)) {
+                toaster.pop('warn', $i18next.t('Filter.DupeInPostmaster'));
                 _dupeInPost = true;
               }
             }
