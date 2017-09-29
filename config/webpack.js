@@ -172,7 +172,7 @@ module.exports = (env) => {
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env),
         $DIM_BUILD_DATE: JSON.stringify(Date.now()),
-        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/master/docs/CHANGELOG.md#${env === 'release' ? $DIM_VERSION.replace(/\.$/, "") : 'next'}`),
+        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/docs/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
@@ -241,6 +241,7 @@ module.exports = (env) => {
 
   if (isDev) {
     config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
+    return config;
   } else {
     // Bail and fail hard on first error
     config.bail = true;
