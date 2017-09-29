@@ -292,7 +292,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     });
 
     const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) => {
-      return _.first(items, 9);
+      return vm.store.isVault ? items : _.first(items, 9);
     });
 
     // Copy the items and mark them equipped and put them in arrays, so they look like a loadout

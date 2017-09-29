@@ -1,5 +1,13 @@
 # Next
+
+* Fix bug that prevented pinned apps in iOS from authenticating with Bungie.net.
+
+# 4.16.2
+
+* Added `is:dupelower` to search filters for easier trashing.
+* Added missing factions to the reputation section for Faction Rally.
 * Fix in infusion calculator to correctly consider +5 mod
+* Fix for CSV export (e.g.: First In, Last Out in 2 columns)
 
 # 4.16.1
 
