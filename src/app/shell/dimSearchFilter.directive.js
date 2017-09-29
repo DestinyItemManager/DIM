@@ -199,7 +199,7 @@ function SearchFilter(dimSearchService) {
 }
 
 
-function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresService, dimVendorService, dimSearchService, hotkeys, $i18next) {
+function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresService, dimVendorService, dimSearchService, hotkeys, $i18next, toaster) {
   const vm = this;
 
   function getStoreService() {
@@ -209,6 +209,13 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
   const filterInputId = 'filter-input';
   let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
   let _lowerDupes = {};
+  let _dupeInPost = false;
+
+  function resetDuplicates() {
+    _duplicates = null;
+    _lowerDupes = {};
+    _dupeInPost = false;
+  }
 
   vm.search = dimSearchService;
 
@@ -217,27 +224,23 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
   });
 
   $scope.$on('dim-stores-updated', () => {
-    _duplicates = null;
-    _lowerDupes = {};
+    resetDuplicates();
     vm.filter();
   });
 
   $scope.$on('d2-stores-updated', () => {
-    _duplicates = null;
-    _lowerDupes = {};
+    resetDuplicates();
     vm.filter();
   });
 
   $scope.$on('dim-vendors-updated', () => {
-    _duplicates = null;
-    _lowerDupes = {};
+    resetDuplicates();
     vm.filter();
   });
 
   // Something has changed that could invalidate filters
   $scope.$on('dim-filter-invalidate', () => {
-    _duplicates = null;
-    _lowerDupes = {};
+    resetDuplicates();
     vm.filter();
   });
 
@@ -541,14 +544,21 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
       if (_duplicates === null) {
         _duplicates = _.groupBy(getStoreService().getAllItems(), 'hash');
         _.each(_duplicates, (dupes) => {
-          const bestBasePower = _.max(_.pluck(dupes, 'basePower'));
-
           if (dupes.length > 1) {
+            const bestBasePower = _.max(_.pluck(dupes, 'basePower'));
+
             _.filter(dupes, (dupe) => {
               return dupe.basePower < bestBasePower;
             }).forEach((dupe) => {
               _lowerDupes[dupe.id] = 1;
             });
+
+            if (!_dupeInPost) {
+              if(_.any(dupes, (dupe) => dupe.location.inPostmaster)) {
+                toaster.pop('warn', $i18next.t('Filter.DupeInPostmaster'),);
+                _dupeInPost = true;
+              }
+            }
           }
         });
       }
