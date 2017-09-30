@@ -14,7 +14,7 @@ class D2BulkFetcher {
   _getBulkWeaponDataEndpointPost(gunList) {
     return {
       method: 'POST',
-      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
+      url: 'https://db-api.destinytracker.net/api/external/reviews/fetch',
       data: gunList,
       dataType: 'json'
     };
