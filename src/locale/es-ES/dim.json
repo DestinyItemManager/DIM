@@ -146,6 +146,7 @@
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra los objetos duplicados",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "Muestra engramas.",
     "EnterName": "Escribe el nombre de un objeto:",
     "EnterNote": "Inserta notas de texto:",
@@ -236,6 +237,8 @@
     "NeverShow": "Nunca mostrar esto de nuevo.",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tienes poco espacio en disco. DIM no puede continuar.",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "Por favor actualice Chrome",
     "Version_beta": "La Beta ha sido actualizada a la v{{version}}",
     "Version_release": "DIM v{{version}} ha sido Publicada",
@@ -489,6 +492,8 @@
     "SortPrimary": "estadística principal",
     "SortRarity": "rareza",
     "SortRoll": "calificación",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "Máximo inventario en depósito"
   },
   "Stats": {

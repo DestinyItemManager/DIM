@@ -146,6 +146,7 @@
     "DamageType": "Montre les objets selon leur type de dégât.",
     "Description": "Description",
     "Dupe": "Montre les objets dupliqués",
+    "DupeInPostmaster": "Certains doublons sont au commis des postes.",
     "Engrams": "Montre les engrammes.",
     "EnterName": "Entrez un nom d'objet:",
     "EnterNote": "Entrez vos notes:",
@@ -236,6 +237,8 @@
     "NeverShow": "Ne plus jamais afficher.",
     "NoStorage": "DIM ne peut pas stocker de données",
     "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible. DIM ne peut pas continuer.",
+    "UpdateAvailable": "DIM mis à jour",
+    "UpdateAvailableMessage": "Une mise à jour est disponible pour DIM. Actualisez la page pour mettre à jour.",
     "UpgradeChrome": "Veuillez Mettre à Jour Chrome",
     "Version_beta": "Beta a été mis à jour à v{{version}}",
     "Version_release": "DIM v{{version}} Publiée",
@@ -489,6 +492,8 @@
     "SortPrimary": "stat primaire",
     "SortRarity": "rareté",
     "SortRoll": "note",
+    "SortTypeThenName": "type d'objet puis nom",
+    "SortTypeThenPrimary": "type d'objet puis stat primaire",
     "VaultColumns": "Nombre maximal de colonne de coffre"
   },
   "Stats": {
