@@ -35,18 +35,21 @@ function DestinyTrackerService($q,
     isDestinyOne: function() {
       return (dimSettingsService.destinyVersion === 1);
     },
+
     isDestinyTwo: function() {
       return (dimSettingsService.destinyVersion === 2);
     },
+
     reattachScoresFromCache: function(stores) {
       if (this.isDestinyOne()) {
         _bulkFetcher.attachRankings(null,
-          stores);
+                                    stores);
       }
       else if (this.isDestinyTwo()) {
         console.log("reattach D2 called");
       }
     },
+
     updateCachedUserRankings: function(item,
                                        userReview) {
       if (this.isDestinyOne()) {
@@ -57,6 +60,7 @@ function DestinyTrackerService($q,
         console.log("update cached D2 called");
       }
     },
+
     updateVendorRankings: function(vendors) {
       if (dimSettingsService.showReviews) {
         if (this.isDestinyOne()) {
@@ -67,11 +71,13 @@ function DestinyTrackerService($q,
         }
       }
     },
+
     getItemReviews: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
         _reviewsFetcher.getItemReviews(item);
       }
     },
+
     submitReview: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
         if (this.isDestinyOne()) {
@@ -82,6 +88,7 @@ function DestinyTrackerService($q,
         }
       }
     },
+
     fetchReviews: function(stores) {
       if (dimSettingsService.showReviews) {
         if (this.isDestinyOne()) {
@@ -92,6 +99,7 @@ function DestinyTrackerService($q,
         }
       }
     },
+
     reportReview: function(review) {
       if (dimSettingsService.allowIdPostToDtr) {
         _reviewReporter.reportReview(review);
