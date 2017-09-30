@@ -22,6 +22,7 @@
     "Title": "A message from Bungie:"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
     "Difficulties": "The Bungie API is currently experiencing difficulties.",
     "ItemUniqueness": "Item Uniqueness",
