@@ -15,13 +15,13 @@ class D2ReviewDataCache {
   }
 
   _getMatchingItem(item) {
-    const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
+    const dtrItem = this._itemTransformer.translateToDtrItem(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
     // and findWhere considers 123 !== "123".
     dtrItem.referenceId = String(dtrItem.referenceId);
 
-    return _.find(this._itemStores, { referenceId: dtrItem.referenceId, roll: dtrItem.roll });
+    return _.find(this._itemStores, { referenceId: dtrItem.referenceId });
   }
 
   /**

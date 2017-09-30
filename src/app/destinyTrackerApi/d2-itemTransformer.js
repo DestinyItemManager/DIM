@@ -7,18 +7,18 @@
  */
 class D2ItemTransformer {
   /**
-   * Translate a DIM weapon item into the basic form that the DTR understands a weapon to contain.
+   * Translate a DIM item into the basic form that the DTR understands an item to contain.
    * This does not contain personally-identifying information.
+   * Meant for fetch calls.
    *
-   * @param {dimItem} weapon
+   * @param {dimItem} item
    * @returns {dtrWeapon}
    *
    * @memberof D2ItemTransformer
    */
-  translateToDtrWeapon(weapon) {
+  translateToDtrItem(item) {
     return {
-      referenceId: weapon.hash,
-      roll: this._getDtrRoll(weapon)
+      referenceId: item.hash
     };
   }
 

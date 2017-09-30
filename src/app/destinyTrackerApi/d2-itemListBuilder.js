@@ -15,7 +15,7 @@ class D2ItemListBuilder {
   }
 
   _getNewItems(allItems, reviewDataCache) {
-    const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrWeapon(item));
+    const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrItem(item));
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
     const unmatched = _.reject(allDtrItems, (dtrItem) => _.any(allKnownDtrItems, { referenceId: String(dtrItem.referenceId), roll: dtrItem.roll }));
@@ -34,29 +34,25 @@ class D2ItemListBuilder {
   }
 
   // Get all of the weapons from our stores in a DTR API-friendly format.
-  _getDtrWeapons(stores, reviewDataCache) {
+  _getDtrItems(stores, reviewDataCache) {
     const allItems = this._getAllItems(stores);
 
-    const allWeapons = _.filter(allItems,
+    const allReviewableItems = _.filter(allItems,
                         (item) => {
-                          if (!item.primStat) {
-                            return false;
-                          }
-
-                          return (item.bucket.sort === 'Weapons');
+                          return (item.reviewable);
                         });
 
-    const newGuns = this._getNewItems(allWeapons, reviewDataCache);
+    const newItems = this._getNewItems(allReviewableItems, reviewDataCache);
 
     if (reviewDataCache.getItemStores().length > 0) {
-      return newGuns;
+      return newItems;
     }
 
-    return allWeapons.map((weapon) => this._itemTransformer.translateToDtrWeapon(weapon));
+    return allReviewableItems.map((item) => this._itemTransformer.translateToDtrItem(item));
   }
 
   /**
-   * Translate the universe of weapons that the user has in their stores into a collection of data that we can send the DTR API.
+   * Translate the universe of items that the user has in their stores into a collection of data that we can send the DTR API.
    * Tailored to work alongside the bulkFetcher.
    * Non-obvious bit: it attempts to optimize away from sending items that already exist in the ReviewDataCache.
    *
@@ -67,9 +63,9 @@ class D2ItemListBuilder {
    * @memberof D2ItemListBuilder
    */
   getWeaponList(stores, reviewDataCache) {
-    const dtrWeapons = this._getDtrWeapons(stores, reviewDataCache);
+    const dtrItems = this._getDtrItems(stores, reviewDataCache);
 
-    const list = new Set(dtrWeapons);
+    const list = new Set(dtrItems);
 
     return Array.from(list);
   }
