@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 /**
  * Translates items from the objects that DIM has to the form that the DTR API expects.
  * This is generally tailored towards working with weapons.
@@ -26,34 +28,25 @@ class D2ItemTransformer {
    * Get the roll and perks for the selected DIM item (to send to the DTR API).
    * Will contain personally-identifying information.
    *
-   * @param {dimItem} weapon
+   * @param {dimItem} item
    * @returns {dtrWeaponWithIdentifyingInfo}
    *
    * @memberof D2ItemTransformer
    */
-  getRollAndPerks(weapon) {
+  getRollAndPerks(item) {
     return {
-      roll: this._getDtrRoll(weapon),
-      selectedPerks: this._getDtrPerks(weapon),
-      referenceId: weapon.hash,
-      instanceId: weapon.id,
+      selectedPerks: this._getSelectedPlugs(item),
+      referenceId: item.hash,
+      instanceId: item.id,
     };
   }
 
-  _getDtrPerks(weapon) {
-    if (!weapon.talentGrid) {
+  _getSelectedPlugs(item) {
+    if (!item.sockets) {
       return null;
     }
 
-    return weapon.talentGrid.dtrPerks;
-  }
-
-  _getDtrRoll(weapon) {
-    if (!weapon.talentGrid) {
-      return null;
-    }
-
-    return weapon.talentGrid.dtrRoll;
+    return _.pluck(_.pluck(item.sockets.sockets, 'plug'), 'hash');
   }
 }
 

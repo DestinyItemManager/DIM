@@ -9,6 +9,7 @@ import { UserFilter } from '../destinyTrackerApi/userFilter';
 
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
@@ -30,6 +31,7 @@ function DestinyTrackerService($q,
 
   const _d2reviewDataCache = new D2ReviewDataCache();
   const _d2bulkFetcher = new D2BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _d2reviewDataCache);
+  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
   return {
     isDestinyOne: function() {
@@ -74,7 +76,12 @@ function DestinyTrackerService($q,
 
     getItemReviews: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
-        _reviewsFetcher.getItemReviews(item);
+        if (this.isDestinyOne()) {
+          _reviewsFetcher.getItemReviews(item);
+        }
+        else if (this.isDestinyTwo()) {
+          _d2reviewsFetcher.getItemReviews(item);
+        }
       }
     },
 
