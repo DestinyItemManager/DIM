@@ -1,6 +1,7 @@
 # Next
 
 * Updated `is:dupelower` search filter for items with the same/no power level.
+* Fix some issues with Google Drive that might lead to lost data.
 
 # 4.17.0
 
