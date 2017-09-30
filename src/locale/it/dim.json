@@ -146,6 +146,7 @@
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
     "Description": "Descrizione",
     "Dupe": "Mostra oggetti doppioni",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "Mostra engrammi.",
     "EnterName": "Inserisci il nome di un oggetto:",
     "EnterNote": "Inserisci delle note:",
@@ -236,6 +237,8 @@
     "NeverShow": "Non mostrarmi più questo messaggio.",
     "NoStorage": "DIM non può salvare dati",
     "NoStorageMessage": "DIM non può salvare dati nel tuo browser. Questo può essere causato dalla navigazione con privacy o in modalità in incognito, oppure se hai poco spazio libero in memoria. DIM non può continuare.",
+    "UpdateAvailable": "DIM aggiornato",
+    "UpdateAvailableMessage": "E' disponibile un aggiornamento per DIM. Ricarica la pagina per aggiornare.",
     "UpgradeChrome": "Prego aggiornare Chrome",
     "Version_beta": "La Beta è stata aggiornata alla versione v{{version}}",
     "Version_release": "Rilasciata la versione v{{version}} di DIM",
@@ -489,6 +492,8 @@
     "SortPrimary": "Statistica primaria",
     "SortRarity": "Rarità",
     "SortRoll": "Giudizio",
+    "SortTypeThenName": "tipo di oggetto e poi nome",
+    "SortTypeThenPrimary": "tipo di oggetto e poi statistica primaria",
     "VaultColumns": "Larghezza massima dell'inventario del deposito"
   },
   "Stats": {

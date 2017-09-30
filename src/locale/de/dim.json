@@ -146,6 +146,7 @@
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
+    "DupeInPostmaster": "Einige Item-Duplikate sind bei der Poststelle.",
     "Engrams": "Zeige Engramme.",
     "EnterName": "Trage einen Namen ein:",
     "EnterNote": "Trage eine Beschreibung ein:",
@@ -236,6 +237,8 @@
     "NeverShow": "Diesen Tipp nicht erneut zeigen.",
     "NoStorage": "DIM kann die Daten nicht speichern",
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. DIM kann nicht fortfahren.",
+    "UpdateAvailable": "DIM aktualisiert",
+    "UpdateAvailableMessage": "Es ist eine Aktualisierung für DIM verfügbar. Aktualisiere die Seite um die Aktualisierung durchzuführen.",
     "UpgradeChrome": "Bitte aktualisiere Chrome",
     "Version_beta": "Beta wurde auf v{{version}} aktualisiert",
     "Version_release": "DIM v{{version}} veröffentlicht",
@@ -489,6 +492,8 @@
     "SortPrimary": "primärer Wert",
     "SortRarity": "Seltenheit",
     "SortRoll": "Bewertung",
+    "SortTypeThenName": "Itemtyp dann Name",
+    "SortTypeThenPrimary": "Itemtyp dann Primärwert",
     "VaultColumns": "Maximale Anzahl von Spalten des Tresors"
   },
   "Stats": {

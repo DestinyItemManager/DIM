@@ -1,5 +1,9 @@
 # Next
 
+* Updated `is:dupelower` search filter for items with the same/no power level.
+
+# 4.17.0
+
 * Fix bug that prevented pinned apps in iOS from authenticating with Bungie.net.
 
 # 4.16.2
