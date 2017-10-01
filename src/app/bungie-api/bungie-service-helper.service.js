@@ -64,6 +64,8 @@ export function BungieServiceHelper($rootScope, $q, $timeout, $http, $state, dim
         return $q.reject(error);
       }
       break;
+    case 1670: // DestinyLegacyPlatformInaccessible
+      return $q.reject(new Error($i18next.t('BungieService.DestinyLegacyPlatform')));
     case 2101: // ApiInvalidOrExpiredKey
     case 2102: // ApiKeyMissingFromRequest
     case 2107: // OriginHeaderDoesNotMatchKey
