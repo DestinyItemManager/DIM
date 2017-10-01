@@ -46,7 +46,8 @@
       </span>
     </div>
   </div>
-  <div ng-if="!$ctrl.isDestinyTwo()">
+  
+  <div ng-if="$ctrl.isDestinyOne()">
     <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>
   </div>
 

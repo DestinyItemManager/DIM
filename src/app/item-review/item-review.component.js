@@ -42,6 +42,10 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     return (dimSettingsService.destinyVersion === 2);
   };
 
+  vm.isDestinyOne = function() {
+    return (dimSettingsService.destinyVersion === 1);
+  };
+
   vm.openFlagContext = function(reviewId) {
     const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
 
