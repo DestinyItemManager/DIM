@@ -140,6 +140,8 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     } else {
       vm.item.userVote = userVote;
     }
+
+    vm.expandReview = (vm.item.userVote !== 0);
   };
 }
 
