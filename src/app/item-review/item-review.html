@@ -30,15 +30,19 @@
   <span ng-i18next="DtrReview.YourReview"></span>
 
   <div ng-if="$ctrl.isDestinyTwo()" class="user-review--thumbs">
-    <div class="user-review--thumbs-up link">
+    <div class="user-review--thumbs-up link" ng-click="$ctrl.setUserVote(1)">
         <span class="user-review--thumbs-up-button">
-          <i class="fa fa-thumbs-o-up fa-2x" aria-hidden="true"></i>
+          <i class="fa fa-2x"
+             ng-class="{'fa-thumbs-o-up': $ctrl.item.userVote !== 1, 'fa-thumbs-up': $ctrl.item.userVote === 1}"
+             aria-hidden="true"></i>
         </span>
     </div>
 
     <div class="user-review--thumbs-down">
-      <span class="user-review--thumbs-down-button">
-        <i class="fa fa-thumbs-o-down fa-2x" aria-hidden="true"></i>
+      <span class="user-review--thumbs-down-button" ng-click="$ctrl.setUserVote(-1)">
+        <i class="fa fa-2x"
+           ng-class="{'fa-thumbs-o-down': $ctrl.item.userVote !== -1, 'fa-thumbs-down': $ctrl.item.userVote === -1}"
+           aria-hidden="true"></i>
       </span>
     </div>
   </div>

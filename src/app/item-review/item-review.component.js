@@ -133,6 +133,14 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
       dimDestinyTrackerService.getItemReviews(vm.item);
     }
   };
+
+  vm.setUserVote = function(userVote) {
+    if (vm.item.userVote === userVote) {
+      vm.item.userVote = 0;
+    } else {
+      vm.item.userVote = userVote;
+    }
+  };
 }
 
 export const ItemReviewComponent = {
