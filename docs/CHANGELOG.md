@@ -2,6 +2,7 @@
 
 * Updated `is:dupelower` search filter for items with the same/no power level.
 * Fix some issues with Google Drive that might lead to lost data.
+* Really fix vault counts this time!
 
 # 4.17.0
 
