@@ -50,7 +50,8 @@ function DestinyTrackerService($q,
                                     stores);
       }
       else if (this.isDestinyTwo()) {
-        console.log("reattach D2 called");
+        _d2bulkFetcher.attachRankings(null,
+                                      stores);
       }
     },
 
