@@ -118,6 +118,8 @@ export function SyncService(
               console.error('Sync: Error loading from', adapter.name, e);
               return null;
             });
+        } else if ($featureFlags.debugSync) {
+          console.log(adapter.name, 'is disabled');
         }
         return promise;
       }, $q.when())

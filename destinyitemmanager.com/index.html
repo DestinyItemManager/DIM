@@ -2,7 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-60316581-6"></script>
+    <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments)};
+     gtag('js', new Date());
+
+     gtag('config', 'UA-60316581-6');
+    </script>
+
     <title>Destiny Item Manager</title>
     <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
     <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
@@ -14,7 +25,7 @@
   <body>
     <header>
       <nav class="row">
-        <div class="col-2 logo"><img class="logo link release" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v4.3.0 (release)" src="images/DIM-menu.svg" alt="DIM" href="#"></div>
+        <div class="col-2 logo"><img class="logo link release" src="images/DIM-menu.svg" alt="DIM" href="#"></div>
         <ul class="col-10 menu">
           <li><a target="_blank" href="https://opencollective.com/dim?utm_campaign=dim&utm_medium=github&utm_source=opencollective#about_us">About</a></li>
           <li><a target="_blank" href="https://opencollective.com/dim?utm_campaign=dim&utm_medium=github&utm_source=opencollective#support">Backers</a></li>
@@ -27,7 +38,7 @@
       <button class="mobile-menu">Mobile Menu<span></span><span></span><span> </span></button>
       <nav class="sliding-panel-content">
         <ul class="menu">
-          <li class="mobile-heading"><img class="logo link release" ng-class="::$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v4.3.0 (release)" src="images/DIM-menu.svg" alt="DIM" href="#"></li>
+          <li class="mobile-heading"><img class="logo link release" src="images/DIM-menu.svg" alt="DIM" href="#"></li>
           <li><a target="_blank" href="https://opencollective.com/dim?utm_campaign=dim&utm_medium=github&utm_source=opencollective#about_us">About</a></li>
           <li><a target="_blank" href="https://opencollective.com/dim?utm_campaign=dim&utm_medium=github&utm_source=opencollective#support">Backers</a></li>
           <li><a target="_blank" href="https://teespring.com/stores/dim">Shop</a></li>

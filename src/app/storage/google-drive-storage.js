@@ -140,7 +140,9 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
           if ($featureFlags.debugSync) {
             console.log('authorizing Google Drive');
           }
-          return auth.signIn();
+          return auth.signIn().then(() => {
+            return this.updateSigninStatus(true);
+          });
         }
       });
     },
