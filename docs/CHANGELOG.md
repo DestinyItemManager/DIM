@@ -1,6 +1,7 @@
 # Next
 
 * Updated `is:dupelower` search filter for items with the same/no power level.
+* Really fix vault counts this time!
 
 # 4.17.0
 

@@ -497,8 +497,9 @@ export function D2StoresService(
           count: 0,
           bucket
         };
-        vault.d2VaultCounts[vaultBucketId].count += vault.buckets[bucket.id].length;
+        vault.d2VaultCounts[vaultBucketId].count += activeStore.buckets[bucket.id].length;
       }
     });
+    activeStore.vault = vault; // god help me
   }
 }
