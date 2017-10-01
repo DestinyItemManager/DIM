@@ -38,6 +38,10 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     }
   };
 
+  vm.isDestinyTwo = function() {
+    return (dimSettingsService.destinyVersion === 2);
+  };
+
   vm.openFlagContext = function(reviewId) {
     const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
 
