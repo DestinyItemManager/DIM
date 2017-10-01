@@ -56,8 +56,14 @@ function DestinyTrackerService($q,
 
     updateCachedUserRankings: function(item,
                                        userReview) {
-      _reviewDataCache.addUserReviewData(item,
-                                         userReview);
+      if (this.isDestinyOne()) {
+        _reviewDataCache.addUserReviewData(item,
+                                           userReview);
+      }
+      else if (this.isDestinyTwo()) {
+        _d2reviewDataCache.addUserReviewData(item,
+                                             userReview);
+      }
     },
 
     updateVendorRankings: function(vendors) {
