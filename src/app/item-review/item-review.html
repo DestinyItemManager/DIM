@@ -29,8 +29,18 @@
 <div ng-if="$ctrl.canCreateReview" class="user-review--header">
   <span ng-i18next="DtrReview.YourReview"></span>
 
-  <div ng-if="$ctrl.isDestinyTwo()">
-    <span>thumbs up/down</span>
+  <div ng-if="$ctrl.isDestinyTwo()" class="user-review--thumbs">
+    <div class="user-review--thumbs-up link">
+        <span class="user-review--thumbs-up-button">
+          <i class="fa fa-thumbs-o-up fa-2x" aria-hidden="true"></i>
+        </span>
+    </div>
+
+    <div class="user-review--thumbs-down">
+      <span class="user-review--thumbs-down-button">
+        <i class="fa fa-thumbs-o-down fa-2x" aria-hidden="true"></i>
+      </span>
+    </div>
   </div>
   <div ng-if="!$ctrl.isDestinyTwo()">
     <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>
