@@ -10,7 +10,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.canCreateReview = (vm.canReview && vm.item.owner);
   vm.submitted = false;
   vm.hasUserReview = ((vm.item.userRating) || (vm.item.userVote));
-  vm.expandReview = vm.item.isLocallyCached;
+  vm.expandReview = ((vm.item.isLocallyCached) && (vm.item.userVote !== 0));
   vm.toggledFlags = [];
 
   vm.procon = false; // TODO: turn this back on..
@@ -25,6 +25,12 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
   vm.toggleEdit = function() {
     vm.expandReview = !vm.expandReview;
+
+    if ((vm.item.userVote === 1) ||
+        (vm.item.userVote === -1)) {
+      vm.item.userVote = 0;
+      vm.reviewBlur();
+    }
   };
 
   vm.clickReview = function(reviewId) {
