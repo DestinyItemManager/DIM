@@ -22,6 +22,7 @@
     "Title": "Eine Nachricht von Bungie:"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
     "Difficulties": "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
     "ItemUniqueness": "Item Einzigartigkeit",
@@ -528,6 +529,7 @@
     "Export": "Sichere DIM Daten",
     "ForceSync": "Erzwinge Synchronisation",
     "GDriveLogout": "Deine Daten sind noch immer in Google Drive - wenn du dich wieder anmeldest, wird DIM diese wieder verwenden.",
+    "GDriveSignInError": "Error signing in to Google Drive:",
     "GDriveSignInWarning": "Wenn du bereits DIM Daten in Google Drive gespeichert hast, wird alles überschrieben was du lokal gespeichert hast. Du solltest eventuell deine Daten sichern, bevor du dich anmeldest.\n\nGoogle Drive Anmeldung fortsetzen?",
     "GoogleApiBlocked": "Google Drive ist nicht erreichbar, weil ein Inhaltsblocker JavaScript für Google Drive deaktiviert hat.",
     "GoogleDriveStorage": "Google Drive",
