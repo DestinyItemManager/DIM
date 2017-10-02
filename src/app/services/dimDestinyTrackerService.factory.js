@@ -32,8 +32,8 @@ function DestinyTrackerService($q,
 
   const _d2reviewDataCache = new D2ReviewDataCache();
   const _d2bulkFetcher = new D2BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
-  const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _d2reviewDataCache);
 
   return {
     isDestinyOne: function() {

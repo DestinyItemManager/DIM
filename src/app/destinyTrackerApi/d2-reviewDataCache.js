@@ -17,10 +17,6 @@ class D2ReviewDataCache {
   _getMatchingItem(item) {
     const dtrItem = this._itemTransformer.translateToDtrItem(item);
 
-    // The DTR API isn't consistent about returning reference ID as an int in its responses
-    // and findWhere considers 123 !== "123".
-    dtrItem.referenceId = String(dtrItem.referenceId);
-
     return _.find(this._itemStores, { referenceId: dtrItem.referenceId });
   }
 
@@ -79,14 +75,14 @@ class D2ReviewDataCache {
 
     this._markItemAsLocallyCached(item, true);
 
-    const rating = matchingItem.rating;
+    const userVote = matchingItem.userVote;
 
     Object.assign(matchingItem,
                   userReview);
 
     matchingItem.userRating = matchingItem.rating;
 
-    matchingItem.rating = rating;
+    matchingItem.userVote = userVote;
   }
 
   /**

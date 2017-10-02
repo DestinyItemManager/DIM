@@ -149,8 +149,8 @@ class D2ReviewsFetcher {
     }
 
     this._getItemReviewsPromise(item)
-      .then((data) => this._attachReviews(item,
-                                         data));
+      .then((reviewData) => this._attachReviews(item,
+                                                reviewData));
   }
 }
 
