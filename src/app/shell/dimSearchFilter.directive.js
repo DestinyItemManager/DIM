@@ -128,7 +128,7 @@ function SearchService(dimSettingsService) {
     });
   });
 
-  const ranges = ['light', 'level', 'quality', 'percentage'];
+  const ranges = ['light', 'level', 'stack', 'quality', 'percentage'];
 
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
