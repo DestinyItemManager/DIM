@@ -899,10 +899,6 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
 
     const foundStatHash = _.find(item.stats, { statHash });
 
-    if (typeof foundStatHash === 'undefined') {
-      return false;
-    }
-
-    return compareByOperand(foundStatHash, predicate);
+    return foundStatHash && foundStatHash.value && compareByOperand(foundStatHash.value, predicate);
   };
 }
