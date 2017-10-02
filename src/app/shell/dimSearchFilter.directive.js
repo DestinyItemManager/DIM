@@ -628,7 +628,7 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
       return item.maxStackSize > 1;
     },
     stack: function(predicate, item) {
-      return compareByOperand(vm.item.amount, predicate);
+      return compareByOperand(item.amount, predicate);
     },
     engram: function(predicate, item) {
       return item.isEngram();
