@@ -20,6 +20,7 @@
     <div ng-if="vm.loadout.warnitems.length" class="loadout-contents">
       <div ng-repeat="item in vm.loadout.warnitems" id="loadout-warn-item-{{:: $index }}" class="loadout-item">
         <dim-simple-item item-data="item"></dim-simple-item>
+        <div class="close" ng-click="vm.remove(item, $event); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>
         <div class="fa warn"></div>
       </div>
     </div>
