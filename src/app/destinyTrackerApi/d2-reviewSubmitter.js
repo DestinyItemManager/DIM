@@ -28,8 +28,8 @@ class D2ReviewSubmitter {
 
   toRatingAndReview(item) {
     return {
-      rating: item.userRating,
-      review: item.userReview,
+      voted: item.userVote,
+      text: item.userReview,
       pros: item.pros,
       cons: item.cons
     };
