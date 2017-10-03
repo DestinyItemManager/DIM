@@ -1,9 +1,9 @@
 import { D2ItemTransformer } from './d2-itemTransformer';
 
 /**
- * Supports submitting review data to the DTR API.
+ * Supports submitting D2 review data to the DTR API.
  *
- * @class ReviewSubmitter
+ * @class D2ReviewSubmitter
  */
 class D2ReviewSubmitter {
   constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, reviewDataCache) {
