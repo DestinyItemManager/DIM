@@ -3,12 +3,13 @@ import _ from 'underscore';
 import template from './dimSearchFilter.directive.html';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
+import { flatMap } from '../util';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
   .directive('dimSearchFilter', SearchFilter);
 
-function SearchService(dimSettingsService) {
+function SearchService(dimSettingsService, dimCategory, D2Categories) {
   const categoryFilters = {
     pulserifle: ['CATEGORY_PULSE_RIFLE'],
     scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
@@ -22,7 +23,7 @@ function SearchService(dimSettingsService) {
     sword: ['CATEGORY_SWORD'],
   };
 
-  const itemTypes = ['helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'emote'];
+  const itemTypes = [];
 
   const stats = ['charge', 'impact', 'range', 'stability', 'reload', 'magazine', 'aimassist', 'equipspeed'];
 
@@ -34,14 +35,14 @@ function SearchService(dimSettingsService) {
       heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
       machinegun: ['CATEGORY_MACHINE_GUN'],
     });
-    itemTypes.push(...['primary', 'special', 'heavy', 'horn', 'bounties', 'quests', 'messages', 'missions']);
+    itemTypes.push(...flatMap(dimCategory, (l) => _.map(l, (v) => v.toLowerCase())));
     stats.push(...['rof']);
   } else {
     Object.assign(categoryFilters, {
       grenadelauncher: ['CATEGORY_GRENADE_LAUNCHER'],
       submachine: ['CATEGORY_SUBMACHINEGUN'],
     });
-    itemTypes.push(...['energy', 'power']);
+    itemTypes.push(...flatMap(D2Categories, (l) => _.map(l, (v) => v.toLowerCase())));
     stats.push(...['rpm']);
   }
 
@@ -883,26 +884,7 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
   const filterByStats = function(predicate, item, statType) {
-    if (predicate.length === 0 || !item.stats) {
-      return false;
-    }
-
-    const operands = ['<=', '>=', '=', '>', '<'];
-    let operand = 'none';
-    let result = false;
-    let statHash = {};
-
-    operands.forEach((element) => {
-      if (predicate.substring(0, element.length) === element) {
-        operand = element;
-        predicate = predicate.substring(element.length);
-        return false;
-      } else {
-        return true;
-      }
-    }, this);
-
-    statHash = {
+    const statHash = {
       rpm: 4284893193,
       charge: 2961396640,
       impact: 4043523819,
@@ -917,32 +899,6 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
 
     const foundStatHash = _.find(item.stats, { statHash });
 
-    if (typeof foundStatHash === 'undefined') {
-      return false;
-    }
-
-    predicate = parseInt(predicate, 10);
-
-    switch (operand) {
-    case 'none':
-      result = (foundStatHash.value === predicate);
-      break;
-    case '=':
-      result = (foundStatHash.value === predicate);
-      break;
-    case '<':
-      result = (foundStatHash.value < predicate);
-      break;
-    case '<=':
-      result = (foundStatHash.value <= predicate);
-      break;
-    case '>':
-      result = (foundStatHash.value > predicate);
-      break;
-    case '>=':
-      result = (foundStatHash.value >= predicate);
-      break;
-    }
-    return result;
+    return foundStatHash && foundStatHash.value && compareByOperand(foundStatHash.value, predicate);
   };
 }

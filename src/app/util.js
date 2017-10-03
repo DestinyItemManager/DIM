@@ -16,12 +16,12 @@ function count(list, predicate) {
   });
 }
 
-// A replacement for _.compact(_.flatten(_.map(l, fn))) that is more efficient.
+// A replacement for _.compact(_.flatten(_.map(c, fn))) that is more efficient.
 function flatMap(list, fx) {
   const fn = _.iteratee(fx);
   const res = [];
-  list.forEach((item) => {
-    const resList = fn(item);
+  Object.keys(list).forEach((item) => {
+    const resList = fn(list[item]);
     if (resList) {
       resList.forEach((resItem) => {
         if (resItem !== undefined && resItem !== null) {
