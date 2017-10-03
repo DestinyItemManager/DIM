@@ -166,7 +166,7 @@ function SearchFilter(dimSearchService) {
       textcomplete.register([
         {
           words: dimSearchService.keywords,
-          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/i,
+          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|sta)\w*)$/i,
           search: function(term, callback) {
             callback(this.words.filter((word) => word.startsWith(term.toLowerCase())));
           },
