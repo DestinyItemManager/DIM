@@ -491,6 +491,7 @@
     "SizeItem": "Item size",
     "SortName": "name",
     "SortPrimary": "primary stat",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortRarity": "rarity",
     "SortRoll": "rating",
     "SortTypeThenName": "item type then name",

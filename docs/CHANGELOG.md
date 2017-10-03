@@ -1,5 +1,7 @@
 # Next
 
+* Support sorting by base power
+
 # 4.18.0
 
 * Updated `is:dupelower` search filter for items with the same/no power level.
