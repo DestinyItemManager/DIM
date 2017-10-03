@@ -96,7 +96,14 @@ class D2ReviewDataCache {
    */
   addReviewsData(item,
                  reviewsData) {
-    const matchingItem = this._getMatchingItem(item);
+    let matchingItem = this._getMatchingItem(item);
+
+    if (!matchingItem) {
+      this.addScore(reviewsData);
+    }
+
+    matchingItem = this._getMatchingItem(item);
+
     if (matchingItem) {
       matchingItem.reviews = reviewsData.reviews;
       matchingItem.reviewsDataFetched = true;
