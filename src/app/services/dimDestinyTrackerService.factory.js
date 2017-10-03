@@ -11,6 +11,7 @@ import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
+import { D2TrackerErrorHandler } from '../destinyTrackerApi/d2-trackerErrorHandler';
 
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
@@ -31,9 +32,10 @@ function DestinyTrackerService($q,
   const _reviewReporter = new ReviewReporter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
-  const _d2bulkFetcher = new D2BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
-  const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _d2reviewDataCache);
+  const _d2trackerErrorHandler = new D2TrackerErrorHandler($q, $i18next);
+  const _d2bulkFetcher = new D2BulkFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
+  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, dimPlatformService, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
 
   return {
     isDestinyOne: function() {
