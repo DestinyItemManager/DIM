@@ -147,7 +147,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     };
 
     return userReview;
-  }
+  };
 
   vm.featureFlags = {
     qualityEnabled: $featureFlags.qualityEnabled,
