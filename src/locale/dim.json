@@ -406,7 +406,7 @@
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
     "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These vendor items cannot be equipped:"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Building Destiny info database",
