@@ -115,7 +115,12 @@ function DestinyTrackerService($q,
 
     reportReview: function(review) {
       if (dimSettingsService.allowIdPostToDtr) {
-        _reviewReporter.reportReview(review);
+        if (this.isDestinyOne()) {
+          _reviewReporter.reportReview(review);
+        }
+        else if (this.isDestinyTwo()) {
+          console.log("report review for D2 called");
+        }
       }
     },
     clearIgnoredUsers: function() {
