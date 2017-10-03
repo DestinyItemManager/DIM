@@ -41,6 +41,7 @@ class D2ReviewsFetcher {
   }
 
   _getUserReview(reviewData) {
+    // bugbug: will need to use membership service if isReviewer flag stays broke
     return _.find(reviewData.reviews, { isReviewer: true });
   }
 
@@ -64,8 +65,8 @@ class D2ReviewsFetcher {
     this._sortAndIgnoreReviews(item);
 
     if (userReview) {
-      item.userRating = userReview.rating;
-      item.userReview = userReview.review;
+      item.userVote = userReview.voted;
+      item.userReview = userReview.text;
       item.userReviewPros = userReview.pros;
       item.userReviewCons = userReview.cons;
     }
@@ -143,7 +144,7 @@ class D2ReviewsFetcher {
 
     if (ratingData && ratingData.reviewsDataFetched) {
       this._attachCachedReviews(item,
-                               ratingData);
+                                ratingData);
 
       return;
     }
