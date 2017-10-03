@@ -30,7 +30,7 @@ function FilterLinkCtrl(dimSearchService, $window, $i18next) {
       filter = `notes:"${filter.trim()}"`;
     }
 
-    if (filter.indexOf('light:') === 0 || filter.indexOf('quality:') === 0) {
+    if (filter.indexOf('light:') === 0 || filter.indexOf('quality:') === 0 || filter.indexOf('stack:') === 0) {
       const type = filter.split(':');
       const lightFilterType = type[1];
       let light = $window.prompt(`Enter a ${type[0]} value:`);
