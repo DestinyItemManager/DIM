@@ -129,7 +129,7 @@ function SearchService(dimSettingsService, dimCategory, D2Categories) {
     });
   });
 
-  const ranges = ['light', 'level', 'quality', 'percentage'];
+  const ranges = ['light', 'level', 'stack', 'quality', 'percentage'];
 
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
@@ -348,6 +348,9 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
       } else if (term.startsWith('light:')) {
         filter = term.replace('light:', '');
         addPredicate("light", filter);
+      } else if (term.startsWith('stack:')) {
+        filter = term.replace('stack:', '');
+        addPredicate("stack", filter);
       } else if (term.startsWith('level:')) {
         filter = term.replace('level:', '');
         addPredicate("level", filter);
@@ -624,6 +627,9 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     },
     stackable: function(predicate, item) {
       return item.maxStackSize > 1;
+    },
+    stack: function(predicate, item) {
+      return compareByOperand(item.amount, predicate);
     },
     engram: function(predicate, item) {
       return item.isEngram();
