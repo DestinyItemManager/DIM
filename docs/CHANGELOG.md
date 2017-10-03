@@ -1,4 +1,5 @@
 # Next
+* Added `stack:` to search filters for easier maintenance of modifications
 
 # 4.18.0
 

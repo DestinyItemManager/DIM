@@ -192,6 +192,7 @@
     },
     "RequiredLevel": "Shows items based on their required level.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stats": "Shows items based on their stat value. The available filters are:",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
@@ -406,7 +407,7 @@
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
     "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These vendor items cannot be equipped:"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Building Destiny info database",
