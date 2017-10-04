@@ -92,7 +92,7 @@ class D2BulkFetcher {
           const matchingItem = self._reviewDataCache.getRatingData(storeItem);
 
           if (matchingItem) {
-            storeItem.dtr2Rating = (matchingItem.votes.upvotes / matchingItem.votes.total) * 5;
+            storeItem.dtr2Rating = matchingItem.rating;
             storeItem.dtr2RatingCount = matchingItem.votes.total;
             storeItem.dtr2HighlightedRatingCount = matchingItem.highlightedRatingCount;
             storeItem.userVote = matchingItem.voted;

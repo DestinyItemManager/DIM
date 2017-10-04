@@ -44,6 +44,17 @@ class D2ReviewDataCache {
     return rating.toFixed(1);
   }
 
+  _getScore(dtrRating) {
+    const rating = (dtrRating.votes.upvotes / dtrRating.votes.total) * 5;
+
+    if ((rating < 1) &&
+            (dtrRating.votes.total > 0)) {
+      return 1;
+    }
+
+    return rating;
+  }
+
   /**
    * Add (and track) the community score.
    *
@@ -52,8 +63,8 @@ class D2ReviewDataCache {
    * @memberof ReviewDataCache
    */
   addScore(dtrRating) {
-    const rating = (dtrRating.votes.upvotes / dtrRating.votes.total) * 5;
-    dtrRating.rating = this._toAtMostOneDecimal(rating);
+    const score = this._getScore(dtrRating);
+    dtrRating.rating = this._toAtMostOneDecimal(score);
 
     this._itemStores.push(dtrRating);
   }
