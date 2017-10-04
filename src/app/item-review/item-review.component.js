@@ -88,6 +88,10 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     }
 
     vm.expandReview = true;
+
+    if (review.voted) {
+      vm.item.userVote = review.voted;
+    }
   };
 
   vm.submitReview = function() {
