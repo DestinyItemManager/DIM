@@ -74,7 +74,7 @@ class D2ReviewsFetcher {
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
     item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
-    item.writtenReviews = _.filter(reviewData.reviews, 'review');
+    item.writtenReviews = _.filter(reviewData.reviews, 'text'); // only attach reviews with text associated
 
     this._sortAndIgnoreReviews(item);
 
