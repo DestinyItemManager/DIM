@@ -205,21 +205,26 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
   // returns to tenth decimal place.
   function getLight(store, loadout) {
     // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
-    const itemWeight = store.destinyVersion === 2 ? {
-      Weapons: 3 / 21,
-      Armor: 5 / 42,
-      General: 2 / 21
-    } : {
-      Weapons: store.level === 40 ? .12 : .1304,
-      Armor: store.level === 40 ? .10 : .1087,
-      General: store.level === 40 ? .08 : .087
+    const itemWeight = {
+      Weapons: 6,
+      Armor: 5,
+      General: 4
     };
+    // 3 Weapons, 4 Armor, 2 General
+    let itemWeightDenominator = 46;
+    if (store.destinyVersion === 2) {
+      // 3 Weapons, 4 Armor, 1 General
+      itemWeightDenominator = 42;
+    } else if (store.level === 40) {
+      // 3 Weapons, 4 Armor, 3 General
+      itemWeightDenominator = 50;
+    }
 
     const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
 
-    return (Math.floor(items.length * _.reduce(items, (memo, item) => {
+    return (_.reduce(items, (memo, item) => {
       return memo + (item.primStat.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }, 0)) / items.length).toFixed(1);
+    }, 0) / itemWeightDenominator).toFixed(1);
   }
 
   /**
