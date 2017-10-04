@@ -34,7 +34,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.clickReview = function(reviewId) {
-    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    const review = this.findReview(reviewId);
 
     if (review.isReviewer) {
       vm.editReview();
@@ -53,7 +53,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.openFlagContext = function(reviewId) {
-    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    const review = this.findReview(reviewId);
 
     if ((review.isReviewer) || (review.isHighlighted)) {
       return;
@@ -116,7 +116,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.reportReview = function(reviewId) {
-    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    const review = this.findReview(reviewId);
 
     dimDestinyTrackerService.reportReview(review);
   };
