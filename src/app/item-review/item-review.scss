@@ -106,4 +106,12 @@
   &--report-cancel {
     margin-left: auto;
   }
+
+  &--thumbs-down {
+    color: red !important;
+  }
+
+  &--thumbs-up {
+    color: green !important;
+  }
 }
