@@ -18,7 +18,7 @@ export const D2Categories = {
   ],
   General: [
     'Ghost',
-    'Clan Banners',
+    'ClanBanners',
     'Vehicle',
     'Ships',
     'Emblems',
@@ -35,9 +35,9 @@ export const D2Categories = {
     'Quests',
   ],
   Postmaster: [
-    'Lost Items',
+    'LostItems',
     'Messages',
-    'Special Orders'
+    'SpecialOrders'
   ]
 };
 
@@ -65,16 +65,16 @@ const bucketToType = {
   3865314626: "Materials",
   4023194814: "Ghost",
   4274335291: "Emblems",
-  4292445962: "Clan Banners",
+  4292445962: "ClanBanners",
   14239492: "Chest",
   18606351: "Shaders",
   20886954: "Leg",
-  215593132: "Lost Items",
+  215593132: "LostItems",
   284967655: "Ships",
   375726501: "Engrams",
   953998645: "Power",
   1269569095: "Auras",
-  1367666825: "Special Orders",
+  1367666825: "SpecialOrders",
   1498876634: "Kinetic",
   1585787867: "ClassItem",
   2025709351: "Vehicle",

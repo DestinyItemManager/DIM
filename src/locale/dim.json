@@ -192,6 +192,7 @@
     },
     "RequiredLevel": "Shows items based on their required level.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stats": "Shows items based on their stat value. The available filters are:",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
@@ -406,7 +407,7 @@
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
     "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These vendor items cannot be equipped:"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Building Destiny info database",
@@ -529,8 +530,8 @@
     "Export": "Back up DIM data",
     "ForceSync": "Force sync data",
     "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
-    "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
     "GDriveSignInError": "Error signing in to Google Drive:",
+    "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
     "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
     "GoogleDriveStorage": "Google Drive",
     "IgnoredUsers": "{{value}} ignored users",

@@ -1,4 +1,7 @@
 # Next
+* Added `stack:` to search filters for easier maintenance of modifications
+
+# 4.18.0
 
 * Updated `is:dupelower` search filter for items with the same/no power level.
 * Fix some issues with Google Drive that might lead to lost data.
