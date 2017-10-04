@@ -1,5 +1,6 @@
 # Next
 * Added `stack:` to search filters for easier maintenance of modifications
+* The "Max Light" calculation is even more accurate now.
 
 # 4.18.0
 
