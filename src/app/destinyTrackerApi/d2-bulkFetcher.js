@@ -92,11 +92,11 @@ class D2BulkFetcher {
           const matchingItem = self._reviewDataCache.getRatingData(storeItem);
 
           if (matchingItem) {
-            storeItem.dtrRating = matchingItem.rating;
-            storeItem.dtrRatingCount = matchingItem.ratingCount;
-            storeItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
-            storeItem.userRating = matchingItem.userRating;
-            storeItem.userReview = matchingItem.review;
+            storeItem.dtr2Rating = (matchingItem.votes.upvotes / matchingItem.votes.total) * 5;
+            storeItem.dtr2RatingCount = matchingItem.votes.total;
+            storeItem.dtr2HighlightedRatingCount = matchingItem.highlightedRatingCount;
+            storeItem.userVote = matchingItem.voted;
+            storeItem.userReview = matchingItem.text;
             storeItem.pros = matchingItem.pros;
             storeItem.cons = matchingItem.cons;
           }

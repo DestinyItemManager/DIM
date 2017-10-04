@@ -19,6 +19,10 @@
   <div ng-if="vm.item.dtrRating && (vm.item.dtrRatingCount > 1 || vm.item.dtrHighlightedRatingCount > 0)"
        class="item-stat item-review"
        ng-style="vm.item.dtrRating | dtrRatingColor">{{ vm.item.dtrRating }}<i class="fa fa-star"></i></div>
+  <!-- we're allowing lonely one-review gear for now -->
+  <div ng-if="vm.item.dtr2Rating && (vm.item.dtr2RatingCount > 0 || vm.item.dtr2HighlightedRatingCount > 0)"
+        class="item-stat item-review"
+        ng-style="vm.item.dtr2Rating | dtr2RatingColor">{{ vm.item.dtr2Rating }}<i class="fa fa-star"></i></div>
   <div class="item-element"
        ng-class="::vm.item.dmg"></div>
   <div ng-class="vm.item.dimInfo.tag | tagIcon"></div>

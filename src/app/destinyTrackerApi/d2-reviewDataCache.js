@@ -52,7 +52,8 @@ class D2ReviewDataCache {
    * @memberof ReviewDataCache
    */
   addScore(dtrRating) {
-    dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
+    const rating = (dtrRating.votes.upvotes / dtrRating.votes.total) * 5;
+    dtrRating.rating = this._toAtMostOneDecimal(rating);
 
     this._itemStores.push(dtrRating);
   }
