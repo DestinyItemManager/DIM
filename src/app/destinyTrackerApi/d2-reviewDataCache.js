@@ -6,7 +6,7 @@ import { D2ItemTransformer } from './d2-itemTransformer';
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
  * Tailored for the Destiny 2 version.
  *
- * @class ReviewDataCache
+ * @class D2ReviewDataCache
  */
 class D2ReviewDataCache {
   constructor() {
