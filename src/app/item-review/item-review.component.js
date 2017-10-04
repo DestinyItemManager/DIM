@@ -72,8 +72,16 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     vm.toggledFlags.splice(toggledReviewIndex);
   };
 
+  vm.findReview = function(reviewId) {
+    if (this.isDestinyOne()) {
+      return _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    } else {
+      return _.find(vm.item.writtenReviews, { id: reviewId });
+    }
+  };
+
   vm.editReview = function(reviewId) {
-    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    const review = this.findReview(reviewId);
 
     if (!review.isReviewer) {
       return;

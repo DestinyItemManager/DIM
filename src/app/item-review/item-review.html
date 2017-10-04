@@ -119,7 +119,7 @@
       </div>
     </div>
     <div ng-if="$ctrl.isDestinyTwo()">
-      <div ng-class="{'link community-review--clickable' : review.isReviewer}" ng-click="$ctrl.editReview(review.reviewId)">
+      <div ng-class="{'link community-review--clickable' : review.isReviewer}" ng-click="$ctrl.editReview(review.id)">
           <div class="community-review--who">
             <div ng-if="review.voted === 1">
               <span class="community-review--thumbs-up">
