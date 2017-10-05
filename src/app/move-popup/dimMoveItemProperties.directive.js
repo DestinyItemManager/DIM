@@ -168,7 +168,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
   });
   vm.destinyDBLink = vm.item.destinyVersion === 2
     ? `http://db.destinytracker.com/d2/en/items/${vm.item.hash}`
-    : `http://db.destinytracker.com/inventory/item/${vm.item.hash}#${vm.item.talentGrid.dtrPerks}`;
+    : `http://db.destinytracker.com/inventory/item/${vm.item.hash}#${vm.item.talentGrid && vm.item.talentGrid.dtrPerks}`;
 
   if (vm.item.primStat) {
     vm.light = vm.item.primStat.value.toString();
