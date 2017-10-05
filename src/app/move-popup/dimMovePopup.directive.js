@@ -88,16 +88,23 @@ function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog,
   };
 
   vm.canShowStore = function canShowStore(item, itemStore, buttonStore) {
+    // Can't store into a vault
     if (buttonStore.isVault) {
       return false;
     }
 
     if (item.notransfer) {
+      // Can store an equiped item in same itemStore
       if (item.equipped && itemStore.id === buttonStore.id) {
         return true;
       }
     } else if (itemStore.id !== buttonStore.id || item.equipped) {
-      return true;
+      // In Destiny2, only show one store for account wide items
+      if (item.destinyVersion === 2 && item.bucket && item.bucket.accountWide && !buttonStore.current) {
+        return false;
+      } else {
+        return true;
+      }
     }
 
     return false;
