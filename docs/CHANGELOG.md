@@ -3,6 +3,8 @@
 * The "Max Light" calculation is even more accurate now.
 * Added `PowerMod` column to CSV export indicating whether or not a weapon or piece of armor has a power mod
 
+* Support sorting by base power
+
 # 4.18.0
 
 * Updated `is:dupelower` search filter for items with the same/no power level.
