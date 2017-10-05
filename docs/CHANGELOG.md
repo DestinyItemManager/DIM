@@ -1,6 +1,7 @@
 # Next
 * Added `stack:` to search filters for easier maintenance of modifications
 * The "Max Light" calculation is even more accurate now.
+* Added `PowerMod` column to CSV export indicating whether or not a weapon or piece of armor has a power mod
 
 # 4.18.0
 
