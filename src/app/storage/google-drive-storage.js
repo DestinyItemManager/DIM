@@ -8,7 +8,10 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
     drive: {
       client_id: $GOOGLE_DRIVE_CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/drive.appdata',
-      discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"]
+      discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+      fetch_basic_profile: false,
+      ux_mode: 'redirect',
+      redirect_uri: window.location.origin
     },
 
     // The Google Drive ID of the file we use to save data.
@@ -140,9 +143,12 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
           if ($featureFlags.debugSync) {
             console.log('authorizing Google Drive');
           }
-          return auth.signIn().then(() => {
-            return this.updateSigninStatus(true);
-          });
+          return auth
+            .signIn()
+            .then(() => this.updateSigninStatus(true))
+            .catch((e) => {
+              throw new Error(`Failed to sign in to Google Drive: ${e.error}`);
+            });
         }
       });
     },
