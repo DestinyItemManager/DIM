@@ -474,6 +474,7 @@ export function D2ItemFactory(
     return objectives.map((objective) => {
       const def = objectiveDefs.get(objective.objectiveHash);
 
+      console.log(objective);
       return {
         displayName: def.displayProperties.name ||
           (objective.isComplete
@@ -482,7 +483,7 @@ export function D2ItemFactory(
         description: def.displayProperties.description,
         progress: objective.progress || 0,
         completionValue: def.completionValue,
-        complete: objective.isComplete,
+        complete: objective.complete,
         boolean: def.completionValue === 1,
         display: `${objective.progress || 0}/${def.completionValue}`
       };

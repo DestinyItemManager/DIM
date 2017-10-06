@@ -8,7 +8,7 @@
 * Hide "split" and "take" button for D2 consumables.
 * OK really really fix the vault count.
 * Fix showing item popup for some D1 items.
-
+* Completed objectives will now show as "complete".
 
 # 4.18.0
 
