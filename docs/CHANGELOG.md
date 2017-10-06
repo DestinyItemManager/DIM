@@ -1,9 +1,14 @@
 # Next
-* Added `stack:` to search filters for easier maintenance of modifications
+
+* Added `stack:` to search filters for easier maintenance of modifications.
+* Add missing type filters for D2 (try `is:modifications`)!
 * The "Max Light" calculation is even more accurate now.
 * Added `PowerMod` column to CSV export indicating whether or not a weapon or piece of armor has a power mod
+* Support sorting by base power.
+* Hide "split" and "take" button for D2 consumables.
+* OK really really fix the vault count.
+* Fix showing item popup for some D1 items.
 
-* Support sorting by base power
 
 # 4.18.0
 
