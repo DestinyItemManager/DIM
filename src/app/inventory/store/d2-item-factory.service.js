@@ -474,7 +474,6 @@ export function D2ItemFactory(
     return objectives.map((objective) => {
       const def = objectiveDefs.get(objective.objectiveHash);
 
-      console.log(objective);
       return {
         displayName: def.displayProperties.name ||
           (objective.isComplete
