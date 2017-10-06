@@ -2,6 +2,7 @@
 
 * Added `stack:` to search filters for easier maintenance of modifications.
 * Add missing type filters for D2 (try `is:modifications`)!
+* Bring back keyboard shortcuts for tagging (hit ? to see them all).
 * The "Max Light" calculation is even more accurate now.
 * Added `PowerMod` column to CSV export indicating whether or not a weapon or piece of armor has a power mod
 * Support sorting by base power.
