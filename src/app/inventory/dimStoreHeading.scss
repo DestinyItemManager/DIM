@@ -203,12 +203,16 @@ dim-store-heading {
   opacity: 0.8;
 }
 
-.current.character .character-box:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  border-top: 13px solid gold;
-  border-right: 13px solid transparent;
+.current {
+  &.character, &.character-swipe {
+    .character-box:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      border-top: 13px solid gold;
+      border-right: 13px solid transparent;
+    }
+  }
 }
