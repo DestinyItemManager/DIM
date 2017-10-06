@@ -62,7 +62,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, D2Categories,
   $scope.$on('dim-edit-loadout', (event, args) => {
     vm.showClass = args.showClass;
     if (args.loadout) {
-      vm.loadout = args.loadout;
+      vm.loadout = angular.copy(args.loadout);
       vm.show = true;
       dimLoadoutService.dialogOpen = true;
       if (vm.loadout.classType === undefined) {
