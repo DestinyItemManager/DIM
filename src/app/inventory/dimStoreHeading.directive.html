@@ -1,4 +1,4 @@
-<div class="character-box" ng-click="vm.openLoadoutPopup($event)" ng-class="::{ destiny2: vm.store.destinyVersion == 2 && !vm.store.isVault }">
+<div class="character-box" ng-click="vm.openLoadoutPopup($event)" ng-class="::{ destiny2: vm.store.destinyVersion == 2 && !vm.store.isVault, vault: vm.store.isVault }">
   <div class="background" ng-style="{ 'background-image': 'url(' + vm.store.background + ')' }"></div>
   <div class="details">
     <div class="emblem" ng-style="{ 'background-image': 'url(' + vm.store.icon + ')' }"></div>

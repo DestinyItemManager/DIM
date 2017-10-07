@@ -22,6 +22,7 @@
   flex-direction: column;
 
   img {
+    -webkit-touch-callout: none;
     width: 34px;
     height: 34px;
     &.notChosen {
