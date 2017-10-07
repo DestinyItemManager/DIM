@@ -5,7 +5,7 @@ import { sum } from '../util';
 import template from './storage.html';
 import './storage.scss';
 
-function StorageController($scope, dimSettingsService, SyncService, GoogleDriveStorage, dimDestinyTrackerService, $timeout, $window, $q, $i18next) {
+function StorageController($scope, dimSettingsService, SyncService, GoogleDriveStorage, dimDestinyTrackerService, $timeout, $window, $q, $i18next, $stateParams, $state) {
   'ngInject';
 
   const vm = this;
@@ -150,6 +150,12 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
 
   $scope.$on('$destroy', () => {
     window.removeEventListener('message', messageHandler);
+  });
+
+  $scope.$on('gdrive-sign-in', () => {
+    if ($stateParams.gdrive === 'true') {
+      vm.forceSync().then(() => $state.go('storage', { gdrive: undefined }, 'replace'));
+    }
   });
 
   vm.browserMayClearData = true;

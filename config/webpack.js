@@ -35,7 +35,8 @@ module.exports = (env) => {
     entry: {
       main: './src/index.js',
       browsercheck: './src/browsercheck.js',
-      authReturn: './src/authReturn.js'
+      authReturn: './src/authReturn.js',
+      gdriveReturn: './src/gdriveReturn.js'
     },
 
     output: {
@@ -137,6 +138,13 @@ module.exports = (env) => {
         filename: 'return.html',
         template: '!handlebars-loader!src/return.html',
         chunks: ['manifest', 'vendor', 'authReturn']
+      }),
+
+      new HtmlWebpackPlugin({
+        inject: false,
+        filename: 'gdrive-return.html',
+        template: '!handlebars-loader!src/gdrive-return.html',
+        chunks: ['manifest', 'vendor', 'gdriveReturn']
       }),
 
       new CopyWebpackPlugin([

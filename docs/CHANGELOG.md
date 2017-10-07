@@ -9,6 +9,7 @@
 * Hide "split" and "take" button for D2 consumables.
 * OK really really fix the vault count.
 * Fix showing item popup for some D1 items.
+* Changed how we do Google Drive log-in - it should be smoother on mobile.
 * Completed objectives will now show as "complete".
 * Bring back the yellow triangle for current character on mobile.
 
