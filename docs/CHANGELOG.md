@@ -12,6 +12,7 @@
 * Changed how we do Google Drive log-in - it should be smoother on mobile.
 * Completed objectives will now show as "complete".
 * Bring back the yellow triangle for current character on mobile.
+* Updated `is:dupelower` search filter for items to tie break by primary stat.
 
 # 4.18.0
 
