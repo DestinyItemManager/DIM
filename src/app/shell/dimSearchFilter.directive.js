@@ -551,9 +551,9 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
           if (dupes.length > 1) {
             let bestDupe = _.max(dupes, 'basePower');
             if (bestDupe !== -Infinity) {
-              const dupesWithMaxBasePower = _.select(dupes, (dupe) => dupe.basePower == bestDupe.basePower);
+              const dupesWithMaxBasePower = _.select(dupes, (dupe) => dupe.basePower === bestDupe.basePower);
               if (dupesWithMaxBasePower.length > 1) {
-                bestDupe = _.max(dupesWithMaxBasePower, (item) => item.primStat ? item.primStat.value : 0);
+                bestDupe = _.max(dupesWithMaxBasePower, (item) => (item.primStat ? item.primStat.value : 0));
               }
             }
 
