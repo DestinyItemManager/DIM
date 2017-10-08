@@ -549,12 +549,19 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
         _duplicates = _.groupBy(getStoreService().getAllItems(), 'hash');
         _.each(_duplicates, (dupes) => {
           if (dupes.length > 1) {
-            let bestBasePower = _.max(dupes, 'basePower');
-            if (bestBasePower === -Infinity) {
-              bestBasePower = dupes[0];
+            let bestDupe = _.max(dupes, 'basePower');
+            if (bestDupe !== -Infinity) {
+              const dupesWithMaxBasePower = _.select(dupes, (dupe) => dupe.basePower === bestDupe.basePower);
+              if (dupesWithMaxBasePower.length > 1) {
+                bestDupe = _.max(dupesWithMaxBasePower, (item) => (item.primStat ? item.primStat.value : 0));
+              }
             }
 
-            _.reject(dupes, (dupe) => dupe.id === bestBasePower.id).forEach((dupe) => {
+            if (bestDupe === -Infinity) {
+              bestDupe = dupes[0];
+            }
+
+            _.reject(dupes, (dupe) => dupe.id === bestDupe.id).forEach((dupe) => {
               _lowerDupes[dupe.id] = 1;
             });
 
