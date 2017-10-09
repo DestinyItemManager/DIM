@@ -358,8 +358,7 @@ export function D2StoresService(
           store.buckets[bucket.id] = [];
         }
 
-        // TODO: don't even update them for account-wide
-        if (!bucket.accountWide && bucket.vaultBucket) {
+        if (bucket.vaultBucket) {
           const vaultBucketId = bucket.vaultBucket.id;
           store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
             count: 0,
@@ -474,16 +473,18 @@ export function D2StoresService(
   function getBasePower(store, loadout) {
     // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
     const itemWeight = {
-      Weapons: 3 / 21,
-      Armor: 5 / 42,
-      General: 2 / 21
+      Weapons: 6,
+      Armor: 5,
+      General: 4
     };
+    // 3 Weapons, 4 Armor, 1 General
+    const itemWeightDenominator = 42;
 
     const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
 
-    return (Math.floor(items.length * _.reduce(items, (memo, item) => {
+    return (_.reduce(items, (memo, item) => {
       return memo + (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }, 0)) / items.length).toFixed(1);
+    }, 0) / itemWeightDenominator).toFixed(1);
   }
 
   // TODO: vault counts are silly and convoluted. We really need an

@@ -28,12 +28,15 @@ module.exports = (env) => {
   if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
+  // Used for the changelog anchor
+  const versionNoDots = version.replace(/\./g, '');
 
   const config = {
     entry: {
       main: './src/index.js',
       browsercheck: './src/browsercheck.js',
-      authReturn: './src/authReturn.js'
+      authReturn: './src/authReturn.js',
+      gdriveReturn: './src/gdriveReturn.js'
     },
 
     output: {
@@ -137,6 +140,13 @@ module.exports = (env) => {
         chunks: ['manifest', 'vendor', 'authReturn']
       }),
 
+      new HtmlWebpackPlugin({
+        inject: false,
+        filename: 'gdrive-return.html',
+        template: '!handlebars-loader!src/gdrive-return.html',
+        chunks: ['manifest', 'vendor', 'gdriveReturn']
+      }),
+
       new CopyWebpackPlugin([
         { from: './src/.htaccess' },
         { from: './extension', to: '../extension-dist' },
@@ -172,7 +182,7 @@ module.exports = (env) => {
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env),
         $DIM_BUILD_DATE: JSON.stringify(Date.now()),
-        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/docs/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
+        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/master/docs/CHANGELOG.md#${env === 'release' ? versionNoDots : 'next'}`),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),

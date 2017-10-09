@@ -482,7 +482,7 @@ export function D2ItemFactory(
         description: def.displayProperties.description,
         progress: objective.progress || 0,
         completionValue: def.completionValue,
-        complete: objective.isComplete,
+        complete: objective.complete,
         boolean: def.completionValue === 1,
         display: `${objective.progress || 0}/${def.completionValue}`
       };

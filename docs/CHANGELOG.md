@@ -1,5 +1,20 @@
 # Next
-* Added `stack:` to search filters for easier maintenance of modifications
+
+# 4.19.0
+
+* Added `stack:` to search filters for easier maintenance of modifications.
+* Add missing type filters for D2 (try `is:modifications`)!
+* Bring back keyboard shortcuts for tagging (hit ? to see them all).
+* The "Max Light" calculation is even more accurate now.
+* Added `PowerMod` column to CSV export indicating whether or not a weapon or piece of armor has a power mod
+* Support sorting by base power.
+* Hide "split" and "take" button for D2 consumables.
+* OK really really fix the vault count.
+* Fix showing item popup for some D1 items.
+* Changed how we do Google Drive log-in - it should be smoother on mobile.
+* Completed objectives will now show as "complete".
+* Bring back the yellow triangle for current character on mobile.
+* Updated `is:dupelower` search filter for items to tie break by primary stat.
 
 # 4.18.0
 

@@ -166,9 +166,14 @@ mod.filter('sortItems', (dimSettingsService) => {
     }
 
     items = _.sortBy(items || [], 'name');
-    if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality' || sort === 'typeThenPrimary') {
+    if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality' || sort === 'typeThenPrimary' || sort === 'basePowerThenPrimary') {
       items = _.sortBy(items, (item) => {
         return (item.primStat) ? (-1 * item.primStat.value) : 1000;
+      });
+    }
+    if (sort === 'basePowerThenPrimary') {
+      items = _.sortBy(items, (item) => {
+        return (item.basePower) ? (-1 * item.basePower) : 1000;
       });
     }
     if (sort === 'quality') {

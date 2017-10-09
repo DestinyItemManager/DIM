@@ -6,7 +6,7 @@
         <dim-store-heading
           class="character-swipe"
           selected-store="vm.selectedStore"
-          ng-class="{ current: vm.selectedStore.current }"
+          ng-class="{ current: store.current }"
           store-data="store"
           internal-loadout-menu="false"
           ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id"
