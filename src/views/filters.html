@@ -86,7 +86,7 @@
         </td>
         <td ng-i18next="[i18next]({ percentage: 'percentage', quality: 'quality' })Filter.Quality"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:light"></dim-filter-link>
           <dim-filter-link filter="has:light"></dim-filter-link>
@@ -124,7 +124,7 @@
       <tr>
         <td>
           <dim-filter-link filter="is:weapon"></dim-filter-link>
-          <dim-filter-link filter="is:class"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:class"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:primary"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:special"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:heavy"></dim-filter-link>
@@ -255,16 +255,18 @@
       </tr>
       <tr>
         <td>
+          <dim-filter-link filter="is:autorifle"></dim-filter-link>
+          <dim-filter-link filter="is:fusionrifle"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:grenadelauncher"></dim-filter-link>
+          <dim-filter-link filter="is:handcannon"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:machinegun"></dim-filter-link>
           <dim-filter-link filter="is:pulserifle"></dim-filter-link>
           <dim-filter-link filter="is:scoutrifle"></dim-filter-link>
-          <dim-filter-link filter="is:handcannon"></dim-filter-link>
-          <dim-filter-link filter="is:autorifle"></dim-filter-link>
-          <dim-filter-link filter="is:sniperrifle"></dim-filter-link>
           <dim-filter-link filter="is:shotgun"></dim-filter-link>
-          <dim-filter-link filter="is:fusionrifle"></dim-filter-link>
           <dim-filter-link filter="is:sidearm"></dim-filter-link>
+          <dim-filter-link filter="is:sniperrifle"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:submachine"></dim-filter-link>
           <dim-filter-link filter="is:rocketlauncher"></dim-filter-link>
-          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:machinegun"></dim-filter-link>
           <dim-filter-link filter="is:sword"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:primaryweaponengram"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:specialweaponengram"></dim-filter-link>
