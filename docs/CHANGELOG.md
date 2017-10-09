@@ -1,5 +1,7 @@
 # Next
 
+# 4.19.0
+
 * Added `stack:` to search filters for easier maintenance of modifications.
 * Add missing type filters for D2 (try `is:modifications`)!
 * Bring back keyboard shortcuts for tagging (hit ? to see them all).
