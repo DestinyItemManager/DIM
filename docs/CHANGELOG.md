@@ -1,5 +1,7 @@
 # Next
 
+* Fix landscape orientation not working on mobile.
+
 # 4.19.0
 
 * Added `stack:` to search filters for easier maintenance of modifications.
