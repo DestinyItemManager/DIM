@@ -68,17 +68,17 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, D2Categories,
       if (vm.loadout.classType === undefined) {
         vm.loadout.classType = -1;
       }
-      vm.loadout.items = vm.loadout.items || [];
+      vm.loadout.items = vm.loadout.items || {};
 
       // Filter out any vendor items and equip all if requested
       vm.loadout.warnitems = _.reduce(vm.loadout.items, (o, items) => {
-        const vendorItems = _.filter(items, (item) => { return !item.owner; });
+        const vendorItems = _.filter(items, (item) => !item.owner);
         o = o.concat(...vendorItems);
         return o;
       }, []);
 
       _.each(vm.loadout.items, (items, type) => {
-        vm.loadout.items[type] = _.filter(items, (item) => { return item.owner; });
+        vm.loadout.items[type] = _.filter(items, (item) => item.owner);
         if (args.equipAll && vm.loadout.items[type][0]) {
           vm.loadout.items[type][0].equipped = true;
         }
@@ -243,7 +243,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, D2Categories,
   };
 
   vm.recalculateStats = function() {
-    if (!vm.loadout || !vm.loadout.items) {
+    if (vm.settings.destinyVersion !== 1 || !vm.loadout || !vm.loadout.items) {
       vm.stats = null;
       return;
     }

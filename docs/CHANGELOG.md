@@ -1,6 +1,7 @@
 # Next
 
 * Fix landscape orientation not working on mobile.
+* Fix D1 stats in loadout builder and loadout editor.
 
 # 4.19.0
 
