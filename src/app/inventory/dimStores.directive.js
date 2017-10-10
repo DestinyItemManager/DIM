@@ -1,6 +1,8 @@
 import _ from 'underscore';
 import template from './dimStores.directive.html';
 import './dimStores.scss';
+import { isPhonePortraitStream } from '../mediaQueries';
+import { subscribeOnScope } from '../rx-utils';
 
 export const StoresComponent = {
   controller: StoresCtrl,
@@ -55,17 +57,11 @@ function StoresCtrl(dimSettingsService, $scope, dimPlatformService, loadingTrack
     vm.settings.save();
   };
 
-  // TODO: angular media-query-switch directive
-  // This seems like a good breakpoint for portrait based on https://material.io/devices/
-  // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720
-  const phoneWidthQuery = window.matchMedia('(max-width: 540px)');
-  function phoneWidthHandler(e) {
+  subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
     $scope.$apply(() => {
-      vm.isPhonePortrait = e.matches;
+      vm.isPhonePortrait = isPhonePortrait;
     });
-  }
-  phoneWidthQuery.addListener(phoneWidthHandler);
-  vm.isPhonePortrait = phoneWidthQuery.matches;
+  });
 
   vm.$onChanges = function() {
     vm.vault = _.find(vm.stores, 'isVault');

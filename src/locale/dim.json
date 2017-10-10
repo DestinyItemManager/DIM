@@ -233,8 +233,6 @@
     "ChangingPerks": "Changing Perks Not Supported",
     "ChangingPerksInfo": "Sorry, there's no way to change perks outside the game. We wish we could!",
     "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
-    "ExtensionDeprecatedMessage": "The DIM Chrome extension now just opens our website - which works on every browser and on mobile devices! You can uninstall the extension, or leave it around as a convenient bookmark for the site. Your data (tags, notes, and settings) can be imported from the storage page (disk icon in the header).",
-    "ExtensionDeprecatedTitle": "DIM is just a website now!",
     "HidePopup": "Hide This Popup",
     "NeverShow": "Never show me this again.",
     "NoStorage": "DIM can't store data",
