@@ -1,6 +1,6 @@
 # Next
-* Keyword searchs now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
 
+* Keyword searchs now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
 * Add Iron Banner reputation.
 
 # 4.19.1
