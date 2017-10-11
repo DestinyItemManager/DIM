@@ -264,6 +264,8 @@
           <dim-filter-link filter="is:fusionrifle"></dim-filter-link>
           <dim-filter-link filter="is:sidearm"></dim-filter-link>
           <dim-filter-link filter="is:rocketlauncher"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:submachine"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:grenadelauncer"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:machinegun"></dim-filter-link>
           <dim-filter-link filter="is:sword"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:primaryweaponengram"></dim-filter-link>
