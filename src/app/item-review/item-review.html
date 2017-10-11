@@ -89,7 +89,7 @@
     </div>
   </div>
   <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews | filter : { isIgnored: '!true' }">
-    <div ng-if="$ctrl.isDestinyOne()">
+    <div ng-if="$ctrl.item.destinyVersion === 1">
       <div ng-class="{'link community-review--clickable' : review.isReviewer}" ng-click="$ctrl.editReview(review.reviewId)">
         <div class="community-review--who">
           <star-rating rating="review.rating" read-only></star-rating>
@@ -118,7 +118,7 @@
         </div>
       </div>
     </div>
-    <div ng-if="$ctrl.isDestinyTwo()">
+    <div ng-if="$ctrl.item.destinyVersion === 2">
       <div ng-class="{'link community-review--clickable' : review.isReviewer}" ng-click="$ctrl.editReview(review.id)">
           <div class="community-review--who">
             <div ng-if="review.voted === 1">
