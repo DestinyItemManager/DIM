@@ -1,5 +1,4 @@
 # Next
-* Added `stack:` to search filters for easier maintenance of modifications
 * Community reviews (for weapons and armor) are in for Destiny 2 inventory.
 
 # 4.19.2

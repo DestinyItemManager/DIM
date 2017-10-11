@@ -44,14 +44,6 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     }
   };
 
-  vm.isDestinyTwo = function() {
-    return (dimSettingsService.destinyVersion === 2);
-  };
-
-  vm.isDestinyOne = function() {
-    return (dimSettingsService.destinyVersion === 1);
-  };
-
   vm.openFlagContext = function(reviewId) {
     const review = this.findReview(reviewId);
 
@@ -73,7 +65,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.findReview = function(reviewId) {
-    if (this.isDestinyOne()) {
+    if (vm.item.destinyVersion === 1) {
       return _.find(vm.item.writtenReviews, { reviewId: reviewId });
     } else {
       return _.find(vm.item.writtenReviews, { id: reviewId });
@@ -122,7 +114,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.toUserReview = function(item) {
-    if (this.isDestinyOne()) {
+    if (vm.item.destinyVersion === 1) {
       return this.toDestinyOneUserReview(item);
     }
 

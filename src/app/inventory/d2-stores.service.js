@@ -214,7 +214,7 @@ export function D2StoresService(
         // TODO: update vault counts for character account-wide
         updateVaultCounts(buckets, _.find(characters, 'current'), vault);
 
-        dimDestinyTrackerService.fetchReviews(_stores);
+        dimDestinyTrackerService.fetchReviews(stores);
 
         itemInfoService.cleanInfos(stores);
 

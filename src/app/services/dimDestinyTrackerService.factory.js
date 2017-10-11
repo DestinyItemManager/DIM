@@ -39,21 +39,21 @@ function DestinyTrackerService($q,
   const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, dimPlatformService, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
   const _d2reviewReporter = new D2ReviewReporter($q, $http, dimPlatformService, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
 
+  function _isDestinyOne() {
+    return (dimSettingsService.destinyVersion === 1);
+  }
+
+  function _isDestinyTwo() {
+    return (dimSettingsService.destinyVersion === 2);
+  }
+
   return {
-    isDestinyOne: function() {
-      return (dimSettingsService.destinyVersion === 1);
-    },
-
-    isDestinyTwo: function() {
-      return (dimSettingsService.destinyVersion === 2);
-    },
-
     reattachScoresFromCache: function(stores) {
-      if (this.isDestinyOne()) {
+      if (_isDestinyOne()) {
         _bulkFetcher.attachRankings(null,
                                     stores);
       }
-      else if (this.isDestinyTwo()) {
+      else if (_isDestinyTwo()) {
         _d2bulkFetcher.attachRankings(null,
                                       stores);
       }
@@ -61,11 +61,11 @@ function DestinyTrackerService($q,
 
     updateCachedUserRankings: function(item,
                                        userReview) {
-      if (this.isDestinyOne()) {
+      if (_isDestinyOne()) {
         _reviewDataCache.addUserReviewData(item,
                                            userReview);
       }
-      else if (this.isDestinyTwo()) {
+      else if (_isDestinyTwo()) {
         _d2reviewDataCache.addUserReviewData(item,
                                              userReview);
       }
@@ -73,10 +73,10 @@ function DestinyTrackerService($q,
 
     updateVendorRankings: function(vendors) {
       if (dimSettingsService.showReviews) {
-        if (this.isDestinyOne()) {
+        if (_isDestinyOne()) {
           _bulkFetcher.bulkFetchVendorItems(vendors);
         }
-        else if (this.isDestinyTwo()) {
+        else if (_isDestinyTwo()) {
           console.log("update vendor for D2 called");
         }
       }
@@ -84,10 +84,10 @@ function DestinyTrackerService($q,
 
     getItemReviews: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
-        if (this.isDestinyOne()) {
+        if (_isDestinyOne()) {
           _reviewsFetcher.getItemReviews(item);
         }
-        else if (this.isDestinyTwo()) {
+        else if (_isDestinyTwo()) {
           _d2reviewsFetcher.getItemReviews(item);
         }
       }
@@ -95,10 +95,10 @@ function DestinyTrackerService($q,
 
     submitReview: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
-        if (this.isDestinyOne()) {
+        if (_isDestinyOne()) {
           _reviewSubmitter.submitReview(item);
         }
-        else if (this.isDestinyTwo()) {
+        else if (_isDestinyTwo()) {
           _d2reviewSubmitter.submitReview(item);
         }
       }
@@ -106,10 +106,10 @@ function DestinyTrackerService($q,
 
     fetchReviews: function(stores) {
       if (dimSettingsService.showReviews) {
-        if (this.isDestinyOne()) {
+        if (_isDestinyOne()) {
           _bulkFetcher.bulkFetch(stores);
         }
-        else if (this.isDestinyTwo()) {
+        else if (_isDestinyTwo()) {
           _d2bulkFetcher.bulkFetch(stores);
         }
       }
@@ -117,10 +117,10 @@ function DestinyTrackerService($q,
 
     reportReview: function(review) {
       if (dimSettingsService.allowIdPostToDtr) {
-        if (this.isDestinyOne()) {
+        if (_isDestinyOne()) {
           _reviewReporter.reportReview(review);
         }
-        else if (this.isDestinyTwo()) {
+        else if (_isDestinyTwo()) {
           _d2reviewReporter.reportReview(review);
         }
       }

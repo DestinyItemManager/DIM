@@ -29,7 +29,7 @@
 <div ng-if="$ctrl.canCreateReview" class="user-review--header">
   <span ng-i18next="DtrReview.YourReview"></span>
 
-  <div ng-if="$ctrl.isDestinyTwo()" class="user-review--thumbs">
+  <div ng-if="$ctrl.item.destinyVersion === 2" class="user-review--thumbs">
     <div class="user-review--thumbs-up link" ng-click="$ctrl.setUserVote(1)">
         <span class="user-review--thumbs-up-button">
           <i class="fa fa-2x"
@@ -47,7 +47,7 @@
     </div>
   </div>
   
-  <div ng-if="$ctrl.isDestinyOne()">
+  <div ng-if="$ctrl.item.destinyVersion === 1">
     <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>
   </div>
 
