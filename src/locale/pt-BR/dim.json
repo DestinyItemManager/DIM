@@ -191,6 +191,7 @@
       "tTK": "O Rei dos Possuídos"
     },
     "RequiredLevel": "Mostra itens baseado em seu nível necessário.",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
     "Stats": "Exibir itens baseados em suas estatísticas. Os filtros disponíveis são:",
     "Tags": {
@@ -406,7 +407,7 @@
     "SaveErrorTitle": "Erro ao salvar o set",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set de itens busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "VendorsCanEquip": "Estes itens não podem ser equipados:",
-    "VendorsCannotEquip": "Estes itens de vendedores não podem ser equipados:"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Construindo banco de dados de informações",
@@ -489,6 +490,7 @@
     "ShowOverlay": "Mostrar novos itens com um efeito brilhante",
     "ShowReviews": "Mostrar classificações das armas em análise",
     "SizeItem": "Tamanho do item",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortName": "Nome",
     "SortPrimary": "Estatisticas primárias",
     "SortRarity": "Raridade",

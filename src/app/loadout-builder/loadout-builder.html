@@ -144,7 +144,7 @@
         <span ng-if="setType.set.includesVendorItems" ng-i18next="LB.ContainsVendorItems"></span>
         <span ng-if="!setType.set.includesVendorItems" class="dim-button" ng-click="vm.newLoadout(setType.set)" ng-i18next="Loadouts.Create"></span>
         <span ng-if="!setType.set.includesVendorItems" class="dim-button equip-button" ng-click="vm.equipItems(setType.set)" ng-i18next="[i18next]({ character: vm.activeCharacters[vm.selectedCharacter].name })LB.Equip"></span>
-        <dim-stats stats="setType.tiers[vm.activesets].stats"></dim-stats>
+        <dim-stats destiny-version="1" stats="setType.tiers[vm.activesets].stats"></dim-stats>
       </div>
       <div class="loadout-builder-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">

@@ -271,8 +271,6 @@ export function D2StoresService(
 
     /* Label isn't used, but it helps us understand what each one is */
     const progressionMeta = {
-      1761642340: { label: "Unknown", order: -1 },
-
       611314723: { label: "Vanguard", order: 1 },
       3231773039: { label: "Vanguard Research", order: 2 },
       697030790: { label: "Crucible", order: 3 },
@@ -287,8 +285,9 @@ export function D2StoresService(
       2105209711: { label: "New Monarchy", order: 8 },
       3398051042: { label: "Dead Orbit", order: 11 },
       3468066401: { label: "The Nine", order: 12 },
+      1761642340: { label: "Iron Banner", order: 13 },
 
-      1482334108: { label: "Leviathan", order: 13 },
+      1482334108: { label: "Leviathan", order: 14 }
     };
 
     if (progressions) {

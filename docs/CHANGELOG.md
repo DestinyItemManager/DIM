@@ -2,6 +2,18 @@
 * Added `stack:` to search filters for easier maintenance of modifications
 * Community reviews (for weapons and armor) are in for Destiny 2 inventory.
 
+# 4.19.2
+
+* Keyword searchs now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
+* Add Iron Banner reputation.
+
+# 4.19.1
+
+* Fix landscape orientation not working on mobile.
+* Fix D1 stats in loadout builder and loadout editor.
+
+# 4.19.0
+
 * Added `stack:` to search filters for easier maintenance of modifications.
 * Add missing type filters for D2 (try `is:modifications`)!
 * Bring back keyboard shortcuts for tagging (hit ? to see them all).
@@ -11,8 +23,10 @@
 * Hide "split" and "take" button for D2 consumables.
 * OK really really fix the vault count.
 * Fix showing item popup for some D1 items.
+* Changed how we do Google Drive log-in - it should be smoother on mobile.
 * Completed objectives will now show as "complete".
 * Bring back the yellow triangle for current character on mobile.
+* Updated `is:dupelower` search filter for items to tie break by primary stat.
 
 # 4.18.0
 
