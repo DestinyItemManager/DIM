@@ -3,6 +3,7 @@
   <div class="ngdialog-inner-content">
     <p ng-i18next="Filter.ClickFilters"></p>
     <p ng-i18next="[i18next]({ example: 'is:arc light:>300', not: 'not:', notexample: 'not:engram' })Filter.Combine"></p>
+    <p ng-i18next="[i18next]({ '<a href=\'https://youtu.be/T0tjH95AG_I\' target=\'_blank\' rel=\'noopener noreferrer\'>Youtube</a>' })Filter.VideoExample"></p>
     <table>
       <tr>
         <td ng-i18next="Filter.Filter"></td>
@@ -97,6 +98,13 @@
         <td>
           <dim-filter-link filter="is:weapon"></dim-filter-link>
           <dim-filter-link filter="is:armor"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:ghost"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:vehicle"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:ships"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:engrams"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:consumables"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:modifications"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:shaders"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:cosmetic"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.Categories"></td>
