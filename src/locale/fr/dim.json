@@ -191,6 +191,7 @@
       "tTK": "Le Roi des Corrompus"
     },
     "RequiredLevel": "Montre les objets selon leur niveau requis.",
+    "StackLevel": "Montre les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Montre les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
     "Stats": "Montre les objets selon la valeur de leur statistique. Les filtres disponibles sont:",
     "Tags": {
@@ -406,7 +407,7 @@
     "SaveErrorTitle": "Erreur lors de l'enregistrement du pré set",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}} Nous avons transféré tout ce que vous aviez.",
     "VendorsCanEquip": "Ces objets peuvent être équipés:",
-    "VendorsCannotEquip": "Ces objets de vendeurs ne peuvent pas être équipés:"
+    "VendorsCannotEquip": "Ces objets ne peuvent pas être équipés:"
   },
   "Manifest": {
     "Build": "Base de données d'info de Destiny en cours de construction",
@@ -489,6 +490,7 @@
     "ShowOverlay": "Afficher les nouveaux objets en surbrillance",
     "ShowReviews": "Montrer les notes d'évaluation sur les armes",
     "SizeItem": "Taille des objets",
+    "SortBasePower": "puissance de base (destiny 2 uniquement)",
     "SortName": "nom",
     "SortPrimary": "stat primaire",
     "SortRarity": "rareté",
