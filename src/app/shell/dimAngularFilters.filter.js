@@ -221,7 +221,7 @@ mod.filter('sortItems', (dimSettingsService) => {
         return item.quality && item.quality.min ? -item.quality.min : (dimSettingsService.showReviews && item.dtrRating ? -item.dtrRating : 1000);
       });
     }
-    if (sort === 'rarityThenPrimary' || (items.length &&  items[0].location.inGeneral)) {
+    if (sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {
       items = _.sortBy(items, rarity);
     }
     if (sort === 'typeThenPrimary' || sort === 'typeThenName') {
