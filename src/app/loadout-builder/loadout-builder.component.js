@@ -75,6 +75,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
     stat.tier = Math.min((stat.value / 60) >> 0, 5);
     stat.value = stat.value % 60;
     stat.tiers = [0, 0, 0, 0, 0];
+    stat.tierMax = 60;
 
     for (let tier = 0; tier < 5; tier++) {
       if (tier < stat.tier) {

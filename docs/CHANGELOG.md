@@ -1,5 +1,15 @@
 # Next
 
+# 4.19.2
+
+* Keyword searchs now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
+* Add Iron Banner reputation.
+
+# 4.19.1
+
+* Fix landscape orientation not working on mobile.
+* Fix D1 stats in loadout builder and loadout editor.
+
 # 4.19.0
 
 * Added `stack:` to search filters for easier maintenance of modifications.

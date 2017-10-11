@@ -191,8 +191,8 @@
       "tTK": "The Taken King"
     },
     "RequiredLevel": "Shows items based on their required level.",
-    "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
+    "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
@@ -490,9 +490,9 @@
     "ShowOverlay": "Show new items with a shiny overlay",
     "ShowReviews": "Show review ratings on weapons",
     "SizeItem": "Item size",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortName": "name",
     "SortPrimary": "primary stat",
-    "SortBasePower": "base power (destiny 2 only)",
     "SortRarity": "rarity",
     "SortRoll": "rating",
     "SortTypeThenName": "item type then name",

@@ -191,6 +191,7 @@
       "tTK": "降り立ちし邪神"
     },
     "RequiredLevel": "必要なレベルに応じてアイテムを表示",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "一纏め可能なアイテム(弾合成アイテム、奇妙なコインなど)を表示",
     "Stats": "アイテムのステータスを基に表示。各フィルターは以下の通りです。",
     "Tags": {
@@ -406,7 +407,7 @@
     "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
     "TooManyRequested": "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。",
     "VendorsCanEquip": "これらのアイテムは装備出来ません。",
-    "VendorsCannotEquip": "これらのベンダーアイテムは装備出来ません。"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Destinyのデータを再構築する。",
@@ -489,6 +490,7 @@
     "ShowOverlay": "新しいアイテムを光るように表示する",
     "ShowReviews": "武器に関するレビュー評価を表示する",
     "SizeItem": "アイテムサイズ",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortName": "名前",
     "SortPrimary": "メインのステータス",
     "SortRarity": "希少性",

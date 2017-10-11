@@ -657,6 +657,8 @@ function SearchFilterCtrl($scope, dimSettingsService, dimStoreService, D2StoresS
     },
     keyword: function(predicate, item) {
       return item.name.toLowerCase().indexOf(predicate) >= 0 ||
+        // Search for typeName (itemTypeDisplayName of modifications)
+        item.typeName.toLowerCase().indexOf(predicate) >= 0 ||
         // Search perks as well
         (item.talentGrid && _.any(item.talentGrid.nodes, (node) => {
           // Fixed #798 by searching on the description too.

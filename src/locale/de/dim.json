@@ -22,7 +22,7 @@
     "Title": "Eine Nachricht von Bungie:"
   },
   "BungieService": {
-    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
+    "DestinyLegacyPlatform": "Bungies Dienste haben derzeit einen Bug, der DIM daran hindert Informationen für deinen Destiny 2 Account zu laden, wenn du Destiny 1 auf einer älteren Konsolengeneration gespielt hast. Bungie wird den Fehler bald beheben, aber bis dahin musst du Destiny 1 auf einer neuen Konsole spielen, um die Informationen laden zu können.",
     "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
     "Difficulties": "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
     "ItemUniqueness": "Item Einzigartigkeit",
@@ -191,6 +191,7 @@
       "tTK": "König der Besessenen"
     },
     "RequiredLevel": "Zeigt Items basierend auf deren Mindestlevel.",
+    "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "Stats": "Zeigt Items basierend auf ihrem statischen Wert an. Verfügbare Filter sind:",
     "Tags": {
@@ -406,7 +407,7 @@
     "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
     "TooManyRequested": "Du hast {{total}} {{itemname}}. Dein Loadout verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "VendorsCanEquip": "Folgende Items können ausgerüstet werden:",
-    "VendorsCannotEquip": "Folgende Händler-Items können nicht ausgerüstet werden:"
+    "VendorsCannotEquip": "Folgende Items können nicht ausgerüstet werden:"
   },
   "Manifest": {
     "Build": "Lege Destiny Datenbank an",
@@ -489,6 +490,7 @@
     "ShowOverlay": "Hebe neue Items mit einem glänzenden Icon hervor",
     "ShowReviews": "Zeige Bewertungen bei Waffen an",
     "SizeItem": "Item Größe",
+    "SortBasePower": "Basis Power (nur Destiny 2)",
     "SortName": "Name",
     "SortPrimary": "primärer Wert",
     "SortRarity": "Seltenheit",
@@ -529,7 +531,7 @@
     "Export": "Sichere DIM Daten",
     "ForceSync": "Erzwinge Synchronisation",
     "GDriveLogout": "Deine Daten sind noch immer in Google Drive - wenn du dich wieder anmeldest, wird DIM diese wieder verwenden.",
-    "GDriveSignInError": "Error signing in to Google Drive:",
+    "GDriveSignInError": "Fehler bei der Google Drive Anmeldung:",
     "GDriveSignInWarning": "Wenn du bereits DIM Daten in Google Drive gespeichert hast, wird alles überschrieben was du lokal gespeichert hast. Du solltest eventuell deine Daten sichern, bevor du dich anmeldest.\n\nGoogle Drive Anmeldung fortsetzen?",
     "GoogleApiBlocked": "Google Drive ist nicht erreichbar, weil ein Inhaltsblocker JavaScript für Google Drive deaktiviert hat.",
     "GoogleDriveStorage": "Google Drive",
