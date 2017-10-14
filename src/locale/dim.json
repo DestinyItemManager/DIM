@@ -215,7 +215,7 @@
       "Shipwright": "Shipwright",
       "Speaker": "Speaker"
     },
-    "VideoExample": "For a even better example of how to use filters, watch this video on {{link}}",
+    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "Year": "Shows items from which year of Destiny they appeared in."
