@@ -41,12 +41,12 @@ export function D2ItemFactory(
     943549884, // Handling
     4188031367, // Reload Speed
     1345609583, // Aim Assistance
+    2715839340, // Recoil Direction
     3555269338, // Zoom
     3871231066, // Magazine
     2996146975, // Mobility
     392767087, // Resilience
     1943323491 // Recovery
-    //    2715839340, // Recoil Direction (people like to see this, but it's confusing)
     //    1935470627, // Power
     //    1931675084, //  Inventory Size
     // there are a few others (even an `undefined` stat)
@@ -391,7 +391,7 @@ export function D2ItemFactory(
       const def = statDefs.get(stat.statHash);
 
       // only aim assist and zoom for now
-      if (![1345609583, 3555269338].includes(stat.statHash) || !stat.value) {
+      if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
         return undefined;
       }
 

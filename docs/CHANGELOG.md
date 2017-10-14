@@ -1,6 +1,7 @@
 # Next
 
 * Sort consumables, mods, and shaders in a more useful way (generally grouping same type together, alphabetical for shaders).
+* Show the hidden recoil direction stat.
 
 # 4.19.2
 
