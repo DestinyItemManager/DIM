@@ -29,15 +29,15 @@ function DestinyTrackerService($q,
   const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
-  const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  const _reviewReporter = new ReviewReporter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
+  const _reviewSubmitter = new ReviewSubmitter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _reviewReporter = new ReviewReporter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
   const _d2trackerErrorHandler = new D2TrackerErrorHandler($q, $i18next);
   const _d2bulkFetcher = new D2BulkFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
   const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter, dimPlatformService);
-  const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, dimPlatformService, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewReporter = new D2ReviewReporter($q, $http, dimPlatformService, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
+  const _d2reviewReporter = new D2ReviewReporter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
 
   function _isDestinyOne() {
     return (dimSettingsService.destinyVersion === 1);
@@ -95,11 +95,13 @@ function DestinyTrackerService($q,
 
     submitReview: function(item) {
       if (dimSettingsService.allowIdPostToDtr) {
+        const membershipInfo = dimPlatformService.getActive();
+
         if (_isDestinyOne()) {
-          _reviewSubmitter.submitReview(item);
+          _reviewSubmitter.submitReview(item, membershipInfo);
         }
         else if (_isDestinyTwo()) {
-          _d2reviewSubmitter.submitReview(item);
+          _d2reviewSubmitter.submitReview(item, membershipInfo);
         }
       }
     },
@@ -117,11 +119,13 @@ function DestinyTrackerService($q,
 
     reportReview: function(review) {
       if (dimSettingsService.allowIdPostToDtr) {
+        const membershipInfo = dimPlatformService.getActive();
+
         if (_isDestinyOne()) {
-          _reviewReporter.reportReview(review);
+          _reviewReporter.reportReview(review, membershipInfo);
         }
         else if (_isDestinyTwo()) {
-          _d2reviewReporter.reportReview(review);
+          _d2reviewReporter.reportReview(review, membershipInfo);
         }
       }
     },

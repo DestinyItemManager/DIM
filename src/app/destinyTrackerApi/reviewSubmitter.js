@@ -6,19 +6,16 @@ import { ItemTransformer } from './itemTransformer';
  * @class ReviewSubmitter
  */
 class ReviewSubmitter {
-  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, reviewDataCache) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;
     this._itemTransformer = new ItemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
-    this._dimPlatformService = dimPlatformService;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getReviewer() {
-    const membershipInfo = this._dimPlatformService.getActive();
-
+  _getReviewer(membershipInfo) {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,
@@ -44,9 +41,9 @@ class ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item) {
+  _submitReviewPromise(item, membershipInfo) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
-    const reviewer = this._getReviewer();
+    const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
 
     const rating = Object.assign(rollAndPerks, review);
@@ -67,19 +64,19 @@ class ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item) {
+  _markItemAsReviewedAndSubmitted(item, membershipInfo) {
     const review = this.toRatingAndReview(item);
     review.isReviewer = true;
-    review.reviewer = this._getReviewer();
+    review.reviewer = this._getReviewer(membershipInfo);
     review.timestamp = new Date().toISOString();
 
     this._reviewDataCache.markItemAsReviewedAndSubmitted(item,
                                                          review);
   }
 
-  submitReview(item) {
-    this._submitReviewPromise(item)
-      .then(this._markItemAsReviewedAndSubmitted(item))
+  submitReview(item, membershipInfo) {
+    this._submitReviewPromise(item, membershipInfo)
+      .then(this._markItemAsReviewedAndSubmitted(item, membershipInfo))
       .then(this._eventuallyPurgeCachedData(item));
   }
 }
