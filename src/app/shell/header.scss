@@ -27,6 +27,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding-left: constant(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
 
   #user {
     color: white;
