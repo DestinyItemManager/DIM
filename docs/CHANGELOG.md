@@ -2,6 +2,8 @@
 
 * Sort consumables, mods, and shaders in a more useful way (generally grouping same type together, alphabetical for shaders).
 * Link to DestinyDB in your language instead of always English.
+* Updated documentation for search filters.
+* Fixed logic that makes room for items when your vault is full for D2.
 
 # 4.19.2
 
