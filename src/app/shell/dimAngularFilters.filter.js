@@ -51,6 +51,23 @@ mod.filter('equipped', () => {
   };
 });
 
+function rarity(item) {
+  switch (item.tier) {
+  case 'Exotic':
+    return 0;
+  case 'Legendary':
+    return 1;
+  case 'Rare':
+    return 2;
+  case 'Uncommon':
+    return 3;
+  case 'Common':
+    return 4;
+  default:
+    return 5;
+  }
+}
+
 /**
  * Sort the stores according to the user's preferences (via the order parameter).
  */
@@ -79,7 +96,7 @@ mod.filter('sortItems', (dimSettingsService) => {
   return function(items, sort) {
     // Don't resort postmaster items - that way people can see
     // what'll get bumped when it's full.
-    const dontsort = ["BUCKET_BOUNTIES", "BUCKET_MISSION", "BUCKET_QUESTS", "BUCKET_POSTMASTER"];
+    const dontsort = ["BUCKET_BOUNTIES", "BUCKET_MISSION", "BUCKET_QUESTS", "BUCKET_POSTMASTER", 215593132, 1801258597];
     if (items.length && dontsort.includes(items[0].location.id)) {
       return items;
     }
@@ -166,6 +183,29 @@ mod.filter('sortItems', (dimSettingsService) => {
     }
 
     items = _.sortBy(items || [], 'name');
+
+    // Re-sort mods
+    if (items.length && items[0].location.id === 3313201758) {
+      items = _.sortBy(items, 'typeName');
+      if (sort === 'rarityThenPrimary') {
+        items = _.sortBy(items, rarity);
+      }
+      return items;
+    }
+
+    // Re-sort consumables
+    if (items.length && items[0].location.id === 1469714392) {
+      items = _.sortBy(items, rarity);
+      items = _.sortBy(items, 'typeName');
+      return items;
+    }
+
+    // Re-sort shaders
+    if (items.length && items[0].location.id === 2973005342) {
+      // Just sort by name
+      return items;
+    }
+
     if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality' || sort === 'typeThenPrimary' || sort === 'basePowerThenPrimary') {
       items = _.sortBy(items, (item) => {
         return (item.primStat) ? (-1 * item.primStat.value) : 1000;
@@ -182,22 +222,7 @@ mod.filter('sortItems', (dimSettingsService) => {
       });
     }
     if (sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {
-      items = _.sortBy(items, (item) => {
-        switch (item.tier) {
-        case 'Exotic':
-          return 0;
-        case 'Legendary':
-          return 1;
-        case 'Rare':
-          return 2;
-        case 'Uncommon':
-          return 3;
-        case 'Common':
-          return 4;
-        default:
-          return 5;
-        }
-      });
+      items = _.sortBy(items, rarity);
     }
     if (sort === 'typeThenPrimary' || sort === 'typeThenName') {
       items = _.sortBy(items, (item) => {
