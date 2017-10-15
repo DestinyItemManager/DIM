@@ -61,6 +61,13 @@
       </span>
     </li>
 
+    <li ng-if="vm.store.destinyVersion === 2" class="loadout-set">
+      <span ng-click="vm.gatherTokensLoadout($event)">
+        <i class="fa fa-arrow-circle-o-up"></i>
+        <span ng-i18next="Loadouts.GatherTokens"></span>
+      </span>
+    </li>
+
     <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.startFarming($event)">
         <img class="fa" src="~app/images/engram.svg" height="12" width="12"/>
