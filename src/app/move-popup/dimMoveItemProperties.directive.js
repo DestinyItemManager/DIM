@@ -166,9 +166,29 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
   $scope.$watch('vm.settings.itemDetails', (show) => {
     vm.itemDetails = vm.itemDetails || show;
   });
-  vm.destinyDBLink = vm.item.destinyVersion === 2
-    ? `http://db.destinytracker.com/d2/en/items/${vm.item.hash}`
-    : `http://db.destinytracker.com/inventory/item/${vm.item.hash}#${vm.item.talentGrid && vm.item.talentGrid.dtrPerks}`;
+
+  // DTR 404s on the new D2 languages for D1 items
+  let language = vm.settings.language;
+  if (vm.item.destinyVersion === 1) {
+    switch (language) {
+    case 'es-mx':
+      language = 'es';
+      break;
+    case 'pl':
+    case 'ru':
+    case 'zh-cht':
+      language = 'en';
+      break;
+    }
+  } else {
+    // For D2, DTR uses English for es-mx
+    switch (language) {
+    case 'es-mx':
+      language = 'es';
+      break;
+    }
+  }
+  vm.destinyDBLink = `http://db.destinytracker.com/d${vm.item.destinyVersion}/${vm.settings.language}/items/${vm.item.hash}`;
 
   if (vm.item.primStat) {
     vm.light = vm.item.primStat.value.toString();

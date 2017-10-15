@@ -176,7 +176,7 @@
     "NewItems": "Mostra i nuovi oggetti.",
     "Notes": "Cerca oggetti che hai segnato con note",
     "Ornament": "Mostra gli oggetti con ornamenti e li filtra in base allo stato.",
-    "PartialMatch": "Mostra gli oggetti il cui nome ha un riscontro parziale con il testo inserito.",
+    "PartialMatch": "Mostra gli oggetti che hanno nel loro nome e perks una corrispondenza parziale con il testo del filtro.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerMod": "Oggetti che hanno una modifica per aumentare il loro Potere.",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
@@ -215,6 +215,7 @@
       "Shipwright": "Nostromo",
       "Speaker": "L'Oratore"
     },
+    "VideoExample": "Per una migliore comprensione di come usare i filtri, guarda questo video su {{link}}",
     "WeaponClass": "Mostra gli oggetti basandosi sulla loro classe arma.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",
     "Year": "Mostra gli oggetti divisi per anno di Destiny in cui sono apparsi."
@@ -230,11 +231,9 @@
   },
   "Help": {
     "CannotMove": "Non posso spostare quell'oggetto da questo personaggio.",
-    "ChangingPerks": "Selezione dei Perk non supportata",
+    "ChangingPerks": "Selezione dei perk non supportata",
     "ChangingPerksInfo": "Scusa, non è possibile cambiare i perk dall'esterno del gioco. Ci piacerebbe poterlo fare!",
     "Drag": "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa quantità.",
-    "ExtensionDeprecatedMessage": "L'estensione Chrome di DIM adesso apre il nostro sito internet, che funziona su tutti i browser e sui dispositivi mobili! Puoi disinstallare l'estensione, oppure lasciarla come comodo segnalibro per il sito. I tuoi dati (etichette, note e impostazioni) possono essere importati dalla pagina dei dati memorizzati (l'icona a forma di dischetto in alto).",
-    "ExtensionDeprecatedTitle": "DIM è un sito web adesso!",
     "HidePopup": "Nascondi Questo Popup",
     "NeverShow": "Non mostrarmi più questo messaggio.",
     "NoStorage": "DIM non può salvare dati",

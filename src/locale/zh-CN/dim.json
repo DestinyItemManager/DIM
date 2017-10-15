@@ -176,7 +176,7 @@
     "NewItems": "Shows new items.",
     "Notes": "Search for items that you have tagged with custom notes",
     "Ornament": "Shows items with ornaments and filters for their status.",
-    "PartialMatch": "Shows items where their name has a partial match to the filter text.",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
@@ -215,6 +215,7 @@
       "Shipwright": "Shipwright",
       "Speaker": "Speaker"
     },
+    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "Year": "Shows items from which year of Destiny they appeared in."
@@ -233,8 +234,6 @@
     "ChangingPerks": "Changing Perks Not Supported",
     "ChangingPerksInfo": "Sorry, there's no way to change perks outside the game. We wish we could!",
     "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
-    "ExtensionDeprecatedMessage": "The DIM Chrome extension now just opens our website - which works on every browser and on mobile devices! You can uninstall the extension, or leave it around as a convenient bookmark for the site. Your data (tags, notes, and settings) can be imported from the storage page (disk icon in the header).",
-    "ExtensionDeprecatedTitle": "DIM is just a website now!",
     "HidePopup": "Hide This Popup",
     "NeverShow": "Never show me this again.",
     "NoStorage": "DIM can't store data",

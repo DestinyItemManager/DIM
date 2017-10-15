@@ -3,6 +3,7 @@ import _ from 'underscore';
 import template from './dimStoreBucket.directive.html';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 import './dimStoreBucket.scss';
+import { isPhonePortrait } from '../mediaQueries';
 
 export const StoreBucketComponent = {
   controller: StoreBucketCtrl,
@@ -88,7 +89,7 @@ function StoreBucketCtrl($scope,
   vm.moveDroppedItem = dimActionQueue.wrap((item, equip, $event, hovering) => {
     const target = vm.store;
 
-    if (target.current && equip) {
+    if (target.current && equip && !isPhonePortrait()) {
       didYouKnow();
     }
 

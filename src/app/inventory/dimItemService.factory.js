@@ -443,7 +443,10 @@ export function ItemService(
 
     // Start with candidates of the same type (or sort if it's vault)
     const allItems = store.isVault
-      ? _.filter(store.items, (i) => i.bucket.sort === item.bucket.sort)
+      ? _.filter(store.items,
+             store.destinyVersion === 2
+               ? (i) => i.bucket.vaultBucket.id === item.bucket.vaultBucket.id
+               : (i) => i.bucket.sort === item.bucket.sort)
       : store.buckets[item.location.id];
     let moveAsideCandidates = _.filter(allItems, movable);
 
