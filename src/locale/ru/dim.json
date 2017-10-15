@@ -1,16 +1,16 @@
 {
   "Activities": {
     "Activities": "Активности",
-    "Hard": "Hard",
-    "Nightfall": "Nightfall Strike",
-    "Normal": "Normal",
-    "WeeklyHeroic": "Недельный Героический Страйк"
+    "Hard": "Сложный",
+    "Nightfall": "Сумрачный налёт",
+    "Normal": "Нормальный",
+    "WeeklyHeroic": "Недельный Героический Налёт"
   },
   "Bucket": {
     "Armor": "Броня",
     "General": "Общее",
-    "Inventory": "Inventory",
-    "Postmaster": "Постмастер",
+    "Inventory": "Предметы",
+    "Postmaster": "Почтмейстер",
     "Progress": "Прогресс",
     "Reputation": "Репутация",
     "Show": "Показать {{bucket}}",
@@ -22,7 +22,7 @@
     "Title": "Сообщение от Bungie:"
   },
   "BungieService": {
-    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
+    "DestinyLegacyPlatform": "Сервисы Bungie содержат баг, который препятствует DIM загрузить информацию вашего аккаунта в Destiny 2, если вы играли в Destiny 1 на консоли прошлого поколения. Bungie скоро это исправят, но до тех пор вы должны играть в Destiny 1 на консоли текущего поколения, чтобы иметь доступ к своим данным.",
     "DevVersion": "Вы используете нестабильную версию DIM? Вы должны зарегистрировать ваше расширение Chrome на bungie.net.",
     "Difficulties": "API Bungie в настоящий момент работает нестабильно.",
     "ItemUniqueness": "Item Uniqueness",
@@ -32,7 +32,7 @@
     "Maintenance": "Сервера Bungie.net отключены для техобслуживания.",
     "NetworkError": "Сетевая ошибка - {{status}} {{statusText}}",
     "NoAccount": "Не найден аккаунт Destiny для {{platform}}. Вы выбрали правильную платформу?",
-    "NoAccountForPlatform": "Не удалось найти ваш аккаунт в Destiny на {{platform}}.",
+    "NoAccountForPlatform": "Не удалось найти ваш аккаунт Destiny на {{platform}}.",
     "NoCookies": "Куки (Cookies) не найдены.",
     "NotConnected": "Вы, возможно, не подключены к Интернету.",
     "NotLoggedIn": "Пожалуйста, войдите в свой аккаунт Bungie.net для того, чтобы использовать это расширение.",
@@ -90,12 +90,12 @@
     "HelpPros": "Опиши преимущества этого оружия (опционально)",
     "NoReviews": "Ещё нет отзывов об этом предмете, будь первым!",
     "Pros": "Преимущества",
-    "ReallyReport": "Report",
+    "ReallyReport": "Пожаловаться",
     "ServiceCallError": "Ошибка вызова Destiny Tracker Service.",
     "ServiceSubmitError": "Ошибка отправки на Destiny Tracker Service.",
     "Submit": "Отправить",
     "ThankYou": "Спасибо за отправку вашего отзыва! Вскоре он будет показан в общем списке.",
-    "VerifyReport": "Are you sure you want to flag this review?",
+    "VerifyReport": "Вы уверены, что хотите пожаловаться на этот отзыв?",
     "YourReview": "Ваш отзыв"
   },
   "FarmingMode": {
@@ -177,8 +177,8 @@
     "Notes": "Search for items that you have tagged with custom notes",
     "Ornament": "Shows items with ornaments and filters for their status.",
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
-    "Postmaster": "Items that are currently in the Postmaster.",
-    "PowerMod": "Items that have a mod to increase their Power.",
+    "Postmaster": "Вещи, находящиеся у Почтмейстера.",
+    "PowerMod": "Вещи с модификатором на повышение Силы.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
@@ -206,14 +206,14 @@
     "Vendor": "Item is available from vendor <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "Item is available from vendor <i>{{vendor}}</i>",
     "Vendors": {
-      "CQ": "Crucible Quartermaster",
-      "DO": "Dead Orbit",
-      "EV": "Eververse",
-      "FWC": "Future War Cult",
-      "Gunsmith": "Gunsmith",
-      "NM": "New Monarchy",
-      "Shipwright": "Shipwright",
-      "Speaker": "Speaker"
+      "CQ": "Квартирмейстер Горнила",
+      "DO": "Мёртвая Орбита",
+      "EV": "Эверверс",
+      "FWC": "Культ Грядущей Войны",
+      "Gunsmith": "Оружейник",
+      "NM": "Новая Монархия",
+      "Shipwright": "Корабел",
+      "Speaker": "Глашатай"
     },
     "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "Shows items based on their weapon classes.",
@@ -222,27 +222,27 @@
   },
   "Header": {
     "About": "О проекте",
-    "FilterHelp": "Search item/perk or {{example}}",
+    "FilterHelp": "Поиск предмета/бонуса или {{example}}",
     "Filters": "Filters",
     "Inventory": "Инвентарь",
     "Refresh": "Обновить данные Destiny",
     "Shop": "Магазин",
-    "SupportDIM": "Backers"
+    "SupportDIM": "Поддержавшие"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
-    "ChangingPerks": "Changing Perks Not Supported",
-    "ChangingPerksInfo": "Sorry, there's no way to change perks outside the game. We wish we could!",
+    "ChangingPerks": "Смена бонусов не поддерживается",
+    "ChangingPerksInfo": "К сожалению, нет способа изменить бонусы вне игры. А мы хотели бы!",
     "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
     "HidePopup": "Hide This Popup",
     "NeverShow": "Never show me this again.",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
     "UpdateAvailable": "DIM Updated",
-    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
-    "UpgradeChrome": "Please Upgrade Chrome",
-    "Version_beta": "Beta has been updated to v{{version}}",
-    "Version_release": "DIM v{{version}} Released",
+    "UpdateAvailableMessage": "Доступно обновление для DIM. Перезагрузите страницу, чтобы обновить.",
+    "UpgradeChrome": "Пожалуйста, обновите Chrome",
+    "Version_beta": "Бета-версия была обновлена до v{{version}}",
+    "Version_release": "Выпущена версия {{version}} DIM",
     "Xur": "Xûr is Here"
   },
   "Hotkey": {
@@ -283,7 +283,7 @@
       "Vault": "There are too many '{{itemtype}}' items in the {{store}}."
     },
     "Classified": "This item is classified and cannot be transferred at this time.",
-    "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
+    "Classified2": "Засекреченный предмет. Bungie пока что не предоставляет информацию об этом предмете. Добавьте заметку к этому предмету и используйте фильтр \"notes:\" в поиске, чтобы найти его.",
     "Deequip": "Cannot find another item to equip in order to dequip {{itemname}}",
     "ExoticError": "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
@@ -302,7 +302,7 @@
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
     "FilterSets": "Filter sets",
-    "Guardians": "Guardians",
+    "Guardians": "Стражи",
     "Help": {
       "And": "Armor with all of these perks will be used (\"and\")",
       "ChangeNodes": "Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.",
@@ -409,15 +409,15 @@
     "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
-    "Build": "Building Destiny info database",
-    "Download": "Downloading latest Destiny info from Bungie",
-    "Error": "Error loading Destiny info:\n{{error}}\nReload to retry.",
-    "Load": "Loading saved Destiny info",
-    "LoadCharInv": "Loading Destiny characters and inventory",
-    "Outdated": "Outdated Destiny Info",
-    "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.",
-    "Save": "Saving latest Destiny info",
-    "Unzip": "Unzipping latest Destiny info"
+    "Build": "Создание локальной базы данных Destiny",
+    "Download": "Загрузка последних данных Destiny от Bungie",
+    "Error": "Ошибка загрузки данных Destiny:\n{{error}}\nПерезагрузите, чтобы повторить попытку.",
+    "Load": "Загрузка сохранённых данных Destiny",
+    "LoadCharInv": "Загрузка персонажей Destiny и предметов",
+    "Outdated": "Устаревшие данные Destiny",
+    "OutdatedExplanation": "Bungie обновила базу данных Destiny. Перезагрузите DIM, чтобы применить изменения. Обратите внимание, что некоторые вещи могут не работать в DIM несколько часов после того, как Bungie обновят Destiny, пока новые данные не распространятся через все их системы.",
+    "Save": "Сохранение последних данных Destiny",
+    "Unzip": "Распаковка последних данных Destiny"
   },
   "MoveAmount": {
     "Decrement": "One fewer",
@@ -463,7 +463,7 @@
   "Settings": {
     "AllowIdPostToDtr": "Показывать детальные отзывы об оружии и разрешить ставить им оценку",
     "AllowIdPostToDtrLine2": "Это передаст имя вашего аккаунта и отзывы о предметах на Destiny Tracker.",
-    "AlwaysShowDetails": "Always show expanded item popup",
+    "AlwaysShowDetails": "Всегда отображать подробное описание предмета",
     "CharacterOrder": "Сортировать персонажей по",
     "CharacterOrderFixed": "время создания",
     "CharacterOrderRecent": "время последнего использования",
@@ -486,7 +486,7 @@
     "ShowAnimations": "Animate the new item shine",
     "ShowAnimationsHelp": "Will show the animated new item shine on new items. Turning this off can save CPU cycles.",
     "ShowElemental": "Показывать иконку элементального урона на оружии",
-    "ShowOverlay": "Show new items with a shiny overlay",
+    "ShowOverlay": "Показывать новые предметы блестящей пометкой",
     "ShowReviews": "Показывать рейтинг отзывов на оружии",
     "SizeItem": "Item size",
     "SortBasePower": "base power (destiny 2 only)",

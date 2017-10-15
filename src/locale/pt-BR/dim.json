@@ -176,7 +176,7 @@
     "NewItems": "Mostra novos itens.",
     "Notes": "Procura por itens que você marcou com notas customizadas",
     "Ornament": "Mostra itens com ornamentos e filtros pra seus estados.",
-    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
+    "PartialMatch": "Mostra itens onde nomes/perks combinam parcialmente com o texto do filtro.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
     "PowerMod": "Itens que possuem um mod para aumentar seu poder.",
     "Quality": "Mostra itens baseado na porcentagem total da qualidade de seus atributos. '{{percentage}}' é um apelido pra '{{quality}}'.",
