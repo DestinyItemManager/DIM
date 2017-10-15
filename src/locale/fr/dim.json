@@ -215,7 +215,7 @@
       "Shipwright": "Responsable de la flotte",
       "Speaker": "Le Guide"
     },
-    "VideoExample": "Pour un meilleur exemple sur comment utiliser les filtres, regardez cette vidéo : {{link}}",
+    "VideoExample": "Pour un meilleur exemple sur comment utiliser les filtres, regardez cette vidéo: {{link}}",
     "WeaponClass": "Montre les objets selon leur classe d'arme.",
     "WeaponType": "Montre les armes selon leur type d'arme.",
     "Year": "Montre les objets selon l'année à laquelle ils sont apparus."

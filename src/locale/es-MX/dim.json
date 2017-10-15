@@ -215,7 +215,7 @@
       "Shipwright": "Contramaestre",
       "Speaker": "El Orador"
     },
-    "VideoExample": "For a even better example of how to use filters, watch this video on {{link}}",
+    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "Muestra objetos basado en las clases de arma.",
     "WeaponType": "Muestra armas basado en su tipo de daño.",
     "Year": "Muestra los objetos con su respectivo año de aparición en Destiny."
