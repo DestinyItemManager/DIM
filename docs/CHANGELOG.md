@@ -1,5 +1,7 @@
 # Next
 
+* Fixed an error when trying to space to move items.
+
 # 4.20.0
 
 * Sort consumables, mods, and shaders in a more useful way (generally grouping same type together, alphabetical for shaders).
