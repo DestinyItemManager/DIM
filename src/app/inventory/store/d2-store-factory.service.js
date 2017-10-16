@@ -45,6 +45,10 @@ export function D2StoreFactory($i18next, dimInfoService) {
       if (!item.type) {
         throw new Error("item needs a 'type' field");
       }
+      // Account-wide buckets (mods, etc) are only on the first character
+      if (item.location.accountWide && !this.current) {
+        return 0;
+      }
       const openStacks = Math.max(0, this.capacityForItem(item) -
                                   this.buckets[item.location.id].length);
       const maxStackSize = item.maxStackSize || 1;
@@ -188,15 +192,8 @@ export function D2StoreFactory($i18next, dimInfoService) {
           return buckets.byHash[item.bucket.hash].vaultBucket.capacity;
         },
         spaceLeftForItem: function(item) {
-          let sort = item.sort;
-          if (item.bucket) {
-            sort = item.bucket.sort;
-          }
-          if (!sort) {
-            throw new Error("item needs a 'sort' field");
-          }
           const openStacks = Math.max(0, this.capacityForItem(item) -
-                                      count(this.items, (i) => i.bucket.sort === sort));
+                                      count(this.items, (i) => i.bucket.vaultBucket.id === item.bucket.vaultBucket.id));
           const maxStackSize = item.maxStackSize || 1;
           if (maxStackSize === 1) {
             return openStacks;

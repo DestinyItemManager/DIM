@@ -176,7 +176,7 @@
     "NewItems": "Muestra objetos nuevos.",
     "Notes": "Busca los objetos que has etiquetado con notas personalizadas",
     "Ornament": "Muestra objetos con ornamentos y filtros para sus estadísticas.",
-    "PartialMatch": "Muestra objetos que en su nombre coinciden parcialmente al filtro de texto.",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "Objetos que están actualmente en la administración.",
     "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Muestra objetos basado en el porcentaje de calidad de su estadística total. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
@@ -215,6 +215,7 @@
       "Shipwright": "Contramaestre",
       "Speaker": "El Orador"
     },
+    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "Muestra objetos basado en las clases de arma.",
     "WeaponType": "Muestra armas basado en su tipo de daño.",
     "Year": "Muestra los objetos con su respectivo año de aparición en Destiny."
@@ -233,8 +234,6 @@
     "ChangingPerks": "Cambio de mejoras no soportado",
     "ChangingPerksInfo": "Lo sentimos, no hay forma de cambiar mejoras afuera del juego. ¡Quisiéramos poder hacerlo!",
     "Drag": "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un monto parcial.",
-    "ExtensionDeprecatedMessage": "La extensión DIM de Chrome ahora solamente abre nuestro sitio web - el cual funciona en cualquier navegador y en dispositivos móviles. Puedes remover la extensión, o dejarla como un conveniente acceso para el sitio. Tu información (etiquetas, notas y ajustes) pueden ser importadas desde la pagina de almacenamiento (icono de disco en la cabecera).",
-    "ExtensionDeprecatedTitle": "¡DIM es un solo sitio web ahora!",
     "HidePopup": "Esconde Esta Ventana",
     "NeverShow": "Nunca mostrar esto de nuevo.",
     "NoStorage": "DIM no puede almacenar información",

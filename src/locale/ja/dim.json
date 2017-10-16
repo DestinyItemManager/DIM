@@ -176,7 +176,7 @@
     "NewItems": "新しいアイテムを表示",
     "Notes": "メモを付けたアイテムを検索",
     "Ornament": "装飾可能なアイテム、装飾状況を表示",
-    "PartialMatch": "アイテム名の一部合致から検索できます",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
@@ -215,6 +215,7 @@
       "Shipwright": "造船工",
       "Speaker": "預言者"
     },
+    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "武器のクラスを基に表示",
     "WeaponType": "武器の種類を基に表示",
     "Year": "Destinyの何年目にでてきたかを表示"
@@ -233,8 +234,6 @@
     "ChangingPerks": "パーク変更は対応していません",
     "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
     "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
-    "ExtensionDeprecatedMessage": "DIMのエクステンションからどのブラウザー、携帯機器でもウェブサイトを開くことが出来るようになりました！　エクステンションを削除するか、ブックマークとして使用することが出来ます。データ(タグ、メモ、設定)はストレージのページ(上部のディスクのアイコン)から転送できます。",
-    "ExtensionDeprecatedTitle": "DIMがウェブサイトになりました！",
     "HidePopup": "ポップアップを非表示にする",
     "NeverShow": "次回から表示しない",
     "NoStorage": "DIMがデータを保管できません。",
