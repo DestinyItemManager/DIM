@@ -1,5 +1,7 @@
 # Next
 
+# 4.20.0
+
 * Sort consumables, mods, and shaders in a more useful way (generally grouping same type together, alphabetical for shaders).
 * Show the hidden recoil direction stat.
 * Link to DestinyDB in your language instead of always English.
