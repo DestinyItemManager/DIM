@@ -75,8 +75,8 @@
     "DidYouKnow": "Você sabia?",
     "DontShowAgain": "Não exibir esta dica novamente",
     "DoubleClick": "Se você está movendo um item para o seu personagem ativo atualmente (último logado), você pode dar um duplo clique para equipá-lo instantaneamente.",
-    "DragAndDrop": "Itens podem ser arrastados e soltados entre diferentes colunas de personagens/cofre.",
-    "Expand": "Para re-expandir uma seção simplesmente clique no sinal de mais, no lado esquerdo da categoria que você ocultou.",
+    "DragAndDrop": "Itens podem ser arrastados e soltos entre diferentes colunas de personagens/cofre.",
+    "Expand": "Para re-expandir uma seção, basta clicar no ícone de sinal de mais à esquerda da categoria que você ocultou.",
     "TryNext": "Tente na próxima vez!"
   },
   "DtrReview": {
@@ -86,15 +86,15 @@
     "Delete": "Apagar",
     "Edit": "Editar",
     "Help": "Escreva uma análise (opcional)",
-    "HelpCons": "Descreva os aspetos negativos desta arma (opcional)",
-    "HelpPros": "Descreva os aspetos positivos desta arma (opcional)",
-    "NoReviews": "Ainda não há análises para este item, sê o primeiro!",
+    "HelpCons": "Descreva os aspectos negativos desta arma (opcional)",
+    "HelpPros": "Descreva os aspectos positivos desta arma (opcional)",
+    "NoReviews": "Ainda não há análises para este item, seja o primeiro!",
     "Pros": "Prós",
     "ReallyReport": "Informar problema",
     "ServiceCallError": "O serviço de chamada do Destiny tracker falhou.",
     "ServiceSubmitError": "O serviço de submissão do Destiny tracker falhou.",
     "Submit": "Enviar",
-    "ThankYou": "Obrigado por submeteres a tua análise! Ficará disponível dentro de momentos.",
+    "ThankYou": "Obrigado por submeter sua análise! Ficará disponível em breve.",
     "VerifyReport": "Tem certeza que deseja sinalizar esta revisão?",
     "YourReview": "Sua avaliação"
   },
@@ -295,7 +295,7 @@
   },
   "LB": {
     "AdvancedOptions": "Opções avançadas",
-    "ClearLocked": "Limpar itens equipados",
+    "ClearLocked": "Limpar itens travados",
     "ContainsVendorItems": "Essa carga contém itens de vendedores",
     "Current": "Atual",
     "Equip": "Equipe em {{character}}",
@@ -327,13 +327,13 @@
     "IncludeRare": "Incluir itens raros (azuis)",
     "LB": "Construtor de Sets",
     "LightMode": {
-      "HelpCurrent": "Calcular set com os níveis de defesa reais.",
+      "HelpCurrent": "Calcular set com os níveis de defesa atuais.",
       "HelpScaled": "Calcular set como se todo os itens fossem 350 de defesa.",
       "LightMode": "Modo de luz"
     },
     "Loading": "Carregando os melhores sets ({{percent, pct}})",
     "LockEquipped": "Travar itens equipados",
-    "LockPerk": "Por perk",
+    "LockPerk": "Travar perk",
     "Locked": "Itens travados",
     "LockedHelp": "Arraste e solte itens para construir sets com itens específicos. SHIFT+Clique para excluir.",
     "Missing1": "Faltam itens lendários ou exóticos para construir um set completo!",
@@ -405,7 +405,7 @@
     "SaveErrorDescription": "Incapaz de salvar o set {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Erro ao salvar o set",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set de itens busca por {{requested}}. Nós transferimos tudo o que você tem.",
-    "VendorsCanEquip": "Estes itens não podem ser equipados:",
+    "VendorsCanEquip": "Estes itens podem ser equipados:",
     "VendorsCannotEquip": "Estes itens não podem ser equipados:"
   },
   "Manifest": {
@@ -441,7 +441,7 @@
     "Subtitle_Gear": "{{classType}} {{typeName}} com {{light}} de {{statName}}",
     "Take": "Tomar",
     "TrackUntrack_Track": "Seguir {{itemType}}",
-    "TrackUntrack_Untrack": "No seguir {{itemType}}",
+    "TrackUntrack_Untrack": "Não seguir {{itemType}}",
     "Vault": "Cofre"
   },
   "Notes": {
@@ -541,10 +541,10 @@
     "ImportFromExtensionButton": "Importar dados",
     "ImportFromExtensionDetail": "Você pode importar dados da Extensão DIM do Chrome no site do DIM.",
     "ImportFromExtensionWarning": "Sua Extensão do Chrome DIM vai sobrescrever seus dados atuais.\nContinuar?",
-    "ImportNoFile": "Nenhum ficheiro selecionado!",
+    "ImportNoFile": "Nenhum arquivo selecionado!",
     "ImportSuccess": "Dados do DIM importados!",
     "IndexedDBStorage": "Armazenamento local do Navegador",
-    "Loadouts": "{{value}}",
+    "Loadouts": "{{value}} sets",
     "NoData": "Sem informação",
     "Settings": "Suas configurações e preferências do DIM",
     "StatLabel": "Isso contém:",
