@@ -91,5 +91,76 @@
 
   &--chart-container {
     width: 95%;
+    display: flex;
+  }
+
+  &--review-chart {
+    &.stats {
+      width: 100%;
+      display: table;
+      border-spacing: 0 3px;
+    
+      .stat-box-row {
+        overflow: hidden;
+        margin-bottom: 3px;
+        display: table-row;
+      }
+      .stat-box-wrap {
+        white-space: normal !important;
+      }
+      .stat-box-cell {
+        display: table-cell;
+        line-height: 10px;
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      .stat-box-text {
+        padding-right: 8px;
+        padding-left: 10px;
+        text-align: right;
+      }
+      .stat-box-val {
+        text-align: left;
+        padding-right: 10px;
+        padding-left: 5px;
+      }
+      .higher-stats {
+        color: #7DC878;
+      }
+      .lower-stats {
+        color: #985C58;
+      }
+      .stat-box-outer {
+        display: table-cell;
+        height: 10px;
+        line-height: 10px;
+        background-color: #333;
+        width: 100%;
+      }
+      .stat-box-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+      }
+      .stat-box-inner {
+        display: block;
+        height: 100%;
+        float: left;
+        line-height: 10px;
+        background-color: #333;
+        background-color: white;
+        color: black;
+        line-height: 20px;
+        &.higher-stats {
+          background-color: #7DC878;
+        }
+        &.lower-stats {
+          background-color: #985C58;
+        }
+        &.rating-chart-bar-color {
+          background-color: #E8A534;
+        }
+      }
+    }
   }
 }
