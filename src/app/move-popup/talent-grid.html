@@ -11,6 +11,12 @@
        ng-click="node.hash == 1270552711 ? vm.infuse({ '$event': $event }) : true"
        press-tip="{{ node.description }}"
        press-tip-title="{{ node.name }}">
+       <circle ng-if="node.bestRated && !node.activated" 
+        class="talent-node-best-rated-circle"
+        r="5"
+        cx="30"
+        cy="5"
+       />
       <circle r="16"
               cx="-17"
               cy="17"
