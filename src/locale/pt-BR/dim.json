@@ -114,6 +114,7 @@
       "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
       "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
     },
+    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "Você está sem espaço para mover itens do {{character}}. É hora de descriptografar alguns engramas e fazer uma limpeza!",
     "OutOfRoomTitle": "Sem espaço",
     "Quickmove": "Mover rapidamente",
@@ -378,6 +379,7 @@
     "FromEquipped": "Equipado",
     "GatherEngrams": "Obter engramas",
     "GatherEngramsExceptExotics": "Exóticos",
+    "GatherTokens": "Gather Reputation Items",
     "ItemLeveling": "Nivelamento de itens",
     "ItemsWithIcon": "Itens com este ícone serão equipados. Clicar em um item alterna a equipagem.",
     "LoadoutName": "Nome do set...",
@@ -396,6 +398,7 @@
     "NameRequired": "Um nome é obrigatório.",
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
     "NoExotics": "Nenhum engrama disponível para transferir.",
+    "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Somente itens equipáveis, materiais e consumíveis podem ser adicionados em um set.",
     "Random": "Aleatória",
     "Randomize": "Embaralhar suas armas equipadas, armadura, fantasma e artefato?",

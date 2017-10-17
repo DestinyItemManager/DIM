@@ -114,6 +114,7 @@
       "MakeRoom": "Hacer espacio para coger objetos moviendo equipamiento",
       "Tooltip": "Si esta marcado, DIM va a mover armas y armadura para hacer espacio en el depósito para Engramas."
     },
+    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "Ya no hay espacio para mover objetos fuera de tu {{character}}. ¡Es hora de desencriptar algunos engramas y limpiar la basura!",
     "OutOfRoomTitle": "Sin espacio",
     "Quickmove": "Movimiento rápido",
@@ -378,6 +379,7 @@
     "FromEquipped": "Equipado",
     "GatherEngrams": "Juntar engramas",
     "GatherEngramsExceptExotics": "Exóticos",
+    "GatherTokens": "Gather Reputation Items",
     "ItemLeveling": "Nivel de objetos",
     "ItemsWithIcon": "Objetos con éste ícono van a ser equipados. Click en un objeto para equipar.",
     "LoadoutName": "Nombre de equipo...",
@@ -396,6 +398,7 @@
     "NameRequired": "Se necesita un nombre.",
     "NoEngrams": "No hay engramas no exóticos disponibles para transferir.",
     "NoExotics": "No hay engramas disponibles para transferir.",
+    "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Solo objetos equipables, materiales, y consumibles pueden añadirse a una configuración.",
     "Random": "Aleatorio",
     "Randomize": "Aleatorizar las armas, armaduras, carcasa y artefacto equipados?",

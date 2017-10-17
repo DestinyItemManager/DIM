@@ -9,7 +9,7 @@
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
-    "Inventory": "Inventory",
+    "Inventory": "在庫",
     "Postmaster": "ポストマスター",
     "Progress": "進行状況",
     "Reputation": "ランク",
@@ -67,7 +67,7 @@
     "Dump": "ゲーム機に情報を転送する"
   },
   "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
+    "Banner": "DIMはデスティニー 2 をサポートします。",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "DidYouKnow": {
@@ -90,7 +90,7 @@
     "HelpPros": "この武器の良いところを書いてください(オプション)",
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "Pros": "長所",
-    "ReallyReport": "Report",
+    "ReallyReport": "報告",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
     "Submit": "提出",
@@ -114,6 +114,7 @@
       "MakeRoom": "設備を動かしてアイテムを拾うための空間を確保する",
       "Tooltip": "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
     },
+    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "{{character}}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
     "OutOfRoomTitle": "スペースありません。",
     "Quickmove": "素早く移動",
@@ -238,7 +239,7 @@
     "NeverShow": "次回から表示しない",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
-    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailable": "DIM 更新",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "クロームをアップデートしてください",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
@@ -378,6 +379,7 @@
     "FromEquipped": "装備している",
     "GatherEngrams": "エングラム収集",
     "GatherEngramsExceptExotics": "エキゾチック",
+    "GatherTokens": "Gather Reputation Items",
     "ItemLeveling": "アイテムのレベルアップ",
     "ItemsWithIcon": "このアイコンを持つアイテムが装備されます。アイテムをクリックすると装備を切り替えることができます。",
     "LoadoutName": "ロードアウトの名前...",
@@ -396,6 +398,7 @@
     "NameRequired": "名称が必要",
     "NoEngrams": "転送出来るエングラムがありません。",
     "NoExotics": "非エキゾチクなエングラムは転送できません。",
+    "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "Random": "ランダム",
     "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",

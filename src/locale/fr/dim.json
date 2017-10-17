@@ -114,6 +114,7 @@
       "MakeRoom": "Faire de la place pour collecter des objets en déplaçant de l'équipement",
       "Tooltip": "Si activé, DIM déplacera les armes et armures afin de faire de la place dans le coffre pour les engrammes."
     },
+    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "Vous n'avez plus d'espace pour déplacer des objets hors de {{character}}. Il serait temps de décrypter quelques engrammes et de faire le tri!",
     "OutOfRoomTitle": "Plus de Place",
     "Quickmove": "Déplacement rapide",
@@ -378,6 +379,7 @@
     "FromEquipped": "Équipé",
     "GatherEngrams": "Réunir les Engrammes",
     "GatherEngramsExceptExotics": "Exotiques",
+    "GatherTokens": "Gather Reputation Items",
     "ItemLeveling": "Infusion d'objet",
     "ItemsWithIcon": "Les objets avec cette icône seront équipés. Cliquez sur un bouton d'objet pour l'équiper.",
     "LoadoutName": "Nom du pré set...",
@@ -396,6 +398,7 @@
     "NameRequired": "Un nom est requis.",
     "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
     "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
+    "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Seulement les objets équipables, matériaux et consommables peuvent être ajoutés à un pré set.",
     "Random": "Aléatoire",
     "Randomize": "Randomisez vos armes, armures, spectres et artéfacts équipés?",

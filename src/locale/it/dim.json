@@ -114,6 +114,7 @@
       "MakeRoom": "Fai spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
       "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
     },
+    "MoveTokens": "Invia i pegni di reputazione al deposito",
     "OutOfRoom": "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
     "OutOfRoomTitle": "Spazio esaurito",
     "Quickmove": "Spostamento Rapido",
@@ -378,6 +379,7 @@
     "FromEquipped": "Equipaggiato",
     "GatherEngrams": "Raccogliere Engrammi",
     "GatherEngramsExceptExotics": "Esotici",
+    "GatherTokens": "Raccogli i pegni di reputazione",
     "ItemLeveling": "Elementi da Livellare",
     "ItemsWithIcon": "Gli oggetti con questa icona verranno equipaggiati. Clicca su un oggetto per scegliere se equipaggiarli o meno.",
     "LoadoutName": "Nome loadout...",
@@ -396,6 +398,7 @@
     "NameRequired": "E' richiesto un nome.",
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
     "NoExotics": "Non ci sono engrammi da trasferire.",
+    "NoTokens": "Non ci sono pegni di reputazione disponibili al trasferimento.",
     "OnlyItems": "Solo oggetti, che si possono equipaggiare, materiali e consumabili si possono aggiungere a un loadout.",
     "Random": "Casuale",
     "Randomize": "Vuoi selezionare casualmente armi, armature, spettro e artefatto?",
