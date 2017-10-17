@@ -49,13 +49,16 @@ function DestinyTrackerService($q,
 
   return {
     reattachScoresFromCache: function(stores) {
-      if (_isDestinyOne()) {
-        _bulkFetcher.attachRankings(null,
+      if ((stores) &&
+          (stores[0])) {
+        if (stores[0].destinyVersion === 1) {
+          _bulkFetcher.attachRankings(null,
                                     stores);
-      }
-      else if (_isDestinyTwo()) {
-        _d2bulkFetcher.attachRankings(null,
-                                      stores);
+        }
+        else if (stores[0].destinyVersion === 2) {
+          _d2bulkFetcher.attachRankings(null,
+                                        stores);
+        }
       }
     },
 
@@ -107,11 +110,13 @@ function DestinyTrackerService($q,
     },
 
     fetchReviews: function(stores) {
-      if (dimSettingsService.showReviews) {
-        if (_isDestinyOne()) {
+      if ((dimSettingsService.showReviews) &&
+          (stores) &&
+          (stores[0])) {
+        if (stores[0].destinyVersion === 1) {
           _bulkFetcher.bulkFetch(stores);
         }
-        else if (_isDestinyTwo()) {
+        else if (stores[0].destinyVersion === 2) {
           _d2bulkFetcher.bulkFetch(stores);
         }
       }
