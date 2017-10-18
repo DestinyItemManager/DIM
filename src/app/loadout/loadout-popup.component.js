@@ -2,6 +2,7 @@ import angular from 'angular';
 import _ from 'underscore';
 import { flatMap } from '../util';
 import { optimalLoadout } from './loadout-utils';
+import { REP_TOKENS } from '../farming/rep-tokens';
 import template from './loadout-popup.html';
 import './loadout-popup.scss';
 
@@ -277,6 +278,36 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     const loadout = {
       classType: -1,
       name: $i18next.t('Loadouts.GatherEngrams'),
+      items: finalItems
+    };
+    vm.applyLoadout(loadout, $event);
+  };
+
+  vm.gatherTokensLoadout = function gatherTokensLoadout($event) {
+    const tokens = _.filter(storeService.getAllItems(), (i) => {
+      return REP_TOKENS.has(i.hash) && !i.notransfer;
+    });
+
+    if (tokens.length === 0) {
+      toaster.pop('warning', $i18next.t('Loadouts.GatherTokens'), $i18next.t('Loadouts.NoTokens'));
+      return;
+    }
+
+    const itemsByType = _.groupBy(tokens, 'type');
+
+    // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
+    const finalItems = {};
+    _.each(itemsByType, (items, type) => {
+      if (items) {
+        finalItems[type.toLowerCase()] = items.map((i) => {
+          return angular.copy(i);
+        });
+      }
+    });
+
+    const loadout = {
+      classType: -1,
+      name: $i18next.t('Loadouts.GatherTokens'),
       items: finalItems
     };
     vm.applyLoadout(loadout, $event);

@@ -9,7 +9,7 @@
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
-    "Inventory": "Inventory",
+    "Inventory": "在庫",
     "Postmaster": "ポストマスター",
     "Progress": "進行状況",
     "Reputation": "ランク",
@@ -67,7 +67,7 @@
     "Dump": "ゲーム機に情報を転送する"
   },
   "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
+    "Banner": "DIMはデスティニー 2 をサポートします。",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "DidYouKnow": {
@@ -90,7 +90,7 @@
     "HelpPros": "この武器の良いところを書いてください(オプション)",
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "Pros": "長所",
-    "ReallyReport": "Report",
+    "ReallyReport": "報告",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
     "Submit": "提出",
@@ -114,6 +114,7 @@
       "MakeRoom": "設備を動かしてアイテムを拾うための空間を確保する",
       "Tooltip": "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
     },
+    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "{{character}}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
     "OutOfRoomTitle": "スペースありません。",
     "Quickmove": "素早く移動",
@@ -176,7 +177,7 @@
     "NewItems": "新しいアイテムを表示",
     "Notes": "メモを付けたアイテムを検索",
     "Ornament": "装飾可能なアイテム、装飾状況を表示",
-    "PartialMatch": "アイテム名の一部合致から検索できます",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
@@ -215,6 +216,7 @@
       "Shipwright": "造船工",
       "Speaker": "預言者"
     },
+    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "武器のクラスを基に表示",
     "WeaponType": "武器の種類を基に表示",
     "Year": "Destinyの何年目にでてきたかを表示"
@@ -233,13 +235,11 @@
     "ChangingPerks": "パーク変更は対応していません",
     "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
     "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
-    "ExtensionDeprecatedMessage": "DIMのエクステンションからどのブラウザー、携帯機器でもウェブサイトを開くことが出来るようになりました！　エクステンションを削除するか、ブックマークとして使用することが出来ます。データ(タグ、メモ、設定)はストレージのページ(上部のディスクのアイコン)から転送できます。",
-    "ExtensionDeprecatedTitle": "DIMがウェブサイトになりました！",
     "HidePopup": "ポップアップを非表示にする",
     "NeverShow": "次回から表示しない",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
-    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailable": "DIM 更新",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "クロームをアップデートしてください",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
@@ -379,6 +379,7 @@
     "FromEquipped": "装備している",
     "GatherEngrams": "エングラム収集",
     "GatherEngramsExceptExotics": "エキゾチック",
+    "GatherTokens": "Gather Reputation Items",
     "ItemLeveling": "アイテムのレベルアップ",
     "ItemsWithIcon": "このアイコンを持つアイテムが装備されます。アイテムをクリックすると装備を切り替えることができます。",
     "LoadoutName": "ロードアウトの名前...",
@@ -397,6 +398,7 @@
     "NameRequired": "名称が必要",
     "NoEngrams": "転送出来るエングラムがありません。",
     "NoExotics": "非エキゾチクなエングラムは転送できません。",
+    "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "Random": "ランダム",
     "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",

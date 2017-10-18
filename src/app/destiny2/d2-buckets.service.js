@@ -67,7 +67,6 @@ const bucketToType = {
   4274335291: "Emblems",
   4292445962: "ClanBanners",
   14239492: "Chest",
-  18606351: "Shaders",
   20886954: "Leg",
   215593132: "LostItems",
   284967655: "Ships",

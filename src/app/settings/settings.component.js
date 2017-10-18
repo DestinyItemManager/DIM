@@ -1,6 +1,8 @@
 import _ from 'underscore';
 import template from './settings.html';
 import './settings.scss';
+import { isPhonePortraitStream } from '../mediaQueries';
+import { subscribeOnScope } from '../rx-utils';
 
 export const SettingsComponent = {
   template,
@@ -29,17 +31,11 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
   vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
-  // TODO: angular media-query-switch directive
-  // This seems like a good breakpoint for portrait based on https://material.io/devices/
-  // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720
-  const phoneWidthQuery = window.matchMedia('(max-width: 540px)');
-  function phoneWidthHandler(e) {
+  subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
     $scope.$apply(() => {
-      vm.isPhonePortrait = e.matches;
+      vm.isPhonePortrait = isPhonePortrait;
     });
-  }
-  phoneWidthQuery.addListener(phoneWidthHandler);
-  vm.isPhonePortrait = phoneWidthQuery.matches;
+  });
 
   vm.filters = {
     vendors: {
