@@ -1,5 +1,7 @@
 # Next
 
+* Fixed the shadow under the sticky characters bar on Chrome.
+
 # 4.20.1
 
 * Fixed an error when trying to space to move items.
