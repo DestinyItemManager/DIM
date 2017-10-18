@@ -1,15 +1,15 @@
-import { ItemTransformer } from './itemTransformer';
+import { D2ItemTransformer } from './d2-itemTransformer';
 
 /**
- * Supports submitting review data to the DTR API.
+ * Supports submitting D2 review data to the DTR API.
  *
- * @class ReviewSubmitter
+ * @class D2ReviewSubmitter
  */
-class ReviewSubmitter {
+class D2ReviewSubmitter {
   constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;
-    this._itemTransformer = new ItemTransformer();
+    this._itemTransformer = new D2ItemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
@@ -25,8 +25,8 @@ class ReviewSubmitter {
 
   toRatingAndReview(item) {
     return {
-      rating: item.userRating,
-      review: item.userReview,
+      voted: item.userVote,
+      text: item.userReview,
       pros: item.pros,
       cons: item.cons
     };
@@ -35,7 +35,7 @@ class ReviewSubmitter {
   _submitItemReviewCall(itemReview) {
     return {
       method: 'POST',
-      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/submit',
+      url: 'https://db-api.destinytracker.com/api/external/reviews/submit',
       data: itemReview,
       dataType: 'json'
     };
@@ -81,4 +81,4 @@ class ReviewSubmitter {
   }
 }
 
-export { ReviewSubmitter };
+export { D2ReviewSubmitter };

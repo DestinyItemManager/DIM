@@ -8,9 +8,13 @@
   <div ng-if="vm.item.quality"
        class="item-stat item-quality"
        ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>
-  <div ng-if="vm.item.dtrRating && (vm.item.dtrRatingCount > 1 || vm.item.dtrHighlightedRatingCount > 0)"
+  <div ng-if="vm.item.destinyVersion === 1 && vm.item.dtrRating && (vm.item.dtrRatingCount > 1 || vm.item.dtrHighlightedRatingCount > 0)"
        class="item-stat item-review"
        ng-style="vm.item.dtrRating | dtrRatingColor">{{ vm.item.dtrRating }}<i class="fa fa-star"></i></div>
+  <!-- we're allowing lonely one-review gear for now -->
+  <div ng-if="vm.item.destinyVersion === 2 && vm.item.dtrRating && (vm.item.dtrRatingCount > 0 || vm.item.dtrHighlightedRatingCount > 0)"
+    class="item-stat item-review"
+    ng-style="vm.item.dtrRating | dtr2RatingColor">{{ vm.item.dtrRating }}<i class="fa fa-star"></i></div>
   <div class="item-stat item-equipment"
        ng-if="vm.item.primStat.value || vm.item.maxStackSize > 1">{{ vm.item.primStat.value || vm.item.amount }}</div>
 </div>

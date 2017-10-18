@@ -1,4 +1,5 @@
 # Next
+* Community reviews (for weapons and armor) are in for Destiny 2 inventory.
 * Charting weapon reviews.
 
 * Fixed the shadow under the sticky characters bar on Chrome.
