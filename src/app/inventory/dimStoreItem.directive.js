@@ -49,12 +49,25 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
   const vm = this;
   let dialogResult = null;
 
-  const dragHelp = document.getElementById('drag-help');
+  const phoneWidthQuery = window.matchMedia('(orientation: portrait) and (max-device-width: 750px)');
+  function phoneWidthHandler(e) {
+    $scope.$apply(() => {
+      vm.isPhonePortrait = e.matches;
+    });
+  }
+  phoneWidthQuery.addListener(phoneWidthHandler);
+  //  vm.isPhonePortrait = phoneWidthQuery.matches;
 
-  if (vm.item.maxStackSize > 1) {
-    $element.on('dragstart', (e) => {
+  const dragHelp = document.getElementById('item-drag-box');
+
+  if (vm.item.maxStackSize > 1 || (vm.item.destinyVersion === 2 && phoneWidthQuery.matches)) {
+    $element.on('dragstart', (element) => {
+      $rootScope.$broadcast('drag-start-item', {
+        item: vm.item,
+        element
+      });
       $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
-      if (vm.item.amount > 1) {
+      if (vm.item.amount > 1 || (vm.item.destinyVersion === 2 && phoneWidthQuery.matches)) {
         dragHelp.classList.remove('drag-help-hidden');
       }
     });

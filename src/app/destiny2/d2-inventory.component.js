@@ -14,6 +14,10 @@ function D2InventoryController($scope, D2StoresService, D2BucketsService) {
 
   const vm = this;
 
+  vm.featureFlags = {
+    dnd: $featureFlags.dnd
+  };
+
   this.$onInit = function() {
     D2BucketsService.getBuckets().then((buckets) => {
       vm.buckets = buckets;
