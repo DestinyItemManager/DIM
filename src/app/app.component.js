@@ -2,6 +2,7 @@ import template from './app.html';
 import './app.scss';
 import changelog from '../views/changelog-toaster-release.html';
 import _ from 'underscore';
+import i18next from 'i18next';
 
 export const AppComponent = {
   template: template,
@@ -125,4 +126,8 @@ function AppComponentCtrl(
       });
     }
   };
+
+  $scope.$on('i18nextLanguageChange', () => {
+    this.language = `lang-${i18next.language}`;
+  });
 }

@@ -77,6 +77,10 @@ export function D2StoreFactory($i18next, dimInfoService) {
         const bucketIndex = bucketItems.findIndex(match);
         bucketItems.splice(bucketIndex, 1);
 
+        if (this.current && item.location.accountWide) {
+          this.vault.d2VaultCounts[item.location.id].count--;
+        }
+
         return true;
       }
       return false;
@@ -95,6 +99,10 @@ export function D2StoreFactory($i18next, dimInfoService) {
         });
       }
       item.owner = this.id;
+
+      if (this.current && item.location.accountWide) {
+        this.vault.d2VaultCounts[item.location.id].count++;
+      }
     },
 
     // Create a loadout from this store's equipped items
@@ -200,14 +208,16 @@ export function D2StoreFactory($i18next, dimInfoService) {
         },
         removeItem: function(item) {
           const result = StoreProto.removeItem.call(this, item);
-          const bucket = item.location.accountWide ? item.location : item.location.vaultBucket;
-          this.d2VaultCounts[bucket.id].count--;
+          if (item.location.vaultBucket) {
+            this.d2VaultCounts[item.location.vaultBucket.id].count--;
+          }
           return result;
         },
         addItem: function(item) {
           StoreProto.addItem.call(this, item);
-          const bucket = item.location.accountWide ? item.location : item.location.vaultBucket;
-          this.d2VaultCounts[bucket.id].count++;
+          if (item.location.vaultBucket) {
+            this.d2VaultCounts[item.location.vaultBucket.id].count++;
+          }
         }
       });
     }

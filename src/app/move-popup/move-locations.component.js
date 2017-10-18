@@ -54,16 +54,23 @@ function controller($rootScope, dimSettingsService, dimItemMoveService, dimStore
   };
 
   vm.canShowStore = function canShowStore(buttonStore) {
+    // Can't store into a vault
     if (buttonStore.isVault) {
       return false;
     }
 
     if (vm.item.notransfer) {
+      // Can store an equiped item in same itemStore
       if (vm.item.equipped && vm.store.id === buttonStore.id) {
         return true;
       }
     } else if (vm.store.id !== buttonStore.id || vm.item.equipped) {
-      return true;
+      // In Destiny2, only show one store for account wide items
+      if (vm.item.destinyVersion === 2 && vm.item.bucket && vm.item.bucket.accountWide && !buttonStore.current) {
+        return false;
+      } else {
+        return true;
+      }
     }
 
     return false;

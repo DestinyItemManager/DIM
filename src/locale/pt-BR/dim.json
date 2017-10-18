@@ -22,6 +22,7 @@
     "Title": "Uma mensagem da Bungie:"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
     "Difficulties": "A API da Bungie está atualmente passando por dificuldades.",
     "ItemUniqueness": "Unicidade de itens",
@@ -146,6 +147,7 @@
     "DamageType": "Mostrar items baseado no seu tipo de dano.",
     "Description": "Descrição",
     "Dupe": "Mostrar items duplicados",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "Mostrar engramas.",
     "EnterName": "Digite um nome de item:",
     "EnterNote": "Digite a anotação:",
@@ -189,6 +191,7 @@
       "tTK": "O Rei dos Possuídos"
     },
     "RequiredLevel": "Mostra itens baseado em seu nível necessário.",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
     "Stats": "Exibir itens baseados em suas estatísticas. Os filtros disponíveis são:",
     "Tags": {
@@ -236,6 +239,8 @@
     "NeverShow": "Não mostre isso novamente.",
     "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não pode salvar dados no navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco. DIM não pode prosseguir.",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "Por favor, atualize o Chrome",
     "Version_beta": "Beta foi atualizado para v{{version}}",
     "Version_release": "DIM v{{version}} lançado",
@@ -402,7 +407,7 @@
     "SaveErrorTitle": "Erro ao salvar o set",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set de itens busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "VendorsCanEquip": "Estes itens não podem ser equipados:",
-    "VendorsCannotEquip": "Estes itens de vendedores não podem ser equipados:"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Construindo banco de dados de informações",
@@ -485,10 +490,13 @@
     "ShowOverlay": "Mostrar novos itens com um efeito brilhante",
     "ShowReviews": "Mostrar classificações das armas em análise",
     "SizeItem": "Tamanho do item",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortName": "Nome",
     "SortPrimary": "Estatisticas primárias",
     "SortRarity": "Raridade",
     "SortRoll": "avaliação",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "Largura máxima do inventário do cofre"
   },
   "Stats": {
@@ -523,6 +531,7 @@
     "Export": "Fazer Back up dos dados do DIM",
     "ForceSync": "Forçar sincronização de dados",
     "GDriveLogout": "Seus dados continuam no Google Drive - se você logar de novo, DIM voltará a usá-los.",
+    "GDriveSignInError": "Error signing in to Google Drive:",
     "GDriveSignInWarning": "Se você já salvou os dados do DIM no Google Drive, eles vão sobrescrever qualquer coisa salva localmente. Você pode querer salvar seus dados antes de logar.\n\nContinuar a logar no Google Drive?",
     "GoogleApiBlocked": "Google Drive não está disponível por que um bloqueador de conteúdo bloqueou o JavaScript. Por favor remova o DIM do bloqueio e tente novamente.",
     "GoogleDriveStorage": "Google Drive",

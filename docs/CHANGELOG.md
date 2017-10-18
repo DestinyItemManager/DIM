@@ -1,5 +1,45 @@
 # Next
-* Added missing factions to the reputation section.
+
+# 4.19.2
+
+* Keyword searchs now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
+* Add Iron Banner reputation.
+
+# 4.19.1
+
+* Fix landscape orientation not working on mobile.
+* Fix D1 stats in loadout builder and loadout editor.
+
+# 4.19.0
+
+* Added `stack:` to search filters for easier maintenance of modifications.
+* Add missing type filters for D2 (try `is:modifications`)!
+* Bring back keyboard shortcuts for tagging (hit ? to see them all).
+* The "Max Light" calculation is even more accurate now.
+* Added `PowerMod` column to CSV export indicating whether or not a weapon or piece of armor has a power mod
+* Support sorting by base power.
+* Hide "split" and "take" button for D2 consumables.
+* OK really really fix the vault count.
+* Fix showing item popup for some D1 items.
+* Changed how we do Google Drive log-in - it should be smoother on mobile.
+* Completed objectives will now show as "complete".
+* Bring back the yellow triangle for current character on mobile.
+* Updated `is:dupelower` search filter for items to tie break by primary stat.
+
+# 4.18.0
+
+* Updated `is:dupelower` search filter for items with the same/no power level.
+* Fix some issues with Google Drive that might lead to lost data.
+* Really fix vault counts this time!
+
+# 4.17.0
+
+* Fix bug that prevented pinned apps in iOS from authenticating with Bungie.net.
+
+# 4.16.2
+
+* Added `is:dupelower` to search filters for easier trashing.
+* Added missing factions to the reputation section for Faction Rally.
 * Fix in infusion calculator to correctly consider +5 mod
 * Fix for CSV export (e.g.: First In, Last Out in 2 columns)
 

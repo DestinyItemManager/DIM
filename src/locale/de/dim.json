@@ -22,6 +22,7 @@
     "Title": "Eine Nachricht von Bungie:"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Bungies Dienste haben derzeit einen Bug, der DIM daran hindert Informationen für deinen Destiny 2 Account zu laden, wenn du Destiny 1 auf einer älteren Konsolengeneration gespielt hast. Bungie wird den Fehler bald beheben, aber bis dahin musst du Destiny 1 auf einer neuen Konsole spielen, um die Informationen laden zu können.",
     "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
     "Difficulties": "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
     "ItemUniqueness": "Item Einzigartigkeit",
@@ -146,6 +147,7 @@
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
+    "DupeInPostmaster": "Einige Item-Duplikate sind bei der Poststelle.",
     "Engrams": "Zeige Engramme.",
     "EnterName": "Trage einen Namen ein:",
     "EnterNote": "Trage eine Beschreibung ein:",
@@ -189,6 +191,7 @@
       "tTK": "König der Besessenen"
     },
     "RequiredLevel": "Zeigt Items basierend auf deren Mindestlevel.",
+    "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "Stats": "Zeigt Items basierend auf ihrem statischen Wert an. Verfügbare Filter sind:",
     "Tags": {
@@ -236,6 +239,8 @@
     "NeverShow": "Diesen Tipp nicht erneut zeigen.",
     "NoStorage": "DIM kann die Daten nicht speichern",
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. DIM kann nicht fortfahren.",
+    "UpdateAvailable": "DIM aktualisiert",
+    "UpdateAvailableMessage": "Es ist eine Aktualisierung für DIM verfügbar. Aktualisiere die Seite um die Aktualisierung durchzuführen.",
     "UpgradeChrome": "Bitte aktualisiere Chrome",
     "Version_beta": "Beta wurde auf v{{version}} aktualisiert",
     "Version_release": "DIM v{{version}} veröffentlicht",
@@ -402,7 +407,7 @@
     "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
     "TooManyRequested": "Du hast {{total}} {{itemname}}. Dein Loadout verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "VendorsCanEquip": "Folgende Items können ausgerüstet werden:",
-    "VendorsCannotEquip": "Folgende Händler-Items können nicht ausgerüstet werden:"
+    "VendorsCannotEquip": "Folgende Items können nicht ausgerüstet werden:"
   },
   "Manifest": {
     "Build": "Lege Destiny Datenbank an",
@@ -485,10 +490,13 @@
     "ShowOverlay": "Hebe neue Items mit einem glänzenden Icon hervor",
     "ShowReviews": "Zeige Bewertungen bei Waffen an",
     "SizeItem": "Item Größe",
+    "SortBasePower": "Basis Power (nur Destiny 2)",
     "SortName": "Name",
     "SortPrimary": "primärer Wert",
     "SortRarity": "Seltenheit",
     "SortRoll": "Bewertung",
+    "SortTypeThenName": "Itemtyp dann Name",
+    "SortTypeThenPrimary": "Itemtyp dann Primärwert",
     "VaultColumns": "Maximale Anzahl von Spalten des Tresors"
   },
   "Stats": {
@@ -523,6 +531,7 @@
     "Export": "Sichere DIM Daten",
     "ForceSync": "Erzwinge Synchronisation",
     "GDriveLogout": "Deine Daten sind noch immer in Google Drive - wenn du dich wieder anmeldest, wird DIM diese wieder verwenden.",
+    "GDriveSignInError": "Fehler bei der Google Drive Anmeldung:",
     "GDriveSignInWarning": "Wenn du bereits DIM Daten in Google Drive gespeichert hast, wird alles überschrieben was du lokal gespeichert hast. Du solltest eventuell deine Daten sichern, bevor du dich anmeldest.\n\nGoogle Drive Anmeldung fortsetzen?",
     "GoogleApiBlocked": "Google Drive ist nicht erreichbar, weil ein Inhaltsblocker JavaScript für Google Drive deaktiviert hat.",
     "GoogleDriveStorage": "Google Drive",

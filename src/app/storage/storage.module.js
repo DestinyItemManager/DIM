@@ -20,7 +20,7 @@ export default angular
     $stateProvider.state({
       name: 'storage',
       component: 'storage',
-      url: '/storage'
+      url: '/storage?gdrive'
     });
   })
   .name;

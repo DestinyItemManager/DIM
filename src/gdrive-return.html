@@ -1,0 +1,25 @@
+<html !doctype>
+  <head>
+    <title>Authorizing Google Drive</title>
+
+    {{#each htmlWebpackPlugin.files.css}}
+    <link href="{{ webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
+    {{/each}}
+  </head>
+
+  <body>
+    <div id="return">
+      Authorizing Google Drive...
+    </div>
+
+    <div id="return-error" style="display: none">
+      <p>We were unable to set up Google Drive.</p>
+      <a href="/index.html">Go back to DIM</a>
+    </div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    {{#each htmlWebpackPlugin.files.js}}
+    <script type="text/javascript" src="{{ webpackConfig.output.publicPath }}{{ this }}"></script>
+    {{/each}}
+  </body>
+</html>

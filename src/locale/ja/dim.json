@@ -22,6 +22,7 @@
     "Title": "Bungieからのメッセージです。"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
     "Difficulties": "Bungie APIに問題が発生しています。",
     "ItemUniqueness": "アイテムのレア度",
@@ -146,6 +147,7 @@
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "重複するアイテムを表示",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "エングラムを表示",
     "EnterName": "アイテム名を入力してください。",
     "EnterNote": "ここにノート入力:",
@@ -189,6 +191,7 @@
       "tTK": "降り立ちし邪神"
     },
     "RequiredLevel": "必要なレベルに応じてアイテムを表示",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "一纏め可能なアイテム(弾合成アイテム、奇妙なコインなど)を表示",
     "Stats": "アイテムのステータスを基に表示。各フィルターは以下の通りです。",
     "Tags": {
@@ -236,6 +239,8 @@
     "NeverShow": "次回から表示しない",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "クロームをアップデートしてください",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
     "Version_release": "DIM v{{version}} がリリースされました",
@@ -402,7 +407,7 @@
     "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
     "TooManyRequested": "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。",
     "VendorsCanEquip": "これらのアイテムは装備出来ません。",
-    "VendorsCannotEquip": "これらのベンダーアイテムは装備出来ません。"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Destinyのデータを再構築する。",
@@ -485,10 +490,13 @@
     "ShowOverlay": "新しいアイテムを光るように表示する",
     "ShowReviews": "武器に関するレビュー評価を表示する",
     "SizeItem": "アイテムサイズ",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortName": "名前",
     "SortPrimary": "メインのステータス",
     "SortRarity": "希少性",
     "SortRoll": "評価",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "保管庫の最大幅"
   },
   "Stats": {
@@ -523,6 +531,7 @@
     "Export": "DIMのデータをバックアップ",
     "ForceSync": "データの同調を強制する",
     "GDriveLogout": "データがグーグルドライブにまだあります。次回のサインイン時にはこのデータが使用されます。",
+    "GDriveSignInError": "Error signing in to Google Drive:",
     "GDriveSignInWarning": "既にグーグルドライブにDIMのデータをセーブしている場合、機器にセーブされたデータに上書きされます。サインインする前にデータをバックアップしたほうがいいかも知れません。\n\nグーグルドライブにサインインしますか？",
     "GoogleApiBlocked": "コンテンツブロッカーによりグーグルドライブにアクセスできません。DIMをコンテンツブロッカー設定より解除して、お試しください。",
     "GoogleDriveStorage": "Google Drive",

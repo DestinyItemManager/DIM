@@ -22,6 +22,7 @@
     "Title": "Un message de Bungie:"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Les services Bungie ont actuellement un bug empêchant DIM de charger les informations pour votre compte Destiny 2 si vous avez joué à Destiny 1 sur une console d'ancienne génération. Bungie corrigera bientôt ce bug, mais en attendant vous devez jouer à Destiny 1 sur une console de génération actuelle pour pouvoir accéder à vos informations.",
     "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec bungie.net.",
     "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
     "ItemUniqueness": "Unicité d'un objet",
@@ -146,6 +147,7 @@
     "DamageType": "Montre les objets selon leur type de dégât.",
     "Description": "Description",
     "Dupe": "Montre les objets dupliqués",
+    "DupeInPostmaster": "Certains doublons sont au commis des postes.",
     "Engrams": "Montre les engrammes.",
     "EnterName": "Entrez un nom d'objet:",
     "EnterNote": "Entrez vos notes:",
@@ -189,6 +191,7 @@
       "tTK": "Le Roi des Corrompus"
     },
     "RequiredLevel": "Montre les objets selon leur niveau requis.",
+    "StackLevel": "Montre les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Montre les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
     "Stats": "Montre les objets selon la valeur de leur statistique. Les filtres disponibles sont:",
     "Tags": {
@@ -236,6 +239,8 @@
     "NeverShow": "Ne plus jamais afficher.",
     "NoStorage": "DIM ne peut pas stocker de données",
     "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible. DIM ne peut pas continuer.",
+    "UpdateAvailable": "DIM mis à jour",
+    "UpdateAvailableMessage": "Une mise à jour est disponible pour DIM. Actualisez la page pour mettre à jour.",
     "UpgradeChrome": "Veuillez Mettre à Jour Chrome",
     "Version_beta": "Beta a été mis à jour à v{{version}}",
     "Version_release": "DIM v{{version}} Publiée",
@@ -402,7 +407,7 @@
     "SaveErrorTitle": "Erreur lors de l'enregistrement du pré set",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}} Nous avons transféré tout ce que vous aviez.",
     "VendorsCanEquip": "Ces objets peuvent être équipés:",
-    "VendorsCannotEquip": "Ces objets de vendeurs ne peuvent pas être équipés:"
+    "VendorsCannotEquip": "Ces objets ne peuvent pas être équipés:"
   },
   "Manifest": {
     "Build": "Base de données d'info de Destiny en cours de construction",
@@ -485,10 +490,13 @@
     "ShowOverlay": "Afficher les nouveaux objets en surbrillance",
     "ShowReviews": "Montrer les notes d'évaluation sur les armes",
     "SizeItem": "Taille des objets",
+    "SortBasePower": "puissance de base (destiny 2 uniquement)",
     "SortName": "nom",
     "SortPrimary": "stat primaire",
     "SortRarity": "rareté",
     "SortRoll": "note",
+    "SortTypeThenName": "type d'objet puis nom",
+    "SortTypeThenPrimary": "type d'objet puis stat primaire",
     "VaultColumns": "Nombre maximal de colonne de coffre"
   },
   "Stats": {
@@ -523,6 +531,7 @@
     "Export": "Sauvegarder ses données DIM",
     "ForceSync": "Forcer la synchronisation des données",
     "GDriveLogout": "Vos données sont toujours sur Google Drive - si vous vous connectez à nouveau, DIM les réutilisera.",
+    "GDriveSignInError": "Erreur lors de la connexion à Google Drive:",
     "GDriveSignInWarning": "Si vous avez déjà sauvegardé des données DIM sur Google Drive, cela écrasera tout ce que vous avez sauvegarder localement. Vous voudrez peut-être sauvegardez vos données avant de vous connecter.\n\nContinuer la connexion vers Google Drive?",
     "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il Java Script di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
     "GoogleDriveStorage": "Google Drive",

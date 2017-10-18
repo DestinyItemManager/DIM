@@ -266,8 +266,6 @@ export function D2StoresService(
 
     /* Label isn't used, but it helps us understand what each one is */
     const progressionMeta = {
-      1761642340: { label: "Unknown", order: -1 },
-
       611314723: { label: "Vanguard", order: 1 },
       3231773039: { label: "Vanguard Research", order: 2 },
       697030790: { label: "Crucible", order: 3 },
@@ -282,8 +280,9 @@ export function D2StoresService(
       2105209711: { label: "New Monarchy", order: 8 },
       3398051042: { label: "Dead Orbit", order: 11 },
       3468066401: { label: "The Nine", order: 12 },
+      1761642340: { label: "Iron Banner", order: 13 },
 
-      1482334108: { label: "Leviathan", order: 13 },
+      1482334108: { label: "Leviathan", order: 14 }
     };
 
     if (progressions) {
@@ -358,8 +357,7 @@ export function D2StoresService(
           store.buckets[bucket.id] = [];
         }
 
-        // TODO: don't even update them for account-wide
-        if (!bucket.accountWide && bucket.vaultBucket) {
+        if (bucket.vaultBucket) {
           const vaultBucketId = bucket.vaultBucket.id;
           store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
             count: 0,
@@ -474,16 +472,18 @@ export function D2StoresService(
   function getBasePower(store, loadout) {
     // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
     const itemWeight = {
-      Weapons: 3 / 21,
-      Armor: 5 / 42,
-      General: 2 / 21
+      Weapons: 6,
+      Armor: 5,
+      General: 4
     };
+    // 3 Weapons, 4 Armor, 1 General
+    const itemWeightDenominator = 42;
 
     const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
 
-    return (Math.floor(items.length * _.reduce(items, (memo, item) => {
+    return (_.reduce(items, (memo, item) => {
       return memo + (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }, 0)) / items.length).toFixed(1);
+    }, 0) / itemWeightDenominator).toFixed(1);
   }
 
   // TODO: vault counts are silly and convoluted. We really need an
@@ -497,8 +497,9 @@ export function D2StoresService(
           count: 0,
           bucket
         };
-        vault.d2VaultCounts[vaultBucketId].count += vault.buckets[bucket.id].length;
+        vault.d2VaultCounts[vaultBucketId].count += activeStore.buckets[bucket.id].length;
       }
     });
+    activeStore.vault = vault; // god help me
   }
 }

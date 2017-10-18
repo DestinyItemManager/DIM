@@ -22,6 +22,7 @@
     "Title": "A message from Bungie:"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
     "Difficulties": "The Bungie API is currently experiencing difficulties.",
     "ItemUniqueness": "Item Uniqueness",
@@ -146,6 +147,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "Shows engrams.",
     "EnterName": "Enter an item name:",
     "EnterNote": "Enter notes text:",
@@ -189,6 +191,7 @@
       "tTK": "The Taken King"
     },
     "RequiredLevel": "Shows items based on their required level.",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
     "Tags": {
@@ -236,6 +239,8 @@
     "NeverShow": "Never show me this again.",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "Please Upgrade Chrome",
     "Version_beta": "Beta has been updated to v{{version}}",
     "Version_release": "DIM v{{version}} Released",
@@ -402,7 +407,7 @@
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
     "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These vendor items cannot be equipped:"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Building Destiny info database",
@@ -485,10 +490,13 @@
     "ShowOverlay": "Show new items with a shiny overlay",
     "ShowReviews": "Show review ratings on weapons",
     "SizeItem": "Item size",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortName": "name",
     "SortPrimary": "primary stat",
     "SortRarity": "rarity",
     "SortRoll": "rating",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {
@@ -523,6 +531,7 @@
     "Export": "Back up DIM data",
     "ForceSync": "Force sync data",
     "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
+    "GDriveSignInError": "Error signing in to Google Drive:",
     "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
     "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
     "GoogleDriveStorage": "Google Drive",

@@ -30,7 +30,9 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
   // TODO: angular media-query-switch directive
-  const phoneWidthQuery = window.matchMedia('(orientation: portrait) and (max-device-width: 750px)');
+  // This seems like a good breakpoint for portrait based on https://material.io/devices/
+  // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720
+  const phoneWidthQuery = window.matchMedia('(max-width: 540px)');
   function phoneWidthHandler(e) {
     $scope.$apply(() => {
       vm.isPhonePortrait = e.matches;

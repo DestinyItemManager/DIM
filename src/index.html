@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>DIM</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
     <link href="https://www.bungie.net" rel="preconnect">
@@ -25,6 +25,8 @@
     <link rel="manifest" href="/manifest-webapp.json">
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#434444">
     <meta name="theme-color" content="#404141">
+    <!-- We cannot use this, because our OAuth flow redirects to another site, and Safari cannot bring us back. Thus we'll never be able to log in. -->
+    <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     {{#each htmlWebpackPlugin.files.css}}
