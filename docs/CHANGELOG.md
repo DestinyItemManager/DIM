@@ -1,4 +1,5 @@
 # Next
+* Charting weapon reviews.
 
 * Fixed the shadow under the sticky characters bar on Chrome.
 * Add an option to farming mode that stashes reputation items in the vault.

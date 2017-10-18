@@ -88,4 +88,29 @@
   &--report-cancel {
     margin-left: auto;
   }
+
+  &--chart-container {
+    width: 95%;
+    display: flex;
+  }
+
+  &--review-chart {
+    &.stats {
+      border-spacing: 0 3px;
+    
+      .stat-box-row {
+        margin-bottom: 3px;
+      }
+      .stat-box-cell {
+        line-height: 10px;
+      }
+      .stat-box-outer {
+        height: 10px;
+        line-height: 10px;
+      }
+      .stat-box-inner {
+        line-height: 10px;
+      }
+    }
+  }
 }

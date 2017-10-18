@@ -10,7 +10,8 @@ import { UserFilter } from '../destinyTrackerApi/userFilter';
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
 
-function DestinyTrackerService($q,
+function DestinyTrackerService($rootScope,
+                               $q,
                                $http,
                                dimPlatformService,
                                dimSettingsService,
@@ -21,7 +22,7 @@ function DestinyTrackerService($q,
   const _userFilter = new UserFilter(SyncService);
   const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
+  const _reviewsFetcher = new ReviewsFetcher($rootScope, $q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewReporter = new ReviewReporter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
