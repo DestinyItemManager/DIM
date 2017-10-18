@@ -22,6 +22,7 @@
     "Title": "A message from Bungie:"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
     "Difficulties": "The Bungie API is currently experiencing difficulties.",
     "ItemUniqueness": "Item Uniqueness",
@@ -99,6 +100,9 @@
   },
   "FarmingMode": {
     "Configuration": "Configuration",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
@@ -110,13 +114,11 @@
       "MakeRoom": "Make room to pick up items by moving equipment",
       "Tooltip": "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
     },
+    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "You're out of space to move items off of {{character}}. Time to decrypt some engrams and clear out the trash!",
     "OutOfRoomTitle": "Out of Room",
     "Quickmove": "Quick Move",
-    "Stop": "Stop",
-    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room."
+    "Stop": "Stop"
   },
   "Filter": {
     "Activities": {
@@ -146,6 +148,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "Shows engrams.",
     "EnterName": "Enter an item name:",
     "EnterNote": "Enter notes text:",
@@ -174,8 +177,9 @@
     "NewItems": "Shows new items.",
     "Notes": "Search for items that you have tagged with custom notes",
     "Ornament": "Shows items with ornaments and filters for their status.",
-    "PartialMatch": "Shows items where their name has a partial match to the filter text.",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "Items that are currently in the Postmaster.",
+    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
@@ -188,6 +192,7 @@
       "tTK": "The Taken King"
     },
     "RequiredLevel": "Shows items based on their required level.",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
     "Tags": {
@@ -211,6 +216,7 @@
       "Shipwright": "Shipwright",
       "Speaker": "Speaker"
     },
+    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "Year": "Shows items from which year of Destiny they appeared in."
@@ -229,12 +235,12 @@
     "ChangingPerks": "Changing Perks Not Supported",
     "ChangingPerksInfo": "Sorry, there's no way to change perks outside the game. We wish we could!",
     "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
-    "ExtensionDeprecatedMessage": "The DIM Chrome extension now just opens our website - which works on every browser and on mobile devices! You can uninstall the extension, or leave it around as a convenient bookmark for the site. Your data (tags, notes, and settings) can be imported from the storage page (disk icon in the header).",
-    "ExtensionDeprecatedTitle": "DIM is just a website now!",
     "HidePopup": "Hide This Popup",
     "NeverShow": "Never show me this again.",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
+    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "Please Upgrade Chrome",
     "Version_beta": "Beta has been updated to v{{version}}",
     "Version_release": "DIM v{{version}} Released",
@@ -278,7 +284,7 @@
       "Vault": "There are too many '{{itemtype}}' items in the {{store}}."
     },
     "Classified": "This item is classified and cannot be transferred at this time.",
-    "Classified2": "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
+    "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
     "Deequip": "Cannot find another item to equip in order to dequip {{itemname}}",
     "ExoticError": "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
@@ -360,6 +366,7 @@
     "ApplySearch": "Items = \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "Cancel": "Cancel",
+    "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "CouldNotEquip": "Could not equip {{itemname}}",
     "Create": "Create Loadout",
@@ -372,6 +379,7 @@
     "FromEquipped": "Equipped",
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
+    "GatherTokens": "Gather Reputation Items",
     "ItemLeveling": "Item Leveling",
     "ItemsWithIcon": "Items with this icon will be equipped. Click on an item to toggle equip.",
     "LoadoutName": "Loadout Name...",
@@ -386,9 +394,11 @@
     "MakeRoomError": "Unable to make room for all Postmaster items: {{error}}.",
     "MaxSlots": "You can only have {{slots}} of that kind of item in a loadout.",
     "MaximizeLight": "Maximize Light",
+    "MaximizePower": "Maximize Power",
     "NameRequired": "A name is required.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
+    "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
     "Random": "Random",
     "Randomize": "Randomize your equipped weapons, armor, ghost, and artifact?",
@@ -399,7 +409,7 @@
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
     "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These vendor items cannot be equipped:"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Building Destiny info database",
@@ -482,20 +492,25 @@
     "ShowOverlay": "Show new items with a shiny overlay",
     "ShowReviews": "Show review ratings on weapons",
     "SizeItem": "Item size",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortName": "name",
     "SortPrimary": "primary stat",
     "SortRarity": "rarity",
     "SortRoll": "rating",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",
+    "MaxBasePower": "Max Base Power (w/o mods)",
     "NoBonus": "No Bonus",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
+    "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
@@ -518,6 +533,7 @@
     "Export": "Back up DIM data",
     "ForceSync": "Force sync data",
     "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
+    "GDriveSignInError": "Error signing in to Google Drive:",
     "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
     "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
     "GoogleDriveStorage": "Google Drive",

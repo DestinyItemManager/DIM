@@ -97,10 +97,11 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
   function responseHandler(response) {
     if (response.config.url.match(matcher) &&
         !response.config.triedRefresh && // Only try once, to avoid infinite loop
-        response.data &&
-        (response.data.ErrorCode === 2111 || // Auth token expired
-         response.data.ErrorCode === 99 || // WebAuthRequired
-         response.data.ErrorCode === 22)) { // WebAuthModuleAsyncFailed (also means the access token has expired)
+        (response.status === 401 ||
+         (response.data &&
+          (response.data.ErrorCode === 2111 || // Auth token expired
+           response.data.ErrorCode === 99 || // WebAuthRequired
+           response.data.ErrorCode === 22)))) { // WebAuthModuleAsyncFailed (also means the access token has expired)
       // OK, Bungie has told us our access token is expired or
       // invalid. Refresh it and try again.
       console.log(`Access token expired (code ${response.data.ErrorCode}), refreshing`);

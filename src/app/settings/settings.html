@@ -93,6 +93,9 @@
             <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat"><span ng-i18next="Settings.SortPrimary"></span></label>
           <br>
           <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="basePowerThenPrimary"><span ng-i18next="Settings.SortBasePower"></span></label>
+          <br>
+          <label>
             <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary"><span ng-i18next="Settings.SortRarity"></span></label>
           <br>
           <label ng-show="vm.settings.itemQuality">
@@ -100,6 +103,12 @@
           <br>
           <label>
             <input type="radio" ng-model="vm.settings.itemSort" value="name"><span ng-i18next="Settings.SortName"></span></label>
+          <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="typeThenPrimary"><span ng-i18next="Settings.SortTypeThenPrimary"></span></label>
+          <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="typeThenName"><span ng-i18next="Settings.SortTypeThenName"></span></label>
         </td>
       </tr>
       <tr>
@@ -117,7 +126,7 @@
             <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur' }"><span ng-i18next="Settings.CharacterOrderFixed"></span></label>
         </td>
       </tr>
-      <tr ng-if="vm.supportsCssVar">
+      <tr ng-if="vm.supportsCssVar && !vm.isPhonePortrait">
         <td>
           <label for="charCol" ng-i18next="Settings.InventoryColumns"></label>
         </td>
@@ -125,7 +134,7 @@
           <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required></select>
         </td>
       </tr>
-      <tr ng-if="vm.supportsCssVar">
+      <tr ng-if="vm.supportsCssVar && !vm.isPhonePortrait">
         <td>
           <label for="vaultCol" ng-i18next="Settings.VaultColumns"></label>
         </td>
@@ -133,7 +142,7 @@
           <select id="vaultCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
         </td>
       </tr>
-      <tr ng-if="vm.supportsCssVar">
+      <tr ng-if="vm.supportsCssVar && !vm.isPhonePortrait">
         <td>
           <label for="itemSize" ng-i18next="Settings.SizeItem"></label>
         </td>

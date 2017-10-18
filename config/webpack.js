@@ -19,8 +19,7 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
 const preMinifiedDeps = [
-  'underscore/underscore-min.js',
-  'indexeddbshim/dist/indexeddbshim.min.js'
+  'underscore/underscore-min.js'
 ];
 
 module.exports = (env) => {
@@ -29,12 +28,15 @@ module.exports = (env) => {
   if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
+  // Used for the changelog anchor
+  const versionNoDots = version.replace(/\./g, '');
 
   const config = {
     entry: {
       main: './src/index.js',
       browsercheck: './src/browsercheck.js',
-      authReturn: './src/authReturn.js'
+      authReturn: './src/authReturn.js',
+      gdriveReturn: './src/gdriveReturn.js'
     },
 
     output: {
@@ -138,6 +140,13 @@ module.exports = (env) => {
         chunks: ['manifest', 'vendor', 'authReturn']
       }),
 
+      new HtmlWebpackPlugin({
+        inject: false,
+        filename: 'gdrive-return.html',
+        template: '!handlebars-loader!src/gdrive-return.html',
+        chunks: ['manifest', 'vendor', 'gdriveReturn']
+      }),
+
       new CopyWebpackPlugin([
         { from: './src/.htaccess' },
         { from: './extension', to: '../extension-dist' },
@@ -154,6 +163,7 @@ module.exports = (env) => {
       // Extract a stable "vendor" chunk
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
+        chunks: ['main', 'authReturn'],
         minChunks: function(module) {
           // this assumes your vendor imports exist in the node_modules directory
           return module.context && module.context.indexOf('node_modules') !== -1;
@@ -172,7 +182,7 @@ module.exports = (env) => {
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env),
         $DIM_BUILD_DATE: JSON.stringify(Date.now()),
-        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/docs/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
+        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/master/docs/CHANGELOG.md#${env === 'release' ? versionNoDots : 'next'}`),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
@@ -199,8 +209,8 @@ module.exports = (env) => {
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(false),
-        // Use a WebAssembly version of SQLite, if possible (this crashes on Android Chrome right now)
-        '$featureFlags.wasm': '!window.navigator.userAgent.includes("Android")',
+        // Use a WebAssembly version of SQLite, if possible (this crashes on Chrome 58 on Android though)
+        '$featureFlags.wasm': JSON.stringify(true),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
         // Whether to log page views for router events
@@ -241,6 +251,7 @@ module.exports = (env) => {
 
   if (isDev) {
     config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
+    return config;
   } else {
     // Bail and fail hard on first error
     config.bail = true;
@@ -264,11 +275,28 @@ module.exports = (env) => {
         'authReturn*',
         'extension-scripts/*',
         'return.html',
+        'service-worker.js'
       ],
-      // swSrc: './src/sw.js',
+      swSrc: './dist/service-worker.js',
       swDest: './dist/service-worker.js'
     }));
   }
 
-  return config;
+  // Build the service worker in an entirely separate configuration so
+  // it doesn't get name-mangled. It'll be used by the
+  // WorkboxPlugin. This lets us inline the dependencies.
+  const serviceWorker = {
+    entry: {
+      'service-worker': './src/service-worker.js'
+    },
+
+    output: {
+      path: path.resolve('./dist'),
+      filename: '[name].js'
+    },
+
+    stats: 'errors-only'
+  };
+
+  return [serviceWorker, config];
 };

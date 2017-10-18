@@ -4,7 +4,7 @@ import _ from 'underscore';
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
   Weapons: [
-    'Subclass',
+    'Class',
     'Kinetic',
     'Energy',
     'Power'
@@ -18,7 +18,7 @@ export const D2Categories = {
   ],
   General: [
     'Ghost',
-    'Clan Banners',
+    'ClanBanners',
     'Vehicle',
     'Ships',
     'Emblems',
@@ -31,10 +31,13 @@ export const D2Categories = {
     'Modifications',
     'Shaders'
   ],
+  Progress: [
+    'Quests',
+  ],
   Postmaster: [
-    'Lost Items',
+    'LostItems',
     'Messages',
-    'Special Orders'
+    'SpecialOrders'
   ]
 };
 
@@ -55,28 +58,28 @@ const bucketToType = {
   2973005342: "Shaders",
   3054419239: "Emotes",
   3161908920: "Messages",
-  3284755031: "Subclass",
+  3284755031: "Class",
   3313201758: "Modifications",
   3448274439: "Helmet",
   3551918588: "Gauntlets",
   3865314626: "Materials",
   4023194814: "Ghost",
   4274335291: "Emblems",
-  4292445962: "Clan Banners",
+  4292445962: "ClanBanners",
   14239492: "Chest",
-  18606351: "Shaders",
   20886954: "Leg",
-  215593132: "Lost Items",
+  215593132: "LostItems",
   284967655: "Ships",
   375726501: "Engrams",
   953998645: "Power",
   1269569095: "Auras",
-  1367666825: "Special Orders",
+  1367666825: "SpecialOrders",
   1498876634: "Kinetic",
   1585787867: "ClassItem",
   2025709351: "Vehicle",
   1469714392: "Consumables",
-  138197802: "General"
+  138197802: "General",
+  1801258597: "Quests"
 };
 
 export function D2BucketsService(D2Definitions, D2Categories) {

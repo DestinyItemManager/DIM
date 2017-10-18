@@ -146,11 +146,9 @@ export function ItemService(
     }
 
     if (equip) {
-      const equipped = _.find(target.buckets[item.location.id], { equipped: true });
-      if (equipped) {
-        equipped.equipped = false;
-      }
-      item.equipped = true;
+      target.buckets[item.location.id].forEach((i) => {
+        i.equipped = (i.index === item.index);
+      });
     }
 
     return item;
@@ -241,7 +239,6 @@ export function ItemService(
    * Bulk equip items. Only use for multiple equips at once.
    */
   function equipItems(store, items) {
-    const storeService = getStoreService(items[0]);
     // Check for (and move aside) exotics
     const extraItemsToEquip = _.compact(items.map((i) => {
       if (i.isExotic) {
@@ -252,7 +249,7 @@ export function ItemService(
           if (!similarItem) {
             return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: otherExotic.name })));
           }
-          const target = storeService.getStore(similarItem.owner);
+          const target = getStoreService(similarItem).getStore(similarItem.owner);
 
           if (store.id === target.id) {
             return similarItem;
@@ -268,6 +265,9 @@ export function ItemService(
     return $q.all(extraItemsToEquip).then((extraItems) => {
       items = items.concat(extraItems);
 
+      if (items.length === 0) {
+        return $q.when([]);
+      }
       if (items.length === 1) {
         return equipItem(items[0]);
       }
@@ -443,7 +443,10 @@ export function ItemService(
 
     // Start with candidates of the same type (or sort if it's vault)
     const allItems = store.isVault
-      ? _.filter(store.items, (i) => i.bucket.sort === item.bucket.sort)
+      ? _.filter(store.items,
+             store.destinyVersion === 2
+               ? (i) => i.bucket.vaultBucket.id === item.bucket.vaultBucket.id
+               : (i) => i.bucket.sort === item.bucket.sort)
       : store.buckets[item.location.id];
     let moveAsideCandidates = _.filter(allItems, movable);
 
@@ -691,7 +694,7 @@ export function ItemService(
 
     if (equip) {
       promises.push(canEquip(item, store));
-      if (item.isExotic) {
+      if (item.isExotic && item.location.sort !== 'General') {
         promises.push(canEquipExotic(item, store));
       }
     }

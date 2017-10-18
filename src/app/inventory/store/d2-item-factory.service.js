@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { getClass } from './character-utils';
+import { sum } from '../../util';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -31,16 +32,22 @@ export function D2ItemFactory(
 
   const statWhiteList = [
     4284893193, // Rounds Per Minute
+    2961396640, // Charge Time
+    3614673599, // Blast Radius
+    2523465841, // Velocity
     4043523819, // Impact
     1240592695, // Range
     155624089, // Stability
     943549884, // Handling
     4188031367, // Reload Speed
     1345609583, // Aim Assistance
+    2715839340, // Recoil Direction
     3555269338, // Zoom
     3871231066, // Magazine
-    //    2715839340, // Recoil Direction (people like to see this, but it's confusing)
-    //    1935470627, // Power (what is power....)
+    2996146975, // Mobility
+    392767087, // Resilience
+    1943323491 // Recovery
+    //    1935470627, // Power
     //    1931675084, //  Inventory Size
     // there are a few others (even an `undefined` stat)
   ];
@@ -162,7 +169,7 @@ export function D2ItemFactory(
     }
 
     if (itemDef.redacted) {
-      console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
+      console.warn('Missing Item Definition:\n\n', { item, itemDef, instanceDef }, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
     }
 
     if (!itemDef || !itemDef.displayProperties.name) {
@@ -178,6 +185,7 @@ export function D2ItemFactory(
       buckets.setHasUnknown();
     }
 
+
     // We cheat a bit for items in the vault, since we treat the
     // vault as a character. So put them in the bucket they would
     // have been in if they'd been on a character.
@@ -187,12 +195,14 @@ export function D2ItemFactory(
 
     const itemType = normalBucket.type || 'Unknown';
 
-    const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
-      const category = defs.ItemCategory.get(c);
-      return category ? category.itemTypeRegex : null; // Uh oh, no more readable IDs!
-    })) : [];
+    const categories = itemDef.quality ? [itemDef.quality.infusionCategoryName.replace('v300.', 'category_').toUpperCase()] : [];
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
+
+    // https://github.com/Bungie-net/api/issues/134
+    if (instanceDef.primaryStat && itemType === 'Class') {
+      delete instanceDef.primaryStat;
+    }
 
     const createdItem = angular.extend(Object.create(ItemProto), {
       // figure out what year this item is probably from
@@ -211,7 +221,7 @@ export function D2ItemFactory(
       name: itemDef.displayProperties.name,
       description: itemDef.displayProperties.description,
       icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
-      notransfer: Boolean(currentBucket.accountWide || currentBucket.inPostmaster || itemDef.nonTransferrable),
+      notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable),
       id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
       equipped: Boolean(instanceDef.isEquipped),
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
@@ -241,8 +251,9 @@ export function D2ItemFactory(
     });
 
     // *able
-    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
+    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && isWeaponOrArmor(createdItem));
 
     if (createdItem.primStat) {
       createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
@@ -271,13 +282,68 @@ export function D2ItemFactory(
           buildHiddenStats(item, itemDef, defs.Stat)
         ), 'sort');
       }
+      if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
+        createdItem.stats = _.sortBy(buildInvestmentStats(item, itemDef.investmentStats, defs.Stat));
+      }
     } catch (e) {
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     }
 
+    try {
+      createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
+    } catch (e) {
+      console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
+    }
+
+    try {
+      createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
+    } catch (e) {
+      console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
+    }
+
+    if (itemDef.perks && itemDef.perks.length) {
+      createdItem.perks = itemDef.perks.map((p) => {
+        return Object.assign({
+          requirement: p.requirementDisplayString
+        }, defs.SandboxPerk.get(p.perkHash));
+      }).filter((p) => p.isDisplayable);
+      if (createdItem.perks.length === 0) {
+        createdItem.perks = null;
+      }
+    }
+
     createdItem.index = createItemIndex(createdItem);
 
+    if (createdItem.objectives) {
+      createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
+      createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
+        if (objective.completionValue) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
+        } else {
+          return 0;
+        }
+      });
+    }
+
+    // Infusion
+    const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
+    createdItem.infusionProcess = tier && tier.infusionProcess;
+    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName.length);
+    createdItem.infusionQuality = itemDef.quality || null;
+
+    if (createdItem.primStat) {
+      createdItem.basePower = getBasePowerLevel(createdItem);
+      if (createdItem.basePower !== createdItem.primStat.value) {
+        createdItem.complete = true;
+      }
+    }
+
     return createdItem;
+  }
+
+  function isWeaponOrArmor(item) {
+    return ((item.primStat.statHash === 1480404414) || // weapon
+            (item.primStat.statHash === 3897883278)); // armor
   }
 
   // Set an ID for the item that should be unique across all items
@@ -331,7 +397,7 @@ export function D2ItemFactory(
       const def = statDefs.get(stat.statHash);
 
       // only aim assist and zoom for now
-      if (![1345609583, 3555269338].includes(stat.statHash) || !stat.value) {
+      if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
         return undefined;
       }
 
@@ -340,7 +406,7 @@ export function D2ItemFactory(
         bonus: 0,
         statHash: stat.statHash,
         name: def.displayProperties.name,
-        id: item.itemInstanceId,
+        id: stat.statHash,
         sort: statWhiteList.indexOf(stat.statHash),
         value: stat.value,
         maximumValue: 100,
@@ -369,12 +435,121 @@ export function D2ItemFactory(
         bonus: 0,
         statHash: stat.statHash,
         name: def.displayProperties.name,
-        id: item.itemInstanceId,
+        id: stat.statHash,
         sort: statWhiteList.indexOf(stat.statHash),
         value: val,
         maximumValue: itemStat.maximumValue,
-        bar: stat.statHash !== 4284893193 && stat.statHash !== 3871231066
+        bar: stat.statHash !== 4284893193 &&
+        stat.statHash !== 3871231066 &&
+        stat.statHash !== 2961396640
       };
     }));
+  }
+
+
+  function buildInvestmentStats(item, itemStats, statDefs) {
+    return _.compact(_.map(itemStats, (itemStat) => {
+      const def = statDefs.get(itemStat.statTypeHash);
+      if (!def || !itemStat || itemStat.statTypeHash === 1935470627 /* Power */) {
+        return undefined;
+      }
+
+      return {
+        base: itemStat.value,
+        bonus: 0,
+        statHash: itemStat.statHash,
+        name: def.displayProperties.name,
+        id: itemStat.statHash,
+        sort: statWhiteList.indexOf(itemStat.statHash),
+        value: itemStat.value,
+        maximumValue: 0,
+        bar: false
+      };
+    }));
+  }
+
+  function buildObjectives(item, objectivesMap, objectiveDefs) {
+    let objectives = objectivesMap[item.itemInstanceId];
+    if (objectives) {
+      objectives = objectivesMap[item.itemInstanceId].objectives;
+    }
+    if (!objectives || !objectives.length) {
+      return null;
+    }
+
+    return objectives.map((objective) => {
+      const def = objectiveDefs.get(objective.objectiveHash);
+
+      return {
+        displayName: def.displayProperties.name ||
+          (objective.isComplete
+            ? $i18next.t('Objectives.Complete')
+            : $i18next.t('Objectives.Incomplete')),
+        description: def.displayProperties.description,
+        progress: objective.progress || 0,
+        completionValue: def.completionValue,
+        complete: objective.complete,
+        boolean: def.completionValue === 1,
+        display: `${objective.progress || 0}/${def.completionValue}`
+      };
+    });
+  }
+
+
+  function buildSockets(item, socketsMap, defs, itemDef) {
+    if (!itemDef.sockets || !itemDef.sockets.socketEntries.length) {
+      return null;
+    }
+    let sockets = socketsMap[item.itemInstanceId];
+    if (sockets) {
+      sockets = socketsMap[item.itemInstanceId].sockets;
+    }
+    if (!sockets || !sockets.length) {
+      return null;
+    }
+
+    const realSockets = sockets.map((socket) => {
+      const plug = defs.InventoryItem.get(socket.plugHash);
+      let failReasons = (socket.enableFailIndexes || []).map((index) => plug.plug.enabledRules[index].failureMessage).join("\n");
+      if (failReasons.length) {
+        failReasons = `\n\n${failReasons}`;
+      }
+      const dimSocket = {
+        plug,
+        reusablePlugs: (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash)),
+        enabled: socket.isEnabled,
+        enableFailReasons: failReasons
+      };
+      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 && (!plug || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? dimSocket.reusablePlugs : [dimSocket.plug];
+      return dimSocket;
+    });
+
+    const categories = itemDef.sockets.socketCategories.map((category) => {
+      return {
+        category: defs.SocketCategory.get(category.socketCategoryHash),
+        sockets: category.socketIndexes.map((index) => realSockets[index])
+      };
+    });
+
+    const dimSockets = {
+      sockets: realSockets, // Flat list of sockets
+      categories // Sockets organized by category
+    };
+
+    return dimSockets;
+  }
+
+  function getBasePowerLevel(item) {
+    const MOD_CATEGORY = 59;
+    const POWER_STAT_HASH = 1935470627;
+    const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
+      return plug &&
+        plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
+        plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
+    }) : [];
+
+    const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH).value);
+
+    return item.primStat.value - modPower;
   }
 }

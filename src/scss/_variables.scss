@@ -14,9 +14,10 @@ $gold: #f5dc56;
 
 $character-box-height: 46px;
 
-// Based on the CSS width of an iPhone 6 Plus
 @mixin phone-portrait {
-  @media (max-width: 414px) {
+  // This seems like a good breakpoint for portrait based on https://material.io/devices/
+  // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720
+  @media (max-width: 540px) {
     @content;
   }
 }

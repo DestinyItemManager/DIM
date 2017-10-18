@@ -1,13 +1,130 @@
 # Next
 
+* Community reviews (for weapons and armor) are in for Destiny 2 inventory.
+* Charting weapon reviews.
+* Fixed the shadow under the sticky characters bar on Chrome.
+* Add an option to farming mode that stashes reputation items in the vault.
+* Add a new smart loadout to gather reputation items for redemption.
+* Scroll the loadout drawer on mobile.
+
+# 4.20.1
+
+* Fixed an error when trying to space to move items.
+
+# 4.20.0
+
+* Sort consumables, mods, and shaders in a more useful way (generally grouping same type together, alphabetical for shaders).
+* Show the hidden recoil direction stat.
+* Link to DestinyDB in your language instead of always English.
+* Updated documentation for search filters.
+* Fixed logic that makes room for items when your vault is full for D2.
+
+# 4.19.2
+
+* Keyword searchs now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
+* Add Iron Banner reputation.
+
+# 4.19.1
+
+* Fix landscape orientation not working on mobile.
+* Fix D1 stats in loadout builder and loadout editor.
+
+# 4.19.0
+
+* Added `stack:` to search filters for easier maintenance of modifications.
+* Add missing type filters for D2 (try `is:modifications`)!
+* Bring back keyboard shortcuts for tagging (hit ? to see them all).
+* The "Max Light" calculation is even more accurate now.
+* Added `PowerMod` column to CSV export indicating whether or not a weapon or piece of armor has a power mod
+* Support sorting by base power.
+* Hide "split" and "take" button for D2 consumables.
+* OK really really fix the vault count.
+* Fix showing item popup for some D1 items.
+* Changed how we do Google Drive log-in - it should be smoother on mobile.
+* Completed objectives will now show as "complete".
+* Bring back the yellow triangle for current character on mobile.
+* Updated `is:dupelower` search filter for items to tie break by primary stat.
+
+# 4.18.0
+
+* Updated `is:dupelower` search filter for items with the same/no power level.
+* Fix some issues with Google Drive that might lead to lost data.
+* Really fix vault counts this time!
+
+# 4.17.0
+
+* Fix bug that prevented pinned apps in iOS from authenticating with Bungie.net.
+
+# 4.16.2
+
+* Added `is:dupelower` to search filters for easier trashing.
+* Added missing factions to the reputation section for Faction Rally.
+* Fix in infusion calculator to correctly consider +5 mod
+* Fix for CSV export (e.g.: First In, Last Out in 2 columns)
+
+# 4.16.1
+
+* Bugfixes for iOS 10.0 - 10.2.
+
+# 4.16.0
+
+* Added item type sort to settings group items by type (e.g. all Sniper Rifles together).
+* Reputation emblems are the same size as items now, however you have item size set.
+* Shaders show up in an item's mods now.
+* Transfering search loadouts is more reliable.
+* Fixed a serious bug with storage that may have deleted your tags and notes. It's fixed now, but hopefully you had a backup...
+* Highlight mods that increase an item's power with a gold border. New 'is:powermod' search keyword can find them all.
+* Phone mode should trigger even on really big phones.
+* More places can be pressed to show a tooltip.
+* Fixed showing quality for D1 items.
+* D2 subclasses are diamonds instead of squares.
+* Max Base Power, Mobility, Resilience, and Recovery are now shown for each character.
+* Legendary shards have the right icon now.
+* Fix newly created loadouts showing no items.
+* Inventory (mods, shaders, and consumables) in your vault now show up separated into the vault, and you can transfer them to and from the vault.
+* Search keywords are now case-insensitive.
+* You can now lock and unlock D2 items.
+* Equipping an exotic emote won't unequip your exotic sparrow and vice versa.
+* Item popups aren't weirdly tall on Firefox anymore.
+* Armor stats now match the order in the game.
+* Infusion calculator now always gives you the full value of your infusion.
+* Show a warning that your max light may be wrong if you have classified items.
+* CSV export for D2 weapons and armor is back.
+* Add text search for mods and perks.
+* Add "Random Loadout" to D2. You gotta find it though...
+
+# 4.15.0
+
+* D2 items with objectives now show them, and quests + milestones are displayed for your characters.
+* Custom loadouts return for D2.
+* D2 items now display their perks and mods.
+* DIM won't log you out if you've been idle too long.
+* Swipe left or right anywhere on the page in mobile mode to switch characters.
+* If you have lots of inventory, it won't make the page scroll anymore.
+* Power level will update when you change equipment again.
+* Searches will stay searched when you reload info.
+* Max light loadout won't try to use two exotics.
+* Farming mode looks better on mobile.
+* If you're viewing a non-current character in mobile, it won't mess up on reload anymore.
+* You can tag and write notes on classified items to help remember which they are.
+* The Infusion Fuel Finder is back for D2.
+* The "Max Light" calculation is more accurate now.
+* Mods now show more detail about what they do.
+
+# 4.14.0
+
 * Added back in Repuation for D2.
 * Max Light Loadout, Make Room for Postmaster, Farming Mode, and Search Loadout are all reenabled for D2.
-* Classified items can be transferred.
+* Classified items can be transferred!
+* Fixed search filters for D2.
+* Show hidden stats on D2 items.
+* D2 inventory (mods, shaders, etc) now take the full width of the screen.
 
 # 4.13.0
 
 * DIM will remember whether you last used D2 or D1.
 * Lots of DIM functionality is back for D2.
+* We now highlight the perks from high community reviews that you don't have selected.
 
 # 4.12.0
 

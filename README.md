@@ -110,6 +110,13 @@ Check code Style
 Build in dev mode (website)
 * `npm run server`. Visit the URL it prints out to load DIM. It will update automatically as you change files.
 
+Or run your own local web server
+* `npm install http-server -g` will install http-server
+* `npm start` will start webpack building (and rebuilding as file changes are detected)
+* then go in to the `dist` subdirectory and run `http-server -S` to run http-server over SSL. It'll run on port 8080.
+* If it complains about missing certificates, run `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem` in the dist directory (thanks to [Stack Overflow](https://stackoverflow.com/questions/12871565/how-to-create-pem-files-for-https-web-server)) and generate your own local certs
+* After the one-time setup, `npm start` and `http-server -S` and you're off to the races.
+
 Get your own API key:
 
 * Goto [Bungie](https://www.bungie.net/en/Application)

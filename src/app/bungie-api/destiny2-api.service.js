@@ -171,7 +171,9 @@ export function Destiny2Api(
       });
   }
 
-  function setLockState(account, store, item, lockState) {
+  function setLockState(store, item, lockState) {
+    const account = dimState.active;
+
     return $http(bungieApiUpdate(
       `/Platform/Destiny2/Actions/Items/SetLockState/`,
       {

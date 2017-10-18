@@ -51,6 +51,23 @@ mod.filter('equipped', () => {
   };
 });
 
+function rarity(item) {
+  switch (item.tier) {
+  case 'Exotic':
+    return 0;
+  case 'Legendary':
+    return 1;
+  case 'Rare':
+    return 2;
+  case 'Uncommon':
+    return 3;
+  case 'Common':
+    return 4;
+  default:
+    return 5;
+  }
+}
+
 /**
  * Sort the stores according to the user's preferences (via the order parameter).
  */
@@ -79,7 +96,7 @@ mod.filter('sortItems', (dimSettingsService) => {
   return function(items, sort) {
     // Don't resort postmaster items - that way people can see
     // what'll get bumped when it's full.
-    const dontsort = ["BUCKET_BOUNTIES", "BUCKET_MISSION", "BUCKET_QUESTS", "BUCKET_POSTMASTER"];
+    const dontsort = ["BUCKET_BOUNTIES", "BUCKET_MISSION", "BUCKET_QUESTS", "BUCKET_POSTMASTER", 215593132, 1801258597];
     if (items.length && dontsort.includes(items[0].location.id)) {
       return items;
     }
@@ -166,9 +183,37 @@ mod.filter('sortItems', (dimSettingsService) => {
     }
 
     items = _.sortBy(items || [], 'name');
-    if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality') {
+
+    // Re-sort mods
+    if (items.length && items[0].location.id === 3313201758) {
+      items = _.sortBy(items, 'typeName');
+      if (sort === 'rarityThenPrimary') {
+        items = _.sortBy(items, rarity);
+      }
+      return items;
+    }
+
+    // Re-sort consumables
+    if (items.length && items[0].location.id === 1469714392) {
+      items = _.sortBy(items, rarity);
+      items = _.sortBy(items, 'typeName');
+      return items;
+    }
+
+    // Re-sort shaders
+    if (items.length && items[0].location.id === 2973005342) {
+      // Just sort by name
+      return items;
+    }
+
+    if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality' || sort === 'typeThenPrimary' || sort === 'basePowerThenPrimary') {
       items = _.sortBy(items, (item) => {
         return (item.primStat) ? (-1 * item.primStat.value) : 1000;
+      });
+    }
+    if (sort === 'basePowerThenPrimary') {
+      items = _.sortBy(items, (item) => {
+        return (item.basePower) ? (-1 * item.basePower) : 1000;
       });
     }
     if (sort === 'quality') {
@@ -177,21 +222,14 @@ mod.filter('sortItems', (dimSettingsService) => {
       });
     }
     if (sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {
+      items = _.sortBy(items, rarity);
+    }
+    if (sort === 'typeThenPrimary' || sort === 'typeThenName') {
       items = _.sortBy(items, (item) => {
-        switch (item.tier) {
-        case 'Exotic':
-          return 0;
-        case 'Legendary':
-          return 1;
-        case 'Rare':
-          return 2;
-        case 'Uncommon':
-          return 3;
-        case 'Common':
-          return 4;
-        default:
-          return 5;
-        }
+        return item.classType;
+      });
+      items = _.sortBy(items, (item) => {
+        return item.typeName;
       });
     }
     return items;
@@ -225,6 +263,33 @@ mod.filter('qualityColor', () => {
 });
 
 mod.filter('dtrRatingColor', () => {
+  return function getColor(value, property) {
+    if (!value) {
+      return null;
+    }
+
+    property = property || 'background-color';
+    let color = 0;
+    if (value < 2) {
+      color = 0;
+    } else if (value <= 3) {
+      color = 15;
+    } else if (value <= 4) {
+      color = 30;
+    } else if (value <= 4.4) {
+      color = 60;
+    } else if (value <= 4.8) {
+      color = 120;
+    } else if (value >= 4.9) {
+      color = 190;
+    }
+    const result = {};
+    result[property] = `hsl(${color},85%,60%)`;
+    return result;
+  };
+});
+
+mod.filter('dtr2RatingColor', () => {
   return function getColor(value, property) {
     if (!value) {
       return null;

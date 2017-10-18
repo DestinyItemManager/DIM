@@ -52,14 +52,15 @@ export function NewItemsService(dimPlatformService, $q) {
     }
     _removedNewItems.add(item.id);
     item.isNew = false;
-    loadNewItems(dimPlatformService.getActive()).then((newItems) => {
+    const account = dimPlatformService.getActive();
+    loadNewItems(account).then((newItems) => {
       newItems.delete(item.id);
       service.hasNewItems = (newItems.size !== 0);
-      saveNewItems(newItems);
+      saveNewItems(newItems, account, item.destinyVersion);
     });
   }
 
-  function clearNewItems(stores) {
+  function clearNewItems(stores, account, destinyVersion) {
     stores.forEach((store) => {
       store.items.forEach((item) => {
         if (item.isNew) {
@@ -69,24 +70,23 @@ export function NewItemsService(dimPlatformService, $q) {
       });
     });
     service.hasNewItems = false;
-    saveNewItems(new Set());
+    saveNewItems(new Set(), account, destinyVersion);
   }
 
-  function loadNewItems(activePlatform) {
-    if (activePlatform) {
-      const key = newItemsKey();
+  function loadNewItems(account, destinyVersion) {
+    if (account) {
+      const key = newItemsKey(account, destinyVersion);
       return idbKeyval.get(key).then((v) => v || new Set());
     }
     return $q.resolve(new Set());
   }
 
-  function saveNewItems(newItems) {
-    return idbKeyval.set(newItemsKey(), newItems);
+  function saveNewItems(newItems, account, destinyVersion) {
+    return idbKeyval.set(newItemsKey(account, destinyVersion), newItems);
   }
 
-  function newItemsKey() {
-    const platform = dimPlatformService.getActive();
-    return `newItems-${platform ? platform.platformType : ''}`;
+  function newItemsKey(account, destinyVersion) {
+    return `newItems-m${account.membershipId}-p${account.platformType}-d${destinyVersion}`;
   }
 
   function buildItemSet(stores) {

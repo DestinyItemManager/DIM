@@ -8,4 +8,9 @@
   margin: 2px 2px -2px 2px;
   position: relative;
   display: inline-block;
+
+  svg {
+    width: calc(var(--item-size) + 4px);
+    height: calc(var(--item-size) + 4px);
+  }
 }

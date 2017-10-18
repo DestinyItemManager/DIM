@@ -87,6 +87,11 @@ dim-store-item {
   &.complete {
     border-color: $gold;
   }
+  &.diamond {
+    background-color: transparent;
+    border: none;
+    padding: 2px;
+  }
 }
 
 .item-element {

@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { REP_TOKENS } from './rep-tokens';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -11,7 +12,8 @@ export function D2FarmingService($rootScope,
                         $interval,
                         toaster,
                         $i18next,
-                        D2BucketsService) {
+                        D2BucketsService,
+                        dimSettingsService) {
   'ngInject';
 
   let intervalId;
@@ -26,9 +28,7 @@ export function D2FarmingService($rootScope,
 
   function getMakeRoomBuckets() {
     return D2BucketsService.getBuckets().then((buckets) => {
-      const makeRoomBuckets = Object.values(buckets.byHash).filter((b) => b.category === 3 && b.type);
-      console.log({ makeRoomBuckets });
-      return makeRoomBuckets;
+      return Object.values(buckets.byHash).filter((b) => b.category === 3 && b.type);
     });
   }
 
@@ -56,7 +56,7 @@ export function D2FarmingService($rootScope,
             if (vaultSpaceLeft <= 1) {
               // If we're down to one space, try putting it on other characters
               const otherStores = _.select(D2StoresService.getStores(),
-                                            (store) => !store.isVault && store.id !== store.id);
+                                            (s) => !s.isVault && s.id !== store.id);
               const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
 
               if (otherStoresWithSpace.length) {
@@ -86,7 +86,7 @@ export function D2FarmingService($rootScope,
     makeRoomForItems: function(store) {
       return getMakeRoomBuckets().then((makeRoomBuckets) => {
         // If any category is full, we'll move one aside
-        const itemsToMove = [];
+        let itemsToMove = [];
         makeRoomBuckets.forEach((makeRoomBucket) => {
           const items = store.buckets[makeRoomBucket.id];
           if (items.length > 0 && items.length >= makeRoomBucket.capacity) {
@@ -111,6 +111,10 @@ export function D2FarmingService($rootScope,
           }
         });
 
+        if (dimSettingsService.farming.moveTokens) {
+          itemsToMove = itemsToMove.concat(store.items.filter((i) => REP_TOKENS.has(i.hash)));
+        }
+
         if (itemsToMove.length === 0) {
           return $q.resolve();
         }
@@ -133,7 +137,7 @@ export function D2FarmingService($rootScope,
         // That way folks can reload manually too
         subscription = D2StoresService.getStoresStream(account).subscribe((stores) => {
           // prevent some recursion...
-          if (this.active && !this.movingItems && !this.makingRoom) {
+          if (this.active && !this.movingItems && !this.makingRoom && stores) {
             const store = stores.find((s) => s.id === storeId);
             this.store = store;
             this.makeRoomForItems(store);

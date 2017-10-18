@@ -59,7 +59,8 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
     // What settings for farming mode
     farming: {
       // Whether to keep one slot per item type open
-      makeRoomForItems: true
+      makeRoomForItems: true,
+      moveTokens: false
     },
     // Active destiny version
     destinyVersion: 2,

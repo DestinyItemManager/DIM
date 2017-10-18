@@ -6,7 +6,7 @@ angular.module('dimApp')
   // Categories (sorts) and the types within them
   .value('dimCategory', {
     Weapons: [
-      'Subclass',
+      'Class',
       'Primary',
       'Special',
       'Heavy'
@@ -37,8 +37,8 @@ angular.module('dimApp')
       'Missions'
     ],
     Postmaster: [
-      'Lost Items',
-      'Special Orders',
+      'LostItems',
+      'SpecialOrders',
       'Messages'
     ]
   });
@@ -50,12 +50,12 @@ function BucketService(dimDefinitions, dimCategory) {
   const bucketToType = {
     BUCKET_CHEST: "Chest",
     BUCKET_LEGS: "Leg",
-    BUCKET_RECOVERY: "Lost Items",
+    BUCKET_RECOVERY: "LostItems",
     BUCKET_SHIP: "Ship",
     BUCKET_MISSION: "Missions",
     BUCKET_ARTIFACT: "Artifact",
     BUCKET_HEAVY_WEAPON: "Heavy",
-    BUCKET_COMMERCIALIZATION: "Special Orders",
+    BUCKET_COMMERCIALIZATION: "SpecialOrders",
     BUCKET_CONSUMABLES: "Consumable",
     BUCKET_PRIMARY_WEAPON: "Primary",
     BUCKET_CLASS_ITEMS: "ClassItem",
@@ -69,7 +69,7 @@ function BucketService(dimDefinitions, dimCategory) {
     BUCKET_MODS: "Ornaments",
     BUCKET_EMOTES: "Emote",
     BUCKET_MAIL: "Messages",
-    BUCKET_BUILD: "Subclass",
+    BUCKET_BUILD: "Class",
     BUCKET_HEAD: "Helmet",
     BUCKET_ARMS: "Gauntlets",
     BUCKET_HORN: "Horn",
