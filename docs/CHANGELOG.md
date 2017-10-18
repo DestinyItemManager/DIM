@@ -124,6 +124,7 @@
 
 * DIM will remember whether you last used D2 or D1.
 * Lots of DIM functionality is back for D2.
+* We now highlight the perks from high community reviews that you don't have selected.
 
 # 4.12.0
 
