@@ -28,10 +28,10 @@
     padding-left: 5px;
   }
   .higher-stats {
-    color: #7DC878;
+    color: #6dcc66;
   }
   .lower-stats {
-    color: #985C58;
+    color: #cc6666;
   }
   .stat-box-outer {
     display: table-cell;
@@ -39,6 +39,9 @@
     line-height: 14px;
     background-color: #333;
     width: 100%;
+  }
+  .stat-box-outer--no-bar {
+    background-color: transparent;
   }
   .stat-box-container {
     display: flex;
@@ -55,10 +58,13 @@
     color: black;
     line-height: 20px;
     &.higher-stats {
-      background-color: #7DC878;
+      background-color: #6dcc66;
     }
     &.lower-stats {
-      background-color: #985C58;
+      background-color: #cc6666;
+    }
+    &.rating-chart-bar-color {
+      background-color: #E8A534;
     }
   }
 }

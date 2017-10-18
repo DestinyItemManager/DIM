@@ -22,6 +22,8 @@
 @include phone-portrait {
   :root {
     --item-size: 64px !important;
+    --character-columns: 3 !important;
+    --vault-max-columns: 999 !important;
   }
 }
 
@@ -49,6 +51,12 @@ div:focus, span:focus {
   display: none;
 }
 
+@keyframes browser-warning {
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
 #browser-warning {
   position: fixed;
   bottom: 0;
@@ -60,6 +68,7 @@ div:focus, span:focus {
   &.hidden {
     display: none;
   }
+  animation: 1s linear 10s forwards browser-warning;
 }
 
 /**
@@ -355,8 +364,11 @@ img {
   cursor: pointer;
 
   .detached & {
-    top: 48px;
+    top: 103px;
+    z-index: 1000;
     max-height: calc(100vh - 221px);
+    max-width: 230px;
+    left: calc((100% - 230px) / 2);
   }
 }
 
@@ -364,6 +376,8 @@ img {
   margin: 8px auto;
   padding: 0 8px;
   user-select: none;
+  padding-left: constant(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
 }
 
 .stores {
@@ -414,8 +428,7 @@ h2, h3, h4 {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.on-dragging .ngdialog,
-.on-dragging .new_overlay {
+.on-dragging .ngdialog {
   display: none;
 }
 

@@ -8,7 +8,9 @@ export const StoreHeadingComponent = {
   controllerAs: 'vm',
   bindings: {
     store: '<storeData',
-    internalLoadoutMenu: '<internalLoadoutMenu'
+    internalLoadoutMenu: '<internalLoadoutMenu',
+    selectedStore: '<',
+    onTapped: '&'
   },
   template
 };
@@ -27,7 +29,7 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
       const prestige = _.find(vm.store.progression.progressions, {
         progressionHash: 2030054750
       });
-      vm.xpTillMote = $i18next.t('Stats.Prestige', {
+      vm.xpTillMote = $i18next.t(vm.store.destinyVersion === 1 ? 'Stats.Prestige' : 'Stats.PrestigeD2', {
         level: prestige.level,
         exp: (prestige.nextLevelAt - prestige.progressToNextLevel)
       });
@@ -45,6 +47,11 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
 
   vm.openLoadoutPopup = function openLoadoutPopup(e) {
     e.stopPropagation();
+
+    if (vm.store !== vm.selectedStore && !vm.internalLoadoutMenu) {
+      vm.onTapped();
+      return;
+    }
 
     if (dialogResult === null) {
       ngDialog.closeAll();

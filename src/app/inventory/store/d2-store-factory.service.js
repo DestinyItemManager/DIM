@@ -45,6 +45,10 @@ export function D2StoreFactory($i18next, dimInfoService) {
       if (!item.type) {
         throw new Error("item needs a 'type' field");
       }
+      // Account-wide buckets (mods, etc) are only on the first character
+      if (item.location.accountWide && !this.current) {
+        return 0;
+      }
       const openStacks = Math.max(0, this.capacityForItem(item) -
                                   this.buckets[item.location.id].length);
       const maxStackSize = item.maxStackSize || 1;
@@ -59,7 +63,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
 
     updateCharacterInfo: function(defs, character) {
       this.level = character.levelProgression.level; // Maybe?
-      this.light = character.light;
+      this.powerLevel = character.light;
       this.background = `https://www.bungie.net/${character.emblemBackgroundPath}`;
       this.icon = `https://www.bungie.net/${character.emblemPath}`;
       // this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
@@ -76,6 +80,10 @@ export function D2StoreFactory($i18next, dimInfoService) {
         const bucketItems = this.buckets[item.location.id];
         const bucketIndex = bucketItems.findIndex(match);
         bucketItems.splice(bucketIndex, 1);
+
+        if (this.current && item.location.accountWide) {
+          this.vault.d2VaultCounts[item.location.id].count--;
+        }
 
         return true;
       }
@@ -95,6 +103,10 @@ export function D2StoreFactory($i18next, dimInfoService) {
         });
       }
       item.owner = this.id;
+
+      if (this.current && item.location.accountWide) {
+        this.vault.d2VaultCounts[item.location.id].count++;
+      }
     },
 
     // Create a loadout from this store's equipped items
@@ -134,7 +146,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
         level: character.levelProgression.level, // Maybe?
         powerLevel: character.light,
-        // stats: getCharacterStatsData(defs.Stat, character.characterBase),
+        stats: getCharacterStatsData(defs.Stat, character.stats),
         class: getClass(classy.classType),
         classType: classy.classType,
         className: className,
@@ -149,12 +161,11 @@ export function D2StoreFactory($i18next, dimInfoService) {
     },
 
     makeVault(buckets, profileCurrencies) {
-      // TODO: get this right
-      console.log(profileCurrencies);
-      const glimmer = _.find(profileCurrencies, (cur) => { return cur.itemHash === 3159615086; });
+      const glimmer = _.find(profileCurrencies, (cur) => cur.itemHash === 3159615086);
+      const legendary = _.find(profileCurrencies, (cur) => cur.itemHash === 1022552290);
       const currencies = {
-        glimmer: glimmer ? glimmer.quantity : 0
-        // marks: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2534352370; }).quantity,
+        glimmer: glimmer ? glimmer.quantity : 0,
+        marks: legendary ? legendary.quantity : 0
         // silver: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2749350776; }).quantity
       };
 
@@ -175,25 +186,14 @@ export function D2StoreFactory($i18next, dimInfoService) {
         isVault: true,
         // Vault has different capacity rules
         capacityForItem: function(item) {
-          let sort = item.sort;
-          if (item.bucket) {
-            sort = item.bucket.sort;
+          if (!item.bucket) {
+            throw new Error("item needs a 'bucket' field");
           }
-          if (!sort) {
-            throw new Error("item needs a 'sort' field");
-          }
-          return buckets[sort].capacity;
+          return buckets.byHash[item.bucket.hash].vaultBucket.capacity;
         },
         spaceLeftForItem: function(item) {
-          let sort = item.sort;
-          if (item.bucket) {
-            sort = item.bucket.sort;
-          }
-          if (!sort) {
-            throw new Error("item needs a 'sort' field");
-          }
           const openStacks = Math.max(0, this.capacityForItem(item) -
-                                      count(this.items, (i) => i.bucket.sort === sort));
+                                      count(this.items, (i) => i.bucket.vaultBucket && (i.bucket.vaultBucket.id === item.bucket.vaultBucket.id)));
           const maxStackSize = item.maxStackSize || 1;
           if (maxStackSize === 1) {
             return openStacks;
@@ -205,14 +205,44 @@ export function D2StoreFactory($i18next, dimInfoService) {
         },
         removeItem: function(item) {
           const result = StoreProto.removeItem.call(this, item);
-          this.vaultCounts[item.location.sort]--;
+          if (item.location.vaultBucket) {
+            this.d2VaultCounts[item.location.vaultBucket.id].count--;
+          }
           return result;
         },
         addItem: function(item) {
           StoreProto.addItem.call(this, item);
-          this.vaultCounts[item.location.sort]++;
+          if (item.location.vaultBucket) {
+            this.d2VaultCounts[item.location.vaultBucket.id].count++;
+          }
         }
       });
     }
   };
+
+  /**
+   * Compute character-level stats.
+   */
+  function getCharacterStatsData(statDefs, stats) {
+    const statWhitelist = [2996146975, 392767087, 1943323491];
+    const ret = {};
+
+    // Fill in missing stats
+    statWhitelist.forEach((statHash) => {
+      const def = statDefs.get(statHash);
+      const value = stats[statHash] || 0;
+      const stat = {
+        id: statHash,
+        name: def.displayProperties.name,
+        description: def.displayProperties.description,
+        value,
+        icon: `https://www.bungie.net${def.displayProperties.icon}`,
+        tiers: [value],
+        tierMax: 10,
+        tier: 0
+      };
+      ret[statHash] = stat;
+    });
+    return ret;
+  }
 }

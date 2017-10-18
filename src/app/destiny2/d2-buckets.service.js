@@ -4,39 +4,41 @@ import _ from 'underscore';
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
   Weapons: [
-    'Subclass',
-    'Kinetic Weapons',
-    'Energy Weapons',
-    'Power Weapons'
+    'Class',
+    'Kinetic',
+    'Energy',
+    'Power'
   ],
   Armor: [
     'Helmet',
     'Gauntlets',
-    'Chest Armor',
-    'Leg Armor',
-    'Class Armor'
+    'Chest',
+    'Leg',
+    'ClassItem'
   ],
   General: [
     'Ghost',
-    'Modifications',
-    'Emblems',
-    'Shaders',
-    'Emotes',
-    'Ships',
+    'ClanBanners',
     'Vehicle',
-    'Auras',
-    'Clan Banners'
+    'Ships',
+    'Emblems',
+    'Emotes',
+    'Engrams',
+    'Auras'
+  ],
+  Inventory: [
+    'Consumables',
+    'Modifications',
+    'Shaders'
+  ],
+  Progress: [
+    'Quests',
   ],
   Postmaster: [
-    'Lost Items',
-    'Special Orders',
-    'Messages'
+    'LostItems',
+    'Messages',
+    'SpecialOrders'
   ]
-};
-
-const vaultTypes = {
-  1469714392: 'Weapons',
-  138197802: 'General',
 };
 
 // A mapping from the bucket names to DIM item types
@@ -46,7 +48,7 @@ const vaultTypes = {
 // TODO: there are no more bucket IDs... gotta update all this
 // bucket hash to DIM type
 const bucketToType = {
-  2465295065: "Energy Weapons",
+  2465295065: "Energy",
   2689798304: "Upgrade Point",
   2689798305: "Strange Coin",
   2689798308: "Glimmer",
@@ -56,26 +58,28 @@ const bucketToType = {
   2973005342: "Shaders",
   3054419239: "Emotes",
   3161908920: "Messages",
-  3284755031: "Subclass",
+  3284755031: "Class",
   3313201758: "Modifications",
   3448274439: "Helmet",
   3551918588: "Gauntlets",
   3865314626: "Materials",
   4023194814: "Ghost",
   4274335291: "Emblems",
-  4292445962: "Clan Banners",
-  14239492: "Chest Armor",
-  18606351: "Shaders",
-  20886954: "Leg Armor",
-  215593132: "Lost Items",
+  4292445962: "ClanBanners",
+  14239492: "Chest",
+  20886954: "Leg",
+  215593132: "LostItems",
   284967655: "Ships",
   375726501: "Engrams",
-  953998645: "Power Weapons",
+  953998645: "Power",
   1269569095: "Auras",
-  1367666825: "Special Orders",
-  1498876634: "Kinetic Weapons",
-  1585787867: "Class Armor",
-  2025709351: "Vehicle"
+  1367666825: "SpecialOrders",
+  1498876634: "Kinetic",
+  1585787867: "ClassItem",
+  2025709351: "Vehicle",
+  1469714392: "Consumables",
+  138197802: "General",
+  1801258597: "Quests"
 };
 
 export function D2BucketsService(D2Definitions, D2Categories) {
@@ -112,35 +116,42 @@ export function D2BucketsService(D2Definitions, D2Categories) {
         };
 
         _.each(defs.InventoryBucket, (def) => {
-          if (def.enabled) {
-            const bucket = {
-              id: def.hash,
-              description: def.displayProperties.description,
-              name: def.displayProperties.name,
-              hash: def.hash,
-              hasTransferDestination: def.hasTransferDestination,
-              capacity: def.itemCount
-            };
+          const bucket = {
+            id: def.hash,
+            description: def.displayProperties.description,
+            name: def.displayProperties.name,
+            hash: def.hash,
+            hasTransferDestination: def.hasTransferDestination,
+            capacity: def.itemCount,
+            accountWide: def.scope === 1,
+            category: def.category
+          };
 
-            bucket.type = bucketToType[bucket.hash];
-            if (bucket.type) {
-              bucket.sort = typeToSort[bucket.type];
-              buckets.byType[bucket.type] = bucket;
-            } else if (vaultTypes[bucket.id]) {
-              bucket.sort = vaultTypes[bucket.id];
-              buckets[bucket.sort] = bucket;
-            }
-
-            // Add an easy helper property like "inPostmaster"
-            bucket[`in${bucket.sort}`] = true;
-
-            buckets.byHash[bucket.hash] = bucket;
-            buckets.byId[bucket.id] = bucket;
+          bucket.type = bucketToType[bucket.hash];
+          if (bucket.type) {
+            bucket.sort = typeToSort[bucket.type];
+            buckets.byType[bucket.type] = bucket;
           }
+
+          // Add an easy helper property like "inPostmaster"
+          if (bucket.sort) {
+            bucket[`in${bucket.sort}`] = true;
+          }
+
+          buckets.byHash[bucket.hash] = bucket;
+          buckets.byId[bucket.id] = bucket;
         });
 
-        // Hack in the fact that weapons and armor share vault space now
-        buckets.Armor = buckets.byHash[138197802];
+        const vaultMappings = {};
+        defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {
+          vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
+        });
+
+        _.each(buckets.byHash, (bucket) => {
+          if (vaultMappings[bucket.hash]) {
+            bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
+          }
+        });
 
         _.each(D2Categories, (types, category) => {
           buckets.byCategory[category] = _.compact(types.map((type) => {

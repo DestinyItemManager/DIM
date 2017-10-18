@@ -9,6 +9,7 @@
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
+    "Inventory": "在庫",
     "Postmaster": "ポストマスター",
     "Progress": "進行状況",
     "Reputation": "ランク",
@@ -21,6 +22,7 @@
     "Title": "Bungieからのメッセージです。"
   },
   "BungieService": {
+    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
     "Difficulties": "Bungie APIに問題が発生しています。",
     "ItemUniqueness": "アイテムのレア度",
@@ -65,7 +67,7 @@
     "Dump": "ゲーム機に情報を転送する"
   },
   "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
+    "Banner": "DIMはデスティニー 2 をサポートします。",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "DidYouKnow": {
@@ -88,7 +90,7 @@
     "HelpPros": "この武器の良いところを書いてください(オプション)",
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "Pros": "長所",
-    "ReallyReport": "Report",
+    "ReallyReport": "報告",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
     "Submit": "提出",
@@ -98,6 +100,9 @@
   },
   "FarmingMode": {
     "Configuration": "設定",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
     "Desc_female": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
     "Desc_male": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
@@ -109,6 +114,7 @@
       "MakeRoom": "設備を動かしてアイテムを拾うための空間を確保する",
       "Tooltip": "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
     },
+    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "{{character}}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
     "OutOfRoomTitle": "スペースありません。",
     "Quickmove": "素早く移動",
@@ -142,6 +148,7 @@
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "重複するアイテムを表示",
+    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "エングラムを表示",
     "EnterName": "アイテム名を入力してください。",
     "EnterNote": "ここにノート入力:",
@@ -170,8 +177,9 @@
     "NewItems": "新しいアイテムを表示",
     "Notes": "メモを付けたアイテムを検索",
     "Ornament": "装飾可能なアイテム、装飾状況を表示",
-    "PartialMatch": "アイテム名の一部合致から検索できます",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "現在ポストマスターにあるアイテム",
+    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
     "RarityTier": "希少性を基に表示",
     "Rated": "Destiny トラッカーから評価をされた武器を全て表示",
@@ -184,6 +192,7 @@
       "tTK": "降り立ちし邪神"
     },
     "RequiredLevel": "必要なレベルに応じてアイテムを表示",
+    "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "一纏め可能なアイテム(弾合成アイテム、奇妙なコインなど)を表示",
     "Stats": "アイテムのステータスを基に表示。各フィルターは以下の通りです。",
     "Tags": {
@@ -207,6 +216,7 @@
       "Shipwright": "造船工",
       "Speaker": "預言者"
     },
+    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "武器のクラスを基に表示",
     "WeaponType": "武器の種類を基に表示",
     "Year": "Destinyの何年目にでてきたかを表示"
@@ -225,12 +235,12 @@
     "ChangingPerks": "パーク変更は対応していません",
     "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
     "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
-    "ExtensionDeprecatedMessage": "DIMのエクステンションからどのブラウザー、携帯機器でもウェブサイトを開くことが出来るようになりました！　エクステンションを削除するか、ブックマークとして使用することが出来ます。データ(タグ、メモ、設定)はストレージのページ(上部のディスクのアイコン)から転送できます。",
-    "ExtensionDeprecatedTitle": "DIMがウェブサイトになりました！",
     "HidePopup": "ポップアップを非表示にする",
     "NeverShow": "次回から表示しない",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
+    "UpdateAvailable": "DIM 更新",
+    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "クロームをアップデートしてください",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
     "Version_release": "DIM v{{version}} がリリースされました",
@@ -274,7 +284,7 @@
       "Vault": "{{store}} には {{itemtype}} のスペースがありません。"
     },
     "Classified": "この商品は現在分類されており、現時点では譲渡できません。",
-    "Classified2": "極秘扱いのアイテムです。Bungie がこのアイテムについて情報提供していません。このアイテムの移動は不可です。",
+    "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
     "Deequip": "{{itemname}}を取り除くために装備するアイテムが見つかりません",
     "ExoticError": "'{{itemname}}'は装備できません。なぜなら{{slot}}エキゾチックなものは装備できないからです。({{error}})",
     "NotEnoughRoom": "{{itemname}}のスペースを確保するために{{store}}から移動することはできません。",
@@ -356,6 +366,7 @@
     "ApplySearch": "アイテム = \"{{query}}\"",
     "Before": "前 '{{name}}'",
     "Cancel": "キャンセル",
+    "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "本当に「{{name}}」を削除しますか？",
     "CouldNotEquip": "{{itemname}} を装備できませんでした",
     "Create": "ロードアウトを作成",
@@ -368,6 +379,7 @@
     "FromEquipped": "装備している",
     "GatherEngrams": "エングラム収集",
     "GatherEngramsExceptExotics": "エキゾチック",
+    "GatherTokens": "Gather Reputation Items",
     "ItemLeveling": "アイテムのレベルアップ",
     "ItemsWithIcon": "このアイコンを持つアイテムが装備されます。アイテムをクリックすると装備を切り替えることができます。",
     "LoadoutName": "ロードアウトの名前...",
@@ -382,9 +394,11 @@
     "MakeRoomError": "ポストマスターの全アイテム用のスペースを確保できませんでした: {{error}} 。",
     "MaxSlots": "ロードアウトでは、その種のアイテムの{{slots}}しか持てません。",
     "MaximizeLight": "光レベルを最大化",
+    "MaximizePower": "Maximize Power",
     "NameRequired": "名称が必要",
     "NoEngrams": "転送出来るエングラムがありません。",
     "NoExotics": "非エキゾチクなエングラムは転送できません。",
+    "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "Random": "ランダム",
     "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",
@@ -395,7 +409,7 @@
     "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
     "TooManyRequested": "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。",
     "VendorsCanEquip": "これらのアイテムは装備出来ません。",
-    "VendorsCannotEquip": "これらのベンダーアイテムは装備出来ません。"
+    "VendorsCannotEquip": "These items cannot be equipped:"
   },
   "Manifest": {
     "Build": "Destinyのデータを再構築する。",
@@ -478,20 +492,25 @@
     "ShowOverlay": "新しいアイテムを光るように表示する",
     "ShowReviews": "武器に関するレビュー評価を表示する",
     "SizeItem": "アイテムサイズ",
+    "SortBasePower": "base power (destiny 2 only)",
     "SortName": "名前",
     "SortPrimary": "メインのステータス",
     "SortRarity": "希少性",
     "SortRoll": "評価",
+    "SortTypeThenName": "item type then name",
+    "SortTypeThenPrimary": "item type then primary stat",
     "VaultColumns": "保管庫の最大幅"
   },
   "Stats": {
     "Discipline": "鍛錬",
     "Intellect": "知性",
     "Level": "レベル",
+    "MaxBasePower": "Max Base Power (w/o mods)",
     "NoBonus": "ボーナスなし。",
     "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、をクリックしてください。",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
+    "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "品質",
     "Strength": "腕力",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
@@ -514,6 +533,7 @@
     "Export": "DIMのデータをバックアップ",
     "ForceSync": "データの同調を強制する",
     "GDriveLogout": "データがグーグルドライブにまだあります。次回のサインイン時にはこのデータが使用されます。",
+    "GDriveSignInError": "Error signing in to Google Drive:",
     "GDriveSignInWarning": "既にグーグルドライブにDIMのデータをセーブしている場合、機器にセーブされたデータに上書きされます。サインインする前にデータをバックアップしたほうがいいかも知れません。\n\nグーグルドライブにサインインしますか？",
     "GoogleApiBlocked": "コンテンツブロッカーによりグーグルドライブにアクセスできません。DIMをコンテンツブロッカー設定より解除して、お試しください。",
     "GoogleDriveStorage": "Google Drive",

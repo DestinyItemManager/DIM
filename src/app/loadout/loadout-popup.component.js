@@ -1,6 +1,8 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { sum, flatMap } from '../util';
+import { flatMap } from '../util';
+import { optimalLoadout } from './loadout-utils';
+import { REP_TOKENS } from '../farming/rep-tokens';
 import template from './loadout-popup.html';
 import './loadout-popup.scss';
 
@@ -13,7 +15,7 @@ export const LoadoutPopupComponent = {
   template
 };
 
-function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService) {
+function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, D2FarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, D2BucketsService, $q, dimStoreService, D2StoresService, $stateParams) {
   'ngInject';
   const vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
@@ -29,6 +31,8 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   vm.search = dimSearchService;
 
+  const storeService = this.store.destinyVersion === 1 ? dimStoreService : D2StoresService;
+
   function initLoadouts() {
     dimLoadoutService.getLoadouts()
       .then((loadouts) => {
@@ -37,7 +41,9 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
         vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
         vm.loadouts = vm.loadouts.filter((loadout) => {
-          return (_.isUndefined(loadout.platform) ||
+          return (vm.store.destinyVersion === 2
+            ? loadout.destinyVersion === 2 : loadout.destinyVersion !== 2) &&
+            (_.isUndefined(loadout.platform) ||
                   loadout.platform === platform.platformLabel) &&
             (vm.classTypeId === -1 ||
              loadout.classType === -1 ||
@@ -62,6 +68,9 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     // like emblems and ships and horns.
     loadout.items = _.pick(loadout.items,
                            'class',
+                           'kinetic',
+                           'energy',
+                           'power',
                            'primary',
                            'special',
                            'heavy',
@@ -109,6 +118,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
     ngDialog.closeAll();
     dimFarmingService.stop();
+    D2FarmingService.stop();
 
     if (filterToEquipped) {
       loadout = filterLoadoutToEquipped(loadout);
@@ -121,7 +131,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // A dynamic loadout set up to level weapons and armor
   vm.itemLevelingLoadout = function itemLevelingLoadout($event) {
-    const applicableItems = _.filter(dimStoreService.getAllItems(), (i) => {
+    const applicableItems = _.filter(storeService.getAllItems(), (i) => {
       return i.canBeEquippedBy(vm.store) &&
         i.talentGrid &&
         !i.talentGrid.xpComplete && // Still need XP
@@ -177,28 +187,22 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       return value;
     };
 
-    const loadout = optimalLoadout(applicableItems, bestItemFn, $i18next.t('Loadouts.ItemLeveling'));
+    const loadout = optimalLoadout(vm.store, applicableItems, bestItemFn, $i18next.t('Loadouts.ItemLeveling'));
     vm.applyLoadout(loadout, $event);
   };
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   vm.maxLightLoadout = function maxLightLoadout($event) {
-    // These types contribute to light level
-    const lightTypes = ['Primary',
-      'Special',
-      'Heavy',
-      'Helmet',
-      'Gauntlets',
-      'Chest',
-      'Leg',
-      'ClassItem',
-      'Artifact',
-      'Ghost'];
+    const statHashes = new Set([
+      1480404414, // D2 Attack
+      3897883278, // D1 & D2 Defense
+      368428387 // D1 Attack
+    ]);
 
-    const applicableItems = _.filter(dimStoreService.getAllItems(), (i) => {
+    const applicableItems = _.filter(storeService.getAllItems(), (i) => {
       return i.canBeEquippedBy(vm.store) &&
         i.primStat && // has a primary stat (sanity check)
-        _.contains(lightTypes, i.type); // one of our selected types
+        statHashes.has(i.primStat.statHash); // one of our selected stats
     });
 
     const bestItemFn = function(item) {
@@ -222,17 +226,24 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       return value;
     };
 
-    const loadout = optimalLoadout(applicableItems, bestItemFn, $i18next.t('Loadouts.MaximizeLight'));
+    const loadout = optimalLoadout(vm.store, applicableItems, bestItemFn, $i18next.t('Loadouts.MaximizeLight'));
     if ($event) {
       vm.applyLoadout(loadout, $event);
     }
     return loadout;
   };
-  vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout());
+
+  vm.hasClassified = storeService.getAllItems().some((i) => {
+    return i.classified &&
+      (i.location.sort === 'Weapons' ||
+       i.location.sort === 'Armor' ||
+       i.type === 'Ghost');
+  });
+  vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout()) + (vm.hasClassified ? '*' : '');
 
   // A dynamic loadout set up to level weapons and armor
   vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {
-    const engrams = _.filter(dimStoreService.getAllItems(), (i) => {
+    const engrams = _.filter(storeService.getAllItems(), (i) => {
       return i.isEngram() && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
     });
 
@@ -272,14 +283,47 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     vm.applyLoadout(loadout, $event);
   };
 
+  vm.gatherTokensLoadout = function gatherTokensLoadout($event) {
+    const tokens = _.filter(storeService.getAllItems(), (i) => {
+      return REP_TOKENS.has(i.hash) && !i.notransfer;
+    });
+
+    if (tokens.length === 0) {
+      toaster.pop('warning', $i18next.t('Loadouts.GatherTokens'), $i18next.t('Loadouts.NoTokens'));
+      return;
+    }
+
+    const itemsByType = _.groupBy(tokens, 'type');
+
+    // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
+    const finalItems = {};
+    _.each(itemsByType, (items, type) => {
+      if (items) {
+        finalItems[type.toLowerCase()] = items.map((i) => {
+          return angular.copy(i);
+        });
+      }
+    });
+
+    const loadout = {
+      classType: -1,
+      name: $i18next.t('Loadouts.GatherTokens'),
+      items: finalItems
+    };
+    vm.applyLoadout(loadout, $event);
+  };
+
   // Move items matching the current search. Max 9 per type.
   vm.searchLoadout = function searchLoadout($event) {
-    const items = _.filter(dimStoreService.getAllItems(), (i) => {
-      return i.visible && !i.location.inPostmaster;
+    const items = _.filter(storeService.getAllItems(), (i) => {
+      return i.visible &&
+        !i.location.inPostmaster &&
+        !i.notransfer &&
+        i.owner !== vm.store.id;
     });
 
     const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) => {
-      return _.first(items, 9);
+      return vm.store.isVault ? items : _.first(items, 9);
     });
 
     // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
@@ -305,7 +349,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   vm.makeRoomForPostmaster = function makeRoomForPostmaster() {
     ngDialog.closeAll();
 
-    dimBucketService.getBuckets().then((buckets) => {
+    (vm.store.destinyVersion === 1 ? dimBucketService : D2BucketsService).getBuckets().then((buckets) => {
       const postmasterItems = flatMap(buckets.byCategory.Postmaster,
                                       (bucket) => vm.store.buckets[bucket.id]);
       const postmasterItemCountsByType = _.countBy(postmasterItems,
@@ -365,11 +409,11 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
       return promise
         .then(() => {
-          const vault = dimStoreService.getVault();
+          const vault = storeService.getVault();
           const vaultSpaceLeft = vault.spaceLeftForItem(item);
           if (vaultSpaceLeft <= 1) {
             // If we're down to one space, try putting it on other characters
-            const otherStores = _.filter(dimStoreService.getStores(),
+            const otherStores = _.filter(storeService.getStores(),
                                          (store) => !store.isVault && store.id !== vm.store.id);
             const otherStoresWithSpace = _.filter(otherStores, (store) => store.spaceLeftForItem(item));
 
@@ -384,72 +428,13 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   vm.startFarming = function startFarming() {
     ngDialog.closeAll();
-    dimFarmingService.start(vm.store);
+    if (vm.store.destinyVersion === 2) {
+      D2FarmingService.start({
+        membershipId: $stateParams.membershipId,
+        platformType: $stateParams.platformType
+      }, vm.store.id);
+    } else {
+      dimFarmingService.start(vm.store);
+    }
   };
-
-  // Generate an optimized loadout based on a filtered set of items and a value function
-  function optimalLoadout(applicableItems, bestItemFn, name) {
-    const itemsByType = _.groupBy(applicableItems, 'type');
-
-    const isExotic = function(item) {
-      return item.isExotic && !item.hasLifeExotic();
-    };
-
-    // Pick the best item
-    const items = _.mapObject(itemsByType, (items) => {
-      return _.max(items, bestItemFn);
-    });
-
-    // Solve for the case where our optimizer decided to equip two exotics
-    const exoticGroups = [['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']];
-    _.each(exoticGroups, (group) => {
-      const itemsInGroup = _.pick(items, group);
-      const numExotics = _.filter(_.values(itemsInGroup), isExotic).length;
-      if (numExotics > 1) {
-        const options = [];
-
-        // Generate an option where we use each exotic
-        _.each(itemsInGroup, (item, type) => {
-          if (isExotic(item)) {
-            const option = angular.copy(itemsInGroup);
-            let optionValid = true;
-            // Switch the other exotic items to the next best non-exotic
-            _.each(_.omit(itemsInGroup, type), (otherItem, otherType) => {
-              if (isExotic(otherItem)) {
-                const nonExotics = _.reject(itemsByType[otherType], isExotic);
-                if (_.isEmpty(nonExotics)) {
-                  // this option isn't usable because we couldn't swap this exotic for any non-exotic
-                  optionValid = false;
-                } else {
-                  option[otherType] = _.max(nonExotics, bestItemFn);
-                }
-              }
-            });
-
-            if (optionValid) {
-              options.push(option);
-            }
-          }
-        });
-
-        // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
-        const bestOption = _.max(options, (opt) => { return sum(_.values(opt), bestItemFn); });
-        _.assign(items, bestOption);
-      }
-    });
-
-    // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
-    const finalItems = {};
-    _.each(items, (item, type) => {
-      const itemCopy = angular.copy(item);
-      itemCopy.equipped = true;
-      finalItems[type.toLowerCase()] = [itemCopy];
-    });
-
-    return {
-      classType: -1,
-      name: name,
-      items: finalItems
-    };
-  }
 }

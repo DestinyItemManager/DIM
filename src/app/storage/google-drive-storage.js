@@ -1,6 +1,6 @@
 import _ from 'underscore';
 
-export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
+export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) {
   'ngInject';
 
   return {
@@ -8,7 +8,10 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
     drive: {
       client_id: $GOOGLE_DRIVE_CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/drive.appdata',
-      discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"]
+      discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+      fetch_basic_profile: false,
+      ux_mode: 'redirect',
+      redirect_uri: `${window.location.origin}/gdrive-return.html`
     },
 
     // The Google Drive ID of the file we use to save data.
@@ -112,7 +115,13 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
             auth.isSignedIn.listen(this.updateSigninStatus.bind(this));
 
             // Handle the initial sign-in state.
-            return this.updateSigninStatus(auth.isSignedIn.get()).then(() => this.ready.resolve());
+            return this.updateSigninStatus(auth.isSignedIn.get())
+              .then(() => {
+                if (auth.isSignedIn.get()) {
+                  $rootScope.$broadcast('gdrive-sign-in');
+                }
+                this.ready.resolve();
+              });
           });
         });
       } else {
@@ -140,7 +149,13 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
           if ($featureFlags.debugSync) {
             console.log('authorizing Google Drive');
           }
-          return auth.signIn();
+          return auth
+            .signIn()
+            // This won't happen since we'll redirect
+            .then(() => this.updateSigninStatus(true))
+            .catch((e) => {
+              throw new Error(`Failed to sign in to Google Drive: ${e.error}`);
+            });
         }
       });
     },

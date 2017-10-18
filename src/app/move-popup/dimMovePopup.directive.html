@@ -24,11 +24,11 @@
       <span ng-i18next="MovePopup.Take"></span>
     </div>
     <div class="move-button move-distribute" ng-i18next="[title]MovePopup.DistributeEvenly;[alt]MovePopup.DistributeEvenly"
-      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">
+      ng-if="vm.item.destinyVersion === 1 && !vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">
       <span ng-i18next="MovePopup.Split"></span>
     </div>
-  <div class="locations">
-    <div class="move-button infuse-perk" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" ng-i18next="[title]Infusion.Infusion;[alt]Infusion.Calc" ng-class="vm.item.bucket.sort"></div>
+  <div class="locations" ng-if="vm.item.infusable">
+    <div class="move-button infuse-perk" ng-class="{ destiny2: vm.item.destinyVersion === 2 }" ng-click="vm.infuse(vm.item, $event)" ng-i18next="[title]Infusion.Infusion;[alt]Infusion.Calc" ng-class="vm.item.bucket.sort"></div>
   </div>
   </div>
   <div class="arrow" ng-class="'is-{{vm.item.dmg}}'"></div>

@@ -15,7 +15,12 @@ dim-store-heading {
   position: relative;
   border-bottom: 2px solid #888;
   height: 46px;
+  max-width: 230px;
   cursor: pointer;
+
+  store-pager & {
+    margin: 0 auto;
+  }
 
   .details {
     display: flex;
@@ -140,6 +145,12 @@ dim-store-heading {
   align-items: center;
   justify-content: space-between;
   opacity: 0.8;
+  max-width: 230px;
+
+  store-pager & {
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   height: 16px;
   margin-top: 3px;
@@ -154,11 +165,13 @@ dim-store-heading {
     &:last-child {
       margin-right: 0;
     }
+    color: #AAA;
   }
 
   .vault-bucket-tag {
     height: 16px;
     width: 16px;
+    font-weight: bold;
     text-align: center;
   }
 
@@ -190,12 +203,28 @@ dim-store-heading {
   opacity: 0.8;
 }
 
-.current.character .character-box:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  border-top: 13px solid gold;
-  border-right: 13px solid transparent;
+.current {
+  &.character, &.character-swipe {
+    .character-box:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      border-top: 13px solid gold;
+      border-right: 13px solid transparent;
+    }
+  }
+}
+
+.lang-ru {
+  .vault .class {
+    font-size: 14px;
+  }
+}
+
+.lang-ja {
+  .class {
+    font-size: 16px;
+  }
 }

@@ -1,6 +1,8 @@
 import _ from 'underscore';
 import template from './settings.html';
 import './settings.scss';
+import { isPhonePortraitStream } from '../mediaQueries';
+import { subscribeOnScope } from '../rx-utils';
 
 export const SettingsComponent = {
   template,
@@ -8,7 +10,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state, $i18next) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, OAuthTokenService, $state, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -28,6 +30,12 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
   vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
   vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
+
+  subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
+    $scope.$apply(() => {
+      vm.isPhonePortrait = isPhonePortrait;
+    });
+  });
 
   vm.filters = {
     vendors: {
@@ -87,12 +95,12 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
 
   vm.downloadWeaponCsv = function() {
-    dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
+    dimCsvService.downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Weapons");
     ga('send', 'event', 'Download CSV', 'Weapons');
   };
 
   vm.downloadArmorCsv = function() {
-    dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Armor");
+    dimCsvService.downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Armor");
     ga('send', 'event', 'Download CSV', 'Armor');
   };
 

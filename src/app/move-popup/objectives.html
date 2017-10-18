@@ -1,5 +1,5 @@
 <div class="item-objectives" ng-if="$ctrl.objectives.length">
-  <div class="objective-row" ng-switch="objective.displayStyle" ng-repeat="objective in $ctrl.objectives track by $index" ng-class="{ 'objective-complete': objective.complete, 'objective-boolean': objective.boolean }">
+  <div class="objective-row" title="{{objective.description}}" ng-switch="objective.displayStyle" ng-repeat="objective in $ctrl.objectives track by $index" ng-class="{ 'objective-complete': objective.complete, 'objective-boolean': objective.boolean }">
     <div ng-switch-when="trials">
       <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{ 'incomplete': $index >= objective.progress, 'wins': objective.completionValue === 9 }"></i>
       <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>

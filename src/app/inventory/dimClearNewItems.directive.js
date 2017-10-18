@@ -8,7 +8,8 @@ export const ClearNewItemsComponent = {
   template,
   controller: ClearNewItemsCtrl,
   bindings: {
-    destinyVersion: '<'
+    destinyVersion: '<',
+    account: '<'
   }
 };
 
@@ -29,6 +30,7 @@ function ClearNewItemsCtrl($scope, NewItemsService, dimSettingsService, D2Stores
   });
 
   this.clearNewItems = function() {
-    NewItemsService.clearNewItems((this.destinyVersion === 2 ? D2StoresService : dimStoreService).getStores());
+    const stores = (this.destinyVersion === 2 ? D2StoresService : dimStoreService).getStores();
+    NewItemsService.clearNewItems(stores, this.account, this.destinyVersion);
   };
 }

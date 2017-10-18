@@ -31,6 +31,7 @@ function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $i18next) {
       type: alert.type,
       title: $i18next.t('BungieAlert.Title'),
       bodyOutputType: 'trustedHtml',
+      showCloseButton: true,
       body: `<p>${alert.body}</p>${twitter}`
     });
   }, (alert) => `${alert.key}-${alert.timestamp}`);

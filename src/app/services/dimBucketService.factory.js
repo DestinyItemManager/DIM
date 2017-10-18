@@ -37,8 +37,8 @@ angular.module('dimApp')
       'Missions'
     ],
     Postmaster: [
-      'Lost Items',
-      'Special Orders',
+      'LostItems',
+      'SpecialOrders',
       'Messages'
     ]
   });
@@ -50,12 +50,12 @@ function BucketService(dimDefinitions, dimCategory) {
   const bucketToType = {
     BUCKET_CHEST: "Chest",
     BUCKET_LEGS: "Leg",
-    BUCKET_RECOVERY: "Lost Items",
+    BUCKET_RECOVERY: "LostItems",
     BUCKET_SHIP: "Ship",
     BUCKET_MISSION: "Missions",
     BUCKET_ARTIFACT: "Artifact",
     BUCKET_HEAVY_WEAPON: "Heavy",
-    BUCKET_COMMERCIALIZATION: "Special Orders",
+    BUCKET_COMMERCIALIZATION: "SpecialOrders",
     BUCKET_CONSUMABLES: "Consumable",
     BUCKET_PRIMARY_WEAPON: "Primary",
     BUCKET_CLASS_ITEMS: "ClassItem",

@@ -8,6 +8,7 @@ export function PressTip() {
     restrict: 'A',
     link($scope, $element, $attrs) {
       let tooltip = null;
+      let timer = null;
 
       function showTip() {
         if (!tooltip) {
@@ -22,9 +23,15 @@ export function PressTip() {
             trigger: 'manual',
             container: 'body'
           });
+          tooltip.show();
         }
-        tooltip.show();
       }
+
+      $element.on('mouseenter', (e) => {
+        timer = setTimeout(() => {
+          showTip();
+        }, 100);
+      });
 
       $element.on('mousedown touchstart', (e) => {
         e.preventDefault();
@@ -34,8 +41,10 @@ export function PressTip() {
       $element.on('mouseup mouseleave touchend', (e) => {
         e.preventDefault();
         if (tooltip) {
-          tooltip.hide();
+          tooltip.dispose();
+          tooltip = null;
         }
+        clearTimeout(timer);
       });
 
       $scope.$on('$destroy', () => {

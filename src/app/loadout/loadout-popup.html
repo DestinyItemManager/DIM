@@ -1,7 +1,7 @@
 <div class="loadout-popup-content">
   <ul class="loadout-list">
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set">
+    <li class="loadout-set">
       <span ng-click="vm.newLoadout($event)">
         <i class="fa fa-plus-circle"></i>
         <span ng-i18next="Loadouts.Create"></span>
@@ -9,7 +9,7 @@
       <span ng-click="vm.newLoadoutFromEquipped($event)" ng-i18next="Loadouts.FromEquipped"></span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">
+    <li ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">
       <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">
         {{ loadout.name }}
       </span>
@@ -21,29 +21,29 @@
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="vm.search.query">
+    <li class="loadout-set" ng-if="vm.search.query">
       <span ng-click="vm.searchLoadout($event)">
         <i class="fa fa-search"></i>
         <span ng-i18next="[i18next]({ query: vm.search.query })Loadouts.ApplySearch"></span>
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="!vm.store.isVault">
+    <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.maxLightLoadout($event)">
-        <span class="light" ng-bind="::vm.maxLightValue"></span>
-        <i class="fa fa-star"></i>
-        <span ng-i18next="Loadouts.MaximizeLight"></span>
+        <span class="light" ng-bind="::vm.maxLightValue" press-tip="{{ vm.hasClassified ? 'Loadouts.Classified' : '' | i18next }}"></span>
+        <i class="fa">✦</i>
+        <span ng-i18next="{{ vm.store.destinyVersion == 2 ? 'Loadouts.MaximizePower' : 'Loadouts.MaximizeLight' }}"></span>
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="!vm.store.isVault">
+    <li class="loadout-set" ng-if="vm.store.destinyVersion == 1 && !vm.store.isVault">
       <span ng-click="vm.itemLevelingLoadout($event)">
         <i class="fa fa-level-up"></i>
         <span ng-i18next="Loadouts.ItemLeveling"></span>
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="!vm.store.isVault">
+    <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.makeRoomForPostmaster($event)">
         <i class="fa fa-envelope"></i>
         <span ng-i18next="Loadouts.MakeRoom"></span>
@@ -61,6 +61,13 @@
       </span>
     </li>
 
+    <li ng-if="vm.store.destinyVersion === 2" class="loadout-set">
+      <span ng-click="vm.gatherTokensLoadout($event)">
+        <i class="fa fa-arrow-circle-o-up"></i>
+        <span ng-i18next="Loadouts.GatherTokens"></span>
+      </span>
+    </li>
+
     <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.startFarming($event)">
         <img class="fa" src="~app/images/engram.svg" height="12" width="12"/>
@@ -68,7 +75,7 @@
       </span>
     </li>
 
-    <li ng-if="vm.store.destinyVersion === 1" class="loadout-set" ng-if="vm.previousLoadout">
+    <li class="loadout-set" ng-if="vm.previousLoadout">
       <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)">
         <i class="fa fa-undo"></i>
         {{ vm.previousLoadout.name }}

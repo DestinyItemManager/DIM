@@ -40,11 +40,11 @@ export function CsvService() {
   }
 
   function downloadArmor(items, nameMap) {
-    const header = "Name,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,Year," +
+    const header = "Name,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,PowerMod,Year," +
       "% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n";
     let data = "";
     items.forEach((item) => {
-      data += `${item.name},`;
+      data += `"${item.name}",`;
       data += `${item.dimInfo.tag || ''},`;
       data += `${item.tier},`;
       data += `${item.typeName},`;
@@ -61,6 +61,7 @@ export function CsvService() {
       data += `${(item.percentComplete * 100).toFixed(0)},`;
       data += `${item.locked},`;
       data += `${item.equipped},`;
+      data += `${(item.primStat && (item.primStat.value !== item.basePower))},`;
       data += `${item.year},`;
       data += item.quality ? `${item.quality.min},` : "0,";
       const stats = {};
@@ -95,12 +96,12 @@ export function CsvService() {
   }
 
   function downloadWeapons(guns, nameMap) {
-    const header = "Name,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,Year," +
+    const header = "Name,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,PowerMod,Year," +
       "AA,Impact,Range,Stability,ROF,Reload,Mag,Equip," +
       "Notes,Nodes\n";
     let data = "";
     guns.forEach((gun) => {
-      data += `${gun.name},`;
+      data += `"${gun.name}",`;
       data += `${gun.dimInfo.tag || ''},`;
       data += `${gun.tier},`;
       data += `${gun.typeName},`;
@@ -115,6 +116,7 @@ export function CsvService() {
       data += `${(gun.percentComplete * 100).toFixed(0)},`;
       data += `${gun.locked},`;
       data += `${gun.equipped},`;
+      data += `${(gun.primStat && (gun.primStat.value !== gun.basePower))},`;
       data += `${gun.year},`;
       const stats = {
         aa: 0,
@@ -219,7 +221,7 @@ export function CsvService() {
         return;
       }
       if (type === "Weapons") {
-        if (item.primStat.statHash === 368428387) {
+        if (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414) {
           items.push(item);
         }
       }

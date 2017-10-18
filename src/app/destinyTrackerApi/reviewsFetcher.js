@@ -9,7 +9,8 @@ import { PerkRater } from './perkRater';
  * @class ReviewsFetcher
  */
 class ReviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
+  constructor($rootScope, $q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
+    this.$rootScope = $rootScope;
     this.$q = $q;
     this.$http = $http;
     this._itemTransformer = new ItemTransformer();

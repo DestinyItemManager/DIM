@@ -1,6 +1,6 @@
 window.ga = window.ga || function(...args) { (ga.q = ga.q || []).push(args); }; ga.l = Number(new Date());
 
-ga('create', 'UA-60316581-1', 'auto');
+ga('create', $DIM_FLAVOR === 'release' ? 'UA-60316581-1' : 'UA-60316581-5', 'auto');
 ga('set', 'dimension1', $DIM_VERSION);
 ga('set', 'dimension2', $DIM_FLAVOR);
 

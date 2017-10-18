@@ -3,6 +3,7 @@
   <div class="ngdialog-inner-content">
     <p ng-i18next="Filter.ClickFilters"></p>
     <p ng-i18next="[i18next]({ example: 'is:arc light:>300', not: 'not:', notexample: 'not:engram' })Filter.Combine"></p>
+    <p ng-i18next="[html:i18next]({ link: '<a href=\'https://youtu.be/T0tjH95AG_I\' target=\'_blank\' rel=\'noopener noreferrer\'>Youtube</a>' })Filter.VideoExample"></p>
     <table>
       <tr>
         <td ng-i18next="Filter.Filter"></td>
@@ -35,6 +36,16 @@
       </tr>
       <tr>
         <td>
+          <dim-filter-link filter="stack:value"></dim-filter-link>
+          <dim-filter-link filter="stack:&gt;=value"></dim-filter-link>
+          <dim-filter-link filter="stack:&gt;value"></dim-filter-link>
+          <dim-filter-link filter="stack:&lt;value"></dim-filter-link>
+          <dim-filter-link filter="stack:&lt;=value"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.StackLevel"></td>
+      </tr>
+      <tr>
+        <td>
           <dim-filter-link filter="level:value"></dim-filter-link>
           <dim-filter-link filter="level:&gt;=value"></dim-filter-link>
           <dim-filter-link filter="level:&gt;value"></dim-filter-link>
@@ -53,7 +64,9 @@
         </td>
         <td><span ng-i18next="Filter.Stats"></span>
           <ul>
-            <li>stat:rof:</li>
+            <li ng-if="vm.settings.destinyVersion === 2">stat:rpm:</li>
+            <li ng-if="vm.settings.destinyVersion === 1">stat:rof:</li>
+            <li>stat:charge:</li>
             <li>stat:impact:</li>
             <li>stat:range:</li>
             <li>stat:stability:</li>
@@ -64,7 +77,7 @@
           </ul>
         </td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="quality:value"></dim-filter-link>
           <dim-filter-link filter="quality:&gt;=value"></dim-filter-link>
@@ -74,7 +87,7 @@
         </td>
         <td ng-i18next="[i18next]({ percentage: 'percentage', quality: 'quality' })Filter.Quality"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:light"></dim-filter-link>
           <dim-filter-link filter="has:light"></dim-filter-link>
@@ -85,7 +98,14 @@
         <td>
           <dim-filter-link filter="is:weapon"></dim-filter-link>
           <dim-filter-link filter="is:armor"></dim-filter-link>
-          <dim-filter-link filter="is:cosmetic"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:ghost"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:vehicle"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:ships"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:engrams"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:consumables"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:modifications"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:shaders"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:cosmetic"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.Categories"></td>
       </tr>
@@ -112,10 +132,13 @@
       <tr>
         <td>
           <dim-filter-link filter="is:weapon"></dim-filter-link>
-          <dim-filter-link filter="is:class"></dim-filter-link>
-          <dim-filter-link filter="is:primary"></dim-filter-link>
-          <dim-filter-link filter="is:special"></dim-filter-link>
-          <dim-filter-link filter="is:heavy"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:class"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:primary"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:special"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:heavy"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:kinetic"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:energy"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:power"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.WeaponClass"></td>
       </tr>
@@ -136,7 +159,7 @@
           <dim-filter-link filter="is:uncommon"></dim-filter-link>
           <dim-filter-link filter="is:rare"></dim-filter-link>
           <dim-filter-link filter="is:legendary"></dim-filter-link>
-          <dim-filter-link filter="is:sublime"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:sublime"></dim-filter-link>
           <dim-filter-link filter="is:exotic"></dim-filter-link>
           <dim-filter-link filter="is:white"></dim-filter-link>
           <dim-filter-link filter="is:green"></dim-filter-link>
@@ -146,7 +169,14 @@
         </td>
         <td ng-i18next="Filter.RarityTier"></td>
       </tr>
-      <tr>
+
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="is:powermod"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.PowerMod"></td>
+      </tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:intellect"></dim-filter-link>
           <dim-filter-link filter="is:discipline"></dim-filter-link>
@@ -161,14 +191,14 @@
         </td>
         <td ng-i18next="Filter.Infusable"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:ascended"></dim-filter-link>
           <dim-filter-link filter="is:unascended"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.Ascended"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:reforgeable"></dim-filter-link>
           <dim-filter-link filter="is:reforge"></dim-filter-link>
@@ -177,7 +207,7 @@
         </td>
         <td ng-i18next="Filter.Reforgeable"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:complete"></dim-filter-link>
           <dim-filter-link filter="is:incomplete"></dim-filter-link>
@@ -207,6 +237,7 @@
         <td>
           <dim-filter-link filter="is:dupe"></dim-filter-link>
           <dim-filter-link filter="is:duplicate"></dim-filter-link>
+          <dim-filter-link filter="is:dupelower"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.Dupe"></td>
       </tr>
@@ -217,7 +248,7 @@
         </td>
         <td ng-i18next="Filter.Locked"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:tracked"></dim-filter-link>
           <dim-filter-link filter="is:untracked"></dim-filter-link>
@@ -232,20 +263,22 @@
       </tr>
       <tr>
         <td>
+          <dim-filter-link filter="is:autorifle"></dim-filter-link>
+          <dim-filter-link filter="is:fusionrifle"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:grenadelauncher"></dim-filter-link>
+          <dim-filter-link filter="is:handcannon"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:machinegun"></dim-filter-link>
           <dim-filter-link filter="is:pulserifle"></dim-filter-link>
           <dim-filter-link filter="is:scoutrifle"></dim-filter-link>
-          <dim-filter-link filter="is:handcannon"></dim-filter-link>
-          <dim-filter-link filter="is:autorifle"></dim-filter-link>
-          <dim-filter-link filter="is:sniperrifle"></dim-filter-link>
           <dim-filter-link filter="is:shotgun"></dim-filter-link>
-          <dim-filter-link filter="is:fusionrifle"></dim-filter-link>
           <dim-filter-link filter="is:sidearm"></dim-filter-link>
+          <dim-filter-link filter="is:sniperrifle"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:submachine"></dim-filter-link>
           <dim-filter-link filter="is:rocketlauncher"></dim-filter-link>
-          <dim-filter-link filter="is:machinegun"></dim-filter-link>
           <dim-filter-link filter="is:sword"></dim-filter-link>
-          <dim-filter-link filter="is:primaryweaponengram"></dim-filter-link>
-          <dim-filter-link filter="is:specialweaponengram"></dim-filter-link>
-          <dim-filter-link filter="is:heavyweaponengram"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:primaryweaponengram"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:specialweaponengram"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:heavyweaponengram"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.WeaponType"></td>
       </tr>
@@ -255,7 +288,7 @@
         </td>
         <td ng-i18next="Filter.Engrams"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:glimmeritem"></dim-filter-link>
           <dim-filter-link filter="is:glimmerboost"></dim-filter-link>
@@ -317,7 +350,7 @@
           <td ng-i18next="Filter.Rating"></td>
         </tr>
       </span>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:year1"></dim-filter-link>
           <dim-filter-link filter="is:year2"></dim-filter-link>
@@ -332,7 +365,7 @@
         </td>
         <td ng-i18next="Filter.InLoadout"></td>
       </tr>
-    <tr>
+    <tr ng-if="vm.settings.destinyVersion === 1">
       <td>
         <dim-filter-link filter="is:ornament"></dim-filter-link>
         <dim-filter-link filter="is:ornamentmissing"></dim-filter-link>
@@ -347,7 +380,7 @@
         </td>
         <td ng-i18next="Filter.Postmaster"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:fwc"></dim-filter-link>
           <dim-filter-link filter="is:do"></dim-filter-link>
@@ -379,7 +412,7 @@
           <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' })Filter.Vendor"></span>
         </td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:vanilla"></dim-filter-link>
           <dim-filter-link filter="is:qw"></dim-filter-link>

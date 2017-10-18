@@ -46,6 +46,7 @@ export function SyncService(
 
     if (!PUT && angular.equals(_.pick(cached, _.keys(value)), value)) {
       if ($featureFlags.debugSync) {
+        console.log(_.pick(cached, _.keys(value)), value);
         console.log("Skip save, already got it");
       }
       return $q.when();
@@ -88,7 +89,7 @@ export function SyncService(
   function get(force) {
     // if we already have it and we're not forcing a sync
     if (cached && !force) {
-      return $q.resolve(cached);
+      return $q.resolve(angular.copy(cached));
     }
 
     if (_getPromise) {
@@ -117,6 +118,8 @@ export function SyncService(
               console.error('Sync: Error loading from', adapter.name, e);
               return null;
             });
+        } else if ($featureFlags.debugSync) {
+          console.log(adapter.name, 'is disabled');
         }
         return promise;
       }, $q.when())
