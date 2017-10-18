@@ -61,7 +61,7 @@ class D2ItemTransformer {
       return null;
     }
 
-    const allPlugs = _.pluck(_.pluck(item.sockets.sockets, 'plug'), 'hash');
+    const allPlugs = _.compact(_.pluck(_.pluck(item.sockets.sockets, 'plug'), 'hash'));
 
     return _.difference(allPlugs, this._getPowerMods(item));
   }
