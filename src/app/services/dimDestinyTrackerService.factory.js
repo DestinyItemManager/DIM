@@ -17,8 +17,7 @@ import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
 
-function DestinyTrackerService($rootScope,
-                               $q,
+function DestinyTrackerService($q,
                                $http,
                                dimPlatformService,
                                dimSettingsService,
