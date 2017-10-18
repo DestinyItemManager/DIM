@@ -53,7 +53,7 @@ class D2ItemTransformer {
         plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
     }) : null;
 
-    return powerMods;
+    return _.pluck(powerMods, 'hash');
   }
 
   _getSelectedPlugs(item) {
