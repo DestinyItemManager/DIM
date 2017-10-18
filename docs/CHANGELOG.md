@@ -1,6 +1,9 @@
 # Next
 
 * Fixed the shadow under the sticky characters bar on Chrome.
+* Add an option to farming mode that stashes reputation items in the vault.
+* Add a new smart loadout to gather reputation items for redemption.
+* Scroll the loadout drawer on mobile.
 
 # 4.20.1
 
@@ -13,8 +16,6 @@
 * Link to DestinyDB in your language instead of always English.
 * Updated documentation for search filters.
 * Fixed logic that makes room for items when your vault is full for D2.
-* Add an option to farming mode that stashes reputation items in the vault.
-* Add a new smart loadout to gather reputation items for redemption.
 
 # 4.19.2
 
