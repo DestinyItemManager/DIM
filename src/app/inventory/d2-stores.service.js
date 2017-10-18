@@ -24,7 +24,8 @@ export function D2StoresService(
   D2ItemFactory,
   NewItemsService,
   $stateParams,
-  loadingTracker
+  loadingTracker,
+  dimDestinyTrackerService
 ) {
   'ngInject';
 
@@ -213,12 +214,16 @@ export function D2StoresService(
         // TODO: update vault counts for character account-wide
         updateVaultCounts(buckets, _.find(characters, 'current'), vault);
 
+        dimDestinyTrackerService.fetchReviews(stores);
+
         itemInfoService.cleanInfos(stores);
 
         stores.forEach((s) => updateBasePower(stores, s, defs));
 
         // Let our styling know how many characters there are
         document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
+
+        dimDestinyTrackerService.reattachScoresFromCache(stores);
 
         // TODO: this is still useful, but not in as many situations
         $rootScope.$broadcast('d2-stores-updated', {

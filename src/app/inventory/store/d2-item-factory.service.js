@@ -253,6 +253,7 @@ export function D2ItemFactory(
     // *able
     createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
+    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && isWeaponOrArmor(createdItem));
 
     if (createdItem.primStat) {
       createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
@@ -338,6 +339,11 @@ export function D2ItemFactory(
     }
 
     return createdItem;
+  }
+
+  function isWeaponOrArmor(item) {
+    return ((item.primStat.statHash === 1480404414) || // weapon
+            (item.primStat.statHash === 3897883278)); // armor
   }
 
   // Set an ID for the item that should be unique across all items

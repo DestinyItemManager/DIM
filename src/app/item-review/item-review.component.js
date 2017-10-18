@@ -9,8 +9,8 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.canReview = dimSettingsService.allowIdPostToDtr;
   vm.canCreateReview = (vm.canReview && vm.item.owner);
   vm.submitted = false;
-  vm.hasUserReview = vm.item.userRating;
-  vm.expandReview = vm.item.isLocallyCached;
+  vm.hasUserReview = ((vm.item.userRating) || (vm.item.userVote));
+  vm.expandReview = ((vm.item.isLocallyCached) && (vm.item.userVote !== 0));
   vm.toggledFlags = [];
 
   vm.isCollapsed = false;
@@ -31,10 +31,16 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
   vm.toggleEdit = function() {
     vm.expandReview = !vm.expandReview;
+
+    if ((vm.item.userVote === 1) ||
+        (vm.item.userVote === -1)) {
+      vm.item.userVote = 0;
+      vm.reviewBlur();
+    }
   };
 
   vm.clickReview = function(reviewId) {
-    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    const review = this.findReview(reviewId);
 
     if (review.isReviewer) {
       vm.editReview();
@@ -45,7 +51,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.openFlagContext = function(reviewId) {
-    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    const review = this.findReview(reviewId);
 
     if ((review.isReviewer) || (review.isHighlighted)) {
       return;
@@ -64,14 +70,26 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     vm.toggledFlags.splice(toggledReviewIndex);
   };
 
+  vm.findReview = function(reviewId) {
+    if (vm.item.destinyVersion === 1) {
+      return _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    } else {
+      return _.find(vm.item.writtenReviews, { id: reviewId });
+    }
+  };
+
   vm.editReview = function(reviewId) {
-    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    const review = this.findReview(reviewId);
 
     if (!review.isReviewer) {
       return;
     }
 
     vm.expandReview = true;
+
+    if (review.voted) {
+      vm.item.userVote = review.voted;
+    }
   };
 
   vm.totalReviews = 0;
@@ -126,12 +144,36 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   };
 
   vm.reportReview = function(reviewId) {
-    const review = _.find(vm.item.writtenReviews, { reviewId: reviewId });
+    const review = this.findReview(reviewId);
 
     dimDestinyTrackerService.reportReview(review);
   };
 
   vm.toUserReview = function(item) {
+    if (vm.item.destinyVersion === 1) {
+      return this.toDestinyOneUserReview(item);
+    }
+
+    return this.toDestinyTwoUserReview(item);
+  };
+
+  vm.toDestinyTwoUserReview = function(item) {
+    const userVote = item.userVote;
+    const review = item.userReview;
+    const pros = item.userReviewPros;
+    const cons = item.userReviewCons;
+
+    const userReview = {
+      voted: userVote,
+      review: review,
+      pros: pros,
+      cons: cons
+    };
+
+    return userReview;
+  };
+
+  vm.toDestinyOneUserReview = function(item) {
     const newRating = item.userRating;
     const review = item.userReview;
     const pros = item.userReviewPros;
@@ -168,6 +210,18 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);
     }
+  };
+
+  vm.setUserVote = function(userVote) {
+    if (vm.item.userVote === userVote) {
+      vm.item.userVote = 0;
+    } else {
+      vm.item.userVote = userVote;
+    }
+
+    vm.expandReview = (vm.item.userVote !== 0);
+
+    vm.reviewBlur();
   };
 }
 

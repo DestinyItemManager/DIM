@@ -1,27 +1,27 @@
 import _ from 'underscore';
-import { ItemTransformer } from './itemTransformer';
+import { D2ItemTransformer } from './d2-itemTransformer';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
- * This was tailored to work for weapons.  Items (armor, etc.) may or may not work.
  *
- * @class ReviewsFetcher
+ * @class D2ReviewsFetcher
  */
-class ReviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
+class D2ReviewsFetcher {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter, dimPlatformService) {
     this.$q = $q;
     this.$http = $http;
-    this._itemTransformer = new ItemTransformer();
+    this._itemTransformer = new D2ItemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;
+    this._dimPlatformService = dimPlatformService;
   }
 
   _getItemReviewsCall(item) {
     return {
       method: 'POST',
-      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',
+      url: 'https://db-api.destinytracker.com/api/external/reviews?page=1', // TODO: pagination
       data: item,
       dataType: 'json'
     };
@@ -42,6 +42,7 @@ class ReviewsFetcher {
   }
 
   _getUserReview(reviewData) {
+    // bugbug: will need to use membership service if isReviewer flag stays broke
     return _.find(reviewData.reviews, { isReviewer: true });
   }
 
@@ -55,18 +56,31 @@ class ReviewsFetcher {
     }
   }
 
+  _markUserReview(reviewData) {
+    const membershipInfo = this._dimPlatformService.getActive();
+    const membershipId = membershipInfo.membershipId;
+
+    _.each(reviewData.reviews, (review) => {
+      if (review.reviewer.membershipId === membershipId) {
+        review.isReviewer = true;
+      }
+    });
+
+    return reviewData;
+  }
+
   _attachReviews(item, reviewData) {
     const userReview = this._getUserReview(reviewData);
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
     item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
-    item.writtenReviews = _.filter(reviewData.reviews, 'review'); // only attach reviews with text associated
+    item.writtenReviews = _.filter(reviewData.reviews, 'text'); // only attach reviews with text associated
 
     this._sortAndIgnoreReviews(item);
 
     if (userReview) {
-      item.userRating = userReview.rating;
-      item.userReview = userReview.review;
+      item.userVote = userReview.voted;
+      item.userReview = userReview.text;
       item.userReviewPros = userReview.pros;
       item.userReviewCons = userReview.cons;
     }
@@ -144,15 +158,16 @@ class ReviewsFetcher {
 
     if (ratingData && ratingData.reviewsDataFetched) {
       this._attachCachedReviews(item,
-                               ratingData);
+                                ratingData);
 
       return;
     }
 
     this._getItemReviewsPromise(item)
-      .then((data) => this._attachReviews(item,
-                                         data));
+      .then((reviewData) => this._markUserReview(reviewData))
+      .then((reviewData) => this._attachReviews(item,
+                                                reviewData));
   }
 }
 
-export { ReviewsFetcher };
+export { D2ReviewsFetcher };
