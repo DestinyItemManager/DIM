@@ -26,7 +26,7 @@
   </form>
 </div>
 
-<div class="link community-review--chart-container" ng-click="$ctrl.toggleChart()">
+<div ng-if="$ctrl.item.destinyVersion !== 2" class="link community-review--chart-container" ng-click="$ctrl.toggleChart()">
   <div class="collapse-handle">
     <i class="fa collapse" ng-class="$ctrl.isCollapsed ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
   </div>
@@ -36,7 +36,7 @@
       <span class="stat-box-outer"><span class="stat-box-container">
         <span class="stat-box-inner rating-chart-bar-color" dim-percent-width="{{ $ctrl.reviewData[$index] / $ctrl.totalReviews }}"></span>
       </span></span>
-    </div>  
+    </div>
   </div>
 </div>
 
@@ -60,7 +60,7 @@
       </span>
     </div>
   </div>
-  
+
   <div ng-if="$ctrl.item.destinyVersion === 1">
     <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>
   </div>
