@@ -218,7 +218,9 @@ module.exports = (env) => {
         // Enable activities tab
         '$featureFlags.activities': JSON.stringify(true),
         // Debug ui-router
-        '$featureFlags.debugRouter': JSON.stringify(false)
+        '$featureFlags.debugRouter': JSON.stringify(false),
+        // Show drag and drop on mobile
+        '$featureFlags.dnd': JSON.stringify(env !== 'release')
       }),
 
       new webpack.SourceMapDevToolPlugin({

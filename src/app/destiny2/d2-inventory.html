@@ -3,7 +3,7 @@
 <loadout-drawer stores="$ctrl.stores" account="$ctrl.account"></loadout-drawer>
 <dim-compare></dim-compare>
 <dim-item-discuss></dim-item-discuss>
-<dim-move-locations id="item-drag-box" class="drag-help-hidden drag-locations" ></dim-move-locations>
+<dim-move-locations ng-if="$ctrl.featureFlags.dnd" id="item-drag-box" class="drag-help-hidden drag-locations" ></dim-move-locations>
 <d2-farming></d2-farming>
 <dim-clear-new-items destiny-version="2" account="$ctrl.account"></dim-clear-new-items>
 <random-loadout stores="$ctrl.stores"></random-loadout>
