@@ -118,6 +118,8 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   vm.reviewData = vm.getReviewData();
 
   vm.shouldDrawChart = function() {
+    vm.reviewData = vm.getReviewData();
+
     return ((vm.reviewData.length > 0) &&
             (_.some(vm.reviewData, (item) => { return item > 0; })));
   };
