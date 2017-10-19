@@ -100,9 +100,9 @@
   },
   "FarmingMode": {
     "Configuration": "Настройки",
-    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
+    "D2Desc_female": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
+    "D2Desc_male": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
     "Desc": "DIM перемещает Энграммы и Глиммер с {{store}} в Хранилище и оставляет одно свободное место на каждый тип предмета, чтобы избежать их отправки к Почтмейстеру.",
     "Desc_female": "DIM перемещает Энграммы и Глиммер с {{store}} в Хранилище и оставляет одно свободное место на каждый тип предмета, чтобы избежать их отправки к Почтмейстеру.",
     "Desc_male": "DIM перемещает Энграммы и Глиммер с {{store}} в Хранилище и оставляет одно свободное место на каждый тип предмета, чтобы избежать их отправки к Почтмейстеру.",
@@ -114,7 +114,7 @@
       "MakeRoom": "Освобождать место для лута путём перемещения снаряжения",
       "Tooltip": "Если включено, DIM переместит оружие и броню, чтобы освободить место в Хранилище для Энграмм."
     },
-    "MoveTokens": "Send reputation items to the vault",
+    "MoveTokens": "Отправка репутационных предметов в Хранилище",
     "OutOfRoom": "Не хватает свободного места, чтобы переместить предметы с {{character}}. Самое время дешифровать несколько Энграмм и почистить всё от мусора!",
     "OutOfRoomTitle": "Недостаточно свободного места",
     "Quickmove": "Быстрое перемещение",
