@@ -257,7 +257,7 @@ mod.filter('qualityColor', () => {
       color = 190;
     }
     const result = {};
-    result[property] = `hsl(${color},85%,60%)`;
+    result[property] = `hsla(${color},65%,50%, .85)`;
     return result;
   };
 });
@@ -268,7 +268,7 @@ mod.filter('dtrRatingColor', () => {
       return null;
     }
 
-    property = property || 'background-color';
+    property = property || 'color';
     let color = 0;
     if (value < 2) {
       color = 0;
@@ -284,7 +284,7 @@ mod.filter('dtrRatingColor', () => {
       color = 190;
     }
     const result = {};
-    result[property] = `hsl(${color},85%,60%)`;
+    result[property] = `hsl(${color},65%,35%)`;
     return result;
   };
 });
