@@ -9,7 +9,7 @@ export function ScrollClass() {
       const threshold = attrs.scrollClassThreshold || 0;
 
       function stickyHeader() {
-        const scrolled = document.documentElement.scrollTop > threshold;
+        const scrolled = document.body.scrollTop > threshold || document.documentElement.scrollTop > threshold;
         elem[0].classList.toggle(attrs.scrollClass, scrolled);
       }
 
