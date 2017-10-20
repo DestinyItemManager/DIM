@@ -145,6 +145,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         lastPlayed,
         background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
         level: character.levelProgression.level, // Maybe?
+        percentToNextLevel: character.levelProgression.progressToNextLevel / character.levelProgression.nextLevelAt,
         powerLevel: character.light,
         stats: getCharacterStatsData(defs.Stat, character.stats),
         class: getClass(classy.classType),

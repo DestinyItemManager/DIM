@@ -6,6 +6,7 @@
 * Add an option to farming mode that stashes reputation items in the vault.
 * Add a new smart loadout to gather reputation items for redemption.
 * Scroll the loadout drawer on mobile.
+* Show character level progression under level 20 for D2.
 
 # 4.20.1
 
