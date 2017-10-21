@@ -24,13 +24,13 @@ function SearchFilterCtrl(
     return vm.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  let filterDefinitions;
+  let filters;
   let searchConfig;
 
   vm.$onChanges = function(changes) {
     if (changes.destinyVersion && changes.destinyVersion) {
       searchConfig = buildSearchConfig(vm.destinyVersion, dimSettingsService.itemTags, vm.destinyVersion === 1 ? dimCategory : D2Categories);
-      filterDefinitions = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
+      filters = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
       setupTextcomplete();
     }
   };
@@ -83,7 +83,7 @@ function SearchFilterCtrl(
   });
 
   $scope.$on('dim-stores-updated d2-stores-updated dim-vendors-updated dim-filter-invalidate', () => {
-    filterDefinitions.reset();
+    filters.reset();
     vm.filter();
   });
 
@@ -158,86 +158,17 @@ function SearchFilterCtrl(
     let filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
 
-    // could probably tidy this regex, just a quick hack to support multi term:
-    // [^\s]*"[^"]*" -> match is:"stuff here"
-    // [^\s]*'[^']*' -> match is:'stuff here'
-    // [^\s"']+' -> match is:stuff
-    const searchTerms = filterValue.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g);
-    const filters = [];
-
-    function addPredicate(predicate, filter, invert = false) {
-      filters.push({ predicate: predicate, value: filter, invert: invert });
-    }
-
-    // TODO: replace this if-ladder with a split and check
-    _.each(searchTerms, (term) => {
-      term = term.replace(/'/g, '').replace(/"/g, '');
-
-      if (term.startsWith('is:')) {
-        const filter = term.replace('is:', '');
-        const predicate = searchConfig.keywordToFilter[filter];
-        if (predicate) {
-          addPredicate(predicate, filter);
-        }
-      } else if (term.startsWith('not:')) {
-        const filter = term.replace('not:', '');
-        const predicate = searchConfig.keywordToFilter[filter];
-        if (predicate) {
-          addPredicate(predicate, filter, true);
-        }
-      } else if (term.startsWith('tag:')) {
-        const filter = term.replace('tag:', '');
-        addPredicate("itemtags", filter);
-      } else if (term.startsWith('notes:')) {
-        const filter = term.replace('notes:', '');
-        addPredicate("notes", filter);
-      } else if (term.startsWith('light:') || term.startsWith('power:')) {
-        const filter = term.replace('light:', '').replace('power:', '');
-        addPredicate("light", filter);
-      } else if (term.startsWith('stack:')) {
-        const filter = term.replace('stack:', '');
-        addPredicate("stack", filter);
-      } else if (term.startsWith('level:')) {
-        const filter = term.replace('level:', '');
-        addPredicate("level", filter);
-      } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
-        const filter = term.replace('quality:', '').replace('percentage:', '');
-        addPredicate("quality", filter);
-      } else if (term.startsWith('rating:')) {
-        const filter = term.replace('rating:', '');
-        addPredicate("rating", filter);
-      } else if (term.startsWith('ratingcount:')) {
-        const filter = term.replace('ratingcount:', '');
-        addPredicate("ratingcount", filter);
-      } else if (term.startsWith('stat:')) {
-        // Avoid console.error by checking if all parameters are typed
-        const pieces = term.split(':');
-        if (pieces.length === 3) {
-          const filter = pieces[1];
-          addPredicate(filter, pieces[2]);
-        }
-      } else if (!/^\s*$/.test(term)) {
-        // TODO: not
-        addPredicate("keyword", term);
-      }
-    });
-
-    const filterFn = function(item) {
-      return _.all(filters, (filter) => {
-        const result = filterDefinitions[filter.predicate](filter.value, item);
-        return filter.invert ? !result : result;
-      });
-    };
+    const filterFn = filters.filterFunction(filterValue);
 
     for (const item of getStoreService().getAllItems()) {
-      item.visible = (filters.length > 0) ? filterFn(item) : true;
+      item.visible = filterFn(item);
     }
 
     if (vm.destinyVersion === 1) {
       // Filter vendor items
       _.each(dimVendorService.vendors, (vendor) => {
         for (const saleItem of vendor.allItems) {
-          saleItem.item.visible = (filters.length > 0) ? filterFn(saleItem.item) : true;
+          saleItem.item.visible = filterFn(saleItem.item);
         }
       });
     }
