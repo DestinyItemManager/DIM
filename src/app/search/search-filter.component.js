@@ -46,7 +46,7 @@ function SearchFilterCtrl(
     textcomplete.register([
       {
         words: searchConfig.keywords,
-        match: /\b((li|po|le|qu|pe|ra|is:|not:|tag:|notes:|sta)\w*)$/i,
+        match: /\b((ba|li|po|le|qu|pe|ra|is:|not:|tag:|notes:|sta)\w*)$/i,
         search: function(term, callback) {
           callback(this.words.filter((word) => word.startsWith(term.toLowerCase())));
         },

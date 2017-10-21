@@ -128,6 +128,8 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
   const ranges = ['light', 'power', 'level', 'stack'];
   if (destinyVersion === 1) {
     ranges.push('quality', 'percentage');
+  } else {
+    ranges.push('basepower');
   }
 
   if ($featureFlags.reviewsEnabled) {
@@ -279,6 +281,9 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate("light", filter);
+        } else if (term.startsWith('basepower:')) {
+          const filter = term.replace('basepower:', '');
+          addPredicate("basepower", filter);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
           addPredicate("stack", filter);
@@ -545,6 +550,12 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
           return false;
         }
         return compareByOperand(item.primStat.value, predicate);
+      },
+      basepower: function(predicate, item) {
+        if (!item.basePower) {
+          return false;
+        }
+        return compareByOperand(item.basePower, predicate);
       },
       level: function(predicate, item) {
         return compareByOperand(item.equipRequiredLevel, predicate);
