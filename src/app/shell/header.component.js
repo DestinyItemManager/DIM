@@ -1,7 +1,7 @@
 import template from './header.html';
 import aboutTemplate from 'app/views/about.html';
 import supportTemplate from 'app/views/support.html';
-import filtersTemplate from 'app/views/filters.html';
+import filtersTemplate from '../search/filters.html';
 import './header.scss';
 
 // TODO: Today we share one header everywhere, and show/hide bits of it depending on the circumstance.

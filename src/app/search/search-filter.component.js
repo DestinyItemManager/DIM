@@ -1,6 +1,5 @@
-import angular from 'angular';
 import _ from 'underscore';
-import template from './dimSearchFilter.directive.html';
+import template from './search-filter.html';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { searchFilters, buildSearchConfig } from './search-filters';
@@ -14,15 +13,9 @@ export const SearchFilterComponent = {
   template
 };
 
-angular.module('dimApp')
-  .component('dimSearchFilter', SearchFilterComponent)
-  // a simple service to share the search query among components
-  .service('dimSearchService', () => {
-    return { query: '' };
-  });
-
 function SearchFilterCtrl(
   $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, hotkeys, $i18next, $element, dimCategory, D2Categories, dimSettingsService, toaster) {
+  'ngInject';
   const vm = this;
   vm.search = dimSearchService;
 
@@ -34,7 +27,6 @@ function SearchFilterCtrl(
   let searchConfig;
 
   vm.$onChanges = function(changes) {
-    console.log(changes);
     if (changes.destinyVersion && changes.destinyVersion) {
       searchConfig = buildSearchConfig(vm.destinyVersion, dimSettingsService.itemTags, vm.destinyVersion === 1 ? dimCategory : D2Categories);
       filterDefinitions = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
