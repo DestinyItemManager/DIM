@@ -121,11 +121,6 @@
           ng-i18next="[title]Settings.Settings"></span>
     <span class="link search-link"
           ng-class="{ show: $ctrl.showSearch }">
-      <span class="filter-help"
-            ng-click="$ctrl.showFilters($event)"
-            ng-i18next="[title]Header.Filters">
-        <i class="fa fa-question-circle-o"></i>
-      </span>
       <dim-search-filter ng-if="$ctrl.destinyVersion" destiny-version="$ctrl.destinyVersion"></dim-search-filter>
     </span>
     <span class="link search-button"

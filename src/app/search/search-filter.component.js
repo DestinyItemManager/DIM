@@ -3,11 +3,11 @@ import template from './search-filter.html';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { searchFilters, buildSearchConfig } from './search-filters';
+import filtersTemplate from '../search/filters.html';
 import './search-filter.scss';
 
 export const SearchFilterComponent = {
   controller: SearchFilterCtrl,
-  controllerAs: 'vm',
   bindings: {
     destinyVersion: '<'
   },
@@ -15,7 +15,7 @@ export const SearchFilterComponent = {
 };
 
 function SearchFilterCtrl(
-  $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, hotkeys, $i18next, $element, dimCategory, D2Categories, dimSettingsService, toaster) {
+  $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, hotkeys, $i18next, $element, dimCategory, D2Categories, dimSettingsService, toaster, ngDialog) {
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;
@@ -78,7 +78,7 @@ function SearchFilterCtrl(
     searchInput = $element[0].getElementsByTagName('input');
   };
 
-  $scope.$watch('vm.search.query', () => {
+  $scope.$watch('$ctrl.search.query', () => {
     vm.filter();
   });
 
@@ -105,6 +105,34 @@ function SearchFilterCtrl(
         vm.clearFilter();
       }
     });
+
+  vm.showFilters = showPopupFunction('filters', filtersTemplate);
+
+  /**
+   * Show a popup dialog containing the given template. Its class
+   * will be based on the name.
+   */
+  function showPopupFunction(name, template) {
+    let result;
+    return function(e) {
+      e.stopPropagation();
+
+      if (result) {
+        result.close();
+      } else {
+        ngDialog.closeAll();
+        result = ngDialog.open({
+          template: template,
+          className: name,
+          appendClassName: 'modal-dialog'
+        });
+
+        result.closePromise.then(() => {
+          result = null;
+        });
+      }
+    };
+  }
 
   $scope.$on('dim-clear-filter-input', () => {
     vm.clearFilter();

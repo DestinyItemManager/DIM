@@ -13,6 +13,8 @@ export const FilterLinkComponent = {
 };
 
 function FilterLinkCtrl(dimSearchService, $window, $i18next) {
+  'ngInject';
+
   this.addFilter = function(filter) {
     let itemNameFilter = false;
 

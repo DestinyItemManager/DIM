@@ -1,1 +1,6 @@
-<input id="filter-input" class="dim-input" autocomplete="off" autocorrect="off" autocapitalize="off" ng-i18next="[i18next:placeholder]({ example: 'is:dupe' })Header.FilterHelp" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">
+<span class="filter-help"
+    ng-click="$ctrl.showFilters($event)"
+    ng-i18next="[title]Header.Filters">
+  <i class="fa fa-question-circle-o"></i>
+</span>
+<input id="filter-input" class="dim-input" autocomplete="off" autocorrect="off" autocapitalize="off" ng-i18next="[i18next:placeholder]({ example: 'is:dupe' })Header.FilterHelp" type="search" name="filter" ng-model="$ctrl.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">
