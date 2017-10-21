@@ -331,11 +331,20 @@ export function D2ItemFactory(
     createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName.length);
     createdItem.infusionQuality = itemDef.quality || null;
 
+    // Mark items with power mods
     if (createdItem.primStat) {
       createdItem.basePower = getBasePowerLevel(createdItem);
       if (createdItem.basePower !== createdItem.primStat.value) {
         createdItem.complete = true;
       }
+    }
+
+    // Mark upgradeable stacks of rare modifications
+    if (createdItem.maxStackSize > 1 &&
+        createdItem.amount >= 3 &&
+        createdItem.tier === 'Rare' &&
+        createdItem.bucket.id === 3313201758) {
+      createdItem.complete = true;
     }
 
     return createdItem;
