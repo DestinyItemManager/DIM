@@ -46,10 +46,19 @@ function SearchFilterCtrl(
     textcomplete.register([
       {
         words: searchConfig.keywords,
-        match: /\b((ba|li|po|le|qu|pe|ra|is:|not:|tag:|notes:|sta)\w*)$/i,
+        match: /\b([\w:]{3,})/i,
         search: function(term, callback) {
-          callback(this.words.filter((word) => word.startsWith(term.toLowerCase())));
+          if (term) {
+            let words = this.words.filter((word) => word.includes(term.toLowerCase()));
+            words = _.sortBy(words, (word) => word.indexOf(term.toLowerCase()));
+            if (term.match(/\b((is:|not:|tag:|notes:|stat:)\w*)$/i)) {
+              callback(words);
+            } else {
+              callback([term, ...words]);
+            }
+          }
         },
+        // TODO: use "template" to include help text
         index: 1,
         replace: function(word) {
           word = word.toLowerCase();
