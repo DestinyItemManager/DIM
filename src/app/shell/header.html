@@ -126,7 +126,7 @@
             ng-i18next="[title]Header.Filters">
         <i class="fa fa-question-circle-o"></i>
       </span>
-      <dim-search-filter></dim-search-filter>
+      <dim-search-filter ng-if="$ctrl.destinyVersion" destiny-version="$ctrl.destinyVersion"></dim-search-filter>
     </span>
     <span class="link search-button"
           ng-click="$ctrl.showSearch = !$ctrl.showSearch">
