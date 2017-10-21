@@ -172,6 +172,7 @@
       "XPComplete": "{{term}} - shows items that cannot have XP put into them (whether or not their upgrades have been unlocked)."
     },
     "LightLevel": "Shows items based on their light level (Attack for Weapons; Defense for Armor).",
+    "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
     "Locked": "Shows items based on their locked status.",
     "NamedStat": "Shows armor that has points in the named stat.",
     "NewItems": "Shows new items.",

@@ -124,7 +124,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     });
   });
 
-  const ranges = ['light', 'level', 'stack', 'quality', 'percentage'];
+  const ranges = ['light', 'power', 'level', 'stack', 'quality', 'percentage'];
 
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');

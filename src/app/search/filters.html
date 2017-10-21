@@ -24,7 +24,7 @@
         </td>
         <td ng-i18next="Filter.DamageType"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="light:value"></dim-filter-link>
           <dim-filter-link filter="light:&gt;=value"></dim-filter-link>
@@ -33,6 +33,16 @@
           <dim-filter-link filter="light:&lt;=value"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.LightLevel"></td>
+      </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="power:value"></dim-filter-link>
+          <dim-filter-link filter="power:&gt;=value"></dim-filter-link>
+          <dim-filter-link filter="power:&gt;value"></dim-filter-link>
+          <dim-filter-link filter="power:&lt;value"></dim-filter-link>
+          <dim-filter-link filter="power:&lt;=value"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.PowerLevel"></td>
       </tr>
       <tr>
         <td>

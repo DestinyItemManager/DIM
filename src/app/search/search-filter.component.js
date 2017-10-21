@@ -46,7 +46,7 @@ function SearchFilterCtrl(
     textcomplete.register([
       {
         words: searchConfig.keywords,
-        match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|sta)\w*)$/i,
+        match: /\b((li|po|le|qu|pe|ra|is:|not:|tag:|notes:|sta)\w*)$/i,
         search: function(term, callback) {
           callback(this.words.filter((word) => word.startsWith(term.toLowerCase())));
         },
@@ -191,8 +191,8 @@ function SearchFilterCtrl(
       } else if (term.startsWith('notes:')) {
         const filter = term.replace('notes:', '');
         addPredicate("notes", filter);
-      } else if (term.startsWith('light:')) {
-        const filter = term.replace('light:', '');
+      } else if (term.startsWith('light:') || term.startsWith('power:')) {
+        const filter = term.replace('light:', '').replace('power:', '');
         addPredicate("light", filter);
       } else if (term.startsWith('stack:')) {
         const filter = term.replace('stack:', '');
