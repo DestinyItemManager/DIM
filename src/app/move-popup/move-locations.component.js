@@ -24,7 +24,7 @@ function controller($rootScope, dimSettingsService, dimItemMoveService, dimStore
     vm.item = args.item;
     vm.store = getStoreService().getStore(vm.item.owner);
     vm.stores = getStoreService().getStores();
-    dragBox.style.top = `${args.element.target.getBoundingClientRect().top - args.element.target.offsetHeight}px`;
+    dragBox.style.top = `${args.element.target.getBoundingClientRect().top - dragBox.offsetHeight}px`;
     $rootScope.$digest();
   });
   $rootScope.$on('drag-stop-item', (event, args) => {
@@ -37,10 +37,10 @@ function controller($rootScope, dimSettingsService, dimItemMoveService, dimStore
     vm.stores = getStoreService().getStores();
   }
 
-  vm.canShowVault = function canShowVault(item, itemStore, buttonStore) {
+  vm.canShowVault = function canShowVault(buttonStore) {
     // If my itemStore is the vault, don't show a vault button.
     // Can't vault a vaulted item.
-    if (itemStore.isVault) {
+    if (vm.store.isVault) {
       return false;
     }
 
@@ -50,7 +50,7 @@ function controller($rootScope, dimSettingsService, dimItemMoveService, dimStore
     }
 
     // Can't move this item away from the current itemStore.
-    if (item.notransfer) {
+    if (vm.item.notransfer) {
       return false;
     }
 

@@ -1,6 +1,6 @@
 <div class="locations" ng-repeat="store in $ctrl.stores | sortStores:$ctrl.settings.characterOrder track by store.id">
   <div class="move-button move-vault" alt="{{ ::store.name }}" title="{{ ::store.name }}"
-    ng-if="$ctrl.canShowVault($ctrl.item, $ctrl.store, store)" ng-click="$ctrl.moveItemTo(store)"
+    ng-if="$ctrl.canShowVault(store)" ng-click="$ctrl.moveItemTo(store)"
     data-type="item" data-character="{{ ::store.id }}"
     ui-on-drop="$ctrl.onDrop(store, $event, false)"
     drop-channel="{{ $ctrl.item.bucket.type }}">
