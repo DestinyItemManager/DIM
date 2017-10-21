@@ -39,6 +39,7 @@ dim-move-locations {
   margin: 6px 4px 6px 0;
   cursor: pointer;
   user-select: none;
+  border: 1px solid transparent;
   &:last-child {
     margin-right: 10px;
   }
