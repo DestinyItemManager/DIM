@@ -163,6 +163,7 @@ function SearchFilterCtrl(
   vm.clearFilter = function() {
     vm.search.query = "";
     vm.filter();
+    textcomplete.trigger('');
   };
 
   vm.filter = function() {
