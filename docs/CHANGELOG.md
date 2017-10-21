@@ -7,6 +7,9 @@
 * Add a new smart loadout to gather reputation items for redemption.
 * Scroll the loadout drawer on mobile.
 * Show character level progression under level 20 for D2.
+* Add basepower: filter and is:goldborder filter.
+* Fix filtering in D1.
+* Add a button to clear the current search.
 
 # 4.20.1
 
