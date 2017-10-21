@@ -75,7 +75,7 @@ function SearchFilterCtrl(
 
   let searchInput;
   vm.$postLink = function() {
-    searchInput = $element[0].getElementsByTagName('input');
+    searchInput = $element[0].getElementsByTagName('input')[0];
   };
 
   $scope.$watch('$ctrl.search.query', () => {
@@ -134,10 +134,6 @@ function SearchFilterCtrl(
     };
   }
 
-  $scope.$on('dim-clear-filter-input', () => {
-    vm.clearFilter();
-  });
-
   vm.blurFilterInputIfEmpty = function() {
     if (vm.search.query === "") {
       vm.blurFilterInput();
@@ -145,6 +141,7 @@ function SearchFilterCtrl(
   };
 
   vm.focusFilterInput = function() {
+    console.log(searchInput);
     searchInput.focus();
   };
 

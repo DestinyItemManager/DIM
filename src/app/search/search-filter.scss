@@ -33,6 +33,7 @@
 
       #filter-input {
         height: 28px;
+        margin-top: 0;
       }
 
       .filter-help {
@@ -60,11 +61,15 @@
 
 .filter-help {
   position: absolute;
-  right: -4px;
-  top: 6px;
+  right: -2px;
+  top: 8px;
+  cursor: pointer;
   .fa {
     font-size: 16px !important;
     color: #999 !important;
+    &:hover {
+      color: #E8A534 !important;
+    }
   }
 }
 
