@@ -91,7 +91,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     });
   } else {
     Object.assign(filterTrans, {
-      hasLight: ['light', 'haslight', 'power', 'haspower'],
+      hasLight: ['light', 'haslight', 'haspower'],
       powermod: ['powermod', 'haspowermod'],
       complete: ['goldborder', 'yellowborder']
     });
@@ -713,7 +713,16 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
           "BUCKET_SPECIAL_WEAPON",
           "BUCKET_HEAD",
           "BUCKET_ARMS",
-          "BUCKET_GHOST"];
+          "BUCKET_GHOST",
+          3448274439,
+          3551918588,
+          14239492,
+          20886954,
+          1585787867,
+          1498876634,
+          2465295065,
+          953998645
+        ];
         return item.bucket && _.contains(lightBuckets, item.bucket.id);
       },
       weapon: function(predicate, item) {
