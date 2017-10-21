@@ -7,6 +7,7 @@
 * Add a new smart loadout to gather reputation items for redemption.
 * Scroll the loadout drawer on mobile.
 * Show character level progression under level 20 for D2.
+* Stacks of three or more rare mods now have a yellow border
 
 # 4.20.1
 
