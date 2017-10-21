@@ -80,7 +80,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
       unascended: ['unascended', 'unassended', 'unasscended'],
       ascended: ['ascended', 'assended', 'asscended'],
       reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-      ornament: ['ornament', 'ornamentmissing', 'ornamentunlocked'],
+      ornament: ['ornamentable', 'ornamentmissing', 'ornamentunlocked'],
       engram: ['engram'],
       stattype: ['intellect', 'discipline', 'strength'],
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
