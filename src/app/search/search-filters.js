@@ -2,7 +2,7 @@ import _ from 'underscore';
 import { flatMap } from '../util';
 
 /**
- * An object that describes the available search keywords and category mappings.
+ * Builds an object that describes the available search keywords and category mappings.
  */
 export function buildSearchConfig(destinyVersion, itemTags, categories) {
   const categoryFilters = {
@@ -22,7 +22,6 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
 
   const stats = ['charge', 'impact', 'range', 'stability', 'reload', 'magazine', 'aimassist', 'equipspeed'];
 
-  // don't have access to dimSettingService yet here.
   if (destinyVersion === 1) {
     Object.assign(categoryFilters, {
       primaryweaponengram: ['CATEGORY_PRIMARY_WEAPON', 'CATEGORY_ENGRAM'],
@@ -31,14 +30,14 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
       machinegun: ['CATEGORY_MACHINE_GUN'],
     });
     itemTypes.push(...flatMap(categories, (l) => _.map(l, (v) => v.toLowerCase())));
-    stats.push(...['rof']);
+    stats.push('rof');
   } else {
     Object.assign(categoryFilters, {
       grenadelauncher: ['CATEGORY_GRENADE_LAUNCHER'],
       submachine: ['CATEGORY_SUBMACHINEGUN'],
     });
     itemTypes.push(...flatMap(categories, (l) => _.map(l, (v) => v.toLowerCase())));
-    stats.push(...['rpm']);
+    stats.push('rpm');
   }
 
   /**
@@ -51,15 +50,12 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate', 'dupelower'],
-    tracked: ['tracked'],
-    untracked: ['untracked'],
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
     category: _.keys(categoryFilters),
     inloadout: ['inloadout'],
     new: ['new'],
-    hasLight: ['light', 'haslight'],
     level: ['level'],
     weapon: ['weapon'],
     armor: ['armor'],
@@ -72,6 +68,9 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
 
   if (destinyVersion === 1) {
     Object.assign(filterTrans, {
+      hasLight: ['light', 'haslight'],
+      tracked: ['tracked'],
+      untracked: ['untracked'],
       sublime: ['sublime'],
       incomplete: ['incomplete'],
       complete: ['complete'],
@@ -92,7 +91,9 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     });
   } else {
     Object.assign(filterTrans, {
-      powermod: ['powermod', 'haspowermod']
+      hasLight: ['light', 'haslight', 'power', 'haspower'],
+      powermod: ['powermod', 'haspowermod'],
+      complete: ['goldborder', 'yellowborder']
     });
   }
 
@@ -124,7 +125,10 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     });
   });
 
-  const ranges = ['light', 'power', 'level', 'stack', 'quality', 'percentage'];
+  const ranges = ['light', 'power', 'level', 'stack'];
+  if (destinyVersion === 1) {
+    ranges.push('quality', 'percentage');
+  }
 
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
@@ -158,12 +162,8 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
 }
 
 /**
- * The implementation of all the filter functions.
+ * This builds an object that can be used to generate filter functions from search queried.
  *
- * Value is the checking function
- * @param {String} predicate The predicate - for example, is:arc gets the 'elemental' filter function, with predicate='arc'
- * @param {Object} item The item to test against.
- * @return {Boolean} Returns true for a match, false for a non-match
  */
 export function searchFilters(searchConfig, storeService, toaster, $i18next) {
   let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -318,6 +318,9 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
     /**
      * Each entry in this map is a filter function that will be provided the normalized
      * query term and an item, and should return whether or not it matches the filter.
+     * @param {String} predicate The predicate - for example, is:arc gets the 'elemental' filter function, with predicate='arc'
+     * @param {Object} item The item to test against.
+     * @return {Boolean} Returns true for a match, false for a non-match
      */
     filters: {
       dmg: function(predicate, item) {
