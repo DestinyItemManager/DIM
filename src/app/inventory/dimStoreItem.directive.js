@@ -56,7 +56,6 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
     });
   }
   phoneWidthQuery.addListener(phoneWidthHandler);
-  //  vm.isPhonePortrait = phoneWidthQuery.matches;
 
   if (vm.item.maxStackSize > 1 || (vm.item.destinyVersion === 2 && phoneWidthQuery.matches)) {
     const dragHelp = document.getElementById('drag-help');
@@ -75,6 +74,7 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
       }
     });
     $element.on('dragend', () => {
+      $rootScope.$broadcast('drag-stop-item');
       dragHelp.classList.add('drag-help-hidden');
       dragBox.classList.add('drag-help-hidden');
       delete $rootScope.dragItem;
