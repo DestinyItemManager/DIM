@@ -17,14 +17,18 @@ function controller($rootScope, dimSettingsService, dimItemMoveService, dimStore
     return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  const dragHelp = document.getElementById('item-drag-box');
+  const dragBox = document.getElementById('item-drag-box');
   vm.settings = dimSettingsService;
 
   $rootScope.$on('drag-start-item', (event, args) => {
     vm.item = args.item;
     vm.store = getStoreService().getStore(vm.item.owner);
     vm.stores = getStoreService().getStores();
-    dragHelp.style.top = `${args.element.target.getBoundingClientRect().top + args.element.target.offsetHeight}px`;
+    dragBox.style.top = `${args.element.target.getBoundingClientRect().top - args.element.target.offsetHeight}px`;
+    $rootScope.$digest();
+  });
+  $rootScope.$on('drag-stop-item', (event, args) => {
+    dragBox.style.top = '-200px';
     $rootScope.$digest();
   });
 
