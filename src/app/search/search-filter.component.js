@@ -53,8 +53,10 @@ function SearchFilterCtrl(
             words = _.sortBy(words, (word) => word.indexOf(term.toLowerCase()));
             if (term.match(/\b((is:|not:|tag:|notes:|stat:)\w*)$/i)) {
               callback(words);
-            } else {
+            } else if (words.length) {
               callback([term, ...words]);
+            } else {
+              callback([]);
             }
           }
         },
