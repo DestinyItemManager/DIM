@@ -3,6 +3,7 @@ import template from './search-filter.html';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { searchFilters, buildSearchConfig } from './search-filters';
+import './search-filter.scss';
 
 export const SearchFilterComponent = {
   controller: SearchFilterCtrl,
