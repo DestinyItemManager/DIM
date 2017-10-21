@@ -10,6 +10,7 @@
 * Add basepower: filter and is:goldborder filter.
 * Fix filtering in D1.
 * Add a button to clear the current search.
+* Stacks of three or more rare mods now have a yellow border
 
 # 4.20.1
 

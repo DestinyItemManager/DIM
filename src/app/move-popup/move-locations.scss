@@ -12,6 +12,13 @@
   justify-content: space-around;
   left: 0;
   width: 100%;
+
+  .move-button {
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+  }
 }
 
 dim-move-locations {
@@ -32,14 +39,16 @@ dim-move-locations {
   margin: 6px 4px 6px 0;
   cursor: pointer;
   user-select: none;
+  border: 1px solid transparent;
   &:last-child {
     margin-right: 10px;
   }
   &:focus {
     outline-width: 5px;
   }
-  &.on-drag-hover span {
+  &.on-drag-hover {
     border: 1px solid white;
+    filter: blur(1px);
   }
   span {
     text-transform: uppercase;
