@@ -257,7 +257,7 @@ mod.filter('qualityColor', () => {
       color = 190;
     }
     const result = {};
-    result[property] = `hsl(${color},85%,60%)`;
+    result[property] = `hsla(${color},65%,50%, .85)`;
     return result;
   };
 });
@@ -268,23 +268,23 @@ mod.filter('dtrRatingColor', () => {
       return null;
     }
 
-    property = property || 'background-color';
-    let color = 0;
+    property = property || 'color';
+    let color;
     if (value < 2) {
-      color = 0;
+      color = 'hsl(0,45%,45%)';
     } else if (value <= 3) {
-      color = 15;
+      color = 'hsl(15,65%,40%)';
     } else if (value <= 4) {
-      color = 30;
+      color = 'hsl(30,75%,45%)';
     } else if (value <= 4.4) {
-      color = 60;
+      color = 'hsl(60,100%,30%)';
     } else if (value <= 4.8) {
-      color = 120;
+      color = 'hsl(120,65%,40%)';
     } else if (value >= 4.9) {
-      color = 190;
+      color = 'hsl(190,90%,45%)';
     }
     const result = {};
-    result[property] = `hsl(${color},85%,60%)`;
+    result[property] = color;
     return result;
   };
 });
