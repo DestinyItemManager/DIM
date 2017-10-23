@@ -6,6 +6,7 @@
   text-align: center;
   padding: .5em .5em;
   color: #e0e0e0;
+  z-index: 10;
 
   display: flex;
   flex-direction: row;
@@ -39,7 +40,6 @@ dim-move-locations {
   margin: 6px 4px 6px 0;
   cursor: pointer;
   user-select: none;
-  border: 1px solid transparent;
   &:last-child {
     margin-right: 10px;
   }
@@ -47,7 +47,6 @@ dim-move-locations {
     outline-width: 5px;
   }
   &.on-drag-hover {
-    border: 1px solid white;
     filter: blur(1px);
   }
   span {
