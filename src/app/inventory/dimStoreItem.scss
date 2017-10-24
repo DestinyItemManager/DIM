@@ -15,13 +15,12 @@
 }
 
 .item-stat {
-  opacity: .85;
   position: absolute;
   bottom: 0;
   right: 0;
   font-size: 9.5px;
   padding: 0 2px;
-  background: #ddd;
+  background: rgba(221, 221, 221, .85);
   color: #000;
   min-width: 10px;
   text-align: center;
