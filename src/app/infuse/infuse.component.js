@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { flatMap, sum } from '../util';
+import { flatMap } from '../util';
 import template from './infuse.html';
 import './infuse.scss';
 

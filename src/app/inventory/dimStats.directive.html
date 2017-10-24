@@ -7,6 +7,5 @@
     <div ng-if="stat.tiers.length > 1" class="bar" ng-repeat="n in stat.tiers track by $index">
       <div class="progress" ng-class="{ complete: vm.destinyVersion == 2 || (n / stat.tierMax) === 1 }" dim-percent-width="n / stat.tierMax"></div>
     </div>
-    </div>
   </div>
 </div>
