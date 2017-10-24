@@ -312,8 +312,6 @@ export function D2ItemFactory(
       }
     }
 
-    createdItem.index = createItemIndex(createdItem);
-
     if (createdItem.objectives) {
       createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
       createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
@@ -346,6 +344,8 @@ export function D2ItemFactory(
         createdItem.bucket.id === 3313201758) {
       createdItem.complete = true;
     }
+
+    createdItem.index = createItemIndex(createdItem);
 
     return createdItem;
   }
