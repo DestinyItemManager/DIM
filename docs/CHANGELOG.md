@@ -1,5 +1,9 @@
 # Next
 
+* Add basepower: filter and is:goldborder filter.
+* Fix filtering in D1.
+* Add a button to clear the current search.
+
 # 4.21.0
 
 * Community reviews (for weapons and armor) are in for Destiny 2 inventory.
@@ -10,9 +14,6 @@
 * Scroll the loadout drawer on mobile.
 * Show character level progression under level 20 for D2.
 * Stacks of three or more rare mods now have a yellow border
-* Add basepower: filter and is:goldborder filter.
-* Fix filtering in D1.
-* Add a button to clear the current search.
 
 # 4.20.1
 
