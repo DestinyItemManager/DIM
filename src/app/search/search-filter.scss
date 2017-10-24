@@ -102,3 +102,40 @@
   margin-right: 5px;
   vertical-align: middle;
 }
+
+/* Textcomplete */
+
+.dropdown-menu {
+  border: 1px solid #ddd;
+  background-color: white;
+  transform: translate(0, -1px);
+  .textcomplete-header, .textcomplete-footer {
+    display: none;
+  }
+  li {
+    border-top: 1px solid #ddd;
+    padding: 2px 5px;
+    &:nth-child(2) {
+      border-top: none;
+    }
+    &:hover {
+      background-color: #555;
+    }
+  }
+  .active {
+    background-color: #555;
+  }
+  li:hover a, .active a {
+    color: white;
+  }
+  a {
+    color: #333;
+    font-size: 11px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

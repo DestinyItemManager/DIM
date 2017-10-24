@@ -64,6 +64,12 @@ dim-store-item {
   opacity: .2;
 }
 
+.item-xp-bar {
+  height: 4px;
+  width: 100%;
+  background-color: $xp;
+}
+
 .item-xp-bar-small {
   position: absolute;
   top: 0;
