@@ -46,7 +46,7 @@ function SearchFilterCtrl(
     textcomplete.register([
       {
         words: searchConfig.keywords,
-        match: /\b([\w:]{3,})/i,
+        match: /\b([\w:]{3,})$/i,
         search: function(term, callback) {
           if (term) {
             let words = this.words.filter((word) => word.includes(term.toLowerCase()));
