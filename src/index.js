@@ -25,9 +25,7 @@ require('./app/services/dimPlatformService.factory');
 require('./app/services/dimDestinyTrackerService.factory');
 
 require('./app/shell/dimAngularFilters.filter');
-require('./app/shell/dimSearchFilter.directive');
 require('./app/shell/dimClickAnywhereButHere.directive');
-require('./app/shell/dimFilterLink.directive');
 require('./app/shell/dimManifestProgress.directive');
 
 require('./scss/main.scss');

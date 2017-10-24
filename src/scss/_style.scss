@@ -85,23 +85,6 @@ div:focus, span:focus {
   width: 17px;
 }
 
-.hide-filtered .search-hidden {
-  display: none !important;
-}
-
-#filter-input {
-  width: 250px;
-  margin-left: -3px;
-  margin-top: 4px;
-  padding-right: 20px;
-  border-radius: 0;
-  -webkit-appearance: none;
-
-  @media (max-width: 1100px) {
-    width: 175px;
-  }
-}
-
 dt {
   font-style: italic;
   font-weight: bold;
@@ -112,73 +95,9 @@ dd {
   margin: 3px 20px;
 }
 
-.search-link {
-  position: relative;
-  top: -2px;
-
-  // Yikes this is a hack
-  @include phone-portrait {
-    display: none;
-
-    &.show {
-      position: absolute;
-      left: 29px;
-      top: 4px;
-      display: block;
-
-      #filter-input {
-        height: 28px;
-      }
-
-      .filter-help {
-        top: 8px;
-      }
-
-      .dim-input {
-        &:hover, &:focus {
-          background-color: #222;
-        }
-      }
-
-      input, select:focus {
-        font-size: 16px; // so iOS doesn't zoom
-      }
-    }
-  }
-}
-.search-button {
-  display: none;
-  @include phone-portrait {
-    display: inline-block;
-  }
-}
-
-.filter-help {
-  position: absolute;
-  right: -4px;
-  top: 6px;
-  .fa {
-    font-size: 16px !important;
-    color: #999 !important;
-  }
-}
-
 a {
   color: $blue;
   font-size: 13px;
-}
-
-#filter-view td span {
-  margin: 2px 4px;
-  color: #eee;
-  display: block;
-}
-
-#filter-view td span.ng-binding {
-  &:hover {
-    color: $blue;
-    cursor: pointer;
-  }
 }
 
 h2, h3 {
@@ -235,16 +154,6 @@ input, select, option {
 
 input[type="search"] {
   -webkit-appearance: textfield;
-}
-
-#filter-view ul {
-  padding-left: 2em;
-}
-
-#filter-text {
-  display: inline-block;
-  margin-right: 5px;
-  vertical-align: middle;
 }
 
 img {

@@ -145,6 +145,7 @@
     "ClickFilters": "Click filters below to apply, or by typing in the search box.",
     "Combine": "Filters are combined using 'and' logic, for example '{{example}}' will return all arc items with over 300 light. Filters can be negated using '{{not}}', for example '{{notexample}}' will find all non-engram items.",
     "ContributeLight": "Items that contribute to your light level.",
+    "ContributePower": "Items that contribute to your power level.",
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items",
@@ -172,6 +173,7 @@
       "XPComplete": "{{term}} - shows items that cannot have XP put into them (whether or not their upgrades have been unlocked)."
     },
     "LightLevel": "Shows items based on their light level (Attack for Weapons; Defense for Armor).",
+    "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
     "Locked": "Shows items based on their locked status.",
     "NamedStat": "Shows armor that has points in the named stat.",
     "NewItems": "Shows new items.",

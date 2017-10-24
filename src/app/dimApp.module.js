@@ -34,6 +34,7 @@ import oauthModule from './oauth/oauth.module';
 import storageModule from './storage/storage.module';
 import loadoutModule from './loadout/loadout.module';
 import movePopupModule from './move-popup/move-popup.module';
+import searchModule from './search/search.module';
 import destiny1Module from './destiny1/destiny1.module';
 import destiny2Module from './destiny2/destiny2.module';
 
@@ -73,6 +74,7 @@ const dependencies = [
   storageModule,
   loadoutModule,
   movePopupModule,
+  searchModule,
   destiny1Module,
   destiny2Module,
   'ajoslin.promise-tracker',
