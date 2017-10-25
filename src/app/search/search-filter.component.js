@@ -20,6 +20,8 @@ function SearchFilterCtrl(
   const vm = this;
   vm.search = dimSearchService;
   vm.settings = dimSettingsService;
+  vm.bulkItemTags = angular.copy(vm.settings.itemTags);
+  vm.bulkItemTags.itemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
   function getStoreService() {
     return vm.destinyVersion === 2 ? D2StoresService : dimStoreService;
@@ -172,8 +174,8 @@ function SearchFilterCtrl(
   };
 
   vm.bulkTag = function() {
-    dimItemInfoService.bulkSave(filteredItems.map((item) => {
-      item.dimInfo.tag = vm.selectedTag.type;
+    dimItemInfoService.bulkSave(filteredItems.filter((i) => i.taggable).map((item) => {
+      item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
       return item;
     }));
 
