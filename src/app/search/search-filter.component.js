@@ -19,7 +19,7 @@ function SearchFilterCtrl(
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;
-  vm.bulkItemTags = angular.copy(dimSettingsService.itemTags);
+  vm.bulkItemTags = _.clone(dimSettingsService.itemTags);
   vm.bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
   function getStoreService() {
