@@ -19,7 +19,8 @@ function SearchFilterCtrl(
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;
-  vm.settings = dimSettingsService;
+  vm.bulkItemTags = angular.copy(dimSettingsService.itemTags);
+  vm.bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
   function getStoreService() {
     return vm.destinyVersion === 2 ? D2StoresService : dimStoreService;
@@ -31,7 +32,7 @@ function SearchFilterCtrl(
 
   vm.$onChanges = function(changes) {
     if (changes.destinyVersion && changes.destinyVersion) {
-      searchConfig = buildSearchConfig(vm.destinyVersion, vm.settings.itemTags, vm.destinyVersion === 1 ? dimCategory : D2Categories);
+      searchConfig = buildSearchConfig(vm.destinyVersion, dimSettingsService.itemTags, vm.destinyVersion === 1 ? dimCategory : D2Categories);
       filters = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
       setupTextcomplete();
     }
@@ -172,8 +173,8 @@ function SearchFilterCtrl(
   };
 
   vm.bulkTag = function() {
-    dimItemInfoService.bulkSave(filteredItems.map((item) => {
-      item.dimInfo.tag = vm.selectedTag.type;
+    dimItemInfoService.bulkSave(filteredItems.filter((i) => i.taggable).map((item) => {
+      item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
       return item;
     }));
 
