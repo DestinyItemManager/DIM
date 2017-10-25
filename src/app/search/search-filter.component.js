@@ -15,10 +15,11 @@ export const SearchFilterComponent = {
 };
 
 function SearchFilterCtrl(
-  $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, hotkeys, $i18next, $element, dimCategory, D2Categories, dimSettingsService, toaster, ngDialog) {
+  $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimCategory, D2Categories, dimSettingsService, toaster, ngDialog) {
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;
+  vm.settings = dimSettingsService;
 
   function getStoreService() {
     return vm.destinyVersion === 2 ? D2StoresService : dimStoreService;
@@ -26,10 +27,11 @@ function SearchFilterCtrl(
 
   let filters;
   let searchConfig;
+  let filteredItems = [];
 
   vm.$onChanges = function(changes) {
     if (changes.destinyVersion && changes.destinyVersion) {
-      searchConfig = buildSearchConfig(vm.destinyVersion, dimSettingsService.itemTags, vm.destinyVersion === 1 ? dimCategory : D2Categories);
+      searchConfig = buildSearchConfig(vm.destinyVersion, vm.settings.itemTags, vm.destinyVersion === 1 ? dimCategory : D2Categories);
       filters = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
       setupTextcomplete();
     }
@@ -163,12 +165,26 @@ function SearchFilterCtrl(
   };
 
   vm.clearFilter = function() {
+    filteredItems = [];
     vm.search.query = "";
     vm.filter();
     textcomplete.trigger('');
   };
 
+  vm.bulkTag = function() {
+    dimItemInfoService.bulkSave(filteredItems.map((item) => {
+      item.dimInfo.tag = vm.selectedTag.type;
+      return item;
+    }));
+
+    // invalidate and filter
+    filters.reset();
+    vm.filter();
+    vm.showSelect = false;
+  };
+
   vm.filter = function() {
+    filteredItems = [];
     let filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
 
@@ -176,6 +192,9 @@ function SearchFilterCtrl(
 
     for (const item of getStoreService().getAllItems()) {
       item.visible = filterFn(item);
+      if (item.visible) {
+        filteredItems.push(item);
+      }
     }
 
     if (vm.destinyVersion === 1) {

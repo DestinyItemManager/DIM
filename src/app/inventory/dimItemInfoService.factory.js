@@ -59,58 +59,69 @@ export function ItemInfoService(SyncService, $i18next, toaster, $q) {
   }
 
   // Returns a function that, when given an account, returns the item info source for that platform
-  return function(account, destinyVersion = 1) {
-    const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${destinyVersion}`;
-
-    // Load and clean out old infos
-    return migrateOldData(account, key)
-      .then(() => getInfos(key))
-      .then((infos) => {
-        return {
-          infoForItem: function(hash, id) {
-            const itemKey = `${hash}-${id}`;
-            const info = infos[itemKey];
-            return angular.extend({
-              save: function() {
-                return getInfos(key).then((infos) => {
-                  infos[itemKey] = _.omit(this, 'save');
-                  setInfos(key, infos)
-                    .catch((e) => {
-                      toaster.pop('error',
-                                  $i18next.t('ItemInfoService.SaveInfoErrorTitle'),
-                                  $i18next.t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
-                      console.error("Error saving item info (tags, notes):", e);
-                    });
-                });
-              }
-            }, info);
-          },
-
-          // Remove all item info that isn't in stores' items
-          cleanInfos: function(stores) {
-            if (!stores.length) {
-              // don't accidentally wipe out notes
-              return $q.when();
-            }
-
-            return getInfos(key).then((infos) => {
-              const remain = {};
-
-              stores.forEach((store) => {
-                store.items.forEach((item) => {
-                  const itemKey = `${item.hash}-${item.id}`;
-                  const info = infos[itemKey];
-                  if (info && (info.tag !== undefined || (info.notes && info.notes.length))) {
-                    remain[itemKey] = info;
-                  }
-                });
-              });
-
-              return setInfos(key, remain);
-            });
-          }
-        };
+  let key;
+  return {
+    bulkSave: function(items) {
+      getInfos(key).then((infos) => {
+        items.forEach((item) => {
+          infos[`${item.hash}-${item.id}`] = { tag: item.dimInfo.tag };
+        });
+        setInfos(key, infos);
       });
+    },
+    init: function(account, destinyVersion = 1) {
+      key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${destinyVersion}`;
+
+      // Load and clean out old infos
+      return migrateOldData(account, key)
+        .then(() => getInfos(key))
+        .then((infos) => {
+          return {
+            infoForItem: function(hash, id) {
+              const itemKey = `${hash}-${id}`;
+              const info = infos[itemKey];
+              return angular.extend({
+                save: function() {
+                  return getInfos(key).then((infos) => {
+                    infos[itemKey] = _.omit(this, 'save');
+                    setInfos(key, infos)
+                      .catch((e) => {
+                        toaster.pop('error',
+                                    $i18next.t('ItemInfoService.SaveInfoErrorTitle'),
+                                    $i18next.t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
+                        console.error("Error saving item info (tags, notes):", e);
+                      });
+                  });
+                }
+              }, info);
+            },
+
+            // Remove all item info that isn't in stores' items
+            cleanInfos: function(stores) {
+              if (!stores.length) {
+                // don't accidentally wipe out notes
+                return $q.when();
+              }
+
+              return getInfos(key).then((infos) => {
+                const remain = {};
+
+                stores.forEach((store) => {
+                  store.items.forEach((item) => {
+                    const itemKey = `${item.hash}-${item.id}`;
+                    const info = infos[itemKey];
+                    if (info && (info.tag !== undefined || (info.notes && info.notes.length))) {
+                      remain[itemKey] = info;
+                    }
+                  });
+                });
+
+                return setInfos(key, remain);
+              });
+            }
+          };
+        });
+    }
   };
 }
 
