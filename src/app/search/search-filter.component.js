@@ -185,6 +185,7 @@ function SearchFilterCtrl(
   };
 
   vm.filter = function() {
+    vm.selectedTag = undefined;
     filteredItems = [];
     let filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
