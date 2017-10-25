@@ -87,8 +87,8 @@ export function ItemInfoService(SyncService, $i18next, toaster, $q) {
                     setInfos(key, infos)
                       .catch((e) => {
                         toaster.pop('error',
-                                    $i18next.t('ItemInfoService.SaveInfoErrorTitle'),
-                                    $i18next.t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
+                          $i18next.t('ItemInfoService.SaveInfoErrorTitle'),
+                          $i18next.t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
                         console.error("Error saving item info (tags, notes):", e);
                       });
                   });
