@@ -56,7 +56,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     category: _.keys(categoryFilters),
     inloadout: ['inloadout'],
     new: ['new'],
-    tag: ['tag', 'tagged'],
+    tag: ['tagged'],
     level: ['level'],
     weapon: ['weapon'],
     armor: ['armor'],
