@@ -56,6 +56,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     category: _.keys(categoryFilters),
     inloadout: ['inloadout'],
     new: ['new'],
+    tag: ['tag', 'tagged'],
     level: ['level'],
     weapon: ['weapon'],
     armor: ['armor'],
@@ -702,6 +703,9 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
       },
       new: function(predicate, item) {
         return item.isNew;
+      },
+      tag: function(predicate, item) {
+        return item.dimInfo.tag !== undefined;
       },
       hasLight: function(predicate, item) {
         const lightBuckets = ["BUCKET_CHEST",
