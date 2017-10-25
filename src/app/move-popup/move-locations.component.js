@@ -9,7 +9,7 @@ export const MoveLocationsComponent = {
   }
 };
 
-function controller($rootScope, dimSettingsService, dimItemMoveService, dimStoreService, D2StoresService) {
+function controller(dimSettingsService, dimItemMoveService, dimStoreService, D2StoresService) {
   'ngInject';
   const vm = this;
 
@@ -17,25 +17,10 @@ function controller($rootScope, dimSettingsService, dimItemMoveService, dimStore
     return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  const dragBox = document.getElementById('item-drag-box');
   vm.settings = dimSettingsService;
 
-  $rootScope.$on('drag-start-item', (event, args) => {
-    vm.item = args.item;
-    vm.store = getStoreService().getStore(vm.item.owner);
-    vm.stores = getStoreService().getStores();
-    dragBox.style.top = `${args.element.target.getBoundingClientRect().top - dragBox.offsetHeight}px`;
-    $rootScope.$digest();
-  });
-  $rootScope.$on('drag-stop-item', (event, args) => {
-    dragBox.style.top = '-200px';
-    $rootScope.$digest();
-  });
-
-  if (vm.item) {
-    vm.store = getStoreService().getStore(vm.item.owner);
-    vm.stores = getStoreService().getStores();
-  }
+  vm.store = getStoreService().getStore(vm.item.owner);
+  vm.stores = getStoreService().getStores();
 
   vm.canShowVault = function canShowVault(buttonStore) {
     // If my itemStore is the vault, don't show a vault button.
