@@ -10,7 +10,8 @@
     ng-hide="$ctrl.showSelect"
     ng-click="$ctrl.showSelect = true"
     ng-i18next="[title]Header.BulkTag"></i>
-  <select ng-show="$ctrl.showSelect"
+  <select class="bulk-tag-select"
+    ng-show="$ctrl.showSelect"
     ng-options="tag as tag.label | i18next for tag in $ctrl.bulkItemTags track by tag.type"
     ng-model="$ctrl.selectedTag"
     ng-change="$ctrl.bulkTag()"></select>
