@@ -59,7 +59,7 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
 
   if (vm.item.maxStackSize > 1 || (vm.item.destinyVersion === 2 && phoneWidthQuery.matches)) {
     const dragHelp = document.getElementById('drag-help');
-    let dragBox = document.getElementById('item-drag-box');
+    const dragBox = document.getElementById('item-drag-box');
     $element.on('dragstart', (element) => {
       $rootScope.$broadcast('drag-start-item', {
         item: vm.item,

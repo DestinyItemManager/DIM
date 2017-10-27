@@ -5,9 +5,18 @@
   <i class="fa fa-question-circle-o"></i>
 </span>
 <span class="filter-help"
-  ng-if="$ctrl.search.query"
-  ng-click="$ctrl.clearFilter($event)"
-  ng-i18next="[title]Header.Filters">
-  <i class="fa fa-times-circle"></i>
+  ng-if="$ctrl.search.query">
+  <i class="fa fa-tag"
+    ng-hide="$ctrl.showSelect"
+    ng-click="$ctrl.showSelect = true"
+    ng-i18next="[title]Header.BulkTag"></i>
+  <select class="bulk-tag-select"
+    ng-show="$ctrl.showSelect"
+    ng-options="tag as tag.label | i18next for tag in $ctrl.bulkItemTags track by tag.type"
+    ng-model="$ctrl.selectedTag"
+    ng-change="$ctrl.bulkTag()"></select>
+  <i class="fa fa-times-circle"
+    ng-click="$ctrl.clearFilter($event)"
+    ng-i18next="[title]Header.Filters"></i>
 </span>
 <input id="filter-input" class="dim-input" autocomplete="off" autocorrect="off" autocapitalize="off" ng-i18next="[i18next:placeholder]({ example: 'is:dupe' })Header.FilterHelp" type="text" name="filter" ng-model="$ctrl.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">

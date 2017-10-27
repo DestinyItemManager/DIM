@@ -39,10 +39,10 @@ function D2InventoryController($rootScope, $scope, D2StoresService, D2BucketsSer
     dragBox.style.top = `${args.element.target.getBoundingClientRect().top - dragBox.offsetHeight}px`;
     $rootScope.$digest();
   });
-  $rootScope.$on('drag-stop-item', (event, args) => {
+
+  $rootScope.$on('drag-stop-item', () => {
     dragBox.style.top = '-200px';
     vm.item = null;
     $rootScope.$digest();
   });
-
 }

@@ -1,5 +1,6 @@
 # Next
 
+* Add a 'bulk tag' button to the search filter.
 * Add basepower: filter and is:goldborder filter.
 * Fix filtering in D1.
 * Add a button to clear the current search.

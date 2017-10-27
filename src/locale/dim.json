@@ -571,7 +571,8 @@
     "Infuse": "Infuse",
     "Junk": "Junk",
     "Keep": "Keep",
-    "TagItem": "Tag Item"
+    "TagItem": "Tag Item",
+    "ClearTag": "Clear"
   },
   "TrialsCard": {
     "FiveWins": "5 Win Reward (Armor)",
