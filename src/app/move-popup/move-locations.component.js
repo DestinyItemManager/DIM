@@ -5,7 +5,8 @@ export const MoveLocationsComponent = {
   template,
   controller,
   bindings: {
-    item: '<'
+    item: '<',
+    amount: '<'
   }
 };
 
@@ -66,7 +67,7 @@ function controller(dimSettingsService, dimItemMoveService, dimStoreService, D2S
   };
 
   vm.moveItemTo = function(store, equip) {
-    dimItemMoveService.moveItemTo(vm.item, store, equip, vm.moveAmount);
+    dimItemMoveService.moveItemTo(vm.item, store, equip, vm.amount);
   };
 
   // drag stuff

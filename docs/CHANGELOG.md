@@ -4,6 +4,7 @@
 * Add basepower: filter and is:goldborder filter.
 * Fix filtering in D1.
 * Add a button to clear the current search.
+* Fix moving partial stacks of items.
 
 # 4.21.0
 
