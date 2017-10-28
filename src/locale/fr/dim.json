@@ -542,10 +542,6 @@
     "IgnoredUsers": "{{value}} utilisateurs ignorés",
     "Import": "Importer des données DIM depuis un fichier",
     "ImportExport": "Sauvegarder les données",
-    "ImportFromExtension": "Importer des données depuis l'extension DIM pour Chrome",
-    "ImportFromExtensionButton": "Importer des données",
-    "ImportFromExtensionDetail": "Vous pouvez importer des données depuis l'extension DIM pour Chrome vers le site DIM.",
-    "ImportFromExtensionWarning": "Vos données de l'extension DIM pour Chrome vont écraser vos données actuelles. Continuer?",
     "ImportNoFile": "Aucun fichier sélectionné!",
     "ImportSuccess": "Données DIM importées!",
     "IndexedDBStorage": "Stockage local du navigateur",
@@ -567,6 +563,7 @@
     "SaveTooLarge": "Votre fichier de sauvegarde est trop volumineux. Supprimez les pré sets enregistrés."
   },
   "Tags": {
+    "ClearTag": "Vider",
     "Favorite": "Préféré",
     "Infuse": "Infuser",
     "Junk": "Camelote",

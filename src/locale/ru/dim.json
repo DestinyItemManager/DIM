@@ -542,10 +542,6 @@
     "IgnoredUsers": "{{value}} ignored users",
     "Import": "Импортировать данные DIM из файла",
     "ImportExport": "Резервное копирование данных",
-    "ImportFromExtension": "Импортировать данные DIM из расширения Chrome",
-    "ImportFromExtensionButton": "Импортировать данные",
-    "ImportFromExtensionDetail": "Вы можете импортировать данные DIM из расширения Chrome на вебсайт DIM.",
-    "ImportFromExtensionWarning": "Ваши данные DIM из расширения Chrome перезапишут текущие. Продолжить?",
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Данные DIM импортированы!",
     "IndexedDBStorage": "Локальное Хранилище Браузера",
@@ -567,8 +563,9 @@
     "SaveTooLarge": "Ваш файл сохранения слишком большой. Удалите сохранённые комплекты снаряжения."
   },
   "Tags": {
+    "ClearTag": "Clear",
     "Favorite": "Избранное",
-    "Infuse": "Для вливания",
+    "Infuse": "Для слияния",
     "Junk": "Мусор",
     "Keep": "Оставить",
     "TagItem": "Тег"

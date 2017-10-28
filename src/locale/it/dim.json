@@ -542,10 +542,6 @@
     "IgnoredUsers": "{{value}} utenti ignorati",
     "Import": "Importa i dati di DIM da un file",
     "ImportExport": "Back up dati",
-    "ImportFromExtension": "Importa dati dall'estensione di DIM per Chrome",
-    "ImportFromExtensionButton": "Importa dati",
-    "ImportFromExtensionDetail": "Puoi importare dati dall'estensione di DIM per Chrome all'interno del sito di DIM.",
-    "ImportFromExtensionWarning": "La tua estensione DIM per Chrome sovrascriverà i tupi dati attuali. Continuare?",
     "ImportNoFile": "Nessun file selezionato!",
     "ImportSuccess": "Dati DIM importati!",
     "IndexedDBStorage": "Memoria del browser locale",
@@ -567,6 +563,7 @@
     "SaveTooLarge": "Il tuo file di salvataggio è troppo grande. Rimuovi i loadout salvati."
   },
   "Tags": {
+    "ClearTag": "Elimina",
     "Favorite": "Preferito",
     "Infuse": "Infondi",
     "Junk": "Smantella",

@@ -542,10 +542,6 @@
     "IgnoredUsers": "{{value}} ignored users",
     "Import": "DIMデータを取り込む。",
     "ImportExport": "データのバックアップ",
-    "ImportFromExtension": "クロームのDIMエクステンションからデータを転送する",
-    "ImportFromExtensionButton": "データのインポート",
-    "ImportFromExtensionDetail": "クロームのDIMエクステンションからDIMのウェブサイトにデータを転送できます。",
-    "ImportFromExtensionWarning": "クロームのDIMエクステンションのデータが現在のデータに上書きされます。\nいいですか？",
     "ImportNoFile": "ファイルが選択されていません！",
     "ImportSuccess": "DIMデータを取り込みました！",
     "IndexedDBStorage": "ローカルブラウザストレージ",
@@ -567,6 +563,7 @@
     "SaveTooLarge": "容量上限です。ロードアウトを削除してください。"
   },
   "Tags": {
+    "ClearTag": "Clear",
     "Favorite": "お気に入り",
     "Infuse": "融合する",
     "Junk": "不要",
