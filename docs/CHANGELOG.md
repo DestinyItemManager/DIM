@@ -5,6 +5,7 @@
 * Fix filtering in D1.
 * Add a button to clear the current search.
 * Fix moving partial stacks of items.
+* Fixed "transfer items" in the Infusion Fuel Finder.
 
 # 4.21.0
 

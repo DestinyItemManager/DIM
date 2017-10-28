@@ -141,15 +141,17 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         toaster.pop('error', $i18next.t('Infusion.NoTransfer', { target: vm.target.name }));
         return $q.resolve();
       }
-      const store = dimStoreService.getStore(vm.source.owner);
+      const store = (vm.source.destinyVersion === 1 ? dimStoreService : D2StoresService).getStore(vm.source.owner);
       const items = {};
-      const key = vm.target.type.toLowerCase();
-      items[key] = items[key] || [];
+      const targetKey = vm.target.type.toLowerCase();
+      items[targetKey] = items[targetKey] || [];
       const itemCopy = angular.copy(vm.target);
       itemCopy.equipped = false;
-      items[key].push(itemCopy);
+      items[targetKey].push(itemCopy);
       // Include the source, since we wouldn't want it to get moved out of the way
-      items[vm.source.type.toLowerCase()].push(vm.source);
+      const sourceKey = vm.source.type.toLowerCase();
+      items[sourceKey] = items[sourceKey] || [];
+      items[sourceKey].push(vm.source);
 
       items.material = [];
       if (vm.target.bucket.sort === 'General') {

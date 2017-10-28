@@ -154,7 +154,6 @@ module.exports = function(grunt) {
     }
     manifest.version = dist === 'beta' ? betaVersion : pkg.version;
 
-    manifest.content_scripts[0].matches = [`https://${dist}.destinyitemmanager.com/*`];
     grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
     var mainjs = grunt.file.read('extension-dist/main.js');
     mainjs = mainjs.replace('localhost:8080', `${dist}.destinyitemmanager.com`);
