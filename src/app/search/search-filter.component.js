@@ -176,15 +176,17 @@ function SearchFilterCtrl(
     dimItemInfoService({
       membershipId: $stateParams.membershipId,
       platformType: $stateParams.platformType
-    }, filteredItems[0].destinyVersion).bulkSave(filteredItems.filter((i) => i.taggable).map((item) => {
-      item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
-      return item;
-    }));
+    }, filteredItems[0].destinyVersion).then((itemInfoService) => {
+      itemInfoService.bulkSave(filteredItems.filter((i) => i.taggable).map((item) => {
+        item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
+        return item;
+      }));
 
-    // invalidate and filter
-    filters.reset();
-    vm.filter();
-    vm.showSelect = false;
+      // invalidate and filter
+      filters.reset();
+      vm.filter();
+      vm.showSelect = false;
+    });
   };
 
   vm.filter = function() {
