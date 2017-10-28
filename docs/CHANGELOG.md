@@ -6,6 +6,7 @@
 * Add a button to clear the current search.
 * Fix moving partial stacks of items.
 * Fixed "transfer items" in the Infusion Fuel Finder.
+* Giving hints about the community's favorite plugs on D2 items.
 
 # 4.21.0
 
