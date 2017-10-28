@@ -25,7 +25,8 @@ class D2PerkRater {
           (socket.plugOptions.length > 1)) {
         const plugOptionHashes = _.pluck(socket.plugOptions, 'hash');
 
-        const ratingsAndReviews = _.map(plugOptionHashes, (plugOptionHash) => this._getPlugRatingsAndReviewCount(plugOptionHash, item.writtenReviews));
+        const ratingsAndReviews = _.map(plugOptionHashes,
+          (plugOptionHash) => this._getPlugRatingsAndReviewCount(plugOptionHash, item.writtenReviews));
 
         const maxReview = this._getMaxReview(ratingsAndReviews);
 
