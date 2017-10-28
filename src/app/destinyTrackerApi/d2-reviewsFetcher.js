@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
+import { D2PerkRater } from './d2-perkRater';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -7,7 +8,7 @@ import { D2ItemTransformer } from './d2-itemTransformer';
  * @class D2ReviewsFetcher
  */
 class D2ReviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter, dimPlatformService) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
     this.$q = $q;
     this.$http = $http;
     this._itemTransformer = new D2ItemTransformer();
@@ -15,7 +16,7 @@ class D2ReviewsFetcher {
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;
-    this._dimPlatformService = dimPlatformService;
+    this._perkRater = new D2PerkRater();
   }
 
   _getItemReviewsCall(item) {
@@ -56,19 +57,6 @@ class D2ReviewsFetcher {
     }
   }
 
-  _markUserReview(reviewData) {
-    const membershipInfo = this._dimPlatformService.getActive();
-    const membershipId = membershipInfo.membershipId;
-
-    _.each(reviewData.reviews, (review) => {
-      if (review.reviewer.membershipId === membershipId) {
-        review.isReviewer = true;
-      }
-    });
-
-    return reviewData;
-  }
-
   _attachReviews(item, reviewData) {
     const userReview = this._getUserReview(reviewData);
 
@@ -86,6 +74,8 @@ class D2ReviewsFetcher {
     }
 
     this._reviewDataCache.addReviewsData(item, reviewData);
+
+    this._perkRater.ratePerks(item);
   }
 
   _sortReviews(a, b) {
@@ -164,7 +154,6 @@ class D2ReviewsFetcher {
     }
 
     this._getItemReviewsPromise(item)
-      .then((reviewData) => this._markUserReview(reviewData))
       .then((reviewData) => this._attachReviews(item,
                                                 reviewData));
   }
