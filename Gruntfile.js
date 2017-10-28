@@ -150,7 +150,7 @@ module.exports = function(grunt) {
   function rewrite(dist) {
     var manifest = grunt.file.readJSON('extension-dist/manifest.json');
     if (dist === 'beta') {
-      manifest.name += ' Beta';
+      manifest.name = 'Destiny Item Manager Beta Shortcut';
     }
     manifest.version = dist === 'beta' ? betaVersion : pkg.version;
 
