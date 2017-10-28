@@ -14,31 +14,38 @@ class D2PerkRater {
    */
   ratePerks(item) {
     if ((!item.writtenReviews) ||
-        (!item.writtenReviews.length)) {
+        (!item.writtenReviews.length) ||
+        (!item.sockets) ||
+        (!item.sockets.sockets)) {
       return;
     }
 
-    console.log(item);
+    _.each(item.sockets.sockets, (socket) => {
+      if ((socket.plugOptions.length) &&
+          (socket.plugOptions.length > 1)) {
+        const plugOptionHashes = _.pluck(socket.plugOptions, 'hash');
 
-    // const maxColumn = this._getMaxColumn(item);
+        const ratingsAndReviews = _.map(plugOptionHashes, (plugOptionHash) => this._getPlugRatingsAndReviewCount(plugOptionHash, item.writtenReviews));
 
-    // for (let i = 1; i < maxColumn; i++) {
-    //   const perkNodesInColumn = this._getPerkNodesInColumn(item, i);
+        const maxReview = this._getMaxReview(ratingsAndReviews);
 
-    //   const ratingsAndReviews = _.map(perkNodesInColumn, (perkNode) => this._getPerkRatingsAndReviewCount(perkNode, item.writtenReviews));
-
-    //   const maxReview = this._getMaxReview(ratingsAndReviews);
-
-    //   this._markNodeAsBest(maxReview);
-    // }
+        this._markPlugAsBest(maxReview,
+                             socket);
+      }
+    });
   }
 
-  _markNodeAsBest(maxReview) {
+  _markPlugAsBest(maxReview,
+                  socket) {
     if (!maxReview) {
       return;
     }
 
-    maxReview.perkNode.bestRated = true;
+    const matchingPlugOption = _.find(socket.plugOptions, (plugOption) => plugOption.hash === maxReview.plugOptionHash);
+
+    if (matchingPlugOption) {
+      matchingPlugOption.bestRated = true;
+    }
   }
 
   _getMaxReview(ratingsAndReviews) {
@@ -52,18 +59,9 @@ class D2PerkRater {
     return null;
   }
 
-  _getMaxColumn(item) {
-    return _.max(item.talentGrid.nodes, (node) => { return node.column; }).column;
-  }
-
-  _getPerkNodesInColumn(item,
-                        column) {
-    return _.where(item.talentGrid.nodes, { column: column });
-  }
-
-  _getPerkRatingsAndReviewCount(perkNode,
+  _getPlugRatingsAndReviewCount(plugOptionHash,
                                 reviews) {
-    const matchingReviews = this._getMatchingReviews(perkNode,
+    const matchingReviews = this._getMatchingReviews(plugOptionHash,
                                                      reviews);
 
     const ratingCount = matchingReviews.length;
@@ -72,39 +70,17 @@ class D2PerkRater {
     const ratingAndReview = {
       ratingCount: ratingCount,
       averageReview: averageReview,
-      perkNode: perkNode
+      plugOptionHash: plugOptionHash
     };
 
     return ratingAndReview;
   }
 
-  _getSelectedPerksAndRating(review) {
-    const selectedPerks = this._getSelectedPerks(review);
-
-    return {
-      selectedPerks: selectedPerks,
-      rating: review.rating,
-      isHighlighted: review.isHighlighted
-    };
-  }
-
-  _getMatchingReviews(perkNode,
+  _getMatchingReviews(plugOptionHash,
                       reviews) {
-    const perkRoll = perkNode.dtrRoll.replace('o', '');
-    return _.filter(reviews, (review) => { return this._selectedPerkNodeApplies(perkRoll, review); });
-  }
-
-  _selectedPerkNodeApplies(perkRoll,
-                           review) {
-    const reviewSelectedPerks = this._getSelectedPerks(review);
-
-    return _.some(reviewSelectedPerks, (reviewSelectedPerk) => { return perkRoll === reviewSelectedPerk; });
-  }
-
-  _getSelectedPerks(review) {
-    const allSelectedPerks = _.filter(review.roll.split(';'), ((str) => { return str.indexOf('o') > -1; }));
-
-    return _.map(allSelectedPerks, (selectedPerk) => { return selectedPerk.replace('o', ''); });
+    return _.filter(reviews, (review) => { return review.selectedPerks.includes(plugOptionHash) ||
+                                                  ((review.attachedMods) &&
+                                                   (review.attachedMods.includes(plugOptionHash))); });
   }
 }
 
