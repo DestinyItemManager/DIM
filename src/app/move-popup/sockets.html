@@ -6,7 +6,7 @@
       ng-repeat="socketInfo in category.sockets track by $index">
       <img class="item-mod"
         ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
-        ng-class="{ notChosen: socket != socketInfo.plug }"
+        ng-class="{ notChosen: socket != socketInfo.plug && !socket.bestRated, bestRated: socket != socketInfo.plug && socket.bestRated }"
         ng-repeat="socket in socketInfo.plugOptions track by $index"
         press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}"
         press-tip-title="{{ socket.displayProperties.name }}">

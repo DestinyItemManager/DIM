@@ -28,6 +28,10 @@
     &.notChosen {
       opacity: .4;
     }
+    &.bestRated {
+      -webkit-filter: opacity(50%) sepia() saturate(10000%) hue-rotate(30deg);
+      filter: opacity(50%) sepia() saturate(10000%) hue-rotate(30deg);
+    }
   }
   &.disabled {
     opacity: .4;
