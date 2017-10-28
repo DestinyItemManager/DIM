@@ -8,7 +8,7 @@ import { D2PerkRater } from './d2-perkRater';
  * @class D2ReviewsFetcher
  */
 class D2ReviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter, dimPlatformService) {
     this.$q = $q;
     this.$http = $http;
     this._itemTransformer = new D2ItemTransformer();
@@ -16,6 +16,7 @@ class D2ReviewsFetcher {
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;
+    this._dimPlatformService = dimPlatformService;
     this._perkRater = new D2PerkRater();
   }
 
@@ -55,6 +56,19 @@ class D2ReviewsFetcher {
         writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
+  }
+
+  _markUserReview(reviewData) {
+    const membershipInfo = this._dimPlatformService.getActive();
+    const membershipId = membershipInfo.membershipId;
+
+    _.each(reviewData.reviews, (review) => {
+      if (review.reviewer.membershipId === membershipId) {
+        review.isReviewer = true;
+      }
+    });
+
+    return reviewData;
   }
 
   _attachReviews(item, reviewData) {
@@ -154,6 +168,7 @@ class D2ReviewsFetcher {
     }
 
     this._getItemReviewsPromise(item)
+      .then((reviewData) => this._markUserReview(reviewData))
       .then((reviewData) => this._attachReviews(item,
                                                 reviewData));
   }
