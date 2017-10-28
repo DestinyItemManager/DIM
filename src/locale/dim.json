@@ -563,12 +563,12 @@
     "SaveTooLarge": "Your save file is too large.  Remove saved loadouts."
   },
   "Tags": {
+    "ClearTag": "Clear",
     "Favorite": "Favorite",
     "Infuse": "Infuse",
     "Junk": "Junk",
     "Keep": "Keep",
-    "TagItem": "Tag Item",
-    "ClearTag": "Clear"
+    "TagItem": "Tag Item"
   },
   "TrialsCard": {
     "FiveWins": "5 Win Reward (Armor)",
