@@ -21,19 +21,28 @@
   display: flex;
   flex-direction: column;
 
+  &.disabled {
+    opacity: .4;
+  }
+}
+
+.socket-container {
+  position: relative;
+  display: inline-block;
+
   img {
     -webkit-touch-callout: none;
     width: 34px;
     height: 34px;
+    display: block;
     &.notChosen {
       opacity: .4;
     }
-    &.bestRated {
-      -webkit-filter: opacity(50%) sepia() saturate(10000%) hue-rotate(30deg);
-      filter: opacity(50%) sepia() saturate(10000%) hue-rotate(30deg);
-    }
   }
-  &.disabled {
-    opacity: .4;
+
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 }

@@ -4,12 +4,22 @@
     <div class="item-socket"
       ng-class="{ disabled: !socketInfo.enabled }"
       ng-repeat="socketInfo in category.sockets track by $index">
-      <img class="item-mod"
-        ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
-        ng-class="{ notChosen: socket != socketInfo.plug && !socket.bestRated, bestRated: socket != socketInfo.plug && socket.bestRated }"
-        ng-repeat="socket in socketInfo.plugOptions track by $index"
-        press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}"
-        press-tip-title="{{ socket.displayProperties.name }}">
+      <div class="socket-container"
+           ng-repeat="socket in socketInfo.plugOptions track by $index">
+        <svg ng-if="socket != socketInfo.plug && socket.bestRated" width="34" height="34">
+          <circle
+            class="talent-node-best-rated-circle"
+            r="5"
+            cx="25"
+            cy="6"
+          />
+        </svg>
+        <img class="item-mod"
+          ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
+          ng-class="{ notChosen: socket != socketInfo.plug }"
+          press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}"
+          press-tip-title="{{ socket.displayProperties.name }}">
+      </div>
     </div>
   </div>
 </div>
