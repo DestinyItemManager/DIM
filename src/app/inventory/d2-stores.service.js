@@ -162,7 +162,7 @@ export function D2StoresService(
       D2Definitions.getDefinitions(),
       D2BucketsService.getBuckets(),
       NewItemsService.loadNewItems(account, 2),
-      dimItemInfoService.init(account, 2),
+      dimItemInfoService(account, 2),
       Destiny2Api.getStores(account)
     ];
 

@@ -15,7 +15,7 @@ export const SearchFilterComponent = {
 };
 
 function SearchFilterCtrl(
-  $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimCategory, D2Categories, dimSettingsService, toaster, ngDialog) {
+  $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimCategory, D2Categories, dimSettingsService, toaster, ngDialog, $stateParams) {
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;
@@ -173,15 +173,20 @@ function SearchFilterCtrl(
   };
 
   vm.bulkTag = function() {
-    dimItemInfoService.bulkSave(filteredItems.filter((i) => i.taggable).map((item) => {
-      item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
-      return item;
-    }));
+    dimItemInfoService({
+      membershipId: $stateParams.membershipId,
+      platformType: $stateParams.platformType
+    }, filteredItems[0].destinyVersion).then((itemInfoService) => {
+      itemInfoService.bulkSave(filteredItems.filter((i) => i.taggable).map((item) => {
+        item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
+        return item;
+      }));
 
-    // invalidate and filter
-    filters.reset();
-    vm.filter();
-    vm.showSelect = false;
+      // invalidate and filter
+      filters.reset();
+      vm.filter();
+      vm.showSelect = false;
+    });
   };
 
   vm.filter = function() {

@@ -157,7 +157,7 @@ export function StoreService(
       dimDefinitions.getDefinitions(),
       dimBucketService.getBuckets(),
       NewItemsService.loadNewItems(account, 1),
-      dimItemInfoService.init(account, 1),
+      dimItemInfoService(account, 1),
       Destiny1Api.getStores(account)
     ];
 
