@@ -36,7 +36,7 @@ class D2PerkRater {
   }
 
   _markPlugAsBest(maxReview,
-                  socket) {
+    socket) {
     if (!maxReview) {
       return;
     }
@@ -61,9 +61,9 @@ class D2PerkRater {
   }
 
   _getPlugRatingsAndReviewCount(plugOptionHash,
-                                reviews) {
+    reviews) {
     const matchingReviews = this._getMatchingReviews(plugOptionHash,
-                                                     reviews);
+      reviews);
 
     const ratingCount = matchingReviews.length;
     const averageReview = _.pluck(matchingReviews, 'rating').reduce((memo, num) => memo + num, 0) / matchingReviews.length || 1;
@@ -78,7 +78,7 @@ class D2PerkRater {
   }
 
   _getMatchingReviews(plugOptionHash,
-                      reviews) {
+    reviews) {
     return _.filter(reviews, (review) => { return review.selectedPerks.includes(plugOptionHash) ||
                                                   (review.attachedMods &&
                                                    review.attachedMods.includes(plugOptionHash)); });
