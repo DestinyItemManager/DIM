@@ -49,7 +49,8 @@ class D2PerkRater {
   }
 
   _getMaxReview(ratingsAndReviews) {
-    const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) => { return ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview; }).reverse();
+    const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) => (ratingAndReview.ratingCount < 2 ? 0
+      : ratingAndReview.averageReview)).reverse();
 
     if ((orderedRatingsAndReviews.length > 0) &&
         (orderedRatingsAndReviews[0].ratingCount > 1)) {
