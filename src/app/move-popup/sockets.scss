@@ -40,9 +40,13 @@
     }
   }
 
-  svg {
+  .circle-container {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
+  }
+
+  .blue-circle {
+    color: #0099ff;
   }
 }

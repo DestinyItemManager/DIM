@@ -6,18 +6,15 @@
       ng-repeat="socketInfo in category.sockets track by $index">
       <div class="socket-container"
            ng-repeat="socket in socketInfo.plugOptions track by $index">
-        <svg ng-if="socket != socketInfo.plug && socket.bestRated" width="34" height="34">
-          <circle
-            class="talent-node-best-rated-circle"
-            r="5"
-            cx="25"
-            cy="6"
-          />
-        </svg>
+        <div ng-if="socket != socketInfo.plug && socket.bestRated" class="circle-container">
+          <div class="blue-circle">
+            <i class="fa fa-circle" aria-hidden="true"></i>
+          </div>
+        </div>
         <img class="item-mod"
           ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
           ng-class="{ notChosen: socket != socketInfo.plug }"
-          press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}"
+          press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}{{socket.bestRated ? $ctrl.bestRatedText : ''}}"
           press-tip-title="{{ socket.displayProperties.name }}">
       </div>
     </div>
