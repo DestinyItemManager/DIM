@@ -30,8 +30,7 @@ class D2PerkRater {
 
         const maxReview = this._getMaxReview(ratingsAndReviews);
 
-        this._markPlugAsBest(maxReview,
-                             socket);
+        this._markPlugAsBest(maxReview, socket);
       }
     });
   }
@@ -80,8 +79,8 @@ class D2PerkRater {
   _getMatchingReviews(plugOptionHash,
                       reviews) {
     return _.filter(reviews, (review) => { return review.selectedPerks.includes(plugOptionHash) ||
-                                                  ((review.attachedMods) &&
-                                                   (review.attachedMods.includes(plugOptionHash))); });
+                                                  (review.attachedMods &&
+                                                   review.attachedMods.includes(plugOptionHash)); });
   }
 }
 
