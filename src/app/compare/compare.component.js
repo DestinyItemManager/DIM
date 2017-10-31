@@ -80,6 +80,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   vm.cancel = function cancel() {
     vm.comparisons = [];
     vm.statRanges = {};
+    vm.statsMap = {};
     vm.similarTypes = [];
     vm.archeTypes = [];
     vm.highlight = null;
