@@ -19,7 +19,7 @@
         <span ng-bind="item.primStat.value"></span>
       </div>
       <div ng-class="{ highlight: vm.highlight === stat.statHash }" ng-mouseover="vm.highlight = stat.statHash" ng-repeat="stat in item.stats track by $index" ng-style="stat | statRange:vm.statRanges | qualityColor:'color'">
-        <span ng-bind="stat.value || 'N/A'"></span>
+        <span ng-bind="stat.value || ('Stats.NotApplicable' | i18next)"></span>
         <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
       </div>
       <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
