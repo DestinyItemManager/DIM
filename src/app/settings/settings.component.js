@@ -10,7 +10,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, OAuthTokenService, $state, $i18next, dimDestinyTrackerService) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, OAuthTokenService, $state, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -121,7 +121,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   };
 
   vm.platformChanged = function() {
-    // bugbug: need to get stores for fetch after this
-    dimDestinyTrackerService.clearCache();
+    dimSettingsService.save();
+    D2StoresService.refreshRatingsData();
   };
 }
