@@ -20,20 +20,22 @@ class D2ReviewsFetcher {
     this._perkRater = new D2PerkRater();
   }
 
-  _getItemReviewsCall(item) {
+  _getItemReviewsCall(item, platformSelection) {
+    const queryString = `reviews?page=1&platform=${platformSelection}`;
+
     return {
       method: 'POST',
-      url: 'https://db-api.destinytracker.com/api/external/reviews?page=1', // TODO: pagination
+      url: `https://db-api.destinytracker.com/api/external/reviews?${queryString}`, // TODO: pagination
       data: item,
       dataType: 'json'
     };
   }
 
-  _getItemReviewsPromise(item) {
+  _getItemReviewsPromise(item, platformSelection) {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     const promise = this.$q
-              .when(this._getItemReviewsCall(postWeapon))
+              .when(this._getItemReviewsCall(postWeapon, platformSelection))
               .then(this.$http)
               .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
               .then((response) => { return response.data; });
@@ -150,11 +152,12 @@ class D2ReviewsFetcher {
    * Attempts to fetch data from the cache first.
    *
    * @param {any} item
+   * @param {number} platformSelection
    * @returns {void}
    *
-   * @memberof ReviewsFetcher
+   * @memberof D2ReviewsFetcher
    */
-  getItemReviews(item) {
+  getItemReviews(item, platformSelection) {
     if (!item.reviewable) {
       return;
     }
@@ -167,7 +170,7 @@ class D2ReviewsFetcher {
       return;
     }
 
-    this._getItemReviewsPromise(item)
+    this._getItemReviewsPromise(item, platformSelection)
       .then((reviewData) => this._markUserReview(reviewData))
       .then((reviewData) => this._attachReviews(item,
                                                 reviewData));
