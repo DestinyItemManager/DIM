@@ -84,7 +84,7 @@
           <input type="checkbox" id="allowIdPostToDtr" ng-model="vm.settings.allowIdPostToDtr"/>
         </td>
       </tr>
-      <tr ng-if="vm.settings.showReviews || vm.settings.allowIdPostToDtr">
+      <tr ng-if="vm.settings.destinyVersion === 2 && (vm.settings.showReviews || vm.settings.allowIdPostToDtr)">
         <td>
           <label for="reviewPlatformSelection" ng-i18next="Settings.PlatformSelection"></label>
         </td>

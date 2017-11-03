@@ -158,6 +158,15 @@ class D2ReviewDataCache {
   }
 
   /**
+   * Clears all items (in case of, say, platform re-selection).
+   *
+   * @memberof D2ReviewDataCache
+   */
+  clearAllItems() {
+    this._itemStores = [];
+  }
+
+  /**
    * There's a 10 minute delay between posting an item review to the DTR API
    * and being able to fetch that review from it.
    * To prevent angry bug reports, we'll continue to hang on to local user review data for
