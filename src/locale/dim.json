@@ -222,7 +222,14 @@
     "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
-    "Year": "Shows items from which year of Destiny they appeared in."
+    "Year": "Shows items from which year of Destiny they appeared in.",
+    "Platforms" : {
+      "All": "Show All",
+      "Xbox": "XBox Only",
+      "Playstation": "Playstation Only",
+      "AllConsoles": "All Consoles",
+      "Pc": "PC Only"
+    }
   },
   "Header": {
     "About": "About",
@@ -486,6 +493,7 @@
     "InventoryColumns": "Character inventory width",
     "Language": "Language (reload DIM to take effect)",
     "LogOut": "Log out",
+    "PlatformSelection": "Only show ratings from the following platforms",
     "ResetToDefault": "Reset",
     "SetSort": "Sort items by",
     "Settings": "Settings",
