@@ -10,7 +10,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, OAuthTokenService, $state, $i18next) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, OAuthTokenService, $state, $i18next, dimDestinyTrackerService) {
   'ngInject';
 
   const vm = this;
@@ -118,5 +118,10 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
 
   vm.resetItemSize = function() {
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
+  };
+
+  vm.platformChanged = function() {
+    // bugbug: need to get stores for fetch after this
+    dimDestinyTrackerService.clearCache();
   };
 }

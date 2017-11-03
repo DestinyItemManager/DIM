@@ -134,6 +134,11 @@ function DestinyTrackerService($q,
     },
     clearIgnoredUsers: function() {
       _userFilter.clearIgnoredUsers();
+    },
+    clearCache: function() {
+      if (_isDestinyTwo()) {
+        _d2reviewDataCache.clearAllItems();
+      }
     }
   };
 }
