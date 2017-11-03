@@ -85,6 +85,14 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     'zh-cht': '正體字'
   };
 
+  vm.platformOptions = {
+    0: $i18next.t('Filter.Platforms.All'),
+    1: $i18next.t('Filter.Platforms.Xbox'),
+    2: $i18next.t('Filter.Platforms.Playstation'),
+    3: $i18next.t('Filter.Platforms.AllConsoles'),
+    4: $i18next.t('Filter.Platforms.Pc')
+  };
+
   if ($featureFlags.colorA11y) {
     vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
   }
