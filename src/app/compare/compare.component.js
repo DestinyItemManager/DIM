@@ -34,11 +34,41 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
+  function addMissingStats(item) {
+    if (!vm.comparisons[0]) {
+      item.stats.forEach((stat, idx) => {
+        vm.statsMap[stat.id] = idx;
+      });
+      return item;
+    }
+    const itemStatsMap = {};
+    item.stats.forEach((stat, idx) => {
+      itemStatsMap[stat.id] = { index: idx, name: stat.name };
+    });
+
+    _.difference(_.keys(vm.statsMap), _.keys(itemStatsMap)).forEach((statId) => {
+      item.stats.splice(vm.statsMap[statId], 0, { value: undefined, id: Number(statId), statHash: Number(statId) });
+    });
+
+    _.difference(_.keys(itemStatsMap), _.keys(vm.statsMap)).forEach((statId) => {
+      _.keys(vm.statsMap).forEach((statMapId) => {
+        if (vm.statsMap[statMapId] >= itemStatsMap[statId].index) {
+          vm.statsMap[statMapId]++;
+        }
+      });
+      vm.statsMap[statId] = itemStatsMap[statId].index;
+      vm.comparisons[0].stats.splice(vm.statsMap[statId], 0, { value: undefined, id: Number(statId), statHash: Number(statId), name: itemStatsMap[statId].name });
+    });
+
+    return item;
+  }
+
   vm.tagsEnabled = $featureFlags.tagsEnabled;
   vm.show = dimCompareService.dialogOpen;
 
   vm.comparisons = [];
   vm.statRanges = {};
+  vm.statsMap = {};
 
   $scope.$on('dim-store-item-compare', (event, args) => {
     vm.show = true;
@@ -50,6 +80,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   vm.cancel = function cancel() {
     vm.comparisons = [];
     vm.statRanges = {};
+    vm.statsMap = {};
     vm.similarTypes = [];
     vm.archeTypes = [];
     vm.highlight = null;
@@ -66,7 +97,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     vm.sortedHash = statHash;
     vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), (item) => {
       const stat = _.find(item.stats, { statHash: statHash }) || item.primStat;
-      return stat.value;
+      return stat.value || -1;
     }).reverse();
   };
 
@@ -120,9 +151,9 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
           }, 0) === armorSplit;
         });
       }
-
-      vm.comparisons = _.filter(allItems, { hash: vm.compare.hash });
+      vm.comparisons = _.map(_.filter(allItems, { hash: vm.compare.hash }), (item) => addMissingStats(item));
     } else if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
+      addMissingStats(args.item);
       vm.comparisons.push(args.item);
     }
   };
@@ -152,7 +183,9 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     const statBuckets = {};
 
     function bucketStat(stat) {
-      (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
+      if (stat.value) {
+        (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
+      }
     }
 
     vm.comparisons.forEach((item) => {
