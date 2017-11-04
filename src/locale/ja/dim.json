@@ -509,6 +509,7 @@
     "Level": "レベル",
     "MaxBasePower": "最大ベースパワー（変更なし）",
     "NoBonus": "ボーナスなし。",
+    "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、をクリックしてください。",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",

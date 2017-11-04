@@ -509,6 +509,7 @@
     "Level": "Livello",
     "MaxBasePower": "Massimo Potere di base (senza mods)",
     "NoBonus": "Nessun Bonus",
+    "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del roll massimo",
     "PercentHelp": "Clicca per maggiori informazioni riguardo la Qualità delle Statistiche.",
     "Prestige": "Livello Prestigio: {{level}}\n{{exp}}xp fino alle 5 particelle di luce.",

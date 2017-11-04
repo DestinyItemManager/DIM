@@ -509,6 +509,7 @@
     "Level": "Level",
     "MaxBasePower": "Max Base Power (w/o mods)",
     "NoBonus": "No Bonus",
+    "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",

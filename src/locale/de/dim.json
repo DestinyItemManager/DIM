@@ -509,6 +509,7 @@
     "Level": "Level",
     "MaxBasePower": "Max Basis Power (ohne Mods)",
     "NoBonus": "Kein Bonus",
+    "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} des max. Rolls",
     "PercentHelp": "Klicke um mehr Informationen über die Wert-Qualität zu erhalten.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp bis 5 Lichtpartikel.",
