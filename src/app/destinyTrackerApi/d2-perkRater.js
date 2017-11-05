@@ -13,10 +13,10 @@ class D2PerkRater {
    * @memberof D2PerkRater
    */
   ratePerks(item) {
-    if ((!item.writtenReviews) ||
-        (!item.writtenReviews.length) ||
-        (!item.sockets) ||
-        (!item.sockets.sockets)) {
+    if (!item.writtenReviews ||
+        !item.writtenReviews.length ||
+        !item.sockets ||
+        !item.sockets.sockets) {
       return;
     }
 
