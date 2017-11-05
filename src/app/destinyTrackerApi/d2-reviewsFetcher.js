@@ -35,10 +35,10 @@ class D2ReviewsFetcher {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     const promise = this.$q
-              .when(this._getItemReviewsCall(postWeapon, platformSelection))
-              .then(this.$http)
-              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
-              .then((response) => { return response.data; });
+      .when(this._getItemReviewsCall(postWeapon, platformSelection))
+      .then(this.$http)
+      .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+      .then((response) => { return response.data; });
 
     this._loadingTracker.addPromise(promise);
 
@@ -124,7 +124,7 @@ class D2ReviewsFetcher {
   }
 
   _attachCachedReviews(item,
-                       cachedItem) {
+    cachedItem) {
     item.communityReviews = cachedItem.reviews;
 
     this._attachReviews(item, cachedItem);
@@ -165,7 +165,7 @@ class D2ReviewsFetcher {
 
     if (ratingData && ratingData.reviewsDataFetched) {
       this._attachCachedReviews(item,
-                                ratingData);
+        ratingData);
 
       return;
     }
@@ -173,7 +173,7 @@ class D2ReviewsFetcher {
     this._getItemReviewsPromise(item, platformSelection)
       .then((reviewData) => this._markUserReview(reviewData))
       .then((reviewData) => this._attachReviews(item,
-                                                reviewData));
+        reviewData));
   }
 }
 
