@@ -32,10 +32,10 @@ class D2BulkFetcher {
     }
 
     const promise = this.$q
-              .when(this._getBulkWeaponDataEndpointPost(weaponList, platformSelection))
-              .then(this.$http)
-              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
-              .then((response) => response.data);
+      .when(this._getBulkWeaponDataEndpointPost(weaponList, platformSelection))
+      .then(this.$http)
+      .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+      .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
 
@@ -55,7 +55,7 @@ class D2BulkFetcher {
 
     this._getBulkFetchPromise(stores, platformSelection)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                  stores));
+        stores));
   }
 
   /**
@@ -70,11 +70,11 @@ class D2BulkFetcher {
 
     this._getBulkFetchPromise(vendors)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
-                                                        vendors));
+        vendors));
   }
 
   attachRankings(bulkRankings,
-                 stores) {
+    stores) {
     if (!bulkRankings && !stores) {
       return;
     }
@@ -107,7 +107,7 @@ class D2BulkFetcher {
   }
 
   attachVendorRankings(bulkRankings,
-                       vendors) {
+    vendors) {
     if (!bulkRankings && !vendors) {
       return;
     }
