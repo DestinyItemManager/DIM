@@ -11,6 +11,7 @@
 * Fix moving partial stacks of items.
 * Fixed "transfer items" in the Infusion Fuel Finder.
 * Giving hints about the community's favorite plugs on D2 items.
+* Added setting to pick relevant platforms for reviews.
 
 # 4.21.0
 
