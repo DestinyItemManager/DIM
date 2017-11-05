@@ -86,11 +86,11 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   };
 
   vm.platformOptions = {
-    0: $i18next.t('Filter.Platforms.All'),
-    1: $i18next.t('Filter.Platforms.Xbox'),
-    2: $i18next.t('Filter.Platforms.Playstation'),
-    3: $i18next.t('Filter.Platforms.AllConsoles'),
-    4: $i18next.t('Filter.Platforms.Pc')
+    0: $i18next.t('DtrReview.Platforms.All'),
+    1: $i18next.t('DtrReview.Platforms.Xbox'),
+    2: $i18next.t('DtrReview.Platforms.Playstation'),
+    3: $i18next.t('DtrReview.Platforms.AllConsoles'),
+    4: $i18next.t('DtrReview.Platforms.Pc')
   };
 
   if ($featureFlags.colorA11y) {
