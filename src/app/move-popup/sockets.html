@@ -7,9 +7,7 @@
       <div class="socket-container"
            ng-repeat="socket in socketInfo.plugOptions track by $index">
         <div ng-if="socket != socketInfo.plug && socket.bestRated" class="circle-container">
-          <div class="blue-circle">
-            <i class="fa fa-circle" aria-hidden="true"></i>
-          </div>
+          <div class="blue-circle"></div>
         </div>
         <img class="item-mod"
           ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
