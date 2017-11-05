@@ -97,7 +97,15 @@
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
     "VerifyReport": "Are you sure you want to flag this review?",
-    "YourReview": "Your Review"
+    "YourReview": "Your Review",
+    "BestRatedTip": "This perk is associated with high community ratings.",
+    "Platforms" : {
+      "All": "Show All",
+      "Xbox": "XBox Only",
+      "Playstation": "Playstation Only",
+      "AllConsoles": "All Consoles",
+      "Pc": "PC Only"
+    }
   },
   "FarmingMode": {
     "Configuration": "Configuration",
@@ -222,14 +230,7 @@
     "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
-    "Year": "Shows items from which year of Destiny they appeared in.",
-    "Platforms" : {
-      "All": "Show All",
-      "Xbox": "XBox Only",
-      "Playstation": "Playstation Only",
-      "AllConsoles": "All Consoles",
-      "Pc": "PC Only"
-    }
+    "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Header": {
     "About": "About",
