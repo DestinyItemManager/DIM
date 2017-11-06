@@ -1,5 +1,7 @@
 # Next
 
+# 4.23.0
+
 # 4.22.0
 
 * Add a 'bulk tag' button to the search filter.
