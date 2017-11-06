@@ -509,7 +509,7 @@
     "Level": "Nivel",
     "MaxBasePower": "Máximo de poder base (sin mods)",
     "NoBonus": "Sin beneficio",
-    "NotApplicable": "N/A",
+    "NotApplicable": "No es aplicable",
     "OfMaxRoll": "{{range}} del máximo posible de estadísticas",
     "PercentHelp": "Haz click para más información acerca de su calidad estadística.",
     "Prestige": "Nivel de Prestigio: {{level}}\n{{exp}}xp para 5 motas de luz.",
