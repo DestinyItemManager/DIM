@@ -74,13 +74,13 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.languageOptions = {
     de: 'Deutsch',
     en: 'English',
-    es: 'Español',
-    'es-mx': 'Español (América Latina)',
+    es: 'Español (España)',
+    'es-mx': 'Español (México)',
     fr: 'Français',
     it: 'Italiano',
-    pl: 'Polszczyzna',
+    pl: 'Polski',
     'pt-br': 'Português (Brasil)',
-    ru: 'ру́сский',
+    ru: 'Русский',
     ja: '日本語',
     'zh-cht': '繁體中文' // Chinese (Traditional)
   };
