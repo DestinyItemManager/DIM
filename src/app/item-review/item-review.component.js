@@ -44,8 +44,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
 
     if (review.isReviewer) {
       vm.editReview();
-    }
-    else if (!review.isHighlighted) {
+    } else if (!review.isHighlighted) {
       vm.openFlagContext(reviewId);
     }
   };

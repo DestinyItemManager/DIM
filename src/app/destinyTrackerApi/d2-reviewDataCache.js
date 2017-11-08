@@ -149,8 +149,7 @@ class D2ReviewDataCache {
 
     if (matchingItem.reviews) {
       matchingItem.reviews = _.reject(matchingItem.reviews, { isReviewer: true });
-    }
-    else {
+    } else {
       matchingItem.reviews = [];
     }
 

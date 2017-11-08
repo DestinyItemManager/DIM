@@ -79,9 +79,11 @@ class D2PerkRater {
 
   _getMatchingReviews(plugOptionHash,
     reviews) {
-    return _.filter(reviews, (review) => { return review.selectedPerks.includes(plugOptionHash) ||
+    return _.filter(reviews, (review) => {
+      return review.selectedPerks.includes(plugOptionHash) ||
                                                   (review.attachedMods &&
-                                                   review.attachedMods.includes(plugOptionHash)); });
+                                                   review.attachedMods.includes(plugOptionHash));
+    });
   }
 }
 

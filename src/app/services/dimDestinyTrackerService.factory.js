@@ -67,8 +67,7 @@ function DestinyTrackerService($q,
       if (_isDestinyOne()) {
         _reviewDataCache.addUserReviewData(item,
                                            userReview);
-      }
-      else if (_isDestinyTwo()) {
+      } else if (_isDestinyTwo()) {
         _d2reviewDataCache.addUserReviewData(item,
                                              userReview);
       }
@@ -78,8 +77,7 @@ function DestinyTrackerService($q,
       if (dimSettingsService.showReviews) {
         if (_isDestinyOne()) {
           _bulkFetcher.bulkFetchVendorItems(vendors);
-        }
-        else if (_isDestinyTwo()) {
+        } else if (_isDestinyTwo()) {
           console.log("update vendor for D2 called");
         }
       }
@@ -89,8 +87,7 @@ function DestinyTrackerService($q,
       if (dimSettingsService.allowIdPostToDtr) {
         if (_isDestinyOne()) {
           _reviewsFetcher.getItemReviews(item);
-        }
-        else if (_isDestinyTwo()) {
+        } else if (_isDestinyTwo()) {
           _d2reviewsFetcher.getItemReviews(item);
         }
       }
@@ -102,8 +99,7 @@ function DestinyTrackerService($q,
 
         if (_isDestinyOne()) {
           _reviewSubmitter.submitReview(item, membershipInfo);
-        }
-        else if (_isDestinyTwo()) {
+        } else if (_isDestinyTwo()) {
           _d2reviewSubmitter.submitReview(item, membershipInfo);
         }
       }
@@ -129,8 +125,7 @@ function DestinyTrackerService($q,
 
         if (_isDestinyOne()) {
           _reviewReporter.reportReview(review, membershipInfo);
-        }
-        else if (_isDestinyTwo()) {
+        } else if (_isDestinyTwo()) {
           _d2reviewReporter.reportReview(review, membershipInfo);
         }
       }
