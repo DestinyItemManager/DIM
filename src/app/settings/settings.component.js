@@ -82,7 +82,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     'pt-br': 'Português (Brasil)',
     ru: 'ру́сский',
     ja: '日本語',
-    'zh-cht': '繁體中文' // Chinese (Traditonal)
+    'zh-cht': '繁體中文' // Chinese (Traditional)
   };
 
   if ($featureFlags.colorA11y) {
