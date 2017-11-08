@@ -8,7 +8,7 @@ import ja from '../locale/ja/dim.json';
 import pl from '../locale/pl/dim.json';
 import ptBR from '../locale/pt-BR/dim.json';
 import ru from '../locale/ru/dim.json';
-import zhCNT from '../locale/zh-TW/dim.json';
+import zhCHT from '../locale/zh-TW/dim.json';
 
 import { init as i18init } from 'i18next';
 
@@ -51,7 +51,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       'pt-br': { translation: ptBR },
       pl: { translation: pl },
       ru: { translation: ru },
-      'zh-cht': { translation: zhCNT }
+      'zh-cht': { translation: zhCHT }
     },
     returnObjects: true
   });
