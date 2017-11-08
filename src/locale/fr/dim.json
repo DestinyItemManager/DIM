@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
+    "BestRatedTip": "Cette capacité est associés avec des bons votes de la communauté.",
     "Cancel": "Annuler",
     "Cons": "Désavantages",
     "Delete": "Supprimer",

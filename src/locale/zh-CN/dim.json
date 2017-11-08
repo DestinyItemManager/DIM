@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基于{{numRatings}} 评分",
+    "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "取消",
     "Cons": "缺点",
     "Delete": "删除",

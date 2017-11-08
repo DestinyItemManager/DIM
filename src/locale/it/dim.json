@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi.",
+    "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "Cancella",
     "Cons": "Contro",
     "Delete": "Elimina",

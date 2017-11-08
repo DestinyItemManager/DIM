@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "{{numRatings}}人の評価({{itemRating}})",
+    "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "キャンセル",
     "Cons": "短所",
     "Delete": "削除",

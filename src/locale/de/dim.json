@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
+    "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "Abbrechen",
     "Cons": "Nachteile",
     "Delete": "Löschen",
@@ -509,7 +510,7 @@
     "Level": "Level",
     "MaxBasePower": "Max Basis Power (ohne Mods)",
     "NoBonus": "Kein Bonus",
-    "NotApplicable": "N/A",
+    "NotApplicable": "N/V",
     "OfMaxRoll": "{{range}} des max. Rolls",
     "PercentHelp": "Klicke um mehr Informationen über die Wert-Qualität zu erhalten.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp bis 5 Lichtpartikel.",

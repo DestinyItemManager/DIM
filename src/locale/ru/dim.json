@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) на основе {{numRatings}} оценок.",
+    "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "Отмена",
     "Cons": "Недостатки",
     "Delete": "Удалить",
