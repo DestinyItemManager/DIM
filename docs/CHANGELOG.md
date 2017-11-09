@@ -1,4 +1,5 @@
 # Next
+* Added setting to pick relevant platforms for reviews.
 
 # 4.23.0
 
