@@ -11,16 +11,16 @@ class D2BulkFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getBulkWeaponDataEndpointPost(gunList) {
+  _getBulkWeaponDataEndpointPost(gunList, platformSelection) {
     return {
       method: 'POST',
-      url: 'https://db-api.destinytracker.com/api/external/reviews/fetch',
+      url: `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}`,
       data: gunList,
       dataType: 'json'
     };
   }
 
-  _getBulkFetchPromise(stores) {
+  _getBulkFetchPromise(stores, platformSelection) {
     if (!stores.length) {
       return this.$q.resolve();
     }
@@ -32,10 +32,10 @@ class D2BulkFetcher {
     }
 
     const promise = this.$q
-              .when(this._getBulkWeaponDataEndpointPost(weaponList))
-              .then(this.$http)
-              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
-              .then((response) => response.data);
+      .when(this._getBulkWeaponDataEndpointPost(weaponList, platformSelection))
+      .then(this.$http)
+      .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+      .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
 
@@ -46,15 +46,16 @@ class D2BulkFetcher {
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
    *
    * @param {any} storesContainer
+   * @param {number} platformSelection
    *
    * @memberof D2BulkFetcher
    */
-  bulkFetch(storesContainer) {
+  bulkFetch(storesContainer, platformSelection) {
     const stores = _.values(storesContainer);
 
-    this._getBulkFetchPromise(stores)
+    this._getBulkFetchPromise(stores, platformSelection)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                  stores));
+        stores));
   }
 
   /**
@@ -69,11 +70,11 @@ class D2BulkFetcher {
 
     this._getBulkFetchPromise(vendors)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
-                                                        vendors));
+        vendors));
   }
 
   attachRankings(bulkRankings,
-                 stores) {
+    stores) {
     if (!bulkRankings && !stores) {
       return;
     }
@@ -106,7 +107,7 @@ class D2BulkFetcher {
   }
 
   attachVendorRankings(bulkRankings,
-                       vendors) {
+    vendors) {
     if (!bulkRankings && !vendors) {
       return;
     }

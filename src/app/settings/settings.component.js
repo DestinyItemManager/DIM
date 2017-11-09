@@ -85,6 +85,22 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     'zh-cht': '繁體中文' // Chinese (Traditional)
   };
 
+  vm.platformOptions = {
+    0: $i18next.t('DtrReview.Platforms.All'),
+    1: $i18next.t('DtrReview.Platforms.Xbox'),
+    2: $i18next.t('DtrReview.Platforms.Playstation'),
+    3: $i18next.t('DtrReview.Platforms.AllConsoles'),
+    4: $i18next.t('DtrReview.Platforms.Pc')
+  };
+
+  vm.platformOptions = {
+    0: $i18next.t('DtrReview.Platforms.All'),
+    1: $i18next.t('DtrReview.Platforms.Xbox'),
+    2: $i18next.t('DtrReview.Platforms.Playstation'),
+    3: $i18next.t('DtrReview.Platforms.AllConsoles'),
+    4: $i18next.t('DtrReview.Platforms.Pc')
+  };
+
   if ($featureFlags.colorA11y) {
     vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
   }
@@ -110,5 +126,10 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
 
   vm.resetItemSize = function() {
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
+  };
+
+  vm.platformChanged = function() {
+    dimSettingsService.save();
+    D2StoresService.refreshRatingsData();
   };
 }

@@ -90,6 +90,13 @@
     "HelpCons": "Describe the negatives of this weapon (optional)",
     "HelpPros": "Describe the positives of this weapon (optional)",
     "NoReviews": "There are no reviews for this item, be the first!",
+    "Platforms" : {
+      "All": "Show All",
+      "Xbox": "XBox Only",
+      "Playstation": "Playstation Only",
+      "AllConsoles": "All Consoles",
+      "Pc": "PC Only"
+    },
     "Pros": "Pros",
     "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
@@ -486,6 +493,7 @@
     "InventoryColumns": "Character inventory width",
     "Language": "Language (reload DIM to take effect)",
     "LogOut": "Log out",
+    "PlatformSelection": "Only show ratings from the following platform",
     "ResetToDefault": "Reset",
     "SetSort": "Sort items by",
     "Settings": "Settings",

@@ -88,7 +88,8 @@ function DestinyTrackerService($q,
         if (_isDestinyOne()) {
           _reviewsFetcher.getItemReviews(item);
         } else if (_isDestinyTwo()) {
-          _d2reviewsFetcher.getItemReviews(item);
+          const platformSelection = dimSettingsService.platformSelection;
+          _d2reviewsFetcher.getItemReviews(item, platformSelection);
         }
       }
     },
@@ -115,7 +116,8 @@ function DestinyTrackerService($q,
       if (stores[0].destinyVersion === 1) {
         _bulkFetcher.bulkFetch(stores);
       } else if (stores[0].destinyVersion === 2) {
-        _d2bulkFetcher.bulkFetch(stores);
+        const platformSelection = dimSettingsService.platformSelection;
+        _d2bulkFetcher.bulkFetch(stores, platformSelection);
       }
     },
 
@@ -132,6 +134,11 @@ function DestinyTrackerService($q,
     },
     clearIgnoredUsers: function() {
       _userFilter.clearIgnoredUsers();
+    },
+    clearCache: function() {
+      if (_isDestinyTwo()) {
+        _d2reviewDataCache.clearAllItems();
+      }
     }
   };
 }
