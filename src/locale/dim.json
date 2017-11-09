@@ -90,6 +90,13 @@
     "HelpCons": "Describe the negatives of this weapon (optional)",
     "HelpPros": "Describe the positives of this weapon (optional)",
     "NoReviews": "There are no reviews for this item, be the first!",
+    "Platforms" : {
+      "All": "Show All",
+      "Xbox": "XBox Only",
+      "Playstation": "Playstation Only",
+      "AllConsoles": "All Consoles",
+      "Pc": "PC Only"
+    },
     "Pros": "Pros",
     "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
@@ -97,14 +104,7 @@
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
     "VerifyReport": "Are you sure you want to flag this review?",
-    "YourReview": "Your Review",
-    "Platforms" : {
-      "All": "Show All",
-      "Xbox": "XBox Only",
-      "Playstation": "Playstation Only",
-      "AllConsoles": "All Consoles",
-      "Pc": "PC Only"
-    }
+    "YourReview": "Your Review"
   },
   "FarmingMode": {
     "Configuration": "Configuration",
