@@ -1,20 +1,33 @@
 <div class="item-socket-category" ng-repeat="category in $ctrl.sockets.categories | orderBy:'category.index' track by category.category.hash">
-  <div class="item-socket-category-name">{{category.category.displayProperties.name}}</div>
-  <div class="item-sockets">
-    <div class="item-socket"
-      ng-class="{ disabled: !socketInfo.enabled }"
-      ng-repeat="socketInfo in category.sockets track by $index">
-      <div class="socket-container"
-           ng-repeat="socket in socketInfo.plugOptions track by $index">
-        <div ng-if="socket != socketInfo.plug && socket.bestRated" class="circle-container">
-          <div class="blue-circle"></div>
+    <div class="item-socket-category-name">
+      <div class="category-name">{{category.category.displayProperties.name}}</div>
+  
+      <div ng-if="$ctrl.anyBestRatedUnselected(category)" class="best-rated-key">
+        <div class="best-rated-tip-container">
+          <div class="best-rated-tip"></div>
+          <div class="circle-container">
+            <div class="blue-circle"></div>
+          </div>
         </div>
-        <img class="item-mod"
-          ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
-          ng-class="{ notChosen: socket != socketInfo.plug }"
-          press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}{{socket.bestRated ? $ctrl.bestRatedText : ''}}"
-          press-tip-title="{{ socket.displayProperties.name }}">
+        <div class="tip-text">= COMMUNITY FAVORITE</div>
+      </div>
+    </div>
+    <div class="item-sockets">
+      <div class="item-socket"
+        ng-class="{ disabled: !socketInfo.enabled }"
+        ng-repeat="socketInfo in category.sockets track by $index">
+        <div class="socket-container"
+             ng-repeat="socket in socketInfo.plugOptions track by $index">
+          <div ng-if="socket != socketInfo.plug && socket.bestRated" class="circle-container">
+            <div class="blue-circle"></div>
+          </div>
+          <img class="item-mod"
+            ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
+            ng-class="{ notChosen: socket != socketInfo.plug }"
+            press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}{{socket.bestRated ? $ctrl.bestRatedText : ''}}"
+            press-tip-title="{{ socket.displayProperties.name }}">
+        </div>
       </div>
     </div>
   </div>
-</div>
+  
