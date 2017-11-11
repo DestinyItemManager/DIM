@@ -81,7 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} reseñas.",
-    "BestRatedTip": "This perk is associated with high community ratings.",
+    "BestRatedTip": "Esta ventaja se asocia con calificaciones altas de la comunidad.",
     "Cancel": "Cancelar",
     "Cons": "Contras",
     "Delete": "Borrar",
