@@ -88,7 +88,7 @@ function DestinyTrackerService($q,
         if (_isDestinyOne()) {
           _reviewsFetcher.getItemReviews(item);
         } else if (_isDestinyTwo()) {
-          const platformSelection = dimSettingsService.platformSelection;
+          const platformSelection = dimSettingsService.reviewsPlatformSelection;
           _d2reviewsFetcher.getItemReviews(item, platformSelection);
         }
       }
@@ -116,7 +116,7 @@ function DestinyTrackerService($q,
       if (stores[0].destinyVersion === 1) {
         _bulkFetcher.bulkFetch(stores);
       } else if (stores[0].destinyVersion === 2) {
-        const platformSelection = dimSettingsService.platformSelection;
+        const platformSelection = dimSettingsService.reviewsPlatformSelection;
         _d2bulkFetcher.bulkFetch(stores, platformSelection);
       }
     },

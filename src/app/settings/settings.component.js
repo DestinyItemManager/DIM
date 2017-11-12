@@ -85,7 +85,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     'zh-cht': '繁體中文' // Chinese (Traditional)
   };
 
-  vm.platformOptions = {
+  vm.reviewsPlatformOptions = {
     0: $i18next.t('DtrReview.Platforms.All'),
     1: $i18next.t('DtrReview.Platforms.Xbox'),
     2: $i18next.t('DtrReview.Platforms.Playstation'),
@@ -120,7 +120,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
   };
 
-  vm.platformChanged = function() {
+  vm.reviewsPlatformChanged = function() {
     dimSettingsService.save();
     D2StoresService.refreshRatingsData();
   };
