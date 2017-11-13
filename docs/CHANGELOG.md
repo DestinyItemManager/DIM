@@ -1,5 +1,7 @@
 # Next
 
+# 4.24.1
+
 # 4.24.0
 
 * Bungie has reduced the throttling delay for moving items, so you may once again move items quickly.
