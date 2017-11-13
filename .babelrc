@@ -4,6 +4,7 @@
       "modules": false,
       "useBuiltIns": true,
       "targets": {
+        "uglify": true,
         "browsers": [
           "last 2 Chrome versions",
           "last 2 ChromeAndroid versions",

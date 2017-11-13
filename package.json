@@ -81,7 +81,7 @@
     "sass-loader": "^6.0.2",
     "sqlite3": "^3.1.13",
     "style-loader": "^0.18.0",
-    "uglifyjs-webpack-plugin": "^1.0.1",
+    "uglify-js": "^3.1.5",
     "unzip": "^0.1.11",
     "url-loader": "^0.5.7",
     "webpack": "^3.8.1",
