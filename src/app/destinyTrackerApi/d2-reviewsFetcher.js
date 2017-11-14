@@ -21,7 +21,7 @@ class D2ReviewsFetcher {
   }
 
   _getItemReviewsCall(item, platformSelection) {
-    const queryString = `reviews?page=1&platform=${platformSelection}`;
+    const queryString = `page=1&platform=${platformSelection}`;
 
     return {
       method: 'POST',
