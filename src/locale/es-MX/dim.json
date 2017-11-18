@@ -101,9 +101,9 @@
   },
   "FarmingMode": {
     "Configuration": "Configuración",
-    "D2Desc": "Dim está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
-    "D2Desc_female": "Dim está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
-    "D2Desc_male": "Dim está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
+    "D2Desc": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
+    "D2Desc_female": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
+    "D2Desc_male": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
     "Desc": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "Desc_female": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "Desc_male": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
