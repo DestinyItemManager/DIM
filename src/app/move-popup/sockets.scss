@@ -14,6 +14,7 @@
 .item-socket-category-name {
   text-transform: uppercase;
   margin-bottom: 2px;
+  display: flex;
 }
 
 .item-socket {
@@ -33,6 +34,7 @@
 .best-rated-key {
   display: flex;
   text-transform: none !important;
+  padding-left: 20px;
 }
 
 .best-rated-tip-container {

@@ -1,5 +1,16 @@
 <div class="item-socket-category" ng-repeat="category in $ctrl.sockets.categories | orderBy:'category.index' track by category.category.hash">
-  <div class="item-socket-category-name">{{category.category.displayProperties.name}}</div>
+  <div class="item-socket-category-name">
+    <div>{{category.category.displayProperties.name}}</div>
+    <div ng-if="$ctrl.anyBestRatedUnselected(category)" class="best-rated-key">
+        <div class="best-rated-tip-container">
+          <div class="best-rated-tip"></div>
+          <div class="circle-container">
+            <div class="thumbs-up"><i class="fa fa-thumbs-up" aria-hidden="true"></i></div>
+          </div>
+        </div>
+        <div class="tip-text" ng-i18next="DtrReview.BestRatedKey"></div>
+      </div>
+  </div>
   <div class="item-sockets">
     <div class="item-socket"
       ng-class="{ disabled: !socketInfo.enabled }"
@@ -15,15 +26,6 @@
           press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}{{socket.bestRated ? $ctrl.bestRatedText : ''}}"
           press-tip-title="{{ socket.displayProperties.name }}">
       </div>
-    </div>
-    <div ng-if="$ctrl.anyBestRatedUnselected(category)" class="best-rated-key">
-      <div class="best-rated-tip-container">
-        <div class="best-rated-tip"></div>
-        <div class="circle-container">
-          <div class="thumbs-up"><i class="fa fa-thumbs-up" aria-hidden="true"></i></div>
-        </div>
-      </div>
-      <div class="tip-text" ng-i18next="DtrReview.BestRatedKey"></div>
     </div>
   </div>
 </div>
