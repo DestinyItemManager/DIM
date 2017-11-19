@@ -7,7 +7,7 @@
       <div class="socket-container"
             ng-repeat="socket in socketInfo.plugOptions track by $index">
         <div ng-if="socket != socketInfo.plug && socket.bestRated" class="circle-container">
-          <div class="blue-circle"></div>
+          <div class="thumbs-up"><i class="fa fa-thumbs-up" aria-hidden="true"></i></div>
         </div>
         <img class="item-mod"
           ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
@@ -20,7 +20,7 @@
       <div class="best-rated-tip-container">
         <div class="best-rated-tip"></div>
         <div class="circle-container">
-          <div class="blue-circle"></div>
+          <div class="thumbs-up"><i class="fa fa-thumbs-up" aria-hidden="true"></i></div>
         </div>
       </div>
       <div class="tip-text" ng-i18next="DtrReview.BestRatedKey"></div>
