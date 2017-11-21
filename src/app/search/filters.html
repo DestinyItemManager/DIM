@@ -24,7 +24,7 @@
         </td>
         <td ng-i18next="Filter.DamageType"></td>
       </tr>
-      <tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="light:value"></dim-filter-link>
           <dim-filter-link filter="light:&gt;=value"></dim-filter-link>
@@ -33,6 +33,21 @@
           <dim-filter-link filter="light:&lt;=value"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.LightLevel"></td>
+      </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="power:value"></dim-filter-link>
+          <dim-filter-link filter="power:&gt;=value"></dim-filter-link>
+          <dim-filter-link filter="power:&gt;value"></dim-filter-link>
+          <dim-filter-link filter="power:&lt;value"></dim-filter-link>
+          <dim-filter-link filter="power:&lt;=value"></dim-filter-link>
+          <dim-filter-link filter="basepower:value"></dim-filter-link>
+          <dim-filter-link filter="basepower:&gt;=value"></dim-filter-link>
+          <dim-filter-link filter="basepower:&gt;value"></dim-filter-link>
+          <dim-filter-link filter="basepower:&lt;value"></dim-filter-link>
+          <dim-filter-link filter="basepower:&lt;=value"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.PowerLevel"></td>
       </tr>
       <tr>
         <td>
@@ -90,16 +105,21 @@
       <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:light"></dim-filter-link>
-          <dim-filter-link filter="has:light"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.ContributeLight"></td>
+      </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="is:power"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.ContributePower"></td>
       </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:weapon"></dim-filter-link>
           <dim-filter-link filter="is:armor"></dim-filter-link>
-          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:ghost"></dim-filter-link>
-          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:vehicle"></dim-filter-link>
+          <dim-filter-link filter="is:ghost"></dim-filter-link>
+          <dim-filter-link filter="is:vehicle"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:ships"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:engrams"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:consumables"></dim-filter-link>
@@ -132,7 +152,7 @@
       <tr>
         <td>
           <dim-filter-link filter="is:weapon"></dim-filter-link>
-          <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:class"></dim-filter-link>
+          <dim-filter-link filter="is:class"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:primary"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:special"></dim-filter-link>
           <dim-filter-link ng-if="vm.settings.destinyVersion === 1" filter="is:heavy"></dim-filter-link>
@@ -367,7 +387,7 @@
       </tr>
     <tr ng-if="vm.settings.destinyVersion === 1">
       <td>
-        <dim-filter-link filter="is:ornament"></dim-filter-link>
+        <dim-filter-link filter="is:ornamentable"></dim-filter-link>
         <dim-filter-link filter="is:ornamentmissing"></dim-filter-link>
         <dim-filter-link filter="is:ornamentunlocked"></dim-filter-link>
       </td>

@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
+    "BestRatedTip": "Dieser Perk wird mit hohen Community-Bewertungen assoziiert.",
     "Cancel": "Abbrechen",
     "Cons": "Nachteile",
     "Delete": "Löschen",
@@ -114,6 +115,7 @@
       "MakeRoom": "Schaffe Platz durch Verschieben von Ausrüstung, um Items aufnehmen zu können",
       "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
     },
+    "MoveTokens": "Sende Reputations-Items zum Tresor",
     "OutOfRoom": "Dir ist der Platz ausgegangen um Items von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll rauszuräumen!",
     "OutOfRoomTitle": "Kein Platz mehr",
     "Quickmove": "Schnelles Verschieben",
@@ -144,6 +146,7 @@
     "ClickFilters": "Klick unten auf Filter um diese anzuwenden oder benutze die Suchfunktion.",
     "Combine": "Filter werden nach 'and'-Logik kombiniert, zum Beispiel wird '{{example}}' alle Arkus-Items mit einem Licht über 300 zurückgeben. Filter können durch '{{not}}' negiert werden, zum Beispiel findet '{{notexample}}' alle Nicht-Engramm Items.",
     "ContributeLight": "Items die zu deinem Lichtlevel beitragen.",
+    "ContributePower": "Items die zu deinem Powerlevel beitragen.",
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
@@ -178,6 +181,7 @@
     "Ornament": "Zeigt Items mit Ornamenten und filtert nach ihrem Status.",
     "PartialMatch": "Zeigt Items, deren Name/Perk eine partielle Übereinstimmung mit dem Filtertext hat.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
+    "PowerLevel": "Zeigt Items basierend auf dem Powerlevel (Angriff für Waffen; Verteidigung für Rüstung).",
     "PowerMod": "Items, die ein Mod haben, um das Powerlevel zu erhöhen.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
@@ -215,7 +219,7 @@
       "Shipwright": "Schiffsmeisterin",
       "Speaker": "Der Sprecher"
     },
-    "VideoExample": "Schau dir dieses Video für ein noch besseres Beispiel zur Verwendung von Filtern an auf {{link}}",
+    "VideoExample": "Schau dir auf {{link}} dieses Video für ein noch besseres Beispiel zur Verwendung von Filtern an",
     "WeaponClass": "Zeigt Items basierend auf ihrer Waffen Klasse an.",
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
@@ -378,6 +382,7 @@
     "FromEquipped": "Ausgerüstet",
     "GatherEngrams": "Engramme sammeln",
     "GatherEngramsExceptExotics": "Exos",
+    "GatherTokens": "Sammle Reputations-Items",
     "ItemLeveling": "Item Leveln",
     "ItemsWithIcon": "Items mit diesem Symbol werden angelegt. Klicke auf ein Item um es anzulegen bzw. abzulegen.",
     "LoadoutName": "Loadout Name...",
@@ -396,6 +401,7 @@
     "NameRequired": "Ein Name ist erforderlich.",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
+    "NoTokens": "Es sind keine Reputations-Items zum Transfer verfügbar.",
     "OnlyItems": "Es können nur ausrüstbare Items, Materialien und Verbrauchs-Items zu einem Loadout hinzugefügt werden.",
     "Random": "Zufällig",
     "Randomize": "Sollen deine ausgerüsteten Waffen und Rüstungen, sowie Geist und Artefakt zufällig ausgewählt werden?",
@@ -504,6 +510,7 @@
     "Level": "Level",
     "MaxBasePower": "Max Basis Power (ohne Mods)",
     "NoBonus": "Kein Bonus",
+    "NotApplicable": "N/V",
     "OfMaxRoll": "{{range}} des max. Rolls",
     "PercentHelp": "Klicke um mehr Informationen über die Wert-Qualität zu erhalten.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp bis 5 Lichtpartikel.",
@@ -537,10 +544,6 @@
     "IgnoredUsers": "{{value}} ignorierte Benutzer",
     "Import": "Importiere DIM Daten aus Datei",
     "ImportExport": "Back Up Dateien",
-    "ImportFromExtension": "Importiere Daten von der DIM Chrome Erweiterung",
-    "ImportFromExtensionButton": "Importiere Daten",
-    "ImportFromExtensionDetail": "Du kannst Daten von der DIM Chrome Erweiterung in die DIM Webseite importieren.",
-    "ImportFromExtensionWarning": "Deine Daten der DIM Chrome Erweiterung werden deine aktuellen Daten überschreiben. Fortsetzen?",
     "ImportNoFile": "Keine Datei ausgewählt!",
     "ImportSuccess": "DIM Daten importiert!",
     "IndexedDBStorage": "Lokaler Browser Speicher",
@@ -562,6 +565,7 @@
     "SaveTooLarge": "Deine Speicherdatei ist zu groß. Bitte entferne gespeicherte Loadouts."
   },
   "Tags": {
+    "ClearTag": "Löschen",
     "Favorite": "Favorisieren",
     "Infuse": "Infundieren",
     "Junk": "Müll",

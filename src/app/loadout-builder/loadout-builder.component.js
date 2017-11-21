@@ -601,7 +601,13 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
                           $timeout(step, 0, true, activeGuardian, h, g, c, l, ci, gh, ar, processedCount);
                           return;
                         }
-                      } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
+                      } ar = 0;
+                    } gh = 0;
+                  } ci = 0;
+                } l = 0;
+              } c = 0;
+            } g = 0;
+          }
 
           const tiers = _.each(_.groupBy(Array.from(tiersSet.keys()), (tierString) => {
             return _.reduce(tierString.split('/'), (memo, num) => {

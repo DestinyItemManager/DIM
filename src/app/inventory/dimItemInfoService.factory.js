@@ -77,8 +77,8 @@ export function ItemInfoService(SyncService, $i18next, toaster, $q) {
                   setInfos(key, infos)
                     .catch((e) => {
                       toaster.pop('error',
-                                  $i18next.t('ItemInfoService.SaveInfoErrorTitle'),
-                                  $i18next.t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
+                        $i18next.t('ItemInfoService.SaveInfoErrorTitle'),
+                        $i18next.t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
                       console.error("Error saving item info (tags, notes):", e);
                     });
                 });
@@ -107,6 +107,16 @@ export function ItemInfoService(SyncService, $i18next, toaster, $q) {
               });
 
               return setInfos(key, remain);
+            });
+          },
+
+          // bulk save a list of items to storage
+          bulkSave: function(items) {
+            return getInfos(key).then((infos) => {
+              items.forEach((item) => {
+                infos[`${item.hash}-${item.id}`] = { tag: item.dimInfo.tag };
+              });
+              return setInfos(key, infos);
             });
           }
         };

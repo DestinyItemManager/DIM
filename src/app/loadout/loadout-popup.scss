@@ -66,3 +66,33 @@
     }
   }
 }
+
+.loadout-popup-content {
+  line-height: 35px;
+  background-color: #3A4150;
+  color: #E4E4E4;
+}
+
+.ngdialog.loadout-popup {
+  position: absolute;
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 121px);
+  overflow: auto;
+  z-index: 2;
+  top: 0;
+  bottom: initial;
+  margin: 0;
+  padding: 0;
+  color: rgba(245, 245, 245, 0.6);
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  .detached & {
+    top: 103px;
+    z-index: 1000;
+    max-height: calc(100vh - 221px);
+    max-width: 230px;
+    left: calc((100% - 230px) / 2);
+  }
+}

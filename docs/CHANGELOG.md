@@ -1,6 +1,44 @@
 # Next
 
+# 4.25.0
+
+# 4.24.1
+
+# 4.24.0
+
+* Bungie has reduced the throttling delay for moving items, so you may once again move items quickly.
+
+# 4.23.0
+
+# 4.22.0
+
+* Add a 'bulk tag' button to the search filter.
+* Add basepower: filter and is:goldborder filter.
+* Fix filtering in D1.
+* Add a button to clear the current search.
+* Fix moving partial stacks of items.
+* Fixed "transfer items" in the Infusion Fuel Finder.
+* Giving hints about the community's favorite plugs on D2 items.
+
+# 4.21.0
+
+* Community reviews (for weapons and armor) are in for Destiny 2 inventory.
+* Charting weapon reviews.
+* Fixed the shadow under the sticky characters bar on Chrome.
+* Add an option to farming mode that stashes reputation items in the vault.
+* Add a new smart loadout to gather reputation items for redemption.
+* Scroll the loadout drawer on mobile.
+* Show character level progression under level 20 for D2.
+* Stacks of three or more rare mods now have a yellow border
+
+# 4.20.1
+
+* Fixed an error when trying to space to move items.
+
+# 4.20.0
+
 * Sort consumables, mods, and shaders in a more useful way (generally grouping same type together, alphabetical for shaders).
+* Show the hidden recoil direction stat.
 * Link to DestinyDB in your language instead of always English.
 * Updated documentation for search filters.
 * Fixed logic that makes room for items when your vault is full for D2.
@@ -110,6 +148,7 @@
 
 * DIM will remember whether you last used D2 or D1.
 * Lots of DIM functionality is back for D2.
+* We now highlight the perks from high community reviews that you don't have selected.
 
 # 4.12.0
 

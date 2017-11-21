@@ -8,7 +8,7 @@ import ja from '../locale/ja/dim.json';
 import pl from '../locale/pl/dim.json';
 import ptBR from '../locale/pt-BR/dim.json';
 import ru from '../locale/ru/dim.json';
-import zhCN from '../locale/zh-CN/dim.json';
+import zhCHT from '../locale/zh-TW/dim.json';
 
 import { init as i18init } from 'i18next';
 
@@ -51,7 +51,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       'pt-br': { translation: ptBR },
       pl: { translation: pl },
       ru: { translation: ru },
-      'zh-cht': { translation: zhCN }
+      'zh-cht': { translation: zhCHT }
     },
     returnObjects: true
   });
@@ -60,10 +60,10 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
   // by making responses take 2s to return, not by sending an error code or throttling response. Choosing
   // our throttling limit to be 1 request every 1100ms lets us achieve best throughput while accounting for
   // what I assume is clock skew between Bungie's hosts when they calculate a global rate limit.
-  // ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/D1\/Platform\/Destiny\/TransferItem/, 1, 1100);
-  // ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/D1\/Platform\/Destiny\/EquipItem/, 1, 1100);
-  // ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/TransferItem/, 1, 1100);
-  // ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItem/, 1, 1100);
+  ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/D1\/Platform\/Destiny\/TransferItem/, 1, 110);
+  ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/D1\/Platform\/Destiny\/EquipItem/, 1, 110);
+  ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/TransferItem/, 1, 100);
+  ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItem/, 1, 100);
 
   // https://github.com/likeastore/ngDialog/issues/327
   ngDialogProvider.setDefaults({

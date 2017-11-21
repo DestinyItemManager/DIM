@@ -21,15 +21,35 @@
   display: flex;
   flex-direction: column;
 
+  &.disabled {
+    opacity: .4;
+  }
+}
+
+.socket-container {
+  position: relative;
+  display: inline-block;
+
   img {
     -webkit-touch-callout: none;
     width: 34px;
     height: 34px;
+    display: block;
     &.notChosen {
       opacity: .4;
     }
   }
-  &.disabled {
-    opacity: .4;
+
+  .circle-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .blue-circle {
+    background-color: #0099ff;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
   }
 }

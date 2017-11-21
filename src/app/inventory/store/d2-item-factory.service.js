@@ -41,12 +41,12 @@ export function D2ItemFactory(
     943549884, // Handling
     4188031367, // Reload Speed
     1345609583, // Aim Assistance
+    2715839340, // Recoil Direction
     3555269338, // Zoom
     3871231066, // Magazine
     2996146975, // Mobility
     392767087, // Resilience
     1943323491 // Recovery
-    //    2715839340, // Recoil Direction (people like to see this, but it's confusing)
     //    1935470627, // Power
     //    1931675084, //  Inventory Size
     // there are a few others (even an `undefined` stat)
@@ -253,6 +253,7 @@ export function D2ItemFactory(
     // *able
     createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
+    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && isWeaponOrArmor(createdItem));
 
     if (createdItem.primStat) {
       createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
@@ -311,8 +312,6 @@ export function D2ItemFactory(
       }
     }
 
-    createdItem.index = createItemIndex(createdItem);
-
     if (createdItem.objectives) {
       createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
       createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
@@ -330,6 +329,7 @@ export function D2ItemFactory(
     createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName.length);
     createdItem.infusionQuality = itemDef.quality || null;
 
+    // Mark items with power mods
     if (createdItem.primStat) {
       createdItem.basePower = getBasePowerLevel(createdItem);
       if (createdItem.basePower !== createdItem.primStat.value) {
@@ -337,7 +337,22 @@ export function D2ItemFactory(
       }
     }
 
+    // Mark upgradeable stacks of rare modifications
+    if (createdItem.maxStackSize > 1 &&
+        createdItem.amount >= 3 &&
+        createdItem.tier === 'Rare' &&
+        createdItem.bucket.id === 3313201758) {
+      createdItem.complete = true;
+    }
+
+    createdItem.index = createItemIndex(createdItem);
+
     return createdItem;
+  }
+
+  function isWeaponOrArmor(item) {
+    return ((item.primStat.statHash === 1480404414) || // weapon
+            (item.primStat.statHash === 3897883278)); // armor
   }
 
   // Set an ID for the item that should be unique across all items
@@ -391,7 +406,7 @@ export function D2ItemFactory(
       const def = statDefs.get(stat.statHash);
 
       // only aim assist and zoom for now
-      if (![1345609583, 3555269338].includes(stat.statHash) || !stat.value) {
+      if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
         return undefined;
       }
 

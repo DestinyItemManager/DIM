@@ -233,6 +233,9 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
    * @return a promise for the completion of the whole loadout operation.
    */
   function applyLoadout(store, loadout, allowUndo = false) {
+    if (!store) {
+      throw new Error("You need a store!");
+    }
     return dimActionQueue.queueAction(() => {
       if (allowUndo) {
         if (!_previousLoadouts[store.id]) {

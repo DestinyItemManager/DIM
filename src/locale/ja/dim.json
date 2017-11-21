@@ -9,7 +9,7 @@
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
-    "Inventory": "Inventory",
+    "Inventory": "在庫",
     "Postmaster": "ポストマスター",
     "Progress": "進行状況",
     "Reputation": "ランク",
@@ -67,7 +67,7 @@
     "Dump": "ゲーム機に情報を転送する"
   },
   "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
+    "Banner": "DIMはデスティニー 2 をサポートします。",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "DidYouKnow": {
@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "{{numRatings}}人の評価({{itemRating}})",
+    "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "キャンセル",
     "Cons": "短所",
     "Delete": "削除",
@@ -90,7 +91,7 @@
     "HelpPros": "この武器の良いところを書いてください(オプション)",
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "Pros": "長所",
-    "ReallyReport": "Report",
+    "ReallyReport": "報告",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
     "Submit": "提出",
@@ -114,6 +115,7 @@
       "MakeRoom": "設備を動かしてアイテムを拾うための空間を確保する",
       "Tooltip": "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
     },
+    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "{{character}}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
     "OutOfRoomTitle": "スペースありません。",
     "Quickmove": "素早く移動",
@@ -144,6 +146,7 @@
     "ClickFilters": "下のフィルターをクリック、もしくは検索ボックスに入力して探すことができます。",
     "Combine": "フィルターは複合することが出来ます。例えば'{{example}}'は光が300以上の全アークアイテムを検索します。'{{not}}'を使って除外することもできます。例えば'{{notexample}}'はエングラム以外の全アイテムを検索します。",
     "ContributeLight": "光レベル上昇に必要なアイテム",
+    "ContributePower": "Items that contribute to your power level.",
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "重複するアイテムを表示",
@@ -178,6 +181,7 @@
     "Ornament": "装飾可能なアイテム、装飾状況を表示",
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "現在ポストマスターにあるアイテム",
+    "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
     "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
     "RarityTier": "希少性を基に表示",
@@ -238,7 +242,7 @@
     "NeverShow": "次回から表示しない",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
-    "UpdateAvailable": "DIM Updated",
+    "UpdateAvailable": "DIM 更新",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "UpgradeChrome": "クロームをアップデートしてください",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
@@ -378,6 +382,7 @@
     "FromEquipped": "装備している",
     "GatherEngrams": "エングラム収集",
     "GatherEngramsExceptExotics": "エキゾチック",
+    "GatherTokens": "Gather Reputation Items",
     "ItemLeveling": "アイテムのレベルアップ",
     "ItemsWithIcon": "このアイコンを持つアイテムが装備されます。アイテムをクリックすると装備を切り替えることができます。",
     "LoadoutName": "ロードアウトの名前...",
@@ -392,10 +397,11 @@
     "MakeRoomError": "ポストマスターの全アイテム用のスペースを確保できませんでした: {{error}} 。",
     "MaxSlots": "ロードアウトでは、その種のアイテムの{{slots}}しか持てません。",
     "MaximizeLight": "光レベルを最大化",
-    "MaximizePower": "Maximize Power",
+    "MaximizePower": "パワーを最大化する",
     "NameRequired": "名称が必要",
     "NoEngrams": "転送出来るエングラムがありません。",
     "NoExotics": "非エキゾチクなエングラムは転送できません。",
+    "NoTokens": "ファクション評価の印は転送できません。",
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "Random": "ランダム",
     "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",
@@ -406,7 +412,7 @@
     "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
     "TooManyRequested": "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。",
     "VendorsCanEquip": "これらのアイテムは装備出来ません。",
-    "VendorsCannotEquip": "These items cannot be equipped:"
+    "VendorsCannotEquip": "これらのアイテムは装備できません。"
   },
   "Manifest": {
     "Build": "Destinyのデータを再構築する。",
@@ -489,21 +495,22 @@
     "ShowOverlay": "新しいアイテムを光るように表示する",
     "ShowReviews": "武器に関するレビュー評価を表示する",
     "SizeItem": "アイテムサイズ",
-    "SortBasePower": "base power (destiny 2 only)",
+    "SortBasePower": "ベースパワー（デスティニー2のみ）",
     "SortName": "名前",
     "SortPrimary": "メインのステータス",
     "SortRarity": "希少性",
     "SortRoll": "評価",
-    "SortTypeThenName": "item type then name",
-    "SortTypeThenPrimary": "item type then primary stat",
+    "SortTypeThenName": "アイテムタイプと名前",
+    "SortTypeThenPrimary": "アイテムタイプとプライマリ統計",
     "VaultColumns": "保管庫の最大幅"
   },
   "Stats": {
     "Discipline": "鍛錬",
     "Intellect": "知性",
     "Level": "レベル",
-    "MaxBasePower": "Max Base Power (w/o mods)",
+    "MaxBasePower": "最大ベースパワー（変更なし）",
     "NoBonus": "ボーナスなし。",
+    "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、をクリックしてください。",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
@@ -537,10 +544,6 @@
     "IgnoredUsers": "{{value}} ignored users",
     "Import": "DIMデータを取り込む。",
     "ImportExport": "データのバックアップ",
-    "ImportFromExtension": "クロームのDIMエクステンションからデータを転送する",
-    "ImportFromExtensionButton": "データのインポート",
-    "ImportFromExtensionDetail": "クロームのDIMエクステンションからDIMのウェブサイトにデータを転送できます。",
-    "ImportFromExtensionWarning": "クロームのDIMエクステンションのデータが現在のデータに上書きされます。\nいいですか？",
     "ImportNoFile": "ファイルが選択されていません！",
     "ImportSuccess": "DIMデータを取り込みました！",
     "IndexedDBStorage": "ローカルブラウザストレージ",
@@ -562,6 +565,7 @@
     "SaveTooLarge": "容量上限です。ロードアウトを削除してください。"
   },
   "Tags": {
+    "ClearTag": "Clear",
     "Favorite": "お気に入り",
     "Infuse": "融合する",
     "Junk": "不要",

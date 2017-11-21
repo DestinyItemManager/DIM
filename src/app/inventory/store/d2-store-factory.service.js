@@ -145,6 +145,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         lastPlayed,
         background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
         level: character.levelProgression.level, // Maybe?
+        percentToNextLevel: character.levelProgression.progressToNextLevel / character.levelProgression.nextLevelAt,
         powerLevel: character.light,
         stats: getCharacterStatsData(defs.Stat, character.stats),
         class: getClass(classy.classType),
@@ -193,7 +194,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         },
         spaceLeftForItem: function(item) {
           const openStacks = Math.max(0, this.capacityForItem(item) -
-                                      count(this.items, (i) => i.bucket.vaultBucket.id === item.bucket.vaultBucket.id));
+                                      count(this.items, (i) => i.bucket.vaultBucket && (i.bucket.vaultBucket.id === item.bucket.vaultBucket.id)));
           const maxStackSize = item.maxStackSize || 1;
           if (maxStackSize === 1) {
             return openStacks;

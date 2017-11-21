@@ -1,36 +1,35 @@
 import angular from 'angular';
 import 'babel-polyfill';
 
-require('./app/google');
+import './app/google';
 
 // Drag and drop
-const iosDragDropShim = require('drag-drop-webkit-mobile');
+import iosDragDropShim from 'drag-drop-webkit-mobile';
+
+// Initialize the main DIM app
+import './app/app.module';
+
+import './app/services/dimActionQueue.factory';
+import './app/services/dimDefinitions.factory';
+import './app/services/dimManifestService.factory';
+import './app/services/dimBucketService.factory';
+import './app/services/dimInfoService.factory';
+import './app/services/dimPlatformService.factory';
+import './app/services/dimDestinyTrackerService.factory';
+
+import './app/shell/dimAngularFilters.filter';
+import './app/shell/dimClickAnywhereButHere.directive';
+import './app/shell/dimManifestProgress.directive';
+
+import './scss/main.scss';
 
 iosDragDropShim({
   enableEnterLeave: true,
   holdToDrag: 300
 });
+
 // https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
 window.addEventListener('touchmove', () => {});
-
-// Initialize the main DIM app
-require('./app/app.module');
-
-require('./app/services/dimActionQueue.factory');
-require('./app/services/dimDefinitions.factory');
-require('./app/services/dimManifestService.factory');
-require('./app/services/dimBucketService.factory');
-require('./app/services/dimInfoService.factory');
-require('./app/services/dimPlatformService.factory');
-require('./app/services/dimDestinyTrackerService.factory');
-
-require('./app/shell/dimAngularFilters.filter');
-require('./app/shell/dimSearchFilter.directive');
-require('./app/shell/dimClickAnywhereButHere.directive');
-require('./app/shell/dimFilterLink.directive');
-require('./app/shell/dimManifestProgress.directive');
-
-require('./scss/main.scss');
 
 if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
   navigator.serviceWorker.register('/service-worker.js')

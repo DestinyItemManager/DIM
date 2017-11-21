@@ -208,7 +208,7 @@ module.exports = (env) => {
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
-        '$featureFlags.debugSync': JSON.stringify(false),
+        '$featureFlags.debugSync': JSON.stringify(env !== 'release'),
         // Use a WebAssembly version of SQLite, if possible (this crashes on Chrome 58 on Android though)
         '$featureFlags.wasm': JSON.stringify(true),
         // Enable color-blind a11y
@@ -218,7 +218,9 @@ module.exports = (env) => {
         // Enable activities tab
         '$featureFlags.activities': JSON.stringify(true),
         // Debug ui-router
-        '$featureFlags.debugRouter': JSON.stringify(false)
+        '$featureFlags.debugRouter': JSON.stringify(false),
+        // Show drag and drop on dev only
+        '$featureFlags.dnd': JSON.stringify(isDev)
       }),
 
       new webpack.SourceMapDevToolPlugin({

@@ -49,17 +49,34 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
   const vm = this;
   let dialogResult = null;
 
-  const dragHelp = document.getElementById('drag-help');
+  const phoneWidthQuery = window.matchMedia('(orientation: portrait) and (max-device-width: 750px)');
+  function phoneWidthHandler(e) {
+    $scope.$apply(() => {
+      vm.isPhonePortrait = e.matches;
+    });
+  }
+  phoneWidthQuery.addListener(phoneWidthHandler);
 
-  if (vm.item.maxStackSize > 1) {
-    $element.on('dragstart', (e) => {
+  if (vm.item.maxStackSize > 1 || (vm.item.destinyVersion === 2 && phoneWidthQuery.matches)) {
+    const dragHelp = document.getElementById('drag-help');
+    const dragBox = document.getElementById('item-drag-box');
+    $element.on('dragstart', (element) => {
+      $rootScope.$broadcast('drag-start-item', {
+        item: vm.item,
+        element
+      });
       $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
+      if (vm.item.destinyVersion === 2 && phoneWidthQuery.matches) {
+        dragBox.classList.remove('drag-help-hidden');
+      }
       if (vm.item.amount > 1) {
         dragHelp.classList.remove('drag-help-hidden');
       }
     });
     $element.on('dragend', () => {
+      $rootScope.$broadcast('drag-stop-item');
       dragHelp.classList.add('drag-help-hidden');
+      dragBox.classList.add('drag-help-hidden');
       delete $rootScope.dragItem;
     });
     $element.on('drag', (e) => {

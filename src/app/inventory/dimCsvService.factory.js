@@ -51,8 +51,7 @@ export function CsvService() {
       let equippable = item.classTypeName;
       if (!equippable || equippable === "unknown") {
         equippable = "Any";
-      }
-      else {
+      } else {
         equippable = capitalizeFirstLetter(equippable);
       }
       data += `${equippable},`;
@@ -108,8 +107,7 @@ export function CsvService() {
       data += `${gun.primStat.value},`;
       if (gun.dmg) {
         data += `${capitalizeFirstLetter(gun.dmg)},`;
-      }
-      else {
+      } else {
         data += "Kinetic,";
       }
       data += `${nameMap[gun.owner]},`;
@@ -210,8 +208,7 @@ export function CsvService() {
       allItems = allItems.concat(store.items);
       if (store.id === "vault") {
         nameMap[store.id] = "Vault";
-      }
-      else {
+      } else {
         nameMap[store.id] = `${capitalizeFirstLetter(store.class)}(${store.powerLevel})`;
       }
     });
@@ -224,8 +221,7 @@ export function CsvService() {
         if (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414) {
           items.push(item);
         }
-      }
-      else if (type === "Armor") {
+      } else if (type === "Armor") {
         if (item.primStat.statHash === 3897883278) {
           items.push(item);
         }
@@ -233,8 +229,7 @@ export function CsvService() {
     });
     if (type === "Weapons") {
       downloadWeapons(items, nameMap);
-    }
-    else {
+    } else {
       downloadArmor(items, nameMap);
     }
   }

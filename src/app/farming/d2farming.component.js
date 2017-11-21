@@ -8,13 +8,14 @@ export const D2FarmingComponent = {
   template
 };
 
-function FarmingCtrl(D2FarmingService) {
+function FarmingCtrl(D2FarmingService, dimSettingsService) {
   'ngInject';
 
   const vm = this;
 
   angular.extend(vm, {
     service: D2FarmingService,
+    settings: dimSettingsService,
     stop: function($event) {
       $event.preventDefault();
       D2FarmingService.stop();

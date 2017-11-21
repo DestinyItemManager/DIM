@@ -1,0 +1,25 @@
+<div class="locations" ng-repeat="store in $ctrl.stores | sortStores:$ctrl.settings.characterOrder track by store.id">
+  <div class="move-button move-vault" alt="{{ ::store.name }}" title="{{ ::store.name }}"
+    ng-if="$ctrl.canShowVault(store)" ng-click="$ctrl.moveItemTo(store)"
+    data-type="item" data-character="{{ ::store.id }}"
+    ui-on-drop="$ctrl.onDrop(store, $event, false)"
+    drop-channel="{{ $ctrl.item.bucket.type }}">
+    <span ng-i18next="MovePopup.Vault"></span>
+  </div>
+  <div class="move-button move-equip" alt="{{ ::store.name }}" title="{{ ::store.name }}"
+    ng-if="!($ctrl.item.owner == store.id && $ctrl.item.equipped) && $ctrl.item.canBeEquippedBy(store)" ng-click="$ctrl.moveItemTo(store, true)"
+    data-type="equip" data-character="{{ ::store.id }}"
+    ui-on-drop="$ctrl.onDrop(store, $event, true)"
+    drop-channel="{{ $ctrl.item.bucket.type }}"
+    style="background-image: url({{ ::store.icon }})">
+    <span ng-i18next="MovePopup.Equip"></span>
+  </div>
+  <div class="move-button move-store" alt="{{ ::store.name }}" title="{{ ::store.name }}"
+    ng-if="$ctrl.canShowStore(store)" ng-click="$ctrl.moveItemTo(store)"
+    data-type="item" data-character="{{ ::store.id }}"
+    ui-on-drop="$ctrl.onDrop(store, $event, false)"
+    drop-channel="{{ $ctrl.item.bucket.type }}"
+    style="background-image: url({{ ::store.icon }})">
+    <span ng-i18next="MovePopup.Store"></span>
+  </div>
+</div>

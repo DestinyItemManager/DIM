@@ -203,6 +203,13 @@ dim-store-heading {
   opacity: 0.8;
 }
 
+.loadout-menu {
+  position: relative;
+  [role="button"] {
+    outline: none;
+  }
+}
+
 .current {
   &.character, &.character-swipe {
     .character-box:before {

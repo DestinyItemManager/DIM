@@ -4,19 +4,16 @@
  * @class ReviewReporter
  */
 class ReviewReporter {
-  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
     this.$q = $q;
     this.$http = $http;
     this._trackerErrorHandler = trackerErrorHandler;
-    this._dimPlatformService = dimPlatformService;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;
   }
 
-  _getReporter() {
-    const membershipInfo = this._dimPlatformService.getActive();
-
+  _getReporter(membershipInfo) {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,
@@ -33,8 +30,8 @@ class ReviewReporter {
     };
   }
 
-  _generateReviewReport(reviewId) {
-    const reporter = this._getReporter();
+  _generateReviewReport(reviewId, membershipInfo) {
+    const reporter = this._getReporter(membershipInfo);
 
     return {
       reviewId: reviewId,
@@ -43,8 +40,8 @@ class ReviewReporter {
     };
   }
 
-  _submitReportReviewPromise(reviewId) {
-    const reviewReport = this._generateReviewReport(reviewId);
+  _submitReportReviewPromise(reviewId, membershipInfo) {
+    const reviewReport = this._generateReviewReport(reviewId, membershipInfo);
 
     const promise = this.$q
               .when(this._submitReviewReportCall(reviewReport))
@@ -66,14 +63,15 @@ class ReviewReporter {
    * Also quietly adds the associated user to a block list.
    *
    * @param {review} review
+   * @param {Account} membershipInfo
    * @memberof ReviewReporter
    */
-  reportReview(review) {
+  reportReview(review, membershipInfo) {
     if (review.isHighlighted || review.isReviewer) {
       return;
     }
 
-    this._submitReportReviewPromise(review.reviewId)
+    this._submitReportReviewPromise(review.reviewId, membershipInfo)
       .then(this._reviewDataCache.markReviewAsIgnored(review))
       .then(this._ignoreReportedUser(review));
   }

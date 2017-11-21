@@ -1,10 +1,28 @@
-.user-review--header {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px;
+.user-review{
+  &--header {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
 
-  star-rating {
-    font-size: 1.2em;
+    star-rating {
+      font-size: 1.2em;
+    }
+  }
+
+  &--thumbs {
+    display: flex;
+  }
+
+  &--thumbs-up {
+    padding-right: 20px;
+  }
+
+  &--thumbs-up-button {
+    color: #6dcc66;
+  }
+
+  &--thumbs-down-button {
+    color: #cc6666;
   }
 }
 
@@ -87,5 +105,38 @@
 
   &--report-cancel {
     margin-left: auto;
+  }
+
+  &--thumbs-down {
+    color:#cc6666 !important;
+  }
+
+  &--thumbs-up {
+    color: #6dcc66 !important;
+  }
+
+  &--chart-container {
+    width: 95%;
+    display: flex;
+  }
+
+  &--review-chart {
+    &.stats {
+      border-spacing: 0 3px;
+    
+      .stat-box-row {
+        margin-bottom: 3px;
+      }
+      .stat-box-cell {
+        line-height: 10px;
+      }
+      .stat-box-outer {
+        height: 10px;
+        line-height: 10px;
+      }
+      .stat-box-inner {
+        line-height: 10px;
+      }
+    }
   }
 }

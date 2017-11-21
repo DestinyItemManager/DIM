@@ -1,20 +1,20 @@
-import angular from 'angular';
-import template from './dimFilterLink.directive.html';
+import template from './filter-link.html';
 
 /**
  * Link to a specific filter in search. Clicking adds this term to the search.
  * Example: <dim-filter-link filter="is:arc"></dim-filter-link>
  */
-angular.module('dimApp')
-  .component('dimFilterLink', {
-    template: template,
-    controller: FilterLinkCtrl,
-    bindings: {
-      filter: '@'
-    }
-  });
+export const FilterLinkComponent = {
+  template: template,
+  controller: FilterLinkCtrl,
+  bindings: {
+    filter: '@'
+  }
+};
 
 function FilterLinkCtrl(dimSearchService, $window, $i18next) {
+  'ngInject';
+
   this.addFilter = function(filter) {
     let itemNameFilter = false;
 

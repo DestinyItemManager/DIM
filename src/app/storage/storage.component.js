@@ -118,40 +118,6 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
     }
   };
 
-  vm.importDataFromExtension = function() {
-    if ($window.confirm($i18next.t('Storage.ImportFromExtensionWarning'))) {
-      return SyncService.set(vm.extensionData, true)
-        .then(() => $q.all(SyncService.adapters.map(refreshAdapter)));
-    }
-    return null;
-  };
-
-  function messageHandler(event) {
-    // We only accept messages from ourselves
-    if (event.source !== window) {
-      return;
-    }
-
-    switch (event.data.type) {
-    case 'DIM_EXT_PONG':
-      vm.supportsExtensionImport = true;
-      window.postMessage({ type: 'DIM_GET_DATA' }, "*");
-      break;
-
-    case 'DIM_DATA_RESPONSE':
-      vm.extensionData = event.data.data;
-      vm.extensionDataStats = dataStats(vm.extensionData);
-      break;
-    }
-  }
-
-  window.addEventListener('message', messageHandler, false);
-  window.postMessage({ type: 'DIM_EXT_PING' }, "*");
-
-  $scope.$on('$destroy', () => {
-    window.removeEventListener('message', messageHandler);
-  });
-
   $scope.$on('gdrive-sign-in', () => {
     if ($stateParams.gdrive === 'true') {
       vm.forceSync().then(() => $state.go('storage', { gdrive: undefined }, 'replace'));
