@@ -1,5 +1,7 @@
 # Next
 
+* Fix mobile store pager width
+
 # 4.25.0
 
 # 4.24.1
