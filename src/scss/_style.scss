@@ -243,6 +243,10 @@ img {
   padding-right: constant(safe-area-inset-right);
 }
 
+.bucket-padding {
+  padding: 0 8px;
+}
+
 .store-bounds {
   position: fixed;
   backface-visibility: hidden;
