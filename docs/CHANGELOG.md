@@ -2,6 +2,10 @@
 
 * Fix mobile store pager width
 
+# 4.25.1
+
+* Added Net Neutrality popup.
+
 # 4.25.0
 
 # 4.24.1
