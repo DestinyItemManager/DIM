@@ -1,4 +1,5 @@
 # Next
+* Don't show community best rated perk tip if socket's plugged.
 
 # 4.25.1
 
