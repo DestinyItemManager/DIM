@@ -1,4 +1,6 @@
 # Next
+
+# 4.26.0
 * Don't show community best rated perk tip if socket's plugged.
 
 * is:haslevel/haspower (D1/D2) fix in cheatsheet.
