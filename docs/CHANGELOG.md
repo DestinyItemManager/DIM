@@ -1,6 +1,8 @@
 # Next
 * Don't show community best rated perk tip if socket's plugged.
 
+* is:haslevel/haspower (D1/D2) fix in cheatsheet.
+
 # 4.25.1
 
 * Added Net Neutrality popup.
