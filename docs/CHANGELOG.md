@@ -1,4 +1,5 @@
 # Next
+* Added setting to pick relevant platforms for reviews.
 
 * Fix review area not collapsing in popup.
 * Fix display of option selector on reviews tab when detailed reviews are disabled.
