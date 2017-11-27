@@ -571,10 +571,10 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         return predicate.length !== 0 && item.dtrRating;
       },
       rating: function(predicate, item) {
-        return compareByOperand(item.dtrRating, predicate);
+        return item.dtrRating && compareByOperand(item.dtrRating, predicate);
       },
       ratingcount: function(predicate, item) {
-        return compareByOperand(item.dtrRatingCount, predicate);
+        return item.dtrRating && compareByOperand(item.dtrRatingCount, predicate);
       },
       year: function(predicate, item) {
         if (predicate === 'year1') {
