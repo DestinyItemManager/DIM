@@ -1,6 +1,7 @@
 # Next
 
 * Fix review area not collapsing in popup.
+* Fix display of option selector on reviews tab when detailed reviews are disabled.
 
 # 4.26.0
 * Don't show community best rated perk tip if socket's plugged.
