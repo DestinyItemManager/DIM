@@ -13,75 +13,75 @@
     "Postmaster": "Administración",
     "Progress": "Progreso",
     "Reputation": "Reputación",
-    "Show": "Muestra {{bucket}}",
+    "Show": "Mostrar {{bucket}}",
     "Unknown": "Desconocido",
-    "Vault": "Depósito",
+    "Vault": "Bóveda",
     "Weapons": "Armas"
   },
   "BungieAlert": {
     "Title": "Un mensaje de Bungie:"
   },
   "BungieService": {
-    "DestinyLegacyPlatform": "Los servicios de Bungie tienen un bug que incapacita que DIM pueda cargar tu perfil de Destiny 2 si has jugado Destiny 1 en una consola old-gen. Bungie arreglará esto pronto, mientras tanto una solución puede ser jugar Destiny 1 en la generación actual para poder acceder a tu perfil.",
+    "DestinyLegacyPlatform": "Los servicios de Bungie tienen actualmente un error que impide que DIM pueda cargar tu perfil de Destiny 2 si has jugado Destiny 1 en una consola de la generación anterior. Bungie arreglará esto pronto, mientras tanto una solución es jugar Destiny 1 en una consola de la generación actual para poder acceder a tu perfil.",
     "DevVersion": "¿Estás corriendo una versión de desarrollo de DIM? Debes primero registrar tu extensión de Chrome con Bungie.net.",
     "Difficulties": "La API de Bungie esta teniendo dificultades.",
-    "ItemUniqueness": "Singularidad del objeto",
+    "ItemUniqueness": "Peculiaridad del objeto",
     "ItemUniquenessExplanation": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
-    "ItemUniquenessExplanation_female": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
+    "ItemUniquenessExplanation_female": "Intentaste mover la '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
     "ItemUniquenessExplanation_male": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
-    "Maintenance": "Los servidores de Bungie.net se encuentran en mantenimiento.",
+    "Maintenance": "Los servidores de Bungie.net se encuentran fuera de servicio por mantenimiento.",
     "NetworkError": "Error de red - {{status}} {{statusText}}",
-    "NoAccount": "No se encontró esta cuenta de Destiny en {{platform}}. ¿Seleccionaste la plataforma correcta?",
-    "NoAccountForPlatform": "No encontramos tu cuenta de Destiny en {{platform}}.",
+    "NoAccount": "No se encontró ninguna cuenta de Destiny en {{platform}}. ¿Seleccionaste la plataforma correcta?",
+    "NoAccountForPlatform": "No encontramos ninguna cuenta de Destiny en {{platform}}.",
     "NoCookies": "No se encontraron cookies.",
     "NotConnected": "Es posible que no tengas conexión a Internet.",
     "NotLoggedIn": "Por favor inicie sesión en Bungie.net para poder usar esta extensión.",
     "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelve a intentarlo.",
-    "Twitter": "Entérate de las actualizaciones de estados en:",
+    "Twitter": "Obtén actualizaciones de estado en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
-    "VendorNotFound": "Los datos del vendedor no están disponibles."
+    "VendorNotFound": "La información de los vendedores no está disponible."
   },
   "Compare": {
     "All": "Comparaciones de {{type}} ({{quantity}})",
     "Archetype": "Comparaciones de arquetipo ({{quantity}})",
-    "ButtonHelp": "Compara Objetos",
+    "ButtonHelp": "Comparar Objetos",
     "Close": "Cerrar",
     "Compare": "Comparar",
     "Error": {
       "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
       "Class": "No se puede comparar este objeto ya que no es para {{class}}."
     },
-    "ItemCount": "Tienes {{num}} de esto.",
-    "Splits": "Comparar partes similares ({{quantity}})"
+    "ItemCount": "Tienes {{num}} de estos.",
+    "Splits": "Comparar con los de atributos similares ({{quantity}})"
   },
   "Cooldown": {
-    "Grenade": "Tiempo para Granada: {{cooldown}}",
-    "Melee": "Tiempo para Cuerpo a cuerpo: {{cooldown}}",
-    "Super": "Tiempo para Super: {{cooldown}}"
+    "Grenade": "Tiempo de recarga de Granada: {{cooldown}}",
+    "Melee": "Tiempo de recarga de Ataque Cuerpo a Cuerpo: {{cooldown}}",
+    "Super": "Tiempo de recarga de Súper: {{cooldown}}"
   },
   "Countdown": {
     "Days": "{{count}} Día",
     "Days_plural": "{{count}} Días"
   },
   "Debug": {
-    "Dump": "Descargar información a la consola"
+    "Dump": "Volcar información a la consola"
   },
   "Destiny2": {
-    "Banner": "DIM proveerá soporte para Destiny 2",
-    "ComingSoon": "Proveeremos soporte para tus personajes de Destiny 2 en cuanto el juego se encuentre disponible en consolas, de acuerdo a nuestras capacidades. Danos algunas semanas para conocer el juego (y entretenernos!)."
+    "Banner": "DIM proveerá servicio para Destiny 2",
+    "ComingSoon": "Proveeremos el servicio para tus personajes de Destiny 2 en cualquier capacidad que podamos en cuanto el juego se encuentre disponible en consolas. Danos algunas semanas para aprender más sobre el juego (y para jugarlo nosotros mismos!)."
   },
   "DidYouKnow": {
     "Collapse": "¡Acabas de colapsar una sección en DIM!. Esto puede ser útil para ocultar partes de DIM que no necesitas usar normalmente.",
     "DidYouKnow": "¿Sabias que?",
     "DontShowAgain": "No mostrar esta sugerencia de nuevo",
-    "DoubleClick": "Si estas moviendo un objeto a tu personaje activo (último al que iniciaste sesión), puedes darle doble click al objeto para equiparlo instantáneamente.",
-    "DragAndDrop": "Los objetos pueden ser arrastrados y soltados entre diferentes columnas de personajes/depósito.",
+    "DoubleClick": "Si estas moviendo un objeto a tu personaje activo (el último con el que iniciaste sesión), puedes darle doble click al objeto para equiparlo instantáneamente.",
+    "DragAndDrop": "Los objetos pueden ser arrastrados y soltados entre diferentes columnas de personajes/boveda.",
     "Expand": "Para expandir de nuevo una sección, simplemente da click en el símbolo de más a la izquierda de la categoría que colapsaste.",
     "TryNext": "¡Pruébalo la próxima vez!"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} reseñas.",
-    "BestRatedTip": "Esta ventaja se asocia con calificaciones altas de la comunidad.",
+    "BestRatedTip": "Esta opción de configuración está asociada con calificaciones altas de la comunidad.",
     "Cancel": "Cancelar",
     "Cons": "Contras",
     "Delete": "Borrar",
@@ -90,32 +90,39 @@
     "HelpCons": "Describe las cosas negativas de esta arma (opcional)",
     "HelpPros": "Describe las cosas positivas de esta arma (opcional)",
     "NoReviews": "¡No hay reseñas para este objeto, sé el primero!",
+    "Platforms": {
+      "All": "Mostrar Todas",
+      "AllConsoles": "Todas las Consolas",
+      "Pc": "Solo para PC",
+      "Playstation": "Solo Playstation",
+      "Xbox": "Solo Xbox"
+    },
     "Pros": "Pros",
     "ReallyReport": "Reportar",
     "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker.",
     "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker.",
     "Submit": "Enviar",
-    "ThankYou": "¡Gracias por enviar un comentario! Estará en vivo pronto.",
-    "VerifyReport": "Estas seguro de que quieres marcar esta reseña?",
+    "ThankYou": "¡Gracias por enviar una reseña! Estará en vivo pronto.",
+    "VerifyReport": "¿Estas seguro de que quieres marcar esta reseña?",
     "YourReview": "Tu Reseña"
   },
   "FarmingMode": {
     "Configuration": "Configuración",
-    "D2Desc": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
-    "D2Desc_female": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
+    "D2Desc": "DIM está impidiendo que los objetos se vayan al correo al asegurarse de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos a la bóveda para hacer espacio.",
+    "D2Desc_female": "DIM está impidiendo que los objetos se vayan al correo al asegurarse de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos a la bóveda para hacer espacio.",
     "D2Desc_male": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
     "Desc": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "Desc_female": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "Desc_male": "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
-    "FarmingMode": "Modo recolector (mover objetos)",
+    "FarmingMode": "Modalidad de Recolección (mover objetos)",
     "MakeRoom": {
       "Desc": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
       "Desc_female": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
       "Desc_male": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
-      "MakeRoom": "Hacer espacio para coger objetos moviendo equipamiento",
-      "Tooltip": "Si esta marcado, DIM va a mover armas y armadura para hacer espacio en el depósito para Engramas."
+      "MakeRoom": "Mueva equipamiento para hacer espacio para recolectar objetos",
+      "Tooltip": "Si esta marcado, DIM moverá armas y armadura para hacer espacio en la bóveda para engramas."
     },
-    "MoveTokens": "Enviar elementos de reputación al almacén",
+    "MoveTokens": "Enviar objetos de reputación a la bóveda",
     "OutOfRoom": "Ya no hay espacio para mover objetos fuera de tu {{character}}. ¡Es hora de desencriptar algunos engramas y limpiar la basura!",
     "OutOfRoomTitle": "Sin espacio",
     "Quickmove": "Movimiento rápido",
@@ -145,8 +152,8 @@
     "Class": "Muestra objetos basados en su afinidad de clase.",
     "ClickFilters": "Haz click en los filtros abajo para aplicar, o escribiendo en la casilla de búsqueda.",
     "Combine": "Los filtros son combinados usando la lógica \"y\", por ejemplo '{{example}}' mostrará todos los objetos de arco que tengan más de 300 de nivel de luz. Los filtros pueden ser negados usando '{{not}}', por ejemplo '{{notexample}}' va a encontrar todos los objetos que no son engramas.",
-    "ContributeLight": "Objetos que contribuyen a tu nivel de luz.",
-    "ContributePower": "Objetos que contribuyen a tu nivel de luz.",
+    "ContributeLight": "Muestra los items que tienen luz y pueden contribuir a subir tu nivel de luz.",
+    "ContributePower": "Muestra los items que tienen poder y contribuyen a subir tu nivel de poder.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra los objetos duplicados",
@@ -487,6 +494,7 @@
     "Language": "Lenguaje (recarga DIM para que se apliquen los cambios)",
     "LogOut": "Cerrar sesión",
     "ResetToDefault": "Reiniciar",
+    "ReviewsPlatformSelection": "Mostrar solo calificaciones de la siguiente plataforma",
     "SetSort": "Ordenar objetos por",
     "Settings": "Configuración",
     "ShowAnimations": "Animar el brillo de artículos nuevos",
