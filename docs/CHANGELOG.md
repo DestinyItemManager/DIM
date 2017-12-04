@@ -1,18 +1,16 @@
 # Next
 
 # 4.27.0
-* Added setting to pick relevant platforms for reviews.
 
+* Added setting to pick relevant platforms for reviews.
 * Fix review area not collapsing in popup.
 * Fix display of option selector on reviews tab when detailed reviews are disabled.
 
 # 4.26.0
+
 * Don't show community best rated perk tip if socket's plugged.
-
 * is:haslevel/haspower (D1/D2) fix in cheatsheet.
-
 * Fix mobile store pager width
-
 
 # 4.25.1
 
