@@ -1,4 +1,6 @@
 # Next
+
+# 4.27.0
 * Added setting to pick relevant platforms for reviews.
 
 * Fix review area not collapsing in popup.
