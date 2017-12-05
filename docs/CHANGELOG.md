@@ -1,4 +1,5 @@
 # Next
+
 * Key for perk hints in D2.
 
 # 4.27.0
