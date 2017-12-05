@@ -588,6 +588,7 @@ export function ItemService(
     }
 
     if (item.owner === store.id) {
+      // TODO: handle space for postmaster
       return $q.resolve(true);
     }
 
@@ -730,15 +731,17 @@ export function ItemService(
               promise = promise.then((item) => dequipItem(item));
             }
 
-            promise = promise
-              .then((item) => moveToVault(item, amount))
-              .then((item) => moveToStore(item, target, equip, amount));
+            if (!item.location.inPostmaster) {
+              promise = promise
+                .then((item) => moveToVault(item, amount))
+                .then((item) => moveToStore(item, target, equip, amount));
+            }
           }
 
           if (equip) {
             promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
           } else if (!equip) {
-            promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
+            promise = promise.then((item) => (item.equipped ? dequipItem(item) : moveToStore(item, target)));
           }
         } else if (source.isVault && target.isVault) { // Vault to Vault
           // Do Nothing.
