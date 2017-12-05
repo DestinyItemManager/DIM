@@ -195,7 +195,7 @@ export function D2ItemFactory(
 
     const itemType = normalBucket.type || 'Unknown';
 
-    const categories = itemDef.quality ? [itemDef.quality.infusionCategoryName.replace('v300.', 'category_').toUpperCase()] : [];
+    const categories = itemDef.quality && itemDef.quality.infusionCategoryName ? [itemDef.quality.infusionCategoryName.replace('v300.', 'category_').toUpperCase()] : [];
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
@@ -326,7 +326,7 @@ export function D2ItemFactory(
     // Infusion
     const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
     createdItem.infusionProcess = tier && tier.infusionProcess;
-    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName.length);
+    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName && itemDef.quality.infusionCategoryName.length);
     createdItem.infusionQuality = itemDef.quality || null;
 
     // Mark items with power mods
