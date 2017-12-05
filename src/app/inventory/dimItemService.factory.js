@@ -587,8 +587,7 @@ export function ItemService(
       return Math.max(0, left);
     }
 
-    if (item.owner === store.id) {
-      // TODO: handle space for postmaster
+    if (item.owner === store.id && !item.location.inPostmaster) {
       return $q.resolve(true);
     }
 
@@ -731,11 +730,9 @@ export function ItemService(
               promise = promise.then((item) => dequipItem(item));
             }
 
-            if (!item.location.inPostmaster) {
-              promise = promise
-                .then((item) => moveToVault(item, amount))
-                .then((item) => moveToStore(item, target, equip, amount));
-            }
+            promise = promise
+              .then((item) => moveToVault(item, amount))
+              .then((item) => moveToStore(item, target, equip, amount));
           }
 
           if (equip) {
