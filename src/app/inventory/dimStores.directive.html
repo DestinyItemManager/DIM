@@ -14,7 +14,7 @@
       </store-pager>
     </div>
     <div class="detached" loadout-id="{{vm.selectedStore.id}}"></div>
-    <div ng-swipe-right="vm.swipeRight($event)" ng-swipe-left="vm.swipeLeft($event)">
+    <div class="bucket-padding" ng-swipe-right="vm.swipeRight($event)" ng-swipe-left="vm.swipeLeft($event)">
       <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">
         <div class="title">
           <span class="collapse-handle" ng-click="vm.toggleSection(category)"><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.{{ ::category }}"></span></span>
@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <div ng-if="!vm.isPhonePortrait">
+  <div class="bucket-padding" ng-if="!vm.isPhonePortrait">
     <div class="store-row store-header">
       <div class="store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
         <dim-store-heading internal-loadout-menu="true" class="character" ng-class="{ current: store.current }" store-data="store"></dim-store-heading>

@@ -14,7 +14,7 @@ export function defaultAccountRoute($stateProvider) {
         return dimPlatformService.getPlatforms().then(() => dimPlatformService.getActive());
       }
     },
-    controller: ($state, activeAccount, dimSettingsService) => {
+    controller: function controller($state, activeAccount, dimSettingsService) {
       'ngInject';
 
       if (activeAccount) {

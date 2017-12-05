@@ -23,10 +23,9 @@
         <img class="item-mod"
           ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
           ng-class="{ notChosen: socket != socketInfo.plug }"
-          press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}{{socket.bestRated ? $ctrl.bestRatedText : ''}}"
+          press-tip="{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}{{socket != socketInfo.plug && socket.bestRated ? $ctrl.bestRatedText : ''}}"
           press-tip-title="{{ socket.displayProperties.name }}">
       </div>
     </div>
   </div>
 </div>
-  

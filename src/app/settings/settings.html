@@ -84,6 +84,18 @@
           <input type="checkbox" id="allowIdPostToDtr" ng-model="vm.settings.allowIdPostToDtr"/>
         </td>
       </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2 && (vm.settings.showReviews || vm.settings.allowIdPostToDtr)">
+        <td>
+          <label for="reviewsPlatformSelection" ng-i18next="Settings.ReviewsPlatformSelection"></label>
+        </td>
+        <td>
+          <select id="reviewsPlatformSelection"
+            ng-model="vm.settings.reviewsPlatformSelection"
+            ng-options="code as name for (code, name) in vm.reviewsPlatformOptions"
+            ng-change="vm.reviewsPlatformChanged()">
+          </select>
+        </td>
+      </tr>
       <tr>
         <td>
           <label for="itemSort" ng-i18next="Settings.SetSort"></label>
