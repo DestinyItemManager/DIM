@@ -1,6 +1,7 @@
-# Next
+# 4.27.1
 
 * Key for perk hints in D2.
+* Fixed bug loading items with Destiny 2 v1.1.0.
 
 # 4.27.0
 
