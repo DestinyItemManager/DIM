@@ -1,3 +1,7 @@
+# Next
+
+* NEW - Move items from the postmaster in DIM!
+
 # 4.27.1
 
 * Key for perk hints in D2.
