@@ -195,6 +195,10 @@ export function D2ItemFactory(
 
     const itemType = normalBucket.type || 'Unknown';
 
+    // Bungie API Bug: infusionCategoryName is missing as of CoO: https://github.com/Bungie-net/api/issues/324
+    // TODO: We should be figuring out our categories based on
+    // itemDef.itemCategoryHashes instead. Unfortunately they're
+    // localized and don't map cleanly into our existing categories.
     const categories = itemDef.quality && itemDef.quality.infusionCategoryName ? [itemDef.quality.infusionCategoryName.replace('v300.', 'category_').toUpperCase()] : [];
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
@@ -326,7 +330,8 @@ export function D2ItemFactory(
     // Infusion
     const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
     createdItem.infusionProcess = tier && tier.infusionProcess;
-    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName && itemDef.quality.infusionCategoryName.length);
+    // Bungie API Bug: infusionCategoryName is missing as of CoO: https://github.com/Bungie-net/api/issues/324
+    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName);
     createdItem.infusionQuality = itemDef.quality || null;
 
     // Mark items with power mods
