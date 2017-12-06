@@ -63,7 +63,7 @@ export function ItemService(
       const stackable = item.maxStackSize > 1;
       // Items to be decremented
       const sourceItems = stackable
-        ? _.sortBy(_.filter(source.buckets[item.location.id], (i) => {
+        ? _.sortBy(_.filter(source.buckets[item.bucket.id], (i) => {
           return i.hash === item.hash &&
                 i.id === item.id &&
                 !i.notransfer;
@@ -71,7 +71,7 @@ export function ItemService(
       // Items to be incremented. There's really only ever at most one of these, but
       // it's easier to deal with as a list.
       const targetItems = stackable
-        ? _.sortBy(_.filter(target.buckets[item.location.id], (i) => {
+        ? _.sortBy(_.filter(target.buckets[item.bucket.id], (i) => {
           return i.hash === item.hash &&
                 i.id === item.id &&
                 // Don't consider full stacks as targets
@@ -146,7 +146,7 @@ export function ItemService(
     }
 
     if (equip) {
-      target.buckets[item.location.id].forEach((i) => {
+      target.buckets[item.bucket.id].forEach((i) => {
         i.equipped = (i.index === item.index);
       });
     }
@@ -447,7 +447,7 @@ export function ItemService(
              store.destinyVersion === 2
                ? (i) => i.bucket.vaultBucket.id === item.bucket.vaultBucket.id
                : (i) => i.bucket.sort === item.bucket.sort)
-      : store.buckets[item.location.id];
+      : store.buckets[item.bucket.id];
     let moveAsideCandidates = _.filter(allItems, movable);
 
     // if there are no candidates at all, fail
@@ -587,7 +587,7 @@ export function ItemService(
       return Math.max(0, left);
     }
 
-    if (item.owner === store.id) {
+    if (item.owner === store.id && !item.location.inPostmaster) {
       return $q.resolve(true);
     }
 
@@ -738,7 +738,7 @@ export function ItemService(
           if (equip) {
             promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
           } else if (!equip) {
-            promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
+            promise = promise.then((item) => (item.equipped ? dequipItem(item) : moveToStore(item, target)));
           }
         } else if (source.isVault && target.isVault) { // Vault to Vault
           // Do Nothing.

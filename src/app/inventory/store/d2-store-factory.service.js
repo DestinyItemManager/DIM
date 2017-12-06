@@ -50,7 +50,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
         return 0;
       }
       const openStacks = Math.max(0, this.capacityForItem(item) -
-                                  this.buckets[item.location.id].length);
+                                  this.buckets[item.bucket.id].length);
       const maxStackSize = item.maxStackSize || 1;
       if (maxStackSize === 1) {
         return openStacks;
