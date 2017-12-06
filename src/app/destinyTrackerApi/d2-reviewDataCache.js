@@ -44,11 +44,29 @@ class D2ReviewDataCache {
     return rating.toFixed(1);
   }
 
+  _getDownvoteMultiplier(dtrRating) {
+    if (dtrRating.votes.total > 300) {
+      return 1.0;
+    }
+
+    if (dtrRating.votes.total > 200) {
+      return 1.5;
+    }
+
+    if (dtrRating.votes.total > 100) {
+      return 2.0;
+    }
+
+    return 2.5;
+  }
+
   _getScore(dtrRating) {
-    const rating = (dtrRating.votes.upvotes / dtrRating.votes.total) * 5;
+    const downvoteMultipler = this._getDownvoteMultiplier(dtrRating);
+
+    const rating = ((dtrRating.votes.total - (dtrRating.votes.downvotes * downvoteMultipler)) / dtrRating.votes.total) * 5;
 
     if ((rating < 1) &&
-            (dtrRating.votes.total > 0)) {
+        (dtrRating.votes.total > 0)) {
       return 1;
     }
 
