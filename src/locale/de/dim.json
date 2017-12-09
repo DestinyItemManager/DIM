@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
+    "BestRatedKey": " = Empfohlener Perk",
     "BestRatedTip": "Dieser Perk wird mit hohen Community-Bewertungen assoziiert.",
     "Cancel": "Abbrechen",
     "Cons": "Nachteile",
@@ -153,7 +154,7 @@
     "ClickFilters": "Klick unten auf Filter um diese anzuwenden oder benutze die Suchfunktion.",
     "Combine": "Filter werden nach 'and'-Logik kombiniert, zum Beispiel wird '{{example}}' alle Arkus-Items mit einem Licht über 300 zurückgeben. Filter können durch '{{not}}' negiert werden, zum Beispiel findet '{{notexample}}' alle Nicht-Engramm Items.",
     "ContributeLight": "Zeige Items die Licht haben und zu deinem Lichtlevel beitragen können.",
-    "ContributePower": "Zeige Items die Power haben und zu deinem Power-Level beziehen können.",
+    "ContributePower": "Zeige Items die Power haben und zu deinem Power-Level beitragen können.",
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",

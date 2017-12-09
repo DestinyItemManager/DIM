@@ -81,6 +81,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} reseñas.",
+    "BestRatedKey": " = suggested perk",
     "BestRatedTip": "Esta opción de configuración está asociada con calificaciones altas de la comunidad.",
     "Cancel": "Cancelar",
     "Cons": "Contras",
