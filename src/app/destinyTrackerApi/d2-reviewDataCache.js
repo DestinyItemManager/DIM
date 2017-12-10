@@ -12,6 +12,7 @@ class D2ReviewDataCache {
   constructor() {
     this._itemTransformer = new D2ItemTransformer();
     this._itemStores = [];
+    this._maxTotalVotes = 0;
   }
 
   _getMatchingItem(item) {
@@ -45,15 +46,15 @@ class D2ReviewDataCache {
   }
 
   _getDownvoteMultiplier(dtrRating) {
-    if (dtrRating.votes.total > 300) {
+    if (dtrRating.votes.total > (this._maxTotalVotes * .75)) {
       return 1.0;
     }
 
-    if (dtrRating.votes.total > 200) {
+    if (dtrRating.votes.total > (this._maxTotalVotes * .50)) {
       return 1.5;
     }
 
-    if (dtrRating.votes.total > 100) {
+    if (dtrRating.votes.total > (this._maxTotalVotes * .25)) {
       return 2.0;
     }
 
@@ -73,6 +74,27 @@ class D2ReviewDataCache {
     return rating;
   }
 
+  _setMaximumTotalVotes(bulkRankings) {
+    this._maxTotalVotes = _.max(_.pluck(_.pluck(bulkRankings, 'votes'), 'total'));
+  }
+
+  /**
+   * Add (and track) the community scores.
+   *
+   * @param {List<DtrRating>} dtrRating
+   *
+   * @memberof ReviewDataCache
+   */
+  addScores(bulkRankings) {
+    if (bulkRankings) {
+      this._setMaximumTotalVotes(bulkRankings);
+
+      bulkRankings.forEach((bulkRanking) => {
+        this._addScore(bulkRanking);
+      });
+    }
+  }
+
   /**
    * Add (and track) the community score.
    *
@@ -80,7 +102,7 @@ class D2ReviewDataCache {
    *
    * @memberof ReviewDataCache
    */
-  addScore(dtrRating) {
+  _addScore(dtrRating) {
     const score = this._getScore(dtrRating);
     dtrRating.rating = this._toAtMostOneDecimal(score);
 

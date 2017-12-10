@@ -81,11 +81,7 @@ class D2BulkFetcher {
 
     const self = this;
 
-    if (bulkRankings) {
-      bulkRankings.forEach((bulkRanking) => {
-        self._reviewDataCache.addScore(bulkRanking);
-      });
-    }
+    this._reviewDataCache.addScores(bulkRankings);
 
     stores.forEach((store) => {
       store.items.forEach((storeItem) => {
