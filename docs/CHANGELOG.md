@@ -1,5 +1,7 @@
 # Next
 
+# 4.28.0
+
 * NEW - Move items from the postmaster in DIM!
 
 # 4.27.1
