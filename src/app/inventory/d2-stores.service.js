@@ -281,7 +281,7 @@ export function D2StoresService(
       4196149087: { label: "Titan Field Commander", order: 6 },
       1660497607: { label: "Nessus AI", order: 7 },
       828982195: { label: "Io Researcher", order: 8 },
-      828982195: { label: "Mercury", order: 9 },
+      2677528157: { label: "Follower of Osiris", order: 9 },
 
       2105209711: { label: "New Monarchy", order: 10 },
       1714509342: { label: "Future War Cult", order: 11 },
