@@ -1,4 +1,5 @@
 # Next
+* Fixed a bug trying to maximize power level (and sometimes transfer items) in Destiny 2.
 
 # 4.28.0
 
