@@ -1,7 +1,7 @@
 <div ui-draggable="{{ ::vm.draggable }}"
      id="{{ ::vm.item.index }}"
      drag-channel="{{ ::vm.dragChannel }}"
-     title="{{ ::vm.item.name }}"
+     title="{{ ::vm.item.name + '\n' + vm.item.typeName }}"
      drag="::vm.item.index"
      class="item"
      ng-click="vm.clicked(vm.item, $event)"
