@@ -1,5 +1,7 @@
 # Next
 
+* Add Mercury reputation 
+
 # 4.28.0
 
 * NEW - Move items from the postmaster in DIM!
