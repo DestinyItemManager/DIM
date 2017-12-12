@@ -80,7 +80,7 @@ export function D2ItemFactory(
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
     },
     hasLifeExotic() {
-      return false;
+      return this.type === 'Ghost' && this.isExotic;
     }
   };
 
