@@ -1,5 +1,30 @@
 # Next
 
+# 4.28.0
+
+* NEW - Move items from the postmaster in DIM!
+
+# 4.27.1
+
+* Key for perk hints in D2.
+* Fixed bug loading items with Destiny 2 v1.1.0.
+
+# 4.27.0
+
+* Added setting to pick relevant platforms for reviews.
+* Fix review area not collapsing in popup.
+* Fix display of option selector on reviews tab when detailed reviews are disabled.
+
+# 4.26.0
+
+* Don't show community best rated perk tip if socket's plugged.
+* is:haslevel/haspower (D1/D2) fix in cheatsheet.
+* Fix mobile store pager width
+
+# 4.25.1
+
+* Added Net Neutrality popup.
+
 # 4.25.0
 
 # 4.24.1

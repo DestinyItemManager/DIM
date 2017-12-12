@@ -81,7 +81,8 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基于{{numRatings}} 评分",
-    "BestRatedTip": "This perk is associated with high community ratings.",
+    "BestRatedKey": "= 推荐模组",
+    "BestRatedTip": "社区高分模组。",
     "Cancel": "取消",
     "Cons": "缺点",
     "Delete": "删除",
@@ -90,6 +91,13 @@
     "HelpCons": "描述此武器的缺点（可选）",
     "HelpPros": "描述此武器的优点（可选）",
     "NoReviews": "尚无评测，来做第一个评测这个物品的人！",
+    "Platforms": {
+      "All": "显示全部",
+      "AllConsoles": "控制台",
+      "Pc": "仅限PC",
+      "Playstation": "仅限Playstation",
+      "Xbox": "仅限XBox"
+    },
     "Pros": "优点",
     "ReallyReport": "举报",
     "ServiceCallError": "命运跟踪服务调用失败。",
@@ -130,12 +138,12 @@
       "CoE": "长者的挑战",
       "Dawning": "曙光",
       "IB": "铁横幅",
-      "KF": "King's Fall",
+      "KF": "帝王陨落",
       "PoE": "Prison of Elders",
       "QW": "Queen's Wrath",
-      "SRL": "Sparrow Racing",
-      "ToO": "Trials of Osiris",
-      "VoG": "Vault of Glass",
+      "SRL": "快雀竞赛",
+      "ToO": "奥西里斯的试练",
+      "VoG": "玻璃宝库",
       "WotM": "机械之怒"
     },
     "Activity": "可以从<i>{{activity}}</i>活动中获得",
@@ -145,8 +153,8 @@
     "Class": "Shows items based on their class affinty.",
     "ClickFilters": "Click filters below to apply, or by typing in the search box.",
     "Combine": "Filters are combined using 'and' logic, for example '{{example}}' will return all arc items with over 300 light. Filters can be negated using '{{not}}', for example '{{notexample}}' will find all non-engram items.",
-    "ContributeLight": "Items that contribute to your light level.",
-    "ContributePower": "Items that contribute to your power level.",
+    "ContributeLight": "Shows items that have light and can contribute to your light level.",
+    "ContributePower": "Shows items that have power and can contribute to your power level.",
     "DamageType": "Shows items based on their damage type.",
     "Description": "描述",
     "Dupe": "显示重复物品",
@@ -190,9 +198,9 @@
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "Releases": {
-      "RoI": "Rise of Iron",
+      "RoI": "铁旗崛起",
       "Vanilla": "Vanilla",
-      "tTK": "The Taken King"
+      "tTK": "夺魂之王"
     },
     "RequiredLevel": "Shows items based on their required level.",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
@@ -219,14 +227,14 @@
       "Shipwright": "Shipwright",
       "Speaker": "Speaker"
     },
-    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
-    "WeaponClass": "Shows items based on their weapon classes.",
-    "WeaponType": "Shows weapons based on their weapon type.",
-    "Year": "Shows items from which year of Destiny they appeared in."
+    "VideoExample": "更好的使用标签功能，请查看{{link}}",
+    "WeaponClass": "按照武器类型显示",
+    "WeaponType": "按照伤害类型显示",
+    "Year": "按照物品推出年份显示"
   },
   "Header": {
     "About": "关于",
-    "FilterHelp": "Search item/perk or {{example}}",
+    "FilterHelp": "搜索物品/模组或者{{example}}",
     "Filters": "筛选",
     "Inventory": "背包",
     "Refresh": "刷新命运数据",
@@ -487,6 +495,7 @@
     "Language": "语言（刷新DIM页面以生效）",
     "LogOut": "注销",
     "ResetToDefault": "重置",
+    "ReviewsPlatformSelection": "Only show ratings from the following platform",
     "SetSort": "物品排序依据",
     "Settings": "设置",
     "ShowAnimations": "为新物品增加动画效果",

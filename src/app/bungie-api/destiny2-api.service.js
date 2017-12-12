@@ -100,7 +100,9 @@ export function Destiny2Api(
   function transfer(item, store, amount) {
     const platform = dimState.active;
     return $http(bungieApiUpdate(
-      '/Platform/Destiny2/Actions/Items/TransferItem/',
+      item.location.inPostmaster
+        ? '/Platform/Destiny2/Actions/Items/PullFromPostmaster/'
+        : '/Platform/Destiny2/Actions/Items/TransferItem/',
       {
         characterId: store.isVault ? item.owner : store.id,
         membershipType: platform.platformType,

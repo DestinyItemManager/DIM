@@ -65,7 +65,8 @@ export function D2StoresService(
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,
-    reloadStores
+    reloadStores,
+    refreshRatingsData
   };
 
   return service;
@@ -506,5 +507,10 @@ export function D2StoresService(
       }
     });
     activeStore.vault = vault; // god help me
+  }
+
+  function refreshRatingsData() {
+    dimDestinyTrackerService.clearCache();
+    dimDestinyTrackerService.fetchReviews(_stores);
   }
 }

@@ -54,6 +54,10 @@ function controller(dimSettingsService, dimItemMoveService, dimStoreService, D2S
       if (vm.item.equipped && vm.store.id === buttonStore.id) {
         return true;
       }
+      // Can pull items from the postmaster to the same character
+      if (vm.store.id === buttonStore.id && vm.item.location.inPostmaster && vm.item.destinyVersion === 2) {
+        return true;
+      }
     } else if (vm.store.id !== buttonStore.id || vm.item.equipped) {
       // In Destiny2, only show one store for account wide items
       if (vm.item.destinyVersion === 2 && vm.item.bucket && vm.item.bucket.accountWide && !buttonStore.current) {

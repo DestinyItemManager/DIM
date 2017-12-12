@@ -14,6 +14,7 @@
 .item-socket-category-name {
   text-transform: uppercase;
   margin-bottom: 2px;
+  display: flex;
 }
 
 .item-socket {
@@ -24,6 +25,40 @@
   &.disabled {
     opacity: .4;
   }
+}
+
+.category-name {
+  display: inline-block;
+}
+
+.best-rated-key {
+  display: flex;
+  text-transform: none !important;
+  padding-left: 20px;
+}
+
+.best-rated-tip-container {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+}
+
+.best-rated-tip {
+  background-color: #888888;
+  width: 15px;
+  height: 15px;
+  margin-top: 5px;
+}
+
+.circle-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.thumbs-up {
+  color: #6dcc66;
 }
 
 .socket-container {
@@ -38,18 +73,5 @@
     &.notChosen {
       opacity: .4;
     }
-  }
-
-  .circle-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .blue-circle {
-    background-color: #0099ff;
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
   }
 }
