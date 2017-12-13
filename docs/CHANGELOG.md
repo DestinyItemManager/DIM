@@ -11,6 +11,7 @@
 # 4.28.0
 
 * NEW - Move items from the postmaster in DIM!
+* Revamped rating algorithm for D2 items.
 
 # 4.27.1
 
