@@ -57,6 +57,10 @@ export function ItemService(
     target = storeService.getStore(target.id);
     item = storeService.getItemAcrossStores(item);
 
+    if (item.location.inPostmaster) {
+      item.location = item.bucket;
+    }
+
     // If we've moved to a new place
     if (source.id !== target.id) {
       // We handle moving stackable and nonstackable items almost exactly the same!
