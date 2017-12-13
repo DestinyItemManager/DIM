@@ -434,7 +434,7 @@ export function D2StoresService(
         value: hasClassified ? `${maxBasePower}*` : maxBasePower,
         icon: `https://www.bungie.net${def.displayProperties.icon}`,
         tiers: [maxBasePower],
-        tierMax: 300,
+        tierMax: 330,
         tier: 0
       };
     }
