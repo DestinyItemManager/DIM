@@ -142,10 +142,6 @@ export function D2ItemFactory(
    * @param {string} owner the ID of the owning store.
    */
   function makeItem(defs, buckets, previousItems, newItems, itemInfoService, itemComponents, item, owner) {
-    if (item.itemHash === 3437746471) {
-      debugger;
-    }
-
     let itemDef = defs.InventoryItem.get(item.itemHash);
     const instanceDef = itemComponents.instances.data[item.itemInstanceId] || {};
     // Missing definition?

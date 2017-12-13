@@ -1,6 +1,7 @@
-# Next
+# 4.29.0
 
-* Add Mercury reputation 
+* Added Mercury reputation.
+* Added Crimson Exotic Hand Canon.
 
 # 4.28.0
 
