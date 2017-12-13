@@ -561,7 +561,7 @@ export function D2ItemFactory(
     const MOD_CATEGORY = 59;
     const POWER_STAT_HASH = 1935470627;
     const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
-      return plug &&
+      return plug && plug.itemCategoryHashes && plug.investmentStats &&
         plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
         plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
     }) : [];
