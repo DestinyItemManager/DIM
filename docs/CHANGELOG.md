@@ -832,3 +832,7 @@
 * The reload and settings icons are easier to hit (remember you can also hit "R" to reload.
 * The move popup closes immediately when you select a move, rather than waiting for the move to start.
 * New sort option of "rarity, then primary stat".
+
+# 3.2.1
+
+* When hovering over an icon, the name and type will be displayed
