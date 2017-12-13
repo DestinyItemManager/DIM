@@ -1,5 +1,6 @@
 # Next
 
+* NEW - Revamped rating algorithm for D2 items.
 * Fixed a bug trying to maximize power level (and sometimes transfer items) in Destiny 2.
 * When hovering over an icon, the name and type will be displayed
 
@@ -11,7 +12,6 @@
 # 4.28.0
 
 * NEW - Move items from the postmaster in DIM!
-* Revamped rating algorithm for D2 items.
 
 # 4.27.1
 
