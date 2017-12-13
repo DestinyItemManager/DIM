@@ -735,7 +735,9 @@ export function ItemService(
               .then((item) => moveToStore(item, target, equip, amount));
           }
 
-          if (equip) {
+          if (item.location.inPostmaster) {
+            promise = promise.then((item) => moveToStore(item, target));
+          } else if (equip) {
             promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
           } else if (!equip) {
             promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
