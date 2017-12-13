@@ -281,14 +281,15 @@ export function D2StoresService(
       4196149087: { label: "Titan Field Commander", order: 6 },
       1660497607: { label: "Nessus AI", order: 7 },
       828982195: { label: "Io Researcher", order: 8 },
+      2677528157: { label: "Follower of Osiris", order: 9 },
 
-      1714509342: { label: "Future War Cult", order: 9 },
-      2105209711: { label: "New Monarchy", order: 8 },
-      3398051042: { label: "Dead Orbit", order: 11 },
-      3468066401: { label: "The Nine", order: 12 },
-      1761642340: { label: "Iron Banner", order: 13 },
+      2105209711: { label: "New Monarchy", order: 10 },
+      1714509342: { label: "Future War Cult", order: 11 },
+      3398051042: { label: "Dead Orbit", order: 12 },
+      3468066401: { label: "The Nine", order: 13 },
+      1761642340: { label: "Iron Banner", order: 14 },
 
-      1482334108: { label: "Leviathan", order: 14 }
+      1482334108: { label: "Leviathan", order: 15 }
     };
 
     if (progressions) {
