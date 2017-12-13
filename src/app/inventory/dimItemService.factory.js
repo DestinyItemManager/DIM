@@ -738,7 +738,7 @@ export function ItemService(
           if (equip) {
             promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
           } else if (!equip) {
-            promise = promise.then((item) => (item.equipped ? dequipItem(item) : moveToStore(item, target)));
+            promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
           }
         } else if (source.isVault && target.isVault) { // Vault to Vault
           // Do Nothing.

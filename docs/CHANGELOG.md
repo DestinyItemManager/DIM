@@ -1,7 +1,7 @@
-# 4.29.0
-
+# Next
 * Added Mercury reputation.
 * Added Crimson Exotic Hand Canon.
+* Fixed a bug trying to maximize power level (and sometimes transfer items) in Destiny 2.
 
 # 4.28.0
 
