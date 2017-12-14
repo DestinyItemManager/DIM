@@ -4,6 +4,7 @@
 * Fixed a bug trying to maximize power level (and sometimes transfer items) in Destiny 2.
 * When hovering over an icon, the name and type will be displayed
 * Allowing more exotic item types to be simultaneously equipped in Destiny 2
+* Fixed reporting reviews in Destiny 2.
 
 # 4.29.0
 
