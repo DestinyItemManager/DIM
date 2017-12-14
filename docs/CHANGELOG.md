@@ -3,6 +3,7 @@
 * NEW - Revamped rating algorithm for D2 items.
 * Fixed a bug trying to maximize power level (and sometimes transfer items) in Destiny 2.
 * When hovering over an icon, the name and type will be displayed
+* Fixed reporting reviews in Destiny 2.
 
 # 4.29.0
 
