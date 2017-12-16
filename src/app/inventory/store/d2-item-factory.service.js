@@ -52,6 +52,31 @@ export function D2ItemFactory(
     // there are a few others (even an `undefined` stat)
   ];
 
+  // Mapping from itemCategoryHash to our category strings for filtering.
+  const categoryFromHash = {
+    // These two types are missing.
+    // ???: 'CATEGORY_GRENADE_LAUNCHER',
+    // ???: 'CATEGORY_SUBMACHINEGUN',
+    5: 'CATEGORY_AUTO_RIFLE',
+    6: 'CATEGORY_HAND_CANNON',
+    7: 'CATEGORY_PULSE_RIFLE',
+    8: 'CATEGORY_SCOUT_RIFLE',
+    9: 'CATEGORY_FUSION_RIFLE',
+    10: 'CATEGORY_SNIPER_RIFLE',
+    11: 'CATEGORY_SHOTGUN',
+    13: 'CATEGORY_ROCKET_LAUNCHER',
+    14: 'CATEGORY_SIDEARM',
+    54: 'CATEGORY_SWORD',
+  };
+
+  // Mapping from infusionCategoryHash to our category strings for
+  // cases where the itemCategory is missing.
+  // TODO: Remove this once the bug in the API is fixed.
+  const categoryFromInfusionHash = {
+    3879234379: 'CATEGORY_GRENADE_LAUNCHER',
+    3499784695: 'CATEGORY_SUBMACHINEGUN',
+  };
+
   // Prototype for Item objects - add methods to this to add them to all
   // items.
   const ItemProto = {
@@ -195,11 +220,19 @@ export function D2ItemFactory(
 
     const itemType = normalBucket.type || 'Unknown';
 
-    // Bungie API Bug: infusionCategoryName is missing as of CoO: https://github.com/Bungie-net/api/issues/324
-    // TODO: We should be figuring out our categories based on
-    // itemDef.itemCategoryHashes instead. Unfortunately they're
-    // localized and don't map cleanly into our existing categories.
-    const categories = itemDef.quality && itemDef.quality.infusionCategoryName ? [itemDef.quality.infusionCategoryName.replace('v300.', 'category_').toUpperCase()] : [];
+    const categories = [];
+    if (itemDef.itemCategoryHashes) {
+      for (const hash of itemDef.itemCategoryHashes) {
+        const c = categoryFromHash[hash];
+        if (c) { categories.push(c); }
+      }
+    }
+    // TODO: Some of our categories are not yet available as
+    // ItemCategories. This is a hack.
+    if (categories.length === 0 && itemDef.quality) {
+      const c = categoryFromInfusionHash[itemDef.quality.infusionCategoryHash];
+      if (c) { categories.push(c); }
+    }
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
