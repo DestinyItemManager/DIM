@@ -157,7 +157,7 @@ export function D2ItemFactory(
   }
 
   /**
-   * Construct the search category (CATEGORY_*) list from an item definitiion.
+   * Construct the search category (CATEGORY_*) list from an item definition.
    * @param itemDef the item definition object
    */
   function findCategories(itemDef) {
