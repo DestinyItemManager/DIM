@@ -157,6 +157,27 @@ export function D2ItemFactory(
   }
 
   /**
+   * Construct the search category (CATEGORY_*) list from an item definitiion.
+   * @param itemDef the item definition object
+   */
+  function findCategories(itemDef) {
+    const categories = [];
+    if (itemDef.itemCategoryHashes) {
+      for (const hash of itemDef.itemCategoryHashes) {
+        const c = categoryFromHash[hash];
+        if (c) { categories.push(c); }
+      }
+    }
+    // TODO: Some of our categories are not yet available as
+    // ItemCategories. This is a hack.
+    if (categories.length === 0 && itemDef.quality) {
+      const c = categoryFromInfusionHash[itemDef.quality.infusionCategoryHash];
+      if (c) { categories.push(c); }
+    }
+    return categories;
+  }
+
+  /**
    * Process a single raw item into a DIM item.s
    * @param defs the manifest definitions from dimDefinitions
    * @param buckets the bucket definitions from dimBucketService
@@ -220,19 +241,7 @@ export function D2ItemFactory(
 
     const itemType = normalBucket.type || 'Unknown';
 
-    const categories = [];
-    if (itemDef.itemCategoryHashes) {
-      for (const hash of itemDef.itemCategoryHashes) {
-        const c = categoryFromHash[hash];
-        if (c) { categories.push(c); }
-      }
-    }
-    // TODO: Some of our categories are not yet available as
-    // ItemCategories. This is a hack.
-    if (categories.length === 0 && itemDef.quality) {
-      const c = categoryFromInfusionHash[itemDef.quality.infusionCategoryHash];
-      if (c) { categories.push(c); }
-    }
+    const categories = findCategories(itemDef);
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
