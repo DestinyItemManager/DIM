@@ -5,6 +5,8 @@
 * When hovering over an icon, the name and type will be displayed
 * Allowing more exotic item types to be simultaneously equipped in Destiny 2
 * Initial support for masterworks weapons.
+* Fixed reporting reviews in Destiny 2.
+* Fixed item filtering in Destiny 2.
 
 # 4.29.0
 
