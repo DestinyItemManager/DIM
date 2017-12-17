@@ -52,6 +52,7 @@
     "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.2.0",
     "css-loader": "^0.28.7",
+    "es-to-primitive": "^1.1.1",
     "eslint": "^4.9.0",
     "eslint-import-resolver-webpack": "^0.8.3",
     "eslint-plugin-angular": "^3.1.1",
