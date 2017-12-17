@@ -284,8 +284,9 @@ export function D2ItemFactory(
       dmg: dmgName,
       visible: true,
       lockable: item.lockable,
-      tracked: item.state === 2,
-      locked: item.state === 1,
+      tracked: item.state & 2,
+      locked: item.state & 1,
+      masterwork: item.state & 4,
       redacted: Boolean(itemDef.redacted),
       classified: Boolean(itemDef.classified),
       isInLoadout: false,
@@ -577,6 +578,8 @@ export function D2ItemFactory(
         enableFailReasons: failReasons
       };
       dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 && (!plug || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? dimSocket.reusablePlugs : [dimSocket.plug];
+      dimSocket.masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
+
       return dimSocket;
     });
 
