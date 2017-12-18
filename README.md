@@ -103,6 +103,7 @@ Install dependencies:
 * Install [NodeJS](https://nodejs.org/).
 * Windows-based developers will need to install `windows-build-tools` (`npm install --global windows-build-tools`) globally prior to running `npm install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
 * Run `npm install`.
+  * Note that on Windows, the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
 
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
