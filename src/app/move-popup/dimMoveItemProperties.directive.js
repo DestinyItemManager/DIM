@@ -103,7 +103,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     const item = vm.item;
 
     if (item.sockets) {
-      return _.find(_.pluck(item.sockets.sockets, 'masterworkProgress'), (mp) => mp > 0);
+      return _.find(_.pluck(item.sockets.sockets, 'masterworkProgress'), (mp) => mp >= 0);
     }
 
     return null;
