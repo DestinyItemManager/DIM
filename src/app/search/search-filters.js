@@ -94,7 +94,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     Object.assign(filterTrans, {
       hasLight: ['light', 'haslight', 'haspower'],
       powermod: ['powermod', 'haspowermod'],
-      complete: ['goldborder', 'yellowborder'],
+      complete: ['goldborder', 'yellowborder', 'complete'],
       masterwork: ['masterwork', 'masterworks']
     });
   }
