@@ -1,4 +1,5 @@
 # Next
+* "is:complete" will find completed rare mod stacks in Destiny 2.
 
 # 4.30.0
 
