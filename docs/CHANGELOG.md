@@ -1,4 +1,5 @@
 # Next
+* Slightly tweaked visuals of displaying masterworks weapons and stats
 
 # 4.31.0
 * "is:complete" will find completed rare mod stacks in Destiny 2.
