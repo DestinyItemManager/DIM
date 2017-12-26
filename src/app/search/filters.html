@@ -186,6 +186,7 @@
           <dim-filter-link filter="is:blue"></dim-filter-link>
           <dim-filter-link filter="is:purple"></dim-filter-link>
           <dim-filter-link filter="is:yellow"></dim-filter-link>
+          <dim-filter-link ng-if="vm.settings.destinyVersion === 2" filter="is:masterwork"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.RarityTier"></td>
       </tr>

@@ -35,7 +35,7 @@ class D2ReviewReporter {
 
     return {
       reviewId: reviewId,
-      report: "",
+      text: "",
       reporter: reporter
     };
   }
@@ -71,7 +71,7 @@ class D2ReviewReporter {
       return;
     }
 
-    this._submitReportReviewPromise(review.reviewId, membershipInfo)
+    this._submitReportReviewPromise(review.id, membershipInfo)
         .then(this._reviewDataCache.markReviewAsIgnored(review))
         .then(this._ignoreReportedUser(review));
   }

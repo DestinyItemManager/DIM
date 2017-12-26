@@ -57,6 +57,10 @@ export function ItemService(
     target = storeService.getStore(target.id);
     item = storeService.getItemAcrossStores(item);
 
+    if (item.location.inPostmaster) {
+      item.location = item.bucket;
+    }
+
     // If we've moved to a new place
     if (source.id !== target.id) {
       // We handle moving stackable and nonstackable items almost exactly the same!
@@ -735,10 +739,12 @@ export function ItemService(
               .then((item) => moveToStore(item, target, equip, amount));
           }
 
-          if (equip) {
+          if (item.location.inPostmaster) {
+            promise = promise.then((item) => moveToStore(item, target));
+          } else if (equip) {
             promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
           } else if (!equip) {
-            promise = promise.then((item) => (item.equipped ? dequipItem(item) : moveToStore(item, target)));
+            promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
           }
         } else if (source.isVault && target.isVault) { // Vault to Vault
           // Do Nothing.

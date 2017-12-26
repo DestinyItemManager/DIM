@@ -298,6 +298,7 @@
     "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
     "Deequip": "{{itemname}}を取り除くために装備するアイテムが見つかりません",
     "ExoticError": "'{{itemname}}'は装備できません。なぜなら{{slot}}エキゾチックなものは装備できないからです。({{error}})",
+    "MasterworkProgress": "Masterwork - {{progress}} enemies defeated.",
     "NotEnoughRoom": "{{itemname}}のスペースを確保するために{{store}}から移動することはできません。",
     "OnlyEquippedClassLevel": "これは、レベル{{level}}以上の{{class}}にしか装備できません。",
     "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",

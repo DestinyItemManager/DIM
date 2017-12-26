@@ -1,7 +1,7 @@
 <div ui-draggable="{{ ::vm.draggable }}"
      id="{{ ::vm.item.index }}"
      drag-channel="{{ ::vm.dragChannel }}"
-     title="{{ ::vm.item.name }}"
+     title="{{ ::vm.item.name + '\n' + vm.item.typeName }}"
      drag="::vm.item.index"
      class="item"
      ng-click="vm.clicked(vm.item, $event)"
@@ -10,7 +10,7 @@
        ng-if="::vm.item.percentComplete && !vm.item.complete"
        dim-percent-width="::vm.item.percentComplete"></div>
   <div class="item-img"
-       ng-class="::{ complete: vm.item.complete, diamond: (vm.item.destinyVersion == 2 && vm.item.bucket.hash == 3284755031) }"
+       ng-class="::{ complete: vm.item.complete, diamond: (vm.item.destinyVersion == 2 && vm.item.bucket.hash == 3284755031), masterwork: vm.item.masterwork }"
        ng-style="::vm.item.icon | bungieBackground"
        ng-dblclick="vm.doubleClicked(vm.item, $event)"></div>
   <div ng-if="::vm.item.quality"

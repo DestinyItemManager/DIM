@@ -99,6 +99,16 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     return userReview;
   };
 
+  vm.masterworkProgress = function() {
+    const item = vm.item;
+
+    if (item.sockets) {
+      return _.find(_.pluck(item.sockets.sockets, 'masterworkProgress'), (mp) => mp >= 0);
+    }
+
+    return null;
+  };
+
   vm.submitReview = function() {
     const item = vm.item;
 

@@ -298,6 +298,7 @@
     "Classified2": "Elemento Clasificado. Bungie no aporta ningún tipo de información respecto a este elemento. Añade notas a este elemento y usa el filtro de busqueda \"notes:\" para encontrarlo.",
     "Deequip": "No se encontró otro objeto a equipar para desequipar {{itemname}}",
     "ExoticError": "'{{itemname}}' no puede ser equipado porque el objeto exótico en el espacio {{slot}} no puede ser desequipado. ({{error}})",
+    "MasterworkProgress": "Masterwork - {{progress}} enemies defeated.",
     "NotEnoughRoom": "No hay nada que podamos sacar fuera de {{store}} para hacerle espacio a {{itemname}}",
     "OnlyEquippedClassLevel": "Esto solo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",

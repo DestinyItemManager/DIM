@@ -298,6 +298,7 @@
     "Classified2": "Item secreto. Bungie ainda não fornece informações sobre este item. Adicione uma nota a este item e use o \"notas\" como filtro de busca para encontrá-lo.",
     "Deequip": "Não foi possível encontrar outro item para equipar no lugar de {{itemname}}",
     "ExoticError": "'{{itemname}}' não pode ser equipado porque o exótico no slot de {{slot}} não pode ser removido. ({{error}})",
+    "MasterworkProgress": "Obra-prima - {{progress}} oponentes derrotados.",
     "NotEnoughRoom": "Não há nada que possamos mover do {{store}} para abrir espaço para {{itemname}}",
     "OnlyEquippedClassLevel": "Este item só pode ser equipado em um {{class}} igual ou acima do nível {{level}}.",
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
