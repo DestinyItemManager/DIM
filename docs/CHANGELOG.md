@@ -3,6 +3,7 @@
 * Slightly tweaked visuals of displaying masterworks weapons and stats
 * Mercury reputation items are now handled by farming mode and gather reputation items.
 * Tweak max base power / max light calculations to be slightly more accurate.
+* Display D2 subclass talent trees. We can't show which ones are selected/unlocked yet.
 
 # 4.31.0
 
