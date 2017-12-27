@@ -114,6 +114,16 @@ function SearchFilterCtrl(
       }
     })
     .add({
+      combo: ['shift+f'],
+      description: $i18next.t('Hotkey.StartSearchClear'),
+      callback: function(event) {
+        vm.clearFilter();
+        vm.focusFilterInput();
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    })
+    .add({
       combo: ['esc'],
       allowIn: ['INPUT'],
       callback: function() {
