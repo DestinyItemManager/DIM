@@ -373,8 +373,7 @@ export function D2ItemFactory(
     // Infusion
     const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
     createdItem.infusionProcess = tier && tier.infusionProcess;
-    // Bungie API Bug: infusionCategoryName is missing as of CoO: https://github.com/Bungie-net/api/issues/324
-    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName);
+    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryHashes && itemDef.quality.infusionCategoryHashes.length);
     createdItem.infusionQuality = itemDef.quality || null;
 
     // Mark items with power mods

@@ -112,7 +112,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
             (!item.locked || vm.showLockedItems) &&
             (vm.source.destinyVersion === 1
               ? (item.type === vm.source.type)
-              : (item.infusionQuality && (item.infusionQuality.infusionCategoryName === vm.source.infusionQuality.infusionCategoryName))) &&
+              : (item.infusionQuality && (item.infusionQuality.infusionCategoryHashes.some((h) => vm.source.infusionQuality.infusionCategoryHashes.includes(h))))) &&
             ((item.destinyVersion === 1 && item.primStat.value > vm.source.primStat.value) ||
              (item.destinyVersion === 2 && item.basePower > vm.source.basePower));
         });
