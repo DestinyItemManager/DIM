@@ -36,11 +36,9 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     debugMode: dimState.debug
   };
 
-  vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
-    vm.item.talentGrid ||
-    vm.item.objectives;
-  vm.showDescription = true;// || (vm.item.description.length &&
-  //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
+  vm.hasDetails = Boolean((vm.item.stats && vm.item.stats.length) ||
+                          vm.item.talentGrid || vm.item.objectives);
+  vm.showDescription = true;
   vm.locking = false;
 
   // The 'i' keyboard shortcut toggles full details

@@ -15,7 +15,7 @@
         </a>
       </div>
       <i ng-i18next="[title]Compare.ButtonHelp" ng-if="vm.item.comparable" class="compare-button fa fa-clone" ng-click="vm.openCompare()"></i>
-      <div ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.itemDetails = !vm.itemDetails">
+      <div ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails)" ng-click="vm.itemDetails = !vm.itemDetails">
         <i class="info fa" ng-class="{ 'fa-chevron-circle-up': vm.itemDetails, 'fa-chevron-circle-down': !vm.itemDetails }">
         </i>
       </div>
