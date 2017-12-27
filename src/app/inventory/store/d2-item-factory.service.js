@@ -338,9 +338,6 @@ export function D2ItemFactory(
 
     try {
       createdItem.talentGrid = buildTalentGrid(item, itemComponents.talentGrids.data, defs.TalentGrid);
-      if (createdItem.talentGrid) {
-        console.log(createdItem.name, createdItem.talentGrid);
-      }
     } catch (e) {
       console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
     }
@@ -574,8 +571,6 @@ export function D2ItemFactory(
     let gridNodes = talentGridDef.nodes.map((node) => {
       const talentNodeGroup = node;
       const talentNodeSelected = node.steps[0];
-
-      console.log(talentNodeGroup, talentNodeSelected);
 
       if (!talentNodeSelected) {
         return undefined;
