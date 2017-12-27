@@ -2,6 +2,7 @@
 
 * Slightly tweaked visuals of displaying masterworks weapons and stats
 * Mercury reputation items are now handled by farming mode and gather reputation items.
+* Tweak max base power / max light calculations to be slightly more accurate.
 
 # 4.31.0
 

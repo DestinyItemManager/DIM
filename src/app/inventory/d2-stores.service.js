@@ -488,9 +488,12 @@ export function D2StoresService(
 
     const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
 
-    return (_.reduce(items, (memo, item) => {
+    const exactBasePower = _.reduce(items, (memo, item) => {
       return memo + (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }, 0) / itemWeightDenominator).toFixed(1);
+    }, 0) / itemWeightDenominator;
+
+    // Floor-truncate to one significant digit since the game doesn't round
+    return (Math.floor(exactBasePower * 10.0) / 10.0).toFixed(1);
   }
 
   // TODO: vault counts are silly and convoluted. We really need an
