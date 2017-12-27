@@ -263,6 +263,7 @@
     "MarkItemAs": "Mark item as '{{tag}}'",
     "RefreshInventory": "Refresh inventory",
     "StartSearch": "Start a search",
+    "StartSearchClear": "Start a fresh search",
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
