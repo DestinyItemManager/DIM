@@ -222,9 +222,12 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
 
     const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
 
-    return (_.reduce(items, (memo, item) => {
+    const exactLight = _.reduce(items, (memo, item) => {
       return memo + (item.primStat.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }, 0) / itemWeightDenominator).toFixed(1);
+    }, 0) / itemWeightDenominator;
+
+    // Floor-truncate to one significant digit since the game doesn't round
+    return (Math.floor(exactLight * 10.0) / 10.0).toFixed(1);
   }
 
   /**

@@ -731,7 +731,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
           2465295065,
           953998645
         ];
-        return item.bucket && _.contains(lightBuckets, item.bucket.id);
+        return item.primStat && item.bucket && _.contains(lightBuckets, item.bucket.id);
       },
       weapon: function(predicate, item) {
         return item.bucket && item.bucket.sort === 'Weapons';

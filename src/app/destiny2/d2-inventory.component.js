@@ -33,14 +33,14 @@ function D2InventoryController($rootScope, $scope, D2StoresService, D2BucketsSer
     D2StoresService.reloadStores();
   });
 
-  $rootScope.$on('drag-start-item', (event, args) => {
+  $scope.$on('drag-start-item', (event, args) => {
     dragBox = document.getElementById('item-drag-box');
     vm.item = args.item;
     dragBox.style.top = `${args.element.target.getBoundingClientRect().top - dragBox.offsetHeight}px`;
     $rootScope.$digest();
   });
 
-  $rootScope.$on('drag-stop-item', () => {
+  $scope.$on('drag-stop-item', () => {
     dragBox.style.top = '-200px';
     vm.item = null;
     $rootScope.$digest();

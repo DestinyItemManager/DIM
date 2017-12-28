@@ -337,6 +337,12 @@ export function D2ItemFactory(
     }
 
     try {
+      createdItem.talentGrid = buildTalentGrid(item, itemComponents.talentGrids.data, defs.TalentGrid);
+    } catch (e) {
+      console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
+    }
+
+    try {
       createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
     } catch (e) {
       console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
@@ -373,8 +379,7 @@ export function D2ItemFactory(
     // Infusion
     const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
     createdItem.infusionProcess = tier && tier.infusionProcess;
-    // Bungie API Bug: infusionCategoryName is missing as of CoO: https://github.com/Bungie-net/api/issues/324
-    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryName);
+    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryHashes && itemDef.quality.infusionCategoryHashes.length);
     createdItem.infusionQuality = itemDef.quality || null;
 
     // Mark items with power mods
@@ -552,6 +557,78 @@ export function D2ItemFactory(
     });
   }
 
+  function buildTalentGrid(item, talentsMap, talentDefs) {
+    const talentGrid = talentsMap[item.itemInstanceId];
+    if (!talentGrid) {
+      return null;
+    }
+
+    const talentGridDef = talentDefs.get(talentGrid.talentGridHash);
+    if (!talentGridDef || !talentGridDef.nodes || !talentGridDef.nodes.length) {
+      return undefined;
+    }
+
+    let gridNodes = talentGridDef.nodes.map((node) => {
+      const talentNodeGroup = node;
+      const talentNodeSelected = node.steps[0];
+
+      if (!talentNodeSelected) {
+        return undefined;
+      }
+
+      const nodeName = talentNodeSelected.displayProperties.name;
+
+      // Filter out some weird bogus nodes
+      if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
+        return undefined;
+      }
+
+      // Only one node in this column can be selected (scopes, etc)
+      const exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodeHashes &&
+                               talentNodeGroup.exlusiveWithNodeHashes.length > 0);
+
+      const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+
+      // There's a lot more here, but we're taking just what we need
+      return {
+        name: nodeName,
+        hash: talentNodeSelected.nodeStepHash,
+        description: talentNodeSelected.displayProperties.description,
+        icon: talentNodeSelected.displayProperties.icon,
+        // Position in the grid
+        column: talentNodeGroup.column / 8,
+        row: talentNodeGroup.row / 8,
+        // Is the node selected (lit up in the grid)
+        activated: true,
+        // The item level at which this node can be unlocked
+        activatedAtGridLevel: activatedAtGridLevel,
+        // Only one node in this column can be selected (scopes, etc)
+        exclusiveInColumn: exclusiveInColumn,
+        // Whether or not the material cost has been paid for the node
+        unlocked: true,
+        // Some nodes don't show up in the grid, like purchased ascend nodes
+        hidden: false
+      };
+    });
+
+    // We need to unique-ify because Ornament nodes show up twice!
+    gridNodes = _.uniq(_.compact(gridNodes), false, 'hash');
+
+    if (!gridNodes.length) {
+      return undefined;
+    }
+
+    // Fix for stuff that has nothing in early columns
+    const minColumn = _.min(_.reject(gridNodes, 'hidden'), 'column').column;
+    if (minColumn > 0) {
+      gridNodes.forEach((node) => { node.column -= minColumn; });
+    }
+
+    return {
+      nodes: _.sortBy(gridNodes, (node) => { return node.column + (0.1 * node.row); }),
+      complete: _.all(gridNodes, (n) => n.unlocked)
+    };
+  }
 
   function buildSockets(item, socketsMap, defs, itemDef) {
     if (!itemDef.sockets || !itemDef.sockets.socketEntries.length) {

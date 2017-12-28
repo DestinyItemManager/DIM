@@ -15,7 +15,7 @@
         </a>
       </div>
       <i ng-i18next="[title]Compare.ButtonHelp" ng-if="vm.item.comparable" class="compare-button fa fa-clone" ng-click="vm.openCompare()"></i>
-      <div ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.itemDetails = !vm.itemDetails">
+      <div ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails)" ng-click="vm.itemDetails = !vm.itemDetails">
         <i class="info fa" ng-class="{ 'fa-chevron-circle-up': vm.itemDetails, 'fa-chevron-circle-down': !vm.itemDetails }">
         </i>
       </div>
@@ -49,7 +49,7 @@
       <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>
       <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
       <div class="item-description" ng-if="vm.showDescription" ng-bind="::vm.item.description"></div>
-      <div class="masterwork-progress" ng-if="vm.item.masterwork" ng-i18next="[i18next]({ progress: vm.masterworkProgress() })ItemService.MasterworkProgress"></div>
+      <div class="masterwork-progress" ng-if="vm.item.masterwork" ng-i18next="[html:i18next]({ progress: '<strong>' + vm.masterworkProgress() + '</strong>' })ItemService.MasterworkProgress"></div>
       <div class="item-details" ng-if="vm.item.classified" ng-i18next="ItemService.Classified2"></div>
       <dim-item-stats item="vm.item" class="stats" ng-if="vm.hasDetails"></dim-item-stats>
       <div class="item-details item-perks" ng-if="vm.item.talentGrid">

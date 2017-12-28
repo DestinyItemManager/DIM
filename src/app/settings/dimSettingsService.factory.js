@@ -38,7 +38,7 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
     showNewItems: false,
     // Show animation of new item overlay on new items
     showNewAnimation: true,
-    // Show reviews damage icons
+    // Show item reviews
     showReviews: true,
     // Show elemental damage icons
     showElements: false,

@@ -255,7 +255,13 @@ $item-header-spacing: 5px;
 }
 
 .masterwork-progress {
-  margin: 5px 10px;
+  margin: 4px 0px;
+  padding: 3px 10px;
+  background: #333;
+
+  strong {
+    color: orange;
+  }
 }
 
 .item-perks {

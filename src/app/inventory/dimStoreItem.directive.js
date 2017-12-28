@@ -66,7 +66,7 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
         element
       });
       $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
-      if (vm.item.destinyVersion === 2 && phoneWidthQuery.matches) {
+      if (dragBox && phoneWidthQuery.matches) {
         dragBox.classList.remove('drag-help-hidden');
       }
       if (vm.item.amount > 1) {
@@ -76,7 +76,9 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
     $element.on('dragend', () => {
       $rootScope.$broadcast('drag-stop-item');
       dragHelp.classList.add('drag-help-hidden');
-      dragBox.classList.add('drag-help-hidden');
+      if (dragBox) {
+        dragBox.classList.add('drag-help-hidden');
+      }
       delete $rootScope.dragItem;
     });
     $element.on('drag', (e) => {
