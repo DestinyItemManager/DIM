@@ -98,8 +98,6 @@ dim-store-item {
     padding: 2px;
   }
   &.masterwork {
-    border-color: $gold;
-
     &::after {
       content: '';
       display: block;
