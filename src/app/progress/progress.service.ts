@@ -1,10 +1,21 @@
 import * as _ from 'underscore';
 import { Subject, ReplaySubject, ConnectableObservable } from '@reactivex/rxjs';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
+import { IDictionaryComponent, IDestinyCharacterComponent, IDestinyCharacterProgressionComponent } from '../bungie-api/interfaces';
 
 export interface ProgressService {
   getProgressStream: (account: DestinyAccount) => ConnectableObservable<ProgressProfile>,
   reloadProgress: () => Promise<ProgressProfile>
+}
+
+/**
+ * A slimmed down version of IDestinyProfileResponse for just what we get
+ * TODO: Move all this into bungie-api.
+ */
+interface ProgressProfileResponse {
+  characters: IDictionaryComponent<IDestinyCharacterComponent>;
+  characterProgressions: IDictionaryComponent<IDestinyCharacterProgressionComponent>;
+  itemComponents: object;
 }
 
 // TODO: generate all the API structures from the Swagger docs
@@ -12,9 +23,12 @@ export interface ProgressService {
 // Should allow for better understanding of updates, but prevents us from "correcting" and interpreting the data,
 // and means we may have to block on defs lookup in the UI rendering :-/
 export interface ProgressProfile {
-  defs;
-  profileInfo;
-  lastPlayedDate: Date;
+  readonly defs;
+  readonly profileInfo: ProgressProfileResponse;
+  /**
+   * The date the most recently played character was last played.
+   */
+  readonly lastPlayedDate: Date;
 }
 
 // TODO: use ngimport to break this free of Angular-ness
@@ -83,26 +97,19 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
   async function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
     // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
     return $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]) => {;
-      const lastPlayedDate = findLastPlayedDate(profileInfo);
-
       return {
         defs,
         profileInfo,
-        lastPlayedDate
+        get lastPlayedDate() {
+          return _.reduce(_.values(this.profileInfo.characters.data), (memo, character) => {
+            const d1 = new Date(character.dateLastPlayed);
+            return (memo) ? ((d1 >= memo!) ? d1 : memo) : d1;
+          }, new Date(0));
+        }
       };
     })
     .finally(() => {
       D2ManifestService.isLoaded = true;
     });
-  }
-
-  /**
-   * Find the date of the most recently played character.
-   */
-  function findLastPlayedDate(profileInfo) {
-    return _.reduce(_.values(profileInfo.characters.data), (memo, character) => {
-      const d1 = new Date(character.dateLastPlayed);
-      return (memo) ? ((d1 >= memo!) ? d1 : memo) : d1;
-    }, new Date(0));
   }
 }
