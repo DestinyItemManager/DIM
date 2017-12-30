@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ProgressService } from './progress.service';
+import { ProgressService, ProgressProfile } from './progress.service';
 import { IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Subscription } from '@reactivex/rxjs';
@@ -10,18 +10,24 @@ interface Props {
   account: DestinyAccount;
 }
 
-export class Progress extends React.Component<Props> {
-  subscription: Subscription;
+interface State {
+  progress: ProgressProfile | null
+}
+
+export class Progress extends React.Component<Props, State> {
   state = {
-    data: ''
-  }
+    progress: null
+  };
+
+  subscription: Subscription;
   componentDidMount() {
     console.log('PROPS', this.props);
-    this.subscription = this.props.ProgressService.getProgressStream(this.props.account).subscribe((stores) => {
-      console.log(stores);
+    this.subscription = this.props.ProgressService.getProgressStream(this.props.account).subscribe((progress) => {
+      console.log(progress);
+      this.setState({ progress });
     });
   }
   render() {
-    return <div>HELLO</div>
+    return <div>HELLO ${JSON.stringify(this.state.progress)}</div>
   }
 }

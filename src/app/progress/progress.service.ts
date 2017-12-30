@@ -7,24 +7,18 @@ export interface ProgressService {
   reloadProgress: () => Promise<ProgressProfile>
 }
 
-/**
- * An object representing the various progress of a single character.
- */
-interface CharacterProgress {
-  character; // TODO: interface for our Character object
-  factions;
-  milestones;
-  progressions;
-  quests;
-}
-
 // TODO: generate all the API structures from the Swagger docs
-interface ProgressProfile {
-  characters: CharacterProgress[];
+// This is a kind of radical approach - the result is not modified or interpreted until we get to components!
+// Should allow for better understanding of updates, but prevents us from "correcting" and interpreting the data,
+// and means we may have to block on defs lookup in the UI rendering :-/
+export interface ProgressProfile {
+  defs;
+  profileInfo;
+  lastPlayedDate: Date;
 }
 
 // TODO: use ngimport to break this free of Angular-ness
-export function ProgressService(Destiny2Api: any, D2StoreFactory: any, D2Definitions: any) {
+export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2ManifestService, $q) {
   'ngInject';
 
   // A subject that keeps track of the current account. Because it's a
@@ -87,38 +81,19 @@ export function ProgressService(Destiny2Api: any, D2StoreFactory: any, D2Definit
   }
 
   async function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
-    const [profileInfo, defs] = await Promise.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]);
-    const lastPlayedDate = findLastPlayedDate(profileInfo);
+    // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
+    return $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]) => {;
+      const lastPlayedDate = findLastPlayedDate(profileInfo);
 
-    // TODO: Could we just return this raw instead of transforming it??
-    const characters = Object.keys(profileInfo.characters.data).map((characterId) => progressForCharacter(
-      characterId,
-      defs,
-      profileInfo.characters.data[characterId],
-      profileInfo.characterProgressions.data[characterId],
-      lastPlayedDate!));
-
-    /*
-    D2StoreFactory.makeCharacter(defs, profileInfo.characters.data[characterId], lastPlayedDate)
-    const characterProgresses = characters.map((character) => progressForCharacter(character, defs, profileInfo.characterProgressions.data[character.id]))
-*/
-    console.log(characters, profileInfo);
-    return {
-      characters
-    };
-  }
-
-  function progressForCharacter(characterId: string, defs, characterData, progressionData, lastPlayedDate: Date): CharacterProgress {
-    const character = D2StoreFactory.makeCharacter(defs, characterData, lastPlayedDate);
-
-    return {
-      character,
-      factions,
-      milestones,
-      progressions,
-      quests,
-
-    }
+      return {
+        defs,
+        profileInfo,
+        lastPlayedDate
+      };
+    })
+    .finally(() => {
+      D2ManifestService.isLoaded = true;
+    });
   }
 
   /**
@@ -128,6 +103,6 @@ export function ProgressService(Destiny2Api: any, D2StoreFactory: any, D2Definit
     return _.reduce(_.values(profileInfo.characters.data), (memo, character) => {
       const d1 = new Date(character.dateLastPlayed);
       return (memo) ? ((d1 >= memo!) ? d1 : memo) : d1;
-    }, null);
+    }, new Date(0));
   }
 }

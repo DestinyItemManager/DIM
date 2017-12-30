@@ -9,13 +9,13 @@ import { Progress } from './progress.component';
 // This is the Destiny 2 "Progress" page with milestones and factions.
 export default module('progressModule', [bungieApiModule])
   .factory('ProgressService', ProgressService)
-  .component('progress', react2angular(Progress, ['account'], ['ProgressService', '$scope']))
+  .component('d2Progress', react2angular(Progress, ['account'], ['ProgressService', '$scope']))
   .config(($stateProvider: IStateProvider) => {
     'ngInject';
 
     $stateProvider.state({
       name: 'destiny2.progress',
-      component: 'progress',
+      component: 'd2Progress',
       url: '/progress'
     });
   })
