@@ -1,5 +1,6 @@
 import template from './dimStoreItem.directive.html';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
+import { isPhonePortrait } from '../mediaQueries';
 import './dimStoreItem.scss';
 
 export function tagIconFilter(dimSettingsService) {
@@ -49,15 +50,7 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
   const vm = this;
   let dialogResult = null;
 
-  const phoneWidthQuery = window.matchMedia('(orientation: portrait) and (max-device-width: 750px)');
-  function phoneWidthHandler(e) {
-    $scope.$apply(() => {
-      vm.isPhonePortrait = e.matches;
-    });
-  }
-  phoneWidthQuery.addListener(phoneWidthHandler);
-
-  if (vm.item.maxStackSize > 1 || (vm.item.destinyVersion === 2 && phoneWidthQuery.matches)) {
+  if (vm.item.maxStackSize > 1 || ($featureFlags.dnd && vm.item.destinyVersion === 2)) {
     const dragHelp = document.getElementById('drag-help');
     const dragBox = document.getElementById('item-drag-box');
     $element.on('dragstart', (element) => {
@@ -66,7 +59,7 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
         element
       });
       $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
-      if (dragBox && phoneWidthQuery.matches) {
+      if ($featureFlags.dnd && dragBox && isPhonePortrait()) {
         dragBox.classList.remove('drag-help-hidden');
       }
       if (vm.item.amount > 1) {
