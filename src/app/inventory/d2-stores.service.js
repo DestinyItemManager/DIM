@@ -175,6 +175,11 @@ export function D2StoresService(
 
         // TODO: components may be hidden (privacy)
 
+        if (!profileInfo.profileInventory.data || !profileInfo.characterInventories.data) {
+          console.error("Vault or character inventory was missing - bailing in order to avoid corruption");
+          throw new Error($i18next.t('BungieService.Difficulties'));
+        }
+
         const processVaultPromise = processVault(defs,
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
