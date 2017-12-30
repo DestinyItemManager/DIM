@@ -105,10 +105,10 @@ dim-store-item {
       content: '';
       display: block;
       width: $size;
-      height: $size;
+      height: $size + 14px;
       position: relative;
       left: calc(50% - #{$size / 2});
-      top: calc(100% - #{$size / 2});
+      bottom: -1 * $size + 4px;
       background-color: $orange;
       filter: blur(8px);
     }
