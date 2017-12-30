@@ -3,7 +3,7 @@ import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { DestinyComponentType } from './destiny-component-type';
 
 /**
- * APIs for interacting with Destiny 2   game data.
+ * APIs for interacting with Destiny 2 game data.
  *
  * Destiny2 Service at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
@@ -19,13 +19,12 @@ export function Destiny2Api(
   return {
     getManifest,
     getStores,
+    getProgression,
     getCharacters,
     transfer,
     equip,
     equipItems,
     setLockState
-
-    // TODO: getMilestones, replaces Activities
   };
 
   function getManifest() {
@@ -53,6 +52,15 @@ export function Destiny2Api(
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
       DestinyComponentType.ItemPlugStates
+    );
+  }
+
+  /**
+   * Get the user's progression for all characters on this platform.
+   */
+  async function getProgression(platform) {
+    return getProfile(platform,
+      DestinyComponentType.CharacterProgressions
     );
   }
 

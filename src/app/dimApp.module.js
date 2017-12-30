@@ -37,6 +37,7 @@ import movePopupModule from './move-popup/move-popup.module';
 import searchModule from './search/search.module';
 import destiny1Module from './destiny1/destiny1.module';
 import destiny2Module from './destiny2/destiny2.module';
+import progressModule from './progress/progress.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -77,6 +78,7 @@ const dependencies = [
   searchModule,
   destiny1Module,
   destiny2Module,
+  progressModule,
   'ajoslin.promise-tracker',
   'cfp.hotkeys'
 ];
