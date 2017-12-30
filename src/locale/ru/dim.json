@@ -135,15 +135,15 @@
       "AoT": "Age of Triumph",
       "CD": "Crimson Doubles",
       "CE": "Crota's End",
-      "CoE": "Challenge of Elders",
+      "CoE": "Испытание Старейших",
       "Dawning": "Рассвет",
       "IB": "Железное Знамя",
-      "KF": "King's Fall",
-      "PoE": "Prison of Elders",
+      "KF": "Падение Короля",
+      "PoE": "Темница Старейших",
       "QW": "Queen's Wrath",
       "SRL": "Гонки на \"СПЭРРОУ\"",
       "ToO": "Испытания Осириса",
-      "VoG": "Склеп Стекла",
+      "VoG": "Стеклянный Свод",
       "WotM": "Гнев Машины"
     },
     "Activity": "Доступно в активности <i>{{activity}}</i>",
@@ -204,17 +204,17 @@
     },
     "RequiredLevel": "Shows items based on their required level.",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
-    "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
+    "Stackable": "Показать складывающиеся предметы (боеприпасы, странные монеты, т.д)",
     "Stats": "Shows items based on their stat value. The available filters are:",
     "Tags": {
-      "Dismantle": "Shows items you wish to eventually dismantle.",
+      "Dismantle": "Показать предметы отмеченные (ранее) для уничтожения.",
       "Favorite": "Показать избранные предметы.",
-      "Infuse": "Shows items you wish to eventually infuse.",
+      "Infuse": "Показать предметы отмеченные (ранее) для слияния.",
       "Keep": "Shows keep items.",
       "NoTag": "Показать предметы без маркировки."
     },
     "Tracked": "Shows quests/bounties based on their tracked status.",
-    "Transferable": "Items that can be moved between characters.",
+    "Transferable": "Предметы доступные всем Персонажам.",
     "Vendor": "Item is available from vendor <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "Item is available from vendor <i>{{vendor}}</i>",
     "Vendors": {
@@ -263,6 +263,7 @@
     "MarkItemAs": "Маркировать предмет: '{{tag}}'",
     "RefreshInventory": "Обновить инвентарь",
     "StartSearch": "Начать поиск",
+    "StartSearchClear": "Start a fresh search",
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
@@ -292,7 +293,7 @@
       "Guardian": "There are too many '{{itemtype}}' items on your {{store}}.",
       "Guardian_female": "There are too many '{{itemtype}}' items on your {{store}}.",
       "Guardian_male": "There are too many '{{itemtype}}' items on your {{store}}.",
-      "Vault": "There are too many '{{itemtype}}' items in the {{store}}."
+      "Vault": "Есть слишком много «{{itemtype}}» в {{store}}."
     },
     "Classified": "This item is classified and cannot be transferred at this time.",
     "Classified2": "Засекреченный предмет. Bungie пока что не предоставляет информацию об этом предмете. Добавьте заметку к этому предмету и используйте фильтр \"notes:\" в поиске, чтобы найти его.",
@@ -388,7 +389,7 @@
     "DoesNotExist": "{{itemname}} doesn't exist in your account.",
     "Edit": "Изменить Набор",
     "FilteredItems": "Filtered Items",
-    "FromEquipped": "Equipped",
+    "FromEquipped": "Из экипированных",
     "GatherEngrams": "Собрать Энграммы",
     "GatherEngramsExceptExotics": "Экзотический",
     "GatherTokens": "Собрать предметы Репутаций",
@@ -420,8 +421,8 @@
     "SaveErrorDescription": "Не удается сохранить набор {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Ошибка сохранения набора",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
-    "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These items cannot be equipped:"
+    "VendorsCanEquip": "Предметы, которые возможно надеть:",
+    "VendorsCannotEquip": "Предметы, которые невозможно надеть:"
   },
   "Manifest": {
     "Build": "Создание локальной базы данных Destiny",
@@ -439,7 +440,7 @@
     "DownStack": "Уменьшить до предыдущей полной \"пачки\"",
     "Increment": "Увеличить на один",
     "Max": "Total amount in this location",
-    "Min": "Minimum stack (1)",
+    "Min": "Минимальное количество (1)",
     "UpStack": "Increase up to the next full stack"
   },
   "MovePopup": {
@@ -451,7 +452,7 @@
     "OverviewTab": "Обзор",
     "ReviewsTab": "Отзывы",
     "Split": "Делить",
-    "Store": "Store",
+    "Store": "Дать",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
     "Take": "Взять",
@@ -488,7 +489,7 @@
     "ColumnSizeAuto": "Авто",
     "DIMPopups": "Всплывающие подсказки DIM",
     "DIMPopupsReset": "Сбросить статус скрытия всплывающих подсказок",
-    "EnableAdvancedStats": "Show stat quality rating on armor",
+    "EnableAdvancedStats": "Показать рейтинг качества характеристик брони",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Скачать список ваших предметов в формате CSV, который может быть легко просмотрен в любом приложении для работы с таблицами по вашему выбору.",
     "HideUnfiltered": "Скрывать предметы, не подходящие под поиск",
@@ -521,11 +522,11 @@
     "MaxBasePower": "Максимальный Лайт (без модификаторов)",
     "NoBonus": "No Bonus",
     "NotApplicable": "Н/Д",
-    "OfMaxRoll": "{{range}} of max roll",
-    "PercentHelp": "Click for more information about what Stats Quality is.",
+    "OfMaxRoll": "{{range}} от максимального",
+    "PercentHelp": "Дополнительная информация о \"Качестве характеристик\" (ЛКМ).",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
     "PrestigeD2": "Уровень Престижа: {{level}}\n{{exp}} опыта до Яркой Энграммы.",
-    "Quality": "Stats quality",
+    "Quality": "Качество характеристик",
     "Strength": "Стойкость",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"

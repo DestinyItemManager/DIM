@@ -263,6 +263,7 @@
     "MarkItemAs": "将物品标记为 “{{tag}}”",
     "RefreshInventory": "刷新背包",
     "StartSearch": "开始搜索",
+    "StartSearchClear": "Start a fresh search",
     "ToggleDetails": "显示物品详情开关"
   },
   "Infusion": {

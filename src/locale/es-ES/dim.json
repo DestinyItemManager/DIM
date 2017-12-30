@@ -263,6 +263,7 @@
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "RefreshInventory": "Actualizar inventario",
     "StartSearch": "Empezar una búsqueda",
+    "StartSearchClear": "Start a fresh search",
     "ToggleDetails": "Mostrar detalles completos de objeto"
   },
   "Infusion": {
