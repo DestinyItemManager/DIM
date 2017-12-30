@@ -32,7 +32,7 @@ export interface ProgressProfile {
 }
 
 // TODO: use ngimport to break this free of Angular-ness
-export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2ManifestService, $q) {
+export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2ManifestService, $q, loadingTracker) {
   'ngInject';
 
   // A subject that keeps track of the current account. Because it's a
@@ -96,7 +96,7 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
 
   async function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
     // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
-    return $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]) => {;
+    const reloadPromise = $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]) => {;
       return {
         defs,
         profileInfo,
@@ -111,5 +111,9 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
     .finally(() => {
       D2ManifestService.isLoaded = true;
     });
+
+    loadingTracker.addPromise(reloadPromise);
+
+    return reloadPromise;
   }
 }
