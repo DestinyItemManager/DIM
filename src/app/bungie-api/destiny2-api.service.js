@@ -39,19 +39,15 @@ export function Destiny2Api(
    */
   function getStores(platform) {
     return getProfile(platform,
-      // TODO: this is a guess - when the game launches, dial these in. DIM uses a lot.
-      DestinyComponentType.Profiles, // TODO: Don't think we need this
       DestinyComponentType.ProfileInventories,
       DestinyComponentType.ProfileCurrencies,
       DestinyComponentType.Characters,
       DestinyComponentType.CharacterInventories,
       DestinyComponentType.CharacterProgressions,
-      DestinyComponentType.CharacterActivities,
       DestinyComponentType.CharacterEquipment,
       // TODO: consider loading less item data, and then loading item details on click? Makes searches hard though.
       DestinyComponentType.ItemInstances,
       DestinyComponentType.ItemObjectives,
-      DestinyComponentType.ItemPerks,
       DestinyComponentType.ItemStats,
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
