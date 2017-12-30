@@ -98,15 +98,19 @@ dim-store-item {
     padding: 2px;
   }
   &.masterwork {
-    border-color: $gold;
+    overflow: hidden;
 
     &::after {
+      $size: 28px;
       content: '';
       display: block;
-      width: 0;
-      height: 0;
-      margin: calc(100% + 6px) auto;
-      box-shadow: 0 0 25px 18px $orange;
+      width: $size;
+      height: $size;
+      position: relative;
+      left: calc(50% - #{$size / 2});
+      top: calc(100% - #{$size / 2});
+      background-color: $orange;
+      filter: blur(8px);
     }
   }
 }
