@@ -56,10 +56,12 @@ export function Destiny2Api(
   }
 
   /**
-   * Get the user's progression for all characters on this platform.
+   * Get the user's progression for all characters on this platform. This is a completely separate
+   * call in hopes of separating the progress page into an independent thing.
    */
   async function getProgression(platform) {
     return getProfile(platform,
+      DestinyComponentType.Characters,
       DestinyComponentType.CharacterProgressions
     );
   }
