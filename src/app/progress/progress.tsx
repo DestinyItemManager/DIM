@@ -97,7 +97,6 @@ export class Progress extends React.Component<Props, State> {
 
     const { defs, profileInfo, lastPlayedDate } = this.state.progress;
 
-    // TODO: sort characters based on settings
     const characters = sortCharacters(Object.values(profileInfo.characters.data), this.state.characterOrder);
 
     // TODO: sorting these is a mystery

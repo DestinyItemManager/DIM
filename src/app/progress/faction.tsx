@@ -39,13 +39,12 @@ export function Faction(props: FactionProps) {
       }
     </div>
   </div>;
-    // TODO: highlight level > 10
 }
 
 /**
  * Calculate how many engrams you could get if you turned in all your rep items for this faction.
  */
-function calculateEngramsAvailable(profileInventory: IDestinyInventoryComponent, factionDef, factionProgress: IDestinyFactionProgression) : number {
+function calculateEngramsAvailable(profileInventory: IDestinyInventoryComponent, factionDef, factionProgress: IDestinyFactionProgression): number {
   const totalXPAvailable = sum(profileInventory.items, (item: IDestinyItemComponent) => {
     return (factionDef.tokenValues[item.itemHash] || 0) * item.quantity;
   });
