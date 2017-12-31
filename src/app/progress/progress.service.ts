@@ -1,11 +1,11 @@
 import * as _ from 'underscore';
 import { Subject, ReplaySubject, ConnectableObservable } from '@reactivex/rxjs';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
-import { IDictionaryComponent, IDestinyCharacterComponent, IDestinyCharacterProgressionComponent } from '../bungie-api/interfaces';
+import { IDictionaryComponent, IDestinyCharacterComponent, IDestinyCharacterProgressionComponent, IDestinyInventoryComponent, ISingleComponentResponse } from '../bungie-api/interfaces';
 
 export interface ProgressService {
   getProgressStream: (account: DestinyAccount) => ConnectableObservable<ProgressProfile>,
-  reloadProgress: () => Promise<ProgressProfile>
+  reloadProgress: () => void
 }
 
 /**
@@ -15,6 +15,7 @@ export interface ProgressService {
 interface ProgressProfileResponse {
   characters: IDictionaryComponent<IDestinyCharacterComponent>;
   characterProgressions: IDictionaryComponent<IDestinyCharacterProgressionComponent>;
+  profileInventory: ISingleComponentResponse<IDestinyInventoryComponent>;
   itemComponents: object;
 }
 
@@ -83,15 +84,8 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
    * Force the inventory and characters to reload.
    * @return {Promise} the new stores
    */
-  async function reloadProgress() {
-    // adhere to the old contract by returning the next value as a
-    // promise We take 2 from the stream because the publishReplay
-    // will always return the latest value instantly, and we want the
-    // next value (the refreshed value). toPromise returns the last
-    // value in the sequence.
-    const promise = storesStream.take(2).toPromise();
+  function reloadProgress() {
     forceReloadTrigger.next(); // signal the force reload
-    return promise;
   }
 
   async function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {

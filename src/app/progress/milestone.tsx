@@ -16,8 +16,6 @@ export function Milestone(props: MilestoneProps) {
   // TODO: no typings for manifest types yet
   const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
 
-  console.log({milestone, milestoneDef})
-
   // TODO: there are also "vendor milestones" which have no quest but have vendors (Xur)
 
   return <>
@@ -39,11 +37,11 @@ function AvailableQuest(props: AvailableQuestProps) {
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const displayProperties: IDestinyDisplayPropertiesDefinition = questDef.displayProperties || milestoneDef.displayProperties;
 
-  console.log(displayProperties.name, availableQuest, milestoneDef, questDef);
-
   // Only look at the first reward, the rest are screwy (old, etc)
   const questRewards = _.take(questDef.questRewards.items, 1).map((r: any) => defs.InventoryItem.get(r.itemHash));
   // TODO: some quests don't have a description, but they have an Activity (questDef.activities)!
+
+  // TODO: show activity challenges
 
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;

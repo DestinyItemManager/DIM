@@ -28,9 +28,13 @@
          ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.activities"
          ng-i18next="Activities.Activities"></a>
       <span class="link"
-            ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
-            ng-click="$ctrl.showXur($event)">Xûr</span>
-
+         ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
+         ng-click="$ctrl.showXur($event)">Xûr</span>
+      <a class="link second-to-go"
+         ui-sref-active="active"
+         ui-sref="destiny2.progress"
+         ng-if="$ctrl.destinyVersion == 2"
+         ng-i18next="Progress.Progress"></a>
       <hr>
 
       <a class="link"
@@ -76,7 +80,7 @@
      href="https://teespring.com/stores/dim"
      ng-i18next="Header.Shop"></a>
 
-  <span ng-if="$ctrl.destinyVersion == 1" class="link first-to-go header-separator"></span>
+  <span class="link first-to-go header-separator"></span>
 
   <a class="link second-to-go"
      ui-sref-active="active"
@@ -104,8 +108,13 @@
      ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.vendorsEnabled"
      ng-i18next="Vendors.Vendors"></a>
   <span class="link second-to-go"
-        ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
-        ng-click="$ctrl.showXur($event)">Xûr</span>
+     ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
+     ng-click="$ctrl.showXur($event)">Xûr</span>
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny2.progress"
+     ng-if="$ctrl.destinyVersion == 2"
+     ng-i18next="Progress.Progress"></a>
 
   <span class="header-right">
     <refresh

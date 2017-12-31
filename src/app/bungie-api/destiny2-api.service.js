@@ -62,7 +62,8 @@ export function Destiny2Api(
   async function getProgression(platform) {
     return getProfile(platform,
       DestinyComponentType.Characters,
-      DestinyComponentType.CharacterProgressions
+      DestinyComponentType.CharacterProgressions,
+      DestinyComponentType.ProfileInventories
     );
   }
 

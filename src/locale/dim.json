@@ -107,6 +107,10 @@
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engram available",
+    "EngramsAvailable_plural": "{{count}} engrams available"
+  },
   "FarmingMode": {
     "Configuration": "Configuration",
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -471,6 +475,9 @@
   "Postmaster": {
     "Desc": "There are 20 lost items at the Postmaster on your {{store}}. Any new items will overwrite the existing.",
     "Limit": "Postmaster Limit"
+  },
+  "Progress": {
+    "Progress": "Progress"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",

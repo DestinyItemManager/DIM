@@ -5,6 +5,28 @@ import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
 import { optimalLoadout } from '../loadout/loadout-utils';
 
+/* Label isn't used, but it helps us understand what each one is */
+export const progressionMeta = {
+  611314723: { label: "Vanguard", order: 1 },
+  3231773039: { label: "Vanguard Research", order: 2 },
+  697030790: { label: "Crucible", order: 3 },
+  1021210278: { label: "Gunsmith", order: 4 },
+
+  4235119312: { label: "EDZ Deadzone Scout", order: 5 },
+  4196149087: { label: "Titan Field Commander", order: 6 },
+  1660497607: { label: "Nessus AI", order: 7 },
+  828982195: { label: "Io Researcher", order: 8 },
+  2677528157: { label: "Follower of Osiris", order: 9 },
+
+  2105209711: { label: "New Monarchy", order: 10 },
+  1714509342: { label: "Future War Cult", order: 11 },
+  3398051042: { label: "Dead Orbit", order: 12 },
+  3468066401: { label: "The Nine", order: 13 },
+  1761642340: { label: "Iron Banner", order: 14 },
+
+  1482334108: { label: "Leviathan", order: 15 }
+};
+
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
  * consolidate them, or at least organize them better.
@@ -274,28 +296,6 @@ export function D2StoresService(
     itemInfoService,
     lastPlayedDate) {
     const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
-
-    /* Label isn't used, but it helps us understand what each one is */
-    const progressionMeta = {
-      611314723: { label: "Vanguard", order: 1 },
-      3231773039: { label: "Vanguard Research", order: 2 },
-      697030790: { label: "Crucible", order: 3 },
-      1021210278: { label: "Gunsmith", order: 4 },
-
-      4235119312: { label: "EDZ Deadzone Scout", order: 5 },
-      4196149087: { label: "Titan Field Commander", order: 6 },
-      1660497607: { label: "Nessus AI", order: 7 },
-      828982195: { label: "Io Researcher", order: 8 },
-      2677528157: { label: "Follower of Osiris", order: 9 },
-
-      2105209711: { label: "New Monarchy", order: 10 },
-      1714509342: { label: "Future War Cult", order: 11 },
-      3398051042: { label: "Dead Orbit", order: 12 },
-      3468066401: { label: "The Nine", order: 13 },
-      1761642340: { label: "Iron Banner", order: 14 },
-
-      1482334108: { label: "Leviathan", order: 15 }
-    };
 
     if (progressions) {
       store.progression = {
