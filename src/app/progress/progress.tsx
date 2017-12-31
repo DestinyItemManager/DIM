@@ -39,26 +39,38 @@ interface Props {
   ProgressService: ProgressService;
   $scope: IScope;
   account: DestinyAccount;
+  dimSettingsService;
 }
 
 interface State {
-  progress?: ProgressProfile
+  progress?: ProgressProfile;
+  characterOrder: string;
 }
 
 export class Progress extends React.Component<Props, State> {
-  state: State = {};
-
   subscription: Subscription;
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      characterOrder: this.props.dimSettingsService.characterOrder
+    };
+  }
 
   componentDidMount() {
     this.subscription = this.props.ProgressService.getProgressStream(this.props.account).subscribe((progress) => {
-      console.log({progress});
       this.setState({ progress });
     });
 
     this.props.$scope.$on('dim-refresh', () => {
       this.props.ProgressService.reloadProgress();
-    })
+    });
+
+    this.props.$scope.$watch(() => this.props.dimSettingsService.characterOrder, (newValue) => {
+      if (newValue != this.state.characterOrder) {
+        this.setState({ characterOrder: newValue });
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -75,7 +87,7 @@ export class Progress extends React.Component<Props, State> {
     const { defs, profileInfo, lastPlayedDate } = this.state.progress;
 
     // TODO: sort characters based on settings
-    const characters = Object.values(profileInfo.characters.data);
+    const characters = sortCharacters(Object.values(profileInfo.characters.data), this.state.characterOrder);
 
     // TODO: sorting these is a mystery
     function milestonesForCharacter(character): IDestinyMilestone[] {
@@ -140,7 +152,7 @@ export class Progress extends React.Component<Props, State> {
           {characters.map((character) =>
             <div className="progress-for-character" key={character.characterId}>
               {questItemsForCharacter(character).map((item) =>
-                <Quest defs={defs} item={item} objectives={objectivesForItem(character, item)} />
+                <Quest defs={defs} item={item} objectives={objectivesForItem(character, item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
               )}
             </div>
           )}
@@ -160,5 +172,19 @@ export class Progress extends React.Component<Props, State> {
         </div>
       </div>
     </div>;
+  }
+}
+
+export function sortCharacters(characters: IDestinyCharacterComponent[], order: string) {
+  if (order === 'mostRecent') {
+    return _.sortBy(characters, (store) => {
+      return -1 * new Date(store.dateLastPlayed).getTime();
+    });
+  } else if (order === 'mostRecentReverse') {
+    return _.sortBy(characters, (store) => {
+      return new Date(store.dateLastPlayed).getTime();
+    });
+  } else {
+    return characters;
   }
 }

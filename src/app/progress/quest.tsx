@@ -37,7 +37,7 @@ export function Quest(props: QuestProps) {
       <div className="milestone-description">{itemDef.displayProperties.description}</div>
       <div className="quest-objectives">
         {objectives.map((objective) =>
-          <Objective defs={defs} objective={objective} />
+          <Objective defs={defs} objective={objective} key={objective.objectiveHash}/>
         )}
       </div>
     </div>
