@@ -5,7 +5,7 @@
  * Enum for the Bungie membership type
  * @enum
  */
-export enum BungieMembershipType {
+export const enum BungieMembershipType {
   All = -1,
   Xbox = 1,
   PSN = 2,
@@ -17,7 +17,7 @@ export enum BungieMembershipType {
 * Enum for Desinty component type
 * @enum
 */
-export enum ComponentType {
+export const enum ComponentType {
   None = 0,
   Profiles = 100,
   VendorReceipts = 101,
@@ -48,7 +48,7 @@ export enum ComponentType {
 * Enum for component privacy
 * @enum
 */
-export enum ComponentPrivacySetting {
+export const enum ComponentPrivacySetting {
   None = 0,
   Public = 1,
   Private = 2,
@@ -58,7 +58,7 @@ export enum ComponentPrivacySetting {
 * Enum for the damage type of items
 * @enum
 */
-export enum DamageType {
+export const enum DamageType {
   None = 0,
   Kinetic = 1,
   Arc = 2,
@@ -71,7 +71,7 @@ export enum DamageType {
 * Enum for Destiny acitivity difficulty
 * @enum
 */
-export enum DestinyActivityDifficultyTier {
+export const enum DestinyActivityDifficultyTier {
   Trivial = 0,
   Easy = 1,
   Normal = 2,
@@ -86,7 +86,7 @@ export enum DestinyActivityDifficultyTier {
 * Enum for Destiny acitivity mode type
 * @enum
 */
-export enum DestinyActivityModeType {
+export const enum DestinyActivityModeType {
   None = 0,
   Story = 2,
   Strike = 3,
@@ -126,7 +126,7 @@ export enum DestinyActivityModeType {
 * Enum for classes in Destiny 2
 * @enum
 */
-export enum DestinyClass {
+export const enum DestinyClass {
   Titan = 0,
   Hunter = 1,
   Warlock = 2,
@@ -137,7 +137,7 @@ export enum DestinyClass {
 * A flags enumeration indicating the versions of the game that a given user has purchased.
 * @enum
 */
-export enum DestinyGameVersion {
+export const enum DestinyGameVersion {
   None = 0,
   Destiny2 = 1,
 }
@@ -145,7 +145,7 @@ export enum DestinyGameVersion {
 * Enum for genders in Destiny 2
 * @enum
 */
-export enum DestinyGender {
+export const enum DestinyGender {
   Male = 0,
   Female = 1,
   Unknown = 2,
@@ -155,7 +155,7 @@ export enum DestinyGender {
 * Enum for races in Destiny
 * @enum
 */
-export enum DestinyRace {
+export const enum DestinyRace {
   Human = 0,
   Awoken = 1,
   Exo = 2,
@@ -166,7 +166,7 @@ export enum DestinyRace {
 * Enum for Destiny stats group type
 * @enum
 */
-export enum DestinyStatsGroupType {
+export const enum DestinyStatsGroupType {
   None = 0,
   General = 1,
   Weapons = 2,
@@ -182,7 +182,7 @@ export enum DestinyStatsGroupType {
 * Enum for Destiny talent node states
 * @enum
 */
-export enum DestinyTalentNodeState {
+export const enum DestinyTalentNodeState {
   Invalid = 0,
   CanUpgrade = 1,
   NoPoints = 2,
@@ -203,7 +203,7 @@ export enum DestinyTalentNodeState {
 * The reasons why an item cannot be equipped, if any. Many flags can be set, or "None" if
 * @enum
 */
-export enum EquipFailureReason {
+export const enum EquipFailureReason {
   None = 0,
   ItemUnequippable = 1,
   temUniqueEquipRestricted = 2,
@@ -216,7 +216,7 @@ export enum EquipFailureReason {
 * Enum for the item bind status
 * @enum
 */
-export enum ItemBindStatus {
+export const enum ItemBindStatus {
   NotBound = 0,
   BoundToCharacter = 1,
   BoundToAccount = 2,
@@ -227,7 +227,7 @@ export enum ItemBindStatus {
 * Enum for the item location
 * @enum
 */
-export enum ItemLocation {
+export const enum ItemLocation {
   Unknown = 0,
   Inventory = 1,
   Vault = 2,
@@ -239,7 +239,7 @@ export enum ItemLocation {
 * Enum for the item state
 * @enum
 */
-export enum ItemState {
+export const enum ItemState {
   None = 0,
   Locked = 1,
   Tracked = 2,
@@ -249,7 +249,7 @@ export enum ItemState {
 * Enum for Destiny period type
 * @enum
 */
-export enum PeriodType {
+export const enum PeriodType {
   None = 0,
   Daily = 1,
   AllTime = 2,
@@ -260,7 +260,7 @@ export enum PeriodType {
 * Enum for the possible error codes
 * @enum
 */
-export enum PlatformErrorCodes {
+export const enum PlatformErrorCodes {
   None = 0,
   Success = 1,
   TransportException = 2,
@@ -881,7 +881,7 @@ export enum PlatformErrorCodes {
 * Enum for different stat category types
 * @enum
 */
-export enum StatsCategoryType {
+export const enum StatsCategoryType {
   None = 0,
   Kills = 1,
   Assists = 2,
@@ -904,7 +904,7 @@ export enum StatsCategoryType {
 * Enum for different stat IDs
 * @enum
 */
-export enum StatId {
+export const enum StatId {
   ActivitiesClearedabilityKills = 'DestinyInventoryItemDefinition',
   ActivitiesEntered = 'ActivitiesEntered',
   ActivitiesWon = 'ActivitiesWon',
@@ -1139,7 +1139,7 @@ export enum StatId {
 * Enum for different type definitions
 * @enum
 */
-export enum TypeDefinition {
+export const enum TypeDefinition {
   DestinyActivityGraphDefinition = 'DestinyActivityGraphDefinition',
   DestinyActivityModeDefinition = 'DestinyActivityModeDefinition',
   DestinyActivityModifierDefinition = 'DestinyActivityModifierDefinition',
@@ -1182,7 +1182,7 @@ export enum TypeDefinition {
 * Enum for the transfer status of an item
 * @enum
 */
-export enum TransferStatus {
+export const enum TransferStatus {
   CanTransfer = 0,
   ItemIsEquipped = 1,
   NotTransferrable = 2,
@@ -1193,7 +1193,7 @@ export enum TransferStatus {
 * Enum for unit types
 * @enum
 */
-export enum UnitType {
+export const enum UnitType {
   None = 0,
   Count = 1,
   PerGame = 2,
@@ -1213,7 +1213,7 @@ export enum UnitType {
 * Enum for the vendor item refund policy
 * @enum
 */
-export enum VendorItemRefundPolicy {
+export const enum VendorItemRefundPolicy {
   NotRefundable = 0,
   DeletesItem = 1,
   RevokesLicense = 2,
@@ -1223,7 +1223,7 @@ export enum VendorItemRefundPolicy {
 * Enum for the vendor item status
 * @enum
 */
-export enum VendorItemStatus {
+export const enum VendorItemStatus {
   Success = 0,
   NoInventorySpace = 1,
   NoFunds = 2,
