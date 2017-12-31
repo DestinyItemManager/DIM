@@ -1,10 +1,14 @@
 # Next
 
-* Added hotkey for search and clear.
-* Slightly tweaked visuals of displaying masterworks weapons and stats
+* Added hotkey for search and clear (Shift+F).
+* Masterworks show up with an orange glow like in the game, and gold borders are back to meaning "has power mod".
 * Mercury reputation items are now handled by farming mode and gather reputation items.
 * Tweak max base power / max light calculations to be slightly more accurate.
 * Display D2 subclass talent trees. We can't show which ones are selected/unlocked yet.
+* Moving items on Android should work better.
+* Rotating to and from landscape and portrait should be faster.
+* Fix quest steps showing up in the "haspower" search.
+* Do a better job of figuring out what's infusable.
 
 # 4.31.0
 
