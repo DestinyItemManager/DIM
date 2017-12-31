@@ -29,10 +29,11 @@ export function Faction(props: FactionProps) {
           <polygon strokeDasharray="121.622368" style={style} fillOpacity="0" stroke="#FFF" strokeWidth="3" points="24,2.5 45.5,24 24,45.5 2.5,24" strokeLinecap="butt"/>
         }
       </svg>
+      <div className={`item-stat item-faction ${factionProgress.level >= 10 ? 'purchase-unlocked' : ''}`}>{factionProgress.level}</div>
     </div>
     <div className="faction-info">
-      <div className="faction-name">{factionDef.displayProperties.name}</div>
-      <div className="faction-level"><span className={factionProgress.level >= 10 ? 'purchase-unlocked' : ''}>Level {factionProgress.level}</span>, {factionProgress.progressToNextLevel}/{factionProgress.nextLevelAt}</div>
+      <div className="faction-name" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
+      <div className="faction-level">{factionProgress.progressToNextLevel}/{factionProgress.nextLevelAt}</div>
       {engramsAvailable > 0 &&
         <div className="faction-rewards">{t('Faction.EngramsAvailable', { count: engramsAvailable })}</div>
       }
