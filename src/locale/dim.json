@@ -477,7 +477,10 @@
     "Limit": "Postmaster Limit"
   },
   "Progress": {
-    "Progress": "Progress"
+    "Progress": "Progress",
+    "Milestones": "Milestones",
+    "Factions": "Factions",
+    "Quests": "Quests"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",

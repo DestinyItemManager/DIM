@@ -16,7 +16,8 @@ interface ProgressProfileResponse {
   characters: IDictionaryComponent<IDestinyCharacterComponent>;
   characterProgressions: IDictionaryComponent<IDestinyCharacterProgressionComponent>;
   profileInventory: ISingleComponentResponse<IDestinyInventoryComponent>;
-  itemComponents: object;
+  characterInventories: IDictionaryComponent<IDestinyInventoryComponent>;
+  itemComponents: any;
 }
 
 // TODO: generate all the API structures from the Swagger docs

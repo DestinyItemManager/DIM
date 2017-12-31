@@ -7,10 +7,33 @@ import { Subscription } from '@reactivex/rxjs';
 import { CharacterTile } from './character-tile';
 import { Milestone } from './milestone';
 import { Faction } from './faction';
-import { IDestinyMilestone, IDestinyProgression, IDestinyFactionProgression } from '../bungie-api/interfaces';
-import { progressionMeta } from '../inventory/d2-stores.service';
+import { Quest } from './quest';
+import { IDestinyCharacterComponent, IDestinyMilestone, IDestinyProgression, IDestinyFactionProgression, IDestinyItemComponent, IDestinyInventoryComponent, IDestinyObjectiveProgress } from '../bungie-api/interfaces';
 import { sum } from '../util';
+import { t } from 'i18next';
 import './progress.scss';
+
+/* Label isn't used, but it helps us understand what each one is */
+const progressionMeta = {
+  611314723: { label: "Vanguard", order: 1 },
+  3231773039: { label: "Vanguard Research", order: 2 },
+  697030790: { label: "Crucible", order: 3 },
+  1021210278: { label: "Gunsmith", order: 4 },
+
+  4235119312: { label: "EDZ Deadzone Scout", order: 5 },
+  4196149087: { label: "Titan Field Commander", order: 6 },
+  1660497607: { label: "Nessus AI", order: 7 },
+  828982195: { label: "Io Researcher", order: 8 },
+  2677528157: { label: "Follower of Osiris", order: 9 },
+
+  2105209711: { label: "New Monarchy", order: 10 },
+  1714509342: { label: "Future War Cult", order: 11 },
+  3398051042: { label: "Dead Orbit", order: 12 },
+  3468066401: { label: "The Nine", order: 13 },
+  1761642340: { label: "Iron Banner", order: 14 },
+
+  1482334108: { label: "Leviathan", order: 15 }
+};
 
 interface Props {
   ProgressService: ProgressService;
@@ -67,6 +90,27 @@ export class Progress extends React.Component<Props, State> {
       return _.sortBy(allFactions, (f) => progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999);
     }
 
+    function questItemsForCharacter(character): IDestinyItemComponent[] {
+      const allItems: IDestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items;
+      const filteredItems = allItems.filter((item) => {
+        const itemDef = defs.InventoryItem.get(item.itemHash);
+        // This required a lot of trial and error
+        return itemDef.itemCategoryHashes.includes(16) || (itemDef.inventory && itemDef.inventory.tierTypeHash === 0 && itemDef.backgroundColor && itemDef.backgroundColor.alpha > 0);
+      });
+      return _.sortBy(filteredItems, (item) => {
+        const itemDef = defs.InventoryItem.get(item.itemHash);
+        return itemDef.displayProperties.name;
+      });
+    }
+
+    function objectivesForItem(character: IDestinyCharacterComponent, item: IDestinyItemComponent): IDestinyObjectiveProgress[] {
+      let objectives = profileInfo.itemComponents.objectives.data[item.itemInstanceId];
+      if (objectives) {
+        return objectives.objectives;
+      }
+      return profileInfo.characterProgressions.data[character.characterId].uninstancedItemObjectives[item.itemHash] || [];
+    }
+
     return <div className="progress dim-page">
       <div className="progress-characters">
         {characters.map((character) =>
@@ -78,7 +122,7 @@ export class Progress extends React.Component<Props, State> {
       </div>
 
       <div className="section">
-        <div className="title">Milestones</div>
+        <div className="title">{t('Progress.Milestones')}</div>
         <div className="progress-row">
           {characters.map((character) =>
             <div className="progress-for-character" key={character.characterId}>
@@ -91,7 +135,20 @@ export class Progress extends React.Component<Props, State> {
       </div>
 
       <div className="section">
-        <div className="title">Factions</div>
+        <div className="title">{t('Progress.Quests')}</div>
+        <div className="progress-row">
+          {characters.map((character) =>
+            <div className="progress-for-character" key={character.characterId}>
+              {questItemsForCharacter(character).map((item) =>
+                <Quest defs={defs} item={item} objectives={objectivesForItem(character, item)} />
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="section">
+        <div className="title">{t('Progress.Factions')}</div>
         <div className="progress-row">
           {characters.map((character) =>
             <div className="progress-for-character" key={character.characterId}>

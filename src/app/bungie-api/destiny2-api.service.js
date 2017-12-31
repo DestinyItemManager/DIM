@@ -63,7 +63,9 @@ export function Destiny2Api(
     return getProfile(platform,
       DestinyComponentType.Characters,
       DestinyComponentType.CharacterProgressions,
-      DestinyComponentType.ProfileInventories
+      DestinyComponentType.ProfileInventories,
+      DestinyComponentType.CharacterInventories,
+      DestinyComponentType.ItemObjectives
     );
   }
 
