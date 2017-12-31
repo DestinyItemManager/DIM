@@ -16,3 +16,4 @@ config/dim_travis.rsa
 .brackets.json
 .npmrc
 npm-debug.log
+.nvmrc
