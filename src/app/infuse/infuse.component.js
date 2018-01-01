@@ -7,7 +7,7 @@ import './infuse.scss';
 export const InfuseComponent = {
   template,
   bindings: {
-    source: '<'
+    query: '<'
   },
   controller: InfuseCtrl,
   controllerAs: 'vm'
@@ -19,7 +19,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
   const vm = this;
 
   vm.items = {};
-  if (vm.source.destinyVersion === 1) {
+  if (vm.query.destinyVersion === 1) {
     dimDefinitions.getDefinitions().then((defs) => {
       [
         452597397,
@@ -40,16 +40,17 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
     target: null,
     exotic: false,
     infused: 0,
-    infusable: [],
+    sourceItems: [],
+    targetItems: [],
     transferInProgress: false,
 
     $onInit: function() {
       // Set the source and reset the targets
       vm.infused = 0;
       vm.target = null;
-      vm.exotic = vm.source.tier === 'Exotic';
-      vm.stat = vm.source.primStat.stat;
-      if (vm.source.bucket.sort === 'General') {
+      vm.exotic = vm.query.tier === 'Exotic';
+      vm.stat = vm.query.primStat.stat;
+      if (vm.query.bucket.sort === 'General') {
         vm.wildcardMaterialCost = 2;
         vm.wildcardMaterialHash = 937555249;
       } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
@@ -63,11 +64,17 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
       vm.getItems();
     },
 
-    selectItem: function(item, e) {
+    selectItem: function(item, isTarget, e) {
       if (e) {
         e.stopPropagation();
       }
-      vm.target = item;
+      if (isTarget) {
+        vm.target = item;
+        vm.source = vm.query;
+      } else {
+        vm.target = vm.query;
+        vm.source = item;
+      }
       vm.infused = vm.target.primStat.value;
 
       if (vm.source.destinyVersion === 2) {
@@ -87,21 +94,26 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         // https://github.com/DestinyItemManager/DIM/issues/2215
         vm.infused = vm.target.basePower + (vm.source.primStat.value - vm.source.basePower);
       }
+
+      vm.result = angular.copy(vm.source);
+      vm.result.primStat.value = vm.infused;
     },
 
     // get Items for infusion
     getItems: function() {
-      let stores = vm.source.destinyVersion === 1 ? dimStoreService.getStores() : D2StoresService.getStores();
+      let stores = vm.query.destinyVersion === 1 ? dimStoreService.getStores() : D2StoresService.getStores();
 
       // If we want ALL our weapons, including vault's one
       if (!vm.getAllItems) {
         stores = _.filter(stores, (store) => {
-          return store.id === vm.source.owner;
+          return store.id === vm.query.owner;
         });
       }
 
       // all stores
-      let allItems = flatMap(stores, (store) => {
+      let targetItems = flatMap(stores, (store) => {
+        let source = vm.query;
+
         // all items in store
         return _.filter(store.items, (item) => {
           if (item.name === 'Rat King') {
@@ -110,26 +122,44 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
           return item.primStat &&
             item.year !== 1 &&
             (!item.locked || vm.showLockedItems) &&
-            (vm.source.destinyVersion === 1
-              ? (item.type === vm.source.type)
-              : (item.infusionQuality && (item.infusionQuality.infusionCategoryHashes.some((h) => vm.source.infusionQuality.infusionCategoryHashes.includes(h))))) &&
-            ((item.destinyVersion === 1 && item.primStat.value > vm.source.primStat.value) ||
-             (item.destinyVersion === 2 && item.basePower > vm.source.basePower));
+            (source.destinyVersion === 1
+              ? (item.type === source.type)
+              : (item.infusionQuality && (item.infusionQuality.infusionCategoryHashes.some((h) => source.infusionQuality.infusionCategoryHashes.includes(h))))) &&
+            ((item.destinyVersion === 1 && item.primStat.value > source.primStat.value) ||
+             (item.destinyVersion === 2 && item.basePower > source.basePower));
         });
       });
 
-      allItems = _.sortBy(allItems, (item) => {
+      targetItems = _.sortBy(targetItems, (item) => {
         return -((item.basePower || item.primStat.value) +
                  (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
       });
 
-      vm.infusable = allItems;
-      if (allItems.length) {
-        vm.selectItem(allItems[allItems.length - 1]);
-      } else {
-        vm.target = null;
-        vm.infused = 0;
-      }
+      let sourceItems = flatMap(stores, (store) => {
+        let target = vm.query;
+
+        return _.filter(store.items, (item) => {
+          return item.primStat &&
+            item.year !== 1 &&
+            (!item.locked || vm.showLockedItems) &&
+            (target.destinyVersion === 1
+              ? (item.type === target.type)
+              : (item.infusionQuality && (item.infusionQuality.infusionCategoryHashes.some((h) => target.infusionQuality.infusionCategoryHashes.includes(h))))) &&
+              ((item.destinyVersion === 1 && item.primStat.value < target.primStat.value) ||
+               (item.destinyVersion === 2 && item.basePower < target.basePower));
+        });
+      });
+
+      sourceItems = _.sortBy(sourceItems, (item) => {
+        return -((item.basePower || item.primStat.value) +
+                 (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
+      });
+
+      vm.sourceItems = sourceItems;
+      vm.targetItems = targetItems;
+
+      vm.target = null;
+      vm.infused = 0;
     },
 
     closeDialog: function() {
@@ -137,11 +167,14 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
     },
 
     transferItems: function() {
-      if (vm.target.notransfer) {
-        toaster.pop('error', $i18next.t('Infusion.NoTransfer', { target: vm.target.name }));
+      if (vm.target.notransfer || vm.source.notransfer) {
+        const name = vm.source.notransfer ? vm.source.name : vm.target.name;
+
+        toaster.pop('error', $i18next.t('Infusion.NoTransfer', { target: name }));
         return $q.resolve();
       }
-      const store = (vm.source.destinyVersion === 1 ? dimStoreService : D2StoresService).getStore(vm.source.owner);
+
+      const store = (vm.source.destinyVersion === 1 ? dimStoreService : D2StoresService).getStore(vm.query.owner);
       const items = {};
       const targetKey = vm.target.type.toLowerCase();
       items[targetKey] = items[targetKey] || [];

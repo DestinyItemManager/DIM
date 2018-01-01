@@ -267,9 +267,10 @@
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
-    "BringGear": "Will bring the gear to:",
+    "BringGear": "Will bring {{name}} to:",
     "Calc": "Infusion calculator",
-    "InfuseItems": "Select item to infuse with:",
+    "InfuseTarget": "Select item to infuse {{name}}:",
+    "InfuseSource": "Select item to infuse into; consumes {{name}}:",
     "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "Infusion Materials",
     "LockedItems": "Include 'locked' items",

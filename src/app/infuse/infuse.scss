@@ -91,18 +91,47 @@
     padding: 10px 25px;
     overflow: hidden;
 
-    .item {
-      float: left;
-      margin: 3px 3px;
+    .resultContainer {
+      display: flex;
     }
+
     .infusedItem {
-      float: left;
-      margin: 3px 10px 3px 3px;
+      margin: 3px 3px 3px 3px;
     }
+
     .plusSeparator {
       float: left;
       margin-top: 5px;
       font-size: 32px;
     }
+
+    .itemGrid {
+      display: flex;
+    }
+
+    .infusionPlan {
+      display: flex;
+
+      .icon {
+        align-self: center;
+      }
+    }
   }
+
+  .infuseSelector {
+    justify-content: space-around;
+    display: flex;
+
+    .infuseSeparator {
+      width: 1px;
+      margin: 15px 0;
+      background: white;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
 }
+

@@ -39,7 +39,7 @@ function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog,
 
     // Open the infuse window
     ngDialog.open({
-      template: '<infuse source="item"></infuse>',
+      template: '<infuse query="item"></infuse>',
       className: 'app-settings',
       appendClassName: 'modal-dialog',
       controller: function($scope) {
