@@ -49,14 +49,11 @@ function AvailableQuest(props: AvailableQuestProps) {
 
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;
-  const objectiveDef = objective ? defs.Objective.get(objective.objectiveHash) : null;
 
   return <div className="milestone-quest">
     <div className="milestone-icon">
       <img src={`https://www.bungie.net${displayProperties.icon}`} />
-      {objective && objectiveDef.completionValue > 1 &&
-        <span>{objective.progress}/{objectiveDef.completionValue}</span>
-      }
+      <MilestoneObjectiveStatus objective={objective} defs={defs} />
     </div>
     <div className="milestone-info">
       <span className="milestone-name">{displayProperties.name}</span>
@@ -71,4 +68,22 @@ function AvailableQuest(props: AvailableQuestProps) {
       )}
     </div>
   </div>;
+
+interface MilestoneObjectiveStatus {
+  objective: IDestinyObjectiveProgress | null;
+  defs: any;
+}
+
+function MilestoneObjectiveStatus(props: MilestoneObjectiveStatus) {
+  const { objective, defs } = props;
+  if (objective) {
+    const objectiveDef = defs.Objective.get(objective.objectiveHash);
+    if (objective.complete) {
+      return <span><i className="fa fa-check-square-o"></i></span>;
+    } else if (objectiveDef.completionValue > 1) {
+      return <span>{objective.progress}/{objectiveDef.completionValue}</span>;
+    }
+  }
+
+  return null;
 }
