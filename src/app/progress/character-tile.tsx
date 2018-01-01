@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { classNames } from 'classnames';
 import { IDestinyCharacterComponent } from '../bungie-api/interfaces';
 import { bungieBackgroundStyle } from '../dim-ui/bungie-image';
 
@@ -19,7 +20,7 @@ export function CharacterTile(props: CharacterTileProps) {
   const current = lastPlayedDate.getTime() == new Date(character.dateLastPlayed).getTime() ? 'current' : '';
 
   // TODO: update this to be a D2-specific, simplified tile
-  return <div className={`character ${current ? 'current' : ''}`}>
+  return <div className={classNames('character', { current })}>
     <div className="character-box destiny2">
       <div className="background" style={bungieBackgroundStyle(character.emblemBackgroundPath)}></div>
       <div className="details">
