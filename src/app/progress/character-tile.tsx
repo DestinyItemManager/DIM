@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IDestinyCharacterComponent } from '../bungie-api/interfaces';
+import { bungieBackgroundStyle } from '../dim-ui/bungie-image';
 
 interface CharacterTileProps {
   character: IDestinyCharacterComponent;
@@ -20,7 +21,7 @@ export function CharacterTile(props: CharacterTileProps) {
   // TODO: update this to be a D2-specific, simplified tile
   return <div className={`character ${current ? 'current' : ''}`}>
     <div className="character-box destiny2">
-      <div className="background" style={{ backgroundImage: `url(https://www.bungie.net${character.emblemBackgroundPath})` }}></div>
+      <div className="background" style={bungieBackgroundStyle(character.emblemBackgroundPath)}></div>
       <div className="details">
         <div className="emblem"></div>
         <div className="character-text">

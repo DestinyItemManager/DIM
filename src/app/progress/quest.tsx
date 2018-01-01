@@ -4,6 +4,7 @@ import { IDestinyObjectiveProgress, IDestinyInventoryComponent, IDestinyItemInst
 import { sum } from '../util';
 import { t } from 'i18next';
 import { percent } from '../inventory/dimPercentWidth.directive';
+import { BungieImage } from '../dim-ui/bungie-image';
 import './quest.scss';
 
 interface QuestProps {
@@ -28,6 +29,7 @@ export function Quest(props: QuestProps) {
 
   return <div className="milestone-quest item-quest">
     <div className="milestone-icon">
+      <BungieImage src={itemDef.displayProperties.icon} />
       <img src={`https://www.bungie.net${itemDef.displayProperties.icon}`} />
       {percentComplete > 0 &&
         <span>{Math.floor(percentComplete * 100.0)}%</span>}

@@ -3,6 +3,7 @@ import * as _ from 'underscore';
 import { IDestinyFactionProgression, IDestinyInventoryComponent, IDestinyItemInstanceComponent, IDestinyItemComponent } from '../bungie-api/interfaces';
 import { sum } from '../util';
 import { t } from 'i18next';
+import { bungieNetPath } from '../dim-ui/bungie-image';
 import './faction.scss';
 
 interface FactionProps {
@@ -24,7 +25,7 @@ export function Faction(props: FactionProps) {
   return <div className="faction">
     <div className="faction-icon">
       <svg viewBox="0 0 48 48">
-        <image xlinkHref={`https://www.bungie.net${factionDef.displayProperties.icon}`} width="48" height="48" />
+        <image xlinkHref={bungieNetPath(factionDef.displayProperties.icon)} width="48" height="48" />
         {factionProgress.progressToNextLevel > 0 &&
           <polygon strokeDasharray="121.622368" style={style} fillOpacity="0" stroke="#FFF" strokeWidth="3" points="24,2.5 45.5,24 24,45.5 2.5,24" strokeLinecap="butt"/>
         }

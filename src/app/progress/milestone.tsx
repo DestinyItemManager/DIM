@@ -3,6 +3,7 @@ import * as _ from 'underscore';
 import { IDestinyMilestone, IDestinyMilestoneQuest, IDestinyDisplayPropertiesDefinition, IDestinyObjectiveProgress } from '../bungie-api/interfaces';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import { t } from 'i18next';
+import { BungieImage } from '../dim-ui/bungie-image';
 import './milestone.scss';
 
 interface MilestoneProps {
@@ -52,7 +53,7 @@ function AvailableQuest(props: AvailableQuestProps) {
 
   return <div className="milestone-quest">
     <div className="milestone-icon">
-      <img src={`https://www.bungie.net${displayProperties.icon}`} />
+      <BungieImage src={displayProperties.icon} />
       <MilestoneObjectiveStatus objective={objective} defs={defs} />
     </div>
     <div className="milestone-info">
@@ -62,7 +63,7 @@ function AvailableQuest(props: AvailableQuestProps) {
       <div className="milestone-description">{displayProperties.description}</div>
       {questRewards.map((questReward) =>
         <div className="milestone-reward" key={questReward.hash}>
-          <img src={`https://www.bungie.net${questReward.displayProperties.icon}`} />
+          <BungieImage src={questReward.displayProperties.icon} />
           <span>{questReward.displayProperties.name}</span>
         </div>
       )}
