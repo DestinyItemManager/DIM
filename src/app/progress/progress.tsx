@@ -100,19 +100,19 @@ export class Progress extends React.Component<Props, State> {
     const characters = sortCharacters(Object.values(profileInfo.characters.data), this.state.characterOrder);
 
     // TODO: sorting these is a mystery
-    function milestonesForCharacter(character): IDestinyMilestone[] {
+    function milestonesForCharacter(character: IDestinyCharacterComponent): IDestinyMilestone[] {
       const allMilestones: IDestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
       return allMilestones.filter((milestone) => {
-        return (milestone.availableQuests || []).every((q) => q.status.stepObjectives.length > 0 && q.status.started && (!q.status.completed || !q.status.redeemed));
+        return milestone.availableQuests && milestone.availableQuests.every((q) => q.status.stepObjectives.length > 0 && q.status.started && (!q.status.completed || !q.status.redeemed));
       });
     }
 
-    function factionsForCharacter(character): IDestinyFactionProgression[] {
+    function factionsForCharacter(character: IDestinyCharacterComponent): IDestinyFactionProgression[] {
       const allFactions: IDestinyFactionProgression[] = Object.values(profileInfo.characterProgressions.data[character.characterId].factions);
       return _.sortBy(allFactions, (f) => progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999);
     }
 
-    function questItemsForCharacter(character): IDestinyItemComponent[] {
+    function questItemsForCharacter(character: IDestinyCharacterComponent): IDestinyItemComponent[] {
       const allItems: IDestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items;
       const filteredItems = allItems.filter((item) => {
         const itemDef = defs.InventoryItem.get(item.itemHash);

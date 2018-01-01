@@ -37,8 +37,12 @@ function AvailableQuest(props: AvailableQuestProps) {
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const displayProperties: IDestinyDisplayPropertiesDefinition = questDef.displayProperties || milestoneDef.displayProperties;
 
+  let activityDef: any = null;
+  if (availableQuest.activity) {
+    activityDef = defs.Activity.get(availableQuest.activity.activityHash);
+  }
   // Only look at the first reward, the rest are screwy (old, etc)
-  const questRewards = _.take(questDef.questRewards.items, 1).map((r: any) => defs.InventoryItem.get(r.itemHash));
+  const questRewards = questDef.questRewards ? _.take(questDef.questRewards.items, 1).map((r: any) => defs.InventoryItem.get(r.itemHash)) : [];
   // TODO: some quests don't have a description, but they have an Activity (questDef.activities)!
 
   // TODO: show activity challenges
@@ -56,6 +60,8 @@ function AvailableQuest(props: AvailableQuestProps) {
     </div>
     <div className="milestone-info">
       <span className="milestone-name">{displayProperties.name}</span>
+      {activityDef && activityDef.displayProperties.name !== displayProperties.name &&
+        <div className="milestone-location">{activityDef.displayProperties.name}</div>}
       <div className="milestone-description">{displayProperties.description}</div>
       {questRewards.map((questReward) =>
         <div className="milestone-reward" key={questReward.hash}>

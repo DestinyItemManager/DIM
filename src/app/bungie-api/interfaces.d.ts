@@ -657,7 +657,7 @@ export interface IDestinyMilestoneRewardEntry {
 export interface IDestinyObjectiveProgress {
   objectiveHash: number;
   destinationHash?: string;
-  activityHash?: string;
+  activityHash?: number;
   progress?: number;
   complete: boolean;
 }
