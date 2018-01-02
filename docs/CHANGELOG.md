@@ -1,5 +1,7 @@
 # Next
 
+# 4.32.0
+
 * Added hotkey for search and clear (Shift+F).
 * Masterworks show up with an orange glow like in the game, and gold borders are back to meaning "has power mod".
 * Mercury reputation items are now handled by farming mode and gather reputation items.
