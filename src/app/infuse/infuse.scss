@@ -107,13 +107,20 @@
 
     .itemGrid {
       display: flex;
+      max-width: calc((var(--item-size) + 8px) * 5);
+      flex-wrap: wrap;
     }
 
     .infusionPlan {
       display: flex;
 
-      .icon {
-        align-self: center;
+      .infusionEquation {
+        display: flex;
+        height: calc(var(--item-size) + 8px + 6px);
+
+        .icon {
+          align-self: center;
+        }
       }
     }
   }
@@ -124,14 +131,10 @@
 
     .infuseSeparator {
       width: 1px;
-      margin: 15px 0;
+      margin: 15px 15px 0px 15px;
+      flex: none;
       background: white;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
     }
   }
-
 }
 

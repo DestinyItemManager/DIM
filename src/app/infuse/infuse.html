@@ -52,11 +52,13 @@
     <div class="gearsContainer black">
       <div ng-show="vm.infused != 0">
         <div class="infusionPlan">
-          <dim-simple-item class="infusedItem" item-data="vm.source"></dim-simple-item>
-          <div class="icon"><i class="fa fa-plus" aria-hidden="true"></i></div>
-          <dim-simple-item class="infusedItem" item-data="vm.target"></dim-simple-item>
-          <div class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
-          <dim-simple-item class="infusedItem" item-data="vm.result"></dim-simple-item>
+          <div class="infusionEquation">
+            <dim-simple-item class="infusedItem" item-data="vm.source"></dim-simple-item>
+            <div class="icon"><i class="fa fa-plus" aria-hidden="true"></i></div>
+            <dim-simple-item class="infusedItem" item-data="vm.target"></dim-simple-item>
+            <div class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+            <dim-simple-item class="infusedItem" item-data="vm.result"></dim-simple-item>
+          </div>
           <div class="result">
             <div>
               <div ng-i18next="[i18next]({name: vm.source.name})Infusion.BringGear"></div>
