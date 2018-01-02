@@ -478,9 +478,16 @@
   },
   "Progress": {
     "Progress": "Progress",
+    "ProfileMilestones": "Account Milestones",
     "Milestones": "Milestones",
     "Factions": "Factions",
-    "Quests": "Quests"
+    "Quests": "Quests",
+    "RewardRedeemed": "Reward redeemed",
+    "RewardEarned": "Reward earned but not redeemed",
+    "RewardNotEarned": "Reward not earned",
+    "Weekly": "Weekly",
+    "Daily": "Daily",
+    "ExpiresIn": "expires at {{endTime}}"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",

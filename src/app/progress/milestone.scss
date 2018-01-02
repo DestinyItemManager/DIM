@@ -4,6 +4,10 @@
   align-items: flex-start;
   margin-bottom: 16px;
 
+  .complete {
+    color: #A1A2A2;
+  }
+
   .milestone-icon {
     img {
       height: 36px;
@@ -68,6 +72,49 @@
 
     i {
       margin-right: 4px;
+    }
+  }
+
+  .milestone-challenges {
+    margin: 8px 32px 0 0;
+
+    .milestone-challenges-activity-name {
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+  }
+
+  .milestone-challenge {
+    margin: 4px 0 0 -14px;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+
+    .milestone-challenge-info {
+      flex: 1;
+    }
+
+    i.fa {
+      margin-right: 4px;
+    }
+
+    .milestone-challenge-name {
+      flex: 1;
+      text-transform: uppercase;
+    }
+
+    .milestone-header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .milestone-challenge-description {
+      font-size: 10px;
+    }
+
+    .milestone-challenge-progress {
+      font-size: 10px;
     }
   }
 }

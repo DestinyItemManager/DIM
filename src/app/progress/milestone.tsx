@@ -89,7 +89,7 @@ function RewardActivity(props: RewardActivityProps) {
   console.log(rewardEntry, rewardDef);
 
   return (
-    <div className="milestone-reward-activity" title={t(tooltip)}>
+    <div className={classNames('milestone-reward-activity', { complete: rewardEntry.earned })} title={t(tooltip)}>
       <i className={classNames('fa', checkClass)}/>
       <BungieImage src={rewardDef.displayProperties.icon} />
       <span>{rewardDef.displayProperties.name}</span>
@@ -104,6 +104,9 @@ interface AvailableQuestProps {
   availableQuest: IDestinyMilestoneQuest;
 }
 
+/**
+ * Most milestones are represented as a quest, with some objectives and a reward associated with them.
+ */
 function AvailableQuest(props: AvailableQuestProps) {
   const { defs, milestone, milestoneDef, availableQuest } = props;
 
@@ -114,11 +117,9 @@ function AvailableQuest(props: AvailableQuestProps) {
   if (availableQuest.activity) {
     activityDef = defs.Activity.get(availableQuest.activity.activityHash);
   }
-  // Only look at the first reward, the rest are screwy (old, etc)
-  const questRewards = questDef.questRewards ? _.take(questDef.questRewards.items, 1).map((r: any) => defs.InventoryItem.get(r.itemHash)) : [];
-  // TODO: some quests don't have a description, but they have an Activity (questDef.activities)!
 
-  // TODO: show activity challenges
+  // Only look at the first reward, the rest are screwy (old engram versions, etc)
+  const questRewards = questDef.questRewards ? _.take(questDef.questRewards.items, 1).map((r: any) => defs.InventoryItem.get(r.itemHash)) : [];
 
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;
@@ -142,22 +143,112 @@ function AvailableQuest(props: AvailableQuestProps) {
             <span>{questReward.displayProperties.name}</span>
           </div>
         )}
+        <Challenges defs={defs} availableQuest={availableQuest} />
       </div>
     </div>
   );
 }
 
-interface MilestoneObjectiveStatus {
+interface ChallengesProps {
+  defs;
+  availableQuest: IDestinyMilestoneQuest;
+}
+
+/**
+ * If this quest has associated challenges, display them.
+ * There doesn't seem to be any consistency about which quests do and don't have challenges, though.
+ */
+function Challenges(props: ChallengesProps) {
+  const { defs, availableQuest } = props;
+
+  if (!availableQuest.challenges) {
+    return null;
+  }
+
+  // If we can, filter challenges down to the current activity.
+  let filteredChallenges = availableQuest.activity ? availableQuest.challenges.filter((c) => c.objective.activityHash === availableQuest.activity.activityHash) : availableQuest.challenges;
+
+  // Sometimes none of them match the activity, though. I don't know why.
+  if (filteredChallenges.length === 0) {
+    filteredChallenges = availableQuest.challenges;
+  }
+
+  // TODO: If we don't filter, there are duplicates. The duplicates are often for the prestige-mode versions.
+  // Not sure if we want to show them since they're dups, but the completion values would be different between
+  // them, right?
+
+  // Sometimes a quest can be completed by doing challenges from multiple activities. If that's the case, group
+  // them by activity and give each a header to help them make sense.
+  const challengesByActivity = _.groupBy(filteredChallenges, (c) => c.objective.activityHash);
+  return (
+    <>
+      {_.map(challengesByActivity, (challengeStatuses, activityHash) => {
+        const activityDef = defs.Activity.get(activityHash);
+
+        return (
+          <div className="milestone-challenges">
+            {_.size(challengesByActivity) > 1 &&
+              <div className="milestone-challenges-activity-name">{activityDef.displayProperties.name}</div>
+            }
+            {filteredChallenges.map((challenge) =>
+              <Challenge key={challenge.objective.objectiveHash} defs={defs} challenge={challenge} />
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+interface ChallengeProps {
+  defs;
+  challenge: IDestinyChallengeStatus;
+}
+
+/**
+ * A single challenge. A lot like an objective, but we display it closer to how it appears in-game.
+ */
+function Challenge(props: ChallengeProps) {
+  const { defs, challenge } = props;
+
+  const objectiveDef = defs.Objective.get(challenge.objective.objectiveHash);
+  const icon = challenge.objective.complete ? 'fa-check-circle' : 'fa-circle-o';
+
+  return (
+    <div
+     className={classNames('milestone-challenge', { complete: challenge.objective.complete })}
+     title={objectiveDef.displayProperties.description}
+    >
+    <i className={classNames('fa', icon)}/>
+      <div className="milestone-challenge-info">
+        <div className="milestone-header">
+          <span className="milestone-challenge-name">{objectiveDef.displayProperties.name}</span>
+          {objectiveDef.completionValue > 1 &&
+            <span className="milestone-challenge-progress">{challenge.objective.progress || 0}/{objectiveDef.completionValue}</span>
+          }
+        </div>
+        <div className="milestone-challenge-description">{objectiveDef.displayProperties.description}</div>
+      </div>
+    </div>
+  );
+}
+
+interface MilestoneObjectiveStatusProps {
   objective: IDestinyObjectiveProgress | null;
   defs: any;
 }
 
-function MilestoneObjectiveStatus(props: MilestoneObjectiveStatus) {
+/**
+ * The display for a milestone quest's objective. Either a count to be shown under the icon, or a
+ * checkmark if the objective has been completed but not picked up. If it's a single-step objective
+ * don't display anything until it's complete, because it's obvious there's only one thing to do.
+ */
+function MilestoneObjectiveStatus(props: MilestoneObjectiveStatusProps) {
   const { objective, defs } = props;
   if (objective) {
     const objectiveDef = defs.Objective.get(objective.objectiveHash);
     if (objective.complete) {
-      return <span><i className="fa fa-check-square-o"/></span>;
+      return <span><i className="fa fa-check-circle-o"/></span>;
     } else if (objectiveDef.completionValue > 1) {
       return <span>{objective.progress}/{objectiveDef.completionValue}</span>;
     }
