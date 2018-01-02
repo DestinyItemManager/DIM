@@ -8,7 +8,8 @@
   },
   "extends": [
     "tslint:recommended",
-    "tslint-eslint-rules"
+    "tslint-eslint-rules",
+    "tslint-react"
   ],
   "jsRules": {},
   "rules": {
@@ -147,7 +148,8 @@
     "space-within-parens": [true, 0],
     "type-literal-delimiter": true,
     "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-rest-spread", "check-type", "check-typecast", "check-type-operator", "check-preblock"],
-    "interface-name": false
+    "interface-name": false,
+    "jsx-no-multiline-js": false
   },
   "rulesDirectory": []
 }

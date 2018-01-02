@@ -20,22 +20,24 @@ export function CharacterTile(props: CharacterTileProps) {
   const current = lastPlayedDate.getTime() === new Date(character.dateLastPlayed).getTime() ? 'current' : '';
 
   // TODO: update this to be a D2-specific, simplified tile
-  return <div className={classNames('character', { current })}>
-    <div className="character-box destiny2">
-      <div className="background" style={bungieBackgroundStyle(character.emblemBackgroundPath)}></div>
-      <div className="details">
-        <div className="emblem"></div>
-        <div className="character-text">
-          <div className="top">
-            <div className="class">{ className }</div>
-            <div className="powerLevel">{character.light}</div>
-          </div>
-          <div className="bottom">
-            <div className="race-gender">{genderRace}</div>
-            <div className="level">{character.levelProgression.level}</div>
+  return (
+    <div className={classNames('character', { current })}>
+      <div className="character-box destiny2">
+        <div className="background" style={bungieBackgroundStyle(character.emblemBackgroundPath)}/>
+        <div className="details">
+          <div className="emblem"/>
+          <div className="character-text">
+            <div className="top">
+              <div className="class">{className}</div>
+              <div className="powerLevel">{character.light}</div>
+            </div>
+            <div className="bottom">
+              <div className="race-gender">{genderRace}</div>
+              <div className="level">{character.levelProgression.level}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>;
+  );
 }

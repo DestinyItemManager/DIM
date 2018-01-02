@@ -133,72 +133,78 @@ export class Progress extends React.Component<Props, State> {
     }
 
     function draw(characters) {
-      return <div className="progress dim-page">
-        <div className="progress-characters">
-          {characters.map((character) =>
-            <CharacterTile key={character.characterId}
-                            character={character}
-                            defs={defs}
-                            lastPlayedDate={lastPlayedDate} />
-          )}
-        </div>
-
-        <div className="section">
-          <div className="title">{t('Progress.Milestones')}</div>
-          <div className="progress-row">
+      return (
+        <div className="progress dim-page">
+          <div className="progress-characters">
             {characters.map((character) =>
-              <div className="progress-for-character" key={character.characterId}>
-                {milestonesForCharacter(character).map((milestone) =>
-                  <Milestone milestone={milestone} defs={defs} key={milestone.milestoneHash} />
-                )}
-              </div>
+              <CharacterTile
+                key={character.characterId}
+                character={character}
+                defs={defs}
+                lastPlayedDate={lastPlayedDate}
+              />
             )}
           </div>
-        </div>
 
-        <div className="section">
-          <div className="title">{t('Progress.Quests')}</div>
-          <div className="progress-row">
-            {characters.map((character) =>
-              <div className="progress-for-character" key={character.characterId}>
-                {questItemsForCharacter(character).map((item) =>
-                  <Quest defs={defs} item={item} objectives={objectivesForItem(character, item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
-                )}
-              </div>
-            )}
+          <div className="section">
+            <div className="title">{t('Progress.Milestones')}</div>
+            <div className="progress-row">
+              {characters.map((character) =>
+                <div className="progress-for-character" key={character.characterId}>
+                  {milestonesForCharacter(character).map((milestone) =>
+                    <Milestone milestone={milestone} defs={defs} key={milestone.milestoneHash} />
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="section">
+            <div className="title">{t('Progress.Quests')}</div>
+            <div className="progress-row">
+              {characters.map((character) =>
+                <div className="progress-for-character" key={character.characterId}>
+                  {questItemsForCharacter(character).map((item) =>
+                    <Quest defs={defs} item={item} objectives={objectivesForItem(character, item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="section">
+            <div className="title">{t('Progress.Factions')}</div>
+            <div className="progress-row">
+              {characters.map((character) =>
+                <div className="progress-for-character" key={character.characterId}>
+                  {factionsForCharacter(character).map((faction) =>
+                    <Faction factionProgress={faction} defs={defs} profileInventory={profileInfo.profileInventory.data} key={faction.factionHash} />
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-
-        <div className="section">
-          <div className="title">{t('Progress.Factions')}</div>
-          <div className="progress-row">
-            {characters.map((character) =>
-              <div className="progress-for-character" key={character.characterId}>
-                {factionsForCharacter(character).map((faction) =>
-                  <Faction factionProgress={faction} defs={defs} profileInventory={profileInfo.profileInventory.data} key={faction.factionHash} />
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>;
+      );
     }
 
     if (this.state.isPhonePortrait) {
-      return <ViewPager>
-        <Frame className="frame">
-          <Track
-            viewsToShow={1}
-            contain={true}
-            className="track"
-            autoSize={true}
-          >
-            {characters.map((character) =>
-              <View className="view">{draw([character])}</View>
-            )}
-          </Track>
-        </Frame>
-      </ViewPager>;
+      return (
+        <ViewPager>
+          <Frame className="frame">
+            <Track
+              viewsToShow={1}
+              contain={true}
+              className="track"
+              autoSize={true}
+            >
+              {characters.map((character) =>
+                <View className="view" key={character.characterId}>{draw([character])}</View>
+              )}
+            </Track>
+          </Frame>
+        </ViewPager>
+      );
     } else {
       return draw(characters);
     }

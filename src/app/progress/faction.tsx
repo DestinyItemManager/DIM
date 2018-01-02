@@ -24,24 +24,26 @@ export function Faction(props: FactionProps) {
 
   const engramsAvailable = calculateEngramsAvailable(profileInventory, factionDef, factionProgress);
 
-  return <div className="faction">
-    <div className="faction-icon">
-      <svg viewBox="0 0 48 48">
-        <image xlinkHref={bungieNetPath(factionDef.displayProperties.icon)} width="48" height="48" />
-        {factionProgress.progressToNextLevel > 0 &&
-          <polygon strokeDasharray="121.622368" style={style} fillOpacity="0" stroke="#FFF" strokeWidth="3" points="24,2.5 45.5,24 24,45.5 2.5,24" strokeLinecap="butt"/>
+  return (
+    <div className="faction">
+      <div className="faction-icon">
+        <svg viewBox="0 0 48 48">
+          <image xlinkHref={bungieNetPath(factionDef.displayProperties.icon)} width="48" height="48" />
+          {factionProgress.progressToNextLevel > 0 &&
+            <polygon strokeDasharray="121.622368" style={style} fillOpacity="0" stroke="#FFF" strokeWidth="3" points="24,2.5 45.5,24 24,45.5 2.5,24" strokeLinecap="butt"/>
+          }
+        </svg>
+        <div className={classNames('item-stat', 'item-faction', { 'purchase-unlocked': factionProgress.level >= 10 })}>{factionProgress.level}</div>
+      </div>
+      <div className="faction-info">
+        <div className="faction-name" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
+        <div className="faction-level">{factionProgress.progressToNextLevel}/{factionProgress.nextLevelAt}</div>
+        {engramsAvailable > 0 &&
+          <div className="faction-rewards">{t('Faction.EngramsAvailable', { count: engramsAvailable })}</div>
         }
-      </svg>
-      <div className={classNames('item-stat', 'item-faction', { 'purchase-unlocked': factionProgress.level >= 10 })}>{factionProgress.level}</div>
+      </div>
     </div>
-    <div className="faction-info">
-      <div className="faction-name" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
-      <div className="faction-level">{factionProgress.progressToNextLevel}/{factionProgress.nextLevelAt}</div>
-      {engramsAvailable > 0 &&
-        <div className="faction-rewards">{t('Faction.EngramsAvailable', { count: engramsAvailable })}</div>
-      }
-    </div>
-  </div>;
+  );
 }
 
 /**

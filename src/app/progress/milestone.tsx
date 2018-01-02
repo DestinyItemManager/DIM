@@ -17,11 +17,13 @@ export function Milestone(props: MilestoneProps) {
 
   // TODO: there are also "vendor milestones" which have no quest but have vendors (Xur)
 
-  return <>
-    {(milestone.availableQuests || []).map((availableQuest) =>
-      <AvailableQuest defs={defs} milestoneDef={milestoneDef} availableQuest={availableQuest} key={availableQuest.questItemHash} />
-    )}
-  </>;
+  return (
+    <>
+      {(milestone.availableQuests || []).map((availableQuest) =>
+        <AvailableQuest defs={defs} milestoneDef={milestoneDef} availableQuest={availableQuest} key={availableQuest.questItemHash} />
+      )}
+    </>
+  );
 }
 
 interface AvailableQuestProps {
@@ -49,24 +51,27 @@ function AvailableQuest(props: AvailableQuestProps) {
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;
 
-  return <div className="milestone-quest">
-    <div className="milestone-icon">
-      <BungieImage src={displayProperties.icon} />
-      <MilestoneObjectiveStatus objective={objective} defs={defs} />
+  return (
+    <div className="milestone-quest">
+      <div className="milestone-icon">
+        <BungieImage src={displayProperties.icon} />
+        <MilestoneObjectiveStatus objective={objective} defs={defs} />
+      </div>
+      <div className="milestone-info">
+        <span className="milestone-name">{displayProperties.name}</span>
+        {activityDef && activityDef.displayProperties.name !== displayProperties.name &&
+          <div className="milestone-location">{activityDef.displayProperties.name}</div>}
+        <div className="milestone-description">{displayProperties.description}</div>
+        {questRewards.map((questReward) =>
+          <div className="milestone-reward" key={questReward.hash}>
+            <BungieImage src={questReward.displayProperties.icon} />
+            <span>{questReward.displayProperties.name}</span>
+          </div>
+        )}
+      </div>
     </div>
-    <div className="milestone-info">
-      <span className="milestone-name">{displayProperties.name}</span>
-      {activityDef && activityDef.displayProperties.name !== displayProperties.name &&
-        <div className="milestone-location">{activityDef.displayProperties.name}</div>}
-      <div className="milestone-description">{displayProperties.description}</div>
-      {questRewards.map((questReward) =>
-        <div className="milestone-reward" key={questReward.hash}>
-          <BungieImage src={questReward.displayProperties.icon} />
-          <span>{questReward.displayProperties.name}</span>
-        </div>
-      )}
-    </div>
-  </div>;
+  );
+}
 
 interface MilestoneObjectiveStatus {
   objective: IDestinyObjectiveProgress | null;
@@ -78,7 +83,7 @@ function MilestoneObjectiveStatus(props: MilestoneObjectiveStatus) {
   if (objective) {
     const objectiveDef = defs.Objective.get(objective.objectiveHash);
     if (objective.complete) {
-      return <span><i className="fa fa-check-square-o"></i></span>;
+      return <span><i className="fa fa-check-square-o"/></span>;
     } else if (objectiveDef.completionValue > 1) {
       return <span>{objective.progress}/{objectiveDef.completionValue}</span>;
     }

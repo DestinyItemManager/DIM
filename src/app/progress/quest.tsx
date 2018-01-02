@@ -28,23 +28,25 @@ export function Quest(props: QuestProps) {
     }
   });
 
-  return <div className="milestone-quest item-quest">
-    <div className="milestone-icon">
-      <BungieImage src={itemDef.displayProperties.icon} />
-      <img src={`https://www.bungie.net${itemDef.displayProperties.icon}`} />
-      {percentComplete > 0 &&
-        <span>{Math.floor(percentComplete * 100)}%</span>}
-    </div>
-    <div className="milestone-info">
-      <span className="milestone-name">{itemDef.displayProperties.name}</span>
-      <div className="milestone-description">{itemDef.displayProperties.description}</div>
-      <div className="quest-objectives">
-        {objectives.map((objective) =>
-          <Objective defs={defs} objective={objective} key={objective.objectiveHash}/>
-        )}
+  return (
+    <div className="milestone-quest item-quest">
+      <div className="milestone-icon">
+        <BungieImage src={itemDef.displayProperties.icon} />
+        <img src={`https://www.bungie.net${itemDef.displayProperties.icon}`} />
+        {percentComplete > 0 &&
+          <span>{Math.floor(percentComplete * 100)}%</span>}
+      </div>
+      <div className="milestone-info">
+        <span className="milestone-name">{itemDef.displayProperties.name}</span>
+        <div className="milestone-description">{itemDef.displayProperties.description}</div>
+        <div className="quest-objectives">
+          {objectives.map((objective) =>
+            <Objective defs={defs} objective={objective} key={objective.objectiveHash}/>
+          )}
+        </div>
       </div>
     </div>
-  </div>;
+  );
 }
 
 interface ObjectiveProps {
@@ -57,20 +59,25 @@ function Objective(props: ObjectiveProps) {
   const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
   const displayName = objectiveDef.progressDescription ||
-      (objective.complete
-        ? t('Objectives.Complete')
-        : t('Objectives.Incomplete'));
-  const display = `${objective.progress || 0}/${objectiveDef.completionValue}`;
+      t(objective.complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
 
-  return <div className={classNames('objective-row', {
-      'objective-complete': objective.complete,
-      'objective-boolean': objectiveDef.completionValue === 1
-    })}>
-    <div className="objective-checkbox"><div></div></div>
-    <div className="objective-progress">
-      <div className="objective-progress-bar" style={ { width: percent((objective.progress || 0) / objectiveDef.completionValue) } }></div>
-      <div className="objective-description">{displayName}</div>
-      <div className="objective-text">{display}</div>
+  const classes = classNames('objective-row', {
+    'objective-complete': objective.complete,
+    'objective-boolean': objectiveDef.completionValue === 1
+  });
+
+  const progressBarStyle = {
+    width: percent((objective.progress || 0) / objectiveDef.completionValue)
+  };
+
+  return (
+    <div className={classes}>
+      <div className="objective-checkbox"><div/></div>
+      <div className="objective-progress">
+        <div className="objective-progress-bar" style={progressBarStyle}/>
+        <div className="objective-description">{displayName}</div>
+        <div className="objective-text">{objective.progress || 0}/{objectiveDef.completionValue}</div>
+      </div>
     </div>
-  </div>;
+  );
 }
