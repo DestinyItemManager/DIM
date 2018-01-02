@@ -17,23 +17,46 @@ export function Milestone(props: MilestoneProps) {
 
   // TODO: there are also "vendor milestones" which have no quest but have vendors (Xur)
 
-  return (
-    <>
-      {(milestone.availableQuests || []).map((availableQuest) =>
-        <AvailableQuest defs={defs} milestoneDef={milestoneDef} availableQuest={availableQuest} key={availableQuest.questItemHash} />
-      )}
-    </>
-  );
+  if (milestone.availableQuests) {
+    return (
+      <>
+        {milestone.availableQuests.map((availableQuest) =>
+          <AvailableQuest
+            defs={defs}
+            milestone={milestone}
+            milestoneDef={milestoneDef}
+            availableQuest={availableQuest}
+            key={availableQuest.questItemHash}
+          />
+        )}
+      </>
+    );
+  } else if (milestone.vendors) {
+    return (
+      <div className="milestone-quest">
+        <div className="milestone-icon">
+          <BungieImage src={milestoneDef.displayProperties.icon} />
+        </div>
+        <div className="milestone-info">
+          <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
+          <div className="milestone-description">{milestoneDef.displayProperties.description}</div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 interface AvailableQuestProps {
   defs;
+  milestone: IDestinyMilestone;
   milestoneDef;
   availableQuest: IDestinyMilestoneQuest;
 }
 
 function AvailableQuest(props: AvailableQuestProps) {
-  const { defs, milestoneDef, availableQuest } = props;
+  const { defs, milestone, milestoneDef, availableQuest } = props;
 
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const displayProperties: IDestinyDisplayPropertiesDefinition = questDef.displayProperties || milestoneDef.displayProperties;

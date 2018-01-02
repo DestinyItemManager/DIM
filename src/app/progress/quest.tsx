@@ -32,7 +32,6 @@ export function Quest(props: QuestProps) {
     <div className="milestone-quest item-quest">
       <div className="milestone-icon">
         <BungieImage src={itemDef.displayProperties.icon} />
-        <img src={`https://www.bungie.net${itemDef.displayProperties.icon}`} />
         {percentComplete > 0 &&
           <span>{Math.floor(percentComplete * 100)}%</span>}
       </div>

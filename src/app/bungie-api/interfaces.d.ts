@@ -100,6 +100,15 @@ export interface IDestinyMilestoneQuest {
 }
 
 /**
+* Interface for an Destiny 2 milestone vendor
+* @interface
+*/
+export interface IDestinyMilestoneVendor {
+  vendorHash: number;
+  previewItemHash?: number;
+}
+
+/**
 * Interface for an Destiny 2 challenge status
 * @interface
 */
@@ -566,7 +575,7 @@ export interface IDestinyMilestone {
   milestoneHash: number;
   availableQuests: IDestinyMilestoneQuest[];
   values: object;
-  vendorHashes: number[];
+  vendors: IDestinyMilestoneVendor[];
   rewards: IDestinyMilestoneRewardCategory[];
   startDate?: Date;
   endDate?: Date;
