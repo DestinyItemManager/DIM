@@ -26,7 +26,8 @@
 
     <div class="gearsContainer grey infuseSelector">
       <div class="infuseTargets">
-        <span ng-if="!vm.targetItems.length"><strong ng-i18next="Infusion.NoItems"></strong></span>
+        <span ng-if="!vm.query.infusable"><strong ng-i18next="Infusion.Uninfusable"></strong></span>
+        <span ng-if="vm.query.infusable && !vm.targetItems.length"><strong ng-i18next="Infusion.NoItems"></strong></span>
         <span ng-if="vm.targetItems.length" ng-i18next="[i18next]({name: vm.query.name})Infusion.InfuseTarget"></span>
         <div class="itemGrid">
           <div ng-repeat="value in vm.targetItems track by value.index">

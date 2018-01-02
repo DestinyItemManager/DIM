@@ -107,30 +107,30 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         });
       }
 
-      // all stores
-      let targetItems = flatMap(stores, (store) => {
-        const source = vm.query;
+      if (vm.query.infusable) {
+        let targetItems = flatMap(stores, (store) => {
+          const source = vm.query;
 
-        // all items in store
-        return _.filter(store.items, (item) => {
-          if (item.name === 'Rat King') {
-            console.log(item.name, item.infusionQuality);
-          }
-          return item.primStat &&
-            item.year !== 1 &&
-            (!item.locked || vm.showLockedItems) &&
-            (source.destinyVersion === 1
-              ? (item.type === source.type)
-              : (item.infusionQuality && (item.infusionQuality.infusionCategoryHashes.some((h) => source.infusionQuality.infusionCategoryHashes.includes(h))))) &&
-            ((item.destinyVersion === 1 && item.primStat.value > source.primStat.value) ||
-             (item.destinyVersion === 2 && item.basePower > source.basePower));
+          return _.filter(store.items, (item) => {
+            if (item.name === 'Rat King') {
+              console.log(item.name, item.infusionQuality);
+            }
+            return item.primStat &&
+              item.year !== 1 &&
+              (!item.locked || vm.showLockedItems) &&
+              (source.destinyVersion === 1
+                ? (item.type === source.type)
+                : (item.infusionQuality && (item.infusionQuality.infusionCategoryHashes.some((h) => source.infusionQuality.infusionCategoryHashes.includes(h))))) &&
+              ((item.destinyVersion === 1 && item.primStat.value > source.primStat.value) ||
+              (item.destinyVersion === 2 && item.basePower > source.basePower));
+          });
         });
-      });
 
-      targetItems = _.sortBy(targetItems, (item) => {
-        return -((item.basePower || item.primStat.value) +
-                 (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
-      });
+        targetItems = _.sortBy(targetItems, (item) => {
+          return -((item.basePower || item.primStat.value) +
+                  (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
+        });
+      };
 
       let sourceItems = flatMap(stores, (store) => {
         const target = vm.query;

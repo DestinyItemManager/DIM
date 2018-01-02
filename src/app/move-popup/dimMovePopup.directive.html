@@ -11,7 +11,7 @@
       ng-if="vm.item.destinyVersion === 1 && !vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">
       <span ng-i18next="MovePopup.Split"></span>
     </div>
-    <div class="locations" ng-if="vm.item.infusable">
+    <div class="locations" ng-if="vm.item.infusionFuel">
       <div class="move-button infuse-perk" ng-class="[{ destiny2: vm.item.destinyVersion === 2}, vm.item.bucket.sort]" ng-click="vm.infuse(vm.item, $event)" ng-i18next="[title]Infusion.Infusion;[alt]Infusion.Calc"></div>
     </div>
   </div>
