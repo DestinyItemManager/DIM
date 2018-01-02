@@ -37,8 +37,8 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
   angular.extend(vm, {
     getAllItems: true,
     showLockedItems: false,
+    source: null,
     target: null,
-    exotic: false,
     infused: 0,
     sourceItems: [],
     targetItems: [],
@@ -48,18 +48,6 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
       // Set the source and reset the targets
       vm.infused = 0;
       vm.target = null;
-      vm.exotic = vm.query.tier === 'Exotic';
-      vm.stat = vm.query.primStat.stat;
-      if (vm.query.bucket.sort === 'General') {
-        vm.wildcardMaterialCost = 2;
-        vm.wildcardMaterialHash = 937555249;
-      } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
-        vm.wildcardMaterialCost = 10;
-        vm.wildcardMaterialHash = 1898539128;
-      } else {
-        vm.wildcardMaterialCost = 10;
-        vm.wildcardMaterialHash = 1542293174;
-      }
 
       vm.getItems();
     },
@@ -93,6 +81,17 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         // and that you just always get the full value.
         // https://github.com/DestinyItemManager/DIM/issues/2215
         vm.infused = vm.target.basePower + (vm.source.primStat.value - vm.source.basePower);
+      } else {
+        if (vm.source.bucket.sort === 'General') {
+          vm.wildcardMaterialCost = 2;
+          vm.wildcardMaterialHash = 937555249;
+        } else if (vm.source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
+          vm.wildcardMaterialCost = 10;
+          vm.wildcardMaterialHash = 1898539128;
+        } else {
+          vm.wildcardMaterialCost = 10;
+          vm.wildcardMaterialHash = 1542293174;
+        }
       }
 
       vm.result = angular.copy(vm.source);
@@ -195,7 +194,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
           amount: 2,
           equipped: false
         });
-      } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
+      } else if (vm.source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
         // Weapon Parts
         items.material.push({
           id: '0',
@@ -212,7 +211,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
           equipped: false
         });
       }
-      if (vm.exotic) {
+      if (vm.source.isExotic) {
         // Exotic shard
         items.material.push({
           id: '0',
