@@ -54,6 +54,19 @@
          rel="noopener noreferrer"
          href="https://teespring.com/stores/dim"
          ng-i18next="Header.Shop"></a>
+
+      <hr>
+
+      <a class="link"
+         href="http://destinysets.com"
+         target="_blank"
+         rel="noopener noreferrer"
+         ng-if="$ctrl.destinyVersion == 2">DestinySets.com</a>
+      <a class="link"
+         target="_blank"
+         rel="noopener noreferrer"
+         href="http://vendorengrams.xyz"
+         ng-if="$ctrl.destinyVersion == 2">VendorEngrams.xyz</a>
     </div>
   </span>
 
@@ -106,6 +119,16 @@
   <span class="link second-to-go"
         ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
         ng-click="$ctrl.showXur($event)">Xûr</span>
+  <a class="link first-to-go"
+     href="http://destinysets.com"
+     target="_blank"
+     rel="noopener noreferrer"
+     ng-if="$ctrl.destinyVersion == 2">DestinySets.com</a>
+  <a class="link first-to-go"
+     target="_blank"
+     rel="noopener noreferrer"
+     href="http://vendorengrams.xyz"
+     ng-if="$ctrl.destinyVersion == 2">VendorEngrams.xyz</a>
 
   <span class="header-right">
     <refresh
