@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as _ from 'underscore';
-import { classNames } from 'classnames';
+import classNames from 'classnames';
 import { IDestinyObjectiveProgress, IDestinyItemComponent } from '../bungie-api/interfaces';
 import { sum } from '../util';
 import { t } from 'i18next';

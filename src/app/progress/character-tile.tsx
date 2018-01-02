@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { classNames } from 'classnames';
+import classNames from 'classnames';
 import { IDestinyCharacterComponent } from '../bungie-api/interfaces';
 import { bungieBackgroundStyle } from '../dim-ui/bungie-image';
 
