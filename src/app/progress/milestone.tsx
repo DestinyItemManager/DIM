@@ -1,8 +1,6 @@
 import * as React from 'react';
 import * as _ from 'underscore';
-import { IDestinyMilestone, IDestinyMilestoneQuest, IDestinyDisplayPropertiesDefinition, IDestinyObjectiveProgress } from '../bungie-api/interfaces';
-import { percent } from '../inventory/dimPercentWidth.directive';
-import { t } from 'i18next';
+import { IDestinyMilestone, IDestinyMilestoneQuest, IDestinyDisplayPropertiesDefinition, IDestinyObjectiveProgress, IDestinyChallengeStatus } from '../bungie-api/interfaces';
 import { BungieImage } from '../dim-ui/bungie-image';
 import './milestone.scss';
 

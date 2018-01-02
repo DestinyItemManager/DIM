@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'underscore';
-import { IDestinyObjectiveProgress, IDestinyInventoryComponent, IDestinyItemInstanceComponent, IDestinyItemComponent } from '../bungie-api/interfaces';
+import { classNames } from 'classnames';
+import { IDestinyObjectiveProgress, IDestinyItemComponent } from '../bungie-api/interfaces';
 import { sum } from '../util';
 import { t } from 'i18next';
 import { percent } from '../inventory/dimPercentWidth.directive';
@@ -21,7 +22,7 @@ export function Quest(props: QuestProps) {
   const percentComplete = sum(objectives, (objective) => {
     const objectiveDef = defs.Objective.get(objective.objectiveHash);
     if (objectiveDef.completionValue) {
-      return Math.min(1.0, (objective.progress || 0) / objectiveDef.completionValue) / objectives.length;
+      return Math.min(1, (objective.progress || 0) / objectiveDef.completionValue) / objectives.length;
     } else {
       return 0;
     }
@@ -32,7 +33,7 @@ export function Quest(props: QuestProps) {
       <BungieImage src={itemDef.displayProperties.icon} />
       <img src={`https://www.bungie.net${itemDef.displayProperties.icon}`} />
       {percentComplete > 0 &&
-        <span>{Math.floor(percentComplete * 100.0)}%</span>}
+        <span>{Math.floor(percentComplete * 100)}%</span>}
     </div>
     <div className="milestone-info">
       <span className="milestone-name">{itemDef.displayProperties.name}</span>
@@ -55,20 +56,21 @@ function Objective(props: ObjectiveProps) {
 
   const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
-  const classNames = `objective-row ${objective.complete ? 'objective-complete' : ''} ${objectiveDef.completionValue === 1 ? 'objective-boolean' : ''}`
-
   const displayName = objectiveDef.progressDescription ||
       (objective.complete
         ? t('Objectives.Complete')
         : t('Objectives.Incomplete'));
   const display = `${objective.progress || 0}/${objectiveDef.completionValue}`;
 
-  return <div className={classNames}>
+  return <div className={classNames('objective-row', {
+      'objective-complete': objective.complete,
+      'objective-boolean': objectiveDef.completionValue === 1
+    })}>
     <div className="objective-checkbox"><div></div></div>
     <div className="objective-progress">
       <div className="objective-progress-bar" style={ { width: percent((objective.progress || 0) / objectiveDef.completionValue) } }></div>
       <div className="objective-description">{displayName}</div>
       <div className="objective-text">{display}</div>
     </div>
-  </div>
+  </div>;
 }

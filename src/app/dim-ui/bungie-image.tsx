@@ -13,7 +13,7 @@ interface BungieImageProps {
  * An image tag that links its src to bungie.net. Other props pass through to the underlying image.
  */
 export function BungieImage(props: BungieImageProps) {
-  const {src, ...otherProps} = props;
+  const { src, ...otherProps } = props;
   return <img src={bungieNetPath(src)} {...otherProps} />;
 }
 
@@ -21,12 +21,12 @@ export function BungieImage(props: BungieImageProps) {
  * Produce a style object that sets the background image to an image on bungie.net.
  */
 export function bungieBackgroundStyle(src: BungieImagePath) {
-  return { backgroundImage: `url(${bungieNetPath(src)})` }
+  return { backgroundImage: `url(${bungieNetPath(src)})` };
 }
 
 /**
  * Expand a relative bungie.net asset path to a full path.
  */
-export function bungieNetPath(src: BungieImagePath) {
+export function bungieNetPath(src: BungieImagePath): string {
   return `https://www.bungie.net${src}`;
 }

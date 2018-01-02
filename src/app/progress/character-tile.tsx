@@ -17,7 +17,7 @@ export function CharacterTile(props: CharacterTileProps) {
   const classy = defs.Class[character.classHash];
   const genderRace = race.genderedRaceNames[gender.genderType === 1 ? 'Female' : 'Male'];
   const className = classy.genderedClassNames[gender.genderType === 1 ? 'Female' : 'Male'];
-  const current = lastPlayedDate.getTime() == new Date(character.dateLastPlayed).getTime() ? 'current' : '';
+  const current = lastPlayedDate.getTime() === new Date(character.dateLastPlayed).getTime() ? 'current' : '';
 
   // TODO: update this to be a D2-specific, simplified tile
   return <div className={classNames('character', { current })}>

@@ -8,8 +8,7 @@ import { CharacterTile } from './character-tile';
 import { Milestone } from './milestone';
 import { Faction } from './faction';
 import { Quest } from './quest';
-import { IDestinyCharacterComponent, IDestinyMilestone, IDestinyProgression, IDestinyFactionProgression, IDestinyItemComponent, IDestinyInventoryComponent, IDestinyObjectiveProgress } from '../bungie-api/interfaces';
-import { sum } from '../util';
+import { IDestinyCharacterComponent, IDestinyMilestone, IDestinyFactionProgression, IDestinyItemComponent, IDestinyObjectiveProgress } from '../bungie-api/interfaces';
 import { t } from 'i18next';
 import { ViewPager, Frame, Track, View } from 'react-view-pager';
 import { isPhonePortraitStream, isPhonePortrait } from '../mediaQueries';
@@ -67,18 +66,18 @@ export class Progress extends React.Component<Props, State> {
       this.setState({ progress });
     });
 
-    this.mediaQuerySubscription = isPhonePortraitStream().subscribe((isPhonePortrait: boolean) => {
-      if (isPhonePortrait != this.state.isPhonePortrait) {
-        this.setState({ isPhonePortrait });
+    this.mediaQuerySubscription = isPhonePortraitStream().subscribe((phonePortrait: boolean) => {
+      if (phonePortrait !== this.state.isPhonePortrait) {
+        this.setState({ isPhonePortrait: phonePortrait });
       }
-    })
+    });
 
     this.props.$scope.$on('dim-refresh', () => {
       this.props.ProgressService.reloadProgress();
     });
 
     this.props.$scope.$watch(() => this.props.dimSettingsService.characterOrder, (newValue: string) => {
-      if (newValue != this.state.characterOrder) {
+      if (newValue !== this.state.characterOrder) {
         this.setState({ characterOrder: newValue });
       }
     });
@@ -126,13 +125,12 @@ export class Progress extends React.Component<Props, State> {
     }
 
     function objectivesForItem(character: IDestinyCharacterComponent, item: IDestinyItemComponent): IDestinyObjectiveProgress[] {
-      let objectives = profileInfo.itemComponents.objectives.data[item.itemInstanceId];
+      const objectives = profileInfo.itemComponents.objectives.data[item.itemInstanceId];
       if (objectives) {
         return objectives.objectives;
       }
       return profileInfo.characterProgressions.data[character.characterId].uninstancedItemObjectives[item.itemHash] || [];
     }
-
 
     function draw(characters) {
       return <div className="progress dim-page">

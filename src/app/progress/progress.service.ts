@@ -4,8 +4,8 @@ import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.ser
 import { IDictionaryComponent, IDestinyCharacterComponent, IDestinyCharacterProgressionComponent, IDestinyInventoryComponent, ISingleComponentResponse } from '../bungie-api/interfaces';
 
 export interface ProgressService {
-  getProgressStream: (account: DestinyAccount) => ConnectableObservable<ProgressProfile>,
-  reloadProgress: () => void
+  getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
+  reloadProgress(): void;
 }
 
 /**
@@ -54,7 +54,7 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
         // whenever the force reload triggers
         .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
         // Whenever either trigger happens, load progress
-        .switchMap((account: DestinyAccount) => loadProgress(account))
+        .switchMap(loadProgress)
         // Keep track of the last value for new subscribers
         .publishReplay(1);
 
@@ -71,7 +71,7 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
    * the account by also calling "storesStream". This won't force the
    * stores to reload unless they haven't been loaded at all.
    *
-   * @return {Observable} a stream of store updates
+   * @return a stream of store updates
    */
   function getProgressStream(account: DestinyAccount) {
     accountStream.next(account);
@@ -83,7 +83,6 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
 
   /**
    * Force the inventory and characters to reload.
-   * @return {Promise} the new stores
    */
   function reloadProgress() {
     forceReloadTrigger.next(); // signal the force reload
@@ -91,14 +90,14 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
 
   async function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
     // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
-    const reloadPromise = $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]) => {;
+    const reloadPromise = $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]) => {
       return {
         defs,
         profileInfo,
         get lastPlayedDate() {
           return _.reduce(_.values(this.profileInfo.characters.data), (memo, character) => {
             const d1 = new Date(character.dateLastPlayed);
-            return (memo) ? ((d1 >= memo!) ? d1 : memo) : d1;
+            return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
           }, new Date(0));
         }
       };
