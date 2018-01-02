@@ -96,29 +96,53 @@ export class Progress extends React.Component<Props, State> {
       return <div className="progress dim-page">Loading...</div>;
     }
 
-    const { profileInfo } = this.state.progress;
+    const { defs, profileInfo } = this.state.progress;
 
     const characters = sortCharacters(Object.values(profileInfo.characters.data), this.state.characterOrder);
 
+    const profileMilestones = this.milestonesForProfile(characters[0]);
+    const profileMilestonesContent = profileMilestones.length &&
+      (
+        <div className="section">
+          <div className="title">{t('Progress.ProfileMilestones')}</div>
+          <div className="progress-row">
+            <div className="progress-for-character">
+              {profileMilestones.map((milestone) =>
+                <Milestone milestone={milestone} defs={defs} key={milestone.milestoneHash} />
+              )}
+            </div>
+          </div>
+          <hr/>
+        </div>
+      );
+
     if (this.state.isPhonePortrait) {
       return (
-        <ViewPager>
-          <Frame className="frame">
-            <Track
-              viewsToShow={1}
-              contain={true}
-              className="track"
-              autoSize={true}
-            >
-              {characters.map((character) =>
-                <View className="view" key={character.characterId}>{this.renderCharacters([character])}</View>
-              )}
-            </Track>
-          </Frame>
-        </ViewPager>
+        <div className="progress dim-page">
+          {profileMilestonesContent}
+          <ViewPager>
+            <Frame className="frame">
+              <Track
+                viewsToShow={1}
+                contain={true}
+                className="track"
+                autoSize={true}
+              >
+                {characters.map((character) =>
+                  <View className="view" key={character.characterId}>{this.renderCharacters([character])}</View>
+                )}
+              </Track>
+            </Frame>
+          </ViewPager>
+        </div>
       );
     } else {
-      return this.renderCharacters(characters);
+      return (
+        <div className="progress dim-page">
+          {profileMilestonesContent}
+          {this.renderCharacters(characters)}
+        </div>
+      );
     }
   }
 
@@ -128,8 +152,25 @@ export class Progress extends React.Component<Props, State> {
   private renderCharacters(characters) {
     const { defs, profileInfo, lastPlayedDate } = this.state.progress!;
 
+    function ProgressSection(props) {
+      const { children, title } = props;
+
+      if (children.length) {
+        return (
+          <div className="section">
+            <div className="title">{title}</div>
+            <div className="progress-row">
+              <div className="progress-for-character">
+                {children}
+              </div>
+            </div>
+          </div>
+        );
+      }
+    }
+
     return (
-      <div className="progress dim-page">
+      <>
         <div className="progress-characters">
           {characters.map((character) =>
             <CharacterTile
@@ -179,8 +220,28 @@ export class Progress extends React.Component<Props, State> {
             )}
           </div>
         </div>
-      </div>
+      </>
     );
+  }
+
+  /**
+   * Get all the milestones that are valid across the whole profile. This still requires a character (any character)
+   * to look them up, and the assumptions underlying this may get invalidated as the game evolves.
+   */
+  private milestonesForProfile(character: IDestinyCharacterComponent): IDestinyMilestone[] {
+    const { defs, profileInfo } = this.state.progress!;
+
+    const allMilestones: IDestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
+
+    const filteredMilestones = allMilestones.filter((milestone) => {
+      return !milestone.availableQuests && (milestone.vendors || milestone.rewards);
+    });
+
+    // Sort them alphabetically by name
+    return _.sortBy(filteredMilestones, (milestone) => {
+      const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
+      return milestoneDef.displayProperties.name;
+    });
   }
 
   /**
@@ -192,11 +253,10 @@ export class Progress extends React.Component<Props, State> {
     const allMilestones: IDestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
 
     const filteredMilestones = allMilestones.filter((milestone) => {
-      return milestone.vendors ||
-        (milestone.availableQuests && milestone.availableQuests.every((q) =>
+      return milestone.availableQuests && milestone.availableQuests.every((q) =>
             q.status.stepObjectives.length > 0 &&
             q.status.started &&
-            (!q.status.completed || !q.status.redeemed)));
+            (!q.status.completed || !q.status.redeemed));
     });
 
     // Sort them alphabetically by name

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as _ from 'underscore';
-import { IDestinyMilestone, IDestinyMilestoneQuest, IDestinyDisplayPropertiesDefinition, IDestinyObjectiveProgress, IDestinyChallengeStatus } from '../bungie-api/interfaces';
+import classNames from 'classnames';
+import { t } from 'i18next';
+import { IDestinyMilestone, IDestinyMilestoneQuest, IDestinyDisplayPropertiesDefinition, IDestinyObjectiveProgress, IDestinyChallengeStatus, IDestinyMilestoneRewardEntry } from '../bungie-api/interfaces';
 import { BungieImage } from '../dim-ui/bungie-image';
 import './milestone.scss';
 
@@ -9,13 +11,14 @@ interface MilestoneProps {
   defs;
 }
 
+/**
+ * A Milestone is an activity or event that a player can complete to earn rewards.
+ * There are several forms of Milestone.
+ */
 export function Milestone(props: MilestoneProps) {
   const { milestone, defs } = props;
 
-  // TODO: no typings for manifest types yet
   const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
-
-  // TODO: there are also "vendor milestones" which have no quest but have vendors (Xur)
 
   if (milestone.availableQuests) {
     return (
@@ -43,9 +46,55 @@ export function Milestone(props: MilestoneProps) {
         </div>
       </div>
     );
+  } else if (milestone.rewards) {
+    const rewards = milestone.rewards[0];
+    const milestoneRewardDef = milestoneDef.rewards[rewards.rewardCategoryHash];
+
+    return (
+      <div className="milestone-quest">
+        <div className="milestone-icon">
+          <BungieImage src={milestoneDef.displayProperties.icon} />
+        </div>
+        <div className="milestone-info">
+          <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
+          <div className="milestone-description">{milestoneDef.displayProperties.description}</div>
+          {rewards.entries.map((rewardEntry) =>
+            <RewardActivity key={rewardEntry.rewardEntryHash} defs={defs} rewardEntry={rewardEntry} milestoneRewardDef={milestoneRewardDef} />
+          )}
+        </div>
+      </div>
+    );
   }
 
   return null;
+}
+
+interface RewardActivityProps {
+  defs;
+  rewardEntry: IDestinyMilestoneRewardEntry;
+  milestoneRewardDef;
+}
+
+/**
+ * For profile-wide milestones with rewards, these show the status of each reward. So
+ * far this is only used for the "Clan Objectives" milestone.
+ */
+function RewardActivity(props: RewardActivityProps) {
+  const { defs, rewardEntry, milestoneRewardDef } = props;
+
+  const rewardDef = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
+
+  const checkClass = (rewardEntry.redeemed ? 'fa-check-circle' : rewardEntry.earned ? 'fa-check-circle-o' : 'fa-circle-o');
+  const tooltip = (rewardEntry.redeemed ? 'Progress.RewardRedeemed' : rewardEntry.earned ? 'Progress.RewardEarned' : 'Progress.RewardNotEarned');
+  console.log(rewardEntry, rewardDef);
+
+  return (
+    <div className="milestone-reward-activity" title={t(tooltip)}>
+      <i className={classNames('fa', checkClass)}/>
+      <BungieImage src={rewardDef.displayProperties.icon} />
+      <span>{rewardDef.displayProperties.name}</span>
+    </div>
+  );
 }
 
 interface AvailableQuestProps {
@@ -74,9 +123,11 @@ function AvailableQuest(props: AvailableQuestProps) {
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;
 
+  const tooltip = availableQuest.status.completed ? 'Progress.RewardEarned' : 'Progress.RewardNotEarned';
+
   return (
     <div className="milestone-quest">
-      <div className="milestone-icon">
+      <div className="milestone-icon" title={t(tooltip)}>
         <BungieImage src={displayProperties.icon} />
         <MilestoneObjectiveStatus objective={objective} defs={defs} />
       </div>
