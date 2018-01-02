@@ -130,7 +130,9 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
           return -((item.basePower || item.primStat.value) +
                   (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
         });
-      };
+
+        vm.targetItems = targetItems;
+      }
 
       let sourceItems = flatMap(stores, (store) => {
         const target = vm.query;
@@ -154,7 +156,6 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
       });
 
       vm.sourceItems = sourceItems;
-      vm.targetItems = targetItems;
 
       vm.target = null;
       vm.infused = 0;

@@ -380,7 +380,7 @@ export function D2ItemFactory(
     const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
     createdItem.infusionProcess = tier && tier.infusionProcess;
     createdItem.infusionFuel = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryHashes && itemDef.quality.infusionCategoryHashes.length);
-    createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem)
+    createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
     createdItem.infusionQuality = itemDef.quality || null;
 
     // Mark items with power mods
