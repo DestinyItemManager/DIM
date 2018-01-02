@@ -140,6 +140,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         return _.filter(store.items, (item) => {
           return item.primStat &&
             item.year !== 1 &&
+            item.infusable &&
             (!item.locked || vm.showLockedItems) &&
             (target.destinyVersion === 1
               ? (item.type === target.type)
