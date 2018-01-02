@@ -4,17 +4,9 @@
   flex-direction: column;
   overflow: auto;
 
-  small {
-    font-size: 10px;
-  }
-
   .ngdialog-inner-content {
     padding-left: 0;
     padding-right: 0;
-  }
-
-  .locked {
-    position: absolute;
   }
 
   .bigValue {
@@ -24,10 +16,6 @@
 
   .infuseSourceDetailsRow {
     margin-left: 1rem;
-  }
-
-  .results {
-    margin-bottom: 2px;
   }
 
   .black {
@@ -47,26 +35,8 @@
     flex-direction: row;
   }
 
-  .infuseResults {
-    flex: 1;
-  }
-
   .infuse-selected {
     outline: 2px solid black !important;
-  }
-
-  .bestInfusion label {
-    display: inline;
-    margin-right: 22px;
-  }
-
-  .infuse-hidden {
-    opacity: 0.35;
-  }
-
-  .infuse-excluded {
-    filter: greyscale();
-    opacity: 0.15;
   }
 
   .infuse-btn {
