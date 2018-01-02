@@ -269,8 +269,8 @@
   "Infusion": {
     "BringGear": "Will bring {{name}} to:",
     "Calc": "Infusion calculator",
-    "InfuseTarget": "Select item to infuse {{name}}:",
     "InfuseSource": "Select item to infuse into; consumes {{name}}:",
+    "InfuseTarget": "Select item to infuse {{name}}:",
     "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "Infusion Materials",
     "LockedItems": "Include 'locked' items",

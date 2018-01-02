@@ -81,17 +81,15 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
         // and that you just always get the full value.
         // https://github.com/DestinyItemManager/DIM/issues/2215
         vm.infused = vm.target.basePower + (vm.source.primStat.value - vm.source.basePower);
+      } else if (vm.source.bucket.sort === 'General') {
+        vm.wildcardMaterialCost = 2;
+        vm.wildcardMaterialHash = 937555249;
+      } else if (vm.source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
+        vm.wildcardMaterialCost = 10;
+        vm.wildcardMaterialHash = 1898539128;
       } else {
-        if (vm.source.bucket.sort === 'General') {
-          vm.wildcardMaterialCost = 2;
-          vm.wildcardMaterialHash = 937555249;
-        } else if (vm.source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
-          vm.wildcardMaterialCost = 10;
-          vm.wildcardMaterialHash = 1898539128;
-        } else {
-          vm.wildcardMaterialCost = 10;
-          vm.wildcardMaterialHash = 1542293174;
-        }
+        vm.wildcardMaterialCost = 10;
+        vm.wildcardMaterialHash = 1542293174;
       }
 
       vm.result = angular.copy(vm.source);
@@ -111,7 +109,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
 
       // all stores
       let targetItems = flatMap(stores, (store) => {
-        let source = vm.query;
+        const source = vm.query;
 
         // all items in store
         return _.filter(store.items, (item) => {
@@ -135,7 +133,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
       });
 
       let sourceItems = flatMap(stores, (store) => {
-        let target = vm.query;
+        const target = vm.query;
 
         return _.filter(store.items, (item) => {
           return item.primStat &&
