@@ -94,6 +94,21 @@ module.exports = (env) => {
             ],
             fallback: 'style-loader'
           })
+        },
+        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+        {
+          test: /\.tsx?$/,
+          loader: "awesome-typescript-loader",
+          options: {
+            useBabel: true,
+            useCache: true
+          }
+        },
+        // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+        {
+          enforce: "pre",
+          test: /\.js$/,
+          loader: "source-map-loader"
         }
       ],
 
@@ -103,7 +118,7 @@ module.exports = (env) => {
     },
 
     resolve: {
-      extensions: ['.js', '.json'],
+      extensions: ['.js', '.json', '.ts', '.tsx'],
 
       alias: {
         app: path.resolve('./src')
@@ -258,6 +273,11 @@ module.exports = (env) => {
     // Bail and fail hard on first error
     config.bail = true;
     config.stats = 'verbose';
+
+    // Tell React we're in Production mode
+    config.plugins.push(new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }));
 
     // The sql.js library doesnt work at all (reports no tables) when minified,
     // so we exclude it from the regular minification

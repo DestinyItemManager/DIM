@@ -12,7 +12,8 @@ const lazyTables = [
   'ActivityType', // DestinyActivityTypeDefinition
   'Vendor',
   'SocketCategory',
-  'SocketType'
+  'SocketType',
+  'Milestone'
 ];
 
 const eagerTables = [

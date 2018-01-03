@@ -263,6 +263,7 @@
     "MarkItemAs": "アイテムを '{{tag}}' とマークする",
     "RefreshInventory": "インベントリーを更新",
     "StartSearch": "検索開始",
+    "StartSearchClear": "Start a fresh search",
     "ToggleDetails": "完全なアイテムの詳細を表示する"
   },
   "Infusion": {

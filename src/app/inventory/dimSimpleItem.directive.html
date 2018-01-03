@@ -1,6 +1,6 @@
 <div title="{{ vm.item.name }}" class="item">
   <div class="item-img"
-       ng-class="{ complete: vm.item.complete, diamond: (vm.item.destinyVersion == 2 && vm.item.bucket.hash == 3284755031) }"
+       ng-class="{ complete: vm.item.complete, diamond: (vm.item.destinyVersion == 2 && vm.item.bucket.hash == 3284755031), masterwork: vm.item.masterwork }"
        ng-style="vm.item.icon | bungieBackground"></div>
   <div class="item-element"
        ng-class="::vm.item.dmg"></div>

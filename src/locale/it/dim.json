@@ -263,6 +263,7 @@
     "MarkItemAs": "Contrassegna oggetto come '{{tag}}'",
     "RefreshInventory": "Aggiorna l'inventario",
     "StartSearch": "Inizia una ricerca",
+    "StartSearchClear": "Inizia una ricerca",
     "ToggleDetails": "Bottone per mostrare o meno tutti i dettagli dell'oggetto"
   },
   "Infusion": {
