@@ -3,7 +3,7 @@ import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { DestinyComponentType } from './destiny-component-type';
 
 /**
- * APIs for interacting with Destiny 2   game data.
+ * APIs for interacting with Destiny 2 game data.
  *
  * Destiny2 Service at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
@@ -19,13 +19,12 @@ export function Destiny2Api(
   return {
     getManifest,
     getStores,
+    getProgression,
     getCharacters,
     transfer,
     equip,
     equipItems,
     setLockState
-
-    // TODO: getMilestones, replaces Activities
   };
 
   function getManifest() {
@@ -39,24 +38,34 @@ export function Destiny2Api(
    */
   function getStores(platform) {
     return getProfile(platform,
-      // TODO: this is a guess - when the game launches, dial these in. DIM uses a lot.
-      DestinyComponentType.Profiles, // TODO: Don't think we need this
       DestinyComponentType.ProfileInventories,
       DestinyComponentType.ProfileCurrencies,
       DestinyComponentType.Characters,
       DestinyComponentType.CharacterInventories,
       DestinyComponentType.CharacterProgressions,
-      DestinyComponentType.CharacterActivities,
       DestinyComponentType.CharacterEquipment,
       // TODO: consider loading less item data, and then loading item details on click? Makes searches hard though.
       DestinyComponentType.ItemInstances,
       DestinyComponentType.ItemObjectives,
-      DestinyComponentType.ItemPerks,
       DestinyComponentType.ItemStats,
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
       DestinyComponentType.ItemPlugStates
+    );
+  }
+
+  /**
+   * Get the user's progression for all characters on this platform. This is a completely separate
+   * call in hopes of separating the progress page into an independent thing.
+   */
+  async function getProgression(platform) {
+    return getProfile(platform,
+      DestinyComponentType.Characters,
+      DestinyComponentType.CharacterProgressions,
+      DestinyComponentType.ProfileInventories,
+      DestinyComponentType.CharacterInventories,
+      DestinyComponentType.ItemObjectives
     );
   }
 

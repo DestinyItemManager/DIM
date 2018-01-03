@@ -31,9 +31,6 @@ export const D2Categories = {
     'Modifications',
     'Shaders'
   ],
-  Progress: [
-    'Quests',
-  ],
   Postmaster: [
     'LostItems',
     'Messages',
@@ -78,8 +75,7 @@ const bucketToType = {
   1585787867: "ClassItem",
   2025709351: "Vehicle",
   1469714392: "Consumables",
-  138197802: "General",
-  1801258597: "Quests"
+  138197802: "General"
 };
 
 export function D2BucketsService(D2Definitions, D2Categories) {

@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from '@reactivex/rxjs';
 
 import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
@@ -197,7 +197,7 @@ export function D2StoresService(
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId] ? profileInfo.characterEquipment.data[characterId].items : [],
           profileInfo.itemComponents,
-          Object.assign(profileInfo.characterProgressions.data[characterId].progressions, profileInfo.characterProgressions.data[characterId].factions),
+          profileInfo.characterProgressions.data[characterId].progressions,
           buckets,
           previousItems,
           newItems,
@@ -275,41 +275,9 @@ export function D2StoresService(
     lastPlayedDate) {
     const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
 
-    /* Label isn't used, but it helps us understand what each one is */
-    const progressionMeta = {
-      611314723: { label: "Vanguard", order: 1 },
-      3231773039: { label: "Vanguard Research", order: 2 },
-      697030790: { label: "Crucible", order: 3 },
-      1021210278: { label: "Gunsmith", order: 4 },
-
-      4235119312: { label: "EDZ Deadzone Scout", order: 5 },
-      4196149087: { label: "Titan Field Commander", order: 6 },
-      1660497607: { label: "Nessus AI", order: 7 },
-      828982195: { label: "Io Researcher", order: 8 },
-      2677528157: { label: "Follower of Osiris", order: 9 },
-
-      2105209711: { label: "New Monarchy", order: 10 },
-      1714509342: { label: "Future War Cult", order: 11 },
-      3398051042: { label: "Dead Orbit", order: 12 },
-      3468066401: { label: "The Nine", order: 13 },
-      1761642340: { label: "Iron Banner", order: 14 },
-
-      1482334108: { label: "Leviathan", order: 15 }
-    };
-
+    // This is pretty much just needed for the xp bar under the character header
     if (progressions) {
-      store.progression = {
-        progressions: _.map(progressions)
-      };
-      store.progression.progressions.forEach((prog) => {
-        Object.assign(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
-        const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
-        if (faction) {
-          prog.faction = faction;
-          prog.faction.factionName = faction.displayProperties.name;
-          prog.faction.factionIcon = faction.displayProperties.icon;
-        }
-      });
+      store.progression = { progressions };
     }
 
     // We work around the weird account-wide buckets by assigning them to the current character

@@ -46,7 +46,7 @@ export const DestinyComponentType = {
   // This will return info about activities that a user can see and
   // gating on it, if you are the currently authenticated user or the
   // user haselected to allow anonymous viewing of its progression
-  // info.Note that the data returned by this can be unfortunately
+  // info. Note that the data returned by this can be unfortunately
   // problematic and relatively unreliable insome cases. We'll
   // eventually work on making it more consistently reliable.
   CharacterActivities: 204,

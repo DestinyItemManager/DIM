@@ -1,0 +1,39 @@
+@import "../../scss/variables.scss";
+
+.faction {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .faction-icon {
+    margin: 2px 10px -2px 2px;
+    position: relative;
+    display: inline-block;
+
+    svg {
+      width: calc(var(--item-size) + 4px);
+      height: calc(var(--item-size) + 4px);
+    }
+  }
+
+  .faction-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faction-name {
+    font-size: 14px;
+  }
+
+  .faction-level {
+    color: #A1A2A2;
+  }
+
+  .faction-rewards {
+  }
+
+  .purchase-unlocked {
+    background-color: $gold;
+  }
+}

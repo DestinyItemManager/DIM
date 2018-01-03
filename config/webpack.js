@@ -118,7 +118,7 @@ module.exports = (env) => {
     },
 
     resolve: {
-      extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
+      extensions: ['.js', '.json', '.ts', '.tsx'],
 
       alias: {
         app: path.resolve('./src')
@@ -273,6 +273,11 @@ module.exports = (env) => {
     // Bail and fail hard on first error
     config.bail = true;
     config.stats = 'verbose';
+
+    // Tell React we're in Production mode
+    config.plugins.push(new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }));
 
     // The sql.js library doesnt work at all (reports no tables) when minified,
     // so we exclude it from the regular minification
