@@ -293,7 +293,7 @@ export class Progress extends React.Component<Props, State> {
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
       // This required a lot of trial and error.
-      return itemDef.itemCategoryHashes.includes(16) ||
+      return (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(16)) ||
         (itemDef.inventory && itemDef.inventory.tierTypeHash === 0 &&
           itemDef.backgroundColor && itemDef.backgroundColor.alpha > 0);
     });
