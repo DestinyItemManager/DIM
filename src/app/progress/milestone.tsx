@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import { IDestinyMilestone, IDestinyMilestoneQuest, IDestinyDisplayPropertiesDefinition, IDestinyObjectiveProgress, IDestinyChallengeStatus, IDestinyMilestoneRewardEntry } from '../bungie-api/interfaces';
+import { IDestinyMilestone, IDestinyMilestoneQuest, IDestinyDisplayPropertiesDefinition, IDestinyObjectiveProgress, IDestinyChallengeStatus, IDestinyMilestoneRewardEntry, IDestinyQuestStatus } from '../bungie-api/interfaces';
 import { BungieImage } from '../dim-ui/bungie-image';
 import './milestone.scss';
 
@@ -86,7 +86,6 @@ function RewardActivity(props: RewardActivityProps) {
 
   const checkClass = (rewardEntry.redeemed ? 'fa-check-circle' : rewardEntry.earned ? 'fa-check-circle-o' : 'fa-circle-o');
   const tooltip = (rewardEntry.redeemed ? 'Progress.RewardRedeemed' : rewardEntry.earned ? 'Progress.RewardEarned' : 'Progress.RewardNotEarned');
-  console.log(rewardEntry, rewardDef);
 
   return (
     <div className={classNames('milestone-reward-activity', { complete: rewardEntry.earned })} title={t(tooltip)}>
@@ -123,6 +122,7 @@ function AvailableQuest(props: AvailableQuestProps) {
 
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;
+  const objectiveDef = objective ? defs.Objective.get(objective.objectiveHash) : null;
 
   const tooltip = availableQuest.status.completed ? 'Progress.RewardEarned' : 'Progress.RewardNotEarned';
 
@@ -130,13 +130,13 @@ function AvailableQuest(props: AvailableQuestProps) {
     <div className="milestone-quest">
       <div className="milestone-icon" title={t(tooltip)}>
         <BungieImage src={displayProperties.icon} />
-        <MilestoneObjectiveStatus objective={objective} defs={defs} />
+        <MilestoneObjectiveStatus objective={objective} status={availableQuest.status} defs={defs} />
       </div>
       <div className="milestone-info">
         <span className="milestone-name">{displayProperties.name}</span>
         {activityDef && activityDef.displayProperties.name !== displayProperties.name &&
           <div className="milestone-location">{activityDef.displayProperties.name}</div>}
-        <div className="milestone-description">{displayProperties.description}</div>
+        <div className="milestone-description">{objectiveDef ? objectiveDef.progressDescription : displayProperties.description}</div>
         {questRewards.map((questReward) =>
           <div className="milestone-reward" key={questReward.hash}>
             <BungieImage src={questReward.displayProperties.icon} />
@@ -186,7 +186,7 @@ function Challenges(props: ChallengesProps) {
         const activityDef = defs.Activity.get(activityHash);
 
         return (
-          <div className="milestone-challenges">
+          <div key={activityHash} className="milestone-challenges">
             {_.size(challengesByActivity) > 1 &&
               <div className="milestone-challenges-activity-name">{activityDef.displayProperties.name}</div>
             }
@@ -235,6 +235,7 @@ function Challenge(props: ChallengeProps) {
 
 interface MilestoneObjectiveStatusProps {
   objective: IDestinyObjectiveProgress | null;
+  status: IDestinyQuestStatus;
   defs: any;
 }
 
@@ -244,13 +245,21 @@ interface MilestoneObjectiveStatusProps {
  * don't display anything until it's complete, because it's obvious there's only one thing to do.
  */
 function MilestoneObjectiveStatus(props: MilestoneObjectiveStatusProps) {
-  const { objective, defs } = props;
+  const { objective, defs, status } = props;
   if (objective) {
     const objectiveDef = defs.Objective.get(objective.objectiveHash);
-    if (objective.complete) {
+
+    let progress = objective.progress || 0;
+    let completionValue = objectiveDef.completionValue;
+    if (objective.objectiveHash === 3289403948) {
+      progress *= 250;
+      completionValue *= 250;
+    }
+
+    if (status.completed) {
       return <span><i className="fa fa-check-circle-o"/></span>;
-    } else if (objectiveDef.completionValue > 1) {
-      return <span>{objective.progress}/{objectiveDef.completionValue}</span>;
+    } else if (completionValue > 1) {
+      return <span>{progress}/{completionValue}</span>;
     }
   }
 
