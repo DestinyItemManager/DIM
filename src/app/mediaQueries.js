@@ -1,4 +1,4 @@
-import { Observable, Scheduler } from 'rxjs/';
+import { Observable, Scheduler } from '@reactivex/rxjs';
 
 // This seems like a good breakpoint for portrait based on https://material.io/devices/
 // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720
