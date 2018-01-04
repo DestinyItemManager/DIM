@@ -190,7 +190,7 @@ function Challenges(props: ChallengesProps) {
             {_.size(challengesByActivity) > 1 &&
               <div className="milestone-challenges-activity-name">{activityDef.displayProperties.name}</div>
             }
-            {filteredChallenges.map((challenge) =>
+            {challengeStatuses.map((challenge) =>
               <Challenge key={challenge.objective.objectiveHash} defs={defs} challenge={challenge} />
             )}
           </div>
