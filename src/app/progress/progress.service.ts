@@ -132,6 +132,6 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
       showCloseButton: false
     });
 
-    console.error('Error loading stores', e);
+    console.error('Error loading progress', e);
   }
 }
