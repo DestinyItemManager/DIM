@@ -121,12 +121,12 @@ export class Progress extends React.Component<Props, State> {
         <div className="progress dim-page">
           {profileMilestonesContent}
           <ViewPager>
-            <Frame className="frame">
+            <Frame className="frame" autoSize={true}>
               <Track
                 viewsToShow={1}
                 contain={true}
                 className="track"
-                autoSize={true}
+                flickTimeout={100}
               >
                 {characters.map((character) =>
                   <View className="view" key={character.characterId}>{this.renderCharacters([character])}</View>
