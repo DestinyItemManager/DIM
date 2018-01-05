@@ -1,5 +1,8 @@
 # Next
 
+* A brand new Progress page for Destiny 2 displays your milestones, quests, and faction reputation all in one place. That information has been removed from the main inventory screen.
+* We've changed around the effect for masterworks a bit more.
+
 # 4.32.0
 
 * Added hotkey for search and clear (Shift+F).
