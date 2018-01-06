@@ -107,6 +107,10 @@
     "VerifyReport": "Tem certeza que deseja sinalizar esta revisão?",
     "YourReview": "Sua avaliação"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engram available",
+    "EngramsAvailable_plural": "{{count}} engrams available"
+  },
   "FarmingMode": {
     "Configuration": "Configuração",
     "D2Desc": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
@@ -471,6 +475,19 @@
   "Postmaster": {
     "Desc": "Há 20 itens perdidos em seu Correio com seu {{store}}. Quaisquer novos itens irão substituir os existentes.",
     "Limit": "Limite do Chefe de Correio"
+  },
+  "Progress": {
+    "Daily": "Daily",
+    "ExpiresIn": "expires at {{endTime}}",
+    "Factions": "Factions",
+    "Milestones": "Milestones",
+    "ProfileMilestones": "Account Milestones",
+    "Progress": "Progress",
+    "Quests": "Quests",
+    "RewardEarned": "Reward earned but not redeemed",
+    "RewardNotEarned": "Reward not earned",
+    "RewardRedeemed": "Reward redeemed",
+    "Weekly": "Weekly"
   },
   "RecordBooks": {
     "HideCompleted": "Esconder os recordes completados",

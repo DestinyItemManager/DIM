@@ -107,6 +107,10 @@
     "VerifyReport": "Bist du dir sicher dass du diesen Bericht melden möchtest?",
     "YourReview": "Dein Bericht"
   },
+  "Faction": {
+    "EngramsAvailable": "1 Engramm verfügbar",
+    "EngramsAvailable_plural": "{{count}} Engramme verfügbar"
+  },
   "FarmingMode": {
     "Configuration": "Einstellungen",
     "D2Desc": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
@@ -471,6 +475,19 @@
   "Postmaster": {
     "Desc": "Es sind 20 verlorene Items in der Poststelle deines {{store}}. Jedes neue Item wird bereits vorhandene überschreiben.",
     "Limit": "Poststellenlimit"
+  },
+  "Progress": {
+    "Daily": "Täglich",
+    "ExpiresIn": "läuft ab {{endTime}}",
+    "Factions": "Fraktionen",
+    "Milestones": "Meilensteine",
+    "ProfileMilestones": "Konto-Meilensteine",
+    "Progress": "Fortschritt",
+    "Quests": "Aufgaben",
+    "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
+    "RewardNotEarned": "Belohnung nicht erhalten",
+    "RewardRedeemed": "Belohnung eingelöst",
+    "Weekly": "Wöchentlich"
   },
   "RecordBooks": {
     "HideCompleted": "Abgeschlossene Urkunden nicht anzeigen",

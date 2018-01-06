@@ -107,6 +107,10 @@
     "VerifyReport": "Sei sicuro di voler segnalare questa recensione?",
     "YourReview": "La tua recensione"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engramma disponibile",
+    "EngramsAvailable_plural": "{{count}} engrammi disponibili"
+  },
   "FarmingMode": {
     "Configuration": "Configurazione",
     "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
@@ -471,6 +475,19 @@
   "Postmaster": {
     "Desc": "Sul tuo {{store}} ci sono 20 oggetti persi dall'amministratore. Qualsiasi nuovo oggetto sovrascriverà uno degli esistenti.",
     "Limit": "Limite Amministratore"
+  },
+  "Progress": {
+    "Daily": "Giornaliera",
+    "ExpiresIn": "scade alle {{endTime}}",
+    "Factions": "Fazioni",
+    "Milestones": "Pietre miliari",
+    "ProfileMilestones": "Pietre miliari account",
+    "Progress": "Avanzamento",
+    "Quests": "Imprese",
+    "RewardEarned": "Ricompensa sbloccata ma non ancora presa",
+    "RewardNotEarned": "Ricompensa non sbloccata",
+    "RewardRedeemed": "Ricompensa presa",
+    "Weekly": "Settimanale"
   },
   "RecordBooks": {
     "HideCompleted": "Nascondi completati",

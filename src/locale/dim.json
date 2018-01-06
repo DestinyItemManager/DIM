@@ -477,17 +477,17 @@
     "Limit": "Postmaster Limit"
   },
   "Progress": {
-    "Progress": "Progress",
-    "ProfileMilestones": "Account Milestones",
-    "Milestones": "Milestones",
+    "Daily": "Daily",
+    "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",
+    "Milestones": "Milestones",
+    "ProfileMilestones": "Account Milestones",
+    "Progress": "Progress",
     "Quests": "Quests",
-    "RewardRedeemed": "Reward redeemed",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
-    "Weekly": "Weekly",
-    "Daily": "Daily",
-    "ExpiresIn": "expires at {{endTime}}"
+    "RewardRedeemed": "Reward redeemed",
+    "Weekly": "Weekly"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",

@@ -107,6 +107,10 @@
     "VerifyReport": "Êtes-vous sûr de vouloir signaler cette évaluation?",
     "YourReview": "Votre évaluation"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engramme disponible",
+    "EngramsAvailable_plural": "{{count}} engrammes disponibles"
+  },
   "FarmingMode": {
     "Configuration": "Configuration",
     "D2Desc": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
@@ -471,6 +475,19 @@
   "Postmaster": {
     "Desc": "Il y a 20 objets perdus au Commis Des Postes sur votre {{store}}. Tous les nouveaux objets remplaceront les objets existants.",
     "Limit": "Limite du Commis Des Postes"
+  },
+  "Progress": {
+    "Daily": "Quotidient",
+    "ExpiresIn": "expire à {{endTime}}",
+    "Factions": "Factions",
+    "Milestones": "Jalons",
+    "ProfileMilestones": "Jalons de compte",
+    "Progress": "Progression",
+    "Quests": "Quêtes",
+    "RewardEarned": "Récompense obtenue mais non récupérée",
+    "RewardNotEarned": "Récompense non obtenue",
+    "RewardRedeemed": "Récompense récupérée",
+    "Weekly": "Hebdomadaire"
   },
   "RecordBooks": {
     "HideCompleted": "Cacher les exploits complétés",
