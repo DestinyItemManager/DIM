@@ -31,7 +31,7 @@
         <span ng-if="vm.targetItems.length" ng-i18next="[i18next]({name: vm.query.name})Infusion.InfuseTarget"></span>
         <div class="itemGrid">
           <div ng-repeat="value in vm.targetItems track by value.index">
-            <dim-simple-item ng-class="{ 'infuse-selected': value == vm.target }" item-data="value" ng-click="vm.selectItem(value, true, $event)"></dim-simple-item>
+            <dim-simple-item ng-class="{ 'infuse-selected': value == vm.target }" item-data="value" ng-click="vm.setSourceAndTarget(vm.query, value, $event)"></dim-simple-item>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
         <span ng-if="vm.sourceItems.length" ng-i18next="[i18next]({name: vm.query.name})Infusion.InfuseSource"></span>
         <div class="itemGrid">
           <div ng-repeat="value in vm.sourceItems track by value.index">
-            <dim-simple-item ng-class="{ 'infuse-selected': value == vm.source }" item-data="value" ng-click="vm.selectItem(value, false, $event)"></dim-simple-item>
+            <dim-simple-item ng-class="{ 'infuse-selected': value == vm.source }" item-data="value" ng-click="vm.setSourceAndTarget(value, vm.query, $event)"></dim-simple-item>
           </div>
         </div>
       </div>

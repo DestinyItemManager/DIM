@@ -52,17 +52,13 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
       vm.getItems();
     },
 
-    selectItem: function(item, isTarget, e) {
+    setSourceAndTarget: function(source, target, e) {
       if (e) {
         e.stopPropagation();
       }
-      if (isTarget) {
-        vm.target = item;
-        vm.source = vm.query;
-      } else {
-        vm.target = vm.query;
-        vm.source = item;
-      }
+      vm.source = source;
+      vm.target = target;
+
       vm.infused = vm.target.primStat.value;
 
       if (vm.source.destinyVersion === 2) {
@@ -109,56 +105,56 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2
 
       if (vm.query.infusable) {
         let targetItems = flatMap(stores, (store) => {
-          const source = vm.query;
-
           return _.filter(store.items, (item) => {
-            if (item.name === 'Rat King') {
-              console.log(item.name, item.infusionQuality);
-            }
-            return item.primStat &&
-              item.year !== 1 &&
-              (!item.locked || vm.showLockedItems) &&
-              (source.destinyVersion === 1
-                ? (item.type === source.type)
-                : (item.infusionQuality && (item.infusionQuality.infusionCategoryHashes.some((h) => source.infusionQuality.infusionCategoryHashes.includes(h))))) &&
-              ((item.destinyVersion === 1 && item.primStat.value > source.primStat.value) ||
-              (item.destinyVersion === 2 && item.basePower > source.basePower));
+            return (!item.locked || vm.showLockedItems) && vm.isInfusable(vm.query, item);
           });
         });
 
-        targetItems = _.sortBy(targetItems, (item) => {
-          return -((item.basePower || item.primStat.value) +
-                  (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
-        });
+        targetItems = _.sortBy(targetItems, vm.itemToSortKey);
 
         vm.targetItems = targetItems;
       }
 
       let sourceItems = flatMap(stores, (store) => {
-        const target = vm.query;
-
         return _.filter(store.items, (item) => {
-          return item.primStat &&
-            item.year !== 1 &&
-            item.infusable &&
-            (!item.locked || vm.showLockedItems) &&
-            (target.destinyVersion === 1
-              ? (item.type === target.type)
-              : (item.infusionQuality && (item.infusionQuality.infusionCategoryHashes.some((h) => target.infusionQuality.infusionCategoryHashes.includes(h))))) &&
-              ((item.destinyVersion === 1 && item.primStat.value < target.primStat.value) ||
-               (item.destinyVersion === 2 && item.basePower < target.basePower));
+          return (!item.locked || vm.showLockedItems) && vm.isInfusable(item, vm.query);
         });
       });
 
-      sourceItems = _.sortBy(sourceItems, (item) => {
-        return -((item.basePower || item.primStat.value) +
-                 (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
-      });
+      sourceItems = _.sortBy(sourceItems, vm.itemToSortKey);
 
       vm.sourceItems = sourceItems;
 
       vm.target = null;
       vm.infused = 0;
+    },
+
+    isInfusable: function(source, target) {
+      if (!source.infusable || !target.infusionFuel) {
+        return false;
+      }
+
+      if (source.destinyVersion !== target.destinyVersion) {
+        return false;
+      }
+
+      if (source.destinyVersion === 1) {
+        return (source.type === target.type) && (source.primStat.value < target.primStat.value);
+      }
+
+      if (source.destinyVersion === 2) {
+        return source.infusionQuality && target.infusionQuality &&
+               (source.infusionQuality.infusionCategoryHashes.some((h) => target.infusionQuality.infusionCategoryHashes.includes(h))) &&
+               (source.basePower < target.basePower);
+      }
+
+      // Don't try to apply logic for unknown Destiny versions.
+      return false;
+    },
+
+    itemToSortKey: function(item) {
+      return -((item.basePower || item.primStat.value) +
+      (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
     },
 
     closeDialog: function() {
