@@ -8,6 +8,11 @@
          ui-sref="destiny1.inventory"
          ng-i18next="Header.Inventory"></a>
       <a class="link"
+         ng-if="$ctrl.destinyVersion == 2"
+         ui-sref-active="active"
+         ui-sref="destiny2.inventory"
+         ng-i18next="Header.Inventory"></a>
+      <a class="link"
          ng-if="$ctrl.destinyVersion == 1"
          ui-sref-active="active"
          ui-sref="destiny1.loadout-builder"
@@ -86,6 +91,11 @@
      ui-sref-active="active"
      ui-sref="destiny1.inventory"
      ng-if="$ctrl.destinyVersion == 1"
+     ng-i18next="Header.Inventory"></a>
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny2.inventory"
+     ng-if="$ctrl.destinyVersion == 2"
      ng-i18next="Header.Inventory"></a>
   <a class="link second-to-go"
      ui-sref-active="active"
