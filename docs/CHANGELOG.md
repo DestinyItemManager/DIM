@@ -16,6 +16,7 @@
 * Rotating to and from landscape and portrait should be faster.
 * Fix quest steps showing up in the "haspower" search.
 * Do a better job of figuring out what's infusable.
+* Added a reverse lookup to Infusion Fuel Finder.
 
 # 4.31.0
 
