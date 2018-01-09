@@ -10,6 +10,7 @@ import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/
 export const requireSqlLib = _.memoize(() => {
   function importAsmJs() {
     delete window.Module;
+    delete window.SQL;
     console.log("Using asm.js SQLite");
     return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
   }

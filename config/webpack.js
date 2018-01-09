@@ -41,6 +41,7 @@ module.exports = (env) => {
 
     output: {
       path: path.resolve('./dist'),
+      publicPath: '/',
       filename: '[name]-[chunkhash:6].js',
       chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
     },
@@ -112,9 +113,9 @@ module.exports = (env) => {
         }
       ],
 
-      noParse: [
-        /\/sql\.js$/
-      ]
+      noParse: function(path) {
+        return path.endsWith('sql.js/js/sql.js') || preMinifiedDeps.some((d) => path.endsWith(d));
+      }
     },
 
     resolve: {
@@ -263,7 +264,6 @@ module.exports = (env) => {
   preMinifiedDeps.forEach((dep) => {
     const depPath = path.resolve(nodeModulesDir, dep);
     config.resolve.alias[dep.split(path.sep)[0]] = depPath;
-    config.module.noParse.push(new RegExp(depPath));
   });
 
   if (isDev) {
