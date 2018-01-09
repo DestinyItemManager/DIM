@@ -1,5 +1,7 @@
 # Next
 
+* Fix DIM loading on iOS 11.2.2.
+
 # 4.33.0
 
 * A brand new Progress page for Destiny 2 displays your milestones, quests, and faction reputation all in one place. That information has been removed from the main inventory screen.
