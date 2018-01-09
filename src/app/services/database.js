@@ -26,7 +26,6 @@ export const requireSqlLib = _.memoize(() => {
       window.SQL = {
         onRuntimeInitialized: function() {
           if (!loaded) {
-            console.info("Using WASM SQLite");
             loaded = true;
 
             try {
@@ -41,6 +40,7 @@ export const requireSqlLib = _.memoize(() => {
               return;
             }
 
+            console.info("Using WASM SQLite");
             resolve(window.SQL);
             delete window.SQL;
           }
