@@ -9,6 +9,7 @@ import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/
 // can only be done using the dynamic import method.
 export const requireSqlLib = _.memoize(() => {
   function importAsmJs() {
+    console.log("Using asm.js SQLite");
     return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
   }
 
@@ -24,6 +25,19 @@ export const requireSqlLib = _.memoize(() => {
           if (!loaded) {
             console.info("Using WASM SQLite");
             loaded = true;
+
+            try {
+              // Do a self-test
+              const db = new window.SQL.Database();
+              db.run("CREATE TABLE hello (a int, b char);");
+              db.run("INSERT INTO hello VALUES (0, 'hello');");
+              db.exec("SELECT * FROM hello");
+            } catch (e) {
+              console.error('Failed to load WASM SQLite, falling back', e);
+              importAsmJs().then(resolve, reject);
+              return;
+            }
+
             resolve(window.SQL);
             delete window.SQL;
           }
