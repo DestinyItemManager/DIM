@@ -1,5 +1,7 @@
 # Next
 
+# 4.33.1
+
 * Fix DIM loading on iOS 11.2.2.
 
 # 4.33.0
