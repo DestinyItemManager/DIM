@@ -36,7 +36,7 @@ export const requireSqlLib = _.memoize(() => {
           loaded = true;
 
           // Fall back to the old one
-          importAsmJs.then(resolve, reject);
+          importAsmJs().then(resolve, reject);
         }
       }, 10000);
 
