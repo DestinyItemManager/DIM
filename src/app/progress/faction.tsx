@@ -3,15 +3,16 @@ import * as _ from 'underscore';
 import classNames from 'classnames';
 import { t } from 'i18next';
 
-import { IDestinyFactionProgression, IDestinyInventoryComponent, IDestinyItemComponent } from '../bungie-api/interfaces';
+import { DestinyFactionProgression, DestinyInventoryComponent, DestinyItemComponent, DestinyFactionDefinition } from 'bungie-api-ts/destiny2';
 import { sum } from '../util';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import './faction.scss';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 interface FactionProps {
-  factionProgress: IDestinyFactionProgression;
-  profileInventory: IDestinyInventoryComponent;
-  defs;
+  factionProgress: DestinyFactionProgression;
+  profileInventory: DestinyInventoryComponent;
+  defs: D2ManifestDefinitions;
 }
 
 export function Faction(props: FactionProps) {
@@ -49,8 +50,8 @@ export function Faction(props: FactionProps) {
 /**
  * Calculate how many engrams you could get if you turned in all your rep items for this faction.
  */
-function calculateEngramsAvailable(profileInventory: IDestinyInventoryComponent, factionDef, factionProgress: IDestinyFactionProgression): number {
-  const totalXPAvailable: number = sum(profileInventory.items, (item: IDestinyItemComponent) => {
+function calculateEngramsAvailable(profileInventory: DestinyInventoryComponent, factionDef: DestinyFactionDefinition, factionProgress: DestinyFactionProgression): number {
+  const totalXPAvailable: number = sum(profileInventory.items, (item: DestinyItemComponent) => {
     return (factionDef.tokenValues[item.itemHash] || 0) * item.quantity;
   });
 

@@ -1,6 +1,19 @@
-import _ from 'underscore';
+import { DestinyAccount } from './../accounts/destiny-account.service';
+import * as _ from 'underscore';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
-import { DestinyComponentType } from './destiny-component-type';
+import { DestinyComponentType, DestinyManifestServerResponse, DestinyManifest, DestinyProfileComponent, DestinyProfileResponse, DestinyEquipItemResultsServerResponse, DestinyEquipItemResults } from 'bungie-api-ts/destiny2';
+import { IPromise } from 'angular';
+
+export interface Destiny2ApiService {
+  getManifest(): IPromise<DestinyManifest>;
+  getStores(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
+  getProgression(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
+  getCharacters(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
+  transfer(item, store, amount: number): any;
+  equip(item): any;
+  equipItems(store, items): any;
+  setLockState(store, item, lockState): any;
+}
 
 /**
  * APIs for interacting with Destiny 2 game data.
@@ -12,7 +25,7 @@ export function Destiny2Api(
   $q,
   $http,
   dimState,
-  $i18next) {
+  $i18next): Destiny2ApiService {
   'ngInject';
   const { handleErrors, retryOnThrottled } = BungieServiceHelper;
 
@@ -27,7 +40,7 @@ export function Destiny2Api(
     setLockState
   };
 
-  function getManifest() {
+  function getManifest(): IPromise<DestinyManifest> {
     return $http(bungieApiQuery('/Platform/Destiny2/Manifest/'))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response);
@@ -36,7 +49,7 @@ export function Destiny2Api(
   /**
    * Get the user's stores on this platform. This includes characters, vault, and item information.
    */
-  function getStores(platform) {
+  function getStores(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
     return getProfile(platform,
       DestinyComponentType.ProfileInventories,
       DestinyComponentType.ProfileCurrencies,
@@ -59,7 +72,7 @@ export function Destiny2Api(
    * Get the user's progression for all characters on this platform. This is a completely separate
    * call in hopes of separating the progress page into an independent thing.
    */
-  async function getProgression(platform) {
+  function getProgression(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
     return getProfile(platform,
       DestinyComponentType.Characters,
       DestinyComponentType.CharacterProgressions,
@@ -72,7 +85,7 @@ export function Destiny2Api(
   /**
    * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh stats.
    */
-  function getCharacters(platform) {
+  function getCharacters(platform): IPromise<DestinyProfileResponse> {
     return getProfile(platform,
       DestinyComponentType.Characters,
       DestinyComponentType.CharacterInventories
@@ -82,11 +95,8 @@ export function Destiny2Api(
   /**
    * Get parameterized profile information for the whole account. Pass in components to select what
    * you want. This can handle just characters, full inventory, vendors, kiosks, activities, etc.
-   *
-   * @param {DestinyAccount} platform the account to query
-   * @param {DestinyComponentType[]} components the list of components to retrieve
    */
-  function getProfile(platform, ...components) {
+  function getProfile(platform: DestinyAccount, ...components: DestinyComponentType[]): IPromise<DestinyProfileResponse> {
     return $http(bungieApiQuery(
       `/Platform/Destiny2/${platform.platformType}/Profile/${platform.membershipId}/`,
       {
@@ -98,7 +108,7 @@ export function Destiny2Api(
       // TODO: what does it actually look like to not have an account?
       if (_.size(response.data.Response) === 0) {
         return $q.reject(new Error($i18next.t('BungieService.NoAccountForPlatform', {
-          platform: platform.label
+          platform: platform.platformLabel
         })));
       }
 
@@ -106,7 +116,11 @@ export function Destiny2Api(
     });
   }
 
-  function transfer(item, store, amount) {
+  interface DimError extends Error {
+    code?: number;
+  }
+
+  function transfer(item, store, amount: number) {
     const platform = dimState.active;
     return $http(bungieApiUpdate(
       item.location.inPostmaster
@@ -126,14 +140,14 @@ export function Destiny2Api(
       .catch((e) => handleUniquenessViolation(e, item, store));
 
     // Handle "DestinyUniquenessViolation" (1648)
-    function handleUniquenessViolation(e, item, store) {
+    function handleUniquenessViolation(e: DimError, item, store) {
       if (e && e.code === 1648) {
-        const error = Error($i18next.t('BungieService.ItemUniquenessExplanation', {
+        const error = new Error($i18next.t('BungieService.ItemUniquenessExplanation', {
           name: item.name,
           type: item.type.toLowerCase(),
           character: store.name,
           context: store.gender
-        }));
+        })) as DimError;
         error.code = e.code;
         return $q.reject(error);
       }
@@ -159,7 +173,7 @@ export function Destiny2Api(
   function equipItems(store, items) {
     // TODO: test if this is still broken in D2
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
-    items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
+    items = _.sortBy(items, (i: any) => (i.isExotic ? 1 : 0));
 
     const platform = dimState.active;
     return $http(bungieApiUpdate(
@@ -172,7 +186,7 @@ export function Destiny2Api(
       .then(retryOnThrottled)
       .then(handleErrors, handleErrors)
       .then((response) => {
-        const data = response.data.Response;
+        const data: DestinyEquipItemResults = response.data.Response;
         return items.filter((i) => {
           const item = _.find(data.equipResults, {
             itemInstanceId: i.id

@@ -1,16 +1,17 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { IDestinyCharacterComponent } from '../bungie-api/interfaces';
+import { DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
 import { bungieBackgroundStyle } from '../dim-ui/bungie-image';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 interface CharacterTileProps {
-  character: IDestinyCharacterComponent;
-  defs;
+  character: DestinyCharacterComponent;
+  defs: D2ManifestDefinitions;
   lastPlayedDate: Date;
 }
 
 // TODO: this should probably move to a library of character functions
-export function characterIsCurrent(character: IDestinyCharacterComponent, lastPlayedDate: Date): boolean {
+export function characterIsCurrent(character: DestinyCharacterComponent, lastPlayedDate: Date): boolean {
   return lastPlayedDate.getTime() === new Date(character.dateLastPlayed).getTime();
 }
 

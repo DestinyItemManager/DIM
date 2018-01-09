@@ -3,6 +3,7 @@ import _ from 'underscore';
 import template from './loadout-drawer.html';
 import './loadout-drawer.scss';
 import { getCharacterStatsData } from '../inventory/store/character-utils';
+import { D2Categories } from '../destiny2/d2-buckets.service';
 
 export const LoadoutDrawerComponent = {
   controller: LoadoutDrawerCtrl,
@@ -14,7 +15,7 @@ export const LoadoutDrawerComponent = {
   template
 };
 
-function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, D2Categories, toaster, dimSettingsService, $i18next, dimDefinitions) {
+function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimSettingsService, $i18next, dimDefinitions) {
   'ngInject';
   const vm = this;
 

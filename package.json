@@ -118,6 +118,7 @@
     "angularjs-slider": "^5.9.0",
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
     "babel-polyfill": "^6.26.0",
+    "bungie-api-ts": "^2.1.1",
     "browserslist": "^2.10.0",
     "classnames": "^2.2.5",
     "components-font-awesome": "^4.7.0",

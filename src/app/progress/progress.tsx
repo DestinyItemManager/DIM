@@ -8,7 +8,7 @@ import { CharacterTile, characterIsCurrent } from './character-tile';
 import { Milestone } from './milestone';
 import { Faction } from './faction';
 import { Quest } from './quest';
-import { IDestinyCharacterComponent, IDestinyMilestone, IDestinyFactionProgression, IDestinyItemComponent, IDestinyObjectiveProgress } from '../bungie-api/interfaces';
+import { DestinyCharacterComponent, DestinyMilestone, DestinyFactionProgression, DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import { ViewPager, Frame, Track, View } from 'react-view-pager';
 import { isPhonePortraitStream, isPhonePortrait } from '../mediaQueries';
@@ -166,25 +166,8 @@ export class Progress extends React.Component<Props, State> {
   /**
    * Render one or more characters. This could render them all, or just one at a time.
    */
-  private renderCharacters(characters) {
+  private renderCharacters(characters: DestinyCharacterComponent[]) {
     const { defs, profileInfo, lastPlayedDate } = this.state.progress!;
-
-    function ProgressSection(props) {
-      const { children, title } = props;
-
-      if (children.length) {
-        return (
-          <div className="section">
-            <div className="title">{title}</div>
-            <div className="progress-row">
-              <div className="progress-for-character">
-                {children}
-              </div>
-            </div>
-          </div>
-        );
-      }
-    }
 
     return (
       <>
@@ -244,7 +227,7 @@ export class Progress extends React.Component<Props, State> {
   /**
    * The list of characters in the current (or provided) state, ordered in the preferred way.
    */
-  private sortedCharacters(progress: ProgressProfile = this.state.progress!, characterOrder: CharacterOrder = this.state.characterOrder): IDestinyCharacterComponent[] {
+  private sortedCharacters(progress: ProgressProfile = this.state.progress!, characterOrder: CharacterOrder = this.state.characterOrder): DestinyCharacterComponent[] {
     return sortCharacters(Object.values(progress.profileInfo.characters.data), characterOrder);
   }
 
@@ -252,10 +235,10 @@ export class Progress extends React.Component<Props, State> {
    * Get all the milestones that are valid across the whole profile. This still requires a character (any character)
    * to look them up, and the assumptions underlying this may get invalidated as the game evolves.
    */
-  private milestonesForProfile(character: IDestinyCharacterComponent): IDestinyMilestone[] {
+  private milestonesForProfile(character: DestinyCharacterComponent): DestinyMilestone[] {
     const { defs, profileInfo } = this.state.progress!;
 
-    const allMilestones: IDestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
+    const allMilestones: DestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
 
     const filteredMilestones = allMilestones.filter((milestone) => {
       return !milestone.availableQuests && (milestone.vendors || milestone.rewards);
@@ -271,10 +254,10 @@ export class Progress extends React.Component<Props, State> {
   /**
    * Get all the milestones to show for a particular character, filtered to active milestones and sorted.
    */
-  private milestonesForCharacter(character: IDestinyCharacterComponent): IDestinyMilestone[] {
+  private milestonesForCharacter(character: DestinyCharacterComponent): DestinyMilestone[] {
     const { defs, profileInfo } = this.state.progress!;
 
-    const allMilestones: IDestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
+    const allMilestones: DestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
 
     const filteredMilestones = allMilestones.filter((milestone) => {
       return milestone.availableQuests && milestone.availableQuests.every((q) =>
@@ -298,10 +281,10 @@ export class Progress extends React.Component<Props, State> {
   /**
    * Get all the factions to show for a particular character.
    */
-  private factionsForCharacter(character: IDestinyCharacterComponent): IDestinyFactionProgression[] {
+  private factionsForCharacter(character: DestinyCharacterComponent): DestinyFactionProgression[] {
     const { defs, profileInfo } = this.state.progress!;
 
-    const allFactions: IDestinyFactionProgression[] = Object.values(profileInfo.characterProgressions.data[character.characterId].factions);
+    const allFactions: DestinyFactionProgression[] = Object.values(profileInfo.characterProgressions.data[character.characterId].factions);
     return _.sortBy(allFactions, (f) => progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999);
   }
 
@@ -310,10 +293,10 @@ export class Progress extends React.Component<Props, State> {
    * up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
    * that represent milestones.
    */
-  private questItemsForCharacter(character: IDestinyCharacterComponent): IDestinyItemComponent[] {
+  private questItemsForCharacter(character: DestinyCharacterComponent): DestinyItemComponent[] {
     const { defs, profileInfo } = this.state.progress!;
 
-    const allItems: IDestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items;
+    const allItems: DestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items;
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
       // This required a lot of trial and error.
@@ -331,10 +314,10 @@ export class Progress extends React.Component<Props, State> {
    * Get the list of objectives associated with a specific quest item. Sometimes these have their own objectives,
    * and sometimes they are disassociated and stored in characterProgressions.
    */
-  private objectivesForItem(character: IDestinyCharacterComponent, item: IDestinyItemComponent): IDestinyObjectiveProgress[] {
+  private objectivesForItem(character: DestinyCharacterComponent, item: DestinyItemComponent): DestinyObjectiveProgress[] {
     const { defs, profileInfo } = this.state.progress!;
 
-    const objectives = profileInfo.itemComponents.objectives.data[item.itemInstanceId];
+    const objectives = item.itemInstanceId ? profileInfo.itemComponents.objectives.data[item.itemInstanceId] : undefined;
     if (objectives) {
       return objectives.objectives;
     }
@@ -345,7 +328,7 @@ export class Progress extends React.Component<Props, State> {
 /**
  * Sort a list of characters by a specified sorting method.
  */
-export function sortCharacters(characters: IDestinyCharacterComponent[], order: CharacterOrder) {
+export function sortCharacters(characters: DestinyCharacterComponent[], order: CharacterOrder) {
   if (order === 'mostRecent') {
     return _.sortBy(characters, (store) => {
       return -1 * new Date(store.dateLastPlayed).getTime();
