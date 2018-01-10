@@ -25,7 +25,7 @@ export function Faction(props: FactionProps) {
   const engramsAvailable = calculateEngramsAvailable(profileInventory, factionDef, factionProgress);
 
   return (
-    <div className="faction">
+    <div className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}>
       <div className="faction-icon">
         <svg viewBox="0 0 48 48">
           <image xlinkHref={bungieNetPath(factionDef.displayProperties.icon)} width="48" height="48" />
