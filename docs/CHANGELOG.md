@@ -1,5 +1,7 @@
 # Next
 
+* Sorting characters by age should be correct for D2 on PC.
+
 # 4.33.1
 
 * Fix DIM loading on iOS 11.2.2.
