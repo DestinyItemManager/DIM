@@ -302,7 +302,7 @@ export class Progress extends React.Component<Props, State> {
     const { defs, profileInfo } = this.state.progress!;
 
     const allFactions: IDestinyFactionProgression[] = Object.values(profileInfo.characterProgressions.data[character.characterId].factions);
-    return _.sortBy(allFactions, (f) => progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999);
+    return _.sortBy(allFactions, (f) => (progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999) + (f.factionVendorIndex === -1 ? 1000 : 0));
   }
 
   /**

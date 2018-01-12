@@ -1,7 +1,7 @@
 # Next
 
 * Sorting characters by age should be correct for D2 on PC.
-* Factions that you can't turn in rewards to are now greyed out.
+* Factions that you can't turn in rewards to are now greyed out. We also show the vendor name, and the raw XP values have moved to a tooltip.
 
 # 4.33.1
 

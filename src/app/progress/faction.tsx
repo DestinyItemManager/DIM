@@ -16,6 +16,7 @@ interface FactionProps {
 
 export function Faction(props: FactionProps) {
   const { defs, factionProgress, profileInventory } = props;
+
   const factionDef = defs.Faction[factionProgress.factionHash];
 
   const style = {
@@ -24,8 +25,16 @@ export function Faction(props: FactionProps) {
 
   const engramsAvailable = calculateEngramsAvailable(profileInventory, factionDef, factionProgress);
 
+  const vendorIndex = factionProgress.factionVendorIndex === -1 ? 0 : factionProgress.factionVendorIndex;
+  const vendorHash = factionDef.vendors[vendorIndex].vendorHash;
+
+  const vendorDef = defs.Vendor.get(vendorHash);
+
   return (
-    <div className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}>
+    <div
+      className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}
+      title={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
+    >
       <div className="faction-icon">
         <svg viewBox="0 0 48 48">
           <image xlinkHref={bungieNetPath(factionDef.displayProperties.icon)} width="48" height="48" />
@@ -36,8 +45,8 @@ export function Faction(props: FactionProps) {
         <div className={classNames('item-stat', 'item-faction', { 'purchase-unlocked': factionProgress.level >= 10 })}>{factionProgress.level}</div>
       </div>
       <div className="faction-info">
-        <div className="faction-name" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
-        <div className="faction-level">{factionProgress.progressToNextLevel}/{factionProgress.nextLevelAt}</div>
+        <div className="faction-name" title={vendorDef.displayProperties.description}>{vendorDef.displayProperties.name}</div>
+        <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
         {engramsAvailable > 0 &&
           <div className="faction-rewards">{t('Faction.EngramsAvailable', { count: engramsAvailable })}</div>
         }
