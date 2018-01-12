@@ -148,6 +148,7 @@ export interface DimItem {
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
   infusable: boolean;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
+  infusionFuel: boolean;
   // Can this item be equipped by the given store?
   canBeEquippedBy(store: DimStore): boolean;
   inCategory(categoryName: string): boolean;
