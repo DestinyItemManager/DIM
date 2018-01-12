@@ -107,6 +107,10 @@
     "VerifyReport": "Вы уверены, что хотите пожаловаться на этот отзыв?",
     "YourReview": "Ваш отзыв"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engram available",
+    "EngramsAvailable_plural": "{{count}} engrams available"
+  },
   "FarmingMode": {
     "Configuration": "Настройки",
     "D2Desc": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
@@ -269,7 +273,6 @@
   "Infusion": {
     "BringGear": "Will bring the gear to:",
     "Calc": "Калькулятор синтеза",
-    "InfuseItems": "Выбрать предмет для Синтеза:",
     "Infusion": "Предметы доступные для Синтеза",
     "InfusionMaterials": "Материалы для Синтеза",
     "LockedItems": "Включая 'заблокированные' предметы",
@@ -471,6 +474,19 @@
   "Postmaster": {
     "Desc": "There are 20 lost items at the Postmaster on your {{store}}. Any new items will overwrite the existing.",
     "Limit": "Postmaster Limit"
+  },
+  "Progress": {
+    "Daily": "Daily",
+    "ExpiresIn": "expires at {{endTime}}",
+    "Factions": "Factions",
+    "Milestones": "Milestones",
+    "ProfileMilestones": "Account Milestones",
+    "Progress": "Progress",
+    "Quests": "Quests",
+    "RewardEarned": "Reward earned but not redeemed",
+    "RewardNotEarned": "Reward not earned",
+    "RewardRedeemed": "Reward redeemed",
+    "Weekly": "Weekly"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",

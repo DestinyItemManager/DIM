@@ -107,6 +107,10 @@
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "レビュー"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engram available",
+    "EngramsAvailable_plural": "{{count}} engrams available"
+  },
   "FarmingMode": {
     "Configuration": "設定",
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -269,7 +273,6 @@
   "Infusion": {
     "BringGear": "装備を転送する:",
     "Calc": "融合計算機能",
-    "InfuseItems": "融合するアイテムを選択",
     "Infusion": "融合対象物発掘機能",
     "InfusionMaterials": "融合材料",
     "LockedItems": "ロックされているアイテムも含む",
@@ -471,6 +474,19 @@
   "Postmaster": {
     "Desc": "{{store}} のポストマスターに20個のアイテムがあります。新アイテムは前のと入り替わります.",
     "Limit": "ポストマスターに空きがありません"
+  },
+  "Progress": {
+    "Daily": "Daily",
+    "ExpiresIn": "expires at {{endTime}}",
+    "Factions": "Factions",
+    "Milestones": "Milestones",
+    "ProfileMilestones": "Account Milestones",
+    "Progress": "Progress",
+    "Quests": "Quests",
+    "RewardEarned": "Reward earned but not redeemed",
+    "RewardNotEarned": "Reward not earned",
+    "RewardRedeemed": "Reward redeemed",
+    "Weekly": "Weekly"
   },
   "RecordBooks": {
     "HideCompleted": "完了した記録を非表示にする",

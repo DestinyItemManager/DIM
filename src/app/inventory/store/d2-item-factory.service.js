@@ -379,7 +379,8 @@ export function D2ItemFactory(
     // Infusion
     const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
     createdItem.infusionProcess = tier && tier.infusionProcess;
-    createdItem.infusable = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryHashes && itemDef.quality.infusionCategoryHashes.length);
+    createdItem.infusionFuel = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryHashes && itemDef.quality.infusionCategoryHashes.length);
+    createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
     createdItem.infusionQuality = itemDef.quality || null;
 
     // Mark items with power mods
@@ -406,6 +407,10 @@ export function D2ItemFactory(
   function isWeaponOrArmor(item) {
     return ((item.primStat.statHash === 1480404414) || // weapon
             (item.primStat.statHash === 3897883278)); // armor
+  }
+
+  function isLegendaryOrBetter(item) {
+    return (item.tier === 'Legendary' || item.tier === 'Exotic');
   }
 
   // Set an ID for the item that should be unique across all items

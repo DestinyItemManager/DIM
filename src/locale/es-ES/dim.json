@@ -107,6 +107,10 @@
     "VerifyReport": "Estas seguro de que quieres marcar esta reseña?",
     "YourReview": "Tu Reseña"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engram available",
+    "EngramsAvailable_plural": "{{count}} engrams available"
+  },
   "FarmingMode": {
     "Configuration": "Configuración",
     "D2Desc": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
@@ -269,7 +273,6 @@
   "Infusion": {
     "BringGear": "Traerá el equipo a:",
     "Calc": "Calculador de Infusión",
-    "InfuseItems": "Selecciona un objeto para infusionar:",
     "Infusion": "Buscador de Combustible de Infusión",
     "InfusionMaterials": "Materiales para Infusionar",
     "LockedItems": "Incluir objetos 'bloqueados'",
@@ -471,6 +474,19 @@
   "Postmaster": {
     "Desc": "Hay 20 objetos perdidos en la Administración en tu {{store}}. Nuevos objetos reemplazarán los ya existentes.",
     "Limit": "Límite de Administración"
+  },
+  "Progress": {
+    "Daily": "Daily",
+    "ExpiresIn": "expires at {{endTime}}",
+    "Factions": "Factions",
+    "Milestones": "Milestones",
+    "ProfileMilestones": "Account Milestones",
+    "Progress": "Progress",
+    "Quests": "Quests",
+    "RewardEarned": "Reward earned but not redeemed",
+    "RewardNotEarned": "Reward not earned",
+    "RewardRedeemed": "Reward redeemed",
+    "Weekly": "Weekly"
   },
   "RecordBooks": {
     "HideCompleted": "Ocultar records completados",

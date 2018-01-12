@@ -107,6 +107,10 @@
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engram available",
+    "EngramsAvailable_plural": "{{count}} engrams available"
+  },
   "FarmingMode": {
     "Configuration": "Configuration",
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -269,14 +273,16 @@
   "Infusion": {
     "BringGear": "Will bring the gear to:",
     "Calc": "Infusion calculator",
-    "InfuseItems": "Select item to infuse with:",
+    "InfuseSource": "Select item to infuse into; consumes {{name}}:",
+    "InfuseTarget": "Select item to infuse {{name}}:",
     "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "Infusion Materials",
     "LockedItems": "Include 'locked' items",
     "NoItems": "No infusable items available.",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
     "ShowItems": "Show infusable items across all characters and vault",
-    "TransferItems": "Transfer items"
+    "TransferItems": "Transfer items",
+    "Uninfusable": "This item cannot be infused."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {{error}}.",
@@ -471,6 +477,19 @@
   "Postmaster": {
     "Desc": "There are 20 lost items at the Postmaster on your {{store}}. Any new items will overwrite the existing.",
     "Limit": "Postmaster Limit"
+  },
+  "Progress": {
+    "Daily": "Daily",
+    "ExpiresIn": "expires at {{endTime}}",
+    "Factions": "Factions",
+    "Milestones": "Milestones",
+    "ProfileMilestones": "Account Milestones",
+    "Progress": "Progress",
+    "Quests": "Quests",
+    "RewardEarned": "Reward earned but not redeemed",
+    "RewardNotEarned": "Reward not earned",
+    "RewardRedeemed": "Reward redeemed",
+    "Weekly": "Weekly"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",

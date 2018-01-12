@@ -107,6 +107,10 @@
     "VerifyReport": "您确定要标记这个评测吗？",
     "YourReview": "您的评测"
   },
+  "Faction": {
+    "EngramsAvailable": "1 engram available",
+    "EngramsAvailable_plural": "{{count}} engrams available"
+  },
   "FarmingMode": {
     "Configuration": "配置",
     "D2Desc": "DIM会通过确保您在{{store}} 中所有物品种类中至少有一个空位以防止物品被寄送到邮政官处。这是通过移动物品到金库来腾出空间。",
@@ -269,7 +273,6 @@
   "Infusion": {
     "BringGear": "Will bring the gear to:",
     "Calc": "灌注计算器",
-    "InfuseItems": "选择灌注材料：",
     "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "灌注材料",
     "LockedItems": "包括 \"锁定\" 项目",
@@ -471,6 +474,19 @@
   "Postmaster": {
     "Desc": "There are 20 lost items at the Postmaster on your {{store}}. Any new items will overwrite the existing.",
     "Limit": "邮政官上限"
+  },
+  "Progress": {
+    "Daily": "Daily",
+    "ExpiresIn": "expires at {{endTime}}",
+    "Factions": "Factions",
+    "Milestones": "Milestones",
+    "ProfileMilestones": "Account Milestones",
+    "Progress": "Progress",
+    "Quests": "Quests",
+    "RewardEarned": "Reward earned but not redeemed",
+    "RewardNotEarned": "Reward not earned",
+    "RewardRedeemed": "Reward redeemed",
+    "Weekly": "Weekly"
   },
   "RecordBooks": {
     "HideCompleted": "隐藏完成事件",

@@ -206,7 +206,7 @@ export const enum DestinyTalentNodeState {
 export const enum EquipFailureReason {
   None = 0,
   ItemUnequippable = 1,
-  temUniqueEquipRestricted = 2,
+  ItemUniqueEquipRestricted = 2,
   ItemFailedUnlockCheck = 4,
   ItemFailedLevelCheck = 8,
   ItemNotOnCharacter = 16,

@@ -4,7 +4,7 @@ import { ProgressService, ProgressProfile } from './progress.service';
 import { IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Subscription } from '@reactivex/rxjs';
-import { CharacterTile } from './character-tile';
+import { CharacterTile, characterIsCurrent } from './character-tile';
 import { Milestone } from './milestone';
 import { Faction } from './faction';
 import { Quest } from './quest';
@@ -49,6 +49,7 @@ interface State {
   progress?: ProgressProfile;
   characterOrder: CharacterOrder;
   isPhonePortrait: boolean;
+  currentCharacterId: string;
 }
 
 export class Progress extends React.Component<Props, State> {
@@ -59,13 +60,28 @@ export class Progress extends React.Component<Props, State> {
     super(props);
     this.state = {
       characterOrder: this.props.dimSettingsService.characterOrder,
-      isPhonePortrait: isPhonePortrait()
+      isPhonePortrait: isPhonePortrait(),
+      currentCharacterId: ""
     };
   }
 
   componentDidMount() {
     this.subscription = this.props.ProgressService.getProgressStream(this.props.account).subscribe((progress) => {
-      this.setState({ progress });
+      this.setState((prevState) => {
+        const updatedState = {
+          progress,
+          currentCharacterId: prevState.currentCharacterId
+        };
+        if (prevState.currentCharacterId === "") {
+          const characters = this.sortedCharacters(progress, prevState.characterOrder);
+          if (characters.length) {
+            const lastPlayedDate = progress.lastPlayedDate;
+            updatedState.currentCharacterId = characters.find((c) => characterIsCurrent(c, lastPlayedDate))!.characterId;
+          }
+        }
+
+        return updatedState;
+      });
     });
 
     this.mediaQuerySubscription = isPhonePortraitStream().subscribe((phonePortrait: boolean) => {
@@ -98,7 +114,7 @@ export class Progress extends React.Component<Props, State> {
 
     const { defs, profileInfo } = this.state.progress;
 
-    const characters = sortCharacters(Object.values(profileInfo.characters.data), this.state.characterOrder);
+    const characters = this.sortedCharacters();
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
     const profileMilestonesContent = profileMilestones.length &&
@@ -121,12 +137,13 @@ export class Progress extends React.Component<Props, State> {
         <div className="progress dim-page">
           {profileMilestonesContent}
           <ViewPager>
-            <Frame className="frame">
+            <Frame className="frame" autoSize={true}>
               <Track
+                currentView={this.state.currentCharacterId}
                 viewsToShow={1}
                 contain={true}
                 className="track"
-                autoSize={true}
+                flickTimeout={100}
               >
                 {characters.map((character) =>
                   <View className="view" key={character.characterId}>{this.renderCharacters([character])}</View>
@@ -225,6 +242,13 @@ export class Progress extends React.Component<Props, State> {
   }
 
   /**
+   * The list of characters in the current (or provided) state, ordered in the preferred way.
+   */
+  private sortedCharacters(progress: ProgressProfile = this.state.progress!, characterOrder: CharacterOrder = this.state.characterOrder): IDestinyCharacterComponent[] {
+    return sortCharacters(Object.values(progress.profileInfo.characters.data), characterOrder);
+  }
+
+  /**
    * Get all the milestones that are valid across the whole profile. This still requires a character (any character)
    * to look them up, and the assumptions underlying this may get invalidated as the game evolves.
    */
@@ -293,7 +317,7 @@ export class Progress extends React.Component<Props, State> {
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
       // This required a lot of trial and error.
-      return itemDef.itemCategoryHashes.includes(16) ||
+      return (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(16)) ||
         (itemDef.inventory && itemDef.inventory.tierTypeHash === 0 &&
           itemDef.backgroundColor && itemDef.backgroundColor.alpha > 0);
     });

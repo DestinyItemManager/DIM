@@ -2,6 +2,7 @@ import * as _ from 'underscore';
 import { Subject, ReplaySubject, ConnectableObservable } from '@reactivex/rxjs';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { IDictionaryComponent, IDestinyCharacterComponent, IDestinyCharacterProgressionComponent, IDestinyInventoryComponent, ISingleComponentResponse } from '../bungie-api/interfaces';
+import { t } from 'i18next';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -34,7 +35,7 @@ export interface ProgressProfile {
 }
 
 // TODO: use ngimport to break this free of Angular-ness
-export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2ManifestService, $q, loadingTracker) {
+export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2ManifestService, $q, loadingTracker, toaster) {
   'ngInject';
 
   // A subject that keeps track of the current account. Because it's a
@@ -102,6 +103,13 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
         }
       };
     })
+    .catch((e) => {
+      showErrorToaster(e);
+      // It's important that we swallow all errors here - otherwise
+      // our observable will fail on the first error. We could work
+      // around that with some rxjs operators, but it's easier to
+      // just make this never fail.
+    })
     .finally(() => {
       D2ManifestService.isLoaded = true;
     });
@@ -109,5 +117,21 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
     loadingTracker.addPromise(reloadPromise);
 
     return reloadPromise;
+  }
+
+  // TODO: move to a shared function
+  function showErrorToaster(e) {
+    const twitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
+    const twitter = `<div> ${t('BungieService.Twitter')} ${twitterLink}</div>`;
+
+    toaster.pop({
+      type: 'error',
+      bodyOutputType: 'trustedHtml',
+      title: 'Bungie.net Error',
+      body: e.message + twitter,
+      showCloseButton: false
+    });
+
+    console.error('Error loading progress', e);
   }
 }

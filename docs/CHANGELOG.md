@@ -1,5 +1,17 @@
 # Next
 
+* Sorting characters by age should be correct for D2 on PC.
+* The infusion fuel finder now supports reverse lookups, so you can choose the best thing to infuse a particular item *into*.
+
+# 4.33.1
+
+* Fix DIM loading on iOS 11.2.2.
+
+# 4.33.0
+
+* A brand new Progress page for Destiny 2 displays your milestones, quests, and faction reputation all in one place. That information has been removed from the main inventory screen.
+* We've changed around the effect for masterworks a bit more.
+
 # 4.32.0
 
 * Added hotkey for search and clear (Shift+F).
@@ -11,6 +23,7 @@
 * Rotating to and from landscape and portrait should be faster.
 * Fix quest steps showing up in the "haspower" search.
 * Do a better job of figuring out what's infusable.
+* Added a reverse lookup to Infusion Fuel Finder.
 
 # 4.31.0
 

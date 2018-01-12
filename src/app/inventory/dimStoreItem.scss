@@ -101,16 +101,14 @@ dim-store-item {
     overflow: hidden;
 
     &::after {
-      $size: 28px;
       content: '';
       display: block;
-      width: $size;
-      height: $size + 14px;
-      position: relative;
-      left: calc(50% - #{$size / 2});
-      bottom: -1 * $size + 4px;
-      background-color: $orange;
-      filter: blur(8px);
+      width: calc(100% - 4px);
+      height: calc(100% - 4px);
+      position: absolute;
+      left: 2px;
+      bottom: 2px;
+      background: radial-gradient(ellipse at center, rgba(232,165,52,0) 1%,rgba(232,165,52,0) 39%,rgba(232,165,52,0.78) 99%,rgba(232,165,52,0.80) 100%);
     }
   }
 }
