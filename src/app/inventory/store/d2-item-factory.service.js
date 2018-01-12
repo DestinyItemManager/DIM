@@ -76,7 +76,7 @@ export function D2ItemFactory(
   const categoryFromInfusionHash = {
     3879234379: 'CATEGORY_GRENADE_LAUNCHER',
     3499784695: 'CATEGORY_SUBMACHINEGUN',
-    522776512 : 'CATEGORY_AUTO_RIFLE', // Trace Rifle
+    522776512: 'CATEGORY_AUTO_RIFLE', // Trace Rifle
   };
 
   // Prototype for Item objects - add methods to this to add them to all
