@@ -41,6 +41,7 @@ module.exports = (env) => {
 
     output: {
       path: path.resolve('./dist'),
+      publicPath: '/',
       filename: '[name]-[chunkhash:6].js',
       chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
     },
@@ -112,9 +113,9 @@ module.exports = (env) => {
         }
       ],
 
-      noParse: [
-        /\/sql\.js$/
-      ]
+      noParse: function(path) {
+        return path.endsWith('sql.js/js/sql.js') || preMinifiedDeps.some((d) => path.endsWith(d));
+      }
     },
 
     resolve: {
@@ -263,11 +264,11 @@ module.exports = (env) => {
   preMinifiedDeps.forEach((dep) => {
     const depPath = path.resolve(nodeModulesDir, dep);
     config.resolve.alias[dep.split(path.sep)[0]] = depPath;
-    config.module.noParse.push(new RegExp(depPath));
   });
 
   if (isDev) {
     config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
+
     return config;
   } else {
     // Bail and fail hard on first error
@@ -276,7 +277,8 @@ module.exports = (env) => {
 
     // Tell React we're in Production mode
     config.plugins.push(new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env': JSON.stringify({ NODE_ENV: 'production' })
     }));
 
     // The sql.js library doesnt work at all (reports no tables) when minified,

@@ -84,7 +84,7 @@ mod.filter('sortStores', () => {
         }
       });
     } else {
-      return _.sortBy(stores, 'id');
+      return stores;
     }
   };
 });

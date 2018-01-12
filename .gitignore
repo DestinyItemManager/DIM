@@ -12,7 +12,9 @@ build/*.json
 build/*.zip
 *.DS_Store
 config/dim_travis.rsa
+.awcache
 
 .brackets.json
 .npmrc
 npm-debug.log
+.nvmrc

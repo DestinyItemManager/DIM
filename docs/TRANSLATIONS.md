@@ -28,7 +28,7 @@ There are two different roles available per language
 
 # Translators
 Using the 'Show' dropdown menu, select 'Untranslated'.
-Translate these to you language.
+Translate these to your language.
 
 As translations are changed they will automatically be marked as 'Fuzzy'.
 Using the 'Show' dropdown menu, select 'Fuzzy'.

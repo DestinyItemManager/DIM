@@ -354,6 +354,9 @@ export function ItemFactory(
 
     createdItem.infusable = createdItem.talentGrid && createdItem.talentGrid.infusable;
 
+    // An item can be used as infusion fuel if it is equipment, and has a primary stat that isn't Speed
+    createdItem.infusionFuel = Boolean(createdItem.equipment && createdItem.primStat && createdItem.primStat.statHash !== 1501155019);
+
     try {
       createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
 
