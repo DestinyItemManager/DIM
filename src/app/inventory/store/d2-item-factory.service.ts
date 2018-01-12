@@ -1,6 +1,6 @@
 import { BucketsService, DimInventoryBuckets, DimInventoryBucket } from './../../destiny2/d2-buckets.service';
 import { LazyDefinition, D2ManifestDefinitions, D2DefinitionsService } from './../../destiny2/d2-definitions.service';
-import { DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyInventoryComponent, DestinyItemInstanceComponent, ItemLocation, DestinyItemStatsComponent, DestinyStatDefinition, DestinyStat, DestinyItemInvestmentStatDefinition, DestinyClass, DestinyInventoryItemDefinition, DestinyClassDefinition, DestinyInventoryItemStatDefinition, DestinyItemQualityBlockDefinition, DestinyItemTierTypeInfusionBlock, DestinyItemObjectivesComponent, DestinyObjectiveDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyInventoryComponent, DestinyItemInstanceComponent, ItemLocation, DestinyItemStatsComponent, DestinyStatDefinition, DestinyStat, DestinyItemInvestmentStatDefinition, DestinyClass, DestinyInventoryItemDefinition, DestinyClassDefinition, DestinyInventoryItemStatDefinition, DestinyItemQualityBlockDefinition, DestinyItemTierTypeInfusionBlock, DestinyItemObjectivesComponent, DestinyObjectiveDefinition, DestinyTalentGridDefinition, DestinyItemTalentGridComponent } from 'bungie-api-ts/destiny2';
 import { IPromise, extend } from 'angular';
 import * as _ from 'underscore';
 import { getClass } from './character-utils';
@@ -42,6 +42,31 @@ interface DimObjective {
   complete: boolean;
   boolean: boolean;
   display: string;
+}
+
+interface DimGridNode {
+  name: string;
+  hash: number;
+  description: string;
+  icon: string;
+  /** Position in the grid */
+  column: number;
+  row: number;
+  /** Is the node selected (lit up in the grid) */
+  activated: boolean;
+  /** The item level at which this node can be unlocked */
+  activatedAtGridLevel: number;
+  /** Only one node in this column can be selected (scopes, etc) */
+  exclusiveInColumn: boolean;
+  /** Whether or not the material cost has been paid for the node */
+  unlocked: boolean;
+  /** Some nodes don't show up in the grid, like purchased ascend nodes */
+  hidden: boolean;
+}
+
+interface DimTalentGrid {
+  nodes: DimGridNode[];
+  complete: boolean;
 }
 
 export interface DimItem {
@@ -86,7 +111,7 @@ export interface DimItem {
   isInLoadout: boolean;
   sockets?;
   percentComplete: number;
-  talentGrid?;
+  talentGrid?: DimTalentGrid | null;
   stats: DimStat[] | null;
   objectives: DimObjective[] | null;
   quality;
@@ -682,7 +707,14 @@ export function D2ItemFactory(
     });
   }
 
-  function buildTalentGrid(item: DestinyItemComponent, talentsMap, talentDefs) {
+  function buildTalentGrid(
+    item: DestinyItemComponent,
+    talentsMap: { [key: string]: DestinyItemTalentGridComponent },
+    talentDefs: LazyDefinition<DestinyTalentGridDefinition>
+  ): DimTalentGrid | null {
+    if (!item.itemInstanceId || !talentsMap[item.itemInstanceId]) {
+      return null;
+    }
     const talentGrid = talentsMap[item.itemInstanceId];
     if (!talentGrid) {
       return null;
@@ -690,10 +722,10 @@ export function D2ItemFactory(
 
     const talentGridDef = talentDefs.get(talentGrid.talentGridHash);
     if (!talentGridDef || !talentGridDef.nodes || !talentGridDef.nodes.length) {
-      return undefined;
+      return null;
     }
 
-    let gridNodes = talentGridDef.nodes.map((node) => {
+    const gridNodes = _.compact(talentGridDef.nodes.map((node) => {
       const talentNodeGroup = node;
       const talentNodeSelected = node.steps[0];
 
@@ -709,13 +741,13 @@ export function D2ItemFactory(
       }
 
       // Only one node in this column can be selected (scopes, etc)
-      const exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodeHashes &&
-                               talentNodeGroup.exlusiveWithNodeHashes.length > 0);
+      const exclusiveInColumn = Boolean(talentNodeGroup.exclusiveWithNodeHashes &&
+                               talentNodeGroup.exclusiveWithNodeHashes.length > 0);
 
       const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
 
       // There's a lot more here, but we're taking just what we need
-      return {
+      const gridNode: DimGridNode = {
         name: nodeName,
         hash: talentNodeSelected.nodeStepHash,
         description: talentNodeSelected.displayProperties.description,
@@ -734,17 +766,16 @@ export function D2ItemFactory(
         // Some nodes don't show up in the grid, like purchased ascend nodes
         hidden: false
       };
-    });
-
-    // We need to unique-ify because Ornament nodes show up twice!
-    gridNodes = _.uniq(_.compact(gridNodes), false, 'hash');
+      return gridNode;
+    })) as DimGridNode[];
 
     if (!gridNodes.length) {
-      return undefined;
+      return null;
     }
 
     // Fix for stuff that has nothing in early columns
-    const minColumn = _.min(_.reject(gridNodes, 'hidden'), 'column').column;
+    const minByColumn = _.min(gridNodes.filter((n) => !n.hidden, (n) => n.column);
+    const minColumn = minByColumn.column;
     if (minColumn > 0) {
       gridNodes.forEach((node) => { node.column -= minColumn; });
     }
@@ -755,11 +786,15 @@ export function D2ItemFactory(
     };
   }
 
-  function buildSockets(item: DestinyItemComponent, socketsMap, defs, itemDef) {
-    if (!itemDef.sockets || !itemDef.sockets.socketEntries.length) {
+  function buildSockets(
+    item: DestinyItemComponent,
+    socketsMap: { [key: string]: DestinyItemSocketsComponent },
+    defs: D2ManifestDefinitions,
+    itemDef: DestinyInventoryItemDefinition) {
+    if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length) {
       return null;
     }
-    let sockets = socketsMap[item.itemInstanceId];
+    let soc kets = socketsMap[item.itemInstanceId];
     if (sockets) {
       sockets = socketsMap[item.itemInstanceId].sockets;
     }

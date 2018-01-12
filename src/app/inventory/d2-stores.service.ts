@@ -441,7 +441,7 @@ export function D2StoresService(
       3897883278, // Defense
     ]);
 
-    const applicableItems = _.filter(flatMap(stores, (s) => s.items), (i) => {
+    const applicableItems = flatMap(stores, (s) => s.items).filter((i) => {
       return i.canBeEquippedBy(store) &&
         i.primStat && // has a primary stat (sanity check)
         statHashes.has(i.primStat.statHash); // one of our selected stats
