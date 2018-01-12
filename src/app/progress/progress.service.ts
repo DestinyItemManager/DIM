@@ -38,7 +38,7 @@ export interface ProgressProfile {
 }
 
 // TODO: use ngimport to break this free of Angular-ness
-export function ProgressService(Destiny2Api: Destiny2ApiService, D2StoreFactory, D2Definitions: D2DefinitionsService, D2ManifestService, $q, loadingTracker, toaster) {
+export function ProgressService(Destiny2Api: Destiny2ApiService, D2Definitions: D2DefinitionsService, D2ManifestService, $q, loadingTracker, toaster) {
   'ngInject';
 
   // A subject that keeps track of the current account. Because it's a

@@ -1,3 +1,14 @@
+declare const $DIM_VERSION: string;
+declare const $DIM_FLAVOR: string;
+declare const DIM_WEB_API_KEY: string;
+declare const $DIM_BUILD_DATE: string;
+declare const $DIM_CHANGELOG: string;
+declare const $DIM_WEB_API_KEY: string;
+declare const $DIM_WEB_CLIENT_ID: string;
+declare const $DIM_WEB_CLIENT_SECRET: string;
+declare const $GOOGLE_DRIVE_CLIENT_ID: string;
+declare const $BROWSERS: string[];
+
 declare const $featureFlags: {
   tagsEnabled: boolean;
   compareEnabled: boolean;

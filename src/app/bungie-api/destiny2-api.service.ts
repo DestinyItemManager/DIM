@@ -1,18 +1,20 @@
-import { DestinyAccount } from './../accounts/destiny-account.service';
 import * as _ from 'underscore';
-import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
-import { DestinyComponentType, DestinyManifestServerResponse, DestinyManifest, DestinyProfileComponent, DestinyProfileResponse, DestinyEquipItemResultsServerResponse, DestinyEquipItemResults } from 'bungie-api-ts/destiny2';
+import { DimError, BungieServiceHelperType } from './bungie-service-helper.service';
+import { DestinyAccount } from './../accounts/destiny-account.service';
+import { DestinyComponentType, DestinyManifest, DestinyProfileResponse, DestinyEquipItemResults, getDestinyManifest, getProfile as getProfileApi, transferItem, pullFromPostmaster, ServerResponse, equipItem, equipItems as equipItemsApi, setItemLockState } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 
 export interface Destiny2ApiService {
   getManifest(): IPromise<DestinyManifest>;
   getStores(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
   getProgression(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
   getCharacters(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
-  transfer(item, store, amount: number): any;
-  equip(item): any;
-  equipItems(store, items): any;
-  setLockState(store, item, lockState): any;
+  transfer(item: DimItem, store: DimStore, amount: number): IPromise<ServerResponse<number>>;
+  equip(item: DimItem): IPromise<ServerResponse<number>>;
+  equipItems(store: DimStore, items: DimItem[]): IPromise<ServerResponse<number>>;
+  setLockState(store: DimStore, item: DimItem, lockState: boolean): IPromise<ServerResponse<number>>;
 }
 
 /**
@@ -21,13 +23,11 @@ export interface Destiny2ApiService {
  * Destiny2 Service at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
 export function Destiny2Api(
-  BungieServiceHelper,
-  $q,
-  $http,
+  BungieServiceHelper: BungieServiceHelperType,
   dimState,
   $i18next): Destiny2ApiService {
   'ngInject';
-  const { handleErrors, retryOnThrottled } = BungieServiceHelper;
+  const { httpAdapter, httpAdapterWithRetry } = BungieServiceHelper;
 
   return {
     getManifest,
@@ -41,9 +41,8 @@ export function Destiny2Api(
   };
 
   function getManifest(): IPromise<DestinyManifest> {
-    return $http(bungieApiQuery('/Platform/Destiny2/Manifest/'))
-      .then(handleErrors, handleErrors)
-      .then((response) => response.data.Response);
+    return getDestinyManifest(httpAdapter)
+      .then((response) => response.Response) as IPromise<DestinyManifest>;
   }
 
   /**
@@ -97,50 +96,41 @@ export function Destiny2Api(
    * you want. This can handle just characters, full inventory, vendors, kiosks, activities, etc.
    */
   function getProfile(platform: DestinyAccount, ...components: DestinyComponentType[]): IPromise<DestinyProfileResponse> {
-    return $http(bungieApiQuery(
-      `/Platform/Destiny2/${platform.platformType}/Profile/${platform.membershipId}/`,
-      {
-        components: components.join(',')
-      }
-    ))
-    .then(handleErrors, handleErrors)
+    return getProfileApi(httpAdapter, {
+      destinyMembershipId: platform.membershipId,
+      membershipType: platform.platformType,
+      components
+    })
     .then((response) => {
       // TODO: what does it actually look like to not have an account?
-      if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error($i18next.t('BungieService.NoAccountForPlatform', {
+      if (_.size(response.Response) === 0) {
+        throw new Error($i18next.t('BungieService.NoAccountForPlatform', {
           platform: platform.platformLabel
-        })));
+        }));
       }
 
-      return response.data.Response;
-    });
+      return response.Response;
+    }) as IPromise<DestinyProfileResponse>;
   }
 
-  interface DimError extends Error {
-    code?: number;
-  }
-
-  function transfer(item, store, amount: number) {
+  function transfer(item: DimItem, store: DimStore, amount: number): IPromise<ServerResponse<number>> {
     const platform = dimState.active;
-    return $http(bungieApiUpdate(
-      item.location.inPostmaster
-        ? '/Platform/Destiny2/Actions/Items/PullFromPostmaster/'
-        : '/Platform/Destiny2/Actions/Items/TransferItem/',
-      {
-        characterId: store.isVault ? item.owner : store.id,
-        membershipType: platform.platformType,
-        itemId: item.id,
-        itemReferenceHash: item.hash,
-        stackSize: amount || item.amount,
-        transferToVault: store.isVault
-      }
-    ))
-      .then(retryOnThrottled)
-      .then(handleErrors, handleErrors)
-      .catch((e) => handleUniquenessViolation(e, item, store));
+    const request = {
+      characterId: store.isVault ? item.owner : store.id,
+      membershipType: platform.platformType,
+      itemId: item.id,
+      itemReferenceHash: item.hash,
+      stackSize: amount || item.amount,
+      transferToVault: store.isVault
+    };
+
+    const response = item.location.inPostmaster
+      ? pullFromPostmaster(httpAdapterWithRetry, request)
+      : transferItem(httpAdapterWithRetry, request);
+    return response.catch((e) => handleUniquenessViolation(e, item, store)) as IPromise<ServerResponse<number>>;
 
     // Handle "DestinyUniquenessViolation" (1648)
-    function handleUniquenessViolation(e: DimError, item, store) {
+    function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
       if (e && e.code === 1648) {
         const error = new Error($i18next.t('BungieService.ItemUniquenessExplanation', {
           name: item.name,
@@ -149,66 +139,53 @@ export function Destiny2Api(
           context: store.gender
         })) as DimError;
         error.code = e.code;
-        return $q.reject(error);
+        throw error;
       }
-      return $q.reject(e);
+      throw e;
     }
   }
 
-  function equip(item) {
+  function equip(item: DimItem): IPromise<ServerResponse<number>> {
     const platform = dimState.active;
-    return $http(bungieApiUpdate(
-      '/Platform/Destiny2/Actions/Items/EquipItem/',
-      {
-        characterId: item.owner,
-        membershipType: platform.platformType,
-        itemId: item.id
-      }
-    ))
-      .then(retryOnThrottled)
-      .then(handleErrors, handleErrors);
+
+    return equipItem(httpAdapterWithRetry, {
+      characterId: item.owner,
+      membershipType: platform.platformType,
+      itemId: item.id
+    }) as IPromise<ServerResponse<number>>;
   }
 
   // Returns a list of items that were successfully equipped
-  function equipItems(store, items) {
+  function equipItems(store: DimStore, items: DimItem[]): IPromise<any> {
     // TODO: test if this is still broken in D2
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
     items = _.sortBy(items, (i: any) => (i.isExotic ? 1 : 0));
 
     const platform = dimState.active;
-    return $http(bungieApiUpdate(
-      '/Platform/Destiny2/Actions/Items/EquipItems/',
-      {
-        characterId: store.id,
-        membershipType: platform.platformType,
-        itemIds: _.pluck(items, 'id')
-      }))
-      .then(retryOnThrottled)
-      .then(handleErrors, handleErrors)
+    return equipItemsApi(httpAdapterWithRetry, {
+      characterId: store.id,
+      membershipType: platform.platformType,
+      itemIds: _.pluck(items, 'id')
+    })
       .then((response) => {
-        const data: DestinyEquipItemResults = response.data.Response;
+        const data: DestinyEquipItemResults = response.Response;
         return items.filter((i) => {
           const item = _.find(data.equipResults, {
             itemInstanceId: i.id
           });
           return item && item.equipStatus === 1;
         });
-      });
+      }) as IPromise<DimItem[]>;
   }
 
-  function setLockState(store, item, lockState) {
+  function setLockState(store: DimStore, item: DimItem, lockState: boolean): IPromise<ServerResponse<number>> {
     const account = dimState.active;
 
-    return $http(bungieApiUpdate(
-      `/Platform/Destiny2/Actions/Items/SetLockState/`,
-      {
-        characterId: store.isVault ? item.owner : store.id,
-        membershipType: account.platformType,
-        itemId: item.id,
-        state: lockState
-      }
-    ))
-      .then(retryOnThrottled)
-      .then(handleErrors, handleErrors);
+    return setItemLockState(httpAdapterWithRetry, {
+      characterId: store.isVault ? item.owner : store.id,
+      membershipType: account.platformType,
+      itemId: item.id,
+      state: lockState
+    }) as IPromise<ServerResponse<number>>;
   }
 }

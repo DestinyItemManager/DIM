@@ -1,6 +1,6 @@
-import { bungieApiQuery } from './bungie-api-utils';
 import { IPromise } from 'angular';
-import { UserMembershipData } from 'bungie-api-ts/user';
+import { UserMembershipData, getMembershipDataById, BungieMembershipType } from 'bungie-api-ts/user';
+import { BungieServiceHelperType } from './bungie-service-helper.service';
 
 export interface BungieUserApiService {
   getAccounts(bungieMembershipId: string): IPromise<UserMembershipData>;
@@ -9,18 +9,18 @@ export interface BungieUserApiService {
 /**
  * UserService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
-export function BungieUserApi(BungieServiceHelper, $http): BungieUserApiService {
+export function BungieUserApi(BungieServiceHelper: BungieServiceHelperType): BungieUserApiService {
   'ngInject';
 
-  const { handleErrors } = BungieServiceHelper;
+  const { httpAdapter } = BungieServiceHelper;
 
   return {
-    getAccounts
+    getAccounts(bungieMembershipId: string): IPromise<UserMembershipData> {
+      return getMembershipDataById(httpAdapter, {
+        membershipId: bungieMembershipId,
+        membershipType: BungieMembershipType.BungieNext
+      })
+        .then((response) => response.Response) as IPromise<UserMembershipData>;
+    }
   };
-
-  function getAccounts(bungieMembershipId: string): IPromise<UserMembershipData> {
-    return $http(bungieApiQuery(`/Platform/User/GetMembershipsById/${bungieMembershipId}/254/`))
-      .then(handleErrors, handleErrors)
-      .then((response) => response.data.Response);
-  }
 }

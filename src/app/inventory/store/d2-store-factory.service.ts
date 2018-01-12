@@ -8,7 +8,7 @@ import { DestinyCharacterComponent, DestinyStatDefinition, DestinyItemComponent,
 import { D2ManifestDefinitions, LazyDefinition } from './../../destiny2/d2-definitions.service';
 import { Loadout } from './../../loadout/loadout.service';
 import { DimInventoryBucket, DimInventoryBuckets } from './../../destiny2/d2-buckets.service';
-import { DimItem, DimStat } from './d2-item-factory.service';
+import { DimItem } from './d2-item-factory.service';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';
 // tslint:disable-next-line:no-implicit-dependencies
@@ -151,7 +151,7 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
       this.powerLevel = character.light;
       this.background = `https://www.bungie.net/${character.emblemBackgroundPath}`;
       this.icon = `https://www.bungie.net/${character.emblemPath}`;
-      this.stats = getCharacterStatsData(defs.Stat, character.stats);
+      this.stats = { ...this.stats, ...getCharacterStatsData(defs.Stat, character.stats) };
     },
 
     // Remove an item from this store. Returns whether it actually removed anything.

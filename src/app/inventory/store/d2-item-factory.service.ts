@@ -1,8 +1,8 @@
 import { DimStore } from './d2-store-factory.service';
 import { BucketsService, DimInventoryBuckets, DimInventoryBucket } from './../../destiny2/d2-buckets.service';
 import { LazyDefinition, D2ManifestDefinitions, D2DefinitionsService } from './../../destiny2/d2-definitions.service';
-import { DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyInventoryComponent, DestinyItemInstanceComponent, ItemLocation, DestinyItemStatsComponent, DestinyStatDefinition, DestinyStat, DestinyItemInvestmentStatDefinition, DestinyClass, DestinyInventoryItemDefinition, DestinyClassDefinition, DestinyInventoryItemStatDefinition, DestinyItemQualityBlockDefinition, DestinyItemTierTypeInfusionBlock, DestinyItemObjectivesComponent, DestinyObjectiveDefinition, DestinyTalentGridDefinition, DestinyItemTalentGridComponent, DestinyItemSocketsComponent, DestinySocketCategoryDefinition, DestinySandboxPerkDefinition } from 'bungie-api-ts/destiny2';
-import { IPromise, extend } from 'angular';
+import { DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyItemInstanceComponent, ItemLocation, DestinyItemStatsComponent, DestinyStatDefinition, DestinyStat, DestinyItemInvestmentStatDefinition, DestinyClass, DestinyInventoryItemDefinition, DestinyInventoryItemStatDefinition, DestinyItemQualityBlockDefinition, DestinyItemTierTypeInfusionBlock, DestinyItemObjectivesComponent, DestinyObjectiveDefinition, DestinyTalentGridDefinition, DestinyItemTalentGridComponent, DestinyItemSocketsComponent, DestinySocketCategoryDefinition, DestinySandboxPerkDefinition } from 'bungie-api-ts/destiny2';
+import { IPromise } from 'angular';
 import * as _ from 'underscore';
 import { getClass } from './character-utils';
 import { sum } from '../../util';
@@ -185,7 +185,6 @@ export interface D2ItemFactoryType {
  */
 export function D2ItemFactory(
   D2ManifestService,
-  dimSettingsService,
   $i18next,
   NewItemsService,
   D2Definitions: D2DefinitionsService,
@@ -482,11 +481,11 @@ export function D2ItemFactory(
     try {
       if (itemDef.stats && itemDef.stats.stats) {
         createdItem.stats = _.sortBy((buildStats(item, itemComponents.stats.data, defs.Stat)).concat(
-          buildHiddenStats(item, itemDef, defs.Stat)
+          buildHiddenStats(itemDef, defs.Stat)
         ), 'sort');
       }
       if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
-        createdItem.stats = _.sortBy(buildInvestmentStats(item, itemDef.investmentStats, defs.Stat));
+        createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
       }
     } catch (e) {
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
@@ -606,7 +605,7 @@ export function D2ItemFactory(
     }
   }
 
-  function buildHiddenStats(item: DestinyItemComponent, itemDef: DestinyInventoryItemDefinition, statDefs: LazyDefinition<DestinyStatDefinition>): DimStat[] {
+  function buildHiddenStats(itemDef: DestinyInventoryItemDefinition, statDefs: LazyDefinition<DestinyStatDefinition>): DimStat[] {
     const itemStats = itemDef.stats.stats;
 
     if (!itemStats) {
@@ -671,7 +670,6 @@ export function D2ItemFactory(
   }
 
   function buildInvestmentStats(
-    item: DestinyItemComponent,
     itemStats: DestinyItemInvestmentStatDefinition[],
     statDefs: LazyDefinition<DestinyStatDefinition>
   ): DimStat[] {

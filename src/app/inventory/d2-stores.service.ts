@@ -1,5 +1,5 @@
 import { DimStore, DimVault } from './store/d2-store-factory.service';
-import { DimInventoryBuckets, DimInventoryBucket } from './../destiny2/d2-buckets.service';
+import { DimInventoryBuckets } from './../destiny2/d2-buckets.service';
 import { D2ManifestDefinitions } from './../destiny2/d2-definitions.service';
 import { IPromise } from 'angular';
 import * as _ from 'underscore';
@@ -10,7 +10,7 @@ import { compareAccounts } from '../accounts/destiny-account.service';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
 import { D2DefinitionsService } from '../destiny2/d2-definitions.service';
-import { DestinyProfileResponse, DestinyCharacterComponent, DestinyInventoryComponent, DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyProgression } from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, DestinyCharacterComponent, DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyProgression } from 'bungie-api-ts/destiny2';
 import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
 
 /**
@@ -187,7 +187,7 @@ export function D2StoresService(
           throw new Error($i18next.t('BungieService.Difficulties'));
         }
 
-        const processVaultPromise = processVault(defs,
+        const processVaultPromise = processVault(
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
           profileInfo.itemComponents,
@@ -316,7 +316,6 @@ export function D2StoresService(
   }
 
   function processVault(
-    defs: D2ManifestDefinitions,
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
@@ -397,7 +396,7 @@ export function D2StoresService(
   function updateBasePower(stores, store, defs) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
-      const maxBasePower = getBasePower(store, maxBasePowerLoadout(stores, store));
+      const maxBasePower = getBasePower(maxBasePowerLoadout(stores, store));
 
       const hasClassified = flatMap(_stores, (s) => s.items).some((i) => {
         return i.classified &&
@@ -456,7 +455,7 @@ export function D2StoresService(
     return optimalLoadout(store, applicableItems, bestItemFn, '');
   }
 
-  function getBasePower(store, loadout: { items: { [type: string]: DimItem[] } }) {
+  function getBasePower(loadout: { items: { [type: string]: DimItem[] } }) {
     // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
     const itemWeight = {
       Weapons: 6,
