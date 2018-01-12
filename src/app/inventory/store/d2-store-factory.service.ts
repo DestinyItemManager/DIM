@@ -1,14 +1,99 @@
-import angular from 'angular';
-import _ from 'underscore';
+import { DimStore } from './d2-store-factory.service';
+import { IPromise, copy as angularCopy } from 'angular';
+import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { sum, count } from '../../util';
 import { getClass } from './character-utils';
+import { DestinyCharacterComponent, DestinyStatDefinition, DestinyItemComponent, DestinyClass } from 'bungie-api-ts/destiny2';
+import { D2ManifestDefinitions, LazyDefinition } from './../../destiny2/d2-definitions.service';
+import { Loadout } from './../../loadout/loadout.service';
+import { DimInventoryBucket, DimInventoryBuckets } from './../../destiny2/d2-buckets.service';
+import { DimItem, DimStat } from './d2-item-factory.service';
+// tslint:disable-next-line:no-implicit-dependencies
+import vaultIcon from 'app/images/vault.png';
+// tslint:disable-next-line:no-implicit-dependencies
+import vaultBackground from 'app/images/vault-background.png';
+
+export interface DimCharacterStat {
+  id: number;
+  name: string;
+  description: string;
+  value: number;
+  icon: string;
+  tiers: number[];
+  tierMax: number;
+  tier: number;
+}
+
+// TODO: replace this with a "Profile" concept
+export interface DimStore {
+  id: string;
+  name: string;
+  items: DimItem[];
+  isVault: boolean;
+  vault?: DimStore;
+  buckets: { [bucketId: number]: DimItem[] };
+
+  destinyVersion: number;
+  icon: string;
+  current: boolean;
+  lastPlayed: Date;
+  background: string;
+  level: number;
+  percentToNextLevel: number;
+  powerLevel: number;
+  stats: DimCharacterStat[];
+  class: string;
+  classType: DestinyClass;
+  className: string;
+  gender: string;
+  genderRace: string;
+
+  updateCharacterInfo(defs, bStore): IPromise<DimStore[]>;
+  amountOfItem(item: DimItem): number;
+  /**
+   * How much of items like this item can fit in this store? For
+   * stackables, this is in stacks, not individual pieces.
+   */
+  capacityForItem(item: DimItem): number;
+  /**
+   * How many *more* items like this item can fit in this store?
+   * This takes into account stackables, so the answer will be in
+   * terms of individual pieces.
+   */
+  spaceLeftForItem(item: DimItem): number;
+
+  /** Remove an item from this store. Returns whether it actually removed anything. */
+  removeItem(item: DimItem): boolean;
+
+  addItem(item: DimItem): void;
+
+  // Create a loadout from this store's equipped items
+  // TODO: Loadout type
+  loadoutFromCurrentlyEquipped(item: DimItem): Loadout;
+
+  // TODO: implement this for D2
+  factionAlignment();
+}
+
+export interface DimVault extends DimStore {
+  d2VaultCounts: { [bucketId: number]: { count: number; bucket: DimInventoryBucket } };
+
+  legendaryMarks: number;
+  glimmer: number;
+  silver: number;
+}
+
+export interface D2StoreFactoryType {
+  makeCharacter(defs: D2ManifestDefinitions, character: DestinyCharacterComponent, mostRecentLastPlayed: Date): DimStore;
+  makeVault(buckets: DimInventoryBuckets, profileCurrencies: DestinyItemComponent[]): DimVault;
+}
 
 /**
  * A factory service for producing "stores" (characters or the vault).
  * The job of filling in their items is left to other code - this is just the basic store itself.
  */
-export function D2StoreFactory($i18next, dimInfoService) {
+export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
   'ngInject';
 
   // Prototype for Store objects - add methods to this to add them to all
@@ -18,7 +103,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
      * Get the total amount of this item in the store, across all stacks,
      * excluding stuff in the postmaster.
      */
-    amountOfItem: function(item) {
+    amountOfItem(item: DimItem) {
       return sum(this.items.filter((i) => {
         return i.hash === item.hash && !i.location.inPostmaster;
       }), 'amount');
@@ -28,7 +113,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
      * How much of items like this item can fit in this store? For
      * stackables, this is in stacks, not individual pieces.
      */
-    capacityForItem: function(item) {
+    capacityForItem(item: DimItem) {
       if (!item.bucket) {
         console.error("item needs a 'bucket' field", item);
         return 10;
@@ -41,7 +126,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
      * This takes into account stackables, so the answer will be in
      * terms of individual pieces.
      */
-    spaceLeftForItem: function(item) {
+    spaceLeftForItem(item: DimItem) {
       if (!item.type) {
         throw new Error("item needs a 'type' field");
       }
@@ -61,16 +146,16 @@ export function D2StoreFactory($i18next, dimInfoService) {
       }
     },
 
-    updateCharacterInfo: function(defs, character) {
+    updateCharacterInfo(defs: D2ManifestDefinitions, character: DestinyCharacterComponent) {
       this.level = character.levelProgression.level; // Maybe?
       this.powerLevel = character.light;
       this.background = `https://www.bungie.net/${character.emblemBackgroundPath}`;
       this.icon = `https://www.bungie.net/${character.emblemPath}`;
-      // this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
+      this.stats = getCharacterStatsData(defs.Stat, character.stats);
     },
 
     // Remove an item from this store. Returns whether it actually removed anything.
-    removeItem: function(item) {
+    removeItem(item) {
       // Completely remove the source item
       const match = (i) => item.index === i.index;
       const sourceIndex = this.items.findIndex(match);
@@ -90,11 +175,11 @@ export function D2StoreFactory($i18next, dimInfoService) {
       return false;
     },
 
-    addItem: function(item) {
+    addItem(item: DimItem) {
       this.items.push(item);
       const bucketItems = this.buckets[item.location.id];
       bucketItems.push(item);
-      if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
+      if (item.location.type === 'LostItems' && bucketItems.length >= item.location.capacity) {
         dimInfoService.show('lostitems', {
           type: 'warning',
           title: $i18next.t('Postmaster.Limit'),
@@ -110,25 +195,25 @@ export function D2StoreFactory($i18next, dimInfoService) {
     },
 
     // Create a loadout from this store's equipped items
-    loadoutFromCurrentlyEquipped: function(name) {
+    loadoutFromCurrentlyEquipped(name: string): Loadout {
       const allItems = this.items
         .filter((item) => item.canBeInLoadout())
-        .map((i) => angular.copy(i));
+        .map(angularCopy);
       return {
         id: uuidv4(),
         classType: -1,
-        name: name,
+        name,
         items: _.groupBy(allItems, (i) => i.type.toLowerCase())
       };
     },
 
-    factionAlignment: function() {
+    factionAlignment() {
       return null;
     }
   };
 
   return {
-    makeCharacter(defs, character, mostRecentLastPlayed) {
+    makeCharacter(defs: D2ManifestDefinitions, character: DestinyCharacterComponent, mostRecentLastPlayed: Date): DimStore {
       const race = defs.Race[character.raceHash];
       const gender = defs.Gender[character.genderHash];
       const classy = defs.Class[character.classHash];
@@ -137,7 +222,7 @@ export function D2StoreFactory($i18next, dimInfoService) {
       const genderName = gender.displayProperties.name;
       const lastPlayed = new Date(character.dateLastPlayed);
 
-      const store = angular.extend(Object.create(StoreProto), {
+      const store: DimStore = Object.assign(Object.create(StoreProto), {
         destinyVersion: 2,
         id: character.characterId,
         icon: `https://www.bungie.net/${character.emblemPath}`,
@@ -150,9 +235,9 @@ export function D2StoreFactory($i18next, dimInfoService) {
         stats: getCharacterStatsData(defs.Stat, character.stats),
         class: getClass(classy.classType),
         classType: classy.classType,
-        className: className,
+        className,
         gender: genderName,
-        genderRace: genderRace,
+        genderRace,
         isVault: false
       });
 
@@ -161,16 +246,17 @@ export function D2StoreFactory($i18next, dimInfoService) {
       return store;
     },
 
-    makeVault(buckets, profileCurrencies) {
+    makeVault(buckets: DimInventoryBuckets, profileCurrencies: DestinyItemComponent[]): DimVault {
       const glimmer = _.find(profileCurrencies, (cur) => cur.itemHash === 3159615086);
       const legendary = _.find(profileCurrencies, (cur) => cur.itemHash === 1022552290);
+      const silver = _.find(profileCurrencies, (cur) => cur.itemHash === 3147280338);
       const currencies = {
         glimmer: glimmer ? glimmer.quantity : 0,
-        marks: legendary ? legendary.quantity : 0
-        // silver: _.find(profileCurrencies, (cur) => { return cur.itemHash === 2749350776; }).quantity
+        marks: legendary ? legendary.quantity : 0,
+        silver: silver ? silver.quantity : 0
       };
 
-      return angular.extend(Object.create(StoreProto), {
+      return Object.assign(Object.create(StoreProto), {
         destinyVersion: 2,
         id: 'vault',
         name: $i18next.t('Bucket.Vault'),
@@ -178,23 +264,30 @@ export function D2StoreFactory($i18next, dimInfoService) {
         current: false,
         className: $i18next.t('Bucket.Vault'),
         lastPlayed: new Date('2005-01-01T12:00:01Z'),
-        icon: require('app/images/vault.png'),
-        background: require('app/images/vault-background.png'),
+        icon: vaultIcon,
+        background: vaultBackground,
         items: [],
         legendaryMarks: currencies.marks,
         glimmer: currencies.glimmer,
         silver: currencies.silver,
         isVault: true,
         // Vault has different capacity rules
-        capacityForItem: function(item) {
+        capacityForItem(item: DimItem) {
           if (!item.bucket) {
             throw new Error("item needs a 'bucket' field");
           }
-          return buckets.byHash[item.bucket.hash].vaultBucket.capacity;
+          const vaultBucket = buckets.byHash[item.bucket.hash].vaultBucket;
+          return vaultBucket ? vaultBucket.capacity : 0;
         },
-        spaceLeftForItem: function(item) {
-          const openStacks = Math.max(0, this.capacityForItem(item) -
-                                      count(this.items, (i) => i.bucket.vaultBucket && (i.bucket.vaultBucket.id === item.bucket.vaultBucket.id)));
+        spaceLeftForItem(item: DimItem) {
+          if (!item.bucket.vaultBucket) {
+            return 0;
+          }
+          const vaultBucket = item.bucket.vaultBucket;
+          const usedSpace = item.bucket.vaultBucket
+            ? count(this.items, (i) => i.bucket.vaultBucket && (i.bucket.vaultBucket.id === vaultBucket.id))
+            : 0;
+          const openStacks = Math.max(0, this.capacityForItem(item) - usedSpace);
           const maxStackSize = item.maxStackSize || 1;
           if (maxStackSize === 1) {
             return openStacks;
@@ -204,14 +297,14 @@ export function D2StoreFactory($i18next, dimInfoService) {
             return (openStacks * maxStackSize) + stackSpace;
           }
         },
-        removeItem: function(item) {
+        removeItem(item): DimItem {
           const result = StoreProto.removeItem.call(this, item);
           if (item.location.vaultBucket) {
             this.d2VaultCounts[item.location.vaultBucket.id].count--;
           }
           return result;
         },
-        addItem: function(item) {
+        addItem(item: DimItem) {
           StoreProto.addItem.call(this, item);
           if (item.location.vaultBucket) {
             this.d2VaultCounts[item.location.vaultBucket.id].count++;
@@ -224,15 +317,20 @@ export function D2StoreFactory($i18next, dimInfoService) {
   /**
    * Compute character-level stats.
    */
-  function getCharacterStatsData(statDefs, stats) {
+  function getCharacterStatsData(
+    statDefs: LazyDefinition<DestinyStatDefinition>,
+    stats: {
+        [key: number]: number;
+    }
+  ): { [hash: number]: DimCharacterStat } {
     const statWhitelist = [2996146975, 392767087, 1943323491];
-    const ret = {};
+    const ret: { [hash: number]: DimCharacterStat } = {};
 
     // Fill in missing stats
     statWhitelist.forEach((statHash) => {
       const def = statDefs.get(statHash);
       const value = stats[statHash] || 0;
-      const stat = {
+      const stat: DimCharacterStat = {
         id: statHash,
         name: def.displayProperties.name,
         description: def.displayProperties.description,

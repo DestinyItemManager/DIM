@@ -1,11 +1,11 @@
+import { DimStore } from './d2-store-factory.service';
 import { BucketsService, DimInventoryBuckets, DimInventoryBucket } from './../../destiny2/d2-buckets.service';
 import { LazyDefinition, D2ManifestDefinitions, D2DefinitionsService } from './../../destiny2/d2-definitions.service';
-import { DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyInventoryComponent, DestinyItemInstanceComponent, ItemLocation, DestinyItemStatsComponent, DestinyStatDefinition, DestinyStat, DestinyItemInvestmentStatDefinition, DestinyClass, DestinyInventoryItemDefinition, DestinyClassDefinition, DestinyInventoryItemStatDefinition, DestinyItemQualityBlockDefinition, DestinyItemTierTypeInfusionBlock, DestinyItemObjectivesComponent, DestinyObjectiveDefinition, DestinyTalentGridDefinition, DestinyItemTalentGridComponent } from 'bungie-api-ts/destiny2';
+import { DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyInventoryComponent, DestinyItemInstanceComponent, ItemLocation, DestinyItemStatsComponent, DestinyStatDefinition, DestinyStat, DestinyItemInvestmentStatDefinition, DestinyClass, DestinyInventoryItemDefinition, DestinyClassDefinition, DestinyInventoryItemStatDefinition, DestinyItemQualityBlockDefinition, DestinyItemTierTypeInfusionBlock, DestinyItemObjectivesComponent, DestinyObjectiveDefinition, DestinyTalentGridDefinition, DestinyItemTalentGridComponent, DestinyItemSocketsComponent, DestinySocketCategoryDefinition, DestinySandboxPerkDefinition } from 'bungie-api-ts/destiny2';
 import { IPromise, extend } from 'angular';
 import * as _ from 'underscore';
 import { getClass } from './character-utils';
 import { sum } from '../../util';
-import { DimStore } from '../d2-stores.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -18,11 +18,11 @@ const tiers = [
   'Exotic'
 ];
 
-interface EnhancedStat extends DestinyStat {
+export interface EnhancedStat extends DestinyStat {
   stat: DestinyStatDefinition & { statName: string };
 }
 
-interface DimStat {
+export interface DimStat {
   base: number;
   bonus: number;
   statHash: number;
@@ -34,7 +34,7 @@ interface DimStat {
   bar: boolean;
 }
 
-interface DimObjective {
+export interface DimObjective {
   displayName: string;
   description: string;
   progress: number;
@@ -44,7 +44,7 @@ interface DimObjective {
   display: string;
 }
 
-interface DimGridNode {
+export interface DimGridNode {
   name: string;
   hash: number;
   description: string;
@@ -64,9 +64,32 @@ interface DimGridNode {
   hidden: boolean;
 }
 
-interface DimTalentGrid {
+export interface DimTalentGrid {
   nodes: DimGridNode[];
   complete: boolean;
+}
+
+export interface DimSocket {
+  plug: DestinyInventoryItemDefinition | null;
+  reusablePlugs: DestinyInventoryItemDefinition[];
+  enabled: boolean;
+  enableFailReasons: string;
+  plugOptions: DestinyInventoryItemDefinition[];
+  masterworkProgress: number | undefined;
+}
+
+export interface DimSocketCategory {
+  category: DestinySocketCategoryDefinition;
+  sockets: DimSocket[];
+}
+
+export interface DimSockets {
+  sockets: DimSocket[];
+  categories: DimSocketCategory[];
+}
+
+export interface DimPerk extends DestinySandboxPerkDefinition {
+  requirement: string;
 }
 
 export interface DimItem {
@@ -109,18 +132,17 @@ export interface DimItem {
   masterwork: boolean;
   classified: boolean;
   isInLoadout: boolean;
-  sockets?;
+  sockets: DimSockets | null;
   percentComplete: number;
   talentGrid?: DimTalentGrid | null;
   stats: DimStat[] | null;
   objectives: DimObjective[] | null;
-  quality;
   taggable: boolean;
   comparable: boolean;
   reviewable: boolean;
   isNew: boolean;
   dimInfo?;
-  perks?;
+  perks: DimPerk[] | null;
   basePower: number;
   index: string;
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
@@ -426,7 +448,6 @@ export function D2ItemFactory(
       talentGrid: null, // filled in later
       stats: null, // filled in later
       objectives: null, // filled in later
-      quality: null // filled in later
     });
 
     // *able
@@ -489,7 +510,7 @@ export function D2ItemFactory(
     }
 
     if (itemDef.perks && itemDef.perks.length) {
-      createdItem.perks = itemDef.perks.map((p) => {
+      createdItem.perks = itemDef.perks.map((p): DimPerk => {
         return { requirement: p.requirementDisplayString, ...defs.SandboxPerk.get(p.perkHash) };
       }).filter((p) => p.isDisplayable);
       if (createdItem.perks.length === 0) {
@@ -562,9 +583,6 @@ export function D2ItemFactory(
 
     if (!item.complete && item.percentComplete) {
       index += `-pc${Math.round(item.percentComplete * 100)}`;
-    }
-    if (item.quality) {
-      index += `-q${item.quality.min}`;
     }
     if (item.primStat && item.primStat.value) {
       index += `-ps${item.primStat.value}`;
@@ -725,7 +743,7 @@ export function D2ItemFactory(
       return null;
     }
 
-    const gridNodes = _.compact(talentGridDef.nodes.map((node) => {
+    const gridNodes = _.compact(talentGridDef.nodes.map((node): DimGridNode | undefined => {
       const talentNodeGroup = node;
       const talentNodeSelected = node.steps[0];
 
@@ -747,7 +765,7 @@ export function D2ItemFactory(
       const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
 
       // There's a lot more here, but we're taking just what we need
-      const gridNode: DimGridNode = {
+      return {
         name: nodeName,
         hash: talentNodeSelected.nodeStepHash,
         description: talentNodeSelected.displayProperties.description,
@@ -766,7 +784,6 @@ export function D2ItemFactory(
         // Some nodes don't show up in the grid, like purchased ascend nodes
         hidden: false
       };
-      return gridNode;
     })) as DimGridNode[];
 
     if (!gridNodes.length) {
@@ -774,7 +791,7 @@ export function D2ItemFactory(
     }
 
     // Fix for stuff that has nothing in early columns
-    const minByColumn = _.min(gridNodes.filter((n) => !n.hidden, (n) => n.column);
+    const minByColumn = _.min(gridNodes.filter((n) => !n.hidden, (n) => n.column));
     const minColumn = minByColumn.column;
     if (minColumn > 0) {
       gridNodes.forEach((node) => { node.column -= minColumn; });
@@ -790,49 +807,46 @@ export function D2ItemFactory(
     item: DestinyItemComponent,
     socketsMap: { [key: string]: DestinyItemSocketsComponent },
     defs: D2ManifestDefinitions,
-    itemDef: DestinyInventoryItemDefinition) {
-    if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length) {
+    itemDef: DestinyInventoryItemDefinition): DimSockets | null {
+    if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length || socketsMap[item.itemInstanceId]) {
       return null;
     }
-    let soc kets = socketsMap[item.itemInstanceId];
-    if (sockets) {
-      sockets = socketsMap[item.itemInstanceId].sockets;
-    }
+    const sockets = socketsMap[item.itemInstanceId].sockets;
     if (!sockets || !sockets.length) {
       return null;
     }
 
-    const realSockets = sockets.map((socket) => {
-      const plug = defs.InventoryItem.get(socket.plugHash);
-      let failReasons = (socket.enableFailIndexes || []).map((index) => plug.plug.enabledRules[index].failureMessage).join("\n");
+    const realSockets = sockets.map((socket): DimSocket => {
+      const plug = socket.plugHash ? defs.InventoryItem.get(socket.plugHash) : null;
+      let failReasons = plug ? (socket.enableFailIndexes || []).map((index) => plug.plug.enabledRules[index].failureMessage).join("\n") : '';
       if (failReasons.length) {
         failReasons = `\n\n${failReasons}`;
       }
-      const dimSocket = {
-        plug,
-        reusablePlugs: (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash)),
-        enabled: socket.isEnabled,
-        enableFailReasons: failReasons
-      };
-      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 && (!plug || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? dimSocket.reusablePlugs : [dimSocket.plug];
-      dimSocket.masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
+      const reusablePlugs = (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash));
+      const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? reusablePlugs : (plug ? [plug] : []);
+      const masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
 
-      return dimSocket;
+      return {
+        plug,
+        reusablePlugs,
+        enabled: socket.isEnabled,
+        enableFailReasons: failReasons,
+        plugOptions,
+        masterworkProgress
+      };
     });
 
-    const categories = itemDef.sockets.socketCategories.map((category) => {
+    const categories = itemDef.sockets.socketCategories.map((category): DimSocketCategory => {
       return {
         category: defs.SocketCategory.get(category.socketCategoryHash),
         sockets: category.socketIndexes.map((index) => realSockets[index])
       };
     });
 
-    const dimSockets = {
+    return {
       sockets: realSockets, // Flat list of sockets
       categories // Sockets organized by category
     };
-
-    return dimSockets;
   }
 
   function getBasePowerLevel(item: DimItem): number {

@@ -26,3 +26,8 @@ declare const $featureFlags: {
   /** Show drag and drop on dev only */
   dnd: boolean
 }
+
+declare module "*.png" {
+  const value: string;
+  export default value;
+}

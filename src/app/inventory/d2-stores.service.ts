@@ -1,4 +1,4 @@
-import { DimVault } from './d2-stores.service';
+import { DimStore, DimVault } from './store/d2-store-factory.service';
 import { DimInventoryBuckets, DimInventoryBucket } from './../destiny2/d2-buckets.service';
 import { D2ManifestDefinitions } from './../destiny2/d2-definitions.service';
 import { IPromise } from 'angular';
@@ -12,21 +12,6 @@ import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
 import { D2DefinitionsService } from '../destiny2/d2-definitions.service';
 import { DestinyProfileResponse, DestinyCharacterComponent, DestinyInventoryComponent, DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyProgression } from 'bungie-api-ts/destiny2';
 import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
-
-// TODO: replace this with a "Profile" concept
-export interface DimStore {
-  id: string;
-  name: string;
-  items: DimItem[];
-  isVault: boolean;
-  vault?: DimStore;
-  buckets: { [bucketId: number]: DimItem[] };
-  updateCharacterInfo(defs, bStore): IPromise<DimStore[]>;
-}
-
-export interface DimVault extends DimStore {
-  d2VaultCounts: { [bucketId: number]: { count: number; bucket: DimInventoryBucket } };
-}
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
