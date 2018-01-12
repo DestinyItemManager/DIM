@@ -464,7 +464,8 @@
     "Take": "Take",
     "TrackUntrack_Track": "Track {{itemType}}",
     "TrackUntrack_Untrack": "Untrack {{itemType}}",
-    "Vault": "Vault"
+    "Vault": "Vault",
+    "Infuse": "Infuse"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
