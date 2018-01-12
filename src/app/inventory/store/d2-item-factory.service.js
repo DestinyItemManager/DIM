@@ -54,9 +54,10 @@ export function D2ItemFactory(
 
   // Mapping from itemCategoryHash to our category strings for filtering.
   const categoryFromHash = {
-    // These two types are missing.
+    // These three types are missing.
     // ???: 'CATEGORY_GRENADE_LAUNCHER',
     // ???: 'CATEGORY_SUBMACHINEGUN',
+    // ???: 'CATEGORY_TRACE_RIFLE',
     5: 'CATEGORY_AUTO_RIFLE',
     6: 'CATEGORY_HAND_CANNON',
     7: 'CATEGORY_PULSE_RIFLE',
@@ -75,6 +76,7 @@ export function D2ItemFactory(
   const categoryFromInfusionHash = {
     3879234379: 'CATEGORY_GRENADE_LAUNCHER',
     3499784695: 'CATEGORY_SUBMACHINEGUN',
+    522776512 : 'CATEGORY_AUTO_RIFLE', // Trace Rifle
   };
 
   // Prototype for Item objects - add methods to this to add them to all
