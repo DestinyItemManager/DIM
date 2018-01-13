@@ -1,11 +1,32 @@
-import { DimStore } from './d2-store-factory.service';
-import { BucketsService, DimInventoryBuckets, DimInventoryBucket } from './../../destiny2/d2-buckets.service';
-import { LazyDefinition, D2ManifestDefinitions, D2DefinitionsService } from './../../destiny2/d2-definitions.service';
-import { DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyItemInstanceComponent, ItemLocation, DestinyItemStatsComponent, DestinyStatDefinition, DestinyStat, DestinyItemInvestmentStatDefinition, DestinyClass, DestinyInventoryItemDefinition, DestinyInventoryItemStatDefinition, DestinyItemQualityBlockDefinition, DestinyItemTierTypeInfusionBlock, DestinyItemObjectivesComponent, DestinyObjectiveDefinition, DestinyTalentGridDefinition, DestinyItemTalentGridComponent, DestinyItemSocketsComponent, DestinySocketCategoryDefinition, DestinySandboxPerkDefinition } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
+import {
+  DestinyClass,
+  DestinyInventoryItemDefinition,
+  DestinyInventoryItemStatDefinition,
+  DestinyItemComponent,
+  DestinyItemComponentSetOfint64,
+  DestinyItemInstanceComponent,
+  DestinyItemInvestmentStatDefinition,
+  DestinyItemObjectivesComponent,
+  DestinyItemQualityBlockDefinition,
+  DestinyItemSocketsComponent,
+  DestinyItemStatsComponent,
+  DestinyItemTalentGridComponent,
+  DestinyItemTierTypeInfusionBlock,
+  DestinyObjectiveDefinition,
+  DestinySandboxPerkDefinition,
+  DestinySocketCategoryDefinition,
+  DestinyStat,
+  DestinyStatDefinition,
+  DestinyTalentGridDefinition,
+  ItemLocation
+  } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { getClass } from './character-utils';
 import { sum } from '../../util';
+import { BucketsService, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
+import { D2DefinitionsService, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { getClass } from './character-utils';
+import { DimStore } from './d2-store-factory.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [

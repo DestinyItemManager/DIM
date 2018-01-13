@@ -1,13 +1,16 @@
-import * as React from 'react';
-import * as _ from 'underscore';
+import {
+  DestinyFactionDefinition,
+  DestinyFactionProgression,
+  DestinyInventoryComponent,
+  DestinyItemComponent
+  } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
-
-import { DestinyFactionProgression, DestinyInventoryComponent, DestinyItemComponent, DestinyFactionDefinition } from 'bungie-api-ts/destiny2';
-import { sum } from '../util';
-import { bungieNetPath } from '../dim-ui/bungie-image';
-import './faction.scss';
+import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { bungieNetPath } from '../dim-ui/bungie-image';
+import { sum } from '../util';
+import './faction.scss';
 
 interface FactionProps {
   factionProgress: DestinyFactionProgression;

@@ -1,7 +1,14 @@
-import { IHttpResponse, IRootScopeService, IPromise, IHttpService, ITimeoutService, IRequestConfig } from "angular";
-import { ServerResponse, PlatformErrorCodes } from 'bungie-api-ts/common';
-import { StateService } from "@uirouter/angularjs";
-import { HttpClientConfig } from "bungie-api-ts/http";
+import { StateService } from '@uirouter/angularjs';
+import {
+  IHttpResponse,
+  IHttpService,
+  IPromise,
+  IRequestConfig,
+  IRootScopeService,
+  ITimeoutService
+  } from 'angular';
+import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
+import { HttpClientConfig } from 'bungie-api-ts/http';
 import { apiKey } from './bungie-api-utils';
 
 declare module "angular" {

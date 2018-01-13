@@ -1,4 +1,4 @@
-import { DimItem } from './../inventory/store/d2-item-factory.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 export const enum LoadoutClass {
   any = -1,

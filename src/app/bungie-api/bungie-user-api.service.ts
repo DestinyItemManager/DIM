@@ -1,5 +1,5 @@
 import { IPromise } from 'angular';
-import { UserMembershipData, getMembershipDataById, BungieMembershipType } from 'bungie-api-ts/user';
+import { BungieMembershipType, getMembershipDataById, UserMembershipData } from 'bungie-api-ts/user';
 import { BungieServiceHelperType } from './bungie-service-helper.service';
 
 export interface BungieUserApiService {

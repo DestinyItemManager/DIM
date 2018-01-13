@@ -1,5 +1,5 @@
 import { IPromise } from 'angular';
-import { DestinyInventoryBucketDefinition, BucketCategory } from 'bungie-api-ts/destiny2';
+import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { D2DefinitionsService } from './d2-definitions.service';
 

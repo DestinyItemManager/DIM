@@ -1,10 +1,9 @@
-import { module } from 'angular';
 import { StateProvider } from '@uirouter/angularjs';
+import { module } from 'angular';
 import { react2angular } from 'react2angular';
-
 import bungieApiModule from '../bungie-api/bungie-api.module';
-import { ProgressService } from './progress.service';
 import { Progress } from './progress';
+import { ProgressService } from './progress.service';
 
 // This is the Destiny 2 "Progress" page with milestones and factions.
 export const progressModule = module('progressModule', [bungieApiModule])

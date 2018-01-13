@@ -1,6 +1,26 @@
-import * as _ from 'underscore';
-import { DestinyInventoryItemDefinition, DestinyItemCategoryDefinition, DestinyActivityDefinition, DestinyActivityTypeDefinition, DestinyObjectiveDefinition, DestinySandboxPerkDefinition, DestinyStatDefinition, DestinyTalentGridDefinition, DestinyProgressionDefinition, DestinyInventoryBucketDefinition, DestinyClassDefinition, DestinyGenderDefinition, DestinyRaceDefinition, DestinyFactionDefinition, DestinyItemTierTypeDefinition, DestinyMilestoneDefinition, DestinyVendorDefinition, DestinySocketCategoryDefinition, DestinySocketTypeDefinition } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
+import {
+  DestinyActivityDefinition,
+  DestinyActivityTypeDefinition,
+  DestinyClassDefinition,
+  DestinyFactionDefinition,
+  DestinyGenderDefinition,
+  DestinyInventoryBucketDefinition,
+  DestinyInventoryItemDefinition,
+  DestinyItemCategoryDefinition,
+  DestinyItemTierTypeDefinition,
+  DestinyMilestoneDefinition,
+  DestinyObjectiveDefinition,
+  DestinyProgressionDefinition,
+  DestinyRaceDefinition,
+  DestinySandboxPerkDefinition,
+  DestinySocketCategoryDefinition,
+  DestinySocketTypeDefinition,
+  DestinyStatDefinition,
+  DestinyTalentGridDefinition,
+  DestinyVendorDefinition
+  } from 'bungie-api-ts/destiny2';
+import * as _ from 'underscore';
 
 const lazyTables = [
   'InventoryItem', // DestinyInventoryItemDefinition

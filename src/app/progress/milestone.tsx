@@ -1,11 +1,22 @@
-import * as React from 'react';
-import * as _ from 'underscore';
+import {
+  DestinyActivityDefinition,
+  DestinyChallengeStatus,
+  DestinyDisplayPropertiesDefinition,
+  DestinyMilestone,
+  DestinyMilestoneDefinition,
+  DestinyMilestoneQuest,
+  DestinyMilestoneRewardCategoryDefinition,
+  DestinyMilestoneRewardEntry,
+  DestinyObjectiveProgress,
+  DestinyQuestStatus
+  } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import { DestinyMilestone, DestinyMilestoneQuest, DestinyDisplayPropertiesDefinition, DestinyObjectiveProgress, DestinyChallengeStatus, DestinyMilestoneRewardEntry, DestinyQuestStatus, DestinyActivityDefinition, DestinyMilestoneRewardEntryDefinition, DestinyMilestoneRewardCategoryDefinition, DestinyMilestoneDefinition } from 'bungie-api-ts/destiny2';
+import * as React from 'react';
+import * as _ from 'underscore';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
 import './milestone.scss';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 interface MilestoneProps {
   milestone: DestinyMilestone;
@@ -27,7 +38,6 @@ export function Milestone(props: MilestoneProps) {
         {milestone.availableQuests.map((availableQuest) =>
           <AvailableQuest
             defs={defs}
-            milestone={milestone}
             milestoneDef={milestoneDef}
             availableQuest={availableQuest}
             key={availableQuest.questItemHash}
@@ -60,7 +70,7 @@ export function Milestone(props: MilestoneProps) {
           <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
           <div className="milestone-description">{milestoneDef.displayProperties.description}</div>
           {rewards.entries.map((rewardEntry) =>
-            <RewardActivity key={rewardEntry.rewardEntryHash} defs={defs} rewardEntry={rewardEntry} milestoneRewardDef={milestoneRewardDef} />
+            <RewardActivity key={rewardEntry.rewardEntryHash} rewardEntry={rewardEntry} milestoneRewardDef={milestoneRewardDef} />
           )}
         </div>
       </div>
@@ -71,7 +81,6 @@ export function Milestone(props: MilestoneProps) {
 }
 
 interface RewardActivityProps {
-  defs: D2ManifestDefinitions;
   rewardEntry: DestinyMilestoneRewardEntry;
   milestoneRewardDef: DestinyMilestoneRewardCategoryDefinition;
 }
@@ -81,7 +90,7 @@ interface RewardActivityProps {
  * far this is only used for the "Clan Objectives" milestone.
  */
 function RewardActivity(props: RewardActivityProps) {
-  const { defs, rewardEntry, milestoneRewardDef } = props;
+  const { rewardEntry, milestoneRewardDef } = props;
 
   const rewardDef = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
 
@@ -99,7 +108,6 @@ function RewardActivity(props: RewardActivityProps) {
 
 interface AvailableQuestProps {
   defs: D2ManifestDefinitions;
-  milestone: DestinyMilestone;
   milestoneDef: DestinyMilestoneDefinition;
   availableQuest: DestinyMilestoneQuest;
 }
@@ -108,7 +116,7 @@ interface AvailableQuestProps {
  * Most milestones are represented as a quest, with some objectives and a reward associated with them.
  */
 function AvailableQuest(props: AvailableQuestProps) {
-  const { defs, milestone, milestoneDef, availableQuest } = props;
+  const { defs, milestoneDef, availableQuest } = props;
 
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const displayProperties: DestinyDisplayPropertiesDefinition = questDef.displayProperties || milestoneDef.displayProperties;

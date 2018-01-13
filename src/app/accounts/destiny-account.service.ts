@@ -1,8 +1,8 @@
-import { PLATFORMS } from '../bungie-api/platforms';
-import { BungieMembershipType } from '../../../../bungie-api-ts/lib/destiny2/index';
 import { IPromise } from 'angular';
-import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
+import { BungieMembershipType } from 'bungie-api-ts/common';
 import { UserMembershipData } from 'bungie-api-ts/user';
+import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
+import { PLATFORMS } from '../bungie-api/platforms';
 
 /** A specific Destiny account (one per platform and Destiny version) */
 export interface DestinyAccount {

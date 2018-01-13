@@ -1,18 +1,25 @@
-import { DimStore } from './d2-store-factory.service';
-import { IPromise, copy as angularCopy } from 'angular';
+import { copy as angularCopy, IPromise } from 'angular';
+import {
+  DestinyCharacterComponent,
+  DestinyClass,
+  DestinyItemComponent,
+  DestinyProgression,
+  DestinyStatDefinition
+  } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
-import { sum, count } from '../../util';
+import { bungieNetPath } from '../../dim-ui/bungie-image';
+import { count, sum } from '../../util';
+import { DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
+import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
-import { DestinyCharacterComponent, DestinyStatDefinition, DestinyItemComponent, DestinyClass } from 'bungie-api-ts/destiny2';
-import { D2ManifestDefinitions, LazyDefinition } from './../../destiny2/d2-definitions.service';
-import { Loadout } from './../../loadout/loadout.service';
-import { DimInventoryBucket, DimInventoryBuckets } from './../../destiny2/d2-buckets.service';
 import { DimItem } from './d2-item-factory.service';
-// tslint:disable-next-line:no-implicit-dependencies
-import vaultIcon from 'app/images/vault.png';
+import { DimStore } from './d2-store-factory.service';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultBackground from 'app/images/vault-background.png';
+// tslint:disable-next-line:no-implicit-dependencies
+import vaultIcon from 'app/images/vault.png';
 
 export interface DimCharacterStat {
   id: number;
@@ -48,8 +55,11 @@ export interface DimStore {
   className: string;
   gender: string;
   genderRace: string;
+  progression: null | {
+    progressions: { [key: number]: DestinyProgression };
+  };
 
-  updateCharacterInfo(defs, bStore): IPromise<DimStore[]>;
+  updateCharacterInfo(defs: D2ManifestDefinitions, bStore: DestinyCharacterComponent): IPromise<DimStore[]>;
   amountOfItem(item: DimItem): number;
   /**
    * How much of items like this item can fit in this store? For
@@ -78,6 +88,7 @@ export interface DimStore {
 
 export interface DimVault extends DimStore {
   d2VaultCounts: { [bucketId: number]: { count: number; bucket: DimInventoryBucket } };
+  vaultCounts: { [category: string]: number };
 
   legendaryMarks: number;
   glimmer: number;
@@ -149,8 +160,8 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
     updateCharacterInfo(defs: D2ManifestDefinitions, character: DestinyCharacterComponent) {
       this.level = character.levelProgression.level; // Maybe?
       this.powerLevel = character.light;
-      this.background = `https://www.bungie.net/${character.emblemBackgroundPath}`;
-      this.icon = `https://www.bungie.net/${character.emblemPath}`;
+      this.background = bungieNetPath(character.emblemBackgroundPath);
+      this.icon = bungieNetPath(character.emblemPath);
       this.stats = { ...this.stats, ...getCharacterStatsData(defs.Stat, character.stats) };
     },
 
@@ -225,10 +236,10 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
       const store: DimStore = Object.assign(Object.create(StoreProto), {
         destinyVersion: 2,
         id: character.characterId,
-        icon: `https://www.bungie.net/${character.emblemPath}`,
+        icon: bungieNetPath(character.emblemPath),
         current: mostRecentLastPlayed.getTime() === lastPlayed.getTime(),
         lastPlayed,
-        background: `https://www.bungie.net/${character.emblemBackgroundPath}`,
+        background: bungieNetPath(character.emblemBackgroundPath),
         level: character.levelProgression.level, // Maybe?
         percentToNextLevel: character.levelProgression.progressToNextLevel / character.levelProgression.nextLevelAt,
         powerLevel: character.light,
@@ -335,7 +346,7 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
         name: def.displayProperties.name,
         description: def.displayProperties.description,
         value,
-        icon: `https://www.bungie.net${def.displayProperties.icon}`,
+        icon: bungieNetPath(def.displayProperties.icon),
         tiers: [value],
         tierMax: 10,
         tier: 0

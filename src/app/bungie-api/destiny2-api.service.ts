@@ -1,10 +1,23 @@
-import * as _ from 'underscore';
-import { DimError, BungieServiceHelperType } from './bungie-service-helper.service';
-import { DestinyAccount } from './../accounts/destiny-account.service';
-import { DestinyComponentType, DestinyManifest, DestinyProfileResponse, DestinyEquipItemResults, getDestinyManifest, getProfile as getProfileApi, transferItem, pullFromPostmaster, ServerResponse, equipItem, equipItems as equipItemsApi, setItemLockState } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
+import {
+  DestinyComponentType,
+  DestinyEquipItemResults,
+  DestinyManifest,
+  DestinyProfileResponse,
+  equipItem,
+  equipItems as equipItemsApi,
+  getDestinyManifest,
+  getProfile as getProfileApi,
+  pullFromPostmaster,
+  ServerResponse,
+  setItemLockState,
+  transferItem
+  } from 'bungie-api-ts/destiny2';
+import * as _ from 'underscore';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { BungieServiceHelperType, DimError } from './bungie-service-helper.service';
 
 export interface Destiny2ApiService {
   getManifest(): IPromise<DestinyManifest>;
@@ -25,7 +38,8 @@ export interface Destiny2ApiService {
 export function Destiny2Api(
   BungieServiceHelper: BungieServiceHelperType,
   dimState,
-  $i18next): Destiny2ApiService {
+  $i18next
+): Destiny2ApiService {
   'ngInject';
   const { httpAdapter, httpAdapterWithRetry } = BungieServiceHelper;
 
@@ -86,8 +100,7 @@ export function Destiny2Api(
    */
   function getCharacters(platform): IPromise<DestinyProfileResponse> {
     return getProfile(platform,
-      DestinyComponentType.Characters,
-      DestinyComponentType.CharacterInventories
+      DestinyComponentType.Characters
     );
   }
 

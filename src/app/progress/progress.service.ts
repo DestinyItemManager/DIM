@@ -1,11 +1,19 @@
-import { D2ManifestDefinitions } from './../destiny2/d2-definitions.service';
-import * as _ from 'underscore';
-import { Subject, ReplaySubject, ConnectableObservable } from '@reactivex/rxjs';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
-import { DestinyCharacterComponent, DestinyItemComponentSetOfint64, DictionaryComponentResponse, DestinyCharacterProgressionComponent, DestinyInventoryComponent, SingleComponentResponse, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { ConnectableObservable, ReplaySubject, Subject } from '@reactivex/rxjs';
+import {
+  DestinyCharacterComponent,
+  DestinyCharacterProgressionComponent,
+  DestinyInventoryComponent,
+  DestinyItemComponentSetOfint64,
+  DestinyProfileResponse,
+  DictionaryComponentResponse,
+  SingleComponentResponse
+  } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
-import { D2DefinitionsService } from '../destiny2/d2-definitions.service';
+import * as _ from 'underscore';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
+import { D2DefinitionsService } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;

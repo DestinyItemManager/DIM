@@ -1,18 +1,29 @@
-import * as React from 'react';
-import * as _ from 'underscore';
-import { ProgressService, ProgressProfile } from './progress.service';
-import { IScope } from 'angular';
-import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Subscription } from '@reactivex/rxjs';
-import { CharacterTile, characterIsCurrent } from './character-tile';
-import { Milestone } from './milestone';
-import { Faction } from './faction';
-import { Quest } from './quest';
-import { DestinyCharacterComponent, DestinyMilestone, DestinyFactionProgression, DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
+import { IScope } from 'angular';
+import {
+  DestinyCharacterComponent,
+  DestinyFactionProgression,
+  DestinyItemComponent,
+  DestinyMilestone,
+  DestinyObjectiveProgress
+  } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
-import { ViewPager, Frame, Track, View } from 'react-view-pager';
-import { isPhonePortraitStream, isPhonePortrait } from '../mediaQueries';
+import * as React from 'react';
+import {
+  Frame,
+  Track,
+  View,
+  ViewPager
+  } from 'react-view-pager';
+import * as _ from 'underscore';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { isPhonePortrait, isPhonePortraitStream } from '../mediaQueries';
+import { characterIsCurrent, CharacterTile } from './character-tile';
+import { Faction } from './faction';
+import { Milestone } from './milestone';
 import './progress.scss';
+import { ProgressProfile, ProgressService } from './progress.service';
+import { Quest } from './quest';
 
 /* Label isn't used, but it helps us understand what each one is */
 const progressionMeta = {
@@ -112,7 +123,7 @@ export class Progress extends React.Component<Props, State> {
       return <div className="progress dim-page">Loading...</div>;
     }
 
-    const { defs, profileInfo } = this.state.progress;
+    const { defs } = this.state.progress;
 
     const characters = this.sortedCharacters();
 
@@ -282,7 +293,7 @@ export class Progress extends React.Component<Props, State> {
    * Get all the factions to show for a particular character.
    */
   private factionsForCharacter(character: DestinyCharacterComponent): DestinyFactionProgression[] {
-    const { defs, profileInfo } = this.state.progress!;
+    const { profileInfo } = this.state.progress!;
 
     const allFactions: DestinyFactionProgression[] = Object.values(profileInfo.characterProgressions.data[character.characterId].factions);
     return _.sortBy(allFactions, (f) => progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999);
@@ -315,7 +326,7 @@ export class Progress extends React.Component<Props, State> {
    * and sometimes they are disassociated and stored in characterProgressions.
    */
   private objectivesForItem(character: DestinyCharacterComponent, item: DestinyItemComponent): DestinyObjectiveProgress[] {
-    const { defs, profileInfo } = this.state.progress!;
+    const { profileInfo } = this.state.progress!;
 
     const objectives = item.itemInstanceId ? profileInfo.itemComponents.objectives.data[item.itemInstanceId] : undefined;
     if (objectives) {

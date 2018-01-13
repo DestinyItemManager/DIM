@@ -1,13 +1,12 @@
-import * as React from 'react';
-import * as _ from 'underscore';
+import { DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
-import { DestinyObjectiveProgress, DestinyItemComponent } from 'bungie-api-ts/destiny2';
-import { sum } from '../util';
 import { t } from 'i18next';
-import { percent } from '../inventory/dimPercentWidth.directive';
-import { BungieImage } from '../dim-ui/bungie-image';
-import './quest.scss';
+import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { BungieImage } from '../dim-ui/bungie-image';
+import { percent } from '../inventory/dimPercentWidth.directive';
+import { sum } from '../util';
+import './quest.scss';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;

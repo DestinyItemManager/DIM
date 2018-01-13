@@ -1,37 +1,46 @@
-import { DimStore, DimVault } from './store/d2-store-factory.service';
-import { DimInventoryBuckets } from './../destiny2/d2-buckets.service';
-import { D2ManifestDefinitions } from './../destiny2/d2-definitions.service';
-import { IPromise } from 'angular';
+import { BehaviorSubject, Subject } from '@reactivex/rxjs';
+import { StateParams } from '@uirouter/angularjs';
+import { IPromise, IRootScopeService } from 'angular';
+import {
+  DestinyCharacterComponent,
+  DestinyItemComponent,
+  DestinyItemComponentSetOfint64,
+  DestinyProfileResponse,
+  DestinyProgression
+  } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { Subject, BehaviorSubject } from '@reactivex/rxjs';
-
-import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
-import { optimalLoadout } from '../loadout/loadout-utils';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
+import { PLATFORMS } from '../bungie-api/platforms';
 import { D2DefinitionsService } from '../destiny2/d2-definitions.service';
-import { DestinyProfileResponse, DestinyCharacterComponent, DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyProgression } from 'bungie-api-ts/destiny2';
+import { bungieNetPath } from '../dim-ui/bungie-image';
+import { optimalLoadout } from '../loadout/loadout-utils';
+import { flatMap } from '../util';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
+import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
  * consolidate them, or at least organize them better.
  */
 export function D2StoresService(
-  $rootScope,
+  $rootScope: IRootScopeService,
   $q,
   Destiny2Api: Destiny2ApiService,
   dimPlatformService,
   D2Definitions: D2DefinitionsService,
-  D2BucketsService,
+  D2BucketsService: BucketsService,
   dimItemInfoService,
   D2ManifestService,
   $i18next,
   toaster,
-  D2StoreFactory,
+  D2StoreFactory: D2StoreFactoryType,
   D2ItemFactory: D2ItemFactoryType,
   NewItemsService,
-  $stateParams,
+  $stateParams: StateParams,
   loadingTracker,
   dimDestinyTrackerService
 ) {
@@ -98,13 +107,15 @@ export function D2StoresService(
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  function updateCharacters(account) {
+  function updateCharacters(account: DestinyAccount) {
     // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
       if ($stateParams.membershipId && $stateParams.platformType) {
         account = {
           membershipId: $stateParams.membershipId,
-          platformType: $stateParams.platformType
+          platformType: $stateParams.platformType,
+          displayName: 'Unknown',
+          platformLabel: PLATFORMS[$stateParams.platformType]
         };
       } else {
         throw new Error("Don't know membership ID and platform type");
@@ -114,7 +125,7 @@ export function D2StoresService(
     return $q.all([
       D2Definitions.getDefinitions(),
       Destiny2Api.getCharacters(account)
-    ]).then(([defs, profileInfo]) => {
+    ]).then(([defs, profileInfo]: [D2ManifestDefinitions, DestinyProfileResponse]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
           const bStore = profileInfo.characters.data[dStore.id];
@@ -283,9 +294,7 @@ export function D2StoresService(
     const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
-    if (progressions) {
-      store.progression = { progressions };
-    }
+    store.progression = progressions ? { progressions } : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
     let items = characterInventory.concat(_.values(characterEquipment));
@@ -411,7 +420,7 @@ export function D2StoresService(
         hasClassified,
         description: def.displayProperties.description,
         value: hasClassified ? `${maxBasePower}*` : maxBasePower,
-        icon: `https://www.bungie.net${def.displayProperties.icon}`,
+        icon: bungieNetPath(def.displayProperties.icon),
         tiers: [maxBasePower],
         tierMax: 330,
         tier: 0
