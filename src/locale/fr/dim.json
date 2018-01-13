@@ -271,15 +271,18 @@
     "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet"
   },
   "Infusion": {
-    "BringGear": "Cela amènera l'équipement à:",
+    "BringGear": "Apportera {{name}} à:",
     "Calc": "Calculateur d'infusion",
+    "InfuseSource": "Sélectionner un objet dans lequel infuser; consume {{name}}:",
+    "InfuseTarget": "Sélectionner un objet pour infuser {{name}}:",
     "Infusion": "Chercheur de Fuel à Infusion",
     "InfusionMaterials": "Matériels d'Infusion",
     "LockedItems": "Inclure les objets \"verrouillés\"",
     "NoItems": "Pas d'objets infusibles disponibles.",
     "NoTransfer": "Transférer matériel d'infusion\n{{target}} ne peut pas être déplacé.",
     "ShowItems": "Afficher les objets infusibles sur tous les personnages et le coffre",
-    "TransferItems": "Transférer objets"
+    "TransferItems": "Transférer objets",
+    "Uninfusable": "Cet objet ne peut pas être infusé."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les tags et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était: {{error}}.",
@@ -450,6 +453,7 @@
     "Consolidate": "Réunir",
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Armer",
+    "Infuse": "Infuser",
     "LockUnlock_Lock": "Bloquer {{itemType}}",
     "LockUnlock_Unlock": "Débloquer {{itemType}}",
     "OverviewTab": "Vue d'ensemble",

@@ -453,6 +453,7 @@
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "Lock {{itemType}}",
     "LockUnlock_Unlock": "Unlock {{itemType}}",
     "OverviewTab": "Overview",
@@ -464,8 +465,7 @@
     "Take": "Take",
     "TrackUntrack_Track": "Track {{itemType}}",
     "TrackUntrack_Untrack": "Untrack {{itemType}}",
-    "Vault": "Vault",
-    "Infuse": "Infuse"
+    "Vault": "Vault"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",

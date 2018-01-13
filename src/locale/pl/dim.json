@@ -271,7 +271,7 @@
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
-    "BringGear": "Will bring the gear to:",
+    "BringGear": "Will bring {{name}} to:",
     "Calc": "Infusion calculator",
     "InfuseSource": "Select item to infuse into; consumes {{name}}:",
     "InfuseTarget": "Select item to infuse {{name}}:",
@@ -453,6 +453,7 @@
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "Lock {{itemType}}",
     "LockUnlock_Unlock": "Unlock {{itemType}}",
     "OverviewTab": "Overview",

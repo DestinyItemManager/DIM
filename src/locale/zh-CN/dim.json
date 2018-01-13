@@ -271,15 +271,18 @@
     "ToggleDetails": "显示物品详情开关"
   },
   "Infusion": {
-    "BringGear": "Will bring the gear to:",
+    "BringGear": "Will bring {{name}} to:",
     "Calc": "灌注计算器",
+    "InfuseSource": "Select item to infuse into; consumes {{name}}:",
+    "InfuseTarget": "Select item to infuse {{name}}:",
     "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "灌注材料",
     "LockedItems": "包括 \"锁定\" 项目",
     "NoItems": "没有可灌注物品",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
     "ShowItems": "Show infusable items across all characters and vault",
-    "TransferItems": "转移物品"
+    "TransferItems": "转移物品",
+    "Uninfusable": "This item cannot be infused."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {{error}}.",
@@ -450,6 +453,7 @@
     "Consolidate": "合并",
     "DistributeEvenly": "均匀分布",
     "Equip": "装备",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "Lock {{itemType}}",
     "LockUnlock_Unlock": "Unlock {{itemType}}",
     "OverviewTab": "概述",
