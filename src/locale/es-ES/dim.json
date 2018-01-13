@@ -271,15 +271,18 @@
     "ToggleDetails": "Mostrar detalles completos de objeto"
   },
   "Infusion": {
-    "BringGear": "Traerá el equipo a:",
+    "BringGear": "Will bring {{name}} to:",
     "Calc": "Calculador de Infusión",
+    "InfuseSource": "Select item to infuse into; consumes {{name}}:",
+    "InfuseTarget": "Select item to infuse {{name}}:",
     "Infusion": "Buscador de Combustible de Infusión",
     "InfusionMaterials": "Materiales para Infusionar",
     "LockedItems": "Incluir objetos 'bloqueados'",
     "NoItems": "No hay objetos disponibles para infusionar.",
     "NoTransfer": "El material para infusionar\n{{target}} no puede ser movido.",
     "ShowItems": "Mostrar objetos de infusión en el Depósito y todos los personajes",
-    "TransferItems": "Transferir objetos"
+    "TransferItems": "Transferir objetos",
+    "Uninfusable": "This item cannot be infused."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Ha habido un problema al guardar información específica de DIM para un objeto.\nUn problema es del límite de datos que pueden ser guardados - es por esto que etiquetas y notas no han salido de la versión Beta. El error fue: {{error}}.",
@@ -450,6 +453,7 @@
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Poner",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "Bloquear {{itemType}}",
     "LockUnlock_Unlock": "Desbloquear {{itemType}}",
     "OverviewTab": "Resumen",

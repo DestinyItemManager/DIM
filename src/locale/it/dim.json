@@ -271,15 +271,18 @@
     "ToggleDetails": "Bottone per mostrare o meno tutti i dettagli dell'oggetto"
   },
   "Infusion": {
-    "BringGear": "Porterà l'oggetto a:",
+    "BringGear": "Porterà {{name}} a:",
     "Calc": "Calcolatrice per Infusione",
+    "InfuseSource": "Selezionare oggetto da infondere; consuma {{name}}:",
+    "InfuseTarget": "Selezionare oggetto da infondere {{name}}:",
     "Infusion": "Trova oggetti per infusione",
     "InfusionMaterials": "Materiali da Infusione",
     "LockedItems": "Include oggetti 'bloccati'",
     "NoItems": "Non è disponibile nessun oggetto per l'infusione.",
     "NoTransfer": "Trasferimento materiale per infusione\n {{target}} non può essere spostato.",
     "ShowItems": "Mostra gli oggetti infondibili di tutti i personaggi e del deposito",
-    "TransferItems": "Trasferisci oggetti"
+    "TransferItems": "Trasferisci oggetti",
+    "Uninfusable": "Questo oggetto non può essere infuso."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Si è presentato un problema salvando informazioni specifiche di DIM riguardo un oggetto. Un problema è dato dal fatto che è presente un limite sul numero di dati che possono essere conservati. Per questo motivo i tag e le note non sono ancora state consentite al di fuori della versione Beta. L'errore era: {{error}}.",
@@ -450,6 +453,7 @@
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "Blocca {{itemType}}",
     "LockUnlock_Unlock": "Sblocca {{itemType}}",
     "OverviewTab": "Panoramica",

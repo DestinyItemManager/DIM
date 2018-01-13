@@ -271,15 +271,18 @@
     "ToggleDetails": "Zeige/verstecke vollständige Item-Details"
   },
   "Infusion": {
-    "BringGear": "Bringt die Ausrüstung auf:",
+    "BringGear": "Bringt {{name}} auf:",
     "Calc": "Infusionsrechner",
+    "InfuseSource": "Item zum Rein-Infundieren auswählen; verbraucht {{name}}:",
+    "InfuseTarget": "Item zum Infundieren auswählen {{name}}:",
     "Infusion": "Finde Infusions-Material",
     "InfusionMaterials": "Infusions-Material",
     "LockedItems": "'Gesperrte' Items einbeziehen",
     "NoItems": "Keine infundierbaren Items verfügbar.",
     "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
     "ShowItems": "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
-    "TransferItems": "Übertrage Items"
+    "TransferItems": "Übertrage Items",
+    "Uninfusable": "Dieses Item kann nicht infundiert werden."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item aufgetreten. Es gibt ein Limit wie viel Daten gespeichert werden können. Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {{error}}.",
@@ -450,6 +453,7 @@
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausr.",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "{{itemType}} sperren",
     "LockUnlock_Unlock": "{{itemType}} entsperren",
     "OverviewTab": "Übersicht",

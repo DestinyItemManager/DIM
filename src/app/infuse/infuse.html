@@ -50,7 +50,7 @@
     </div>
 
     <div class="gearsContainer black">
-      <div ng-show="vm.infused != 0">
+      <div ng-if="vm.infused != 0">
         <div class="infusionPlan">
           <div class="infusionEquation">
             <dim-simple-item class="infusedItem" item-data="vm.source"></dim-simple-item>
