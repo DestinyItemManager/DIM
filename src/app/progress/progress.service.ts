@@ -12,8 +12,7 @@ import { t } from 'i18next';
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
-import { D2DefinitionsService } from '../destiny2/d2-definitions.service';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;

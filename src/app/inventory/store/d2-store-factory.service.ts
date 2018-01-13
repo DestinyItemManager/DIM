@@ -32,7 +32,6 @@ export interface DimCharacterStat {
   tier: number;
 }
 
-// TODO: replace this with a "Profile" concept
 export interface DimStore {
   id: string;
   name: string;

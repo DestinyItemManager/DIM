@@ -1,4 +1,4 @@
-import { IPromise } from 'angular';
+import { IPromise, IQService } from 'angular';
 import {
   DestinyClass,
   DestinyInventoryItemDefinition,
@@ -113,6 +113,7 @@ export interface DimPerk extends DestinySandboxPerkDefinition {
   requirement: string;
 }
 
+// TODO: This interface is clearly too large
 export interface DimItem {
   owner: string;
   /** The version of Destiny this comes from */
@@ -124,7 +125,7 @@ export interface DimItem {
   hash: number;
   // This is the type of the item (see D2Category/D2Buckets) regardless of location
   type: string;
-  categories; // see defs.ItemCategories
+  categories: string[];
   tier: string;
   isExotic: boolean;
   isVendorItem: boolean;
@@ -134,14 +135,13 @@ export interface DimItem {
   notransfer: boolean;
   id: string; // zero for non-instanced is legacy hack
   equipped: boolean;
-  equipment: boolean; // TODO: this has a ton of good info for the item move logic
-  complete: boolean; // TODO: what's the deal w/ item progression?
+  equipment: boolean;
+  complete: boolean;
   amount: number;
   primStat: EnhancedStat | null;
   typeName: string;
   equipRequiredLevel: number;
   maxStackSize: number;
-  // 0: titan, 1: hunter, 2: warlock, 3: any
   classType: DestinyClass;
   classTypeName: string;
   classTypeNameLocalized: string;
@@ -170,6 +170,7 @@ export interface DimItem {
   infusable: boolean;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
+
   // Can this item be equipped by the given store?
   canBeEquippedBy(store: DimStore): boolean;
   inCategory(categoryName: string): boolean;
@@ -210,7 +211,7 @@ export function D2ItemFactory(
   NewItemsService,
   D2Definitions: D2DefinitionsService,
   D2BucketsService: BucketsService,
-  $q
+  $q: IQService
 ): D2ItemFactoryType {
   'ngInject';
 
@@ -325,7 +326,7 @@ export function D2ItemFactory(
     return $q.all([
       D2Definitions.getDefinitions(),
       D2BucketsService.getBuckets()])
-      .then(([defs, buckets]: [D2ManifestDefinitions, any]) => {
+      .then(([defs, buckets]) => {
         const result: DimItem[] = [];
         D2ManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;
         _.each(items, (item) => {
@@ -816,7 +817,7 @@ export function D2ItemFactory(
     }
 
     // Fix for stuff that has nothing in early columns
-    const minByColumn = _.min(gridNodes.filter((n) => !n.hidden, (n) => n.column));
+    const minByColumn = _.min(gridNodes.filter((n) => !n.hidden), (n) => n.column);
     const minColumn = minByColumn.column;
     if (minColumn > 0) {
       gridNodes.forEach((node) => { node.column -= minColumn; });
@@ -832,7 +833,8 @@ export function D2ItemFactory(
     item: DestinyItemComponent,
     socketsMap: { [key: string]: DestinyItemSocketsComponent },
     defs: D2ManifestDefinitions,
-    itemDef: DestinyInventoryItemDefinition): DimSockets | null {
+    itemDef: DestinyInventoryItemDefinition
+  ): DimSockets | null {
     if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length || socketsMap[item.itemInstanceId]) {
       return null;
     }

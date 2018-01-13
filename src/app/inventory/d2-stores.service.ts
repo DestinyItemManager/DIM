@@ -9,17 +9,16 @@ import {
   DestinyProgression
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { compareAccounts } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
 import { PLATFORMS } from '../bungie-api/platforms';
-import { D2DefinitionsService } from '../destiny2/d2-definitions.service';
+import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { optimalLoadout } from '../loadout/loadout-utils';
+import { Loadout } from '../loadout/loadout.service';
 import { flatMap } from '../util';
-import { DestinyAccount } from '../accounts/destiny-account.service';
-import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
+import { D2ItemFactoryType } from './store/d2-item-factory.service';
 import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
 
 /**
@@ -290,7 +289,8 @@ export function D2StoresService(
     previousItems,
     newItems,
     itemInfoService,
-    lastPlayedDate: Date): IPromise<DimStore> {
+    lastPlayedDate: Date
+  ): IPromise<DimStore> {
     const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
@@ -331,7 +331,8 @@ export function D2StoresService(
     buckets: DimInventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
-    itemInfoService): IPromise<DimVault> {
+    itemInfoService
+  ): IPromise<DimVault> {
     const store = D2StoreFactory.makeVault(buckets, profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
@@ -464,7 +465,7 @@ export function D2StoresService(
     return optimalLoadout(store, applicableItems, bestItemFn, '');
   }
 
-  function getBasePower(loadout: { items: { [type: string]: DimItem[] } }) {
+  function getBasePower(loadout: Loadout) {
     // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
     const itemWeight = {
       Weapons: 6,
