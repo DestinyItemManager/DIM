@@ -3,6 +3,8 @@
 * Sorting characters by age should be correct for D2 on PC.
 * The infusion fuel finder now supports reverse lookups, so you can choose the best thing to infuse a particular item *into*.
 * Your character stats now update live when you change armor.
+* Labeled the Infusion Fuel Finder button.
+* Trace Rifles are highlighted again on is:autorifle search.
 
 # 4.33.1
 
