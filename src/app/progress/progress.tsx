@@ -26,14 +26,14 @@ const progressionMeta = {
   1660497607: { label: "Nessus AI", order: 7 },
   828982195: { label: "Io Researcher", order: 8 },
   2677528157: { label: "Follower of Osiris", order: 9 },
+  24856709: { label: "Leviathan", order: 10 },
 
-  2105209711: { label: "New Monarchy", order: 10 },
-  1714509342: { label: "Future War Cult", order: 11 },
-  3398051042: { label: "Dead Orbit", order: 12 },
-  3468066401: { label: "The Nine", order: 13 },
-  1761642340: { label: "Iron Banner", order: 14 },
+  3468066401: { label: "The Nine", order: 11 },
+  1761642340: { label: "Iron Banner", order: 12 },
 
-  1482334108: { label: "Leviathan", order: 15 }
+  2105209711: { label: "New Monarchy", order: 13 },
+  1714509342: { label: "Future War Cult", order: 14 },
+  3398051042: { label: "Dead Orbit", order: 15 }
 };
 
 interface Props {
@@ -302,7 +302,7 @@ export class Progress extends React.Component<Props, State> {
     const { defs, profileInfo } = this.state.progress!;
 
     const allFactions: IDestinyFactionProgression[] = Object.values(profileInfo.characterProgressions.data[character.characterId].factions);
-    return _.sortBy(allFactions, (f) => progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999);
+    return _.sortBy(allFactions, (f) => (progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999) + (f.factionVendorIndex === -1 ? 1000 : 0));
   }
 
   /**

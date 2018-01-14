@@ -4,6 +4,7 @@
 * The infusion fuel finder now supports reverse lookups, so you can choose the best thing to infuse a particular item *into*.
 * Labeled the Infusion Fuel Finder button.
 * Trace Rifles are highlighted again on is:autorifle search.
+* Factions that you can't turn in rewards to are now greyed out. We also show the vendor name, and the raw XP values have moved to a tooltip.
 
 # 4.33.1
 

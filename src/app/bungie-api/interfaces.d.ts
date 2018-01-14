@@ -277,6 +277,7 @@ export interface IDestinyEquipItemResults {
 */
 export interface IDestinyFactionProgression extends IDestinyProgression {
   factionHash: number;
+  factionVendorIndex: number;
 }
 
 export interface IDestinyHistoricalStatsAccountResult {
