@@ -63,20 +63,6 @@ function AppComponentCtrl(
       });
     }
 
-    // Check for old Chrome versions
-    // TODO: do feature checks instead? Use Modernizr?
-    const chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
-    if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
-      $timeout(() => {
-        dimInfoService.show('old-chrome', {
-          title: $i18next.t('Help.UpgradeChrome'),
-          body: $i18next.t('Views.UpgradeChrome'),
-          type: 'error',
-          hideable: false
-        }, 0);
-      });
-    }
-
     // Show the changelog
     if ($featureFlags.changelogToaster) {
       $timeout(() => {

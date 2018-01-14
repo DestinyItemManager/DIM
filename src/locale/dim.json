@@ -256,7 +256,6 @@
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
     "UpdateAvailable": "DIM Updated",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
-    "UpgradeChrome": "Please Upgrade Chrome",
     "Version_beta": "Beta has been updated to v{{version}}",
     "Version_release": "DIM v{{version}} Released",
     "Xur": "Xûr is Here"
@@ -671,7 +670,6 @@
       "SponsorsDetail": "Become a sponsor and get your logo here with a link to your site.",
       "Support": "Supporting DIM",
       "Teespring": "We also have shirts with our new logo for sale on {{link}}"
-    },
-    "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM."
+    }
   }
 }
