@@ -1,6 +1,5 @@
-<div>
+<div class="dim-page dim-static-page">
   <h1 ng-i18next="Settings.Settings"></h1>
-  <div class="ngdialog-inner-content">
   <form class="settings">
     <table>
       <tr>
@@ -20,68 +19,56 @@
         </td>
       </tr>
       <tr>
-        <td>
-          <label for="condensedItems" ng-i18next="Settings.HideUnfiltered"></label>
-        </td>
-        <td>
-          <input type="checkbox" ng-model="vm.settings.hideFilteredItems"/>
+        <td colspan="2" class="check-option">
+          <input id="condensedItems" type="checkbox" ng-model="vm.settings.hideFilteredItems"/>
+           <label for="condensedItems" ng-i18next="Settings.HideUnfiltered"></label>
         </td>
       </tr>
       <tr>
-        <td>
-          <label for="details" ng-i18next="Settings.AlwaysShowDetails"></label>
-        </td>
-        <td>
+        <td colspan="2" class="check-option">
           <input type="checkbox" id="details" ng-model="vm.settings.itemDetails"/>
+          <label for="details" ng-i18next="Settings.AlwaysShowDetails"></label>
         </td>
       </tr>
       <tr ng-if="vm.featureFlags.qualityEnabled">
-        <td>
-          <label for="itemQuality" ng-i18next="Settings.EnableAdvancedStats"></label>
-        </td>
-        <td>
+        <td colspan="2" class="check-option">
           <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality"/>
+          <label for="itemQuality" ng-i18next="Settings.EnableAdvancedStats"></label>
         </td>
       </tr>
       <tr>
-        <td>
-          <label for="showNewItems" ng-i18next="Settings.ShowOverlay"></label>
-        </td>
-        <td>
+        <td colspan="2" class="check-option">
           <input type="checkbox" id="showNewItems" ng-model="vm.settings.showNewItems"/>
+          <label for="showNewItems" ng-i18next="Settings.ShowOverlay"></label>
         </td>
       </tr>
       <tr ng-if="vm.settings.showNewItems">
-        <td>
-          <label for="showNewAnimation" ng-i18next="[title]Settings.ShowAnimationsHelp;Settings.ShowAnimations"></label>
-        </td>
-        <td>
+        <td colspan="2" class="check-option">
           <input type="checkbox" id="showNewAnimation" ng-model="vm.settings.showNewAnimation"/>
+          <label for="showNewAnimation" ng-i18next="[title]Settings.ShowAnimationsHelp;Settings.ShowAnimations"></label>
         </td>
       </tr>
       <tr>
-        <td><label for="showElements" ng-i18next="Settings.ShowElemental"></label></td>
-        <td><input type="checkbox" id="showElements" ng-model="vm.settings.showElements"/></td>
+        <td colspan="2" class="check-option">
+          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements"/>
+          <label for="showElements" ng-i18next="Settings.ShowElemental"></label>
+        </td>
       </tr>
       <tr ng-if="vm.featureFlags.reviewsEnabled">
-        <td>
+        <td colspan="2" class="check-option">
+          <input type="checkbox" id="showReviews" ng-model="vm.settings.showReviews"/>
           <label for="showReviews" ng-i18next="Settings.ShowReviews"></label>
           <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md" target="_blank" rel="noopener noreferrer"></a>
         </td>
-        <td>
-          <input type="checkbox" id="showReviews" ng-model="vm.settings.showReviews"/>
-        </td>
       </tr>
       <tr ng-if="vm.featureFlags.reviewsEnabled">
-        <td>
+        <td colspan="2" class="check-option">
+          <input type="checkbox" id="allowIdPostToDtr" ng-model="vm.settings.allowIdPostToDtr"/>
           <label for="allowIdPostToDtr" ng-i18next="Settings.AllowIdPostToDtr"></label>
           <div class="fineprint">
             <label ng-i18next="Settings.AllowIdPostToDtrLine2"></label>
             <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md" target="_blank" rel="noopener noreferrer"></a>
           </div>
-        </td>
-        <td>
-          <input type="checkbox" id="allowIdPostToDtr" ng-model="vm.settings.allowIdPostToDtr"/>
         </td>
       </tr>
       <tr ng-if="vm.settings.destinyVersion === 2 && (vm.settings.showReviews || vm.settings.allowIdPostToDtr)">
@@ -183,5 +170,4 @@
       </tr>
     </table>
   </form>
-  </div>
 </div>

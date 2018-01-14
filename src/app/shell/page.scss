@@ -52,14 +52,10 @@
     }
   }
   tr td:first-child {
-    border-left-style: solid;
-    border-left-width: 1px;
+    border-left: none;
   }
   td {
-    border-color: #1B1B1B;
-    border-style: none solid solid none;
-    border-top: medium none;
-    border-width: medium 1px 1px medium;
+    border: none;
     font-size: 13px;
     padding: 6px 9px;
     vertical-align: top;

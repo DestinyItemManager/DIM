@@ -47,7 +47,8 @@
          ui-sref="storage"
          ng-i18next="Storage.Title"></a>
       <span class="link"
-            ng-click="$ctrl.showSetting($event)"
+            ui-sref-active="active"
+            ui-sref="storage"
             ng-i18next="Settings.Settings"></span>
 
       <hr>
@@ -141,11 +142,12 @@
       class="link"></refresh>
     <span class="link fa fa-save"
           ng-if="!$ctrl.showSearch"
+          ui-sref-active="active"
           ui-sref="storage"
           ng-i18next="[title]Storage.Title"></span>
     <span class="link fa fa-cog"
           ng-if="!$ctrl.showSearch"
-          ng-click="$ctrl.showSetting($event)"
+          ui-sref="settings"
           ng-i18next="[title]Settings.Settings"></span>
     <span class="link search-link"
           ng-class="{ show: $ctrl.showSearch }">

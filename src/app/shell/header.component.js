@@ -76,7 +76,6 @@ function HeaderController(
     };
   }
 
-  vm.showSetting = showPopupFunction('settings', '<settings></settings>');
   vm.showXur = showPopupFunction('xur', '<xur></xur>');
 
   vm.xur = dimXurService;

@@ -1,4 +1,12 @@
-.settings td:nth-child(2) {
-  white-space: nowrap;
-  min-width: 20em;
+.settings {
+  table {
+    margin: 0 auto;
+  }
+  td:nth-child(2) {
+    white-space: nowrap;
+    min-width: 20em;
+  }
+
+  .check-option {
+  }
 }
