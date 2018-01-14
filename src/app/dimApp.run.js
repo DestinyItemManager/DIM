@@ -14,7 +14,7 @@ function run($rootScope, SyncService, $transitions, $location, $trace, $uiRouter
   $rootScope.$DIM_CHANGELOG = $DIM_CHANGELOG;
   $rootScope.$DIM_BUILD_DATE = new Date($DIM_BUILD_DATE).toLocaleString();
 
-  console.log(`DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.reddit.com/r/destinyitemmanager`);
+  console.log(`DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`);
 }
 
 export default run;
