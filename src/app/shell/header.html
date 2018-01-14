@@ -53,10 +53,12 @@
       <hr>
 
       <span class="link"
-            ng-click="$ctrl.showAbout($event)"
+            ui-sref-active="active"
+            ui-sref="about"
             ng-i18next="Header.About"></span>
       <span class="link"
-            ng-click="$ctrl.showSupport($event)"
+            ui-sref-active="active"
+            ui-sref="support"
             ng-i18next="Header.SupportDIM"></span>
       <a class="link"
          target="_blank"
@@ -74,10 +76,12 @@
        alt="DIM"/>
 
   <span class="link first-to-go"
-        ng-click="$ctrl.showAbout($event)"
+        ui-sref-active="active"
+        ui-sref="about"
         ng-i18next="Header.About"></span>
   <span class="link first-to-go"
-        ng-click="$ctrl.showSupport($event)"
+        ui-sref-active="active"
+        ui-sref="support"
         ng-i18next="Header.SupportDIM"></span>
   <a class="link first-to-go"
      target="_blank"
@@ -85,7 +89,12 @@
      href="https://teespring.com/stores/dim"
      ng-i18next="Header.Shop"></a>
 
-  <span class="link first-to-go header-separator"></span>
+  <span class="link first-to-go header-separator" ng-if="$ctrl.destinyVersion"></span>
+
+  <a class="link second-to-go"
+     ui-sref="default-account"
+     ng-if="!$ctrl.destinyVersion"
+     ng-i18next="Header.Back"></a>
 
   <a class="link second-to-go"
      ui-sref-active="active"

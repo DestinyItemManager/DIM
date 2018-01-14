@@ -1,0 +1,74 @@
+@import '../../scss/variables.scss';
+
+.dim-static-page {
+  padding: 0 1em;
+  form {
+    padding: 0;
+  }
+  h1 {
+    flex-shrink: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin: 15px 0;
+    font-weight: 200;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    img {
+      margin-right: 8px;
+    }
+
+    @media (max-width: 800px) {
+      font-size: 20px;
+    }
+  }
+  > p {
+    margin: 5px 0;
+  }
+  dl {
+    background-color: #2F2F2F;
+    border-radius: 6px;
+    padding: 5px 15px;
+    margin: .5em 0;
+  }
+  dt {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.1em;
+    margin-top: 10px;
+    color: $orange;
+  }
+  dd {
+    margin: 10px 10px 15px 10px;
+  }
+  table {
+    padding: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #222;
+    tr:nth-child(2n+1) {
+      background-color: #1B1B1B;
+    }
+  }
+  tr td:first-child {
+    border-left-style: solid;
+    border-left-width: 1px;
+  }
+  td {
+    border-color: #1B1B1B;
+    border-style: none solid solid none;
+    border-top: medium none;
+    border-width: medium 1px 1px medium;
+    font-size: 13px;
+    padding: 6px 9px;
+    vertical-align: top;
+  }
+  input {
+    &[type="checkbox"], &[type="radio"] {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+    }
+  }
+}

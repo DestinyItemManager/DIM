@@ -243,7 +243,8 @@
     "Inventory": "Inventory",
     "Refresh": "Refresh Destiny Data",
     "Shop": "Shop",
-    "SupportDIM": "Backers"
+    "SupportDIM": "Backers",
+    "Back": "Go Back"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
@@ -625,7 +626,7 @@
       "BungieCopyright": "All images and content are property of Bungie. Please contact us if there are any issues.",
       "ContactUs": "Contact Us",
       "Discord": "Discord",
-      "DiscordHelp": "Ask questions and get support in our Discord channels.",
+      "DiscordHelp": "Ask questions, give feedback, and get support in our Discord channels.",
       "FAQ": "FAQ",
       "FAQAccess": "How does DIM get access to my Destiny data?",
       "FAQAccessAnswer": "We use Bungie's app authentication to grant access to DIM to see and move your items. DIM never sees your username or password. This is the same way the Companion app works.",
@@ -644,7 +645,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "About Destiny Item Manager (DIM)",
-      "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.",
+      "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
       "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule_beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",

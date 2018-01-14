@@ -1,6 +1,4 @@
 import template from './header.html';
-import aboutTemplate from 'app/views/about.html';
-import supportTemplate from 'app/views/support.html';
 import './header.scss';
 
 // TODO: Today we share one header everywhere, and show/hide bits of it depending on the circumstance.
@@ -79,8 +77,6 @@ function HeaderController(
   }
 
   vm.showSetting = showPopupFunction('settings', '<settings></settings>');
-  vm.showAbout = showPopupFunction('about', aboutTemplate);
-  vm.showSupport = showPopupFunction('support', supportTemplate);
   vm.showXur = showPopupFunction('xur', '<xur></xur>');
 
   vm.xur = dimXurService;
