@@ -47,16 +47,19 @@
          ui-sref="storage"
          ng-i18next="Storage.Title"></a>
       <span class="link"
-            ng-click="$ctrl.showSetting($event)"
+            ui-sref-active="active"
+            ui-sref="storage"
             ng-i18next="Settings.Settings"></span>
 
       <hr>
 
       <span class="link"
-            ng-click="$ctrl.showAbout($event)"
+            ui-sref-active="active"
+            ui-sref="about"
             ng-i18next="Header.About"></span>
       <span class="link"
-            ng-click="$ctrl.showSupport($event)"
+            ui-sref-active="active"
+            ui-sref="support"
             ng-i18next="Header.SupportDIM"></span>
       <a class="link"
          target="_blank"
@@ -74,10 +77,12 @@
        alt="DIM"/>
 
   <span class="link first-to-go"
-        ng-click="$ctrl.showAbout($event)"
+        ui-sref-active="active"
+        ui-sref="about"
         ng-i18next="Header.About"></span>
   <span class="link first-to-go"
-        ng-click="$ctrl.showSupport($event)"
+        ui-sref-active="active"
+        ui-sref="support"
         ng-i18next="Header.SupportDIM"></span>
   <a class="link first-to-go"
      target="_blank"
@@ -85,7 +90,12 @@
      href="https://teespring.com/stores/dim"
      ng-i18next="Header.Shop"></a>
 
-  <span class="link first-to-go header-separator"></span>
+  <span class="link first-to-go header-separator" ng-if="$ctrl.destinyVersion"></span>
+
+  <a class="link second-to-go"
+     ui-sref="default-account"
+     ng-if="!$ctrl.destinyVersion"
+     ng-i18next="Header.Back"></a>
 
   <a class="link second-to-go"
      ui-sref-active="active"
@@ -132,11 +142,12 @@
       class="link"></refresh>
     <span class="link fa fa-save"
           ng-if="!$ctrl.showSearch"
+          ui-sref-active="active"
           ui-sref="storage"
           ng-i18next="[title]Storage.Title"></span>
     <span class="link fa fa-cog"
           ng-if="!$ctrl.showSearch"
-          ng-click="$ctrl.showSetting($event)"
+          ui-sref="settings"
           ng-i18next="[title]Settings.Settings"></span>
     <span class="link search-link"
           ng-class="{ show: $ctrl.showSearch }">

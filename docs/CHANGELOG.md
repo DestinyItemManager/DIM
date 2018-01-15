@@ -7,6 +7,7 @@
 * Labeled the Infusion Fuel Finder button.
 * Trace Rifles are highlighted again on is:autorifle search.
 * Factions that you can't turn in rewards to are now greyed out. We also show the vendor name, and the raw XP values have moved to a tooltip.
+* The settings page has been cleaned up and moved to its own page.
 
 # 4.33.1
 

@@ -1,61 +1,43 @@
-<div>
+<div class="dim-page dim-static-page">
   <h1><img src="~app/images/logo-light.svg" alt="DIM Logo" height="36" width="36"/> <span ng-i18next="Views.About.Header"></span></h1>
-  <div class="ngdialog-inner-content">
-    <a ng-href="{{ $DIM_CHANGELOG }}" target="_blank" rel="noopener noreferrer"><span ng-i18next="[i18next]({ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE })Views.About.Version"></span></a>
-    <p ng-i18next="Views.About.HowItsMade"></p>
-    <p ng-if="$DIM_FLAVOR != 'dev'" ng-i18next="[i18next]({ context: $DIM_FLAVOR })Views.About.Schedule"></p>
-    <h2 ng-i18next="Views.About.ContactUs"></h2>
-    <table>
-      <tr>
-        <td ng-i18next="Views.About.Twitter"></td>
-        <td ng-i18next="Views.About.Reddit"></td>
-        <td ng-i18next="Views.About.Discord"></td>
-        <td ng-i18next="Views.About.GitHub"></td>
-        <td ng-i18next="Views.About.Translation"></td>
-      </tr>
-      <tr>
-        <td><span ng-i18next="Views.About.TwitterHelp"></span>
-          <br><a href="https://twitter.com/ThisIsDIM" target="_blank" rel="noopener noreferrer">@ThisIsDIM</a>
-        </td>
-        <td><span ng-i18next="Views.About.RedditHelp"></span>
-          <br><a href="https://destinyitemmanager.reddit.com" target="_blank" rel="noopener noreferrer">/r/destinyitemmanager</a>
-        </td>
-        <td><span ng-i18next="Views.About.DiscordHelp"></span>
-          <br><a href="https://discord.gg/UK2GWC7" target="_blank" rel="noopener noreferrer" ng-i18next="Views.About.Discord"></a>
-        </td>
-        <td ng-i18next="[html:i18next]({ link: '<a href=\'https://github.com/DestinyItemManager/DIM/\' target=\'_blank\' rel=\'noopener noreferrer\'>GitHub</a>' })Views.About.GitHubHelp"></td>
-        <td ng-i18next="[html:i18next]({
-                        link: '<a href=\'https://crowdin.com/project/destiny-item-manager/invite?d=6565n46535j5o4a30373q4u2o4e4m4n413b3b323n4d3i4p4e3t2s4l4v24333436323t4k4c583b3c3535383\' target=\'_blank\' rel=\'noopener noreferrer\'>Crowdin</a>'
-                        })Views.About.TranslationText"></td>
-      </tr>
-    </table>
-    <h2 ng-i18next="Views.About.FAQ"></h2>
-    <div>
-      <dl>
-        <dt ng-i18next="Views.About.FAQMobile"></dt>
-        <dd ng-i18next="Views.About.FAQMobileAnswer"></dd>
-      </dl>
-      <dl>
-        <dt ng-i18next="Views.About.FAQLogout"></dt>
-        <dd ng-i18next="Views.About.FAQLogoutAnswer"></dd>
-      </dl>
-      <dl>
-        <dt ng-i18next="Views.About.FAQKeyboard"></dt>
-        <dd ng-i18next="Views.About.FAQKeyboardAnswer"></dd>
-      </dl>
-      <dl>
-        <dt ng-i18next="Views.About.FAQLostItem"></dt>
-        <dd ng-i18next="[html:i18next]({ link: '<a href=\'https://www.bungie.net\' target=\'_blank\' rel=\'noopener noreferrer\'>Bungie.net</a>' })Views.About.FAQLostItemAnswer"></dd>
-      </dl>
-      <dl>
-        <dt ng-i18next="Views.About.FAQAccess"></dt>
-        <dd ng-i18next="Views.About.FAQAccessAnswer"></dd>
-      </dl>
-      <dl>
-        <dt ng-i18next="Views.About.FAQDupeGally"></dt>
-        <dd ng-i18next="Views.About.FAQDupeGallyAnswer"></dd>
-      </dl>
-    </div>
-    <p ng-i18next="Views.About.BungieCopyright"></p>
-  </div>
+  <a ng-href="{{ $DIM_CHANGELOG }}" target="_blank" rel="noopener noreferrer"><span ng-i18next="[i18next]({ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE })Views.About.Version"></span></a>
+  <p ng-i18next="Views.About.HowItsMade"></p>
+  <p ng-if="$DIM_FLAVOR != 'dev'" ng-i18next="[i18next]({ context: $DIM_FLAVOR })Views.About.Schedule"></p>
+  <h2 ng-i18next="Views.About.ContactUs"></h2>
+  <dl>
+    <dt ng-i18next="Views.About.Twitter"></dt>
+    <dd><span ng-i18next="Views.About.TwitterHelp"></span>
+      <br><a href="https://twitter.com/ThisIsDIM" target="_blank" rel="noopener noreferrer">@ThisIsDIM</a>
+    </dd>
+    <dt ng-i18next="Views.About.Reddit"></dt>
+    <dd><span ng-i18next="Views.About.RedditHelp"></span>
+      <br><a href="https://destinyitemmanager.reddit.com" target="_blank" rel="noopener noreferrer">/r/destinyitemmanager</a>
+    </dd>
+    <dt ng-i18next="Views.About.Discord"></dt>
+    <dd><span ng-i18next="Views.About.DiscordHelp"></span>
+      <br><a href="https://discord.gg/UK2GWC7" target="_blank" rel="noopener noreferrer" ng-i18next="Views.About.Discord"></a>
+    </dd>
+    <dt ng-i18next="Views.About.GitHub"></dt>
+    <dd ng-i18next="[html:i18next]({ link: '<a href=\'https://github.com/DestinyItemManager/DIM/\' target=\'_blank\' rel=\'noopener noreferrer\'>GitHub</a>' })Views.About.GitHubHelp"></dd>
+    <dt ng-i18next="Views.About.Translation"></dt>
+    <dd ng-i18next="[html:i18next]({
+                    link: '<a href=\'https://crowdin.com/project/destiny-item-manager/invite?d=6565n46535j5o4a30373q4u2o4e4m4n413b3b323n4d3i4p4e3t2s4l4v24333436323t4k4c583b3c3535383\' target=\'_blank\' rel=\'noopener noreferrer\'>Crowdin</a>'
+                    })Views.About.TranslationText"></dd>
+  </dl>
+  <h2 ng-i18next="Views.About.FAQ"></h2>
+  <dl>
+    <dt ng-i18next="Views.About.FAQMobile"></dt>
+    <dd ng-i18next="Views.About.FAQMobileAnswer"></dd>
+    <dt ng-i18next="Views.About.FAQLogout"></dt>
+    <dd ng-i18next="Views.About.FAQLogoutAnswer"></dd>
+    <dt ng-i18next="Views.About.FAQKeyboard"></dt>
+    <dd ng-i18next="Views.About.FAQKeyboardAnswer"></dd>
+    <dt ng-i18next="Views.About.FAQLostItem"></dt>
+    <dd ng-i18next="[html:i18next]({ link: '<a href=\'https://www.bungie.net\' target=\'_blank\' rel=\'noopener noreferrer\'>Bungie.net</a>' })Views.About.FAQLostItemAnswer"></dd>
+    <dt ng-i18next="Views.About.FAQAccess"></dt>
+    <dd ng-i18next="Views.About.FAQAccessAnswer"></dd>
+    <dt ng-i18next="Views.About.FAQDupeGally"></dt>
+    <dd ng-i18next="Views.About.FAQDupeGallyAnswer"></dd>
+  </dl>
+  <p ng-i18next="Views.About.BungieCopyright"></p>
 </div>

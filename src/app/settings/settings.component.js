@@ -3,6 +3,9 @@ import template from './settings.html';
 import './settings.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
+import { changeLanguage } from 'i18next';
+import exampleWeaponImage from 'app/images/example-weapon.jpg';
+import exampleArmorImage from 'app/images/example-armor.jpg';
 
 export const SettingsComponent = {
   template,
@@ -10,7 +13,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, OAuthTokenService, $state, $i18next) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, OAuthTokenService, $state, $i18next, $rootScope) {
   'ngInject';
 
   const vm = this;
@@ -18,7 +21,6 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.featureFlags = {
     qualityEnabled: $featureFlags.qualityEnabled,
     reviewsEnabled: $featureFlags.reviewsEnabled,
-    tagsEnabled: $featureFlags.tagsEnabled,
     colorA11y: $featureFlags.colorA11y
   };
   vm.loadingTracker = loadingTracker;
@@ -32,44 +34,8 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
   subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
-    $scope.$apply(() => {
-      vm.isPhonePortrait = isPhonePortrait;
-    });
+    vm.isPhonePortrait = isPhonePortrait;
   });
-
-  vm.filters = {
-    vendors: {
-      FWC: $i18next.t('Filter.Vendors.FWC'),
-      DO: $i18next.t('Filter.Vendors.DO'),
-      NM: $i18next.t('Filter.Vendors.NM'),
-      Speaker: $i18next.t('Filter.Vendors.Speaker'),
-      Shipwright: $i18next.t('Filter.Vendors.Shipwright'),
-      CQ: $i18next.t('Filter.Vendors.CQ'),
-      EV: $i18next.t('Filter.Vendors.EV'),
-      Gunsmith: $i18next.t('Filter.Vendors.Gunsmith'),
-    },
-    releases: {
-      Vanilla: $i18next.t('Filter.Releases.Vanilla'),
-      tTK: $i18next.t('Filter.Releases.tTK'),
-      RoI: $i18next.t('Filter.Releases.RoI')
-    },
-    activities: {
-      QW: $i18next.t('Filter.Activities.QW'),
-      IB: $i18next.t('Filter.Activities.IB'),
-      VoG: $i18next.t('Filter.Activities.VoG'),
-      CE: $i18next.t('Filter.Activities.CE'),
-      PoE: $i18next.t('Filter.Activities.PoE'),
-      ToO: $i18next.t('Filter.Activities.ToO'),
-      CoE: $i18next.t('Filter.Activities.CoE'),
-      KF: $i18next.t('Filter.Activities.KF'),
-      SRL: $i18next.t('Filter.Activities.SRL'),
-      CD: $i18next.t('Filter.Activities.CD'),
-      AF: $i18next.t('Filter.Activities.AF'),
-      WotM: $i18next.t('Filter.Activities.WotM'),
-      Dawning: $i18next.t('Filter.Activities.Dawning'),
-      AoT: $i18next.t('Filter.Activities.AoT')
-    }
-  };
 
   vm.languageOptions = {
     de: 'Deutsch',
@@ -85,6 +51,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     'zh-cht': '繁體中文' // Chinese (Traditional)
   };
 
+
   vm.reviewsPlatformOptions = {
     0: $i18next.t('DtrReview.Platforms.All'),
     1: $i18next.t('DtrReview.Platforms.Xbox'),
@@ -97,7 +64,38 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
   }
 
+  vm.fakeWeapon = {
+    icon: `~${exampleWeaponImage}`,
+    dtrRating: 4.6,
+    dtrRatingCount: 100,
+    dmg: 'void',
+    isNew: true,
+    location: {
+      type: 'energy'
+    },
+    visible: true,
+    primStat: {
+      value: 300
+    }
+  };
+
+  vm.fakeArmor = {
+    icon: `~${exampleArmorImage}`,
+    quality: {
+      min: 96
+    },
+    isNew: true,
+    location: {
+      type: 'energy'
+    },
+    visible: true,
+    primStat: {
+      value: 300
+    }
+  };
+
   vm.settings = dimSettingsService;
+  vm.initialLanguage = vm.settings.language;
 
   // Edge doesn't support these
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
@@ -123,5 +121,17 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.reviewsPlatformChanged = function() {
     dimSettingsService.save();
     D2StoresService.refreshRatingsData();
+  };
+
+  vm.changeLanguage = function() {
+    changeLanguage(vm.settings.language, () => {
+      $rootScope.$applyAsync(() => {
+        $rootScope.$broadcast('i18nextLanguageChange');
+      });
+    });
+  };
+
+  vm.reloadDim = function() {
+    window.location.reload(false);
   };
 }
