@@ -80,6 +80,7 @@
     ],
     "unified-signatures": true,
     "await-promise": [true, "Thenable", "IPromise"],
+    "no-bitwise": false,
     "no-duplicate-super": true,
     "no-duplicate-switch-case": true,
     "no-empty": [true, "allow-empty-catch"],

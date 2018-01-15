@@ -1,14 +1,26 @@
-import * as React from 'react';
-import * as _ from 'underscore';
+import {
+  DestinyActivityDefinition,
+  DestinyChallengeStatus,
+  DestinyDisplayPropertiesDefinition,
+  DestinyMilestone,
+  DestinyMilestoneDefinition,
+  DestinyMilestoneQuest,
+  DestinyMilestoneRewardCategoryDefinition,
+  DestinyMilestoneRewardEntry,
+  DestinyObjectiveProgress,
+  DestinyQuestStatus
+  } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import { IDestinyMilestone, IDestinyMilestoneQuest, IDestinyDisplayPropertiesDefinition, IDestinyObjectiveProgress, IDestinyChallengeStatus, IDestinyMilestoneRewardEntry, IDestinyQuestStatus } from '../bungie-api/interfaces';
+import * as React from 'react';
+import * as _ from 'underscore';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
 import './milestone.scss';
 
 interface MilestoneProps {
-  milestone: IDestinyMilestone;
-  defs;
+  milestone: DestinyMilestone;
+  defs: D2ManifestDefinitions;
 }
 
 /**
@@ -26,7 +38,6 @@ export function Milestone(props: MilestoneProps) {
         {milestone.availableQuests.map((availableQuest) =>
           <AvailableQuest
             defs={defs}
-            milestone={milestone}
             milestoneDef={milestoneDef}
             availableQuest={availableQuest}
             key={availableQuest.questItemHash}
@@ -59,7 +70,7 @@ export function Milestone(props: MilestoneProps) {
           <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
           <div className="milestone-description">{milestoneDef.displayProperties.description}</div>
           {rewards.entries.map((rewardEntry) =>
-            <RewardActivity key={rewardEntry.rewardEntryHash} defs={defs} rewardEntry={rewardEntry} milestoneRewardDef={milestoneRewardDef} />
+            <RewardActivity key={rewardEntry.rewardEntryHash} rewardEntry={rewardEntry} milestoneRewardDef={milestoneRewardDef} />
           )}
         </div>
       </div>
@@ -70,9 +81,8 @@ export function Milestone(props: MilestoneProps) {
 }
 
 interface RewardActivityProps {
-  defs;
-  rewardEntry: IDestinyMilestoneRewardEntry;
-  milestoneRewardDef;
+  rewardEntry: DestinyMilestoneRewardEntry;
+  milestoneRewardDef: DestinyMilestoneRewardCategoryDefinition;
 }
 
 /**
@@ -80,7 +90,7 @@ interface RewardActivityProps {
  * far this is only used for the "Clan Objectives" milestone.
  */
 function RewardActivity(props: RewardActivityProps) {
-  const { defs, rewardEntry, milestoneRewardDef } = props;
+  const { rewardEntry, milestoneRewardDef } = props;
 
   const rewardDef = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
 
@@ -97,28 +107,27 @@ function RewardActivity(props: RewardActivityProps) {
 }
 
 interface AvailableQuestProps {
-  defs;
-  milestone: IDestinyMilestone;
-  milestoneDef;
-  availableQuest: IDestinyMilestoneQuest;
+  defs: D2ManifestDefinitions;
+  milestoneDef: DestinyMilestoneDefinition;
+  availableQuest: DestinyMilestoneQuest;
 }
 
 /**
  * Most milestones are represented as a quest, with some objectives and a reward associated with them.
  */
 function AvailableQuest(props: AvailableQuestProps) {
-  const { defs, milestone, milestoneDef, availableQuest } = props;
+  const { defs, milestoneDef, availableQuest } = props;
 
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
-  const displayProperties: IDestinyDisplayPropertiesDefinition = questDef.displayProperties || milestoneDef.displayProperties;
+  const displayProperties: DestinyDisplayPropertiesDefinition = questDef.displayProperties || milestoneDef.displayProperties;
 
-  let activityDef: any = null;
+  let activityDef: DestinyActivityDefinition | null = null;
   if (availableQuest.activity) {
     activityDef = defs.Activity.get(availableQuest.activity.activityHash);
   }
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
-  const questRewards = questDef.questRewards ? _.take(questDef.questRewards.items, 1).map((r: any) => defs.InventoryItem.get(r.itemHash)) : [];
+  const questRewards = questDef.questRewards ? _.take(questDef.questRewards.items, 1).map((r) => defs.InventoryItem.get(r.itemHash)) : [];
 
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;
@@ -150,8 +159,8 @@ function AvailableQuest(props: AvailableQuestProps) {
 }
 
 interface ChallengesProps {
-  defs;
-  availableQuest: IDestinyMilestoneQuest;
+  defs: D2ManifestDefinitions;
+  availableQuest: DestinyMilestoneQuest;
 }
 
 /**
@@ -183,7 +192,7 @@ function Challenges(props: ChallengesProps) {
   return (
     <>
       {_.map(challengesByActivity, (challengeStatuses, activityHash) => {
-        const activityDef = defs.Activity.get(activityHash);
+        const activityDef = defs.Activity.get(parseInt(activityHash, 10));
 
         return (
           <div key={activityHash} className="milestone-challenges">
@@ -201,8 +210,8 @@ function Challenges(props: ChallengesProps) {
 }
 
 interface ChallengeProps {
-  defs;
-  challenge: IDestinyChallengeStatus;
+  defs: D2ManifestDefinitions;
+  challenge: DestinyChallengeStatus;
 }
 
 /**
@@ -234,9 +243,9 @@ function Challenge(props: ChallengeProps) {
 }
 
 interface MilestoneObjectiveStatusProps {
-  objective: IDestinyObjectiveProgress | null;
-  status: IDestinyQuestStatus;
-  defs: any;
+  objective: DestinyObjectiveProgress | null;
+  status: DestinyQuestStatus;
+  defs: D2ManifestDefinitions;
 }
 
 /**

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 // Some utility functions missing from underscore
 function sum(list, summer) {
@@ -17,11 +17,11 @@ function count(list, predicate) {
 }
 
 // A replacement for _.compact(_.flatten(_.map(c, fn))) that is more efficient.
-function flatMap(list, fx) {
-  const fn = _.iteratee(fx);
-  const res = [];
-  Object.keys(list).forEach((item) => {
-    const resList = fn(list[item]);
+function flatMap<T, TResult>(list: T[], fx: _.ListIterator<T, TResult[]>): TResult[] {
+  const fn = _.iteratee(fx) as _.ListIterator<T, TResult[]>;
+  const res: TResult[] = [];
+  _.each(list, (item, index, list) => {
+    const resList = fn(item, index, list);
     if (resList) {
       resList.forEach((resItem) => {
         if (resItem !== undefined && resItem !== null) {

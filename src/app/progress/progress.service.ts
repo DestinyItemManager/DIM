@@ -1,8 +1,18 @@
-import * as _ from 'underscore';
-import { Subject, ReplaySubject, ConnectableObservable } from '@reactivex/rxjs';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
-import { IDictionaryComponent, IDestinyCharacterComponent, IDestinyCharacterProgressionComponent, IDestinyInventoryComponent, ISingleComponentResponse } from '../bungie-api/interfaces';
+import { ConnectableObservable, ReplaySubject, Subject } from '@reactivex/rxjs';
+import {
+  DestinyCharacterComponent,
+  DestinyCharacterProgressionComponent,
+  DestinyInventoryComponent,
+  DestinyItemComponentSetOfint64,
+  DestinyProfileResponse,
+  DictionaryComponentResponse,
+  SingleComponentResponse
+  } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
+import * as _ from 'underscore';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
+import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
+import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -14,11 +24,11 @@ export interface ProgressService {
  * TODO: Move all this into bungie-api.
  */
 interface ProgressProfileResponse {
-  characters: IDictionaryComponent<IDestinyCharacterComponent>;
-  characterProgressions: IDictionaryComponent<IDestinyCharacterProgressionComponent>;
-  profileInventory: ISingleComponentResponse<IDestinyInventoryComponent>;
-  characterInventories: IDictionaryComponent<IDestinyInventoryComponent>;
-  itemComponents: any;
+  characters: DictionaryComponentResponse<DestinyCharacterComponent>;
+  characterProgressions: DictionaryComponentResponse<DestinyCharacterProgressionComponent>;
+  profileInventory: SingleComponentResponse<DestinyInventoryComponent>;
+  characterInventories: DictionaryComponentResponse<DestinyInventoryComponent>;
+  itemComponents: DestinyItemComponentSetOfint64;
 }
 
 // TODO: generate all the API structures from the Swagger docs
@@ -26,7 +36,7 @@ interface ProgressProfileResponse {
 // Should allow for better understanding of updates, but prevents us from "correcting" and interpreting the data,
 // and means we may have to block on defs lookup in the UI rendering :-/
 export interface ProgressProfile {
-  readonly defs;
+  readonly defs: D2ManifestDefinitions;
   readonly profileInfo: ProgressProfileResponse;
   /**
    * The date the most recently played character was last played.
@@ -35,7 +45,7 @@ export interface ProgressProfile {
 }
 
 // TODO: use ngimport to break this free of Angular-ness
-export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2ManifestService, $q, loadingTracker, toaster) {
+export function ProgressService(Destiny2Api: Destiny2ApiService, D2Definitions: D2DefinitionsService, D2ManifestService, $q, loadingTracker, toaster) {
   'ngInject';
 
   // A subject that keeps track of the current account. Because it's a
@@ -91,12 +101,12 @@ export function ProgressService(Destiny2Api, D2StoreFactory, D2Definitions, D2Ma
 
   async function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
     // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
-    const reloadPromise = $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]) => {
+    const reloadPromise = $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]: [DestinyProfileResponse, D2ManifestDefinitions]): ProgressProfile => {
       return {
         defs,
         profileInfo,
         get lastPlayedDate() {
-          return _.reduce(_.values(this.profileInfo.characters.data), (memo, character) => {
+          return _.reduce(_.values(this.profileInfo.characters.data), (memo, character: DestinyCharacterComponent) => {
             const d1 = new Date(character.dateLastPlayed);
             return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
           }, new Date(0));

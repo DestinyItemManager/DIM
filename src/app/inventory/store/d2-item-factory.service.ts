@@ -1,7 +1,32 @@
-import angular from 'angular';
-import _ from 'underscore';
-import { getClass } from './character-utils';
+import { IPromise, IQService } from 'angular';
+import {
+  DestinyClass,
+  DestinyInventoryItemDefinition,
+  DestinyInventoryItemStatDefinition,
+  DestinyItemComponent,
+  DestinyItemComponentSetOfint64,
+  DestinyItemInstanceComponent,
+  DestinyItemInvestmentStatDefinition,
+  DestinyItemObjectivesComponent,
+  DestinyItemQualityBlockDefinition,
+  DestinyItemSocketsComponent,
+  DestinyItemStatsComponent,
+  DestinyItemTalentGridComponent,
+  DestinyItemTierTypeInfusionBlock,
+  DestinyObjectiveDefinition,
+  DestinySandboxPerkDefinition,
+  DestinySocketCategoryDefinition,
+  DestinyStat,
+  DestinyStatDefinition,
+  DestinyTalentGridDefinition,
+  ItemLocation
+  } from 'bungie-api-ts/destiny2';
+import * as _ from 'underscore';
 import { sum } from '../../util';
+import { BucketsService, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
+import { D2DefinitionsService, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { getClass } from './character-utils';
+import { DimStore } from './d2-store-factory.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -14,18 +39,180 @@ const tiers = [
   'Exotic'
 ];
 
+export interface EnhancedStat extends DestinyStat {
+  stat: DestinyStatDefinition & { statName: string };
+}
+
+export interface DimStat {
+  base: number;
+  bonus: number;
+  statHash: number;
+  name: string;
+  id: number;
+  sort: number;
+  value: number;
+  maximumValue: number;
+  bar: boolean;
+}
+
+export interface DimObjective {
+  displayName: string;
+  description: string;
+  progress: number;
+  completionValue: number;
+  complete: boolean;
+  boolean: boolean;
+  display: string;
+}
+
+export interface DimGridNode {
+  name: string;
+  hash: number;
+  description: string;
+  icon: string;
+  /** Position in the grid */
+  column: number;
+  row: number;
+  /** Is the node selected (lit up in the grid) */
+  activated: boolean;
+  /** The item level at which this node can be unlocked */
+  activatedAtGridLevel: number;
+  /** Only one node in this column can be selected (scopes, etc) */
+  exclusiveInColumn: boolean;
+  /** Whether or not the material cost has been paid for the node */
+  unlocked: boolean;
+  /** Some nodes don't show up in the grid, like purchased ascend nodes */
+  hidden: boolean;
+}
+
+export interface DimTalentGrid {
+  nodes: DimGridNode[];
+  complete: boolean;
+}
+
+export interface DimSocket {
+  plug: DestinyInventoryItemDefinition | null;
+  reusablePlugs: DestinyInventoryItemDefinition[];
+  enabled: boolean;
+  enableFailReasons: string;
+  plugOptions: DestinyInventoryItemDefinition[];
+  masterworkProgress: number | undefined;
+}
+
+export interface DimSocketCategory {
+  category: DestinySocketCategoryDefinition;
+  sockets: DimSocket[];
+}
+
+export interface DimSockets {
+  sockets: DimSocket[];
+  categories: DimSocketCategory[];
+}
+
+export interface DimPerk extends DestinySandboxPerkDefinition {
+  requirement: string;
+}
+
+// TODO: This interface is clearly too large
+export interface DimItem {
+  owner: string;
+  /** The version of Destiny this comes from */
+  destinyVersion: 1 | 2;
+  // The bucket the item is currently in
+  location: DimInventoryBucket;
+  // The bucket the item normally resides in (even though it may be in the vault/postmaster)
+  bucket: DimInventoryBucket;
+  hash: number;
+  // This is the type of the item (see D2Category/D2Buckets) regardless of location
+  type: string;
+  categories: string[];
+  tier: string;
+  isExotic: boolean;
+  isVendorItem: boolean;
+  name: string;
+  description: string;
+  icon: string;
+  notransfer: boolean;
+  id: string; // zero for non-instanced is legacy hack
+  equipped: boolean;
+  equipment: boolean;
+  complete: boolean;
+  amount: number;
+  primStat: EnhancedStat | null;
+  typeName: string;
+  equipRequiredLevel: number;
+  maxStackSize: number;
+  classType: DestinyClass;
+  classTypeName: string;
+  classTypeNameLocalized: string;
+  dmg: string;
+  visible: boolean;
+  lockable: boolean;
+  tracked: boolean;
+  locked: boolean;
+  masterwork: boolean;
+  classified: boolean;
+  isInLoadout: boolean;
+  sockets: DimSockets | null;
+  percentComplete: number;
+  talentGrid?: DimTalentGrid | null;
+  stats: DimStat[] | null;
+  objectives: DimObjective[] | null;
+  taggable: boolean;
+  comparable: boolean;
+  reviewable: boolean;
+  isNew: boolean;
+  dimInfo?;
+  perks: DimPerk[] | null;
+  basePower: number;
+  index: string;
+  infusionProcess: DestinyItemTierTypeInfusionBlock | null;
+  infusable: boolean;
+  infusionQuality: DestinyItemQualityBlockDefinition | null;
+  infusionFuel: boolean;
+
+  // Can this item be equipped by the given store?
+  canBeEquippedBy(store: DimStore): boolean;
+  inCategory(categoryName: string): boolean;
+  isEngram(): boolean;
+  canBeInLoadout(): boolean;
+  hasLifeExotic(): boolean;
+}
+
+export interface D2ItemFactoryType {
+  resetIdTracker(): void;
+  processItems(
+    owner: DimStore,
+    items: DestinyItemComponent[],
+    itemComponents: DestinyItemComponentSetOfint64,
+    previousItems: Set<string>,
+    newItems: Set<string>,
+    itemInfoService
+  ): IPromise<DimItem[]>;
+  makeItem(
+    defs: D2ManifestDefinitions,
+    buckets: DimInventoryBuckets,
+    previousItems: Set<string>,
+    newItems: Set<string>,
+    itemInfoService,
+    itemComponents: DestinyItemComponentSetOfint64,
+    item: DestinyItemComponent,
+    owner: DimStore
+  ): DimItem | null;
+  createItemIndex(item: DimItem): string;
+}
+
 /**
  * A factory service for producing DIM inventory items.
  */
 export function D2ItemFactory(
   D2ManifestService,
-  dimSettingsService,
   $i18next,
   NewItemsService,
-  D2Definitions,
-  D2BucketsService,
-  $q
-) {
+  D2Definitions: D2DefinitionsService,
+  D2BucketsService: BucketsService,
+  $q: IQService
+): D2ItemFactoryType {
   'ngInject';
 
   let _idTracker = {};
@@ -83,7 +270,7 @@ export function D2ItemFactory(
   // items.
   const ItemProto = {
     // Can this item be equipped by the given store?
-    canBeEquippedBy: function(store) {
+    canBeEquippedBy(store) {
       if (store.isVault) {
         return false;
       }
@@ -97,13 +284,13 @@ export function D2ItemFactory(
         (!this.notransfer || this.owner === store.id) &&
         !this.location.inPostmaster;
     },
-    inCategory: function(categoryName) {
+    inCategory(categoryName) {
       return _.contains(this.categories, categoryName);
     },
-    isEngram: function() {
+    isEngram() {
       return false;
     },
-    canBeInLoadout: function() {
+    canBeInLoadout() {
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
     },
     hasLifeExotic() {
@@ -118,34 +305,36 @@ export function D2ItemFactory(
     createItemIndex
   };
 
-
   function resetIdTracker() {
     _idTracker = {};
   }
 
   /**
    * Process an entire list of items into DIM items.
-   * @param {string} owner the ID of the owning store.
-   * @param {Array} items a list of "raw" items from the Destiny API
-   * @param {Set<string>} previousItems a set of item IDs representing the previous store's items
-   * @param {Set<string>} newItems a set of item IDs representing the previous list of new items
+   * @param owner the ID of the owning store.
+   * @param items a list of "raw" items from the Destiny API
+   * @param previousItems a set of item IDs representing the previous store's items
+   * @param newItems a set of item IDs representing the previous list of new items
    * @param itemInfoService the item info factory for this store's platform
-   * @return {Promise<Array>} a promise for the list of items
+   * @return a promise for the list of items
    */
-  function processItems(owner, items, itemComponents, previousItems = new Set(), newItems = new Set(), itemInfoService) {
+  function processItems(
+    owner: DimStore,
+    items: DestinyItemComponent[],
+    itemComponents: DestinyItemComponentSetOfint64,
+    previousItems: Set<string> = new Set(),
+    newItems: Set<string> = new Set(),
+    itemInfoService): IPromise<DimItem[]> {
     return $q.all([
       D2Definitions.getDefinitions(),
-      D2BucketsService.getBuckets(),
-      previousItems,
-      newItems,
-      itemInfoService])
-      .then((args) => {
-        const result = [];
+      D2BucketsService.getBuckets()])
+      .then(([defs, buckets]) => {
+        const result: DimItem[] = [];
         D2ManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;
         _.each(items, (item) => {
-          let createdItem = null;
+          let createdItem: DimItem | null = null;
           try {
-            createdItem = makeItem(...args, itemComponents, item, owner);
+            createdItem = makeItem(defs, buckets, previousItems, newItems, itemInfoService, itemComponents, item, owner);
           } catch (e) {
             console.error("Error processing item", item, e);
           }
@@ -162,8 +351,8 @@ export function D2ItemFactory(
    * Construct the search category (CATEGORY_*) list from an item definition.
    * @param itemDef the item definition object
    */
-  function findCategories(itemDef) {
-    const categories = [];
+  function findCategories(itemDef): string[] {
+    const categories: string[] = [];
     if (itemDef.itemCategoryHashes) {
       for (const hash of itemDef.itemCategoryHashes) {
         const c = categoryFromHash[hash];
@@ -183,37 +372,28 @@ export function D2ItemFactory(
    * Process a single raw item into a DIM item.s
    * @param defs the manifest definitions from dimDefinitions
    * @param buckets the bucket definitions from dimBucketService
-   * @param {Set<string>} previousItems a set of item IDs representing the previous store's items
-   * @param {Set<string>} newItems a set of item IDs representing the previous list of new items
+   * @param previousItems a set of item IDs representing the previous store's items
+   * @param newItems a set of item IDs representing the previous list of new items
    * @param itemInfoService the item info factory for this store's platform
    * @param item "raw" item from the Destiny API
-   * @param {string} owner the ID of the owning store.
+   * @param owner the ID of the owning store.
    */
-  function makeItem(defs, buckets, previousItems, newItems, itemInfoService, itemComponents, item, owner) {
-    let itemDef = defs.InventoryItem.get(item.itemHash);
-    const instanceDef = itemComponents.instances.data[item.itemInstanceId] || {};
+  function makeItem(
+    defs: D2ManifestDefinitions,
+    buckets: DimInventoryBuckets,
+    previousItems: Set<string>,
+    newItems: Set<string>,
+    itemInfoService,
+    itemComponents: DestinyItemComponentSetOfint64,
+    item: DestinyItemComponent,
+    owner: DimStore
+  ): DimItem | null {
+    const itemDef = defs.InventoryItem.get(item.itemHash);
+    const instanceDef: Partial<DestinyItemInstanceComponent> = item.itemInstanceId ? itemComponents.instances.data[item.itemInstanceId] : {};
     // Missing definition?
     if (!itemDef) {
-      // maybe it is redacted...
-      itemDef = {
-        itemName: "Missing Item",
-        redacted: true
-      };
       D2ManifestService.warnMissingDefinition();
-    }
-
-    if (!itemDef.icon && !itemDef.action) {
-      itemDef.classified = true;
-      itemDef.classType = 3;
-    }
-
-    if (!itemDef.icon) {
-      itemDef.icon = '/img/misc/missing_icon.png';
-    }
-
-    // TODO: find a substitute for itemTypeName
-    if (!itemDef.itemTypeDisplayName) {
-      itemDef.itemTypeDisplayName = 'Unknown';
+      return null;
     }
 
     if (itemDef.redacted) {
@@ -233,11 +413,10 @@ export function D2ItemFactory(
       buckets.setHasUnknown();
     }
 
-
     // We cheat a bit for items in the vault, since we treat the
     // vault as a character. So put them in the bucket they would
     // have been in if they'd been on a character.
-    if (owner.isVault || instanceDef.location === 2 /* Vault */) {
+    if (owner.isVault || item.location === ItemLocation.Vault) {
       currentBucket = normalBucket;
     }
 
@@ -247,12 +426,10 @@ export function D2ItemFactory(
 
     const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
-    // https://github.com/Bungie-net/api/issues/134
-    if (instanceDef.primaryStat && itemType === 'Class') {
-      delete instanceDef.primaryStat;
-    }
+    // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
+    const primaryStat = itemType === 'Class' ? null : instanceDef.primaryStat || null;
 
-    const createdItem = angular.extend(Object.create(ItemProto), {
+    const createdItem: DimItem = Object.assign(Object.create(ItemProto), {
       // figure out what year this item is probably from
       destinyVersion: 2,
       // The bucket the item is currently in
@@ -262,7 +439,7 @@ export function D2ItemFactory(
       hash: item.itemHash,
       // This is the type of the item (see D2Category/D2Buckets) regardless of location
       type: itemType,
-      categories: categories, // see defs.ItemCategories
+      categories, // see defs.ItemCategories
       tier: tiers[itemDef.inventory.tierType] || 'Common',
       isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
       isVendorItem: (!owner || owner.id === null),
@@ -275,8 +452,8 @@ export function D2ItemFactory(
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
       complete: false, // TODO: what's the deal w/ item progression?
       amount: item.quantity,
-      primStat: instanceDef.primaryStat || null,
-      typeName: itemDef.itemTypeDisplayName,
+      primStat: primaryStat,
+      typeName: itemDef.itemTypeDisplayName || 'Unknown',
       equipRequiredLevel: instanceDef.equipRequiredLevel || 0,
       maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
       // 0: titan, 1: hunter, 2: warlock, 3: any
@@ -289,24 +466,24 @@ export function D2ItemFactory(
       tracked: item.state & 2,
       locked: item.state & 1,
       masterwork: item.state & 4,
-      redacted: Boolean(itemDef.redacted),
-      classified: Boolean(itemDef.classified),
+      classified: Boolean(itemDef.redacted),
       isInLoadout: false,
       percentComplete: null, // filled in later
       talentGrid: null, // filled in later
       stats: null, // filled in later
       objectives: null, // filled in later
-      quality: null // filled in later
     });
 
     // *able
     createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
     createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
-    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && isWeaponOrArmor(createdItem));
+    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem));
 
     if (createdItem.primStat) {
-      createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
-      createdItem.primStat.stat.statName = createdItem.primStat.stat.displayProperties.name;
+      const statDef = defs.Stat.get(createdItem.primStat.statHash);
+      // TODO: hey, does this work?
+      createdItem.primStat.stat = Object.create(statDef);
+      createdItem.primStat.stat.statName = statDef.displayProperties.name;
     }
 
     // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
@@ -328,11 +505,11 @@ export function D2ItemFactory(
     try {
       if (itemDef.stats && itemDef.stats.stats) {
         createdItem.stats = _.sortBy((buildStats(item, itemComponents.stats.data, defs.Stat)).concat(
-          buildHiddenStats(item, itemDef, defs.Stat)
+          buildHiddenStats(itemDef, defs.Stat)
         ), 'sort');
       }
       if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
-        createdItem.stats = _.sortBy(buildInvestmentStats(item, itemDef.investmentStats, defs.Stat));
+        createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
       }
     } catch (e) {
       console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
@@ -357,10 +534,8 @@ export function D2ItemFactory(
     }
 
     if (itemDef.perks && itemDef.perks.length) {
-      createdItem.perks = itemDef.perks.map((p) => {
-        return Object.assign({
-          requirement: p.requirementDisplayString
-        }, defs.SandboxPerk.get(p.perkHash));
+      createdItem.perks = itemDef.perks.map((p): DimPerk => {
+        return { requirement: p.requirementDisplayString, ...defs.SandboxPerk.get(p.perkHash) };
       }).filter((p) => p.isDisplayable);
       if (createdItem.perks.length === 0) {
         createdItem.perks = null;
@@ -368,10 +543,11 @@ export function D2ItemFactory(
     }
 
     if (createdItem.objectives) {
-      createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
+      createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, (o) => o.complete);
+      const length = createdItem.objectives.length;
       createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
-          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
+          return Math.min(1, objective.progress / objective.completionValue) / length;
         } else {
           return 0;
         }
@@ -406,8 +582,9 @@ export function D2ItemFactory(
     return createdItem;
   }
 
-  function isWeaponOrArmor(item) {
-    return ((item.primStat.statHash === 1480404414) || // weapon
+  function isWeaponOrArmor(item: DimItem) {
+    return item.primStat &&
+            ((item.primStat.statHash === 1480404414) || // weapon
             (item.primStat.statHash === 3897883278)); // armor
   }
 
@@ -416,7 +593,7 @@ export function D2ItemFactory(
   }
 
   // Set an ID for the item that should be unique across all items
-  function createItemIndex(item) {
+  function createItemIndex(item: DimItem): string {
     // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
     let index = item.id;
     if (item.id === '0') {
@@ -436,9 +613,6 @@ export function D2ItemFactory(
     if (!item.complete && item.percentComplete) {
       index += `-pc${Math.round(item.percentComplete * 100)}`;
     }
-    if (item.quality) {
-      index += `-q${item.quality.min}`;
-    }
     if (item.primStat && item.primStat.value) {
       index += `-ps${item.primStat.value}`;
     }
@@ -446,8 +620,8 @@ export function D2ItemFactory(
     return index;
   }
 
-  function getClassTypeNameLocalized(defs, type) {
-    const klass = _.find(_.values(defs.Class), { classType: type });
+  function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyClass) {
+    const klass = _.find(Object.values(defs.Class), { classType: type });
     if (klass) {
       return klass.displayProperties.name;
     } else {
@@ -455,14 +629,14 @@ export function D2ItemFactory(
     }
   }
 
-  function buildHiddenStats(item, itemDef, statDefs) {
+  function buildHiddenStats(itemDef: DestinyInventoryItemDefinition, statDefs: LazyDefinition<DestinyStatDefinition>): DimStat[] {
     const itemStats = itemDef.stats.stats;
 
     if (!itemStats) {
-      return undefined;
+      return [];
     }
 
-    return _.compact(_.map(itemStats, (stat) => {
+    return _.compact(_.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
       const def = statDefs.get(stat.statHash);
 
       // only aim assist and zoom for now
@@ -481,16 +655,20 @@ export function D2ItemFactory(
         maximumValue: 100,
         bar: true
       };
-    }));
+    })) as DimStat[];
   }
 
-  function buildStats(item, stats, statDefs) {
-    let itemStats = stats[item.itemInstanceId];
-    if (itemStats) {
-      itemStats = stats[item.itemInstanceId].stats;
+  function buildStats(
+    item: DestinyItemComponent,
+    stats: { [key: string]: DestinyItemStatsComponent },
+    statDefs: LazyDefinition<DestinyStatDefinition>
+  ): DimStat[] {
+    if (!item.itemInstanceId || !stats[item.itemInstanceId]) {
+      return [];
     }
+    const itemStats = stats[item.itemInstanceId].stats;
 
-    return _.compact(_.map(itemStats, (stat) => {
+    return _.compact(_.map(itemStats, (stat: DestinyStat): DimStat | undefined => {
       const def = statDefs.get(stat.statHash);
       const itemStat = itemStats[stat.statHash];
       if (!def || !itemStat) {
@@ -512,46 +690,57 @@ export function D2ItemFactory(
         stat.statHash !== 3871231066 &&
         stat.statHash !== 2961396640
       };
-    }));
+    })) as DimStat[];
   }
 
-
-  function buildInvestmentStats(item, itemStats, statDefs) {
-    return _.compact(_.map(itemStats, (itemStat) => {
+  function buildInvestmentStats(
+    itemStats: DestinyItemInvestmentStatDefinition[],
+    statDefs: LazyDefinition<DestinyStatDefinition>
+  ): DimStat[] {
+    return _.compact(_.map(itemStats, (itemStat): DimStat | undefined => {
       const def = statDefs.get(itemStat.statTypeHash);
-      if (!def || !itemStat || itemStat.statTypeHash === 1935470627 /* Power */) {
+      /* 1935470627 = Power */
+      if (!def || !itemStat || itemStat.statTypeHash === 1935470627) {
         return undefined;
       }
 
       return {
         base: itemStat.value,
         bonus: 0,
-        statHash: itemStat.statHash,
+        statHash: itemStat.statTypeHash,
         name: def.displayProperties.name,
-        id: itemStat.statHash,
-        sort: statWhiteList.indexOf(itemStat.statHash),
+        id: itemStat.statTypeHash,
+        sort: statWhiteList.indexOf(itemStat.statTypeHash),
         value: itemStat.value,
         maximumValue: 0,
         bar: false
       };
-    }));
+    })) as DimStat[];
   }
 
-  function buildObjectives(item, objectivesMap, objectiveDefs) {
-    let objectives = objectivesMap[item.itemInstanceId];
-    if (objectives) {
-      objectives = objectivesMap[item.itemInstanceId].objectives;
+  function buildObjectives(
+    item: DestinyItemComponent,
+    objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
+    objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
+  ): DimObjective[] | null {
+    if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
+      return null;
     }
+
+    // TODO: there is also 'flavorObjectives' for things like emblem stats
+    const objectives = objectivesMap[item.itemInstanceId].objectives;
     if (!objectives || !objectives.length) {
       return null;
     }
+
+    // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
 
     return objectives.map((objective) => {
       const def = objectiveDefs.get(objective.objectiveHash);
 
       return {
         displayName: def.displayProperties.name ||
-          (objective.isComplete
+          (objective.complete
             ? $i18next.t('Objectives.Complete')
             : $i18next.t('Objectives.Incomplete')),
         description: def.displayProperties.description,
@@ -564,7 +753,14 @@ export function D2ItemFactory(
     });
   }
 
-  function buildTalentGrid(item, talentsMap, talentDefs) {
+  function buildTalentGrid(
+    item: DestinyItemComponent,
+    talentsMap: { [key: string]: DestinyItemTalentGridComponent },
+    talentDefs: LazyDefinition<DestinyTalentGridDefinition>
+  ): DimTalentGrid | null {
+    if (!item.itemInstanceId || !talentsMap[item.itemInstanceId]) {
+      return null;
+    }
     const talentGrid = talentsMap[item.itemInstanceId];
     if (!talentGrid) {
       return null;
@@ -572,10 +768,10 @@ export function D2ItemFactory(
 
     const talentGridDef = talentDefs.get(talentGrid.talentGridHash);
     if (!talentGridDef || !talentGridDef.nodes || !talentGridDef.nodes.length) {
-      return undefined;
+      return null;
     }
 
-    let gridNodes = talentGridDef.nodes.map((node) => {
+    const gridNodes = _.compact(talentGridDef.nodes.map((node): DimGridNode | undefined => {
       const talentNodeGroup = node;
       const talentNodeSelected = node.steps[0];
 
@@ -591,8 +787,8 @@ export function D2ItemFactory(
       }
 
       // Only one node in this column can be selected (scopes, etc)
-      const exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodeHashes &&
-                               talentNodeGroup.exlusiveWithNodeHashes.length > 0);
+      const exclusiveInColumn = Boolean(talentNodeGroup.exclusiveWithNodeHashes &&
+                               talentNodeGroup.exclusiveWithNodeHashes.length > 0);
 
       const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
 
@@ -608,81 +804,81 @@ export function D2ItemFactory(
         // Is the node selected (lit up in the grid)
         activated: true,
         // The item level at which this node can be unlocked
-        activatedAtGridLevel: activatedAtGridLevel,
+        activatedAtGridLevel,
         // Only one node in this column can be selected (scopes, etc)
-        exclusiveInColumn: exclusiveInColumn,
+        exclusiveInColumn,
         // Whether or not the material cost has been paid for the node
         unlocked: true,
         // Some nodes don't show up in the grid, like purchased ascend nodes
         hidden: false
       };
-    });
-
-    // We need to unique-ify because Ornament nodes show up twice!
-    gridNodes = _.uniq(_.compact(gridNodes), false, 'hash');
+    })) as DimGridNode[];
 
     if (!gridNodes.length) {
-      return undefined;
+      return null;
     }
 
     // Fix for stuff that has nothing in early columns
-    const minColumn = _.min(_.reject(gridNodes, 'hidden'), 'column').column;
+    const minByColumn = _.min(gridNodes.filter((n) => !n.hidden), (n) => n.column);
+    const minColumn = minByColumn.column;
     if (minColumn > 0) {
       gridNodes.forEach((node) => { node.column -= minColumn; });
     }
 
     return {
-      nodes: _.sortBy(gridNodes, (node) => { return node.column + (0.1 * node.row); }),
+      nodes: _.sortBy(gridNodes, (node) => node.column + (0.1 * node.row)),
       complete: _.all(gridNodes, (n) => n.unlocked)
     };
   }
 
-  function buildSockets(item, socketsMap, defs, itemDef) {
-    if (!itemDef.sockets || !itemDef.sockets.socketEntries.length) {
+  function buildSockets(
+    item: DestinyItemComponent,
+    socketsMap: { [key: string]: DestinyItemSocketsComponent },
+    defs: D2ManifestDefinitions,
+    itemDef: DestinyInventoryItemDefinition
+  ): DimSockets | null {
+    if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length || socketsMap[item.itemInstanceId]) {
       return null;
     }
-    let sockets = socketsMap[item.itemInstanceId];
-    if (sockets) {
-      sockets = socketsMap[item.itemInstanceId].sockets;
-    }
+    const sockets = socketsMap[item.itemInstanceId].sockets;
     if (!sockets || !sockets.length) {
       return null;
     }
 
-    const realSockets = sockets.map((socket) => {
-      const plug = defs.InventoryItem.get(socket.plugHash);
-      let failReasons = (socket.enableFailIndexes || []).map((index) => plug.plug.enabledRules[index].failureMessage).join("\n");
+    const realSockets = sockets.map((socket): DimSocket => {
+      const plug = socket.plugHash ? defs.InventoryItem.get(socket.plugHash) : null;
+      let failReasons = plug ? (socket.enableFailIndexes || []).map((index) => plug.plug.enabledRules[index].failureMessage).join("\n") : '';
       if (failReasons.length) {
         failReasons = `\n\n${failReasons}`;
       }
-      const dimSocket = {
-        plug,
-        reusablePlugs: (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash)),
-        enabled: socket.isEnabled,
-        enableFailReasons: failReasons
-      };
-      dimSocket.plugOptions = dimSocket.reusablePlugs.length > 0 && (!plug || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? dimSocket.reusablePlugs : [dimSocket.plug];
-      dimSocket.masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
+      const reusablePlugs = (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash));
+      const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? reusablePlugs : (plug ? [plug] : []);
+      const masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
 
-      return dimSocket;
+      return {
+        plug,
+        reusablePlugs,
+        enabled: socket.isEnabled,
+        enableFailReasons: failReasons,
+        plugOptions,
+        masterworkProgress
+      };
     });
 
-    const categories = itemDef.sockets.socketCategories.map((category) => {
+    const categories = itemDef.sockets.socketCategories.map((category): DimSocketCategory => {
       return {
         category: defs.SocketCategory.get(category.socketCategoryHash),
         sockets: category.socketIndexes.map((index) => realSockets[index])
       };
     });
 
-    const dimSockets = {
+    return {
       sockets: realSockets, // Flat list of sockets
       categories // Sockets organized by category
     };
-
-    return dimSockets;
   }
 
-  function getBasePowerLevel(item) {
+  function getBasePowerLevel(item: DimItem): number {
     const MOD_CATEGORY = 59;
     const POWER_STAT_HASH = 1935470627;
     const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
@@ -693,6 +889,6 @@ export function D2ItemFactory(
 
     const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH).value);
 
-    return item.primStat.value - modPower;
+    return item.primStat ? (item.primStat.value - modPower) : 0;
   }
 }

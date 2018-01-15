@@ -4,6 +4,7 @@ import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { searchFilters, buildSearchConfig } from './search-filters';
 import filtersTemplate from '../search/filters.html';
+import { D2Categories } from '../destiny2/d2-buckets.service';
 import './search-filter.scss';
 
 export const SearchFilterComponent = {
@@ -15,7 +16,7 @@ export const SearchFilterComponent = {
 };
 
 function SearchFilterCtrl(
-  $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimCategory, D2Categories, dimSettingsService, toaster, ngDialog, $stateParams) {
+  $scope, dimStoreService, D2StoresService, dimVendorService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimCategory, dimSettingsService, toaster, ngDialog, $stateParams) {
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;

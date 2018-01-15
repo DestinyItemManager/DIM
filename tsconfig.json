@@ -6,7 +6,9 @@
     "module": "ESNext",
     "target": "ESNext",
     "jsx": "react",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
   "include": [
     "./src/**/*"

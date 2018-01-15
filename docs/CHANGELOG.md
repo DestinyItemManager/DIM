@@ -1,5 +1,7 @@
 # Next
 
+* Your character stats now update live when you change armor.
+
 # 4.34.0
 
 * Sorting characters by age should be correct for D2 on PC.
