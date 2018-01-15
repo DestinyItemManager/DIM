@@ -17,8 +17,6 @@ export function isWellRested(
   const legendProgressDef = defs.Progression.get(2030054750);
   const legendProgress = characterProgression.progressions[legendProgressDef.hash];
 
-  console.log(legendProgress, levelProgress);
-
   if (levelProgress.level < 4) {
     return true;
   }
