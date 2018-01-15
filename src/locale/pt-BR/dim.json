@@ -108,8 +108,8 @@
     "YourReview": "Sua avaliação"
   },
   "Faction": {
-    "EngramsAvailable": "1 engram available",
-    "EngramsAvailable_plural": "{{count}} engrams available"
+    "EngramsAvailable": "1 engrama disponível",
+    "EngramsAvailable_plural": "{{count}} engramas disponíveis"
   },
   "FarmingMode": {
     "Configuration": "Configuração",
@@ -271,15 +271,18 @@
     "ToggleDetails": "Mostrar todos os detalhes do item"
   },
   "Infusion": {
-    "BringGear": "Elevará o item para:",
+    "BringGear": "Trará {{name}} para:",
     "Calc": "Calculadora de infusões",
+    "InfuseSource": "Selecione o item para infundir por; consumirá {{name}}:",
+    "InfuseTarget": "Selecione o item para infundir em {{name}}:",
     "Infusion": "Buscador de Item para Infusão",
     "InfusionMaterials": "Materiais de infusão",
     "LockedItems": "Incluir itens travados",
     "NoItems": "Nenhum item para infusão disponível.",
     "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
     "ShowItems": "Exibir itens infundíveis de outros personagens e cofre",
-    "TransferItems": "Transferir itens"
+    "TransferItems": "Transferir itens",
+    "Uninfusable": "Este item não pode ser infundido."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Houve um problema ao salvar uma informação específica do DIM sobre um item. O problema é que há um limite de dados que podem salvos - é por isso que tags e notas não são permitidos fora da versão Beta. O erro foi: {{error}}.",
@@ -450,6 +453,7 @@
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "Travar {{itemType}}",
     "LockUnlock_Unlock": "Destravar {{itemType}}",
     "OverviewTab": "Visão geral",
@@ -476,17 +480,17 @@
     "Limit": "Limite do Chefe de Correio"
   },
   "Progress": {
-    "Daily": "Daily",
-    "ExpiresIn": "expires at {{endTime}}",
-    "Factions": "Factions",
-    "Milestones": "Milestones",
-    "ProfileMilestones": "Account Milestones",
-    "Progress": "Progress",
-    "Quests": "Quests",
-    "RewardEarned": "Reward earned but not redeemed",
-    "RewardNotEarned": "Reward not earned",
-    "RewardRedeemed": "Reward redeemed",
-    "Weekly": "Weekly"
+    "Daily": "Diário",
+    "ExpiresIn": "expira em {{endTime}}",
+    "Factions": "Facções",
+    "Milestones": "Marcos",
+    "ProfileMilestones": "Marcos da Conta",
+    "Progress": "Progresso",
+    "Quests": "Jornadas",
+    "RewardEarned": "Recompensa ganha mas não resgatada",
+    "RewardNotEarned": "Recompensa não ganha",
+    "RewardRedeemed": "Recompensa resgatada",
+    "Weekly": "Semanal"
   },
   "RecordBooks": {
     "HideCompleted": "Esconder os recordes completados",

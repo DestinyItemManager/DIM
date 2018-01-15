@@ -2,7 +2,6 @@ dist/
 extension-dist/
 .settings/
 .idea/
-.vscode/
 node_modules/
 build/common
 build/img

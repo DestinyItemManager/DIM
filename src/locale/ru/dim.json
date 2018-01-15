@@ -271,15 +271,18 @@
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
-    "BringGear": "Will bring the gear to:",
+    "BringGear": "Will bring {{name}} to:",
     "Calc": "Калькулятор синтеза",
+    "InfuseSource": "Select item to infuse into; consumes {{name}}:",
+    "InfuseTarget": "Select item to infuse {{name}}:",
     "Infusion": "Предметы доступные для Синтеза",
     "InfusionMaterials": "Материалы для Синтеза",
     "LockedItems": "Включая 'заблокированные' предметы",
     "NoItems": "Нет предметов для синтеза.",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
     "ShowItems": "Отобразить синтезируемые предметы со всех персонажей и сундука",
-    "TransferItems": "Собрать предметы"
+    "TransferItems": "Собрать предметы",
+    "Uninfusable": "This item cannot be infused."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {{error}}.",
@@ -450,6 +453,7 @@
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Надеть",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "Заблокировать {{itemType}}",
     "LockUnlock_Unlock": "Разблокировать {{itemType}}",
     "OverviewTab": "Обзор",

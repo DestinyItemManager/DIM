@@ -79,7 +79,7 @@ module.exports = (env) => {
             'html-loader'
           ]
         }, {
-          test: /\.(png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          test: /\.(jpg|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
@@ -92,6 +92,14 @@ module.exports = (env) => {
               'css-loader',
               'postcss-loader',
               'sass-loader'
+            ],
+            fallback: 'style-loader'
+          })
+        }, {
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract({
+            use: [
+              'css-loader'
             ],
             fallback: 'style-loader'
           })

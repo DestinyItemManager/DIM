@@ -271,15 +271,18 @@
     "ToggleDetails": "完全なアイテムの詳細を表示する"
   },
   "Infusion": {
-    "BringGear": "装備を転送する:",
+    "BringGear": "Will bring {{name}} to:",
     "Calc": "融合計算機能",
+    "InfuseSource": "Select item to infuse into; consumes {{name}}:",
+    "InfuseTarget": "Select item to infuse {{name}}:",
     "Infusion": "融合対象物発掘機能",
     "InfusionMaterials": "融合材料",
     "LockedItems": "ロックされているアイテムも含む",
     "NoItems": "融合可能なアイテムありません。",
     "NoTransfer": "融合材を移動\n {{target}} 移動できません.",
     "ShowItems": "各キャラや保管庫にある融合可能なアイテムを表示。",
-    "TransferItems": "アイテムの転送"
+    "TransferItems": "アイテムの転送",
+    "Uninfusable": "This item cannot be infused."
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "アイテムにDIM固有の情報を保存する際に問題が発生しました。1つの問題は、保存できるデータの量に制限があることです。これがベータ版からタグとメモがまだ許可されていない理由です。エラーは{{error}}でした。",
@@ -450,6 +453,7 @@
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
+    "Infuse": "Infuse",
     "LockUnlock_Lock": "固定する {{itemType}}",
     "LockUnlock_Unlock": "固定解除する {{itemType}}",
     "OverviewTab": "概要",

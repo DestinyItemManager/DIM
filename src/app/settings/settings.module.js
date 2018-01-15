@@ -8,4 +8,19 @@ export default angular
   .controller('dimSettingsCtrl', SettingsController)
   .component('settings', SettingsComponent)
   .factory('dimSettingsService', SettingsService)
+  .config(($stateProvider) => {
+    'ngInject';
+
+    $stateProvider.state({
+      name: 'settings',
+      component: 'settings',
+      url: '/settings',
+      resolve: {
+        settings(dimSettingsService) {
+          'ngInject';
+          return dimSettingsService.ready;
+        }
+      }
+    });
+  })
   .name;

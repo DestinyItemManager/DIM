@@ -64,6 +64,7 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
     },
     // Active destiny version
     destinyVersion: 2,
+    reviewsPlatformSelection: 0,
 
     // Predefined item tags. Maybe eventually allow to add more (also i18n?)
     itemTags: [
@@ -78,14 +79,14 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
 
     colorA11y: '-',
 
-    save: function() {
+    save: _.throttle(() => {
       if (!_loaded) {
         throw new Error("Settings haven't loaded - they can't be saved.");
       }
       SyncService.set({
         'settings-v1.0': _.omit(settings, 'save', 'itemTags')
       });
-    },
+    }, 1000),
 
     ready: _ready.promise
   };
