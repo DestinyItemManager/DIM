@@ -1,5 +1,7 @@
 # Next
 
+# 4.34.0
+
 * Sorting characters by age should be correct for D2 on PC.
 * The infusion fuel finder now supports reverse lookups, so you can choose the best thing to infuse a particular item *into*.
 * Labeled the Infusion Fuel Finder button.
