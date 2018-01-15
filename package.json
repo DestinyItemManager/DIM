@@ -119,7 +119,7 @@
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
     "babel-polyfill": "^6.26.0",
     "browserslist": "^2.10.0",
-    "bungie-api-ts": "^1.0.2",
+    "bungie-api-ts": "^1.2.0",
     "classnames": "^2.2.5",
     "components-font-awesome": "^4.7.0",
     "drag-drop-webkit-mobile": "^1.4.1",
