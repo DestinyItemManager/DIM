@@ -28,7 +28,6 @@
   }
   dl {
     background-color: #2F2F2F;
-    border-radius: 6px;
     padding: 5px 15px;
     margin: .5em 0;
   }
@@ -59,12 +58,5 @@
     font-size: 13px;
     padding: 6px 9px;
     vertical-align: top;
-  }
-  input {
-    &[type="checkbox"], &[type="radio"] {
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-    }
   }
 }

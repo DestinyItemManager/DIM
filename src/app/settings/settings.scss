@@ -1,12 +1,77 @@
 .settings {
-  table {
-    margin: 0 auto;
+  &.dim-page {
+    max-width: 400px;
   }
+
+  h2 {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin: 0 0 .5em 0;
+  }
+
+  section {
+    margin-bottom: 2em;
+  }
+
+  react-toggle {
+    display: inherit;
+  }
+
+  .setting {
+    padding: 8px;
+    margin: 0 0 4px 0;
+    background-color: #353535;
+  }
+
+  .horizontal {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 4px;
+    align-items: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .itemSize {
+    label {
+      flex: 0;
+      white-space: nowrap;
+    }
+
+    input {
+      flex: 1;
+      margin: 0 1em;
+    }
+  }
+
+  label {
+    flex: 1;
+    display: block;
+    margin-right: 1em;
+  }
+  .stylizedAnchor {
+    margin-right: .5em;
+  }
+
+  .examples {
+    margin: 0 0 4px 0;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .radioOptions {
+    margin: 8px 0 0 4px;
+    label {
+      display: block;
+      margin-bottom: 2px;
+    }
+  }
+
   td:nth-child(2) {
     white-space: nowrap;
     min-width: 20em;
-  }
-
-  .check-option {
   }
 }
