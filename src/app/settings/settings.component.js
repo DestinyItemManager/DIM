@@ -130,4 +130,8 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
       });
     });
   };
+
+  vm.reloadDim = function() {
+    window.location.reload(false);
+  };
 }

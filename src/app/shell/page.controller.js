@@ -3,7 +3,6 @@ import './page.scss';
 export default function PageController($scope) {
   'ngInject';
 
-  console.log("PageController");
   // Variables for templates
   $scope.$DIM_VERSION = $DIM_VERSION;
   $scope.$DIM_FLAVOR = $DIM_FLAVOR;
