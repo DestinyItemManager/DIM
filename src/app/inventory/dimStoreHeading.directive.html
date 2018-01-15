@@ -9,6 +9,7 @@
       </div>
       <div class="bottom">
         <div class="race-gender" ng-if="::!vm.store.isVault">{{ ::vm.store.genderRace }}</div>
+        <img ng-if="vm.store.isWellRested" class="perk" ng-src="{{vm.wellRestedPerk.displayProperties.icon | bungieIcon}}" title="{{vm.wellRestedPerk.displayProperties.description}}">
         <div class="level" ng-if="::!vm.store.isVault">{{ vm.store.level }}</div>
       </div>
       <div class="levelBar" ng-class="{ moteProgress: !vm.store.percentToNextLevel }" ng-if="::!vm.store.isVault" press-tip="{{ vm.xpTillMote }}" dim-percent-width="vm.levelBar"></div>

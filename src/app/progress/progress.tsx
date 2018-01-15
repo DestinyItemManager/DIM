@@ -187,6 +187,7 @@ export class Progress extends React.Component<Props, State> {
             <CharacterTile
               key={character.characterId}
               character={character}
+              characterProgression={profileInfo.characterProgressions.data[character.characterId]}
               defs={defs}
               lastPlayedDate={lastPlayedDate}
             />

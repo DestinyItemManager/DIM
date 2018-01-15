@@ -6,7 +6,7 @@ import {
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
-  DestinyProgression
+  DestinyCharacterProgressionComponent
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
@@ -213,7 +213,7 @@ export function D2StoresService(
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId] ? profileInfo.characterEquipment.data[characterId].items : [],
           profileInfo.itemComponents,
-          profileInfo.characterProgressions.data[characterId].progressions,
+          profileInfo.characterProgressions.data[characterId],
           buckets,
           previousItems,
           newItems,
@@ -284,17 +284,17 @@ export function D2StoresService(
     profileInventory: DestinyItemComponent[],
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
-    progressions: { [key: number]: DestinyProgression },
+    progressions: DestinyCharacterProgressionComponent,
     buckets: DimInventoryBuckets,
     previousItems,
     newItems,
     itemInfoService,
     lastPlayedDate: Date
   ): IPromise<DimStore> {
-    const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
+    const store = D2StoreFactory.makeCharacter(defs, character, progressions, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
-    store.progression = progressions ? { progressions } : null;
+    store.progression = progressions.progressions ? { progressions: progressions.progressions } : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
     let items = characterInventory.concat(_.values(characterEquipment));
