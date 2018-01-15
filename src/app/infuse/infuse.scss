@@ -6,7 +6,7 @@
   flex-direction: column;
   overflow: auto;
   @include phone-portrait {
-    --item-size: 44px;
+    --item-size: 48px;
   }
 
   .ngdialog-inner-content {
