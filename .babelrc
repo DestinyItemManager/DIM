@@ -4,14 +4,13 @@
       "modules": false,
       "useBuiltIns": true,
       "targets": {
-        "uglify": true,
         "browsers": [
-          "last 2 Chrome versions",
+          "Chrome >= 51",
           "last 2 ChromeAndroid versions",
           "last 2 Firefox versions",
           "last 2 Safari versions",
           "iOS >= 10",
-          "last 2 Edge versions",
+          "last 3 Edge versions",
           "last 2 Opera versions"
         ]
       }
