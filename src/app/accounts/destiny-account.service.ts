@@ -3,6 +3,7 @@ import { BungieMembershipType } from 'bungie-api-ts/common';
 import { UserMembershipData } from 'bungie-api-ts/user';
 import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
 import { PLATFORMS } from '../bungie-api/platforms';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
 
 /** A specific Destiny account (one per platform and Destiny version) */
 export interface DestinyAccount {
@@ -39,7 +40,8 @@ export function DestinyAccountService(BungieUserApi: BungieUserApiService, toast
     return BungieUserApi.getAccounts(bungieMembershipId)
       .then(generatePlatforms)
       .catch((e) => {
-        toaster.pop('error', `Unexpected error getting Destiny accounts for Bungie account ${bungieMembershipId}`, e.message);
+        // TODO: show a full-page error, or show a diagnostics page, rather than a popup
+        toaster.pop(bungieErrorToaster(e));
         throw e;
       });
   }

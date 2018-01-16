@@ -20,6 +20,7 @@ import { Loadout } from '../loadout/loadout.service';
 import { flatMap } from '../util';
 import { D2ItemFactoryType } from './store/d2-item-factory.service';
 import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
@@ -260,7 +261,8 @@ export function D2StoresService(
         throw e;
       })
       .catch((e) => {
-        showErrorToaster(e);
+        toaster.pop(bungieErrorToaster(e));
+        console.error('Error loading stores', e);
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to
@@ -385,21 +387,6 @@ export function D2StoresService(
       const d1 = new Date(character.dateLastPlayed);
       return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
     }, new Date(0));
-  }
-
-  function showErrorToaster(e) {
-    const twitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
-    const twitter = `<div> ${$i18next.t('BungieService.Twitter')} ${twitterLink}</div>`;
-
-    toaster.pop({
-      type: 'error',
-      bodyOutputType: 'trustedHtml',
-      title: 'Bungie.net Error',
-      body: e.message + twitter,
-      showCloseButton: false
-    });
-
-    console.error('Error loading stores', e);
   }
 
   // Add a fake stat for "max base power"

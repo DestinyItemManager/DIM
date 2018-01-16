@@ -8,11 +8,11 @@ import {
   DictionaryComponentResponse,
   SingleComponentResponse
   } from 'bungie-api-ts/destiny2';
-import { t } from 'i18next';
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
 import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -99,7 +99,7 @@ export function ProgressService(Destiny2Api: Destiny2ApiService, D2Definitions: 
     forceReloadTrigger.next(); // signal the force reload
   }
 
-  async function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
+  function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
     // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
     const reloadPromise = $q.all([Destiny2Api.getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]: [DestinyProfileResponse, D2ManifestDefinitions]): ProgressProfile => {
       return {
@@ -114,7 +114,8 @@ export function ProgressService(Destiny2Api: Destiny2ApiService, D2Definitions: 
       };
     })
     .catch((e) => {
-      showErrorToaster(e);
+      toaster.pop(bungieErrorToaster(e));
+      console.error('Error loading progress', e);
       // It's important that we swallow all errors here - otherwise
       // our observable will fail on the first error. We could work
       // around that with some rxjs operators, but it's easier to
@@ -127,21 +128,5 @@ export function ProgressService(Destiny2Api: Destiny2ApiService, D2Definitions: 
     loadingTracker.addPromise(reloadPromise);
 
     return reloadPromise;
-  }
-
-  // TODO: move to a shared function
-  function showErrorToaster(e) {
-    const twitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
-    const twitter = `<div> ${t('BungieService.Twitter')} ${twitterLink}</div>`;
-
-    toaster.pop({
-      type: 'error',
-      bodyOutputType: 'trustedHtml',
-      title: 'Bungie.net Error',
-      body: e.message + twitter,
-      showCloseButton: false
-    });
-
-    console.error('Error loading progress', e);
   }
 }

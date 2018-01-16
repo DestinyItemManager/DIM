@@ -3,6 +3,7 @@ import { Subject, BehaviorSubject } from '@reactivex/rxjs';
 
 import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
 
 export function StoreService(
   $rootScope,
@@ -13,7 +14,6 @@ export function StoreService(
   dimBucketService,
   dimItemInfoService,
   dimManifestService,
-  $i18next,
   dimDestinyTrackerService,
   toaster,
   StoreFactory,
@@ -211,7 +211,8 @@ export function StoreService(
         throw e;
       })
       .catch((e) => {
-        showErrorToaster(e);
+        toaster.pop(bungieErrorToaster(e));
+        console.error('Error loading stores', e);
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to
@@ -289,20 +290,5 @@ export function StoreService(
 
       return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
     }, null);
-  }
-
-  function showErrorToaster(e) {
-    const twitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
-    const twitter = `<div> ${$i18next.t('BungieService.Twitter')} ${twitterLink}</div>`;
-
-    toaster.pop({
-      type: 'error',
-      bodyOutputType: 'trustedHtml',
-      title: 'Bungie.net Error',
-      body: e.message + twitter,
-      showCloseButton: false
-    });
-
-    console.error('Error loading stores', e);
   }
 }
