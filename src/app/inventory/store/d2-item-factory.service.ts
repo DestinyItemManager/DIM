@@ -171,6 +171,12 @@ export interface DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
 
+  // TODO: this should be on a separate object, with the other DTR stuff
+  pros: string;
+  cons: string;
+  userReview: string;
+  userVote: number;
+
   // Can this item be equipped by the given store?
   canBeEquippedBy(store: DimStore): boolean;
   inCategory(categoryName: string): boolean;
@@ -837,7 +843,7 @@ export function D2ItemFactory(
     defs: D2ManifestDefinitions,
     itemDef: DestinyInventoryItemDefinition
   ): DimSockets | null {
-    if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length || socketsMap[item.itemInstanceId]) {
+    if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length || !socketsMap[item.itemInstanceId]) {
       return null;
     }
     const sockets = socketsMap[item.itemInstanceId].sockets;

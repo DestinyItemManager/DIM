@@ -83,6 +83,8 @@ mod.filter('sortStores', () => {
           return store.lastPlayed;
         }
       });
+    } else if (stores.length && stores[0].destinyVersion === 1) {
+      return _.sortBy(stores, 'id');
     } else {
       return stores;
     }
