@@ -206,9 +206,10 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
 
     // Create a loadout from this store's equipped items
     loadoutFromCurrentlyEquipped(name: string): Loadout {
-      const allItems = this.items
+      const allItems = (this.items as DimItem[])
         .filter((item) => item.canBeInLoadout())
-        .map(angularCopy);
+        // tslint:disable-next-line:no-unnecessary-callback-wrapper
+        .map((item) => angularCopy(item));
       return {
         id: uuidv4(),
         classType: -1,

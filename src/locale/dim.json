@@ -244,7 +244,8 @@
     "Refresh": "Refresh Destiny Data",
     "Shop": "Shop",
     "SupportDIM": "Backers",
-    "Back": "Go Back"
+    "Back": "Go Back",
+    "BulkTag": "Bulk tag items"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
