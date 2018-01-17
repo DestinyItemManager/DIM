@@ -4,6 +4,7 @@ import { UserMembershipData } from 'bungie-api-ts/user';
 import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
 import { PLATFORMS } from '../bungie-api/platforms';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
+import { reportExceptionToGoogleAnalytics } from '../google';
 
 /** A specific Destiny account (one per platform and Destiny version) */
 export interface DestinyAccount {
@@ -42,6 +43,7 @@ export function DestinyAccountService(BungieUserApi: BungieUserApiService, toast
       .catch((e) => {
         // TODO: show a full-page error, or show a diagnostics page, rather than a popup
         toaster.pop(bungieErrorToaster(e));
+        reportExceptionToGoogleAnalytics('getDestinyAccountsForBungieAccount', e);
         throw e;
       });
   }

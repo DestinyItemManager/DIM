@@ -452,7 +452,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
 
               if (!_dupeInPost) {
                 if (_.any(dupes, (dupe) => dupe.location.inPostmaster)) {
-                  toaster.pop('warn', $i18next.t('Filter.DupeInPostmaster'));
+                  toaster.pop('warning', $i18next.t('Filter.DupeInPostmaster'));
                   _dupeInPost = true;
                 }
               }

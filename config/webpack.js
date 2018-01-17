@@ -246,7 +246,9 @@ module.exports = (env) => {
         // Debug ui-router
         '$featureFlags.debugRouter': JSON.stringify(false),
         // Show drag and drop on dev only
-        '$featureFlags.dnd': JSON.stringify(isDev)
+        '$featureFlags.dnd': JSON.stringify(isDev),
+        // Send exception reports to Google Analytics on beta only
+        '$featureFlags.googleExceptionReports': JSON.stringify(env === 'beta')
       }),
 
       new webpack.SourceMapDevToolPlugin({

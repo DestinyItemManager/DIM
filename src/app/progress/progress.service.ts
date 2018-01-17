@@ -11,8 +11,9 @@ import {
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
-import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
+import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { reportExceptionToGoogleAnalytics } from '../google';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -116,6 +117,7 @@ export function ProgressService(Destiny2Api: Destiny2ApiService, D2Definitions: 
     .catch((e) => {
       toaster.pop(bungieErrorToaster(e));
       console.error('Error loading progress', e);
+      reportExceptionToGoogleAnalytics('progressService', e);
       // It's important that we swallow all errors here - otherwise
       // our observable will fail on the first error. We could work
       // around that with some rxjs operators, but it's easier to
