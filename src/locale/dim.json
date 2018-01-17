@@ -245,7 +245,8 @@
     "Shop": "Shop",
     "SupportDIM": "Backers",
     "Back": "Go Back",
-    "BulkTag": "Bulk tag items"
+    "BulkTag": "Bulk tag items",
+    "ReportBug": "Report an Issue"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
