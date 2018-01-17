@@ -1,5 +1,7 @@
 import _ from 'underscore';
-import { Subject, BehaviorSubject } from '@reactivex/rxjs';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import '../rx-operators';
 
 import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
