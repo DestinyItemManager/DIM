@@ -13,11 +13,8 @@ function ItemStatsController(dimSettingsService) {
   vm.masterworkStat = function() {
     const item = vm.item;
 
-//    debugger;
-
     if (item.sockets) {
-      const mw = _.pluck(item.sockets.sockets, 'masterworkStat');
-      return _.find(mw, (ms) => ms > 0);
+      return _.find(_.pluck(item.sockets.sockets, 'masterworkStat'), (ms) => ms > 0);
     }
 
     return null;

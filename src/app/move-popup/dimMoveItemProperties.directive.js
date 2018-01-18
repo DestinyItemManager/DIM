@@ -111,7 +111,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     const item = vm.item;
 
     if (item.sockets) {
-      return _.find(_.pluck(item.sockets.sockets, 'masterworkType'), (type) => type != null);
+      return _.find(_.pluck(item.sockets.sockets, 'masterworkType'), (type) => type !== null);
     }
 
     return null;

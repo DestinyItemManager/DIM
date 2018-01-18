@@ -865,11 +865,6 @@ export function D2ItemFactory(
       const masterworkType = (socket.plugObjectives && socket.plugObjectives.length) ? ((plugOptions[0].plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible") : null;
       const masterworkStat = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].statTypeHash : undefined;
 
-      /* if (masterworkType) {
-        debugger;
-      } */
-
-
       return {
         plug,
         reusablePlugs,
