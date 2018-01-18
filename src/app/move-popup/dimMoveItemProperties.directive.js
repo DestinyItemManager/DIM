@@ -107,6 +107,18 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     return null;
   };
 
+  vm.masterworkType = function() {
+    const item = vm.item;
+
+    if (item.sockets) {
+      return _.find(_.pluck(item.sockets.sockets, 'masterworkType'), (type) => type != null);
+    }
+
+    return null;
+  }
+
+
+
   vm.submitReview = function() {
     const item = vm.item;
 

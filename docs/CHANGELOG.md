@@ -1,6 +1,7 @@
 # Next
 
 * Your character stats now update live when you change armor.
+* Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
 
 # 4.34.0
 

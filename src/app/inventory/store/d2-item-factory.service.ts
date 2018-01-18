@@ -97,6 +97,8 @@ export interface DimSocket {
   enableFailReasons: string;
   plugOptions: DestinyInventoryItemDefinition[];
   masterworkProgress: number | undefined;
+  masterworkType: string | null;
+  masterworkStat: number | undefined;
 }
 
 export interface DimSocketCategory {
@@ -860,6 +862,13 @@ export function D2ItemFactory(
       const reusablePlugs = (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash));
       const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? reusablePlugs : (plug ? [plug] : []);
       const masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
+      const masterworkType = (socket.plugObjectives && socket.plugObjectives.length) ? ((plugOptions[0].plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible") : null;
+      const masterworkStat = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].statTypeHash : undefined;
+
+      /* if (masterworkType) {
+        debugger;
+      } */
+
 
       return {
         plug,
@@ -867,7 +876,9 @@ export function D2ItemFactory(
         enabled: socket.isEnabled,
         enableFailReasons: failReasons,
         plugOptions,
-        masterworkProgress
+        masterworkProgress,
+        masterworkType,
+        masterworkStat
       };
     });
 
