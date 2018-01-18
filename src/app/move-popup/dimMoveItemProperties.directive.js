@@ -115,8 +115,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     }
 
     return null;
-  }
-
+  };
 
 
   vm.submitReview = function() {

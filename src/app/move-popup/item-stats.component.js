@@ -18,7 +18,7 @@ function ItemStatsController(dimSettingsService) {
     }
 
     return null;
-  }
+  };
 }
 
 export const ItemStatsComponent = {
