@@ -35,7 +35,9 @@ declare const $featureFlags: {
   /** Debug ui-router */
   debugRouter: boolean;
   /** Show drag and drop on dev only */
-  dnd: boolean
+  dnd: boolean,
+  /** Send exception reports to Google Analytics */
+  googleExceptionReports: boolean;
 }
 
 declare module "*.png" {

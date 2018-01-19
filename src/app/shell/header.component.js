@@ -31,7 +31,8 @@ function HeaderController(
 
   vm.featureFlags = {
     vendorsEnabled: $featureFlags.vendorsEnabled,
-    activities: $featureFlags.activities
+    activities: $featureFlags.activities,
+    bugReportLink: $DIM_FLAVOR !== 'release'
   };
 
   vm.destinyVersion = getCurrentDestinyVersion($state);
