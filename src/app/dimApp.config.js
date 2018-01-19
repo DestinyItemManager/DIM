@@ -1,16 +1,14 @@
-/*
-import en from '../locale/dim.json';
-import it from '../locale/it/dim.json';
-import de from '../locale/de/dim.json';
-import fr from '../locale/fr/dim.json';
-import es from '../locale/es-ES/dim.json';
-import esMX from '../locale/es-MX/dim.json';
-import ja from '../locale/ja/dim.json';
-import pl from '../locale/pl/dim.json';
-import ptBR from '../locale/pt-BR/dim.json';
-import ru from '../locale/ru/dim.json';
-import zhCHT from '../locale/zh-TW/dim.json';
-*/
+import en from 'file-loader?name=[name]-[hash:6].[ext]!../locale/dim.json';
+import it from 'file-loader?name=[name]-[hash:6].[ext]!../locale/it/dim.json';
+import de from 'file-loader?name=[name]-[hash:6].[ext]!../locale/de/dim.json';
+import fr from 'file-loader?name=[name]-[hash:6].[ext]!../locale/fr/dim.json';
+import es from 'file-loader?name=[name]-[hash:6].[ext]!../locale/es-ES/dim.json';
+import esMX from 'file-loader?name=[name]-[hash:6].[ext]!../locale/es-MX/dim.json';
+import ja from 'file-loader?name=[name]-[hash:6].[ext]!../locale/ja/dim.json';
+import pl from 'file-loader?name=[name]-[hash:6].[ext]!../locale/pl/dim.json';
+import ptBR from 'file-loader?name=[name]-[hash:6].[ext]!../locale/pt-BR/dim.json';
+import ru from 'file-loader?name=[name]-[hash:6].[ext]!../locale/ru/dim.json';
+import zhCHT from 'file-loader?name=[name]-[hash:6].[ext]!../locale/zh-CN/dim.json';
 
 import { init as i18init, use as i18use } from 'i18next';
 import XHR from 'i18next-xhr-backend';
@@ -29,32 +27,13 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
 
   hotkeysProvider.includeCheatSheet = true;
 
-
-  function loadLocales(url, options, callback) {
-    if (url === 'es') {
-      url = 'es-ES';
-    } else if (url === 'zh-cht') {
-      url = 'zh-CN';
-    }
-    url = url.replace(/-[a-z]+/, (str) => str.toUpperCase());
-
-    import(`../locale/${url}/dim.json`)
-      .then((locale) => {
-        console.log(locale);
-        callback(locale, { status: '200' });
-      })
-      .catch((e) => {
-        console.log("Failed to load language", e);
-        callback(null, { status: '404' });
-      });
-  }
-
   // See https://github.com/i18next/ng-i18next
   i18use(XHR);
   i18init({
     debug: $DIM_FLAVOR === 'dev',
     fallbackLng: 'en',
     lowerCaseLng: true,
+    load: 'currentOnly',
     interpolation: {
       escapeValue: false,
       format: function(val, format) {
@@ -64,10 +43,44 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
         return val;
       }
     },
+    /*
+    whitelist: [
+      'en',
+      'it',
+      'de',
+      'fr',
+      'es',
+      'es-mx',
+      'ja',
+      'pt-br',
+      'pl',
+      'ru',
+      'zh-cht'
+    ],
+    */
     backend: {
-      loadPath: '{{lng}}',
-      parse: (data) => data,
-      ajax: loadLocales
+      loadPath(lng) {
+        const path = {
+          en,
+          it,
+          de,
+          fr,
+          es,
+          'es-mx': esMX,
+          ja,
+          'pt-br': ptBR,
+          pl,
+          ru,
+          'zh-cht': zhCHT
+        }[lng];
+        console.log('load', lng, path);
+        if (!path) {
+          throw new Error("unsupported language " + lng);
+        }
+        return path;
+      },
+      //parse: (data) => console.log(data) && data,
+      //ajax: loadLocales
     }, /*
     resources: {
       en: { translation: en },
