@@ -99,7 +99,6 @@
   },
   "dependencies": {
     "@destiny-item-manager/zip.js": "github:DestinyItemManager/zip.js",
-    "@reactivex/rxjs": "^5.5.6",
     "@types/angular": "^1.6.40",
     "@types/i18next": "^8.4.2",
     "@types/react": "^16.0.34",
@@ -137,6 +136,7 @@
     "react-dom": "^16.2.0",
     "react-view-pager": "^0.5.1",
     "react2angular": "^3.1.0",
+    "rxjs": "^5.5.6",
     "simple-query-string": "^1.3.0",
     "sql.js": "github:DestinyItemManager/sql.js",
     "textcomplete": "^0.16.0",

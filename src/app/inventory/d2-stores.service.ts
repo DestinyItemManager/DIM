@@ -1,4 +1,3 @@
-import { BehaviorSubject, Subject } from '@reactivex/rxjs';
 import { StateParams } from '@uirouter/angularjs';
 import { IPromise, IRootScopeService } from 'angular';
 import {
@@ -8,19 +7,22 @@ import {
   DestinyProfileResponse,
   DestinyProgression
   } from 'bungie-api-ts/destiny2';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { PLATFORMS } from '../bungie-api/platforms';
 import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
 import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';
+import '../rx-operators';
 import { flatMap } from '../util';
 import { D2ItemFactoryType } from './store/d2-item-factory.service';
 import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
-import { bungieErrorToaster } from '../bungie-api/error-toaster';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
