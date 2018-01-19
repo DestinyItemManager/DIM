@@ -1,3 +1,4 @@
+/*
 import en from '../locale/dim.json';
 import it from '../locale/it/dim.json';
 import de from '../locale/de/dim.json';
@@ -9,8 +10,10 @@ import pl from '../locale/pl/dim.json';
 import ptBR from '../locale/pt-BR/dim.json';
 import ru from '../locale/ru/dim.json';
 import zhCHT from '../locale/zh-TW/dim.json';
+*/
 
-import { init as i18init } from 'i18next';
+import { init as i18init, use as i18use } from 'i18next';
+import XHR from 'i18next-xhr-backend';
 
 function config($compileProvider, $httpProvider, hotkeysProvider,
                 ngHttpRateLimiterConfigProvider, ngDialogProvider) {
@@ -26,7 +29,28 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
 
   hotkeysProvider.includeCheatSheet = true;
 
+
+  function loadLocales(url, options, callback) {
+    if (url === 'es') {
+      url = 'es-ES';
+    } else if (url === 'zh-cht') {
+      url = 'zh-CN';
+    }
+    url = url.replace(/-[a-z]+/, (str) => str.toUpperCase());
+
+    import(`../locale/${url}/dim.json`)
+      .then((locale) => {
+        console.log(locale);
+        callback(locale, { status: '200' });
+      })
+      .catch((e) => {
+        console.log("Failed to load language", e);
+        callback(null, { status: '404' });
+      });
+  }
+
   // See https://github.com/i18next/ng-i18next
+  i18use(XHR);
   i18init({
     debug: $DIM_FLAVOR === 'dev',
     fallbackLng: 'en',
@@ -40,6 +64,11 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
         return val;
       }
     },
+    backend: {
+      loadPath: '{{lng}}',
+      parse: (data) => data,
+      ajax: loadLocales
+    }, /*
     resources: {
       en: { translation: en },
       it: { translation: it },
@@ -52,7 +81,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       pl: { translation: pl },
       ru: { translation: ru },
       'zh-cht': { translation: zhCHT }
-    },
+    },*/
     returnObjects: true
   });
 
