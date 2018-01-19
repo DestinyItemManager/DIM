@@ -47,14 +47,6 @@ module.exports = (env) => {
       chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
     },
 
-    devServer: {
-      contentBase: path.resolve(__dirname, './src'),
-      publicPath: '/',
-      https: true,
-      host: 'localhost',
-      hot: false
-    },
-
     stats: 'errors-only',
 
     performance: {
