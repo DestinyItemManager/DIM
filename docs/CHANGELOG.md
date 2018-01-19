@@ -1,6 +1,7 @@
 # Next
 
 * Your character stats now update live when you change armor.
+* New settings to help distinguish colors for colorblind users.
 
 # 4.34.0
 

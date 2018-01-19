@@ -238,7 +238,7 @@ module.exports = (env) => {
         // Use a WebAssembly version of SQLite, if possible (this crashes on Chrome 58 on Android though)
         '$featureFlags.wasm': JSON.stringify(true),
         // Enable color-blind a11y
-        '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
+        '$featureFlags.colorA11y': JSON.stringify(true),
         // Whether to log page views for router events
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(true),
         // Enable activities tab
