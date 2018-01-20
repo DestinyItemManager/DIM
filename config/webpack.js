@@ -71,9 +71,6 @@ module.exports = (env) => {
             cacheDirectory: true
           }
         }, {
-          test: /\.json$/,
-          loader: 'json-loader'
-        }, {
           test: /\.html$/,
           use: [
             'raw-loader',

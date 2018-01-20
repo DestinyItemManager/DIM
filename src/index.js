@@ -23,6 +23,8 @@ import './app/shell/dimManifestProgress.directive';
 
 import './scss/main.scss';
 
+import { initi18n } from './app/i18n';
+
 iosDragDropShim({
   enableEnterLeave: true,
   holdToDrag: 300
@@ -38,4 +40,6 @@ if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
     });
 }
 
-angular.bootstrap(document.body, ['app'], { strictDi: true });
+initi18n().then(() => {
+  angular.bootstrap(document.body, ['app'], { strictDi: true });
+});

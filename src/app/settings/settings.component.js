@@ -124,6 +124,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   };
 
   vm.changeLanguage = function() {
+    localStorage.dimLanguage = vm.settings.language;
     changeLanguage(vm.settings.language, () => {
       $rootScope.$applyAsync(() => {
         $rootScope.$broadcast('i18nextLanguageChange');
