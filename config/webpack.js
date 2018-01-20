@@ -8,6 +8,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -141,25 +142,29 @@ module.exports = (env) => {
 
       new ExtractTextPlugin('styles-[contenthash:6].css'),
 
+      new InlineManifestWebpackPlugin({
+        name: 'webpackManifest'
+      }),
+
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'index.html',
         template: '!handlebars-loader!src/index.html',
-        chunks: ['manifest', 'vendor', 'main', 'browsercheck']
+        chunks: ['vendor', 'main', 'browsercheck']
       }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'return.html',
         template: '!handlebars-loader!src/return.html',
-        chunks: ['manifest', 'vendor', 'authReturn']
+        chunks: ['vendor', 'authReturn']
       }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'gdrive-return.html',
         template: '!handlebars-loader!src/gdrive-return.html',
-        chunks: ['manifest', 'vendor', 'gdriveReturn']
+        chunks: ['vendor', 'gdriveReturn']
       }),
 
       new CopyWebpackPlugin([
@@ -306,9 +311,8 @@ module.exports = (env) => {
       maximumFileSizeToCacheInBytes: 5000000,
       globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
       globIgnores: [
-        'authReturn*',
+        'manifest-*.js',
         'extension-scripts/*',
-        'return.html',
         'service-worker.js'
       ],
       swSrc: './dist/service-worker.js',

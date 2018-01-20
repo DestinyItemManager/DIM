@@ -46,6 +46,7 @@
     <script async src="https://www.google-analytics.com/analytics.js"></script>
     <script src="https://apis.google.com/js/api.js"></script>
 
+    {{{htmlWebpackPlugin.files.webpackManifest}}}
     {{#each htmlWebpackPlugin.files.js}}
     <script type="text/javascript" src="{{ webpackConfig.output.publicPath }}{{ this }}"></script>
     {{/each}}
