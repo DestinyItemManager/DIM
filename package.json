@@ -17,8 +17,7 @@
     "build-dev": "npm run bundle -s -- --env=dev --watch",
     "start": "npm run build-dev -s",
     "publish-beta": "npm run build-beta -s && ruby ./badfiles.rb && grunt publish_beta",
-    "publish-release": "npm run build-release -s && ruby ./badfiles.rb && grunt publish_release",
-    "server": "webpack-dev-server --config ./config/webpack.js --env=dev"
+    "publish-release": "npm run build-release -s && ruby ./badfiles.rb && grunt publish_release"
   },
   "repository": {
     "type": "git",
@@ -93,7 +92,6 @@
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
     "webpack-bundle-analyzer": "^2.9.2",
-    "webpack-dev-server": "^2.11.0",
     "webpack-notifier": "^1.5.0",
     "workbox-webpack-plugin": "^2.1.2"
   },

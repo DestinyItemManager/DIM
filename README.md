@@ -108,10 +108,7 @@ Install dependencies:
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-Build in dev mode (website)
-* `npm run server`. Visit the URL it prints out to load DIM. It will update automatically as you change files.
-
-Or run your own local web server
+Run your own local web server
 * `npm install http-server -g` will install http-server
 * `npm start` will start webpack building (and rebuilding as file changes are detected)
 * then go in to the `dist` subdirectory and run `http-server -S` to run http-server over SSL. It'll run on port 8080.
