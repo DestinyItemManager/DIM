@@ -21,7 +21,6 @@ import bungieApiModule from './bungie-api/bungie-api.module';
 import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './inventory/inventory.module';
-import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
 import loginModule from './login/login.module';
 import compareModule from './compare/compare.module';
@@ -60,7 +59,6 @@ const dependencies = [
   bungieApiModule,
   accountsModule,
   inventoryModule,
-  vendorsModule,
   itemReviewModule,
   loginModule,
   compareModule,
