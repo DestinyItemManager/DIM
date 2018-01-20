@@ -25,6 +25,7 @@ export function ActivityTrackerDirective(
 
       $document.on('click', clickHandler);
       $document.on('visibilitychange', visibilityHandler);
+      $document.on('online', refreshAccountData);
 
       const ONE_MINUTE = 60 * 1000;
       const FIVE_MINUTES = 5 * 60 * 1000;
@@ -36,7 +37,7 @@ export function ActivityTrackerDirective(
         // This event should *NOT* be listened to by services!
         // TODO: replace this with an observable?
         $rootScope.$broadcast('dim-refresh');
-      }, ONE_MINUTE);
+      }, ONE_MINUTE, { trailing: false });
 
       const activeWithinLastHour = dimActivityTrackerService.activeWithinTimespan
         .bind(dimActivityTrackerService, ONE_HOUR);
@@ -45,10 +46,10 @@ export function ActivityTrackerDirective(
         const dimHasNoActivePromises = !loadingTracker.active();
         const userWasActiveInTheLastHour = activeWithinLastHour();
         const isDimVisible = !$document.hidden;
+        const isOnline = navigator.onLine;
 
-        if (dimHasNoActivePromises && userWasActiveInTheLastHour && isDimVisible) {
+        if (dimHasNoActivePromises && userWasActiveInTheLastHour && isDimVisible && isOnline) {
           refresh();
-          // TODO: fire an event instead
         }
       }
 
@@ -57,6 +58,7 @@ export function ActivityTrackerDirective(
       scope.$on('$destroy', () => {
         $document.off('click', clickHandler);
         $document.off('visibilitychange', visibilityHandler);
+        $document.off('online', refreshAccountData);
         $timeout.cancel(refreshAccountDataInterval);
       });
 
