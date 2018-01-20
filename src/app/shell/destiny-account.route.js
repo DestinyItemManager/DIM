@@ -36,4 +36,15 @@ export function destinyAccountRoute($stateProvider) {
       }
     }
   });
+
+  // Register a lazy future state for all Destiny 1 pages, so they are not in the main chunk.
+  $stateProvider.state({
+    name: 'destiny1.**',
+    parent: 'destiny-account',
+    lazyLoad($transition$) {
+      const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+      return import(/* webpackChunkName: "destiny1" */ '../destiny1/destiny1.module.js')
+        .then((mod) => $ocLazyLoad.load(mod.default));
+    }
+  });
 }

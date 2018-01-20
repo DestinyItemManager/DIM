@@ -15,16 +15,14 @@ import UIRouterModule from '@uirouter/angularjs';
 import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
+import ocLazyLoadModule from 'oclazyload';
 
 import bungieApiModule from './bungie-api/bungie-api.module';
 import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './inventory/inventory.module';
-import recordBooksModule from './record-books/record-books.module';
-import activitiesModule from './activities/activities.module';
 import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
-import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
 import loginModule from './login/login.module';
 import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
@@ -35,7 +33,6 @@ import storageModule from './storage/storage.module';
 import loadoutModule from './loadout/loadout.module';
 import movePopupModule from './move-popup/move-popup.module';
 import searchModule from './search/search.module';
-import destiny1Module from './destiny1/destiny1.module';
 import destiny2Module from './destiny2/destiny2.module';
 import { progressModule } from './progress/progress.module';
 
@@ -53,6 +50,7 @@ const dependencies = [
   MessagesModule,
   TouchModule,
   ngI18Next,
+  ocLazyLoadModule,
   ngSanitize,
   RateLimiterModule,
   ShellModule,
@@ -62,11 +60,8 @@ const dependencies = [
   bungieApiModule,
   accountsModule,
   inventoryModule,
-  recordBooksModule,
-  activitiesModule,
   vendorsModule,
   itemReviewModule,
-  loadoutBuilderModule,
   loginModule,
   compareModule,
   infuseModule,
@@ -77,7 +72,6 @@ const dependencies = [
   loadoutModule,
   movePopupModule,
   searchModule,
-  destiny1Module,
   destiny2Module,
   progressModule,
   'ajoslin.promise-tracker',

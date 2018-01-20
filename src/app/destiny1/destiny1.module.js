@@ -2,8 +2,16 @@ import angular from 'angular';
 
 import { Destiny1Component } from './destiny1.component';
 
+import recordBooksModule from '../record-books/record-books.module';
+import activitiesModule from '../activities/activities.module';
+import loadoutBuilderModule from '../loadout-builder/loadout-builder.module';
+
 export default angular
-  .module('destiny1Module', [])
+  .module('destiny1Module', [
+    recordBooksModule,
+    activitiesModule,
+    loadoutBuilderModule
+  ])
   .component('destiny1', Destiny1Component)
   .config(($stateProvider) => {
     'ngInject';
@@ -16,5 +24,4 @@ export default angular
       url: '/d1',
       component: 'destiny1'
     });
-  })
-  .name;
+  });
