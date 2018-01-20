@@ -151,7 +151,7 @@ class D2ReviewDataCache {
     let matchingItem = this._getMatchingItem(item);
 
     if (!matchingItem) {
-      this.addScore(reviewsData);
+      this._addScore(reviewsData);
     }
 
     matchingItem = this._getMatchingItem(item);
