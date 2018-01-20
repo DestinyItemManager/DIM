@@ -47,10 +47,15 @@
          ui-sref="storage"
          ng-i18next="Storage.Title"></a>
       <span class="link"
-            ui-sref-active="active"
-            ui-sref="storage"
-            ng-i18next="Settings.Settings"></span>
-
+         ui-sref-active="active"
+         ui-sref="settings"
+         ng-i18next="Settings.Settings"></span>
+      <a class="link"
+         ng-if="$ctrl.featureFlags.bugReportLink"
+         target="_blank"
+         rel="noopener noreferrer"
+         href="https://github.com/DestinyItemManager/DIM/issues"
+         ng-i18next="Header.ReportBug"></a>
       <hr>
 
       <span class="link"
@@ -89,6 +94,12 @@
      rel="noopener noreferrer"
      href="https://teespring.com/stores/dim"
      ng-i18next="Header.Shop"></a>
+  <a class="link first-to-go"
+     ng-if="$ctrl.featureFlags.bugReportLink"
+     target="_blank"
+     rel="noopener noreferrer"
+     href="https://github.com/DestinyItemManager/DIM/issues"
+     ng-i18next="Header.ReportBug"></a>
 
   <span class="link first-to-go header-separator" ng-if="$ctrl.destinyVersion"></span>
 

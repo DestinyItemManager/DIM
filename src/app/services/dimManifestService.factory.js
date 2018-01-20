@@ -56,7 +56,7 @@ function makeManifestService(localStorageKey, idbKey, $q, DestinyApi, $http, toa
 
           // The manifest has updated!
           if (path !== service.version) {
-            toaster.pop('error',
+            toaster.pop('warning',
                         $i18next.t('Manifest.Outdated'),
                         $i18next.t('Manifest.OutdatedExplanation'));
           }

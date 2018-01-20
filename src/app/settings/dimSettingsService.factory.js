@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { changeLanguage } from 'i18next';
+import i18next, { changeLanguage } from 'i18next';
+import { defaultLanguage } from '../i18n';
 
 /**
  * The settings service provides a settings object which contains
@@ -18,14 +19,6 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
 
   let _loaded = false;
   const _ready = $q.defer();
-
-  const destinyLanguages = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'pl', 'pt-br', 'ru', 'zh-cht'];
-
-  // Try to pick a nice default language
-  function defaultLanguage() {
-    const browserLang = ($window.navigator.language || 'en').toLowerCase();
-    return _.find(destinyLanguages, (lang) => browserLang.startsWith(lang)) || 'en';
-  }
 
   const settings = {
     // Hide items that don't match the current search
@@ -110,12 +103,16 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
     _ready.resolve();
 
     $rootScope.$evalAsync(() => {
+      const languageChanged = savedSettings.language !== i18next.language;
       angular.merge(settings, savedSettings);
-      changeLanguage(settings.language, () => {
-        $rootScope.$applyAsync(() => {
-          $rootScope.$broadcast('i18nextLanguageChange');
+      localStorage.dimLanguage = settings.language;
+      if (languageChanged) {
+        changeLanguage(settings.language, () => {
+          $rootScope.$applyAsync(() => {
+            $rootScope.$broadcast('i18nextLanguageChange');
+          });
         });
-      });
+      }
       $rootScope.$emit('dim-settings-loaded', {});
     });
   });

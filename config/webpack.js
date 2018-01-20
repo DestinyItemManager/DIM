@@ -7,6 +7,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -46,14 +48,6 @@ module.exports = (env) => {
       chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
     },
 
-    devServer: {
-      contentBase: path.resolve(__dirname, './src'),
-      publicPath: '/',
-      https: true,
-      host: 'localhost',
-      hot: false
-    },
-
     stats: 'errors-only',
 
     performance: {
@@ -65,12 +59,10 @@ module.exports = (env) => {
         {
           test: /\.js$/,
           exclude: [/node_modules/, /sql\.js/],
-          use: [
-            'babel-loader'
-          ]
-        }, {
-          test: /\.json$/,
-          loader: 'json-loader'
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true
+          }
         }, {
           test: /\.html$/,
           use: [
@@ -150,25 +142,29 @@ module.exports = (env) => {
 
       new ExtractTextPlugin('styles-[contenthash:6].css'),
 
+      new InlineManifestWebpackPlugin({
+        name: 'webpackManifest'
+      }),
+
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'index.html',
         template: '!handlebars-loader!src/index.html',
-        chunks: ['manifest', 'vendor', 'main', 'browsercheck']
+        chunks: ['vendor', 'main', 'browsercheck']
       }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'return.html',
         template: '!handlebars-loader!src/return.html',
-        chunks: ['manifest', 'vendor', 'authReturn']
+        chunks: ['vendor', 'authReturn']
       }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'gdrive-return.html',
         template: '!handlebars-loader!src/gdrive-return.html',
-        chunks: ['manifest', 'vendor', 'gdriveReturn']
+        chunks: ['vendor', 'gdriveReturn']
       }),
 
       new CopyWebpackPlugin([
@@ -236,7 +232,7 @@ module.exports = (env) => {
         // Use a WebAssembly version of SQLite, if possible (this crashes on Chrome 58 on Android though)
         '$featureFlags.wasm': JSON.stringify(true),
         // Enable color-blind a11y
-        '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
+        '$featureFlags.colorA11y': JSON.stringify(true),
         // Whether to log page views for router events
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(true),
         // Enable activities tab
@@ -244,7 +240,9 @@ module.exports = (env) => {
         // Debug ui-router
         '$featureFlags.debugRouter': JSON.stringify(false),
         // Show drag and drop on dev only
-        '$featureFlags.dnd': JSON.stringify(isDev)
+        '$featureFlags.dnd': JSON.stringify(isDev),
+        // Send exception reports to Google Analytics on beta only
+        '$featureFlags.googleExceptionReports': JSON.stringify(env === 'beta')
       }),
 
       new webpack.SourceMapDevToolPlugin({
@@ -292,11 +290,20 @@ module.exports = (env) => {
     // The sql.js library doesnt work at all (reports no tables) when minified,
     // so we exclude it from the regular minification
     // FYI, uglification runs on final chunks rather than individual modules
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    config.plugins.push(new UglifyJsPlugin({
       exclude: [/-sqlLib-/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
-      compress: { warnings: false },
-      output: { comments: false },
-      sourceMap: true
+      uglifyOptions: {
+        compress: {
+          ecma: 6,
+          passes: 2
+        },
+        output: {
+          ecma: 6
+        }
+      },
+      sourceMap: true,
+      cache: true,
+      parallel: true
     }));
 
     // Generate a service worker
@@ -304,9 +311,8 @@ module.exports = (env) => {
       maximumFileSizeToCacheInBytes: 5000000,
       globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
       globIgnores: [
-        'authReturn*',
+        'manifest-*.js',
         'extension-scripts/*',
-        'return.html',
         'service-worker.js'
       ],
       swSrc: './dist/service-worker.js',

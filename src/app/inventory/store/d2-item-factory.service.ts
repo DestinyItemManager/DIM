@@ -19,12 +19,13 @@ import {
   DestinyStat,
   DestinyStatDefinition,
   DestinyTalentGridDefinition,
-  ItemLocation
+  ItemLocation,
+  TransferStatuses
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { sum } from '../../util';
 import { BucketsService, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
 import { D2DefinitionsService, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { sum } from '../../util';
 import { getClass } from './character-utils';
 import { DimStore } from './d2-store-factory.service';
 
@@ -170,6 +171,12 @@ export interface DimItem {
   infusable: boolean;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
+
+  // TODO: this should be on a separate object, with the other DTR stuff
+  pros: string;
+  cons: string;
+  userReview: string;
+  userVote: number;
 
   // Can this item be equipped by the given store?
   canBeEquippedBy(store: DimStore): boolean;
@@ -446,7 +453,9 @@ export function D2ItemFactory(
       name: itemDef.displayProperties.name,
       description: itemDef.displayProperties.description,
       icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
-      notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable),
+      notransfer: Boolean(currentBucket.inPostmaster ||
+        itemDef.nonTransferrable ||
+        item.transferStatus === TransferStatuses.NotTransferrable),
       id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
       equipped: Boolean(instanceDef.isEquipped),
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
@@ -837,7 +846,7 @@ export function D2ItemFactory(
     defs: D2ManifestDefinitions,
     itemDef: DestinyInventoryItemDefinition
   ): DimSockets | null {
-    if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length || socketsMap[item.itemInstanceId]) {
+    if (!item.itemInstanceId || !itemDef.sockets || !itemDef.sockets.socketEntries.length || !socketsMap[item.itemInstanceId]) {
       return null;
     }
     const sockets = socketsMap[item.itemInstanceId].sockets;

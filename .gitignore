@@ -3,6 +3,7 @@ extension-dist/
 .settings/
 .idea/
 node_modules/
+typings/
 build/common
 build/img
 build/manifest
@@ -12,7 +13,8 @@ build/*.zip
 *.DS_Store
 config/dim_travis.rsa
 .awcache
-
+cert.pem
+key.pem
 .brackets.json
 .npmrc
 npm-debug.log

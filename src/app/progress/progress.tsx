@@ -1,4 +1,4 @@
-import { Subscription } from '@reactivex/rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { IScope } from 'angular';
 import {
   DestinyCharacterComponent,

@@ -24,7 +24,7 @@ export function isWellRested(
   }
 
   // Have you gained XP equal to three full levels worth of XP?
-  return legendProgress.weeklyProgress >
+  return legendProgress.weeklyProgress <
     xpRequiredForLevel(legendProgress.level, legendProgressDef) +
     xpRequiredForLevel(legendProgress.level - 1, legendProgressDef) +
     xpRequiredForLevel(legendProgress.level - 2, legendProgressDef);
