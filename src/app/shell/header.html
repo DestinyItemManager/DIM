@@ -42,10 +42,6 @@
          ng-i18next="Progress.Progress"></a>
       <hr>
 
-      <a class="link"
-         ui-sref-active="active"
-         ui-sref="storage"
-         ng-i18next="Storage.Title"></a>
       <span class="link"
          ui-sref-active="active"
          ui-sref="settings"
@@ -151,11 +147,6 @@
     <refresh
       ng-if="!$ctrl.showSearch"
       class="link"></refresh>
-    <span class="link fa fa-save"
-          ng-if="!$ctrl.showSearch"
-          ui-sref-active="active"
-          ui-sref="storage"
-          ng-i18next="[title]Storage.Title"></span>
     <span class="link fa fa-cog"
           ng-if="!$ctrl.showSearch"
           ui-sref="settings"
