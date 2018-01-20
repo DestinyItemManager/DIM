@@ -214,11 +214,6 @@ module.exports = (env) => {
 
         // Feature flags!
 
-        // Tags are off in release right now
-        '$featureFlags.tagsEnabled': JSON.stringify(true),
-        '$featureFlags.compareEnabled': JSON.stringify(true),
-        '$featureFlags.vendorsEnabled': JSON.stringify(true),
-        '$featureFlags.qualityEnabled': JSON.stringify(true),
         // Additional debugging / item info tools
         '$featureFlags.debugMode': JSON.stringify(false),
         // Print debug info to console about item moves
@@ -235,8 +230,6 @@ module.exports = (env) => {
         '$featureFlags.colorA11y': JSON.stringify(true),
         // Whether to log page views for router events
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(true),
-        // Enable activities tab
-        '$featureFlags.activities': JSON.stringify(true),
         // Debug ui-router
         '$featureFlags.debugRouter': JSON.stringify(false),
         // Show drag and drop on dev only

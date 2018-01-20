@@ -10,10 +10,6 @@ declare const $GOOGLE_DRIVE_CLIENT_ID: string;
 declare const $BROWSERS: string[];
 
 declare const $featureFlags: {
-  tagsEnabled: boolean;
-  compareEnabled: boolean;
-  vendorsEnabled: boolean;
-  qualityEnabled: boolean;
   /** Additional debugging / item info tools */
   debugMode: boolean;
   /** Print debug info to console about item moves */
@@ -30,8 +26,6 @@ declare const $featureFlags: {
   colorA11y: boolean;
   /** Whether to log page views for router events */
   googleAnalyticsForRouter: boolean;
-  /** Enable activities tab */
-  activities: boolean;
   /** Debug ui-router */
   debugRouter: boolean;
   /** Show drag and drop on dev only */

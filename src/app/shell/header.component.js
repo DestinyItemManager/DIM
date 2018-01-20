@@ -30,8 +30,6 @@ function HeaderController(
   vm.settings = dimSettingsService;
 
   vm.featureFlags = {
-    vendorsEnabled: $featureFlags.vendorsEnabled,
-    activities: $featureFlags.activities,
     bugReportLink: $DIM_FLAVOR !== 'release'
   };
 

@@ -63,7 +63,6 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     return item;
   }
 
-  vm.tagsEnabled = $featureFlags.tagsEnabled;
   vm.show = dimCompareService.dialogOpen;
 
   vm.comparisons = [];
