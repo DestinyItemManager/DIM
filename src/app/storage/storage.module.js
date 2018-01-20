@@ -11,13 +11,4 @@ export default angular
   .factory('GoogleDriveStorage', GoogleDriveStorage)
   .factory('SyncService', SyncService)
   .component('storage', StorageComponent)
-  .config(($stateProvider) => {
-    'ngInject';
-
-    $stateProvider.state({
-      name: 'storage',
-      component: 'storage',
-      url: '/storage?gdrive'
-    });
-  })
   .name;
