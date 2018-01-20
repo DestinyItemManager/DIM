@@ -66,6 +66,8 @@
       <div class="setting">
         <label for="itemSort" ng-i18next="Settings.SetSort"></label>
 
+        <sort-order-editor on-sort-order-changed="vm.itemSortOrderChanged"></sort-order-editor>
+
         <div class="radioOptions">
           <label>
             <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat">

@@ -113,7 +113,6 @@
     "typeof-compare": true,
     "use-default-type-parameter": true,
     "use-isnan": true,
-    "no-default-export": true,
     "no-duplicate-imports": true,
     "no-require-imports": true,
     "prefer-const": true,

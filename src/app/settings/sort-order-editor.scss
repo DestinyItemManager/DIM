@@ -1,0 +1,41 @@
+.sort-order-editor {
+  padding: 4px 0 0 0;
+}
+
+.sort-order-editor-item {
+  background: #000;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .fa {
+    margin: 0 4px;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .sort-button {
+    transition: opacity .2s;
+  }
+
+  &.is-dragging {
+    .sort-button {
+      opacity: 0;
+    }
+  }
+
+  .drag-handle {
+    margin-right: 4px;
+  }
+
+  .name {
+    flex: 1;
+    margin: 0 1em;
+  }
+}
