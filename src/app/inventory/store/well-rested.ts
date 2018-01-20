@@ -1,4 +1,4 @@
-import { DestinyCharacterProgressionComponent, DestinyProgression, DestinyProgressionDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyCharacterProgressionComponent, DestinyProgressionDefinition } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
 
 /**
@@ -12,38 +12,22 @@ export function isWellRested(
 ) {
   // We have to look at both the regular progress and the "legend" levels you gain after hitting the cap.
   // Thanks to expansions that raise the level cap, you may go back to earning regular XP after getting legend levels.
-  const levelProgressDef = defs.Progression.get(1716568313);
-  const levelProgress = characterProgression.progressions[levelProgressDef.hash];
+  const levelProgress = characterProgression.progressions[1716568313];
   const legendProgressDef = defs.Progression.get(2030054750);
-  const legendProgress = characterProgression.progressions[legendProgressDef.hash];
+  const legendProgress = characterProgression.progressions[2030054750];
 
-  if (levelProgress.level < 4) {
-    return true;
+  // You can only be well-rested if you've hit the normal level cap.
+  // And if you haven't ever gained 3 legend levels, no dice.
+  if (levelProgress.level < levelProgress.levelCap ||
+      legendProgress.level < 4) {
+    return false;
   }
 
-  return levelsGained(levelProgress, levelProgressDef) + levelsGained(legendProgress, legendProgressDef) < 3;
-}
-
-/**
- * How many levels were gained this week for this particular type of progress?
- *
- * Note: caps at 3 levels since we don't need more.
- */
-function levelsGained(
-  progress: DestinyProgression,
-  progressDef: DestinyProgressionDefinition
-) {
-  let levels = 0;
-  let currentLevel = progress.level;
-
-  let xpProgress = progress.weeklyProgress - progress.progressToNextLevel;
-  while (xpProgress > 0 && levels < 3 && currentLevel > 1) {
-    levels++;
-    currentLevel--;
-    xpProgress -= xpRequiredForLevel(currentLevel, progressDef);
-  }
-
-  return levels;
+  // Have you gained XP equal to three full levels worth of XP?
+  return legendProgress.weeklyProgress >
+    xpRequiredForLevel(legendProgress.level, legendProgressDef) +
+    xpRequiredForLevel(legendProgress.level - 1, legendProgressDef) +
+    xpRequiredForLevel(legendProgress.level - 2, legendProgressDef);
 }
 
 /**
