@@ -117,4 +117,27 @@
       font-size: 10px;
     }
   }
+
+
+  .milestone-modifier {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: 4px;
+
+    img {
+      width: 16px;
+      height: 16px;
+      margin: 1px 6px 0 2px;
+    }
+
+    .milestone-modifier-info {
+      flex: 1;
+    }
+
+    .milestone-modifier-description {
+      font-size: 10px;
+      color: #A1A2A2;
+    }
+  }
 }

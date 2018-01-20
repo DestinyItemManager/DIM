@@ -8,7 +8,8 @@ import {
   DestinyMilestoneRewardCategoryDefinition,
   DestinyMilestoneRewardEntry,
   DestinyObjectiveProgress,
-  DestinyQuestStatus
+  DestinyQuestStatus,
+  DestinyActivityModifierDefinition
   } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
@@ -122,8 +123,12 @@ function AvailableQuest(props: AvailableQuestProps) {
   const displayProperties: DestinyDisplayPropertiesDefinition = questDef.displayProperties || milestoneDef.displayProperties;
 
   let activityDef: DestinyActivityDefinition | null = null;
+  let modifiers: DestinyActivityModifierDefinition[] = [];
   if (availableQuest.activity) {
     activityDef = defs.Activity.get(availableQuest.activity.activityHash);
+    if (availableQuest.activity.modifierHashes) {
+      modifiers = availableQuest.activity.modifierHashes.map((h) => defs.ActivityModifier.get(h));
+    }
   }
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
@@ -146,6 +151,9 @@ function AvailableQuest(props: AvailableQuestProps) {
         {activityDef && activityDef.displayProperties.name !== displayProperties.name &&
           <div className="milestone-location">{activityDef.displayProperties.name}</div>}
         <div className="milestone-description">{objectiveDef ? objectiveDef.progressDescription : displayProperties.description}</div>
+        {modifiers.map((modifier) =>
+          <ActivityModifier key={modifier.hash} modifier={modifier}/>
+        )}
         {questRewards.map((questReward) =>
           <div className="milestone-reward" key={questReward.hash}>
             <BungieImage src={questReward.displayProperties.icon} />
@@ -273,4 +281,20 @@ function MilestoneObjectiveStatus(props: MilestoneObjectiveStatusProps) {
   }
 
   return null;
+}
+
+function ActivityModifier(props: {
+  modifier: DestinyActivityModifierDefinition;
+}) {
+  const { modifier } = props;
+
+  return (
+    <div className="milestone-modifier">
+      <BungieImage src={modifier.displayProperties.icon}/>
+      <div className="milestone-modifier-info">
+        <div className="milestone-modifier-name">{modifier.displayProperties.name}</div>
+        <div className="milestone-modifier-description">{modifier.displayProperties.description}</div>
+      </div>
+    </div>
+  );
 }
