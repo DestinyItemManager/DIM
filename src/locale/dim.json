@@ -35,7 +35,7 @@
     "NoAccountForPlatform": "Failed to find a Destiny account for you on {{platform}}.",
     "NoCookies": "No cookies found.",
     "NotConnected": "You may not be connected to the internet.",
-    "NotLoggedIn": "Please log into Bungie.net in order to use this extension.",
+    "NotLoggedIn": "Please authorize DIM in order to use this app.",
     "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
