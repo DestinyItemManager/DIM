@@ -24,6 +24,9 @@ import { Milestone } from './milestone';
 import './progress.scss';
 import { ProgressProfile, ProgressService } from './progress.service';
 import { Quest } from './quest';
+import { isWellRested } from '../inventory/store/well-rested';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { BungieImage } from '../dim-ui/bungie-image';
 
 /* Label isn't used, but it helps us understand what each one is */
 const progressionMeta = {
@@ -187,7 +190,6 @@ export class Progress extends React.Component<Props, State> {
             <CharacterTile
               key={character.characterId}
               character={character}
-              characterProgression={profileInfo.characterProgressions.data[character.characterId]}
               defs={defs}
               lastPlayedDate={lastPlayedDate}
             />
@@ -199,6 +201,8 @@ export class Progress extends React.Component<Props, State> {
           <div className="progress-row">
             {characters.map((character) =>
               <div className="progress-for-character" key={character.characterId}>
+                {isWellRested(defs, profileInfo.characterProgressions.data[character.characterId]) &&
+                  <WellRestedPerkIcon defs={defs} />}
                 {this.milestonesForCharacter(character).map((milestone) =>
                   <Milestone milestone={milestone} defs={defs} key={milestone.milestoneHash} />
                 )}
@@ -352,4 +356,20 @@ export function sortCharacters(characters: DestinyCharacterComponent[], order: C
   } else {
     return characters;
   }
+}
+
+function WellRestedPerkIcon(props: { defs: D2ManifestDefinitions }) {
+  const { defs } = props;
+  const perkDef = defs.SandboxPerk.get(1519921522);
+  return (
+    <div className="well-rested milestone-quest">
+      <div className="milestone-icon">
+        <BungieImage className="perk" src={perkDef.displayProperties.icon} title={perkDef.displayProperties.description} />
+      </div>
+      <div className="milestone-info">
+        <span className="milestone-name">{perkDef.displayProperties.name}</span>
+        <div className="milestone-description">{perkDef.displayProperties.description}</div>
+      </div>
+    </div>
+  );
 }
