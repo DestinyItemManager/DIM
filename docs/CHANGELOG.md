@@ -4,6 +4,7 @@
 * Your character stats now update live when you change armor.
 * New settings to help distinguish colors for colorblind users.
 * DIM should load faster.
+* DIM won't try to transfer Faction tokens anymore.
 
 # 4.34.0
 
