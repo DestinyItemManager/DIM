@@ -1,5 +1,3 @@
-import { flatMap } from '../util';
-
 import template from './account-select.html';
 import dialogTemplate from './account-select.dialog.html';
 import './account-select.scss';

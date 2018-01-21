@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 // TODO: push "current account" into the other account services
-function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $state, $q, dimState) {
+function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $q, dimState) {
   let _platforms = [];
   let _active = null;
 
@@ -12,7 +12,6 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     getPlatforms,
     getActive,
     setActive,
-    reportBadPlatform,
     getPlatformMatching
   };
 
@@ -90,22 +89,6 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     dimState.active = platform;
     $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
     return promise;
-  }
-
-  // TODO: remove this, replace with "you don't have any characters on this platform" message
-  // When we find a platform with no characters, remove it from the list and try something else.
-  function reportBadPlatform(platform, e) {
-    // TODO: push this up to DestinyAccountService
-
-    if (_platforms.length > 1) {
-      _platforms = _platforms.filter((p) => p !== platform);
-      $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
-      setActive(_platforms[0]);
-      $state.go('default-account'); // try for another platform
-    } else {
-      // Nothing we can do
-      throw e;
-    }
   }
 }
 

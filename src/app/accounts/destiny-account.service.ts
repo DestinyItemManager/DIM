@@ -20,6 +20,8 @@ export interface DestinyAccount {
   platformLabel: string;
   /** Destiny membership ID */
   membershipId: string;
+  /** Which version of Destiny is this account for? */
+  destinyVersion: 1 | 2;
 }
 
 /**
@@ -57,11 +59,12 @@ export function DestinyAccountService(BungieUserApi: BungieUserApiService, Desti
    */
   function generatePlatforms(accounts: UserMembershipData): IPromise<DestinyAccount[]> {
     const accountPromises = flatMap(accounts.destinyMemberships, (destinyAccount) => {
-      const account = {
+      const account: DestinyAccount = {
         displayName: destinyAccount.displayName,
         platformType: destinyAccount.membershipType,
         membershipId: destinyAccount.membershipId,
-        platformLabel: PLATFORMS[destinyAccount.membershipType].label
+        platformLabel: PLATFORMS[destinyAccount.membershipType].label,
+        destinyVersion: 1
       };
       // PC only has D2
       return destinyAccount.membershipType === BungieMembershipType.TigerBlizzard
@@ -81,10 +84,11 @@ export function DestinyAccountService(BungieUserApi: BungieUserApiService, Desti
           response.profile.data &&
           response.profile.data.characterIds &&
           response.profile.data.characterIds.length) {
-          return {
+          const result: DestinyAccount = {
             ...account,
             destinyVersion: 2
           };
+          return result;
         }
         return null;
       })
@@ -101,10 +105,11 @@ export function DestinyAccountService(BungieUserApi: BungieUserApiService, Desti
       .getCharacters(account)
       .then((response) => {
         if (response && response.length) {
-          return {
+          const result: DestinyAccount = {
             ...account,
             destinyVersion: 1
           };
+          return result;
         }
         return null;
       })

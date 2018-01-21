@@ -33,7 +33,6 @@ export function D2StoresService(
   $rootScope: IRootScopeService,
   $q,
   Destiny2Api: Destiny2ApiService,
-  dimPlatformService,
   D2Definitions: D2DefinitionsService,
   D2BucketsService: BucketsService,
   dimItemInfoService,
@@ -118,7 +117,8 @@ export function D2StoresService(
           membershipId: $stateParams.membershipId,
           platformType: $stateParams.platformType,
           displayName: 'Unknown',
-          platformLabel: PLATFORMS[$stateParams.platformType]
+          platformLabel: PLATFORMS[$stateParams.platformType],
+          destinyVersion: 2
         };
       } else {
         throw new Error("Don't know membership ID and platform type");
@@ -256,12 +256,6 @@ export function D2StoresService(
           stores
         });
         return stores;
-      })
-      .catch((e) => {
-        if (e.code === 1601 || e.code === 1618) { // DestinyAccountNotFound
-          return dimPlatformService.reportBadPlatform(account, e);
-        }
-        throw e;
       })
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));
