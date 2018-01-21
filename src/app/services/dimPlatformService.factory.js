@@ -53,6 +53,10 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
   }
 
   function getActivePlatform() {
+    if (_active && _.find(_platforms, { id: _active.id })) {
+      return _active;
+    }
+
     return SyncService.get().then((data) => {
       if (!_platforms.length) {
         return null;
@@ -61,7 +65,13 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
       if (_active && _.find(_platforms, { id: _active.id })) {
         return _active;
       } else if (data && data.platformType) {
-        const active = _.find(_platforms, (platform) => {
+        let active = _.find(_platforms, (platform) => {
+          return platform.platformType === data.platformType && platform.destinyVersion === data.destinyVersion;
+        });
+        if (active) {
+          return active;
+        }
+        active = _.find(_platforms, (platform) => {
           return platform.platformType === data.platformType;
         });
         if (active) {
@@ -83,7 +93,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     if (platform === null) {
       promise = SyncService.remove('platformType');
     } else {
-      promise = SyncService.set({ platformType: platform.platformType });
+      promise = SyncService.set({ platformType: platform.platformType, destinyVersion: platform.destinyVersion });
     }
 
     dimState.active = platform;
