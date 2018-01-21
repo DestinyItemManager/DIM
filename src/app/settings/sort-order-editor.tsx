@@ -2,12 +2,11 @@ import * as React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import classNames from 'classnames';
 import './sort-order-editor.scss';
-import * as _ from 'underscore';
 
-interface SortProperty {
-  id: string;
-  displayName: string;
-  enabled: boolean;
+export interface SortProperty {
+  readonly id: string;
+  readonly displayName: string;
+  readonly enabled: boolean;
 }
 
 interface Props {
@@ -28,15 +27,16 @@ interface State {
  * must then be given back the new order by its parent.
  */
 export default class SortOrderEditor extends React.Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       order: props.order
     };
   }
 
-  shouldComponentUpdate(_nextProp, nextState) {
-    return !_.isEqual(nextState.order, this.state.order);
+  shouldComponentUpdate(_nextProp: Props, nextState: State) {
+    // The order should be immutable - if the controlling component mutates it all bets are off
+    return nextState.order !== this.state.order;
   }
 
   componentWillReceiveProps(props: Props) {
@@ -91,27 +91,7 @@ export default class SortOrderEditor extends React.Component<Props, State> {
               ref={provided.innerRef}
               onClick={this.onClick}
             >
-              {this.state.order.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div>
-                      <div
-                        className={classNames('sort-order-editor-item', { 'is-dragging': snapshot.isDragging, disabled: !item.enabled })}
-                        data-index={index}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                      >
-                        <i className="fa fa-bars" {...provided.dragHandleProps}/>
-                        <span className="name" {...provided.dragHandleProps}>{item.displayName}</span>
-                        <i className="sort-button sort-up fa fa-chevron-up"/>
-                        <i className="sort-button sort-down fa fa-chevron-down"/>
-                        <i className={classNames('sort-button', 'sort-toggle', 'fa', item.enabled ? 'fa-check-circle-o' : 'fa-circle-o')} />
-                      </div>
-                        {provided.placeholder}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              <SortEditorItemList order={this.state.order}/>
               {provided.placeholder}
             </div>
           )}
@@ -146,4 +126,45 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
   result.splice(endIndex, 0, removed);
 
   return result;
+}
+
+class SortEditorItemList extends React.Component<{ order: SortProperty[] }, never> {
+  shouldComponentUpdate(nextProps, _nextState) {
+    return nextProps.order !== this.props.order;
+  }
+
+  render() {
+    return this.props.order.map((item, index) => (
+      <SortEditorItem key={item.id} item={item} index={index}/>
+    ));
+  }
+}
+
+function SortEditorItem(props: {
+  index: number;
+  item: SortProperty;
+}) {
+  const { index, item } = props;
+
+  return (
+    <Draggable key={item.id} draggableId={item.id} index={index}>
+      {(provided, snapshot) => (
+        <div>
+          <div
+            className={classNames('sort-order-editor-item', { 'is-dragging': snapshot.isDragging, disabled: !item.enabled })}
+            data-index={index}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+          >
+            <i className="fa fa-bars" {...provided.dragHandleProps}/>
+            <span className="name" {...provided.dragHandleProps}>{item.displayName}</span>
+            <i className="sort-button sort-up fa fa-chevron-up"/>
+            <i className="sort-button sort-down fa fa-chevron-down"/>
+            <i className={classNames('sort-button', 'sort-toggle', 'fa', item.enabled ? 'fa-check-circle-o' : 'fa-circle-o')} />
+          </div>
+            {provided.placeholder}
+        </div>
+      )}
+    </Draggable>
+  );
 }

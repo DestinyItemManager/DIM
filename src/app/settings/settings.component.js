@@ -154,9 +154,9 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     }
   ];
 
-  vm.itemSortOrderChanged = (sortOrder) => {;
+  vm.itemSortOrderChanged = (sortOrder) => {
     vm.itemSortOrder = sortOrder;
     vm.itemSortOrderReal = sortOrder.filter((o) => o.enabled).map((o) => o.id);
-    console.log('sortOrder', vm.itemSortOrderReal)
+    console.log('sortOrder', vm.itemSortOrderReal);
   };
 }
