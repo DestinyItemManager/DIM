@@ -149,10 +149,9 @@ export function Destiny1Api(
     }
   }
 
-  function getVendorForCharacter(character, vendorHash) {
-    const platform = dimState.active;
+  function getVendorForCharacter(account, character, vendorHash) {
     return $http(bungieApiQuery(
-      `/D1/Platform/Destiny/${platform.platformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
+      `/D1/Platform/Destiny/${account.platformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
     ))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response.data);
