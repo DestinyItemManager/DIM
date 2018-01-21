@@ -8,17 +8,21 @@ account-select {
 account {
   display: block;
   cursor: pointer;
-  line-height: 13px;
+  line-height: 15px;
   text-align: left;
   padding-left: 8px;
   padding-right: 8px;
   position: relative;
-  padding-top: 8px;
-  padding-bottom: 6px;
+  padding-top: 6px;
+  padding-bottom: 4px;
 
   .account-details {
     font-size: 10px !important;
     color: #AAA;
+  }
+
+  .account-name span {
+    margin: 0 !important;
   }
 
   &:focus, &:active {
@@ -27,7 +31,7 @@ account {
 
   &.selected-account {
     margin: 0 0 0 2px;
-    padding-right: 19px;
+    padding-right: 22px;
     border-bottom: 2px solid $orange;
 
     &::after {
