@@ -3,7 +3,7 @@
 }
 
 .sort-order-editor-item {
-  background: #000;
+  background: black;
   padding: 4px 8px;
   margin-bottom: 4px;
   display: flex;
@@ -11,13 +11,7 @@
   align-items: center;
 
   .fa {
-    margin: 0 4px;
-    &:first-child {
-      margin-left: 0;
-    }
-    &:last-child {
-      margin-right: 0;
-    }
+    padding: 4px;
   }
 
   .sort-button {
@@ -30,12 +24,12 @@
     }
   }
 
-  .drag-handle {
-    margin-right: 4px;
+  .fa-bars {
+    color: rgb(31, 31, 31);
   }
 
   .name {
     flex: 1;
-    margin: 0 1em;
+    margin: 0 6px;
   }
 }

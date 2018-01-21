@@ -9,7 +9,7 @@ export default angular
   .module('settingsModule', [])
   .controller('dimSettingsCtrl', SettingsController)
   .component('settings', SettingsComponent)
-  .component('sortOrderEditor', react2angular(SortOrderEditor, ['initialItems', 'onSortOrderChanged']))
+  .component('sortOrderEditor', react2angular(SortOrderEditor, ['order', 'onSortOrderChanged']))
   .factory('dimSettingsService', SettingsService)
   .config(($stateProvider) => {
     'ngInject';

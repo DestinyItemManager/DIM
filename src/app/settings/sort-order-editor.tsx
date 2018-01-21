@@ -2,39 +2,48 @@ import * as React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import classNames from 'classnames';
 import './sort-order-editor.scss';
+import * as _ from 'underscore';
 
 interface SortProperty {
   id: string;
   displayName: string;
+  enabled: boolean;
 }
 
 interface Props {
-  initialItems: SortProperty[];
-  onSortOrderChanged(ids: string[]): void;
+  order: SortProperty[];
+  onSortOrderChanged(order: SortProperty[]): void;
 }
 
+// We keep a local copy of props in the state partly because Angular is slow. It's faster
+// to re-render locally then just ignore the "controlled" update if it doesn't change anything.
 interface State {
-  items: SortProperty[];
+  order: SortProperty[];
 }
 
-// An editor for sort-orders, with drag and drop
+/**
+ * An editor for sort-orders, with drag and drop.
+ *
+ * This is a "controlled component" - it fires an event when the order changes, and
+ * must then be given back the new order by its parent.
+ */
 export default class SortOrderEditor extends React.Component<Props, State> {
-
   constructor(props) {
     super(props);
-
     this.state = {
-      items: [{
-        id: 'foo',
-        displayName: 'Foo'
-      }, {
-        id: 'bar',
-        displayName: 'Bar'
-      }, {
-        id: 'baz',
-        displayName: 'Baz'
-      }]
+      order: props.order
     };
+  }
+
+  shouldComponentUpdate(_nextProp, nextState) {
+    return !_.isEqual(nextState.order, this.state.order);
+  }
+
+  componentWillReceiveProps(props: Props) {
+    // Copy props into state
+    this.setState({
+      order: props.order
+    });
   }
 
   onDragStart = () => {
@@ -50,21 +59,29 @@ export default class SortOrderEditor extends React.Component<Props, State> {
       return;
     }
 
-    const items = reorder(
-      this.state.items,
-      result.source.index,
-      result.destination.index
-    );
+    this.moveItem(result.source.index, result.destination.index);
+  }
 
-    this.setState({
-      items,
-    });
+  onClick = (e) => {
+    const target: HTMLElement = e.target;
+    const getIndex = () => parseInt(target.parentElement!.dataset.index!, 10);
 
-    this.props.onSortOrderChanged(items.map((i) => i.id));
+    if (target.classList.contains('sort-up')) {
+      e.preventDefault();
+      const index = getIndex();
+      this.moveItem(index, index - 1);
+    } else if (target.classList.contains('sort-down')) {
+      e.preventDefault();
+      const index = getIndex();
+      this.moveItem(index, index + 1);
+    } else if (target.classList.contains('sort-toggle')) {
+      e.preventDefault();
+      const index = getIndex();
+      this.toggleItem(index);
+    }
   }
 
   render() {
-    // TODO: There can only be one DragDropContext, wrap the whole app in it?
     return (
       <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
         <Droppable droppableId="droppable">
@@ -72,21 +89,23 @@ export default class SortOrderEditor extends React.Component<Props, State> {
             <div
               className="sort-order-editor"
               ref={provided.innerRef}
+              onClick={this.onClick}
             >
-              {this.state.items.map((item, index) => (
+              {this.state.order.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided, snapshot) => (
                     <div>
                       <div
-                        className={classNames('sort-order-editor-item', { 'is-dragging': snapshot.isDragging })}
+                        className={classNames('sort-order-editor-item', { 'is-dragging': snapshot.isDragging, disabled: !item.enabled })}
+                        data-index={index}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                       >
                         <i className="fa fa-bars" {...provided.dragHandleProps}/>
-                        <span className="name">{item.displayName}</span>
-                        <i className="sort-button fa fa-chevron-up"/>
-                        <i className="sort-button fa fa-chevron-down"/>
-                        <i className="sort-button fa fa-times-circle-o"/>
+                        <span className="name" {...provided.dragHandleProps}>{item.displayName}</span>
+                        <i className="sort-button sort-up fa fa-chevron-up"/>
+                        <i className="sort-button sort-down fa fa-chevron-down"/>
+                        <i className={classNames('sort-button', 'sort-toggle', 'fa', item.enabled ? 'fa-check-circle-o' : 'fa-circle-o')} />
                       </div>
                         {provided.placeholder}
                     </div>
@@ -99,6 +118,24 @@ export default class SortOrderEditor extends React.Component<Props, State> {
         </Droppable>
       </DragDropContext>
     );
+  }
+
+  private moveItem(oldIndex, newIndex) {
+      const order = reorder(this.state.order, oldIndex, Math.min(this.state.order.length, Math.max(newIndex, 0)));
+      this.fireOrderChanged(order);
+  }
+
+  private toggleItem(index) {
+    const order = Array.from(this.state.order);
+    order[index] = { ...order[index], enabled: !order[index].enabled };
+    this.fireOrderChanged(order);
+  }
+
+  private fireOrderChanged(order: SortProperty[]) {
+    this.setState({
+      order
+    });
+    this.props.onSortOrderChanged(order);
   }
 }
 

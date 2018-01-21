@@ -136,7 +136,27 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     window.location.reload(false);
   };
 
-  vm.itemSortOrderChanged = (sortOrder) => {
-    console.log('sortOrder', sortOrder);
+  vm.itemSortOrder = [
+    {
+      id: 'foo',
+      displayName: 'Foo',
+      enabled: true
+    },
+    {
+      id: 'bar',
+      displayName: 'Bar',
+      enabled: true
+    },
+    {
+      id: 'baz',
+      displayName: 'Baz',
+      enabled: false
+    }
+  ];
+
+  vm.itemSortOrderChanged = (sortOrder) => {;
+    vm.itemSortOrder = sortOrder;
+    vm.itemSortOrderReal = sortOrder.filter((o) => o.enabled).map((o) => o.id);
+    console.log('sortOrder', vm.itemSortOrderReal)
   };
 }
