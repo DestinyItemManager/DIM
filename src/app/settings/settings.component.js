@@ -147,7 +147,26 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     // archetype: 'Archetype'
   };
 
+  // Sorts not on this list will be converted to "custom". This can be a different
+  // list than the one in the settings service, since that list supports backwards
+  // compatibility with old settings.
+  vm.itemSortPresets = {
+    primaryStat: 'Settings.SortPrimary',
+    basePowerThenPrimary: 'Settings.SortBasePower',
+    rarityThenPrimary: 'Settings.SortRarity',
+    quality: 'Settings.SortRoll',
+    name: 'Settings.SortName',
+    typeThenPrimary: 'Settings.SortTypeThenPrimary',
+    typeThenName: 'Settings.SortTypeThenName',
+    custom: 'Settings.SortCustom'
+  };
+
   const sortOrder = vm.settings.itemSortOrder();
+  if (!vm.itemSortPresets[vm.settings.itemSort]) {
+    vm.settings.itemSortOrderCustom = sortOrder;
+    vm.settings.itemSort = 'custom';
+  }
+
   vm.itemSortCustom = _.sortBy(_.map(itemSortProperties, (displayName, id) => {
     return {
       id,

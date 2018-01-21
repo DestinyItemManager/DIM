@@ -77,7 +77,7 @@ export default class SortOrderEditor extends React.Component<Props, State> {
 
   render() {
     return (
-      <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
+      <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided) => (
             <div
