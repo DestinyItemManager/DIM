@@ -181,5 +181,6 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.itemSortOrderChanged = (sortOrder) => {
     vm.itemSortCustom = sortOrder;
     vm.settings.itemSortOrderCustom = sortOrder.filter((o) => o.enabled).map((o) => o.id);
+    vm.settings.save();
   };
 }

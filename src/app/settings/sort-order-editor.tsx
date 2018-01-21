@@ -145,7 +145,7 @@ function SortEditorItem(props: {
   const { index, item } = props;
 
   return (
-    <Draggable key={item.id} draggableId={item.id} index={index}>
+    <Draggable draggableId={item.id} index={index}>
       {(provided, snapshot) => (
         <div>
           <div
