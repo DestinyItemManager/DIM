@@ -42,10 +42,6 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
     loadingTracker.addPromise(dimPlatformService.setActive(account));
   };
 
-  $scope.$on('dim-platforms-updated', (e, args) => {
-    setAccounts(args.platforms);
-  });
-
   $scope.$on('dim-active-platform-updated', (e, args) => {
     setCurrentAccount(args.platform);
   });

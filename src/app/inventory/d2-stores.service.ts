@@ -251,10 +251,6 @@ export function D2StoresService(
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        // TODO: this is still useful, but not in as many situations
-        $rootScope.$broadcast('d2-stores-updated', {
-          stores
-        });
         return stores;
       })
       .catch((e) => {
@@ -267,6 +263,7 @@ export function D2StoresService(
         // just make this never fail.
       })
       .finally(() => {
+        $rootScope.$broadcast('dim-filter-invalidate');
         D2ManifestService.isLoaded = true;
       });
 

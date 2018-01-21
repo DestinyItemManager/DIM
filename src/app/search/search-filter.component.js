@@ -97,12 +97,10 @@ function SearchFilterCtrl(
     vm.filter();
   });
 
-  for (const event of ['dim-stores-updated', 'd2-stores-updated', 'dim-vendors-updated', 'dim-filter-invalidate']) {
-    $scope.$on(event, () => {
-      filters.reset();
-      vm.filter();
-    });
-  }
+  $scope.$on('dim-filter-invalidate', () => {
+    filters.reset();
+    vm.filter();
+  });
 
   hotkeys.bindTo($scope)
     .add({

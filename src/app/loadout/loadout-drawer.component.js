@@ -52,6 +52,10 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
         vm.classTypeValues.push({ label: store.className, value: classType });
       });
     }
+
+    if (changes.account) {
+      vm.show = false;
+    }
   };
 
   $scope.$on('dim-delete-loadout', () => {
@@ -89,10 +93,6 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
 
   $scope.$on('dim-store-item-clicked', (event, args) => {
     vm.add(args.item, args.clickEvent);
-  });
-
-  $scope.$on('dim-active-platform-updated', () => {
-    vm.show = false;
   });
 
   $scope.$watchCollection('vm.loadout.items', () => {

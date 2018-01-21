@@ -199,11 +199,6 @@ export function StoreService(
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        // TODO: this is still useful, but not in as many situations
-        $rootScope.$broadcast('dim-stores-updated', {
-          stores: stores
-        });
-
         return stores;
       })
       .catch((e) => {
@@ -217,6 +212,7 @@ export function StoreService(
       })
       .finally(() => {
         dimManifestService.isLoaded = true;
+        $rootScope.$broadcast('dim-filter-invalidate');
       });
 
     loadingTracker.addPromise(reloadPromise);
