@@ -137,13 +137,13 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   };
 
   const itemSortProperties = {
-    typeName: 'Item Type',
-    rarity: 'Rarity/Tier',
-    primStat: 'Attack/Defense',
-    basePower: 'Base Power (without mods)',
-    rating: 'Community Rating (or Armor Quality in D1)',
-    classType: 'Class Type',
-    name: 'Name'
+    typeName: $i18next.t('Settings.SortByType'),
+    rarity: $i18next.t('Settings.SortByRarity'),
+    primStat: $i18next.t('Settings.SortByPrimary'),
+    basePower: $i18next.t('Settings.SortByBasePower'),
+    rating: $i18next.t('Settings.SortByRating'),
+    classType: $i18next.t('Settings.SortByClassType'),
+    name: $i18next.t('Settings.SortName')
     // archetype: 'Archetype'
   };
 

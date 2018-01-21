@@ -47,20 +47,13 @@ export default class SortOrderEditor extends React.Component<Props, State> {
     });
   }
 
-  onDragStart = () => {
-    // good times
-    if (window.navigator.vibrate) {
-      window.navigator.vibrate(100);
-    }
-  }
-
   onDragEnd = (result: DropResult) => {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
 
-    this.moveItem(result.source.index, result.destination.index);
+    this.moveItem(result.source.index, result.destination.index, true);
   }
 
   onClick = (e) => {
@@ -101,10 +94,12 @@ export default class SortOrderEditor extends React.Component<Props, State> {
     );
   }
 
-  private moveItem(oldIndex, newIndex) {
+  private moveItem(oldIndex, newIndex, fromDrag = false) {
     newIndex = Math.min(this.state.order.length, Math.max(newIndex, 0));
     const order = reorder(this.state.order, oldIndex, newIndex);
-    order[newIndex] = { ...order[newIndex], enabled: (newIndex === 0 || order[newIndex - 1].enabled) };
+    if (fromDrag) {
+      order[newIndex] = { ...order[newIndex], enabled: (newIndex === 0 || order[newIndex - 1].enabled) };
+    }
     this.fireOrderChanged(order);
   }
 
