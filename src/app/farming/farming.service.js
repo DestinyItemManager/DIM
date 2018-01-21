@@ -18,6 +18,7 @@ export function FarmingService($rootScope,
   'ngInject';
 
   let intervalId;
+  let subscription;
   let cancelReloadListener;
   const glimmerHashes = new Set([
     269776572, // -house-banners
@@ -182,7 +183,7 @@ export function FarmingService($rootScope,
           this.makingRoom = false;
         });
     },
-    start: function(store) {
+    start: function(account, storeId) {
       const self = this;
       function farm() {
         const consolidateHashes = [
@@ -211,28 +212,32 @@ export function FarmingService($rootScope,
 
       if (!this.active) {
         this.active = true;
-        this.store = store;
         this.itemsMoved = 0;
         this.movingItems = false;
         this.makingRoom = false;
 
         // Whenever the store is reloaded, run the farming algo
         // That way folks can reload manually too
-        // TODO: subscribe to stores!
-        cancelReloadListener = $rootScope.$on('dim-stores-updated', () => {
+        subscription = dimStoreService.getStoresStream(account).subscribe((stores) => {
           // prevent some recursion...
-          if (self.active && !self.movingItems && !self.makingRoom) {
+          if (this.active && !this.movingItems && !this.makingRoom && stores) {
+            const store = stores.find((s) => s.id === storeId);
+            this.store = store;
             farm();
           }
         });
+
         intervalId = $interval(() => {
           // just start reloading stores more often
-          dimStoreService.reloadStores();
+          $rootScope.$broadcast('dim-refresh');
         }, 60000);
-        farm();
       }
     },
     stop: function() {
+      if (subscription) {
+        subscription.unsubscribe();
+        subscription = null;
+      }
       if (intervalId) {
         $interval.cancel(intervalId);
       }
