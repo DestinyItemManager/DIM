@@ -42,10 +42,12 @@ export function Destiny1Api(
     return charactersPromise;
 
     function processBnetCharactersRequest(response) {
-      if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error($i18next.t('BungieService.NoAccountForPlatform', {
+      if (!response.data || _.size(response.data.Response) === 0) {
+        const error = new Error($i18next.t('BungieService.NoAccountForPlatform', {
           platform: platform.label
-        })));
+        }));
+        error.code = 1601;
+        return $q.reject(error);
       }
 
       return _.map(response.data.Response.data.characters, (c) => {

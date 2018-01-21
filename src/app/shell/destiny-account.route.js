@@ -23,7 +23,8 @@ export function destinyAccountRoute($stateProvider) {
             // TODO: make sure it's a "real" account
             const account = dimPlatformService.getPlatformMatching({
               membershipId,
-              platformType
+              platformType,
+              destinyVersion: $transition$.$().includes.destiny2 ? 2 : 1
             });
             if (!account) {
               // If we didn't load an account, kick out and re-resolve
