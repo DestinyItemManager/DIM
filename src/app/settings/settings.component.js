@@ -136,27 +136,31 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     window.location.reload(false);
   };
 
-  vm.itemSortOrder = [
-    {
-      id: 'foo',
-      displayName: 'Foo',
-      enabled: true
-    },
-    {
-      id: 'bar',
-      displayName: 'Bar',
-      enabled: true
-    },
-    {
-      id: 'baz',
-      displayName: 'Baz',
-      enabled: false
-    }
-  ];
+  const itemSortProperties = {
+    typeName: 'Item Type',
+    rarity: 'Rarity/Tier',
+    primStat: 'Attack/Defense',
+    basePower: 'Base Power (without mods)',
+    rating: 'Community Rating (or Armor Quality in D1)',
+    classType: 'Class Type',
+    name: 'Name'
+    // archetype: 'Archetype'
+  };
+
+  const sortOrder = vm.settings.itemSortOrder();
+  vm.itemSortCustom = _.sortBy(_.map(itemSortProperties, (displayName, id) => {
+    return {
+      id,
+      displayName,
+      enabled: sortOrder.includes(id)
+    };
+  }), (o) => {
+    const index = sortOrder.indexOf(o.id);
+    return index >= 0 ? index : 999;
+  });
 
   vm.itemSortOrderChanged = (sortOrder) => {
-    vm.itemSortOrder = sortOrder;
-    vm.itemSortOrderReal = sortOrder.filter((o) => o.enabled).map((o) => o.id);
-    console.log('sortOrder', vm.itemSortOrderReal);
+    vm.itemSortCustom = sortOrder;
+    vm.settings.itemSortOrderCustom = sortOrder.filter((o) => o.enabled).map((o) => o.id);
   };
 }

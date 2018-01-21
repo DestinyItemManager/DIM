@@ -114,9 +114,9 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
      * excluding stuff in the postmaster.
      */
     amountOfItem(item: DimItem) {
-      return sum(this.items.filter((i) => {
+      return sum(this.items.filter((i: DimItem) => {
         return i.hash === item.hash && !i.location.inPostmaster;
-      }), 'amount');
+      }), (i: DimItem) => i.amount);
     },
 
     /**

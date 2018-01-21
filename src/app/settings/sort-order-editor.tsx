@@ -7,6 +7,7 @@ export interface SortProperty {
   readonly id: string;
   readonly displayName: string;
   readonly enabled: boolean;
+  // TODO, should we support up/down?
 }
 
 interface Props {
@@ -101,8 +102,10 @@ export default class SortOrderEditor extends React.Component<Props, State> {
   }
 
   private moveItem(oldIndex, newIndex) {
-      const order = reorder(this.state.order, oldIndex, Math.min(this.state.order.length, Math.max(newIndex, 0)));
-      this.fireOrderChanged(order);
+    newIndex = Math.min(this.state.order.length, Math.max(newIndex, 0));
+    const order = reorder(this.state.order, oldIndex, newIndex);
+    order[newIndex] = { ...order[newIndex], enabled: (newIndex === 0 || order[newIndex - 1].enabled) };
+    this.fireOrderChanged(order);
   }
 
   private toggleItem(index) {
