@@ -612,7 +612,9 @@ export function ItemService(
 
     // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
     const storeReservations: { [storeId: string]: number } = {};
-    storeReservations[store.id] = item.amount;
+    if (!item.location.inPostmaster) {
+      storeReservations[store.id] = item.amount;
+    }
 
     // guardian-to-guardian transfer will also need space in the vault
     if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {
