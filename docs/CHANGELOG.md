@@ -1,5 +1,7 @@
 # Next
 
+# 4.36.1
+
 * Attempt to fix error on app.
 
 
