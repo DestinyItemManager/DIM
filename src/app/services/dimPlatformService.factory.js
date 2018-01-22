@@ -45,7 +45,6 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
       })
       .then((destinyAccounts) => {
         _platforms = destinyAccounts;
-        $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
         return getActivePlatform();
       })
       .then(setActive)

@@ -8,6 +8,14 @@ function XurService($rootScope, dimVendorService, dimStoreService) {
     available: false,
     totalCoins: {}
   };
+/*
+  // TODO: remove Xur service in favor of a XurLink component!
+  dimVendorService.getVendorsStream(vm.account).subscribe(([stores, vendors]) => {
+    vm.stores = stores;
+    vm.vendors = vendors;
+    vm.totalCoins = dimVendorService.countCurrencies(stores, vendors);
+    service.totalCoins = dimVendorService.countCurrencies(stores, service.vendors);
+  });
 
   $rootScope.$on('dim-vendors-updated', () => {
     // To fake Xur when he's not around, substitute another vendor's ID
@@ -27,7 +35,7 @@ function XurService($rootScope, dimVendorService, dimStoreService) {
       service.totalCoins = dimVendorService.countCurrencies(stores, service.vendors);
     });
   });
-
+*/
   return service;
 }
 
