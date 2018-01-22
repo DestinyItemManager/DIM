@@ -638,7 +638,13 @@ export function ItemService(
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
       if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
-        const error = new Error($i18next.t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`, { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), store: moveAsideTarget.name, context: moveAsideTarget.gender }));
+        const itemtype = (moveAsideTarget.isVault
+          ? (moveAsideItem.destinyVersion === 1
+            ? moveAsideItem.bucket.sort
+            : '')
+          : moveAsideItem.type);
+        const error = new Error($i18next.t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`,
+          { itemtype, store: moveAsideTarget.name, context: moveAsideTarget.gender }));
         error.code = 'no-space';
         return $q.reject(error);
       } else {
