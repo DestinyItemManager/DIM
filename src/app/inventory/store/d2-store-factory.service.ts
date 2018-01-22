@@ -40,7 +40,7 @@ export interface DimStore {
   vault?: DimStore;
   buckets: { [bucketId: number]: DimItem[] };
 
-  destinyVersion: number;
+  destinyVersion: 1 | 2;
   icon: string;
   current: boolean;
   lastPlayed: Date;

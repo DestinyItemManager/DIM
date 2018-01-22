@@ -432,5 +432,5 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       membershipId: $stateParams.membershipId,
       platformType: $stateParams.platformType
     }, vm.store.id);
-};
+  };
 }
