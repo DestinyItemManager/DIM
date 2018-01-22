@@ -602,7 +602,7 @@ export function ItemService(
     storeReservations[store.id] = item.amount;
 
     // guardian-to-guardian transfer will also need space in the vault
-    if (item.owner !== 'vault' && !store.isVault) {
+    if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {
       storeReservations.vault = item.amount;
     }
 
