@@ -12,6 +12,7 @@
       <dim-return></dim-return>
     </div>
 
+    {{{htmlWebpackPlugin.files.webpackManifest}}}
     {{#each htmlWebpackPlugin.files.js}}
     <script type="text/javascript" src="{{ webpackConfig.output.publicPath }}{{ this }}"></script>
     {{/each}}

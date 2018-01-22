@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import { reportExceptionToGoogleAnalytics } from '../google';
 
 /**
  * The sync service allows us to save a single object to persistent
@@ -70,6 +71,7 @@ export function SyncService(
           })
           .catch((e) => {
             console.error('Sync: Error saving to', adapter.name, e);
+            reportExceptionToGoogleAnalytics('Sync Save', e);
             return null;
           });
       }
@@ -116,6 +118,7 @@ export function SyncService(
             })
             .catch((e) => {
               console.error('Sync: Error loading from', adapter.name, e);
+              reportExceptionToGoogleAnalytics('Sync Load', e);
               return null;
             });
         } else if ($featureFlags.debugSync) {

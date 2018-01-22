@@ -118,10 +118,6 @@ export function D2Definitions($q, D2ManifestService): D2DefinitionsService {
         });
 
         return defs;
-      })
-      .catch((e) => {
-        console.error(e);
-        return $q.reject(e);
       }));
   };
 
