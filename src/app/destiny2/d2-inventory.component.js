@@ -18,8 +18,6 @@ function D2InventoryController($rootScope, $scope, D2StoresService, D2BucketsSer
     dnd: $featureFlags.dnd
   };
 
-  let dragBox;
-
   this.$onInit = function() {
     D2BucketsService.getBuckets().then((buckets) => {
       vm.buckets = buckets;
@@ -33,16 +31,24 @@ function D2InventoryController($rootScope, $scope, D2StoresService, D2BucketsSer
     D2StoresService.reloadStores();
   });
 
-  $scope.$on('drag-start-item', (event, args) => {
-    dragBox = document.getElementById('item-drag-box');
-    vm.item = args.item;
-    dragBox.style.top = `${args.element.target.getBoundingClientRect().top - dragBox.offsetHeight}px`;
-    $rootScope.$digest();
-  });
+  if ($featureFlags.dnd) {
+    let dragBox;
 
-  $scope.$on('drag-stop-item', () => {
-    dragBox.style.top = '-200px';
-    vm.item = null;
-    $rootScope.$digest();
-  });
+    $scope.$on('drag-start-item', (event, args) => {
+      dragBox = document.getElementById('item-drag-box');
+      dragBox.style.top = `${args.element.target.getBoundingClientRect().top - dragBox.offsetHeight}px`;
+      $scope.$apply(() => {
+        vm.item = args.item;
+      });
+    });
+
+    $scope.$on('drag-stop-item', () => {
+      if (dragBox) {
+        dragBox.style.top = '-200px';
+      }
+      $scope.$apply(() => {
+        vm.item = null;
+      });
+    });
+  }
 }
