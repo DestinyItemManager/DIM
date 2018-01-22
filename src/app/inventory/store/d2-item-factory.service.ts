@@ -588,7 +588,6 @@ export function D2ItemFactory(
       createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs.Stat);
     }
 
-
     // Mark items with power mods
     if (createdItem.primStat) {
       createdItem.basePower = getBasePowerLevel(createdItem);
@@ -921,12 +920,12 @@ export function D2ItemFactory(
     statDefs: LazyDefinition<DestinyStatDefinition>
   ): DimMasterwork | null {
     const progress = _.find(_.pluck(sockets.sockets, 'masterworkProgress'), (mp) => mp >= 0);
-    const typeName =  _.find(_.pluck(sockets.sockets, 'masterworkType'), (type) => type !== null);
-    const typeIcon =  _.find(_.pluck(sockets.sockets, 'masterworkIcon'), (icon) => icon !== null);
-    const typeDesc =  _.find(_.pluck(sockets.sockets, 'masterworkDesc'), (desc) => desc !== null);
-    const statHash =  _.find(_.pluck(sockets.sockets, 'masterworkStat'), (ms) => ms > 0);
-    const statName =  statDefs.get(statHash).displayProperties.name;
-    const statValue =  _.find(_.pluck(sockets.sockets, 'masterworkValue'), (mv) => mv >= 0);
+    const typeName = _.find(_.pluck(sockets.sockets, 'masterworkType'), (type) => type !== null);
+    const typeIcon = _.find(_.pluck(sockets.sockets, 'masterworkIcon'), (icon) => icon !== null);
+    const typeDesc = _.find(_.pluck(sockets.sockets, 'masterworkDesc'), (desc) => desc !== null);
+    const statHash = _.find(_.pluck(sockets.sockets, 'masterworkStat'), (ms) => ms > 0);
+    const statName = statDefs.get(statHash).displayProperties.name;
+    const statValue = _.find(_.pluck(sockets.sockets, 'masterworkValue'), (mv) => mv >= 0);
 
     return {
       progress,
@@ -936,7 +935,7 @@ export function D2ItemFactory(
       statHash,
       statName,
       statValue
-    }
+    };
   }
 
   function getBasePowerLevel(item: DimItem): number {
