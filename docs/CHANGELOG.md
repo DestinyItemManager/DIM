@@ -1,5 +1,7 @@
 # Next
 
+# 4.35.0
+
 * The Settings page has been redesigned.
 * Your character stats now update live when you change armor.
 * New settings to help distinguish colors for colorblind users.
