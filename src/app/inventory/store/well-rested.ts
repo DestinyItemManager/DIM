@@ -9,7 +9,11 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
 export function isWellRested(
   defs: D2ManifestDefinitions,
   characterProgression: DestinyCharacterProgressionComponent
-) {
+): {
+  wellRested: boolean;
+  progress?: number;
+  requiredXP?: number;
+} {
   // We have to look at both the regular progress and the "legend" levels you gain after hitting the cap.
   // Thanks to expansions that raise the level cap, you may go back to earning regular XP after getting legend levels.
   const levelProgress = characterProgression.progressions[1716568313];
@@ -20,14 +24,23 @@ export function isWellRested(
   // And if you haven't ever gained 3 legend levels, no dice.
   if (levelProgress.level < levelProgress.levelCap ||
       legendProgress.level < 4) {
-    return false;
+    return {
+      wellRested: false
+    };
   }
 
-  // Have you gained XP equal to three full levels worth of XP?
-  return legendProgress.weeklyProgress <
-    xpRequiredForLevel(legendProgress.level, legendProgressDef) +
+  const progress = legendProgress.weeklyProgress;
+
+  const requiredXP = xpRequiredForLevel(legendProgress.level, legendProgressDef) +
     xpRequiredForLevel(legendProgress.level - 1, legendProgressDef) +
     xpRequiredForLevel(legendProgress.level - 2, legendProgressDef);
+
+  // Have you gained XP equal to three full levels worth of XP?
+  return {
+    wellRested: progress < requiredXP,
+    progress,
+    requiredXP
+  };
 }
 
 /**

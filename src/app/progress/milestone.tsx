@@ -270,7 +270,8 @@ function MilestoneObjectiveStatus(props: MilestoneObjectiveStatusProps) {
     if (status.completed) {
       return <span><i className="fa fa-check-circle-o"/></span>;
     } else if (completionValue > 1) {
-      return <span>{progress}/{completionValue}</span>;
+      const formatter = new Intl.NumberFormat(window.navigator.language);
+      return <span>{formatter.format(progress)}/{formatter.format(completionValue)}</span>;
     }
   }
 
