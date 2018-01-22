@@ -22,8 +22,25 @@ import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
 import { flatMap } from '../util';
-import { D2ItemFactoryType } from './store/d2-item-factory.service';
+import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
 import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
+import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
+
+export interface StoreServiceType {
+  getActiveStore(): DimStore | undefined;
+  getStores(): DimStore[];
+  getStore(id: string): DimStore | undefined;
+  getVault(): DimVault | undefined;
+  getAllItems(): DimItem[];
+  getStoresStream(account: DestinyAccount): ConnectableObservable<DimStore[]>;
+  getItemAcrossStores(params: {
+    id: string;
+    hash: number;
+    notransfer: boolean;
+  }): DimItem | undefined;
+  updateCharacters(account: DestinyAccount): IPromise<DimStore[]>;
+  reloadStores(): Promise<DimStore[]>;
+}
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
@@ -46,7 +63,7 @@ export function D2StoresService(
   $stateParams: StateParams,
   loadingTracker,
   dimDestinyTrackerService
-) {
+): StoreServiceType {
   'ngInject';
 
   let _stores: DimStore[] = [];
@@ -80,7 +97,7 @@ export function D2StoresService(
     getActiveStore: () => _.find(_stores, 'current'),
     getStores: () => _stores,
     getStore: (id) => _.find(_stores, { id }),
-    getVault: () => _.find(_stores, { id: 'vault' }),
+    getVault: () => _.find(_stores, { id: 'vault' }) as DimVault | undefined,
     getAllItems: () => flatMap(_stores, (s) => s.items),
     getStoresStream,
     getItemAcrossStores,
@@ -94,7 +111,7 @@ export function D2StoresService(
   /**
    * Find an item among all stores that matches the params provided.
    */
-  function getItemAcrossStores(params: { id: string; hash: string; notransfer: boolean }) {
+  function getItemAcrossStores(params: { id: string; hash: number; notransfer: boolean }) {
     const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer')) as (DimItem) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
@@ -110,7 +127,7 @@ export function D2StoresService(
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  function updateCharacters(account: DestinyAccount) {
+  function updateCharacters(account: DestinyAccount): IPromise<DimStore[]> {
     // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
       if ($stateParams.membershipId && $stateParams.platformType) {

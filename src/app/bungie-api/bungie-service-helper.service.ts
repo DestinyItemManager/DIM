@@ -18,7 +18,7 @@ declare module "angular" {
 }
 
 export interface DimError extends Error {
-  code?: PlatformErrorCodes;
+  code?: PlatformErrorCodes | string;
   status?: string;
 }
 
