@@ -96,8 +96,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     }
 
     dimState.active = platform;
-    $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
-    return promise;
+    return promise.then(() => platform);
   }
 }
 

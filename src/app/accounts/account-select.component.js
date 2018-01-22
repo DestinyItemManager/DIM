@@ -21,34 +21,28 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
 
   vm.$onChanges = function(changes) {
     // If we go to a non-destiny-account page, leave it, or default to D1
-    vm.destinyVersion = changes.destinyVersion.currentValue || vm.destinyVersion || 1;
-    if (vm.currentAccount) {
-      vm.currentAccount.destinyVersion = vm.destinyVersion;
-    }
+    vm.destinyVersion = changes.destinyVersion.currentValue ||
+      vm.destinyVersion ||
+      (vm.currentAccount && vm.currentAccount.destinyVersion) ||
+      1;
+
+    // TODO: remove
     dimSettingsService.destinyVersion = vm.destinyVersion;
     dimSettingsService.save();
   };
 
-  function setAccounts(accounts) {
-    vm.accounts = accounts;
-  }
-
   // TODO: save this in the account service, or some other global state, so we don't flip flop
   function setCurrentAccount(currentAccount) {
-    vm.currentAccount = { ...currentAccount, destinyVersion: vm.destinyVersion };
+    vm.currentAccount = currentAccount;
   }
 
   vm.accountChange = function accountChange(account) {
-    loadingTracker.addPromise(dimPlatformService.setActive(account));
+    loadingTracker.addPromise(dimPlatformService.setActive(account).then(setCurrentAccount));
   };
-
-  $scope.$on('dim-active-platform-updated', (e, args) => {
-    setCurrentAccount(args.platform);
-  });
 
   const loadAccountsPromise = dimPlatformService.getPlatforms()
     .then((accounts) => {
-      setAccounts(accounts);
+      vm.accounts = accounts;
       setCurrentAccount(dimPlatformService.getActive());
     });
   loadingTracker.addPromise(loadAccountsPromise);

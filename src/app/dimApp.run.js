@@ -1,4 +1,4 @@
-function run($rootScope, SyncService, $transitions, $location, $trace, $uiRouter) {
+function run(SyncService, $trace, $uiRouter) {
   'ngInject';
 
   SyncService.init();
