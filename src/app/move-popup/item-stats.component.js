@@ -9,16 +9,6 @@ function ItemStatsController(dimSettingsService) {
   this.qualityEnabled = $featureFlags.qualityEnabled;
 
   const vm = this;
-
-  vm.masterworkStat = function() {
-    const item = vm.item;
-
-    if (item.sockets) {
-      return _.find(_.pluck(item.sockets.sockets, 'masterworkStat'), (ms) => ms > 0);
-    }
-
-    return null;
-  };
 }
 
 export const ItemStatsComponent = {

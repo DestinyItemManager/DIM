@@ -97,8 +97,11 @@ export interface DimSocket {
   enableFailReasons: string;
   plugOptions: DestinyInventoryItemDefinition[];
   masterworkProgress: number | undefined;
-  masterworkType: string | null;
+  masterworkType: 'Vanguard' | 'Crucible' | null;
   masterworkStat: number | undefined;
+  masterworkValue: number | undefined;
+  masterworkIcon: string | null;
+  masterworkDesc: string | null;
 }
 
 export interface DimSocketCategory {
@@ -172,6 +175,7 @@ export interface DimItem {
   infusable: boolean;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
+  masterworkInfo: DimMasterwork | null;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
@@ -208,6 +212,16 @@ export interface D2ItemFactoryType {
     owner: DimStore
   ): DimItem | null;
   createItemIndex(item: DimItem): string;
+}
+
+export interface DimMasterwork {
+  progress: number | undefined;
+  typeName: 'Vanguard' | 'Crucible' | null;
+  typeIcon: string;
+  typeDesc: string | null;
+  statHash: number | undefined;
+  statName: string;
+  statValue: number | undefined;
 }
 
 /**
@@ -569,6 +583,12 @@ export function D2ItemFactory(
     createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
     createdItem.infusionQuality = itemDef.quality || null;
 
+    // Masterwork
+    if (createdItem.masterwork && createdItem.sockets) {
+      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs.Stat);
+    }
+
+
     // Mark items with power mods
     if (createdItem.primStat) {
       createdItem.basePower = getBasePowerLevel(createdItem);
@@ -864,6 +884,9 @@ export function D2ItemFactory(
       const masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
       const masterworkType = (socket.plugObjectives && socket.plugObjectives.length) ? ((plugOptions[0].plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible") : null;
       const masterworkStat = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].statTypeHash : undefined;
+      const masterworkValue = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].value : undefined;
+      const masterworkIcon = (socket.plugObjectives && socket.plugObjectives.length) ? defs.Objective.get(socket.plugObjectives[0].objectiveHash).displayProperties.icon : null;
+      const masterworkDesc = (socket.plugObjectives && socket.plugObjectives.length) ? defs.Objective.get(socket.plugObjectives[0].objectiveHash).progressDescription : null;
 
       return {
         plug,
@@ -873,7 +896,10 @@ export function D2ItemFactory(
         plugOptions,
         masterworkProgress,
         masterworkType,
-        masterworkStat
+        masterworkStat,
+        masterworkIcon,
+        masterworkValue,
+        masterworkDesc
       };
     });
 
@@ -888,6 +914,29 @@ export function D2ItemFactory(
       sockets: realSockets, // Flat list of sockets
       categories // Sockets organized by category
     };
+  }
+
+  function buildMasterworkInfo(
+    sockets: DimSockets,
+    statDefs: LazyDefinition<DestinyStatDefinition>
+  ): DimMasterwork | null {
+    const progress = _.find(_.pluck(sockets.sockets, 'masterworkProgress'), (mp) => mp >= 0);
+    const typeName =  _.find(_.pluck(sockets.sockets, 'masterworkType'), (type) => type !== null);
+    const typeIcon =  _.find(_.pluck(sockets.sockets, 'masterworkIcon'), (icon) => icon !== null);
+    const typeDesc =  _.find(_.pluck(sockets.sockets, 'masterworkDesc'), (desc) => desc !== null);
+    const statHash =  _.find(_.pluck(sockets.sockets, 'masterworkStat'), (ms) => ms > 0);
+    const statName =  statDefs.get(statHash).displayProperties.name;
+    const statValue =  _.find(_.pluck(sockets.sockets, 'masterworkValue'), (mv) => mv >= 0);
+
+    return {
+      progress,
+      typeName,
+      typeIcon,
+      typeDesc,
+      statHash,
+      statName,
+      statValue
+    }
   }
 
   function getBasePowerLevel(item: DimItem): number {
