@@ -134,6 +134,7 @@ export interface DimItem {
   description: string;
   icon: string;
   notransfer: boolean;
+  canPullFromPostmaster;
   id: string; // zero for non-instanced is legacy hack
   equipped: boolean;
   equipment: boolean;
@@ -456,6 +457,7 @@ export function D2ItemFactory(
       notransfer: Boolean(currentBucket.inPostmaster ||
         itemDef.nonTransferrable ||
         item.transferStatus === TransferStatuses.NotTransferrable),
+      canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
       id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
       equipped: Boolean(instanceDef.isEquipped),
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
