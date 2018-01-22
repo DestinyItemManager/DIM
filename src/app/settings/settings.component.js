@@ -152,12 +152,9 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   // compatibility with old settings.
   vm.itemSortPresets = {
     primaryStat: 'Settings.SortPrimary',
-    basePowerThenPrimary: 'Settings.SortBasePower',
     rarityThenPrimary: 'Settings.SortRarity',
     quality: 'Settings.SortRoll',
     name: 'Settings.SortName',
-    typeThenPrimary: 'Settings.SortTypeThenPrimary',
-    typeThenName: 'Settings.SortTypeThenName',
     custom: 'Settings.SortCustom'
   };
 

@@ -542,13 +542,10 @@
     "SortByPrimary": "Primary Stat (Attack/Defense)",
     "SortByBasePower": "Base power (D2 only)",
     "SortByRating": "Community Rating or Armor Quality",
-    "SortBasePower": "Base power (D2 only), then primary stat",
     "SortName": "Name",
     "SortPrimary": "Primary stat (attack or defense)",
     "SortRarity": "Rarity, then primary stat",
     "SortRoll": "Community rating or armor quality",
-    "SortTypeThenName": "Item type then name",
-    "SortTypeThenPrimary": "Item type then primary stat",
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {

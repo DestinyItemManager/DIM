@@ -67,9 +67,9 @@
         <label for="itemSort" ng-i18next="Settings.SetSort"></label>
 
         <div class="radioOptions">
-          <label ng-repeat="(value, i18key) in vm.itemSortPresets track by value">
+          <label ng-repeat="(value, i18nkey) in vm.itemSortPresets track by value">
             <input type="radio" ng-model="vm.settings.itemSort" value="{{value}}">
-            <span ng-i18next="{{i18key}}"></span>
+            <span ng-i18next="{{i18nkey}}"></span>
           </label>
         </div>
         <sort-order-editor ng-if="vm.settings.itemSort == 'custom'" order="vm.itemSortCustom" on-sort-order-changed="vm.itemSortOrderChanged"></sort-order-editor>
