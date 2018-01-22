@@ -4,9 +4,8 @@ import {
   DestinyClass,
   DestinyItemComponent,
   DestinyProgression,
-  DestinyStatDefinition,
-  DestinyCharacterProgressionComponent
-} from 'bungie-api-ts/destiny2';
+  DestinyStatDefinition
+  } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { bungieNetPath } from '../../dim-ui/bungie-image';
@@ -21,7 +20,6 @@ import { DimStore } from './d2-store-factory.service';
 import vaultBackground from 'app/images/vault-background.png';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';
-import { isWellRested } from './well-rested';
 
 export interface DimCharacterStat {
   id: number;
@@ -59,7 +57,6 @@ export interface DimStore {
   progression: null | {
     progressions: { [key: number]: DestinyProgression };
   };
-  isWellRested: boolean;
 
   updateCharacterInfo(defs: D2ManifestDefinitions, bStore: DestinyCharacterComponent): IPromise<DimStore[]>;
   amountOfItem(item: DimItem): number;
@@ -98,12 +95,7 @@ export interface DimVault extends DimStore {
 }
 
 export interface D2StoreFactoryType {
-  makeCharacter(
-    defs: D2ManifestDefinitions,
-    character: DestinyCharacterComponent,
-    characterProgression: DestinyCharacterProgressionComponent,
-    mostRecentLastPlayed: Date
-  ): DimStore;
+  makeCharacter(defs: D2ManifestDefinitions, character: DestinyCharacterComponent, mostRecentLastPlayed: Date): DimStore;
   makeVault(buckets: DimInventoryBuckets, profileCurrencies: DestinyItemComponent[]): DimVault;
 }
 
@@ -232,12 +224,7 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
   };
 
   return {
-    makeCharacter(
-      defs: D2ManifestDefinitions,
-      character: DestinyCharacterComponent,
-      characterProgression: DestinyCharacterProgressionComponent,
-      mostRecentLastPlayed: Date
-    ): DimStore {
+    makeCharacter(defs: D2ManifestDefinitions, character: DestinyCharacterComponent, mostRecentLastPlayed: Date): DimStore {
       const race = defs.Race[character.raceHash];
       const gender = defs.Gender[character.genderHash];
       const classy = defs.Class[character.classHash];
@@ -262,13 +249,10 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
         className,
         gender: genderName,
         genderRace,
-        isVault: false,
-        isWellRested: isWellRested(defs, characterProgression)
+        isVault: false
       });
 
       store.name = `${store.genderRace} ${store.className}`;
-
-      console.log(store.name, store.isWellRested, characterProgression);
 
       return store;
     },
@@ -298,7 +282,6 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
         glimmer: currencies.glimmer,
         silver: currencies.silver,
         isVault: true,
-        isWellRested: false,
         // Vault has different capacity rules
         capacityForItem(item: DimItem) {
           if (!item.bucket) {

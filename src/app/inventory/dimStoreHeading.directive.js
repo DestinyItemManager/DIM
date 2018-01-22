@@ -15,17 +15,11 @@ export const StoreHeadingComponent = {
   template
 };
 
-function StoreHeadingCtrl($scope, ngDialog, $i18next, D2Definitions) {
+function StoreHeadingCtrl($scope, ngDialog, $i18next) {
   'ngInject';
 
   const vm = this;
   let dialogResult = null;
-
-  if (vm.store.destinyVersion === 2) {
-    D2Definitions.getDefinitions().then((defs) => {
-      vm.wellRestedPerk = defs.SandboxPerk.get(1519921522);
-    });
-  }
 
   function getLevelBar() {
     if (vm.store.percentToNextLevel) {
