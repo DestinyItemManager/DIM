@@ -30,9 +30,6 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
   vm.tab = 'default';
 
   vm.featureFlags = {
-    qualityEnabled: $featureFlags.qualityEnabled,
-    compareEnabled: $featureFlags.compareEnabled,
-    tagsEnabled: $featureFlags.tagsEnabled,
     debugMode: dimState.debug
   };
 

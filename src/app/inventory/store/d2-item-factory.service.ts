@@ -502,8 +502,8 @@ export function D2ItemFactory(
     });
 
     // *able
-    createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
-    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
+    createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
+    createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
     createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem));
 
     if (createdItem.primStat) {

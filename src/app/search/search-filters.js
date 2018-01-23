@@ -107,15 +107,13 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     return [`is:${word}`, `not:${word}`];
   }));
 
-  if ($featureFlags.tagsEnabled) {
-    itemTags.forEach((tag) => {
-      if (tag.type) {
-        keywords.push(`tag:${tag.type}`);
-      } else {
-        keywords.push("tag:none");
-      }
-    });
-  }
+  itemTags.forEach((tag) => {
+    if (tag.type) {
+      keywords.push(`tag:${tag.type}`);
+    } else {
+      keywords.push("tag:none");
+    }
+  });
 
   // Filters that operate on ranges (>, <, >=, <=)
   const comparisons = [":<", ":>", ":<=", ":>=", ":"];
@@ -146,9 +144,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
   });
 
   // free form notes on items
-  if ($featureFlags.tagsEnabled) {
-    keywords.push('notes:');
-  }
+  keywords.push('notes:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter = {};

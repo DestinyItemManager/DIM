@@ -5,7 +5,6 @@ function ItemStatsController(dimSettingsService) {
   'ngInject';
 
   this.settings = dimSettingsService;
-  this.qualityEnabled = $featureFlags.qualityEnabled;
 }
 
 export const ItemStatsComponent = {

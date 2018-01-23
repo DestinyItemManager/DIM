@@ -18,7 +18,7 @@
          ui-sref="destiny1.loadout-builder"
          ng-i18next="LB.LB"></a>
       <a class="link"
-         ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.vendorsEnabled"
+         ng-if="$ctrl.destinyVersion == 1"
          ui-sref-active="active"
          ui-sref="destiny1.vendors"
          ng-i18next="Vendors.Vendors"></a>
@@ -30,7 +30,7 @@
       <a class="link"
          ui-sref-active="active"
          ui-sref="destiny1.activities"
-         ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.activities"
+         ng-if="$ctrl.destinyVersion == 1"
          ng-i18next="Activities.Activities"></a>
       <span class="link"
          ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
@@ -131,12 +131,12 @@
   <a class="link second-to-go"
      ui-sref-active="active"
      ui-sref="destiny1.activities"
-     ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.activities"
+     ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="Activities.Activities"></a>
   <a class="link second-to-go"
      ui-sref-active="active"
      ui-sref="destiny1.vendors"
-     ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.vendorsEnabled"
+     ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="Vendors.Vendors"></a>
   <span class="link second-to-go"
      ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"

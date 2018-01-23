@@ -19,7 +19,6 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   const vm = this;
 
   vm.featureFlags = {
-    qualityEnabled: $featureFlags.qualityEnabled,
     reviewsEnabled: $featureFlags.reviewsEnabled,
     colorA11y: $featureFlags.colorA11y
   };
