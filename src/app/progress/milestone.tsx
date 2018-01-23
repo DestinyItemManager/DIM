@@ -269,14 +269,17 @@ function MilestoneObjectiveStatus(props: MilestoneObjectiveStatusProps) {
     let progress = objective.progress || 0;
     let completionValue = objectiveDef.completionValue;
     if (objective.objectiveHash === 3289403948) {
-      progress *= 250;
-      completionValue *= 250;
+      // This is the personal clan XP progression
+      const progressDef = defs.Progression.get(540048094);
+      progress *= progressDef.steps[1].progressTotal;
+      completionValue *= progressDef.steps[0].progressTotal;
     }
 
     if (status.completed) {
       return <span><i className="fa fa-check-circle-o"/></span>;
     } else if (completionValue > 1) {
-      return <span>{progress}/{completionValue}</span>;
+      const formatter = new Intl.NumberFormat(window.navigator.language);
+      return <span>{formatter.format(progress)}/{formatter.format(completionValue)}</span>;
     }
   }
 
