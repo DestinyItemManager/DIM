@@ -18,7 +18,7 @@
          ui-sref="destiny1.loadout-builder"
          ng-i18next="LB.LB"></a>
       <a class="link"
-         ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.vendorsEnabled"
+         ng-if="$ctrl.destinyVersion == 1"
          ui-sref-active="active"
          ui-sref="destiny1.vendors"
          ng-i18next="Vendors.Vendors"></a>
@@ -30,7 +30,7 @@
       <a class="link"
          ui-sref-active="active"
          ui-sref="destiny1.activities"
-         ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.activities"
+         ng-if="$ctrl.destinyVersion == 1"
          ng-i18next="Activities.Activities"></a>
       <span class="link"
          ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
@@ -42,10 +42,6 @@
          ng-i18next="Progress.Progress"></a>
       <hr>
 
-      <a class="link"
-         ui-sref-active="active"
-         ui-sref="storage"
-         ng-i18next="Storage.Title"></a>
       <span class="link"
          ui-sref-active="active"
          ui-sref="settings"
@@ -131,12 +127,12 @@
   <a class="link second-to-go"
      ui-sref-active="active"
      ui-sref="destiny1.activities"
-     ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.activities"
+     ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="Activities.Activities"></a>
   <a class="link second-to-go"
      ui-sref-active="active"
      ui-sref="destiny1.vendors"
-     ng-if="$ctrl.destinyVersion == 1 && $ctrl.featureFlags.vendorsEnabled"
+     ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="Vendors.Vendors"></a>
   <span class="link second-to-go"
      ng-if="$ctrl.destinyVersion == 1 && $ctrl.xurAvailable"
@@ -151,11 +147,6 @@
     <refresh
       ng-if="!$ctrl.showSearch"
       class="link"></refresh>
-    <span class="link fa fa-save"
-          ng-if="!$ctrl.showSearch"
-          ui-sref-active="active"
-          ui-sref="storage"
-          ng-i18next="[title]Storage.Title"></span>
     <span class="link fa fa-cog"
           ng-if="!$ctrl.showSearch"
           ui-sref="settings"

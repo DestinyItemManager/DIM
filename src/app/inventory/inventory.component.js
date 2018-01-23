@@ -18,7 +18,9 @@ function InventoryController($scope, dimStoreService, dimBucketService) {
     dimBucketService.getBuckets().then((buckets) => {
       vm.buckets = buckets;
       subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), (stores) => {
-        vm.stores = stores;
+        if (stores) {
+          vm.stores = stores;
+        }
       });
     });
   };

@@ -18,7 +18,7 @@ declare module "angular" {
 }
 
 export interface DimError extends Error {
-  code?: PlatformErrorCodes;
+  code?: PlatformErrorCodes | string;
   status?: string;
 }
 
@@ -89,7 +89,9 @@ export function BungieServiceHelper(
 
   function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHttpResponse<ServerResponse<T>> {
     if (response.status === -1) {
-      throw new Error($i18next.t('BungieService.NotConnected'));
+      throw new Error(navigator.onLine
+        ? $i18next.t('BungieService.NotConnectedOrBlocked')
+        : $i18next.t('BungieService.NotConnected'));
     }
     // Token expired and other auth maladies
     if (response.status === 401 || response.status === 403) {

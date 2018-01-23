@@ -28,19 +28,17 @@ function Destiny2Controller(
     }
   });
 
-  if ($featureFlags.tagsEnabled) {
-    dimSettingsService.itemTags.forEach((tag) => {
-      if (tag.hotkey) {
-        hotkeys.add({
-          combo: [tag.hotkey],
-          description: $i18next.t('Hotkey.MarkItemAs', {
-            tag: $i18next.t(tag.label)
-          }),
-          callback: function() {
-            $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
-          }
-        });
-      }
-    });
-  }
+  dimSettingsService.itemTags.forEach((tag) => {
+    if (tag.hotkey) {
+      hotkeys.add({
+        combo: [tag.hotkey],
+        description: $i18next.t('Hotkey.MarkItemAs', {
+          tag: $i18next.t(tag.label)
+        }),
+        callback: function() {
+          $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
+        }
+      });
+    }
+  });
 }

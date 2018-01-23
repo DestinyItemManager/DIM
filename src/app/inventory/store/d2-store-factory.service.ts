@@ -114,9 +114,9 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
      * excluding stuff in the postmaster.
      */
     amountOfItem(item: DimItem) {
-      return sum(this.items.filter((i) => {
+      return sum((this.items as DimItem[]).filter((i) => {
         return i.hash === item.hash && !i.location.inPostmaster;
-      }), 'amount');
+      }), (i) => i.amount);
     },
 
     /**
@@ -296,7 +296,7 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
           }
           const vaultBucket = item.bucket.vaultBucket;
           const usedSpace = item.bucket.vaultBucket
-            ? count(this.items, (i) => i.bucket.vaultBucket && (i.bucket.vaultBucket.id === vaultBucket.id))
+            ? count((this.items as DimItem[]), (i) => i.bucket.vaultBucket && (i.bucket.vaultBucket.id === vaultBucket.id))
             : 0;
           const openStacks = Math.max(0, this.capacityForItem(item) - usedSpace);
           const maxStackSize = item.maxStackSize || 1;

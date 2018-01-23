@@ -27,7 +27,7 @@ export interface Destiny2ApiService {
   getCharacters(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
   transfer(item: DimItem, store: DimStore, amount: number): IPromise<ServerResponse<number>>;
   equip(item: DimItem): IPromise<ServerResponse<number>>;
-  equipItems(store: DimStore, items: DimItem[]): IPromise<ServerResponse<number>>;
+  equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]>;
   setLockState(store: DimStore, item: DimItem, lockState: boolean): IPromise<ServerResponse<number>>;
 }
 
@@ -177,7 +177,7 @@ export function Destiny2Api(
   }
 
   // Returns a list of items that were successfully equipped
-  function equipItems(store: DimStore, items: DimItem[]): IPromise<any> {
+  function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]> {
     // TODO: test if this is still broken in D2
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
     items = _.sortBy(items, (i: any) => (i.isExotic ? 1 : 0));

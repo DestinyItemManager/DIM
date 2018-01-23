@@ -1,10 +1,22 @@
 # Next
 
+# 4.36.1
+
+* Attempt to fix error on app.
+* Moving an item from the postmaster will now only clear enough space for that one item.
+
+# 4.36.0
+
+* Attempt to fix error on app.
+
+# 4.35.0
+
 * The Settings page has been redesigned.
 * Your character stats now update live when you change armor.
 * New settings to help distinguish colors for colorblind users.
 * DIM should load faster.
 * DIM won't try to transfer Faction tokens anymore.
+* Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
 
 # 4.34.0
 

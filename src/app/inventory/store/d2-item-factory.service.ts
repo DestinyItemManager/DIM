@@ -98,6 +98,11 @@ export interface DimSocket {
   enableFailReasons: string;
   plugOptions: DestinyInventoryItemDefinition[];
   masterworkProgress: number | undefined;
+  masterworkType: 'Vanguard' | 'Crucible' | null;
+  masterworkStat: number | undefined;
+  masterworkValue: number | undefined;
+  masterworkIcon: string | null;
+  masterworkDesc: string | null;
 }
 
 export interface DimSocketCategory {
@@ -134,6 +139,7 @@ export interface DimItem {
   description: string;
   icon: string;
   notransfer: boolean;
+  canPullFromPostmaster;
   id: string; // zero for non-instanced is legacy hack
   equipped: boolean;
   equipment: boolean;
@@ -171,12 +177,14 @@ export interface DimItem {
   infusable: boolean;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
+  masterworkInfo: DimMasterwork | null;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
   cons: string;
   userReview: string;
   userVote: number;
+  dtrRating: number;
 
   // Can this item be equipped by the given store?
   canBeEquippedBy(store: DimStore): boolean;
@@ -207,6 +215,16 @@ export interface D2ItemFactoryType {
     owner: DimStore
   ): DimItem | null;
   createItemIndex(item: DimItem): string;
+}
+
+export interface DimMasterwork {
+  progress: number | undefined;
+  typeName: 'Vanguard' | 'Crucible' | null;
+  typeIcon: string;
+  typeDesc: string | null;
+  statHash: number | undefined;
+  statName: string;
+  statValue: number | undefined;
 }
 
 /**
@@ -456,6 +474,7 @@ export function D2ItemFactory(
       notransfer: Boolean(currentBucket.inPostmaster ||
         itemDef.nonTransferrable ||
         item.transferStatus === TransferStatuses.NotTransferrable),
+      canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
       id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
       equipped: Boolean(instanceDef.isEquipped),
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
@@ -484,8 +503,8 @@ export function D2ItemFactory(
     });
 
     // *able
-    createdItem.taggable = Boolean($featureFlags.tagsEnabled && (createdItem.lockable || createdItem.classified));
-    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
+    createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
+    createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
     createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem));
 
     if (createdItem.primStat) {
@@ -569,6 +588,11 @@ export function D2ItemFactory(
     createdItem.infusionFuel = Boolean(createdItem.infusionProcess && itemDef.quality && itemDef.quality.infusionCategoryHashes && itemDef.quality.infusionCategoryHashes.length);
     createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
     createdItem.infusionQuality = itemDef.quality || null;
+
+    // Masterwork
+    if (createdItem.masterwork && createdItem.sockets) {
+      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs.Stat);
+    }
 
     // Mark items with power mods
     if (createdItem.primStat) {
@@ -863,6 +887,11 @@ export function D2ItemFactory(
       const reusablePlugs = (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash));
       const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? reusablePlugs : (plug ? [plug] : []);
       const masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
+      const masterworkType = (socket.plugObjectives && socket.plugObjectives.length) ? ((plugOptions[0].plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible") : null;
+      const masterworkStat = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].statTypeHash : undefined;
+      const masterworkValue = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].value : undefined;
+      const masterworkIcon = (socket.plugObjectives && socket.plugObjectives.length) ? defs.Objective.get(socket.plugObjectives[0].objectiveHash).displayProperties.icon : null;
+      const masterworkDesc = (socket.plugObjectives && socket.plugObjectives.length) ? defs.Objective.get(socket.plugObjectives[0].objectiveHash).progressDescription : null;
 
       return {
         plug,
@@ -870,7 +899,12 @@ export function D2ItemFactory(
         enabled: socket.isEnabled,
         enableFailReasons: failReasons,
         plugOptions,
-        masterworkProgress
+        masterworkProgress,
+        masterworkType,
+        masterworkStat,
+        masterworkIcon,
+        masterworkValue,
+        masterworkDesc
       };
     });
 
@@ -884,6 +918,29 @@ export function D2ItemFactory(
     return {
       sockets: realSockets, // Flat list of sockets
       categories // Sockets organized by category
+    };
+  }
+
+  function buildMasterworkInfo(
+    sockets: DimSockets,
+    statDefs: LazyDefinition<DestinyStatDefinition>
+  ): DimMasterwork | null {
+    const progress = _.find(_.pluck(sockets.sockets, 'masterworkProgress'), (mp) => mp >= 0);
+    const typeName = _.find(_.pluck(sockets.sockets, 'masterworkType'), (type) => type !== null);
+    const typeIcon = _.find(_.pluck(sockets.sockets, 'masterworkIcon'), (icon) => icon !== null);
+    const typeDesc = _.find(_.pluck(sockets.sockets, 'masterworkDesc'), (desc) => desc !== null);
+    const statHash = _.find(_.pluck(sockets.sockets, 'masterworkStat'), (ms) => ms > 0);
+    const statName = statDefs.get(statHash).displayProperties.name;
+    const statValue = _.find(_.pluck(sockets.sockets, 'masterworkValue'), (mv) => mv >= 0);
+
+    return {
+      progress,
+      typeName,
+      typeIcon,
+      typeDesc,
+      statHash,
+      statName,
+      statValue
     };
   }
 

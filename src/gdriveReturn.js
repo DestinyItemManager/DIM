@@ -13,7 +13,7 @@ if (window.gapi) {
       }
       const auth = gapi.auth2.getAuthInstance();
       if (auth && auth.isSignedIn.get()) {
-        window.location = '/index.html#!/storage?gdrive=true';
+        window.location = '/index.html#!/settings?gdrive=true';
       } else {
         document.getElementById('return-error').style.display = 'block';
       }

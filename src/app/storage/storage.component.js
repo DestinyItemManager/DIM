@@ -122,7 +122,7 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
 
   $scope.$on('gdrive-sign-in', () => {
     if ($stateParams.gdrive === 'true') {
-      vm.forceSync().then(() => $state.go('storage', { gdrive: undefined }, 'replace'));
+      vm.forceSync().then(() => $state.go('settings', { gdrive: undefined }, 'replace'));
     }
   });
 

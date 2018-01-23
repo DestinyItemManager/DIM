@@ -5,7 +5,8 @@ import {
   DestinyFactionProgression,
   DestinyItemComponent,
   DestinyMilestone,
-  DestinyObjectiveProgress
+  DestinyObjectiveProgress,
+  DestinyCharacterProgressionComponent
   } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
@@ -24,6 +25,9 @@ import { Milestone } from './milestone';
 import './progress.scss';
 import { ProgressProfile, ProgressService } from './progress.service';
 import { Quest } from './quest';
+import { isWellRested } from '../inventory/store/well-rested';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { BungieImage } from '../dim-ui/bungie-image';
 
 /* Label isn't used, but it helps us understand what each one is */
 const progressionMeta = {
@@ -198,6 +202,7 @@ export class Progress extends React.Component<Props, State> {
           <div className="progress-row">
             {characters.map((character) =>
               <div className="progress-for-character" key={character.characterId}>
+                <WellRestedPerkIcon defs={defs} progressions={profileInfo.characterProgressions.data[character.characterId]} />
                 {this.milestonesForCharacter(character).map((milestone) =>
                   <Milestone milestone={milestone} defs={defs} key={milestone.milestoneHash} />
                 )}
@@ -351,4 +356,30 @@ export function sortCharacters(characters: DestinyCharacterComponent[], order: C
   } else {
     return characters;
   }
+}
+
+function WellRestedPerkIcon(props: {
+  defs: D2ManifestDefinitions;
+  progressions: DestinyCharacterProgressionComponent;
+}) {
+  const { defs, progressions } = props;
+  const wellRestedInfo = isWellRested(defs, progressions);
+
+  if (!wellRestedInfo.wellRested) {
+    return null;
+  }
+  const formatter = new Intl.NumberFormat(window.navigator.language);
+  const perkDef = defs.SandboxPerk.get(1519921522);
+  return (
+    <div className="well-rested milestone-quest">
+      <div className="milestone-icon">
+        <BungieImage className="perk" src={perkDef.displayProperties.icon} title={perkDef.displayProperties.description} />
+        <span>{formatter.format(wellRestedInfo.progress!)}<wbr/>/<wbr/>{formatter.format(wellRestedInfo.requiredXP!)}</span>
+      </div>
+      <div className="milestone-info">
+        <span className="milestone-name">{perkDef.displayProperties.name}</span>
+        <div className="milestone-description">{perkDef.displayProperties.description}</div>
+      </div>
+    </div>
+  );
 }

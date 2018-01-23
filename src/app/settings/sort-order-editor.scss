@@ -1,0 +1,36 @@
+.sort-order-editor {
+  padding: 4px 0 0 0;
+}
+
+.sort-order-editor-item {
+  background: #222;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transition: opacity .2s;
+
+  .fa {
+    padding: 4px;
+  }
+
+  .sort-button {
+    transition: opacity .2s;
+  }
+
+  &.is-dragging {
+    .sort-button {
+      opacity: 0;
+    }
+  }
+
+  .fa-bars {
+    color: #444;
+  }
+
+  .name {
+    flex: 1;
+    margin: 0 6px;
+  }
+}

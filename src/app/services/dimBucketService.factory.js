@@ -83,6 +83,11 @@ function BucketService(dimDefinitions, dimCategory) {
     BUCKET_VAULT_WEAPONS: 'Weapons',
     BUCKET_VAULT_ITEMS: 'General'
   };
+  const sortToVault = {
+    Armor: 'BUCKET_VAULT_ARMOR',
+    Weapons: 'BUCKET_VAULT_WEAPONS',
+    General: 'BUCKET_VAULT_ITEMS'
+  };
 
   const typeToSort = {};
   _.each(dimCategory, (types, category) => {
@@ -140,6 +145,12 @@ function BucketService(dimDefinitions, dimCategory) {
 
             buckets.byHash[bucket.hash] = bucket;
             buckets.byId[bucket.id] = bucket;
+          }
+        });
+
+        _.each(buckets.byHash, (bucket) => {
+          if (sortToVault[bucket.sort]) {
+            bucket.vaultBucket = buckets.byId[bucket.sort];
           }
         });
 

@@ -7,7 +7,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -214,11 +213,6 @@ module.exports = (env) => {
 
         // Feature flags!
 
-        // Tags are off in release right now
-        '$featureFlags.tagsEnabled': JSON.stringify(true),
-        '$featureFlags.compareEnabled': JSON.stringify(true),
-        '$featureFlags.vendorsEnabled': JSON.stringify(true),
-        '$featureFlags.qualityEnabled': JSON.stringify(true),
         // Additional debugging / item info tools
         '$featureFlags.debugMode': JSON.stringify(false),
         // Print debug info to console about item moves
@@ -235,12 +229,10 @@ module.exports = (env) => {
         '$featureFlags.colorA11y': JSON.stringify(true),
         // Whether to log page views for router events
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(true),
-        // Enable activities tab
-        '$featureFlags.activities': JSON.stringify(true),
         // Debug ui-router
         '$featureFlags.debugRouter': JSON.stringify(false),
         // Show drag and drop on dev only
-        '$featureFlags.dnd': JSON.stringify(isDev),
+        '$featureFlags.dnd': JSON.stringify(false),
         // Send exception reports to Google Analytics on beta only
         '$featureFlags.googleExceptionReports': JSON.stringify(env === 'beta')
       }),
@@ -290,27 +282,19 @@ module.exports = (env) => {
     // The sql.js library doesnt work at all (reports no tables) when minified,
     // so we exclude it from the regular minification
     // FYI, uglification runs on final chunks rather than individual modules
-    config.plugins.push(new UglifyJsPlugin({
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
       exclude: [/-sqlLib-/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
-      uglifyOptions: {
-        compress: {
-          ecma: 6,
-          passes: 2
-        },
-        output: {
-          ecma: 6
-        }
-      },
-      sourceMap: true,
-      cache: true,
-      parallel: true
+      compress: { warnings: false },
+      output: { comments: false },
+      sourceMap: true
     }));
 
     // Generate a service worker
     config.plugins.push(new WorkboxPlugin({
       maximumFileSizeToCacheInBytes: 5000000,
-      globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
+      globPatterns: ['**/*.{html,js,css,woff2,json}', 'static/*.{png,jpg}'],
       globIgnores: [
+        'data/**',
         'manifest-*.js',
         'extension-scripts/*',
         'service-worker.js'

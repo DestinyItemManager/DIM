@@ -88,7 +88,9 @@ function makeManifestService(localStorageKey, idbKey, $q, DestinyApi, $http, toa
           service.statusText = $i18next.t('Manifest.Error', { error: message });
 
           if (e.status === -1) {
-            message = $i18next.t('BungieService.NotConnected');
+            message = navigator.onLine
+              ? $i18next.t('BungieService.NotConnectedOrBlocked')
+              : $i18next.t('BungieService.NotConnected');
           } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
             message = $i18next.t('BungieService.Down');
           } else if (e.status < 200 || e.status >= 400) {

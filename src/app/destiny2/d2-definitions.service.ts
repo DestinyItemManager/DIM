@@ -18,7 +18,8 @@ import {
   DestinySocketTypeDefinition,
   DestinyStatDefinition,
   DestinyTalentGridDefinition,
-  DestinyVendorDefinition
+  DestinyVendorDefinition,
+  DestinyActivityModifierDefinition
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 
@@ -32,6 +33,7 @@ const lazyTables = [
   'ItemCategory', // DestinyItemCategoryDefinition
   'Activity', // DestinyActivityDefinition
   'ActivityType', // DestinyActivityTypeDefinition
+  'ActivityModifier',
   'Vendor',
   'SocketCategory',
   'SocketType',
@@ -61,6 +63,7 @@ export interface D2ManifestDefinitions {
   ItemCategory: LazyDefinition<DestinyItemCategoryDefinition>;
   Activity: LazyDefinition<DestinyActivityDefinition>;
   ActivityType: LazyDefinition<DestinyActivityTypeDefinition>;
+  ActivityModifier: LazyDefinition<DestinyActivityModifierDefinition>;
   Vendor: LazyDefinition<DestinyVendorDefinition>;
   SocketCategory: LazyDefinition<DestinySocketCategoryDefinition>;
   SocketType: LazyDefinition<DestinySocketTypeDefinition>;

@@ -28,17 +28,7 @@ export function FarmingService($rootScope,
   ]);
 
   // These are things you may pick up frequently out in the wild
-  const makeRoomTypes = dimSettingsService.destinyVersion === 2 ? [
-    953998645, // power weapons
-    1498876634, // kinetic weapons
-    2465295065, // energy weapon
-    // are the specific to warlocks? ->
-    3448274439, // helmets
-    14239492, // chest
-    20886954, // boots
-    3551918588, // gloves
-    1585787867, // class items
-  ] : [
+  const makeRoomTypes = [
     'BUCKET_PRIMARY_WEAPON',
     'BUCKET_SPECIAL_WEAPON',
     'BUCKET_HEAVY_WEAPON',
@@ -75,11 +65,7 @@ export function FarmingService($rootScope,
           // reserve one space in the active character
           reservations[this.store.id] = {};
           makeRoomTypes.forEach((type) => {
-            if (dimSettingsService.destinyVersion === 2) {
-              reservations[this.store.id][buckets.byHash[type].type] = 1;
-            } else {
-              reservations[this.store.id][buckets.byId[type].type] = 1;
-            }
+            reservations[this.store.id][buckets.byId[type].type] = 1;
           });
         }
 

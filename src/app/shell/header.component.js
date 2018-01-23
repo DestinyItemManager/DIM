@@ -33,12 +33,13 @@ function HeaderController(
   vm.settings = dimSettingsService;
 
   vm.featureFlags = {
-    vendorsEnabled: $featureFlags.vendorsEnabled,
-    activities: $featureFlags.activities,
     bugReportLink: $DIM_FLAVOR !== 'release'
   };
 
-  vm.destinyVersion = getCurrentDestinyVersion($state);
+  vm.$onInit = function() {
+    vm.destinyVersion = getCurrentDestinyVersion();
+    updateXur();
+  };
 
   function getCurrentDestinyVersion() {
     // TODO there must be a better way of doing this?
@@ -49,11 +50,6 @@ function HeaderController(
     }
     return null;
   }
-
-  $transitions.onSuccess({ }, () => {
-    vm.destinyVersion = getCurrentDestinyVersion();
-    updateXur();
-  });
 
   /**
    * Show a popup dialog containing the given template. Its class
@@ -96,6 +92,4 @@ function HeaderController(
       });
     }
   }
-
-  updateXur();
 }

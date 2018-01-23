@@ -5,6 +5,7 @@ import './sockets.scss';
 export const SocketsComponent = {
   controller: SocketsCtrl,
   bindings: {
+    item: '<',
     sockets: '<',
     infuse: '&'
   },
