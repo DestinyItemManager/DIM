@@ -34,7 +34,30 @@ declare const $featureFlags: {
   googleExceptionReports: boolean;
 }
 
+declare function ga(...params: string[]);
+
+interface Window {
+  CSS: {
+    supports(propertyName: string, value: string, something: number);
+  }
+}
+
+declare module "*.jpg" {
+  const value: string;
+  export default value;
+}
+
 declare module "*.png" {
+  const value: string;
+  export default value;
+}
+
+declare module "*.html" {
+  const value: string;
+  export default value;
+}
+
+declare module "*.scss" {
   const value: string;
   export default value;
 }

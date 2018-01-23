@@ -67,35 +67,12 @@
         <label for="itemSort" ng-i18next="Settings.SetSort"></label>
 
         <div class="radioOptions">
-          <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat">
-            <span ng-i18next="Settings.SortPrimary"></span>
-          </label>
-          <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="basePowerThenPrimary">
-            <span ng-i18next="Settings.SortBasePower"></span>
-          </label>
-          <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary">
-            <span ng-i18next="Settings.SortRarity"></span>
-          </label>
-          <label ng-if="vm.settings.itemQuality">
-            <input type="radio" ng-model="vm.settings.itemSort" value="quality">
-            <span ng-i18next="Settings.SortRoll"></span>
-          </label>
-          <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="name">
-            <span ng-i18next="Settings.SortName"></span>
-          </label>
-          <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="typeThenPrimary">
-            <span ng-i18next="Settings.SortTypeThenPrimary"></span>
-          </label>
-          <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="typeThenName">
-            <span ng-i18next="Settings.SortTypeThenName"></span>
+          <label ng-repeat="(value, i18nkey) in vm.itemSortPresets track by value">
+            <input type="radio" ng-model="vm.settings.itemSort" value="{{value}}">
+            <span ng-i18next="{{i18nkey}}"></span>
           </label>
         </div>
+        <sort-order-editor ng-if="vm.settings.itemSort == 'custom'" order="vm.itemSortCustom" on-sort-order-changed="vm.itemSortOrderChanged"></sort-order-editor>
         <div class="fineprint" ng-i18next="Settings.DontForgetDupes"></div>
       </div>
     </section>
