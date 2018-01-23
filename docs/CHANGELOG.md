@@ -1,5 +1,12 @@
 # Next
 
+* Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
+* The "Well Rested" buff now appears as a Milestone on your Progress page.
+* Nightfall modifiers are shown on the Progress page.
+* Storage (Google Drive) settings have moved to the Settings page.
+* You can configure a custom item sorting method from the Settings page.
+* Improved display of the account selection dropdown.
+
 # 4.36.1
 
 * Attempt to fix error on app.
@@ -16,7 +23,6 @@
 * New settings to help distinguish colors for colorblind users.
 * DIM should load faster.
 * DIM won't try to transfer Faction tokens anymore.
-* Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
 
 # 4.34.0
 
