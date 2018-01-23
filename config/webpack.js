@@ -289,7 +289,7 @@ module.exports = (env) => {
         compress: {
           ecma: 8,
           passes: 2,
-          inline: 1
+          inline: false
         },
         output: {
           ecma: 8
