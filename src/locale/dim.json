@@ -1,4 +1,9 @@
 {
+  "Accounts": {
+    "PlayStation": "PS4",
+    "Xbox": "XB1",
+    "Blizzard": "PC"
+  },
   "Activities": {
     "Activities": "Activities",
     "Hard": "Hard",
