@@ -22,7 +22,9 @@ function D2InventoryController($rootScope, $scope, D2StoresService, D2BucketsSer
     D2BucketsService.getBuckets().then((buckets) => {
       vm.buckets = buckets;
       subscribeOnScope($scope, D2StoresService.getStoresStream(vm.account), (stores) => {
-        vm.stores = stores;
+        if (stores) {
+          vm.stores = stores;
+        }
       });
     });
   };

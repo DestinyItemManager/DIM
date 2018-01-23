@@ -3,7 +3,7 @@
 # 4.36.1
 
 * Attempt to fix error on app.
-
+* Moving an item from the postmaster will now only clear enough space for that one item.
 
 # 4.36.0
 
