@@ -514,8 +514,8 @@
     "ColorA11y": "Color blindness configuration",
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",
+    "Data": "Spreadsheets",
     "DIMPopupsReset": "Reset previously hidden info tips",
-    "Data": "Data",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExportSS": "Inventory spreadsheets",
@@ -572,7 +572,7 @@
   "Storage": {
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
     "ChromeSyncStorage": "Chrome Sync (Extension Only)",
-    "ClearIgnoredUsers": "Clear Ignored Users",
+    "ClearIgnoredUsers": "Clear Ignored Reviewers",
     "Details": {
       "ChromeSyncStorage": "If you are logged in to Chrome, this will sync your data to other Chrome instances. It does not work on the DIM website.",
       "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",

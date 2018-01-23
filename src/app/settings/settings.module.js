@@ -17,7 +17,7 @@ export default angular
     $stateProvider.state({
       name: 'settings',
       component: 'settings',
-      url: '/settings',
+      url: '/settings?gdrive',
       resolve: {
         settings(dimSettingsService) {
           'ngInject';
