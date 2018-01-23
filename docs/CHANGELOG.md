@@ -16,6 +16,7 @@
 * New settings to help distinguish colors for colorblind users.
 * DIM should load faster.
 * DIM won't try to transfer Faction tokens anymore.
+* Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
 
 # 4.34.0
 

@@ -307,7 +307,6 @@
     "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
     "Deequip": "Cannot find another item to equip in order to dequip {{itemname}}",
     "ExoticError": "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
-    "MasterworkProgress": "Masterwork - {{progress}} enemies defeated.",
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",

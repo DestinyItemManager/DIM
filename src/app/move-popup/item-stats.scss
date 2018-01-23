@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .stats {
   width: 100%;
   display: table;
@@ -21,6 +23,10 @@
     padding-right: 8px;
     padding-left: 10px;
     text-align: right;
+  }
+  .stat-box-masterwork {
+    color: $orange;
+    font-weight: bold;
   }
   .stat-box-val {
     text-align: left;

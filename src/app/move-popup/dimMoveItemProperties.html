@@ -49,14 +49,17 @@
       <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>
       <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
       <div class="item-description" ng-if="vm.showDescription" ng-bind="::vm.item.description"></div>
-      <div class="masterwork-progress" ng-if="vm.item.masterwork" ng-i18next="[html:i18next]({ progress: '<strong>' + vm.masterworkProgress() + '</strong>' })ItemService.MasterworkProgress"></div>
+      <div class="masterwork-progress" ng-if="vm.item.masterwork" >
+        <img ng-src="{{ ::vm.item.masterworkInfo.typeIcon | bungieIcon }}" title="{{ ::vm.item.masterworkInfo.typeName }}"/>
+        <span> {{ ::vm.item.masterworkInfo.typeDesc }} <strong> {{ ::vm.item.masterworkInfo.progress }} </strong></span>
+      </div>
       <div class="item-details" ng-if="vm.item.classified" ng-i18next="ItemService.Classified2"></div>
       <dim-item-stats item="vm.item" class="stats" ng-if="vm.hasDetails"></dim-item-stats>
       <div class="item-details item-perks" ng-if="vm.item.talentGrid">
         <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>
       </div>
       <div class="item-details item-sockets" ng-if="vm.item.sockets">
-        <sockets sockets="vm.item.sockets" infuse="vm.infuse(vm.item, $event)"></sockets>
+        <sockets item="vm.item" sockets="vm.item.sockets" infuse="vm.infuse(vm.item, $event)"></sockets>
       </div>
       <div class="item-details item-perks" ng-if="vm.item.perks">
         <div class="item-perk" ng-repeat="perk in vm.item.perks">
