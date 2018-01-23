@@ -13,10 +13,10 @@ function HeaderController(
   ngDialog,
   $rootScope,
   hotkeys,
-  dimXurService,
   dimSettingsService,
   $transitions,
-  $state
+  $state,
+  $injector
 ) {
   'ngInject';
 
@@ -33,7 +33,16 @@ function HeaderController(
     bugReportLink: $DIM_FLAVOR !== 'release'
   };
 
-  vm.destinyVersion = getCurrentDestinyVersion($state);
+  vm.$onInit = function() {
+    vm.destinyVersion = getCurrentDestinyVersion();
+
+    // This hacks around the fact that dimXurService isn't defined until the destiny1 modules are lazy-loaded
+    if (vm.destinyVersion === 1) {
+      const dimXurService = $injector.get('dimXurService');
+      vm.showXur = showPopupFunction('xur', '<xur></xur>');
+      vm.xur = dimXurService;
+    }
+  };
 
   function getCurrentDestinyVersion() {
     // TODO there must be a better way of doing this?
@@ -45,9 +54,7 @@ function HeaderController(
     return null;
   }
 
-  $transitions.onSuccess({ }, () => {
-    vm.destinyVersion = getCurrentDestinyVersion();
-  });
+  $transitions.onSuccess({ }, () => vm.$onInit());
 
   /**
    * Show a popup dialog containing the given template. Its class
@@ -74,8 +81,4 @@ function HeaderController(
       }
     };
   }
-
-  vm.showXur = showPopupFunction('xur', '<xur></xur>');
-
-  vm.xur = dimXurService;
 }
