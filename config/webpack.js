@@ -294,11 +294,12 @@ module.exports = (env) => {
       exclude: [/-sqlLib-/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
       uglifyOptions: {
         compress: {
-          ecma: 6,
-          passes: 2
+          ecma: 8,
+          passes: 2,
+          inline: 1
         },
         output: {
-          ecma: 6
+          ecma: 8
         }
       },
       sourceMap: true,
