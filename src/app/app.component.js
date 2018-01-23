@@ -24,7 +24,6 @@ function AppComponentCtrl(
   'ngInject';
 
   this.$onInit = function() {
-    this.qualityEnabled = $featureFlags.qualityEnabled;
     this.reviewsEnabled = $featureFlags.reviewsEnabled;
     this.settings = dimSettingsService;
     this.featureFlags = {

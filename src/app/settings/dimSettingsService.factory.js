@@ -3,6 +3,16 @@ import _ from 'underscore';
 import i18next, { changeLanguage } from 'i18next';
 import { defaultLanguage } from '../i18n';
 
+const itemSortPresets = {
+  primaryStat: ['primStat', 'name'],
+  basePowerThenPrimary: ['basePower', 'primStat', 'name'],
+  rarityThenPrimary: ['rarity', 'primStat', 'name'],
+  quality: ['rating', 'name'],
+  name: ['name'],
+  typeThenPrimary: ['typeName', 'classType', 'primStat', 'name'],
+  typeThenName: ['typeName', 'classType', 'name']
+};
+
 /**
  * The settings service provides a settings object which contains
  * all DIM settings as properties. To observe changes in settings,
@@ -41,6 +51,7 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
     characterOrder: 'mostRecent',
     // Sort items in buckets (primaryStat, rarityThenPrimary, quality)
     itemSort: 'primaryStat',
+    itemSortOrderCustom: Array.from(itemSortPresets.primaryStat),
     // How many columns to display character buckets
     charCol: 3,
     // How many columns to display vault buckets
@@ -77,9 +88,15 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
         throw new Error("Settings haven't loaded - they can't be saved.");
       }
       SyncService.set({
-        'settings-v1.0': _.omit(settings, 'save', 'itemTags')
+        'settings-v1.0': _.omit(settings, 'save', 'itemTags', 'itemSortOrder')
       });
     }, 1000),
+
+    itemSortOrder() {
+      return (this.itemSort === 'custom'
+        ? this.itemSortOrderCustom
+        : itemSortPresets[this.itemSort]) || itemSortPresets.primaryStat;
+    },
 
     ready: _ready.promise
   };

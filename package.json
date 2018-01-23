@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "4.34.0",
+  "version": "4.36.1",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "engines": {
@@ -88,7 +88,7 @@
     "tslint-eslint-rules": "^4.1.1",
     "tslint-react": "^3.4.0",
     "typescript": "^2.6.2",
-    "uglifyjs-webpack-plugin": "^1.0.1",
+    "uglify-js": "^3.3.7",
     "unzip": "^0.1.11",
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
@@ -133,6 +133,7 @@
     "ngimport": "^0.8.0",
     "popper.js": "^1.13.0",
     "react": "^16.2.0",
+    "react-beautiful-dnd": "^4.0.1",
     "react-dom": "^16.2.0",
     "react-view-pager": "^0.5.1",
     "react2angular": "^3.1.0",

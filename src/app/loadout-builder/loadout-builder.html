@@ -1,4 +1,4 @@
-<div class="loadout-builder dim-page" ng-class="::{ itemQuality: vm.qualityEnabled }">
+<div class="loadout-builder dim-page itemQuality">
   <loadout-builder-character-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></loadout-builder-character-select>
 
   <loadout-drawer stores="vm.stores" account="vm.account"></loadout-drawer>
@@ -84,7 +84,7 @@
         <p>
           <label>
             <select ng-model="vm.scaleType" ng-change="vm.onModeChange()">
-              <option ng-if="::vm.qualityEnabled" value="scaled" ng-i18next="LB.Scaled"></option>
+              <option value="scaled" ng-i18next="LB.Scaled"></option>
               <option value="base" ng-i18next="LB.Current"></option>
             </select>
             <span ng-i18next="LB.LightMode.LightMode"></span>

@@ -113,7 +113,6 @@
     "typeof-compare": true,
     "use-default-type-parameter": true,
     "use-isnan": true,
-    "no-default-export": true,
     "no-duplicate-imports": true,
     "no-require-imports": true,
     "prefer-const": true,
@@ -150,7 +149,8 @@
     "type-literal-delimiter": true,
     "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-rest-spread", "check-type", "check-typecast", "check-type-operator", "check-preblock"],
     "interface-name": false,
-    "jsx-no-multiline-js": false
+    "jsx-no-multiline-js": false,
+    "max-classes-per-file": false
   },
   "rulesDirectory": []
 }

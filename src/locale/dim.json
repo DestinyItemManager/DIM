@@ -1,4 +1,9 @@
 {
+  "Accounts": {
+    "PlayStation": "PS4",
+    "Xbox": "XB1",
+    "Blizzard": "PC"
+  },
   "Activities": {
     "Activities": "Activities",
     "Hard": "Hard",
@@ -35,7 +40,8 @@
     "NoAccountForPlatform": "Failed to find a Destiny account for you on {{platform}}.",
     "NoCookies": "No cookies found.",
     "NotConnected": "You may not be connected to the internet.",
-    "NotLoggedIn": "Please log into Bungie.net in order to use this extension.",
+    "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",
+    "NotLoggedIn": "Please authorize DIM in order to use this app.",
     "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
@@ -238,15 +244,15 @@
   },
   "Header": {
     "About": "About",
+    "Back": "Go Back",
+    "BulkTag": "Bulk tag items",
     "FilterHelp": "Search item/perk or {{example}}",
     "Filters": "Filters",
     "Inventory": "Inventory",
     "Refresh": "Refresh Destiny Data",
+    "ReportBug": "Report an Issue",
     "Shop": "Shop",
-    "SupportDIM": "Backers",
-    "Back": "Go Back",
-    "BulkTag": "Bulk tag items",
-    "ReportBug": "Report an Issue"
+    "SupportDIM": "Backers"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
@@ -307,7 +313,6 @@
     "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
     "Deequip": "Cannot find another item to equip in order to dequip {{itemname}}",
     "ExoticError": "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
-    "MasterworkProgress": "Masterwork - {{progress}} enemies defeated.",
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
@@ -511,7 +516,7 @@
     "ColumnSizeAuto": "Auto",
     "Data": "Spreadsheets",
     "DIMPopupsReset": "Reset previously hidden info tips",
-    "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items.",
+    "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
@@ -522,8 +527,8 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
-    "Ratings": "Ratings",
     "RatingInfo": "DIM supports automatic quality ratings for armor (based on roll) in D1, and community ratings for weapons (and armor in D2) provided by <a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>.",
+    "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
     "ReviewsPlatformSelection": "Only show ratings from the following platform",
@@ -535,13 +540,17 @@
     "ShowOverlay": "Show new items with a shiny overlay",
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "Item size",
-    "SortBasePower": "Base power (D2 only), then primary stat",
+    "SortCustom": "Custom Sort",
+    "SortByClassType": "Required Class",
+    "SortByType": "Type",
+    "SortByRarity": "Rarity",
+    "SortByPrimary": "Primary Stat (Attack/Defense)",
+    "SortByBasePower": "Base power (D2 only)",
+    "SortByRating": "Community Rating or Armor Quality",
     "SortName": "Name",
     "SortPrimary": "Primary stat (attack or defense)",
     "SortRarity": "Rarity, then primary stat",
-    "SortRoll": "Quality rating (D1 armor only)",
-    "SortTypeThenName": "Item type then name",
-    "SortTypeThenPrimary": "Item type then primary stat",
+    "SortRoll": "Community rating or armor quality",
     "VaultColumns": "Vault maximum inventory width"
   },
   "Stats": {

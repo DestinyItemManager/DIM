@@ -1,5 +1,10 @@
-import angular from 'angular';
-import _ from 'underscore';
+import { copy as angularCopy, IPromise } from 'angular';
+import * as _ from 'underscore';
+import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
+import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
+import { DimStore } from './store/d2-store-factory.service';
+import { StoreServiceType } from './d2-stores.service';
+import { DimError } from '../bungie-api/bungie-service-helper.service';
 
 /**
  * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
@@ -8,9 +13,9 @@ export function ItemService(
   dimStoreService,
   D2StoresService,
   ItemFactory,
-  D2ItemFactory,
+  D2ItemFactory: D2ItemFactoryType,
   Destiny1Api,
-  Destiny2Api,
+  Destiny2Api: Destiny2ApiService,
   $q,
   $i18next
 ) {
@@ -34,15 +39,15 @@ export function ItemService(
     equipItems
   };
 
-  function api(item) {
+  function api(item: DimItem): Destiny2ApiService {
     return item.destinyVersion === 2 ? Destiny2Api : Destiny1Api;
   }
 
-  function itemFactory(item) {
+  function itemFactory(item: DimItem): D2ItemFactoryType {
     return item.destinyVersion === 2 ? D2ItemFactory : ItemFactory;
   }
 
-  function getStoreService(item) {
+  function getStoreService(item: DimItem): StoreServiceType {
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
@@ -50,12 +55,12 @@ export function ItemService(
    * Update our item and store models after an item has been moved (or equipped/dequipped).
    * @return the new or updated item (it may create a new item!)
    */
-  function updateItemModel(item, source, target, equip, amount) {
+  function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = 0) {
     // Refresh all the items - they may have been reloaded!
     const storeService = getStoreService(item);
-    source = storeService.getStore(source.id);
-    target = storeService.getStore(target.id);
-    item = storeService.getItemAcrossStores(item);
+    source = storeService.getStore(source.id)!;
+    target = storeService.getStore(target.id)!;
+    item = storeService.getItemAcrossStores(item)!;
 
     if (item.location.inPostmaster) {
       item.location = item.bucket;
@@ -108,7 +113,7 @@ export function ItemService(
           // amount. This is because we've switched to bind-once for
           // the amount since it rarely changes.
           source.removeItem(sourceItem);
-          sourceItem = angular.copy(sourceItem);
+          sourceItem = angularCopy(sourceItem);
           sourceItem.amount -= amountToRemove;
           sourceItem.index = itemFactory(sourceItem).createItemIndex(sourceItem);
           source.addItem(sourceItem);
@@ -125,7 +130,7 @@ export function ItemService(
         if (!targetItem) {
           targetItem = item;
           if (!removedSourceItem) {
-            targetItem = angular.copy(item);
+            targetItem = angularCopy(item);
             targetItem.index = itemFactory(targetItem).createItemIndex(targetItem);
           }
           removedSourceItem = false; // only move without cloning once
@@ -140,7 +145,7 @@ export function ItemService(
         // because we've switched to bind-once for the amount since it
         // rarely changes.
         target.removeItem(targetItem);
-        targetItem = angular.copy(targetItem);
+        targetItem = angularCopy(targetItem);
         targetItem.amount += amountToAdd;
         targetItem.index = itemFactory(targetItem).createItemIndex(targetItem);
         target.addItem(targetItem);
@@ -158,9 +163,9 @@ export function ItemService(
     return item;
   }
 
-  function getSimilarItem(item, exclusions, excludeExotic = false) {
+  function getSimilarItem(item: DimItem, exclusions?: DimItem[], excludeExotic = false): DimItem | null {
     const storeService = getStoreService(item);
-    const target = storeService.getStore(item.owner);
+    const target = storeService.getStore(item.owner)!;
     const sortedStores = _.sortBy(storeService.getStores(), (store) => {
       if (target.id === store.id) {
         return 0;
@@ -171,7 +176,7 @@ export function ItemService(
       }
     });
 
-    let result = null;
+    let result: DimItem | null = null;
     sortedStores.find((store) => {
       result = searchForSimilarItem(item, store, exclusions, target, excludeExotic);
       return result !== null;
@@ -185,8 +190,8 @@ export function ItemService(
    * on target.
    * @param exclusions a list of {id, hash} objects that won't be considered for equipping.
    */
-  function searchForSimilarItem(item, store, exclusions, target, excludeExotic) {
-    exclusions = exclusions || [];
+  function searchForSimilarItem(item: DimItem, store: DimStore, exclusions: DimItem[] | undefined, target: DimStore, excludeExotic: boolean) {
+    const exclusionsList = exclusions || [];
 
     let candidates = _.filter(store.items, (i) => {
       return i.canBeEquippedBy(target) &&
@@ -195,7 +200,7 @@ export function ItemService(
         // Not the same item
         i.id !== item.id &&
         // Not on the exclusion list
-        !_.any(exclusions, { id: i.id, hash: i.hash });
+        !_.any(exclusionsList, { id: i.id, hash: i.hash });
     });
 
     if (!candidates.length) {
@@ -203,7 +208,7 @@ export function ItemService(
     }
 
     if (excludeExotic) {
-      candidates = _.reject(candidates, 'isExotic');
+      candidates = candidates.filter((c) => !c.isExotic);
     }
 
     // TODO: unify this value function w/ the others!
@@ -219,7 +224,7 @@ export function ItemService(
         value += 5;
       }
       if (i.primStat) {
-        value += i.primStat.value / 1000.0;
+        value += i.primStat.value / 1000;
       }
       return value;
     }).reverse();
@@ -242,7 +247,7 @@ export function ItemService(
   /**
    * Bulk equip items. Only use for multiple equips at once.
    */
-  function equipItems(store, items) {
+  function equipItems(store: DimStore, items: DimItem[]) {
     // Check for (and move aside) exotics
     const extraItemsToEquip = _.compact(items.map((i) => {
       if (i.isExotic) {
@@ -253,7 +258,7 @@ export function ItemService(
           if (!similarItem) {
             return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: otherExotic.name })));
           }
-          const target = getStoreService(similarItem).getStore(similarItem.owner);
+          const target = getStoreService(similarItem).getStore(similarItem.owner)!;
 
           if (store.id === target.id) {
             return similarItem;
@@ -266,7 +271,7 @@ export function ItemService(
       return undefined;
     }));
 
-    return $q.all(extraItemsToEquip).then((extraItems) => {
+    return $q.all(extraItemsToEquip).then((extraItems: DimItem[]) => {
       items = items.concat(extraItems);
 
       if (items.length === 0) {
@@ -284,26 +289,26 @@ export function ItemService(
     });
   }
 
-  function equipItem(item) {
+  function equipItem(item: DimItem) {
     const storeService = getStoreService(item);
     if ($featureFlags.debugMoves) {
-      console.log('Equip', item.name, item.type, 'to', storeService.getStore(item.owner).name);
+      console.log('Equip', item.name, item.type, 'to', storeService.getStore(item.owner)!.name);
     }
     return api(item).equip(item)
       .then(() => {
-        const store = storeService.getStore(item.owner);
+        const store = storeService.getStore(item.owner)!;
         return updateItemModel(item, store, store, true);
       });
   }
 
-  function dequipItem(item, excludeExotic = false) {
+  function dequipItem(item: DimItem, excludeExotic = false) {
     const storeService = getStoreService(item);
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
       return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: item.name })));
     }
-    const source = storeService.getStore(item.owner);
-    const target = storeService.getStore(similarItem.owner);
+    const source = storeService.getStore(item.owner)!;
+    const target = storeService.getStore(similarItem.owner)!;
 
     let p = $q.when();
     if (source.id !== target.id) {
@@ -315,17 +320,17 @@ export function ItemService(
       .then(() => item);
   }
 
-  function moveToVault(item, amount) {
-    return moveToStore(item, getStoreService(item).getVault(), false, amount);
+  function moveToVault(item: DimItem, amount: number = 0) {
+    return moveToStore(item, getStoreService(item).getVault()!, false, amount);
   }
 
-  function moveToStore(item, store, equip, amount) {
+  function moveToStore(item: DimItem, store: DimStore, equip: boolean = false, amount: number = 0) {
     if ($featureFlags.debugMoves) {
-      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', getStoreService(item).getStore(item.owner).name);
+      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', getStoreService(item).getStore(item.owner)!.name);
     }
     return api(item).transfer(item, store, amount)
       .then(() => {
-        const source = getStoreService(item).getStore(item.owner);
+        const source = getStoreService(item).getStore(item.owner)!;
         const newItem = updateItemModel(item, source, store, false, amount);
         if ((newItem.owner !== 'vault') && equip) {
           return equipItem(newItem);
@@ -341,7 +346,7 @@ export function ItemService(
    * that would conflict. If it could not move aside, this
    * rejects. It never returns false.
    */
-  function canEquipExotic(item, store) {
+  function canEquipExotic(item: DimItem, store: DimStore) {
     const otherExotic = getOtherExoticThatNeedsDequipping(item, store);
     if (otherExotic) {
       return dequipItem(otherExotic, true)
@@ -358,7 +363,7 @@ export function ItemService(
    * Identify the other exotic, if any, that needs to be moved
    * aside. This is not a promise, it returns immediately.
    */
-  function getOtherExoticThatNeedsDequipping(item, store) {
+  function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore) {
     const equippedExotics = _.filter(store.items, (i) => {
       return (i.equipped &&
               i.location.id !== item.location.id &&
@@ -366,25 +371,31 @@ export function ItemService(
               i.isExotic);
     });
 
-    if (equippedExotics.length === 0) {
-      return null;
-    } else if (equippedExotics.length === 1) {
-      const equippedExotic = equippedExotics[0];
-
-      if (item.hasLifeExotic() || equippedExotic.hasLifeExotic()) {
+    switch (equippedExotics.length) {
+      case 0:
         return null;
-      } else {
-        return equippedExotic;
-      }
-    } else if (equippedExotics.length === 2) {
-      // Assume that only one of the equipped items has 'The Life Exotic' perk
-      const hasLifeExotic = item.hasLifeExotic();
-      return _.find(equippedExotics, (i) => {
-        return hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic();
-      });
-    } else {
-      throw new Error($i18next.t('ItemService.TwoExotics'));
+      case 1:
+        const equippedExotic = equippedExotics[0];
+        if (item.hasLifeExotic() || equippedExotic.hasLifeExotic()) {
+          return null;
+        } else {
+          return equippedExotic;
+        }
+      case 2:
+        // Assume that only one of the equipped items has 'The Life Exotic' perk
+        const hasLifeExotic = item.hasLifeExotic();
+        return _.find(equippedExotics, (i) => {
+          return hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic();
+        });
+      default:
+        throw new Error($i18next.t('ItemService.TwoExotics'));
     }
+  }
+
+  interface MoveContext {
+    originalItemType: string;
+    excludes: DimItem[];
+    spaceLeft(s: DimStore, i: DimItem): number;
   }
 
   /**
@@ -398,7 +409,7 @@ export function ItemService(
    * @return An object with item and target properties representing both the item and its destination. This won't ever be undefined.
    * @throws {Error} An error if no move aside item could be chosen.
    */
-  function chooseMoveAsideItem(store, item, moveContext) {
+  function chooseMoveAsideItem(store: DimStore, item: DimItem, moveContext: MoveContext) {
     // Check whether an item cannot or should not be moved
     function movable(otherItem) {
       return !otherItem.notransfer &&
@@ -427,7 +438,7 @@ export function ItemService(
       }
       // And low-stat
       if (i.primStat) {
-        value += i.primStat.value / 1000.0;
+        value += i.primStat.value / 1000;
       }
       // Engrams prefer to be in the vault
       if (!i.isEngram()) {
@@ -443,20 +454,17 @@ export function ItemService(
     }
 
     const stores = getStoreService(item).getStores();
-    const otherStores = _.reject(stores, { id: store.id });
+    const otherStores = stores.filter((s) => s.id === store.id);
 
-    // Start with candidates of the same type (or sort if it's vault)
+    // Start with candidates of the same type (or vault bucket if it's vault)
     const allItems = store.isVault
-      ? _.filter(store.items,
-             store.destinyVersion === 2
-               ? (i) => i.bucket.vaultBucket.id === item.bucket.vaultBucket.id
-               : (i) => i.bucket.sort === item.bucket.sort)
+      ? _.filter(store.items!, (i) => i.bucket.vaultBucket!.id === item.bucket.vaultBucket!.id)
       : store.buckets[item.bucket.id];
     let moveAsideCandidates = _.filter(allItems, movable);
 
     // if there are no candidates at all, fail
     if (moveAsideCandidates.length === 0) {
-      const e = new Error($i18next.t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
+      const e: DimError = new Error($i18next.t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
       e.code = 'no-space';
       throw e;
     }
@@ -514,7 +522,7 @@ export function ItemService(
       const otherNonVaultStores = _.sortBy(
         _.filter(otherStores, (s) => !s.isVault && s.id !== item.owner),
         (s) => cachedSpaceLeft(s, candidate)).reverse();
-      otherNonVaultStores.push(storeService.getStore(item.owner));
+      otherNonVaultStores.push(storeService.getStore(item.owner)!);
       const otherCharacterWithSpace = _.find(otherNonVaultStores,
                                              (s) => cachedSpaceLeft(s, candidate));
 
@@ -554,7 +562,7 @@ export function ItemService(
     });
 
     if (!moveAsideCandidate) {
-      const e = new Error($i18next.t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
+      const e: DimError = new Error($i18next.t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
       e.code = 'no-space';
       throw e;
     }
@@ -574,7 +582,12 @@ export function ItemService(
    * @param options.numRetries A count of how many alternate items we've tried.
    * @return a promise that's either resolved if the move can proceed or rejected with an error.
    */
-  function canMoveToStore(item, store, options = {}) {
+  function canMoveToStore(item: DimItem, store: DimStore, options: {
+    triedFallback?: boolean;
+    excludes?: DimItem[];
+    reservations?: { [storeId: number]: number };
+    numRetries?: number;
+  } = {}) {
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
     const storeService = getStoreService(item);
 
@@ -598,11 +611,13 @@ export function ItemService(
     const stores = storeService.getStores();
 
     // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
-    const storeReservations = {};
-    storeReservations[store.id] = item.amount;
+    const storeReservations: { [storeId: string]: number } = {};
+    if (!item.location.inPostmaster) {
+      storeReservations[store.id] = item.amount;
+    }
 
     // guardian-to-guardian transfer will also need space in the vault
-    if (item.owner !== 'vault' && !store.isVault) {
+    if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {
       storeReservations.vault = item.amount;
     }
 
@@ -618,10 +633,10 @@ export function ItemService(
       return $q.resolve(true);
     } else if (store.isVault || triedFallback) {
       // Move aside one of the items that's in the way
-      const moveContext = {
+      const moveContext: MoveContext = {
         originalItemType: item.type,
-        excludes: excludes,
-        spaceLeft: function(s, i) {
+        excludes,
+        spaceLeft(s, i) {
           let left = spaceLeftWithReservations(s, i);
           if (i.type === this.originalItemType) {
             left = left - storeReservations[s.id];
@@ -633,12 +648,18 @@ export function ItemService(
       // Move starting from the vault (which is always last)
       const moves = _.pairs(movesNeeded)
             .reverse()
-            .find(([_, moveAmount]) => moveAmount > 0);
-      const moveAsideSource = storeService.getStore(moves[0]);
+            .find(([_, moveAmount]) => moveAmount > 0)!;
+      const moveAsideSource = storeService.getStore(moves[0])!;
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
       if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
-        const error = new Error($i18next.t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`, { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), store: moveAsideTarget.name, context: moveAsideTarget.gender }));
+        const itemtype = (moveAsideTarget.isVault
+          ? (moveAsideItem.destinyVersion === 1
+            ? moveAsideItem.bucket.sort
+            : '')
+          : moveAsideItem.type);
+        const error: DimError = new Error($i18next.t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`,
+          { itemtype, store: moveAsideTarget.name, context: moveAsideTarget.gender }));
         error.code = 'no-space';
         return $q.reject(error);
       } else {
@@ -664,26 +685,24 @@ export function ItemService(
             $q.when(storeService.getStores());
       const storeId = store.id;
       return reloadPromise.then((stores) => {
-        const store = _.find(stores, { id: storeId });
+        const store = stores.find((s) => s.id === storeId);
         options.triedFallback = true;
         return canMoveToStore(item, store, options);
       });
     }
   }
 
-  function canEquip(item, store) {
+  function canEquip(item: DimItem, store: DimStore): IPromise<boolean> {
     return $q((resolve, reject) => {
       if (item.canBeEquippedBy(store)) {
         resolve(true);
       } else if (item.classified) {
         reject(new Error($i18next.t('ItemService.Classified')));
       } else {
-        let message;
-        if (item.classTypeName === 'unknown') {
-          message = $i18next.t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel });
-        } else {
-          message = $i18next.t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
-        }
+        const message = (item.classTypeName === 'unknown')
+            ? $i18next.t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
+            : $i18next.t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
+
         reject(new Error(message));
       }
     });
@@ -693,8 +712,8 @@ export function ItemService(
    * Check whether this transfer can happen. If necessary, make secondary inventory moves
    * in order to make the primary transfer possible, such as making room or dequipping exotics.
    */
-  function isValidTransfer(equip, store, item, excludes, reservations) {
-    const promises = [];
+  function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
+    const promises: IPromise<any>[] = [];
 
     if (equip) {
       promises.push(canEquip(item, store));
@@ -716,22 +735,22 @@ export function ItemService(
    * @param amount how much of the item to move (for stacks). Can span more than one stack's worth.
    * @param excludes A list of {id, hash} objects representing items that should not be moved aside to make the move happen.
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
-   * @return {Promise} A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
+   * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  function moveTo(item, target, equip, amount, excludes, reservations) {
+  function moveTo(item: DimItem, target: DimStore, equip: boolean, amount: number = 0, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
     return isValidTransfer(equip, target, item, excludes, reservations)
       .then(() => {
         const storeService = getStoreService(item);
         // Replace the target store - isValidTransfer may have reloaded it
-        target = storeService.getStore(target.id);
-        const source = storeService.getStore(item.owner);
+        target = storeService.getStore(target.id)!;
+        const source = storeService.getStore(item.owner)!;
 
         let promise = $q.when(item);
 
         if (!source.isVault && !target.isVault) { // Guardian to Guardian
           if (source.id !== target.id) { // Different Guardian
             if (item.equipped) {
-              promise = promise.then((item) => dequipItem(item));
+              promise = promise.then(dequipItem);
             }
 
             promise = promise
@@ -750,7 +769,7 @@ export function ItemService(
           // Do Nothing.
         } else if (source.isVault || target.isVault) { // Guardian to Vault
           if (item.equipped) {
-            promise = promise.then((item) => dequipItem(item));
+            promise = promise.then(dequipItem);
           }
 
           promise = promise.then((item) => moveToStore(item, target, equip, amount));

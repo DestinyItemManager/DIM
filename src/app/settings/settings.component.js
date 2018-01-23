@@ -19,7 +19,6 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   const vm = this;
 
   vm.featureFlags = {
-    qualityEnabled: $featureFlags.qualityEnabled,
     reviewsEnabled: $featureFlags.reviewsEnabled,
     colorA11y: $featureFlags.colorA11y
   };
@@ -134,5 +133,50 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
 
   vm.reloadDim = function() {
     window.location.reload(false);
+  };
+
+  const itemSortProperties = {
+    typeName: $i18next.t('Settings.SortByType'),
+    rarity: $i18next.t('Settings.SortByRarity'),
+    primStat: $i18next.t('Settings.SortByPrimary'),
+    basePower: $i18next.t('Settings.SortByBasePower'),
+    rating: $i18next.t('Settings.SortByRating'),
+    classType: $i18next.t('Settings.SortByClassType'),
+    name: $i18next.t('Settings.SortName')
+    // archetype: 'Archetype'
+  };
+
+  // Sorts not on this list will be converted to "custom". This can be a different
+  // list than the one in the settings service, since that list supports backwards
+  // compatibility with old settings.
+  vm.itemSortPresets = {
+    primaryStat: 'Settings.SortPrimary',
+    rarityThenPrimary: 'Settings.SortRarity',
+    quality: 'Settings.SortRoll',
+    name: 'Settings.SortName',
+    custom: 'Settings.SortCustom'
+  };
+
+  const sortOrder = vm.settings.itemSortOrder();
+  if (!vm.itemSortPresets[vm.settings.itemSort]) {
+    vm.settings.itemSortOrderCustom = sortOrder;
+    vm.settings.itemSort = 'custom';
+  }
+
+  vm.itemSortCustom = _.sortBy(_.map(itemSortProperties, (displayName, id) => {
+    return {
+      id,
+      displayName,
+      enabled: sortOrder.includes(id)
+    };
+  }), (o) => {
+    const index = sortOrder.indexOf(o.id);
+    return index >= 0 ? index : 999;
+  });
+
+  vm.itemSortOrderChanged = (sortOrder) => {
+    vm.itemSortCustom = sortOrder;
+    vm.settings.itemSortOrderCustom = sortOrder.filter((o) => o.enabled).map((o) => o.id);
+    vm.settings.save();
   };
 }

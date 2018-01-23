@@ -17,12 +17,14 @@ if ($featureFlags.googleExceptionReports) {
   // Report no more than once every 5 minutes
   reportException = _.throttle((name, e) => {
     ga('send', 'exception', {
-      exDescription: `${name}: ${e.message}`,
+      exDescription: `${name}: ${JSON.stringify(e)}`,
       exFatal: false
     });
   }, 5 * 60000, { trailing: false });
 
-  window.addEventListener('error', reportException.bind('Global Error'));
+  window.addEventListener('error', (msg, url, lineNo, columnNo, error) => {
+    reportException(`Global Error (${lineNo}:${columnNo}) ${msg}`, error);
+  });
   window.addEventListener('unhandledrejection', (event) => reportException('Unhandled Promise Rejection', event.reason));
 }
 

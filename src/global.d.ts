@@ -10,10 +10,6 @@ declare const $GOOGLE_DRIVE_CLIENT_ID: string;
 declare const $BROWSERS: string[];
 
 declare const $featureFlags: {
-  tagsEnabled: boolean;
-  compareEnabled: boolean;
-  vendorsEnabled: boolean;
-  qualityEnabled: boolean;
   /** Additional debugging / item info tools */
   debugMode: boolean;
   /** Print debug info to console about item moves */
@@ -30,8 +26,6 @@ declare const $featureFlags: {
   colorA11y: boolean;
   /** Whether to log page views for router events */
   googleAnalyticsForRouter: boolean;
-  /** Enable activities tab */
-  activities: boolean;
   /** Debug ui-router */
   debugRouter: boolean;
   /** Show drag and drop on dev only */
@@ -40,7 +34,30 @@ declare const $featureFlags: {
   googleExceptionReports: boolean;
 }
 
+declare function ga(...params: string[]);
+
+interface Window {
+  CSS: {
+    supports(propertyName: string, value: string, something: number);
+  }
+}
+
+declare module "*.jpg" {
+  const value: string;
+  export default value;
+}
+
 declare module "*.png" {
+  const value: string;
+  export default value;
+}
+
+declare module "*.html" {
+  const value: string;
+  export default value;
+}
+
+declare module "*.scss" {
   const value: string;
   export default value;
 }

@@ -14,14 +14,12 @@ function controller(dimSettingsService, dimItemMoveService, dimStoreService, D2S
   'ngInject';
   const vm = this;
 
-  function getStoreService() {
-    return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
+  const storeService = vm.item.destinyVersion === 2 ? D2StoresService : dimStoreService;
 
   vm.settings = dimSettingsService;
 
-  vm.store = getStoreService().getStore(vm.item.owner);
-  vm.stores = getStoreService().getStores();
+  vm.store = storeService.getStore(vm.item.owner);
+  vm.stores = storeService.getStores();
 
   vm.canShowVault = function canShowVault(buttonStore) {
     // If my itemStore is the vault, don't show a vault button.
@@ -55,12 +53,18 @@ function controller(dimSettingsService, dimItemMoveService, dimStoreService, D2S
         return true;
       }
       // Can pull items from the postmaster to the same character
-      if (vm.store.id === buttonStore.id && vm.item.location.inPostmaster && vm.item.destinyVersion === 2) {
+      if (vm.store.id === buttonStore.id &&
+          vm.item.location.inPostmaster &&
+          vm.item.destinyVersion === 2 &&
+          vm.item.canPullFromPostmaster) {
         return true;
       }
     } else if (vm.store.id !== buttonStore.id || vm.item.equipped) {
       // In Destiny2, only show one store for account wide items
-      if (vm.item.destinyVersion === 2 && vm.item.bucket && vm.item.bucket.accountWide && !buttonStore.current) {
+      if (vm.item.destinyVersion === 2 &&
+          vm.item.bucket &&
+          vm.item.bucket.accountWide &&
+          !buttonStore.current) {
         return false;
       } else {
         return true;
