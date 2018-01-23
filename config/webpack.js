@@ -58,9 +58,10 @@ module.exports = (env) => {
         {
           test: /\.js$/,
           exclude: [/node_modules/, /sql\.js/],
-          use: [
-            'babel-loader'
-          ]
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true
+          }
         }, {
           test: /\.html$/,
           use: [
