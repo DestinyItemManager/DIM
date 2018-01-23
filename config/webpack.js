@@ -291,8 +291,9 @@ module.exports = (env) => {
     // Generate a service worker
     config.plugins.push(new WorkboxPlugin({
       maximumFileSizeToCacheInBytes: 5000000,
-      globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
+      globPatterns: ['**/*.{html,js,css,woff2,json}', 'static/*.{png,jpg}'],
       globIgnores: [
+        'data/**',
         'manifest-*.js',
         'extension-scripts/*',
         'service-worker.js'
