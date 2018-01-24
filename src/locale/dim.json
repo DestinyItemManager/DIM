@@ -389,7 +389,7 @@
     "Applied_plural": "Your loadout of {{count}} items have been transferred to your {{store}}.",
     "Applied_plural_female": "Your loadout of {{count}} items have been transferred to your {{store}}.",
     "Applied_plural_male": "Your loadout of {{count}} items have been transferred to your {{store}}.",
-    "ApplySearch": "Items = \"{{query}}\"",
+    "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "Cancel": "Cancel",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",

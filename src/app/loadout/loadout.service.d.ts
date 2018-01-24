@@ -9,8 +9,10 @@ export const enum LoadoutClass {
 
 // TODO: move into loadouts service
 export interface Loadout {
-  id: string;
+  id?: string;
   classType: LoadoutClass;
   name: string;
   items: { [type: string]: DimItem[] };
+  destinyVersion?: 1 | 2;
+  platform?: string;
 }

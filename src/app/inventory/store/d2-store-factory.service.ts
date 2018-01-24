@@ -79,7 +79,7 @@ export interface DimStore {
 
   // Create a loadout from this store's equipped items
   // TODO: Loadout type
-  loadoutFromCurrentlyEquipped(item: DimItem): Loadout;
+  loadoutFromCurrentlyEquipped(name: string): Loadout;
 
   // TODO: implement this for D2
   factionAlignment();

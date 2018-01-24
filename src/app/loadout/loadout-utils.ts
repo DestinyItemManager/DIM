@@ -1,17 +1,20 @@
-import angular from 'angular';
-import _ from 'underscore';
+import * as angular from 'angular';
+import * as _ from 'underscore';
 import { sum } from '../util';
+import { Loadout } from './loadout.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 // Generate an optimized loadout based on a filtered set of items and a value function
-export function optimalLoadout(store, applicableItems, bestItemFn, name) {
+export function optimalLoadout(store: DimStore, applicableItems: DimItem[], bestItemFn: (DimItem) => number, name: string): Loadout {
   const itemsByType = _.groupBy(applicableItems, 'type');
 
-  const isExotic = function(item) {
+  const isExotic = (item) => {
     return item.isExotic && !item.hasLifeExotic();
   };
 
   // Pick the best item
-  const items = _.mapObject(itemsByType, (items) => {
+  const items: _.Dictionary<DimItem> = _.mapObject(itemsByType, (items) => {
     return _.max(items, bestItemFn);
   });
 
@@ -21,10 +24,10 @@ export function optimalLoadout(store, applicableItems, bestItemFn, name) {
     ? [['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']]
     : [['Kinetic', 'Energy', 'Power'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']];
   _.each(exoticGroups, (group) => {
-    const itemsInGroup = _.pick(items, group);
+    const itemsInGroup: _.Dictionary<DimItem> = _.pick(items, group);
     const numExotics = _.filter(_.values(itemsInGroup), isExotic).length;
     if (numExotics > 1) {
-      const options = [];
+      const options: _.Dictionary<DimItem>[] = [];
 
       // Generate an option where we use each exotic
       _.each(itemsInGroup, (item, type) => {
@@ -51,13 +54,13 @@ export function optimalLoadout(store, applicableItems, bestItemFn, name) {
       });
 
       // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
-      const bestOption = _.max(options, (opt) => { return sum(_.values(opt), bestItemFn); });
+      const bestOption = _.max(options, (opt) => sum(_.values(opt), bestItemFn));
       _.assign(items, bestOption);
     }
   });
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
-  const finalItems = {};
+  const finalItems: { [type: string]: DimItem[] } = {};
   _.each(items, (item, type) => {
     const itemCopy = angular.copy(item);
     itemCopy.equipped = true;
@@ -66,7 +69,7 @@ export function optimalLoadout(store, applicableItems, bestItemFn, name) {
 
   return {
     classType: -1,
-    name: name,
+    name,
     items: finalItems
   };
 }
