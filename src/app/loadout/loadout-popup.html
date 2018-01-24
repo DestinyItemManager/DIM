@@ -43,10 +43,17 @@
       </span>
     </li>
 
-    <li class="loadout-set" ng-if="!vm.store.isVault">
+    <li class="loadout-set" ng-if="vm.store.destinyVersion == 1 && !vm.store.isVault && vm.numPostmasterItems > 0">
       <span ng-click="vm.makeRoomForPostmaster($event)">
         <i class="fa fa-envelope"></i>
         <span ng-i18next="Loadouts.MakeRoom"></span>
+      </span>
+    </li>
+
+    <li class="loadout-set" ng-if="vm.store.destinyVersion == 2 && !vm.store.isVault && vm.numPostmasterItems > 0">
+      <span ng-click="vm.pullFromPostmaster($event)">
+        <i class="fa fa-envelope"></i>
+        <span ng-i18next="[i18next]({ count: vm.numPostmasterItems })Loadouts.PullFromPostmaster"></span>
       </span>
     </li>
 

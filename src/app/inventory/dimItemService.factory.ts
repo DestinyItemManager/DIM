@@ -55,7 +55,7 @@ export function ItemService(
    * Update our item and store models after an item has been moved (or equipped/dequipped).
    * @return the new or updated item (it may create a new item!)
    */
-  function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = 0) {
+  function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = item.amount) {
     // Refresh all the items - they may have been reloaded!
     const storeService = getStoreService(item);
     source = storeService.getStore(source.id)!;
@@ -320,7 +320,7 @@ export function ItemService(
       .then(() => item);
   }
 
-  function moveToVault(item: DimItem, amount: number = 0) {
+  function moveToVault(item: DimItem, amount: number = item.amount) {
     return moveToStore(item, getStoreService(item).getVault()!, false, amount);
   }
 
@@ -735,7 +735,7 @@ export function ItemService(
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  function moveTo(item: DimItem, target: DimStore, equip: boolean, amount: number = 0, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
+  function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
     return isValidTransfer(equip, target, item, excludes, reservations)
       .then(() => {
         const storeService = getStoreService(item);

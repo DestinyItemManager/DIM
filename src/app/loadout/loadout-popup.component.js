@@ -15,7 +15,7 @@ export const LoadoutPopupComponent = {
   template
 };
 
-function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, D2FarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, D2BucketsService, $q, dimStoreService, D2StoresService, $stateParams) {
+function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, D2FarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, D2BucketsService, $q, dimStoreService, D2StoresService, $stateParams, dimActionQueue) {
   'ngInject';
   const vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
@@ -28,6 +28,8 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   if (vm.classTypeId === undefined) {
     vm.classTypeId = -1;
   }
+
+  vm.numPostmasterItems = pullablePostmasterItems(this.store).length;
 
   vm.search = dimSearchService;
 
@@ -349,53 +351,103 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   vm.makeRoomForPostmaster = function makeRoomForPostmaster() {
     ngDialog.closeAll();
 
-    (vm.store.destinyVersion === 1 ? dimBucketService : D2BucketsService).getBuckets().then((buckets) => {
-      const postmasterItems = flatMap(buckets.byCategory.Postmaster,
-                                      (bucket) => vm.store.buckets[bucket.id]);
-      const postmasterItemCountsByType = _.countBy(postmasterItems,
-                                                   (i) => i.bucket.id);
+    return dimActionQueue.queueAction(() => {
+      (vm.store.destinyVersion === 1 ? dimBucketService : D2BucketsService).getBuckets().then((buckets) => {
+        const postmasterItems = flatMap(buckets.byCategory.Postmaster,
+                                        (bucket) => vm.store.buckets[bucket.id]);
+        const postmasterItemCountsByType = _.countBy(postmasterItems,
+                                                    (i) => i.bucket.id);
 
-      // If any category is full, we'll move enough aside
-      const itemsToMove = [];
-      _.each(postmasterItemCountsByType, (count, bucket) => {
-        if (count > 0) {
-          const items = vm.store.buckets[bucket];
-          const capacity = vm.store.capacityForItem(items[0]);
-          const numNeededToMove = Math.max(0, count + items.length - capacity);
-          if (numNeededToMove > 0) {
-            // We'll move the lowest-value item to the vault.
-            const candidates = _.sortBy(_.filter(items, { equipped: false, notransfer: false }), (i) => {
-              let value = {
-                Common: 0,
-                Uncommon: 1,
-                Rare: 2,
-                Legendary: 3,
-                Exotic: 4
-              }[i.tier];
-              // And low-stat
-              if (i.primStat) {
-                value += i.primStat.value / 1000.0;
-              }
-              return value;
-            });
-            itemsToMove.push(..._.first(candidates, numNeededToMove));
+        // If any category is full, we'll move enough aside
+        const itemsToMove = [];
+        _.each(postmasterItemCountsByType, (count, bucket) => {
+          if (count > 0) {
+            const items = vm.store.buckets[bucket];
+            const capacity = vm.store.capacityForItem(items[0]);
+            const numNeededToMove = Math.max(0, count + items.length - capacity);
+            if (numNeededToMove > 0) {
+              // We'll move the lowest-value item to the vault.
+              const candidates = _.sortBy(_.filter(items, { equipped: false, notransfer: false }), (i) => {
+                let value = {
+                  Common: 0,
+                  Uncommon: 1,
+                  Rare: 2,
+                  Legendary: 3,
+                  Exotic: 4
+                }[i.tier];
+                // And low-stat
+                if (i.primStat) {
+                  value += i.primStat.value / 1000.0;
+                }
+                return value;
+              });
+              itemsToMove.push(..._.first(candidates, numNeededToMove));
+            }
+          }
+        });
+
+        // TODO: it'd be nice if this were a loadout option
+        return moveItemsToVault(itemsToMove, buckets)
+          .then(() => {
+            toaster.pop('success',
+                        $i18next.t('Loadouts.MakeRoom'),
+                        $i18next.t('Loadouts.MakeRoomDone', { count: postmasterItems.length, movedNum: itemsToMove.length, store: vm.store.name, context: vm.store.gender }));
+          })
+          .catch((e) => {
+            toaster.pop('error',
+                        $i18next.t('Loadouts.MakeRoom'),
+                        $i18next.t('Loadouts.MakeRoomError', { error: e.message }));
+            throw e;
+          });
+      });
+    });
+  };
+
+  function pullablePostmasterItems(store) {
+    return store.buckets[215593132].filter((i) => {
+      // Can be pulled
+      return (i.destinyVersion === 1 || i.canPullFromPostmaster) &&
+      // Either has space, or is going to a bucket we can make room in
+      (i.bucket.vaultBucket || store.spaceLeftForItem(i) > 0);
+    });
+  }
+
+  vm.pullFromPostmaster = function pullFromPostmaster() {
+    ngDialog.closeAll();
+
+    return dimActionQueue.queueAction(async() => {
+      const items = pullablePostmasterItems(this.store);
+
+      try {
+        let succeeded = 0;
+        for (const item of items) {
+          try {
+            await dimItemService.moveTo(item, vm.store);
+            succeeded++;
+          } catch (e) {
+            console.log(e);
+            if (e.code === 'no-space') {
+              // TODO: This could fire 20 times.
+              toaster.pop('error',
+                $i18next.t('Loadouts.PullFromPostmasterPopupTitle'),
+                $i18next.t('Loadouts.PullFromPostmasterError', { error: e.message }));
+            } else {
+              throw e;
+            }
           }
         }
-      });
 
-      // TODO: it'd be nice if this were a loadout option
-      return moveItemsToVault(itemsToMove, buckets)
-        .then(() => {
+        if (succeeded > 0) {
           toaster.pop('success',
-                      $i18next.t('Loadouts.MakeRoom'),
-                      $i18next.t('Loadouts.MakeRoomDone', { count: postmasterItems.length, movedNum: itemsToMove.length, store: vm.store.name, context: vm.store.gender }));
-        })
-        .catch((e) => {
-          toaster.pop('error',
-                      $i18next.t('Loadouts.MakeRoom'),
-                      $i18next.t('Loadouts.MakeRoomError', { error: e.message }));
-          throw e;
-        });
+            $i18next.t('Loadouts.PullFromPostmasterPopupTitle'),
+            $i18next.t('Loadouts.PullFromPostmasterDone', { count: succeeded, store: vm.store.name, context: vm.store.gender }));
+        }
+      } catch (e) {
+        toaster.pop('error',
+          $i18next.t('Loadouts.PullFromPostmasterPopupTitle'),
+          $i18next.t('Loadouts.PullFromPostmasterError', { error: e.message }));
+        throw e;
+      }
     });
   };
 
