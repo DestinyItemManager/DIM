@@ -598,7 +598,7 @@ export function ItemService(
         left -= reservations[s.id][i.type];
       }
       // but not counting the original item that's moving
-      if (s.id === item.owner && i.type === item.type) {
+      if (s.id === item.owner && i.type === item.type && !item.location.inPostmaster) {
         left--;
       }
       return Math.max(0, left);
@@ -612,9 +612,7 @@ export function ItemService(
 
     // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
     const storeReservations: { [storeId: string]: number } = {};
-    if (!item.location.inPostmaster) {
-      storeReservations[store.id] = item.amount;
-    }
+    storeReservations[store.id] = item.amount;
 
     // guardian-to-guardian transfer will also need space in the vault
     if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {

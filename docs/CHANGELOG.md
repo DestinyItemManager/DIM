@@ -6,6 +6,7 @@
 * Storage (Google Drive) settings have moved to the Settings page.
 * You can configure a custom item sorting method from the Settings page.
 * Improved display of the account selection dropdown.
+* Fix pull from postmaster to clear exactly enough space, not too many, but also not too few.
 
 # 4.36.1
 
