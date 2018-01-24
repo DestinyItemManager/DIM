@@ -65,7 +65,6 @@ function LoadoutPopupCtrl(
   $i18next,
   dimBucketService,
   D2BucketsService,
-  $q,
   dimStoreService,
   D2StoresService,
   $stateParams,
@@ -173,6 +172,7 @@ function LoadoutPopupCtrl(
   // TODO: move all these fancy loadouts to a new service
 
   vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
+    $event.preventDefault();
     ngDialog.closeAll();
     dimFarmingService.stop();
     D2FarmingService.stop();
