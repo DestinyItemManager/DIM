@@ -6,6 +6,7 @@ import { DimInventoryBucket, BucketsService } from '../destiny2/d2-buckets.servi
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { pullFromPostmaster } from '../loadout/postmaster';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -45,8 +46,9 @@ export function D2FarmingService(
     itemsMoved: 0,
     movingItems: false,
     makingRoom: false,
+
     // Move all items on the selected character to the vault.
-    moveItemsToVault(store: DimStore, items: DimItem[], makeRoomBuckets: DimInventoryBucket[]) {
+    async moveItemsToVault(store: DimStore, items: DimItem[], makeRoomBuckets: DimInventoryBucket[]) {
       const reservations = {};
       // reserve one space in the active character
       reservations[store.id] = {};
@@ -54,39 +56,51 @@ export function D2FarmingService(
         reservations[store.id][bucket.type!] = 1;
       });
 
-      return _.reduce(items, (promise, item) => {
-        // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
-        return promise
-          .then(() => {
-            const vault = D2StoresService.getVault()!;
-            const vaultSpaceLeft = vault.spaceLeftForItem(item);
-            if (vaultSpaceLeft <= 1) {
-              // If we're down to one space, try putting it on other characters
-              const otherStores = D2StoresService.getStores().filter((s) => !s.isVault && s.id !== store.id);
-              const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
+      for (const item of items) {
+        try {
+          // Move a single item. We reevaluate each time in case something changed.
+          const vault = D2StoresService.getVault()!;
+          const vaultSpaceLeft = vault.spaceLeftForItem(item);
+          if (vaultSpaceLeft <= 1) {
+            // If we're down to one space, try putting it on other characters
+            const otherStores = D2StoresService.getStores().filter((s) => !s.isVault && s.id !== store.id);
+            const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
-              if (otherStoresWithSpace.length) {
-                if ($featureFlags.debugMoves) {
-                  console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', D2StoresService.getStore(item.owner)!.name);
-                }
-                return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
+            if (otherStoresWithSpace.length) {
+              if ($featureFlags.debugMoves) {
+                console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', D2StoresService.getStore(item.owner)!.name);
               }
+              await dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
+              continue;
             }
-            if ($featureFlags.debugMoves) {
-              console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', D2StoresService.getStore(item.owner)!.name);
-            }
-            return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
-          })
-          .catch((e) => {
-            if (e.code === 'no-space') {
-              outOfSpaceWarning(store);
-            } else {
-              toaster.pop('error', item.name, e.message);
-            }
-            throw e;
-          });
-      }, $q.resolve());
+          }
+          if ($featureFlags.debugMoves) {
+            console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', D2StoresService.getStore(item.owner)!.name);
+          }
+          await dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
+        } catch (e) {
+          if (e.code === 'no-space') {
+            outOfSpaceWarning(store);
+          } else {
+            toaster.pop('error', item.name, e.message);
+          }
+          throw e;
+        }
+      }
+
+      // Also clear out the postmaster
+      // We "mock" the toaster interface here so we don't pop up toasters if we can't move stuff
+      try {
+        await pullFromPostmaster(store, dimItemService, {
+          pop(severity, title, message) {
+            console.log(severity, title, message);
+          }
+        });
+      } catch (e) {
+        console.warn("Cannot move some items off the postmaster:", e);
+      }
     },
+
     // Ensure that there's one open space in each category that could
     // hold an item, so they don't go to the postmaster.
     makeRoomForItems(store: DimStore) {
@@ -132,6 +146,7 @@ export function D2FarmingService(
           });
       });
     },
+
     start(account: DestinyAccount, storeId: string) {
       if (!this.active) {
         this.active = true;
@@ -156,6 +171,7 @@ export function D2FarmingService(
         }, 60000);
       }
     },
+
     stop() {
       if (intervalId) {
         $interval.cancel(intervalId);
