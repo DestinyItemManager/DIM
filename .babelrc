@@ -4,7 +4,6 @@
       "modules": false,
       "useBuiltIns": true,
       "targets": {
-        "uglify": true,
         "browsers": [
           "Chrome >= 51",
           "last 2 ChromeAndroid versions",
