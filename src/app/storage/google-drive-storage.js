@@ -22,22 +22,29 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
 
     get: function() {
       return this.ready.promise
-        .then(() => {
-          if (!this.fileId) {
-            // TODO: error handling
-            throw new Error("no file!");
-          }
-          return gapi.client.drive.files.get({
-            fileId: this.fileId,
-            alt: 'media'
-          });
-        })
-        .then((resp) => resp.result)
-        .catch((e) => {
-          // TODO: error handling
-          // this.revokeDrive();
+        .then(() => this._get());
+    },
+
+    _get(triedFallback = false) {
+      if (!this.fileId) {
+        // TODO: error handling
+        throw new Error("no file!");
+      }
+      return gapi.client.drive.files.get({
+        fileId: this.fileId,
+        alt: 'media'
+      })
+      .then((resp) => resp.result)
+      .catch((e) => {
+        if (triedFallback || e.status !== 404) {
+          console.error(`Unable to load GDrive file ${this.fileId}`);
           throw e;
-        });
+        } else {
+          this.fileId = null;
+          localStorage.removeItem('gdrive-fileid');
+          return this.getFileId().then(() => this._get(true));
+        }
+      });
     },
 
     // TODO: set a timestamp for merging?
