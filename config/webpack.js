@@ -7,7 +7,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -283,21 +282,11 @@ module.exports = (env) => {
     // The sql.js library doesnt work at all (reports no tables) when minified,
     // so we exclude it from the regular minification
     // FYI, uglification runs on final chunks rather than individual modules
-    config.plugins.push(new UglifyJsPlugin({
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
       exclude: [/-sqlLib-/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
-      uglifyOptions: {
-        compress: {
-          ecma: 6,
-          passes: 2,
-          inline: 1
-        },
-        output: {
-          ecma: 6
-        }
-      },
-      sourceMap: true,
-      cache: true,
-      parallel: true
+      compress: { warnings: false },
+      output: { comments: false },
+      sourceMap: true
     }));
 
     // Generate a service worker
