@@ -3,9 +3,6 @@ import 'babel-polyfill';
 
 import './app/google';
 
-// Drag and drop
-import iosDragDropShim from 'drag-drop-webkit-mobile';
-
 // Initialize the main DIM app
 import './app/app.module';
 
@@ -25,8 +22,11 @@ import './scss/main.scss';
 
 import { initi18n } from './app/i18n';
 
-iosDragDropShim({
-  enableEnterLeave: true,
+// Drag and drop
+import { polyfill } from "mobile-drag-drop";
+import 'mobile-drag-drop/default.css';
+
+polyfill({
   holdToDrag: 300
 });
 
