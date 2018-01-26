@@ -139,7 +139,10 @@ module.exports = (env) => {
 
       new NotifyPlugin('DIM', !isDev),
 
-      new ExtractTextPlugin('styles-[contenthash:6].css'),
+      new ExtractTextPlugin({
+        filename: 'styles-[contenthash:6].css',
+        allChunks: true
+      }),
 
       new InlineManifestWebpackPlugin({
         name: 'webpackManifest'
