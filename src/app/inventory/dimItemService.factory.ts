@@ -408,7 +408,14 @@ export function ItemService(
    * @return An object with item and target properties representing both the item and its destination. This won't ever be undefined.
    * @throws {Error} An error if no move aside item could be chosen.
    */
-  function chooseMoveAsideItem(store: DimStore, item: DimItem, moveContext: MoveContext) {
+  function chooseMoveAsideItem(
+    store: DimStore,
+    item: DimItem,
+    moveContext: MoveContext
+  ): {
+    item: DimItem;
+    target: DimStore;
+  } {
     // Check whether an item cannot or should not be moved
     function movable(otherItem) {
       return !otherItem.notransfer &&
@@ -455,7 +462,6 @@ export function ItemService(
       }
     }
 
-
     const tierValue = {
       Common: 0,
       Uncommon: 1,
@@ -485,7 +491,10 @@ export function ItemService(
       compareBy((i) => i.type === item.typeName),
       // Engrams prefer to be in the vault, so not-engram is larger than engram
       compareBy((i) => !i.isEngram()),
+      // Never unequip something
       compareBy((i) => i.equipped),
+      // Always prefer keeping something that was manually moved over something that wasn't
+      compareBy((i) => store.isVault ? (-1 * i.lastManuallyMoved) : (i.lastManuallyMoved)),
       // Prefer things this character can use
       compareBy((i) => !store.isVault && i.canBeEquippedBy(store)),
       // Tagged items sort by the value of their tags
@@ -542,7 +551,7 @@ export function ItemService(
         // we're not moving the original item *from* the vault, put
         // the candidate on another character in order to avoid
         // gumming up the vault.
-        const openVaultSlots = Math.floor(cachedSpaceLeft(candidate) / candidate.maxStackSize);
+        const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
         if (openVaultSlots === 1 && otherCharacterWithSpace) {
           moveAsideCandidate = {
             item: candidate,
