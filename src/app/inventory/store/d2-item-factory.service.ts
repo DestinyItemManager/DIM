@@ -178,6 +178,7 @@ export interface DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
   masterworkInfo: DimMasterwork | null;
+  _isEngram: boolean;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
@@ -313,7 +314,7 @@ export function D2ItemFactory(
       return _.contains(this.categories, categoryName);
     },
     isEngram() {
-      return false;
+      return this._isEngram;
     },
     canBeInLoadout() {
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
@@ -495,6 +496,7 @@ export function D2ItemFactory(
       locked: item.state & 1,
       masterwork: item.state & 4,
       classified: Boolean(itemDef.redacted),
+      _isEngram: itemDef.itemCategoryHashes.includes(34), // category hash for engrams
       isInLoadout: false,
       percentComplete: null, // filled in later
       talentGrid: null, // filled in later
