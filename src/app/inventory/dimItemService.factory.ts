@@ -493,7 +493,7 @@ export function ItemService(
       compareBy((i) => !i.isEngram()),
       // Never unequip something
       compareBy((i) => i.equipped),
-      // Always prefer keeping something that was manually moved over something that wasn't
+      // Always prefer keeping something that was manually moved where it is
       compareBy((i) => store.isVault ? (-1 * i.lastManuallyMoved) : (i.lastManuallyMoved)),
       // Prefer things this character can use
       compareBy((i) => !store.isVault && i.canBeEquippedBy(store)),
