@@ -8,7 +8,6 @@
 * Improved display of the account selection dropdown.
 * Fix pull from postmaster to clear exactly enough space, not too many, but also not too few.
 * In D2, "Make room for Postmaster" has been replaced with "Pull from Postmaster" which pulls all postmaster items we can onto your character.
-* Farming Mode now also pulls from the Postmaster automatically.
 
 # 4.36.1
 

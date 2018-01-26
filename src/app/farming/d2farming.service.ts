@@ -6,7 +6,6 @@ import { DimInventoryBucket, BucketsService } from '../destiny2/d2-buckets.servi
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { pullFromPostmaster } from '../loadout/postmaster';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -91,18 +90,6 @@ export function D2FarmingService(
     async farm(store: DimStore) {
       this.makingRoom = true;
       try {
-        // First, clear out the postmaster
-        // We "mock" the toaster interface here so we don't pop up toasters if we can't move stuff
-        try {
-          await pullFromPostmaster(store, dimItemService, {
-            pop(severity, title, message) {
-              console.log(severity, title, message);
-            }
-          });
-        } catch (e) {
-          console.warn("Cannot move some items off the postmaster:", e);
-        }
-
         // Then make room for items
         await this.makeRoomForItems(store);
       } finally {
