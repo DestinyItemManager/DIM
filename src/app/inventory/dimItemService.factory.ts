@@ -416,7 +416,7 @@ export function ItemService(
     }
 
     const stores = getStoreService(item).getStores();
-    const otherStores = stores.filter((s) => s.id === store.id);
+    const otherStores = stores.filter((s) => s.id !== store.id);
 
     // Start with candidates of the same type (or vault bucket if it's vault)
     const allItems = store.isVault
@@ -511,10 +511,13 @@ export function ItemService(
       }
     });
 
-    let moveAsideCandidate;
+    let moveAsideCandidate: {
+      item: DimItem;
+      target: DimStore;
+    } | undefined;
 
     const storeService = getStoreService(item);
-    const vault = storeService.getVault();
+    const vault = storeService.getVault()!;
     moveAsideCandidates.find((candidate) => {
       // Other, non-vault stores, with the item's current
       // owner ranked last, but otherwise sorted by the
@@ -539,18 +542,18 @@ export function ItemService(
         // we're not moving the original item *from* the vault, put
         // the candidate on another character in order to avoid
         // gumming up the vault.
-        const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
-        if (openVaultSlots > 0 || !otherCharacterWithSpace) {
+        const openVaultSlots = Math.floor(cachedSpaceLeft(candidate) / candidate.maxStackSize);
+        if (openVaultSlots === 1 && otherCharacterWithSpace) {
+          moveAsideCandidate = {
+            item: candidate,
+            target: otherCharacterWithSpace
+          };
+          return true;
+        } else {
           // Otherwise just try to shove it in the vault, and we'll
           // recursively squeeze something else out of the vault.
           moveAsideCandidate = {
             item: candidate,
-            target: vault
-          };
-          return true;
-        } else {
-          moveAsideCandidate = {
-            item: otherCharacterWithSpace,
             target: vault
           };
           return true;
