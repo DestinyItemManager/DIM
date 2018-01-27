@@ -1,8 +1,8 @@
 {
   "Accounts": {
+    "Blizzard": "PC",
     "PlayStation": "PS4",
-    "Xbox": "XB1",
-    "Blizzard": "PC"
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Activities",
@@ -514,8 +514,8 @@
     "ColorA11y": "Color blindness configuration",
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",
-    "Data": "Spreadsheets",
     "DIMPopupsReset": "Reset previously hidden info tips",
+    "Data": "Spreadsheets",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExportSS": "Inventory spreadsheets",
@@ -540,13 +540,13 @@
     "ShowOverlay": "Show new items with a shiny overlay",
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "Item size",
-    "SortCustom": "Custom Sort",
-    "SortByClassType": "Required Class",
-    "SortByType": "Type",
-    "SortByRarity": "Rarity",
-    "SortByPrimary": "Primary Stat (Attack/Defense)",
     "SortByBasePower": "Base power (D2 only)",
+    "SortByClassType": "Required Class",
+    "SortByPrimary": "Primary Stat (Attack/Defense)",
+    "SortByRarity": "Rarity",
     "SortByRating": "Community Rating or Armor Quality",
+    "SortByType": "Type",
+    "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SortPrimary": "Primary stat (attack or defense)",
     "SortRarity": "Rarity, then primary stat",
