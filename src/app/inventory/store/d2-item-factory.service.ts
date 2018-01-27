@@ -14,6 +14,7 @@ import {
   DestinyItemTalentGridComponent,
   DestinyItemTierTypeInfusionBlock,
   DestinyObjectiveDefinition,
+  DestinyObjectiveProgress,
   DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
   DestinyStat,
@@ -97,12 +98,7 @@ export interface DimSocket {
   enabled: boolean;
   enableFailReasons: string;
   plugOptions: DestinyInventoryItemDefinition[];
-  masterworkProgress: number | undefined;
-  masterworkType: 'Vanguard' | 'Crucible' | null;
-  masterworkStat: number | undefined;
-  masterworkValue: number | undefined;
-  masterworkIcon: string | null;
-  masterworkDesc: string | null;
+  plugObjectives: DestinyObjectiveProgress[];
 }
 
 export interface DimSocketCategory {
@@ -591,7 +587,7 @@ export function D2ItemFactory(
 
     // Masterwork
     if (createdItem.masterwork && createdItem.sockets) {
-      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs.Stat);
+      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
     }
 
     // Mark items with power mods
@@ -756,6 +752,7 @@ export function D2ItemFactory(
     objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
     objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
   ): DimObjective[] | null {
+
     if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
       return null;
     }
@@ -886,12 +883,7 @@ export function D2ItemFactory(
       }
       const reusablePlugs = (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash));
       const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? reusablePlugs : (plug ? [plug] : []);
-      const masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
-      const masterworkType = (socket.plugObjectives && socket.plugObjectives.length) ? ((plugOptions[0].plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible") : null;
-      const masterworkStat = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].statTypeHash : undefined;
-      const masterworkValue = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].value : undefined;
-      const masterworkIcon = (socket.plugObjectives && socket.plugObjectives.length) ? defs.Objective.get(socket.plugObjectives[0].objectiveHash).displayProperties.icon : null;
-      const masterworkDesc = (socket.plugObjectives && socket.plugObjectives.length) ? defs.Objective.get(socket.plugObjectives[0].objectiveHash).progressDescription : null;
+      const plugObjectives = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives : [];
 
       return {
         plug,
@@ -899,12 +891,7 @@ export function D2ItemFactory(
         enabled: socket.isEnabled,
         enableFailReasons: failReasons,
         plugOptions,
-        masterworkProgress,
-        masterworkType,
-        masterworkStat,
-        masterworkIcon,
-        masterworkValue,
-        masterworkDesc
+        plugObjectives
       };
     });
 
@@ -923,15 +910,16 @@ export function D2ItemFactory(
 
   function buildMasterworkInfo(
     sockets: DimSockets,
-    statDefs: LazyDefinition<DestinyStatDefinition>
+    defs: D2ManifestDefinitions
   ): DimMasterwork | null {
-    const progress = _.find(_.pluck(sockets.sockets, 'masterworkProgress'), (mp) => mp >= 0);
-    const typeName = _.find(_.pluck(sockets.sockets, 'masterworkType'), (type) => type !== null);
-    const typeIcon = _.find(_.pluck(sockets.sockets, 'masterworkIcon'), (icon) => icon !== null);
-    const typeDesc = _.find(_.pluck(sockets.sockets, 'masterworkDesc'), (desc) => desc !== null);
-    const statHash = _.find(_.pluck(sockets.sockets, 'masterworkStat'), (ms) => ms > 0);
-    const statName = statDefs.get(statHash).displayProperties.name;
-    const statValue = _.find(_.pluck(sockets.sockets, 'masterworkValue'), (mv) => mv >= 0);
+    const socket = sockets.sockets[sockets.sockets.findIndex((socket) => socket.plugObjectives.length > 0)];
+    const progress = socket.plugObjectives[0].progress;
+    const typeName = (socket.plugOptions[0].plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible";
+    const typeIcon = defs.Objective.get(socket.plugObjectives[0].objectiveHash).displayProperties.icon;
+    const typeDesc = defs.Objective.get(socket.plugObjectives[0].objectiveHash).progressDescription;
+    const statHash = socket.plugOptions[0].investmentStats[0].statTypeHash;
+    const statName = defs.Stat.get(statHash).displayProperties.name;
+    const statValue = socket.plugOptions[0].investmentStats[0].value;
 
     return {
       progress,
