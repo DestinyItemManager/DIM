@@ -57,8 +57,10 @@ export interface DimStat {
 }
 
 export interface DimObjective {
+  displayStyle: string;
   displayName: string;
   description: string;
+  icon: string;
   progress: number;
   completionValue: number;
   complete: boolean;
@@ -178,6 +180,7 @@ export interface DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
   masterworkInfo: DimMasterwork | null;
+  objectiveSpecial: boolean;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
@@ -551,6 +554,8 @@ export function D2ItemFactory(
 
     try {
       createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
+      // Instead of checking everywhere for a specific hash or anything like, creted a check for different/special objectives
+      createdItem.objectiveSpecial = Boolean(item.bucketHash === 4274335291); // Emblems
     } catch (e) {
       console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
     }
@@ -574,7 +579,7 @@ export function D2ItemFactory(
       createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, (o) => o.complete);
       const length = createdItem.objectives.length;
       createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
-        if (objective.completionValue) {
+        if (objective.completionValue && !objective.displayStyle) {
           return Math.min(1, objective.progress / objective.completionValue) / length;
         } else {
           return 0;
@@ -760,8 +765,7 @@ export function D2ItemFactory(
       return null;
     }
 
-    // TODO: there is also 'flavorObjectives' for things like emblem stats
-    const objectives = objectivesMap[item.itemInstanceId].objectives;
+    const objectives = (objectivesMap[item.itemInstanceId].objectives || [objectivesMap[item.itemInstanceId].flavorObjective]);
     if (!objectives || !objectives.length) {
       return null;
     }
@@ -771,12 +775,29 @@ export function D2ItemFactory(
     return objectives.map((objective) => {
       const def = objectiveDefs.get(objective.objectiveHash);
 
+      // Emblems need a different treatment
+      if (item.bucketHash === 4274335291) {
+        return {
+          displayStyle: "emblems",
+          displayName: "",
+          description: def.progressDescription,
+          icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
+          progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0,
+          completionValue: 0,
+          complete: false,
+          boolean: false,
+          display: ""
+        };
+      }
+
       return {
+        displayStyle: "",
         displayName: def.displayProperties.name ||
           (objective.complete
             ? $i18next.t('Objectives.Complete')
             : $i18next.t('Objectives.Incomplete')),
         description: def.displayProperties.description,
+        icon: "",
         progress: objective.progress || 0,
         completionValue: def.completionValue,
         complete: objective.complete,
