@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 // TODO: push "current account" into the other account services
-function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $state, $q, dimState) {
+function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $q, dimState) {
   let _platforms = [];
   let _active = null;
 
@@ -12,7 +12,6 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     getPlatforms,
     getActive,
     setActive,
-    reportBadPlatform,
     getPlatformMatching
   };
 
@@ -46,7 +45,6 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
       })
       .then((destinyAccounts) => {
         _platforms = destinyAccounts;
-        $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
         return getActivePlatform();
       })
       .then(setActive)
@@ -54,6 +52,10 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
   }
 
   function getActivePlatform() {
+    if (_active && _.find(_platforms, { id: _active.id })) {
+      return _active;
+    }
+
     return SyncService.get().then((data) => {
       if (!_platforms.length) {
         return null;
@@ -62,7 +64,13 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
       if (_active && _.find(_platforms, { id: _active.id })) {
         return _active;
       } else if (data && data.platformType) {
-        const active = _.find(_platforms, (platform) => {
+        let active = _.find(_platforms, (platform) => {
+          return platform.platformType === data.platformType && platform.destinyVersion === data.destinyVersion;
+        });
+        if (active) {
+          return active;
+        }
+        active = _.find(_platforms, (platform) => {
           return platform.platformType === data.platformType;
         });
         if (active) {
@@ -84,28 +92,11 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     if (platform === null) {
       promise = SyncService.remove('platformType');
     } else {
-      promise = SyncService.set({ platformType: platform.platformType });
+      promise = SyncService.set({ platformType: platform.platformType, destinyVersion: platform.destinyVersion });
     }
 
     dimState.active = platform;
-    $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
-    return promise;
-  }
-
-  // TODO: remove this, replace with "you don't have any characters on this platform" message
-  // When we find a platform with no characters, remove it from the list and try something else.
-  function reportBadPlatform(platform, e) {
-    // TODO: push this up to DestinyAccountService
-
-    if (_platforms.length > 1) {
-      _platforms = _platforms.filter((p) => p !== platform);
-      $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
-      setActive(_platforms[0]);
-      $state.go('default-account'); // try for another platform
-    } else {
-      // Nothing we can do
-      throw e;
-    }
+    return promise.then(() => platform);
   }
 }
 

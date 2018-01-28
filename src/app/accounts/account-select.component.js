@@ -1,5 +1,3 @@
-import { flatMap } from '../util';
-
 import template from './account-select.html';
 import dialogTemplate from './account-select.dialog.html';
 import './account-select.scss';
@@ -23,50 +21,28 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
 
   vm.$onChanges = function(changes) {
     // If we go to a non-destiny-account page, leave it, or default to D1
-    vm.destinyVersion = changes.destinyVersion.currentValue || vm.destinyVersion || 1;
-    if (vm.currentAccount) {
-      vm.currentAccount.destinyVersion = vm.destinyVersion;
-    }
+    vm.destinyVersion = changes.destinyVersion.currentValue ||
+      vm.destinyVersion ||
+      (vm.currentAccount && vm.currentAccount.destinyVersion) ||
+      1;
+
+    // TODO: remove
     dimSettingsService.destinyVersion = vm.destinyVersion;
     dimSettingsService.save();
   };
 
-  function setAccounts(accounts) {
-    vm.accounts = flatMap(accounts, (account) => {
-      // Duplicate each Destiny account, since they may have played either D1 or D2.
-      // TODO: Maybe push this into the account service, and allow people to "hide" accounts?
-      if (account.platformType === 4) {
-        // Blizzard only has D2
-        return [{ ...account, destinyVersion: 2 }];
-      } else {
-        return [
-          { ...account, destinyVersion: 1 },
-          { ...account, destinyVersion: 2 }
-        ];
-      }
-    });
-  }
-
   // TODO: save this in the account service, or some other global state, so we don't flip flop
   function setCurrentAccount(currentAccount) {
-    vm.currentAccount = { ...currentAccount, destinyVersion: vm.destinyVersion };
+    vm.currentAccount = currentAccount;
   }
 
   vm.accountChange = function accountChange(account) {
-    loadingTracker.addPromise(dimPlatformService.setActive(account));
+    loadingTracker.addPromise(dimPlatformService.setActive(account).then(setCurrentAccount));
   };
-
-  $scope.$on('dim-platforms-updated', (e, args) => {
-    setAccounts(args.platforms);
-  });
-
-  $scope.$on('dim-active-platform-updated', (e, args) => {
-    setCurrentAccount(args.platform);
-  });
 
   const loadAccountsPromise = dimPlatformService.getPlatforms()
     .then((accounts) => {
-      setAccounts(accounts);
+      vm.accounts = accounts;
       setCurrentAccount(dimPlatformService.getActive());
     });
   loadingTracker.addPromise(loadAccountsPromise);

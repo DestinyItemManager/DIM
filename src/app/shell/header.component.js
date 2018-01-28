@@ -1,5 +1,6 @@
 import template from './header.html';
 import './header.scss';
+import { subscribeOnScope } from '../rx-utils';
 
 // TODO: Today we share one header everywhere, and show/hide bits of it depending on the circumstance.
 // It'd be nice if there were a cleaner way to go about this.
@@ -16,7 +17,9 @@ function HeaderController(
   dimSettingsService,
   $transitions,
   $state,
-  $injector
+  $scope,
+  $injector,
+  dimPlatformService
 ) {
   'ngInject';
 
@@ -35,13 +38,7 @@ function HeaderController(
 
   vm.$onInit = function() {
     vm.destinyVersion = getCurrentDestinyVersion();
-
-    // This hacks around the fact that dimXurService isn't defined until the destiny1 modules are lazy-loaded
-    if (vm.destinyVersion === 1) {
-      const dimXurService = $injector.get('dimXurService');
-      vm.showXur = showPopupFunction('xur', '<xur></xur>');
-      vm.xur = dimXurService;
-    }
+    updateXur();
   };
 
   function getCurrentDestinyVersion() {
@@ -53,8 +50,6 @@ function HeaderController(
     }
     return null;
   }
-
-  $transitions.onSuccess({ }, () => vm.$onInit());
 
   /**
    * Show a popup dialog containing the given template. Its class
@@ -80,5 +75,21 @@ function HeaderController(
         });
       }
     };
+  }
+
+  let vendorsSubscription;
+  vm.xurAvailable = false;
+
+  function updateXur() {
+    if (vm.destinyVersion === 1 && !vendorsSubscription && dimPlatformService.getActive()) {
+      vm.showXur = showPopupFunction('xur', '<xur></xur>');
+
+      const dimVendorService = $injector.get('dimVendorService'); // hack for code splitting
+
+      vendorsSubscription = subscribeOnScope($scope, dimVendorService.getVendorsStream(dimPlatformService.getActive()), ([_stores, vendors]) => {
+        const xur = 2796397637;
+        vm.xurAvailable = Boolean(vendors[xur]);
+      });
+    }
   }
 }
