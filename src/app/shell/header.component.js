@@ -41,6 +41,10 @@ function HeaderController(
     updateXur();
   };
 
+  $transitions.onSuccess({ }, () => {
+    vm.destinyVersion = getCurrentDestinyVersion();
+  });
+
   function getCurrentDestinyVersion() {
     // TODO there must be a better way of doing this?
     if ($state.includes('destiny1')) {

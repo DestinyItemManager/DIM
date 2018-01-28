@@ -15,9 +15,16 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
 
   const vm = this;
   let dialogResult = null;
+  let platformSubscription = null;
 
   vm.loadingTracker = loadingTracker;
   vm.accounts = [];
+
+  vm.$onInit = function() {
+    platformSubscription = dimPlatformService.current$.subscribe((platform) => {
+      setCurrentAccount(platform);
+    });
+  };
 
   vm.$onChanges = function(changes) {
     // If we go to a non-destiny-account page, leave it, or default to D1
@@ -29,6 +36,12 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
     // TODO: remove
     dimSettingsService.destinyVersion = vm.destinyVersion;
     dimSettingsService.save();
+  };
+
+  vm.$onDestroy = function() {
+    if (platformSubscription) {
+      platformSubscription.unsubscribe();
+    }
   };
 
   // TODO: save this in the account service, or some other global state, so we don't flip flop
@@ -56,6 +69,9 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
 
   vm.selectAccount = function(e, account) {
     e.stopPropagation();
+    //* fixes a bug when swapping between D1 & D2.
+    vm.currentAccount = account;
+    //*
     $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
   };
 

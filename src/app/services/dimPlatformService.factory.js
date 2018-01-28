@@ -1,6 +1,8 @@
 import angular from 'angular';
 import _ from 'underscore';
 
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 // TODO: push "current account" into the other account services
@@ -8,11 +10,14 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
   let _platforms = [];
   let _active = null;
 
+  const current$ = new ReplaySubject(1);
+
   const service = {
     getPlatforms,
     getActive,
     setActive,
-    getPlatformMatching
+    getPlatformMatching,
+    current$
   };
 
   return service;
@@ -87,6 +92,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
 
   function setActive(platform) {
     _active = platform;
+    current$.next(platform);
     let promise;
 
     if (platform === null) {
