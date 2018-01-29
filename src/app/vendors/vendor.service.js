@@ -2,82 +2,87 @@ import angular from 'angular';
 import _ from 'underscore';
 import { sum, flatMap } from '../util';
 import idbKeyval from 'idb-keyval';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import '../rx-operators';
+import { compareAccounts } from '../accounts/destiny-account.service';
 
-function VendorService(
+/*
+const allVendors = [
+  1990950, // Titan Vanguard
+  44395194, // Vehicles
+  134701236, // Guardian Outfitter
+  174528503, // Eris Morn
+  242140165, // Iron Banner
+  459708109, // Shipwright
+  570929315, // Gunsmith
+  614738178, // Emote Collection
+  1303406887, // Cryptarch (Reef)
+  1410745145, // Queen's Wrath
+  1460182514, // Exotic Weapon Blueprints
+  1527174714, // Bounty Tracker
+  1575820975, // Warlock Vanguard
+  1808244981, // New Monarchy
+  1821699360, // Future War Cult
+  1889676839, // Disciple of Osiris
+  1998812735, // House of Judgment
+  2021251983, // Postmaster
+  2190824860, // Vanguard Scout
+  2190824863, // Tyra Karn (Cryptarch)
+  2244880194, // Ship Collection
+  2420628997, // Shader Collection
+  2610555297, // Iron Banner
+  2648860054, // Iron Lord
+  2668878854, // Vanguard Quartermaster
+  2680694281, // The Speaker
+  2762206170, // Postmaster
+  2796397637, // Agent of the Nine
+  3003633346, // Hunter Vanguard
+  3301500998, // Emblem Collection
+  3611686524, // Dead Orbit
+  3658200622, // Crucible Quartermaster
+  3746647075, // Crucible Handler
+  3902439767, // Exotic Armor Blueprints
+  3917130357, // Eververse
+  4269570979 // Cryptarch (Tower)
+];
+  */
+
+// Vendors we don't want to load by default
+const vendorBlackList = [
+  2021251983, // Postmaster,
+];
+
+// Hashes for 'Decode Engram'
+const categoryBlacklist = [
+  3574600435,
+  3612261728,
+  1333567905,
+  2634310414
+];
+
+const xur = 2796397637;
+
+export function VendorService(
   $rootScope,
   Destiny1Api,
   dimStoreService,
   ItemFactory,
   dimDefinitions,
-  dimPlatformService,
   dimDestinyTrackerService,
+  loadingTracker,
   $q
 ) {
   'ngInject';
 
-  /*
-  const allVendors = [
-    1990950, // Titan Vanguard
-    44395194, // Vehicles
-    134701236, // Guardian Outfitter
-    174528503, // Eris Morn
-    242140165, // Iron Banner
-    459708109, // Shipwright
-    570929315, // Gunsmith
-    614738178, // Emote Collection
-    1303406887, // Cryptarch (Reef)
-    1410745145, // Queen's Wrath
-    1460182514, // Exotic Weapon Blueprints
-    1527174714, // Bounty Tracker
-    1575820975, // Warlock Vanguard
-    1808244981, // New Monarchy
-    1821699360, // Future War Cult
-    1889676839, // Disciple of Osiris
-    1998812735, // House of Judgment
-    2021251983, // Postmaster
-    2190824860, // Vanguard Scout
-    2190824863, // Tyra Karn (Cryptarch)
-    2244880194, // Ship Collection
-    2420628997, // Shader Collection
-    2610555297, // Iron Banner
-    2648860054, // Iron Lord
-    2668878854, // Vanguard Quartermaster
-    2680694281, // The Speaker
-    2762206170, // Postmaster
-    2796397637, // Agent of the Nine
-    3003633346, // Hunter Vanguard
-    3301500998, // Emblem Collection
-    3611686524, // Dead Orbit
-    3658200622, // Crucible Quartermaster
-    3746647075, // Crucible Handler
-    3902439767, // Exotic Armor Blueprints
-    3917130357, // Eververse
-    4269570979 // Cryptarch (Tower)
-  ];
-   */
-
-  // Vendors we don't want to load by default
-  const vendorBlackList = [
-    2021251983, // Postmaster,
-  ];
-
-  // Hashes for 'Decode Engram'
-  const categoryBlacklist = [
-    3574600435,
-    3612261728,
-    1333567905,
-    2634310414
-  ];
-
   let _ratingsRequested = false;
-
-  const xur = 2796397637;
-
-  let _reloadPromise = null;
 
   const service = {
     vendorsLoaded: false,
+    getVendorsStream,
     reloadVendors,
+    getVendors() {
+      return this.vendors;
+    },
     // By hash
     vendors: {},
     totalVendors: 0,
@@ -87,18 +92,24 @@ function VendorService(
     // TODO: expose getVendor promise, idempotently?
   };
 
-  // TODO: make this a dependent observable instead
-  $rootScope.$on('dim-stores-updated', (e, stores) => {
-    // TODO: trigger on characters, not stores
-    if (stores.stores.length) {
-      service.reloadVendors(stores.stores);
-    }
-  });
+  // A subject that keeps track of the current account. Because it's a
+  // behavior subject, any new subscriber will always see its last
+  // value.
+  const accountStream = new BehaviorSubject(null);
 
-  $rootScope.$on('dim-active-platform-updated', () => {
-    service.vendors = {};
-    service.vendorsLoaded = false;
-  });
+  // A stream of stores that switches on account changes and supports reloading.
+  // This is a ConnectableObservable that must be connected to start.
+  const vendorsStream = accountStream
+    // Only emit when the account changes
+    .distinctUntilChanged(compareAccounts)
+    .do(() => {
+      service.vendors = {};
+      service.vendorsLoaded = false;
+    })
+    .switchMap((account) => dimStoreService.getStoresStream(account), (account, stores) => [account, stores])
+    .switchMap(([account, stores]) => loadVendors(account, stores))
+    // Keep track of the last value for new subscribers
+    .publishReplay(1);
 
   $rootScope.$on('dim-new-manifest', () => {
     service.vendors = {};
@@ -119,15 +130,33 @@ function VendorService(
     });
   }
 
-  function reloadVendors(stores) {
-    const activePlatform = dimPlatformService.getActive();
-    if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
-      return _reloadPromise;
-    }
+  /**
+   * Set the current account, and get a stream of vendor and stores updates.
+   * This will keep returning data even if something else changes
+   * the account by also calling "vendorsStream". This won't force the
+   * vendors to reload unless they haven't been loaded at all.
+   *
+   * @return {Observable} a stream of vendor updates
+   */
+  function getVendorsStream(account) {
+    accountStream.next(account);
+    // Start the stream the first time it's asked for. Repeated calls
+    // won't do anything.
+    vendorsStream.connect();
+    return vendorsStream;
+  }
 
+  function reloadVendors() {
+    dimStoreService.reloadStores();
+  }
+
+  /**
+   * Returns a promise for a fresh view of the vendors and their items.
+   */
+  function loadVendors(account, stores) {
     const characters = _.reject(stores, 'isVault');
 
-    _reloadPromise = dimDefinitions.getDefinitions()
+    const reloadPromise = dimDefinitions.getDefinitions()
       .then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
@@ -148,7 +177,7 @@ function VendorService(
             service.loadedVendors++;
             return service.vendors[vendorDef.hash];
           } else {
-            return $q.all(characters.map((store) => loadVendorForCharacter(store, vendorDef, defs)))
+            return $q.all(characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs)))
               .then((vendors) => {
                 const nonNullVendors = _.compact(vendors);
                 if (nonNullVendors.length) {
@@ -162,19 +191,15 @@ function VendorService(
         })));
       })
       .then(() => {
+        $rootScope.$broadcast('dim-filter-invalidate');
         $rootScope.$broadcast('dim-vendors-updated');
         service.vendorsLoaded = true;
         fulfillRatingsRequest();
-      })
-      .finally(() => {
-        // Clear the reload promise so this can be called again
-        if (_reloadPromise.activePlatform === activePlatform) {
-          _reloadPromise = null;
-        }
+        return [stores, service.vendors];
       });
 
-    _reloadPromise.activePlatform = activePlatform;
-    return _reloadPromise;
+    loadingTracker.addPromise(reloadPromise);
+    return reloadPromise;
   }
 
   function mergeVendors([firstVendor, ...otherVendors]) {
@@ -226,8 +251,8 @@ function VendorService(
     mergedCategory.hasBounties = mergedCategory.hasBounties || otherCategory.hasBounties;
   }
 
-  function loadVendorForCharacter(store, vendorDef, defs) {
-    return loadVendor(store, vendorDef, defs)
+  function loadVendorForCharacter(account, store, vendorDef, defs) {
+    return loadVendor(account, store, vendorDef, defs)
       .then((vendor) => {
         service.loadedVendors++;
         return vendor;
@@ -277,7 +302,7 @@ function VendorService(
       vendor.factionAligned === factionAligned(store, vendorDef.summary.factionHash);
   }
 
-  function loadVendor(store, vendorDef, defs) {
+  function loadVendor(account, store, vendorDef, defs) {
     const vendorHash = vendorDef.hash;
 
     const key = vendorKey(store, vendorHash);
@@ -293,7 +318,7 @@ function VendorService(
         } else {
           // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
           return Destiny1Api
-            .getVendorForCharacter(store, vendorHash)
+            .getVendorForCharacter(account, store, vendorHash)
             .then((vendor) => {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
@@ -477,6 +502,7 @@ function VendorService(
     return _.every(saleItem.unlockStatuses, 'isSet');
   }
 
+  // TODO: do this with another observable!
   function requestRatings() {
     _ratingsRequested = true;
     fulfillRatingsRequest();
@@ -523,7 +549,3 @@ function VendorService(
     return totalCoins;
   }
 }
-
-export {
-  VendorService
-};

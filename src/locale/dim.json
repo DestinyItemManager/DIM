@@ -2,7 +2,8 @@
   "Accounts": {
     "Blizzard": "PC",
     "PlayStation": "PS4",
-    "Xbox": "XB1"
+    "Xbox": "XB1",
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
   },
   "Activities": {
     "Activities": "Activities",

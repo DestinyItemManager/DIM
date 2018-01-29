@@ -42,10 +42,12 @@ export function Destiny1Api(
     return charactersPromise;
 
     function processBnetCharactersRequest(response) {
-      if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error($i18next.t('BungieService.NoAccountForPlatform', {
+      if (!response.data || _.size(response.data.Response) === 0) {
+        const error = new Error($i18next.t('BungieService.NoAccountForPlatform', {
           platform: platform.label
-        })));
+        }));
+        error.code = 1601;
+        return $q.reject(error);
       }
 
       return _.map(response.data.Response.data.characters, (c) => {
@@ -147,10 +149,9 @@ export function Destiny1Api(
     }
   }
 
-  function getVendorForCharacter(character, vendorHash) {
-    const platform = dimState.active;
+  function getVendorForCharacter(account, character, vendorHash) {
     return $http(bungieApiQuery(
-      `/D1/Platform/Destiny/${platform.platformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
+      `/D1/Platform/Destiny/${account.platformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
     ))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response.data);

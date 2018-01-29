@@ -10,3 +10,4 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/subscribeOn';
+import 'rxjs/add/operator/do';
