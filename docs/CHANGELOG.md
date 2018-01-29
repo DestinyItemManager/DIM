@@ -2,6 +2,7 @@
 
 * Fixed display of Clan XP milestone.
 * DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
+* Accounts with no characters will no longer show up in the account dropdown.
 
 # 4.37.0
 
