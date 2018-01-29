@@ -100,11 +100,6 @@
   <span class="link first-to-go header-separator" ng-if="$ctrl.destinyVersion"></span>
 
   <a class="link second-to-go"
-     ui-sref="default-account"
-     ng-if="!$ctrl.destinyVersion"
-     ng-i18next="Header.Back"></a>
-
-  <a class="link second-to-go"
      ui-sref-active="active"
      ui-sref="destiny1.inventory"
      ng-if="$ctrl.destinyVersion == 1"
@@ -159,8 +154,8 @@
           ng-click="$ctrl.showSearch = !$ctrl.showSearch">
       <i class="fa fa-search"></i>
     </span>
-    <account-select ng-if="$ctrl.destinyVersion"
-                    destiny-version="$ctrl.destinyVersion">
+    <account-select ng-if="$ctrl.account"
+                    current-account="$ctrl.account">
     </account-select>
   </span>
 </div>

@@ -1,4 +1,3 @@
-import { subscribeOnScope } from '../rx-utils';
 import dialogTemplate from './account-select.dialog.html';
 import template from './account-select.html';
 import './account-select.scss';
@@ -7,7 +6,7 @@ export const AccountSelectComponent = {
   template,
   controller: AccountSelectController,
   bindings: {
-    destinyVersion: '<'
+    currentAccount: '<'
   }
 };
 
@@ -20,39 +19,13 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
   vm.loadingTracker = loadingTracker;
   vm.accounts = [];
 
-  vm.$onInit = function() {
-    subscribeOnScope($scope, dimPlatformService.current$, (platform) => {
-      setCurrentAccount(platform);
-    });
+  vm.$onInit = () => {
+    const loadAccountsPromise = dimPlatformService.getPlatforms()
+      .then((accounts) => {
+        vm.accounts = accounts;
+      });
+    loadingTracker.addPromise(loadAccountsPromise);
   };
-
-  vm.$onChanges = function(changes) {
-    // If we go to a non-destiny-account page, leave it, or default to D1
-    vm.destinyVersion = changes.destinyVersion.currentValue ||
-      vm.destinyVersion ||
-      (vm.currentAccount && vm.currentAccount.destinyVersion) ||
-      1;
-
-    // TODO: remove
-    dimSettingsService.destinyVersion = vm.destinyVersion;
-    dimSettingsService.save();
-  };
-
-  // TODO: save this in the account service, or some other global state, so we don't flip flop
-  function setCurrentAccount(currentAccount) {
-    vm.currentAccount = currentAccount;
-  }
-
-  vm.accountChange = function accountChange(account) {
-    loadingTracker.addPromise(dimPlatformService.setActive(account).then(setCurrentAccount));
-  };
-
-  const loadAccountsPromise = dimPlatformService.getPlatforms()
-    .then((accounts) => {
-      vm.accounts = accounts;
-      setCurrentAccount(dimPlatformService.getActive());
-    });
-  loadingTracker.addPromise(loadAccountsPromise);
 
   vm.logOut = function(e) {
     e.stopPropagation();
@@ -63,9 +36,6 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
 
   vm.selectAccount = function(e, account) {
     e.stopPropagation();
-    //* fixes a bug when swapping between D1 & D2.
-    vm.currentAccount = account;
-    //*
     $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
   };
 

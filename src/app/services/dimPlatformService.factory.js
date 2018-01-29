@@ -1,24 +1,29 @@
 import angular from 'angular';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import _ from 'underscore';
 import { compareAccounts } from '../accounts/destiny-account.service';
+import { Subject } from 'rxjs/Subject';
 
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 // TODO: push "current account" into the other account services
-function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $q, dimState) {
+function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $q, dimState, dimSettingsService) {
   let _platforms = [];
   let _active = null;
 
-  const current$ = new ReplaySubject(1)
-    .distinctUntilChanged(compareAccounts);
+  // Set the active platform here - it'll drive the other observable
+  const activePlatform$ = new Subject();
+
+  const current$ = activePlatform$
+    .distinctUntilChanged(compareAccounts)
+    .do(saveActivePlatform)
+    .publishReplay(1);
 
   const service = {
     getPlatforms,
     getActive,
     setActive,
     getPlatformMatching,
-    current$
+    getActiveAccountStream
   };
 
   return service;
@@ -58,7 +63,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
   }
 
   function getActivePlatform() {
-    if (_active && _.find(_platforms, { id: _active.id })) {
+    if (_active && _platforms.find((p) => p.id === _active.id)) {
       return _active;
     }
 
@@ -67,16 +72,16 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
         return null;
       }
 
-      if (_active && _.find(_platforms, { id: _active.id })) {
+      if (_active && _platforms.find((p) => p.id === _active.id)) {
         return _active;
       } else if (data && data.platformType) {
-        let active = _.find(_platforms, (platform) => {
+        let active = _platforms.find((platform) => {
           return platform.platformType === data.platformType && platform.destinyVersion === data.destinyVersion;
         });
         if (active) {
           return active;
         }
-        active = _.find(_platforms, (platform) => {
+        active = _platforms.find((platform) => {
           return platform.platformType === data.platformType;
         });
         if (active) {
@@ -91,19 +96,29 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     return _active;
   }
 
-  function setActive(platform) {
-    _active = platform;
-    current$.next(platform);
-    let promise;
+  function getActiveAccountStream() {
+    current$.connect();
+    return current$;
+  }
 
-    if (platform === null) {
-      promise = SyncService.remove('platformType');
+  function saveActivePlatform(account) {
+    // TODO: kill platform label
+    _active = account;
+    dimState.active = account;
+    if (account === null) {
+      SyncService.remove('platformType');
     } else {
-      promise = SyncService.set({ platformType: platform.platformType, destinyVersion: platform.destinyVersion });
+      if (dimSettingsService.destinyVersion !== account.destinyVersion) {
+        dimSettingsService.destinyVersion = account.destinyVersion;
+        dimSettingsService.save();
+      }
+      SyncService.set({ platformType: account.platformType, destinyVersion: account.destinyVersion });
     }
+  }
 
-    dimState.active = platform;
-    return promise.then(() => platform);
+  function setActive(platform) {
+    activePlatform$.next(platform);
+    return current$.take(1).toPromise();
   }
 }
 

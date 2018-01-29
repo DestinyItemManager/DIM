@@ -48,8 +48,7 @@ export function destinyAccountResolver(destinyVersion) {
           $state.go('default-account');
           return undefined;
         }
-        dimPlatformService.setActive(account);
-        return account;
+        return dimPlatformService.setActive(account);
       });
   };
 }

@@ -28,8 +28,9 @@ function HeaderController(
   // Variables for templates that webpack does not automatically correct.
   vm.$DIM_VERSION = $DIM_VERSION;
   vm.$DIM_FLAVOR = $DIM_FLAVOR;
-  vm.$DIM_CHANGELOG = $DIM_CHANGELOG;
 
+  let vendorsSubscription;
+  vm.xurAvailable = false;
   vm.settings = dimSettingsService;
 
   vm.featureFlags = {
@@ -37,22 +38,24 @@ function HeaderController(
   };
 
   vm.$onInit = function() {
-    vm.destinyVersion = getCurrentDestinyVersion();
-    updateXur();
+    subscribeOnScope($scope, dimPlatformService.getActiveAccountStream(), (account) => {
+      vm.account = account;
+      vm.destinyVersion = account.destinyVersion;
+      updateXur();
+    });
   };
 
-  $transitions.onSuccess({ }, () => {
-    vm.destinyVersion = getCurrentDestinyVersion();
-  });
+  function updateXur() {
+    if (vm.destinyVersion === 1 && !vendorsSubscription) {
+      vm.showXur = showPopupFunction('xur', '<xur></xur>');
 
-  function getCurrentDestinyVersion() {
-    // TODO there must be a better way of doing this?
-    if ($state.includes('destiny1')) {
-      return 1;
-    } else if ($state.includes('destiny2')) {
-      return 2;
+      const dimVendorService = $injector.get('dimVendorService'); // hack for code splitting
+
+      vendorsSubscription = subscribeOnScope($scope, dimVendorService.getVendorsStream(vm.account), ([_stores, vendors]) => {
+        const xur = 2796397637;
+        vm.xurAvailable = Boolean(vendors[xur]);
+      });
     }
-    return null;
   }
 
   /**
@@ -79,21 +82,5 @@ function HeaderController(
         });
       }
     };
-  }
-
-  let vendorsSubscription;
-  vm.xurAvailable = false;
-
-  function updateXur() {
-    if (vm.destinyVersion === 1 && !vendorsSubscription && dimPlatformService.getActive()) {
-      vm.showXur = showPopupFunction('xur', '<xur></xur>');
-
-      const dimVendorService = $injector.get('dimVendorService'); // hack for code splitting
-
-      vendorsSubscription = subscribeOnScope($scope, dimVendorService.getVendorsStream(dimPlatformService.getActive()), ([_stores, vendors]) => {
-        const xur = 2796397637;
-        vm.xurAvailable = Boolean(vendors[xur]);
-      });
-    }
   }
 }
