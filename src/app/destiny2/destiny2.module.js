@@ -4,6 +4,7 @@ import { Destiny2Component } from './destiny2.component';
 import { D2InventoryComponent } from './d2-inventory.component';
 import { D2BucketsService } from './d2-buckets.service';
 import { D2Definitions } from './d2-definitions.service';
+import { destinyAccountResolver } from '../shell/destiny-account.route';
 
 export default angular
   .module('destiny2Module', [])
@@ -20,7 +21,10 @@ export default angular
       parent: 'destiny-account',
       redirectTo: 'destiny2.inventory',
       url: '/d2',
-      component: 'destiny2'
+      component: 'destiny2',
+      resolve: {
+        account: destinyAccountResolver(2)
+      }
     });
 
     $stateProvider.state({
