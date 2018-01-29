@@ -3,7 +3,7 @@
 * Fixed display of Clan XP milestone.
 * DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
 * Accounts with no characters will no longer show up in the account dropdown.
-* Item tagging via keyboard should be a little more international-friendly.
+* Item tagging via keyboard should be a little more international-friendly. Calling the help menu (via shift+/) is too.
 
 # 4.37.0
 
