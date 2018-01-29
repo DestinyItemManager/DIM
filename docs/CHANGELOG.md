@@ -1,5 +1,7 @@
 # Next
 
+* Fixed display of Clan XP milestone.
+
 # 4.37.0
 
 * Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
