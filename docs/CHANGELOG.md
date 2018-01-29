@@ -1,13 +1,18 @@
 # Next
 
+* Fixed display of Clan XP milestone.
+* DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
+* In D2, "Make room for Postmaster" has been replaced with "Pull from Postmaster" which pulls all postmaster items we can onto your character.
+* Fix pull from postmaster to clear exactly enough space, not too many, but also not too few.
+
+# 4.37.0
+
 * Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
 * The "Well Rested" buff now appears as a Milestone on your Progress page.
 * Nightfall modifiers are shown on the Progress page.
 * Storage (Google Drive) settings have moved to the Settings page.
 * You can configure a custom item sorting method from the Settings page.
 * Improved display of the account selection dropdown.
-* Fix pull from postmaster to clear exactly enough space, not too many, but also not too few.
-* In D2, "Make room for Postmaster" has been replaced with "Pull from Postmaster" which pulls all postmaster items we can onto your character.
 
 # 4.36.1
 

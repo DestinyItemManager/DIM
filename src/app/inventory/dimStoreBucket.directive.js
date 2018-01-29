@@ -156,11 +156,16 @@ function StoreBucketCtrl($scope,
 
       const reload = item.equipped || equip;
       if (reload) {
-        movePromise = movePromise.then(() => {
-          return getStoreService(item).updateCharacters();
+        movePromise = movePromise.then((item) => {
+          return getStoreService(item)
+            .updateCharacters()
+            .then(() => item);
         });
       }
-      return movePromise;
+      return movePromise
+        .then((item) => {
+          item.updateManualMoveTimestamp();
+        });
     }).catch((e) => {
       if (e.message !== 'move-canceled') {
         toaster.pop('error', item.name, e.message);

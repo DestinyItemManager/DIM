@@ -5,6 +5,7 @@ import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
 import { DimStore } from './store/d2-store-factory.service';
 import { StoreServiceType } from './d2-stores.service';
 import { DimError } from '../bungie-api/bungie-service-helper.service';
+import { chainComparator, compareBy, reverseComparator } from '../comparators';
 
 /**
  * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
@@ -72,7 +73,7 @@ export function ItemService(
       const stackable = item.maxStackSize > 1;
       // Items to be decremented
       const sourceItems = stackable
-        ? _.sortBy(_.filter(source.buckets[item.bucket.id], (i) => {
+        ? _.sortBy(source.buckets[item.bucket.id].filter((i) => {
           return i.hash === item.hash &&
                 i.id === item.id &&
                 !i.notransfer;
@@ -80,7 +81,7 @@ export function ItemService(
       // Items to be incremented. There's really only ever at most one of these, but
       // it's easier to deal with as a list.
       const targetItems = stackable
-        ? _.sortBy(_.filter(target.buckets[item.bucket.id], (i) => {
+        ? _.sortBy(target.buckets[item.bucket.id].filter((i) => {
           return i.hash === item.hash &&
                 i.id === item.id &&
                 // Don't consider full stacks as targets
@@ -193,7 +194,7 @@ export function ItemService(
   function searchForSimilarItem(item: DimItem, store: DimStore, exclusions: DimItem[] | undefined, target: DimStore, excludeExotic: boolean) {
     const exclusionsList = exclusions || [];
 
-    let candidates = _.filter(store.items, (i) => {
+    let candidates = store.items.filter((i) => {
       return i.canBeEquippedBy(target) &&
         i.location.id === item.location.id &&
         !i.equipped &&
@@ -253,7 +254,7 @@ export function ItemService(
       if (i.isExotic) {
         const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
         // If we aren't already equipping into that slot...
-        if (otherExotic && !_.find(items, { type: otherExotic.type })) {
+        if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
           const similarItem = getSimilarItem(otherExotic);
           if (!similarItem) {
             return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: otherExotic.name })));
@@ -364,7 +365,7 @@ export function ItemService(
    * aside. This is not a promise, it returns immediately.
    */
   function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore) {
-    const equippedExotics = _.filter(store.items, (i) => {
+    const equippedExotics = store.items.filter((i) => {
       return (i.equipped &&
               i.location.id !== item.location.id &&
               i.location.sort === item.location.sort &&
@@ -384,9 +385,7 @@ export function ItemService(
       case 2:
         // Assume that only one of the equipped items has 'The Life Exotic' perk
         const hasLifeExotic = item.hasLifeExotic();
-        return _.find(equippedExotics, (i) => {
-          return hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic();
-        });
+        return equippedExotics.find((i) => hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic());
       default:
         throw new Error($i18next.t('ItemService.TwoExotics'));
     }
@@ -409,58 +408,28 @@ export function ItemService(
    * @return An object with item and target properties representing both the item and its destination. This won't ever be undefined.
    * @throws {Error} An error if no move aside item could be chosen.
    */
-  function chooseMoveAsideItem(store: DimStore, item: DimItem, moveContext: MoveContext) {
+  function chooseMoveAsideItem(
+    store: DimStore,
+    item: DimItem,
+    moveContext: MoveContext
+  ): {
+    item: DimItem;
+    target: DimStore;
+  } {
     // Check whether an item cannot or should not be moved
     function movable(otherItem) {
       return !otherItem.notransfer &&
-        !_.any(moveContext.excludes, { id: otherItem.id, hash: otherItem.hash });
-    }
-
-    // The value of an item to use for ranking which item to move
-    // aside. When moving from the vault we'll choose the
-    // highest-value item, while moving from a character to the
-    // vault (or another character) we'll use the lower value.
-    function itemValue(i) {
-      // Lower means more likely to get moved away
-      // Prefer not moving the equipped item
-      let value = i.equipped ? 10 : 0;
-      // Prefer moving lower-tier
-      value += {
-        Common: 0,
-        Uncommon: 1,
-        Rare: 2,
-        Legendary: 3,
-        Exotic: 4
-      }[i.tier];
-      // Prefer things this character can use
-      if (!store.isVault && i.canBeEquippedBy(store)) {
-        value += 5;
-      }
-      // And low-stat
-      if (i.primStat) {
-        value += i.primStat.value / 1000;
-      }
-      // Engrams prefer to be in the vault
-      if (!i.isEngram()) {
-        value += 20;
-      }
-
-      // prefer same type over everything
-      if (i.type === item.type) {
-        value += 50;
-      }
-
-      return value;
+        !moveContext.excludes.some((i) => i.id == otherItem.id && i.hash === otherItem.hash);
     }
 
     const stores = getStoreService(item).getStores();
-    const otherStores = stores.filter((s) => s.id === store.id);
+    const otherStores = stores.filter((s) => s.id !== store.id);
 
     // Start with candidates of the same type (or vault bucket if it's vault)
     const allItems = store.isVault
-      ? _.filter(store.items!, (i) => i.bucket.vaultBucket!.id === item.bucket.vaultBucket!.id)
+      ? store.items!.filter((i) => i.bucket.vaultBucket!.id === item.bucket.vaultBucket!.id)
       : store.buckets[item.bucket.id];
-    let moveAsideCandidates = _.filter(allItems, movable);
+    let moveAsideCandidates = allItems.filter(movable);
 
     // if there are no candidates at all, fail
     if (moveAsideCandidates.length === 0) {
@@ -477,7 +446,7 @@ export function ItemService(
         if (i.maxStackSize > 1) {
           // Find another store that has an appropriate stackable
           otherStore = otherStores.find(
-            (otherStore) => _.any(otherStore.items, (otherItem) =>
+            (otherStore) => otherStore.items.some((otherItem) =>
               // Same basic item
               otherItem.hash === i.hash &&
                                   // Enough space to absorb this stack
@@ -493,11 +462,51 @@ export function ItemService(
       }
     }
 
+    const tierValue = {
+      Common: 0,
+      Uncommon: 1,
+      Rare: 2,
+      Legendary: 3,
+      Exotic: 4
+    };
+
+    const tagValue = {
+      // Infusion fuel belongs in the vault
+      infuse: -1,
+      // These are still good
+      keep: 1,
+      // Junk should probably bubble towards the character so you remember to delete them!
+      junk: 2,
+      // Favorites you want on your character
+      favorite: 3
+    };
+
+    // A sort for items to use for ranking which item to move
+    // aside. When moving from the vault we'll choose the
+    // "largest" item, while moving from a character to the
+    // vault (or another character) we'll use the "smallest".
+    // Note, in JS "true" is greater than "false".
+    const itemValueComparator: (a: DimItem, b: DimItem) => number = chainComparator(
+      // prefer same type over everything
+      compareBy((i) => i.type === item.typeName),
+      // Engrams prefer to be in the vault, so not-engram is larger than engram
+      compareBy((i) => !i.isEngram()),
+      // Never unequip something
+      compareBy((i) => i.equipped),
+      // Always prefer keeping something that was manually moved where it is
+      compareBy((i) => store.isVault ? (-1 * i.lastManuallyMoved) : (i.lastManuallyMoved)),
+      // Prefer things this character can use
+      compareBy((i) => !store.isVault && i.canBeEquippedBy(store)),
+      // Tagged items sort by the value of their tags
+      compareBy((i) => (i.dimInfo && i.dimInfo.tag) ? tagValue[i.dimInfo.tag] : 0),
+      // Prefer moving lower-tier
+      compareBy((i) => tierValue[i.tier]),
+      // Prefer keeping higher-stat items
+      compareBy((i) => i.primStat && i.primStat.value)
+    );
+
     // Sort all candidates
-    moveAsideCandidates = _.sortBy(moveAsideCandidates, itemValue);
-    if (store.isVault) {
-      moveAsideCandidates = moveAsideCandidates.reverse();
-    }
+    moveAsideCandidates.sort(store.isVault ? reverseComparator(itemValueComparator) : itemValueComparator);
 
     // A cached version of the space-left function
     const cachedSpaceLeft = _.memoize((store, item) => {
@@ -511,20 +520,22 @@ export function ItemService(
       }
     });
 
-    let moveAsideCandidate;
+    let moveAsideCandidate: {
+      item: DimItem;
+      target: DimStore;
+    } | undefined;
 
     const storeService = getStoreService(item);
-    const vault = storeService.getVault();
+    const vault = storeService.getVault()!;
     moveAsideCandidates.find((candidate) => {
       // Other, non-vault stores, with the item's current
       // owner ranked last, but otherwise sorted by the
       // available space for the candidate item.
       const otherNonVaultStores = _.sortBy(
-        _.filter(otherStores, (s) => !s.isVault && s.id !== item.owner),
+        otherStores.filter((s) => !s.isVault && s.id !== item.owner),
         (s) => cachedSpaceLeft(s, candidate)).reverse();
       otherNonVaultStores.push(storeService.getStore(item.owner)!);
-      const otherCharacterWithSpace = _.find(otherNonVaultStores,
-                                             (s) => cachedSpaceLeft(s, candidate));
+      const otherCharacterWithSpace = otherNonVaultStores.find((s) => cachedSpaceLeft(s, candidate));
 
       if (store.isVault) { // If we're moving from the vault
         // If there's somewhere with space, put it there
@@ -541,17 +552,17 @@ export function ItemService(
         // the candidate on another character in order to avoid
         // gumming up the vault.
         const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
-        if (openVaultSlots > 0 || !otherCharacterWithSpace) {
+        if (openVaultSlots === 1 && otherCharacterWithSpace) {
+          moveAsideCandidate = {
+            item: candidate,
+            target: otherCharacterWithSpace
+          };
+          return true;
+        } else {
           // Otherwise just try to shove it in the vault, and we'll
           // recursively squeeze something else out of the vault.
           moveAsideCandidate = {
             item: candidate,
-            target: vault
-          };
-          return true;
-        } else {
-          moveAsideCandidate = {
-            item: otherCharacterWithSpace,
             target: vault
           };
           return true;

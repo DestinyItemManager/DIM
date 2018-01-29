@@ -36,7 +36,7 @@ export const StoreItemComponent = {
 let otherDialog = null;
 let firstItemTimed = false;
 
-export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, dimDestinyTrackerService, NewItemsService) {
+export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, dimDestinyTrackerService, NewItemsService) {
   'ngInject';
 
   function getStoreService(item) {
@@ -91,10 +91,7 @@ export function StoreItemCtrl($scope, $element, dimItemService, dimStoreService,
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;
 
-      dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount)
-        .then(() => {
-          return getStoreService(item).updateCharacters();
-        });
+      dimItemMoveService.moveItemTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount);
     }
   });
 
