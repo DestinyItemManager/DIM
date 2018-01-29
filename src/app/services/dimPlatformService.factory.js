@@ -1,7 +1,7 @@
 import angular from 'angular';
-import _ from 'underscore';
-
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import _ from 'underscore';
+import { compareAccounts } from '../accounts/destiny-account.service';
 
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
@@ -10,7 +10,8 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
   let _platforms = [];
   let _active = null;
 
-  const current$ = new ReplaySubject(1);
+  const current$ = new ReplaySubject(1)
+    .distinctUntilChanged(compareAccounts);
 
   const service = {
     getPlatforms,

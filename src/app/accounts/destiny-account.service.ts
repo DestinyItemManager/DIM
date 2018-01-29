@@ -1,14 +1,16 @@
+import { StateService } from '@uirouter/angularjs';
 import { IPromise, IQService } from 'angular';
 import { BungieMembershipType } from 'bungie-api-ts/common';
-import { UserMembershipData } from 'bungie-api-ts/user';
-import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
-import { PLATFORMS } from '../bungie-api/platforms';
-import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { reportExceptionToGoogleAnalytics } from '../google';
-import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
-import { flatMap } from '../util';
-import * as _ from 'underscore';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { UserMembershipData } from 'bungie-api-ts/user';
+import { t } from 'i18next';
+import * as _ from 'underscore';
+import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
+import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
+import { bungieErrorToaster } from '../bungie-api/error-toaster';
+import { PLATFORMS } from '../bungie-api/platforms';
+import { reportExceptionToGoogleAnalytics } from '../google';
+import { flatMap } from '../util';
 
 /** A specific Destiny account (one per platform and Destiny version) */
 export interface DestinyAccount {
@@ -32,7 +34,15 @@ export interface DestinyAccount {
  * We don't know whether or not the account is associated with D1 or D2 characters until we
  * try to load them.
  */
-export function DestinyAccountService(BungieUserApi: BungieUserApiService, Destiny1Api, Destiny2Api: Destiny2ApiService, toaster, $q: IQService) {
+export function DestinyAccountService(
+  BungieUserApi: BungieUserApiService,
+  Destiny1Api,
+  Destiny2Api: Destiny2ApiService,
+  toaster,
+  $q: IQService,
+  OAuthTokenService,
+  $state: StateService
+) {
   'ngInject';
 
   return {
@@ -46,6 +56,14 @@ export function DestinyAccountService(BungieUserApi: BungieUserApiService, Desti
   function getDestinyAccountsForBungieAccount(bungieMembershipId: string): IPromise<DestinyAccount[]> {
     return BungieUserApi.getAccounts(bungieMembershipId)
       .then(generatePlatforms)
+      .then((platforms) => {
+        if (platforms.length === 0) {
+          toaster.pop('warning', t('Accounts.NoCharacters'));
+          OAuthTokenService.removeToken();
+          $state.go('login', { reauth: true });
+        }
+        return platforms;
+      })
       .catch((e) => {
         // TODO: show a full-page error, or show a diagnostics page, rather than a popup
         toaster.pop(bungieErrorToaster(e));
@@ -127,5 +145,6 @@ export function DestinyAccountService(BungieUserApi: BungieUserApiService, Desti
  */
 export function compareAccounts(account1: DestinyAccount, account2: DestinyAccount): boolean {
   return account1.platformType === account2.platformType &&
-         account1.membershipId === account2.membershipId;
+         account1.membershipId === account2.membershipId &&
+         account2.destinyVersion === account2.destinyVersion;
 }

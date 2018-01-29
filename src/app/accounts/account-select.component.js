@@ -1,5 +1,6 @@
-import template from './account-select.html';
+import { subscribeOnScope } from '../rx-utils';
 import dialogTemplate from './account-select.dialog.html';
+import template from './account-select.html';
 import './account-select.scss';
 
 export const AccountSelectComponent = {
@@ -15,13 +16,12 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
 
   const vm = this;
   let dialogResult = null;
-  let platformSubscription = null;
 
   vm.loadingTracker = loadingTracker;
   vm.accounts = [];
 
   vm.$onInit = function() {
-    platformSubscription = dimPlatformService.current$.subscribe((platform) => {
+    subscribeOnScope($scope, dimPlatformService.current$, (platform) => {
       setCurrentAccount(platform);
     });
   };
@@ -36,12 +36,6 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
     // TODO: remove
     dimSettingsService.destinyVersion = vm.destinyVersion;
     dimSettingsService.save();
-  };
-
-  vm.$onDestroy = function() {
-    if (platformSubscription) {
-      platformSubscription.unsubscribe();
-    }
   };
 
   // TODO: save this in the account service, or some other global state, so we don't flip flop
