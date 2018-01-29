@@ -1,4 +1,3 @@
-import angular from 'angular';
 import _ from 'underscore';
 
 export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
@@ -18,36 +17,36 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
       hide: $i18next.t('DidYouKnow.DontShowAgain')
     });
   });
-
   /**
    * Move the item to the specified store. Equip it if equip is true.
    */
-  const moveItemTo = dimActionQueue.wrap((item, store, equip, amount, callback) => {
+  const moveItemTo = dimActionQueue.wrap((item, store, equip, amount) => {
     didYouKnow();
-
     const reload = item.equipped || equip;
     let promise = dimItemService.moveTo(item, store, equip, amount);
 
     if (reload) {
       // Refresh light levels and such
-      promise = promise.then(() => {
-        return getStoreService(item).updateCharacters();
+      promise = promise.then((item) => {
+        return getStoreService(item)
+          .updateCharacters()
+          .then(() => item);
       });
     }
 
     promise = promise
+      .then((item) => item.updateManualMoveTimestamp())
       .catch((a) => {
         toaster.pop('error', item.name, a.message);
         console.error('error moving item', item, 'to', store, a);
       });
 
     loadingTracker.addPromise(promise);
-    (callback || angular.noop)();
 
     return promise;
   });
 
-  const consolidate = dimActionQueue.wrap((actionableItem, store, callback) => {
+  const consolidate = dimActionQueue.wrap((actionableItem, store) => {
     const stores = _.filter(getStoreService(actionableItem).getStores(), (s) => { return !s.isVault; });
     const vault = getStoreService(actionableItem).getVault();
 
@@ -92,12 +91,11 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
     });
 
     loadingTracker.addPromise(promise);
-    (callback || angular.noop)();
 
     return promise;
   });
 
-  const distribute = dimActionQueue.wrap((actionableItem, store, callback) => {
+  const distribute = dimActionQueue.wrap((actionableItem) => {
     // Sort vault to the end
     const stores = _.sortBy(getStoreService(actionableItem).getStores(), (s) => { return s.id === 'vault' ? 2 : 1; });
 
@@ -171,7 +169,6 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
     });
 
     loadingTracker.addPromise(promise);
-    (callback || angular.noop)();
 
     return promise;
   });

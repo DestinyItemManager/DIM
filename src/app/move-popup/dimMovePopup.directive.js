@@ -54,10 +54,12 @@ function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog,
   }
 
   vm.consolidate = function() {
-    dimItemMoveService.consolidate(vm.item, vm.store, closeThisDialog);
+    closeThisDialog();
+    dimItemMoveService.consolidate(vm.item, vm.store);
   };
 
   vm.distribute = function() {
-    dimItemMoveService.distribute(vm.item, vm.store, closeThisDialog);
+    closeThisDialog();
+    dimItemMoveService.distribute(vm.item);
   };
 }
