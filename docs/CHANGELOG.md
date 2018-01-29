@@ -1,6 +1,7 @@
 # Next
 
 * Fixed display of Clan XP milestone.
+* DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
 
 # 4.37.0
 
@@ -10,7 +11,6 @@
 * Storage (Google Drive) settings have moved to the Settings page.
 * You can configure a custom item sorting method from the Settings page.
 * Improved display of the account selection dropdown.
-* DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
 
 # 4.36.1
 
