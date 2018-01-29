@@ -150,7 +150,7 @@ function BucketService(dimDefinitions, dimCategory) {
 
         _.each(buckets.byHash, (bucket) => {
           if (sortToVault[bucket.sort]) {
-            bucket.vaultBucket = buckets.byId[bucket.sort];
+            bucket.vaultBucket = buckets.byId[sortToVault[bucket.sort]];
           }
         });
 
