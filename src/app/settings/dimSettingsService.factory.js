@@ -110,10 +110,10 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
     // for now just override itemTags. eventually let users create own?
     savedSettings.itemTags = [
       { type: undefined, label: 'Tags.TagItem' },
-      { type: 'favorite', label: 'Tags.Favorite', hotkey: '!', icon: 'star' },
-      { type: 'keep', label: 'Tags.Keep', hotkey: '@', icon: 'tag' },
-      { type: 'junk', label: 'Tags.Junk', hotkey: '#', icon: 'ban' },
-      { type: 'infuse', label: 'Tags.Infuse', hotkey: '$', icon: 'bolt' }
+      { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: 'star' },
+      { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: 'tag' },
+      { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: 'ban' },
+      { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: 'bolt' }
     ];
 
     _loaded = true;

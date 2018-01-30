@@ -11,6 +11,7 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
   $httpProvider.useApplyAsync(true);
 
   hotkeysProvider.includeCheatSheet = true;
+  hotkeysProvider.cheatSheetHotkey = 'shift+/';
 
   // Bungie's API will start throttling an API if it's called more than once per second. It does this
   // by making responses take 2s to return, not by sending an error code or throttling response. Choosing
