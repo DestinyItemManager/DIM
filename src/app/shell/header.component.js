@@ -41,9 +41,12 @@ function HeaderController(
     subscribeOnScope($scope, dimPlatformService.getActiveAccountStream(), (account) => {
       vm.account = account;
       vm.destinyVersion = account.destinyVersion;
-      updateXur();
     });
   };
+
+  $transitions.onSuccess({ to: 'destiny1' }, (transition) => {
+    updateXur();
+  });
 
   function updateXur() {
     if (vm.destinyVersion === 1 && !vendorsSubscription) {

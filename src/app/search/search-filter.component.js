@@ -16,7 +16,7 @@ export const SearchFilterComponent = {
 };
 
 function SearchFilterCtrl(
-  $scope, dimStoreService, D2StoresService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimCategory, dimSettingsService, toaster, ngDialog, $stateParams, $injector) {
+  $scope, dimStoreService, D2StoresService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimCategory, dimSettingsService, toaster, ngDialog, $stateParams, $injector, $transitions) {
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;
@@ -26,6 +26,14 @@ function SearchFilterCtrl(
   function getStoreService() {
     return vm.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
+
+  // This hacks around the fact that dimVendorService isn't defined until the destiny1 modules are lazy-loaded
+  let dimVendorService;
+  $transitions.onSuccess({ to: 'destiny1' }, (transition) => {
+    if (!dimVendorService) {
+      dimVendorService = $injector.get('dimVendorService');
+    }
+  });
 
   let filters;
   let searchConfig;
@@ -213,9 +221,7 @@ function SearchFilterCtrl(
       }
     }
 
-    if (vm.destinyVersion === 1) {
-      // This hacks around the fact that dimVendorService isn't defined until the destiny1 modules are lazy-loaded
-      const dimVendorService = $injector.get('dimVendorService');
+    if (vm.destinyVersion === 1 && dimVendorService) {
       // Filter vendor items
       _.each(dimVendorService.vendors, (vendor) => {
         for (const saleItem of vendor.allItems) {
