@@ -1,5 +1,6 @@
-/** Sentry.io exception reporting */
+import angular from 'angular';
 
+/** Sentry.io exception reporting */
 export let reportException = () => {};
 
 if ($featureFlags.sentry) {
@@ -17,6 +18,7 @@ if ($featureFlags.sentry) {
     // TODO: we can also do this in some situations to gather more feedback from users
     // Raven.showReportDialog();
     Raven.reportException(e);
-  }
-  window.addEventListener('unhandledrejection', (event) => Raven.captureException(evt.reason));
+  };
+
+  window.addEventListener('unhandledrejection', (event) => Raven.captureException(event.reason));
 }
