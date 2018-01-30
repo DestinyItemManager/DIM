@@ -14,12 +14,11 @@ export function defaultAccountRoute($stateProvider) {
         return dimPlatformService.getPlatforms().then(() => dimPlatformService.getActive());
       }
     },
-    controller: function controller($state, activeAccount, dimSettingsService) {
+    controller: function controller($state, activeAccount) {
       'ngInject';
 
       if (activeAccount) {
-        // TODO: we won't know D1 vs. D1 until we try to load characters - load to a selection screen?
-        $state.go(`destiny${dimSettingsService.destinyVersion}.inventory`, activeAccount);
+        $state.go(`destiny${activeAccount.destinyVersion}.inventory`, activeAccount);
       } else {
         // A bit awkward, but getPlatforms should already have redirected to login
       }

@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import { subscribeOnScope } from '../rx-utils';
 
 import template from './vendors.html';
@@ -27,35 +26,17 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
   };
 
   vm.settings = dimSettingsService;
-  vm.vendorService = dimVendorService;
 
   this.$onInit = function() {
-    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
-
-    // TODO: get rid of this when we subscribe to *vendors*, not *stores*
-    init();
+    subscribeOnScope($scope, dimVendorService.getVendorsStream(vm.account), ([stores, vendors]) => {
+      vm.stores = stores;
+      vm.vendors = vendors;
+      vm.totalCoins = dimVendorService.countCurrencies(stores, vendors);
+      dimVendorService.requestRatings();
+    });
   };
 
   $scope.$on('dim-refresh', () => {
-    // TODO: Reload vendor data independently
-    dimStoreService.reloadStores();
-  });
-
-  function init(stores = dimStoreService.getStores()) {
-    if (_.isEmpty(stores)) {
-      return;
-    }
-
-    $scope.$applyAsync(() => {
-      vm.stores = _.reject(stores, (s) => s.isVault);
-      vm.totalCoins = dimVendorService.countCurrencies(stores, vm.vendorService.vendors);
-    });
-
-    dimVendorService.requestRatings();
-  }
-
-  // TODO: vendors observable!
-  $scope.$on('dim-vendors-updated', () => {
-    init();
+    dimVendorService.reloadVendors();
   });
 }

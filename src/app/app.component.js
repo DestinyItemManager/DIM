@@ -12,8 +12,6 @@ export const AppComponent = {
 };
 
 function AppComponentCtrl(
-  $window,
-  $rootScope,
   $scope,
   dimInfoService,
   dimSettingsService,

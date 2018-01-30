@@ -1,5 +1,11 @@
 # Next
 
+* Fixed display of Clan XP milestone.
+* DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
+* Accounts with no characters will no longer show up in the account dropdown.
+
+# 4.37.0
+
 * Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
 * The "Well Rested" buff now appears as a Milestone on your Progress page.
 * Nightfall modifiers are shown on the Progress page.

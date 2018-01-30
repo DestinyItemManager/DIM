@@ -8,33 +8,7 @@ export function destinyAccountRoute($stateProvider) {
   $stateProvider.state({
     name: 'destiny-account',
     redirectTo: 'destiny2.inventory',
-    url: '/:membershipId-{platformType:int}',
-    resolve: {
-      // TODO: move this to platform/account service
-      account: ($transition$, dimPlatformService, $state) => {
-        'ngInject';
-
-        const { membershipId, platformType } = $transition$.params();
-
-        // TODO: shouldn't need to load all platforms for this. How can we avoid that?
-        return dimPlatformService.getPlatforms()
-          .then(() => {
-            // TODO: getPlatformMatching should be able to load an account that we don't know
-            // TODO: make sure it's a "real" account
-            const account = dimPlatformService.getPlatformMatching({
-              membershipId,
-              platformType
-            });
-            if (!account) {
-              // If we didn't load an account, kick out and re-resolve
-              $state.go('default-account');
-              return undefined;
-            }
-            dimPlatformService.setActive(account);
-            return account;
-          });
-      }
-    }
+    url: '/:membershipId-{platformType:int}'
   });
 
   // Register a lazy future state for all Destiny 1 pages, so they are not in the main chunk.
@@ -47,4 +21,34 @@ export function destinyAccountRoute($stateProvider) {
         .then((mod) => $ocLazyLoad.load(mod.default));
     }
   });
+}
+
+/**
+ * This is a function that generates a resolver that can be used for both the destiny1 and destiny2
+ * routes to resolve an account specific to their version.
+ */
+export function destinyAccountResolver(destinyVersion) {
+  return ($transition$, dimPlatformService, $state) => {
+    'ngInject';
+
+    const { membershipId, platformType } = $transition$.params();
+
+    // TODO: shouldn't need to load all platforms for this. How can we avoid that?
+    return dimPlatformService.getPlatforms()
+      .then(() => {
+        // TODO: getPlatformMatching should be able to load an account that we don't know
+        // TODO: make sure it's a "real" account
+        const account = dimPlatformService.getPlatformMatching({
+          membershipId,
+          platformType,
+          destinyVersion
+        });
+        if (!account) {
+          // If we didn't load an account, kick out and re-resolve
+          $state.go('default-account');
+          return undefined;
+        }
+        return dimPlatformService.setActive(account);
+      });
+  };
 }

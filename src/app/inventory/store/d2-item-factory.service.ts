@@ -178,6 +178,9 @@ export interface DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
   masterworkInfo: DimMasterwork | null;
+  _isEngram: boolean;
+  // A timestamp of when, in this session, the item was last manually moved
+  lastManuallyMoved: number;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
@@ -241,6 +244,8 @@ export function D2ItemFactory(
   'ngInject';
 
   let _idTracker = {};
+  // A map from instance id to the last time it was manually moved this session
+  const _moveTouchTimestamps: Map<string, number> = new Map();
 
   const statWhiteList = [
     4284893193, // Rounds Per Minute
@@ -310,16 +315,23 @@ export function D2ItemFactory(
         !this.location.inPostmaster;
     },
     inCategory(categoryName) {
-      return _.contains(this.categories, categoryName);
+      return this.categories.includes(categoryName);
     },
     isEngram() {
-      return false;
+      return this._isEngram;
     },
     canBeInLoadout() {
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
     },
     hasLifeExotic() {
       return (this.type === 'Ghost' || this.type === 'Vehicle' || this.type === 'Ships' || this.type === 'Emotes') && this.isExotic;
+    },
+    // Mark that this item has been moved manually
+    updateManualMoveTimestamp() {
+      this.lastManuallyMoved = Date.now();
+      if (this.id !== '0') {
+        _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
+      }
     }
   };
 
@@ -495,6 +507,8 @@ export function D2ItemFactory(
       locked: item.state & 1,
       masterwork: item.state & 4,
       classified: Boolean(itemDef.redacted),
+      _isEngram: itemDef.itemCategoryHashes.includes(34), // category hash for engrams
+      lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
       isInLoadout: false,
       percentComplete: null, // filled in later
       talentGrid: null, // filled in later
