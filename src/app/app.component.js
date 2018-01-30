@@ -1,6 +1,8 @@
 import template from './app.html';
 import './app.scss';
 import changelog from '../views/changelog-toaster-release.html';
+import { isPhonePortraitStream } from './mediaQueries';
+import { subscribeOnScope } from './rx-utils';
 import _ from 'underscore';
 import i18next from 'i18next';
 
@@ -32,14 +34,39 @@ function AppComponentCtrl(
 
     this.settings = dimSettingsService;
     $scope.$watch(() => this.settings.itemSize, (size) => {
-      document.querySelector('html').style.setProperty("--item-size", `${size}px`);
+      if (!this.isPhonePortrait) {
+        document.querySelector('html').style.setProperty("--item-size", `${size}px`);
+      }
     });
     $scope.$watch(() => this.settings.charCol, (cols) => {
-      document.querySelector('html').style.setProperty("--character-columns", cols);
+      if (!this.isPhonePortrait) {
+        document.querySelector('html').style.setProperty("--character-columns", cols);
+      }
     });
     $scope.$watch(() => this.settings.vaultMaxCol, (cols) => {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
+
+    const sizesMobile = {
+      3: 64,
+      4: 51,
+      5: 42
+    }
+    $scope.$watch(() => this.settings.charColMobile, (cols) => {
+      if (this.isPhonePortrait) {
+        document.querySelector('html').style.setProperty("--item-size", `${sizesMobile[cols]}px`);
+        document.querySelector('html').style.setProperty("--character-columns", cols);
+      }
+    });
+    $scope.$watch(() => this.isPhonePortrait, (isPhonePortrait) => {
+      if (isPhonePortrait) {
+        document.querySelector('html').style.setProperty("--item-size", `${sizesMobile[this.settings.charColMobile]}px`);
+        document.querySelector('html').style.setProperty("--character-columns", this.settings.charColMobile);
+      } else {
+        document.querySelector('html').style.setProperty("--item-size", `${this.settings.itemSize}px`);
+        document.querySelector('html').style.setProperty("--character-columns", this.settings.charCol);
+      }
+    })
 
     hotkeys = hotkeys.bindTo($scope);
 
@@ -111,6 +138,10 @@ function AppComponentCtrl(
       });
     }
   };
+
+  subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
+    this.isPhonePortrait = isPhonePortrait;
+  });
 
   $scope.$on('i18nextLanguageChange', () => {
     this.language = `lang-${i18next.language}`;

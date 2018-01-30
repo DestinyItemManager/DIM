@@ -141,6 +141,14 @@
         <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required></select>
       </div>
 
+      <div class="setting" ng-if="vm.supportsCssVar && vm.isPhonePortrait">
+        <div class="horizontal">
+          <label for="charColMobile" ng-i18next="Settings.InventoryColumnsMobile"></label>
+          <select id="charColMobile" ng-model="vm.settings.charColMobile" ng-options="option.id as option.name for option in vm.charColOptions" required></select>
+        </div>
+        <div class="fineprint" ng-i18next="Settings.InventoryColumnsMobileLine2"></div>
+      </div>
+
       <div class="setting horizontal" ng-if="vm.supportsCssVar && !vm.isPhonePortrait">
           <label for="vaultCol" ng-i18next="Settings.VaultColumns"></label>
           <select id="vaultCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>

@@ -54,6 +54,8 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
     itemSortOrderCustom: Array.from(itemSortPresets.primaryStat),
     // How many columns to display character buckets
     charCol: 3,
+    // How many columns to display character buckets on Mobile
+    charColMobile: 3,
     // How many columns to display vault buckets
     vaultMaxCol: 999,
     // How big in pixels to draw items - start smaller for iPad

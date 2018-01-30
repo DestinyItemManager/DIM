@@ -524,6 +524,8 @@
     "HideUnfiltered": "Hide items that don't match a search",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
+    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
+    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",

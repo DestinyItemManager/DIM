@@ -21,8 +21,6 @@
 
 @include phone-portrait {
   :root {
-    --item-size: 64px !important;
-    --character-columns: 3 !important;
     --vault-max-columns: 999 !important;
   }
 }
