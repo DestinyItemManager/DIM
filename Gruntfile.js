@@ -152,7 +152,6 @@ module.exports = function(grunt) {
     if (dist === 'beta') {
       manifest.name = 'Destiny Item Manager Beta Shortcut';
     }
-    manifest.version = dist === 'beta' ? betaVersion : pkg.version;
 
     grunt.file.write('extension-dist/manifest.json', JSON.stringify(manifest));
     var mainjs = grunt.file.read('extension-dist/main.js');
@@ -228,24 +227,32 @@ module.exports = function(grunt) {
     'sortJSON:i18n'
   ]);
 
-  grunt.registerTask('publish_beta', [
-    'crowdin-request:upload',
+  grunt.registerTask('publish_beta_extension', [
     'update_chrome_beta_manifest',
     'compress:chrome',
     'log_beta_version',
-    'webstore_upload:beta',
-    'precompress',
-    'rsync:beta',
-    'rsync:website',
+    'webstore_upload:beta'
   ]);
 
-  grunt.registerTask('publish_release', [
+  grunt.registerTask('publish_release_extension', [
     'update_chrome_release_manifest',
     'compress:chrome',
     'log_release_version',
-    'precompress',
-    'rsync:prod',
     'webstore_upload:release'
+  ]);
+
+  grunt.registerTask('publish_beta', [
+    'crowdin-request:upload',
+    'log_beta_version',
+    'precompress',
+    'rsync:beta',
+    'rsync:website'
+  ]);
+
+  grunt.registerTask('publish_release', [
+    'log_release_version',
+    'precompress',
+    'rsync:prod'
   ]);
 
   grunt.registerTask('log_beta_version', function() {
