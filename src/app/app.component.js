@@ -49,7 +49,7 @@ function AppComponentCtrl(
       3: 64,
       4: 51,
       5: 42
-    }
+    };
     $scope.$watch(() => this.settings.charColMobile, (cols) => {
       if (this.isPhonePortrait) {
         document.querySelector('html').style.setProperty("--item-size", `${sizesMobile[cols]}px`);
@@ -64,7 +64,7 @@ function AppComponentCtrl(
         document.querySelector('html').style.setProperty("--item-size", `${this.settings.itemSize}px`);
         document.querySelector('html').style.setProperty("--character-columns", this.settings.charCol);
       }
-    })
+    });
 
     hotkeys = hotkeys.bindTo($scope);
 
