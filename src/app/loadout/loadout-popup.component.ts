@@ -246,13 +246,9 @@ function LoadoutPopupCtrl(
 
   vm.startFarming = function startFarming() {
     ngDialog.closeAll();
-    if (vm.store.destinyVersion === 2) {
-      D2FarmingService.start({
-        membershipId: $stateParams.membershipId,
-        platformType: $stateParams.platformType
-      }, vm.store.id);
-    } else {
-      dimFarmingService.start(vm.store);
-    }
+    (vm.store.destinyVersion === 2 ? D2FarmingService : dimFarmingService).start({
+      membershipId: $stateParams.membershipId,
+      platformType: $stateParams.platformType
+    }, vm.store.id);
   };
 }

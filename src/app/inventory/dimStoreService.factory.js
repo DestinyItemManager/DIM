@@ -12,7 +12,6 @@ export function StoreService(
   $rootScope,
   $q,
   Destiny1Api,
-  dimPlatformService,
   dimDefinitions,
   dimBucketService,
   dimItemInfoService,
@@ -200,18 +199,7 @@ export function StoreService(
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        // TODO: this is still useful, but not in as many situations
-        $rootScope.$broadcast('dim-stores-updated', {
-          stores: stores
-        });
-
         return stores;
-      })
-      .catch((e) => {
-        if (e.code === 1601 || e.code === 1618) { // DestinyAccountNotFound
-          return dimPlatformService.reportBadPlatform(account, e);
-        }
-        throw e;
       })
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));
@@ -224,6 +212,7 @@ export function StoreService(
       })
       .finally(() => {
         dimManifestService.isLoaded = true;
+        $rootScope.$broadcast('dim-filter-invalidate');
       });
 
     loadingTracker.addPromise(reloadPromise);

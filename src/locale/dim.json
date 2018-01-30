@@ -2,7 +2,8 @@
   "Accounts": {
     "Blizzard": "PC",
     "PlayStation": "PS4",
-    "Xbox": "XB1"
+    "Xbox": "XB1",
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
   },
   "Activities": {
     "Activities": "Activities",
@@ -663,7 +664,7 @@
       "FAQDupeGally": "Hey, DIM duplicated my Gjallarhorn!",
       "FAQDupeGallyAnswer": "No, we didn't. Promise.",
       "FAQKeyboard": "Does DIM support keyboard shortcuts?",
-      "FAQKeyboardAnswer": "Yes! Press \"?\" to see a list of available shortcuts.",
+      "FAQKeyboardAnswer": "Yes! Press \"shift+/ or ?\" to see a list of available shortcuts.",
       "FAQLogout": "How can I log out of DIM?",
       "FAQLogoutAnswer": "Click on your account in the top right of the screen and choose \"Log out\".",
       "FAQLostItem": "I lost my item using your tool!",

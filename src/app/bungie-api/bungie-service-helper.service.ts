@@ -142,7 +142,7 @@ export function BungieServiceHelper(
     case PlatformErrorCodes.DestinyUnexpectedError:
       if (response.config.url.indexOf('/Account/') >= 0 &&
           response.config.url.indexOf('/Character/') < 0) {
-        const error: DimError = new Error($i18next.t('BungieService.NoAccount', { platform: dimState.active.platformLabel }));
+        const error: DimError = new Error($i18next.t('BungieService.NoAccount', { platform: dimState.active ? dimState.active.platformLabel : 'Unknown' }));
         error.code = errorCode;
         throw error;
       }

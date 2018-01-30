@@ -803,11 +803,11 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
     vm.getItems();
   });
 
-  $scope.$on('dim-active-platform-updated', () => {
+  $scope.$onChanges = () => {
     vm.activePerks = {};
     vm.excludeditems = [];
     vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
     vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
     vm.getItems();
-  });
+  };
 }
