@@ -41,8 +41,6 @@ import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
-import { moduleName as RavenModule } from 'raven-js/plugins/angular';
-
 const dependencies = [
   AriaModule,
   DialogModule,
@@ -80,6 +78,10 @@ const dependencies = [
 
 if ($DIM_FLAVOR === 'dev') {
   dependencies.push(require('./developer/developer.module').default);
+}
+
+if ($featureFlags.sentry) {
+  dependencies.push(require('raven-js/plugins/angular').moduleName);
 }
 
 export const DimAppModule = angular
