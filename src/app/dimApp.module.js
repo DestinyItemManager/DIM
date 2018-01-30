@@ -71,7 +71,6 @@ const dependencies = [
   searchModule,
   destiny2Module,
   progressModule,
-  RavenModule,
   'ajoslin.promise-tracker',
   'cfp.hotkeys'
 ];
