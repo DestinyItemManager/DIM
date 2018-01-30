@@ -94,7 +94,7 @@
     "no-sparse-arrays": true,
     "no-string-literal": true,
     "no-string-throw": true,
-    "no-this-assignment": [true, {"allow-destructuring": true}],
+    "no-this-assignment": [true, {"allowed-names": ["vm"], "allow-destructuring": true}],
     "no-unbound-method": true,
     "no-unnecessary-class": true,
     "no-unused-expression": [true, "allow-fast-null-checks"],

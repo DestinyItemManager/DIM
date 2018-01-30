@@ -139,7 +139,7 @@ export interface DimItem {
   description: string;
   icon: string;
   notransfer: boolean;
-  canPullFromPostmaster;
+  canPullFromPostmaster: boolean;
   id: string; // zero for non-instanced is legacy hack
   equipped: boolean;
   equipment: boolean;

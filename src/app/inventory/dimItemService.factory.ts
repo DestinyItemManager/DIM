@@ -56,7 +56,7 @@ export function ItemService(
    * Update our item and store models after an item has been moved (or equipped/dequipped).
    * @return the new or updated item (it may create a new item!)
    */
-  function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = 0) {
+  function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = item.amount) {
     // Refresh all the items - they may have been reloaded!
     const storeService = getStoreService(item);
     source = storeService.getStore(source.id)!;
@@ -321,7 +321,7 @@ export function ItemService(
       .then(() => item);
   }
 
-  function moveToVault(item: DimItem, amount: number = 0) {
+  function moveToVault(item: DimItem, amount: number = item.amount) {
     return moveToStore(item, getStoreService(item).getVault()!, false, amount);
   }
 
@@ -609,7 +609,7 @@ export function ItemService(
         left -= reservations[s.id][i.type];
       }
       // but not counting the original item that's moving
-      if (s.id === item.owner && i.type === item.type) {
+      if (s.id === item.owner && i.type === item.type && !item.location.inPostmaster) {
         left--;
       }
       return Math.max(0, left);
@@ -623,9 +623,7 @@ export function ItemService(
 
     // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
     const storeReservations: { [storeId: string]: number } = {};
-    if (!item.location.inPostmaster) {
-      storeReservations[store.id] = item.amount;
-    }
+    storeReservations[store.id] = item.amount;
 
     // guardian-to-guardian transfer will also need space in the vault
     if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {
@@ -748,7 +746,7 @@ export function ItemService(
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  function moveTo(item: DimItem, target: DimStore, equip: boolean, amount: number = 0, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
+  function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
     return isValidTransfer(equip, target, item, excludes, reservations)
       .then(() => {
         const storeService = getStoreService(item);
