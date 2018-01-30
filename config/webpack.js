@@ -236,8 +236,8 @@ module.exports = (env) => {
         '$featureFlags.debugRouter': JSON.stringify(false),
         // Show drag and drop on dev only
         '$featureFlags.dnd': JSON.stringify(false),
-        // Send exception reports to Google Analytics on beta only
-        '$featureFlags.googleExceptionReports': JSON.stringify(env === 'beta')
+        // Send exception reports to Sentry.io on beta only
+        '$featureFlags.sentry': JSON.stringify(env === 'beta')
       }),
 
       new webpack.SourceMapDevToolPlugin({

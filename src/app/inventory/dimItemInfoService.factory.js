@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { reportExceptionToGoogleAnalytics } from '../google';
+import { reportException } from '../exceptions';
 
 /**
  * The item info service maintains a map of extra, DIM-specific, synced data about items (per platform).
@@ -81,7 +81,7 @@ export function ItemInfoService(SyncService, $i18next, toaster, $q) {
                         $i18next.t('ItemInfoService.SaveInfoErrorTitle'),
                         $i18next.t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
                       console.error("Error saving item info (tags, notes):", e);
-                      reportExceptionToGoogleAnalytics('itemInfo', e);
+                      reportException('itemInfo', e);
                     });
                 });
               }

@@ -30,8 +30,8 @@ declare const $featureFlags: {
   debugRouter: boolean;
   /** Show drag and drop on dev only */
   dnd: boolean,
-  /** Send exception reports to Google Analytics */
-  googleExceptionReports: boolean;
+  /** Send exception reports to Sentry.io */
+  sentry: boolean;
 }
 
 declare function ga(...params: string[]);

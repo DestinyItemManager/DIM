@@ -4,7 +4,7 @@ import template from './dimStoreBucket.directive.html';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 import './dimStoreBucket.scss';
 import { isPhonePortrait } from '../mediaQueries';
-import { reportExceptionToGoogleAnalytics } from '../google';
+import { reportException } from '../exceptions';
 
 export const StoreBucketComponent = {
   controller: StoreBucketCtrl,
@@ -170,7 +170,7 @@ function StoreBucketCtrl($scope,
       if (e.message !== 'move-canceled') {
         toaster.pop('error', item.name, e.message);
         console.error("error moving", e, item);
-        reportExceptionToGoogleAnalytics('moveItem', e);
+        reportException('moveItem', e);
       }
     });
 

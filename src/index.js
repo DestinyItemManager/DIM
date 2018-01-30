@@ -2,6 +2,7 @@ import angular from 'angular';
 import 'babel-polyfill';
 
 import './app/google';
+import './app/exceptions';
 
 // Initialize the main DIM app
 import './app/app.module';

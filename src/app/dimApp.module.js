@@ -40,7 +40,8 @@ import routes from './dimApp.routes';
 import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
-import { reportExceptionToGoogleAnalytics } from './google';
+
+import { moduleName as RavenModule } from 'raven-js/plugins/angular';
 
 const dependencies = [
   AriaModule,
@@ -72,20 +73,13 @@ const dependencies = [
   searchModule,
   destiny2Module,
   progressModule,
+  RavenModule,
   'ajoslin.promise-tracker',
   'cfp.hotkeys'
 ];
 
 if ($DIM_FLAVOR === 'dev') {
   dependencies.push(require('./developer/developer.module').default);
-}
-
-function DimExceptionHandler($log) {
-  'ngInject';
-  return function myExceptionHandler(exception, cause) {
-    reportExceptionToGoogleAnalytics(cause, exception);
-    $log.warn(exception, cause);
-  };
 }
 
 export const DimAppModule = angular
@@ -95,6 +89,4 @@ export const DimAppModule = angular
   .run(run)
   .value('dimState', state)
   .factory('loadingTracker', loadingTracker)
-  // Overwrite exception handler to log
-  .factory('$exceptionHandler', DimExceptionHandler)
   .name;
