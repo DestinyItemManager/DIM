@@ -40,6 +40,7 @@
     "unreleased versions"
   ],
   "devDependencies": {
+    "@sentry/cli": "^1.28.4",
     "autoprefixer": "^7.2.5",
     "awesome-typescript-loader": "^3.4.1",
     "babel-core": "^6.26.0",
