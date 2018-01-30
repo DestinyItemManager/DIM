@@ -40,6 +40,7 @@
     "unreleased versions"
   ],
   "devDependencies": {
+    "@sentry/cli": "^1.28.4",
     "autoprefixer": "^7.2.5",
     "awesome-typescript-loader": "^3.4.1",
     "babel-core": "^6.26.0",
@@ -133,6 +134,7 @@
     "ngimport": "^0.8.0",
     "oclazyload": "^1.1.0",
     "popper.js": "^1.13.0",
+    "raven-js": "^3.22.1",
     "react": "^16.2.0",
     "react-beautiful-dnd": "^4.0.1",
     "react-dom": "^16.2.0",
