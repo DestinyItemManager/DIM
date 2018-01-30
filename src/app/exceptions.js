@@ -17,7 +17,7 @@ if ($featureFlags.sentry) {
   reportException = (name, e) => {
     // TODO: we can also do this in some situations to gather more feedback from users
     // Raven.showReportDialog();
-    Raven.reportException(e);
+    Raven.captureException(e);
   };
 
   window.addEventListener('unhandledrejection', (event) => Raven.captureException(event.reason));
