@@ -182,7 +182,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     const statBuckets = {};
 
     function bucketStat(stat) {
-      if (stat.value) {
+      if (stat && stat.value) {
         (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
       }
     }
