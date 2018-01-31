@@ -925,13 +925,24 @@ export function D2ItemFactory(
   function buildMasterworkInfo(
     sockets: DimSockets,
     defs: D2ManifestDefinitions
-  ): DimMasterwork {
+  ): DimMasterwork | null {
     const socket = sockets.sockets[sockets.sockets.findIndex((socket) => socket.plugObjectives.length > 0)];
+    if (!socket || !socket.plugObjectives || !socket.plugObjectives.length || !socket.plugOptions || !socket.plugOptions.length) {
+      return null;
+    }
     const plugObjective = socket.plugObjectives[0];
-    const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
     const plugOption = socket.plugOptions[0];
+    if (!plugOption.investmentStats || !plugOption.investmentStats.length) {
+      return null;
+    }
     const statHash = plugOption.investmentStats[0].statTypeHash;
+
+    const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
     const statDef = defs.Stat.get(statHash);
+
+    if (!objectiveDef || !statDef) {
+      return null;
+    }
 
     return {
       progress: plugObjective.progress,
