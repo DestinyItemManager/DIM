@@ -132,7 +132,9 @@ export function DestinyAccountService(
         return null;
       })
       .catch((e) => {
-        if (e.code && e.code === PlatformErrorCodes.DestinyAccountNotFound) {
+        if (e.code &&
+          (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
+           e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)) {
           return null;
         }
         throw e;
