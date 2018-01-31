@@ -601,7 +601,11 @@ export function D2ItemFactory(
 
     // Masterwork
     if (createdItem.masterwork && createdItem.sockets) {
-      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
+      try {
+        createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
+      } catch (e) {
+        console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+      }
     }
 
     // Mark items with power mods
