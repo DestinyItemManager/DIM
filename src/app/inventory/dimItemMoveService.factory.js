@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { reportException } from '../exceptions';
 
 export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
   'ngInject';
