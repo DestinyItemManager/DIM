@@ -217,13 +217,13 @@ export interface D2ItemFactoryType {
 }
 
 export interface DimMasterwork {
-  progress: number | undefined;
+  progress?: number;
   typeName: 'Vanguard' | 'Crucible' | null;
   typeIcon: string;
   typeDesc: string | null;
-  statHash: number | undefined;
+  statHash?: number;
   statName: string;
-  statValue: number | undefined;
+  statValue?: number;
 }
 
 /**
@@ -925,24 +925,22 @@ export function D2ItemFactory(
   function buildMasterworkInfo(
     sockets: DimSockets,
     defs: D2ManifestDefinitions
-  ): DimMasterwork | null {
+  ): DimMasterwork {
     const socket = sockets.sockets[sockets.sockets.findIndex((socket) => socket.plugObjectives.length > 0)];
-    const progress = socket.plugObjectives[0].progress;
-    const typeName = (socket.plugOptions[0].plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible";
-    const typeIcon = defs.Objective.get(socket.plugObjectives[0].objectiveHash).displayProperties.icon;
-    const typeDesc = defs.Objective.get(socket.plugObjectives[0].objectiveHash).progressDescription;
-    const statHash = socket.plugOptions[0].investmentStats[0].statTypeHash;
-    const statName = defs.Stat.get(statHash).displayProperties.name;
-    const statValue = socket.plugOptions[0].investmentStats[0].value;
+    const plugObjective = socket.plugObjectives[0];
+    const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
+    const plugOption = socket.plugOptions[0];
+    const statHash = plugOption.investmentStats[0].statTypeHash;
+    const statDef = defs.Stat.get(statHash);
 
     return {
-      progress,
-      typeName,
-      typeIcon,
-      typeDesc,
+      progress: plugObjective.progress,
+      typeName: (plugOption.plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible",
+      typeIcon:  objectiveDef.displayProperties.icon,
+      typeDesc: objectiveDef.progressDescription,
       statHash,
-      statName,
-      statValue
+      statName: statDef.displayProperties.name,
+      statValue: plugOption.investmentStats[0].value
     };
   }
 
