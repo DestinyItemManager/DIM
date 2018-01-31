@@ -1,5 +1,7 @@
 # Next
 
+# 4.38.0
+
 * Fixed display of Clan XP milestone.
 * DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
 * In D2, "Make room for Postmaster" has been replaced with "Collect Postmaster" which pulls all postmaster items we can onto your character. You can still make room by clicking "Space".
