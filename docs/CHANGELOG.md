@@ -6,6 +6,7 @@
 * Fix pull from postmaster to clear exactly enough space, not too many, but also not too few.
 * Accounts with no characters will no longer show up in the account dropdown.
 * Item tagging via keyboard should be a little more international-friendly. Calling the help menu (via shift+/) is too.
+* Fixed XP required for well-rested perk after the latest Destiny update.
 
 # 4.37.0
 

@@ -51,6 +51,5 @@ function xpRequiredForLevel(
   progressDef: DestinyProgressionDefinition
 ) {
   const stepIndex = Math.min(Math.max(0, level), progressDef.steps.length - 1);
-  // each step may be a different amount of XP. The x2 multiplier is from the saled-XP fiasco, I think
-  return progressDef.steps[stepIndex].progressTotal * 2;
+  return progressDef.steps[stepIndex].progressTotal;
 }
