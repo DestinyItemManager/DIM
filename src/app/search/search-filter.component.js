@@ -29,11 +29,15 @@ function SearchFilterCtrl(
 
   // This hacks around the fact that dimVendorService isn't defined until the destiny1 modules are lazy-loaded
   let dimVendorService;
-  $transitions.onSuccess({ to: 'destiny1' }, (transition) => {
+  const unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, (transition) => {
     if (!dimVendorService) {
       dimVendorService = $injector.get('dimVendorService');
     }
   });
+
+  vm.$onDestroy = function() {
+    unregisterTransitionHook();
+  }
 
   let filters;
   let searchConfig;
@@ -174,7 +178,6 @@ function SearchFilterCtrl(
   };
 
   vm.focusFilterInput = function() {
-    console.log(searchInput);
     searchInput.focus();
   };
 

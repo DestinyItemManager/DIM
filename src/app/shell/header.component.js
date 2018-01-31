@@ -44,9 +44,13 @@ function HeaderController(
     });
   };
 
-  $transitions.onSuccess({ to: 'destiny1' }, (transition) => {
+  const unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, (transition) => {
     updateXur();
   });
+
+  vm.$onDestroy = function() {
+    unregisterTransitionHook();
+  }
 
   function updateXur() {
     if (vm.destinyVersion === 1 && !vendorsSubscription) {
