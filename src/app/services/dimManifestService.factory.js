@@ -10,6 +10,7 @@ import inflate from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manage
 import zipWorker from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/z-worker.js';
 
 import { requireSqlLib } from './database';
+import { reportException } from '../exceptions';
 
 angular.module('dimApp')
   .factory('dimManifestService', ManifestService)
@@ -106,6 +107,7 @@ function makeManifestService(localStorageKey, idbKey, $q, DestinyApi, $http, toa
           manifestPromise = null;
           service.isError = true;
           console.error("Manifest loading error", { error: e }, e);
+          reportException('manifest load', e);
           throw new Error(message);
         });
 

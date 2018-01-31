@@ -65,7 +65,7 @@ export function makeRoomForPostmaster(
 
 // D2 only
 export function pullablePostmasterItems(store: DimStore) {
-  return store.buckets[215593132].filter((i) => {
+  return (store.buckets[215593132] || []).filter((i) => {
     // Can be pulled
     return i.canPullFromPostmaster &&
     // Either has space, or is going to a bucket we can make room in

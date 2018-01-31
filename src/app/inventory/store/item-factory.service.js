@@ -4,6 +4,7 @@ import { sum } from '../../util';
 import missingSources from 'app/data/missing_sources.json';
 import { getClass, getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
+import { reportException } from '../../exceptions';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -147,6 +148,7 @@ export function ItemFactory(
             createdItem = makeItem(...args, item, owner);
           } catch (e) {
             console.error("Error processing item", item, e);
+            reportException('Processing D1 item', e);
           }
           if (createdItem !== null) {
             createdItem.owner = owner.id;

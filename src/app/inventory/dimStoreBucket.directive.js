@@ -170,7 +170,12 @@ function StoreBucketCtrl($scope,
       if (e.message !== 'move-canceled') {
         toaster.pop('error', item.name, e.message);
         console.error("error moving", e, item);
-        reportException('moveItem', e);
+        // Some errors aren't worth reporting
+        if (e.code !== 'wrong-level' &&
+            e.code !== 'no-space' &&
+            e.code !== 1671 /*PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation*/) {
+          reportException('moveItem', e);
+        }
       }
     });
 

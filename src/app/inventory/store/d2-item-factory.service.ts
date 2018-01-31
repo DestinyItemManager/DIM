@@ -29,6 +29,7 @@ import { D2DefinitionsService, D2ManifestDefinitions, LazyDefinition } from '../
 import { sum } from '../../util';
 import { getClass } from './character-utils';
 import { DimStore } from './d2-store-factory.service';
+import { reportException } from '../../exceptions';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -370,6 +371,7 @@ export function D2ItemFactory(
             createdItem = makeItem(defs, buckets, previousItems, newItems, itemInfoService, itemComponents, item, owner);
           } catch (e) {
             console.error("Error processing item", item, e);
+            reportException('Processing D2 item', e);
           }
           if (createdItem !== null) {
             createdItem.owner = owner.id;

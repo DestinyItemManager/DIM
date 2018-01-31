@@ -26,36 +26,33 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
     },
 
     _get(triedFallback = false) {
-      if (!this.fileId) {
-        // TODO: error handling
-        throw new Error("no file!");
-      }
-      return gapi.client.drive.files.get({
-        fileId: this.fileId,
-        alt: 'media'
-      })
-      .then((resp) => resp.result)
-      .catch((e) => {
-        if (triedFallback || e.status !== 404) {
-          console.error(`Unable to load GDrive file ${this.fileId}`);
-          throw e;
-        } else {
-          this.fileId = null;
-          localStorage.removeItem('gdrive-fileid');
-          return this.getFileId().then(() => this._get(true));
-        }
-      });
+      return this.getFileId()
+        .then((fileId) => {
+          return gapi.client.drive.files.get({
+            fileId,
+            alt: 'media'
+          })
+        })
+        .then((resp) => resp.result)
+        .catch((e) => {
+          if (triedFallback || e.status !== 404) {
+            console.error(`Unable to load GDrive file ${this.fileId}`);
+            throw new Error(e.message);
+          } else {
+            this.fileId = null;
+            localStorage.removeItem('gdrive-fileid');
+            return this.getFileId().then(() => this._get(true));
+          }
+        });
     },
 
     // TODO: set a timestamp for merging?
     set: function(value) {
       return this.ready.promise
-        .then(() => {
-          if (!this.fileId) {
-            throw new Error("no file!");
-          }
+        .then(() => this.getFileId())
+        .then((fileId) => {
           return $q.when(gapi.client.request({
-            path: `/upload/drive/v3/files/${this.fileId}`,
+            path: `/upload/drive/v3/files/${fileId}`,
             method: 'PATCH',
             params: {
               uploadType: 'media',
@@ -115,7 +112,7 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
             }
             const auth = gapi.auth2.getAuthInstance();
             if (!auth) {
-              return $q.reject(new Error("No auth instance - has it not initialized??"));
+              return $q.reject(new Error("GoogleDriveStorage: No auth instance - has it not initialized??"));
             }
 
             // Listen for sign-in state changes.
@@ -144,7 +141,7 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
       return this.ready.promise.then(() => {
         const auth = gapi.auth2.getAuthInstance();
         if (!auth) {
-          return $q.reject(new Error("No auth instance - has it not initialized??"));
+          return $q.reject(new Error("GoogleDriveStorage: No auth instance - has it not initialized??"));
         }
 
         if (auth.isSignedIn.get()) {
@@ -199,7 +196,7 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
       if (!fileName) {
         // TODO: localize
         // TODO: observe logged in / platforms and don't load before that
-        return $q.reject(new Error("You're not logged in yet"));
+        return $q.reject(new Error("GoogleDriveStorage: You're not logged in yet"));
       }
 
       // grab all of the list files
@@ -207,7 +204,7 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
         .then((list) => {
           if (!list.result || !list.result.files) {
             // TODO: error handling
-            throw new Error("No files!");
+            throw new Error("GoogleDriveStorage: No files!");
           }
 
           const files = list.result.files;
@@ -259,6 +256,7 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
     },
 
     supported: $featureFlags.gdrive,
+    // TODO: only enable after login, and force sync when enabled
     enabled: Boolean(localStorage.getItem('gdrive-fileid')),
     name: 'GoogleDriveStorage'
   };

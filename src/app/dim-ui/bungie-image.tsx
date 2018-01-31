@@ -28,5 +28,8 @@ export function bungieBackgroundStyle(src: BungieImagePath) {
  * Expand a relative bungie.net asset path to a full path.
  */
 export function bungieNetPath(src: BungieImagePath): string {
+  if (!src) {
+    return '';
+  }
   return `https://www.bungie.net${src}`;
 }
