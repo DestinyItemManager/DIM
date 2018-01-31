@@ -505,7 +505,7 @@ export function D2ItemFactory(
       locked: item.state & 1,
       masterwork: item.state & 4,
       classified: Boolean(itemDef.redacted),
-      _isEngram: itemDef.itemCategoryHashes.includes(34), // category hash for engrams
+      _isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
       lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
       isInLoadout: false,
       percentComplete: null, // filled in later
