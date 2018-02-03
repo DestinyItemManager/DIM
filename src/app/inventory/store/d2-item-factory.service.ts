@@ -68,6 +68,18 @@ export interface DimObjective {
   display: string;
 }
 
+export interface DimFlavorObjective {
+  displayStyle: string;
+  displayName: string;
+  description: string;
+  icon: string;
+  progress: number;
+  completionValue: number;
+  complete: boolean;
+  boolean: boolean;
+  display: string;
+}
+
 export interface DimGridNode {
   name: string;
   hash: number;
@@ -180,7 +192,7 @@ export interface DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionFuel: boolean;
   masterworkInfo: DimMasterwork | null;
-  objectiveSpecial: boolean;
+  flavorObjective: DimFlavorObjective | null;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
@@ -554,10 +566,14 @@ export function D2ItemFactory(
 
     try {
       createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
-      // Instead of checking everywhere for a specific hash or anything like, creted a check for different/special objectives
-      createdItem.objectiveSpecial = Boolean(item.bucketHash === 4274335291); // Emblems
     } catch (e) {
       console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
+    }
+
+    try {
+      createdItem.objectives = buildFlavorObjectives(item, itemComponents.objectives.data, defs.Objective);
+    } catch (e) {
+      console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
     }
 
     try {
@@ -761,6 +777,57 @@ export function D2ItemFactory(
     objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
     objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
   ): DimObjective[] | null {
+    if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
+      return null;
+    }
+
+    const objectives = (objectivesMap[item.itemInstanceId].objectives || [objectivesMap[item.itemInstanceId].flavorObjective]);
+    if (!objectives || !objectives.length) {
+      return null;
+    }
+
+    // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
+
+    return objectives.map((objective) => {
+      const def = objectiveDefs.get(objective.objectiveHash);
+
+      // Emblems need a different treatment
+      if (item.bucketHash === 4274335291) {
+        return {
+          displayStyle: "emblems",
+          displayName: "",
+          description: def.progressDescription,
+          icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
+          progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0,
+          completionValue: 0,
+          complete: false,
+          boolean: false,
+          display: ""
+        };
+      }
+
+      return {
+        displayStyle: "",
+        displayName: def.displayProperties.name ||
+          (objective.complete
+            ? $i18next.t('Objectives.Complete')
+            : $i18next.t('Objectives.Incomplete')),
+        description: def.displayProperties.description,
+        icon: "",
+        progress: objective.progress || 0,
+        completionValue: def.completionValue,
+        complete: objective.complete,
+        boolean: def.completionValue === 1,
+        display: `${objective.progress || 0}/${def.completionValue}`
+      };
+    });
+  }
+
+  function buildFlavorObjectives(
+    item: DestinyItemComponent,
+    objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
+    objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
+  ): DimFlavorObjective[] | null {
     if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
       return null;
     }
