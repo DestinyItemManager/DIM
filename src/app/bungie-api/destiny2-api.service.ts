@@ -23,6 +23,7 @@ export interface Destiny2ApiService {
   getManifest(): IPromise<DestinyManifest>;
   getStores(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
   getProgression(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
+  getBasicProfile(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
   getCharacters(platform: DestinyAccount): IPromise<DestinyProfileResponse>;
   transfer(item: DimItem, store: DimStore, amount: number): IPromise<ServerResponse<number>>;
   equip(item: DimItem): IPromise<ServerResponse<number>>;
@@ -47,6 +48,7 @@ export function Destiny2Api(
     getManifest,
     getStores,
     getProgression,
+    getBasicProfile,
     getCharacters,
     transfer,
     equip,
@@ -101,6 +103,12 @@ export function Destiny2Api(
   function getCharacters(platform): IPromise<DestinyProfileResponse> {
     return getProfile(platform,
       DestinyComponentType.Characters
+    );
+  }
+
+  function getBasicProfile(platform): IPromise<DestinyProfileResponse> {
+    return getProfile(platform,
+      DestinyComponentType.Profiles
     );
   }
 

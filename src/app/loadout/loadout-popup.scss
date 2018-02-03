@@ -65,6 +65,15 @@
       font-size: 50%;
     }
   }
+
+  .badge {
+    border-radius: 50%;
+    border-radius: 10px;
+    background: $orange;
+    padding: 0 4px;
+    color: black;
+    font-size: 9px;
+  }
 }
 
 .loadout-popup-content {

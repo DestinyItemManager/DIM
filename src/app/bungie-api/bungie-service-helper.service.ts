@@ -87,6 +87,13 @@ export function BungieServiceHelper(
         .then((response) => response.data);
   }
 
+  /** Generate an error with a bit more info */
+  function error(message: string, errorCode: PlatformErrorCodes): DimError {
+    const error: DimError = new Error(message);
+    error.code = errorCode;
+    return error;
+  }
+
   function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHttpResponse<ServerResponse<T>> {
     if (response.status === -1) {
       throw new Error(navigator.onLine
@@ -117,58 +124,57 @@ export function BungieServiceHelper(
       return response;
 
     case PlatformErrorCodes.DestinyVendorNotFound:
-      throw new Error($i18next.t('BungieService.VendorNotFound'));
+      throw error($i18next.t('BungieService.VendorNotFound'), errorCode);
 
     case PlatformErrorCodes.AuthorizationCodeInvalid:
     case PlatformErrorCodes.AccessNotPermittedByApplicationScope:
       $rootScope.$broadcast('dim-no-token-found');
-      throw new Error("DIM does not have permission to perform this action.");
+      throw error("DIM does not have permission to perform this action.", errorCode);
 
     case PlatformErrorCodes.SystemDisabled:
-      throw new Error($i18next.t('BungieService.Maintenance'));
+      throw error($i18next.t('BungieService.Maintenance'), errorCode);
 
     case PlatformErrorCodes.ThrottleLimitExceededMinutes:
     case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
     case PlatformErrorCodes.ThrottleLimitExceededSeconds:
-      throw new Error($i18next.t('BungieService.Throttled'));
+      throw error($i18next.t('BungieService.Throttled'), errorCode);
 
     case PlatformErrorCodes.AccessTokenHasExpired:
     case PlatformErrorCodes.WebAuthRequired:
     case PlatformErrorCodes.WebAuthModuleAsyncFailed: // means the access token has expired
       $rootScope.$broadcast('dim-no-token-found');
-      throw new Error($i18next.t('BungieService.NotLoggedIn'));
+      throw error($i18next.t('BungieService.NotLoggedIn'), errorCode);
 
     case PlatformErrorCodes.DestinyAccountNotFound:
     case PlatformErrorCodes.DestinyUnexpectedError:
       if (response.config.url.indexOf('/Account/') >= 0 &&
           response.config.url.indexOf('/Character/') < 0) {
-        const error: DimError = new Error($i18next.t('BungieService.NoAccount', { platform: dimState.active.platformLabel }));
-        error.code = errorCode;
-        throw error;
+        throw error($i18next.t('BungieService.NoAccount', {
+          platform: dimState.active ? dimState.active.platformLabel : 'Unknown'
+        }), errorCode);
       }
       break;
 
     case PlatformErrorCodes.DestinyLegacyPlatformInaccessible:
-      throw new Error($i18next.t('BungieService.DestinyLegacyPlatform'));
+      throw error($i18next.t('BungieService.DestinyLegacyPlatform'), errorCode);
 
     case PlatformErrorCodes.ApiInvalidOrExpiredKey:
     case PlatformErrorCodes.ApiKeyMissingFromRequest:
     case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
       if ($DIM_FLAVOR === 'dev') {
         $state.go('developer');
-        throw new Error($i18next.t('BungieService.DevVersion'));
+        throw error($i18next.t('BungieService.DevVersion'), errorCode);
       } else {
-        throw new Error($i18next.t('BungieService.Difficulties'));
+        throw error($i18next.t('BungieService.Difficulties'), errorCode);
       }
     }
 
     // Any other error
     if (errorCode > 1) {
       if (response.data.Message) {
-        const error: DimError = new Error($i18next.t('BungieService.UnknownError', { message: response.data.Message }));
-        error.code = response.data.ErrorCode;
-        error.status = response.data.ErrorStatus;
-        throw error;
+        const e = error($i18next.t('BungieService.UnknownError', { message: response.data.Message }), errorCode);
+        e.status = response.data.ErrorStatus;
+        throw e;
       } else {
         throw new Error($i18next.t('BungieService.Difficulties'));
       }

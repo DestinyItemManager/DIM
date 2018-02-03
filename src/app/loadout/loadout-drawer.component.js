@@ -4,6 +4,7 @@ import template from './loadout-drawer.html';
 import './loadout-drawer.scss';
 import { getCharacterStatsData } from '../inventory/store/character-utils';
 import { D2Categories } from '../destiny2/d2-buckets.service';
+import { flatMap } from '../util';
 
 export const LoadoutDrawerComponent = {
   controller: LoadoutDrawerCtrl,
@@ -52,6 +53,10 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
         vm.classTypeValues.push({ label: store.className, value: classType });
       });
     }
+
+    if (changes.account) {
+      vm.show = false;
+    }
   };
 
   $scope.$on('dim-delete-loadout', () => {
@@ -72,11 +77,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
       vm.loadout.items = vm.loadout.items || {};
 
       // Filter out any vendor items and equip all if requested
-      vm.loadout.warnitems = _.reduce(vm.loadout.items, (o, items) => {
-        const vendorItems = _.filter(items, (item) => !item.owner);
-        o = o.concat(...vendorItems);
-        return o;
-      }, []);
+      vm.loadout.warnitems = flatMap(vm.loadout.items, (o, items) => _.filter(items, (item) => !item.owner));
 
       _.each(vm.loadout.items, (items, type) => {
         vm.loadout.items[type] = _.filter(items, (item) => item.owner);
@@ -89,10 +90,6 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
 
   $scope.$on('dim-store-item-clicked', (event, args) => {
     vm.add(args.item, args.clickEvent);
-  });
-
-  $scope.$on('dim-active-platform-updated', () => {
-    vm.show = false;
   });
 
   $scope.$watchCollection('vm.loadout.items', () => {

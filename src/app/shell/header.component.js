@@ -1,5 +1,6 @@
 import template from './header.html';
 import './header.scss';
+import { subscribeOnScope } from '../rx-utils';
 
 // TODO: Today we share one header everywhere, and show/hide bits of it depending on the circumstance.
 // It'd be nice if there were a cleaner way to go about this.
@@ -16,7 +17,9 @@ function HeaderController(
   dimSettingsService,
   $transitions,
   $state,
-  $injector
+  $scope,
+  $injector,
+  dimPlatformService
 ) {
   'ngInject';
 
@@ -25,8 +28,9 @@ function HeaderController(
   // Variables for templates that webpack does not automatically correct.
   vm.$DIM_VERSION = $DIM_VERSION;
   vm.$DIM_FLAVOR = $DIM_FLAVOR;
-  vm.$DIM_CHANGELOG = $DIM_CHANGELOG;
 
+  let vendorsSubscription;
+  vm.xurAvailable = false;
   vm.settings = dimSettingsService;
 
   vm.featureFlags = {
@@ -34,27 +38,32 @@ function HeaderController(
   };
 
   vm.$onInit = function() {
-    vm.destinyVersion = getCurrentDestinyVersion();
-
-    // This hacks around the fact that dimXurService isn't defined until the destiny1 modules are lazy-loaded
-    if (vm.destinyVersion === 1) {
-      const dimXurService = $injector.get('dimXurService');
-      vm.showXur = showPopupFunction('xur', '<xur></xur>');
-      vm.xur = dimXurService;
-    }
+    subscribeOnScope($scope, dimPlatformService.getActiveAccountStream(), (account) => {
+      vm.account = account;
+      vm.destinyVersion = account.destinyVersion;
+    });
   };
 
-  function getCurrentDestinyVersion() {
-    // TODO there must be a better way of doing this?
-    if ($state.includes('destiny1')) {
-      return 1;
-    } else if ($state.includes('destiny2')) {
-      return 2;
-    }
-    return null;
+  const unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, (transition) => {
+    updateXur();
+  });
+
+  vm.$onDestroy = function() {
+    unregisterTransitionHook();
   }
 
-  $transitions.onSuccess({ }, () => vm.$onInit());
+  function updateXur() {
+    if (vm.destinyVersion === 1 && !vendorsSubscription) {
+      vm.showXur = showPopupFunction('xur', '<xur></xur>');
+
+      const dimVendorService = $injector.get('dimVendorService'); // hack for code splitting
+
+      vendorsSubscription = subscribeOnScope($scope, dimVendorService.getVendorsStream(vm.account), ([_stores, vendors]) => {
+        const xur = 2796397637;
+        vm.xurAvailable = Boolean(vendors[xur]);
+      });
+    }
+  }
 
   /**
    * Show a popup dialog containing the given template. Its class

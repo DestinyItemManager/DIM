@@ -272,14 +272,14 @@ function MilestoneObjectiveStatus(props: MilestoneObjectiveStatusProps) {
       // This is the personal clan XP progression
       const progressDef = defs.Progression.get(540048094);
       progress *= progressDef.steps[1].progressTotal;
-      completionValue *= progressDef.steps[0].progressTotal;
+      completionValue *= progressDef.steps[1].progressTotal;
     }
 
     if (status.completed) {
       return <span><i className="fa fa-check-circle-o"/></span>;
     } else if (completionValue > 1) {
       const formatter = new Intl.NumberFormat(window.navigator.language);
-      return <span>{formatter.format(progress)}/{formatter.format(completionValue)}</span>;
+      return <span>{formatter.format(progress)}<wbr/>/<wbr/>{formatter.format(completionValue)}</span>;
     }
   }
 

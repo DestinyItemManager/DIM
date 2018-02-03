@@ -17,7 +17,7 @@ import { PLATFORMS } from '../bungie-api/platforms';
 import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
 import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
-import { reportExceptionToGoogleAnalytics } from '../google';
+import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
@@ -50,7 +50,6 @@ export function D2StoresService(
   $rootScope: IRootScopeService,
   $q,
   Destiny2Api: Destiny2ApiService,
-  dimPlatformService,
   D2Definitions: D2DefinitionsService,
   D2BucketsService: BucketsService,
   dimItemInfoService,
@@ -135,7 +134,8 @@ export function D2StoresService(
           membershipId: $stateParams.membershipId,
           platformType: $stateParams.platformType,
           displayName: 'Unknown',
-          platformLabel: PLATFORMS[$stateParams.platformType]
+          platformLabel: PLATFORMS[$stateParams.platformType],
+          destinyVersion: 2
         };
       } else {
         throw new Error("Don't know membership ID and platform type");
@@ -268,28 +268,19 @@ export function D2StoresService(
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        // TODO: this is still useful, but not in as many situations
-        $rootScope.$broadcast('d2-stores-updated', {
-          stores
-        });
         return stores;
-      })
-      .catch((e) => {
-        if (e.code === 1601 || e.code === 1618) { // DestinyAccountNotFound
-          return dimPlatformService.reportBadPlatform(account, e);
-        }
-        throw e;
       })
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);
-        reportExceptionToGoogleAnalytics('d2stores', e);
+        reportException('d2stores', e);
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to
         // just make this never fail.
       })
       .finally(() => {
+        $rootScope.$broadcast('dim-filter-invalidate');
         D2ManifestService.isLoaded = true;
       });
 

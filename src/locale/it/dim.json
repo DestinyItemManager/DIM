@@ -1,4 +1,9 @@
 {
+  "Accounts": {
+    "Blizzard": "PC",
+    "PlayStation": "PS4",
+    "Xbox": "XB1"
+  },
   "Activities": {
     "Activities": "Attività",
     "Hard": "Difficile",
@@ -35,7 +40,8 @@
     "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {{platform}}.",
     "NoCookies": "Non è stato trovato nessun cookie.",
     "NotConnected": "Potresti non essere connesso a internet.",
-    "NotLoggedIn": "Please authorize DIM in order to use this app.",
+    "NotConnectedOrBlocked": "Potresti non essere connesso ad internet, oppure una estensione per blocco pubblicità o privacy potrebbe bloccare Bungie.net.",
+    "NotLoggedIn": "Si prega di autorizzare DIM per poter utilizzare questa applicazione.",
     "Throttled": "Superato il limite di aggiornamento delle API di Bungie. Riprovare fra poco.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
@@ -307,7 +313,6 @@
     "Classified2": "Oggetto nascosto. Bungie non fornisce ancora informazioni su questo oggetto. Aggiungi delle note a questo oggetto ed utilizza il filtro di ricerca \"notes:\" per trovarlo.",
     "Deequip": "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
     "ExoticError": "'{{itemname}}' non può essere equipaggiato, poiché l'esotico nello slot {{slot}} non può essere rimosso. ({{error}})",
-    "MasterworkProgress": "Prodigio - {{progress}} nemici sconfitti.",
     "NotEnoughRoom": "Non c'è nulla che possiamo spostare dal {{store}} per fare spazio per {{itemname}}",
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
@@ -510,8 +515,8 @@
     "ColumnSize": "{{num}} oggetti",
     "ColumnSizeAuto": "Automatico",
     "DIMPopupsReset": "Ripristina i consigli precedentemente nascosti",
-    "Data": "Dati",
-    "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe oppure is:dupelower per trovare velocemente oggetti duplicati.",
+    "Data": "Fogli di calcolo",
+    "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe o is:dupelower per trovare velocemente oggetti duplicati, e puoi usare lo strumento di confronto per valutarli.",
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature (D1)",
     "ExportSS": "Scarica inventario in formato foglio elettronico",
     "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
@@ -522,7 +527,7 @@
     "Items": "Aspetto degli oggetti",
     "Language": "Lingua",
     "LogOut": "Disconnetti",
-    "RatingInfo": "DIM supporta i giudizi automatici sulle armature (basate sui roll) in D1, e i giudizi comunitari per le armi (e armature in D2) forniti da <a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>.",
+    "RatingInfo": "DIM supporta i giudizi automatici sulle armature (basate sui roll) in D1, e i giudizi della comunità per le armi (e armature in D2) forniti da <a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>.",
     "Ratings": "Giudizi",
     "ReloadDIM": "Ricarica DIM per completare il cambio di lingua",
     "ResetToDefault": "Ripristina",
@@ -535,13 +540,17 @@
     "ShowOverlay": "Metti in evidenza gli oggetti nuovi",
     "ShowReviews": "Mostra i giudizi della comunità sulle armi",
     "SizeItem": "Dimensione oggetti",
-    "SortBasePower": "Potere di base (solo D2), poi statistica primaria",
+    "SortByBasePower": "Potere di base (solo D2)",
+    "SortByClassType": "Classe Richiesta",
+    "SortByPrimary": "Statistica Primaria (Attacco/Difesa)",
+    "SortByRarity": "Rarità",
+    "SortByRating": "Giudizio della comunità o Qualità Armatura",
+    "SortByType": "Tipo",
+    "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome",
     "SortPrimary": "Statistica primaria (attacco o difesa)",
     "SortRarity": "Rarità, poi statistica primaria",
-    "SortRoll": "Qualità (solo armature D1)",
-    "SortTypeThenName": "Tipo di oggetto e poi nome",
-    "SortTypeThenPrimary": "Tipo di oggetto e poi statistica primaria",
+    "SortRoll": "Giudizio della comunità o qualità armatura",
     "VaultColumns": "Larghezza massima dell'inventario del deposito"
   },
   "Stats": {
@@ -563,7 +572,7 @@
   "Storage": {
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
     "ChromeSyncStorage": "Chrome Sync (Solo estensione)",
-    "ClearIgnoredUsers": "Cancella utenti ignorati",
+    "ClearIgnoredUsers": "Cancella Recensori Ignorati",
     "Details": {
       "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM.",
       "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",

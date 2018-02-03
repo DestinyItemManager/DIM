@@ -4,7 +4,7 @@ import { sum } from '../util';
 
 import template from './storage.html';
 import './storage.scss';
-import { reportExceptionToGoogleAnalytics } from '../google';
+import { reportException } from '../exceptions';
 
 function StorageController($scope, dimSettingsService, SyncService, GoogleDriveStorage, dimDestinyTrackerService, $timeout, $window, $q, $i18next, $stateParams, $state) {
   'ngInject';
@@ -70,7 +70,7 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
         .then(vm.forceSync)
         .catch((e) => {
           $window.alert($i18next.t('Storage.GDriveSignInError') + e.message);
-          reportExceptionToGoogleAnalytics('Google Drive Signin', e);
+          reportException('Google Drive Signin', e);
         });
     }
     return null;

@@ -12,11 +12,6 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
   let _loadouts = [];
   const _previousLoadouts = {}; // by character ID
 
-  // TODO: load this on demand!
-  $rootScope.$on('dim-stores-updated', () => {
-    getLoadouts(true);
-  });
-
   return {
     dialogOpen: false,
     getLoadouts: getLoadouts,

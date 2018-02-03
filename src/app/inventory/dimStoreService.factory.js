@@ -6,13 +6,12 @@ import '../rx-operators';
 import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { reportExceptionToGoogleAnalytics } from '../google';
+import { reportException } from '../exceptions';
 
 export function StoreService(
   $rootScope,
   $q,
   Destiny1Api,
-  dimPlatformService,
   dimDefinitions,
   dimBucketService,
   dimItemInfoService,
@@ -200,23 +199,12 @@ export function StoreService(
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        // TODO: this is still useful, but not in as many situations
-        $rootScope.$broadcast('dim-stores-updated', {
-          stores: stores
-        });
-
         return stores;
-      })
-      .catch((e) => {
-        if (e.code === 1601 || e.code === 1618) { // DestinyAccountNotFound
-          return dimPlatformService.reportBadPlatform(account, e);
-        }
-        throw e;
       })
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);
-        reportExceptionToGoogleAnalytics('dimStoreService', e);
+        reportException('dimStoreService', e);
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to
@@ -224,6 +212,7 @@ export function StoreService(
       })
       .finally(() => {
         dimManifestService.isLoaded = true;
+        $rootScope.$broadcast('dim-filter-invalidate');
       });
 
     loadingTracker.addPromise(reloadPromise);

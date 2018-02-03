@@ -4,6 +4,7 @@ import { sum } from '../../util';
 import missingSources from 'app/data/missing_sources.json';
 import { getClass, getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
+import { reportException } from '../../exceptions';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -40,6 +41,8 @@ export function ItemFactory(
   'ngInject';
 
   let _idTracker = {};
+  // A map from instance id to the last time it was manually moved this session
+  const _moveTouchTimestamps = new Map();
 
   /**
    * Check to see if this item has a node that restricts it to a
@@ -97,6 +100,13 @@ export function ItemFactory(
     // "The Life Exotic" Perk on Exotic Items means you can equip another exotic
     hasLifeExotic: function() {
       return this.isExotic && this.talentGrid && (_.find(this.talentGrid.nodes, { hash: 4044819214 }) !== undefined);
+    },
+    // Mark that this item has been moved manually
+    updateManualMoveTimestamp() {
+      this.lastManuallyMoved = Date.now();
+      if (this.id !== '0') {
+        _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
+      }
     }
   };
 
@@ -138,6 +148,7 @@ export function ItemFactory(
             createdItem = makeItem(...args, item, owner);
           } catch (e) {
             console.error("Error processing item", item, e);
+            reportException('Processing D1 item', e);
           }
           if (createdItem !== null) {
             createdItem.owner = owner.id;
@@ -307,6 +318,7 @@ export function ItemFactory(
       locked: item.locked,
       redacted: Boolean(itemDef.redacted),
       classified: Boolean(itemDef.classified),
+      lastManuallyMoved: item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
       isInLoadout: false,
       dtrRating: item.dtrRating,
       percentComplete: null, // filled in later
