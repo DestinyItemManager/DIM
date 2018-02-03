@@ -176,8 +176,7 @@ export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreServ
 
   vm.badgeClassNames = {};
 
-  // Some objective shouldn't have badges
-  if (!vm.item.primStat && vm.item.objectives && !vm.item.objectiveSpecial) {
+  if (!vm.item.primStat && vm.item.objectives) {
     processBounty(vm, vm.item);
   } else if (vm.item.maxStackSize > 1) {
     processStackable(vm, vm.item);

@@ -3,6 +3,7 @@ import { ItemStatsComponent } from './item-stats.component';
 import { ItemTagComponent } from './item-tag.component';
 import { MoveAmount } from './move-amount.directive';
 import { ObjectivesComponent } from './objectives.component';
+import { FlavorObjectiveComponent } from './flavor-objective.component';
 import { MoveItemProperties } from './dimMoveItemProperties.directive';
 import { MovePopupComponent } from './dimMovePopup.directive';
 import { MoveLocationsComponent } from './move-locations.component';
@@ -17,6 +18,7 @@ export default angular
   .component('dimItemTag', ItemTagComponent)
   .directive('dimMoveAmount', MoveAmount)
   .component('dimObjectives', ObjectivesComponent)
+  .component('dimFlavorObjective', FlavorObjectiveComponent)
   .directive('dimMoveItemProperties', MoveItemProperties)
   .component('dimMoveLocations', MoveLocationsComponent)
   .component('dimMovePopup', MovePopupComponent)

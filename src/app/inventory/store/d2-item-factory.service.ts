@@ -59,10 +59,7 @@ export interface DimStat {
 }
 
 export interface DimObjective {
-  displayStyle: string;
   displayName: string;
-  description: string;
-  icon: string;
   progress: number;
   completionValue: number;
   complete: boolean;
@@ -71,15 +68,9 @@ export interface DimObjective {
 }
 
 export interface DimFlavorObjective {
-  displayStyle: string;
-  displayName: string;
   description: string;
   icon: string;
   progress: number;
-  completionValue: number;
-  complete: boolean;
-  boolean: boolean;
-  display: string;
 }
 
 export interface DimGridNode {
@@ -583,7 +574,8 @@ export function D2ItemFactory(
     }
 
     try {
-      createdItem.objectives = buildFlavorObjectives(item, itemComponents.objectives.data, defs.Objective);
+      createdItem.flavorObjective = buildFlavorObjective(item, itemComponents.objectives.data, defs.Objective);
+      if (createdItem.flavorObjective) { debugger; }
     } catch (e) {
       console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
     }
@@ -607,7 +599,7 @@ export function D2ItemFactory(
       createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, (o) => o.complete);
       const length = createdItem.objectives.length;
       createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
-        if (objective.completionValue && !objective.displayStyle) {
+        if (objective.completionValue) {
           return Math.min(1, objective.progress / objective.completionValue) / length;
         } else {
           return 0;
@@ -798,7 +790,7 @@ export function D2ItemFactory(
       return null;
     }
 
-    const objectives = (objectivesMap[item.itemInstanceId].objectives || [objectivesMap[item.itemInstanceId].flavorObjective]);
+    const objectives = objectivesMap[item.itemInstanceId].objectives;
     if (!objectives || !objectives.length) {
       return null;
     }
@@ -808,29 +800,11 @@ export function D2ItemFactory(
     return objectives.map((objective) => {
       const def = objectiveDefs.get(objective.objectiveHash);
 
-      // Emblems need a different treatment
-      if (item.bucketHash === 4274335291) {
-        return {
-          displayStyle: "emblems",
-          displayName: "",
-          description: def.progressDescription,
-          icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
-          progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0,
-          completionValue: 0,
-          complete: false,
-          boolean: false,
-          display: ""
-        };
-      }
-
       return {
-        displayStyle: "",
         displayName: def.displayProperties.name ||
           (objective.complete
             ? $i18next.t('Objectives.Complete')
             : $i18next.t('Objectives.Incomplete')),
-        description: def.displayProperties.description,
-        icon: "",
         progress: objective.progress || 0,
         completionValue: def.completionValue,
         complete: objective.complete,
@@ -840,55 +814,26 @@ export function D2ItemFactory(
     });
   }
 
-  function buildFlavorObjectives(
+  function buildFlavorObjective(
     item: DestinyItemComponent,
     objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
     objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
-  ): DimFlavorObjective[] | null {
+  ): DimFlavorObjective | null {
     if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
       return null;
     }
 
-    const objectives = (objectivesMap[item.itemInstanceId].objectives || [objectivesMap[item.itemInstanceId].flavorObjective]);
-    if (!objectives || !objectives.length) {
+    const objective = objectivesMap[item.itemInstanceId].flavorObjective;
+    if (!objective) {
       return null;
     }
 
-    // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
-
-    return objectives.map((objective) => {
-      const def = objectiveDefs.get(objective.objectiveHash);
-
-      // Emblems need a different treatment
-      if (item.bucketHash === 4274335291) {
-        return {
-          displayStyle: "emblems",
-          displayName: "",
-          description: def.progressDescription,
-          icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
-          progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0,
-          completionValue: 0,
-          complete: false,
-          boolean: false,
-          display: ""
-        };
-      }
-
-      return {
-        displayStyle: "",
-        displayName: def.displayProperties.name ||
-          (objective.complete
-            ? $i18next.t('Objectives.Complete')
-            : $i18next.t('Objectives.Incomplete')),
-        description: def.displayProperties.description,
-        icon: "",
-        progress: objective.progress || 0,
-        completionValue: def.completionValue,
-        complete: objective.complete,
-        boolean: def.completionValue === 1,
-        display: `${objective.progress || 0}/${def.completionValue}`
-      };
-    });
+    const def = objectiveDefs.get(objective.objectiveHash);
+    return {
+      description: def.progressDescription,
+      icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
+      progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0
+    };
   }
 
   function buildTalentGrid(
