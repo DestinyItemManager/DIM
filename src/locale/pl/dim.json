@@ -1,6 +1,7 @@
 {
   "Accounts": {
     "Blizzard": "PC",
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
     "PlayStation": "PS4",
     "Xbox": "XB1"
   },
@@ -389,7 +390,7 @@
     "Applied_plural": "Your loadout of {{count}} items have been transferred to your {{store}}.",
     "Applied_plural_female": "Your loadout of {{count}} items have been transferred to your {{store}}.",
     "Applied_plural_male": "Your loadout of {{count}} items have been transferred to your {{store}}.",
-    "ApplySearch": "Items = \"{{query}}\"",
+    "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "Cancel": "Cancel",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
@@ -426,6 +427,16 @@
     "NoExotics": "No engrams are available to transfer.",
     "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
+    "PullFromPostmaster": "Collect Postmaster",
+    "PullFromPostmasterDone": "Finished pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterDone_female": "Finished pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterDone_male": "Finished pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterDone_plural": "Finished pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterDone_plural_female": "Finished pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterDone_plural_male": "Finished pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterError": "Unable to pull from Postmaster: {{error}}.",
+    "PullFromPostmasterPopupTitle": "Pull from Postmaster",
+    "PullMakeSpace": "Space",
     "Random": "Random",
     "Randomize": "Randomize your equipped weapons, armor, ghost, and artifact?",
     "RestoreAllItems": "All Items",
