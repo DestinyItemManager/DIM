@@ -60,6 +60,7 @@ export interface DimStat {
 
 export interface DimObjective {
   displayName: string;
+  description: string;
   progress: number;
   completionValue: number;
   complete: boolean;
@@ -575,7 +576,6 @@ export function D2ItemFactory(
 
     try {
       createdItem.flavorObjective = buildFlavorObjective(item, itemComponents.objectives.data, defs.Objective);
-      if (createdItem.flavorObjective) { debugger; }
     } catch (e) {
       console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
     }
@@ -805,6 +805,7 @@ export function D2ItemFactory(
           (objective.complete
             ? $i18next.t('Objectives.Complete')
             : $i18next.t('Objectives.Incomplete')),
+        description: def.displayProperties.description,
         progress: objective.progress || 0,
         completionValue: def.completionValue,
         complete: objective.complete,
