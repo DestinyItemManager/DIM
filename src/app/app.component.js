@@ -2,7 +2,6 @@ import template from './app.html';
 import './app.scss';
 import changelog from '../views/changelog-toaster-release.html';
 import { isPhonePortrait } from './mediaQueries';
-import { subscribeOnScope } from './rx-utils';
 import _ from 'underscore';
 import i18next from 'i18next';
 
