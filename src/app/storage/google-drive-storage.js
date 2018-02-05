@@ -31,13 +31,13 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
           return gapi.client.drive.files.get({
             fileId,
             alt: 'media'
-          })
+          });
         })
         .then((resp) => resp.result)
         .catch((e) => {
           if (triedFallback || e.status !== 404) {
             console.error(`Unable to load GDrive file ${this.fileId}`);
-            throw new Error(e.message);
+            throw new Error(`GDrive Error: ${e.status} ${e.statusText}`);
           } else {
             this.fileId = null;
             localStorage.removeItem('gdrive-fileid');
