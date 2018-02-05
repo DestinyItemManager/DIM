@@ -31,10 +31,10 @@ function AppComponentCtrl(
 
     this.settings = dimSettingsService;
     $scope.$watch(() => this.settings.itemSize, (size) => {
-        document.querySelector('html').style.setProperty("--item-size", `${size}px`);
+      document.querySelector('html').style.setProperty("--item-size", `${size}px`);
     });
     $scope.$watch(() => this.settings.charCol, (cols) => {
-        document.querySelector('html').style.setProperty("--character-columns", cols);
+      document.querySelector('html').style.setProperty("--character-columns", cols);
     });
     $scope.$watch(() => this.settings.vaultMaxCol, (cols) => {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
