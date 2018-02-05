@@ -6,7 +6,10 @@ import './compare.scss';
 export function StatRangeFilter() {
   // Turns a stat and a list of ranges into a 0-100 scale
   return function(stat, statRanges) {
-    const statRange = stat ? statRanges[stat.statHash] : null;
+    if (!stat) {
+      return -1;
+    }
+    const statRange = statRanges[stat.statHash];
     if (stat.qualityPercentage) {
       return stat.qualityPercentage.min;
     }
