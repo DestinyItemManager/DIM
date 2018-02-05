@@ -721,7 +721,7 @@ export function ItemService(
 
         const error: DimError = new Error(message);
         error.code = 'wrong-level';
-        reject();
+        reject(error);
       }
     });
   }
