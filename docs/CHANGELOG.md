@@ -1,5 +1,7 @@
 # Next
 
+# 4.39.0
+
 * Fixed random loadout feature taking you to a blank page.
 
 # 4.38.0
