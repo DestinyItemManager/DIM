@@ -23,7 +23,9 @@ function RandomLoadoutCtrl($window, $scope, dimStoreService, D2StoresService, di
   };
   vm.disableRandomLoadout = false;
 
-  vm.applyRandomLoadout = function() {
+  vm.applyRandomLoadout = function(e) {
+    e.preventDefault();
+
     if (vm.disableRandomLoadout) {
       return null;
     }

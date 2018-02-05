@@ -1,5 +1,7 @@
 # Next
 
+* Fixed random loadout feature taking you to a blank page.
+
 # 4.38.0
 
 * Fixed display of Clan XP milestone.
