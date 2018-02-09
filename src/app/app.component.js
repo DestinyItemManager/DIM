@@ -49,7 +49,7 @@ function AppComponentCtrl(
     });
     // a subscribe on isPhonePortraitStream is needed when the user on mobile changes from portrait to landscape
     // or a user on desktop shrinks the browser window below isphoneportrait treshold value
-    isPhonePortraitStream().subscribeOnScope((isPhonePortrait) => {
+    subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
       if (isPhonePortrait) {
         document.querySelector('html').style.setProperty("--character-columns", this.settings.charColMobile);
       } else {
