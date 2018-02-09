@@ -49,7 +49,7 @@
       <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>
       <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
       <div class="item-description" ng-if="vm.showDescription" ng-bind="::vm.item.description"></div>
-      <div class="masterwork-progress" ng-if="vm.item.masterwork" >
+      <div class="masterwork-progress" ng-if="vm.item.masterworkInfo" >
         <img ng-src="{{ ::vm.item.masterworkInfo.typeIcon | bungieIcon }}" title="{{ ::vm.item.masterworkInfo.typeName }}"/>
         <span> {{ ::vm.item.masterworkInfo.typeDesc }} <strong> {{ ::vm.item.masterworkInfo.progress }} </strong></span>
       </div>
