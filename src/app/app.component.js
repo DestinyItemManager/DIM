@@ -2,6 +2,7 @@ import template from './app.html';
 import './app.scss';
 import changelog from '../views/changelog-toaster-release.html';
 import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
+import { subscribeOnScope } from './rx-utils';
 import _ from 'underscore';
 import i18next from 'i18next';
 
@@ -48,7 +49,7 @@ function AppComponentCtrl(
     });
     // a subscribe on isPhonePortraitStream is needed when the user on mobile changes from portrait to landscape
     // or a user on desktop shrinks the browser window below isphoneportrait treshold value
-    isPhonePortraitStream().subscribe((isPhonePortrait) => {
+    isPhonePortraitStream().subscribeOnScope((isPhonePortrait) => {
       if (isPhonePortrait) {
         document.querySelector('html').style.setProperty("--character-columns", this.settings.charColMobile);
       } else {
