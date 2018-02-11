@@ -99,6 +99,7 @@ export interface DimSocket {
   enabled: boolean;
   enableFailReasons: string;
   plugOptions: DestinyInventoryItemDefinition[];
+  plugOptionsPerks: DestinySandboxPerkDefinition[];
   plugObjectives: DestinyObjectiveProgress[];
 }
 
@@ -903,6 +904,13 @@ export function D2ItemFactory(
       }
       const reusablePlugs = (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash));
       const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? reusablePlugs : (plug ? [plug] : []);
+      // the merge is to enable the intrinsic mods to show up even if the user choosed another
+      // plug.itemTyper - removes the reusablePlugs from masterwork
+      // plug.action - removes the "Remove Shader" plug
+      if (reusablePlugs.length > 0 && plugOptions.length > 0) {
+        reusablePlugs.forEach((plug) => { if (!plugOptions.includes(plug) && plug.itemType && plug.action) { plugOptions.push(plug); } });
+      }
+      const plugOptionsPerks = plugOptions.length > 0 ? (plugOptions.filter((plug) => plug.perks.length > 0) || []).map((plug) => defs.SandboxPerk.get(plug.perks[0].perkHash)) : [];
       const plugObjectives = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives : [];
 
       return {
@@ -911,6 +919,7 @@ export function D2ItemFactory(
         enabled: socket.isEnabled,
         enableFailReasons: failReasons,
         plugOptions,
+        plugOptionsPerks,
         plugObjectives
       };
     });

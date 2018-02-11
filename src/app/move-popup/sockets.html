@@ -23,7 +23,7 @@
         <img class="item-mod"
           ng-src="{{ socket.displayProperties.icon | bungieIcon }}"
           ng-class="{ notChosen: socket != socketInfo.plug }"
-          press-tip="{{ socket.plug.plugCategoryHash == '2109207426' || socket.plug.plugCategoryHash == '2989652629' ? '<strong>' + $ctrl.item.masterworkInfo.statName + ' ' + $ctrl.item.masterworkInfo.statValue + '</strong>\n' : ''}}{{ socket.displayProperties.description }}{{ socketInfo.enableFailReasons }}{{socket != socketInfo.plug && socket.bestRated ? $ctrl.bestRatedText : ''}}"
+          press-tip="{{ socket.plug.plugCategoryHash == '2109207426' || socket.plug.plugCategoryHash == '2989652629' ? '<strong>' + $ctrl.item.masterworkInfo.statName + ' ' + $ctrl.item.masterworkInfo.statValue + '</strong>\n' : ''}}{{ socket.displayProperties.description ? socket.displayProperties.description : ((socket.displayProperties.name !== socketInfo.plugOptionsPerks[$index].displayProperties.name) ? socketInfo.plugOptionsPerks[$index].displayProperties.name +'\n' : '')+ socketInfo.plugOptionsPerks[$index].displayProperties.description }}{{ socketInfo.enableFailReasons }}{{socket != socketInfo.plug && socket.bestRated ? $ctrl.bestRatedText : ''}}"
           press-tip-title="{{ socket.displayProperties.name }}">
       </div>
     </div>
