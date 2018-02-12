@@ -62,14 +62,10 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
       vm.statsMap[statId] = itemStatsMap[statId].index;
 
       const missingStatItemIdx = vm.comparisons.findIndex((compItem) => !compItem.stats.some((stat) => stat.id === Number(statId)));
-      if (item.hash === 2208405142) { debugger; }
       if (missingStatItemIdx > 0) {
-        if (item.hash === 2208405142) { debugger; }
         vm.comparisons[missingStatItemIdx].stats.splice(vm.statsMap[statId], 0, { value: undefined, id: Number(statId), statHash: Number(statId), name: itemStatsMap[statId].name });
       }
     });
-
-    if (item.hash === 2208405142) { debugger; }
     return item;
   }
 
