@@ -131,7 +131,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
           return memo + (stat.base === 0 ? 0 : stat.statHash);
         }, 0);
       }
-debugger;
+
       // 4284893193 is RPM in D2
       const archetypeStat = _.find(vm.compare.stats, {
         statHash: (vm.compare.destinyVersion === 1
