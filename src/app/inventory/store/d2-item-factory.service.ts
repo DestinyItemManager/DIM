@@ -147,6 +147,7 @@ export interface DimItem {
   id: string; // zero for non-instanced is legacy hack
   equipped: boolean;
   equipment: boolean;
+  equippingLabel?: string;
   complete: boolean;
   amount: number;
   primStat: EnhancedStat | null;
@@ -199,7 +200,6 @@ export interface DimItem {
   inCategory(categoryName: string): boolean;
   isEngram(): boolean;
   canBeInLoadout(): boolean;
-  hasLifeExotic(): boolean;
 }
 
 export interface D2ItemFactoryType {
@@ -327,9 +327,6 @@ export function D2ItemFactory(
     },
     canBeInLoadout() {
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
-    },
-    hasLifeExotic() {
-      return (this.type === 'Ghost' || this.type === 'Vehicle' || this.type === 'Ships' || this.type === 'Emotes') && this.isExotic;
     },
     // Mark that this item has been moved manually
     updateManualMoveTimestamp() {
@@ -496,6 +493,7 @@ export function D2ItemFactory(
       id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
       equipped: Boolean(instanceDef.isEquipped),
       equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
+      equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
       complete: false, // TODO: what's the deal w/ item progression?
       amount: item.quantity,
       primStat: primaryStat,

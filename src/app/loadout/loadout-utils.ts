@@ -2,60 +2,52 @@ import * as angular from 'angular';
 import * as _ from 'underscore';
 import { sum } from '../util';
 import { Loadout } from './loadout.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 // Generate an optimized loadout based on a filtered set of items and a value function
-export function optimalLoadout(store: DimStore, applicableItems: DimItem[], bestItemFn: (DimItem) => number, name: string): Loadout {
+export function optimalLoadout(applicableItems: DimItem[], bestItemFn: (item: DimItem) => number, name: string): Loadout {
   const itemsByType = _.groupBy(applicableItems, 'type');
 
-  const isExotic = (item) => {
-    return item.isExotic && !item.hasLifeExotic();
-  };
-
   // Pick the best item
-  const items: _.Dictionary<DimItem> = _.mapObject(itemsByType, (items) => {
-    return _.max(items, bestItemFn);
-  });
+  let items = _.mapObject(itemsByType, (items) => _.max(items, bestItemFn));
 
   // Solve for the case where our optimizer decided to equip two exotics
-  // TODO: D2 gives us a way better way to do this with equippingBlock info, but it's too complex to figure out now
-  const exoticGroups = store.destinyVersion === 1
-    ? [['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']]
-    : [['Kinetic', 'Energy', 'Power'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']];
-  _.each(exoticGroups, (group) => {
-    const itemsInGroup: _.Dictionary<DimItem> = _.pick(items, group);
-    const numExotics = _.filter(_.values(itemsInGroup), isExotic).length;
-    if (numExotics > 1) {
-      const options: _.Dictionary<DimItem>[] = [];
+  const getLabel = (i) => i.equippingLabel;
+  // All items that share an equipping label, grouped by label
+  const overlaps: _.Dictionary<DimItem[]> = _.groupBy(Object.values(items).filter(getLabel), getLabel);
+  _.each(overlaps, (overlappingItems) => {
+    if (overlappingItems.length <= 1) {
+      return;
+    }
 
-      // Generate an option where we use each exotic
-      _.each(itemsInGroup, (item, type) => {
-        if (isExotic(item)) {
-          const option = angular.copy(itemsInGroup);
-          let optionValid = true;
-          // Switch the other exotic items to the next best non-exotic
-          _.each(_.omit(itemsInGroup, type), (otherItem, otherType) => {
-            if (isExotic(otherItem)) {
-              const nonExotics = _.reject(itemsByType[otherType], isExotic);
-              if (_.isEmpty(nonExotics)) {
-                // this option isn't usable because we couldn't swap this exotic for any non-exotic
-                optionValid = false;
-              } else {
-                option[otherType] = _.max(nonExotics, bestItemFn);
-              }
-            }
-          });
+    const options: _.Dictionary<DimItem>[] = [];
+    // For each item, replace all the others overlapping it with the next best thing
+    for (const item of overlappingItems) {
+      const option = angular.copy(items);
+      const otherItems = overlappingItems.filter((i) => i !== item);
+      let optionValid = true;
 
-          if (optionValid) {
-            options.push(option);
-          }
+      for (const otherItem of otherItems) {
+        // Note: we could look for items that just don't have the *same* equippingLabel but
+        // that may fail if there are ever mutual-exclusion items beyond exotics.
+        const nonExotics = itemsByType[otherItem.type].filter((i) => !i.equippingLabel);
+        if (nonExotics.length) {
+          option[otherItem.type] = _.max(nonExotics, bestItemFn);
+        } else {
+          // this option isn't usable because we couldn't swap this exotic for any non-exotic
+          optionValid = false;
         }
-      });
+      }
 
-      // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
-      const bestOption = _.max(options, (opt) => sum(_.values(opt), bestItemFn));
-      _.assign(items, bestOption);
+      if (optionValid) {
+        options.push(option);
+      }
+    }
+
+    // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
+    if (options.length > 0) {
+      const bestOption = _.max(options, (opt) => sum(Object.values(opt), bestItemFn));
+      items = bestOption;
     }
   });
 

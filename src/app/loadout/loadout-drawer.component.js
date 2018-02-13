@@ -214,14 +214,9 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
         item.equipped = false;
       } else {
         const allItems = _.flatten(Object.values(vm.loadout.items));
-        if (item.isExotic) {
-          const exotic = _.find(allItems, {
-            sort: item.bucket.sort,
-            isExotic: true,
-            equipped: true
-          });
-
-          if (!_.isUndefined(exotic)) {
+        if (item.equippingLabel) {
+          const exotics = allItems.filter((i) => i.equippingLabel === item.equippingLabel && i.equipped);
+          for (const exotic of exotics) {
             exotic.equipped = false;
           }
         }

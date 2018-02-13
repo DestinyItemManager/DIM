@@ -461,7 +461,7 @@ export function D2StoresService(
       return value;
     };
 
-    return optimalLoadout(store, applicableItems, bestItemFn, '');
+    return optimalLoadout(applicableItems, bestItemFn, '');
   }
 
   function getBasePower(loadout: Loadout) {

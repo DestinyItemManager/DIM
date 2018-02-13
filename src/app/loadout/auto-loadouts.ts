@@ -67,7 +67,7 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
     return value;
   };
 
-  return optimalLoadout(store, applicableItems, bestItemFn, t('Loadouts.ItemLeveling'));
+  return optimalLoadout(applicableItems, bestItemFn, t('Loadouts.ItemLeveling'));
 }
 
 /**
@@ -107,7 +107,7 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
     return value;
   };
 
-  return optimalLoadout(store, applicableItems, bestItemFn, t('Loadouts.MaximizeLight'));
+  return optimalLoadout(applicableItems, bestItemFn, t('Loadouts.MaximizeLight'));
 }
 
 /**
