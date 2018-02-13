@@ -535,6 +535,8 @@
     "HideUnfiltered": "Ocultar itens que não correspondem a busca",
     "Inventory": "Exibição Inventário",
     "InventoryColumns": "Largura do inventário de personagem",
+    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
+    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
     "Items": "Exibição dos Itens",
     "Language": "Idioma",
     "LogOut": "Sair",

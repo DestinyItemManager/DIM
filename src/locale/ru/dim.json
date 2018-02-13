@@ -535,6 +535,8 @@
     "HideUnfiltered": "Скрывать предметы, не подходящие под поиск",
     "Inventory": "Отображение инвентаря",
     "InventoryColumns": "Ширина (в предметах) столбца Персонажа",
+    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
+    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
     "Items": "Отображение предмета",
     "Language": "Язык",
     "LogOut": "Выйти",

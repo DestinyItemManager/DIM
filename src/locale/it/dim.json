@@ -535,6 +535,8 @@
     "HideUnfiltered": "Nascondi gli oggetti che non corrispondono a una ricerca",
     "Inventory": "Aspetto dell'inventario",
     "InventoryColumns": "Larghezza dell'inventario",
+    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
+    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
     "Items": "Aspetto degli oggetti",
     "Language": "Lingua",
     "LogOut": "Disconnetti",

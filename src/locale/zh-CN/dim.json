@@ -535,6 +535,8 @@
     "HideUnfiltered": "隐藏不匹配物品",
     "Inventory": "物品栏显示模式",
     "InventoryColumns": "物品栏显示宽度",
+    "InventoryColumnsMobile": "移动端物品栏显示宽度",
+    "InventoryColumnsMobileLine2": "将自动调整物品大小以适配当前设置",
     "Items": "物品显示",
     "Language": "语言",
     "LogOut": "注销",

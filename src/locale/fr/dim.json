@@ -535,6 +535,8 @@
     "HideUnfiltered": "Cacher les objets qui ne correspondent pas à une recherche",
     "Inventory": "Affichage de l'inventaire",
     "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
+    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
+    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
     "Items": "Affichage des objets",
     "Language": "Langue",
     "LogOut": "Se déconnecter",

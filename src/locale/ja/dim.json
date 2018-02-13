@@ -535,6 +535,8 @@
     "HideUnfiltered": "検索に合致しないアイテムを非表示にする",
     "Inventory": "Inventory Display",
     "InventoryColumns": "キャラ毎のアイテム幅",
+    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
+    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "ログアウト",
