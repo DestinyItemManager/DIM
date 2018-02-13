@@ -14,6 +14,7 @@ import {
   DestinyItemTalentGridComponent,
   DestinyItemTierTypeInfusionBlock,
   DestinyObjectiveDefinition,
+  DestinyObjectiveProgress,
   DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
   DestinyStat,
@@ -28,6 +29,7 @@ import { D2DefinitionsService, D2ManifestDefinitions, LazyDefinition } from '../
 import { sum } from '../../util';
 import { getClass } from './character-utils';
 import { DimStore } from './d2-store-factory.service';
+import { reportException } from '../../exceptions';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -66,6 +68,12 @@ export interface DimObjective {
   display: string;
 }
 
+export interface DimFlavorObjective {
+  description: string;
+  icon: string;
+  progress: number;
+}
+
 export interface DimGridNode {
   name: string;
   hash: number;
@@ -97,12 +105,8 @@ export interface DimSocket {
   enabled: boolean;
   enableFailReasons: string;
   plugOptions: DestinyInventoryItemDefinition[];
-  masterworkProgress: number | undefined;
-  masterworkType: 'Vanguard' | 'Crucible' | null;
-  masterworkStat: number | undefined;
-  masterworkValue: number | undefined;
-  masterworkIcon: string | null;
-  masterworkDesc: string | null;
+  plugOptionsPerks: DestinySandboxPerkDefinition[];
+  plugObjectives: DestinyObjectiveProgress[];
 }
 
 export interface DimSocketCategory {
@@ -139,7 +143,7 @@ export interface DimItem {
   description: string;
   icon: string;
   notransfer: boolean;
-  canPullFromPostmaster;
+  canPullFromPostmaster: boolean;
   id: string; // zero for non-instanced is legacy hack
   equipped: boolean;
   equipment: boolean;
@@ -181,6 +185,7 @@ export interface DimItem {
   _isEngram: boolean;
   // A timestamp of when, in this session, the item was last manually moved
   lastManuallyMoved: number;
+  flavorObjective: DimFlavorObjective | null;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
@@ -221,13 +226,13 @@ export interface D2ItemFactoryType {
 }
 
 export interface DimMasterwork {
-  progress: number | undefined;
+  progress?: number;
   typeName: 'Vanguard' | 'Crucible' | null;
   typeIcon: string;
   typeDesc: string | null;
-  statHash: number | undefined;
+  statHash?: number;
   statName: string;
-  statValue: number | undefined;
+  statValue?: number;
 }
 
 /**
@@ -374,6 +379,7 @@ export function D2ItemFactory(
             createdItem = makeItem(defs, buckets, previousItems, newItems, itemInfoService, itemComponents, item, owner);
           } catch (e) {
             console.error("Error processing item", item, e);
+            reportException('Processing D2 item', e);
           }
           if (createdItem !== null) {
             createdItem.owner = owner.id;
@@ -507,7 +513,7 @@ export function D2ItemFactory(
       locked: item.state & 1,
       masterwork: item.state & 4,
       classified: Boolean(itemDef.redacted),
-      _isEngram: itemDef.itemCategoryHashes.includes(34), // category hash for engrams
+      _isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
       lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
       isInLoadout: false,
       percentComplete: null, // filled in later
@@ -570,6 +576,12 @@ export function D2ItemFactory(
     }
 
     try {
+      createdItem.flavorObjective = buildFlavorObjective(item, itemComponents.objectives.data, defs.Objective);
+    } catch (e) {
+      console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
+    }
+
+    try {
       createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
     } catch (e) {
       console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
@@ -605,7 +617,11 @@ export function D2ItemFactory(
 
     // Masterwork
     if (createdItem.masterwork && createdItem.sockets) {
-      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs.Stat);
+      try {
+        createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
+      } catch (e) {
+        console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+      }
     }
 
     // Mark items with power mods
@@ -770,11 +786,11 @@ export function D2ItemFactory(
     objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
     objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
   ): DimObjective[] | null {
+
     if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
       return null;
     }
 
-    // TODO: there is also 'flavorObjectives' for things like emblem stats
     const objectives = objectivesMap[item.itemInstanceId].objectives;
     if (!objectives || !objectives.length) {
       return null;
@@ -798,6 +814,28 @@ export function D2ItemFactory(
         display: `${objective.progress || 0}/${def.completionValue}`
       };
     });
+  }
+
+  function buildFlavorObjective(
+    item: DestinyItemComponent,
+    objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
+    objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
+  ): DimFlavorObjective | null {
+    if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
+      return null;
+    }
+
+    const objective = objectivesMap[item.itemInstanceId].flavorObjective;
+    if (!objective) {
+      return null;
+    }
+
+    const def = objectiveDefs.get(objective.objectiveHash);
+    return {
+      description: def.progressDescription,
+      icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
+      progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0
+    };
   }
 
   function buildTalentGrid(
@@ -900,12 +938,14 @@ export function D2ItemFactory(
       }
       const reusablePlugs = (socket.reusablePlugHashes || []).map((hash) => defs.InventoryItem.get(hash));
       const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || (socket.reusablePlugHashes || []).includes(socket.plugHash)) ? reusablePlugs : (plug ? [plug] : []);
-      const masterworkProgress = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives[0].progress : undefined;
-      const masterworkType = (socket.plugObjectives && socket.plugObjectives.length) ? ((plugOptions[0].plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible") : null;
-      const masterworkStat = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].statTypeHash : undefined;
-      const masterworkValue = (socket.plugObjectives && socket.plugObjectives.length && plugOptions[0].investmentStats.length) ? plugOptions[0].investmentStats[0].value : undefined;
-      const masterworkIcon = (socket.plugObjectives && socket.plugObjectives.length) ? defs.Objective.get(socket.plugObjectives[0].objectiveHash).displayProperties.icon : null;
-      const masterworkDesc = (socket.plugObjectives && socket.plugObjectives.length) ? defs.Objective.get(socket.plugObjectives[0].objectiveHash).progressDescription : null;
+      // the merge is to enable the intrinsic mods to show up even if the user choosed another
+      // plug.itemTyper - removes the reusablePlugs from masterwork
+      // plug.action - removes the "Remove Shader" plug
+      if (reusablePlugs.length > 0 && plugOptions.length > 0) {
+        reusablePlugs.forEach((plug) => { if (!plugOptions.includes(plug) && plug.itemType && plug.action) { plugOptions.push(plug); } });
+      }
+      const plugOptionsPerks = plugOptions.length > 0 ? (plugOptions.filter((plug) => plug.perks.length > 0) || []).map((plug) => defs.SandboxPerk.get(plug.perks[0].perkHash)) : [];
+      const plugObjectives = (socket.plugObjectives && socket.plugObjectives.length) ? socket.plugObjectives : [];
 
       return {
         plug,
@@ -913,12 +953,8 @@ export function D2ItemFactory(
         enabled: socket.isEnabled,
         enableFailReasons: failReasons,
         plugOptions,
-        masterworkProgress,
-        masterworkType,
-        masterworkStat,
-        masterworkIcon,
-        masterworkValue,
-        masterworkDesc
+        plugOptionsPerks,
+        plugObjectives
       };
     });
 
@@ -937,24 +973,34 @@ export function D2ItemFactory(
 
   function buildMasterworkInfo(
     sockets: DimSockets,
-    statDefs: LazyDefinition<DestinyStatDefinition>
+    defs: D2ManifestDefinitions
   ): DimMasterwork | null {
-    const progress = _.find(_.pluck(sockets.sockets, 'masterworkProgress'), (mp) => mp >= 0);
-    const typeName = _.find(_.pluck(sockets.sockets, 'masterworkType'), (type) => type !== null);
-    const typeIcon = _.find(_.pluck(sockets.sockets, 'masterworkIcon'), (icon) => icon !== null);
-    const typeDesc = _.find(_.pluck(sockets.sockets, 'masterworkDesc'), (desc) => desc !== null);
-    const statHash = _.find(_.pluck(sockets.sockets, 'masterworkStat'), (ms) => ms > 0);
-    const statName = statDefs.get(statHash).displayProperties.name;
-    const statValue = _.find(_.pluck(sockets.sockets, 'masterworkValue'), (mv) => mv >= 0);
+    const socket = sockets.sockets[sockets.sockets.findIndex((socket) => socket.plugObjectives.length > 0)];
+    if (!socket || !socket.plugObjectives || !socket.plugObjectives.length || !socket.plugOptions || !socket.plugOptions.length) {
+      return null;
+    }
+    const plugObjective = socket.plugObjectives[0];
+    const plugOption = socket.plugOptions[0];
+    if (!plugOption.investmentStats || !plugOption.investmentStats.length) {
+      return null;
+    }
+    const statHash = plugOption.investmentStats[0].statTypeHash;
+
+    const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
+    const statDef = defs.Stat.get(statHash);
+
+    if (!objectiveDef || !statDef) {
+      return null;
+    }
 
     return {
-      progress,
-      typeName,
-      typeIcon,
-      typeDesc,
+      progress: plugObjective.progress,
+      typeName: (plugOption.plug.plugCategoryHash === 2109207426) ? "Vanguard" : "Crucible",
+      typeIcon:  objectiveDef.displayProperties.icon,
+      typeDesc: objectiveDef.progressDescription,
       statHash,
-      statName,
-      statValue
+      statName: statDef.displayProperties.name,
+      statValue: plugOption.investmentStats[0].value
     };
   }
 

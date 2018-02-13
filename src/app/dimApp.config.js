@@ -12,6 +12,10 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
 
   hotkeysProvider.includeCheatSheet = true;
 
+  // bugbug: if we get feedback from https://github.com/DestinyItemManager/DIM/issues/2601 then this is the property to set.
+  // It defaults to '?' the way that angular-hotkeys ships.
+  // hotkeysProvider.cheatSheetHotkey = '?';
+
   // Bungie's API will start throttling an API if it's called more than once per second. It does this
   // by making responses take 2s to return, not by sending an error code or throttling response. Choosing
   // our throttling limit to be 1 request every 1100ms lets us achieve best throughput while accounting for

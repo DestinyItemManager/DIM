@@ -6,6 +6,9 @@ import './compare.scss';
 export function StatRangeFilter() {
   // Turns a stat and a list of ranges into a 0-100 scale
   return function(stat, statRanges) {
+    if (!stat) {
+      return -1;
+    }
     const statRange = statRanges[stat.statHash];
     if (stat.qualityPercentage) {
       return stat.qualityPercentage.min;
@@ -182,7 +185,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     const statBuckets = {};
 
     function bucketStat(stat) {
-      if (stat.value) {
+      if (stat && stat.value) {
         (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
       }
     }

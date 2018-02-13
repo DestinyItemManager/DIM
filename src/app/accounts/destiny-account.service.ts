@@ -9,7 +9,7 @@ import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { PLATFORMS } from '../bungie-api/platforms';
-import { reportExceptionToGoogleAnalytics } from '../google';
+import { reportException } from '../exceptions';
 import { flatMap } from '../util';
 
 /** A specific Destiny account (one per platform and Destiny version) */
@@ -67,7 +67,7 @@ export function DestinyAccountService(
       .catch((e) => {
         // TODO: show a full-page error, or show a diagnostics page, rather than a popup
         toaster.pop(bungieErrorToaster(e));
-        reportExceptionToGoogleAnalytics('getDestinyAccountsForBungieAccount', e);
+        reportException('getDestinyAccountsForBungieAccount', e);
         throw e;
       });
   }
@@ -132,7 +132,9 @@ export function DestinyAccountService(
         return null;
       })
       .catch((e) => {
-        if (e.code && e.code === PlatformErrorCodes.DestinyAccountNotFound) {
+        if (e.code &&
+          (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
+           e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)) {
           return null;
         }
         throw e;

@@ -40,7 +40,6 @@ import routes from './dimApp.routes';
 import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
-import { reportExceptionToGoogleAnalytics } from './google';
 
 const dependencies = [
   AriaModule,
@@ -80,12 +79,8 @@ if ($DIM_FLAVOR === 'dev') {
   dependencies.push(require('./developer/developer.module').default);
 }
 
-function DimExceptionHandler($log) {
-  'ngInject';
-  return function myExceptionHandler(exception, cause) {
-    reportExceptionToGoogleAnalytics(cause, exception);
-    $log.warn(exception, cause);
-  };
+if ($featureFlags.sentry) {
+  dependencies.push(require('raven-js/plugins/angular').moduleName);
 }
 
 export const DimAppModule = angular
@@ -95,6 +90,4 @@ export const DimAppModule = angular
   .run(run)
   .value('dimState', state)
   .factory('loadingTracker', loadingTracker)
-  // Overwrite exception handler to log
-  .factory('$exceptionHandler', DimExceptionHandler)
   .name;

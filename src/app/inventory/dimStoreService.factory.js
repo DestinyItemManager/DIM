@@ -6,7 +6,7 @@ import '../rx-operators';
 import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { reportExceptionToGoogleAnalytics } from '../google';
+import { reportException } from '../exceptions';
 
 export function StoreService(
   $rootScope,
@@ -204,7 +204,7 @@ export function StoreService(
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);
-        reportExceptionToGoogleAnalytics('dimStoreService', e);
+        reportException('dimStoreService', e);
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to

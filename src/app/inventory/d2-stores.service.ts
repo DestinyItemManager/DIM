@@ -17,7 +17,7 @@ import { PLATFORMS } from '../bungie-api/platforms';
 import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
 import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
-import { reportExceptionToGoogleAnalytics } from '../google';
+import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
@@ -273,7 +273,7 @@ export function D2StoresService(
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);
-        reportExceptionToGoogleAnalytics('d2stores', e);
+        reportException('d2stores', e);
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to

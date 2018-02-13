@@ -56,7 +56,7 @@ export function ItemService(
    * Update our item and store models after an item has been moved (or equipped/dequipped).
    * @return the new or updated item (it may create a new item!)
    */
-  function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = 0) {
+  function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = item.amount) {
     // Refresh all the items - they may have been reloaded!
     const storeService = getStoreService(item);
     source = storeService.getStore(source.id)!;
@@ -321,7 +321,7 @@ export function ItemService(
       .then(() => item);
   }
 
-  function moveToVault(item: DimItem, amount: number = 0) {
+  function moveToVault(item: DimItem, amount: number = item.amount) {
     return moveToStore(item, getStoreService(item).getVault()!, false, amount);
   }
 
@@ -419,7 +419,7 @@ export function ItemService(
     // Check whether an item cannot or should not be moved
     function movable(otherItem) {
       return !otherItem.notransfer &&
-        !moveContext.excludes.some((i) => i.id == otherItem.id && i.hash === otherItem.hash);
+        !moveContext.excludes.some((i) => i.id === otherItem.id && i.hash === otherItem.hash);
     }
 
     const stores = getStoreService(item).getStores();
@@ -429,7 +429,7 @@ export function ItemService(
     const allItems = store.isVault
       ? store.items!.filter((i) => i.bucket.vaultBucket!.id === item.bucket.vaultBucket!.id)
       : store.buckets[item.bucket.id];
-    let moveAsideCandidates = allItems.filter(movable);
+    const moveAsideCandidates = allItems.filter(movable);
 
     // if there are no candidates at all, fail
     if (moveAsideCandidates.length === 0) {
@@ -598,7 +598,7 @@ export function ItemService(
     excludes?: DimItem[];
     reservations?: { [storeId: number]: number };
     numRetries?: number;
-  } = {}) {
+  } = {}): IPromise<void> {
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
     const storeService = getStoreService(item);
 
@@ -609,7 +609,7 @@ export function ItemService(
         left -= reservations[s.id][i.type];
       }
       // but not counting the original item that's moving
-      if (s.id === item.owner && i.type === item.type) {
+      if (s.id === item.owner && i.type === item.type && !item.location.inPostmaster) {
         left--;
       }
       return Math.max(0, left);
@@ -623,9 +623,7 @@ export function ItemService(
 
     // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
     const storeReservations: { [storeId: string]: number } = {};
-    if (!item.location.inPostmaster) {
-      storeReservations[store.id] = item.amount;
-    }
+    storeReservations[store.id] = item.amount;
 
     // guardian-to-guardian transfer will also need space in the vault
     if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {
@@ -695,10 +693,17 @@ export function ItemService(
       const reloadPromise = (item.destinyVersion === 2 ? throttledD2ReloadStores() : throttledReloadStores()) ||
             $q.when(storeService.getStores());
       const storeId = store.id;
-      return reloadPromise.then((stores) => {
-        const store = stores.find((s) => s.id === storeId);
+      return reloadPromise.then((reloadedStores) => {
         options.triedFallback = true;
-        return canMoveToStore(item, store, options);
+        // TODO: undefined reloadedStores means there was an error loading stores. When we return errors here, rethrow.
+        if (!reloadedStores) {
+          return canMoveToStore(item, store, options);
+        }
+        const reloadedStore = reloadedStores.find((s) => s.id === storeId);
+        if (!reloadedStore) {
+          throw new Error("Can't find the store to move to.");
+        }
+        return canMoveToStore(item, reloadedStore, options);
       });
     }
   }
@@ -714,7 +719,9 @@ export function ItemService(
             ? $i18next.t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
             : $i18next.t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
 
-        reject(new Error(message));
+        const error: DimError = new Error(message);
+        error.code = 'wrong-level';
+        reject(error);
       }
     });
   }
@@ -723,7 +730,7 @@ export function ItemService(
    * Check whether this transfer can happen. If necessary, make secondary inventory moves
    * in order to make the primary transfer possible, such as making room or dequipping exotics.
    */
-  function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
+  function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, excludes?: DimItem[], reservations?: { [storeId: number]: number }): IPromise<any> {
     const promises: IPromise<any>[] = [];
 
     if (equip) {
@@ -748,7 +755,7 @@ export function ItemService(
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  function moveTo(item: DimItem, target: DimStore, equip: boolean, amount: number = 0, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
+  function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
     return isValidTransfer(equip, target, item, excludes, reservations)
       .then(() => {
         const storeService = getStoreService(item);

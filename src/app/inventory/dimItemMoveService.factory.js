@@ -1,4 +1,6 @@
 import _ from 'underscore';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { reportException } from '../exceptions';
 
 export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
   'ngInject';
@@ -36,9 +38,15 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
 
     promise = promise
       .then((item) => item.updateManualMoveTimestamp())
-      .catch((a) => {
-        toaster.pop('error', item.name, a.message);
-        console.error('error moving item', item, 'to', store, a);
+      .catch((e) => {
+        toaster.pop('error', item.name, e.message);
+        console.error('error moving item', item, 'to', store, e);
+        // Some errors aren't worth reporting
+        if (e.code !== 'wrong-level' &&
+            e.code !== 'no-space' &&
+            e.code !== 1671 /*PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation*/) {
+          reportException('moveItem', e);
+        }
       });
 
     loadingTracker.addPromise(promise);

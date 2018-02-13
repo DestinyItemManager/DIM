@@ -1,8 +1,24 @@
 # Next
 
+* Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate)
+* You can now check your emblem objectives
+* Armor mods show more info
+
+# 4.40.0
+
+# 4.39.0
+
+* Fixed random loadout feature taking you to a blank page.
+
+# 4.38.0
+
 * Fixed display of Clan XP milestone.
 * DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
+* In D2, "Make room for Postmaster" has been replaced with "Collect Postmaster" which pulls all postmaster items we can onto your character. You can still make room by clicking "Space".
+* Fix pull from postmaster to clear exactly enough space, not too many, but also not too few.
 * Accounts with no characters will no longer show up in the account dropdown.
+* Item tagging via keyboard should be a little more international-friendly. Calling the help menu (via shift+/) is too.
+* Fixed XP required for well-rested perk after the latest Destiny update.
 
 # 4.37.0
 
@@ -12,7 +28,6 @@
 * Storage (Google Drive) settings have moved to the Settings page.
 * You can configure a custom item sorting method from the Settings page.
 * Improved display of the account selection dropdown.
-* Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate)
 
 # 4.36.1
 

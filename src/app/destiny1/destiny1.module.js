@@ -5,7 +5,7 @@ import { Destiny1Component } from './destiny1.component';
 import recordBooksModule from '../record-books/record-books.module';
 import activitiesModule from '../activities/activities.module';
 import loadoutBuilderModule from '../loadout-builder/loadout-builder.module';
-import vendorsrModule from '../vendors/vendors.module';
+import vendorsModule from '../vendors/vendors.module';
 import { destinyAccountResolver } from '../shell/destiny-account.route';
 
 export default angular
@@ -13,7 +13,7 @@ export default angular
     recordBooksModule,
     activitiesModule,
     loadoutBuilderModule,
-    vendorsrModule
+    vendorsModule
   ])
   .component('destiny1', Destiny1Component)
   .config(($stateProvider) => {
