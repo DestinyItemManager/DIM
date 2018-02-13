@@ -56,6 +56,8 @@ export function buildSearchConfig(
     Object.assign(categoryFilters, {
       grenadelauncher: ['CATEGORY_GRENADE_LAUNCHER'],
       submachine: ['CATEGORY_SUBMACHINEGUN'],
+      tracerifle: ['CATEGORY_TRACE_RIFLE'],
+      linearfusionrifle: ['CATEGORY_LINEAR_FUSION_RIFLE']
     });
     itemTypes.push(...flatMap(Object.values(categories), (l: string[]) => l.map((v) => v.toLowerCase())));
     stats.push('rpm');

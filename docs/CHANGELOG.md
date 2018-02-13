@@ -198,6 +198,7 @@
 * Pulling an item from the postmaster updates the list of items quickly now.
 * Navigation from "About" or "Backers" back to your inventory works.
 * is:dupelower breaks ties more intelligently.
+* Add is:tracerifle and is:linearfusionrifle searches.
 
 # 4.40.0 (2018-02-12)
 
