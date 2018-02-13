@@ -128,12 +128,12 @@ export interface DimItem {
   owner: string;
   /** The version of Destiny this comes from */
   destinyVersion: 1 | 2;
-  // The bucket the item is currently in
+  /** The bucket the item is currently in */
   location: DimInventoryBucket;
-  // The bucket the item normally resides in (even though it may be in the vault/postmaster)
+  /** The bucket the item normally resides in (even though it may be in the vault/postmaster) */
   bucket: DimInventoryBucket;
   hash: number;
-  // This is the type of the item (see D2Category/D2Buckets) regardless of location
+  /** This is the type of the item (see D2Category/D2Buckets) regardless of location */
   type: string;
   categories: string[];
   tier: string;
@@ -147,6 +147,15 @@ export interface DimItem {
   id: string; // zero for non-instanced is legacy hack
   equipped: boolean;
   equipment: boolean;
+  /**
+   * If defined, this is the label used to check if the character has other items of
+   * matching types already equipped.
+   *
+   * For instance, when you aren't allowed to equip more than one Exotic Weapon, that's
+   * because all exotic weapons have identical labels and the game checks the
+   * to-be-equipped item's label vs. all other already equipped items (other
+   * than the item in the slot that's about to be occupied).
+   */
   equippingLabel?: string;
   complete: boolean;
   amount: number;
@@ -184,7 +193,7 @@ export interface DimItem {
   infusionFuel: boolean;
   masterworkInfo: DimMasterwork | null;
   _isEngram: boolean;
-  // A timestamp of when, in this session, the item was last manually moved
+  /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
   flavorObjective: DimFlavorObjective | null;
 
@@ -195,7 +204,7 @@ export interface DimItem {
   userVote: number;
   dtrRating: number;
 
-  // Can this item be equipped by the given store?
+  /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   inCategory(categoryName: string): boolean;
   isEngram(): boolean;
