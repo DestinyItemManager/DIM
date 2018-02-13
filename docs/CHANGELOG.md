@@ -1,5 +1,9 @@
 # Next
 
+* Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate)
+* You can now check your emblem objectives
+* Armor mods show more info
+
 # 4.40.0
 
 # 4.39.0
@@ -24,7 +28,6 @@
 * Storage (Google Drive) settings have moved to the Settings page.
 * You can configure a custom item sorting method from the Settings page.
 * Improved display of the account selection dropdown.
-* You can now check your emblem objectives
 
 # 4.36.1
 
