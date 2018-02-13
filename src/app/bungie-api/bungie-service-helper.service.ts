@@ -30,8 +30,8 @@ export interface BungieServiceHelperType {
    */
   handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHttpResponse<ServerResponse<T>>;
   retryOnThrottled<T>(response: IHttpResponse<ServerResponse<T>>, retries: number): IPromise<IHttpResponse<ServerResponse<T>>> | IHttpResponse<ServerResponse<T>>;
-  httpAdapter(config: HttpClientConfig): IPromise<any>;
-  httpAdapterWithRetry(config: HttpClientConfig): IPromise<any>;
+  httpAdapter(config: HttpClientConfig): Promise<any>;
+  httpAdapterWithRetry(config: HttpClientConfig): Promise<any>;
 }
 
 /**
@@ -74,17 +74,17 @@ export function BungieServiceHelper(
     return options;
   }
 
-  function httpAdapter(config: HttpClientConfig): IPromise<any> {
+  function httpAdapter(config: HttpClientConfig): Promise<any> {
     return $http(buildOptions(config))
         .then(handleErrors, handleErrors)
-        .then((response) => response.data);
+        .then((response) => response.data) as Promise<any>;
   }
 
-  function httpAdapterWithRetry(config: HttpClientConfig): IPromise<any> {
+  function httpAdapterWithRetry(config: HttpClientConfig): Promise<any> {
     return $http(buildOptions(config))
         .then(handleErrors, handleErrors)
         .then(retryOnThrottled)
-        .then((response) => response.data);
+        .then((response) => response.data) as Promise<any>;
   }
 
   /** Generate an error with a bit more info */
