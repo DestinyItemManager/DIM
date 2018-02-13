@@ -71,6 +71,7 @@
         </div>
       </div>
       <dim-objectives class="item-details" ng-if="vm.item.objectives" objectives="vm.item.objectives"></dim-objectives>
+      <dim-flavor-objective class="item-details" ng-if="vm.item.flavorObjective" objective="vm.item.flavorObjective"></dim-flavor-objective>
       <div ng-if="vm.featureFlags.debugMode" class="item-details">
         <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump" />
       </div>

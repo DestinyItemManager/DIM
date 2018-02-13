@@ -24,6 +24,7 @@
 * Storage (Google Drive) settings have moved to the Settings page.
 * You can configure a custom item sorting method from the Settings page.
 * Improved display of the account selection dropdown.
+* You can now check your emblem objectives
 
 # 4.36.1
 

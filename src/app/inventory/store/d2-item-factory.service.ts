@@ -68,6 +68,12 @@ export interface DimObjective {
   display: string;
 }
 
+export interface DimFlavorObjective {
+  description: string;
+  icon: string;
+  progress: number;
+}
+
 export interface DimGridNode {
   name: string;
   hash: number;
@@ -179,6 +185,7 @@ export interface DimItem {
   _isEngram: boolean;
   // A timestamp of when, in this session, the item was last manually moved
   lastManuallyMoved: number;
+  flavorObjective: DimFlavorObjective | null;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
@@ -569,6 +576,12 @@ export function D2ItemFactory(
     }
 
     try {
+      createdItem.flavorObjective = buildFlavorObjective(item, itemComponents.objectives.data, defs.Objective);
+    } catch (e) {
+      console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
+    }
+
+    try {
       createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
     } catch (e) {
       console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
@@ -778,7 +791,6 @@ export function D2ItemFactory(
       return null;
     }
 
-    // TODO: there is also 'flavorObjectives' for things like emblem stats
     const objectives = objectivesMap[item.itemInstanceId].objectives;
     if (!objectives || !objectives.length) {
       return null;
@@ -802,6 +814,28 @@ export function D2ItemFactory(
         display: `${objective.progress || 0}/${def.completionValue}`
       };
     });
+  }
+
+  function buildFlavorObjective(
+    item: DestinyItemComponent,
+    objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
+    objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
+  ): DimFlavorObjective | null {
+    if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
+      return null;
+    }
+
+    const objective = objectivesMap[item.itemInstanceId].flavorObjective;
+    if (!objective) {
+      return null;
+    }
+
+    const def = objectiveDefs.get(objective.objectiveHash);
+    return {
+      description: def.progressDescription,
+      icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
+      progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0
+    };
   }
 
   function buildTalentGrid(
