@@ -59,6 +59,7 @@
       "Class": "Cannot compare this item as it is not for a {{class}}."
     },
     "ItemCount": "You have {{num}} of these.",
+    "Rating": "Rating",
     "Splits": "Compare similar splits ({{quantity}})"
   },
   "Cooldown": {

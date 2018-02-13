@@ -7,15 +7,22 @@
   <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
     <div class="compare-item fixed-left">
       <div class="spacer"></div>
-      <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === vm.comparisons[0].primStat.statHash, sorted: vm.sortedHash === vm.comparisons[0].primStat.statHash }" ng-mouseover="vm.highlight = vm.comparisons[0].primStat.statHash" ng-click="vm.sort(vm.comparisons[0].primStat.statHash)" ng-bind="vm.comparisons[0].primStat.stat.statName || vm.comparisons[0].primStat.stat.displayProperties.name"></div>
-      <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash }" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by stat.statHash" ng-bind="stat.name"></div>
+      <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === 'Rating', sorted: vm.sortedHash === 'Rating' }"
+           ng-mouseover="vm.highlight = 'Rating'" ng-click="vm.sort('Rating')" ng-i18next="[i18next]Compare.Rating" ng-if="vm.comparisons[0].dtrRatingCount && vm.comparisons[0].dtrRating"></div>
+      <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === vm.comparisons[0].primStat.statHash, sorted: vm.sortedHash === vm.comparisons[0].primStat.statHash }"
+           ng-mouseover="vm.highlight = vm.comparisons[0].primStat.statHash" ng-click="vm.sort(vm.comparisons[0].primStat.statHash)" ng-bind="vm.comparisons[0].primStat.stat.statName || vm.comparisons[0].primStat.stat.displayProperties.name"></div>
+      <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash }"
+           ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by stat.statHash" ng-bind="stat.name"></div>
     </div>
     <div ng-repeat="item in vm.comparisons track by item.id" class="compare-item">
       <div class="close" ng-click="vm.remove(item);"></div>
       <dim-item-tag item="item"></dim-item-tag>
       <div class="item-name" ng-click="vm.itemClick(item)" ng-bind="::item.name"></div>
       <dim-simple-item item-data="item"></dim-simple-item>
-      <div ng-class="{ highlight: vm.highlight === item.primStat.stat.statHash }" ng-mouseover="vm.highlight = item.primStat.statHash" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
+      <div ng-class="{ highlight: vm.highlight === 'Rating' }" ng-mouseover="vm.highlight = 'Rating'" ng-style="item.dtrRating | statRange:vm.statRanges | qualityColor:'color'" ng-if="item.dtrRatingCount && item.dtrRating">
+        <span ng-bind="item.dtrRating"></span>
+      </div>
+      <div ng-class="{ highlight: vm.highlight === item.primStat.statHash }" ng-mouseover="vm.highlight = item.primStat.statHash" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
         <span ng-bind="item.primStat.value"></span>
       </div>
       <div ng-class="{ highlight: vm.highlight === stat.statHash }" ng-mouseover="vm.highlight = stat.statHash" ng-repeat="stat in item.stats track by $index" ng-style="stat | statRange:vm.statRanges | qualityColor:'color'">

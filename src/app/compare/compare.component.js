@@ -101,7 +101,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   vm.sort = function(statHash) {
     vm.sortedHash = statHash;
     vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), (item) => {
-      const stat = _.find(item.stats, { statHash: statHash }) || item.primStat;
+      const stat = statHash === item.primStat.statHash ? item.primStat : (vm.sortedHash === 'Rating' ? {value:item.dtrRating} : _.find(item.stats, { statHash: statHash }));
       return stat.value || -1;
     }).reverse();
   };
@@ -131,7 +131,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
           return memo + (stat.base === 0 ? 0 : stat.statHash);
         }, 0);
       }
-
+debugger;
       // 4284893193 is RPM in D2
       const archetypeStat = _.find(vm.compare.stats, {
         statHash: (vm.compare.destinyVersion === 1
