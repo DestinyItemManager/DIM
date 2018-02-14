@@ -1,12 +1,15 @@
 import { parse } from 'simple-query-string';
 import template from './return.component.html';
+import { getAccessTokenFromCode } from '../oauth/oauth.service';
+import { setToken } from '../oauth/oauth-token.service';
 
 export const ReturnComponent = {
   controller: ReturnController,
   template: template
 };
 
-function ReturnController($http, OAuthService, OAuthTokenService) {
+// TODO: this doesn't need to be angular
+function ReturnController() {
   'ngInject';
 
   const ctrl = this;
@@ -35,9 +38,9 @@ function ReturnController($http, OAuthService, OAuthTokenService) {
       return;
     }
 
-    OAuthService.getAccessTokenFromCode(ctrl.code)
+    getAccessTokenFromCode(ctrl.code)
       .then((token) => {
-        OAuthTokenService.setToken(token);
+        setToken(token);
         window.location = "/index.html";
       })
       .catch((error) => {

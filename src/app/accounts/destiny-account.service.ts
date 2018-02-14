@@ -6,10 +6,11 @@ import { UserMembershipData } from 'bungie-api-ts/user';
 import { t } from 'i18next';
 import * as _ from 'underscore';
 import { getAccounts } from '../bungie-api/bungie-user-api.service';
-import { getBasicProfile } from '../bungie-api/destiny2-api';
 import { getCharacters } from '../bungie-api/destiny1-api';
+import { getBasicProfile } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
+import { removeToken } from '../oauth/oauth-token.service';
 import { flatMap } from '../util';
 
 /**
@@ -48,7 +49,6 @@ export interface DestinyAccount {
 export function DestinyAccountService(
   toaster,
   $q: IQService,
-  OAuthTokenService,
   $state: StateService
 ) {
   'ngInject';
@@ -67,7 +67,7 @@ export function DestinyAccountService(
       .then((platforms) => {
         if (platforms.length === 0) {
           toaster.pop('warning', t('Accounts.NoCharacters'));
-          OAuthTokenService.removeToken();
+          removeToken();
           $state.go('login', { reauth: true });
         }
         return platforms;

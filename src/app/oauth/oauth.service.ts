@@ -1,0 +1,71 @@
+import { oauthClientId, oauthClientSecret } from '../bungie-api/bungie-api-utils';
+import { Tokens, Token } from './oauth-token.service';
+
+const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
+
+// https://www.bungie.net/en/Clan/Post/1777779/227330965/0/0
+
+export function getAccessTokenFromRefreshToken(refreshToken) {
+  const data = new URLSearchParams();
+  data.append('grant_type', 'refresh_token');
+  data.append('refresh_token', refreshToken.value);
+  data.append('client_id', oauthClientId());
+  data.append('client_secret', oauthClientSecret());
+  return fetch(TOKEN_URL, {
+    method: 'POST',
+    body: data.toString(),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+    .then((response) => response.ok ? response.json() : Promise.reject(response))
+    .then(handleAccessToken);
+}
+
+export function getAccessTokenFromCode(code) {
+  const data = new URLSearchParams();
+  data.append('grant_type', 'authorization_code');
+  data.append('code', code);
+  data.append('client_id', oauthClientId());
+  data.append('client_secret', oauthClientSecret());
+  return fetch(TOKEN_URL, {
+    method: 'POST',
+    body: data.toString(),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+    .then((response) => response.ok ? response.json() : Promise.reject(response))
+    .then(handleAccessToken);
+}
+
+function handleAccessToken(response): Tokens {
+  if (response && response.access_token) {
+    const data = response;
+    const inception = Date.now();
+    const accessToken: Token = {
+      value: data.access_token,
+      expires: data.expires_in,
+      name: 'access',
+      inception
+    };
+
+    const tokens: Tokens = {
+      accessToken,
+      bungieMembershipId: data.membership_id
+    };
+
+    if (data.refresh_token) {
+      tokens.refreshToken = {
+        value: data.refresh_token,
+        expires: data.refresh_expires_in,
+        name: 'refresh',
+        inception
+      };
+    }
+
+    return tokens;
+  } else {
+    throw response;
+  }
+}
