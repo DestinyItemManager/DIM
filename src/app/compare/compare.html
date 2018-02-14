@@ -19,7 +19,7 @@
       <dim-item-tag item="item"></dim-item-tag>
       <div class="item-name" ng-click="vm.itemClick(item)" ng-bind="::item.name"></div>
       <dim-simple-item item-data="item"></dim-simple-item>
-      <div ng-class="{ highlight: vm.highlight === 'Rating' }" ng-mouseover="vm.highlight = 'Rating'" ng-style="item.dtrRating | statRange:vm.statRanges | qualityColor:'color'" ng-if="item.dtrRatingCount && item.dtrRating">
+      <div ng-class="{ highlight: vm.highlight === 'Rating' }" ng-mouseover="vm.highlight = 'Rating'" ng-style="{value:item.dtrRating, statHash:0} | statRange:vm.statRanges | qualityColor:'color'" ng-if="item.dtrRatingCount && item.dtrRating">
         <span ng-bind="item.dtrRating"></span>
       </div>
       <div ng-class="{ highlight: vm.highlight === item.primStat.statHash }" ng-mouseover="vm.highlight = item.primStat.statHash" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">

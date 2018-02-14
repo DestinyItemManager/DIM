@@ -51,6 +51,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
 
     _.difference(_.keys(vm.statsMap), _.keys(itemStatsMap)).forEach((statId) => {
       item.stats.splice(vm.statsMap[statId], 0, { value: undefined, id: Number(statId), statHash: Number(statId) });
+      vm.statRanges[statId] = { min:0, max:0, enabled:false};
     });
 
     _.difference(_.keys(itemStatsMap), _.keys(vm.statsMap)).forEach((statId) => {
@@ -69,6 +70,15 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     return item;
   }
 
+  function removeMissingStats() {
+    vm.comparisons.map((compItem) => {
+      const statIndex = compItem.stats.findIndex((stat) => (stat.bar && stat.base && stat.sort) == undefined);
+      if (statIndex > 0) {
+        compItem.stats.splice(statIndex, 1);
+      }
+    });
+  }
+
   vm.show = dimCompareService.dialogOpen;
 
   vm.comparisons = [];
@@ -83,6 +93,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   });
 
   vm.cancel = function cancel() {
+    removeMissingStats();
     vm.comparisons = [];
     vm.statRanges = {};
     vm.statsMap = {};
@@ -198,6 +209,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
       if (item.stats) {
         item.stats.forEach(bucketStat);
         bucketStat(item.primStat);
+        bucketStat({statHash:0, value:Number(item.dtrRating)});
       }
     });
 
