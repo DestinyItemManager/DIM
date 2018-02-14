@@ -1,9 +1,9 @@
-import * as _ from 'underscore';
-import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
-import { handleErrors, retryOnThrottled, error } from './bungie-service-helper';
 import { t } from 'i18next';
-import { state as dimState } from '../state';
 import { $http, $q } from 'ngimport';
+import * as _ from 'underscore';
+import { dimState } from '../state';
+import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
+import { error, handleErrors, retryOnThrottled } from './bungie-service-helper';
 
 /**
  * APIs for interacting with Destiny 1 game data.

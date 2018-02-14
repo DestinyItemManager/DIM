@@ -16,6 +16,7 @@ import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
 import ocLazyLoadModule from 'oclazyload';
+import 'ngimport';
 
 import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';
@@ -37,7 +38,6 @@ import { progressModule } from './progress/progress.module';
 import config from './dimApp.config';
 import routes from './dimApp.routes';
 import run from './dimApp.run';
-import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
 const dependencies = [
@@ -70,7 +70,8 @@ const dependencies = [
   destiny2Module,
   progressModule,
   'ajoslin.promise-tracker',
-  'cfp.hotkeys'
+  'cfp.hotkeys',
+  'bcherny/ngimport'
 ];
 
 if ($DIM_FLAVOR === 'dev') {
@@ -86,6 +87,5 @@ export const DimAppModule = angular
   .config(config)
   .config(routes)
   .run(run)
-  .value('dimState', state)
   .factory('loadingTracker', loadingTracker)
   .name;

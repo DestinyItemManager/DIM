@@ -1,5 +1,4 @@
 import { copy as angularCopy, IPromise } from 'angular';
-import { ServerResponse } from 'bungie-api-ts/common';
 import * as _ from 'underscore';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { equip as d2equip, equipItems as d2EquipItems, transfer as d2Transfer } from '../bungie-api/destiny2-api';

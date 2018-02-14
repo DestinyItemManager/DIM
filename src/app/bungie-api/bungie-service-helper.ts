@@ -1,14 +1,14 @@
+import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
+import { HttpClientConfig } from 'bungie-api-ts/http';
+import { t } from 'i18next';
+import { $http, $rootScope, $timeout } from 'ngimport';
+import { dimState } from '../state';
+import { API_KEY } from './bungie-api-utils';
 import {
   IHttpResponse,
   IPromise,
   IRequestConfig,
-    } from 'angular';
-import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
-import { HttpClientConfig } from 'bungie-api-ts/http';
-import { API_KEY } from './bungie-api-utils';
-import { $http, $rootScope, $timeout } from 'ngimport';
-import { t } from 'i18next';
-import { state as dimState } from '../state';
+} from 'angular';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;

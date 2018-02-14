@@ -1,6 +1,6 @@
-import { bungieApiQuery } from './bungie-api-utils';
-import { $http } from 'ngimport';
 import { IPromise } from 'angular';
+import { $http } from 'ngimport';
+import { bungieApiQuery } from './bungie-api-utils';
 
 export interface GlobalAlert {
   key: string;

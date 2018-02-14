@@ -18,7 +18,7 @@ import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { state as dimState } from '../state';
+import { dimState } from '../state';
 import { DimError, httpAdapter, httpAdapterWithRetry } from './bungie-service-helper';
 
 /**

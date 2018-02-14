@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import { getGlobalAlerts } from '../bungie-api/bungie-core-api.service';
+import { getGlobalAlerts } from '../bungie-api/bungie-core-api';
 
 export const BungieAlertsComponent = {
   controller: BungieAlertsCtrl

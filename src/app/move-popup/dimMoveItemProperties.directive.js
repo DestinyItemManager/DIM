@@ -1,8 +1,9 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimMoveItemProperties.html';
-import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
+import { dimState } from '../state';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
+import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
+import template from './dimMoveItemProperties.html';
 
 export function MoveItemProperties() {
   return {
@@ -21,7 +22,7 @@ export function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
   'ngInject';
   const vm = this;
 
