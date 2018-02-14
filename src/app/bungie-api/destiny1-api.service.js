@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
+import { handleErrors, retryOnThrottled } from './bungie-service-helper.service';
 
 /**
  * APIs for interacting with Destiny 1 game data.
@@ -7,13 +8,11 @@ import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
  * DestinyService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
 export function Destiny1Api(
-  BungieServiceHelper,
   $q,
   $http,
   dimState,
   $i18next) {
   'ngInject';
-  const { handleErrors, retryOnThrottled } = BungieServiceHelper;
 
   return {
     getCharacters,

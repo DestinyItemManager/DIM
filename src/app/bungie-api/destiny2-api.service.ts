@@ -17,7 +17,7 @@ import * as _ from 'underscore';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { BungieServiceHelperType, DimError } from './bungie-service-helper.service';
+import { httpAdapter, httpAdapterWithRetry, DimError } from './bungie-service-helper.service';
 
 export interface Destiny2ApiService {
   getManifest(): IPromise<DestinyManifest>;
@@ -37,13 +37,10 @@ export interface Destiny2ApiService {
  * Destiny2 Service at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
 export function Destiny2Api(
-  BungieServiceHelper: BungieServiceHelperType,
   dimState,
   $i18next
 ): Destiny2ApiService {
   'ngInject';
-  const { httpAdapter, httpAdapterWithRetry } = BungieServiceHelper;
-
   return {
     getManifest,
     getStores,

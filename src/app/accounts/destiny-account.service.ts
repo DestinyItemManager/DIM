@@ -5,7 +5,7 @@ import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { UserMembershipData } from 'bungie-api-ts/user';
 import { t } from 'i18next';
 import * as _ from 'underscore';
-import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
+import { getAccounts } from '../bungie-api/bungie-user-api.service';
 import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { PLATFORMS } from '../bungie-api/platforms';
@@ -35,7 +35,6 @@ export interface DestinyAccount {
  * try to load them.
  */
 export function DestinyAccountService(
-  BungieUserApi: BungieUserApiService,
   Destiny1Api,
   Destiny2Api: Destiny2ApiService,
   toaster,
@@ -54,7 +53,7 @@ export function DestinyAccountService(
    * @param bungieMembershipId Bungie.net membership ID
    */
   function getDestinyAccountsForBungieAccount(bungieMembershipId: string): IPromise<DestinyAccount[]> {
-    return BungieUserApi.getAccounts(bungieMembershipId)
+    return getAccounts(bungieMembershipId)
       .then(generatePlatforms)
       .then((platforms) => {
         if (platforms.length === 0) {
