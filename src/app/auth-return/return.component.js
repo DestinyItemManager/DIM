@@ -1,4 +1,4 @@
-import simpleQueryString from 'simple-query-string';
+import { parse } from 'simple-query-string';
 import template from './return.component.html';
 
 export const ReturnComponent = {
@@ -16,7 +16,7 @@ function ReturnController($http, OAuthService, OAuthTokenService) {
   ctrl.authorized = false;
 
   ctrl.$onInit = function() {
-    const queryString = simpleQueryString.parse(window.location.href);
+    const queryString = parse(window.location.href);
 
     ctrl.code = queryString.code;
     ctrl.state = queryString.state;
