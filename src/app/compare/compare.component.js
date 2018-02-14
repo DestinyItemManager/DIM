@@ -107,6 +107,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
 
   vm.compareSimilar = function(type) {
     vm.comparisons = type === 'archetype' ? vm.archeTypes : vm.similarTypes;
+    vm.comparisons.forEach((item) => addMissingStats(item));
   };
 
   vm.sort = function(statHash) {
@@ -205,7 +206,6 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     }
 
     vm.comparisons.forEach((item) => {
-      addMissingStats(item);
       if (item.stats) {
         item.stats.forEach(bucketStat);
         bucketStat(item.primStat);
