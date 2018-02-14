@@ -7,11 +7,11 @@ import { flatMap } from '../util';
 import { compareAccounts } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
+import { getCharacters, getStores } from '../bungie-api/destiny1-api';
 
 export function StoreService(
   $rootScope,
   $q,
-  Destiny1Api,
   dimDefinitions,
   dimBucketService,
   dimItemInfoService,
@@ -102,7 +102,7 @@ export function StoreService(
 
     return $q.all([
       dimDefinitions.getDefinitions(),
-      Destiny1Api.getCharacters(account)
+      getCharacters(account)
     ]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
@@ -160,7 +160,7 @@ export function StoreService(
       dimBucketService.getBuckets(),
       NewItemsService.loadNewItems(account, 1),
       dimItemInfoService(account, 1),
-      Destiny1Api.getStores(account)
+      getStores(account)
     ];
 
     const reloadPromise = $q.all(dataDependencies)

@@ -5,7 +5,7 @@ import {
     } from 'angular';
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig } from 'bungie-api-ts/http';
-import { apiKey } from './bungie-api-utils';
+import { API_KEY } from './bungie-api-utils';
 import { $http, $rootScope, $timeout } from 'ngimport';
 import { t } from 'i18next';
 import { state as dimState } from '../state';
@@ -33,7 +33,7 @@ function buildOptions(config: HttpClientConfig): IRequestConfig {
     method: config.method,
     url: config.url,
     headers: {
-      'X-API-Key': apiKey
+      'X-API-Key': API_KEY
     },
     withCredentials: true
   };

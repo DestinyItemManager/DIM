@@ -1,6 +1,8 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimMoveItemProperties.html';
+import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
+import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 
 export function MoveItemProperties() {
   return {
@@ -19,7 +21,7 @@ export function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService, Destiny1Api, Destiny2Api) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
   'ngInject';
   const vm = this;
 
@@ -124,7 +126,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     }
 
     if (item.destinyVersion === 2) {
-      Destiny2Api.setLockState(store, item, state)
+      d2SetLockState(store, item, state)
         .then(() => {
           item.locked = state;
           $rootScope.$broadcast('dim-filter-invalidate');
@@ -133,7 +135,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
           vm.locking = false;
         });
     } else {
-      Destiny1Api.setItemState(item, store, state, type)
+      d1SetItemState(item, store, state, type)
         .then(() => {
           if (type === 'lock') {
             item.locked = state;

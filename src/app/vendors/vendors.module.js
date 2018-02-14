@@ -1,7 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-import bungieApiModule from '../bungie-api/bungie-api.module';
 import { VendorService } from './vendor.service';
 import { VendorsComponent } from './vendors.component';
 import { VendorItems } from './vendor-items.component';
@@ -11,7 +10,7 @@ import { vendorTab, vendorTabItems } from './vendors.filters';
 import { Xur } from './xur.component';
 
 export default angular
-  .module('VendorsModule', [bungieApiModule])
+  .module('VendorsModule', [])
   .factory('dimVendorService', VendorService)
   .component('vendors', VendorsComponent)
   .component('vendorItems', VendorItems)

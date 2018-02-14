@@ -1,6 +1,6 @@
 import { IPromise } from 'angular';
 import { BungieMembershipType, getMembershipDataById, UserMembershipData } from 'bungie-api-ts/user';
-import { httpAdapter } from './bungie-service-helper.service';
+import { httpAdapter } from './bungie-service-helper';
 
 /**
  * Get all accounts for this Bungie.net user.

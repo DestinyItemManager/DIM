@@ -5,6 +5,7 @@ import idbKeyval from 'idb-keyval';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
 import { compareAccounts } from '../accounts/destiny-account.service';
+import { getVendorForCharacter } from '../bungie-api/destiny1-api';
 
 /*
 const allVendors = [
@@ -64,7 +65,6 @@ const xur = 2796397637;
 
 export function VendorService(
   $rootScope,
-  Destiny1Api,
   dimStoreService,
   ItemFactory,
   dimDefinitions,
@@ -317,8 +317,7 @@ export function VendorService(
           return vendor;
         } else {
           // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
-          return Destiny1Api
-            .getVendorForCharacter(account, store, vendorHash)
+          return getVendorForCharacter(account, store, vendorHash)
             .then((vendor) => {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
