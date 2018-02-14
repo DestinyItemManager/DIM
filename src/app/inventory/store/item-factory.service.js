@@ -97,10 +97,6 @@ export function ItemFactory(
     canBeInLoadout: function() {
       return this.equipment || this.type === 'Material' || this.type === 'Consumable';
     },
-    // "The Life Exotic" Perk on Exotic Items means you can equip another exotic
-    hasLifeExotic: function() {
-      return this.isExotic && this.talentGrid && (_.find(this.talentGrid.nodes, { hash: 4044819214 }) !== undefined);
-    },
     // Mark that this item has been moved manually
     updateManualMoveTimestamp() {
       this.lastManuallyMoved = Date.now();
@@ -296,6 +292,7 @@ export function ItemFactory(
       id: item.itemInstanceId,
       equipped: item.isEquipped,
       equipment: item.isEquipment,
+      equippingLabel: item.isEquipment && tiers[itemDef.tierType] === 'Exotic' ? normalBucket.sort : undefined,
       complete: item.isGridComplete,
       amount: item.stackSize,
       primStat: item.primaryStat || null,
@@ -406,6 +403,11 @@ export function ItemFactory(
     } else if (createdItem.talentGrid) {
       createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
       createdItem.complete = createdItem.year === 1 ? createdItem.talentGrid.totalXP === createdItem.talentGrid.totalXPRequired : createdItem.talentGrid.complete;
+    }
+
+    // "The Life Exotic" perk means you can equip other exotics, so clear out the equipping label
+    if (createdItem.isExotic && createdItem.talentGrid && createdItem.talentGrid.nodes.some((n) => n.hash === 4044819214)) {
+      createdItem.equippingLabel = undefined;
     }
 
     // In debug mode, keep the original JSON around

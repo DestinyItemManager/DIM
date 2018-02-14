@@ -49,7 +49,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
   }
 
   function getBestItem(armor, stats, type, nonExotic) {
-    // for specifc armor (Helmet), look at stats (int/dis), return best one.
+    // for specific armor (Helmet), look at stats (int/dis), return best one.
     return {
       item: _.max(armor, (o) => {
         if (nonExotic && o.isExotic) {

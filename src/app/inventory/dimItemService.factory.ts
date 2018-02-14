@@ -190,8 +190,9 @@ export function ItemService(
    * Find an item in store like "item", excluding the exclusions, to be equipped
    * on target.
    * @param exclusions a list of {id, hash} objects that won't be considered for equipping.
+   * @param excludeExotic exclude any item matching the equippingLabel of item, used when dequipping an exotic so we can equip an exotic in another slot.
    */
-  function searchForSimilarItem(item: DimItem, store: DimStore, exclusions: DimItem[] | undefined, target: DimStore, excludeExotic: boolean) {
+  function searchForSimilarItem(item: DimItem, store: DimStore, exclusions: DimItem[] | undefined, target: DimStore, excludeExotic: boolean): DimItem | null {
     const exclusionsList = exclusions || [];
 
     let candidates = store.items.filter((i) => {
@@ -209,7 +210,7 @@ export function ItemService(
     }
 
     if (excludeExotic) {
-      candidates = candidates.filter((c) => !c.isExotic);
+      candidates = candidates.filter((c) => c.equippingLabel !== item.equippingLabel);
     }
 
     // TODO: unify this value function w/ the others!
@@ -231,7 +232,7 @@ export function ItemService(
     }).reverse();
 
     return sortedCandidates.find((result) => {
-      if (result.isExotic) {
+      if (result.equippingLabel) {
         const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
         // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
         if (!otherExotic || otherExotic.id === item.id) {
@@ -251,7 +252,7 @@ export function ItemService(
   function equipItems(store: DimStore, items: DimItem[]) {
     // Check for (and move aside) exotics
     const extraItemsToEquip = _.compact(items.map((i) => {
-      if (i.isExotic) {
+      if (i.equippingLabel) {
         const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
         // If we aren't already equipping into that slot...
         if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
@@ -302,7 +303,7 @@ export function ItemService(
       });
   }
 
-  function dequipItem(item: DimItem, excludeExotic = false) {
+  function dequipItem(item: DimItem, excludeExotic = false): IPromise<DimItem> {
     const storeService = getStoreService(item);
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
@@ -311,7 +312,7 @@ export function ItemService(
     const source = storeService.getStore(item.owner)!;
     const target = storeService.getStore(similarItem.owner)!;
 
-    let p = $q.when();
+    let p: IPromise<DimItem> = $q.when();
     if (source.id !== target.id) {
       p = moveTo(similarItem, source, true);
     }
@@ -347,7 +348,7 @@ export function ItemService(
    * that would conflict. If it could not move aside, this
    * rejects. It never returns false.
    */
-  function canEquipExotic(item: DimItem, store: DimStore) {
+  function canEquipExotic(item: DimItem, store: DimStore): IPromise<boolean> {
     const otherExotic = getOtherExoticThatNeedsDequipping(item, store);
     if (otherExotic) {
       return dequipItem(otherExotic, true)
@@ -364,31 +365,13 @@ export function ItemService(
    * Identify the other exotic, if any, that needs to be moved
    * aside. This is not a promise, it returns immediately.
    */
-  function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore) {
-    const equippedExotics = store.items.filter((i) => {
-      return (i.equipped &&
-              i.location.id !== item.location.id &&
-              i.location.sort === item.location.sort &&
-              i.isExotic);
-    });
-
-    switch (equippedExotics.length) {
-      case 0:
-        return null;
-      case 1:
-        const equippedExotic = equippedExotics[0];
-        if (item.hasLifeExotic() || equippedExotic.hasLifeExotic()) {
-          return null;
-        } else {
-          return equippedExotic;
-        }
-      case 2:
-        // Assume that only one of the equipped items has 'The Life Exotic' perk
-        const hasLifeExotic = item.hasLifeExotic();
-        return equippedExotics.find((i) => hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic());
-      default:
-        throw new Error($i18next.t('ItemService.TwoExotics'));
+  function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore): DimItem | undefined {
+    if (!item.equippingLabel) {
+      return undefined;
     }
+
+    // Find an item that's not in the slot we're equipping, but has a matching equipping label
+    return store.items.find((i) => i.equipped && i.equippingLabel === item.equippingLabel && i.bucket.id !== item.bucket.id);
   }
 
   interface MoveContext {
@@ -708,22 +691,23 @@ export function ItemService(
     }
   }
 
-  function canEquip(item: DimItem, store: DimStore): IPromise<boolean> {
-    return $q((resolve, reject) => {
-      if (item.canBeEquippedBy(store)) {
-        resolve(true);
-      } else if (item.classified) {
-        reject(new Error($i18next.t('ItemService.Classified')));
-      } else {
-        const message = (item.classTypeName === 'unknown')
-            ? $i18next.t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
-            : $i18next.t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
+  /**
+   * Returns if possible, or throws an exception if the item can't be equipped.
+   */
+  function canEquip(item: DimItem, store: DimStore): void {
+    if (item.canBeEquippedBy(store)) {
+      return;
+    } else if (item.classified) {
+      throw new Error($i18next.t('ItemService.Classified'));
+    } else {
+      const message = (item.classTypeName === 'unknown')
+          ? $i18next.t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
+          : $i18next.t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
 
-        const error: DimError = new Error(message);
-        error.code = 'wrong-level';
-        reject(error);
-      }
-    });
+      const error: DimError = new Error(message);
+      error.code = 'wrong-level';
+      throw error;
+    }
   }
 
   /**
@@ -731,18 +715,16 @@ export function ItemService(
    * in order to make the primary transfer possible, such as making room or dequipping exotics.
    */
   function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, excludes?: DimItem[], reservations?: { [storeId: number]: number }): IPromise<any> {
-    const promises: IPromise<any>[] = [];
+    let promise = $q.when();
 
     if (equip) {
-      promises.push(canEquip(item, store));
-      if (item.isExotic && item.location.sort !== 'General') {
-        promises.push(canEquipExotic(item, store));
+      promise = promise.then(() => canEquip(item, store));
+      if (item.equippingLabel) {
+        promise = promise.then(() => canEquipExotic(item, store));
       }
     }
 
-    promises.push(canMoveToStore(item, store, { excludes, reservations }));
-
-    return $q.all(promises);
+    return promise.then(() => canMoveToStore(item, store, { excludes, reservations }));
   }
 
   /**
@@ -755,7 +737,7 @@ export function ItemService(
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: { [storeId: number]: number }) {
+  function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: { [storeId: number]: number }): IPromise<DimItem> {
     return isValidTransfer(equip, target, item, excludes, reservations)
       .then(() => {
         const storeService = getStoreService(item);
@@ -763,7 +745,7 @@ export function ItemService(
         target = storeService.getStore(target.id)!;
         const source = storeService.getStore(item.owner)!;
 
-        let promise = $q.when(item);
+        let promise: IPromise<DimItem> = $q.when(item);
 
         if (!source.isVault && !target.isVault) { // Guardian to Guardian
           if (source.id !== target.id) { // Different Guardian

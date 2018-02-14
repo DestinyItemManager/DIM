@@ -1,8 +1,10 @@
 # Next
 
-* Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate)
-* You can now check your emblem objectives
-* Armor mods show more info
+* Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate).
+* You can now check your emblem objectives.
+* Armor mods show more info.
+* Destiny 1 transfers are faster.
+* DIM is better at equipping exotics when you already have exotic ghosts, sparrows, and ships equipped.
 
 # 4.40.0
 

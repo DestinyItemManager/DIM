@@ -315,32 +315,21 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       let promise = $q.when();
 
       if (itemsToDequip.length > 1) {
-        const realItemsToDequip = _.compact(itemsToDequip.map((i) => {
-          return getStoreService().getItemAcrossStores(i);
-        }));
+        const realItemsToDequip = _.compact(itemsToDequip.map((i) => getStoreService().getItemAcrossStores(i)));
         const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
-          const equipItems = _.compact(realItemsToDequip.map((i) => {
-            return dimItemService.getSimilarItem(i, loadoutItemIds);
-          }));
+          const equipItems = _.compact(realItemsToDequip.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds)));
           return dimItemService.equipItems(getStoreService().getStore(owner), equipItems);
         });
         promise = $q.all(dequips);
       }
 
       promise = promise
-        .then(() => {
-          return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
-        })
+        .then(() => applyLoadoutItems(store, items, loadout, loadoutItemIds, scope))
         .then(() => {
           if (itemsToEquip.length > 1) {
             // Use the bulk equipAll API to equip all at once.
-            itemsToEquip = _.filter(itemsToEquip, (i) => {
-              return _.find(scope.successfulItems, { id: i.id });
-            });
-            const realItemsToEquip = _.compact(itemsToEquip.map((i) => {
-              return getLoadoutItem(i, store);
-            }));
-
+            itemsToEquip = _.filter(itemsToEquip, (i) => _.find(scope.successfulItems, { id: i.id }));
+            const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
             return dimItemService.equipItems(store, realItemsToEquip);
           } else {
             return itemsToEquip;
@@ -397,17 +386,15 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
 
     let promise = $q.when();
     const pseudoItem = items.shift();
-    let item = getLoadoutItem(pseudoItem, store);
+    const item = getLoadoutItem(pseudoItem, store);
 
     if (item) {
-      if (item.type === 'Material' || item.type === 'Consumable') {
+      if (item.maxStackSize > 1) {
         // handle consumables!
         const amountAlreadyHave = store.amountOfItem(pseudoItem);
         let amountNeeded = pseudoItem.amount - amountAlreadyHave;
         if (amountNeeded > 0) {
-          const otherStores = _.reject(getStoreService().getStores(), (otherStore) => {
-            return store.id === otherStore.id;
-          });
+          const otherStores = _.reject(getStoreService().getStores(), (otherStore) => store.id === otherStore.id);
           const storesByAmount = _.sortBy(otherStores.map((store) => {
             return {
               store: store,
@@ -438,18 +425,8 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
           }
         }
       } else {
-        if (item.type === 'Class') {
-          item = _.find(store.items, {
-            hash: pseudoItem.hash
-          });
-        }
-
-        if (item) {
-          // Pass in the list of items that shouldn't be moved away
-          promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
-        } else {
-          promise = $q.reject(new Error($i18next.t('Loadouts.DoesNotExist', { itemname: item.name })));
-        }
+        // Pass in the list of items that shouldn't be moved away
+        promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
       }
     }
 
@@ -464,10 +441,8 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
         }
         toaster.pop(e.level || 'error', item.name, e.message);
       })
-      .finally(() => {
-        // Keep going
-        return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
-      });
+      // Keep going
+      .finally(() => applyLoadoutItems(store, items, loadout, loadoutItemIds, scope));
 
     return promise;
   }
