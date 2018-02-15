@@ -51,7 +51,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
 
     _.difference(_.keys(vm.statsMap), _.keys(itemStatsMap)).forEach((statId) => {
       item.stats.splice(vm.statsMap[statId], 0, { value: undefined, id: Number(statId), statHash: Number(statId) });
-      vm.statRanges[statId] = { min:0, max:0, enabled:false};
+      vm.statRanges[statId] = { min: 0, max: 0, enabled: false };
     });
 
     _.difference(_.keys(itemStatsMap), _.keys(vm.statsMap)).forEach((statId) => {
@@ -71,8 +71,8 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   }
 
   function removeMissingStats() {
-    vm.comparisons.map((compItem) => {
-      const statIndex = compItem.stats.findIndex((stat) => (stat.bar && stat.base && stat.sort) == undefined);
+    _.map(vm.comparisons, (compItem) => {
+      const statIndex = compItem.stats.findIndex((stat) => (stat.bar && stat.base && stat.sort) === undefined);
       if (statIndex > 0) {
         compItem.stats.splice(statIndex, 1);
       }
@@ -113,7 +113,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   vm.sort = function(statHash) {
     vm.sortedHash = statHash;
     vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), (item) => {
-      const stat = statHash === item.primStat.statHash ? item.primStat : (vm.sortedHash === 'Rating' ? {value:item.dtrRating} : _.find(item.stats, { statHash: statHash }));
+      const stat = statHash === item.primStat.statHash ? item.primStat : (vm.sortedHash === 'Rating' ? { value: item.dtrRating } : _.find(item.stats, { statHash: statHash }));
       return stat.value || -1;
     }).reverse();
   };
@@ -209,7 +209,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
       if (item.stats) {
         item.stats.forEach(bucketStat);
         bucketStat(item.primStat);
-        bucketStat({statHash:0, value:Number(item.dtrRating)});
+        bucketStat({ statHash: 0, value: Number(item.dtrRating) });
       }
     });
 
