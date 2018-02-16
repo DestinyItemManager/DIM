@@ -5,31 +5,31 @@
       <a class="link"
          ng-if="$ctrl.destinyVersion == 1"
          ui-sref-active="active"
-         ui-sref="destiny1.inventory"
+         ui-sref="destiny1.inventory($ctrl.account)"
          ng-i18next="Header.Inventory"></a>
       <a class="link"
          ng-if="$ctrl.destinyVersion == 2"
          ui-sref-active="active"
-         ui-sref="destiny2.inventory"
+         ui-sref="destiny2.inventory($ctrl.account)"
          ng-i18next="Header.Inventory"></a>
       <a class="link"
          ng-if="$ctrl.destinyVersion == 1"
          ui-sref-active="active"
-         ui-sref="destiny1.loadout-builder"
+         ui-sref="destiny1.loadout-builder($ctrl.account)"
          ng-i18next="LB.LB"></a>
       <a class="link"
          ng-if="$ctrl.destinyVersion == 1"
          ui-sref-active="active"
-         ui-sref="destiny1.vendors"
+         ui-sref="destiny1.vendors($ctrl.account)"
          ng-i18next="Vendors.Vendors"></a>
       <a class="link"
          ng-if="$ctrl.destinyVersion == 1"
          ui-sref-active="active"
-         ui-sref="destiny1.record-books"
+         ui-sref="destiny1.record-books($ctrl.account)"
          ng-i18next="RecordBooks.RecordBooks"></a>
       <a class="link"
          ui-sref-active="active"
-         ui-sref="destiny1.activities"
+         ui-sref="destiny1.activities($ctrl.account)"
          ng-if="$ctrl.destinyVersion == 1"
          ng-i18next="Activities.Activities"></a>
       <span class="link"
@@ -37,7 +37,7 @@
          ng-click="$ctrl.showXur($event)">Xûr</span>
       <a class="link second-to-go"
          ui-sref-active="active"
-         ui-sref="destiny2.progress"
+         ui-sref="destiny2.progress($ctrl.account)"
          ng-if="$ctrl.destinyVersion == 2"
          ng-i18next="Progress.Progress"></a>
       <hr>
@@ -101,32 +101,32 @@
 
   <a class="link second-to-go"
      ui-sref-active="active"
-     ui-sref="destiny1.inventory"
+     ui-sref="destiny1.inventory($ctrl.account)"
      ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="Header.Inventory"></a>
   <a class="link second-to-go"
      ui-sref-active="active"
-     ui-sref="destiny2.inventory"
+     ui-sref="destiny2.inventory($ctrl.account)"
      ng-if="$ctrl.destinyVersion == 2"
      ng-i18next="Header.Inventory"></a>
   <a class="link second-to-go"
      ui-sref-active="active"
-     ui-sref="destiny1.loadout-builder"
+     ui-sref="destiny1.loadout-builder($ctrl.account)"
      ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="LB.LB"></a>
   <a class="link second-to-go"
      ui-sref-active="active"
-     ui-sref="destiny1.record-books"
+     ui-sref="destiny1.record-books($ctrl.account)"
      ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="RecordBooks.RecordBooks"></a>
   <a class="link second-to-go"
      ui-sref-active="active"
-     ui-sref="destiny1.activities"
+     ui-sref="destiny1.activities($ctrl.account)"
      ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="Activities.Activities"></a>
   <a class="link second-to-go"
      ui-sref-active="active"
-     ui-sref="destiny1.vendors"
+     ui-sref="destiny1.vendors($ctrl.account)"
      ng-if="$ctrl.destinyVersion == 1"
      ng-i18next="Vendors.Vendors"></a>
   <span class="link second-to-go"
@@ -134,7 +134,7 @@
      ng-click="$ctrl.showXur($event)">Xûr</span>
   <a class="link second-to-go"
      ui-sref-active="active"
-     ui-sref="destiny2.progress"
+     ui-sref="destiny2.progress($ctrl.account)"
      ng-if="$ctrl.destinyVersion == 2"
      ng-i18next="Progress.Progress"></a>
 
