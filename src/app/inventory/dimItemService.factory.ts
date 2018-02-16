@@ -70,12 +70,8 @@ export function ItemService(
     target = storeService.getStore(target.id)!;
     item = storeService.getItemAcrossStores(item)!;
 
-    if (item.location.inPostmaster) {
-      item.location = item.bucket;
-    }
-
     // If we've moved to a new place
-    if (source.id !== target.id) {
+    if (source.id !== target.id || item.location.inPostmaster) {
       // We handle moving stackable and nonstackable items almost exactly the same!
       const stackable = item.maxStackSize > 1;
       // Items to be decremented
@@ -143,6 +139,9 @@ export function ItemService(
           }
           removedSourceItem = false; // only move without cloning once
           targetItem.amount = 0; // We'll increment amount below
+          if (targetItem.location.inPostmaster) {
+            targetItem.location = targetItem.bucket;
+          }
           target.addItem(targetItem);
         }
 

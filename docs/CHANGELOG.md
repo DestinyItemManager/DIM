@@ -5,6 +5,7 @@
 * Armor mods show more info.
 * Destiny 1 transfers are faster.
 * DIM is better at equipping exotics when you already have exotic ghosts, sparrows, and ships equipped.
+* Pulling an item from the postmaster updates the list of items quickly now.
 
 # 4.40.0
 
