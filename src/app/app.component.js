@@ -128,6 +128,7 @@ function AppComponentCtrl(
     }
   };
 
+  this.language = `lang-${i18next.language}`;
   $scope.$on('i18nextLanguageChange', () => {
     this.language = `lang-${i18next.language}`;
   });
