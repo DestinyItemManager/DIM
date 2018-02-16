@@ -5,12 +5,23 @@ import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { UserMembershipData } from 'bungie-api-ts/user';
 import { t } from 'i18next';
 import * as _ from 'underscore';
-import { BungieUserApiService } from '../bungie-api/bungie-user-api.service';
-import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
+import { getAccounts } from '../bungie-api/bungie-user-api.service';
+import { getBasicProfile } from '../bungie-api/destiny2-api';
+import { getCharacters } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { PLATFORMS } from '../bungie-api/platforms';
 import { reportException } from '../exceptions';
 import { flatMap } from '../util';
+
+/**
+ * Platform types (membership types) in the Bungie API.
+ */
+export const PLATFORM_LABELS = {
+  [BungieMembershipType.TigerXbox]: 'Xbox',
+  [BungieMembershipType.TigerPsn]: 'PlayStation',
+  [BungieMembershipType.TigerBlizzard]: 'Blizzard',
+  [BungieMembershipType.TigerDemon]: 'Demon',
+  [BungieMembershipType.BungieNext]: 'Bungie.net'
+};
 
 /** A specific Destiny account (one per platform and Destiny version) */
 export interface DestinyAccount {
@@ -35,9 +46,6 @@ export interface DestinyAccount {
  * try to load them.
  */
 export function DestinyAccountService(
-  BungieUserApi: BungieUserApiService,
-  Destiny1Api,
-  Destiny2Api: Destiny2ApiService,
   toaster,
   $q: IQService,
   OAuthTokenService,
@@ -54,7 +62,7 @@ export function DestinyAccountService(
    * @param bungieMembershipId Bungie.net membership ID
    */
   function getDestinyAccountsForBungieAccount(bungieMembershipId: string): IPromise<DestinyAccount[]> {
-    return BungieUserApi.getAccounts(bungieMembershipId)
+    return getAccounts(bungieMembershipId)
       .then(generatePlatforms)
       .then((platforms) => {
         if (platforms.length === 0) {
@@ -81,7 +89,7 @@ export function DestinyAccountService(
         displayName: destinyAccount.displayName,
         platformType: destinyAccount.membershipType,
         membershipId: destinyAccount.membershipId,
-        platformLabel: PLATFORMS[destinyAccount.membershipType].label,
+        platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
         destinyVersion: 1
       };
       // PC only has D2
@@ -95,8 +103,7 @@ export function DestinyAccountService(
   }
 
   function findD2Characters(account: DestinyAccount): IPromise<DestinyAccount | null> {
-    return Destiny2Api
-      .getBasicProfile(account)
+    return getBasicProfile(account)
       .then((response) => {
         if (response.profile &&
           response.profile.data &&
@@ -119,8 +126,7 @@ export function DestinyAccountService(
   }
 
   function findD1Characters(account): IPromise<any | null> {
-    return Destiny1Api
-      .getCharacters(account)
+    return getCharacters(account)
       .then((response) => {
         if (response && response.length) {
           const result: DestinyAccount = {

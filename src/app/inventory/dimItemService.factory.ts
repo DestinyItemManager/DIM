@@ -1,11 +1,12 @@
 import { copy as angularCopy, IPromise } from 'angular';
 import * as _ from 'underscore';
-import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
-import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
-import { DimStore } from './store/d2-store-factory.service';
-import { StoreServiceType } from './d2-stores.service';
-import { DimError } from '../bungie-api/bungie-service-helper.service';
+import { DimError } from '../bungie-api/bungie-service-helper';
+import { equip as d2equip, equipItems as d2EquipItems, transfer as d2Transfer } from '../bungie-api/destiny2-api';
+import { equip as d1equip, equipItems as d1EquipItems, transfer as d1Transfer } from '../bungie-api/destiny1-api';
 import { chainComparator, compareBy, reverseComparator } from '../comparators';
+import { StoreServiceType } from './d2-stores.service';
+import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
+import { DimStore } from './store/d2-store-factory.service';
 
 /**
  * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
@@ -15,8 +16,6 @@ export function ItemService(
   D2StoresService,
   ItemFactory,
   D2ItemFactory: D2ItemFactoryType,
-  Destiny1Api,
-  Destiny2Api: Destiny2ApiService,
   $q,
   $i18next
 ) {
@@ -40,8 +39,16 @@ export function ItemService(
     equipItems
   };
 
-  function api(item: DimItem): Destiny2ApiService {
-    return item.destinyVersion === 2 ? Destiny2Api : Destiny1Api;
+  function equipApi(item: DimItem): (item: DimItem) => IPromise<any> {
+    return item.destinyVersion === 2 ? d2equip : d1equip;
+  }
+
+  function equipItemsApi(item: DimItem): (store: DimStore, items: DimItem[]) => IPromise<any> {
+    return item.destinyVersion === 2 ? d2EquipItems : d1EquipItems;
+  }
+
+  function transferApi(item: DimItem): (item: DimItem, store: DimStore, amount: number) => IPromise<any> {
+    return item.destinyVersion === 2 ? d2Transfer : d1Transfer;
   }
 
   function itemFactory(item: DimItem): D2ItemFactoryType {
@@ -282,7 +289,7 @@ export function ItemService(
       if (items.length === 1) {
         return equipItem(items[0]);
       }
-      return api(items[0]).equipItems(store, items)
+      return equipItemsApi(items[0])(store, items)
         .then((equippedItems) => {
           return equippedItems.map((i) => {
             return updateItemModel(i, store, store, true);
@@ -296,7 +303,7 @@ export function ItemService(
     if ($featureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', storeService.getStore(item.owner)!.name);
     }
-    return api(item).equip(item)
+    return equipApi(item)(item)
       .then(() => {
         const store = storeService.getStore(item.owner)!;
         return updateItemModel(item, store, store, true);
@@ -330,7 +337,7 @@ export function ItemService(
     if ($featureFlags.debugMoves) {
       console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', getStoreService(item).getStore(item.owner)!.name);
     }
-    return api(item).transfer(item, store, amount)
+    return transferApi(item)(item, store, amount)
       .then(() => {
         const source = getStoreService(item).getStore(item.owner)!;
         const newItem = updateItemModel(item, source, store, false, amount);

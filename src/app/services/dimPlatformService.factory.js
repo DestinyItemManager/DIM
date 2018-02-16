@@ -1,12 +1,13 @@
 import angular from 'angular';
+import { Subject } from 'rxjs/Subject';
 import _ from 'underscore';
 import { compareAccounts } from '../accounts/destiny-account.service';
-import { Subject } from 'rxjs/Subject';
+import { dimState } from '../state';
 
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 // TODO: push "current account" into the other account services
-function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $q, dimState, dimSettingsService) {
+function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $q, dimSettingsService) {
   let _platforms = [];
   let _active = null;
 

@@ -11,6 +11,8 @@ import zipWorker from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-mana
 
 import { requireSqlLib } from './database';
 import { reportException } from '../exceptions';
+import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
+import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
 
 angular.module('dimApp')
   .factory('dimManifestService', ManifestService)
@@ -18,17 +20,17 @@ angular.module('dimApp')
 
 // Two separate copies of the service, with separate state and separate storage
 
-function ManifestService($q, Destiny1Api, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+function ManifestService($q, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   'ngInject';
-  return makeManifestService('manifest-version', 'dimManifest', $q, Destiny1Api, $http, toaster, dimSettingsService, $i18next, $rootScope);
+  return makeManifestService('manifest-version', 'dimManifest', $q, d1GetManifest, $http, toaster, dimSettingsService, $i18next, $rootScope);
 }
 
-function D2ManifestService($q, Destiny2Api, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+function D2ManifestService($q, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   'ngInject';
-  return makeManifestService('d2-manifest-version', 'd2-manifest', $q, Destiny2Api, $http, toaster, dimSettingsService, $i18next, $rootScope);
+  return makeManifestService('d2-manifest-version', 'd2-manifest', $q, d2GetManifest, $http, toaster, dimSettingsService, $i18next, $rootScope);
 }
 
-function makeManifestService(localStorageKey, idbKey, $q, DestinyApi, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   // Testing flags
   const alwaysLoadRemote = false;
 
@@ -50,7 +52,7 @@ function makeManifestService(localStorageKey, idbKey, $q, DestinyApi, $http, toa
     // often than every 10 seconds, and only warns if the manifest
     // version has actually changed.
     warnMissingDefinition: _.debounce(() => {
-      DestinyApi.getManifest()
+      getManifestApi()
         .then((data) => {
           const language = dimSettingsService.language;
           const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
@@ -142,7 +144,7 @@ function makeManifestService(localStorageKey, idbKey, $q, DestinyApi, $http, toa
 
   function loadManifest() {
     return $q.all([
-      DestinyApi.getManifest(),
+      getManifestApi(),
       dimSettingsService.ready // wait for settings to be ready
     ])
       .then(([data]) => {

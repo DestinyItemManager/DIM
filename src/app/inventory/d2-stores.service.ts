@@ -11,9 +11,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
-import { Destiny2ApiService } from '../bungie-api/destiny2-api.service';
+import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { PLATFORMS } from '../bungie-api/platforms';
 import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
 import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
@@ -49,7 +48,6 @@ export interface StoreServiceType {
 export function D2StoresService(
   $rootScope: IRootScopeService,
   $q,
-  Destiny2Api: Destiny2ApiService,
   D2Definitions: D2DefinitionsService,
   D2BucketsService: BucketsService,
   dimItemInfoService,
@@ -134,7 +132,7 @@ export function D2StoresService(
           membershipId: $stateParams.membershipId,
           platformType: $stateParams.platformType,
           displayName: 'Unknown',
-          platformLabel: PLATFORMS[$stateParams.platformType],
+          platformLabel: 'Unknown',
           destinyVersion: 2
         };
       } else {
@@ -144,7 +142,7 @@ export function D2StoresService(
 
     return $q.all([
       D2Definitions.getDefinitions(),
-      Destiny2Api.getCharacters(account)
+      getCharacters(account)
     ]).then(([defs, profileInfo]: [D2ManifestDefinitions, DestinyProfileResponse]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
@@ -202,7 +200,7 @@ export function D2StoresService(
       D2BucketsService.getBuckets(),
       NewItemsService.loadNewItems(account, 2),
       dimItemInfoService(account, 2),
-      Destiny2Api.getStores(account)
+      getStores(account)
     ];
 
     const reloadPromise: IPromise<DimStore[]> = $q.all(dataDependencies)

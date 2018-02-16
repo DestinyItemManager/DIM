@@ -5,6 +5,7 @@ import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
 import { subscribeOnScope } from './rx-utils';
 import _ from 'underscore';
 import i18next from 'i18next';
+import { dimState } from './state';
 
 export const AppComponent = {
   template: template,
@@ -18,8 +19,7 @@ function AppComponentCtrl(
   $i18next,
   toaster,
   $timeout,
-  hotkeys,
-  dimState
+  hotkeys
 ) {
   'ngInject';
 

@@ -1,6 +1,6 @@
+import { subscribeOnScope } from '../rx-utils';
 import template from './header.html';
 import './header.scss';
-import { subscribeOnScope } from '../rx-utils';
 
 // TODO: Today we share one header everywhere, and show/hide bits of it depending on the circumstance.
 // It'd be nice if there were a cleaner way to go about this.
@@ -10,7 +10,6 @@ export const HeaderComponent = {
 };
 
 function HeaderController(
-  dimState,
   ngDialog,
   $rootScope,
   hotkeys,
@@ -44,13 +43,13 @@ function HeaderController(
     });
   };
 
-  const unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, (transition) => {
+  const unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, () => {
     updateXur();
   });
 
   vm.$onDestroy = function() {
     unregisterTransitionHook();
-  }
+  };
 
   function updateXur() {
     if (vm.destinyVersion === 1 && !vendorsSubscription) {

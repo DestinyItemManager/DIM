@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { getGlobalAlerts } from '../bungie-api/bungie-core-api';
 
 export const BungieAlertsComponent = {
   controller: BungieAlertsCtrl
@@ -8,7 +9,7 @@ export const BungieAlertsComponent = {
  * A component that will check for Bungie alerts every 5 minutes and publish them as toasts.
  * Each alert will only be shown once per session.
  */
-function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $i18next) {
+function BungieAlertsCtrl($interval, toaster, $i18next) {
   'ngInject';
 
   this.$onInit = function() {
@@ -37,7 +38,7 @@ function BungieAlertsCtrl(BungieCoreApi, $interval, toaster, $i18next) {
   }, (alert) => `${alert.key}-${alert.timestamp}`);
 
   function pollBungieAlerts() {
-    BungieCoreApi.getGlobalAlerts()
+    getGlobalAlerts()
       .then((alerts) => {
         alerts.forEach(showAlertToaster);
       })

@@ -5,6 +5,7 @@ import missingSources from 'app/data/missing_sources.json';
 import { getClass, getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
+import { dimState } from '../../state';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -28,7 +29,6 @@ const tiers = [
  * A factory service for producing DIM inventory items.
  */
 export function ItemFactory(
-  dimState,
   dimManifestService,
   dimSettingsService,
   $i18next,

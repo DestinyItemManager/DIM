@@ -1,10 +1,9 @@
 import angular from 'angular';
 
-import bungieApiModule from '../bungie-api/bungie-api.module';
 import { ActivitiesComponent } from './activities.component';
 
 export default angular
-  .module('activitiesModule', [bungieApiModule])
+  .module('activitiesModule', [])
   .component('activities', ActivitiesComponent)
   .config(($stateProvider) => {
     'ngInject';
