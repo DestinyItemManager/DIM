@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { flatMap } from '../util';
+import { compareBy, chainComparator, reverseComparator } from '../comparators';
 
 /**
  * Builds an object that describes the available search keywords and category mappings.
@@ -160,6 +161,20 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     categoryFilters
   };
 }
+
+// The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
+const dupeComparator = chainComparator(
+  // basePower
+  reverseComparator(compareBy((item) => item.basePower || (item.primStat && item.primStat.value))),
+  // primary stat
+  reverseComparator(compareBy((item) => item.primStat && item.primStat.value)),
+  compareBy((item) => item.masterwork),
+  // has a power mod
+  compareBy((item) => item.primStat && item.basePower && (item.primStat.value !== item.basePower)),
+  compareBy((item) => item.locked),
+  compareBy((item) => ['favorite', 'keep'].includes(item.dimInfo.tag)),
+  compareBy((i) => i.id) // tiebreak by ID
+);
 
 /**
  * This builds an object that can be used to generate filter functions from search queried.
@@ -430,21 +445,11 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
           _duplicates = _.groupBy(storeService.getAllItems(), 'hash');
           _.each(_duplicates, (dupes) => {
             if (dupes.length > 1) {
-              let bestDupe = _.max(dupes, 'basePower');
-              if (bestDupe !== -Infinity) {
-                const dupesWithMaxBasePower = _.select(dupes, (dupe) => dupe.basePower === bestDupe.basePower);
-                if (dupesWithMaxBasePower.length > 1) {
-                  bestDupe = _.max(dupesWithMaxBasePower, (item) => (item.primStat ? item.primStat.value : 0));
-                }
+              dupes.sort(dupeComparator);
+              const bestDupe = dupes[0];
+              for (const dupe of dupes) {
+                _lowerDupes[dupe.id] = dupe !== bestDupe;
               }
-
-              if (bestDupe === -Infinity) {
-                bestDupe = dupes[0];
-              }
-
-              _.reject(dupes, (dupe) => dupe.id === bestDupe.id).forEach((dupe) => {
-                _lowerDupes[dupe.id] = 1;
-              });
 
               if (!_dupeInPost) {
                 if (_.any(dupes, (dupe) => dupe.location.inPostmaster)) {

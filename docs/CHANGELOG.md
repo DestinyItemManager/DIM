@@ -7,6 +7,7 @@
 * DIM is better at equipping exotics when you already have exotic ghosts, sparrows, and ships equipped.
 * Pulling an item from the postmaster updates the list of items quickly now.
 * Navigation from "About" or "Backers" back to your inventory works.
+* is:dupelower breaks ties more intelligently.
 
 # 4.40.0
 
