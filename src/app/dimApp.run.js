@@ -1,4 +1,4 @@
-function run(SyncService, $trace, $uiRouter) {
+export default function run(SyncService, $trace, $uiRouter) {
   'ngInject';
 
   SyncService.init();
@@ -11,4 +11,3 @@ function run(SyncService, $trace, $uiRouter) {
   console.log(`DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`);
 }
 
-export default run;

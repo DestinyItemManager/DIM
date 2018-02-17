@@ -1,5 +1,9 @@
-function config($compileProvider, $httpProvider, hotkeysProvider,
-                ngHttpRateLimiterConfigProvider, ngDialogProvider) {
+export default function config(
+  $compileProvider,
+  $httpProvider,
+  hotkeysProvider,
+  ngHttpRateLimiterConfigProvider,
+  ngDialogProvider) {
   'ngInject';
 
   // TODO: remove this dependency by fixing component bindings https://github.com/angular/angular.js/blob/master/docs/CHANGELOG.md#breaking-changes-1
@@ -32,5 +36,3 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
     plain: true
   });
 }
-
-export default config;

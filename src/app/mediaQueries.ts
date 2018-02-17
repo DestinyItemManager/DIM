@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { Scheduler } from 'rxjs/Scheduler';
+import { asap } from 'rxjs/scheduler/asap';
 import './rx-operators';
 
 // This seems like a good breakpoint for portrait based on https://material.io/devices/
@@ -16,14 +16,14 @@ export function isPhonePortrait() {
 /**
  * Return an observable sequence of phone-portrait statuses.
  */
-export function isPhonePortraitStream() {
+export function isPhonePortraitStream(): Observable<boolean> {
   return Observable.defer(() => {
     return Observable.fromEventPattern(
-      (h) => phoneWidthQuery.addListener(h),
-      (h) => phoneWidthQuery.removeListener(h)
+      (h: MediaQueryListListener) => phoneWidthQuery.addListener(h),
+      (h: MediaQueryListListener) => phoneWidthQuery.removeListener(h)
     )
-    .map((e) => e.matches)
+    .map((e: MediaQueryList) => e.matches)
     .startWith(phoneWidthQuery.matches)
-    .subscribeOn(Scheduler.asap);
+    .subscribeOn(asap);
   });
 }

@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 
 import { DimAppModule } from './dimApp.module';
 import { ShellModule } from './shell/shell.module';

@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 
 import AriaModule from 'angular-aria';
 import DialogModule from 'ng-dialog';
@@ -75,10 +75,12 @@ const dependencies = [
 ];
 
 if ($DIM_FLAVOR === 'dev') {
+  // tslint:disable-next-line
   dependencies.push(require('./developer/developer.module').default);
 }
 
 if ($featureFlags.sentry) {
+  // tslint:disable-next-line
   dependencies.push(require('raven-js/plugins/angular').moduleName);
 }
 

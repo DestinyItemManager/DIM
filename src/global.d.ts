@@ -40,6 +40,7 @@ interface Window {
   CSS: {
     supports(propertyName: string, value: string, something: number);
   }
+  BroadcastChannel?: BroadcastChannel;
 }
 
 declare module "*.jpg" {

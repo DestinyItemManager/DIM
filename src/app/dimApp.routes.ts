@@ -1,4 +1,4 @@
-function routes($stateProvider, $urlServiceProvider, $transitionsProvider) {
+export default function routes($urlServiceProvider, $transitionsProvider) {
   'ngInject';
 
   $urlServiceProvider.rules.initial({ state: 'default-account' });
@@ -10,5 +10,3 @@ function routes($stateProvider, $urlServiceProvider, $transitionsProvider) {
     });
   }
 }
-
-export default routes;

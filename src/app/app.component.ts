@@ -3,12 +3,12 @@ import './app.scss';
 import changelog from '../views/changelog-toaster-release.html';
 import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
 import { subscribeOnScope } from './rx-utils';
-import _ from 'underscore';
-import i18next from 'i18next';
+import * as _ from 'underscore';
+import { language as i18nextLanguage } from 'i18next';
 import { dimState } from './state';
 
 export const AppComponent = {
-  template: template,
+  template,
   controller: AppComponentCtrl
 };
 
@@ -17,7 +17,6 @@ function AppComponentCtrl(
   dimInfoService,
   dimSettingsService,
   $i18next,
-  toaster,
   $timeout,
   hotkeys
 ) {
@@ -32,28 +31,28 @@ function AppComponentCtrl(
 
     this.settings = dimSettingsService;
     $scope.$watch(() => this.settings.itemSize, (size) => {
-      document.querySelector('html').style.setProperty("--item-size", `${size}px`);
+      document.querySelector('html')!.style.setProperty("--item-size", `${size}px`);
     });
     $scope.$watch(() => this.settings.charCol, (cols) => {
-      document.querySelector('html').style.setProperty("--character-columns", cols);
+      document.querySelector('html')!.style.setProperty("--character-columns", cols);
     });
     $scope.$watch(() => this.settings.vaultMaxCol, (cols) => {
-      document.querySelector('html').style.setProperty("--vault-max-columns", cols);
+      document.querySelector('html')!.style.setProperty("--vault-max-columns", cols);
     });
 
     $scope.$watch(() => this.settings.charColMobile, (cols) => {
       // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
       if (isPhonePortrait()) {
-        document.querySelector('html').style.setProperty("--character-columns", cols);
+        document.querySelector('html')!.style.setProperty("--character-columns", cols);
       }
     });
     // a subscribe on isPhonePortraitStream is needed when the user on mobile changes from portrait to landscape
     // or a user on desktop shrinks the browser window below isphoneportrait treshold value
     subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
       if (isPhonePortrait) {
-        document.querySelector('html').style.setProperty("--character-columns", this.settings.charColMobile);
+        document.querySelector('html')!.style.setProperty("--character-columns", this.settings.charColMobile);
       } else {
-        document.querySelector('html').style.setProperty("--character-columns", this.settings.charCol);
+        document.querySelector('html')!.style.setProperty("--character-columns", this.settings.charCol);
       }
     });
 
@@ -61,19 +60,18 @@ function AppComponentCtrl(
 
     hotkeys.add({
       combo: ['ctrl+alt+shift+d'],
-      callback: function() {
+      callback() {
         dimState.debug = true;
         console.log("***** DIM DEBUG MODE ENABLED *****");
       }
     });
 
-
     if ($featureFlags.colorA11y) {
       $scope.$watch(() => this.settings.colorA11y, (color) => {
         if (color && color !== '-') {
-          document.querySelector('html').style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
+          document.querySelector('html')!.style.setProperty("--color-filter", `url(#${color.toLowerCase()})`);
         } else {
-          document.querySelector('html').style.removeProperty("--color-filter");
+          document.querySelector('html')!.style.removeProperty("--color-filter");
         }
       });
     }
@@ -106,7 +104,7 @@ function AppComponentCtrl(
     }
 
     if (window.BroadcastChannel) {
-      const updateChannel = new window.BroadcastChannel('precache-updates');
+      const updateChannel = new BroadcastChannel('precache-updates');
 
       const updateMessage = _.once(() => {
         $timeout(() => {
@@ -119,17 +117,15 @@ function AppComponentCtrl(
         });
       });
 
-      const messageHandler = () => updateMessage();
-
-      updateChannel.addEventListener('message', messageHandler);
+      updateChannel.addEventListener('message', updateMessage);
       $scope.$on('$destroy', () => {
-        updateChannel.removeEventListener('message', messageHandler);
+        updateChannel.removeEventListener('message', updateMessage);
       });
     }
   };
 
-  this.language = `lang-${i18next.language}`;
+  this.language = `lang-${i18nextLanguage}`;
   $scope.$on('i18nextLanguageChange', () => {
-    this.language = `lang-${i18next.language}`;
+    this.language = `lang-${i18nextLanguage}`;
   });
 }
