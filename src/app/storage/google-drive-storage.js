@@ -1,6 +1,7 @@
 import _ from 'underscore';
+import { getToken } from '../oauth/oauth-token.service';
 
-export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) {
+export function GoogleDriveStorage($q, $i18next, $rootScope) {
   'ngInject';
 
   return {
@@ -169,7 +170,7 @@ export function GoogleDriveStorage($q, $i18next, OAuthTokenService, $rootScope) 
      */
     getFileName: function() {
       // TODO: in the future wait for a promise or observable on this value
-      const token = OAuthTokenService.getToken();
+      const token = getToken();
       if (token && token.bungieMembershipId) {
         return `DIM-${$DIM_FLAVOR}-${token.bungieMembershipId}`;
       }

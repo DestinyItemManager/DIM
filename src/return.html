@@ -9,7 +9,13 @@
 
   <body>
     <div>
-      <dim-return></dim-return>
+      <div id="loading">Authorizing...</div>
+      <div id="error-display" style="display: none">
+        <p>Error authorizing DIM: <span id="error-message"></span> This might be a problem with DIM, or it might be an issue with Bungie.net or your browser.</p>
+        <p>Check DIM status on <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a> or let us know what error you're seeing.</p>
+
+        <a href="/index.html">Go back to DIM and try again</a>
+      </div>
     </div>
 
     {{{htmlWebpackPlugin.files.webpackManifest}}}

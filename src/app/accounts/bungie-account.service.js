@@ -1,3 +1,5 @@
+import { getToken } from '../oauth/oauth-token.service';
+
 /**
  * @typedef {Object} BungieAccount - A Bungie account is an account on Bungie.net, which is associated
  * with one or more Destiny accounts.
@@ -9,7 +11,7 @@
  * DIM account. These accounts are identified with a membership ID,
  * and have references to one or more Destiny accounts.
  */
-export function BungieAccountService(OAuthTokenService) {
+export function BungieAccountService() {
   'ngInject';
 
   // an observable for the accounts
@@ -28,7 +30,7 @@ export function BungieAccountService(OAuthTokenService) {
    * @return {Promise<BungieAccount[]>} a list of all the known Bungie accounts.
    */
   function getBungieAccounts() {
-    const token = OAuthTokenService.getToken();
+    const token = getToken();
 
     if (token && token.bungieMembershipId) {
       return Promise.resolve([{

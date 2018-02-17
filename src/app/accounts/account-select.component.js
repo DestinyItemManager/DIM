@@ -1,5 +1,6 @@
 import dialogTemplate from './account-select.dialog.html';
 import template from './account-select.html';
+import { removeToken } from '../oauth/oauth-token.service';
 import './account-select.scss';
 
 export const AccountSelectComponent = {
@@ -10,7 +11,7 @@ export const AccountSelectComponent = {
   }
 };
 
-function AccountSelectController($scope, dimPlatformService, dimSettingsService, loadingTracker, ngDialog, OAuthTokenService, $state) {
+function AccountSelectController($scope, dimPlatformService, dimSettingsService, loadingTracker, ngDialog, $state) {
   'ngInject';
 
   const vm = this;
@@ -30,7 +31,7 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
   vm.logOut = function(e) {
     e.stopPropagation();
 
-    OAuthTokenService.removeToken();
+    removeToken();
     $state.go('login', { reauth: true });
   };
 
