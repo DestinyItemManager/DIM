@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { bootstrap } from 'angular';
 import 'babel-polyfill';
 
 import './app/google';
@@ -20,7 +20,7 @@ polyfill({
 });
 
 // https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
-window.addEventListener('touchmove', () => {});
+window.addEventListener('touchmove', () => { return; });
 
 if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
   navigator.serviceWorker.register('/service-worker.js')
@@ -30,5 +30,5 @@ if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
 }
 
 initi18n().then(() => {
-  angular.bootstrap(document.body, ['app'], { strictDi: true });
+  bootstrap(document.body, ['app'], { strictDi: true });
 });
