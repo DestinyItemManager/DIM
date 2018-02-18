@@ -1,3 +1,4 @@
+import { itemTags } from '../settings/settings';
 import template from './destiny2.html';
 import './destiny2.scss';
 
@@ -12,7 +13,6 @@ export const Destiny2Component = {
 function Destiny2Controller(
   $rootScope,
   hotkeys,
-  dimSettingsService,
   $scope,
   $i18next
 ) {
@@ -28,7 +28,7 @@ function Destiny2Controller(
     }
   });
 
-  dimSettingsService.itemTags.forEach((tag) => {
+  itemTags.forEach((tag) => {
     if (tag.hotkey) {
       hotkeys.add({
         combo: [tag.hotkey],

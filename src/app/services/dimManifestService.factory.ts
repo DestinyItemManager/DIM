@@ -14,19 +14,20 @@ import { reportException } from '../exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
 import { IPromise, IHttpService, IQService } from 'angular';
+import { settings } from '../settings/settings';
 
 declare const zip: any;
 
 // Two separate copies of the service, with separate state and separate storage
 
-export function ManifestService($q, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+export function ManifestService($q, $http, toaster, $i18next, $rootScope) {
   'ngInject';
-  return makeManifestService('manifest-version', 'dimManifest', $q, d1GetManifest, $http, toaster, dimSettingsService, $i18next, $rootScope);
+  return makeManifestService('manifest-version', 'dimManifest', $q, d1GetManifest, $http, toaster, $i18next, $rootScope);
 }
 
-export function D2ManifestService($q, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+export function D2ManifestService($q, $http, toaster, $i18next, $rootScope) {
   'ngInject';
-  return makeManifestService('d2-manifest-version', 'd2-manifest', $q, d2GetManifest, $http, toaster, dimSettingsService, $i18next, $rootScope);
+  return makeManifestService('d2-manifest-version', 'd2-manifest', $q, d2GetManifest, $http, toaster, $i18next, $rootScope);
 }
 
 function makeManifestService(
@@ -36,7 +37,6 @@ function makeManifestService(
   getManifestApi,
   $http: IHttpService,
   toaster,
-  dimSettingsService,
   $i18next,
   $rootScope
 ) {
@@ -63,7 +63,7 @@ function makeManifestService(
     warnMissingDefinition: _.debounce(() => {
       getManifestApi()
         .then((data) => {
-          const language = dimSettingsService.language;
+          const language = settings.language;
           const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
           // The manifest has updated!
@@ -155,10 +155,10 @@ function makeManifestService(
   function loadManifest(): IPromise<Uint8Array> {
     return $q.all([
       getManifestApi(),
-      dimSettingsService.ready // wait for settings to be ready
+      settings.ready // wait for settings to be ready
     ])
       .then(([data]) => {
-        const language = dimSettingsService.language;
+        const language = settings.language;
         const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
         // Use the path as the version, rather than the "version" field, because

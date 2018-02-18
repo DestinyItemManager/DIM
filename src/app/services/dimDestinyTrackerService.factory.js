@@ -14,6 +14,7 @@ import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
 import { D2TrackerErrorHandler } from '../destinyTrackerApi/d2-trackerErrorHandler';
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { SyncService } from '../storage/sync.service';
+import { settings } from '../settings/settings';
 
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
@@ -21,7 +22,6 @@ angular.module('dimApp')
 function DestinyTrackerService($q,
                                $http,
                                dimPlatformService,
-                               dimSettingsService,
                                $i18next,
                                loadingTracker) {
   const _reviewDataCache = new ReviewDataCache();
@@ -40,11 +40,11 @@ function DestinyTrackerService($q,
   const _d2reviewReporter = new D2ReviewReporter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
 
   function _isDestinyOne() {
-    return (dimSettingsService.destinyVersion === 1);
+    return (settings.destinyVersion === 1);
   }
 
   function _isDestinyTwo() {
-    return (dimSettingsService.destinyVersion === 2);
+    return (settings.destinyVersion === 2);
   }
 
   return {
@@ -74,7 +74,7 @@ function DestinyTrackerService($q,
     },
 
     updateVendorRankings: function(vendors) {
-      if (dimSettingsService.showReviews) {
+      if (settings.showReviews) {
         if (_isDestinyOne()) {
           _bulkFetcher.bulkFetchVendorItems(vendors);
         } else if (_isDestinyTwo()) {
@@ -84,18 +84,18 @@ function DestinyTrackerService($q,
     },
 
     getItemReviews: function(item) {
-      if (dimSettingsService.allowIdPostToDtr) {
+      if (settings.allowIdPostToDtr) {
         if (_isDestinyOne()) {
           _reviewsFetcher.getItemReviews(item);
         } else if (_isDestinyTwo()) {
-          const platformSelection = dimSettingsService.reviewsPlatformSelection;
+          const platformSelection = settings.reviewsPlatformSelection;
           _d2reviewsFetcher.getItemReviews(item, platformSelection);
         }
       }
     },
 
     submitReview: function(item) {
-      if (dimSettingsService.allowIdPostToDtr) {
+      if (settings.allowIdPostToDtr) {
         const membershipInfo = dimPlatformService.getActive();
 
         if (_isDestinyOne()) {
@@ -107,7 +107,7 @@ function DestinyTrackerService($q,
     },
 
     fetchReviews: function(stores) {
-      if (!dimSettingsService.showReviews ||
+      if (!settings.showReviews ||
           !stores ||
           !stores[0]) {
         return;
@@ -116,13 +116,13 @@ function DestinyTrackerService($q,
       if (stores[0].destinyVersion === 1) {
         _bulkFetcher.bulkFetch(stores);
       } else if (stores[0].destinyVersion === 2) {
-        const platformSelection = dimSettingsService.reviewsPlatformSelection;
+        const platformSelection = settings.reviewsPlatformSelection;
         _d2bulkFetcher.bulkFetch(stores, platformSelection);
       }
     },
 
     reportReview: function(review) {
-      if (dimSettingsService.allowIdPostToDtr) {
+      if (settings.allowIdPostToDtr) {
         const membershipInfo = dimPlatformService.getActive();
 
         if (_isDestinyOne()) {

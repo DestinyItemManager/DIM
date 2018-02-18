@@ -6,6 +6,7 @@ import { DimInventoryBucket, BucketsService } from '../destiny2/d2-buckets.servi
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { settings } from '../settings/settings';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -19,8 +20,7 @@ export function D2FarmingService(
   $interval: IIntervalService,
   toaster,
   $i18next,
-  D2BucketsService: BucketsService,
-  dimSettingsService
+  D2BucketsService: BucketsService
 ) {
   'ngInject';
 
@@ -76,7 +76,7 @@ export function D2FarmingService(
         }
       });
 
-      if (dimSettingsService.farming.moveTokens) {
+      if (settings.farming.moveTokens) {
         itemsToMove = itemsToMove.concat(store.items.filter((i) => REP_TOKENS.has(i.hash)));
       }
 

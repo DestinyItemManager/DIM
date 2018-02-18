@@ -1,4 +1,5 @@
 import { subscribeOnScope } from '../rx-utils';
+import { settings } from '../settings/settings';
 import template from './header.html';
 import './header.scss';
 
@@ -13,7 +14,6 @@ function HeaderController(
   ngDialog,
   $rootScope,
   hotkeys,
-  dimSettingsService,
   $transitions,
   $state,
   $scope,
@@ -30,7 +30,7 @@ function HeaderController(
 
   let vendorsSubscription;
   vm.xurAvailable = false;
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   vm.featureFlags = {
     bugReportLink: $DIM_FLAVOR !== 'release'

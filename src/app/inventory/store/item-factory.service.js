@@ -30,7 +30,6 @@ const tiers = [
  */
 export function ItemFactory(
   dimManifestService,
-  dimSettingsService,
   $i18next,
   NewItemsService,
   ClassifiedDataService,

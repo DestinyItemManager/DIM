@@ -1,4 +1,5 @@
 import template from './destiny1.html';
+import { itemTags } from '../settings/settings';
 
 /**
  * This is the parent component of all Destiny 1 views.
@@ -11,7 +12,6 @@ export const Destiny1Component = {
 function Destiny1Controller(
   $rootScope,
   hotkeys,
-  dimSettingsService,
   $scope,
   $i18next
 ) {
@@ -27,7 +27,7 @@ function Destiny1Controller(
     }
   });
 
-  dimSettingsService.itemTags.forEach((tag) => {
+  itemTags.forEach((tag) => {
     if (tag.hotkey) {
       hotkeys.add({
         combo: [tag.hotkey],

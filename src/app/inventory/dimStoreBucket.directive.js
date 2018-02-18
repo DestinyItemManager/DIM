@@ -3,6 +3,7 @@ import _ from 'underscore';
 import { reportException } from '../exceptions';
 import { isPhonePortrait } from '../mediaQueries';
 import { queuedAction } from '../services/action-queue';
+import { settings } from '../settings/settings';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 import template from './dimStoreBucket.directive.html';
 import './dimStoreBucket.scss';
@@ -26,7 +27,6 @@ function StoreBucketCtrl($scope,
                          $q,
                          $timeout,
                          toaster,
-                         dimSettingsService,
                          ngDialog,
                          $rootScope,
                          dimInfoService,
@@ -38,7 +38,7 @@ function StoreBucketCtrl($scope,
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   vm.dropChannel = `${vm.bucket.type},${vm.store.id}${vm.bucket.type}`;
 

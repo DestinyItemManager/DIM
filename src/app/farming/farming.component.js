@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { settings } from '../settings/settings';
 import template from './farming.html';
 import './farming.scss';
 
@@ -8,14 +8,14 @@ export const FarmingComponent = {
   template
 };
 
-function FarmingCtrl(dimFarmingService, dimItemMoveService, dimSettingsService) {
+function FarmingCtrl(dimFarmingService, dimItemMoveService) {
   'ngInject';
 
   const vm = this;
 
-  angular.extend(vm, {
+  Object.assign(vm, {
     service: dimFarmingService,
-    settings: dimSettingsService,
+    settings,
     consolidate: dimItemMoveService.consolidate,
     stop: function($event) {
       $event.preventDefault();

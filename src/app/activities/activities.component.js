@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { subscribeOnScope } from '../rx-utils';
+import { settings } from '../settings/settings';
 
 import template from './activities.html';
 import './activities.scss';
@@ -12,12 +13,12 @@ export const ActivitiesComponent = {
   }
 };
 
-function ActivitiesController($scope, D2StoresService, dimStoreService, dimDefinitions, dimSettingsService, $i18next) {
+function ActivitiesController($scope, D2StoresService, dimStoreService, dimDefinitions, $i18next) {
   'ngInject';
 
   const vm = this;
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   function getStoreService() {
     return vm.settings.destinyVersion === 2 ? D2StoresService : dimStoreService;

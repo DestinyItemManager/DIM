@@ -5,6 +5,7 @@ import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
 import { subscribeOnScope } from './rx-utils';
 import * as _ from 'underscore';
 import { dimState } from './state';
+import { settings } from './settings/settings';
 
 export const AppComponent = {
   template,
@@ -14,7 +15,6 @@ export const AppComponent = {
 function AppComponentCtrl(
   $scope,
   dimInfoService,
-  dimSettingsService,
   $i18next,
   $timeout,
   hotkeys
@@ -23,12 +23,11 @@ function AppComponentCtrl(
 
   this.$onInit = function() {
     this.reviewsEnabled = $featureFlags.reviewsEnabled;
-    this.settings = dimSettingsService;
+    this.settings = settings;
     this.featureFlags = {
       colorA11y: $featureFlags.colorA11y
     };
 
-    this.settings = dimSettingsService;
     $scope.$watch(() => this.settings.itemSize, (size) => {
       document.querySelector('html')!.style.setProperty("--item-size", `${size}px`);
     });

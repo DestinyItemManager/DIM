@@ -28,6 +28,7 @@ import { Quest } from './quest';
 import { isWellRested } from '../inventory/store/well-rested';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
+import { settings, CharacterOrder } from '../settings/settings';
 
 /* Label isn't used, but it helps us understand what each one is */
 const progressionMeta = {
@@ -55,10 +56,7 @@ interface Props {
   ProgressService: ProgressService;
   $scope: IScope;
   account: DestinyAccount;
-  dimSettingsService;
 }
-
-type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed';
 
 interface State {
   progress?: ProgressProfile;
@@ -74,7 +72,7 @@ export class Progress extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      characterOrder: this.props.dimSettingsService.characterOrder,
+      characterOrder: settings.characterOrder,
       isPhonePortrait: isPhonePortrait(),
       currentCharacterId: ""
     };
@@ -109,7 +107,7 @@ export class Progress extends React.Component<Props, State> {
       this.props.ProgressService.reloadProgress();
     });
 
-    this.props.$scope.$watch(() => this.props.dimSettingsService.characterOrder, (newValue: CharacterOrder) => {
+    this.props.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
       if (newValue !== this.state.characterOrder) {
         this.setState({ characterOrder: newValue });
       }

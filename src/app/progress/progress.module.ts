@@ -7,7 +7,7 @@ import { ProgressService } from './progress.service';
 // This is the Destiny 2 "Progress" page with milestones and factions.
 export const progressModule = module('progressModule', [])
   .factory('ProgressService', ProgressService)
-  .component('d2Progress', react2angular(Progress, ['account'], ['ProgressService', '$scope', 'dimSettingsService']))
+  .component('d2Progress', react2angular(Progress, ['account'], ['ProgressService', '$scope']))
   .config(($stateProvider: StateProvider) => {
     'ngInject';
 

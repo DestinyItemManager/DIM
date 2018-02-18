@@ -15,7 +15,7 @@ export const LoadoutBuilderComponent = {
   }
 };
 
-function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
+function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
   'ngInject';
 
   const vm = this;

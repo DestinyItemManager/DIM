@@ -1,4 +1,5 @@
-import angular from 'angular';
+import { copy } from 'angular';
+import { settings as dimSettings } from '../settings/settings';
 import _ from 'underscore';
 import { sum } from '../util';
 
@@ -12,7 +13,6 @@ export function FarmingService($rootScope,
                         dimStoreService,
                         $interval,
                         toaster,
-                        dimSettingsService,
                         $i18next,
                         dimBucketService) {
   'ngInject';
@@ -43,7 +43,7 @@ export function FarmingService($rootScope,
     'BUCKET_MATERIALS'
   ];
 
-  const settings = dimSettingsService.farming;
+  const settings = dimSettings.farming;
 
   const outOfSpaceWarning = _.throttle((store) => {
     toaster.pop('info',
@@ -180,7 +180,7 @@ export function FarmingService($rootScope,
         ];
 
         self.consolidate = _.compact(consolidateHashes.map((hash) => {
-          const ret = angular.copy(dimStoreService.getItemAcrossStores({
+          const ret = copy(dimStoreService.getItemAcrossStores({
             hash: hash
           }));
           if (ret) {

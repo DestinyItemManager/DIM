@@ -1,14 +1,15 @@
 import { isPhonePortrait } from '../mediaQueries';
 import { queuedAction } from '../services/action-queue';
+import { itemTags } from '../settings/settings';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import template from './dimStoreItem.directive.html';
 import './dimStoreItem.scss';
 
-export function tagIconFilter(dimSettingsService) {
+export function tagIconFilter() {
   'ngInject';
   const iconType = {};
 
-  dimSettingsService.itemTags.forEach((tag) => {
+  itemTags.forEach((tag) => {
     if (tag.type) {
       iconType[tag.type] = tag.icon;
     }

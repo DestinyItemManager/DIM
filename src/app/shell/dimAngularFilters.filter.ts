@@ -4,6 +4,7 @@ import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
+import { settings } from '../settings/settings';
 
 // This file defines Angular filters for DIM that may be shared among
 // different parts of DIM.
@@ -186,7 +187,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-mod.filter('sortItems', (dimSettingsService) => {
+mod.filter('sortItems', () => {
   return (items: DimItem[]) => {
     if (!items.length) {
       return items;
@@ -208,7 +209,7 @@ mod.filter('sortItems', (dimSettingsService) => {
       specificSortOrder = D1_MATERIAL_SORT_ORDER;
     }
 
-    const sortOrder: string[] = dimSettingsService.itemSortOrder();
+    const sortOrder: string[] = settings.itemSortOrder();
 
     if (specificSortOrder.length > 0 && !sortOrder.includes('rarity')) {
       items = _.sortBy(items, (item) => {

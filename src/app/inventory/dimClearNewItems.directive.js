@@ -1,3 +1,4 @@
+import { settings } from '../settings/settings';
 import template from './dimClearNewItems.directive.html';
 import './dimClearNewItems.scss';
 
@@ -13,10 +14,10 @@ export const ClearNewItemsComponent = {
   }
 };
 
-function ClearNewItemsCtrl($scope, NewItemsService, dimSettingsService, D2StoresService, hotkeys, $i18next, dimStoreService) {
+function ClearNewItemsCtrl($scope, NewItemsService, D2StoresService, hotkeys, $i18next, dimStoreService) {
   'ngInject';
 
-  this.settings = dimSettingsService;
+  this.settings = settings;
   this.newItemsService = NewItemsService;
 
   hotkeys = hotkeys.bindTo($scope);

@@ -1,9 +1,10 @@
 import idbKeyval from 'idb-keyval';
+import { settings } from '../../settings/settings';
 
 /**
  * This service loads classified item details from the beta DIM website.
  */
-export function ClassifiedDataService($http, dimSettingsService) {
+export function ClassifiedDataService($http) {
   'ngInject';
 
   let classifiedDataPromise;
@@ -65,7 +66,7 @@ export function ClassifiedDataService($http, dimSettingsService) {
     buildClassifiedItem(classifiedData, hash) {
       const info = classifiedData.itemHash[hash];
       if (info) { // do we have declassification info for item?
-        const localInfo = info.i18n[dimSettingsService.language];
+        const localInfo = info.i18n[settings.language];
         const classifiedItem = {
           classified: true,
           icon: info.icon,

@@ -3,6 +3,7 @@ import template from './dimStores.directive.html';
 import './dimStores.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
+import { settings } from '../settings/settings';
 
 export const StoresComponent = {
   controller: StoresCtrl,
@@ -14,7 +15,7 @@ export const StoresComponent = {
   template
 };
 
-function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next, $filter) {
+function StoresCtrl($scope, $rootScope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next, $filter) {
   'ngInject';
 
   const vm = this;
@@ -34,7 +35,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
       return;
     }
 
-    const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
+    const sortedStores = $filter('sortStores')(vm.stores, settings.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
     if (currentIndex < (sortedStores.length - 1)) {
@@ -47,7 +48,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
       return;
     }
 
-    const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
+    const sortedStores = $filter('sortStores')(vm.stores, settings.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
     if (currentIndex > 0) {
@@ -55,7 +56,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
     }
   };
   vm.buckets = null;
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
   vm.toggleSection = function(id) {
     // Only tip when collapsing
     if (!vm.settings.collapsedSections[id]) {
@@ -84,7 +85,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
       } else {
         vm.selectedStore = _.find(vm.stores, { id: vm.selectedStore.id });
       }
-      vm.selectedStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.selectedStore);
+      vm.selectedStoreIndex = $filter('sortStores')(vm.stores, settings.characterOrder).indexOf(vm.selectedStore);
     } else {
       vm.selectedStore = null;
       vm.currentStore = null;

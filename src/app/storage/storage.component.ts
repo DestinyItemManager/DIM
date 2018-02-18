@@ -8,6 +8,7 @@ import {
   } from 'angular';
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
+import { settings } from '../settings/settings';
 import { sum } from '../util';
 import template from './storage.html';
 import './storage.scss';
@@ -21,7 +22,6 @@ declare global {
 
 function StorageController(
   $scope: IScope,
-  dimSettingsService,
   dimDestinyTrackerService,
   $timeout: ITimeoutService,
   $window: IWindowService,
@@ -34,7 +34,7 @@ function StorageController(
 
   const vm = this;
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
   vm.syncService = SyncService;
   vm.adapterStats = {};
   vm.googleApiBlocked = !window.gapi;

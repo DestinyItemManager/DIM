@@ -6,6 +6,7 @@ import { searchFilters, buildSearchConfig } from './search-filters';
 import filtersTemplate from '../search/filters.html';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
+import { itemTags } from '../settings/settings';
 import './search-filter.scss';
 
 export const SearchFilterComponent = {
@@ -25,7 +26,6 @@ function SearchFilterCtrl(
   hotkeys,
   $i18next,
   $element,
-  dimSettingsService,
   toaster,
   ngDialog,
   $stateParams,
@@ -35,7 +35,7 @@ function SearchFilterCtrl(
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;
-  vm.bulkItemTags = _.clone(dimSettingsService.itemTags);
+  vm.bulkItemTags = _.clone(itemTags);
   vm.bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
   function getStoreService() {
@@ -62,7 +62,7 @@ function SearchFilterCtrl(
     if (changes.destinyVersion && changes.destinyVersion) {
       searchConfig = buildSearchConfig(
         vm.destinyVersion,
-        dimSettingsService.itemTags,
+        itemTags,
         vm.destinyVersion === 1 ? D1Categories : D2Categories);
       filters = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
       setupTextcomplete();

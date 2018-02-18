@@ -3,6 +3,7 @@ import _ from 'underscore';
 import { dimState } from '../state';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
+import { settings } from '../settings/settings';
 import template from './dimMoveItemProperties.html';
 
 export function MoveItemProperties() {
@@ -22,7 +23,7 @@ export function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, ngDialog, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
   'ngInject';
   const vm = this;
 
@@ -160,7 +161,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
   vm.light = null;
   vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
   vm.itemDetails = vm.showDetailsByDefault;
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
   $scope.$watch('vm.settings.itemDetails', (show) => {
     vm.itemDetails = vm.itemDetails || show;
   });

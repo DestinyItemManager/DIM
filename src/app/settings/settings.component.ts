@@ -4,6 +4,7 @@ import './settings.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { changeLanguage } from 'i18next';
+import { settings } from '../settings/settings';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies
@@ -15,7 +16,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, $i18next, $rootScope) {
+export function SettingsController(loadingTracker, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, $i18next, $rootScope) {
   'ngInject';
 
   const vm = this;
@@ -27,7 +28,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   vm.loadingTracker = loadingTracker;
 
   $scope.$watchCollection('vm.settings', () => {
-    dimSettingsService.save();
+    settings.save();
   });
 
   vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
@@ -94,7 +95,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     }
   };
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
   vm.initialLanguage = vm.settings.language;
 
   // Edge doesn't support these
@@ -119,7 +120,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   };
 
   vm.reviewsPlatformChanged = () => {
-    dimSettingsService.save();
+    settings.save();
     D2StoresService.refreshRatingsData();
   };
 

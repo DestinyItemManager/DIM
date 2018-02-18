@@ -2,6 +2,7 @@ import _ from 'underscore';
 import angular from 'angular';
 import { sum, count } from '../util';
 import { subscribeOnScope } from '../rx-utils';
+import { settings } from '../settings/settings';
 
 import template from './record-books.html';
 import './record-books.scss';
@@ -14,12 +15,12 @@ export const RecordBooksComponent = {
   }
 };
 
-function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSettingsService, $filter) {
+function RecordBooksController($scope, dimStoreService, dimDefinitions, $filter) {
   'ngInject';
 
   const vm = this;
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   // TODO: it's time for a directive
   vm.toggleSection = function(id) {

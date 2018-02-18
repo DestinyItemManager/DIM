@@ -7,6 +7,7 @@ import { getBungieAccounts } from './bungie-account.service';
 import { IPromise, IQService, IRootScopeService } from 'angular';
 import { Observable } from 'rxjs/Observable';
 import { SyncService } from '../storage/sync.service';
+import { settings } from '../settings/settings';
 
 export interface PlatformServiceType {
   getPlatforms(): IPromise<DestinyAccount[]>;
@@ -17,7 +18,7 @@ export interface PlatformServiceType {
 }
 
 // TODO: push "current account" into the other account services
-export function PlatformService($rootScope: IRootScopeService, $q: IQService, dimSettingsService): PlatformServiceType {
+export function PlatformService($rootScope: IRootScopeService, $q: IQService): PlatformServiceType {
   'ngInject';
   let _platforms: DestinyAccount[] = [];
   let _active: DestinyAccount | null = null;
@@ -115,9 +116,9 @@ export function PlatformService($rootScope: IRootScopeService, $q: IQService, di
     if (account === null) {
       return SyncService.remove('platformType');
     } else {
-      if (dimSettingsService.destinyVersion !== account.destinyVersion) {
-        dimSettingsService.destinyVersion = account.destinyVersion;
-        dimSettingsService.save();
+      if (settings.destinyVersion !== account.destinyVersion) {
+        settings.destinyVersion = account.destinyVersion;
+        settings.save();
       }
       return SyncService.set({ platformType: account.platformType, destinyVersion: account.destinyVersion });
     }
