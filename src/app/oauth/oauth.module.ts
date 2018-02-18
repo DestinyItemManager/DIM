@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 import { HttpRefreshTokenService } from './http-refresh-token.service';
 
 export default angular.module('dim-oauth', [])

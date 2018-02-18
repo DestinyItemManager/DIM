@@ -1,7 +1,10 @@
+import { StateService } from '@uirouter/angularjs';
+import { IDialogOpenResult, IDialogService } from 'ng-dialog';
+import { removeToken } from '../oauth/oauth-token.service';
 import dialogTemplate from './account-select.dialog.html';
 import template from './account-select.html';
-import { removeToken } from '../oauth/oauth-token.service';
 import './account-select.scss';
+import { PlatformServiceType } from './platform.service';
 
 export const AccountSelectComponent = {
   template,
@@ -11,11 +14,16 @@ export const AccountSelectComponent = {
   }
 };
 
-function AccountSelectController($scope, dimPlatformService, dimSettingsService, loadingTracker, ngDialog, $state) {
+function AccountSelectController(
+  dimPlatformService: PlatformServiceType,
+  loadingTracker,
+  ngDialog: IDialogService,
+  $state: StateService
+) {
   'ngInject';
 
   const vm = this;
-  let dialogResult = null;
+  let dialogResult: IDialogOpenResult | null = null;
 
   vm.loadingTracker = loadingTracker;
   vm.accounts = [];
@@ -28,19 +36,19 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
     loadingTracker.addPromise(loadAccountsPromise);
   };
 
-  vm.logOut = function(e) {
+  vm.logOut = (e) => {
     e.stopPropagation();
 
     removeToken();
     $state.go('login', { reauth: true });
   };
 
-  vm.selectAccount = function(e, account) {
+  vm.selectAccount = (e, account) => {
     e.stopPropagation();
     $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
   };
 
-  vm.openDropdown = function(e) {
+  vm.openDropdown = (e) => {
     e.stopPropagation();
 
     if (dialogResult === null) {
@@ -53,7 +61,7 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
         className: 'accounts-popup',
         showClose: false,
         controllerAs: '$ctrl',
-        controller: function($scope) {
+        controller($scope) {
           'ngInject';
           // TODO: reorder accounts by LRU?
           this.accounts = vm.accounts.filter((p) => {
@@ -72,11 +80,11 @@ function AccountSelectController($scope, dimPlatformService, dimSettingsService,
         }
       });
 
-      dialogResult.closePromise.then(() => {
+      dialogResult!.closePromise.then(() => {
         dialogResult = null;
       });
     } else {
-      dialogResult.close();
+      dialogResult!.close();
     }
   };
 }

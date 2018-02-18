@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 
 import AriaModule from 'angular-aria';
-import DialogModule from 'ng-dialog';
+import 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
 import ngSanitize from 'angular-sanitize';
 
@@ -44,7 +44,6 @@ import loadingTracker from './services/dimLoadingTracker.factory';
 
 const dependencies = [
   AriaModule,
-  DialogModule,
   DragAndDropModule,
   MessagesModule,
   TouchModule,
@@ -75,6 +74,7 @@ const dependencies = [
   'ajoslin.promise-tracker',
   'cfp.hotkeys',
   'bcherny/ngimport',
+  'ngDialog',
   ngimportMoreModule
 ];
 

@@ -15,6 +15,7 @@ import './loadout-popup.scss';
 import { Loadout, LoadoutClass } from './loadout.service';
 import { makeRoomForPostmaster, pullablePostmasterItems, pullFromPostmaster } from './postmaster';
 import { PlatformServiceType } from '../accounts/platform.service';
+import { IDialogService } from 'ng-dialog';
 
 export const LoadoutPopupComponent = {
   controller: LoadoutPopupCtrl,
@@ -55,7 +56,7 @@ function LoadoutPopupCtrl(
   this: LoadoutPopupCtrlVM,
   $rootScope,
   $scope,
-  ngDialog,
+  ngDialog: IDialogService,
   dimLoadoutService,
   dimItemService,
   toaster,

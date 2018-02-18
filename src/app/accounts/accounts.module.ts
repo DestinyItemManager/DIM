@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 import { DestinyAccountService } from './destiny-account.service';
 import { AccountComponent } from './account.component';
 import { AccountSelectComponent } from './account-select.component';
