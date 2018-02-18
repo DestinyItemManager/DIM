@@ -1,6 +1,5 @@
 import { merge } from 'angular';
 import * as _ from 'underscore';
-import * as i18next from 'i18next';
 import { defaultLanguage } from '../i18n';
 
 const itemSortPresets = {
@@ -122,11 +121,11 @@ export function SettingsService($rootScope, SyncService, $i18next, $q) {
     _ready.resolve();
 
     $rootScope.$evalAsync(() => {
-      const languageChanged = savedSettings.language !== i18next.language;
+      const languageChanged = savedSettings.language !== $i18next.i18n.language;
       merge(settings, savedSettings);
       localStorage.dimLanguage = settings.language;
       if (languageChanged) {
-        $i18next.changeLanguage(settings.language, () => {
+        $i18next.i18n.changeLanguage(settings.language, () => {
           $rootScope.$applyAsync(() => {
             $rootScope.$broadcast('i18nextLanguageChange');
           });

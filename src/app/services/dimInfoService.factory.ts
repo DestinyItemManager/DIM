@@ -7,6 +7,7 @@ module('dimApp').factory('dimInfoService', InfoService);
  * A service for showing an information toaster that can be permanently ignored.
  */
 function InfoService(toaster, $i18next, SyncService) {
+  'ngInject';
   return {
     show(id, content, timeout) {
       timeout = timeout || 0;

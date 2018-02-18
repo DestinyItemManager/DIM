@@ -4,7 +4,6 @@ import changelog from '../views/changelog-toaster-release.html';
 import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
 import { subscribeOnScope } from './rx-utils';
 import * as _ from 'underscore';
-import * as i18next from 'i18next';
 import { dimState } from './state';
 
 export const AppComponent = {
@@ -124,8 +123,8 @@ function AppComponentCtrl(
     }
   };
 
-  this.language = `lang-${i18next.language}`;
+  this.language = `lang-${$i18next.i18n.language}`;
   $scope.$on('i18nextLanguageChange', () => {
-    this.language = `lang-${i18next.language}`;
+    this.language = `lang-${$i18next.i18n.language}`;
   });
 }
