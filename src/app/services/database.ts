@@ -1,7 +1,18 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 
+// tslint:disable-next-line:no-implicit-dependencies
 import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wasm.js';
+// tslint:disable-next-line:no-implicit-dependencies
 import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-optimized-wasm-raw.wasm';
+
+declare global {
+  interface Window {
+    SQL: any;
+    Module: any;
+  }
+}
+
+declare const WebAssembly: any;
 
 // Dynamic import splits up the sql library so the user only loads it
 // if they need it. So we can minify sql.js specifically (as explained
@@ -12,6 +23,7 @@ export const requireSqlLib = _.memoize(() => {
     delete window.Module;
     delete window.SQL;
     console.log("Using asm.js SQLite");
+    // tslint:disable-next-line:space-in-parens
     return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
   }
 
@@ -25,7 +37,7 @@ export const requireSqlLib = _.memoize(() => {
         }
       };
       window.SQL = {
-        onRuntimeInitialized: function() {
+        onRuntimeInitialized() {
           if (!loaded) {
             loaded = true;
 
