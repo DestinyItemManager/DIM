@@ -1,3 +1,5 @@
+import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
+
 /**
  * A config function that will create the default account route, which is used to redirect
  * when we don't know what to do.
@@ -9,9 +11,9 @@ export function defaultAccountRoute($stateProvider) {
   $stateProvider.state({
     name: 'default-account',
     resolve: {
-      activeAccount: (dimPlatformService) => {
+      activeAccount: () => {
         'ngInject';
-        return dimPlatformService.getPlatforms().then(() => dimPlatformService.getActive());
+        return getPlatforms().then(getActivePlatform);
       }
     },
     controller: function controller($state, activeAccount) {

@@ -1,3 +1,5 @@
+import { getPlatforms, setActivePlatform, getPlatformMatching } from '../accounts/platform.service';
+
 /**
  * A config function that will create the Destiny account route, which is the parent of
  * all views that care about a particular Destiny account.
@@ -28,17 +30,17 @@ export function destinyAccountRoute($stateProvider) {
  * routes to resolve an account specific to their version.
  */
 export function destinyAccountResolver(destinyVersion) {
-  return ($transition$, dimPlatformService, $state) => {
+  return ($transition$, $state) => {
     'ngInject';
 
     const { membershipId, platformType } = $transition$.params();
 
     // TODO: shouldn't need to load all platforms for this. How can we avoid that?
-    return dimPlatformService.getPlatforms()
+    return getPlatforms()
       .then(() => {
         // TODO: getPlatformMatching should be able to load an account that we don't know
         // TODO: make sure it's a "real" account
-        const account = dimPlatformService.getPlatformMatching({
+        const account = getPlatformMatching({
           membershipId,
           platformType,
           destinyVersion
@@ -48,7 +50,7 @@ export function destinyAccountResolver(destinyVersion) {
           $state.go('default-account');
           return undefined;
         }
-        return dimPlatformService.setActive(account);
+        return setActivePlatform(account);
       });
   };
 }

@@ -1,10 +1,11 @@
 import idbKeyval from 'idb-keyval';
+import { getActivePlatform } from '../../accounts/platform.service';
 
 /**
  * This service helps us keep track of new items. They are persisted to indexedDB between sessions.
  * They are tracked whether or not the option to display them is on.
  */
-export function NewItemsService(dimPlatformService, $q) {
+export function NewItemsService($q) {
   'ngInject';
 
   const _removedNewItems = new Set();
@@ -52,7 +53,7 @@ export function NewItemsService(dimPlatformService, $q) {
     }
     _removedNewItems.add(item.id);
     item.isNew = false;
-    const account = dimPlatformService.getActive();
+    const account = getActivePlatform();
     loadNewItems(account).then((newItems) => {
       newItems.delete(item.id);
       service.hasNewItems = (newItems.size !== 0);

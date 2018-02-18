@@ -15,13 +15,13 @@ import { D2TrackerErrorHandler } from '../destinyTrackerApi/d2-trackerErrorHandl
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { SyncService } from '../storage/sync.service';
 import { settings } from '../settings/settings';
+import { getActivePlatform } from '../accounts/platform.service';
 
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
 
 function DestinyTrackerService($q,
                                $http,
-                               dimPlatformService,
                                $i18next,
                                loadingTracker) {
   const _reviewDataCache = new ReviewDataCache();
@@ -35,7 +35,7 @@ function DestinyTrackerService($q,
   const _d2reviewDataCache = new D2ReviewDataCache();
   const _d2trackerErrorHandler = new D2TrackerErrorHandler($q, $i18next);
   const _d2bulkFetcher = new D2BulkFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter, dimPlatformService);
+  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
   const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
   const _d2reviewReporter = new D2ReviewReporter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
 
@@ -96,7 +96,7 @@ function DestinyTrackerService($q,
 
     submitReview: function(item) {
       if (settings.allowIdPostToDtr) {
-        const membershipInfo = dimPlatformService.getActive();
+        const membershipInfo = getActivePlatform();
 
         if (_isDestinyOne()) {
           _reviewSubmitter.submitReview(item, membershipInfo);
@@ -123,7 +123,7 @@ function DestinyTrackerService($q,
 
     reportReview: function(review) {
       if (settings.allowIdPostToDtr) {
-        const membershipInfo = dimPlatformService.getActive();
+        const membershipInfo = getActivePlatform();
 
         if (_isDestinyOne()) {
           _reviewReporter.reportReview(review, membershipInfo);

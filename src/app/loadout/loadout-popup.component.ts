@@ -14,7 +14,7 @@ import template from './loadout-popup.html';
 import './loadout-popup.scss';
 import { Loadout, LoadoutClass } from './loadout.service';
 import { makeRoomForPostmaster, pullablePostmasterItems, pullFromPostmaster } from './postmaster';
-import { PlatformServiceType } from '../accounts/platform.service';
+import { getActivePlatform } from '../accounts/platform.service';
 import { IDialogService } from 'ng-dialog';
 
 export const LoadoutPopupComponent = {
@@ -64,7 +64,6 @@ function LoadoutPopupCtrl(
   D2FarmingService,
   $window,
   dimSearchService,
-  dimPlatformService: PlatformServiceType,
   $i18next,
   dimBucketService,
   D2BucketsService,
@@ -94,7 +93,7 @@ function LoadoutPopupCtrl(
   function initLoadouts() {
     dimLoadoutService.getLoadouts()
       .then((loadouts) => {
-        const platform = dimPlatformService.getActive();
+        const platform = getActivePlatform();
         if (!platform) {
           return;
         }

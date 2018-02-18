@@ -15,7 +15,7 @@ export const StoresComponent = {
   template
 };
 
-function StoresCtrl($scope, $rootScope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next, $filter) {
+function StoresCtrl($scope, $rootScope, loadingTracker, dimBucketService, dimInfoService, $i18next, $filter) {
   'ngInject';
 
   const vm = this;

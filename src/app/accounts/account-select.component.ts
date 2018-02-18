@@ -4,7 +4,7 @@ import { removeToken } from '../oauth/oauth-token.service';
 import dialogTemplate from './account-select.dialog.html';
 import template from './account-select.html';
 import './account-select.scss';
-import { PlatformServiceType } from './platform.service';
+import { getPlatforms } from './platform.service';
 
 export const AccountSelectComponent = {
   template,
@@ -15,7 +15,6 @@ export const AccountSelectComponent = {
 };
 
 function AccountSelectController(
-  dimPlatformService: PlatformServiceType,
   loadingTracker,
   ngDialog: IDialogService,
   $state: StateService
@@ -29,7 +28,7 @@ function AccountSelectController(
   vm.accounts = [];
 
   vm.$onInit = () => {
-    const loadAccountsPromise = dimPlatformService.getPlatforms()
+    const loadAccountsPromise = getPlatforms()
       .then((accounts) => {
         vm.accounts = accounts;
       });

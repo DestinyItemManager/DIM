@@ -1,5 +1,6 @@
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
+import { getActiveAccountStream } from '../accounts/platform.service';
 import template from './header.html';
 import './header.scss';
 
@@ -17,8 +18,7 @@ function HeaderController(
   $transitions,
   $state,
   $scope,
-  $injector,
-  dimPlatformService
+  $injector
 ) {
   'ngInject';
 
@@ -37,7 +37,7 @@ function HeaderController(
   };
 
   vm.$onInit = function() {
-    subscribeOnScope($scope, dimPlatformService.getActiveAccountStream(), (account) => {
+    subscribeOnScope($scope, getActiveAccountStream(), (account) => {
       vm.account = account;
       vm.destinyVersion = account.destinyVersion;
     });

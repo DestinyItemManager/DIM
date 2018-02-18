@@ -2,13 +2,13 @@ import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 import { t } from 'i18next';
 import { $http, $rootScope, $timeout } from 'ngimport';
-import { dimState } from '../state';
 import { API_KEY } from './bungie-api-utils';
 import {
   IHttpResponse,
   IPromise,
   IRequestConfig,
 } from 'angular';
+import { getActivePlatform } from '../accounts/platform.service';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -110,8 +110,9 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
   case PlatformErrorCodes.DestinyUnexpectedError:
     if (response.config.url.indexOf('/Account/') >= 0 &&
         response.config.url.indexOf('/Character/') < 0) {
+      const account = getActivePlatform();
       throw error(t('BungieService.NoAccount', {
-        platform: dimState.active ? dimState.active.platformLabel : 'Unknown'
+        platform: account ? account.platformLabel : 'Unknown'
       }), errorCode);
     }
     break;
