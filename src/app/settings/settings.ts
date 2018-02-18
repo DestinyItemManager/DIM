@@ -118,26 +118,28 @@ export const settings = new Settings();
 
 // Load settings async.
 // TODO: make this an "init" method instead of whatever this is
-SyncService.get().then((data) => {
-  data = data || {};
+export function initSettings() {
+  SyncService.get().then((data) => {
+    data = data || {};
 
-  const savedSettings = data['settings-v1.0'] || {};
-  delete savedSettings.itemTags;
+    const savedSettings = data['settings-v1.0'] || {};
+    delete savedSettings.itemTags;
 
-  _loaded = true;
-  readyResolve();
+    _loaded = true;
+    readyResolve();
 
-  $rootScope.$evalAsync(() => {
-    const languageChanged = savedSettings.language !== i18next.language;
-    merge(settings, savedSettings);
-    localStorage.dimLanguage = settings.language;
-    if (languageChanged) {
-      i18next.changeLanguage(settings.language, () => {
-        $rootScope.$applyAsync(() => {
-          $rootScope.$broadcast('i18nextLanguageChange');
+    $rootScope.$evalAsync(() => {
+      const languageChanged = savedSettings.language !== i18next.language;
+      merge(settings, savedSettings);
+      localStorage.dimLanguage = settings.language;
+      if (languageChanged) {
+        i18next.changeLanguage(settings.language, () => {
+          $rootScope.$applyAsync(() => {
+            $rootScope.$broadcast('i18nextLanguageChange');
+          });
         });
-      });
-    }
-    $rootScope.$emit('dim-settings-loaded', {});
+      }
+      $rootScope.$emit('dim-settings-loaded', {});
+    });
   });
-});
+}

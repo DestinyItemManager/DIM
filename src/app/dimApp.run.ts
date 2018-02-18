@@ -1,9 +1,11 @@
 import { SyncService } from "./storage/sync.service";
+import { initSettings } from "./settings/settings";
 
 export default function run($trace, $uiRouter) {
   'ngInject';
 
   SyncService.init();
+  initSettings();
 
   if ($featureFlags.debugRouter) {
     $trace.enable('TRANSITION');
