@@ -186,7 +186,7 @@ export interface DimItem {
   comparable: boolean;
   reviewable: boolean;
   isNew: boolean;
-  dimInfo?: DimItemInfo;
+  dimInfo: DimItemInfo;
   perks: DimPerk[] | null;
   basePower: number;
   index: string;

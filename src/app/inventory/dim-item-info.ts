@@ -29,11 +29,15 @@ export class ItemInfoSource {
   infoForItem(hash: number, id: string): DimItemInfo {
     const itemKey = `${hash}-${id}`;
     const info = this.infos[itemKey];
+    const accountKey = this.key;
     return extend({
       save() {
-        return getInfos(this.key).then((infos) => {
+        return getInfos(accountKey).then((infos) => {
           infos[itemKey] = _.omit(this, 'save');
-          setInfos(this.key, infos)
+          if (_.isEmpty(infos[itemKey])) {
+            delete infos[itemKey];
+          }
+          setInfos(accountKey, infos)
             .catch((e) => {
               toaster.pop('error',
                 t('ItemInfoService.SaveInfoErrorTitle'),

@@ -46,7 +46,7 @@
     </div>
     <dim-item-review item="vm.item" ng-if="vm.item.lockable" ng-show="vm.tab === 'reviews'"></dim-item-review>
     <div ng-show="vm.tab === 'default'">
-      <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>
+      <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ updateOn: 'blur' }" ng-change="vm.updateNote()"></textarea></form>
       <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
       <div class="item-description" ng-if="vm.showDescription" ng-bind="::vm.item.description"></div>
       <div class="masterwork-progress" ng-if="vm.item.masterworkInfo" >

@@ -26,6 +26,7 @@ import { flatMap } from '../util';
 import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
 import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
+import { getItemInfoSource } from './dim-item-info';
 
 export interface StoreServiceType {
   getActiveStore(): DimStore | undefined;
@@ -50,7 +51,6 @@ export interface StoreServiceType {
 export function D2StoresService(
   $rootScope: IRootScopeService,
   $q,
-  dimItemInfoService,
   $i18next,
   toaster,
   D2StoreFactory: D2StoreFactoryType,
@@ -197,7 +197,7 @@ export function D2StoresService(
       getDefinitions(),
       getBuckets(),
       NewItemsService.loadNewItems(account),
-      dimItemInfoService(account, 2),
+      getItemInfoSource(account),
       getStores(account)
     ];
 

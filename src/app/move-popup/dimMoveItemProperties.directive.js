@@ -70,9 +70,10 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
   };
 
   vm.updateNote = function() {
-    if (angular.isDefined(vm.item.dimInfo.notes)) {
-      vm.item.dimInfo.save();
+    if (vm.item.dimInfo.notes === '') {
+      delete vm.item.dimInfo.notes;
     }
+    vm.item.dimInfo.save();
   };
 
   vm.reviewBlur = function() {

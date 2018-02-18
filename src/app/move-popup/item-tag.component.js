@@ -26,6 +26,9 @@ function ItemTagController($scope, $rootScope) {
 
   vm.updateTag = function() {
     vm.item.dimInfo.tag = vm.selected.type;
+    if (!vm.item.dimInfo.tag) {
+      delete vm.item.dimInfo.tag;
+    }
     $rootScope.$broadcast('dim-filter-invalidate');
     vm.item.dimInfo.save();
   };
