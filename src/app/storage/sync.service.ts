@@ -73,11 +73,11 @@ export const SyncService = {
    * @param PUT if this is true, replace all data with value, rather than merging it
    */
   async set(value: Partial<DimData>, PUT = false): Promise<void> {
-    if (!this.cached) {
+    if (!cached) {
       throw new Error("Must call get at least once before setting");
     }
 
-    if (!PUT && equals(_.pick(this.cached, _.keys(value)), value)) {
+    if (!PUT && equals(_.pick(cached, _.keys(value)), value)) {
       if ($featureFlags.debugSync) {
         console.log(_.pick(cached, _.keys(value)), value);
         console.log("Skip save, already got it");
@@ -87,7 +87,7 @@ export const SyncService = {
 
     // use replace to override the data. normally we're doing a PATCH
     if (PUT) { // update our data
-      this.cached = copy(value) as DimData;
+      cached = copy(value) as DimData;
     } else {
       extend(cached, copy(value));
     }
@@ -166,7 +166,7 @@ async function getAndCacheFromAdapters(): Promise<DimData> {
 }
 
 async function getFromAdapters(): Promise<DimData | undefined> {
-  for (const adapter of this.adapters.slice().reverse()) {
+  for (const adapter of adapters.slice().reverse()) {
     if (adapter.enabled) {
         if ($featureFlags.debugSync) {
           console.log('getting from ', adapter.name);

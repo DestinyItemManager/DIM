@@ -7,9 +7,9 @@ import { StorageAdapter } from './sync.service';
  * but may be deleted by the browser!
  */
 export class IndexedDBStorage implements StorageAdapter {
-  supported: true;
-  enabled: true;
-  name: 'IndexedDBStorage';
+  supported = true;
+  enabled = true;
+  name = 'IndexedDBStorage';
 
   get() {
     return Promise.resolve(idbKeyval.get('DIM-data')).then((value) => {
