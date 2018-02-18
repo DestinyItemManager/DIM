@@ -1,4 +1,3 @@
-import angular from 'angular';
 import _ from 'underscore';
 import { dimState } from '../state';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';

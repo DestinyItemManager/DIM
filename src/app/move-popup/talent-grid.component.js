@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import template from './talent-grid.html';
 import './talent-grid.scss';
+import { showInfoPopup } from '../services/dimInfoService.factory';
 
 export function talentGridNodesFilter(nodes, hiddenColumns) {
   return _.filter(nodes || [], (node) => {
@@ -19,7 +20,7 @@ export const TalentGridComponent = {
   template
 };
 
-function TalentGridCtrl(dimInfoService, $i18next) {
+function TalentGridCtrl($i18next) {
   'ngInject';
 
   const infuseHash = 1270552711;
@@ -34,7 +35,7 @@ function TalentGridCtrl(dimInfoService, $i18next) {
       vm.infuse({ $event });
     } else if (node.exclusiveInColumn) {
       // popup warning
-      dimInfoService.show('changeperks', {
+      showInfoPopup('changeperks', {
         type: 'warning',
         title: $i18next.t('Help.ChangingPerks'),
         body: $i18next.t('Help.ChangingPerksInfo'),

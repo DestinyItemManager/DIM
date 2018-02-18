@@ -1,8 +1,9 @@
 import _ from 'underscore';
 import { reportException } from '../exceptions';
 import { queuedAction } from '../services/action-queue';
+import { showInfoPopup } from '../services/dimInfoService.factory';
 
-export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimItemService, dimInfoService, $i18next) {
+export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimItemService, $i18next) {
   'ngInject';
 
   function getStoreService(item) {
@@ -13,7 +14,7 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
                               <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
-    dimInfoService.show('movebox', {
+    showInfoPopup('movebox', {
       title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')

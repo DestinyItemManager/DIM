@@ -4,6 +4,7 @@ import './dimStores.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
+import { showInfoPopup } from '../services/dimInfoService.factory';
 
 export const StoresComponent = {
   controller: StoresCtrl,
@@ -15,7 +16,7 @@ export const StoresComponent = {
   template
 };
 
-function StoresCtrl($scope, $rootScope, loadingTracker, dimInfoService, $i18next, $filter) {
+function StoresCtrl($scope, $rootScope, loadingTracker, $i18next, $filter) {
   'ngInject';
 
   const vm = this;
@@ -23,7 +24,7 @@ function StoresCtrl($scope, $rootScope, loadingTracker, dimInfoService, $i18next
                               <p>${$i18next.t('DidYouKnow.Expand')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
-    dimInfoService.show('collapsed', {
+    showInfoPopup('collapsed', {
       title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')

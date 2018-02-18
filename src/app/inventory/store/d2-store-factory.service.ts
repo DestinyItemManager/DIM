@@ -20,6 +20,7 @@ import { DimStore } from './d2-store-factory.service';
 import vaultBackground from 'app/images/vault-background.png';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';
+import { showInfoPopup } from '../../services/dimInfoService.factory';
 
 export interface DimCharacterStat {
   id: number;
@@ -103,7 +104,7 @@ export interface D2StoreFactoryType {
  * A factory service for producing "stores" (characters or the vault).
  * The job of filling in their items is left to other code - this is just the basic store itself.
  */
-export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
+export function D2StoreFactory($i18next): D2StoreFactoryType {
   'ngInject';
 
   // Prototype for Store objects - add methods to this to add them to all
@@ -190,7 +191,7 @@ export function D2StoreFactory($i18next, dimInfoService): D2StoreFactoryType {
       const bucketItems = this.buckets[item.location.id];
       bucketItems.push(item);
       if (item.location.type === 'LostItems' && bucketItems.length >= item.location.capacity) {
-        dimInfoService.show('lostitems', {
+        showInfoPopup('lostitems', {
           type: 'warning',
           title: $i18next.t('Postmaster.Limit'),
           body: $i18next.t('Postmaster.Desc', { store: this.name }),

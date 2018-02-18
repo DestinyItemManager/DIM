@@ -6,6 +6,7 @@ import { subscribeOnScope } from './rx-utils';
 import * as _ from 'underscore';
 import { dimState } from './state';
 import { settings } from './settings/settings';
+import { showInfoPopup } from './services/dimInfoService.factory';
 
 export const AppComponent = {
   template,
@@ -14,7 +15,6 @@ export const AppComponent = {
 
 function AppComponentCtrl(
   $scope,
-  dimInfoService,
   $i18next,
   $timeout,
   hotkeys
@@ -77,7 +77,7 @@ function AppComponentCtrl(
     // Show the changelog
     if ($featureFlags.changelogToaster) {
       $timeout(() => {
-        dimInfoService.show(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
+        showInfoPopup(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
           title: $i18next.t('Help.Version', {
             version: $DIM_VERSION,
             context: $DIM_FLAVOR
@@ -92,7 +92,7 @@ function AppComponentCtrl(
     } catch (e) {
       console.log('storage test', e);
       $timeout(() => {
-        dimInfoService.show('no-storage', {
+        showInfoPopup('no-storage', {
           title: $i18next.t('Help.NoStorage'),
           body: $i18next.t('Help.NoStorageMessage'),
           type: 'error',
@@ -106,7 +106,7 @@ function AppComponentCtrl(
 
       const updateMessage = _.once(() => {
         $timeout(() => {
-          dimInfoService.show('update-available', {
+          showInfoPopup('update-available', {
             title: $i18next.t('Help.UpdateAvailable'),
             body: $i18next.t('Help.UpdateAvailableMessage'),
             type: 'warn',

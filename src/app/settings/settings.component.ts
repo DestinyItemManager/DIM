@@ -5,6 +5,7 @@ import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { changeLanguage } from 'i18next';
 import { settings } from '../settings/settings';
+import { resetHiddenInfos } from '../services/dimInfoService.factory';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies
@@ -16,7 +17,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-function SettingsController(loadingTracker, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, $i18next, $rootScope) {
+function SettingsController(loadingTracker, $scope, dimCsvService, dimStoreService, D2StoresService, $i18next, $rootScope) {
   'ngInject';
 
   const vm = this;
@@ -111,9 +112,7 @@ function SettingsController(loadingTracker, $scope, dimCsvService, dimStoreServi
     ga('send', 'event', 'Download CSV', 'Armor');
   };
 
-  vm.resetHiddenInfos = () => {
-    dimInfoService.resetHiddenInfos();
-  };
+  vm.resetHiddenInfos = resetHiddenInfos;
 
   vm.resetItemSize = () => {
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;

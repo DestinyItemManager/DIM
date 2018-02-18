@@ -4,6 +4,7 @@ import { reportException } from '../exceptions';
 import { isPhonePortrait } from '../mediaQueries';
 import { queuedAction } from '../services/action-queue';
 import { settings } from '../settings/settings';
+import { showInfoPopup } from '../services/dimInfoService.factory';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 import template from './dimStoreBucket.directive.html';
 import './dimStoreBucket.scss';
@@ -29,7 +30,6 @@ function StoreBucketCtrl($scope,
                          toaster,
                          ngDialog,
                          $rootScope,
-                         dimInfoService,
                          $i18next) {
   'ngInject';
   const vm = this;
@@ -80,7 +80,7 @@ function StoreBucketCtrl($scope,
                               <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
-    dimInfoService.show('doubleclick', {
+    showInfoPopup('doubleclick', {
       title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')
