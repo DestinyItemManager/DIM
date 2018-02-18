@@ -2,6 +2,7 @@ import { copy as angularCopy, IAngularEvent } from 'angular';
 import * as _ from 'underscore';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { queueAction } from '../services/action-queue';
 import {
   gatherEngramsLoadout,
   gatherTokensLoadout,
@@ -67,8 +68,7 @@ function LoadoutPopupCtrl(
   D2BucketsService,
   dimStoreService,
   D2StoresService,
-  $stateParams,
-  dimActionQueue
+  $stateParams
 ) {
   'ngInject';
   const vm = this;
@@ -236,12 +236,12 @@ function LoadoutPopupCtrl(
   vm.makeRoomForPostmaster = () => {
     ngDialog.closeAll();
     const bucketsService = vm.store.destinyVersion === 1 ? dimBucketService : D2BucketsService;
-    return dimActionQueue.queueAction(() => makeRoomForPostmaster(storeService, vm.store, dimItemService, toaster, bucketsService));
+    return queueAction(() => makeRoomForPostmaster(storeService, vm.store, dimItemService, toaster, bucketsService));
   };
 
   vm.pullFromPostmaster = () => {
     ngDialog.closeAll();
-    return dimActionQueue.queueAction(() => pullFromPostmaster(vm.store, dimItemService, toaster));
+    return queueAction(() => pullFromPostmaster(vm.store, dimItemService, toaster));
   };
 
   vm.startFarming = function startFarming() {

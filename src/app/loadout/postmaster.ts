@@ -5,6 +5,7 @@ import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { flatMap } from '../util';
+import { IPromise } from 'angular';
 
 export function makeRoomForPostmaster(
   storeService: StoreServiceType,
@@ -12,8 +13,8 @@ export function makeRoomForPostmaster(
   dimItemService,
   toaster,
   bucketsService: BucketsService
-) {
-  bucketsService.getBuckets().then((buckets) => {
+): IPromise<void> {
+  return bucketsService.getBuckets().then((buckets) => {
     const postmasterItems: DimItem[] = flatMap(buckets.byCategory.Postmaster,
                                     (bucket: DimInventoryBucket) => store.buckets[bucket.id]);
     const postmasterItemCountsByType = _.countBy(postmasterItems,
@@ -59,7 +60,7 @@ export function makeRoomForPostmaster(
                     t('Loadouts.MakeRoom'),
                     t('Loadouts.MakeRoomError', { error: e.message }));
         throw e;
-      });
+      }) as IPromise<void>;
   });
 }
 

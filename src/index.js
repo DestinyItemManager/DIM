@@ -7,7 +7,6 @@ import './app/exceptions';
 // Initialize the main DIM app
 import './app/app.module';
 
-import './app/services/dimActionQueue.factory';
 import './app/services/dimDefinitions.factory';
 import './app/services/dimManifestService.factory';
 import './app/services/dimBucketService.factory';

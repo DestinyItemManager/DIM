@@ -1,10 +1,11 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimStoreBucket.directive.html';
-import dialogTemplate from './dimStoreBucket.directive.dialog.html';
-import './dimStoreBucket.scss';
-import { isPhonePortrait } from '../mediaQueries';
 import { reportException } from '../exceptions';
+import { isPhonePortrait } from '../mediaQueries';
+import { queuedAction } from '../services/action-queue';
+import dialogTemplate from './dimStoreBucket.directive.dialog.html';
+import template from './dimStoreBucket.directive.html';
+import './dimStoreBucket.scss';
 
 export const StoreBucketComponent = {
   controller: StoreBucketCtrl,
@@ -28,7 +29,6 @@ function StoreBucketCtrl($scope,
                          dimSettingsService,
                          ngDialog,
                          $rootScope,
-                         dimActionQueue,
                          dimInfoService,
                          $i18next) {
   'ngInject';
@@ -87,7 +87,7 @@ function StoreBucketCtrl($scope,
     });
   });
 
-  vm.moveDroppedItem = dimActionQueue.wrap((item, equip, $event, hovering) => {
+  vm.moveDroppedItem = queuedAction((item, equip, $event, hovering) => {
     const target = vm.store;
 
     if (target.current && equip && !isPhonePortrait()) {
