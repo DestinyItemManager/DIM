@@ -13,6 +13,7 @@ import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
 import { D2TrackerErrorHandler } from '../destinyTrackerApi/d2-trackerErrorHandler';
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
+import { SyncService } from '../storage/sync.service';
 
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
@@ -22,8 +23,7 @@ function DestinyTrackerService($q,
                                dimPlatformService,
                                dimSettingsService,
                                $i18next,
-                               loadingTracker,
-                               SyncService) {
+                               loadingTracker) {
   const _reviewDataCache = new ReviewDataCache();
   const _userFilter = new UserFilter(SyncService);
   const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);

@@ -1,6 +1,7 @@
 import { merge } from 'angular';
 import * as _ from 'underscore';
 import { defaultLanguage } from '../i18n';
+import { SyncService } from '../storage/sync.service';
 
 const itemSortPresets = {
   primaryStat: ['primStat', 'name'],
@@ -23,7 +24,7 @@ const itemSortPresets = {
  * load in the user's actual settings, so it is a good idea to
  * always watch the settings you are using.
  */
-export function SettingsService($rootScope, SyncService, $i18next, $q) {
+export function SettingsService($rootScope, $i18next, $q) {
   'ngInject';
 
   let _loaded = false;

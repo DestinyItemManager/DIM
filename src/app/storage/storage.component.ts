@@ -11,7 +11,7 @@ import { reportException } from '../exceptions';
 import { sum } from '../util';
 import template from './storage.html';
 import './storage.scss';
-import { SyncServiceType, StorageAdapter } from './sync.service';
+import { StorageAdapter, SyncService } from './sync.service';
 
 declare global {
   interface Window {
@@ -22,7 +22,6 @@ declare global {
 function StorageController(
   $scope: IScope,
   dimSettingsService,
-  SyncService: SyncServiceType,
   dimDestinyTrackerService,
   $timeout: ITimeoutService,
   $window: IWindowService,
@@ -125,11 +124,9 @@ function StorageController(
   vm.importData = () => {
     const reader = new FileReader();
     reader.onload = () => {
-      $scope.$apply(() => {
-        // TODO: we're kinda trusting that this is the right data here, no validation!
-        SyncService.set(JSON.parse(reader.result), true)
-          .then(() => $q.all(SyncService.adapters.map(refreshAdapter)));
-      });
+      // TODO: we're kinda trusting that this is the right data here, no validation!
+      SyncService.set(JSON.parse(reader.result), true)
+        .then(() => $q.all(SyncService.adapters.map(refreshAdapter)));
       $window.alert($i18next.t('Storage.ImportSuccess'));
     };
     const file = (element(document.getElementById('importFile')!)[0] as HTMLInputElement).files![0];

@@ -2,8 +2,9 @@ import angular from 'angular';
 import _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { queueAction } from '../services/action-queue';
+import { SyncService } from '../storage/sync.service';
 
-export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, D2StoresService, dimSettingsService, toaster, loadingTracker, SyncService) {
+export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, D2StoresService, dimSettingsService, toaster, loadingTracker) {
   'ngInject';
 
   function getStoreService() {

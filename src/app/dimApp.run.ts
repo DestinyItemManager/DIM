@@ -1,4 +1,6 @@
-export default function run(SyncService, $trace, $uiRouter) {
+import { SyncService } from "./storage/sync.service";
+
+export default function run($trace, $uiRouter) {
   'ngInject';
 
   SyncService.init();

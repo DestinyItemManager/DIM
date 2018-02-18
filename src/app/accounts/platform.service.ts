@@ -4,8 +4,9 @@ import { compareAccounts, DestinyAccount, getDestinyAccountsForBungieAccount } f
 import { dimState } from '../state';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { getBungieAccounts } from './bungie-account.service';
-import { IPromise } from 'angular';
+import { IPromise, IQService, IRootScopeService } from 'angular';
 import { Observable } from 'rxjs/Observable';
+import { SyncService } from '../storage/sync.service';
 
 export interface PlatformServiceType {
   getPlatforms(): IPromise<DestinyAccount[]>;
@@ -16,7 +17,7 @@ export interface PlatformServiceType {
 }
 
 // TODO: push "current account" into the other account services
-export function PlatformService($rootScope, SyncService, $q, dimSettingsService): PlatformServiceType {
+export function PlatformService($rootScope: IRootScopeService, $q: IQService, dimSettingsService): PlatformServiceType {
   'ngInject';
   let _platforms: DestinyAccount[] = [];
   let _active: DestinyAccount | null = null;
@@ -70,34 +71,32 @@ export function PlatformService($rootScope, SyncService, $q, dimSettingsService)
       .then(() => _platforms);
   }
 
-  function getActivePlatform(): DestinyAccount {
+  async function getActivePlatform(): Promise<DestinyAccount | null> {
     if (_active) {
       return _active;
     }
 
-    return SyncService.get().then((data) => {
-      if (!_platforms.length) {
-        return null;
-      }
+    if (!_platforms.length) {
+      return null;
+    }
 
-      if (_active) {
-        return _active;
-      } else if (data && data.platformType) {
-        let active = _platforms.find((platform) => {
-          return platform.platformType === data.platformType && platform.destinyVersion === data.destinyVersion;
-        });
-        if (active) {
-          return active;
-        }
-        active = _platforms.find((platform) => {
-          return platform.platformType === data.platformType;
-        });
-        if (active) {
-          return active;
-        }
+    const data = await SyncService.get();
+
+    if (_active) {
+      return _active;
+    } else if (data && data.platformType) {
+      let active = _platforms.find((platform) => {
+        return platform.platformType === data.platformType && platform.destinyVersion === data.destinyVersion;
+      });
+      if (active) {
+        return active;
       }
-      return _platforms[0];
-    });
+      active = _platforms.find((platform) => platform.platformType === data.platformType);
+      if (active) {
+        return active;
+      }
+    }
+    return _platforms[0];
   }
 
   function getActive(): DestinyAccount | null {
@@ -109,18 +108,18 @@ export function PlatformService($rootScope, SyncService, $q, dimSettingsService)
     return current$;
   }
 
-  function saveActivePlatform(account: DestinyAccount) {
+  function saveActivePlatform(account: DestinyAccount): Promise<void> {
     // TODO: kill platform label
     _active = account;
     dimState.active = account;
     if (account === null) {
-      SyncService.remove('platformType');
+      return SyncService.remove('platformType');
     } else {
       if (dimSettingsService.destinyVersion !== account.destinyVersion) {
         dimSettingsService.destinyVersion = account.destinyVersion;
         dimSettingsService.save();
       }
-      SyncService.set({ platformType: account.platformType, destinyVersion: account.destinyVersion });
+      return SyncService.set({ platformType: account.platformType, destinyVersion: account.destinyVersion });
     }
   }
 

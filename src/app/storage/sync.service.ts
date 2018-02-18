@@ -20,16 +20,6 @@ export interface DimData {
   [key: string]: any;
 }
 
-export interface SyncServiceType {
-  adapters: StorageAdapter[];
-  GoogleDriveStorage: GoogleDriveStorage;
-
-  get(force?: boolean): Promise<DimData>;
-  set(value: Partial<DimData>, PUT?: boolean): Promise<void>;
-  remove(key: keyof DimData | (keyof DimData)[]): Promise<void>;
-  init(): void;
-}
-
 export interface StorageAdapter {
   supported: boolean;
   enabled: boolean;
@@ -45,29 +35,35 @@ export interface StorageAdapter {
  * systems. Each system is a separate adapter that can be enabled or
  * disabled.
  */
-export function SyncService(): SyncServiceType {
-  'ngInject';
 
-  // Request persistent storage.
-  if (navigator.storage && navigator.storage.persist) {
-    navigator.storage.persist().then((persistent) => {
-      if (persistent) {
-        console.log("Sync: Storage will not be cleared except by explicit user action.");
-      } else {
-        console.log("Sync: Storage may be cleared under storage pressure.");
-      }
-    });
-  }
+// Request persistent storage.
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then((persistent) => {
+    if (persistent) {
+      console.log("Sync: Storage will not be cleared except by explicit user action.");
+    } else {
+      console.log("Sync: Storage may be cleared under storage pressure.");
+    }
+  });
+}
 
-  // A cache for while we're already in the middle of loading
-  let _getPromise: Promise<any> | undefined;
-  let cached: DimData;
-  const GoogleDriveStorageAdapter = new GoogleDriveStorage();
+const GoogleDriveStorageAdapter = new GoogleDriveStorage();
+const adapters: StorageAdapter[] = [
+  new IndexedDBStorage(),
+  GoogleDriveStorageAdapter
+].filter((a) => a.supported);
 
-  const adapters: StorageAdapter[] = [
-    new IndexedDBStorage(),
-    GoogleDriveStorageAdapter
-  ].filter((a) => a.supported);
+// A cache for while we're already in the middle of loading
+let _getPromise: Promise<DimData> | undefined;
+let cached: DimData;
+
+export const SyncService = {
+  adapters,
+  GoogleDriveStorage: GoogleDriveStorageAdapter,
+
+  init() {
+    return GoogleDriveStorageAdapter.init();
+  },
 
   /**
    * Write some key/value pairs to storage. This will write to each
@@ -76,12 +72,12 @@ export function SyncService(): SyncServiceType {
    * @param value an object that will be merged with the saved data object and persisted.
    * @param PUT if this is true, replace all data with value, rather than merging it
    */
-  async function set(value: Partial<DimData>, PUT: boolean): Promise<void> {
-    if (!cached) {
+  async set(value: Partial<DimData>, PUT = false): Promise<void> {
+    if (!this.cached) {
       throw new Error("Must call get at least once before setting");
     }
 
-    if (!PUT && equals(_.pick(cached, _.keys(value)), value)) {
+    if (!PUT && equals(_.pick(this.cached, _.keys(value)), value)) {
       if ($featureFlags.debugSync) {
         console.log(_.pick(cached, _.keys(value)), value);
         console.log("Skip save, already got it");
@@ -91,7 +87,7 @@ export function SyncService(): SyncServiceType {
 
     // use replace to override the data. normally we're doing a PATCH
     if (PUT) { // update our data
-      cached = copy(value) as DimData;
+      this.cached = copy(value) as DimData;
     } else {
       extend(cached, copy(value));
     }
@@ -109,7 +105,7 @@ export function SyncService(): SyncServiceType {
         }
       }
     }
-  }
+  },
 
   /**
    * Load all the saved data. This attempts to load from each adapter
@@ -118,7 +114,7 @@ export function SyncService(): SyncServiceType {
    * @param force bypass the in-memory cache.
    */
   // get DIM saved data
-  function get(force: boolean): Promise<DimData> {
+  get(force = false): Promise<DimData> {
     // if we already have it and we're not forcing a sync
     if (cached && !force) {
       return Promise.resolve(copy(cached));
@@ -126,50 +122,14 @@ export function SyncService(): SyncServiceType {
 
     _getPromise = _getPromise || getAndCacheFromAdapters();
     return _getPromise;
-  }
-
-  async function getAndCacheFromAdapters(): Promise<DimData> {
-    try {
-      const value = await getFromAdapters();
-      cached = value || {};
-      return copy(cached);
-    } finally {
-      _getPromise = undefined;
-    }
-  }
-
-  async function getFromAdapters(): Promise<DimData | undefined> {
-    for (const adapter of adapters.slice().reverse()) {
-      if (adapter.enabled) {
-          if ($featureFlags.debugSync) {
-            console.log('getting from ', adapter.name);
-          }
-          try {
-            const value = await adapter.get();
-
-            if (value && !_.isEmpty(value)) {
-              if ($featureFlags.debugSync) {
-                console.log('got', value, 'from adapter ', adapter.name);
-              }
-              return value;
-            }
-          } catch (e) {
-            console.error('Sync: Error loading from', adapter.name, e);
-            reportException('Sync Load', e);
-          }
-      } else if ($featureFlags.debugSync) {
-        console.log(adapter.name, 'is disabled');
-      }
-    }
-    return undefined;
-  }
+  },
 
   /**
    * Remove one or more keys from storage. It is removed from all adapters.
    *
    * @param keys to delete
    */
-  async function remove(key: string | string[]): Promise<void> {
+  async remove(key: string | string[]): Promise<void> {
     let deleted = false;
     if (_.isArray(key)) {
       _.each(key, (k) => {
@@ -193,17 +153,40 @@ export function SyncService(): SyncServiceType {
       }
     }
   }
+};
 
-  function init() {
-    return GoogleDriveStorageAdapter.init();
+async function getAndCacheFromAdapters(): Promise<DimData> {
+  try {
+    const value = await getFromAdapters();
+    cached = value || {};
+    return copy(cached);
+  } finally {
+    _getPromise = undefined;
   }
+}
 
-  return {
-    get,
-    set,
-    remove,
-    init,
-    adapters,
-    GoogleDriveStorage: GoogleDriveStorageAdapter
-  };
+async function getFromAdapters(): Promise<DimData | undefined> {
+  for (const adapter of this.adapters.slice().reverse()) {
+    if (adapter.enabled) {
+        if ($featureFlags.debugSync) {
+          console.log('getting from ', adapter.name);
+        }
+        try {
+          const value = await adapter.get();
+
+          if (value && !_.isEmpty(value)) {
+            if ($featureFlags.debugSync) {
+              console.log('got', value, 'from adapter ', adapter.name);
+            }
+            return value;
+          }
+        } catch (e) {
+          console.error('Sync: Error loading from', adapter.name, e);
+          reportException('Sync Load', e);
+        }
+    } else if ($featureFlags.debugSync) {
+      console.log(adapter.name, 'is disabled');
+    }
+  }
+  return undefined;
 }

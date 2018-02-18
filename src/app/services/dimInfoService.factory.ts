@@ -1,12 +1,13 @@
 import { module } from 'angular';
 import * as _ from 'underscore';
+import { SyncService } from '../storage/sync.service';
 
 module('dimApp').factory('dimInfoService', InfoService);
 
 /**
  * A service for showing an information toaster that can be permanently ignored.
  */
-function InfoService(toaster, $i18next, SyncService) {
+function InfoService(toaster, $i18next) {
   'ngInject';
   return {
     show(id, content, timeout) {
