@@ -7,12 +7,13 @@ import filtersTemplate from '../search/filters.html';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
 import { itemTags } from '../settings/settings';
+import { getItemInfoSource } from '../inventory/dim-item-info';
 import './search-filter.scss';
 
 export const SearchFilterComponent = {
   controller: SearchFilterCtrl,
   bindings: {
-    destinyVersion: '<'
+    account: '<'
   },
   template
 };
@@ -22,7 +23,6 @@ function SearchFilterCtrl(
   dimStoreService,
   D2StoresService,
   dimSearchService,
-  dimItemInfoService,
   hotkeys,
   $i18next,
   $element,
@@ -39,7 +39,7 @@ function SearchFilterCtrl(
   vm.bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
   function getStoreService() {
-    return vm.destinyVersion === 2 ? D2StoresService : dimStoreService;
+    return vm.account.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
   // This hacks around the fact that dimVendorService isn't defined until the destiny1 modules are lazy-loaded
@@ -59,11 +59,11 @@ function SearchFilterCtrl(
   let filteredItems = [];
 
   vm.$onChanges = function(changes) {
-    if (changes.destinyVersion && changes.destinyVersion) {
+    if (changes.account && changes.account) {
       searchConfig = buildSearchConfig(
-        vm.destinyVersion,
+        vm.account.destinyVersion,
         itemTags,
-        vm.destinyVersion === 1 ? D1Categories : D2Categories);
+        vm.account.destinyVersion === 1 ? D1Categories : D2Categories);
       filters = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
       setupTextcomplete();
     }
@@ -211,10 +211,7 @@ function SearchFilterCtrl(
   };
 
   vm.bulkTag = function() {
-    dimItemInfoService({
-      membershipId: $stateParams.membershipId,
-      platformType: $stateParams.platformType
-    }, filteredItems[0].destinyVersion).then((itemInfoService) => {
+    getItemInfoSource(vm.account).then((itemInfoService) => {
       itemInfoService.bulkSave(filteredItems.filter((i) => i.taggable).map((item) => {
         item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
         return item;
@@ -242,7 +239,7 @@ function SearchFilterCtrl(
       }
     }
 
-    if (vm.destinyVersion === 1 && dimVendorService) {
+    if (vm.account.destinyVersion === 1 && dimVendorService) {
       // Filter vendor items
       _.each(dimVendorService.vendors, (vendor) => {
         for (const saleItem of vendor.allItems) {

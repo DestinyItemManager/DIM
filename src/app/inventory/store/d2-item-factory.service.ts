@@ -32,6 +32,7 @@ import { D2ManifestService } from '../../services/manifest-service';
 import { getClass } from './character-utils';
 import { DimStore } from './d2-store-factory.service';
 import { NewItemsService } from './new-items.service';
+import { DimItemInfo, ItemInfoSource } from '../dim-item-info';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -185,7 +186,7 @@ export interface DimItem {
   comparable: boolean;
   reviewable: boolean;
   isNew: boolean;
-  dimInfo?;
+  dimInfo?: DimItemInfo;
   perks: DimPerk[] | null;
   basePower: number;
   index: string;
@@ -221,14 +222,14 @@ export interface D2ItemFactoryType {
     itemComponents: DestinyItemComponentSetOfint64,
     previousItems: Set<string>,
     newItems: Set<string>,
-    itemInfoService
+    itemInfoService: ItemInfoSource,
   ): IPromise<DimItem[]>;
   makeItem(
     defs: D2ManifestDefinitions,
     buckets: DimInventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
-    itemInfoService,
+    itemInfoService: ItemInfoSource,
     itemComponents: DestinyItemComponentSetOfint64,
     item: DestinyItemComponent,
     owner: DimStore
@@ -370,7 +371,7 @@ export function D2ItemFactory(
     itemComponents: DestinyItemComponentSetOfint64,
     previousItems: Set<string> = new Set(),
     newItems: Set<string> = new Set(),
-    itemInfoService): IPromise<DimItem[]> {
+    itemInfoService: ItemInfoSource): IPromise<DimItem[]> {
     return $q.all([
       getDefinitions(),
       getBuckets()])
@@ -430,7 +431,7 @@ export function D2ItemFactory(
     buckets: DimInventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
-    itemInfoService,
+    itemInfoService: ItemInfoSource,
     itemComponents: DestinyItemComponentSetOfint64,
     item: DestinyItemComponent,
     owner: DimStore

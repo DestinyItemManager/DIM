@@ -12,11 +12,11 @@ import { D1ManifestService } from '../services/manifest-service';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
+import { getItemInfoSource } from './dim-item-info';
 
 export function StoreService(
   $rootScope,
   $q,
-  dimItemInfoService,
   dimDestinyTrackerService,
   toaster,
   StoreFactory,
@@ -159,7 +159,7 @@ export function StoreService(
       getDefinitions(),
       getBuckets(),
       NewItemsService.loadNewItems(account),
-      dimItemInfoService(account, 1),
+      getItemInfoSource(account),
       getStores(account)
     ];
 
