@@ -28,7 +28,7 @@ import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../desti
 import { getDefinitions, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 import { sum } from '../../util';
-import { D2ManifestService } from '../../services/manifest-service';
+import { D2ManifestService } from '../../manifest/manifest-service';
 import { getClass } from './character-utils';
 import { DimStore } from './d2-store-factory.service';
 import { NewItemsService } from './new-items.service';

@@ -7,12 +7,6 @@ import './app/exceptions';
 // Initialize the main DIM app
 import './app/app.module';
 
-import './app/services/dimDestinyTrackerService.factory';
-
-import './app/shell/dimAngularFilters.filter';
-import './app/shell/dimClickAnywhereButHere.directive';
-import './app/shell/dimManifestProgress.directive';
-
 import './scss/main.scss';
 
 import { initi18n } from './app/i18n';

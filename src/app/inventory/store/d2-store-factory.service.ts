@@ -20,7 +20,7 @@ import { DimStore } from './d2-store-factory.service';
 import vaultBackground from 'app/images/vault-background.png';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';
-import { showInfoPopup } from '../../services/dimInfoService.factory';
+import { showInfoPopup } from '../../shell/info-popup';
 
 export interface DimCharacterStat {
   id: number;

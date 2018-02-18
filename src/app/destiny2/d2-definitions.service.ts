@@ -23,7 +23,7 @@ import {
   } from 'bungie-api-ts/destiny2';
 import { $q } from 'ngimport';
 import * as _ from 'underscore';
-import { D2ManifestService } from '../services/manifest-service';
+import { D2ManifestService } from '../manifest/manifest-service';
 
 const lazyTables = [
   'InventoryItem', // DestinyInventoryItemDefinition

@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import { reportException } from '../exceptions';
-import { queuedAction } from '../services/action-queue';
-import { showInfoPopup } from '../services/dimInfoService.factory';
+import { queuedAction } from '../inventory/action-queue';
+import { showInfoPopup } from '../shell/info-popup';
 
 export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimItemService, $i18next) {
   'ngInject';

@@ -2,7 +2,7 @@ import { copy as angularCopy, IAngularEvent, IPromise } from 'angular';
 import * as _ from 'underscore';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { queueAction } from '../services/action-queue';
+import { queueAction } from '../inventory/action-queue';
 import {
   gatherEngramsLoadout,
   gatherTokensLoadout,

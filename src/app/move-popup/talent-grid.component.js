@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import template from './talent-grid.html';
 import './talent-grid.scss';
-import { showInfoPopup } from '../services/dimInfoService.factory';
+import { showInfoPopup } from '../shell/info-popup';
 
 export function talentGridNodesFilter(nodes, hiddenColumns) {
   return _.filter(nodes || [], (node) => {

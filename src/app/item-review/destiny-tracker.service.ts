@@ -1,4 +1,3 @@
-import angular from 'angular';
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
 import { TrackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler';
 import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
@@ -17,13 +16,12 @@ import { SyncService } from '../storage/sync.service';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 
-angular.module('dimApp')
-  .factory('dimDestinyTrackerService', DestinyTrackerService);
-
-function DestinyTrackerService($q,
-                               $http,
-                               $i18next,
-                               loadingTracker) {
+export function DestinyTrackerService(
+  $q,
+  $http,
+  $i18next,
+  loadingTracker
+) {
   const _reviewDataCache = new ReviewDataCache();
   const _userFilter = new UserFilter(SyncService);
   const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
@@ -48,7 +46,7 @@ function DestinyTrackerService($q,
   }
 
   return {
-    reattachScoresFromCache: function(stores) {
+    reattachScoresFromCache(stores) {
       if (!stores || !stores[0]) {
         return;
       }
@@ -62,8 +60,7 @@ function DestinyTrackerService($q,
       }
     },
 
-    updateCachedUserRankings: function(item,
-                                       userReview) {
+    updateCachedUserRankings(item, userReview) {
       if (_isDestinyOne()) {
         _reviewDataCache.addUserReviewData(item,
                                            userReview);
@@ -73,7 +70,7 @@ function DestinyTrackerService($q,
       }
     },
 
-    updateVendorRankings: function(vendors) {
+    updateVendorRankings(vendors) {
       if (settings.showReviews) {
         if (_isDestinyOne()) {
           _bulkFetcher.bulkFetchVendorItems(vendors);
@@ -83,7 +80,7 @@ function DestinyTrackerService($q,
       }
     },
 
-    getItemReviews: function(item) {
+    getItemReviews(item) {
       if (settings.allowIdPostToDtr) {
         if (_isDestinyOne()) {
           _reviewsFetcher.getItemReviews(item);
@@ -94,7 +91,7 @@ function DestinyTrackerService($q,
       }
     },
 
-    submitReview: function(item) {
+    submitReview(item) {
       if (settings.allowIdPostToDtr) {
         const membershipInfo = getActivePlatform();
 
@@ -106,7 +103,7 @@ function DestinyTrackerService($q,
       }
     },
 
-    fetchReviews: function(stores) {
+    fetchReviews(stores) {
       if (!settings.showReviews ||
           !stores ||
           !stores[0]) {
@@ -121,7 +118,7 @@ function DestinyTrackerService($q,
       }
     },
 
-    reportReview: function(review) {
+    reportReview(review) {
       if (settings.allowIdPostToDtr) {
         const membershipInfo = getActivePlatform();
 
@@ -132,10 +129,10 @@ function DestinyTrackerService($q,
         }
       }
     },
-    clearIgnoredUsers: function() {
+    clearIgnoredUsers() {
       _userFilter.clearIgnoredUsers();
     },
-    clearCache: function() {
+    clearCache() {
       if (_isDestinyTwo()) {
         _d2reviewDataCache.clearAllItems();
       }

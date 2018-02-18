@@ -6,7 +6,7 @@ import { subscribeOnScope } from './rx-utils';
 import * as _ from 'underscore';
 import { dimState } from './state';
 import { settings } from './settings/settings';
-import { showInfoPopup } from './services/dimInfoService.factory';
+import { showInfoPopup } from './shell/info-popup';
 
 export const AppComponent = {
   template,

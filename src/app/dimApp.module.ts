@@ -39,7 +39,6 @@ import { progressModule } from './progress/progress.module';
 import config from './dimApp.config';
 import routes from './dimApp.routes';
 import run from './dimApp.run';
-import loadingTracker from './services/dimLoadingTracker.factory';
 
 const dependencies = [
   AriaModule,
@@ -90,5 +89,4 @@ export const DimAppModule = module('dimApp', dependencies)
   .config(config)
   .config(routes)
   .run(run)
-  .factory('loadingTracker', loadingTracker)
   .name;

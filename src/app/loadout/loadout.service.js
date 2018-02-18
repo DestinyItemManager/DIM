@@ -1,7 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import uuidv4 from 'uuid/v4';
-import { queueAction } from '../services/action-queue';
+import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
 import { settings } from '../settings/settings';
 

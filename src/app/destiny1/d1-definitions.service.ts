@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { D1ManifestService } from '../services/manifest-service';
+import { D1ManifestService } from '../manifest/manifest-service';
 import { $q } from 'ngimport';
 
 const lazyTables = [

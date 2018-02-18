@@ -17,7 +17,7 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
 import '../rx-operators';
-import { D2ManifestService } from '../services/manifest-service';
+import { D2ManifestService } from '../manifest/manifest-service';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;

@@ -4,7 +4,7 @@ import uuidv4 from 'uuid/v4';
 import { sum, count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions } from '../../destiny1/d1-definitions.service';
-import { showInfoPopup } from '../../services/dimInfoService.factory';
+import { showInfoPopup } from '../../shell/info-popup';
 
 // Label isn't used, but it helps us understand what each one is
 const progressionMeta = {

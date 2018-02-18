@@ -5,7 +5,7 @@ import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { changeLanguage } from 'i18next';
 import { settings } from '../settings/settings';
-import { resetHiddenInfos } from '../services/dimInfoService.factory';
+import { resetHiddenInfos } from '../shell/info-popup';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies

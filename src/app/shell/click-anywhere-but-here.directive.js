@@ -1,10 +1,4 @@
-import angular from 'angular';
-
-angular.module('dimApp')
-  .directive('dimClickAnywhereButHere', ClickAnywhereButHere);
-
-
-function ClickAnywhereButHere($document, $timeout) {
+export function ClickAnywhereButHere($document, $timeout) {
   return {
     restrict: 'A',
     link: function(scope, element, attr) {

@@ -21,7 +21,7 @@ import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
-import { D2ManifestService } from '../services/manifest-service';
+import { D2ManifestService } from '../manifest/manifest-service';
 import { flatMap } from '../util';
 import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
 import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';

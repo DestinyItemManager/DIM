@@ -4,7 +4,7 @@ import './dimStores.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
-import { showInfoPopup } from '../services/dimInfoService.factory';
+import { showInfoPopup } from '../shell/info-popup';
 
 export const StoresComponent = {
   controller: StoresCtrl,
