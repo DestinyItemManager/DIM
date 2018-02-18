@@ -11,6 +11,7 @@ import { getCharacters, getStores } from '../bungie-api/destiny1-api';
 import { D1ManifestService } from '../services/manifest-service';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import { getBuckets } from '../destiny1/d1-buckets.service';
+import { NewItemsService } from './store/new-items.service';
 
 export function StoreService(
   $rootScope,
@@ -20,7 +21,6 @@ export function StoreService(
   toaster,
   StoreFactory,
   ItemFactory,
-  NewItemsService,
   $stateParams,
   loadingTracker
 ) {
@@ -158,7 +158,7 @@ export function StoreService(
     const dataDependencies = [
       getDefinitions(),
       getBuckets(),
-      NewItemsService.loadNewItems(account, 1),
+      NewItemsService.loadNewItems(account),
       dimItemInfoService(account, 1),
       getStores(account)
     ];
@@ -185,7 +185,7 @@ export function StoreService(
         if (!firstLoad) {
           // Save the list of new item IDs
           NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account, 1);
+          NewItemsService.saveNewItems(newItems, account);
         }
 
         _stores = stores;

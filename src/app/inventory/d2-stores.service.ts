@@ -25,6 +25,7 @@ import { D2ManifestService } from '../services/manifest-service';
 import { flatMap } from '../util';
 import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
 import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
+import { NewItemsService } from './store/new-items.service';
 
 export interface StoreServiceType {
   getActiveStore(): DimStore | undefined;
@@ -54,7 +55,6 @@ export function D2StoresService(
   toaster,
   D2StoreFactory: D2StoreFactoryType,
   D2ItemFactory: D2ItemFactoryType,
-  NewItemsService,
   $stateParams: StateParams,
   loadingTracker,
   dimDestinyTrackerService
@@ -196,7 +196,7 @@ export function D2StoresService(
     const dataDependencies = [
       getDefinitions(),
       getBuckets(),
-      NewItemsService.loadNewItems(account, 2),
+      NewItemsService.loadNewItems(account),
       dimItemInfoService(account, 2),
       getStores(account)
     ];
@@ -244,7 +244,7 @@ export function D2StoresService(
         if (!firstLoad) {
           // Save the list of new item IDs
           NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account, 2);
+          NewItemsService.saveNewItems(newItems, account);
         }
 
         const stores: DimStore[] = [...characters, vault];

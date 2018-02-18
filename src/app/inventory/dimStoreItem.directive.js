@@ -1,6 +1,7 @@
 import { isPhonePortrait } from '../mediaQueries';
 import { queuedAction } from '../services/action-queue';
 import { itemTags } from '../settings/settings';
+import { NewItemsService } from './store/new-items.service';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import template from './dimStoreItem.directive.html';
 import './dimStoreItem.scss';
@@ -38,7 +39,7 @@ export const StoreItemComponent = {
 let otherDialog = null;
 let firstItemTimed = false;
 
-export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimDestinyTrackerService, NewItemsService) {
+export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimDestinyTrackerService) {
   'ngInject';
 
   function getStoreService(item) {

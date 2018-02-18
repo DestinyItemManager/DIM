@@ -1,4 +1,5 @@
 import { settings } from '../settings/settings';
+import { NewItemsService } from './store/new-items.service';
 import template from './dimClearNewItems.directive.html';
 import './dimClearNewItems.scss';
 
@@ -9,12 +10,11 @@ export const ClearNewItemsComponent = {
   template,
   controller: ClearNewItemsCtrl,
   bindings: {
-    destinyVersion: '<',
     account: '<'
   }
 };
 
-function ClearNewItemsCtrl($scope, NewItemsService, D2StoresService, hotkeys, $i18next, dimStoreService) {
+function ClearNewItemsCtrl($scope, D2StoresService, hotkeys, $i18next, dimStoreService) {
   'ngInject';
 
   this.settings = settings;
@@ -31,7 +31,7 @@ function ClearNewItemsCtrl($scope, NewItemsService, D2StoresService, hotkeys, $i
   });
 
   this.clearNewItems = function() {
-    const stores = (this.destinyVersion === 2 ? D2StoresService : dimStoreService).getStores();
-    NewItemsService.clearNewItems(stores, this.account, this.destinyVersion);
+    const stores = (this.account.destinyVersion === 2 ? D2StoresService : dimStoreService).getStores();
+    NewItemsService.clearNewItems(stores, this.account);
   };
 }

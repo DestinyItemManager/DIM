@@ -31,6 +31,7 @@ import { sum } from '../../util';
 import { D2ManifestService } from '../../services/manifest-service';
 import { getClass } from './character-utils';
 import { DimStore } from './d2-store-factory.service';
+import { NewItemsService } from './new-items.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -250,7 +251,6 @@ export interface DimMasterwork {
  */
 export function D2ItemFactory(
   $i18next,
-  NewItemsService,
   $q: IQService
 ): D2ItemFactoryType {
   'ngInject';

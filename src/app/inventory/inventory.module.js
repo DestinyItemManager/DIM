@@ -6,7 +6,6 @@ import { StoreFactory } from './store/store-factory.service';
 import { D2StoreFactory } from './store/d2-store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
 import { D2ItemFactory } from './store/d2-item-factory.service';
-import { NewItemsService } from './store/new-items.service';
 import { StoreService } from './dimStoreService.factory';
 import { D2StoresService } from './d2-stores.service';
 import { StoresComponent } from './dimStores.directive';
@@ -33,7 +32,6 @@ export default angular
   .factory('D2StoreFactory', D2StoreFactory)
   .factory('ItemFactory', ItemFactory)
   .factory('D2ItemFactory', D2ItemFactory)
-  .factory('NewItemsService', NewItemsService)
   .factory('dimItemService', ItemService)
   .factory('dimItemMoveService', ItemMoveService)
   .factory('dimItemInfoService', ItemInfoService)
