@@ -1,7 +1,7 @@
-import * as angular from 'angular';
+import { module } from 'angular';
 import { HttpRefreshTokenService } from './http-refresh-token.service';
 
-export default angular.module('dim-oauth', [])
+export default module('dim-oauth', [])
   .service('http-refresh-token', HttpRefreshTokenService)
   .run(($rootScope, $state) => {
     $rootScope.$on('dim-no-token-found', () => {

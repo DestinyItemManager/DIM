@@ -43,6 +43,10 @@ interface Window {
   BroadcastChannel?: BroadcastChannel;
 }
 
+interface Navigator {
+  storage: any;
+}
+
 declare module "*.jpg" {
   const value: string;
   export default value;
