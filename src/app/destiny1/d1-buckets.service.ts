@@ -1,6 +1,5 @@
 import * as _ from 'underscore';
-import { DimInventoryBucket, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
-import { BucketCategory } from 'bungie-api-ts/destiny2';
+import { DimInventoryBucket } from '../destiny2/d2-buckets.service';
 
 export const D1Categories = {
   Weapons: [
@@ -42,6 +41,7 @@ export const D1Categories = {
 };
 
 export function BucketService(dimDefinitions) {
+  'ngInject';
   // A mapping from the bucket names to DIM item types
   // Some buckets like vault and currencies have been ommitted
   const bucketToType = {

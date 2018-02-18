@@ -31,6 +31,7 @@ const eagerTables = [
  * above (defs.TalentGrid, etc.).
  */
 export function Definitions($q, dimManifestService) {
+  'ngInject';
   return {
     getDefinitions: _.memoize(() => {
       return $q.when(dimManifestService.getManifest()

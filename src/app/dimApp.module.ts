@@ -33,6 +33,7 @@ import storageModule from './storage/storage.module';
 import loadoutModule from './loadout/loadout.module';
 import movePopupModule from './move-popup/move-popup.module';
 import searchModule from './search/search.module';
+import destiny1EagerModule from './destiny1/destiny1-eager.module';
 import destiny2Module from './destiny2/destiny2.module';
 import { progressModule } from './progress/progress.module';
 
@@ -68,11 +69,13 @@ const dependencies = [
   loadoutModule,
   movePopupModule,
   searchModule,
+  destiny1EagerModule,
   destiny2Module,
   progressModule,
   'ajoslin.promise-tracker',
   'cfp.hotkeys',
-  'bcherny/ngimport'
+  'bcherny/ngimport',
+  ngimportMoreModule
 ];
 
 if ($DIM_FLAVOR === 'dev') {

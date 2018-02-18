@@ -17,6 +17,7 @@ export interface PlatformServiceType {
 
 // TODO: push "current account" into the other account services
 export function PlatformService($rootScope, DestinyAccountService, SyncService, $q, dimSettingsService): PlatformServiceType {
+  'ngInject';
   let _platforms: DestinyAccount[] = [];
   let _active: DestinyAccount | null = null;
 

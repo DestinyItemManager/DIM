@@ -4,7 +4,7 @@ import template from './loadout-drawer.html';
 import './loadout-drawer.scss';
 import { getCharacterStatsData } from '../inventory/store/character-utils';
 import { D2Categories } from '../destiny2/d2-buckets.service';
-import { D1Categories } from '../services/dimBucketService.factory';
+import { D1Categories } from '../destiny1/d1-buckets.service';
 import { flatMap } from '../util';
 
 export const LoadoutDrawerComponent = {

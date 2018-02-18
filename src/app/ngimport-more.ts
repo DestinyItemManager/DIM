@@ -14,7 +14,7 @@ export let $state: StateService;
 
 // prevent double-loading, which has the potential
 // to prevent sharing state between services
-export default angular.module('dim/ngimport')
+export default angular.module('dim/ngimport', [])
   .run(['$injector', ($i: angular.auto.IInjectorService) => {
     toaster = $i.get('toaster');
     $state = $i.get('$state');

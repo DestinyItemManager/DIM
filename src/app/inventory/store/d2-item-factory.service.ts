@@ -418,9 +418,9 @@ export function D2ItemFactory(
   }
 
   /**
-   * Process a single raw item into a DIM item.s
-   * @param defs the manifest definitions from dimDefinitions
-   * @param buckets the bucket definitions from dimBucketService
+   * Process a single raw item into a DIM item.
+   * @param defs the manifest definitions
+   * @param buckets the bucket definitions
    * @param previousItems a set of item IDs representing the previous store's items
    * @param newItems a set of item IDs representing the previous list of new items
    * @param itemInfoService the item info factory for this store's platform
