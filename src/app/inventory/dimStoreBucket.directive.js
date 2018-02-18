@@ -173,7 +173,7 @@ function StoreBucketCtrl($scope,
         // Some errors aren't worth reporting
         if (e.code !== 'wrong-level' &&
             e.code !== 'no-space' &&
-            e.code !== 1671 /*PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation*/) {
+            e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */) {
           reportException('moveItem', e);
         }
       }

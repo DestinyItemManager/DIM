@@ -1,40 +1,49 @@
-/* global zip */
-
-import angular from 'angular';
-import _ from 'underscore';
-import idbKeyval from 'idb-keyval';
+import * as _ from 'underscore';
+import * as idbKeyval from 'idb-keyval';
 
 // For zip
+// tslint:disable-next-line:no-implicit-dependencies
 import 'imports-loader?this=>window!@destiny-item-manager/zip.js';
+// tslint:disable-next-line:no-implicit-dependencies
 import inflate from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/inflate.js';
+// tslint:disable-next-line:no-implicit-dependencies
 import zipWorker from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/z-worker.js';
 
 import { requireSqlLib } from './database';
 import { reportException } from '../exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
+import { IPromise, IHttpService, IQService } from 'angular';
 
-angular.module('dimApp')
-  .factory('dimManifestService', ManifestService)
-  .factory('D2ManifestService', D2ManifestService);
+declare const zip: any;
 
 // Two separate copies of the service, with separate state and separate storage
 
-function ManifestService($q, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+export function ManifestService($q, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   'ngInject';
   return makeManifestService('manifest-version', 'dimManifest', $q, d1GetManifest, $http, toaster, dimSettingsService, $i18next, $rootScope);
 }
 
-function D2ManifestService($q, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+export function D2ManifestService($q, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   'ngInject';
   return makeManifestService('d2-manifest-version', 'd2-manifest', $q, d2GetManifest, $http, toaster, dimSettingsService, $i18next, $rootScope);
 }
 
-function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http, toaster, dimSettingsService, $i18next, $rootScope) {
+function makeManifestService(
+  localStorageKey: string,
+  idbKey,
+  $q: IQService,
+  getManifestApi,
+  $http: IHttpService,
+  toaster,
+  dimSettingsService,
+  $i18next,
+  $rootScope
+) {
   // Testing flags
   const alwaysLoadRemote = false;
 
-  let manifestPromise = null;
+  let manifestPromise: Promise<any> | null = null;
 
   const makeStatement = _.memoize((table, db) => {
     return db.prepare(`select json from ${table} where id = ?`);
@@ -43,8 +52,8 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
   const service = {
     isLoaded: true,
     isError: false,
-    statusText: null,
-    version: null,
+    statusText: null as string | null,
+    version: null as string | null,
 
     // TODO: we probably want a way to unload this service
 
@@ -67,7 +76,7 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
     }, 10000, true),
 
     // TODO: redo all this with rxjs
-    getManifest: function() {
+    getManifest() {
       if (manifestPromise) {
         return manifestPromise;
       }
@@ -94,6 +103,7 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
             message = navigator.onLine
               ? $i18next.t('BungieService.NotConnectedOrBlocked')
               : $i18next.t('BungieService.NotConnected');
+          // tslint:disable-next-line:space-in-parens
           } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
             message = $i18next.t('BungieService.Down');
           } else if (e.status < 200 || e.status >= 400) {
@@ -116,7 +126,7 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
       return manifestPromise;
     },
 
-    getRecord: function(db, table, id) {
+    getRecord(db, table, id): object | null {
       const statement = makeStatement(table, db);
       // The ID in sqlite is a signed 32-bit int, while the id we
       // use is unsigned, so we must convert
@@ -129,7 +139,7 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
       return null;
     },
 
-    getAllRecords: function(db, table) {
+    getAllRecords(db, table): object {
       const rows = db.exec(`SELECT json FROM ${table}`);
       const result = {};
       rows[0].values.forEach((row) => {
@@ -142,7 +152,7 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
 
   return service;
 
-  function loadManifest() {
+  function loadManifest(): IPromise<Uint8Array> {
     return $q.all([
       getManifestApi(),
       dimSettingsService.ready // wait for settings to be ready
@@ -157,16 +167,14 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
         service.version = version;
 
         return loadManifestFromCache(version)
-          .catch((e) => {
-            return loadManifestRemote(version, language, path);
-          });
+          .catch(() => loadManifestRemote(version, path));
       });
   }
 
   /**
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
-  function loadManifestRemote(version, language, path) {
+  function loadManifestRemote(version, path): IPromise<Uint8Array> {
     service.statusText = `${$i18next.t('Manifest.Download')}...`;
 
     return $http.get(`https://www.bungie.net${path}?host=${window.location.hostname}`, { responseType: "blob" })
@@ -178,12 +186,13 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
         service.statusText = `${$i18next.t('Manifest.Save')}...`;
 
         const typedArray = new Uint8Array(arraybuffer);
+        // We intentionally don't wait on this promise
         idbKeyval.set(idbKey, typedArray)
           .then(() => {
             console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
             localStorage.setItem(localStorageKey, version);
           })
-          .catch((e) => {
+          .then(null, (e) => {
             console.error('Error saving manifest file', e);
             toaster.pop({
               title: $i18next.t('Help.NoStorage'),
@@ -206,15 +215,15 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
    * Returns a promise for the cached manifest of the specified
    * version as a Uint8Array, or rejects.
    */
-  function loadManifestFromCache(version) {
+  function loadManifestFromCache(version): IPromise<Uint8Array> {
     if (alwaysLoadRemote) {
-      return $q.reject(new Error("Testing - always load remote"));
+      throw new Error("Testing - always load remote");
     }
 
     service.statusText = `${$i18next.t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(localStorageKey);
     if (currentManifestVersion === version) {
-      return idbKeyval.get(idbKey).then((typedArray) => {
+      return $q.when(idbKeyval.get(idbKey)).then((typedArray: Uint8Array) => {
         if (!typedArray) {
           throw new Error("Empty cached manifest file");
         }
@@ -222,14 +231,14 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
       });
     } else {
       ga('send', 'event', 'Manifest', 'Need New Manifest');
-      return $q.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
+      throw new Error(`version mismatch: ${version} ${currentManifestVersion}`);
     }
   }
 
   /**
    * Unzip a file from a ZIP Blob into an ArrayBuffer. Returns a promise.
    */
-  function unzipManifest(blob) {
+  function unzipManifest(blob): IPromise<ArrayBuffer> {
     return $q((resolve, reject) => {
       zip.useWebWorkers = true;
       zip.workerScripts = {
@@ -257,4 +266,3 @@ function makeManifestService(localStorageKey, idbKey, $q, getManifestApi, $http,
     });
   }
 }
-

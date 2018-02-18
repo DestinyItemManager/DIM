@@ -83,7 +83,6 @@
     "no-bitwise": false,
     "no-duplicate-super": true,
     "no-duplicate-switch-case": true,
-    "no-empty": [true, "allow-empty-catch"],
     "no-floating-promises": [true, "Thenable", "IPromise"],
     "no-for-in-array": true,
     "no-implicit-dependencies": true,

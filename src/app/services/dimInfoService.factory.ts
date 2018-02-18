@@ -1,19 +1,22 @@
-import angular from 'angular';
-import _ from 'underscore';
+import * as angular from 'angular';
+import * as _ from 'underscore';
 
 angular.module('dimApp')
   .factory('dimInfoService', InfoService);
 
+/**
+ * A service for showing an information toaster that can be permanently ignored.
+ */
 function InfoService(toaster, $i18next, SyncService) {
   return {
-    show: function(id, content, timeout) {
+    show(id, content, timeout) {
       timeout = timeout || 0;
       content = content || {};
       content.type = content.type || 'info';
       content.title = content.title || '';
       content.body = content.body || '';
       content.hide = content.hide || $i18next.t('Help.HidePopup');
-      content.func = content.func || function() {};
+      content.func = content.func || (() => {});
       content.hideable = content.hideable === undefined ? true : content.hideable;
 
       function showToaster(body, timeout) {
@@ -29,16 +32,16 @@ function InfoService(toaster, $i18next, SyncService) {
         toaster.pop({
           type: content.type,
           title: content.title,
-          body: body,
-          timeout: timeout,
+          body,
+          timeout,
           bodyOutputType: 'trustedHtml',
           showCloseButton: true,
-          clickHandler: function(_, closeButton) {
+          clickHandler(_, closeButton) {
             // Only close when the close button is clicked
             return Boolean(closeButton);
           },
-          onHideCallback: function() {
-            const checkbox = document.getElementById(`info-${id}`);
+          onHideCallback() {
+            const checkbox = document.getElementById(`info-${id}`) as HTMLInputElement;
             if (checkbox && checkbox.checked) {
               SyncService.set({
                 [`info.${id}`]: 1
@@ -62,7 +65,7 @@ function InfoService(toaster, $i18next, SyncService) {
       }
     },
     // Remove prefs for "don't show this again"
-    resetHiddenInfos: function() {
+    resetHiddenInfos() {
       SyncService.get().then((data) => {
         SyncService.remove(_.filter(_.keys(data), (k) => k.startsWith('info.')));
       });

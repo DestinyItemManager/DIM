@@ -118,7 +118,7 @@ export function transfer(item: DimItem, store: DimStore, amount: number): IPromi
   const platform = dimState.active;
   const request = {
     characterId: store.isVault ? item.owner : store.id,
-    membershipType: platform.platformType,
+    membershipType: platform!.platformType,
     itemId: item.id,
     itemReferenceHash: item.hash,
     stackSize: amount || item.amount,
@@ -151,7 +151,7 @@ export function equip(item: DimItem): IPromise<ServerResponse<number>> {
 
   return equipItem(httpAdapterWithRetry, {
     characterId: item.owner,
-    membershipType: platform.platformType,
+    membershipType: platform!.platformType,
     itemId: item.id
   }) as IPromise<ServerResponse<number>>;
 }
@@ -168,7 +168,7 @@ export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[
   const platform = dimState.active;
   return equipItemsApi(httpAdapterWithRetry, {
     characterId: store.id,
-    membershipType: platform.platformType,
+    membershipType: platform!.platformType,
     itemIds: _.pluck(items, 'id')
   })
     .then((response) => {
@@ -190,7 +190,7 @@ export function setLockState(store: DimStore, item: DimItem, lockState: boolean)
 
   return setItemLockState(httpAdapterWithRetry, {
     characterId: store.isVault ? item.owner : store.id,
-    membershipType: account.platformType,
+    membershipType: account!.platformType,
     itemId: item.id,
     state: lockState
   }) as IPromise<ServerResponse<number>>;

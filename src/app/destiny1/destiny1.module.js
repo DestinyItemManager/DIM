@@ -7,6 +7,7 @@ import activitiesModule from '../activities/activities.module';
 import loadoutBuilderModule from '../loadout-builder/loadout-builder.module';
 import vendorsModule from '../vendors/vendors.module';
 import { destinyAccountResolver } from '../shell/destiny-account.route';
+import { ManifestService } from '../services/dimManifestService.factory';
 
 export default angular
   .module('destiny1Module', [
@@ -15,6 +16,7 @@ export default angular
     loadoutBuilderModule,
     vendorsModule
   ])
+  .factory('dimManifestService', ManifestService)
   .component('destiny1', Destiny1Component)
   .config(($stateProvider) => {
     'ngInject';
