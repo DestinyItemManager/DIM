@@ -9,7 +9,8 @@ import { settings } from '../settings/settings';
 // This file defines Angular filters for DIM that may be shared among
 // different parts of DIM.
 
-const mod = module('dimShell');
+const mod = module('dimAngularFilters', []);
+export default mod.name;
 
 /**
  * Take an icon path and make a full Bungie.net URL out of it

@@ -22,6 +22,8 @@ export function DestinyTrackerService(
   $i18next,
   loadingTracker
 ) {
+  'ngInject';
+
   const _reviewDataCache = new ReviewDataCache();
   const _userFilter = new UserFilter(SyncService);
   const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);

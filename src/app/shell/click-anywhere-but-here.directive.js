@@ -1,4 +1,6 @@
 export function ClickAnywhereButHere($document, $timeout) {
+  'ngInject';
+
   return {
     restrict: 'A',
     link: function(scope, element, attr) {

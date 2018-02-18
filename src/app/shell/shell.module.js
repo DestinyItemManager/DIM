@@ -17,11 +17,12 @@ import supportTemplate from 'app/views/support.html';
 import PageController from './page.controller';
 import { ClickAnywhereButHere } from './click-anywhere-but-here.directive';
 import loadingTracker from './dimLoadingTracker.factory';
-import './dimAngularFilters.filter';
+import dimAngularFiltersModule from './dimAngularFilters.filter';
 
 export const ShellModule = angular
   .module('dimShell', [
-    UIRouterModule
+    UIRouterModule,
+    dimAngularFiltersModule
   ])
   .directive('dimActivityTracker', ActivityTrackerDirective)
   .service('dimActivityTrackerService', ActivityTrackerService)

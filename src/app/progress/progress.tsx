@@ -23,7 +23,7 @@ import { characterIsCurrent, CharacterTile } from './character-tile';
 import { Faction } from './faction';
 import { Milestone } from './milestone';
 import './progress.scss';
-import { ProgressProfile, ProgressService } from './progress.service';
+import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
 import { Quest } from './quest';
 import { isWellRested } from '../inventory/store/well-rested';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
@@ -53,7 +53,6 @@ const progressionMeta = {
 };
 
 interface Props {
-  ProgressService: ProgressService;
   $scope: IScope;
   account: DestinyAccount;
 }
@@ -79,7 +78,7 @@ export class Progress extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.subscription = this.props.ProgressService.getProgressStream(this.props.account).subscribe((progress) => {
+    this.subscription = getProgressStream(this.props.account).subscribe((progress) => {
       this.setState((prevState) => {
         const updatedState = {
           progress,
@@ -104,7 +103,7 @@ export class Progress extends React.Component<Props, State> {
     });
 
     this.props.$scope.$on('dim-refresh', () => {
-      this.props.ProgressService.reloadProgress();
+      reloadProgress();
     });
 
     this.props.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {

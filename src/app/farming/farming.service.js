@@ -8,13 +8,15 @@ import { getBuckets } from '../destiny1/d1-buckets.service';
  * A service for "farming" items by moving them continuously off a character,
  * so that they don't go to the Postmaster.
  */
-export function FarmingService($rootScope,
-                        $q,
-                        dimItemService,
-                        dimStoreService,
-                        $interval,
-                        toaster,
-                        $i18next) {
+export function FarmingService(
+  $rootScope,
+  $q,
+  dimItemService,
+  dimStoreService,
+  $interval,
+  toaster,
+  $i18next
+) {
   'ngInject';
 
   let intervalId;
