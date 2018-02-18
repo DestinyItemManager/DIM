@@ -1,11 +1,11 @@
 import { copy as angularCopy, IPromise } from 'angular';
 import * as _ from 'underscore';
 import { DimError } from '../bungie-api/bungie-service-helper';
-import { equip as d2equip, equipItems as d2EquipItems, transfer as d2Transfer } from '../bungie-api/destiny2-api';
 import { equip as d1equip, equipItems as d1EquipItems, transfer as d1Transfer } from '../bungie-api/destiny1-api';
+import { equip as d2equip, equipItems as d2EquipItems, transfer as d2Transfer } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../comparators';
 import { StoreServiceType } from './d2-stores.service';
-import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
+import { createItemIndex as d2CreateItemIndex, DimItem } from './store/d2-item-factory.service';
 import { DimStore } from './store/d2-store-factory.service';
 
 /**
@@ -15,7 +15,6 @@ export function ItemService(
   dimStoreService,
   D2StoresService,
   ItemFactory,
-  D2ItemFactory: D2ItemFactoryType,
   $q,
   $i18next
 ) {
@@ -51,8 +50,8 @@ export function ItemService(
     return item.destinyVersion === 2 ? d2Transfer : d1Transfer;
   }
 
-  function itemFactory(item: DimItem): D2ItemFactoryType {
-    return item.destinyVersion === 2 ? D2ItemFactory : ItemFactory;
+  function createItemIndex(item: DimItem): string {
+    return item.destinyVersion === 2 ? d2CreateItemIndex(item) : ItemFactory.createItemIndex(item);
   }
 
   function getStoreService(item: DimItem): StoreServiceType {
@@ -119,7 +118,7 @@ export function ItemService(
           source.removeItem(sourceItem);
           sourceItem = angularCopy(sourceItem);
           sourceItem.amount -= amountToRemove;
-          sourceItem.index = itemFactory(sourceItem).createItemIndex(sourceItem);
+          sourceItem.index = createItemIndex(sourceItem);
           source.addItem(sourceItem);
         }
 
@@ -135,7 +134,7 @@ export function ItemService(
           targetItem = item;
           if (!removedSourceItem) {
             targetItem = angularCopy(item);
-            targetItem.index = itemFactory(targetItem).createItemIndex(targetItem);
+            targetItem.index = createItemIndex(targetItem);
           }
           removedSourceItem = false; // only move without cloning once
           targetItem.amount = 0; // We'll increment amount below
@@ -154,7 +153,7 @@ export function ItemService(
         target.removeItem(targetItem);
         targetItem = angularCopy(targetItem);
         targetItem.amount += amountToAdd;
-        targetItem.index = itemFactory(targetItem).createItemIndex(targetItem);
+        targetItem.index = createItemIndex(targetItem);
         target.addItem(targetItem);
         addAmount -= amountToAdd;
       }

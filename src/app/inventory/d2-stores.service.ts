@@ -23,8 +23,8 @@ import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
 import { D2ManifestService } from '../manifest/manifest-service';
 import { flatMap } from '../util';
-import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
-import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
+import { DimItem, resetIdTracker, processItems } from './store/d2-item-factory.service';
+import { DimStore, DimVault, makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource } from './dim-item-info';
 
@@ -53,8 +53,6 @@ export function D2StoresService(
   $q,
   $i18next,
   toaster,
-  D2StoreFactory: D2StoreFactoryType,
-  D2ItemFactory: D2ItemFactoryType,
   $stateParams: StateParams,
   loadingTracker,
   dimDestinyTrackerService
@@ -191,7 +189,7 @@ export function D2StoresService(
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
 
-    D2ItemFactory.resetIdTracker();
+    resetIdTracker();
 
     const dataDependencies = [
       getDefinitions(),
@@ -301,7 +299,7 @@ export function D2StoresService(
     itemInfoService,
     lastPlayedDate: Date
   ): IPromise<DimStore> {
-    const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
+    const store = makeCharacter(defs, character, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
     store.progression = progressions ? { progressions } : null;
@@ -315,7 +313,7 @@ export function D2StoresService(
       }));
     }
 
-    return D2ItemFactory.processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    return processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
@@ -343,13 +341,13 @@ export function D2StoresService(
     newItems: Set<string>,
     itemInfoService
   ): IPromise<DimVault> {
-    const store = D2StoreFactory.makeVault(buckets, profileCurrencies);
+    const store = makeVault(buckets, profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
       // items that cannot be stored in the vault, and are therefore *in* a vault
       return !buckets.byHash[i.bucketHash].vaultBucket;
     });
-    return D2ItemFactory.processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    return processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket

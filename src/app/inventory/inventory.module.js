@@ -3,9 +3,7 @@ import angular from 'angular';
 import { InventoryComponent } from './inventory.component';
 import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
-import { D2StoreFactory } from './store/d2-store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
-import { D2ItemFactory } from './store/d2-item-factory.service';
 import { StoreService } from './dimStoreService.factory';
 import { D2StoresService } from './d2-stores.service';
 import { StoresComponent } from './dimStores.directive';
@@ -28,9 +26,7 @@ export default angular
   .factory('D2StoresService', D2StoresService)
   .factory('ClassifiedDataService', ClassifiedDataService)
   .factory('StoreFactory', StoreFactory)
-  .factory('D2StoreFactory', D2StoreFactory)
   .factory('ItemFactory', ItemFactory)
-  .factory('D2ItemFactory', D2ItemFactory)
   .factory('dimItemService', ItemService)
   .factory('dimItemMoveService', ItemMoveService)
   .factory('dimCsvService', CsvService)
