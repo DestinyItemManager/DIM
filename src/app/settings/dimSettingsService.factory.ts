@@ -1,6 +1,6 @@
-import angular from 'angular';
-import _ from 'underscore';
-import i18next, { changeLanguage } from 'i18next';
+import { merge } from 'angular';
+import * as _ from 'underscore';
+import * as i18next from 'i18next';
 import { defaultLanguage } from '../i18n';
 
 const itemSortPresets = {
@@ -24,7 +24,7 @@ const itemSortPresets = {
  * load in the user's actual settings, so it is a good idea to
  * always watch the settings you are using.
  */
-export function SettingsService($rootScope, SyncService, $window, $i18next, $q) {
+export function SettingsService($rootScope, SyncService, $i18next, $q) {
   'ngInject';
 
   let _loaded = false;
@@ -123,10 +123,10 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
 
     $rootScope.$evalAsync(() => {
       const languageChanged = savedSettings.language !== i18next.language;
-      angular.merge(settings, savedSettings);
+      merge(settings, savedSettings);
       localStorage.dimLanguage = settings.language;
       if (languageChanged) {
-        changeLanguage(settings.language, () => {
+        $i18next.changeLanguage(settings.language, () => {
           $rootScope.$applyAsync(() => {
             $rootScope.$broadcast('i18nextLanguageChange');
           });
@@ -138,4 +138,3 @@ export function SettingsService($rootScope, SyncService, $window, $i18next, $q) 
 
   return settings;
 }
-

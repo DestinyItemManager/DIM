@@ -1,12 +1,12 @@
-import * as angular from 'angular';
+import { module } from 'angular';
 
 import { DimAppModule } from './dimApp.module';
 import { ShellModule } from './shell/shell.module';
 
 import { AppComponent } from './app.component';
 
-export const AppModule = angular
-  .module('app', [
+export const AppModule =
+  module('app', [
     DimAppModule,
     ShellModule
   ])

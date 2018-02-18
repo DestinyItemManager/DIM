@@ -1,10 +1,12 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import template from './settings.html';
 import './settings.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { changeLanguage } from 'i18next';
+// tslint:disable-next-line:no-implicit-dependencies
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
+// tslint:disable-next-line:no-implicit-dependencies
 import exampleArmorImage from 'app/images/example-armor.jpg';
 
 export const SettingsComponent = {
@@ -13,7 +15,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, $state, $i18next, $rootScope) {
+export function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, $i18next, $rootScope) {
   'ngInject';
 
   const vm = this;
@@ -49,7 +51,6 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     ja: '日本語',
     'zh-cht': '繁體中文' // Chinese (Traditional)
   };
-
 
   vm.reviewsPlatformOptions = {
     0: $i18next.t('DtrReview.Platforms.All'),
@@ -99,30 +100,30 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
   // Edge doesn't support these
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
 
-  vm.downloadWeaponCsv = function() {
+  vm.downloadWeaponCsv = () => {
     dimCsvService.downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Weapons");
     ga('send', 'event', 'Download CSV', 'Weapons');
   };
 
-  vm.downloadArmorCsv = function() {
+  vm.downloadArmorCsv = () => {
     dimCsvService.downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Armor");
     ga('send', 'event', 'Download CSV', 'Armor');
   };
 
-  vm.resetHiddenInfos = function() {
+  vm.resetHiddenInfos = () => {
     dimInfoService.resetHiddenInfos();
   };
 
-  vm.resetItemSize = function() {
+  vm.resetItemSize = () => {
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
   };
 
-  vm.reviewsPlatformChanged = function() {
+  vm.reviewsPlatformChanged = () => {
     dimSettingsService.save();
     D2StoresService.refreshRatingsData();
   };
 
-  vm.changeLanguage = function() {
+  vm.changeLanguage = () => {
     localStorage.dimLanguage = vm.settings.language;
     changeLanguage(vm.settings.language, () => {
       $rootScope.$applyAsync(() => {
@@ -131,7 +132,7 @@ export function SettingsController(loadingTracker, dimSettingsService, $scope, d
     });
   };
 
-  vm.reloadDim = function() {
+  vm.reloadDim = () => {
     window.location.reload(false);
   };
 

@@ -1,12 +1,11 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { SettingsService } from './dimSettingsService.factory';
 import { SettingsComponent, SettingsController } from './settings.component';
 import SortOrderEditor from './sort-order-editor';
 import { react2angular } from 'react2angular';
 
-export default angular
-  .module('settingsModule', [])
+export default module('settingsModule', [])
   .controller('dimSettingsCtrl', SettingsController)
   .component('settings', SettingsComponent)
   .component('sortOrderEditor', react2angular(SortOrderEditor, ['order', 'onSortOrderChanged']))

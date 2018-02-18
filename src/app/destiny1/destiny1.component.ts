@@ -22,7 +22,7 @@ function Destiny1Controller(
   hotkeys.add({
     combo: ['i'],
     description: $i18next.t('Hotkey.ToggleDetails'),
-    callback: function() {
+    callback() {
       $rootScope.$broadcast('dim-toggle-item-details');
     }
   });
@@ -34,7 +34,7 @@ function Destiny1Controller(
         description: $i18next.t('Hotkey.MarkItemAs', {
           tag: $i18next.t(tag.label)
         }),
-        callback: function() {
+        callback() {
           $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
         }
       });

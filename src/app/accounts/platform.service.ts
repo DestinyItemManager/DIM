@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount, getDestinyAccountsForBungieAccount } from '../accounts/destiny-account.service';
 import { dimState } from '../state';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { getBungieAccounts } from './bungie-account.service';
@@ -16,7 +16,7 @@ export interface PlatformServiceType {
 }
 
 // TODO: push "current account" into the other account services
-export function PlatformService($rootScope, DestinyAccountService, SyncService, $q, dimSettingsService): PlatformServiceType {
+export function PlatformService($rootScope, SyncService, $q, dimSettingsService): PlatformServiceType {
   'ngInject';
   let _platforms: DestinyAccount[] = [];
   let _active: DestinyAccount | null = null;
@@ -60,7 +60,7 @@ export function PlatformService($rootScope, DestinyAccountService, SyncService, 
 
         // We only support one account now
         const membershipId = bungieAccounts[0].membershipId;
-        return DestinyAccountService.getDestinyAccountsForBungieAccount(membershipId);
+        return getDestinyAccountsForBungieAccount(membershipId);
       })
       .then((destinyAccounts: DestinyAccount[]) => {
         _platforms = destinyAccounts;

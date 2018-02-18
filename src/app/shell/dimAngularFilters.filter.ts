@@ -1,4 +1,4 @@
-import * as angular from 'angular';
+import { module } from 'angular';
 import * as _ from 'underscore';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
@@ -8,7 +8,7 @@ import { compareBy, reverseComparator, chainComparator, Comparator } from '../co
 // This file defines Angular filters for DIM that may be shared among
 // different parts of DIM.
 
-const mod = angular.module('dimApp');
+const mod = module('dimApp');
 
 /**
  * Take an icon path and make a full Bungie.net URL out of it
@@ -94,9 +94,6 @@ mod.filter('sortStores', () => {
     }
   };
 });
-
-//let cachedItemSortFn;
-//let cachedItemSortOrder;
 
 const D1_CONSUMABLE_SORT_ORDER = [
   1043138475, // black-wax-idol

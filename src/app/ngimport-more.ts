@@ -1,4 +1,4 @@
-import * as angular from 'angular';
+import { module } from 'angular';
 import { StateService } from '@uirouter/angularjs';
 
 /**
@@ -14,7 +14,7 @@ export let $state: StateService;
 
 // prevent double-loading, which has the potential
 // to prevent sharing state between services
-export default angular.module('dim/ngimport', [])
+export default module('dim/ngimport', [])
   .run(['$injector', ($i: angular.auto.IInjectorService) => {
     toaster = $i.get('toaster');
     $state = $i.get('$state');

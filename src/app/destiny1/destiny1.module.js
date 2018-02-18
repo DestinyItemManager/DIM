@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { Destiny1Component } from './destiny1.component';
 
@@ -8,8 +8,8 @@ import loadoutBuilderModule from '../loadout-builder/loadout-builder.module';
 import vendorsModule from '../vendors/vendors.module';
 import { destinyAccountResolver } from '../shell/destiny-account.route';
 
-export default angular
-  .module('destiny1Module', [
+export default module('destiny1Module',
+  [
     recordBooksModule,
     activitiesModule,
     loadoutBuilderModule,

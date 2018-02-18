@@ -1,8 +1,7 @@
-import * as angular from 'angular';
+import { module } from 'angular';
 import * as _ from 'underscore';
 
-angular.module('dimApp')
-  .factory('dimInfoService', InfoService);
+module('dimApp').factory('dimInfoService', InfoService);
 
 /**
  * A service for showing an information toaster that can be permanently ignored.

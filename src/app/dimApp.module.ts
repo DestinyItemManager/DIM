@@ -1,4 +1,4 @@
-import * as angular from 'angular';
+import { module } from 'angular';
 
 import AriaModule from 'angular-aria';
 import 'ng-dialog';
@@ -88,8 +88,7 @@ if ($featureFlags.sentry) {
   dependencies.push(require('raven-js/plugins/angular').moduleName);
 }
 
-export const DimAppModule = angular
-  .module('dimApp', dependencies)
+export const DimAppModule = module('dimApp', dependencies)
   .config(config)
   .config(routes)
   .run(run)

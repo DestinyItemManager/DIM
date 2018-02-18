@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { Destiny2Component } from './destiny2.component';
 import { D2InventoryComponent } from './d2-inventory.component';
@@ -7,8 +7,7 @@ import { D2Definitions } from './d2-definitions.service';
 import { destinyAccountResolver } from '../shell/destiny-account.route';
 import { D2ManifestService } from '../services/dimManifestService.factory';
 
-export default angular
-  .module('destiny2Module', [])
+export default module('destiny2Module', [])
   .factory('D2BucketsService', D2BucketsService)
   .factory('D2Definitions', D2Definitions)
   .factory('D2ManifestService', D2ManifestService)

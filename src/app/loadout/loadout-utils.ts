@@ -1,4 +1,4 @@
-import * as angular from 'angular';
+import { copy } from 'angular';
 import * as _ from 'underscore';
 import { sum } from '../util';
 import { Loadout } from './loadout.service';
@@ -23,7 +23,7 @@ export function optimalLoadout(applicableItems: DimItem[], bestItemFn: (item: Di
     const options: _.Dictionary<DimItem>[] = [];
     // For each item, replace all the others overlapping it with the next best thing
     for (const item of overlappingItems) {
-      const option = angular.copy(items);
+      const option = copy(items);
       const otherItems = overlappingItems.filter((i) => i !== item);
       let optionValid = true;
 
@@ -54,7 +54,7 @@ export function optimalLoadout(applicableItems: DimItem[], bestItemFn: (item: Di
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
   const finalItems: { [type: string]: DimItem[] } = {};
   _.each(items, (item, type) => {
-    const itemCopy = angular.copy(item);
+    const itemCopy = copy(item);
     itemCopy.equipped = true;
     finalItems[type.toLowerCase()] = [itemCopy];
   });

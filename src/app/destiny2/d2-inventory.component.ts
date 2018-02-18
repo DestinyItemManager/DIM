@@ -9,7 +9,7 @@ export const D2InventoryComponent = {
   controller: D2InventoryController
 };
 
-function D2InventoryController($rootScope, $scope, D2StoresService, D2BucketsService) {
+function D2InventoryController($scope, D2StoresService, D2BucketsService) {
   'ngInject';
 
   const vm = this;
@@ -18,7 +18,7 @@ function D2InventoryController($rootScope, $scope, D2StoresService, D2BucketsSer
     dnd: $featureFlags.dnd
   };
 
-  this.$onInit = function() {
+  this.$onInit = () => {
     D2BucketsService.getBuckets().then((buckets) => {
       vm.buckets = buckets;
       subscribeOnScope($scope, D2StoresService.getStoresStream(vm.account), (stores) => {
@@ -36,7 +36,7 @@ function D2InventoryController($rootScope, $scope, D2StoresService, D2BucketsSer
   if ($featureFlags.dnd) {
     let dragBox;
 
-    $scope.$on('drag-start-item', (event, args) => {
+    $scope.$on('drag-start-item', (_event, args) => {
       dragBox = document.getElementById('item-drag-box');
       dragBox.style.top = `${args.element.target.getBoundingClientRect().top - dragBox.offsetHeight}px`;
       $scope.$apply(() => {

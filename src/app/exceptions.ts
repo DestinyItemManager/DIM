@@ -1,5 +1,3 @@
-import * as angular from 'angular';
-
 /** Sentry.io exception reporting */
 export let reportException: (name, e) => void = () => { return; };
 
@@ -24,7 +22,7 @@ if ($featureFlags.sentry) {
       ]
     })
     // tslint:disable-next-line
-    .addPlugin(require('raven-js/plugins/angular'), angular)
+    .addPlugin(require('raven-js/plugins/angular'), require('angular'))
     .install();
 
   reportException = (name, e) => {
