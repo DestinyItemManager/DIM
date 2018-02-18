@@ -17,6 +17,7 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
 import '../rx-operators';
+import { D2ManifestService } from '../services/manifest-service';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -49,7 +50,7 @@ export interface ProgressProfile {
 }
 
 // TODO: use ngimport to break this free of Angular-ness
-export function ProgressService(D2Definitions: D2DefinitionsService, D2ManifestService, $q, loadingTracker, toaster) {
+export function ProgressService(D2Definitions: D2DefinitionsService, $q, loadingTracker, toaster) {
   'ngInject';
 
   // A subject that keeps track of the current account. Because it's a

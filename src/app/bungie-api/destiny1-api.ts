@@ -4,6 +4,8 @@ import * as _ from 'underscore';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { error, handleErrors, retryOnThrottled } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
+import { IPromise } from 'angular';
+import { DestinyManifest } from 'bungie-api-ts/destiny2';
 
 /**
  * APIs for interacting with Destiny 1 game data.
@@ -11,10 +13,10 @@ import { getActivePlatform } from '../accounts/platform.service';
  * DestinyService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
 
-export function getManifest() {
+export function getManifest(): IPromise<DestinyManifest> {
   return $http(bungieApiQuery('/D1/Platform/Destiny/Manifest/'))
     .then(handleErrors, handleErrors)
-    .then((response) => response.data.Response);
+    .then((response) => response.data.Response) as IPromise<DestinyManifest>;
 }
 
 export function getCharacters(platform) {

@@ -8,6 +8,7 @@ import { compareAccounts } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
+import { D1ManifestService } from '../services/manifest-service';
 
 export function StoreService(
   $rootScope,
@@ -15,7 +16,6 @@ export function StoreService(
   dimDefinitions,
   dimBucketService,
   dimItemInfoService,
-  dimManifestService,
   dimDestinyTrackerService,
   toaster,
   StoreFactory,
@@ -211,7 +211,7 @@ export function StoreService(
         // just make this never fail.
       })
       .finally(() => {
-        dimManifestService.isLoaded = true;
+        D1ManifestService.isLoaded = true;
         $rootScope.$broadcast('dim-filter-invalidate');
       });
 

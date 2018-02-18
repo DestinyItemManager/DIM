@@ -6,6 +6,7 @@ import { getClass, getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
 import { dimState } from '../../state';
+import { D1ManifestService } from '../../services/manifest-service';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -29,7 +30,6 @@ const tiers = [
  * A factory service for producing DIM inventory items.
  */
 export function ItemFactory(
-  dimManifestService,
   $i18next,
   NewItemsService,
   ClassifiedDataService,
@@ -136,7 +136,7 @@ export function ItemFactory(
       ClassifiedDataService.getClassifiedData()])
       .then((args) => {
         const result = [];
-        dimManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;
+        D1ManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;
         _.each(items, (item) => {
           let createdItem = null;
           try {
@@ -174,7 +174,7 @@ export function ItemFactory(
         itemName: "Missing Item",
         redacted: true
       };
-      dimManifestService.warnMissingDefinition();
+      D1ManifestService.warnMissingDefinition();
     }
 
     if (!itemDef.icon && !itemDef.action) {

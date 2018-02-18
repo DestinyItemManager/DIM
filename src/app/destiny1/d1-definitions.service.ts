@@ -1,4 +1,5 @@
 import * as _ from 'underscore';
+import { D1ManifestService } from '../services/manifest-service';
 
 const lazyTables = [
   'InventoryItem',
@@ -30,11 +31,11 @@ const eagerTables = [
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export function Definitions($q, dimManifestService) {
+export function Definitions($q) {
   'ngInject';
   return {
     getDefinitions: _.memoize(() => {
-      return $q.when(dimManifestService.getManifest()
+      return $q.when(D1ManifestService.getManifest()
         .then((db) => {
           const defs = {};
 
@@ -46,7 +47,7 @@ export function Definitions($q, dimManifestService) {
                 if (this.hasOwnProperty(name)) {
                   return this[name];
                 }
-                const val = dimManifestService.getRecord(db, table, name);
+                const val = D1ManifestService.getRecord(db, table, name);
                 this[name] = val;
                 return val;
               }
@@ -56,7 +57,7 @@ export function Definitions($q, dimManifestService) {
           // Resources that need to be fully loaded (because they're iterated over)
           eagerTables.forEach((tableShort) => {
             const table = `Destiny${tableShort}Definition`;
-            defs[tableShort] = dimManifestService.getAllRecords(db, table);
+            defs[tableShort] = D1ManifestService.getAllRecords(db, table);
           });
 
           return defs;

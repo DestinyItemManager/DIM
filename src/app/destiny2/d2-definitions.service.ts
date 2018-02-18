@@ -22,6 +22,7 @@ import {
   DestinyActivityModifierDefinition
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
+import { D2ManifestService } from '../services/manifest-service';
 
 const lazyTables = [
   'InventoryItem', // DestinyInventoryItemDefinition
@@ -91,7 +92,7 @@ export interface D2DefinitionsService {
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export function D2Definitions($q, D2ManifestService): D2DefinitionsService {
+export function D2Definitions($q): D2DefinitionsService {
   'ngInject';
 
   const getDefinitions: () => IPromise<D2ManifestDefinitions> = () => {

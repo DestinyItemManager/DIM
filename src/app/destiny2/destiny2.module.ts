@@ -5,12 +5,10 @@ import { D2InventoryComponent } from './d2-inventory.component';
 import { D2BucketsService } from './d2-buckets.service';
 import { D2Definitions } from './d2-definitions.service';
 import { destinyAccountResolver } from '../shell/destiny-account.route';
-import { D2ManifestService } from '../services/dimManifestService.factory';
 
 export default module('destiny2Module', [])
   .factory('D2BucketsService', D2BucketsService)
   .factory('D2Definitions', D2Definitions)
-  .factory('D2ManifestService', D2ManifestService)
   .component('destiny2', Destiny2Component)
   .component('inventory2', D2InventoryComponent)
   .config(($stateProvider) => {

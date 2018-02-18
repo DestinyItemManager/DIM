@@ -26,10 +26,11 @@ import {
 import * as _ from 'underscore';
 import { BucketsService, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
 import { D2DefinitionsService, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { reportException } from '../../exceptions';
 import { sum } from '../../util';
+import { D2ManifestService } from '../../services/manifest-service';
 import { getClass } from './character-utils';
 import { DimStore } from './d2-store-factory.service';
-import { reportException } from '../../exceptions';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -248,7 +249,6 @@ export interface DimMasterwork {
  * A factory service for producing DIM inventory items.
  */
 export function D2ItemFactory(
-  D2ManifestService,
   $i18next,
   NewItemsService,
   D2Definitions: D2DefinitionsService,

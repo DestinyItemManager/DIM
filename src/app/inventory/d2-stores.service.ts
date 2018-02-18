@@ -8,6 +8,7 @@ import {
   DestinyProgression
   } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
@@ -20,10 +21,10 @@ import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
+import { D2ManifestService } from '../services/manifest-service';
 import { flatMap } from '../util';
 import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
 import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 
 export interface StoreServiceType {
   getActiveStore(): DimStore | undefined;
@@ -51,7 +52,6 @@ export function D2StoresService(
   D2Definitions: D2DefinitionsService,
   D2BucketsService: BucketsService,
   dimItemInfoService,
-  D2ManifestService,
   $i18next,
   toaster,
   D2StoreFactory: D2StoreFactoryType,

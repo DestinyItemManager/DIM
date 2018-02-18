@@ -16,7 +16,7 @@ export const SettingsComponent = {
   controllerAs: 'vm'
 };
 
-export function SettingsController(loadingTracker, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, $i18next, $rootScope) {
+function SettingsController(loadingTracker, $scope, dimCsvService, dimStoreService, D2StoresService, dimInfoService, $i18next, $rootScope) {
   'ngInject';
 
   const vm = this;
