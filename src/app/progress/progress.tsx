@@ -285,7 +285,7 @@ export class Progress extends React.Component<Props, State> {
     // Sort them alphabetically by name
     return _.sortBy(filteredMilestones, (milestone) => {
       const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
-      if (milestoneDef.displayProperties) {
+      if (milestoneDef && milestoneDef.displayProperties) {
         return milestoneDef.displayProperties.name;
       } else if (milestone.availableQuests) {
         const questDef = milestoneDef.quests[milestone.availableQuests[0].questItemHash];
