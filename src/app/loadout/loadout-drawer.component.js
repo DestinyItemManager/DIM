@@ -4,6 +4,7 @@ import template from './loadout-drawer.html';
 import './loadout-drawer.scss';
 import { getCharacterStatsData } from '../inventory/store/character-utils';
 import { D2Categories } from '../destiny2/d2-buckets.service';
+import { D1Categories } from '../services/dimBucketService.factory';
 import { flatMap } from '../util';
 
 export const LoadoutDrawerComponent = {
@@ -16,11 +17,11 @@ export const LoadoutDrawerComponent = {
   template
 };
 
-function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimSettingsService, $i18next, dimDefinitions) {
+function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, dimSettingsService, $i18next, dimDefinitions) {
   'ngInject';
   const vm = this;
 
-  const dimItemCategories = dimSettingsService.destinyVersion === 2 ? D2Categories : dimCategory;
+  const dimItemCategories = dimSettingsService.destinyVersion === 2 ? D2Categories : D1Categories;
 
   this.$onChanges = function(changes) {
     if (changes.stores) {

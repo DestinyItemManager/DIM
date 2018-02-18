@@ -1,20 +1,29 @@
-import angular from 'angular';
 import { Subject } from 'rxjs/Subject';
-import _ from 'underscore';
-import { compareAccounts } from '../accounts/destiny-account.service';
+import * as _ from 'underscore';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { dimState } from '../state';
+import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
+import { getBungieAccounts } from './bungie-account.service';
+import { IPromise } from 'angular';
+import { Observable } from 'rxjs/Observable';
 
-angular.module('dimApp').factory('dimPlatformService', PlatformService);
+export interface PlatformServiceType {
+  getPlatforms(): IPromise<DestinyAccount[]>;
+  getActive(): DestinyAccount | null;
+  setActive(account: DestinyAccount): void;
+  getPlatformMatching(params: Partial<DestinyAccount>): DestinyAccount | undefined;
+  getActiveAccountStream(): Observable<DestinyAccount>;
+}
 
 // TODO: push "current account" into the other account services
-function PlatformService($rootScope, BungieAccountService, DestinyAccountService, SyncService, $q, dimSettingsService) {
-  let _platforms = [];
-  let _active = null;
+export function PlatformService($rootScope, DestinyAccountService, SyncService, $q, dimSettingsService): PlatformServiceType {
+  let _platforms: DestinyAccount[] = [];
+  let _active: DestinyAccount | null = null;
 
   // Set the active platform here - it'll drive the other observable
-  const activePlatform$ = new Subject();
+  const activePlatform$ = new Subject<DestinyAccount>();
 
-  const current$ = activePlatform$
+  const current$: ConnectableObservable<DestinyAccount> = activePlatform$
     .distinctUntilChanged(compareAccounts)
     .do(saveActivePlatform)
     .publishReplay(1);
@@ -29,21 +38,18 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
 
   return service;
 
-  function getPlatformMatching(params) {
+  function getPlatformMatching(params: Partial<DestinyAccount>): DestinyAccount | undefined {
     return _.find(_platforms, params);
   }
 
-  /**
-   * @return {DestinyAccount[]}
-   */
   // TODO: return a list of bungie accounts and associated destiny accounts?
-  function getPlatforms() {
+  function getPlatforms(): IPromise<DestinyAccount[]> {
     if (_platforms.length) {
       return $q.resolve(_platforms);
     }
 
     // TODO: wire this up with observables?
-    return BungieAccountService.getBungieAccounts()
+    return getBungieAccounts()
       .then((bungieAccounts) => {
         if (!bungieAccounts.length) {
           // We're not logged in, don't bother
@@ -55,7 +61,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
         const membershipId = bungieAccounts[0].membershipId;
         return DestinyAccountService.getDestinyAccountsForBungieAccount(membershipId);
       })
-      .then((destinyAccounts) => {
+      .then((destinyAccounts: DestinyAccount[]) => {
         _platforms = destinyAccounts;
         return getActivePlatform();
       })
@@ -63,8 +69,8 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
       .then(() => _platforms);
   }
 
-  function getActivePlatform() {
-    if (_active && _platforms.find((p) => p.id === _active.id)) {
+  function getActivePlatform(): DestinyAccount {
+    if (_active) {
       return _active;
     }
 
@@ -73,7 +79,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
         return null;
       }
 
-      if (_active && _platforms.find((p) => p.id === _active.id)) {
+      if (_active) {
         return _active;
       } else if (data && data.platformType) {
         let active = _platforms.find((platform) => {
@@ -93,7 +99,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     });
   }
 
-  function getActive() {
+  function getActive(): DestinyAccount | null {
     return _active;
   }
 
@@ -102,7 +108,7 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     return current$;
   }
 
-  function saveActivePlatform(account) {
+  function saveActivePlatform(account: DestinyAccount) {
     // TODO: kill platform label
     _active = account;
     dimState.active = account;
@@ -117,9 +123,8 @@ function PlatformService($rootScope, BungieAccountService, DestinyAccountService
     }
   }
 
-  function setActive(platform) {
+  function setActive(platform: DestinyAccount) {
     activePlatform$.next(platform);
     return current$.take(1).toPromise();
   }
 }
-

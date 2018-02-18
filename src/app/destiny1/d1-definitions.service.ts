@@ -1,5 +1,4 @@
-import angular from 'angular';
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 const lazyTables = [
   'InventoryItem',
@@ -26,16 +25,12 @@ const eagerTables = [
   'Vendor'
 ];
 
-const mod = angular.module('dimApp');
-
-mod.factory('dimDefinitions', Definitions);
-
 /**
  * Manifest database definitions. This returns a promise for an
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-function Definitions($q, dimManifestService) {
+export function Definitions($q, dimManifestService) {
   return {
     getDefinitions: _.memoize(() => {
       return $q.when(dimManifestService.getManifest()
@@ -46,7 +41,7 @@ function Definitions($q, dimManifestService) {
           lazyTables.forEach((tableShort) => {
             const table = `Destiny${tableShort}Definition`;
             defs[tableShort] = {
-              get: function(name) {
+              get(name) {
                 if (this.hasOwnProperty(name)) {
                   return this[name];
                 }
@@ -72,4 +67,3 @@ function Definitions($q, dimManifestService) {
     })
   };
 }
-

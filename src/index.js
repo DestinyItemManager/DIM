@@ -7,11 +7,8 @@ import './app/exceptions';
 // Initialize the main DIM app
 import './app/app.module';
 
-import './app/services/dimDefinitions.factory';
 import './app/services/dimManifestService.factory';
-import './app/services/dimBucketService.factory';
 import './app/services/dimInfoService.factory';
-import './app/services/dimPlatformService.factory';
 import './app/services/dimDestinyTrackerService.factory';
 
 import './app/shell/dimAngularFilters.filter';

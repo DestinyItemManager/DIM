@@ -5,6 +5,7 @@ import Textarea from 'textcomplete/lib/textarea';
 import { searchFilters, buildSearchConfig } from './search-filters';
 import filtersTemplate from '../search/filters.html';
 import { D2Categories } from '../destiny2/d2-buckets.service';
+import { D1Categories } from '../services/dimBucketService.factory';
 import './search-filter.scss';
 
 export const SearchFilterComponent = {
@@ -16,7 +17,7 @@ export const SearchFilterComponent = {
 };
 
 function SearchFilterCtrl(
-  $scope, dimStoreService, D2StoresService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimCategory, dimSettingsService, toaster, ngDialog, $stateParams, $injector, $transitions) {
+  $scope, dimStoreService, D2StoresService, dimSearchService, dimItemInfoService, hotkeys, $i18next, $element, dimSettingsService, toaster, ngDialog, $stateParams, $injector, $transitions) {
   'ngInject';
   const vm = this;
   vm.search = dimSearchService;
@@ -29,7 +30,7 @@ function SearchFilterCtrl(
 
   // This hacks around the fact that dimVendorService isn't defined until the destiny1 modules are lazy-loaded
   let dimVendorService;
-  const unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, (transition) => {
+  const unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, () => {
     if (!dimVendorService) {
       dimVendorService = $injector.get('dimVendorService');
     }
@@ -37,7 +38,7 @@ function SearchFilterCtrl(
 
   vm.$onDestroy = function() {
     unregisterTransitionHook();
-  }
+  };
 
   let filters;
   let searchConfig;
@@ -45,7 +46,10 @@ function SearchFilterCtrl(
 
   vm.$onChanges = function(changes) {
     if (changes.destinyVersion && changes.destinyVersion) {
-      searchConfig = buildSearchConfig(vm.destinyVersion, dimSettingsService.itemTags, vm.destinyVersion === 1 ? dimCategory : D2Categories);
+      searchConfig = buildSearchConfig(
+        vm.destinyVersion,
+        dimSettingsService.itemTags,
+        vm.destinyVersion === 1 ? D1Categories : D2Categories);
       filters = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
       setupTextcomplete();
     }

@@ -8,6 +8,8 @@ import loadoutBuilderModule from '../loadout-builder/loadout-builder.module';
 import vendorsModule from '../vendors/vendors.module';
 import { destinyAccountResolver } from '../shell/destiny-account.route';
 import { ManifestService } from '../services/dimManifestService.factory';
+import { BucketService } from './d1-buckets.service';
+import { Definitions } from './d1-definitions.service';
 
 export default angular
   .module('destiny1Module', [
@@ -17,6 +19,8 @@ export default angular
     vendorsModule
   ])
   .factory('dimManifestService', ManifestService)
+  .factory('dimBucketService', BucketService)
+  .factory('dimDefinitions', Definitions)
   .component('destiny1', Destiny1Component)
   .config(($stateProvider) => {
     'ngInject';

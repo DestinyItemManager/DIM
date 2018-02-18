@@ -17,6 +17,7 @@ import 'angular-hotkeys';
 import 'angular-promise-tracker';
 import ocLazyLoadModule from 'oclazyload';
 import 'ngimport';
+import ngimportMoreModule from './ngimport-more';
 
 import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';

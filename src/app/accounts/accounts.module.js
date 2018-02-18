@@ -1,13 +1,13 @@
 import angular from 'angular';
-import { BungieAccountService } from './bungie-account.service';
 import { DestinyAccountService } from './destiny-account.service';
 import { AccountComponent } from './account.component';
 import { AccountSelectComponent } from './account-select.component';
+import { PlatformService } from './platform.service';
 
 export default angular
   .module('accountsModule', [])
-  .factory('BungieAccountService', BungieAccountService)
   .factory('DestinyAccountService', DestinyAccountService)
+  .factory('dimPlatformService', PlatformService)
   .component('account', AccountComponent)
   .component('accountSelect', AccountSelectComponent)
   .name;

@@ -1,50 +1,47 @@
-import angular from 'angular';
-import _ from 'underscore';
+import * as _ from 'underscore';
+import { DimInventoryBucket, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { BucketCategory } from 'bungie-api-ts/destiny2';
 
-angular.module('dimApp')
-  .factory('dimBucketService', BucketService)
-  // Categories (sorts) and the types within them
-  .value('dimCategory', {
-    Weapons: [
-      'Class',
-      'Primary',
-      'Special',
-      'Heavy'
-    ],
-    Armor: [
-      'Helmet',
-      'Gauntlets',
-      'Chest',
-      'Leg',
-      'ClassItem'
-    ],
-    General: [
-      'Artifact',
-      'Ghost',
-      'Consumable',
-      'Material',
-      'Ornaments',
-      'Emblem',
-      'Shader',
-      'Emote',
-      'Ship',
-      'Vehicle',
-      'Horn'
-    ],
-    Progress: [
-      'Bounties',
-      'Quests',
-      'Missions'
-    ],
-    Postmaster: [
-      'LostItems',
-      'SpecialOrders',
-      'Messages'
-    ]
-  });
+export const D1Categories = {
+  Weapons: [
+    'Class',
+    'Primary',
+    'Special',
+    'Heavy'
+  ],
+  Armor: [
+    'Helmet',
+    'Gauntlets',
+    'Chest',
+    'Leg',
+    'ClassItem'
+  ],
+  General: [
+    'Artifact',
+    'Ghost',
+    'Consumable',
+    'Material',
+    'Ornaments',
+    'Emblem',
+    'Shader',
+    'Emote',
+    'Ship',
+    'Vehicle',
+    'Horn'
+  ],
+  Progress: [
+    'Bounties',
+    'Quests',
+    'Missions'
+  ],
+  Postmaster: [
+    'LostItems',
+    'SpecialOrders',
+    'Messages'
+  ]
+};
 
-
-function BucketService(dimDefinitions, dimCategory) {
+export function BucketService(dimDefinitions) {
   // A mapping from the bucket names to DIM item types
   // Some buckets like vault and currencies have been ommitted
   const bucketToType = {
@@ -90,7 +87,7 @@ function BucketService(dimDefinitions, dimCategory) {
   };
 
   const typeToSort = {};
-  _.each(dimCategory, (types, category) => {
+  _.each(D1Categories, (types, category) => {
     types.forEach((type) => {
       typeToSort[type] = category;
     });
@@ -110,28 +107,30 @@ function BucketService(dimDefinitions, dimCategory) {
             name: 'Unknown',
             hash: -1,
             hasTransferDestination: false,
-            capacity: Math.MAX_SAFE_INTEGER,
+            capacity: Number.MAX_SAFE_INTEGER,
             sort: 'Unknown',
-            type: 'Unknown'
+            type: 'Unknown',
+            accountWide: false
           },
-          setHasUnknown: function() {
+          setHasUnknown() {
             this.byCategory[this.unknown.sort] = [this.unknown];
             this.byId[this.unknown.id] = this.unknown;
             this.byType[this.unknown.type] = this.unknown;
           }
         };
-        _.each(defs.InventoryBucket, (def) => {
+        _.each(defs.InventoryBucket, (def: any) => {
           if (def.enabled) {
-            const bucket = {
+            const bucket: any = {
               id: def.bucketIdentifier,
               description: def.bucketDescription,
               name: def.bucketName,
               hash: def.hash,
               hasTransferDestination: def.hasTransferDestination,
-              capacity: def.itemCount
+              capacity: def.itemCount,
+              accountWide: false,
+              type: bucketToType[def.bucketIdentifier]
             };
 
-            bucket.type = bucketToType[bucket.id];
             if (bucket.type) {
               bucket.sort = typeToSort[bucket.type];
               buckets.byType[bucket.type] = bucket;
@@ -148,13 +147,13 @@ function BucketService(dimDefinitions, dimCategory) {
           }
         });
 
-        _.each(buckets.byHash, (bucket) => {
-          if (sortToVault[bucket.sort]) {
+        _.each(buckets.byHash, (bucket: DimInventoryBucket) => {
+          if (bucket.sort && sortToVault[bucket.sort]) {
             bucket.vaultBucket = buckets.byId[sortToVault[bucket.sort]];
           }
         });
 
-        _.each(dimCategory, (types, category) => {
+        _.each(D1Categories, (types, category) => {
           buckets.byCategory[category] = _.compact(types.map((type) => {
             return buckets.byType[type];
           }));
@@ -165,4 +164,3 @@ function BucketService(dimDefinitions, dimCategory) {
     })
   };
 }
-
