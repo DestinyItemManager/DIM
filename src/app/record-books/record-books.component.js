@@ -3,6 +3,7 @@ import angular from 'angular';
 import { sum, count } from '../util';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 
 import template from './record-books.html';
 import './record-books.scss';
@@ -15,7 +16,7 @@ export const RecordBooksComponent = {
   }
 };
 
-function RecordBooksController($scope, dimStoreService, dimDefinitions, $filter) {
+function RecordBooksController($scope, dimStoreService, $filter) {
   'ngInject';
 
   const vm = this;
@@ -52,7 +53,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, $filter)
       return;
     }
 
-    dimDefinitions.getDefinitions().then((defs) => {
+    getDefinitions().then((defs) => {
       const rawRecordBooks = stores[0].advisors.recordBooks;
       vm.recordBooks = _.map(rawRecordBooks, (rb) => processRecordBook(defs, rb));
     });

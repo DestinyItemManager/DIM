@@ -7,6 +7,8 @@ import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
 import { dimState } from '../../state';
 import { D1ManifestService } from '../../services/manifest-service';
+import { getDefinitions } from '../../destiny1/d1-definitions.service';
+import { getBuckets } from '../../destiny1/d1-buckets.service';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -33,8 +35,6 @@ export function ItemFactory(
   $i18next,
   NewItemsService,
   ClassifiedDataService,
-  dimDefinitions,
-  dimBucketService,
   $q
 ) {
   'ngInject';
@@ -128,8 +128,8 @@ export function ItemFactory(
    */
   function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
     return $q.all([
-      dimDefinitions.getDefinitions(),
-      dimBucketService.getBuckets(),
+      getDefinitions(),
+      getBuckets(),
       previousItems,
       newItems,
       itemInfoService,
@@ -156,8 +156,8 @@ export function ItemFactory(
 
   /**
    * Process a single raw item into a DIM item.s
-   * @param defs the manifest definitions from dimDefinitions
-   * @param buckets the bucket definitions from dimBucketService
+   * @param defs the manifest definitions
+   * @param buckets the bucket definitions
    * @param {Set<string>} previousItems a set of item IDs representing the previous store's items
    * @param {Set<string>} newItems a set of item IDs representing the previous list of new items
    * @param itemInfoService the item info factory for this store's platform

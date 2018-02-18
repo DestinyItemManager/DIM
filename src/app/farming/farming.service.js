@@ -2,6 +2,7 @@ import { copy } from 'angular';
 import { settings as dimSettings } from '../settings/settings';
 import _ from 'underscore';
 import { sum } from '../util';
+import { getBuckets } from '../destiny1/d1-buckets.service';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -13,8 +14,7 @@ export function FarmingService($rootScope,
                         dimStoreService,
                         $interval,
                         toaster,
-                        $i18next,
-                        dimBucketService) {
+                        $i18next) {
   'ngInject';
 
   let intervalId;
@@ -59,7 +59,7 @@ export function FarmingService($rootScope,
     makingRoom: false,
     // Move all items on the selected character to the vault.
     moveItemsToVault: function(items, incrementCounter) {
-      return dimBucketService.getBuckets().then((buckets) => {
+      return getBuckets().then((buckets) => {
         const reservations = {};
         if (settings.makeRoomForItems) {
           // reserve one space in the active character

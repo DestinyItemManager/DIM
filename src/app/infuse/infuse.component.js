@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { flatMap } from '../util';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
 import './infuse.scss';
 
@@ -13,14 +14,14 @@ export const InfuseComponent = {
   controllerAs: 'vm'
 };
 
-function InfuseCtrl($scope, dimStoreService, D2StoresService, dimDefinitions, D2Definitions, dimLoadoutService, toaster, $q, $i18next) {
+function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService, toaster, $q, $i18next) {
   'ngInject';
 
   const vm = this;
 
   vm.items = {};
   if (vm.query.destinyVersion === 1) {
-    dimDefinitions.getDefinitions().then((defs) => {
+    getDefinitions().then((defs) => {
       [
         452597397,
         2534352370,

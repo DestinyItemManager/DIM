@@ -1,7 +1,7 @@
 import { IPromise } from 'angular';
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { D2DefinitionsService } from './d2-definitions.service';
+import { getDefinitions } from './d2-definitions.service';
 
 // TODO: These have to change
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
@@ -110,101 +110,91 @@ export interface DimInventoryBuckets {
   setHasUnknown();
 }
 
-export interface BucketsService {
-  getBuckets(): IPromise<DimInventoryBuckets>;
-}
-
-export function D2BucketsService(D2Definitions: D2DefinitionsService): BucketsService {
-  'ngInject';
-
-  const typeToSort: { [type: string]: string } = {};
-  _.each(D2Categories, (types, category) => {
-    types.forEach((type) => {
-      typeToSort[type] = category;
-    });
+const typeToSort: { [type: string]: string } = {};
+_.each(D2Categories, (types, category) => {
+  types.forEach((type) => {
+    typeToSort[type] = category;
   });
+});
 
-  function getBuckets() {
-    return D2Definitions.getDefinitions().then((defs) => {
-      const buckets: DimInventoryBuckets = {
-        byHash: {}, // numeric hash -> bucket
-        byType: {}, // names ("ClassItem, Special") -> bucket
-        byId: {}, // TODO hack
-        byCategory: {}, // Mirrors the dimCategory heirarchy
-        unknown: {
-          description: 'Unknown items. DIM needs a manifest update.',
-          name: 'Unknown',
-          id: -1,
-          hash: -1,
-          hasTransferDestination: false,
-          capacity: Number.MAX_SAFE_INTEGER,
-          sort: 'Unknown',
-          type: 'Unknown',
-          accountWide: false,
-          category: BucketCategory.Item
-        },
-        setHasUnknown() {
-          this.byCategory[this.unknown.sort] = [this.unknown];
-          this.byType[this.unknown.type] = this.unknown;
-        }
+export const getBuckets = _.memoize(getBucketsUncached) as () => IPromise<DimInventoryBuckets>;
+
+function getBucketsUncached() {
+  return getDefinitions().then((defs) => {
+    const buckets: DimInventoryBuckets = {
+      byHash: {}, // numeric hash -> bucket
+      byType: {}, // names ("ClassItem, Special") -> bucket
+      byId: {}, // TODO hack
+      byCategory: {}, // Mirrors the dimCategory heirarchy
+      unknown: {
+        description: 'Unknown items. DIM needs a manifest update.',
+        name: 'Unknown',
+        id: -1,
+        hash: -1,
+        hasTransferDestination: false,
+        capacity: Number.MAX_SAFE_INTEGER,
+        sort: 'Unknown',
+        type: 'Unknown',
+        accountWide: false,
+        category: BucketCategory.Item
+      },
+      setHasUnknown() {
+        this.byCategory[this.unknown.sort] = [this.unknown];
+        this.byType[this.unknown.type] = this.unknown;
+      }
+    };
+
+    _.each(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
+      const id = def.hash;
+      const type = bucketToType[def.hash];
+      let sort: string | undefined;
+      if (type) {
+        sort = typeToSort[type];
+      }
+
+      const bucket: DimInventoryBucket = {
+        id,
+        description: def.displayProperties.description,
+        name: def.displayProperties.name,
+        hash: id,
+        hasTransferDestination: def.hasTransferDestination,
+        capacity: def.itemCount,
+        accountWide: def.scope === 1,
+        category: def.category,
+        type,
+        sort
       };
 
-      _.each(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
-        const id = def.hash;
-        const type = bucketToType[def.hash];
-        let sort: string | undefined;
-        if (type) {
-          sort = typeToSort[type];
-        }
+      if (bucket.type) {
+        buckets.byType[bucket.type] = bucket;
+      }
 
-        const bucket: DimInventoryBucket = {
-          id,
-          description: def.displayProperties.description,
-          name: def.displayProperties.name,
-          hash: id,
-          hasTransferDestination: def.hasTransferDestination,
-          capacity: def.itemCount,
-          accountWide: def.scope === 1,
-          category: def.category,
-          type,
-          sort
-        };
+      // Add an easy helper property like "inPostmaster"
+      if (bucket.sort) {
+        bucket[`in${bucket.sort}`] = true;
+      }
 
-        if (bucket.type) {
-          buckets.byType[bucket.type] = bucket;
-        }
-
-        // Add an easy helper property like "inPostmaster"
-        if (bucket.sort) {
-          bucket[`in${bucket.sort}`] = true;
-        }
-
-        buckets.byHash[bucket.hash] = bucket;
-        buckets.byId[bucket.id] = bucket;
-      });
-
-      const vaultMappings = {};
-      defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {
-        vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
-      });
-
-      _.each(buckets.byHash, (bucket: DimInventoryBucket) => {
-        if (vaultMappings[bucket.hash]) {
-          bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
-        }
-      });
-
-      _.each(D2Categories, (types, category) => {
-        buckets.byCategory[category] = _.compact(types.map((type) => {
-          return buckets.byType[type];
-        }));
-      });
-
-      return buckets;
+      buckets.byHash[bucket.hash] = bucket;
+      buckets.byId[bucket.id] = bucket;
     });
-  }
 
-  return {
-    getBuckets: _.memoize(getBuckets) as () => IPromise<DimInventoryBuckets>
-  };
+    const vaultMappings = {};
+    defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {
+      vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
+    });
+
+    _.each(buckets.byHash, (bucket: DimInventoryBucket) => {
+      if (vaultMappings[bucket.hash]) {
+        bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
+      }
+    });
+
+    _.each(D2Categories, (types, category) => {
+      buckets.byCategory[category] = _.compact(types.map((type) => {
+        return buckets.byType[type];
+      }));
+    });
+
+    return buckets;
+  });
 }

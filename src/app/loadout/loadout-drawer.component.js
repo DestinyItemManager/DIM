@@ -7,6 +7,7 @@ import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
 import { flatMap } from '../util';
 import { settings } from '../settings/settings';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 
 export const LoadoutDrawerComponent = {
   controller: LoadoutDrawerCtrl,
@@ -18,7 +19,7 @@ export const LoadoutDrawerComponent = {
   template
 };
 
-function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next, dimDefinitions) {
+function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
   'ngInject';
   const vm = this;
 
@@ -274,7 +275,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next, dimDefi
       return;
     }
 
-    dimDefinitions.getDefinitions().then((defs) => {
+    getDefinitions().then((defs) => {
       vm.stats = getCharacterStatsData(defs.Stat, { stats: combinedStats });
     });
   };

@@ -2,13 +2,9 @@ import { module } from 'angular';
 
 import { Destiny2Component } from './destiny2.component';
 import { D2InventoryComponent } from './d2-inventory.component';
-import { D2BucketsService } from './d2-buckets.service';
-import { D2Definitions } from './d2-definitions.service';
 import { destinyAccountResolver } from '../shell/destiny-account.route';
 
 export default module('destiny2Module', [])
-  .factory('D2BucketsService', D2BucketsService)
-  .factory('D2Definitions', D2Definitions)
   .component('destiny2', Destiny2Component)
   .component('inventory2', D2InventoryComponent)
   .config(($stateProvider) => {

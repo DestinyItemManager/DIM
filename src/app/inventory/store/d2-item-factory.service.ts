@@ -24,8 +24,8 @@ import {
   TransferStatuses
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { BucketsService, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
-import { D2DefinitionsService, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
+import { getDefinitions, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 import { sum } from '../../util';
 import { D2ManifestService } from '../../services/manifest-service';
@@ -251,8 +251,6 @@ export interface DimMasterwork {
 export function D2ItemFactory(
   $i18next,
   NewItemsService,
-  D2Definitions: D2DefinitionsService,
-  D2BucketsService: BucketsService,
   $q: IQService
 ): D2ItemFactoryType {
   'ngInject';
@@ -374,8 +372,8 @@ export function D2ItemFactory(
     newItems: Set<string> = new Set(),
     itemInfoService): IPromise<DimItem[]> {
     return $q.all([
-      D2Definitions.getDefinitions(),
-      D2BucketsService.getBuckets()])
+      getDefinitions(),
+      getBuckets()])
       .then(([defs, buckets]) => {
         const result: DimItem[] = [];
         D2ManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;

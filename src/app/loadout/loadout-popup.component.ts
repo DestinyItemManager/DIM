@@ -1,4 +1,4 @@
-import { copy as angularCopy, IAngularEvent } from 'angular';
+import { copy as angularCopy, IAngularEvent, IPromise } from 'angular';
 import * as _ from 'underscore';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
@@ -16,6 +16,8 @@ import { Loadout, LoadoutClass } from './loadout.service';
 import { makeRoomForPostmaster, pullablePostmasterItems, pullFromPostmaster } from './postmaster';
 import { getActivePlatform } from '../accounts/platform.service';
 import { IDialogService } from 'ng-dialog';
+import { getBuckets as d2GetBuckets, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
 
 export const LoadoutPopupComponent = {
   controller: LoadoutPopupCtrl,
@@ -65,8 +67,6 @@ function LoadoutPopupCtrl(
   $window,
   dimSearchService,
   $i18next,
-  dimBucketService,
-  D2BucketsService,
   dimStoreService,
   D2StoresService,
   $stateParams
@@ -239,7 +239,7 @@ function LoadoutPopupCtrl(
 
   vm.makeRoomForPostmaster = () => {
     ngDialog.closeAll();
-    const bucketsService = vm.store.destinyVersion === 1 ? dimBucketService : D2BucketsService;
+    const bucketsService = vm.store.destinyVersion === 1 ? (d1GetBuckets as () => IPromise<DimInventoryBuckets>) : d2GetBuckets;
     return queueAction(() => makeRoomForPostmaster(storeService, vm.store, dimItemService, toaster, bucketsService));
   };
 

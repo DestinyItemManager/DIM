@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
 import { compareAccounts } from '../accounts/destiny-account.service';
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 
 /*
 const allVendors = [
@@ -67,7 +68,6 @@ export function VendorService(
   $rootScope,
   dimStoreService,
   ItemFactory,
-  dimDefinitions,
   dimDestinyTrackerService,
   loadingTracker,
   $q
@@ -156,7 +156,7 @@ export function VendorService(
   function loadVendors(account, stores) {
     const characters = _.reject(stores, 'isVault');
 
-    const reloadPromise = dimDefinitions.getDefinitions()
+    const reloadPromise = getDefinitions()
       .then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);

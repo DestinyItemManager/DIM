@@ -14,7 +14,7 @@ import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getProgression } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
 import '../rx-operators';
 import { D2ManifestService } from '../services/manifest-service';
@@ -50,7 +50,7 @@ export interface ProgressProfile {
 }
 
 // TODO: use ngimport to break this free of Angular-ness
-export function ProgressService(D2Definitions: D2DefinitionsService, $q, loadingTracker, toaster) {
+export function ProgressService($q, loadingTracker, toaster) {
   'ngInject';
 
   // A subject that keeps track of the current account. Because it's a
@@ -106,7 +106,7 @@ export function ProgressService(D2Definitions: D2DefinitionsService, $q, loading
 
   function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
     // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
-    const reloadPromise = $q.all([getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]: [DestinyProfileResponse, D2ManifestDefinitions]): ProgressProfile => {
+    const reloadPromise = $q.all([getProgression(account), getDefinitions()]).then(([profileInfo, defs]: [DestinyProfileResponse, D2ManifestDefinitions]): ProgressProfile => {
       return {
         defs,
         profileInfo,

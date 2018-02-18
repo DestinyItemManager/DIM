@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 
 import template from './activities.html';
 import './activities.scss';
@@ -13,7 +14,7 @@ export const ActivitiesComponent = {
   }
 };
 
-function ActivitiesController($scope, D2StoresService, dimStoreService, dimDefinitions, $i18next) {
+function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -66,7 +67,7 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, dimDefin
       'heroicstrike',
     ];
 
-    dimDefinitions.getDefinitions().then((defs) => {
+    getDefinitions().then((defs) => {
       const rawActivities = stores[0].advisors.activities;
       vm.activities = _.filter(rawActivities, (a) => {
         return a.activityTiers && whitelist.includes(a.identifier);

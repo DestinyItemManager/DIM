@@ -4,6 +4,7 @@ import { dimState } from '../state';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { settings } from '../settings/settings';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './dimMoveItemProperties.html';
 
 export function MoveItemProperties() {
@@ -23,7 +24,7 @@ export function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, ngDialog, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, ngDialog, $scope, $rootScope, dimDestinyTrackerService) {
   'ngInject';
   const vm = this;
 
@@ -243,7 +244,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     console.log(`DEBUG INFO for '${vm.item.name}'`);
     console.log("DIM Item", vm.item);
     console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+alt+shift+d) and refresh items to see this.");
-    dimDefinitions.getDefinitions().then((defs) => {
+    getDefinitions().then((defs) => {
       console.log("Manifest Item Definition", defs.InventoryItem.get(vm.item.hash));
     });
   };

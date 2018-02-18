@@ -14,8 +14,8 @@ import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
-import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { getBuckets, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
@@ -49,8 +49,6 @@ export interface StoreServiceType {
 export function D2StoresService(
   $rootScope: IRootScopeService,
   $q,
-  D2Definitions: D2DefinitionsService,
-  D2BucketsService: BucketsService,
   dimItemInfoService,
   $i18next,
   toaster,
@@ -141,7 +139,7 @@ export function D2StoresService(
     }
 
     return $q.all([
-      D2Definitions.getDefinitions(),
+      getDefinitions(),
       getCharacters(account)
     ]).then(([defs, profileInfo]: [D2ManifestDefinitions, DestinyProfileResponse]) => {
       _stores.forEach((dStore) => {
@@ -196,8 +194,8 @@ export function D2StoresService(
     D2ItemFactory.resetIdTracker();
 
     const dataDependencies = [
-      D2Definitions.getDefinitions(),
-      D2BucketsService.getBuckets(),
+      getDefinitions(),
+      getBuckets(),
       NewItemsService.loadNewItems(account, 2),
       dimItemInfoService(account, 2),
       getStores(account)

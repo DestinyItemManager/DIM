@@ -22,6 +22,11 @@ import { DestinyManifest } from 'bungie-api-ts/destiny2';
 
 declare const zip: any;
 
+interface ManifestDB {
+  exec(query: string);
+  prepare(query: string);
+}
+
 // This file exports D1ManifestService and D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
 
@@ -54,8 +59,8 @@ class ManifestService {
       });
   }, 10000, true);
 
-  private manifestPromise: Promise<any> | null = null;
-  private makeStatement = _.memoize((table, db) => {
+  private manifestPromise: Promise<ManifestDB> | null = null;
+  private makeStatement = _.memoize((table, db: ManifestDB) => {
     return db.prepare(`select json from ${table} where id = ?`);
   });
 
@@ -66,7 +71,7 @@ class ManifestService {
   ) {}
 
   // TODO: redo all this with rxjs
-  getManifest() {
+  getManifest(): Promise<ManifestDB> {
     if (this.manifestPromise) {
       return this.manifestPromise;
     }
@@ -116,7 +121,7 @@ class ManifestService {
     return this.manifestPromise;
   }
 
-  getRecord(db, table, id): object | null {
+  getRecord(db: ManifestDB, table: string, id: number): object | null {
     const statement = this.makeStatement(table, db);
     // The ID in sqlite is a signed 32-bit int, while the id we
     // use is unsigned, so we must convert
@@ -129,7 +134,7 @@ class ManifestService {
     return null;
   }
 
-  getAllRecords(db, table): object {
+  getAllRecords(db: ManifestDB, table: string): object {
     const rows = db.exec(`SELECT json FROM ${table}`);
     const result = {};
     rows[0].values.forEach((row) => {
@@ -139,8 +144,8 @@ class ManifestService {
     return result;
   }
 
-  private loadManifest(): IPromise<Uint8Array> {
-    return $q.all([
+  private loadManifest(): Promise<Uint8Array> {
+    return Promise.all([
       this.getManifestApi(),
       settings.ready // wait for settings to be ready
     ])

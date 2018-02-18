@@ -9,12 +9,12 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
 import { D1ManifestService } from '../services/manifest-service';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { getBuckets } from '../destiny1/d1-buckets.service';
 
 export function StoreService(
   $rootScope,
   $q,
-  dimDefinitions,
-  dimBucketService,
   dimItemInfoService,
   dimDestinyTrackerService,
   toaster,
@@ -101,7 +101,7 @@ export function StoreService(
     }
 
     return $q.all([
-      dimDefinitions.getDefinitions(),
+      getDefinitions(),
       getCharacters(account)
     ]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
@@ -156,8 +156,8 @@ export function StoreService(
     ItemFactory.resetIdTracker();
 
     const dataDependencies = [
-      dimDefinitions.getDefinitions(),
-      dimBucketService.getBuckets(),
+      getDefinitions(),
+      getBuckets(),
       NewItemsService.loadNewItems(account, 1),
       dimItemInfoService(account, 1),
       getStores(account)
