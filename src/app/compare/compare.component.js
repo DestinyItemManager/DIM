@@ -40,7 +40,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   function addMissingStats(item) {
     if (!vm.comparisons[0]) {
       item.stats.forEach((stat, idx) => {
-        vm.statsMap[stat.id] = idx;
+        vm.statsMap[stat.id] = { index: idx, name: stat.name };
       });
       return item;
     }
@@ -50,29 +50,33 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     });
 
     _.difference(_.keys(vm.statsMap), _.keys(itemStatsMap)).forEach((statId) => {
-      item.stats.splice(vm.statsMap[statId], 0, { value: undefined,
-                                                  id: Number(statId),
-                                                  statHash: Number(statId),
-                                                  name: itemStatsMap[statId].name,
-                                                  missingStat: true });
+      item.stats.splice(vm.statsMap[statId].index, 0, {
+        value: undefined,
+        id: Number(statId),
+        statHash: Number(statId),
+        name: vm.statsMap[statId].name,
+        missingStat: true
+      });
       vm.statRanges[statId] = { min: 0, max: 0, enabled: false };
     });
 
     _.difference(_.keys(itemStatsMap), _.keys(vm.statsMap)).forEach((statId) => {
       _.keys(vm.statsMap).forEach((statMapId) => {
-        if (vm.statsMap[statMapId] >= itemStatsMap[statId].index) {
-          vm.statsMap[statMapId]++;
+        if (vm.statsMap[statMapId].index >= itemStatsMap[statId].index) {
+          vm.statsMap[statMapId].index++;
         }
       });
-      vm.statsMap[statId] = itemStatsMap[statId].index;
+      vm.statsMap[statId] = itemStatsMap[statId];
 
       const missingStatItemIdx = vm.comparisons.findIndex((compItem) => !compItem.stats.some((stat) => stat.id === Number(statId)));
-      if (missingStatItemIdx > 0) {
-        vm.comparisons[missingStatItemIdx].stats.splice(vm.statsMap[statId], 0, { value: undefined,
-                                                                                  id: Number(statId),
-                                                                                  statHash: Number(statId),
-                                                                                  name: itemStatsMap[statId].name,
-                                                                                  missingStat: true });
+      if (missingStatItemIdx >= 0) {
+        vm.comparisons[missingStatItemIdx].stats.splice(vm.statsMap[statId].index, 0, {
+          value: undefined,
+          id: Number(statId),
+          statHash: Number(statId),
+          name: itemStatsMap[statId].name,
+          missingStat: true
+        });
       }
     });
     return item;
@@ -81,7 +85,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   function removeMissingStats() {
     _.each(vm.comparisons, (compItem) => {
       const statIndex = compItem.stats.findIndex((stat) => stat.missingStat);
-      if (statIndex > 0) {
+      if (statIndex >= 0) {
         compItem.stats.splice(statIndex, 1);
       }
     });
@@ -180,7 +184,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
           }, 0) === armorSplit;
         });
       }
-      vm.comparisons = _.map(_.filter(allItems, { hash: vm.compare.hash }), (item) => addMissingStats(item));
+      vm.comparisons = _.map(_.filter(allItems, { hash: vm.compare.hash }), addMissingStats);
     } else if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
       addMissingStats(args.item);
       vm.comparisons.push(args.item);
