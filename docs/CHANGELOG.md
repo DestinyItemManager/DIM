@@ -1,5 +1,7 @@
 # Next
 
+# 4.41.0
+
 * Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate).
 * You can now check your emblem objectives.
 * Armor mods show more info.
