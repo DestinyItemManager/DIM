@@ -2,7 +2,7 @@ import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/oauth/oauth.service';
 import { setToken } from './app/oauth/oauth-token.service';
 
-export function handleAuthReturn() {
+function handleAuthReturn() {
   const queryString = parse(window.location.href);
 
   const code = queryString.code;
