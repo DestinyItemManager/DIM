@@ -93,7 +93,7 @@ async function loadActivePlatform(): Promise<DestinyAccount | null> {
   return _platforms[0];
 }
 
-function saveActivePlatform(account: DestinyAccount): Promise<void> {
+function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
   // TODO: kill platform label
   _active = account;
   if (account === null) {

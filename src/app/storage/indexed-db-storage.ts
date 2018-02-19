@@ -12,13 +12,7 @@ export class IndexedDBStorage implements StorageAdapter {
   name = 'IndexedDBStorage';
 
   get() {
-    return Promise.resolve(idbKeyval.get('DIM-data')).then((value) => {
-      // Fall back to local storage as a migration aid
-      if (!value || _.isEmpty(value)) {
-        return JSON.parse(localStorage.getItem('DIM')!);
-      }
-      return value;
-    });
+    return Promise.resolve(idbKeyval.get('DIM-data'));
   }
 
   set(value: object) {

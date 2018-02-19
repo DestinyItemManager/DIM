@@ -1,7 +1,6 @@
 import { equals, copy, extend } from 'angular';
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
-import { $q } from 'ngimport';
 import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
 import { BungieMembershipType } from 'bungie-api-ts/user';
@@ -130,6 +129,10 @@ export const SyncService = {
    * @param keys to delete
    */
   async remove(key: string | string[]): Promise<void> {
+    if (!cached) {
+      throw new Error("Must call get at least once before removing");
+    }
+
     let deleted = false;
     if (_.isArray(key)) {
       _.each(key, (k) => {
@@ -144,7 +147,7 @@ export const SyncService = {
     }
 
     if (!deleted) {
-      return $q.when();
+      return;
     }
 
     for (const adapter of adapters) {
