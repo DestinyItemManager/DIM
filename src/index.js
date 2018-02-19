@@ -1,5 +1,7 @@
 import angular from 'angular';
 import 'babel-polyfill';
+// Promise.finally isn't in the base polyfill
+import 'core-js/fn/promise/finally';
 
 import './app/google';
 import './app/exceptions';

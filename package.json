@@ -124,6 +124,7 @@
     "bungie-api-ts": "^1.3.0",
     "classnames": "^2.2.5",
     "components-font-awesome": "^4.7.0",
+    "core-js": "^2.5.3",
     "dragend": "github:Stereobit/dragend",
     "i18next": "^10.3.0",
     "i18next-xhr-backend": "^1.5.1",
