@@ -22,7 +22,7 @@ export class VendorItem {
     vendorItemDef: DestinyVendorItemDefinition,
     saleItem?: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
-    itemComponents?: DestinyItemComponentSetOfint32
+    _itemComponents?: DestinyItemComponentSetOfint32
   ) {
     this.defs = defs;
     this.vendorItemDef = vendorItemDef;
@@ -30,7 +30,7 @@ export class VendorItem {
     this.inventoryItem = this.defs.InventoryItem.get(this.vendorItemDef.itemHash);
   }
 
-  get id() {
+  get itemHash() {
     return this.vendorItemDef.itemHash;
   }
 

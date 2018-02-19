@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getVendor as getVendorApi, getCharacters, getBasicProfile } from '../bungie-api/destiny2-api';
+import { getVendor as getVendorApi, getBasicProfile } from '../bungie-api/destiny2-api';
 import { StateParams } from '@uirouter/angularjs';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './vendor.scss';
-import { DestinyVendorDefinition, DestinyVendorResponse, DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyVendorDefinition, DestinyVendorResponse, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { BungieImage } from '../dim-ui/bungie-image';
 import { VendorItem } from './vendor-item';
 import * as _ from 'underscore';
@@ -120,7 +120,7 @@ export default class SingleVendor extends React.Component<Props, State> {
               <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
               <div className="vendor-items">
               {items.map((item) =>
-                <VendorItemComponent key={item.id} defs={defs!} item={item}/>
+                <VendorItemComponent key={item.itemHash} defs={defs!} item={item}/>
               )}
               </div>
             </div>
@@ -137,5 +137,10 @@ function toItemList(
   itemList: DestinyVendorItemDefinition[]
 ): VendorItem[] {
   const components = Object.values(vendorInstance.sales.data);
-  return components.map((component) => new VendorItem(defs, itemList[component.vendorItemIndex], component,vendorInstance.itemComponents));
+  return components.map((component) => new VendorItem(
+    defs,
+    itemList[component.vendorItemIndex],
+    component,
+    vendorInstance.itemComponents
+  ));
 }

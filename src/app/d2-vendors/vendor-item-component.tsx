@@ -3,6 +3,7 @@ import * as React from "react";
 import { bungieBackgroundStyle, BungieImage } from "../dim-ui/bungie-image";
 import classNames from 'classnames';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
+import { settings } from '../settings/settings';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -34,12 +35,14 @@ export class VendorItemComponent extends React.Component<Props, {}> {
     // TODO: clean up costs
     return (
       <div className="vendor-item">
-        <div title={item.displayProperties.name} className="item">
-          <div
-            className={classNames("item-img", { transparent: item.borderless })}
-            style={bungieBackgroundStyle(item.displayProperties.icon)}
-          />
-        </div>
+        <a href={`http://db.destinytracker.com/d2/${settings.language}/items/${item.itemHash}`} target="_blank" rel="noopener">
+          <div title={item.displayProperties.name} className="item">
+            <div
+              className={classNames("item-img", { transparent: item.borderless })}
+              style={bungieBackgroundStyle(item.displayProperties.icon)}
+            />
+          </div>
+        </a>
         <div className="vendor-costs">
           {item.costs.map((cost) =>
             <div key={cost.itemHash} className="cost">
