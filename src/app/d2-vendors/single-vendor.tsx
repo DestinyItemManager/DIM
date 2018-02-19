@@ -86,14 +86,12 @@ export default class SingleVendor extends React.Component<Props, State> {
 
     // TODO: do this stuff in setState handlers
     const items = vendorInstance && vendorInstance.sales.data
-      ? toItemList(this.state.defs!, vendorInstance.sales.data, vendorDef.itemList)
+      ? toItemList(this.state.defs!, vendorInstance, vendorDef.itemList)
       // If the sales should come from the server, don't show all possibilities here
       : (vendorDef.returnWithVendorRequest ? [] : vendorDef.itemList.map((i) => new VendorItem(this.state.defs!, i)));
 
     // TODO: sort items, maybe subgroup them
     const itemsByCategory = _.groupBy(items.filter((i) => i.canBeSold), (item: VendorItem) => item.displayCategoryIndex);
-
-    console.log(itemsByCategory, items);
 
     const faction = vendorDef.factionHash ? defs!.Faction[vendorDef.factionHash] : undefined;
     const factionProgress = vendorInstance && vendorInstance.vendor.data.progression;
@@ -135,9 +133,9 @@ export default class SingleVendor extends React.Component<Props, State> {
 
 function toItemList(
   defs: D2ManifestDefinitions,
-  data: { [key: string]: DestinyVendorSaleItemComponent },
+  vendorInstance: DestinyVendorResponse,
   itemList: DestinyVendorItemDefinition[]
 ): VendorItem[] {
-  const components = Object.values(data);
-  return components.map((component) => new VendorItem(defs, itemList[component.vendorItemIndex], component));
+  const components = Object.values(vendorInstance.sales.data);
+  return components.map((component) => new VendorItem(defs, itemList[component.vendorItemIndex], component,vendorInstance.itemComponents));
 }

@@ -48,6 +48,13 @@ export class VendorItem {
   }
 
   /**
+   * Should it display as a wide tile?
+   */
+  get displayTile() {
+    return this.inventoryItem.uiItemDisplayStyle === 'ui_display_style_set_container';
+  }
+
+  /**
    * Should this be displayed in a vendor?
    */
   get canBeSold() {

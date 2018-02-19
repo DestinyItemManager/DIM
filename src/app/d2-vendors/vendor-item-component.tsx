@@ -18,9 +18,22 @@ export class VendorItemComponent extends React.Component<Props, {}> {
   render() {
     const { item, defs } = this.props;
 
+    if (item.displayTile) {
+      return (
+        <div className="vendor-item">
+          <BungieImage
+            className="vendor-tile"
+            title={item.displayProperties.name}
+            src={item.displayProperties.icon}
+          />
+          {item.displayProperties.name}
+        </div>
+      );
+    }
+
     // TODO: clean up costs
     return (
-      <div className="vendor-item" key={item.id}>
+      <div className="vendor-item">
         <div title={item.displayProperties.name} className="item">
           <div
             className={classNames("item-img", { transparent: item.borderless })}

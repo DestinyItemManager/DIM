@@ -121,7 +121,6 @@ export function getVendor(account: DestinyAccount, characterId: string, vendorHa
     destinyMembershipId: account.membershipId,
     membershipType: account.platformType,
     components: [
-      DestinyComponentType.VendorCategories,
       DestinyComponentType.Vendors,
       DestinyComponentType.VendorSales,
       DestinyComponentType.ItemInstances,
