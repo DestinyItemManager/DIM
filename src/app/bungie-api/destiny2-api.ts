@@ -8,10 +8,14 @@ import {
   equipItems as equipItemsApi,
   getDestinyManifest,
   getProfile as getProfileApi,
+  getVendor as getVendorApi,
+  getVendors as getVendorsApi,
   pullFromPostmaster,
   ServerResponse,
   setItemLockState,
-  transferItem
+  transferItem,
+  DestinyVendorResponse,
+  DestinyVendorsResponse
   } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as _ from 'underscore';
@@ -109,6 +113,38 @@ function getProfile(platform: DestinyAccount, ...components: DestinyComponentTyp
 
     return response.Response;
   }) as IPromise<DestinyProfileResponse>;
+}
+
+export function getVendor(account: DestinyAccount, characterId: string, vendorHash: number): IPromise<DestinyVendorResponse> {
+  return getVendorApi(httpAdapter, {
+    characterId,
+    destinyMembershipId: account.membershipId,
+    membershipType: account.platformType,
+    components: [
+      DestinyComponentType.VendorCategories,
+      DestinyComponentType.Vendors,
+      DestinyComponentType.VendorSales,
+      DestinyComponentType.ItemInstances,
+      DestinyComponentType.ItemObjectives,
+      DestinyComponentType.ItemStats,
+      DestinyComponentType.ItemSockets,
+      DestinyComponentType.ItemTalentGrids,
+      DestinyComponentType.ItemCommonData,
+      DestinyComponentType.ItemPlugStates
+    ],
+    vendorHash
+  })
+  .then((response) => response.Response) as IPromise<DestinyVendorResponse>;
+}
+
+export function getVendors(account: DestinyAccount, characterId: string): IPromise<DestinyVendorsResponse> {
+  return getVendorsApi(httpAdapter, {
+    characterId,
+    destinyMembershipId: account.membershipId,
+    membershipType: account.platformType,
+    components: []
+  })
+  .then((response) => response.Response) as IPromise<DestinyVendorsResponse>;
 }
 
 /**

@@ -17,6 +17,7 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
+import { $state } from '../ngimport-more';
 import './milestone.scss';
 
 interface MilestoneProps {
@@ -47,6 +48,10 @@ export function Milestone(props: MilestoneProps) {
       </>
     );
   } else if (milestone.vendors) {
+    const click = () => {
+      $state.go('destiny2.vendor', { id: milestone.vendors[0].vendorHash });
+    };
+
     return (
       <div className="milestone-quest">
         <div className="milestone-icon">
@@ -54,7 +59,7 @@ export function Milestone(props: MilestoneProps) {
         </div>
         <div className="milestone-info">
           <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
-          <div className="milestone-description">{milestoneDef.displayProperties.description}</div>
+          <div className="milestone-description"><a onClick={click}>{milestoneDef.displayProperties.description}</a></div>
         </div>
       </div>
     );

@@ -3,8 +3,10 @@ import { module } from 'angular';
 import { Destiny2Component } from './destiny2.component';
 import { D2InventoryComponent } from './d2-inventory.component';
 import { destinyAccountResolver } from '../shell/destiny-account.route';
+import { progressModule } from '../progress/progress.module';
+import { d2VendorsModule } from '../d2-vendors/vendors.module';
 
-export default module('destiny2Module', [])
+export default module('destiny2Module', [progressModule, d2VendorsModule])
   .component('destiny2', Destiny2Component)
   .component('inventory2', D2InventoryComponent)
   .config(($stateProvider) => {
