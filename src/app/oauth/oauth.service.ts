@@ -24,11 +24,6 @@ export function getAccessTokenFromRefreshToken(refreshToken) {
 }
 
 export function getAccessTokenFromCode(code) {
-  const data = new URLSearchParams();
-  data.append('grant_type', 'authorization_code');
-  data.append('code', code);
-  data.append('client_id', oauthClientId());
-  data.append('client_secret', oauthClientSecret());
   return fetch(TOKEN_URL, {
     method: 'POST',
     body: stringify({
