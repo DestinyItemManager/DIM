@@ -66,7 +66,7 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
     $rootScope.$broadcast('dim-no-token-found');
     throw new Error(t('BungieService.NotLoggedIn'));
   }
-    /* 526 = cloudflare */
+  /* 526 = cloudflare */
   if (response.status >= 503 && response.status <= 526) {
     throw new Error(t('BungieService.Difficulties'));
   }

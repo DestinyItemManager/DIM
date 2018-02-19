@@ -1,5 +1,7 @@
 # Next
 
+* Fix dupelower logic.
+
 # 4.41.0
 
 * Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate).

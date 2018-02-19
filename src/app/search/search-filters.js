@@ -163,18 +163,18 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
 }
 
 // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
-const dupeComparator = chainComparator(
+const dupeComparator = reverseComparator(chainComparator(
   // basePower
-  reverseComparator(compareBy((item) => item.basePower || (item.primStat && item.primStat.value))),
+  compareBy((item) => item.basePower || (item.primStat && item.primStat.value)),
   // primary stat
-  reverseComparator(compareBy((item) => item.primStat && item.primStat.value)),
+  compareBy((item) => item.primStat && item.primStat.value),
   compareBy((item) => item.masterwork),
   // has a power mod
   compareBy((item) => item.primStat && item.basePower && (item.primStat.value !== item.basePower)),
   compareBy((item) => item.locked),
   compareBy((item) => ['favorite', 'keep'].includes(item.dimInfo.tag)),
   compareBy((i) => i.id) // tiebreak by ID
-);
+));
 
 /**
  * This builds an object that can be used to generate filter functions from search queried.

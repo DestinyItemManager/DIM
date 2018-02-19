@@ -29,7 +29,7 @@ export interface Tokens {
 /**
  * Get all token information from saved storage.
  */
-export function getToken(): Tokens {
+export function getToken(): Tokens | null {
   return localStorage.authorization ? JSON.parse(localStorage.authorization) : null;
 }
 
