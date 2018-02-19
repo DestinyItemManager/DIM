@@ -50,6 +50,9 @@ export const NewItemsService = {
   },
 
   clearNewItems(stores: DimStore[], account: DestinyAccount) {
+    if (!stores || !account) {
+      return;
+    }
     stores.forEach((store) => {
       store.items.forEach((item) => {
         if (item.isNew) {

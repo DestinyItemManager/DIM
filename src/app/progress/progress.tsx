@@ -254,7 +254,9 @@ export class Progress extends React.Component<Props, State> {
     const allMilestones: DestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
 
     const filteredMilestones = allMilestones.filter((milestone) => {
-      return !milestone.availableQuests && (milestone.vendors || milestone.rewards);
+      return !milestone.availableQuests &&
+        (milestone.vendors || milestone.rewards) &&
+        defs.Milestone.get(milestone.milestoneHash);
     });
 
     // Sort them alphabetically by name

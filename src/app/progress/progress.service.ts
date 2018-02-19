@@ -60,7 +60,7 @@ const forceReloadTrigger = new Subject();
 
 // A stream of progress that switches on account changes and supports reloading.
 // This is a ConnectableObservable that must be connected to start.
-const storesStream = accountStream
+const storesStream: ConnectableObservable<ProgressProfile> = accountStream
       // Only emit when the account changes
       .distinctUntilChanged(compareAccounts)
       // But also re-emit the current value of the account stream
