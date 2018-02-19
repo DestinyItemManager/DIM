@@ -210,7 +210,7 @@ class ManifestService {
    */
   private loadManifestFromCache(version): IPromise<Uint8Array> {
     if (alwaysLoadRemote) {
-      throw new Error("Testing - always load remote");
+      return $q.reject(new Error("Testing - always load remote"));
     }
 
     this.statusText = `${t('Manifest.Load')}...`;
@@ -224,7 +224,7 @@ class ManifestService {
       });
     } else {
       ga('send', 'event', 'Manifest', 'Need New Manifest');
-      throw new Error(`version mismatch: ${version} ${currentManifestVersion}`);
+      return $q.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }
   }
 }
