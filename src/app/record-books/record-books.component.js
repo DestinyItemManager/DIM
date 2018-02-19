@@ -2,6 +2,8 @@ import _ from 'underscore';
 import angular from 'angular';
 import { sum, count } from '../util';
 import { subscribeOnScope } from '../rx-utils';
+import { settings } from '../settings/settings';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 
 import template from './record-books.html';
 import './record-books.scss';
@@ -14,12 +16,12 @@ export const RecordBooksComponent = {
   }
 };
 
-function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSettingsService, $filter) {
+function RecordBooksController($scope, dimStoreService, $filter) {
   'ngInject';
 
   const vm = this;
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   // TODO: it's time for a directive
   vm.toggleSection = function(id) {
@@ -51,7 +53,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
       return;
     }
 
-    dimDefinitions.getDefinitions().then((defs) => {
+    getDefinitions().then((defs) => {
       const rawRecordBooks = stores[0].advisors.recordBooks;
       vm.recordBooks = _.map(rawRecordBooks, (rb) => processRecordBook(defs, rb));
     });

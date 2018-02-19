@@ -1,9 +1,11 @@
 import { t } from 'i18next';
 import { $http, $q } from 'ngimport';
 import * as _ from 'underscore';
-import { dimState } from '../state';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { error, handleErrors, retryOnThrottled } from './bungie-service-helper';
+import { getActivePlatform } from '../accounts/platform.service';
+import { IPromise } from 'angular';
+import { DestinyManifest } from 'bungie-api-ts/destiny2';
 
 /**
  * APIs for interacting with Destiny 1 game data.
@@ -11,10 +13,10 @@ import { error, handleErrors, retryOnThrottled } from './bungie-service-helper';
  * DestinyService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
 
-export function getManifest() {
+export function getManifest(): IPromise<DestinyManifest> {
   return $http(bungieApiQuery('/D1/Platform/Destiny/Manifest/'))
     .then(handleErrors, handleErrors)
-    .then((response) => response.data.Response);
+    .then((response) => response.data.Response) as IPromise<DestinyManifest>;
 }
 
 export function getCharacters(platform) {
@@ -141,12 +143,12 @@ export function getVendorForCharacter(account, character, vendorHash) {
 }
 
 export function transfer(item, store, amount) {
-  const platform = dimState.active;
+  const platform = getActivePlatform();
   const promise = $http(bungieApiUpdate(
     '/D1/Platform/Destiny/TransferItem/',
     {
       characterId: store.isVault ? item.owner : store.id,
-      membershipType: platform.platformType,
+      membershipType: platform!.platformType,
       itemId: item.id,
       itemReferenceHash: item.hash,
       stackSize: amount || item.amount,
@@ -176,12 +178,12 @@ export function transfer(item, store, amount) {
 }
 
 export function equip(item) {
-  const platform = dimState.active;
+  const platform = getActivePlatform();
   return $http(bungieApiUpdate(
     '/D1/Platform/Destiny/EquipItem/',
     {
       characterId: item.owner,
-      membershipType: platform.platformType,
+      membershipType: platform!.platformType,
       itemId: item.id
     }
   ))
@@ -196,12 +198,12 @@ export function equipItems(store, items) {
     return i.isExotic ? 1 : 0;
   });
 
-  const platform = dimState.active;
+  const platform = getActivePlatform();
   return $http(bungieApiUpdate(
     '/D1/Platform/Destiny/EquipItems/',
     {
       characterId: store.id,
-      membershipType: platform.platformType,
+      membershipType: platform!.platformType,
       itemIds: _.pluck(items, 'id')
     }))
     .then(retryOnThrottled)
@@ -228,12 +230,12 @@ export function setItemState(item, store, lockState, type) {
     break;
   }
 
-  const platform = dimState.active;
+  const platform = getActivePlatform();
   return $http(bungieApiUpdate(
     `/D1/Platform/Destiny/${type}/`,
     {
       characterId: store.isVault ? item.owner : store.id,
-      membershipType: platform.platformType,
+      membershipType: platform!.platformType,
       itemId: item.id,
       state: lockState
     }

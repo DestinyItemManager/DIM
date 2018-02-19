@@ -1,4 +1,4 @@
-import * as angular from 'angular';
+import { copy } from 'angular';
 import { t } from 'i18next';
 import * as _ from 'underscore';
 import { REP_TOKENS } from '../farming/rep-tokens';
@@ -143,7 +143,7 @@ export function gatherEngramsLoadout(
   _.each(itemsByType, (items, type) => {
     if (items) {
       finalItems[type.toLowerCase()] = items.map((i) => {
-        return angular.copy(i);
+        return copy(i);
       });
     }
   });
@@ -171,7 +171,7 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
   _.each(itemsByType, (items, type) => {
     if (items) {
       finalItems[type.toLowerCase()] = items.map((i) => {
-        return angular.copy(i);
+        return copy(i);
       });
     }
   });
@@ -202,9 +202,9 @@ export function searchLoadout(storeService: StoreServiceType, store: DimStore): 
   _.each(itemsByType, (items, type) => {
     if (items) {
       finalItems[type.toLowerCase()] = items.map((i) => {
-        const copy = angular.copy(i);
-        copy.equipped = false;
-        return copy;
+        const copiedItem = copy(i);
+        copiedItem.equipped = false;
+        return copiedItem;
       });
     }
   });

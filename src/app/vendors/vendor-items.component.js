@@ -1,3 +1,4 @@
+import { settings } from '../settings/settings';
 import template from './vendor-items.html';
 
 export const VendorItems = {
@@ -12,12 +13,12 @@ export const VendorItems = {
   template: template
 };
 
-function VendorItemsCtrl(dimSettingsService) {
+function VendorItemsCtrl() {
   'ngInject';
 
   const vm = this;
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   vm.toggleSection = function(id) {
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];

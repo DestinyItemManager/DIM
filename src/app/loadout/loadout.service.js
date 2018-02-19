@@ -1,12 +1,16 @@
 import angular from 'angular';
-import uuidv4 from 'uuid/v4';
 import _ from 'underscore';
+import uuidv4 from 'uuid/v4';
+import { queueAction } from '../inventory/action-queue';
+import { SyncService } from '../storage/sync.service';
+import { settings } from '../settings/settings';
 
-export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, D2StoresService, dimSettingsService, toaster, loadingTracker, SyncService, dimActionQueue) {
+export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, D2StoresService, toaster, loadingTracker) {
   'ngInject';
 
   function getStoreService() {
-    return dimSettingsService.destinyVersion === 2 ? D2StoresService : dimStoreService;
+    // TODO: this needs to use account, store, or item version
+    return settings.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
   let _loadouts = [];
@@ -234,7 +238,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
     if (!store) {
       throw new Error("You need a store!");
     }
-    return dimActionQueue.queueAction(() => {
+    return queueAction(() => {
       if (allowUndo) {
         if (!_previousLoadouts[store.id]) {
           _previousLoadouts[store.id] = [];

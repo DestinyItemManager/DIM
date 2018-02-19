@@ -1,3 +1,4 @@
+import { settings } from '../settings/settings';
 import template from './move-locations.html';
 import './move-locations.scss';
 
@@ -10,13 +11,13 @@ export const MoveLocationsComponent = {
   }
 };
 
-function controller(dimSettingsService, dimItemMoveService, dimStoreService, D2StoresService) {
+function controller(dimItemMoveService, dimStoreService, D2StoresService) {
   'ngInject';
   const vm = this;
 
   const storeService = vm.item.destinyVersion === 2 ? D2StoresService : dimStoreService;
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   vm.store = storeService.getStore(vm.item.owner);
   vm.stores = storeService.getStores();

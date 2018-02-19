@@ -2,10 +2,11 @@ import * as _ from 'underscore';
 import { REP_TOKENS } from './rep-tokens';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DimInventoryBucket, BucketsService } from '../destiny2/d2-buckets.service';
+import { DimInventoryBucket, getBuckets } from '../destiny2/d2-buckets.service';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { settings } from '../settings/settings';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -18,9 +19,7 @@ export function D2FarmingService(
   D2StoresService: StoreServiceType,
   $interval: IIntervalService,
   toaster,
-  $i18next,
-  D2BucketsService: BucketsService,
-  dimSettingsService
+  $i18next
 ) {
   'ngInject';
 
@@ -34,7 +33,7 @@ export function D2FarmingService(
   }, 60000);
 
   function getMakeRoomBuckets() {
-    return D2BucketsService.getBuckets().then((buckets) => {
+    return getBuckets().then((buckets) => {
       return Object.values(buckets.byHash).filter((b) => b.category === 3 && b.type);
     });
   }
@@ -76,7 +75,7 @@ export function D2FarmingService(
         }
       });
 
-      if (dimSettingsService.farming.moveTokens) {
+      if (settings.farming.moveTokens) {
         itemsToMove = itemsToMove.concat(store.items.filter((i) => REP_TOKENS.has(i.hash)));
       }
 

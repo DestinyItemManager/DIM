@@ -1,20 +1,22 @@
-import angular from 'angular';
+import { copy } from 'angular';
+import { settings as dimSettings } from '../settings/settings';
 import _ from 'underscore';
 import { sum } from '../util';
+import { getBuckets } from '../destiny1/d1-buckets.service';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
  * so that they don't go to the Postmaster.
  */
-export function FarmingService($rootScope,
-                        $q,
-                        dimItemService,
-                        dimStoreService,
-                        $interval,
-                        toaster,
-                        dimSettingsService,
-                        $i18next,
-                        dimBucketService) {
+export function FarmingService(
+  $rootScope,
+  $q,
+  dimItemService,
+  dimStoreService,
+  $interval,
+  toaster,
+  $i18next
+) {
   'ngInject';
 
   let intervalId;
@@ -43,7 +45,7 @@ export function FarmingService($rootScope,
     'BUCKET_MATERIALS'
   ];
 
-  const settings = dimSettingsService.farming;
+  const settings = dimSettings.farming;
 
   const outOfSpaceWarning = _.throttle((store) => {
     toaster.pop('info',
@@ -59,7 +61,7 @@ export function FarmingService($rootScope,
     makingRoom: false,
     // Move all items on the selected character to the vault.
     moveItemsToVault: function(items, incrementCounter) {
-      return dimBucketService.getBuckets().then((buckets) => {
+      return getBuckets().then((buckets) => {
         const reservations = {};
         if (settings.makeRoomForItems) {
           // reserve one space in the active character
@@ -180,7 +182,7 @@ export function FarmingService($rootScope,
         ];
 
         self.consolidate = _.compact(consolidateHashes.map((hash) => {
-          const ret = angular.copy(dimStoreService.getItemAcrossStores({
+          const ret = copy(dimStoreService.getItemAcrossStores({
             hash: hash
           }));
           if (ret) {

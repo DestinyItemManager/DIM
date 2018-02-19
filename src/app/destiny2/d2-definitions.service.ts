@@ -1,6 +1,7 @@
 import { IPromise } from 'angular';
 import {
   DestinyActivityDefinition,
+  DestinyActivityModifierDefinition,
   DestinyActivityTypeDefinition,
   DestinyClassDefinition,
   DestinyFactionDefinition,
@@ -18,10 +19,11 @@ import {
   DestinySocketTypeDefinition,
   DestinyStatDefinition,
   DestinyTalentGridDefinition,
-  DestinyVendorDefinition,
-  DestinyActivityModifierDefinition
+  DestinyVendorDefinition
   } from 'bungie-api-ts/destiny2';
+import { $q } from 'ngimport';
 import * as _ from 'underscore';
+import { D2ManifestService } from '../manifest/manifest-service';
 
 const lazyTables = [
   'InventoryItem', // DestinyInventoryItemDefinition
@@ -82,49 +84,40 @@ export interface D2ManifestDefinitions {
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export interface D2DefinitionsService {
-  getDefinitions(): IPromise<D2ManifestDefinitions>;
-}
+export const getDefinitions = _.memoize(getDefinitionsUncached) as () => IPromise<D2ManifestDefinitions>;
 
 /**
  * Manifest database definitions. This returns a promise for an
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export function D2Definitions($q, D2ManifestService): D2DefinitionsService {
-  'ngInject';
+function getDefinitionsUncached(): IPromise<D2ManifestDefinitions> {
+  // Wrap in IPromise until we're off Angular
+  return $q.when(D2ManifestService.getManifest())
+    .then((db) => {
+      const defs = {};
 
-  const getDefinitions: () => IPromise<D2ManifestDefinitions> = () => {
-    return $q.when(D2ManifestService.getManifest()
-      .then((db) => {
-        const defs = {};
-
-        // Load objects that lazily load their properties from the sqlite DB.
-        lazyTables.forEach((tableShort) => {
-          const table = `Destiny${tableShort}Definition`;
-          defs[tableShort] = {
-            get(name) {
-              if (this.hasOwnProperty(name)) {
-                return this[name];
-              }
-              const val = D2ManifestService.getRecord(db, table, name);
-              this[name] = val;
-              return val;
+      // Load objects that lazily load their properties from the sqlite DB.
+      lazyTables.forEach((tableShort) => {
+        const table = `Destiny${tableShort}Definition`;
+        defs[tableShort] = {
+          get(name) {
+            if (this.hasOwnProperty(name)) {
+              return this[name];
             }
-          };
-        });
+            const val = D2ManifestService.getRecord(db, table, name);
+            this[name] = val;
+            return val;
+          }
+        };
+      });
 
-        // Resources that need to be fully loaded (because they're iterated over)
-        eagerTables.forEach((tableShort) => {
-          const table = `Destiny${tableShort}Definition`;
-          defs[tableShort] = D2ManifestService.getAllRecords(db, table);
-        });
+      // Resources that need to be fully loaded (because they're iterated over)
+      eagerTables.forEach((tableShort) => {
+        const table = `Destiny${tableShort}Definition`;
+        defs[tableShort] = D2ManifestService.getAllRecords(db, table);
+      });
 
-        return defs;
-      }));
-  };
-
-  return {
-    getDefinitions: _.memoize(getDefinitions) as () => IPromise<D2ManifestDefinitions>
-  };
+      return defs as D2ManifestDefinitions;
+    });
 }

@@ -1,12 +1,13 @@
 import _ from 'underscore';
+import { settings } from '../settings/settings';
 import template from './item-review.html';
 import './item-review.scss';
 
-function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $scope, $rootScope) {
+function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   'ngInject';
 
   const vm = this;
-  vm.canReview = dimSettingsService.allowIdPostToDtr;
+  vm.canReview = settings.allowIdPostToDtr;
   vm.canCreateReview = (vm.canReview && vm.item.owner);
   vm.submitted = false;
   vm.hasUserReview = ((vm.item.userRating) || (vm.item.userVote));
@@ -194,10 +195,10 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
     reviewsEnabled: $featureFlags.reviewsEnabled
   };
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   $scope.$watchCollection('vm.settings', () => {
-    dimSettingsService.save();
+    settings.save();
   });
 
   $rootScope.$on('dim-item-reviews-fetched', () => {
@@ -205,7 +206,7 @@ function ItemReviewController(dimSettingsService, dimDestinyTrackerService, $sco
   });
 
   vm.valueChanged = function() {
-    vm.canReview = dimSettingsService.allowIdPostToDtr;
+    vm.canReview = settings.allowIdPostToDtr;
 
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);

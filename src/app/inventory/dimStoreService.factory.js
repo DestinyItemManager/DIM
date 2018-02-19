@@ -8,19 +8,19 @@ import { compareAccounts } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
+import { D1ManifestService } from '../manifest/manifest-service';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { getBuckets } from '../destiny1/d1-buckets.service';
+import { NewItemsService } from './store/new-items.service';
+import { getItemInfoSource } from './dim-item-info';
 
 export function StoreService(
   $rootScope,
   $q,
-  dimDefinitions,
-  dimBucketService,
-  dimItemInfoService,
-  dimManifestService,
   dimDestinyTrackerService,
   toaster,
   StoreFactory,
   ItemFactory,
-  NewItemsService,
   $stateParams,
   loadingTracker
 ) {
@@ -101,7 +101,7 @@ export function StoreService(
     }
 
     return $q.all([
-      dimDefinitions.getDefinitions(),
+      getDefinitions(),
       getCharacters(account)
     ]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
@@ -156,10 +156,10 @@ export function StoreService(
     ItemFactory.resetIdTracker();
 
     const dataDependencies = [
-      dimDefinitions.getDefinitions(),
-      dimBucketService.getBuckets(),
-      NewItemsService.loadNewItems(account, 1),
-      dimItemInfoService(account, 1),
+      getDefinitions(),
+      getBuckets(),
+      NewItemsService.loadNewItems(account),
+      getItemInfoSource(account),
       getStores(account)
     ];
 
@@ -185,7 +185,7 @@ export function StoreService(
         if (!firstLoad) {
           // Save the list of new item IDs
           NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account, 1);
+          NewItemsService.saveNewItems(newItems, account);
         }
 
         _stores = stores;
@@ -211,7 +211,7 @@ export function StoreService(
         // just make this never fail.
       })
       .finally(() => {
-        dimManifestService.isLoaded = true;
+        D1ManifestService.isLoaded = true;
         $rootScope.$broadcast('dim-filter-invalidate');
       });
 

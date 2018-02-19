@@ -1,10 +1,11 @@
+import { settings } from '../settings/settings';
 import template from './item-stats.html';
 import './item-stats.scss';
 
-function ItemStatsController(dimSettingsService) {
+function ItemStatsController() {
   'ngInject';
 
-  this.settings = dimSettingsService;
+  this.settings = settings;
 }
 
 export const ItemStatsComponent = {

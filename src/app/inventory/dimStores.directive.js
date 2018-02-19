@@ -3,6 +3,8 @@ import template from './dimStores.directive.html';
 import './dimStores.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
+import { settings } from '../settings/settings';
+import { showInfoPopup } from '../shell/info-popup';
 
 export const StoresComponent = {
   controller: StoresCtrl,
@@ -14,7 +16,7 @@ export const StoresComponent = {
   template
 };
 
-function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next, $filter) {
+function StoresCtrl($scope, $rootScope, loadingTracker, $i18next, $filter) {
   'ngInject';
 
   const vm = this;
@@ -22,7 +24,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
                               <p>${$i18next.t('DidYouKnow.Expand')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
-    dimInfoService.show('collapsed', {
+    showInfoPopup('collapsed', {
       title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')
@@ -34,7 +36,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
       return;
     }
 
-    const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
+    const sortedStores = $filter('sortStores')(vm.stores, settings.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
     if (currentIndex < (sortedStores.length - 1)) {
@@ -47,7 +49,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
       return;
     }
 
-    const sortedStores = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder);
+    const sortedStores = $filter('sortStores')(vm.stores, settings.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
     if (currentIndex > 0) {
@@ -55,7 +57,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
     }
   };
   vm.buckets = null;
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
   vm.toggleSection = function(id) {
     // Only tip when collapsing
     if (!vm.settings.collapsedSections[id]) {
@@ -84,7 +86,7 @@ function StoresCtrl(dimSettingsService, $scope, $rootScope, dimPlatformService, 
       } else {
         vm.selectedStore = _.find(vm.stores, { id: vm.selectedStore.id });
       }
-      vm.selectedStoreIndex = $filter('sortStores')(vm.stores, dimSettingsService.characterOrder).indexOf(vm.selectedStore);
+      vm.selectedStoreIndex = $filter('sortStores')(vm.stores, settings.characterOrder).indexOf(vm.selectedStore);
     } else {
       vm.selectedStore = null;
       vm.currentStore = null;

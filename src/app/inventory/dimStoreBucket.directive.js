@@ -1,10 +1,13 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimStoreBucket.directive.html';
-import dialogTemplate from './dimStoreBucket.directive.dialog.html';
-import './dimStoreBucket.scss';
-import { isPhonePortrait } from '../mediaQueries';
 import { reportException } from '../exceptions';
+import { isPhonePortrait } from '../mediaQueries';
+import { queuedAction } from '../inventory/action-queue';
+import { settings } from '../settings/settings';
+import { showInfoPopup } from '../shell/info-popup';
+import dialogTemplate from './dimStoreBucket.directive.dialog.html';
+import template from './dimStoreBucket.directive.html';
+import './dimStoreBucket.scss';
 
 export const StoreBucketComponent = {
   controller: StoreBucketCtrl,
@@ -25,11 +28,8 @@ function StoreBucketCtrl($scope,
                          $q,
                          $timeout,
                          toaster,
-                         dimSettingsService,
                          ngDialog,
                          $rootScope,
-                         dimActionQueue,
-                         dimInfoService,
                          $i18next) {
   'ngInject';
   const vm = this;
@@ -38,7 +38,7 @@ function StoreBucketCtrl($scope,
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   vm.dropChannel = `${vm.bucket.type},${vm.store.id}${vm.bucket.type}`;
 
@@ -80,14 +80,14 @@ function StoreBucketCtrl($scope,
                               <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
-    dimInfoService.show('doubleclick', {
+    showInfoPopup('doubleclick', {
       title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')
     });
   });
 
-  vm.moveDroppedItem = dimActionQueue.wrap((item, equip, $event, hovering) => {
+  vm.moveDroppedItem = queuedAction((item, equip, $event, hovering) => {
     const target = vm.store;
 
     if (target.current && equip && !isPhonePortrait()) {
@@ -173,7 +173,7 @@ function StoreBucketCtrl($scope,
         // Some errors aren't worth reporting
         if (e.code !== 'wrong-level' &&
             e.code !== 'no-space' &&
-            e.code !== 1671 /*PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation*/) {
+            e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */) {
           reportException('moveItem', e);
         }
       }

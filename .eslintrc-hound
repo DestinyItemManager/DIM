@@ -78,7 +78,18 @@
     "wrap-iife": ["error", "inside"],
     "yoda": "error",
     "no-undef-init": "error",
-    "indent": ["error", 2],
+    "indent": ["error", 2, {
+      "MemberExpression": "off",
+      "FunctionExpression": {
+        "parameters": "off"
+      },
+      "FunctionDeclaration": {
+        "parameters": "off"
+      },
+      "CallExpression": {
+        "arguments": "off"
+      }
+    }],
     "max-len": "off",
     "no-console": "off",
     "no-multiple-empty-lines": "error",

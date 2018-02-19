@@ -3,6 +3,8 @@ import _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { sum, count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
+import { getDefinitions } from '../../destiny1/d1-definitions.service';
+import { showInfoPopup } from '../../shell/info-popup';
 
 // Label isn't used, but it helps us understand what each one is
 const progressionMeta = {
@@ -30,7 +32,7 @@ const factionBadges = {
  * A factory service for producing "stores" (characters or the vault).
  * The job of filling in their items is left to other code - this is just the basic store itself.
  */
-export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
+export function StoreFactory($i18next) {
   'ngInject';
 
   // Prototype for Store objects - add methods to this to add them to all
@@ -80,7 +82,7 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
     },
 
     updateCharacterInfoFromEquip: function(characterInfo) {
-      dimDefinitions.getDefinitions().then((defs) => this.updateCharacterInfo(defs, characterInfo));
+      getDefinitions().then((defs) => this.updateCharacterInfo(defs, characterInfo));
     },
 
     updateCharacterInfo: function(defs, characterInfo) {
@@ -114,7 +116,7 @@ export function StoreFactory($i18next, dimInfoService, dimDefinitions) {
       const bucketItems = this.buckets[item.location.id];
       bucketItems.push(item);
       if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
-        dimInfoService.show('lostitems', {
+        showInfoPopup('lostitems', {
           type: 'warning',
           title: $i18next.t('Postmaster.Limit'),
           body: $i18next.t('Postmaster.Desc', { store: this.name }),

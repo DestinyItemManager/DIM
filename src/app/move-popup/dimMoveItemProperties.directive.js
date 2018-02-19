@@ -1,8 +1,9 @@
-import angular from 'angular';
 import _ from 'underscore';
 import { dimState } from '../state';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
+import { settings } from '../settings/settings';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './dimMoveItemProperties.html';
 
 export function MoveItemProperties() {
@@ -22,7 +23,7 @@ export function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, ngDialog, $scope, $rootScope, dimDestinyTrackerService) {
   'ngInject';
   const vm = this;
 
@@ -68,9 +69,10 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
   };
 
   vm.updateNote = function() {
-    if (angular.isDefined(vm.item.dimInfo.notes)) {
-      vm.item.dimInfo.save();
+    if (vm.item.dimInfo.notes === '') {
+      delete vm.item.dimInfo.notes;
     }
+    vm.item.dimInfo.save();
   };
 
   vm.reviewBlur = function() {
@@ -160,7 +162,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
   vm.light = null;
   vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
   vm.itemDetails = vm.showDetailsByDefault;
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
   $scope.$watch('vm.settings.itemDetails', (show) => {
     vm.itemDetails = vm.itemDetails || show;
   });
@@ -242,7 +244,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     console.log(`DEBUG INFO for '${vm.item.name}'`);
     console.log("DIM Item", vm.item);
     console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+alt+shift+d) and refresh items to see this.");
-    dimDefinitions.getDefinitions().then((defs) => {
+    getDefinitions().then((defs) => {
       console.log("Manifest Item Definition", defs.InventoryItem.get(vm.item.hash));
     });
   };

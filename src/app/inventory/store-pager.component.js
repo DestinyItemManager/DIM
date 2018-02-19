@@ -1,5 +1,6 @@
 import angular from 'angular';
 import Dragend from 'dragend';
+import { settings } from '../settings/settings';
 import './store-pager.scss';
 
 export const StorePagerComponent = {
@@ -14,7 +15,7 @@ export const StorePagerComponent = {
   }
 };
 
-function StorePagerCtrl($element, $scope, $filter, dimSettingsService) {
+function StorePagerCtrl($element, $scope, $filter) {
   'ngInject';
 
   this.$onInit = function() {
@@ -31,7 +32,7 @@ function StorePagerCtrl($element, $scope, $filter, dimSettingsService) {
 
   this.$onChanges = () => {
     if (this.dragend && this.selectedStore) {
-      const storeIndex = $filter('sortStores')(this.stores, dimSettingsService.characterOrder).indexOf(this.selectedStore);
+      const storeIndex = $filter('sortStores')(this.stores, settings.characterOrder).indexOf(this.selectedStore);
       this.dragend.jumpToPage(storeIndex + 1);
     }
   };

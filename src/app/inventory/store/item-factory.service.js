@@ -6,6 +6,10 @@ import { getClass, getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
 import { dimState } from '../../state';
+import { D1ManifestService } from '../../manifest/manifest-service';
+import { getDefinitions } from '../../destiny1/d1-definitions.service';
+import { getBuckets } from '../../destiny1/d1-buckets.service';
+import { NewItemsService } from './new-items.service';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -29,13 +33,8 @@ const tiers = [
  * A factory service for producing DIM inventory items.
  */
 export function ItemFactory(
-  dimManifestService,
-  dimSettingsService,
   $i18next,
-  NewItemsService,
   ClassifiedDataService,
-  dimDefinitions,
-  dimBucketService,
   $q
 ) {
   'ngInject';
@@ -129,15 +128,15 @@ export function ItemFactory(
    */
   function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
     return $q.all([
-      dimDefinitions.getDefinitions(),
-      dimBucketService.getBuckets(),
+      getDefinitions(),
+      getBuckets(),
       previousItems,
       newItems,
       itemInfoService,
       ClassifiedDataService.getClassifiedData()])
       .then((args) => {
         const result = [];
-        dimManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;
+        D1ManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;
         _.each(items, (item) => {
           let createdItem = null;
           try {
@@ -157,8 +156,8 @@ export function ItemFactory(
 
   /**
    * Process a single raw item into a DIM item.s
-   * @param defs the manifest definitions from dimDefinitions
-   * @param buckets the bucket definitions from dimBucketService
+   * @param defs the manifest definitions
+   * @param buckets the bucket definitions
    * @param {Set<string>} previousItems a set of item IDs representing the previous store's items
    * @param {Set<string>} newItems a set of item IDs representing the previous list of new items
    * @param itemInfoService the item info factory for this store's platform
@@ -175,7 +174,7 @@ export function ItemFactory(
         itemName: "Missing Item",
         redacted: true
       };
-      dimManifestService.warnMissingDefinition();
+      D1ManifestService.warnMissingDefinition();
     }
 
     if (!itemDef.icon && !itemDef.action) {

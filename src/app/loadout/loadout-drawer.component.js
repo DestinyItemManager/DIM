@@ -4,7 +4,10 @@ import template from './loadout-drawer.html';
 import './loadout-drawer.scss';
 import { getCharacterStatsData } from '../inventory/store/character-utils';
 import { D2Categories } from '../destiny2/d2-buckets.service';
+import { D1Categories } from '../destiny1/d1-buckets.service';
 import { flatMap } from '../util';
+import { settings } from '../settings/settings';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 
 export const LoadoutDrawerComponent = {
   controller: LoadoutDrawerCtrl,
@@ -16,11 +19,11 @@ export const LoadoutDrawerComponent = {
   template
 };
 
-function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimSettingsService, $i18next, dimDefinitions) {
+function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
   'ngInject';
   const vm = this;
 
-  const dimItemCategories = dimSettingsService.destinyVersion === 2 ? D2Categories : dimCategory;
+  const dimItemCategories = vm.account.destinyVersion === 2 ? D2Categories : D1Categories;
 
   this.$onChanges = function(changes) {
     if (changes.stores) {
@@ -96,7 +99,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
     vm.recalculateStats();
   });
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   vm.types = _.flatten(Object.values(dimItemCategories)).map((t) => t.toLowerCase());
 
@@ -111,7 +114,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
   vm.save = function save($event) {
     $event.preventDefault();
     vm.loadout.platform = vm.account.platformLabel; // Playstation or Xbox
-    vm.loadout.destinyVersion = dimSettingsService.destinyVersion; // D1 or D2
+    vm.loadout.destinyVersion = vm.account.destinyVersion; // D1 or D2
     dimLoadoutService
       .saveLoadout(vm.loadout)
       .catch((e) => {
@@ -236,7 +239,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
   };
 
   vm.recalculateStats = function() {
-    if (vm.settings.destinyVersion !== 1 || !vm.loadout || !vm.loadout.items) {
+    if (vm.account.destinyVersion !== 1 || !vm.loadout || !vm.loadout.items) {
       vm.stats = null;
       return;
     }
@@ -272,7 +275,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, dimCategory, toaster, dimS
       return;
     }
 
-    dimDefinitions.getDefinitions().then((defs) => {
+    getDefinitions().then((defs) => {
       vm.stats = getCharacterStatsData(defs.Stat, { stats: combinedStats });
     });
   };

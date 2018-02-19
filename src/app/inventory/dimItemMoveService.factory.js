@@ -1,8 +1,9 @@
 import _ from 'underscore';
-import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { reportException } from '../exceptions';
+import { queuedAction } from '../inventory/action-queue';
+import { showInfoPopup } from '../shell/info-popup';
 
-export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
+export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, dimStoreService, dimItemService, $i18next) {
   'ngInject';
 
   function getStoreService(item) {
@@ -13,7 +14,7 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
                               <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
-    dimInfoService.show('movebox', {
+    showInfoPopup('movebox', {
       title: $i18next.t('DidYouKnow.DidYouKnow'),
       body: didYouKnowTemplate,
       hide: $i18next.t('DidYouKnow.DontShowAgain')
@@ -22,7 +23,7 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
   /**
    * Move the item to the specified store. Equip it if equip is true.
    */
-  const moveItemTo = dimActionQueue.wrap((item, store, equip, amount) => {
+  const moveItemTo = queuedAction((item, store, equip, amount) => {
     didYouKnow();
     const reload = item.equipped || equip;
     let promise = dimItemService.moveTo(item, store, equip, amount);
@@ -44,7 +45,7 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
         // Some errors aren't worth reporting
         if (e.code !== 'wrong-level' &&
             e.code !== 'no-space' &&
-            e.code !== 1671 /*PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation*/) {
+            e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */) {
           reportException('moveItem', e);
         }
       });
@@ -54,7 +55,7 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
     return promise;
   });
 
-  const consolidate = dimActionQueue.wrap((actionableItem, store) => {
+  const consolidate = queuedAction((actionableItem, store) => {
     const stores = _.filter(getStoreService(actionableItem).getStores(), (s) => { return !s.isVault; });
     const vault = getStoreService(actionableItem).getVault();
 
@@ -103,7 +104,7 @@ export function ItemMoveService($q, loadingTracker, toaster, D2StoresService, di
     return promise;
   });
 
-  const distribute = dimActionQueue.wrap((actionableItem) => {
+  const distribute = queuedAction((actionableItem) => {
     // Sort vault to the end
     const stores = _.sortBy(getStoreService(actionableItem).getStores(), (s) => { return s.id === 'vault' ? 2 : 1; });
 

@@ -23,11 +23,12 @@ import { characterIsCurrent, CharacterTile } from './character-tile';
 import { Faction } from './faction';
 import { Milestone } from './milestone';
 import './progress.scss';
-import { ProgressProfile, ProgressService } from './progress.service';
+import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
 import { Quest } from './quest';
 import { isWellRested } from '../inventory/store/well-rested';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
+import { settings, CharacterOrder } from '../settings/settings';
 
 /* Label isn't used, but it helps us understand what each one is */
 const progressionMeta = {
@@ -52,13 +53,9 @@ const progressionMeta = {
 };
 
 interface Props {
-  ProgressService: ProgressService;
   $scope: IScope;
   account: DestinyAccount;
-  dimSettingsService;
 }
-
-type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed';
 
 interface State {
   progress?: ProgressProfile;
@@ -74,14 +71,14 @@ export class Progress extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      characterOrder: this.props.dimSettingsService.characterOrder,
+      characterOrder: settings.characterOrder,
       isPhonePortrait: isPhonePortrait(),
       currentCharacterId: ""
     };
   }
 
   componentDidMount() {
-    this.subscription = this.props.ProgressService.getProgressStream(this.props.account).subscribe((progress) => {
+    this.subscription = getProgressStream(this.props.account).subscribe((progress) => {
       this.setState((prevState) => {
         const updatedState = {
           progress,
@@ -106,10 +103,10 @@ export class Progress extends React.Component<Props, State> {
     });
 
     this.props.$scope.$on('dim-refresh', () => {
-      this.props.ProgressService.reloadProgress();
+      reloadProgress();
     });
 
-    this.props.$scope.$watch(() => this.props.dimSettingsService.characterOrder, (newValue: CharacterOrder) => {
+    this.props.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
       if (newValue !== this.state.characterOrder) {
         this.setState({ characterOrder: newValue });
       }

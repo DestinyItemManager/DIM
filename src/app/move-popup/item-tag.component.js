@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { itemTags } from '../settings/settings';
 import template from './item-tag.html';
 import './item-tag.scss';
 
@@ -10,14 +11,14 @@ export const ItemTagComponent = {
   template: template
 };
 
-function ItemTagController($scope, $rootScope, dimSettingsService) {
+function ItemTagController($scope, $rootScope) {
   'ngInject';
   const vm = this;
 
-  vm.settings = dimSettingsService;
+  vm.itemTags = itemTags;
   $scope.$watch('$ctrl.item.dimInfo.tag', () => {
     if (vm.item.dimInfo) {
-      vm.selected = _.find(vm.settings.itemTags, (tag) => {
+      vm.selected = _.find(itemTags, (tag) => {
         return tag.type === vm.item.dimInfo.tag;
       });
     }
@@ -25,6 +26,9 @@ function ItemTagController($scope, $rootScope, dimSettingsService) {
 
   vm.updateTag = function() {
     vm.item.dimInfo.tag = vm.selected.type;
+    if (!vm.item.dimInfo.tag) {
+      delete vm.item.dimInfo.tag;
+    }
     $rootScope.$broadcast('dim-filter-invalidate');
     vm.item.dimInfo.save();
   };

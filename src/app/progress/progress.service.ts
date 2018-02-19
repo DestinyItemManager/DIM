@@ -3,10 +3,10 @@ import {
   DestinyCharacterProgressionComponent,
   DestinyInventoryComponent,
   DestinyItemComponentSetOfint64,
-  DestinyProfileResponse,
   DictionaryComponentResponse,
   SingleComponentResponse
   } from 'bungie-api-ts/destiny2';
+import { $q } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
@@ -14,9 +14,12 @@ import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getProgression } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
+import { D2ManifestService } from '../manifest/manifest-service';
+import { loadingTracker, toaster } from '../ngimport-more';
 import '../rx-operators';
+import { IPromise } from 'angular';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -47,65 +50,55 @@ export interface ProgressProfile {
    */
   readonly lastPlayedDate: Date;
 }
+// A subject that keeps track of the current account. Because it's a
+// behavior subject, any new subscriber will always see its last
+// value.
+const accountStream: Subject<DestinyAccount> = new ReplaySubject<DestinyAccount>(1);
 
-// TODO: use ngimport to break this free of Angular-ness
-export function ProgressService(D2Definitions: D2DefinitionsService, D2ManifestService, $q, loadingTracker, toaster) {
-  'ngInject';
+// The triggering observable for force-reloading progress.
+const forceReloadTrigger = new Subject();
 
-  // A subject that keeps track of the current account. Because it's a
-  // behavior subject, any new subscriber will always see its last
-  // value.
-  const accountStream: Subject<DestinyAccount> = new ReplaySubject<DestinyAccount>(1);
+// A stream of progress that switches on account changes and supports reloading.
+// This is a ConnectableObservable that must be connected to start.
+const storesStream = accountStream
+      // Only emit when the account changes
+      .distinctUntilChanged(compareAccounts)
+      // But also re-emit the current value of the account stream
+      // whenever the force reload triggers
+      .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
+      // Whenever either trigger happens, load progress
+      .switchMap(loadProgress)
+      .filter(Boolean)
+      // Keep track of the last value for new subscribers
+      .publishReplay(1);
 
-  // The triggering observable for force-reloading progress.
-  const forceReloadTrigger = new Subject();
+/**
+ * Set the current account, and get a stream of stores updates.
+ * This will keep returning stores even if something else changes
+ * the account by also calling "storesStream". This won't force the
+ * stores to reload unless they haven't been loaded at all.
+ *
+ * @return a stream of store updates
+ */
+export function getProgressStream(account: DestinyAccount) {
+  accountStream.next(account);
+  // Start the stream the first time it's asked for. Repeated calls
+  // won't do anything.
+  storesStream.connect();
+  return storesStream;
+}
 
-  // A stream of progress that switches on account changes and supports reloading.
-  // This is a ConnectableObservable that must be connected to start.
-  const storesStream = accountStream
-        // Only emit when the account changes
-        .distinctUntilChanged(compareAccounts)
-        // But also re-emit the current value of the account stream
-        // whenever the force reload triggers
-        .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
-        // Whenever either trigger happens, load progress
-        .switchMap(loadProgress)
-        // Keep track of the last value for new subscribers
-        .publishReplay(1);
+/**
+ * Force the inventory and characters to reload.
+ */
+export function reloadProgress() {
+  forceReloadTrigger.next(); // signal the force reload
+}
 
-  const service: ProgressService = {
-    getProgressStream,
-    reloadProgress
-  };
-
-  return service;
-
-  /**
-   * Set the current account, and get a stream of stores updates.
-   * This will keep returning stores even if something else changes
-   * the account by also calling "storesStream". This won't force the
-   * stores to reload unless they haven't been loaded at all.
-   *
-   * @return a stream of store updates
-   */
-  function getProgressStream(account: DestinyAccount) {
-    accountStream.next(account);
-    // Start the stream the first time it's asked for. Repeated calls
-    // won't do anything.
-    storesStream.connect();
-    return storesStream;
-  }
-
-  /**
-   * Force the inventory and characters to reload.
-   */
-  function reloadProgress() {
-    forceReloadTrigger.next(); // signal the force reload
-  }
-
-  function loadProgress(account: DestinyAccount): Promise<ProgressProfile> {
-    // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
-    const reloadPromise = $q.all([getProgression(account), D2Definitions.getDefinitions()]).then(([profileInfo, defs]: [DestinyProfileResponse, D2ManifestDefinitions]): ProgressProfile => {
+function loadProgress(account: DestinyAccount): IPromise<ProgressProfile | undefined> {
+  // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
+  const reloadPromise = $q.all([getProgression(account), getDefinitions()])
+    .then(([profileInfo, defs]): ProgressProfile => {
       return {
         defs,
         profileInfo,
@@ -125,13 +118,13 @@ export function ProgressService(D2Definitions: D2DefinitionsService, D2ManifestS
       // our observable will fail on the first error. We could work
       // around that with some rxjs operators, but it's easier to
       // just make this never fail.
+      return undefined;
     })
     .finally(() => {
       D2ManifestService.isLoaded = true;
     });
 
-    loadingTracker.addPromise(reloadPromise);
+  loadingTracker.addPromise(reloadPromise);
 
-    return reloadPromise;
-  }
+  return reloadPromise;
 }

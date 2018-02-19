@@ -1,3 +1,4 @@
+import { settings } from '../settings/settings';
 import template from './dimMovePopup.directive.html';
 import './move-popup.scss';
 
@@ -11,7 +12,7 @@ export const MovePopupComponent = {
   template
 };
 
-function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
+function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog, $timeout, dimItemMoveService) {
   'ngInject';
   const vm = this;
 
@@ -20,7 +21,7 @@ function MovePopupController($scope, D2StoresService, dimStoreService, ngDialog,
   }
 
   vm.moveAmount = vm.item.amount;
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   if (vm.item.maxStackSize > 1) {
     const store = getStoreService().getStore(vm.item.owner);

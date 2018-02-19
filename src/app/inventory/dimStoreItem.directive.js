@@ -1,13 +1,16 @@
-import template from './dimStoreItem.directive.html';
-import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import { isPhonePortrait } from '../mediaQueries';
+import { queuedAction } from '../inventory/action-queue';
+import { itemTags } from '../settings/settings';
+import { NewItemsService } from './store/new-items.service';
+import dialogTemplate from './dimStoreItem.directive.dialog.html';
+import template from './dimStoreItem.directive.html';
 import './dimStoreItem.scss';
 
-export function tagIconFilter(dimSettingsService) {
+export function tagIconFilter() {
   'ngInject';
   const iconType = {};
 
-  dimSettingsService.itemTags.forEach((tag) => {
+  itemTags.forEach((tag) => {
     if (tag.type) {
       iconType[tag.type] = tag.icon;
     }
@@ -36,7 +39,7 @@ export const StoreItemComponent = {
 let otherDialog = null;
 let firstItemTimed = false;
 
-export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue, dimDestinyTrackerService, NewItemsService) {
+export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimDestinyTrackerService) {
   'ngInject';
 
   function getStoreService(item) {
@@ -83,7 +86,7 @@ export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreServ
     });
   }
 
-  vm.doubleClicked = dimActionQueue.wrap((item, e) => {
+  vm.doubleClicked = queuedAction((item, e) => {
     if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
       e.stopPropagation();
       const active = getStoreService(item).getActiveStore();

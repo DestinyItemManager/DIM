@@ -1,5 +1,6 @@
 import template from './inventory.html';
 import { subscribeOnScope } from '../rx-utils';
+import { getBuckets } from '../destiny1/d1-buckets.service';
 
 export const InventoryComponent = {
   template,
@@ -9,13 +10,13 @@ export const InventoryComponent = {
   controller: InventoryController
 };
 
-function InventoryController($scope, dimStoreService, dimBucketService) {
+function InventoryController($scope, dimStoreService) {
   'ngInject';
 
   const vm = this;
 
   this.$onInit = function() {
-    dimBucketService.getBuckets().then((buckets) => {
+    getBuckets().then((buckets) => {
       vm.buckets = buckets;
       subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), (stores) => {
         if (stores) {

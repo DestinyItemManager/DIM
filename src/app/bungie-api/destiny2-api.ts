@@ -18,8 +18,8 @@ import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { dimState } from '../state';
 import { DimError, httpAdapter, httpAdapterWithRetry } from './bungie-service-helper';
+import { getActivePlatform } from '../accounts/platform.service';
 
 /**
  * APIs for interacting with Destiny 2 game data.
@@ -115,10 +115,10 @@ function getProfile(platform: DestinyAccount, ...components: DestinyComponentTyp
  * Transfer an item to another store.
  */
 export function transfer(item: DimItem, store: DimStore, amount: number): IPromise<ServerResponse<number>> {
-  const platform = dimState.active;
+  const platform = getActivePlatform();
   const request = {
     characterId: store.isVault ? item.owner : store.id,
-    membershipType: platform.platformType,
+    membershipType: platform!.platformType,
     itemId: item.id,
     itemReferenceHash: item.hash,
     stackSize: amount || item.amount,
@@ -147,11 +147,11 @@ export function transfer(item: DimItem, store: DimStore, amount: number): IPromi
 }
 
 export function equip(item: DimItem): IPromise<ServerResponse<number>> {
-  const platform = dimState.active;
+  const platform = getActivePlatform();
 
   return equipItem(httpAdapterWithRetry, {
     characterId: item.owner,
-    membershipType: platform.platformType,
+    membershipType: platform!.platformType,
     itemId: item.id
   }) as IPromise<ServerResponse<number>>;
 }
@@ -165,10 +165,10 @@ export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i: any) => (i.isExotic ? 1 : 0));
 
-  const platform = dimState.active;
+  const platform = getActivePlatform();
   return equipItemsApi(httpAdapterWithRetry, {
     characterId: store.id,
-    membershipType: platform.platformType,
+    membershipType: platform!.platformType,
     itemIds: _.pluck(items, 'id')
   })
     .then((response) => {
@@ -186,11 +186,11 @@ export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[
  * Set the lock state of an item.
  */
 export function setLockState(store: DimStore, item: DimItem, lockState: boolean): IPromise<ServerResponse<number>> {
-  const account = dimState.active;
+  const account = getActivePlatform();
 
   return setItemLockState(httpAdapterWithRetry, {
     characterId: store.isVault ? item.owner : store.id,
-    membershipType: account.platformType,
+    membershipType: account!.platformType,
     itemId: item.id,
     state: lockState
   }) as IPromise<ServerResponse<number>>;

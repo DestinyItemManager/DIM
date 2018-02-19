@@ -8,22 +8,25 @@ import {
   DestinyProgression
   } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { BucketsService, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
-import { D2DefinitionsService, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { getBuckets, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
+import { D2ManifestService } from '../manifest/manifest-service';
 import { flatMap } from '../util';
-import { D2ItemFactoryType, DimItem } from './store/d2-item-factory.service';
-import { D2StoreFactoryType, DimStore, DimVault } from './store/d2-store-factory.service';
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
+import { DimItem, resetIdTracker, processItems } from './store/d2-item-factory.service';
+import { DimStore, DimVault, makeVault, makeCharacter } from './store/d2-store-factory.service';
+import { NewItemsService } from './store/new-items.service';
+import { getItemInfoSource } from './dim-item-info';
 
 export interface StoreServiceType {
   getActiveStore(): DimStore | undefined;
@@ -48,15 +51,8 @@ export interface StoreServiceType {
 export function D2StoresService(
   $rootScope: IRootScopeService,
   $q,
-  D2Definitions: D2DefinitionsService,
-  D2BucketsService: BucketsService,
-  dimItemInfoService,
-  D2ManifestService,
   $i18next,
   toaster,
-  D2StoreFactory: D2StoreFactoryType,
-  D2ItemFactory: D2ItemFactoryType,
-  NewItemsService,
   $stateParams: StateParams,
   loadingTracker,
   dimDestinyTrackerService
@@ -141,7 +137,7 @@ export function D2StoresService(
     }
 
     return $q.all([
-      D2Definitions.getDefinitions(),
+      getDefinitions(),
       getCharacters(account)
     ]).then(([defs, profileInfo]: [D2ManifestDefinitions, DestinyProfileResponse]) => {
       _stores.forEach((dStore) => {
@@ -193,13 +189,13 @@ export function D2StoresService(
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
 
-    D2ItemFactory.resetIdTracker();
+    resetIdTracker();
 
     const dataDependencies = [
-      D2Definitions.getDefinitions(),
-      D2BucketsService.getBuckets(),
-      NewItemsService.loadNewItems(account, 2),
-      dimItemInfoService(account, 2),
+      getDefinitions(),
+      getBuckets(),
+      NewItemsService.loadNewItems(account),
+      getItemInfoSource(account),
       getStores(account)
     ];
 
@@ -246,7 +242,7 @@ export function D2StoresService(
         if (!firstLoad) {
           // Save the list of new item IDs
           NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account, 2);
+          NewItemsService.saveNewItems(newItems, account);
         }
 
         const stores: DimStore[] = [...characters, vault];
@@ -303,7 +299,7 @@ export function D2StoresService(
     itemInfoService,
     lastPlayedDate: Date
   ): IPromise<DimStore> {
-    const store = D2StoreFactory.makeCharacter(defs, character, lastPlayedDate);
+    const store = makeCharacter(defs, character, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
     store.progression = progressions ? { progressions } : null;
@@ -317,7 +313,7 @@ export function D2StoresService(
       }));
     }
 
-    return D2ItemFactory.processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    return processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
@@ -345,13 +341,13 @@ export function D2StoresService(
     newItems: Set<string>,
     itemInfoService
   ): IPromise<DimVault> {
-    const store = D2StoreFactory.makeVault(buckets, profileCurrencies);
+    const store = makeVault(buckets, profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
       // items that cannot be stored in the vault, and are therefore *in* a vault
       return !buckets.byHash[i.bucketHash].vaultBucket;
     });
-    return D2ItemFactory.processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
+    return processItems(store, items, itemComponents, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket

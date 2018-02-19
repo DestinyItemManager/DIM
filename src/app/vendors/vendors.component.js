@@ -1,4 +1,5 @@
 import { subscribeOnScope } from '../rx-utils';
+import { settings } from '../settings/settings';
 
 import template from './vendors.html';
 import './vendors.scss';
@@ -12,7 +13,7 @@ export const VendorsComponent = {
   controllerAs: 'vm'
 };
 
-function VendorsController($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
+function VendorsController($scope, $state, $q, dimStoreService, dimVendorService) {
   'ngInject';
 
   const vm = this;
@@ -25,7 +26,7 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
     emotes: ['emotes']
   };
 
-  vm.settings = dimSettingsService;
+  vm.settings = settings;
 
   this.$onInit = function() {
     subscribeOnScope($scope, dimVendorService.getVendorsStream(vm.account), ([stores, vendors]) => {

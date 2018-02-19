@@ -40,6 +40,11 @@ interface Window {
   CSS: {
     supports(propertyName: string, value: string, something: number);
   }
+  BroadcastChannel?: BroadcastChannel;
+}
+
+interface Navigator {
+  storage: any;
 }
 
 declare module "*.jpg" {

@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { settings } from '../settings/settings';
 import template from './d2farming.html';
 import './farming.scss';
 
@@ -8,14 +8,14 @@ export const D2FarmingComponent = {
   template
 };
 
-function FarmingCtrl(D2FarmingService, dimSettingsService) {
+function FarmingCtrl(D2FarmingService) {
   'ngInject';
 
   const vm = this;
 
-  angular.extend(vm, {
+  Object.assign(vm, {
     service: D2FarmingService,
-    settings: dimSettingsService,
+    settings,
     stop: function($event) {
       $event.preventDefault();
       D2FarmingService.stop();

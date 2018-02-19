@@ -5,6 +5,7 @@ import intellectIcon from 'app/images/intellect.png';
 import disciplineIcon from 'app/images/discipline.png';
 import strengthIcon from 'app/images/strength.png';
 import { getBonus } from '../inventory/store/character-utils';
+import { getDefinitions } from '../destiny1/d1-definitions.service';
 
 export const LoadoutBuilderComponent = {
   controller: LoadoutBuilderController,
@@ -15,7 +16,7 @@ export const LoadoutBuilderComponent = {
   }
 };
 
-function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
+function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimStoreService, ngDialog, dimLoadoutService, dimVendorService) {
   'ngInject';
 
   const vm = this;
@@ -266,7 +267,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSet
     return filteredLoadout;
   }
 
-  dimDefinitions.getDefinitions().then((defs) => {
+  getDefinitions().then((defs) => {
     angular.extend(vm, {
       active: 'titan',
       i18nClassNames: _.object(['titan', 'hunter', 'warlock'], _.pluck(_.sortBy(defs.Class, (classDef) => { return classDef.classType; }), 'className')),
