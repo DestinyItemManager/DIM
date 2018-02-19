@@ -101,7 +101,6 @@
     "@destiny-item-manager/zip.js": "github:DestinyItemManager/zip.js",
     "@types/angular": "^1.6.42",
     "@types/angular-mocks": "^1.5.11",
-    "@types/i18next": "^8.4.3",
     "@types/ng-dialog": "^0.6.2",
     "@types/react": "^16.0.37",
     "@types/react-dom": "^16.0.4",

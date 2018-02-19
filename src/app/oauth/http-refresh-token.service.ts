@@ -122,7 +122,7 @@ export function HttpRefreshTokenService($rootScope, $injector) {
       const token = getToken();
       const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
 
-      if (refreshTokenIsValid) {
+      if (token && refreshTokenIsValid) {
         response.config.triedRefresh = true;
         cache = cache || getAccessTokenFromRefreshToken(token.refreshToken);
         return cache

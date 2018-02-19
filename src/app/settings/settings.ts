@@ -1,5 +1,5 @@
 import { merge } from 'angular';
-import * as i18next from 'i18next';
+import i18next from 'i18next';
 import { $rootScope } from 'ngimport';
 import * as _ from 'underscore';
 import { defaultLanguage } from '../i18n';
