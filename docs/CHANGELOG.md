@@ -1,6 +1,9 @@
 # Next
 
+# 4.41.1
+
 * Fix dupelower logic.
+* Fixed bugs preventing DIM from loading in some browsers.
 
 # 4.41.0
 
