@@ -4,6 +4,7 @@
 
 * Fix dupelower logic.
 * Fixed bugs preventing DIM from loading in some browsers.
+* See previews of the items you'll get from faction packages and Xur from links on the Progress page.
 
 # 4.41.0
 
