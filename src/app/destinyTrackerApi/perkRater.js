@@ -13,7 +13,8 @@ class PerkRater {
    * @memberof PerkRater
    */
   ratePerks(item) {
-    if ((!item.writtenReviews) ||
+    if ((!item.talentGrid) ||
+        (!item.writtenReviews) ||
         (!item.writtenReviews.length)) {
       return;
     }
