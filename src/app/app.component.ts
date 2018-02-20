@@ -89,6 +89,9 @@ function AppComponentCtrl(
 
     try {
       localStorage.setItem('test', 'true');
+      if (!window.indexedDB) {
+        throw new Error("IndexedDB not available");
+      }
     } catch (e) {
       console.log('storage test', e);
       $timeout(() => {
