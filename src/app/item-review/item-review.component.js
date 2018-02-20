@@ -81,7 +81,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   vm.editReview = function(reviewId) {
     const review = this.findReview(reviewId);
 
-    if (!review.isReviewer) {
+    if (!review || !review.isReviewer) {
       return;
     }
 
