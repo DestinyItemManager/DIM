@@ -70,7 +70,7 @@ export function ItemService(
     item = storeService.getItemAcrossStores(item)!;
 
     // If we've moved to a new place
-    if (source.id !== target.id || item.location.inPostmaster) {
+    if (source.id !== target.id || (item && item.location && item.location.inPostmaster)) {
       // We handle moving stackable and nonstackable items almost exactly the same!
       const stackable = item.maxStackSize > 1;
       // Items to be decremented
