@@ -14,7 +14,7 @@ export function StatRangeFilter() {
       return stat.qualityPercentage.min;
     }
 
-    if (!statRange.enabled) {
+    if (!statRange || !statRange.enabled) {
       return -1;
     }
 
