@@ -15,7 +15,7 @@ let _active: DestinyAccount | null = null;
 // Set the active platform here - it'll drive the other observable
 const activePlatform$ = new Subject<DestinyAccount>();
 
-const current$: ConnectableObservable<DestinyAccount> = activePlatform$
+const current$: ConnectableObservable<DestinyAccount | null> = activePlatform$
   .distinctUntilChanged(compareAccounts)
   .do(saveActivePlatform)
   .publishReplay(1);

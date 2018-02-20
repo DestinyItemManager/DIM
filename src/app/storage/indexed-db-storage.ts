@@ -1,5 +1,4 @@
 import * as idbKeyval from 'idb-keyval';
-import * as _ from 'underscore';
 import { StorageAdapter } from './sync.service';
 
 /**
