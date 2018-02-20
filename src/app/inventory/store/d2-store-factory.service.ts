@@ -118,7 +118,7 @@ const StoreProto = {
    * stackables, this is in stacks, not individual pieces.
    */
   capacityForItem(item: DimItem) {
-    if (!item.bucket) {
+    if (item && !item.bucket) {
       console.error("item needs a 'bucket' field", item);
       return 10;
     }
