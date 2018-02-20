@@ -21,7 +21,7 @@ export const d2VendorsModule = module('d2VendorsModule', [])
     $stateProvider.state({
       name: 'destiny2.vendor',
       component: 'd2SingleVendor',
-      url: '/vendors/:id'
+      url: '/vendors/:id?characterId'
     });
   })
   .name;

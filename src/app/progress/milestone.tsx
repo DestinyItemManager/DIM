@@ -9,7 +9,8 @@ import {
   DestinyMilestoneRewardEntry,
   DestinyObjectiveProgress,
   DestinyQuestStatus,
-  DestinyActivityModifierDefinition
+  DestinyActivityModifierDefinition,
+  DestinyCharacterComponent
   } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
@@ -23,6 +24,7 @@ import './milestone.scss';
 interface MilestoneProps {
   milestone: DestinyMilestone;
   defs: D2ManifestDefinitions;
+  character: DestinyCharacterComponent;
 }
 
 /**
@@ -30,7 +32,7 @@ interface MilestoneProps {
  * There are several forms of Milestone.
  */
 export function Milestone(props: MilestoneProps) {
-  const { milestone, defs } = props;
+  const { milestone, defs, character } = props;
 
   const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
 
@@ -49,7 +51,7 @@ export function Milestone(props: MilestoneProps) {
     );
   } else if (milestone.vendors) {
     const click = () => {
-      $state.go('destiny2.vendor', { id: milestone.vendors[0].vendorHash });
+      $state.go('destiny2.vendor', { id: milestone.vendors[0].vendorHash, characterId: character.characterId });
     };
 
     return (

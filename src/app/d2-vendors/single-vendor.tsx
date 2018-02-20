@@ -55,12 +55,15 @@ export default class SingleVendor extends React.Component<Props, State> {
     if (vendorDef.returnWithVendorRequest) {
       // TODO: get for all characters, or let people select a character? This is a hack
       // we at least need to display that character!
-      // uggggh
-      // TODO: maybe load the whole stores anyway so we can count currencies and such, a la the old thing
-      const activeStore = this.props.D2StoresService.getActiveStore();
-      const characterId = activeStore
-        ? activeStore.id
-        : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
+      let characterId = this.props.$stateParams.characterId;
+      if (!characterId) {
+        // uggggh
+        // TODO: maybe load the whole stores anyway so we can count currencies and such, a la the old thing
+        const activeStore = this.props.D2StoresService.getActiveStore();
+        characterId = activeStore
+          ? activeStore.id
+          : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
+      }
       const vendorInstance = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
       this.setState({ vendorInstance });
     }
@@ -97,6 +100,8 @@ export default class SingleVendor extends React.Component<Props, State> {
     const factionProgress = vendorInstance && vendorInstance.vendor.data.progression;
 
     // TODO: there's a cool background image but I'm not sure how to use it
+
+    // TODO: localize
     return (
       <div className="vendor dim-page">
         <div className="vendor-featured">
@@ -109,7 +114,7 @@ export default class SingleVendor extends React.Component<Props, State> {
               <h1>{vendorDef.displayProperties.name}</h1>
               <div>{vendorDef.displayProperties.description}</div>
               {vendorInstance &&
-                <div>Items rotate: {new Date(vendorInstance.vendor.data.nextRefreshDate).toLocaleString()}</div>
+                <div>Inventory updates on {new Date(vendorInstance.vendor.data.nextRefreshDate).toLocaleString()}</div>
               }
             </div>
           </div>

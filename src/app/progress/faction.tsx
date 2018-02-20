@@ -3,7 +3,8 @@ import {
   DestinyFactionProgression,
   DestinyInventoryComponent,
   DestinyItemComponent,
-  DestinyProgression
+  DestinyProgression,
+  DestinyCharacterComponent
   } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
@@ -18,10 +19,11 @@ interface FactionProps {
   factionProgress: DestinyFactionProgression;
   profileInventory: DestinyInventoryComponent;
   defs: D2ManifestDefinitions;
+  character: DestinyCharacterComponent;
 }
 
 export function Faction(props: FactionProps) {
-  const { defs, factionProgress, profileInventory } = props;
+  const { defs, factionProgress, profileInventory, character } = props;
 
   const factionDef = defs.Faction[factionProgress.factionHash];
 
@@ -32,7 +34,7 @@ export function Faction(props: FactionProps) {
 
   const vendorDef = defs.Vendor.get(vendorHash);
 
-  const rewardClick = () => $state.go('destiny2.vendor', { id: factionDef.rewardVendorHash });
+  const rewardClick = () => $state.go('destiny2.vendor', { id: factionDef.rewardVendorHash, characterId: character.characterId });
 
   return (
     <div

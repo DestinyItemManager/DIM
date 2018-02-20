@@ -136,7 +136,7 @@ export class Progress extends React.Component<Props, State> {
           <div className="progress-row">
             <div className="progress-for-character">
               {profileMilestones.map((milestone) =>
-                <Milestone milestone={milestone} defs={defs} key={milestone.milestoneHash} />
+                <Milestone milestone={milestone} character={characters[0]} defs={defs} key={milestone.milestoneHash} />
               )}
             </div>
           </div>
@@ -201,7 +201,7 @@ export class Progress extends React.Component<Props, State> {
               <div className="progress-for-character" key={character.characterId}>
                 <WellRestedPerkIcon defs={defs} progressions={profileInfo.characterProgressions.data[character.characterId]} />
                 {this.milestonesForCharacter(character).map((milestone) =>
-                  <Milestone milestone={milestone} defs={defs} key={milestone.milestoneHash} />
+                  <Milestone milestone={milestone} character={character} defs={defs} key={milestone.milestoneHash} />
                 )}
               </div>
             )}
@@ -227,7 +227,7 @@ export class Progress extends React.Component<Props, State> {
             {characters.map((character) =>
               <div className="progress-for-character" key={character.characterId}>
                 {this.factionsForCharacter(character).map((faction) =>
-                  <Faction factionProgress={faction} defs={defs} profileInventory={profileInfo.profileInventory.data} key={faction.factionHash} />
+                  <Faction factionProgress={faction} defs={defs} character={character} profileInventory={profileInfo.profileInventory.data} key={faction.factionHash} />
                 )}
               </div>
             )}
