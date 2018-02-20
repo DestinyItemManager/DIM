@@ -59,6 +59,7 @@
       "Class": "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist."
     },
     "ItemCount": "Du hast {{num}} davon.",
+    "Rating": "Bewertung",
     "Splits": "Vergleiche mit ähnlichen Werten ({{quantity}})"
   },
   "Cooldown": {

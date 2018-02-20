@@ -59,6 +59,7 @@
       "Class": "無法比較此物品,因為他不是一個{{class}}."
     },
     "ItemCount": "您有{{num}} 个物品.",
+    "Rating": "Rating",
     "Splits": "對比相似的分堆({{quantity}})"
   },
   "Cooldown": {
@@ -444,7 +445,7 @@
     "SaveAsNew": "Save As New",
     "SaveErrorDescription": "Unable to save loadout {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Error saving loadout",
-    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
+    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transfered all you had.",
     "VendorsCanEquip": "These items can be equipped:",
     "VendorsCannotEquip": "These items cannot be equipped:"
   },

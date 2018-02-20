@@ -59,6 +59,7 @@
       "Class": "无法比较此物品，因为它不是一个{{class}}。"
     },
     "ItemCount": "您有{{num}} 个物品。",
+    "Rating": "评级",
     "Splits": "对比相似的分堆({{quantity}})"
   },
   "Cooldown": {

@@ -59,6 +59,7 @@
       "Class": "Impossibile confrontare questo oggetto, poiché non è per {{class}}."
     },
     "ItemCount": "Tu hai {{num}} di questi.",
+    "Rating": "Giudizio",
     "Splits": "Confronta suddivisioni simili ({{quantity}})"
   },
   "Cooldown": {

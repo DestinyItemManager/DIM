@@ -59,6 +59,7 @@
       "Class": "このアイテム {{class}} 用のため、比較できません。"
     },
     "ItemCount": "{{num}} を所持していません。",
+    "Rating": "Rating",
     "Splits": "同様の分割を比較する ({{quantity}})"
   },
   "Cooldown": {

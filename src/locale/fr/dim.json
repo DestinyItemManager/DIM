@@ -59,6 +59,7 @@
       "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {{class}}."
     },
     "ItemCount": "Vous avez {{num}} de ceci.",
+    "Rating": "Évaluation",
     "Splits": "Comparer des paliers similaires ({{quantity}})"
   },
   "Cooldown": {
@@ -444,7 +445,7 @@
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveErrorDescription": "Impossible d'enregistrer le pré set {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Erreur lors de l'enregistrement du pré set",
-    "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}} Nous avons transféré tout ce que vous aviez.",
+    "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}}. Nous avons transféré tout ce que vous aviez.",
     "VendorsCanEquip": "Ces objets peuvent être équipés:",
     "VendorsCannotEquip": "Ces objets ne peuvent pas être équipés:"
   },

@@ -59,6 +59,7 @@
       "Class": "No se puede comparar este objeto ya que no es para {{class}}."
     },
     "ItemCount": "Tienes {{num}} de esto.",
+    "Rating": "Rating",
     "Splits": "Comparar partes similares ({{quantity}})"
   },
   "Cooldown": {
