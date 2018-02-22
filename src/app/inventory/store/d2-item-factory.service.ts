@@ -208,6 +208,8 @@ export interface DimItem {
   userReview: string;
   userVote: number;
   dtrRating: number;
+  dtrRatingCount: number;
+  dtrHighlightedRatingCount: number;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;

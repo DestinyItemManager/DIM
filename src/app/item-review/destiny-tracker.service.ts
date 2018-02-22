@@ -6,7 +6,6 @@ import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
 import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
 
-import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
@@ -15,6 +14,8 @@ import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { SyncService } from '../storage/sync.service';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 
 export function DestinyTrackerService(
   $q,
@@ -58,7 +59,7 @@ export function DestinyTrackerService(
                                     stores);
       } else if (stores[0].destinyVersion === 2) {
         _d2bulkFetcher.attachRankings(null,
-                                      stores);
+                                      stores as DimStore[]);
       }
     },
 

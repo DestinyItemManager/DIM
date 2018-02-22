@@ -1,7 +1,17 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { D2ItemListBuilder } from './d2-itemListBuilder';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { DtrItemWithVotes } from './d2-dtr-class-defs';
+import { D2ReviewDataCache } from './d2-reviewDataCache';
+import { IPromise } from 'angular';
 
 class D2BulkFetcher {
+  _reviewDataCache: D2ReviewDataCache;
+  _loadingTracker: any;
+  _trackerErrorHandler: any;
+  _itemListBuilder: D2ItemListBuilder;
+  $http: any;
+  $q: any;
   constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;
@@ -20,7 +30,7 @@ class D2BulkFetcher {
     };
   }
 
-  _getBulkFetchPromise(stores, platformSelection) {
+  _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrItemWithVotes[]> {
     if (!stores.length) {
       return this.$q.resolve();
     }
@@ -44,15 +54,8 @@ class D2BulkFetcher {
 
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
-   *
-   * @param {any} storesContainer
-   * @param {number} platformSelection
-   *
-   * @memberof D2BulkFetcher
    */
-  bulkFetch(storesContainer, platformSelection) {
-    const stores = _.values(storesContainer);
-
+  bulkFetch(stores: DimStore[], platformSelection: number) {
     this._getBulkFetchPromise(stores, platformSelection)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
         stores));
@@ -60,33 +63,27 @@ class D2BulkFetcher {
 
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
-   *
-   * @param {any} vendorContainer
-   *
-   * @memberof D2BulkFetcher
    */
-  bulkFetchVendorItems(vendorContainer) {
+  bulkFetchVendorItems(vendorContainer, platformSelection: number) {
     const vendors = _.values(vendorContainer);
 
-    this._getBulkFetchPromise(vendors)
+    this._getBulkFetchPromise(vendors, platformSelection)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
         vendors));
   }
 
-  attachRankings(bulkRankings,
-    stores) {
+  attachRankings(bulkRankings: DtrItemWithVotes[] | null,
+                 stores: DimStore[]) {
     if (!bulkRankings && !stores) {
       return;
     }
-
-    const self = this;
 
     this._reviewDataCache.addScores(bulkRankings);
 
     stores.forEach((store) => {
       store.items.forEach((storeItem) => {
         if (storeItem.reviewable) {
-          const matchingItem = self._reviewDataCache.getRatingData(storeItem);
+          const matchingItem = this._reviewDataCache.getRatingData(storeItem);
 
           if (matchingItem) {
             storeItem.dtrRating = matchingItem.rating;
@@ -103,16 +100,14 @@ class D2BulkFetcher {
   }
 
   attachVendorRankings(bulkRankings,
-    vendors) {
+                       vendors) {
     if (!bulkRankings && !vendors) {
       return;
     }
 
-    const self = this;
-
     if (bulkRankings) {
       bulkRankings.forEach((bulkRanking) => {
-        self._reviewDataCache.addScore(bulkRanking);
+        this._reviewDataCache.addScore(bulkRanking);
       });
     }
 
@@ -120,7 +115,7 @@ class D2BulkFetcher {
       vendor.allItems.forEach((vendorItemContainer) => {
         const vendorItem = vendorItemContainer.item;
 
-        const matchingItem = self._reviewDataCache.getRatingData(vendorItem);
+        const matchingItem = this._reviewDataCache.getRatingData(vendorItem);
 
         if (matchingItem) {
           vendorItem.dtrRating = matchingItem.rating;
