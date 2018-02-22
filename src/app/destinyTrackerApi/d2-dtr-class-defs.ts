@@ -13,7 +13,7 @@ export interface DtrItem {
 }
 
 export interface DtrItemWithVotes extends DtrItem {
-  votes?: DtrVote;
+  votes: DtrVote;
 }
 
 export interface DtrReviewRequest extends DtrItem {

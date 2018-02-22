@@ -1,10 +1,11 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
 import { IQService, IHttpService } from 'angular';
 import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -47,7 +48,7 @@ class D2ReviewsFetcher {
       .when(this._getItemReviewsCall(postWeapon, platformSelection))
       .then(this.$http)
       .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
-      .then((response) => { return response.data; });
+      .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
 
@@ -71,6 +72,11 @@ class D2ReviewsFetcher {
 
   _markUserReview(reviewData) {
     const membershipInfo = getActivePlatform();
+
+    if (!membershipInfo) {
+      return;
+    }
+
     const membershipId = membershipInfo.membershipId;
 
     _.each(reviewData.reviews, (review) => {
@@ -160,7 +166,7 @@ class D2ReviewsFetcher {
    * them to the item.
    * Attempts to fetch data from the cache first.
    */
-  getItemReviews(item, platformSelection) {
+  getItemReviews(item: DimItem, platformSelection: number) {
     if (!item.reviewable) {
       return;
     }

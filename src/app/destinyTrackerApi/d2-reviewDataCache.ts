@@ -1,6 +1,7 @@
 import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DtrItem, DtrItemWithVotes } from './d2-dtr-class-defs';
 
 /**
  * Cache of review data.
@@ -9,7 +10,7 @@ import { DimItem } from '../inventory/store/d2-item-factory.service';
  */
 class D2ReviewDataCache {
   _maxTotalVotes: number;
-  _itemStores: any[];
+  _itemStores: DtrItem[];
   _itemTransformer: D2ItemTransformer;
   constructor() {
     this._itemTransformer = new D2ItemTransformer();
@@ -26,7 +27,7 @@ class D2ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item) {
+  getRatingData(item: DimItem): DtrItem | null {
     return this._getMatchingItem(item) || null;
   }
 
@@ -42,7 +43,7 @@ class D2ReviewDataCache {
     return rating.toFixed(1);
   }
 
-  _getDownvoteMultiplier(dtrRating) {
+  _getDownvoteMultiplier(dtrRating: DtrItemWithVotes) {
     if (dtrRating.votes.total > (this._maxTotalVotes * 0.75)) {
       return 1;
     }
@@ -105,9 +106,13 @@ class D2ReviewDataCache {
    * is still feeding back cached data or processing it or whatever.
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
-  addUserReviewData(item,
+  addUserReviewData(item: DimItem,
                     userReview) {
     const matchingItem = this._getMatchingItem(item);
+
+    if (!matchingItem) {
+      return;
+    }
 
     this._markItemAsLocallyCached(item, true);
 
