@@ -1,16 +1,11 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 /**
  * Rate perks on a Destiny 2 item (based off of its attached user reviews).
- *
- * @class D2PerkRater
  */
 class D2PerkRater {
   /**
    * Rate the perks on a Destiny 2 item based off of its attached user reviews.
-   *
-   * @param {any} item
-   * @memberof D2PerkRater
    */
   ratePerks(item) {
     if (!item.writtenReviews ||

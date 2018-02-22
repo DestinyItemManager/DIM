@@ -1,11 +1,18 @@
 import { D2ItemTransformer } from './d2-itemTransformer';
+import { IQService, IHttpService } from 'angular';
+import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
+import { D2ReviewDataCache } from './d2-reviewDataCache';
 
 /**
  * Supports submitting D2 review data to the DTR API.
- *
- * @class D2ReviewSubmitter
  */
 class D2ReviewSubmitter {
+  _reviewDataCache: D2ReviewDataCache;
+  _loadingTracker: any;
+  _trackerErrorHandler: D2TrackerErrorHandler;
+  _itemTransformer: D2ItemTransformer;
+  $http: IHttpService;
+  $q: IQService;
   constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;

@@ -1,9 +1,17 @@
+import { IQService, IHttpService } from "angular";
+import { D2TrackerErrorHandler } from "./d2-trackerErrorHandler";
+import { D2ReviewDataCache } from "./d2-reviewDataCache";
+
 /**
  * Class to support reporting bad takes.
- *
- * @class D2ReviewReporter
  */
 class D2ReviewReporter {
+  _userFilter: any;
+  _reviewDataCache: D2ReviewDataCache;
+  _loadingTracker: any;
+  _trackerErrorHandler: D2TrackerErrorHandler;
+  $http: IHttpService;
+  $q: IQService;
   constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
     this.$q = $q;
     this.$http = $http;
@@ -59,13 +67,9 @@ class D2ReviewReporter {
   }
 
   /**
-     * Report a written review.
-     * Also quietly adds the associated user to a block list.
-     *
-     * @param {review} review
-     * @param {Account} membershipInfo
-     * @memberof ReviewReporter
-     */
+   * Report a written review.
+   * Also quietly adds the associated user to a block list.
+   */
   reportReview(review, membershipInfo) {
     if (review.isHighlighted || review.isReviewer) {
       return;

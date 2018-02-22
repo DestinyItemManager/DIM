@@ -1,4 +1,8 @@
+import { IQService } from "angular";
+
 class D2TrackerErrorHandler {
+  $i18next: any;
+  $q: IQService;
   constructor($q, $i18next) {
     this.$q = $q;
     this.$i18next = $i18next;

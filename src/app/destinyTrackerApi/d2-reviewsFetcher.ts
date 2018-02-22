@@ -2,13 +2,22 @@ import _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
+import { IQService, IHttpService } from 'angular';
+import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
+import { D2ReviewDataCache } from './d2-reviewDataCache';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
- *
- * @class D2ReviewsFetcher
  */
 class D2ReviewsFetcher {
+  _perkRater: D2PerkRater;
+  _userFilter: any;
+  _reviewDataCache: D2ReviewDataCache;
+  _loadingTracker: any;
+  _trackerErrorHandler: D2TrackerErrorHandler;
+  _itemTransformer: D2ItemTransformer;
+  $http: IHttpService;
+  $q: IQService;
   constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
     this.$q = $q;
     this.$http = $http;
@@ -150,12 +159,6 @@ class D2ReviewsFetcher {
    * Get community (which may include the current user's) reviews for a given item and attach
    * them to the item.
    * Attempts to fetch data from the cache first.
-   *
-   * @param {any} item
-   * @param {number} platformSelection
-   * @returns {void}
-   *
-   * @memberof D2ReviewsFetcher
    */
   getItemReviews(item, platformSelection) {
     if (!item.reviewable) {

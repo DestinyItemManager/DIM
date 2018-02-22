@@ -3,15 +3,15 @@ import { D2ItemListBuilder } from './d2-itemListBuilder';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DtrItemWithVotes } from './d2-dtr-class-defs';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
-import { IPromise } from 'angular';
+import { IPromise, IQService, IHttpService } from 'angular';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
   _loadingTracker: any;
   _trackerErrorHandler: any;
   _itemListBuilder: D2ItemListBuilder;
-  $http: any;
-  $q: any;
+  $http: IHttpService;
+  $q: IQService;
   constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;
@@ -30,7 +30,7 @@ class D2BulkFetcher {
     };
   }
 
-  _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrItemWithVotes[]> {
+  _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrItemWithVotes[]> | IPromise<void> {
     if (!stores.length) {
       return this.$q.resolve();
     }
@@ -49,7 +49,7 @@ class D2BulkFetcher {
 
     this._loadingTracker.addPromise(promise);
 
-    return promise;
+    return promise as IPromise<DtrItemWithVotes[]>;
   }
 
   /**
@@ -72,7 +72,7 @@ class D2BulkFetcher {
         vendors));
   }
 
-  attachRankings(bulkRankings: DtrItemWithVotes[] | null,
+  attachRankings(bulkRankings: DtrItemWithVotes[] | void,
                  stores: DimStore[]) {
     if (!bulkRankings && !stores) {
       return;
