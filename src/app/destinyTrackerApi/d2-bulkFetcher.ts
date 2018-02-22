@@ -30,15 +30,17 @@ class D2BulkFetcher {
     };
   }
 
-  _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrItemWithVotes[]> | IPromise<void> {
+  _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrItemWithVotes[]> {
     if (!stores.length) {
-      return this.$q.resolve();
+      const emptyVotes: DtrItemWithVotes[] = [];
+      return this.$q.resolve(emptyVotes);
     }
 
     const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
-      return this.$q.resolve();
+      const emptyVotes: DtrItemWithVotes[] = [];
+      return this.$q.resolve(emptyVotes);
     }
 
     const promise = this.$q
@@ -58,7 +60,7 @@ class D2BulkFetcher {
   bulkFetch(stores: DimStore[], platformSelection: number) {
     this._getBulkFetchPromise(stores, platformSelection)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
-        stores));
+                                                  stores));
   }
 
   /**
@@ -69,11 +71,11 @@ class D2BulkFetcher {
 
     this._getBulkFetchPromise(vendors, platformSelection)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
-        vendors));
+                                                        vendors));
   }
 
-  attachRankings(bulkRankings: DtrItemWithVotes[] | void,
-                 stores: DimStore[]) {
+  attachRankings(bulkRankings: DtrItemWithVotes[] | null,
+                 stores: DimStore[]): void {
     if (!bulkRankings && !stores) {
       return;
     }
@@ -100,15 +102,13 @@ class D2BulkFetcher {
   }
 
   attachVendorRankings(bulkRankings,
-                       vendors) {
+                       vendors): void {
     if (!bulkRankings && !vendors) {
       return;
     }
 
     if (bulkRankings) {
-      bulkRankings.forEach((bulkRanking) => {
-        this._reviewDataCache.addScore(bulkRanking);
-      });
+      this._reviewDataCache.addScores(bulkRankings);
     }
 
     vendors.forEach((vendor) => {
