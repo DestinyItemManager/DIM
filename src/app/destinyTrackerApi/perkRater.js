@@ -14,8 +14,8 @@ class PerkRater {
    */
   ratePerks(item) {
     if ((!item.talentGrid) ||
-        (!item.writtenReviews) ||
-        (!item.writtenReviews.length)) {
+        (!item.reviews) ||
+        (!item.reviews.length)) {
       return;
     }
 
@@ -24,7 +24,7 @@ class PerkRater {
     for (let i = 1; i < maxColumn; i++) {
       const perkNodesInColumn = this._getPerkNodesInColumn(item, i);
 
-      const ratingsAndReviews = _.map(perkNodesInColumn, (perkNode) => this._getPerkRatingsAndReviewCount(perkNode, item.writtenReviews));
+      const ratingsAndReviews = _.map(perkNodesInColumn, (perkNode) => this._getPerkRatingsAndReviewCount(perkNode, item.reviews));
 
       const maxReview = this._getMaxReview(ratingsAndReviews);
 
