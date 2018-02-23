@@ -16,6 +16,8 @@ import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
+import { DtrUserReview } from '../destinyTrackerApi/d2-dtr-class-defs';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 export function DestinyTrackerService(
   $q,
