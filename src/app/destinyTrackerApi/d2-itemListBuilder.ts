@@ -3,7 +3,7 @@ import * as _ from 'underscore';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DtrItem } from './d2-dtr-class-defs';
+import { DtrItem } from '../item-review/destiny-tracker.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 
 /**

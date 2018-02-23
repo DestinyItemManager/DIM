@@ -3,8 +3,8 @@ import { IQService, IHttpService } from 'angular';
 import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { Reviewer } from './d2-dtr-class-defs';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { Reviewer } from '../item-review/destiny-tracker.service';
 
 export interface RatingAndReviewRequest {
   reviewer?: Reviewer;
@@ -52,7 +52,7 @@ class D2ReviewSubmitter {
     };
   }
 
-  _submitItemReviewCall(itemReview) {
+  _submitItemReviewCall(itemReview: RatingAndReviewRequest) {
     return {
       method: 'POST',
       url: 'https://db-api.destinytracker.com/api/external/reviews/submit',

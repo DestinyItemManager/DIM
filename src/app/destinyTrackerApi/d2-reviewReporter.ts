@@ -2,7 +2,7 @@ import { IQService, IHttpService } from "angular";
 import { D2TrackerErrorHandler } from "./d2-trackerErrorHandler";
 import { D2ReviewDataCache } from "./d2-reviewDataCache";
 import { DestinyAccount } from "../accounts/destiny-account.service";
-import { DtrUserReview, Reviewer } from "./d2-dtr-class-defs";
+import { DtrUserReview, Reviewer, DimReviewReport } from '../item-review/destiny-tracker.service';
 
 /**
  * Class to support reporting bad takes.
@@ -31,7 +31,7 @@ class D2ReviewReporter {
     };
   }
 
-  _submitReviewReportCall(reviewReport) {
+  _submitReviewReportCall(reviewReport: DimReviewReport) {
     return {
       method: 'POST',
       url: 'https://db-api.destinytracker.com/api/external/reviews/report',
@@ -40,7 +40,7 @@ class D2ReviewReporter {
     };
   }
 
-  _generateReviewReport(reviewId: string, membershipInfo: DestinyAccount) {
+  _generateReviewReport(reviewId: string, membershipInfo: DestinyAccount): DimReviewReport {
     const reporter = this._getReporter(membershipInfo);
 
     return {
@@ -50,7 +50,7 @@ class D2ReviewReporter {
     };
   }
 
-  _submitReportReviewPromise(reviewId, membershipInfo) {
+  _submitReportReviewPromise(reviewId: string, membershipInfo: DestinyAccount) {
     const reviewReport = this._generateReviewReport(reviewId, membershipInfo);
 
     const promise = this.$q
@@ -63,7 +63,7 @@ class D2ReviewReporter {
     return promise;
   }
 
-  _ignoreReportedUser(review) {
+  _ignoreReportedUser(review: DtrUserReview) {
     const reportedMembershipId = review.reviewer.membershipId;
     this._userFilter.ignoreUser(reportedMembershipId);
   }
@@ -73,7 +73,7 @@ class D2ReviewReporter {
    * Also quietly adds the associated user to a block list.
    */
   reportReview(review: DtrUserReview, membershipInfo: DestinyAccount | null) {
-    if (review.isHighlighted || review.isReviewer) {
+    if (review.isHighlighted || review.isReviewer || !membershipInfo) {
       return;
     }
 

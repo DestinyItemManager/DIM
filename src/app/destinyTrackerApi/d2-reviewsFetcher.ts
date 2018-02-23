@@ -6,7 +6,7 @@ import { IQService, IHttpService, IPromise } from 'angular';
 import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DtrItem, DimWorkingUserReview, DtrUserReview, DtrReviewContainer } from './d2-dtr-class-defs';
+import { DtrItem, DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -139,8 +139,7 @@ class D2ReviewsFetcher {
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item: DimItem,
-                       cachedItem: DimWorkingUserReview) {
+  _attachCachedReviews(item: DimItem, cachedItem: DimWorkingUserReview) {
     item.reviews = cachedItem.reviews;
 
     this._attachReviews(item, cachedItem);

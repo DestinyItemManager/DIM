@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { D2ItemListBuilder } from './d2-itemListBuilder';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { DtrBulkItem } from './d2-dtr-class-defs';
+import { DtrBulkItem } from '../item-review/destiny-tracker.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { IPromise, IQService, IHttpService } from 'angular';
 

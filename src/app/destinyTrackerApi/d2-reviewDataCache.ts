@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DimWorkingUserReview, DtrUserReview, DtrBulkItem } from './d2-dtr-class-defs';
+import { DimWorkingUserReview, DtrUserReview, DtrBulkItem } from '../item-review/destiny-tracker.service';
 
 /**
  * Cache of review data.

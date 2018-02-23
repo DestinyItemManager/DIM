@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { DtrItem } from './d2-dtr-class-defs';
+import { DtrItem } from '../item-review/destiny-tracker.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 /**

@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { DtrUserReview } from './d2-dtr-class-defs';
+import { DtrUserReview } from '../item-review/destiny-tracker.service';
 import { DimItem, DimSocket } from '../inventory/store/d2-item-factory.service';
 
 export interface RatingAndReview {
