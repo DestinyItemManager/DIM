@@ -35,7 +35,7 @@ import { NewItemsService } from './new-items.service';
 import { DimItemInfo, ItemInfoSource } from '../dim-item-info';
 import { $q } from 'ngimport';
 import { t } from 'i18next';
-import { DtrUserReview } from '../../destinyTrackerApi/d2-dtr-class-defs';
+import { DtrUserReview } from '../../item-review/destiny-tracker.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
