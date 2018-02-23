@@ -89,7 +89,7 @@
   <div ng-if="$ctrl.submitted"
        class="community-review--message"
        ng-i18next="DtrReview.ThankYou"></div>
-  <div ng-if="!$ctrl.item.writtenReviews.length && !$ctrl.submitted"
+  <div ng-if="!$ctrl.item.reviews.length && !$ctrl.submitted"
        class="community-review--message"
        ng-i18next="DtrReview.NoReviews"></div>
   <div ng-if="$ctrl.procon" class="community-review--procon">
@@ -102,7 +102,7 @@
       <div ng-repeat="con in $ctrl.aggregate.cons" ng-bind="con"></div>
     </div>
   </div>
-  <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews | filter : { isIgnored: '!true' }">
+  <div class="community-review" ng-repeat="review in $ctrl.item.reviews | filter : { isIgnored: '!true' }">
     <div ng-if="$ctrl.item.destinyVersion === 1">
       <div ng-class="{'link community-review--clickable' : review.isReviewer}" ng-click="$ctrl.editReview(review.reviewId)">
         <div class="community-review--who">

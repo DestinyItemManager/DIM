@@ -2,6 +2,19 @@ import { D2ItemTransformer } from './d2-itemTransformer';
 import { IQService, IHttpService } from 'angular';
 import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { Reviewer } from './d2-dtr-class-defs';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+
+export interface RatingAndReviewRequest {
+  reviewer?: Reviewer;
+  voted: number;
+  text: string;
+  pros: string;
+  cons: string;
+  isReviewer?: boolean;
+  timestamp?: string;
+}
 
 /**
  * Supports submitting D2 review data to the DTR API.
@@ -30,7 +43,7 @@ class D2ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item) {
+  toRatingAndReview(item): RatingAndReviewRequest {
     return {
       voted: item.userVote,
       text: item.userReview,
@@ -48,13 +61,12 @@ class D2ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item, membershipInfo) {
+  _submitReviewPromise(item: DimItem, membershipInfo: DestinyAccount | null) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
 
-    const rating = Object.assign(rollAndPerks, review);
-    rating.reviewer = reviewer;
+    const rating = { ...rollAndPerks, ...review, ...reviewer };
 
     const promise = this.$q
               .when(this._submitItemReviewCall(rating))
@@ -67,11 +79,11 @@ class D2ReviewSubmitter {
   }
 
   // Submitted data takes a while to wend its way into live reviews.  In the interim, don't lose track of what we sent.
-  _eventuallyPurgeCachedData(item) {
+  _eventuallyPurgeCachedData(item: DimItem) {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item, membershipInfo) {
+  _markItemAsReviewedAndSubmitted(item: DimItem, membershipInfo: DestinyAccount | null) {
     const review = this.toRatingAndReview(item);
     review.isReviewer = true;
     review.reviewer = this._getReviewer(membershipInfo);
@@ -81,10 +93,12 @@ class D2ReviewSubmitter {
                                                          review);
   }
 
-  submitReview(item, membershipInfo) {
+  submitReview(item: DimItem, membershipInfo: DestinyAccount | null) {
     this._submitReviewPromise(item, membershipInfo)
-      .then(this._markItemAsReviewedAndSubmitted(item, membershipInfo))
-      .then(this._eventuallyPurgeCachedData(item));
+      .then(() => {
+        this._markItemAsReviewedAndSubmitted(item, membershipInfo);
+        this._eventuallyPurgeCachedData(item);
+      });
   }
 }
 

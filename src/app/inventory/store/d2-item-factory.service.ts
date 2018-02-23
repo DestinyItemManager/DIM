@@ -35,6 +35,7 @@ import { NewItemsService } from './new-items.service';
 import { DimItemInfo, ItemInfoSource } from '../dim-item-info';
 import { $q } from 'ngimport';
 import { t } from 'i18next';
+import { DtrUserReview } from '../../destinyTrackerApi/d2-dtr-class-defs';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -104,12 +105,16 @@ export interface DimTalentGrid {
   complete: boolean;
 }
 
+export interface DestinyInventoryItemDefinitionWithRating extends DestinyInventoryItemDefinition {
+  bestRated?: boolean;
+}
+
 export interface DimSocket {
   plug: DestinyInventoryItemDefinition | null;
   reusablePlugs: DestinyInventoryItemDefinition[];
   enabled: boolean;
   enableFailReasons: string;
-  plugOptions: DestinyInventoryItemDefinition[];
+  plugOptions: DestinyInventoryItemDefinitionWithRating[];
   plugOptionsPerks: DestinySandboxPerkDefinition[];
   plugObjectives: DestinyObjectiveProgress[];
 }
@@ -205,11 +210,16 @@ export interface DimItem {
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
   cons: string;
+  userRating: number;
   userReview: string;
   userVote: number;
   dtrRating: number;
   dtrRatingCount: number;
   dtrHighlightedRatingCount: number;
+  reviews: DtrUserReview[];
+  userReviewPros: string;
+  userReviewCons: string;
+  ratingCount: number;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;

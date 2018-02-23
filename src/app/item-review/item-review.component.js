@@ -25,10 +25,6 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     pros: ['fast', 'lol'],
     cons: ['ok']
   };
-  //  vm.item.writtenReviews.forEach((review) => {
-  //    aggregate.pros.push(review.pros);
-  //    aggregate.cons.push(review.cons);
-  //  });
 
   vm.toggleEdit = function() {
     vm.expandReview = !vm.expandReview;
@@ -72,9 +68,9 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
 
   vm.findReview = function(reviewId) {
     if (vm.item.destinyVersion === 1) {
-      return _.find(vm.item.writtenReviews, { reviewId: reviewId });
+      return _.find(vm.item.reviews, { reviewId: reviewId });
     } else {
-      return _.find(vm.item.writtenReviews, { id: reviewId });
+      return _.find(vm.item.reviews, { id: reviewId });
     }
   };
 
@@ -97,14 +93,14 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
   vm.getReviewData = function() {
-    if (!vm.item.writtenReviews) {
+    if (!vm.item.reviews) {
       return [];
     }
 
     const labels = vm.reviewLabels;
 
     const mapData = _.map(labels, (label) => {
-      const matchingReviews = _.where(vm.item.writtenReviews, { rating: label });
+      const matchingReviews = _.where(vm.item.reviews, { rating: label });
       const highlightedReviews = _.where(matchingReviews, { isHighlighted: true });
 
       return matchingReviews.length + (highlightedReviews.length * 4);

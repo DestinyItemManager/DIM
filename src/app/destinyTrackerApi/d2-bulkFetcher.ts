@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { D2ItemListBuilder } from './d2-itemListBuilder';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { DtrItemWithVotes } from './d2-dtr-class-defs';
+import { DtrBulkItem } from './d2-dtr-class-defs';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { IPromise, IQService, IHttpService } from 'angular';
 
@@ -30,16 +30,16 @@ class D2BulkFetcher {
     };
   }
 
-  _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrItemWithVotes[]> {
+  _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrBulkItem[]> {
     if (!stores.length) {
-      const emptyVotes: DtrItemWithVotes[] = [];
+      const emptyVotes: DtrBulkItem[] = [];
       return this.$q.resolve(emptyVotes);
     }
 
     const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
-      const emptyVotes: DtrItemWithVotes[] = [];
+      const emptyVotes: DtrBulkItem[] = [];
       return this.$q.resolve(emptyVotes);
     }
 
@@ -51,7 +51,7 @@ class D2BulkFetcher {
 
     this._loadingTracker.addPromise(promise);
 
-    return promise as IPromise<DtrItemWithVotes[]>;
+    return promise as IPromise<DtrBulkItem[]>;
   }
 
   /**
@@ -74,7 +74,7 @@ class D2BulkFetcher {
                                                         vendors));
   }
 
-  attachRankings(bulkRankings: DtrItemWithVotes[] | null,
+  attachRankings(bulkRankings: DtrBulkItem[] | null,
                  stores: DimStore[]): void {
     if (!bulkRankings && !stores) {
       return;
@@ -91,7 +91,7 @@ class D2BulkFetcher {
             storeItem.dtrRating = matchingItem.rating;
             storeItem.dtrRatingCount = matchingItem.votes.total;
             storeItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
-            storeItem.userVote = matchingItem.voted;
+            storeItem.userVote = matchingItem.userVote;
             storeItem.userReview = matchingItem.text;
             storeItem.pros = matchingItem.pros;
             storeItem.cons = matchingItem.cons;
@@ -119,7 +119,7 @@ class D2BulkFetcher {
 
         if (matchingItem) {
           vendorItem.dtrRating = matchingItem.rating;
-          vendorItem.dtrRatingCount = matchingItem.ratingCount;
+          vendorItem.dtrRatingCount = matchingItem.totalReviews;
           vendorItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
           vendorItem.userRating = matchingItem.userRating;
           vendorItem.userReview = matchingItem.review;

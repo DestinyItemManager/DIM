@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DtrItem, DtrItemWithVotes } from './d2-dtr-class-defs';
+import { DimWorkingUserReview, DtrUserReview, DtrBulkItem } from './d2-dtr-class-defs';
 
 /**
  * Cache of review data.
@@ -10,7 +10,7 @@ import { DtrItem, DtrItemWithVotes } from './d2-dtr-class-defs';
  */
 class D2ReviewDataCache {
   _maxTotalVotes: number;
-  _itemStores: DtrItem[];
+  _itemStores: DimWorkingUserReview[];
   _itemTransformer: D2ItemTransformer;
   constructor() {
     this._itemTransformer = new D2ItemTransformer();
@@ -27,7 +27,7 @@ class D2ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item: DimItem): DtrItem | null {
+  getRatingData(item: DimItem): DimWorkingUserReview | null {
     return this._getMatchingItem(item) || null;
   }
 
@@ -43,7 +43,7 @@ class D2ReviewDataCache {
     return rating.toFixed(1);
   }
 
-  _getDownvoteMultiplier(dtrRating: DtrItemWithVotes) {
+  _getDownvoteMultiplier(dtrRating: DtrBulkItem) {
     if (dtrRating.votes.total > (this._maxTotalVotes * 0.75)) {
       return 1;
     }
@@ -149,7 +149,7 @@ class D2ReviewDataCache {
   /**
    * Fetch the collection of review data that we've stored locally.
    */
-  getItemStores() {
+  getItemStores(): DimWorkingUserReview[] {
     return this._itemStores;
   }
 
@@ -158,19 +158,25 @@ class D2ReviewDataCache {
     item.isLocallyCached = isCached;
   }
 
-  markReviewAsIgnored(writtenReview) {
+  markReviewAsIgnored(writtenReview: DtrUserReview): void {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(item,
+  markItemAsReviewedAndSubmitted(item: DimItem,
                                  userReview) {
     this._markItemAsLocallyCached(item, false);
     const matchingItem = this._getMatchingItem(item);
 
+    if (!matchingItem) {
+      return;
+    }
+
+    // remove their old review from the local cache
     matchingItem.reviews = (matchingItem.reviews) ?
-       _.reject(matchingItem.reviews, { isReviewer: true }) :
+       matchingItem.reviews.filter((review) => !review.isReviewer) :
        [];
 
+    // and add their new review to the local cache
     matchingItem.reviews.unshift(userReview);
   }
 
@@ -195,8 +201,10 @@ class D2ReviewDataCache {
     setTimeout(() => {
       const matchingItem = this._getMatchingItem(item);
 
-      matchingItem.reviews = null;
-      matchingItem.reviewsDataFetched = false;
+      if (matchingItem) {
+        matchingItem.reviews = [];
+        matchingItem.reviewsDataFetched = false;
+      }
     },
       tenMinutes);
   }

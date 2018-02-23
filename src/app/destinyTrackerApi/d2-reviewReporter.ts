@@ -1,6 +1,8 @@
 import { IQService, IHttpService } from "angular";
 import { D2TrackerErrorHandler } from "./d2-trackerErrorHandler";
 import { D2ReviewDataCache } from "./d2-reviewDataCache";
+import { DestinyAccount } from "../accounts/destiny-account.service";
+import { DtrUserReview, Reviewer } from "./d2-dtr-class-defs";
 
 /**
  * Class to support reporting bad takes.
@@ -21,7 +23,7 @@ class D2ReviewReporter {
     this._userFilter = userFilter;
   }
 
-  _getReporter(membershipInfo) {
+  _getReporter(membershipInfo: DestinyAccount): Reviewer {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,
@@ -38,13 +40,13 @@ class D2ReviewReporter {
     };
   }
 
-  _generateReviewReport(reviewId, membershipInfo) {
+  _generateReviewReport(reviewId: string, membershipInfo: DestinyAccount) {
     const reporter = this._getReporter(membershipInfo);
 
     return {
-      reviewId: reviewId,
+      reviewId,
       text: "",
-      reporter: reporter
+      reporter
     };
   }
 
@@ -70,14 +72,16 @@ class D2ReviewReporter {
    * Report a written review.
    * Also quietly adds the associated user to a block list.
    */
-  reportReview(review, membershipInfo) {
+  reportReview(review: DtrUserReview, membershipInfo: DestinyAccount | null) {
     if (review.isHighlighted || review.isReviewer) {
       return;
     }
 
     this._submitReportReviewPromise(review.id, membershipInfo)
-        .then(this._reviewDataCache.markReviewAsIgnored(review))
-        .then(this._ignoreReportedUser(review));
+        .then(() => {
+          this._reviewDataCache.markReviewAsIgnored(review);
+          this._ignoreReportedUser(review);
+        });
   }
 }
 

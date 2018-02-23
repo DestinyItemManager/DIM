@@ -12,43 +12,61 @@ export interface DtrItem {
   selectedPerks?: any[] | null;
 }
 
-export interface DtrItemWithVotes extends DtrItem {
+export interface DtrBulkItem extends DtrItem {
   votes: DtrVote;
 }
 
-export interface DtrReviewRequest extends DtrItem {
-  selectedPerks?: number[];
-}
-
-export interface DtrReviewer {
+export interface Reviewer {
   membershipType: number;
-  membershipId: number;
+  membershipId: string;
   displayName: string;
 }
 
-export interface DtrUserReviewRequest extends DtrItem {
-  reviewer: DtrReviewer;
+export interface DimUserReview extends DtrBulkItem {
+  reviewer: Reviewer;
   voted: number;
   pros: string;
   cons: string;
   text: string;
 }
 
-export interface DtrUserReviewResponse extends DtrUserReviewRequest {
+export interface DtrUserReview {
   id: string;
   timestamp: Date;
   isReviewer: boolean;
   isHighlighted: boolean;
   instanceId?: string;
+  reviewer: Reviewer;
+  voted: number;
+  pros: string;
+  cons: string;
+  text: string;
+  isIgnored?: boolean;
+  selectedPerks: number[];
+  attachedMods: number[];
 }
 
-export interface DtrReviewResponse extends DtrItem {
-  votes?: DtrVote;
+export interface DtrReviewContainer extends DtrBulkItem {
   totalReviews: number;
-  reviews: DtrUserReviewResponse[];
+  reviews: DtrUserReview[];
 }
-export interface DtrReviewReport {
+
+export interface DimWorkingUserReview extends DtrReviewContainer {
+  userVote: number;
+  rating: number;
+  userRating: number;
+  reviewsDataFetched: boolean;
+  highlightedRatingCount: number;
+  review: string;
+  pros: string;
+  cons: string;
+  votes: DtrVote;
+  voted: number;
+  text: string;
+}
+
+export interface DimReviewReport {
   reviewId: string;
-  reporter: DtrReviewer;
+  reporter: Reviewer;
   text: string;
 }

@@ -2,10 +2,11 @@ import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
-import { IQService, IHttpService } from 'angular';
+import { IQService, IHttpService, IPromise } from 'angular';
 import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DtrItem, DimWorkingUserReview, DtrUserReview, DtrReviewContainer } from './d2-dtr-class-defs';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -30,7 +31,7 @@ class D2ReviewsFetcher {
     this._perkRater = new D2PerkRater();
   }
 
-  _getItemReviewsCall(item, platformSelection) {
+  _getItemReviewsCall(item: DtrItem, platformSelection: number) {
     const queryString = `page=1&platform=${platformSelection}`;
 
     return {
@@ -41,36 +42,36 @@ class D2ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item, platformSelection) {
-    const postWeapon = this._itemTransformer.getRollAndPerks(item);
+  _getItemReviewsPromise(item, platformSelection): IPromise<DtrReviewContainer> {
+    const dtrItem = this._itemTransformer.getRollAndPerks(item);
 
     const promise = this.$q
-      .when(this._getItemReviewsCall(postWeapon, platformSelection))
+      .when(this._getItemReviewsCall(dtrItem, platformSelection))
       .then(this.$http)
       .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
       .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
 
-    return promise;
+    return promise as IPromise<DtrReviewContainer>;
   }
 
-  _getUserReview(reviewData) {
+  _getUserReview(reviewData: DimWorkingUserReview | DtrReviewContainer) {
     // bugbug: will need to use membership service if isReviewer flag stays broke
     return _.find(reviewData.reviews, { isReviewer: true });
   }
 
-  _sortAndIgnoreReviews(item) {
-    if (item.writtenReviews) {
-      item.writtenReviews.sort(this._sortReviews);
+  _sortAndIgnoreReviews(item: DimItem) {
+    if (item.reviews) {
+      item.reviews.sort(this._sortReviews);
 
-      item.writtenReviews.forEach((writtenReview) => {
+      item.reviews.forEach((writtenReview) => {
         writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
   }
 
-  _markUserReview(reviewData) {
+  _markUserReview(reviewData: DtrReviewContainer) {
     const membershipInfo = getActivePlatform();
 
     if (!membershipInfo) {
@@ -88,12 +89,12 @@ class D2ReviewsFetcher {
     return reviewData;
   }
 
-  _attachReviews(item, reviewData) {
+  _attachReviews(item: DimItem, reviewData: DtrReviewContainer | DimWorkingUserReview) {
     const userReview = this._getUserReview(reviewData);
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
-    item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
-    item.writtenReviews = _.filter(reviewData.reviews, 'text'); // only attach reviews with text associated
+    item.ratingCount = reviewData.totalReviews;
+    item.reviews = reviewData.reviews.filter((review) => review.text);
 
     this._sortAndIgnoreReviews(item);
 
@@ -109,7 +110,7 @@ class D2ReviewsFetcher {
     this._perkRater.ratePerks(item);
   }
 
-  _sortReviews(a, b) {
+  _sortReviews(a: DtrUserReview, b: DtrUserReview) {
     if (a.isReviewer) {
       return -1;
     }
@@ -126,21 +127,21 @@ class D2ReviewsFetcher {
       return 1;
     }
 
-    const ratingDiff = b.rating - a.rating;
+    const ratingDiff = b.voted - a.voted;
 
     if (ratingDiff !== 0) {
       return ratingDiff;
     }
 
-    const aDate = new Date(a.timestamp);
-    const bDate = new Date(b.timestamp);
+    const aDate = new Date(a.timestamp).getTime();
+    const bDate = new Date(b.timestamp).getTime();
 
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item,
-    cachedItem) {
-    item.communityReviews = cachedItem.reviews;
+  _attachCachedReviews(item: DimItem,
+                       cachedItem: DimWorkingUserReview) {
+    item.reviews = cachedItem.reviews;
 
     this._attachReviews(item, cachedItem);
 
@@ -170,19 +171,22 @@ class D2ReviewsFetcher {
     if (!item.reviewable) {
       return;
     }
+
     const ratingData = this._reviewDataCache.getRatingData(item);
 
     if (ratingData && ratingData.reviewsDataFetched) {
       this._attachCachedReviews(item,
-        ratingData);
+                                ratingData);
 
       return;
     }
 
     this._getItemReviewsPromise(item, platformSelection)
-      .then((reviewData) => this._markUserReview(reviewData))
-      .then((reviewData) => this._attachReviews(item,
-        reviewData));
+      .then((reviewData) => {
+        this._markUserReview(reviewData);
+        this._attachReviews(item,
+                            reviewData);
+      });
   }
 }
 
