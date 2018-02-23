@@ -5,16 +5,17 @@ import { DtrBulkItem } from '../item-review/destiny-tracker.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { IPromise } from 'angular';
 import { $q, $http } from 'ngimport';
+import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
   _loadingTracker: any;
-  _trackerErrorHandler: any;
+  _trackerErrorHandler: D2TrackerErrorHandler;
   _itemListBuilder: D2ItemListBuilder;
 
-  constructor(trackerErrorHandler, loadingTracker, reviewDataCache) {
+  constructor(loadingTracker, reviewDataCache) {
+    this._trackerErrorHandler = new D2TrackerErrorHandler();
     this._itemListBuilder = new D2ItemListBuilder();
-    this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
   }

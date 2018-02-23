@@ -12,8 +12,8 @@ class D2ReviewReporter {
   _reviewDataCache: D2ReviewDataCache;
   _loadingTracker: any;
   _trackerErrorHandler: D2TrackerErrorHandler;
-  constructor(trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
-    this._trackerErrorHandler = trackerErrorHandler;
+  constructor(loadingTracker, reviewDataCache, userFilter) {
+    this._trackerErrorHandler = new D2TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;

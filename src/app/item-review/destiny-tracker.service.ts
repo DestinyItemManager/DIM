@@ -82,7 +82,6 @@ import { UserFilter } from '../destinyTrackerApi/userFilter';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
-import { D2TrackerErrorHandler } from '../destinyTrackerApi/d2-trackerErrorHandler';
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { SyncService } from '../storage/sync.service';
 import { settings } from '../settings/settings';
@@ -107,11 +106,10 @@ export function DestinyTrackerService(
   const _reviewReporter = new ReviewReporter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
-  const _d2trackerErrorHandler = new D2TrackerErrorHandler();
-  const _d2bulkFetcher = new D2BulkFetcher(_d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher(_d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
-  const _d2reviewSubmitter = new D2ReviewSubmitter(_d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewReporter = new D2ReviewReporter(_d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2bulkFetcher = new D2BulkFetcher(loadingTracker, _d2reviewDataCache);
+  const _d2reviewsFetcher = new D2ReviewsFetcher(loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2reviewSubmitter = new D2ReviewSubmitter(loadingTracker, _d2reviewDataCache);
+  const _d2reviewReporter = new D2ReviewReporter(loadingTracker, _d2reviewDataCache, _userFilter);
 
   function _isDestinyOne() {
     return (settings.destinyVersion === 1);

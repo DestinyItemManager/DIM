@@ -24,9 +24,9 @@ class D2ReviewSubmitter {
   _loadingTracker: any;
   _trackerErrorHandler: D2TrackerErrorHandler;
   _itemTransformer: D2ItemTransformer;
-  constructor(trackerErrorHandler, loadingTracker, reviewDataCache) {
+  constructor(loadingTracker, reviewDataCache) {
     this._itemTransformer = new D2ItemTransformer();
-    this._trackerErrorHandler = trackerErrorHandler;
+    this._trackerErrorHandler = new D2TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
   }

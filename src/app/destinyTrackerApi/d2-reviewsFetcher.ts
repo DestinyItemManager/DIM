@@ -13,15 +13,15 @@ import { $q, $http } from 'ngimport';
  * Get the community reviews from the DTR API for a specific item.
  */
 class D2ReviewsFetcher {
+  _trackerErrorHandler: D2TrackerErrorHandler;
   _perkRater: D2PerkRater;
   _userFilter: any;
   _reviewDataCache: D2ReviewDataCache;
   _loadingTracker: any;
-  _trackerErrorHandler: D2TrackerErrorHandler;
   _itemTransformer: D2ItemTransformer;
-  constructor(trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
+  constructor(loadingTracker, reviewDataCache, userFilter) {
     this._itemTransformer = new D2ItemTransformer();
-    this._trackerErrorHandler = trackerErrorHandler;
+    this._trackerErrorHandler = new D2TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;
