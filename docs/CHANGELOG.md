@@ -1,5 +1,8 @@
 # Next
 
+* Compare tool shows ratings, and handles missing stats better.
+* Fixed display of masterwork mod and ornaments.
+
 # 4.41.1
 
 * Fix dupelower logic.
