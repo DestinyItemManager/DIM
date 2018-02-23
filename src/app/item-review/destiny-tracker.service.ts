@@ -107,11 +107,11 @@ export function DestinyTrackerService(
   const _reviewReporter = new ReviewReporter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
-  const _d2trackerErrorHandler = new D2TrackerErrorHandler($q, $i18next);
-  const _d2bulkFetcher = new D2BulkFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
-  const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewReporter = new D2ReviewReporter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2trackerErrorHandler = new D2TrackerErrorHandler();
+  const _d2bulkFetcher = new D2BulkFetcher(_d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
+  const _d2reviewsFetcher = new D2ReviewsFetcher(_d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2reviewSubmitter = new D2ReviewSubmitter(_d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
+  const _d2reviewReporter = new D2ReviewReporter(_d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
 
   function _isDestinyOne() {
     return (settings.destinyVersion === 1);

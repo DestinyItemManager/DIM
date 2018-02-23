@@ -1,8 +1,8 @@
-import { IQService, IHttpService } from "angular";
 import { D2TrackerErrorHandler } from "./d2-trackerErrorHandler";
 import { D2ReviewDataCache } from "./d2-reviewDataCache";
 import { DestinyAccount } from "../accounts/destiny-account.service";
 import { DtrUserReview, Reviewer, DimReviewReport } from '../item-review/destiny-tracker.service';
+import { $q, $http } from 'ngimport';
 
 /**
  * Class to support reporting bad takes.
@@ -12,11 +12,7 @@ class D2ReviewReporter {
   _reviewDataCache: D2ReviewDataCache;
   _loadingTracker: any;
   _trackerErrorHandler: D2TrackerErrorHandler;
-  $http: IHttpService;
-  $q: IQService;
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
-    this.$q = $q;
-    this.$http = $http;
+  constructor(trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
@@ -53,9 +49,9 @@ class D2ReviewReporter {
   _submitReportReviewPromise(reviewId: string, membershipInfo: DestinyAccount) {
     const reviewReport = this._generateReviewReport(reviewId, membershipInfo);
 
-    const promise = this.$q
+    const promise = $q
                 .when(this._submitReviewReportCall(reviewReport))
-                .then(this.$http)
+                .then($http)
                 .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
 
     this._loadingTracker.addPromise(promise);

@@ -1,10 +1,10 @@
 import { D2ItemTransformer } from './d2-itemTransformer';
-import { IQService, IHttpService } from 'angular';
 import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { Reviewer } from '../item-review/destiny-tracker.service';
+import { $q, $http } from 'ngimport';
 
 export interface RatingAndReviewRequest {
   reviewer?: Reviewer;
@@ -24,11 +24,7 @@ class D2ReviewSubmitter {
   _loadingTracker: any;
   _trackerErrorHandler: D2TrackerErrorHandler;
   _itemTransformer: D2ItemTransformer;
-  $http: IHttpService;
-  $q: IQService;
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
-    this.$q = $q;
-    this.$http = $http;
+  constructor(trackerErrorHandler, loadingTracker, reviewDataCache) {
     this._itemTransformer = new D2ItemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
@@ -68,9 +64,9 @@ class D2ReviewSubmitter {
 
     const rating = { ...rollAndPerks, ...review, reviewer };
 
-    const promise = this.$q
+    const promise = $q
               .when(this._submitItemReviewCall(rating))
-              .then(this.$http)
+              .then($http)
               .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
 
     this._loadingTracker.addPromise(promise);

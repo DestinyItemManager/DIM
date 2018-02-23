@@ -27,14 +27,12 @@ class D2ItemListBuilder {
     return unmatched;
   }
 
-  _getAllItems(stores: DimStore[]) {
-    // bugbug: this was holdover logic from D1 vendors, I think?
-    // const firstItem = stores[0];
-
-    // if (firstItem.allItems !== undefined) {
-    //   return _.pluck(flatMap(stores, (store) => store.allItems), 'item');
-    // }
-
+  /**
+   * In D1, extracting all of the items from all of the stores was a little different from
+   * extracting all of the vendor items. If the interface is the same for both, this can go
+   * away.
+   */
+  _getAllItems(stores: DimStore[]): DimItem[] {
     return flatMap(stores, (store) => store.items);
   }
 

@@ -3,18 +3,16 @@ import { D2ItemListBuilder } from './d2-itemListBuilder';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DtrBulkItem } from '../item-review/destiny-tracker.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
-import { IPromise, IQService, IHttpService } from 'angular';
+import { IPromise } from 'angular';
+import { $q, $http } from 'ngimport';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
   _loadingTracker: any;
   _trackerErrorHandler: any;
   _itemListBuilder: D2ItemListBuilder;
-  $http: IHttpService;
-  $q: IQService;
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
-    this.$q = $q;
-    this.$http = $http;
+
+  constructor(trackerErrorHandler, loadingTracker, reviewDataCache) {
     this._itemListBuilder = new D2ItemListBuilder();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
@@ -33,19 +31,19 @@ class D2BulkFetcher {
   _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrBulkItem[]> {
     if (!stores.length) {
       const emptyVotes: DtrBulkItem[] = [];
-      return this.$q.resolve(emptyVotes);
+      return $q.resolve(emptyVotes);
     }
 
     const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
       const emptyVotes: DtrBulkItem[] = [];
-      return this.$q.resolve(emptyVotes);
+      return $q.resolve(emptyVotes);
     }
 
-    const promise = this.$q
+    const promise = $q
       .when(this._getBulkWeaponDataEndpointPost(weaponList, platformSelection))
-      .then(this.$http)
+      .then($http)
       .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
       .then((response) => response.data);
 

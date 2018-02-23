@@ -1,16 +1,10 @@
-import { IQService } from "angular";
+import { $q, } from 'ngimport';
+import { t } from 'i18next';
 
 class D2TrackerErrorHandler {
-  $i18next: any;
-  $q: IQService;
-  constructor($q, $i18next) {
-    this.$q = $q;
-    this.$i18next = $i18next;
-  }
-
   handleErrors(response) {
     if (response.status !== 200) {
-      return this.$q.reject(new Error(this.$i18next.t('DtrReview.ServiceCallError')));
+      return $q.reject(new Error(t('DtrReview.ServiceCallError')));
     }
 
     return response;
@@ -20,7 +14,7 @@ class D2TrackerErrorHandler {
     if ((response.status !== 200) ||
         (!response.data) ||
         (!response.data.success)) {
-      return this.$q.reject(new Error(this.$i18next.t('DtrReview.ServiceSubmitError')));
+      return $q.reject(new Error(t('DtrReview.ServiceSubmitError')));
     }
 
     return response;
