@@ -21,8 +21,6 @@ export function queueAction(fn: () => Promise<void> | IPromise<void>) {
   });
   _queue.push(promise);
 
-  console.log(new Promise(() => { return; }).finally);
-
   return promise;
 }
 

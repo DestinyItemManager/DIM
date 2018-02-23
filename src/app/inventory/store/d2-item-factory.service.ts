@@ -916,14 +916,15 @@ function buildSockets(
     const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || ((socket.reusablePlugHashes || []).includes(socket.plugHash) && !isOrnamentPlug)) ?
       reusablePlugs :
       (plug ? [plug] : []);
-    // the merge is to enable the intrinsic mods to show up even if the user choosed another
+    // the merge is to enable the intrinsic mods to show up even if the user chose another
     // plug.itemCategoryHashes.includes(141186804) - removes the reusablePlugs from masterwork
     // plug.action - removes the "Remove Shader" plug
     if (reusablePlugs.length > 0 && plugOptions.length > 0) {
       reusablePlugs.forEach((plug) => {
         if (!plugOptions.includes(plug) && !plug.itemCategoryHashes.includes(141186804) && !isOrnamentPlug && plug.action) {
             plugOptions.push(plug);
-          }});
+          }
+        });
     }
     const plugOptionsPerks = plugOptions.length > 0 ?
       (plugOptions.filter((plug) => plug.perks.length > 0) || []).map((plug) => defs.SandboxPerk.get(plug.perks[0].perkHash)) :

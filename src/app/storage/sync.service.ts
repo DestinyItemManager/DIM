@@ -61,7 +61,7 @@ export const SyncService = {
   GoogleDriveStorage: GoogleDriveStorageAdapter,
 
   init() {
-    return GoogleDriveStorageAdapter.init();
+    GoogleDriveStorageAdapter.init();
   },
 
   /**
