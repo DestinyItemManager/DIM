@@ -35,7 +35,7 @@ class D2ReviewSubmitter {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getReviewer(membershipInfo) {
+  _getReviewer(membershipInfo): Reviewer {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,
@@ -66,7 +66,7 @@ class D2ReviewSubmitter {
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
 
-    const rating = { ...rollAndPerks, ...review, ...reviewer };
+    const rating = { ...rollAndPerks, ...review, reviewer };
 
     const promise = this.$q
               .when(this._submitItemReviewCall(rating))
