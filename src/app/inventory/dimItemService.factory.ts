@@ -415,7 +415,7 @@ export function ItemService(
 
     // Start with candidates of the same type (or vault bucket if it's vault)
     const allItems = store.isVault
-      ? store.items!.filter((i) => i.bucket.vaultBucket!.id === item.bucket.vaultBucket!.id)
+      ? store.items.filter((i) => i.bucket.vaultBucket!.id === item.bucket.vaultBucket!.id)
       : store.buckets[item.bucket.id];
     const moveAsideCandidates = allItems.filter(movable);
 

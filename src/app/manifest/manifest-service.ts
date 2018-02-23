@@ -150,7 +150,7 @@ class ManifestService {
       settings.ready // wait for settings to be ready
     ])
       .then((args) => {
-        const data = args[0] as DestinyManifest;
+        const data = args[0];
         const language = settings.language;
         const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
