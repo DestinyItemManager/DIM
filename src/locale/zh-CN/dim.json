@@ -254,7 +254,7 @@
     "Refresh": "刷新命运数据",
     "ReportBug": "反馈问题",
     "Shop": "商店",
-    "SupportDIM": "背书人"
+    "SupportDIM": "支持者"
   },
   "Help": {
     "CannotMove": "无法从该角色中移出物品",
@@ -281,7 +281,7 @@
     "ToggleDetails": "显示物品详情开关"
   },
   "Infusion": {
-    "BringGear": "将被灌注至{{name}}:",
+    "BringGear": "将被用于灌注至 {{name}}:",
     "Calc": "灌注计算器",
     "InfuseSource": "选择需要用 {{name}} 进行灌注的物品:",
     "InfuseTarget": "选择需要灌注至 {{name}} 的物品:",
@@ -478,7 +478,7 @@
     "OverviewTab": "概述",
     "ReviewsTab": "评论",
     "Split": "拆分",
-    "Store": "商店",
+    "Store": "仓库",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
     "Take": "拿起",
