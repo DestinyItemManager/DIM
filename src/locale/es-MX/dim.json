@@ -601,7 +601,7 @@
     "ForceSync": "Forzar sincronización de datos",
     "GDriveLogout": "Tu información sigue en Google Drive - Si vuele a iniciar sesión, DIM volverá a usarla.",
     "GDriveSignInError": "Error de autentificación en Google Drive:",
-    "GDriveSignInWarning": "Si ya haz guardado la información de DIM en Google Drive, esto sobre-escribirá cualquier cosa que hayas guardado de forma local. Tal vez quisieras resguardar tu información antes de iniciar sesión. \n\n¿Quieres iniciar sesión en Google Drive?",
+    "GDriveSignInWarning": "Si ya has guardado la información de DIM en Google Drive, esto sobre-escribirá cualquier cosa que hayas guardado de forma local. Tal vez quisieras resguardar tu información antes de iniciar sesión. \n\n¿Quieres iniciar sesión en Google Drive?",
     "GoogleApiBlocked": "Google Drive no esta disponible porque un bloqueador de contenido ha bloqueado el JavaScript de Google Drive. Por favor excluye DIM de los bloqueadores de contenido y intente nuevamente.",
     "GoogleDriveStorage": "Google Drive",
     "IgnoredUsers": "{{value}} usuarios ignorados",
@@ -619,7 +619,7 @@
   },
   "StoreBucket": {
     "FillStack": "Llena la pila ({{amount}})",
-    "HowMuch": "Cuántos {{itemname}} quieres mover?",
+    "HowMuch": "¿Cuántos {{itemname}} quieres mover?",
     "Move": "Mover"
   },
   "SyncService": {
@@ -646,7 +646,7 @@
     "Available": "Disponible en:",
     "Bounties": "Contratos",
     "Compare": "Comparar con lo que ya tienes:",
-    "Consumables": "Consumíbles",
+    "Consumables": "Consumibles",
     "Emotes": "Gestos",
     "Load": "Cargando comerciantes",
     "ShadersAndEmblems": "Shaders & Emblemas",
@@ -691,7 +691,7 @@
     "Login": {
       "Auth": "Autorizar con Bungie.net",
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
-      "LearnMore": "Quieres saber más?",
+      "LearnMore": "¿Quieres saber más?",
       "Permission": "Necesitamos tu permiso..."
     },
     "Support": {

@@ -112,7 +112,7 @@
     "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker.",
     "Submit": "Enviar",
     "ThankYou": "¡Gracias por enviar un comentario! Estará en vivo pronto.",
-    "VerifyReport": "Estas seguro de que quieres marcar esta reseña?",
+    "VerifyReport": "¿Estás seguro de que quieres marcar esta reseña?",
     "YourReview": "Tu Reseña"
   },
   "Faction": {
@@ -337,7 +337,7 @@
       "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
       "Discipline": "La Disciplina acelera la recarga de tiempo de la Granada",
       "DragAndDrop": "Arrastra y suelta objetos en las cajas fijas para crear conjuntos con ese equipo solamente",
-      "Help": "Necesitas ayuda?",
+      "Help": "¿Necesitas ayuda?",
       "HigherTiers": "Niveles altos son mejores",
       "Intellect": "El Intelecto acelera la recarga de tiempo del Súper",
       "Lock": "Fija un conjunto de mejoras dando click al botón de fijar y seleccionando las mejoras",
@@ -395,7 +395,7 @@
     "Before": "Antes '{{name}}'",
     "Cancel": "Cancelar",
     "Classified": "Algunos de tus items son \"Clasificados\", y no pueden ser incluidos en el calculo de luz máxima.",
-    "ConfirmDelete": "Estas seguro de que quieres borrar '{{name}}'?",
+    "ConfirmDelete": "¿Estás seguro de que quieres borrar '{{name}}'?",
     "CouldNotEquip": "No se pudo equipar {{itemname}}",
     "Create": "Crear Equipo",
     "Delete": "Borrar equipo",
@@ -427,7 +427,7 @@
     "NoEngrams": "No hay engramas no exóticos disponibles para transferir.",
     "NoExotics": "No hay engramas disponibles para transferir.",
     "NoTokens": "No hay elementos de reputación disponibles para transferir.",
-    "OnlyItems": "Solo objetos equipables, materiales, y consumibles pueden añadirse a una configuración.",
+    "OnlyItems": "Solo objetos equipables, materiales y consumibles pueden añadirse a una configuración.",
     "PullFromPostmaster": "Recoger de Administración",
     "PullFromPostmasterDone": "Completado extrayendo 1 objeto de Administración a {{store}}.",
     "PullFromPostmasterDone_female": "Completado extrayendo 1 objeto de Administración a {{store}}.",
@@ -439,7 +439,7 @@
     "PullFromPostmasterPopupTitle": "Extraer de Administración",
     "PullMakeSpace": "Espacio",
     "Random": "Aleatorio",
-    "Randomize": "Aleatorizar las armas, armaduras, carcasa y artefacto equipados?",
+    "Randomize": "¿Aleatorizar las armas, armaduras, carcasa y artefacto equipados?",
     "RestoreAllItems": "Todos los objetos",
     "Save": "Guardar",
     "SaveAsNew": "Guardar como nuevo",
@@ -512,8 +512,8 @@
     "Weekly": "Semanal"
   },
   "RecordBooks": {
-    "HideCompleted": "Ocultar records completados",
-    "RecordBooks": "Libros de records"
+    "HideCompleted": "Ocultar hazañas completadas",
+    "RecordBooks": "Libros de hazañas"
   },
   "Settings": {
     "AllowIdPostToDtr": "Mostrar reseña detallada de armas y permitir calificación de armas",
@@ -601,7 +601,7 @@
     "ForceSync": "Forzar sincronización de datos",
     "GDriveLogout": "Tu información sigue en Google Drive - Si vuele a iniciar sesión, DIM volverá a usarla.",
     "GDriveSignInError": "Error de autentificación en Google Drive:",
-    "GDriveSignInWarning": "Si ya haz guardado la información de DIM en Google Drive, esto sobre-escribirá cualquier cosa que hayas guardado de forma local. Tal vez quisieras resguardar tu información antes de iniciar sesión. \n\n¿Quieres iniciar sesión en Google Drive?",
+    "GDriveSignInWarning": "Si ya has guardado la información de DIM en Google Drive, esto sobre-escribirá cualquier cosa que hayas guardado de forma local. Tal vez quisieras resguardar tu información antes de iniciar sesión. \n\n¿Quieres iniciar sesión en Google Drive?",
     "GoogleApiBlocked": "Google Drive no esta disponible porque un bloqueador de contenido ha bloqueado el JavaScript de Google Drive. Por favor excluye DIM de los bloqueadores de contenido y intente nuevamente.",
     "GoogleDriveStorage": "Google Drive",
     "IgnoredUsers": "{{value}} usuarios ignorados",
@@ -619,7 +619,7 @@
   },
   "StoreBucket": {
     "FillStack": "Llena la pila ({{amount}})",
-    "HowMuch": "Cuántos {{itemname}} quieres mover?",
+    "HowMuch": "¿Cuántos {{itemname}} quieres mover?",
     "Move": "Mover"
   },
   "SyncService": {
@@ -646,7 +646,7 @@
     "Available": "Disponible en:",
     "Bounties": "Contratos",
     "Compare": "Comparar con lo que ya tienes:",
-    "Consumables": "Consumíbles",
+    "Consumables": "Consumibles",
     "Emotes": "Gestos",
     "Load": "Cargando comerciantes",
     "ShadersAndEmblems": "Shaders & Emblemas",
@@ -691,7 +691,7 @@
     "Login": {
       "Auth": "Autorizar con Bungie.net",
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
-      "LearnMore": "Quieres saber más?",
+      "LearnMore": "¿Quieres saber más?",
       "Permission": "Necesitamos tu permiso..."
     },
     "Support": {
