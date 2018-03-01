@@ -25,7 +25,7 @@
     "Weapons": "武器"
   },
   "BungieAlert": {
-    "Title": "来自Bungie的消息:"
+    "Title": "一则来自Bungie的信息:"
   },
   "BungieService": {
     "DestinyLegacyPlatform": "目前Bungie的服务出现了一个Bug，如果您在上一代主机上游玩过Destiny1，那么DIM将无法加载您的Destiny2账户信息。Bungie将很快修复这个Bug。但是，直到Bug修复完成前，您必须在目前世代主机上游玩Destiny1以便DIM能读取您的账户信息。",
@@ -76,14 +76,14 @@
   },
   "Destiny2": {
     "Banner": "DIM将支持Destiny2",
-    "ComingSoon": "我们将游戏上线后不久在DIM中支持您的命运2角色。请给我们几个星期的时间来学习这个游戏（并且让我们也玩一会儿！）。"
+    "ComingSoon": "我们将游戏上线后不久在DIM中支持您的天命2角色。请给我们几个星期的时间来学习这个游戏（并且让我们也玩一会儿！）。"
   },
   "DidYouKnow": {
     "Collapse": "您刚才在DIM中隐藏了一个分区！隐藏您不需要的部分能使得使用更加方便。",
-    "DidYouKnow": "您知道吗？",
+    "DidYouKnow": "你知道吗?",
     "DontShowAgain": "不再显示此提示",
     "DoubleClick": "如果您希望移动物品到您当前活动的角色 (或最后登录的角色)， 您可以双击鼠标左键立即装备它。",
-    "DragAndDrop": "物品可以在不同角色/保险库之间拖放。",
+    "DragAndDrop": "物品可以在不同角色和保险库之间拖放移动.",
     "Expand": "单击类别最左侧的加号标志来重新展开一个分区。",
     "TryNext": "下次试试吧！"
   },
@@ -127,16 +127,16 @@
     "Desc": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
     "Desc_female": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
     "Desc_male": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
-    "FarmingMode": "收集模式（移动物品）",
+    "FarmingMode": "收集模式 (移动物品)",
     "MakeRoom": {
       "Desc": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
       "Desc_female": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
       "Desc_male": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
       "MakeRoom": "移动装备腾出空间以便拾取物品",
-      "Tooltip": "如果选中，DIM将在保险库中移动武器和防具来腾出空间给记忆水晶。"
+      "Tooltip": "如果勾选，DIM将在保险库中移动武器和防具来给记忆水晶腾出空间。"
     },
     "MoveTokens": "将声望物品移动到保险库",
-    "OutOfRoom": "您的{{character}}角色已经没有空间了。是时候来解锁一些印记和清理一些不必要的物品！",
+    "OutOfRoom": "您的{{character}} 角色已经没有空间了。是时候来解锁一些记忆水晶和清理一些不必要的物品！",
     "OutOfRoomTitle": "空间不足",
     "Quickmove": "快速移动",
     "Stop": "停止"
@@ -162,42 +162,42 @@
     "ArmorCategory": "按照类别显示防具.",
     "Ascended": "显示可以提高光等的物品.",
     "Categories": "高级别物品类别.",
-    "Class": "按照职业类型显示.",
-    "ClickFilters": "点击下方的筛选器或使用搜索框查找.",
-    "Combine": "筛选器可以使用and逻辑运算符进行组合判断，比如\"{{example}}\"此时将会显示所有光等大于300且是电弧属性的物品，筛选器同样可以使用\"{{not}}\"逻辑运算符来进行否定判断，比如\"{{notexample}}\"来显示所有不是记忆水晶的物品。",
+    "Class": "按照职业类别显示.",
+    "ClickFilters": "点击下方的过滤器或使用搜索框查找.",
+    "Combine": "过滤器可以使用and逻辑运算符进行组合判断，比如搜索\"{{example}}\"此时将会显示所有光等大于300且是电弧属性的物品，过滤器也可以使用\"{{not}}\"逻辑运算符来进行否定判断，比如\"{{notexample}}\"来查找所有不是记忆水晶的物品。",
     "ContributeLight": "高亮显示可提高自身光等的物品.",
     "ContributePower": "高亮显示可提高自身光等的物品.",
-    "DamageType": "按照武器类型显示.",
+    "DamageType": "按照伤害类型显示.",
     "Description": "描述",
     "Dupe": "显示重复物品",
     "DupeInPostmaster": "有一些重复物品在邮政官处.",
     "Engrams": "显示记忆水晶.",
     "EnterName": "输入物品名称：",
-    "EnterNote": "输入注释文本：",
+    "EnterNote": "输入备注文本:",
     "Equipment": "可以装备的物品.",
     "Equipped": "目前已装备的物品.",
-    "Filter": "筛选",
+    "Filter": "过滤器",
     "Glimmer": {
       "Any": "所有类型的微光物品.",
       "Boost": "增加微光币获取量10分钟的物品.",
       "Glimmer": "显示与增加微光币获取有关的消耗品.",
       "Item": "能与拉乎尔大师交换200微光币的物品."
     },
-    "InLoadout": "显示包含在任何配装中的物品.",
+    "InLoadout": "显示已被用于配装的物品.",
     "Infusable": "显示可以灌注的物品.",
     "Leveling": {
-      "Complete": "{{term}}-显示完全完成的项目-每次升级解锁.",
-      "Incomplete": "{{term}}-显示尚未完成的项目-至少升一级才能解锁.",
+      "Complete": "{{term}}-显示完全完成的物品-每次升级解锁.",
+      "Incomplete": "{{term}}-显示尚未完成的物品-至少升一级才能解锁.",
       "Leveling": "显示物品在不同等级的状态：",
       "NeedsXP": "{{term}} - 显示仍能获得经验值的物品.",
-      "Upgraded": "{{term}}-显示具有足够 XP 解锁其所有节点的项目， 但并非所有节点都已解锁。",
-      "XPComplete": "{{term}}-显示无法将 XP 放入其中的项目 (无论其升级是否已解锁)。"
+      "Upgraded": "{{term}}-显示具有足够 XP 解锁其所有节点的物品， 但并非所有节点都已解锁。",
+      "XPComplete": "{{term}}-显示无法将 XP 放入其中的物品 (无论其升级是否已解锁)。"
     },
     "LightLevel": "根据光等来显示物品(武器攻击力; 防具护甲值).",
     "Locked": "根据物品锁定状态显示.",
     "NamedStat": "显示重要防具.",
     "NewItems": "显示新获得的物品.",
-    "Notes": "搜索您已经自定义注释的物品",
+    "Notes": "搜索已添加了自定义备注的物品",
     "Ornament": "显示带有装饰物和过滤器的物品.",
     "PartialMatch": "显示名称/特性与过滤器搜索内容部分匹配的物品.",
     "Postmaster": "目前在邮政官处的物品.",
@@ -205,9 +205,9 @@
     "PowerMod": "显示所有装备了增强模组的物品.",
     "Quality": "根据其统计品质百分比来显示物品'{{percentage}}'别名'{{quality}}'.",
     "RarityTier": "按照稀有度显示.",
-    "Rated": "显示所有物品的Destiny Tracker评价.",
-    "Rating": "以Destiny Tracker的评级来显示武器.",
-    "Reforgeable": "显示可以在枪匠那里重新锻造的物品.",
+    "Rated": "显示具有Destiny Tracker评级的物品.",
+    "Rating": "以Destiny Tracker的评分来显示武器.",
+    "Reforgeable": "显示可以在造枪匠那里重新锻造的物品.",
     "Release": "可从<i>{{release}}</i>发行版获得",
     "Releases": {
       "RoI": "铁旗崛起",
@@ -219,7 +219,7 @@
     "Stackable": "显示可以堆叠的物品(合成弹药,奇怪硬币等)",
     "Stats": "根据统计数值显示物品. 可用的过滤器有：",
     "Tags": {
-      "Dismantle": "显示你想要拆除的东西.",
+      "Dismantle": "显示你想要拆除的物品.",
       "Favorite": "显示你的收藏物品.",
       "Infuse": "显示你想要用于灌注的物品.",
       "Keep": "显示你想要保留的物品.",
@@ -240,7 +240,7 @@
       "Speaker": "预言者"
     },
     "VideoExample": "想要更好的使用过滤器功能? 请查看{{link}}",
-    "WeaponClass": "按照武器类型显示.",
+    "WeaponClass": "按照武器类别显示.",
     "WeaponType": "按照武器类型显示.",
     "Year": "按照物品推出年份显示."
   },
@@ -248,8 +248,8 @@
     "About": "关于",
     "Back": "返回",
     "BulkTag": "批量标记物品",
-    "FilterHelp": "搜索物品/特性或使用{{example}} 查找重复物品",
-    "Filters": "筛选器",
+    "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
+    "Filters": "过滤器",
     "Inventory": "背包",
     "Refresh": "刷新Destiny数据",
     "ReportBug": "反馈问题",
@@ -262,7 +262,7 @@
     "ChangingPerksInfo": "对不起， 无法在游戏外更改特性。 我们对此也无能为力！",
     "Drag": "按住Shift或者在目标区域停留一会儿来完成一次部分堆叠。",
     "HidePopup": "不再显示此弹窗",
-    "NeverShow": "不再显示.",
+    "NeverShow": "不要再显示此信息.",
     "NoStorage": "DIM无法存储数据",
     "NoStorageMessage": "DIM无法在您的浏览器中存储数据。这可能是浏览器的无痕模式造成的，或许您磁盘空间不足。DIM无法完成后续操作。",
     "UpdateAvailable": "DIM已更新",
@@ -295,14 +295,14 @@
     "Uninfusable": "这个物品不能被用于灌注."
   },
   "ItemInfoService": {
-    "SaveInfoErrorDescription": "保存特定DIM物品信息时出现问题。原因是可以存储的数据的数量是有限的。这也是为什么标签和注释没有被允许运行在Beta版之外的原因. 错误内容：{{error}}。",
+    "SaveInfoErrorDescription": "保存特定DIM物品信息时出现问题。原因是可以存储的数据的数量是有限的。这也是为什么标签和备注没有被允许运行在Beta版之外的原因. 错误内容：{{error}}。",
     "SaveInfoErrorTitle": "保存物品时发生错误"
   },
   "ItemMove": {
     "Consolidate": "合并{{name}}",
     "Distributed": "拆分{{name}}\n{{name}} 已平均拆分于所有角色上.",
-    "ToStore": "所有{{name}} 现在都已在你的{{store}} 上.",
-    "ToVault": "所有{{name}} 现都已在你的保险库之中."
+    "ToStore": "所有{{name}} 都已移动至您的 {{store}} 之中.",
+    "ToVault": "所有 {{name}} 都已移动至您的保险库之中."
   },
   "ItemService": {
     "BucketFull": {
@@ -312,7 +312,7 @@
       "Vault": "您的{{store}} 上有太多 “{{itemtype}}” 的物品."
     },
     "Classified": "该物品已被分类并且现在无法被转移.",
-    "Classified2": "已分类物品。Bungie上位提供该物品的相关信息。使用“备注：”为该物品添加备注，搜索筛选器来找到它。",
+    "Classified2": "分类物品。Bungie尚未提供该物品的相关信息。为该物品添加备注，以方便您使用搜索过滤器找到它。",
     "Deequip": "无法找到另一个物品来卸下{{itemname}}",
     "ExoticError": "无法装备“{{itemname}}”，因为在{{slot}} 栏位中无法装备异域物品。（{{error}}）",
     "NotEnoughRoom": "我们无法在{{store}} 上移动物品, 来为{{itemname}} 腾出空间",
@@ -330,7 +330,7 @@
     "Equip": "装备在{{character}}",
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
-    "FilterSets": "筛选器集合",
+    "FilterSets": "组合过滤",
     "Guardians": "守护者",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
@@ -403,7 +403,7 @@
     "DeleteErrorTitle": "删除配装时发生错误",
     "DoesNotExist": "{{itemname}}不存在于您的账户中。",
     "Edit": "编辑配装",
-    "FilteredItems": "筛选过的物品",
+    "FilteredItems": "已过滤的物品",
     "FromEquipped": "当前装备",
     "GatherEngrams": "收集记忆水晶",
     "GatherEngramsExceptExotics": "异域",
@@ -481,17 +481,17 @@
     "Store": "寄存",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Take": "拿起",
+    "Take": "收集",
     "TrackUntrack_Track": "跟踪{{itemType}}",
     "TrackUntrack_Untrack": "取消跟踪{{itemType}}",
     "Vault": "保险库"
   },
   "Notes": {
-    "Error": "错误! 注释不能超过120个字符。",
-    "Help": "为该物品添加注释"
+    "Error": "错误! 备注不能超过120个字符.",
+    "Help": "为该物品添加备注"
   },
   "Objectives": {
-    "Complete": "完成",
+    "Complete": "已完成",
     "Incomplete": "未完成"
   },
   "Postmaster": {
@@ -516,24 +516,24 @@
     "RecordBooks": "记事本"
   },
   "Settings": {
-    "AllowIdPostToDtr": "显示详细的武器评论并允许评级武器.",
-    "AllowIdPostToDtrLine2": "Destiny Tracker将与您共享您的帐户名称和评审物品.",
-    "AlwaysShowDetails": "始终显示完整物品详情页",
+    "AllowIdPostToDtr": "显示详细的武器评论并允许评测武器.",
+    "AllowIdPostToDtrLine2": "将与Destiny Tracker共享您的帐户名称和所评审的物品.",
+    "AlwaysShowDetails": "默认显示物品完整详情页",
     "CharacterOrder": "排序方式",
-    "CharacterOrderFixed": "创建时间",
+    "CharacterOrderFixed": "角色创建时间",
     "CharacterOrderRecent": "最近使用的角色",
     "CharacterOrderReversed": "最近使用的角色(倒序)",
     "ColorA11y": "色盲模式",
     "ColumnSize": "{{num}} 个物品",
     "ColumnSizeAuto": "自动",
-    "DIMPopupsReset": "重置之前隐藏的提示",
+    "DIMPopupsReset": "重置之前隐藏的提示信息",
     "Data": "电子表格",
     "DontForgetDupes": "您可以在搜索框使用 is:dupe或 is:dupelower 来快速查找重复物品, 也可以使用对比工具来对比相关物品.",
     "EnableAdvancedStats": "在防具上显示评分(D1)",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下载您物品的 CSV 列表, 可以在您选择的电子表格应用程序中轻松查看。",
     "General": "通用",
-    "HideUnfiltered": "隐藏不匹配物品",
+    "HideUnfiltered": "隐藏与搜索内容不匹配的物品",
     "Inventory": "物品栏显示模式",
     "InventoryColumns": "物品栏显示宽度",
     "InventoryColumnsMobile": "移动端物品栏显示宽度",
@@ -541,31 +541,31 @@
     "Items": "物品显示",
     "Language": "语言",
     "LogOut": "注销",
-    "RatingInfo": "DIM支持在D1中对装备进行自动评级(基于roll)，以及对武器(和D2的装备)进行社区评级。 由<a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>提供技术支持。",
-    "Ratings": "评分",
+    "RatingInfo": "DIM支持对D1中的防具进行自动评分(基于roll)。以及对武器(和D2的装备)进行社区评测，由<a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>提供技术支持。",
+    "Ratings": "评测",
     "ReloadDIM": "刷新页面[F5] 以完成语言切换",
     "ResetToDefault": "重置",
-    "ReviewsPlatformSelection": "只显示以下平台的评分",
+    "ReviewsPlatformSelection": "只显示以下平台的评测",
     "SetSort": "物品排序方式:",
     "Settings": "设置",
     "ShowAnimations": "为新物品增加动画效果",
     "ShowAnimationsHelp": "我们将为您的新物品上增加一个来回滚动的闪烁特效. 关闭此项可节约CPU资源.",
     "ShowElemental": "在武器上显示元素标志",
     "ShowOverlay": "新获得的物品高亮显示",
-    "ShowReviews": "显示武器的社区(DIM)评分",
-    "SizeItem": "物品大小",
+    "ShowReviews": "显示武器的社区(DIM)评测",
+    "SizeItem": "物品显示大小",
     "SortByBasePower": "基础力量(仅限于D2)",
     "SortByClassType": "必要的类",
     "SortByPrimary": "主要属性(攻击/防御)",
     "SortByRarity": "稀有度",
     "SortByRating": "社区评分或装备品质",
     "SortByType": "类型",
-    "SortCustom": "自定排序",
+    "SortCustom": "自定义排序",
     "SortName": "名称",
     "SortPrimary": "主要属性(攻击或防御)",
     "SortRarity": "稀有度优先于主要属性数值",
     "SortRoll": "社区评分或装备品质",
-    "VaultColumns": "保险库的最大宽度"
+    "VaultColumns": "保险库最大宽度"
   },
   "Stats": {
     "Discipline": "训练",
@@ -613,8 +613,8 @@
     "Loadouts": "{{value}} 套配装",
     "NoData": "无数据",
     "Settings": "您的 DIM 设置和首选项",
-    "StatLabel": "当前包含:",
-    "TagNotes": "{{value}} 个带标签或注释的物品",
+    "StatLabel": "目前包含:",
+    "TagNotes": "{{value}} 个带标签或备注的物品",
     "Title": "DIM存储"
   },
   "StoreBucket": {
@@ -647,7 +647,7 @@
     "Bounties": "赏金",
     "Compare": "与您现有物品比较：",
     "Consumables": "消耗品",
-    "Emotes": "表情",
+    "Emotes": "表情动作",
     "Load": "加载商贩",
     "ShadersAndEmblems": "造型和徽章",
     "ShipsAndVehicles": "飞船和交通工具",
@@ -671,7 +671,7 @@
       "FAQLogout": "如何注销DIM？",
       "FAQLogoutAnswer": "点击屏幕右上角的账户，然后选择“注销”。",
       "FAQLostItem": "在使用你们的工具的过程中我丢失了我的物品！",
-      "FAQLostItemAnswer": "Bungie不允许APP删除物品（甚至是他们自己的官方APP！）。这似乎看起来更像是一个数据传输失败，把您的物品留在另一个角色的金库里。你可以试图在那里找到他们。如果在那里也没有出现，请刷新该页面。查看此链接{{link}} 或者在游戏中查看物品是否存在。我们肯定东西还在。",
+      "FAQLostItemAnswer": "Bungie不允许APP删除物品（甚至是他们自己的官方APP！）。这似乎看起来更像是一个数据传输失败，把您的物品留在另一个角色的保险库里。你可以试图在那里找到他们。如果在那里也没有出现，请刷新该页面。查看此链接{{link}} 或者在游戏中查看物品是否存在。我们肯定东西还在。",
       "FAQMobile": "DIM是否会支持移动端？是否会提供一个APP？",
       "FAQMobileAnswer": "现在，DIM网站可以在手机或平板中加载了！我们仍在努力让我们的界面在移动端展现得更好。请务必将保存DIM成书签放到您的主屏幕上。我们也许会在未来发布一款APP，但是它将会和现在的网站完全一致。",
       "GitHub": "Github",
@@ -690,7 +690,7 @@
     },
     "Login": {
       "Auth": "用Bungie.Net授权",
-      "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
+      "Explanation": "允许DIM查看并修改您的天命角色，保险库和进度。",
       "LearnMore": "您希望了解更多吗？",
       "Permission": "我们需要您的许可..."
     },
