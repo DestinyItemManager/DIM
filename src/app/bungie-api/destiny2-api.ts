@@ -141,7 +141,17 @@ export function getVendors(account: DestinyAccount, characterId: string): IPromi
     characterId,
     destinyMembershipId: account.membershipId,
     membershipType: account.platformType,
-    components: []
+    components: [
+      DestinyComponentType.Vendors,
+      DestinyComponentType.VendorSales,
+      DestinyComponentType.ItemInstances,
+      DestinyComponentType.ItemObjectives,
+      DestinyComponentType.ItemStats,
+      DestinyComponentType.ItemSockets,
+      DestinyComponentType.ItemTalentGrids,
+      DestinyComponentType.ItemCommonData,
+      DestinyComponentType.ItemPlugStates
+    ]
   })
   .then((response) => response.Response) as IPromise<DestinyVendorsResponse>;
 }

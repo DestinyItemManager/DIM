@@ -30,6 +30,10 @@ export class VendorItem {
     this.inventoryItem = this.defs.InventoryItem.get(this.vendorItemDef.itemHash);
   }
 
+  get key() {
+    return this.saleItem ? this.saleItem.vendorItemIndex : this.vendorItemDef.itemHash;
+  }
+
   get itemHash() {
     return this.vendorItemDef.itemHash;
   }

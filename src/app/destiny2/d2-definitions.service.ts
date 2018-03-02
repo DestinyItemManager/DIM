@@ -19,7 +19,9 @@ import {
   DestinySocketTypeDefinition,
   DestinyStatDefinition,
   DestinyTalentGridDefinition,
-  DestinyVendorDefinition
+  DestinyVendorDefinition,
+  DestinyDestinationDefinition,
+  DestinyPlaceDefinition
   } from 'bungie-api-ts/destiny2';
 import { $q } from 'ngimport';
 import * as _ from 'underscore';
@@ -39,7 +41,9 @@ const lazyTables = [
   'Vendor',
   'SocketCategory',
   'SocketType',
-  'Milestone'
+  'Milestone',
+  'Destination',
+  'Place'
 ];
 
 const eagerTables = [
@@ -70,6 +74,8 @@ export interface D2ManifestDefinitions {
   SocketCategory: LazyDefinition<DestinySocketCategoryDefinition>;
   SocketType: LazyDefinition<DestinySocketTypeDefinition>;
   Milestone: LazyDefinition<DestinyMilestoneDefinition>;
+  Destination: LazyDefinition<DestinyDestinationDefinition>;
+  Place: LazyDefinition<DestinyPlaceDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };

@@ -1,19 +1,16 @@
-
-import * as React from 'react';
-import { IScope } from 'angular';
-import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getVendor as getVendorApi, getBasicProfile } from '../bungie-api/destiny2-api';
 import { StateParams } from '@uirouter/angularjs';
-import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { D2ManifestService } from '../manifest/manifest-service';
-import './vendor.scss';
-import { DestinyVendorDefinition, DestinyVendorResponse, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
+import { IScope } from 'angular';
+import { DestinyVendorDefinition, DestinyVendorResponse } from 'bungie-api-ts/destiny2';
+import * as React from 'react';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { getBasicProfile, getVendor as getVendorApi } from '../bungie-api/destiny2-api';
+import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
-import { VendorItem } from './vendor-item';
-import * as _ from 'underscore';
-import { VendorItemComponent } from './vendor-item-component';
-import { FactionIcon } from '../progress/faction';
 import { StoreServiceType } from '../inventory/d2-stores.service';
+import { D2ManifestService } from '../manifest/manifest-service';
+import { FactionIcon } from '../progress/faction';
+import VendorItems from './vendor-items';
+import './vendor.scss';
 
 interface Props {
   $scope: IScope;
@@ -26,11 +23,9 @@ interface State {
   vendorHash: number;
   defs?: D2ManifestDefinitions;
   vendorDef?: DestinyVendorDefinition;
-  vendorInstance?: DestinyVendorResponse;
+  vendorResponse?: DestinyVendorResponse;
 }
 
-// TODO: This component needs to load the info AND display it. Those should be broken out into separate components
-// so we can reuse the display elsewhere.
 export default class SingleVendor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -64,8 +59,8 @@ export default class SingleVendor extends React.Component<Props, State> {
           ? activeStore.id
           : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
       }
-      const vendorInstance = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
-      this.setState({ vendorInstance });
+      const vendorResponse = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
+      this.setState({ vendorResponse });
     }
   }
 
@@ -74,31 +69,29 @@ export default class SingleVendor extends React.Component<Props, State> {
   }
 
   render() {
-    if (!this.state.vendorDef) {
+    const { defs, vendorDef, vendorResponse } = this.state;
+
+    if (!vendorDef || !defs) {
       // TODO: loading component!
       return <div className="vendor dim-page">Loading...</div>;
     }
 
-    const { defs, vendorDef, vendorInstance } = this.state;
-
     // TODO:
     // * countdown
-    // * costs (doesn't look like the API has it yet)
     // * featured item
     // * enabled
+    // * ratings
+    // * show which items you have
+    // * filter by character class
+    const vendor = vendorResponse && vendorResponse.vendor.data;
 
-    // TODO: do this stuff in setState handlers
-    const items = vendorInstance && vendorInstance.sales.data
-      ? toItemList(this.state.defs!, vendorInstance, vendorDef.itemList)
-      // If the sales should come from the server, don't show all possibilities here
-      : (vendorDef.returnWithVendorRequest ? [] : vendorDef.itemList.map((i) => new VendorItem(this.state.defs!, i)));
+    const faction = vendorDef.factionHash ? defs.Faction[vendorDef.factionHash] : undefined;
+    const factionProgress = vendorResponse && vendorResponse.vendor.data.progression;
 
-    // TODO: sort items, maybe subgroup them
-    const itemsByCategory = _.groupBy(items.filter((i) => i.canBeSold), (item: VendorItem) => item.displayCategoryIndex);
+    const destinationDef = vendor && defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
+    const placeDef = destinationDef && defs.Place.get(destinationDef.placeHash);
 
-    const faction = vendorDef.factionHash ? defs!.Faction[vendorDef.factionHash] : undefined;
-    const factionProgress = vendorInstance && vendorInstance.vendor.data.progression;
-
+    const placeString = [(destinationDef && destinationDef.displayProperties.name), (placeDef && placeDef.displayProperties.name)].filter((n) => n && n.length).join(', ');
     // TODO: there's a cool background image but I'm not sure how to use it
 
     // TODO: localize
@@ -113,39 +106,20 @@ export default class SingleVendor extends React.Component<Props, State> {
             <div className="vendor-header-info">
               <h1>{vendorDef.displayProperties.name}</h1>
               <div>{vendorDef.displayProperties.description}</div>
-              {vendorInstance &&
-                <div>Inventory updates on {new Date(vendorInstance.vendor.data.nextRefreshDate).toLocaleString()}</div>
+              {vendorResponse &&
+                <div>Inventory updates on {new Date(vendorResponse.vendor.data.nextRefreshDate).toLocaleString()}</div>
               }
+              <div>Located at {placeString}</div>
             </div>
           </div>
         </div>
-        <div className="vendor-char-items">
-          {_.map(itemsByCategory, (items, categoryIndex) =>
-            <div className="vendor-row" key={categoryIndex}>
-              <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
-              <div className="vendor-items">
-              {items.map((item) =>
-                <VendorItemComponent key={item.itemHash} defs={defs!} item={item}/>
-              )}
-              </div>
-            </div>
-          )}
-        </div>
+        <VendorItems
+          defs={defs}
+          vendorDef={vendorDef}
+          sales={vendorResponse && vendorResponse.sales.data}
+          itemComponents={vendorResponse && vendorResponse.itemComponents}
+        />
       </div>
     );
   }
-}
-
-function toItemList(
-  defs: D2ManifestDefinitions,
-  vendorInstance: DestinyVendorResponse,
-  itemList: DestinyVendorItemDefinition[]
-): VendorItem[] {
-  const components = Object.values(vendorInstance.sales.data);
-  return components.map((component) => new VendorItem(
-    defs,
-    itemList[component.vendorItemIndex],
-    component,
-    vendorInstance.itemComponents
-  ));
 }

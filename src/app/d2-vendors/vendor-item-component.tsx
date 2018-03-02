@@ -4,6 +4,7 @@ import { bungieBackgroundStyle, BungieImage } from "../dim-ui/bungie-image";
 import classNames from 'classnames';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { settings } from '../settings/settings';
+import { DestinyItemQuantity } from "bungie-api-ts/destiny2";
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -32,7 +33,6 @@ export class VendorItemComponent extends React.Component<Props, {}> {
       );
     }
 
-    // TODO: clean up costs
     return (
       <div className="vendor-item">
         <a href={`http://db.destinytracker.com/d2/${settings.language}/items/${item.itemHash}`} target="_blank" rel="noopener">
@@ -45,18 +45,31 @@ export class VendorItemComponent extends React.Component<Props, {}> {
         </a>
         <div className="vendor-costs">
           {item.costs.map((cost) =>
-            <div key={cost.itemHash} className="cost">
-              {cost.quantity}
-              <span className="currency">
-                <BungieImage
-                  src={defs.InventoryItem.get(cost.itemHash).displayProperties.icon}
-                  title={defs.InventoryItem.get(cost.itemHash).displayProperties.name}
-                />
-              </span>
-            </div>
+            <VendorItemCost key={cost.itemHash} defs={defs} cost={cost} />
           )}
         </div>
       </div>
     );
   }
+}
+
+function VendorItemCost({
+  cost,
+  defs
+}: {
+  defs: D2ManifestDefinitions;
+  cost: DestinyItemQuantity;
+}) {
+  const currencyItem = defs.InventoryItem.get(cost.itemHash);
+  return (
+    <div key={cost.itemHash} className="cost">
+      {cost.quantity}
+      <span className="currency">
+        <BungieImage
+          src={currencyItem.displayProperties.icon}
+          title={currencyItem.displayProperties.name}
+        />
+      </span>
+    </div>
+  );
 }
