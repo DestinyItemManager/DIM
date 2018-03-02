@@ -26,8 +26,7 @@ export const D2Categories = {
     'Ships',
     'Emblems',
     'Emotes',
-    'Engrams',
-    'Auras'
+    'Engrams'
   ],
   Inventory: [
     'Consumables',
