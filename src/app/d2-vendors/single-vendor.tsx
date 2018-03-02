@@ -105,12 +105,11 @@ export default class SingleVendor extends React.Component<Props, State> {
               : <BungieImage src={vendorDef.displayProperties.icon}/>
             }
             <div className="vendor-header-info">
-              <h1>{vendorDef.displayProperties.name}</h1>
+              <h1>{vendorDef.displayProperties.name} <span className="vendor-location">{placeString}</span></h1>
               <div>{vendorDef.displayProperties.description}</div>
               {vendorResponse &&
-                <div>Inventory updates on {new Date(vendorResponse.vendor.data.nextRefreshDate).toLocaleString()} <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)}/></div>
+                <div>Inventory updates in <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)}/></div>
               }
-              <div>Located at {placeString}</div>
             </div>
           </div>
         </div>
