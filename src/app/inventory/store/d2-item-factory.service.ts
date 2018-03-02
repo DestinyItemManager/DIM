@@ -21,7 +21,8 @@ import {
   DestinyStatDefinition,
   DestinyTalentGridDefinition,
   ItemLocation,
-  TransferStatuses
+  TransferStatuses,
+  DestinyUnlockValueUIStyle
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
@@ -775,7 +776,7 @@ function buildObjectives(
     const def = objectiveDefs.get(objective.objectiveHash);
 
     return {
-      displayName: def.displayProperties.name ||
+      displayName: def.displayProperties.name || def.progressDescription ||
         (objective.complete
           ? t('Objectives.Complete')
           : t('Objectives.Incomplete')),
@@ -783,7 +784,8 @@ function buildObjectives(
       progress: objective.progress || 0,
       completionValue: def.completionValue,
       complete: objective.complete,
-      boolean: def.completionValue === 1,
+      boolean: def.completionValue === 1 && (def.valueStyle === DestinyUnlockValueUIStyle.Checkbox || def.valueStyle === DestinyUnlockValueUIStyle.Automatic),
+      displayStyle: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? 'integer' : undefined,
       display: `${objective.progress || 0}/${def.completionValue}`
     };
   });
@@ -798,16 +800,23 @@ function buildFlavorObjective(
     return null;
   }
 
-  const objective = objectivesMap[item.itemInstanceId].flavorObjective;
-  if (!objective) {
+  const flavorObjective = objectivesMap[item.itemInstanceId].flavorObjective;
+  if (!flavorObjective) {
     return null;
   }
 
-  const def = objectiveDefs.get(objective.objectiveHash);
+  // Fancy emblems with multiple trackers are tracked as regular objectives, but the info is duplicated in
+  // flavor objective. If that's the case, skip flavor.
+  const objectives = objectivesMap[item.itemInstanceId].objectives;
+  if (objectives && objectives.some((o) => o.objectiveHash === flavorObjective.objectiveHash)) {
+    return null;
+  }
+
+  const def = objectiveDefs.get(flavorObjective.objectiveHash);
   return {
     description: def.progressDescription,
     icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
-    progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0
+    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
   };
 }
 
