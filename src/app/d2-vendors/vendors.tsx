@@ -1,17 +1,22 @@
 import { StateParams } from '@uirouter/angularjs';
 import { IScope } from 'angular';
-import { DestinyVendorsResponse, DestinyVendorComponent, DestinyItemComponentSetOfint32, DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
+import {
+  DestinyItemComponentSetOfint32,
+  DestinyVendorComponent,
+  DestinyVendorSaleItemComponent,
+  DestinyVendorsResponse
+  } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
+import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getBasicProfile, getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
+import Countdown from '../dim-ui/countdown';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { FactionIcon } from '../progress/faction';
 import VendorItems from './vendor-items';
 import './vendor.scss';
-import * as _ from 'underscore';
 
 interface Props {
   $scope: IScope;
@@ -118,6 +123,7 @@ function Vendor({
           {vendorDef.displayProperties.name}
           <span className="vendor-location">{placeString}</span>
         </div>
+        <Countdown endTime={new Date(vendor.nextRefreshDate)}/>
       </div>
       <VendorItems
         defs={defs!}

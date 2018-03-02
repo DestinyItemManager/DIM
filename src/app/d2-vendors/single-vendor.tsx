@@ -6,6 +6,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getBasicProfile, getVendor as getVendorApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
+import Countdown from '../dim-ui/countdown';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import { FactionIcon } from '../progress/faction';
@@ -107,7 +108,7 @@ export default class SingleVendor extends React.Component<Props, State> {
               <h1>{vendorDef.displayProperties.name}</h1>
               <div>{vendorDef.displayProperties.description}</div>
               {vendorResponse &&
-                <div>Inventory updates on {new Date(vendorResponse.vendor.data.nextRefreshDate).toLocaleString()}</div>
+                <div>Inventory updates on {new Date(vendorResponse.vendor.data.nextRefreshDate).toLocaleString()} <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)}/></div>
               }
               <div>Located at {placeString}</div>
             </div>
