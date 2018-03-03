@@ -21,7 +21,8 @@ import {
   DestinyStatDefinition,
   DestinyTalentGridDefinition,
   ItemLocation,
-  TransferStatuses
+  TransferStatuses,
+  DestinyUnlockValueUIStyle
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
@@ -72,6 +73,7 @@ export interface DimObjective {
   complete: boolean;
   boolean: boolean;
   display: string;
+  displayStyle: string | null;
 }
 
 export interface DimFlavorObjective {
@@ -509,7 +511,7 @@ function makeItem(
     equipped: Boolean(instanceDef.isEquipped),
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
-    complete: false, // TODO: what's the deal w/ item progression?
+    complete: false,
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
@@ -610,7 +612,7 @@ function makeItem(
   }
 
   if (createdItem.objectives) {
-    createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, (o) => o.complete);
+    createdItem.complete = createdItem.objectives.every((o) => o.complete);
     const length = createdItem.objectives.length;
     createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
       if (objective.completionValue) {
@@ -619,6 +621,11 @@ function makeItem(
         return 0;
       }
     });
+
+    if (createdItem.objectives.every((o) => o.displayStyle === 'integer')) {
+      createdItem.complete = false;
+      createdItem.percentComplete = 0;
+    }
   }
 
   // Infusion
@@ -787,15 +794,16 @@ function buildObjectives(
     const def = objectiveDefs.get(objective.objectiveHash);
 
     return {
-      displayName: def.displayProperties.name ||
+      displayName: def.displayProperties.name || def.progressDescription ||
         (objective.complete
           ? t('Objectives.Complete')
           : t('Objectives.Incomplete')),
       description: def.displayProperties.description,
       progress: objective.progress || 0,
       completionValue: def.completionValue,
-      complete: objective.complete,
-      boolean: def.completionValue === 1,
+      complete: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? false : objective.complete,
+      boolean: def.completionValue === 1 && (def.valueStyle === DestinyUnlockValueUIStyle.Checkbox || def.valueStyle === DestinyUnlockValueUIStyle.Automatic),
+      displayStyle: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? 'integer' : null,
       display: `${objective.progress || 0}/${def.completionValue}`
     };
   });
@@ -810,16 +818,23 @@ function buildFlavorObjective(
     return null;
   }
 
-  const objective = objectivesMap[item.itemInstanceId].flavorObjective;
-  if (!objective) {
+  const flavorObjective = objectivesMap[item.itemInstanceId].flavorObjective;
+  if (!flavorObjective) {
     return null;
   }
 
-  const def = objectiveDefs.get(objective.objectiveHash);
+  // Fancy emblems with multiple trackers are tracked as regular objectives, but the info is duplicated in
+  // flavor objective. If that's the case, skip flavor.
+  const objectives = objectivesMap[item.itemInstanceId].objectives;
+  if (objectives && objectives.some((o) => o.objectiveHash === flavorObjective.objectiveHash)) {
+    return null;
+  }
+
+  const def = objectiveDefs.get(flavorObjective.objectiveHash);
   return {
     description: def.progressDescription,
     icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
-    progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0
+    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
   };
 }
 

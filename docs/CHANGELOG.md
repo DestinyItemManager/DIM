@@ -3,6 +3,7 @@
 * Compare tool shows ratings, and handles missing stats better.
 * Fixed display of masterwork mod and ornaments.
 * Remove Auras from inventory since they're part of Emblems now.
+* Fancy new emblems show all their counters correctly.
 
 # 4.41.1
 
