@@ -67,6 +67,7 @@ export default class Collections extends React.Component<Props, State> {
 
     return (
       <div className="vendor d2-vendors dim-page">
+        <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Array.from(kioskVendors).map((vendorHash) =>
           <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))}/>
         )}

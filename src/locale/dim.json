@@ -651,7 +651,8 @@
     "Load": "Loading Vendors",
     "ShadersAndEmblems": "Shaders & Emblems",
     "ShipsAndVehicles": "Ships & Vehicles",
-    "Vendors": "Vendors"
+    "Vendors": "Vendors",
+    "Collections": "Collections"
   },
   "Views": {
     "About": {
