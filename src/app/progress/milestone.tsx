@@ -50,9 +50,7 @@ export function Milestone(props: MilestoneProps) {
       </>
     );
   } else if (milestone.vendors) {
-    const click = () => {
-      $state.go('destiny2.vendor', { id: milestone.vendors[0].vendorHash, characterId: character.characterId });
-    };
+    const click = () => $state.go('destiny2.vendor', { id: milestone.vendors[0].vendorHash, characterId: character.characterId });
 
     return (
       <div className="milestone-quest">
@@ -61,7 +59,12 @@ export function Milestone(props: MilestoneProps) {
         </div>
         <div className="milestone-info">
           <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
-          <div className="milestone-description"><a onClick={click}>{milestoneDef.displayProperties.description}</a></div>
+          <div className="milestone-description">
+            {$featureFlags.vendors
+              ? <a onClick={click}>{milestoneDef.displayProperties.description}</a>
+              : milestoneDef.displayProperties.description
+            }
+          </div>
         </div>
       </div>
     );

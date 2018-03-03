@@ -7,5 +7,6 @@
       "relativeUpLevel",
       "relativeDownLevel"
   ],
-  "typescript.extension.sortImports.enableJavascript": true
+  "typescript.extension.sortImports.enableJavascript": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

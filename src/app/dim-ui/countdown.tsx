@@ -10,7 +10,7 @@ interface State {
 }
 
 export default class Countdown extends React.Component<Props, State> {
-  private interval: NodeJS.Timer;
+  private interval: number;
 
   constructor(props) {
     super(props);
@@ -19,14 +19,14 @@ export default class Countdown extends React.Component<Props, State> {
 
   componentDidMount() {
     // Update once a minute
-    this.interval = setInterval(this.update, 60000);
+    this.interval = window.setInterval(this.update, 60000);
     this.update();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.endTime !== this.props.endTime) {
       clearInterval(this.interval);
-      this.interval = setInterval(this.update, 60000);
+      this.interval = window.setInterval(this.update, 60000);
       this.update();
     }
   }

@@ -47,7 +47,7 @@ export function Faction(props: FactionProps) {
         <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
         {engramsAvailable > 0 &&
           <div className="faction-rewards">
-            {factionDef.rewardVendorHash
+            {factionDef.rewardVendorHash && $featureFlags.vendors
               ? <a onClick={rewardClick}>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</a>
               : <>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</>
             }

@@ -32,6 +32,8 @@ declare const $featureFlags: {
   dnd: boolean,
   /** Send exception reports to Sentry.io */
   sentry: boolean;
+  /** D2 Vendors */
+  vendors: boolean;
 }
 
 declare function ga(...params: string[]);

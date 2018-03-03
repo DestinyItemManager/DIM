@@ -43,7 +43,7 @@
       <a class="link"
          ui-sref-active="active"
          ui-sref="destiny2.vendors($ctrl.account)"
-         ng-if="$ctrl.destinyVersion == 2"
+         ng-if="$ctrl.destinyVersion == 2 && $ctrl.featureFlags.vendors"
          ng-i18next="Vendors.Vendors"></a>
       <hr>
 
@@ -145,7 +145,7 @@
   <a class="link second-to-go"
      ui-sref-active="active"
      ui-sref="destiny2.vendors($ctrl.account)"
-     ng-if="$ctrl.destinyVersion == 2"
+     ng-if="$ctrl.destinyVersion == 2 && $ctrl.featureFlags.vendors"
      ng-i18next="Vendors.Vendors"></a>
 
   <span class="header-right">
