@@ -1,4 +1,3 @@
-import { isPhonePortrait } from '../mediaQueries';
 import { queuedAction } from '../inventory/action-queue';
 import { itemTags } from '../settings/settings';
 import { NewItemsService } from './store/new-items.service';
@@ -53,18 +52,14 @@ export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreServ
   const vm = this;
   let dialogResult = null;
 
-  if (vm.item.maxStackSize > 1 || ($featureFlags.dnd && vm.item.destinyVersion === 2)) {
+  if (vm.item.maxStackSize > 1) {
     const dragHelp = document.getElementById('drag-help');
-    const dragBox = document.getElementById('item-drag-box');
     $element.on('dragstart', (element) => {
       $rootScope.$broadcast('drag-start-item', {
         item: vm.item,
         element
       });
       $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
-      if ($featureFlags.dnd && dragBox && isPhonePortrait()) {
-        dragBox.classList.remove('drag-help-hidden');
-      }
       if (vm.item.amount > 1) {
         dragHelp.classList.remove('drag-help-hidden');
       }
@@ -72,9 +67,6 @@ export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreServ
     $element.on('dragend', () => {
       $rootScope.$broadcast('drag-stop-item');
       dragHelp.classList.add('drag-help-hidden');
-      if (dragBox) {
-        dragBox.classList.add('drag-help-hidden');
-      }
       delete $rootScope.dragItem;
     });
     $element.on('drag', (e) => {
