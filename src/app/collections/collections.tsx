@@ -66,7 +66,7 @@ export default class Collections extends React.Component<Props, State> {
     });
 
     return (
-      <div>
+      <div className="vendor d2-vendors dim-page">
         {Array.from(kioskVendors).map((vendorHash) =>
           <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))}/>
         )}
@@ -95,14 +95,12 @@ function Kiosk({
   // TODO: Some items have flavor (emblems)
 
   return (
-    <div className="vendor d2-vendors dim-page">
-      <div className="vendor-char-items">
-        <VendorItems
-          defs={defs}
-          vendorDef={vendorDef}
-          kioskItems={items.filter((i) => i.canAcquire)}
-        />
-      </div>
+    <div className="vendor-char-items">
+      <VendorItems
+        defs={defs}
+        vendorDef={vendorDef}
+        kioskItems={items.filter((i) => i.canAcquire)}
+      />
     </div>
   );
 }
