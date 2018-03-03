@@ -72,6 +72,7 @@ export interface DimObjective {
   complete: boolean;
   boolean: boolean;
   display: string;
+  displayStyle: string | null;
 }
 
 export interface DimFlavorObjective {
@@ -498,7 +499,7 @@ function makeItem(
     equipped: Boolean(instanceDef.isEquipped),
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
-    complete: false, // TODO: what's the deal w/ item progression?
+    complete: false,
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
@@ -599,7 +600,7 @@ function makeItem(
   }
 
   if (createdItem.objectives) {
-    createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, (o) => o.complete);
+    createdItem.complete = createdItem.objectives.every((o) => o.complete);
     const length = createdItem.objectives.length;
     createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
       if (objective.completionValue) {
@@ -608,6 +609,11 @@ function makeItem(
         return 0;
       }
     });
+
+    if (createdItem.objectives.every((o) => o.displayStyle === 'integer')) {
+      createdItem.complete = false;
+      createdItem.percentComplete = 0;
+    }
   }
 
   // Infusion
@@ -783,9 +789,9 @@ function buildObjectives(
       description: def.displayProperties.description,
       progress: objective.progress || 0,
       completionValue: def.completionValue,
-      complete: objective.complete,
+      complete: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? false : objective.complete,
       boolean: def.completionValue === 1 && (def.valueStyle === DestinyUnlockValueUIStyle.Checkbox || def.valueStyle === DestinyUnlockValueUIStyle.Automatic),
-      displayStyle: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? 'integer' : undefined,
+      displayStyle: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? 'integer' : null,
       display: `${objective.progress || 0}/${def.completionValue}`
     };
   });

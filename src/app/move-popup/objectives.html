@@ -4,7 +4,7 @@
       <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{ 'incomplete': $index >= objective.progress, 'wins': objective.completionValue === 9 }"></i>
       <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>
     </div>
-    <div ng-switch-when="integer" class="objective-progress">
+    <div ng-switch-when="integer" class="objective-integer">
       <div class="objective-description">{{ objective.displayName }}</div>
       <div class="objective-text">{{ objective.progress }}</div>
     </div>
