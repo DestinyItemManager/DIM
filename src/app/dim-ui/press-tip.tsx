@@ -48,7 +48,6 @@ export class PressTip extends React.Component<Props, State> {
     if (this.tooltip) {
       this.tooltip.show();
     } else {
-      console.log(this.tooltipContent);
       this.tooltip = new Tooltip(this.ref, {
         placement: 'top', // or bottom, left, right, and variations
         title: '...',
@@ -57,7 +56,6 @@ export class PressTip extends React.Component<Props, State> {
         container: 'body'
       });
       this.tooltip.show();
-      console.log(this.tooltip);
 
       // Ugh this is a real hack
       this.tooltipContent = this.tooltip._tooltipNode.querySelector(this.tooltip.innerSelector);
