@@ -1,26 +1,34 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
+import { IPromise } from 'angular';
+import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
+import { D2ReviewDataCache } from './d2-reviewDataCache';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DtrItem, DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
+import { $q, $http } from 'ngimport';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
- *
- * @class D2ReviewsFetcher
  */
 class D2ReviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
-    this.$q = $q;
-    this.$http = $http;
+  _trackerErrorHandler: D2TrackerErrorHandler;
+  _perkRater: D2PerkRater;
+  _userFilter: any;
+  _reviewDataCache: D2ReviewDataCache;
+  _loadingTracker: any;
+  _itemTransformer: D2ItemTransformer;
+  constructor(loadingTracker, reviewDataCache, userFilter) {
     this._itemTransformer = new D2ItemTransformer();
-    this._trackerErrorHandler = trackerErrorHandler;
+    this._trackerErrorHandler = new D2TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;
     this._perkRater = new D2PerkRater();
   }
 
-  _getItemReviewsCall(item, platformSelection) {
+  _getItemReviewsCall(item: DtrItem, platformSelection: number) {
     const queryString = `page=1&platform=${platformSelection}`;
 
     return {
@@ -31,37 +39,42 @@ class D2ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item, platformSelection) {
-    const postWeapon = this._itemTransformer.getRollAndPerks(item);
+  _getItemReviewsPromise(item, platformSelection): IPromise<DtrReviewContainer> {
+    const dtrItem = this._itemTransformer.getRollAndPerks(item);
 
-    const promise = this.$q
-      .when(this._getItemReviewsCall(postWeapon, platformSelection))
-      .then(this.$http)
+    const promise = $q
+      .when(this._getItemReviewsCall(dtrItem, platformSelection))
+      .then($http)
       .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
-      .then((response) => { return response.data; });
+      .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
 
-    return promise;
+    return promise as IPromise<DtrReviewContainer>;
   }
 
-  _getUserReview(reviewData) {
+  _getUserReview(reviewData: DimWorkingUserReview | DtrReviewContainer) {
     // bugbug: will need to use membership service if isReviewer flag stays broke
     return _.find(reviewData.reviews, { isReviewer: true });
   }
 
-  _sortAndIgnoreReviews(item) {
-    if (item.writtenReviews) {
-      item.writtenReviews.sort(this._sortReviews);
+  _sortAndIgnoreReviews(item: DimItem) {
+    if (item.reviews) {
+      item.reviews.sort(this._sortReviews);
 
-      item.writtenReviews.forEach((writtenReview) => {
+      item.reviews.forEach((writtenReview) => {
         writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
   }
 
-  _markUserReview(reviewData) {
+  _markUserReview(reviewData: DtrReviewContainer) {
     const membershipInfo = getActivePlatform();
+
+    if (!membershipInfo) {
+      return;
+    }
+
     const membershipId = membershipInfo.membershipId;
 
     _.each(reviewData.reviews, (review) => {
@@ -73,12 +86,12 @@ class D2ReviewsFetcher {
     return reviewData;
   }
 
-  _attachReviews(item, reviewData) {
+  _attachReviews(item: DimItem, reviewData: DtrReviewContainer | DimWorkingUserReview) {
     const userReview = this._getUserReview(reviewData);
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
-    item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
-    item.writtenReviews = _.filter(reviewData.reviews, 'text'); // only attach reviews with text associated
+    item.ratingCount = reviewData.totalReviews;
+    item.reviews = reviewData.reviews.filter((review) => review.text);
 
     this._sortAndIgnoreReviews(item);
 
@@ -94,7 +107,7 @@ class D2ReviewsFetcher {
     this._perkRater.ratePerks(item);
   }
 
-  _sortReviews(a, b) {
+  _sortReviews(a: DtrUserReview, b: DtrUserReview) {
     if (a.isReviewer) {
       return -1;
     }
@@ -111,21 +124,20 @@ class D2ReviewsFetcher {
       return 1;
     }
 
-    const ratingDiff = b.rating - a.rating;
+    const ratingDiff = b.voted - a.voted;
 
     if (ratingDiff !== 0) {
       return ratingDiff;
     }
 
-    const aDate = new Date(a.timestamp);
-    const bDate = new Date(b.timestamp);
+    const aDate = new Date(a.timestamp).getTime();
+    const bDate = new Date(b.timestamp).getTime();
 
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item,
-    cachedItem) {
-    item.communityReviews = cachedItem.reviews;
+  _attachCachedReviews(item: DimItem, cachedItem: DimWorkingUserReview) {
+    item.reviews = cachedItem.reviews;
 
     this._attachReviews(item, cachedItem);
 
@@ -150,30 +162,27 @@ class D2ReviewsFetcher {
    * Get community (which may include the current user's) reviews for a given item and attach
    * them to the item.
    * Attempts to fetch data from the cache first.
-   *
-   * @param {any} item
-   * @param {number} platformSelection
-   * @returns {void}
-   *
-   * @memberof D2ReviewsFetcher
    */
-  getItemReviews(item, platformSelection) {
+  getItemReviews(item: DimItem, platformSelection: number) {
     if (!item.reviewable) {
       return;
     }
+
     const ratingData = this._reviewDataCache.getRatingData(item);
 
     if (ratingData && ratingData.reviewsDataFetched) {
       this._attachCachedReviews(item,
-        ratingData);
+                                ratingData);
 
       return;
     }
 
     this._getItemReviewsPromise(item, platformSelection)
-      .then((reviewData) => this._markUserReview(reviewData))
-      .then((reviewData) => this._attachReviews(item,
-        reviewData));
+      .then((reviewData) => {
+        this._markUserReview(reviewData);
+        this._attachReviews(item,
+                            reviewData);
+      });
   }
 }
 

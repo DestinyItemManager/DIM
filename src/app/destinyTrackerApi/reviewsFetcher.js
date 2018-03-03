@@ -48,10 +48,10 @@ class ReviewsFetcher {
   }
 
   _sortAndIgnoreReviews(item) {
-    if (item.writtenReviews) {
-      item.writtenReviews.sort(this._sortReviews);
+    if (item.reviews) {
+      item.reviews.sort(this._sortReviews);
 
-      item.writtenReviews.forEach((writtenReview) => {
+      item.reviews.forEach((writtenReview) => {
         writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
@@ -62,7 +62,7 @@ class ReviewsFetcher {
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
     item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
-    item.writtenReviews = _.filter(reviewData.reviews, 'review'); // only attach reviews with text associated
+    item.reviews = _.filter(reviewData.reviews, 'review'); // only attach reviews with text associated
 
     this._sortAndIgnoreReviews(item);
 
