@@ -37,7 +37,7 @@ export default class Countdown extends React.Component<Props, State> {
 
   render() {
     return (
-      <span title={this.props.endTime.toLocaleString()}>{dhms(this.state.diff / 1000)}</span>
+      <span className="countdown" title={this.props.endTime.toLocaleString()}>{dhms(this.state.diff / 1000)}</span>
     );
   }
 

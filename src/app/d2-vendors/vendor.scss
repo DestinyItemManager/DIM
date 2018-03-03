@@ -1,7 +1,9 @@
 // This inherits a lot of styles from ../vendors/vendors.scss
 
-.vendors {
-  margin: 0 auto;
+.d2-vendors {
+  .vendor-icon {
+    margin: 5px 5px 5px 0;
+  }
 }
 
 .vendor-featured {

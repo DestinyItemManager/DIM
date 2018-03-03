@@ -99,6 +99,9 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    .countdown {
+      font-size: 11px;
+    }
   }
   .vendor-location {
     text-transform: none;

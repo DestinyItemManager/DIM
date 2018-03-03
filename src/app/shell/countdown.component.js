@@ -51,5 +51,5 @@ export const CountdownComponent = {
     endTime: '<'
   },
   controller: CountdownController,
-  template: '{{$ctrl.text}}'
+  template: '<span class="countdown">{{$ctrl.text}}</span>'
 };

@@ -1,4 +1,9 @@
-import { DestinyVendorDefinition, DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32 } from 'bungie-api-ts/destiny2';
+import {
+  DestinyItemComponentSetOfint32,
+  DestinyVendorDefinition,
+  DestinyVendorItemDefinition,
+  DestinyVendorSaleItemComponent
+} from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
@@ -34,7 +39,7 @@ export default function VendorItems({
           <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
           <div className="vendor-items">
           {items.map((item) =>
-            <VendorItemComponent key={item.key} defs={defs!} item={item}/>
+            <VendorItemComponent key={item.key} defs={defs} item={item}/>
           )}
           </div>
         </div>

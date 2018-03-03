@@ -48,6 +48,8 @@ export default class SingleVendor extends React.Component<Props, State> {
     }
     this.setState({ defs, vendorDef });
 
+    // TODO: if we had a cache per vendor (maybe in redux?) we could avoid this load sometimes?
+
     if (vendorDef.returnWithVendorRequest) {
       // TODO: get for all characters, or let people select a character? This is a hack
       // we at least need to display that character!
