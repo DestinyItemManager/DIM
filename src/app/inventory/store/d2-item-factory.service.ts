@@ -188,6 +188,7 @@ export interface DimItem {
   isInLoadout: boolean;
   sockets: DimSockets | null;
   percentComplete: number;
+  hidePercentage: boolean;
   talentGrid?: DimTalentGrid | null;
   stats: DimStat[] | null;
   objectives: DimObjective[] | null;
@@ -531,7 +532,8 @@ function makeItem(
     _isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     isInLoadout: false,
-    percentComplete: null, // filled in later
+    percentComplete: 0, // filled in later
+    hidePercentage: false,
     talentGrid: null, // filled in later
     stats: null, // filled in later
     objectives: null, // filled in later
@@ -625,6 +627,7 @@ function makeItem(
     if (createdItem.objectives.every((o) => o.displayStyle === 'integer')) {
       createdItem.complete = false;
       createdItem.percentComplete = 0;
+      createdItem.hidePercentage = true;
     }
   }
 

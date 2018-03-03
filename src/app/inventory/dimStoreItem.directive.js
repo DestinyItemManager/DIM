@@ -196,7 +196,7 @@ export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreServ
     : (vm.item.equipment || vm.item.location.hasTransferDestination);
 
   function processBounty(vm, item) {
-    const showBountyPercentage = !item.complete && item.objectives.every((o) => o.displayStyle !== 'integer');
+    const showBountyPercentage = !item.complete && !item.hidePercentage;
     vm.showBadge = showBountyPercentage;
 
     if (showBountyPercentage) {
