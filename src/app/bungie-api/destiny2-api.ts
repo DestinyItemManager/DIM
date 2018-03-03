@@ -76,6 +76,25 @@ export function getProgression(platform: DestinyAccount): IPromise<DestinyProfil
 }
 
 /**
+ * Get the user's kiosk status for all characters on this platform. This is a completely separate
+ * call in hopes of separating the collections page into an independent thing.
+ */
+export function getKiosks(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
+  return getProfile(platform,
+    DestinyComponentType.Characters,
+    DestinyComponentType.ItemObjectives,
+    DestinyComponentType.Kiosks,
+    DestinyComponentType.ItemInstances,
+    DestinyComponentType.ItemObjectives,
+    DestinyComponentType.ItemStats,
+    DestinyComponentType.ItemSockets,
+    DestinyComponentType.ItemTalentGrids,
+    DestinyComponentType.ItemCommonData,
+    DestinyComponentType.ItemPlugStates
+  );
+}
+
+/**
  * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh stats.
  */
 export function getCharacters(platform: DestinyAccount): IPromise<DestinyProfileResponse> {

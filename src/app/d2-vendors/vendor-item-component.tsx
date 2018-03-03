@@ -35,6 +35,9 @@ export class VendorItemComponent extends React.Component<Props, {}> {
 
     return (
       <div className="vendor-item">
+        {!item.canPurchase &&
+          <div className="locked-overlay"/>
+        }
         <a href={`http://db.destinytracker.com/d2/${settings.language}/items/${item.itemHash}`} target="_blank" rel="noopener">
           <div title={item.displayProperties.name} className="item">
             <div

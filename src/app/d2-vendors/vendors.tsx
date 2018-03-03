@@ -37,6 +37,7 @@ export default class Vendors extends React.Component<Props, State> {
     this.state = {};
   }
 
+  // TODO: pull this into a service?
   async loadVendors() {
     // TODO: defs as a property, not state
     const defs = await getDefinitions();

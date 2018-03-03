@@ -10,6 +10,7 @@ import { equals } from 'angular';
  * This is the pattern I want to follow for our main items!
  */
 export class VendorItem {
+  canPurchase: boolean;
   private vendorItemDef: DestinyVendorItemDefinition;
   private saleItem?: DestinyVendorSaleItemComponent;
   private inventoryItem: DestinyInventoryItemDefinition;
@@ -22,12 +23,14 @@ export class VendorItem {
     vendorItemDef: DestinyVendorItemDefinition,
     saleItem?: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
-    _itemComponents?: DestinyItemComponentSetOfint32
+    _itemComponents?: DestinyItemComponentSetOfint32,
+    canPurchase = true
   ) {
     this.defs = defs;
     this.vendorItemDef = vendorItemDef;
     this.saleItem = saleItem;
     this.inventoryItem = this.defs.InventoryItem.get(this.vendorItemDef.itemHash);
+    this.canPurchase = canPurchase;
   }
 
   get key() {
@@ -79,6 +82,7 @@ export class VendorItem {
   equals(other: VendorItem) {
     // Defs can be ref-compared
     return this.vendorItemDef === other.vendorItemDef &&
+      this.canPurchase === other.canPurchase &&
       // Deep equals
       equals(this.saleItem, other.saleItem);
   }

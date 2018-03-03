@@ -1,8 +1,8 @@
 import {
   DestinyItemComponentSetOfint32,
   DestinyVendorDefinition,
-  DestinyVendorItemDefinition,
-  DestinyVendorSaleItemComponent
+  DestinyVendorSaleItemComponent,
+  DestinyKioskItem
 } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
@@ -14,7 +14,8 @@ export default function VendorItems({
   vendorDef,
   defs,
   itemComponents,
-  sales
+  sales,
+  kioskItems
 }: {
   defs: D2ManifestDefinitions;
   vendorDef: DestinyVendorDefinition;
@@ -22,12 +23,10 @@ export default function VendorItems({
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   };
+  kioskItems?: DestinyKioskItem[];
 }) {
   // TODO: do this stuff in setState handlers
-  const items = sales && itemComponents
-    ? toItemList(defs, itemComponents, vendorDef.itemList, sales)
-    // If the sales should come from the server, don't show all possibilities here
-    : (vendorDef.returnWithVendorRequest ? [] : vendorDef.itemList.map((i) => new VendorItem(defs, i)));
+  const items = getItems(defs, vendorDef, itemComponents, sales, kioskItems);
 
   // TODO: sort items, maybe subgroup them
   const itemsByCategory = _.groupBy(items.filter((i) => i.canBeSold), (item: VendorItem) => item.displayCategoryIndex);
@@ -48,19 +47,29 @@ export default function VendorItems({
   );
 }
 
-function toItemList(
+function getItems(
   defs: D2ManifestDefinitions,
-  itemComponents: DestinyItemComponentSetOfint32,
-  itemList: DestinyVendorItemDefinition[],
-  sales: {
+  vendorDef: DestinyVendorDefinition,
+  itemComponents?: DestinyItemComponentSetOfint32,
+  sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
+  },
+  kioskItems?: DestinyKioskItem[]
+) {
+  if (kioskItems) {
+    return vendorDef.itemList.map((i, index) => new VendorItem(defs, i, undefined, undefined, kioskItems.some((k) => k.index === index)));
+  } else if (sales && itemComponents) {
+    const components = Object.values(sales);
+    return components.map((component) => new VendorItem(
+      defs,
+      vendorDef.itemList[component.vendorItemIndex],
+      component,
+      itemComponents
+    ));
+  } else if (vendorDef.returnWithVendorRequest) {
+    // If the sales should come from the server, don't show anything until we have them
+    return [];
+  } else {
+    return vendorDef.itemList.map((i) => new VendorItem(defs, i));
   }
-): VendorItem[] {
-  const components = Object.values(sales);
-  return components.map((component) => new VendorItem(
-    defs,
-    itemList[component.vendorItemIndex],
-    component,
-    itemComponents
-  ));
 }
