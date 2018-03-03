@@ -436,7 +436,7 @@
     "PullFromPostmasterDone_plural_female": "成功从邮政官处取回{{count}} 项物品至{{store}}.",
     "PullFromPostmasterDone_plural_male": "成功从邮政官处取回{{count}} 项物品至{{store}}.",
     "PullFromPostmasterError": "无法从邮政官处取回物品:{{error}}.",
-    "PullFromPostmasterPopupTitle": "从邮政官处领取",
+    "PullFromPostmasterPopupTitle": "从邮政官处取回物品",
     "PullMakeSpace": "空格",
     "Random": "随机",
     "Randomize": "随机装备你的武器，防具，机灵和神器?",
