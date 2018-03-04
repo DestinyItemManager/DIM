@@ -22,7 +22,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 42px;
+  height: 44px;
   background-color: #222;
   display: flex;
   flex-direction: row;
@@ -52,6 +52,16 @@
     white-space: nowrap;
   }
 
+  .link {
+    color: white;
+    cursor: pointer;
+
+    &:hover, &.active {
+      color: $orange;
+      transition: color .2s linear;
+    }
+  }
+
   .header-right {
     cursor: default;
     display: flex;
@@ -70,7 +80,8 @@
     position: absolute;
     display: block;
     overflow: auto;
-    top: 42px;
+    top: 44px;
+    height: calc(100vh - 44px);
     left: 0;
     margin: 0;
     padding: 0;
@@ -87,10 +98,11 @@
     .link {
       display: block;
       padding: 4px 2em;
-      font-size: 12px;
+      font-size: 18px;
+      margin: 0;
 
       @include phone-portrait {
-        font-size: 14px;
+        font-size: 18px;
         padding: 6px 2em;
       }
 

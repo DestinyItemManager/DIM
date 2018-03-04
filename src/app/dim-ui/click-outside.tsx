@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  onClickOutside(): void;
+  onClickOutside(event: Event): void;
 }
 
 /**
@@ -42,7 +42,7 @@ export default class ClickOutside extends React.Component<Props, {}> {
         scope.$apply(attr.dimClickAnywhereButHere);
       }, 150);
       */
-      this.props.onClickOutside();
+      this.props.onClickOutside(event);
     }
   }
 

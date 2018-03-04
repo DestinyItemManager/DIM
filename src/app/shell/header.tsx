@@ -16,6 +16,40 @@ import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/click-outside';
 import Refresh from './refresh';
 
+const destiny1Links = [
+  {
+    state: 'destiny1.inventory',
+    text: 'Header.Inventory'
+  },
+  {
+    state: 'destiny1.loadout-builder',
+    text: 'LB.LB'
+  },
+  {
+    state: 'destiny1.vendors',
+    text: 'Vendors.Vendors'
+  },
+  {
+    state: 'destiny1.record-books',
+    text: 'RecordBooks.RecordBooks'
+  },
+  {
+    state: 'destiny1.activities',
+    text: 'Activities.Activities'
+  }
+];
+
+const destiny2Links = [
+  {
+    state: 'destiny2.inventory',
+    text: 'Header.Inventory'
+  },
+  {
+    state: 'destiny2.progress',
+    text: 'Progress.Progress'
+  }
+];
+
 interface State {
   xurAvailable: boolean;
   account?: DestinyAccount;
@@ -40,7 +74,7 @@ export default class Header extends React.Component<{}, State> {
     this.state = {
       xurAvailable: false,
       dropdownOpen: false,
-      showSearch: true
+      showSearch: false
     };
   }
 
@@ -68,44 +102,10 @@ export default class Header extends React.Component<{}, State> {
     const { account, showSearch, dropdownOpen, xurAvailable } = this.state;
     const { SearchFilter } = this;
 
-    // TODO: one link map, rendered twice
     // TODO: new fontawesome
-    const destiny1Links = [
-      {
-        state: 'destiny1.inventory',
-        text: 'Header.Inventory'
-      },
-      {
-        state: 'destiny1.loadout-builder',
-        text: 'LB.LB'
-      },
-      {
-        state: 'destiny1.vendors',
-        text: 'Vendors.Vendors'
-      },
-      {
-        state: 'destiny1.record-books',
-        text: 'RecordBooks.RecordBooks'
-      },
-      {
-        state: 'destiny1.activities',
-        text: 'Activities.Activities'
-      }
-    ];
-
-    const destiny2Links = [
-      {
-        state: 'destiny2.inventory',
-        text: 'Header.Inventory'
-      },
-      {
-        state: 'destiny2.progress',
-        text: 'Progress.Progress'
-      }
-    ];
-
     const bugReportLink = $DIM_FLAVOR !== 'release';
 
+    // Generic links about DIM
     const dimLinks = (
       <>
         <Link state='about' text='Header.About'/>
@@ -123,29 +123,32 @@ export default class Header extends React.Component<{}, State> {
       ? account.destinyVersion === 1 ? destiny1Links : destiny2Links
       : [];
 
+    // Links about the current Destiny version
+    const destinyLinks = (
+      <>
+        {links.map((link) =>
+          <Link
+            key={link.state}
+            account={account}
+            state={link.state}
+            text={link.text}
+          />
+        )}
+        {account && account.destinyVersion === 1 && xurAvailable &&
+          <a className="link" onClick={this.showXur}>Xûr</a>}
+      </>
+    );
+
     return (
       <div id="header">
         <span className="menu link" onClick={this.toggleDropdown}>
           <i className="fa fa-bars" />
           {dropdownOpen &&
-            <ClickOutside className="dropdown" onClickOutside={this.toggleDropdown}>
-              {links.map((link) =>
-                <Link
-                  key={link.state}
-                  account={account}
-                  state={link.state}
-                  text={link.text}
-                />
-              )}
-              {account && account.destinyVersion === 1 && xurAvailable &&
-                <a className="link" onClick={this.showXur}>Xûr</a>}
-
+            <ClickOutside className="dropdown" onClickOutside={this.hideDropdown}>
+              {destinyLinks}
               {links.length > 0 && <hr/>}
-
               <Link state='settings' text='Settings.Settings'/>
-
               <hr/>
-
               {dimLinks}
             </ClickOutside>}
         </span>
@@ -159,21 +162,12 @@ export default class Header extends React.Component<{}, State> {
         />
 
         {dimLinks}
-
         {links.length > 0 && <span className="link first-to-go header-separator"/>}
-
-        {links.map((link) =>
-          <Link
-            key={link.state}
-            account={account}
-            state={link.state}
-            text={link.text}
-          />
-        )}
+        {destinyLinks}
 
         <span className="header-right">
-          {showSearch && <Refresh/>}
-          {showSearch &&
+          {!showSearch && <Refresh/>}
+          {!showSearch &&
             <a
               className="link fa fa-cog"
               onClick={this.goToSettings}
@@ -194,6 +188,13 @@ export default class Header extends React.Component<{}, State> {
 
   private toggleDropdown = () => {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
+  }
+
+  private hideDropdown = (event) => {
+    console.log(event.target);
+    if (!event.target.classList.contains('fa-bars')) {
+      this.setState({ dropdownOpen: false });
+    }
   }
 
   private toggleSearch = () => {
