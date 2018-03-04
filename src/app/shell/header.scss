@@ -114,12 +114,7 @@
   }
 
   .menu {
-    display: none;
     margin-right: none;
-
-    @media (max-width: 1100px) {
-      display: block;
-    }
   }
 }
 

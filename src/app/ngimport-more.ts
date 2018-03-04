@@ -1,5 +1,5 @@
 import { module } from 'angular';
-import { StateService } from '@uirouter/angularjs';
+import { StateService, TransitionService } from '@uirouter/angularjs';
 import { IDialogService } from 'ng-dialog';
 
 /**
@@ -12,8 +12,10 @@ import { IDialogService } from 'ng-dialog';
  // ngToaster
 export let toaster: any;
 export let $state: StateService;
+export let $transitions: TransitionService;
 export let loadingTracker: any;
 export let ngDialog: IDialogService;
+export let hotkeys: any;
 
 // prevent double-loading, which has the potential
 // to prevent sharing state between services
@@ -21,7 +23,9 @@ export default module('dim/ngimport', [])
   .run(['$injector', ($i: angular.auto.IInjectorService) => {
     toaster = $i.get('toaster');
     $state = $i.get('$state');
+    $transitions = $i.get('$transitions');
     loadingTracker = $i.get('loadingTracker');
     ngDialog = $i.get('ngDialog');
+    hotkeys = $i.get('hotkeys');
   }])
   .name;
