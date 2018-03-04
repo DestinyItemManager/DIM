@@ -4,11 +4,11 @@ import { t } from 'i18next';
 import { $injector } from 'ngimport';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
-import { AccountSelectComponent } from '../accounts/account-select.component';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
 import { $state, $transitions, ngDialog } from '../ngimport-more';
 import { SearchFilterComponent } from '../search/search-filter.component';
+import AccountSelect from '../accounts/account-select';
 import './header.scss';
 
 // tslint:disable-next-line:no-implicit-dependencies
@@ -30,13 +30,11 @@ export default class Header extends React.Component<{}, State> {
   private unregisterTransitionHook: Function;
   private showXur = showPopupFunction('xur', '<xur></xur>');
 
-  private AccountSelect: React.ComponentClass<{ currentAccount: DestinyAccount }>;
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
 
   constructor(props) {
     super(props);
 
-    this.AccountSelect = angular2react<{ currentAccount: DestinyAccount }>('accountSelect', AccountSelectComponent, $injector);
     this.SearchFilter = angular2react<{ account: DestinyAccount }>('dimSearchFilter', SearchFilterComponent, $injector);
 
     this.state = {
@@ -68,7 +66,7 @@ export default class Header extends React.Component<{}, State> {
 
   render() {
     const { account, showSearch, dropdownOpen, xurAvailable } = this.state;
-    const { AccountSelect, SearchFilter } = this;
+    const { SearchFilter } = this;
 
     // TODO: one link map, rendered twice
     // TODO: new fontawesome
