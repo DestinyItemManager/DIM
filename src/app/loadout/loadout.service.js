@@ -425,7 +425,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
             amountNeeded -= amountToMove;
             totalAmount += amountToMove;
 
-            promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove));
+            promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove, loadoutItemIds));
           }
         }
       } else {

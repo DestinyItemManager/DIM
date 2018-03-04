@@ -4,6 +4,7 @@
 * Fixed display of masterwork mod and ornaments.
 * Remove Auras from inventory since they're part of Emblems now.
 * Fancy new emblems show all their counters correctly.
+* Improved moving mods, shaders, and consumables via search loadouts. They can now go to any character (not just the active one) and aren't limited to 9 items.
 
 # 4.41.1
 

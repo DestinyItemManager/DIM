@@ -743,6 +743,11 @@ export function ItemService(
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
   function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: { [storeId: number]: number }): IPromise<DimItem> {
+    // Reassign the target store to the active store if we're moving the item to an account-wide bucket
+    if (!target.isVault && item.bucket.accountWide) {
+      target = getStoreService(item).getActiveStore()!;
+    }
+
     return isValidTransfer(equip, target, item, excludes, reservations)
       .then(() => {
         const storeService = getStoreService(item);
