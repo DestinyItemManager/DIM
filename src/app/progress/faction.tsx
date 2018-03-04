@@ -11,6 +11,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { sum } from '../util';
 import './faction.scss';
+import { PressTip } from '../dim-ui/press-tip';
 
 interface FactionProps {
   factionProgress: DestinyFactionProgression;
@@ -37,17 +38,20 @@ export function Faction(props: FactionProps) {
   return (
     <div
       className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}
-      title={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
     >
-      <div className="faction-icon">
-        <svg viewBox="0 0 48 48">
-          <image xlinkHref={bungieNetPath(factionDef.displayProperties.icon)} width="48" height="48" />
-          {factionProgress.progressToNextLevel > 0 &&
-            <polygon strokeDasharray="121.622368" style={style} fillOpacity="0" stroke="#FFF" strokeWidth="3" points="24,2.5 45.5,24 24,45.5 2.5,24" strokeLinecap="butt"/>
-          }
-        </svg>
-        <div className={classNames('item-stat', 'item-faction', { 'purchase-unlocked': factionProgress.level >= 10 })}>{factionProgress.level}</div>
-      </div>
+      <PressTip
+        tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
+      >
+        <div className="faction-icon">
+          <svg viewBox="0 0 48 48">
+            <image xlinkHref={bungieNetPath(factionDef.displayProperties.icon)} width="48" height="48" />
+            {factionProgress.progressToNextLevel > 0 &&
+              <polygon strokeDasharray="121.622368" style={style} fillOpacity="0" stroke="#FFF" strokeWidth="3" points="24,2.5 45.5,24 24,45.5 2.5,24" strokeLinecap="butt"/>
+            }
+          </svg>
+          <div className={classNames('item-stat', 'item-faction', { 'purchase-unlocked': factionProgress.level >= 10 })}>{factionProgress.level}</div>
+        </div>
+      </PressTip>
       <div className="faction-info">
         <div className="faction-name" title={vendorDef.displayProperties.description}>{vendorDef.displayProperties.name}</div>
         <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
