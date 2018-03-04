@@ -234,8 +234,6 @@ module.exports = (env) => {
         '$featureFlags.googleAnalyticsForRouter': JSON.stringify(true),
         // Debug ui-router
         '$featureFlags.debugRouter': JSON.stringify(false),
-        // Show drag and drop on dev only
-        '$featureFlags.dnd': JSON.stringify(false),
         // Send exception reports to Sentry.io on beta only
         '$featureFlags.sentry': JSON.stringify(env === 'beta')
       }),
