@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import { getToken } from '../oauth/oauth-token.service';
 import { t } from 'i18next';
 import { $q, $rootScope } from 'ngimport';
-import { StorageAdapter } from './sync.service';
+import { StorageAdapter, DimData } from './sync.service';
 
 declare const gapi: any;
 declare global {
@@ -13,8 +13,8 @@ declare global {
 
 export class GoogleDriveStorage implements StorageAdapter {
   supported = $featureFlags.gdrive;
-  // TODO: only enable after login, and force sync when enabled
-  enabled = false;
+  // This means we enable gdrive at first, in case you're signed in, so we can block on loading it.
+  enabled = Boolean(localStorage.getItem('gdrive-fileid'));
   name = 'GoogleDriveStorage';
 
   // drive api data
@@ -38,26 +38,36 @@ export class GoogleDriveStorage implements StorageAdapter {
     this.ready = new Promise((resolve) => this.readyResolve = resolve);
   }
 
-  get() {
+  get(): Promise<DimData> {
     return this.ready
-      .then(() => this._get());
+      .then(() => {
+        if (this.enabled) {
+          return this._get();
+        } else {
+          return {};
+        }
+      });
   }
 
   // TODO: set a timestamp for merging?
-  set(value) {
+  set(value: object): Promise<void> {
     return this.ready
-      .then(() => this.getFileId())
-      .then((fileId) => {
-        return $q.when(gapi.client.request({
-          path: `/upload/drive/v3/files/${fileId}`,
-          method: 'PATCH',
-          params: {
-            uploadType: 'media',
-            alt: 'json'
-          },
-          body: value
-        }))
-          .then(() => value)
+      .then(() => {
+        if (!this.enabled) {
+          return;
+        }
+        return this.getFileId()
+          .then((fileId) => {
+            return $q.when(gapi.client.request({
+              path: `/upload/drive/v3/files/${fileId}`,
+              method: 'PATCH',
+              params: {
+                uploadType: 'media',
+                alt: 'json'
+              },
+              body: value
+            }));
+          })
           .catch((resp) => {
             // TODO: error handling
             // this.revokeDrive();
@@ -101,6 +111,7 @@ export class GoogleDriveStorage implements StorageAdapter {
           return this.updateSigninStatus(auth.isSignedIn.get())
             .then(() => {
               if (auth.isSignedIn.get()) {
+                // TODO: switch to observable/event-emitter
                 $rootScope.$broadcast('gdrive-sign-in');
               }
               this.readyResolve();
