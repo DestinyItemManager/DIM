@@ -14,7 +14,7 @@
   },
   "Bucket": {
     "Armor": "防具",
-    "General": "普通",
+    "General": "综合",
     "Inventory": "库存",
     "Postmaster": "邮政官",
     "Progress": "进度",
@@ -44,19 +44,19 @@
     "NotConnectedOrBlocked": "你可能没有连接到互联网，或是广告拦截和隐私拓展阻止了Bungie.net.",
     "NotLoggedIn": "请授权DIM以使用此应用程序",
     "Throttled": "Bungie API流量限制已超出。请稍后重试。",
-    "Twitter": "获取状态更新：",
+    "Twitter": "查看服务器更新状态:",
     "UnknownError": "来自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商贩数据不可用."
   },
   "Compare": {
     "All": "{{type}} 对比({{quantity}})",
-    "Archetype": "同类型对比({{quantity}})",
+    "Archetype": "同系列对比({{quantity}})",
     "ButtonHelp": "对比物品",
     "Close": "关闭",
     "Compare": "对比",
     "Error": {
       "Archetype": "无法与此物品进行比较，因为它并不是{{type}}.",
-      "Class": "无法与此物品进行比较，因为它并不属于{{class}}."
+      "Class": "无法与此物品进行比较，因为它并不适用于{{class}}."
     },
     "ItemCount": "您有{{num}} 个物品.",
     "Rating": "评分",
@@ -76,7 +76,7 @@
   },
   "Destiny2": {
     "Banner": "DIM将支持Destiny2",
-    "ComingSoon": "我们将游戏上线后不久在DIM中支持您的天命2角色。请给我们几个星期的时间来学习这个游戏（并且让我们也玩一会儿！）。"
+    "ComingSoon": "我们将游戏上线后不久在DIM中支持您的命运2角色。请给我们几个星期的时间来学习这个游戏（并且让我们也玩一会儿！）。"
   },
   "DidYouKnow": {
     "Collapse": "您刚才在DIM中隐藏了一个分区！隐藏您不需要的部分能使得使用更加方便。",
@@ -165,8 +165,8 @@
     "Class": "按照职业类别显示.",
     "ClickFilters": "点击下方的过滤器或使用搜索框查找.",
     "Combine": "过滤器可以使用and逻辑运算符进行组合判断，比如搜索\"{{example}}\"此时将会显示所有光等大于300且是电弧属性的物品，过滤器也可以使用\"{{not}}\"逻辑运算符来进行否定判断，比如\"{{notexample}}\"来查找所有不是记忆水晶的物品。",
-    "ContributeLight": "高亮显示可提高自身光等的物品.",
-    "ContributePower": "高亮显示可提高自身光等的物品.",
+    "ContributeLight": "显示拥有光等的物品.",
+    "ContributePower": "显示拥有光等的物品.",
     "DamageType": "按照伤害类型显示.",
     "Description": "描述",
     "Dupe": "显示重复物品",
@@ -251,7 +251,7 @@
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
     "Filters": "过滤器",
     "Inventory": "背包",
-    "Refresh": "刷新Destiny数据",
+    "Refresh": "刷新命运数据",
     "ReportBug": "反馈问题",
     "Shop": "商店",
     "SupportDIM": "支持者"
@@ -409,7 +409,7 @@
     "GatherEngramsExceptExotics": "异域",
     "GatherTokens": "收集声望物品",
     "ItemLeveling": "物品等级",
-    "ItemsWithIcon": "带有此图标的物品将被装备。您可以通过再次点击改物品来选择是否自动装备它。",
+    "ItemsWithIcon": "带有此图标的物品将被用于自动装备。您可以通过再次点击该物品来选择是否自动装备它。",
     "LoadoutName": "配装名称...",
     "Loadouts": "配装",
     "MakeRoom": "为邮政官腾出空间",
@@ -450,15 +450,15 @@
     "VendorsCannotEquip": "这些物品无法被装备:"
   },
   "Manifest": {
-    "Build": "生成天命信息数据库",
-    "Download": "从Bungie下载最新的天命数据",
-    "Error": "天命数据加载错误:\n{{error}}\n请刷新重试.",
-    "Load": "载入保存的天命数据",
-    "LoadCharInv": "加载天命角色和背包",
-    "Outdated": "过期的天命数据",
+    "Build": "生成命运信息数据库",
+    "Download": "从Bungie下载最新的命运数据",
+    "Error": "命运数据加载错误:\n{{error}}\n请刷新重试.",
+    "Load": "载入保存的命运数据",
+    "LoadCharInv": "加载命运角色和背包",
+    "Outdated": "过期的命运数据",
     "OutdatedExplanation": "Bungie更新了他们的Destiny信息数据库。重新加载DIM以获取最新信息。请注意，在Bungie更新Destiny之后的几个小时内，在DIM中有些操作可能无法实现，因为新数据通过它们的系统传播。",
-    "Save": "保存最新的天命数据",
-    "Unzip": "解压最新的天命数据"
+    "Save": "保存最新的命运数据",
+    "Unzip": "解压最新的命运数据"
   },
   "MoveAmount": {
     "Decrement": "减少一个",
@@ -584,13 +584,13 @@
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)"
   },
   "Storage": {
-    "BrowserMayClearData": "如果内存空间不足或长时间未访问DIM，浏览器可能会删除这些信息。",
+    "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
     "ChromeSyncStorage": "谷歌浏览器同步(仅限于扩展)",
     "ClearIgnoredUsers": "清除不理性的评论",
     "Details": {
       "ChromeSyncStorage": "如果您已登陆到Chrome，数据将会被同步到其它登陆此Chrome账号的设备上。这与DIM网站无关。",
       "GoogleDriveStorage": "DIM可以保存数据到Google云端硬盘。如果您在多个浏览器中登陆了Google云端硬盘，您的数据将在多处共享。数据是根据Bungie账号来存储的。",
-      "IndexedDBStorage": "本地存储仅在当前浏览器上保存您的信息."
+      "IndexedDBStorage": "本地存储仅在当前浏览器上保存您的数据信息."
     },
     "Disabled": "已禁用",
     "DriveLogout": "注销Google云端硬盘",
@@ -658,10 +658,10 @@
       "BungieCopyright": "Bungie对所有图片和内容享有版权。如有任何疑问，请与我们联系。",
       "ContactUs": "联系我们",
       "Discord": "Discord",
-      "DiscordHelp": "提出问题,反馈建议,或在Discord频道中获得支援.",
-      "FAQ": "常见问题(FAQ)",
+      "DiscordHelp": "报告问题,反馈建议,或在Discord频道中获得支援。",
+      "FAQ": "常见问题解答(FAQ)",
       "FAQAccess": "DIM是如何得到我的Destiny数据的?",
-      "FAQAccessAnswer": "我们使用Bungie的APP身份验证来获取权限以便查看和移动您的物品，这与Companion APP的工作原理相同。因此DIM绝不会窃取您的用户名或密码。",
+      "FAQAccessAnswer": "我们使用Bungie的APP身份验证获取权限以便查看和移动您的物品，这与Companion APP的工作原理相同。因此DIM绝不会窃取您的用户名或密码。",
       "FAQD2": "DIM是否会支持Destiny2？",
       "FAQD2Answer": "是的！我们将在Destiny2上线后不久提供对其的支持（并且我们已经有幸游玩了Destiny2）。请期待DIM能执行一些简单的功能（比如显示和移动您的物品）并且我们正在开发一些很酷的功能。DIM将会使用同一个网站同时支持Destiny1和Destiny2。您将能够在其中来回切换您的Destiny1和Destiny2角色。",
       "FAQDupeGally": "嘿，DIM复制了我的Gjallarhorn！",
@@ -670,37 +670,37 @@
       "FAQKeyboardAnswer": "当然! 按下\"?\"键查看所有可用的快捷键.",
       "FAQLogout": "如何注销DIM？",
       "FAQLogoutAnswer": "点击屏幕右上角的账户，然后选择“注销”。",
-      "FAQLostItem": "在使用你们的工具的过程中我丢失了我的物品！",
-      "FAQLostItemAnswer": "Bungie不允许APP删除物品（甚至是他们自己的官方APP！）。这似乎看起来更像是一个数据传输失败，把您的物品留在另一个角色的保险库里。你可以试图在那里找到他们。如果在那里也没有出现，请刷新该页面。查看此链接{{link}} 或者在游戏中查看物品是否存在。我们肯定东西还在。",
+      "FAQLostItem": "在使用你们网站的过程中我丢失了我的物品！",
+      "FAQLostItemAnswer": "Bungie Api不允许APP删除物品（包括他们自己的官方APP）。这看起来似乎更像是一次数据传输错误，把您的物品遗留在了另一个角色的保险库里。你可以试试看在其它角色上能否找到。如果其它角色上也没有，请刷新下页面。然后打开此链接{{link}} 查看，或者在游戏中查看物品是否存在。不过我们肯定东西没有丢失。",
       "FAQMobile": "DIM是否会支持移动端？是否会提供一个APP？",
-      "FAQMobileAnswer": "现在，DIM网站可以在手机或平板中加载了！我们仍在努力让我们的界面在移动端展现得更好。请务必将保存DIM成书签放到您的主屏幕上。我们也许会在未来发布一款APP，但是它将会和现在的网站完全一致。",
+      "FAQMobileAnswer": "现在，DIM网站已经可以在手机或平板中加载了！我们仍在努力让我们的界面在移动端上展现得更好。请务必将DIM保存为书签放到您的主界面上。当然，未来我们也许会发布一款APP，但它肯定会和现在的网站完全一致的。",
       "GitHub": "Github",
-      "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 的项目地址。",
-      "Header": "关于天命物品管理器 (DIM)",
+      "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 上的项目地址！",
+      "Header": "关于命运物品管理器 (DIM)",
       "HowItsMade": "DIM是基于Bungie.net和Destiny Companion App所使用的相同服务编译的。DIM能从PlayStation, Xbox和PC平台读取您守护者的背包和保险库。您也可以用拖拽来移动物品。",
       "Reddit": "Reddit",
-      "RedditHelp": "如果您有任何疑问，评论或者建议 - 请务必让我们知道！",
-      "Schedule_beta": "这个测试版的DIM每当我们更改代码时就会应用更新 - 它将应用最新的功能和修复，但是也会有最新的bugs！",
+      "RedditHelp": "如果您有任何疑问，请留下评论或者建议 - 请务必让我们知道！",
+      "Schedule_beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",
       "Schedule_release": "DIM将于每周六下午进行例行版本更新(太平洋时间).",
       "Translation": "加入翻译小组!",
-      "TranslationText": "我们使用{{link}} 来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么加入我们的翻译小组吧！",
+      "TranslationText": "我们使用{{link}} 来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́ )✧！",
       "Twitter": "Twitter",
-      "TwitterHelp": "请务必关注我们，以便了解最新动态和实时应用程序状态信息。",
+      "TwitterHelp": "请务必关注我们！以便了解我们的最新动向和实时状态更新信息。",
       "Version": "版本{{version}}({{flavor}})，编译于：{{date}}"
     },
     "Login": {
       "Auth": "用Bungie.Net授权",
-      "Explanation": "允许DIM查看并修改您的天命角色，保险库和进度。",
+      "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "您希望了解更多吗？",
-      "Permission": "我们需要您的许可..."
+      "Permission": "我们需要您的授权..."
     },
     "Support": {
       "Backers": "支持者",
       "BackersDetail": "您可以选择一次性捐助或者每月捐助，以便我们能继续积极地开发。",
-      "FreeToDownload": "DIM是一款免费下载使用的产品。DIM是一个开源项目，开放给任何人加以修改提高。您将不会在DIM中看到任何一条广告。这是我们的承诺。",
-      "OpenCollective": "我们正使用{{link}} 服务作为我们提供给开发者的酬劳，以答谢他们在这个项目上的贡献。",
-      "Sponsors": "老爷",
-      "SponsorsDetail": "成为老爷并且获得一个带有您logo的友情链接。",
+      "FreeToDownload": "DIM是一款免费下载使用的产品。同时DIM也是一个开源项目，任何人都可以帮助完善它。您永远不会在DIM上看到任何一条广告。这是我们的承诺！",
+      "OpenCollective": "我们正使用{{link}} 服务为我们的开发者提供酬劳，以答谢他们在这个项目上的贡献。",
+      "Sponsors": "赞助商",
+      "SponsorsDetail": "成为赞助商并且获得一个带有您logo的友情链接。",
       "Support": "赞助DIM",
       "Teespring": "我们也有印有我们新logo的衬衫出售{{link}}"
     }
