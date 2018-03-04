@@ -4,6 +4,7 @@ import { reportException } from '../exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
 import { BungieMembershipType } from 'bungie-api-ts/user';
+import { $rootScope } from 'ngimport';
 
 export interface DimData {
   platformType?: BungieMembershipType;
@@ -62,6 +63,12 @@ export const SyncService = {
 
   init() {
     GoogleDriveStorageAdapter.init();
+
+    $rootScope.$on('gdrive-sign-in', () => {
+      // Force refresh data
+      console.log("GDrive sign in, refreshing data");
+      this.get(true);
+    });
   },
 
   /**

@@ -14,7 +14,7 @@ declare global {
 export class GoogleDriveStorage implements StorageAdapter {
   supported = $featureFlags.gdrive;
   // TODO: only enable after login, and force sync when enabled
-  enabled = Boolean(localStorage.getItem('gdrive-fileid'));
+  enabled = false;
   name = 'GoogleDriveStorage';
 
   // drive api data
@@ -263,6 +263,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       if ($featureFlags.debugSync) {
         console.log('signed in to Google Drive');
       }
+      this.enabled = true;
       return this.getFileId();
     } else {
       if ($featureFlags.debugSync) {
