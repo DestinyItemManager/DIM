@@ -4,6 +4,7 @@
 * Fixed display of masterwork mod and ornaments.
 * Remove Auras from inventory since they're part of Emblems now.
 * Fancy new emblems show all their counters correctly.
+* Pausing over a drop zone to trigger the move-amount dialog works every time now, not just the first time.
 
 # 4.41.1
 
