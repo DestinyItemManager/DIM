@@ -35,11 +35,21 @@
       <span class="link"
          ng-if="$ctrl.destinyVersion == 1 && $ctrl.xur.available"
          ng-click="$ctrl.showXur($event)">Xûr</span>
-      <a class="link second-to-go"
+      <a class="link"
          ui-sref-active="active"
          ui-sref="destiny2.progress($ctrl.account)"
          ng-if="$ctrl.destinyVersion == 2"
          ng-i18next="Progress.Progress"></a>
+      <a class="link"
+         ui-sref-active="active"
+         ui-sref="destiny2.vendors($ctrl.account)"
+         ng-if="$ctrl.destinyVersion == 2 && $ctrl.featureFlags.vendors"
+         ng-i18next="Vendors.Vendors"></a>
+      <a class="link"
+         ui-sref-active="active"
+         ui-sref="destiny2.collections($ctrl.account)"
+         ng-if="$ctrl.destinyVersion == 2 && $ctrl.featureFlags.vendors"
+         ng-i18next="Vendors.Collections"></a>
       <hr>
 
       <span class="link"
@@ -137,6 +147,16 @@
      ui-sref="destiny2.progress($ctrl.account)"
      ng-if="$ctrl.destinyVersion == 2"
      ng-i18next="Progress.Progress"></a>
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny2.vendors($ctrl.account)"
+     ng-if="$ctrl.destinyVersion == 2 && $ctrl.featureFlags.vendors"
+     ng-i18next="Vendors.Vendors"></a>
+  <a class="link second-to-go"
+     ui-sref-active="active"
+     ui-sref="destiny2.collections($ctrl.account)"
+     ng-if="$ctrl.destinyVersion == 2 && $ctrl.featureFlags.vendors"
+     ng-i18next="Vendors.Collections"></a>
 
   <span class="header-right">
     <refresh

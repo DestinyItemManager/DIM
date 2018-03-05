@@ -235,7 +235,9 @@ module.exports = (env) => {
         // Debug ui-router
         '$featureFlags.debugRouter': JSON.stringify(false),
         // Send exception reports to Sentry.io on beta only
-        '$featureFlags.sentry': JSON.stringify(env === 'beta')
+        '$featureFlags.sentry': JSON.stringify(env === 'beta'),
+        // D2 Vendors
+        '$featureFlags.vendors': JSON.stringify(env !== 'release'),
       }),
 
       new webpack.SourceMapDevToolPlugin({

@@ -33,7 +33,8 @@ function HeaderController(
   vm.settings = settings;
 
   vm.featureFlags = {
-    bugReportLink: $DIM_FLAVOR !== 'release'
+    bugReportLink: $DIM_FLAVOR !== 'release',
+    vendors: $featureFlags.vendors
   };
 
   vm.$onInit = function() {

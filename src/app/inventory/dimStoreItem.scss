@@ -81,9 +81,9 @@ dim-store-item {
 
 .item-img {
   @include item-size;
-  background-color: #5c7183;
   border: 2px solid #DDD;
   background-size: cover;
+  background-repeat: no-repeat;
   display: block;
   box-sizing: content-box;
   &:focus {
@@ -91,6 +91,9 @@ dim-store-item {
   }
   &.complete {
     border-color: $gold;
+  }
+  &.transparent {
+    border-color: transparent;
   }
   &.diamond {
     background-color: transparent;

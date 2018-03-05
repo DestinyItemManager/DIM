@@ -9,7 +9,8 @@ import {
   DestinyMilestoneRewardEntry,
   DestinyObjectiveProgress,
   DestinyQuestStatus,
-  DestinyActivityModifierDefinition
+  DestinyActivityModifierDefinition,
+  DestinyCharacterComponent
   } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
@@ -17,11 +18,13 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
+import { $state } from '../ngimport-more';
 import './milestone.scss';
 
 interface MilestoneProps {
   milestone: DestinyMilestone;
   defs: D2ManifestDefinitions;
+  character: DestinyCharacterComponent;
 }
 
 /**
@@ -29,7 +32,7 @@ interface MilestoneProps {
  * There are several forms of Milestone.
  */
 export function Milestone(props: MilestoneProps) {
-  const { milestone, defs } = props;
+  const { milestone, defs, character } = props;
 
   const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
 
@@ -47,6 +50,8 @@ export function Milestone(props: MilestoneProps) {
       </>
     );
   } else if (milestone.vendors) {
+    const click = () => $state.go('destiny2.vendor', { id: milestone.vendors[0].vendorHash, characterId: character.characterId });
+
     return (
       <div className="milestone-quest">
         <div className="milestone-icon">
@@ -54,7 +59,12 @@ export function Milestone(props: MilestoneProps) {
         </div>
         <div className="milestone-info">
           <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
-          <div className="milestone-description">{milestoneDef.displayProperties.description}</div>
+          <div className="milestone-description">
+            {$featureFlags.vendors
+              ? <a onClick={click}>{milestoneDef.displayProperties.description}</a>
+              : milestoneDef.displayProperties.description
+            }
+          </div>
         </div>
       </div>
     );

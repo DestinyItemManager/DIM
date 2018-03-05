@@ -1,0 +1,40 @@
+// This inherits a lot of styles from ../vendors/vendors.scss
+
+.under-construction {
+  background-color: #0a40c2;
+  border: 1px solid #256eff;
+  margin-bottom: 1em;
+  padding: .5em;
+  text-align: center;
+  font-size: 14px;
+}
+
+.d2-vendors {
+  .vendor-icon {
+    margin: 5px 5px 5px 0;
+  }
+}
+
+.vendor-featured {
+  .vendor-featured-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    h1 {
+      margin: 0;
+    }
+
+    img, .faction-icon {
+      position: relative;
+      height: 48px;
+      width: 48px;
+      margin-right: 8px;
+    }
+  }
+}
+
+.vendor-tile {
+  height: 54px;
+  width: 123px;
+}

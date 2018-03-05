@@ -8,10 +8,14 @@ import {
   equipItems as equipItemsApi,
   getDestinyManifest,
   getProfile as getProfileApi,
+  getVendor as getVendorApi,
+  getVendors as getVendorsApi,
   pullFromPostmaster,
   ServerResponse,
   setItemLockState,
-  transferItem
+  transferItem,
+  DestinyVendorResponse,
+  DestinyVendorsResponse
   } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as _ from 'underscore';
@@ -72,6 +76,25 @@ export function getProgression(platform: DestinyAccount): IPromise<DestinyProfil
 }
 
 /**
+ * Get the user's kiosk status for all characters on this platform. This is a completely separate
+ * call in hopes of separating the collections page into an independent thing.
+ */
+export function getKiosks(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
+  return getProfile(platform,
+    DestinyComponentType.Characters,
+    DestinyComponentType.ItemObjectives,
+    DestinyComponentType.Kiosks,
+    DestinyComponentType.ItemInstances,
+    DestinyComponentType.ItemObjectives,
+    DestinyComponentType.ItemStats,
+    DestinyComponentType.ItemSockets,
+    DestinyComponentType.ItemTalentGrids,
+    DestinyComponentType.ItemCommonData,
+    DestinyComponentType.ItemPlugStates
+  );
+}
+
+/**
  * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh stats.
  */
 export function getCharacters(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
@@ -109,6 +132,47 @@ function getProfile(platform: DestinyAccount, ...components: DestinyComponentTyp
 
     return response.Response;
   }) as IPromise<DestinyProfileResponse>;
+}
+
+export function getVendor(account: DestinyAccount, characterId: string, vendorHash: number): IPromise<DestinyVendorResponse> {
+  return getVendorApi(httpAdapter, {
+    characterId,
+    destinyMembershipId: account.membershipId,
+    membershipType: account.platformType,
+    components: [
+      DestinyComponentType.Vendors,
+      DestinyComponentType.VendorSales,
+      DestinyComponentType.ItemInstances,
+      DestinyComponentType.ItemObjectives,
+      DestinyComponentType.ItemStats,
+      DestinyComponentType.ItemSockets,
+      DestinyComponentType.ItemTalentGrids,
+      DestinyComponentType.ItemCommonData,
+      DestinyComponentType.ItemPlugStates
+    ],
+    vendorHash
+  })
+  .then((response) => response.Response) as IPromise<DestinyVendorResponse>;
+}
+
+export function getVendors(account: DestinyAccount, characterId: string): IPromise<DestinyVendorsResponse> {
+  return getVendorsApi(httpAdapter, {
+    characterId,
+    destinyMembershipId: account.membershipId,
+    membershipType: account.platformType,
+    components: [
+      DestinyComponentType.Vendors,
+      DestinyComponentType.VendorSales,
+      DestinyComponentType.ItemInstances,
+      DestinyComponentType.ItemObjectives,
+      DestinyComponentType.ItemStats,
+      DestinyComponentType.ItemSockets,
+      DestinyComponentType.ItemTalentGrids,
+      DestinyComponentType.ItemCommonData,
+      DestinyComponentType.ItemPlugStates
+    ]
+  })
+  .then((response) => response.Response) as IPromise<DestinyVendorsResponse>;
 }
 
 /**
