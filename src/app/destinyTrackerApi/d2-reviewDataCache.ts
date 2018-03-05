@@ -1,14 +1,17 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DimWorkingUserReview, DtrUserReview, DtrBulkItem } from '../item-review/destiny-tracker.service';
 
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
  * Tailored for the Destiny 2 version.
- *
- * @class D2ReviewDataCache
  */
 class D2ReviewDataCache {
+  _maxTotalVotes: number;
+  _itemStores: DimWorkingUserReview[];
+  _itemTransformer: D2ItemTransformer;
   constructor() {
     this._itemTransformer = new D2ItemTransformer();
     this._itemStores = [];
@@ -23,13 +26,8 @@ class D2ReviewDataCache {
 
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
-   *
-   * @param {any} item
-   * @returns {any}
-   *
-   * @memberof D2ReviewDataCache
    */
-  getRatingData(item) {
+  getRatingData(item: DimItem): DimWorkingUserReview | null {
     return this._getMatchingItem(item) || null;
   }
 
@@ -45,17 +43,17 @@ class D2ReviewDataCache {
     return rating.toFixed(1);
   }
 
-  _getDownvoteMultiplier(dtrRating) {
-    if (dtrRating.votes.total > (this._maxTotalVotes * .75)) {
-      return 1.0;
+  _getDownvoteMultiplier(dtrRating: DtrBulkItem) {
+    if (dtrRating.votes.total > (this._maxTotalVotes * 0.75)) {
+      return 1;
     }
 
-    if (dtrRating.votes.total > (this._maxTotalVotes * .50)) {
+    if (dtrRating.votes.total > (this._maxTotalVotes * 0.5)) {
       return 1.5;
     }
 
-    if (dtrRating.votes.total > (this._maxTotalVotes * .25)) {
-      return 2.0;
+    if (dtrRating.votes.total > (this._maxTotalVotes * 0.25)) {
+      return 2;
     }
 
     return 2.5;
@@ -80,10 +78,6 @@ class D2ReviewDataCache {
 
   /**
    * Add (and track) the community scores.
-   *
-   * @param {List<DtrRating>} dtrRating
-   *
-   * @memberof ReviewDataCache
    */
   addScores(bulkRankings) {
     if (bulkRankings) {
@@ -97,10 +91,6 @@ class D2ReviewDataCache {
 
   /**
    * Add (and track) the community score.
-   *
-   * @param {any} dtrRating
-   *
-   * @memberof ReviewDataCache
    */
   _addScore(dtrRating) {
     const score = this._getScore(dtrRating);
@@ -115,15 +105,14 @@ class D2ReviewDataCache {
    * happens in the background, then they go back to the item.  Or they post data and the DTR API
    * is still feeding back cached data or processing it or whatever.
    * The expectation is that this will be building on top of reviews data that's already been supplied.
-   *
-   * @param {any} item
-   * @param {any} userReview
-   *
-   * @memberof D2ReviewDataCache
    */
-  addUserReviewData(item,
+  addUserReviewData(item: DimItem,
                     userReview) {
     const matchingItem = this._getMatchingItem(item);
+
+    if (!matchingItem) {
+      return;
+    }
 
     this._markItemAsLocallyCached(item, true);
 
@@ -140,11 +129,6 @@ class D2ReviewDataCache {
   /**
    * Keep track of expanded item review data from the DTR API for this DIM store item.
    * The expectation is that this will be building on top of community score data that's already been supplied.
-   *
-   * @param {any} item
-   * @param {any} reviewsData
-   *
-   * @memberof D2ReviewDataCache
    */
   addReviewsData(item,
                  reviewsData) {
@@ -164,12 +148,8 @@ class D2ReviewDataCache {
 
   /**
    * Fetch the collection of review data that we've stored locally.
-   *
-   * @returns {array}
-   *
-   * @memberof D2ReviewDataCache
    */
-  getItemStores() {
+  getItemStores(): DimWorkingUserReview[] {
     return this._itemStores;
   }
 
@@ -178,28 +158,30 @@ class D2ReviewDataCache {
     item.isLocallyCached = isCached;
   }
 
-  markReviewAsIgnored(writtenReview) {
+  markReviewAsIgnored(writtenReview: DtrUserReview): void {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(item,
+  markItemAsReviewedAndSubmitted(item: DimItem,
                                  userReview) {
     this._markItemAsLocallyCached(item, false);
     const matchingItem = this._getMatchingItem(item);
 
-    if (matchingItem.reviews) {
-      matchingItem.reviews = _.reject(matchingItem.reviews, { isReviewer: true });
-    } else {
-      matchingItem.reviews = [];
+    if (!matchingItem) {
+      return;
     }
 
+    // remove their old review from the local cache
+    matchingItem.reviews = (matchingItem.reviews) ?
+       matchingItem.reviews.filter((review) => !review.isReviewer) :
+       [];
+
+    // and add their new review to the local cache
     matchingItem.reviews.unshift(userReview);
   }
 
   /**
    * Clears all items (in case of, say, platform re-selection).
-   *
-   * @memberof D2ReviewDataCache
    */
   clearAllItems() {
     this._itemStores = [];
@@ -212,20 +194,17 @@ class D2ReviewDataCache {
    * 10 minutes, then we'll purge it (so that it can be re-pulled).
    *
    * Item is just an item from DIM's stores.
-   *
-   * @param {any} item
-   *
-   * @memberof D2ReviewDataCache
    */
-  eventuallyPurgeCachedData(item) {
+  eventuallyPurgeCachedData(item: DimItem) {
     const tenMinutes = 1000 * 60 * 10;
-    const self = this;
 
     setTimeout(() => {
-      const matchingItem = self._getMatchingItem(item);
+      const matchingItem = this._getMatchingItem(item);
 
-      matchingItem.reviews = null;
-      matchingItem.reviewsDataFetched = false;
+      if (matchingItem) {
+        matchingItem.reviews = [];
+        matchingItem.reviewsDataFetched = false;
+      }
     },
       tenMinutes);
   }

@@ -21,7 +21,8 @@ import {
   DestinyStatDefinition,
   DestinyTalentGridDefinition,
   ItemLocation,
-  TransferStatuses
+  TransferStatuses,
+  DestinyUnlockValueUIStyle
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
@@ -35,6 +36,7 @@ import { NewItemsService } from './new-items.service';
 import { DimItemInfo, ItemInfoSource } from '../dim-item-info';
 import { $q } from 'ngimport';
 import { t } from 'i18next';
+import { DtrUserReview } from '../../item-review/destiny-tracker.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -71,6 +73,7 @@ export interface DimObjective {
   complete: boolean;
   boolean: boolean;
   display: string;
+  displayStyle: string | null;
 }
 
 export interface DimFlavorObjective {
@@ -104,12 +107,16 @@ export interface DimTalentGrid {
   complete: boolean;
 }
 
+export interface DestinyInventoryItemDefinitionWithRating extends DestinyInventoryItemDefinition {
+  bestRated?: boolean;
+}
+
 export interface DimSocket {
   plug: DestinyInventoryItemDefinition | null;
   reusablePlugs: DestinyInventoryItemDefinition[];
   enabled: boolean;
   enableFailReasons: string;
-  plugOptions: DestinyInventoryItemDefinition[];
+  plugOptions: DestinyInventoryItemDefinitionWithRating[];
   plugOptionsPerks: DestinySandboxPerkDefinition[];
   plugObjectives: DestinyObjectiveProgress[];
 }
@@ -181,6 +188,7 @@ export interface DimItem {
   isInLoadout: boolean;
   sockets: DimSockets | null;
   percentComplete: number;
+  hidePercentage: boolean;
   talentGrid?: DimTalentGrid | null;
   stats: DimStat[] | null;
   objectives: DimObjective[] | null;
@@ -205,9 +213,16 @@ export interface DimItem {
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
   cons: string;
+  userRating: number;
   userReview: string;
   userVote: number;
   dtrRating: number;
+  dtrRatingCount: number;
+  dtrHighlightedRatingCount: number;
+  reviews: DtrUserReview[];
+  userReviewPros: string;
+  userReviewCons: string;
+  ratingCount: number;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
@@ -497,7 +512,7 @@ function makeItem(
     equipped: Boolean(instanceDef.isEquipped),
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
-    complete: false, // TODO: what's the deal w/ item progression?
+    complete: false,
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
@@ -517,7 +532,8 @@ function makeItem(
     _isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     isInLoadout: false,
-    percentComplete: null, // filled in later
+    percentComplete: 0, // filled in later
+    hidePercentage: false,
     talentGrid: null, // filled in later
     stats: null, // filled in later
     objectives: null, // filled in later
@@ -598,7 +614,7 @@ function makeItem(
   }
 
   if (createdItem.objectives) {
-    createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, (o) => o.complete);
+    createdItem.complete = createdItem.objectives.every((o) => o.complete);
     const length = createdItem.objectives.length;
     createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
       if (objective.completionValue) {
@@ -607,6 +623,12 @@ function makeItem(
         return 0;
       }
     });
+
+    if (createdItem.objectives.every((o) => o.displayStyle === 'integer')) {
+      createdItem.complete = false;
+      createdItem.percentComplete = 0;
+      createdItem.hidePercentage = true;
+    }
   }
 
   // Infusion
@@ -775,15 +797,16 @@ function buildObjectives(
     const def = objectiveDefs.get(objective.objectiveHash);
 
     return {
-      displayName: def.displayProperties.name ||
+      displayName: def.displayProperties.name || def.progressDescription ||
         (objective.complete
           ? t('Objectives.Complete')
           : t('Objectives.Incomplete')),
       description: def.displayProperties.description,
       progress: objective.progress || 0,
       completionValue: def.completionValue,
-      complete: objective.complete,
-      boolean: def.completionValue === 1,
+      complete: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? false : objective.complete,
+      boolean: def.completionValue === 1 && (def.valueStyle === DestinyUnlockValueUIStyle.Checkbox || def.valueStyle === DestinyUnlockValueUIStyle.Automatic),
+      displayStyle: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? 'integer' : null,
       display: `${objective.progress || 0}/${def.completionValue}`
     };
   });
@@ -798,16 +821,23 @@ function buildFlavorObjective(
     return null;
   }
 
-  const objective = objectivesMap[item.itemInstanceId].flavorObjective;
-  if (!objective) {
+  const flavorObjective = objectivesMap[item.itemInstanceId].flavorObjective;
+  if (!flavorObjective) {
     return null;
   }
 
-  const def = objectiveDefs.get(objective.objectiveHash);
+  // Fancy emblems with multiple trackers are tracked as regular objectives, but the info is duplicated in
+  // flavor objective. If that's the case, skip flavor.
+  const objectives = objectivesMap[item.itemInstanceId].objectives;
+  if (objectives && objectives.some((o) => o.objectiveHash === flavorObjective.objectiveHash)) {
+    return null;
+  }
+
+  const def = objectiveDefs.get(flavorObjective.objectiveHash);
   return {
     description: def.progressDescription,
     icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
-    progress: def.valueStyle === 5 ? (objective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? objective.progress : 0) || 0
+    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
   };
 }
 
@@ -916,14 +946,15 @@ function buildSockets(
     const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || ((socket.reusablePlugHashes || []).includes(socket.plugHash) && !isOrnamentPlug)) ?
       reusablePlugs :
       (plug ? [plug] : []);
-    // the merge is to enable the intrinsic mods to show up even if the user choosed another
+    // the merge is to enable the intrinsic mods to show up even if the user chose another
     // plug.itemCategoryHashes.includes(141186804) - removes the reusablePlugs from masterwork
     // plug.action - removes the "Remove Shader" plug
     if (reusablePlugs.length > 0 && plugOptions.length > 0) {
       reusablePlugs.forEach((plug) => {
         if (!plugOptions.includes(plug) && !plug.itemCategoryHashes.includes(141186804) && !isOrnamentPlug && plug.action) {
             plugOptions.push(plug);
-          }});
+          }
+        });
     }
     const plugOptionsPerks = plugOptions.length > 0 ?
       (plugOptions.filter((plug) => plug.perks.length > 0) || []).map((plug) => defs.SandboxPerk.get(plug.perks[0].perkHash)) :

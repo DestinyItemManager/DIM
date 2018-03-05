@@ -79,11 +79,11 @@ function AccountSelectController(
         }
       });
 
-      dialogResult!.closePromise.then(() => {
+      dialogResult.closePromise.then(() => {
         dialogResult = null;
       });
     } else {
-      dialogResult!.close();
+      dialogResult.close();
     }
   };
 }

@@ -1,3 +1,76 @@
+export interface DtrVote {
+  upvotes: number;
+  downvotes: number;
+  total: number;
+  score: number;
+}
+
+export interface DtrItem {
+  referenceId: number;
+  instanceId?: string;
+  attachedMods?: any[] | null;
+  selectedPerks?: any[] | null;
+}
+
+export interface DtrBulkItem extends DtrItem {
+  votes: DtrVote;
+}
+
+export interface Reviewer {
+  membershipType: number;
+  membershipId: string;
+  displayName: string;
+}
+
+export interface DimUserReview extends DtrBulkItem {
+  reviewer: Reviewer;
+  voted: number;
+  pros: string;
+  cons: string;
+  text: string;
+}
+
+export interface DtrUserReview {
+  id: string;
+  timestamp: Date;
+  isReviewer: boolean;
+  isHighlighted: boolean;
+  instanceId?: string;
+  reviewer: Reviewer;
+  voted: number;
+  pros: string;
+  cons: string;
+  text: string;
+  isIgnored?: boolean;
+  selectedPerks: number[];
+  attachedMods: number[];
+}
+
+export interface DtrReviewContainer extends DtrBulkItem {
+  totalReviews: number;
+  reviews: DtrUserReview[];
+}
+
+export interface DimWorkingUserReview extends DtrReviewContainer {
+  userVote: number;
+  rating: number;
+  userRating: number;
+  reviewsDataFetched: boolean;
+  highlightedRatingCount: number;
+  review: string;
+  pros: string;
+  cons: string;
+  votes: DtrVote;
+  voted: number;
+  text: string;
+}
+
+export interface DimReviewReport {
+  reviewId: string;
+  reporter: Reviewer;
+  text: string;
+}
+
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
 import { TrackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler';
 import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
@@ -6,15 +79,15 @@ import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
 import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
 
-import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
-import { D2TrackerErrorHandler } from '../destinyTrackerApi/d2-trackerErrorHandler';
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { SyncService } from '../storage/sync.service';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 
 export function DestinyTrackerService(
   $q,
@@ -33,11 +106,10 @@ export function DestinyTrackerService(
   const _reviewReporter = new ReviewReporter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
-  const _d2trackerErrorHandler = new D2TrackerErrorHandler($q, $i18next);
-  const _d2bulkFetcher = new D2BulkFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
-  const _d2reviewSubmitter = new D2ReviewSubmitter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache);
-  const _d2reviewReporter = new D2ReviewReporter($q, $http, _d2trackerErrorHandler, loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2bulkFetcher = new D2BulkFetcher(loadingTracker, _d2reviewDataCache);
+  const _d2reviewsFetcher = new D2ReviewsFetcher(loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2reviewSubmitter = new D2ReviewSubmitter(loadingTracker, _d2reviewDataCache);
+  const _d2reviewReporter = new D2ReviewReporter(loadingTracker, _d2reviewDataCache, _userFilter);
 
   function _isDestinyOne() {
     return (settings.destinyVersion === 1);
@@ -58,7 +130,7 @@ export function DestinyTrackerService(
                                     stores);
       } else if (stores[0].destinyVersion === 2) {
         _d2bulkFetcher.attachRankings(null,
-                                      stores);
+                                      stores as DimStore[]);
       }
     },
 

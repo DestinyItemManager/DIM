@@ -1,20 +1,23 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
+import { DtrUserReview } from '../item-review/destiny-tracker.service';
+import { DimItem, DimSocket } from '../inventory/store/d2-item-factory.service';
+
+export interface RatingAndReview {
+  ratingCount: number;
+  averageReview: number;
+  plugOptionHash: number;
+}
 
 /**
  * Rate perks on a Destiny 2 item (based off of its attached user reviews).
- *
- * @class D2PerkRater
  */
 class D2PerkRater {
   /**
    * Rate the perks on a Destiny 2 item based off of its attached user reviews.
-   *
-   * @param {any} item
-   * @memberof D2PerkRater
    */
-  ratePerks(item) {
-    if (!item.writtenReviews ||
-        !item.writtenReviews.length ||
+  ratePerks(item: DimItem) {
+    if (!item.reviews ||
+        !item.reviews.length ||
         !item.sockets ||
         !item.sockets.sockets) {
       return;
@@ -26,7 +29,7 @@ class D2PerkRater {
         const plugOptionHashes = _.pluck(socket.plugOptions, 'hash');
 
         const ratingsAndReviews = _.map(plugOptionHashes,
-          (plugOptionHash) => this._getPlugRatingsAndReviewCount(plugOptionHash, item.writtenReviews));
+          (plugOptionHash) => this._getPlugRatingsAndReviewCount(plugOptionHash, item.reviews));
 
         const maxReview = this._getMaxReview(ratingsAndReviews);
 
@@ -35,8 +38,8 @@ class D2PerkRater {
     });
   }
 
-  _markPlugAsBest(maxReview,
-    socket) {
+  _markPlugAsBest(maxReview: RatingAndReview | null,
+                  socket: DimSocket) {
     if (!maxReview) {
       return;
     }
@@ -48,7 +51,7 @@ class D2PerkRater {
     }
   }
 
-  _getMaxReview(ratingsAndReviews) {
+  _getMaxReview(ratingsAndReviews: RatingAndReview[]) {
     const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) => (ratingAndReview.ratingCount < 2 ? 0
       : ratingAndReview.averageReview)).reverse();
 
@@ -61,24 +64,24 @@ class D2PerkRater {
   }
 
   _getPlugRatingsAndReviewCount(plugOptionHash,
-    reviews) {
+                                reviews): RatingAndReview {
     const matchingReviews = this._getMatchingReviews(plugOptionHash,
-      reviews);
+                                                     reviews);
 
     const ratingCount = matchingReviews.length;
     const averageReview = _.pluck(matchingReviews, 'rating').reduce((memo, num) => memo + num, 0) / matchingReviews.length || 1;
 
     const ratingAndReview = {
-      ratingCount: ratingCount,
-      averageReview: averageReview,
-      plugOptionHash: plugOptionHash
+      ratingCount,
+      averageReview,
+      plugOptionHash
     };
 
     return ratingAndReview;
   }
 
   _getMatchingReviews(plugOptionHash,
-    reviews) {
+                      reviews: DtrUserReview[]) {
     return _.filter(reviews, (review) => {
       return (review.selectedPerks && review.selectedPerks.includes(plugOptionHash)) ||
                                                   (review.attachedMods &&

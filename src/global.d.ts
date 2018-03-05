@@ -28,8 +28,6 @@ declare const $featureFlags: {
   googleAnalyticsForRouter: boolean;
   /** Debug ui-router */
   debugRouter: boolean;
-  /** Show drag and drop on dev only */
-  dnd: boolean,
   /** Send exception reports to Sentry.io */
   sentry: boolean;
   /** D2 Vendors */

@@ -14,6 +14,7 @@ import { bungieNetPath } from '../dim-ui/bungie-image';
 import { sum } from '../util';
 import { $state } from '../ngimport-more';
 import './faction.scss';
+import { PressTip } from '../dim-ui/press-tip';
 
 interface FactionProps {
   factionProgress: DestinyFactionProgression;
@@ -39,9 +40,10 @@ export function Faction(props: FactionProps) {
   return (
     <div
       className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}
-      title={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
     >
-      <FactionIcon factionDef={factionDef} factionProgress={factionProgress}/>
+      <PressTip tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}>
+        <FactionIcon factionDef={factionDef} factionProgress={factionProgress}/>
+      </PressTip>
       <div className="faction-info">
         <div className="faction-name" title={vendorDef.displayProperties.description}>{vendorDef.displayProperties.name}</div>
         <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>

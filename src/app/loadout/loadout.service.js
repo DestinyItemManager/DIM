@@ -268,7 +268,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       let totalItems = items.length;
       items = _.filter(items, (pseudoItem) => {
         const item = getLoadoutItem(pseudoItem, store);
-        const invalid = !item || !item.equipment;
+        const invalid = !item;
         // provide a more accurate count of total items
         if (invalid) {
           totalItems--;
@@ -425,7 +425,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
             amountNeeded -= amountToMove;
             totalAmount += amountToMove;
 
-            promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove));
+            promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove, loadoutItemIds));
           }
         }
       } else {

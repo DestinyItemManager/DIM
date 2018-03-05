@@ -6,6 +6,7 @@ import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { optimalLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -184,7 +185,7 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
 }
 
 /**
- * Move items matching the current search. Max 9 per type.
+ * Move items matching the current search.
  */
 export function searchLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
   const items = _.filter(storeService.getAllItems(), (i) => {
@@ -193,9 +194,7 @@ export function searchLoadout(storeService: StoreServiceType, store: DimStore): 
       !i.notransfer;
   });
 
-  const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) => {
-    return store.isVault ? items : _.first(items, 9);
-  });
+  const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) => limitToBucketSize(items, store.isVault));
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
   const finalItems = {};
@@ -214,4 +213,21 @@ export function searchLoadout(storeService: StoreServiceType, store: DimStore): 
     name: t('Loadouts.FilteredItems'),
     items: finalItems
   };
+}
+
+function limitToBucketSize(items: DimItem[], isVault) {
+  if (!items.length) {
+    return [];
+  }
+  const item = items[0];
+
+  if (!item.bucket) {
+    return isVault ? items : _.first(items, 9);
+  }
+  const bucket = isVault ? item.bucket.vaultBucket : item.bucket;
+
+  if (!bucket) {
+    return isVault ? items : _.first(items, 9);
+  }
+  return _.first(items, bucket.capacity - (item.equipment ? 1 : 0));
 }
