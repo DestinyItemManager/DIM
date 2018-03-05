@@ -645,6 +645,7 @@
     "ArmorAndWeapons": "防具 & 武器",
     "Available": "可用:",
     "Bounties": "赏金",
+    "Collections": "收藏品",
     "Compare": "与您现有物品比较：",
     "Consumables": "消耗品",
     "Emotes": "表情动作",
@@ -679,7 +680,7 @@
       "Header": "关于命运物品管理器 (DIM)",
       "HowItsMade": "DIM是基于Bungie.net和Destiny Companion App所使用的相同服务编译的。DIM能从PlayStation, Xbox和PC平台读取您守护者的背包和保险库。您也可以用拖拽来移动物品。",
       "Reddit": "Reddit",
-      "RedditHelp": "如果您有任何疑问，请留下评论或者建议 - 请务必让我们知道！",
+      "RedditHelp": "如果您有任何疑问，留下评论或者建议 - 请务必让我们知道！",
       "Schedule_beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",
       "Schedule_release": "此版本的DIM将于太平洋时间的每周六下午进行例行版本更新.",
       "Translation": "加入翻译小组!",
@@ -692,7 +693,7 @@
       "Auth": "用Bungie.Net授权",
       "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "想要了解更多？",
-      "Permission": "我们需要您的授权..."
+      "Permission": "我们需要您的授权"
     },
     "Support": {
       "Backers": "支持者",

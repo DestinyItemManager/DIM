@@ -565,7 +565,7 @@
     "SortPrimary": "Estadística primaria (ataque o defensa)",
     "SortRarity": "Rareza, luego estadística primaria",
     "SortRoll": "Calificación de la comunidad o calidad de armadura",
-    "VaultColumns": "Máximo inventario en depósito"
+    "VaultColumns": "Anchura máxima del inventario del depósito"
   },
   "Stats": {
     "Discipline": "Disciplina",
@@ -645,6 +645,7 @@
     "ArmorAndWeapons": "Armadura y armas",
     "Available": "Disponible en:",
     "Bounties": "Contratos",
+    "Collections": "Colecciones",
     "Compare": "Comparar con lo que ya tienes:",
     "Consumables": "Consumibles",
     "Emotes": "Gestos",

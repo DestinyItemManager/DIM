@@ -645,14 +645,14 @@
     "ArmorAndWeapons": "Armor & Weapons",
     "Available": "Available on:",
     "Bounties": "Bounties",
+    "Collections": "Collections",
     "Compare": "Compare with what you already have:",
     "Consumables": "Consumables",
     "Emotes": "Emotes",
     "Load": "Loading Vendors",
     "ShadersAndEmblems": "Shaders & Emblems",
     "ShipsAndVehicles": "Ships & Vehicles",
-    "Vendors": "Vendors",
-    "Collections": "Collections"
+    "Vendors": "Vendors"
   },
   "Views": {
     "About": {
