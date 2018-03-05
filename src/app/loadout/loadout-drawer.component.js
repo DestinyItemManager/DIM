@@ -80,7 +80,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
       vm.loadout.items = vm.loadout.items || {};
 
       // Filter out any vendor items and equip all if requested
-      vm.loadout.warnitems = flatMap(vm.loadout.items, (o, items) => _.filter(items, (item) => !item.owner));
+      vm.loadout.warnitems = flatMap(Object.values(vm.loadout.items), (o, items) => _.filter(items, (item) => !item.owner));
 
       _.each(vm.loadout.items, (items, type) => {
         vm.loadout.items[type] = _.filter(items, (item) => item.owner);
