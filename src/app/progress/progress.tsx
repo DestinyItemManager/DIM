@@ -124,24 +124,37 @@ export class Progress extends React.Component<Props, State> {
       return <div className="progress dim-page">Loading...</div>;
     }
 
-    const { defs } = this.state.progress;
+    const { defs, profileInfo } = this.state.progress;
 
     const characters = this.sortedCharacters();
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
     const profileMilestonesContent = profileMilestones.length &&
       (
-        <div className="section">
-          <div className="title">{t('Progress.ProfileMilestones')}</div>
-          <div className="progress-row">
-            <div className="progress-for-character">
-              {profileMilestones.map((milestone) =>
-                <Milestone milestone={milestone} character={characters[0]} defs={defs} key={milestone.milestoneHash} />
-              )}
+        <>
+          <div className="section">
+            <div className="title">{t('Progress.ProfileMilestones')}</div>
+            <div className="progress-row">
+              <div className="progress-for-character">
+                {profileMilestones.map((milestone) =>
+                  <Milestone milestone={milestone} character={characters[0]} defs={defs} key={milestone.milestoneHash} />
+                )}
+              </div>
+            </div>
+            <hr/>
+          </div>
+
+          <div className="section">
+            <div className="title">{t('Progress.ProfileQuests')}</div>
+            <div className="progress-row">
+                <div className="progress-for-character">
+                  {this.questItems(profileInfo.profileInventory.data.items).map((item) =>
+                    <Quest defs={defs} item={item} objectives={this.objectivesForItem(characters[0], item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
+                  )}
+                </div>
             </div>
           </div>
-          <hr/>
-        </div>
+        </>
       );
 
     if (this.state.isPhonePortrait) {
@@ -213,7 +226,7 @@ export class Progress extends React.Component<Props, State> {
           <div className="progress-row">
             {characters.map((character) =>
               <div className="progress-for-character" key={character.characterId}>
-                {this.questItemsForCharacter(character).map((item) =>
+                {this.questItems(profileInfo.characterInventories.data[character.characterId].items).map((item) =>
                   <Quest defs={defs} item={item} objectives={this.objectivesForItem(character, item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
                 )}
               </div>
@@ -308,14 +321,21 @@ export class Progress extends React.Component<Props, State> {
    * up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
    * that represent milestones.
    */
-  private questItemsForCharacter(character: DestinyCharacterComponent): DestinyItemComponent[] {
-    const { defs, profileInfo } = this.state.progress!;
+  private questItems(allItems: DestinyItemComponent[]): DestinyItemComponent[] {
+    const { defs } = this.state.progress!;
 
-    const allItems: DestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items;
+    // const allItems: DestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items.concat(profileInfo.profileInventory.data.items);
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
+
+      console.log(itemDef.displayProperties.name, itemDef.itemCategoryHashes);
       // This required a lot of trial and error.
-      return (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(16)) ||
+      return (itemDef.itemCategoryHashes &&
+          (
+            itemDef.itemCategoryHashes.includes(16) ||
+            itemDef.itemCategoryHashes.includes(2250046497)
+          )
+        ) ||
         (itemDef.inventory && itemDef.inventory.tierTypeHash === 0 &&
           itemDef.backgroundColor && itemDef.backgroundColor.alpha > 0);
     });
