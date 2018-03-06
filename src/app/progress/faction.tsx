@@ -42,7 +42,7 @@ export function Faction(props: FactionProps) {
       className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}
     >
       <PressTip tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}>
-        <FactionIcon factionDef={factionDef} factionProgress={factionProgress}/>
+        <div><FactionIcon factionDef={factionDef} factionProgress={factionProgress}/></div>
       </PressTip>
       <div className="faction-info">
         <div className="faction-name" title={vendorDef.displayProperties.description}>{vendorDef.displayProperties.name}</div>
