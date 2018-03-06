@@ -131,7 +131,8 @@ export class Progress extends React.Component<Props, State> {
     const profileMilestones = this.milestonesForProfile(characters[0]);
     const profileQuests = this.questItems(profileInfo.profileInventory.data.items);
     const profileMilestonesContent = profileMilestones.length && profileQuests.length && (
-        <>
+      <>
+        <div className="profile-content">
           {profileMilestones.length && <div className="section">
             <div className="title">{t('Progress.ProfileMilestones')}</div>
             <div className="progress-row">
@@ -153,9 +154,10 @@ export class Progress extends React.Component<Props, State> {
                 </div>
             </div>
           </div>}
-          <hr/>
-        </>
-      );
+        </div>
+        <hr/>
+      </>
+    );
 
     if (this.state.isPhonePortrait) {
       return (
