@@ -129,10 +129,10 @@ export class Progress extends React.Component<Props, State> {
     const characters = this.sortedCharacters();
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
-    const profileMilestonesContent = profileMilestones.length &&
-      (
+    const profileQuests = this.questItems(profileInfo.profileInventory.data.items);
+    const profileMilestonesContent = profileMilestones.length && profileQuests.length && (
         <>
-          <div className="section">
+          {profileMilestones.length && <div className="section">
             <div className="title">{t('Progress.ProfileMilestones')}</div>
             <div className="progress-row">
               <div className="progress-for-character">
@@ -141,19 +141,19 @@ export class Progress extends React.Component<Props, State> {
                 )}
               </div>
             </div>
-            <hr/>
-          </div>
+          </div>}
 
-          <div className="section">
+          {profileQuests.length && <div className="section">
             <div className="title">{t('Progress.ProfileQuests')}</div>
             <div className="progress-row">
                 <div className="progress-for-character">
-                  {this.questItems(profileInfo.profileInventory.data.items).map((item) =>
+                  {profileQuests.map((item) =>
                     <Quest defs={defs} item={item} objectives={this.objectivesForItem(characters[0], item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
                   )}
                 </div>
             </div>
-          </div>
+          </div>}
+          <hr/>
         </>
       );
 
@@ -328,7 +328,6 @@ export class Progress extends React.Component<Props, State> {
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
 
-      console.log(itemDef.displayProperties.name, itemDef.itemCategoryHashes);
       // This required a lot of trial and error.
       return (itemDef.itemCategoryHashes &&
           (
