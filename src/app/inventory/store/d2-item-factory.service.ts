@@ -504,8 +504,7 @@ function makeItem(
     name: itemDef.displayProperties.name,
     description: itemDef.displayProperties.description,
     icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
-    notransfer: Boolean(currentBucket.inPostmaster ||
-      itemDef.nonTransferrable ||
+    notransfer: Boolean(itemDef.nonTransferrable ||
       item.transferStatus === TransferStatuses.NotTransferrable),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack

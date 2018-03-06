@@ -275,12 +275,13 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
           return true;
         }
 
-        const alreadyThere = item.owner !== store.id ||
+        const notAlreadyThere = item.owner !== store.id ||
+              item.location.inPostmaster ||
               // Needs to be equipped. Stuff not marked "equip" doesn't
               // necessarily mean to de-equip it.
               (pseudoItem.equipped && !item.equipped);
 
-        return alreadyThere;
+        return notAlreadyThere;
       });
 
       // only try to equip subclasses that are equippable, since we allow multiple in a loadout

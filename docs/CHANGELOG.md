@@ -1,5 +1,7 @@
 # Next
 
+* More items can be successfully dragged out of the postmaster.
+
 # 4.42.0
 
 * Compare tool shows ratings, and handles missing stats better.
