@@ -75,7 +75,7 @@ export function ItemService(
       const stackable = item.maxStackSize > 1;
       // Items to be decremented
       const sourceItems = stackable
-        ? _.sortBy(source.buckets[item.bucket.id].filter((i) => {
+        ? _.sortBy(source.buckets[item.location.id].filter((i) => {
           return i.hash === item.hash &&
                 i.id === item.id &&
                 !i.notransfer;
