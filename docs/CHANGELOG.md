@@ -1,5 +1,8 @@
 # Next
 
+* Fix some cases where moving stacks of items would fail.
+* Fix "Gather Reputation Items" from not gathering everything.
+
 # 4.42.0
 
 * Compare tool shows ratings, and handles missing stats better.
