@@ -108,9 +108,9 @@ const StoreProto = {
    * excluding stuff in the postmaster.
    */
   amountOfItem(item: DimItem) {
-    return sum((this.items as DimItem[]).filter((i) => {
-      return i.hash === item.hash && !i.location.inPostmaster;
-    }), (i) => i.amount);
+    return sum(this.items as DimItem[], (i) => {
+      return (i.hash === item.hash && !i.location.inPostmaster) ? i.amount : 0;
+    });
   },
 
   /**
@@ -297,7 +297,7 @@ export function makeVault(buckets: DimInventoryBuckets, profileCurrencies: Desti
         return openStacks;
       } else {
         const existingAmount = this.amountOfItem(item);
-        const stackSpace = existingAmount > 0 ? (maxStackSize - (existingAmount % maxStackSize)) : 0;
+        const stackSpace = Math.ceil(existingAmount / maxStackSize) * maxStackSize - existingAmount;
         return (openStacks * maxStackSize) + stackSpace;
       }
     },

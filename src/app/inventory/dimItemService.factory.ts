@@ -581,7 +581,7 @@ export function ItemService(
    * @param options.numRetries A count of how many alternate items we've tried.
    * @return a promise that's either resolved if the move can proceed or rejected with an error.
    */
-  function canMoveToStore(item: DimItem, store: DimStore, options: {
+  function canMoveToStore(item: DimItem, store: DimStore, amount: number, options: {
     triedFallback?: boolean;
     excludes?: DimItem[];
     reservations?: { [storeId: number]: number };
@@ -611,11 +611,11 @@ export function ItemService(
 
     // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
     const storeReservations: { [storeId: string]: number } = {};
-    storeReservations[store.id] = item.amount;
+    storeReservations[store.id] = amount;
 
     // guardian-to-guardian transfer will also need space in the vault
     if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {
-      storeReservations.vault = item.amount;
+      storeReservations.vault = amount;
     }
 
     // How many moves (in amount, not stacks) are needed from each
@@ -662,7 +662,7 @@ export function ItemService(
       } else {
         // Make one move and start over!
         return moveTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
-          .then(() => canMoveToStore(item, store, options))
+          .then(() => canMoveToStore(item, store, amount, options))
           .catch((e) => {
             if (numRetries < 3) {
               // Exclude this item and try again so we pick another
@@ -670,7 +670,7 @@ export function ItemService(
               options.excludes = excludes;
               options.numRetries = numRetries + 1;
               console.error(`Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`, e);
-              return canMoveToStore(item, store, options);
+              return canMoveToStore(item, store, amount, options);
             } else {
               throw e;
             }
@@ -685,13 +685,13 @@ export function ItemService(
         options.triedFallback = true;
         // TODO: undefined reloadedStores means there was an error loading stores. When we return errors here, rethrow.
         if (!reloadedStores) {
-          return canMoveToStore(item, store, options);
+          return canMoveToStore(item, store, amount, options);
         }
         const reloadedStore = reloadedStores.find((s) => s.id === storeId);
         if (!reloadedStore) {
           throw new Error("Can't find the store to move to.");
         }
-        return canMoveToStore(item, reloadedStore, options);
+        return canMoveToStore(item, reloadedStore, amount, options);
       });
     }
   }
@@ -719,7 +719,7 @@ export function ItemService(
    * Check whether this transfer can happen. If necessary, make secondary inventory moves
    * in order to make the primary transfer possible, such as making room or dequipping exotics.
    */
-  function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, excludes?: DimItem[], reservations?: { [storeId: number]: number }): IPromise<any> {
+  function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, amount: number, excludes?: DimItem[], reservations?: { [storeId: number]: number }): IPromise<any> {
     let promise = $q.when();
 
     if (equip) {
@@ -729,7 +729,7 @@ export function ItemService(
       }
     }
 
-    return promise.then(() => canMoveToStore(item, store, { excludes, reservations }));
+    return promise.then(() => canMoveToStore(item, store, amount, { excludes, reservations }));
   }
 
   /**
@@ -748,7 +748,7 @@ export function ItemService(
       target = getStoreService(item).getActiveStore()!;
     }
 
-    return isValidTransfer(equip, target, item, excludes, reservations)
+    return isValidTransfer(equip, target, item, amount, excludes, reservations)
       .then(() => {
         const storeService = getStoreService(item);
         // Replace the target store - isValidTransfer may have reloaded it
