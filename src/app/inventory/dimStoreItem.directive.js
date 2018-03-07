@@ -181,11 +181,10 @@ export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreServ
 
   // TODO: once we rewrite this in react and don't need the perf hack, we should show ghost affinity and flavor objective here
 
-  vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
-  vm.draggable = !vm.item.location.inPostmaster &&
-    (vm.item.notransfer)
+  vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.bucket.type : vm.item.bucket.type;
+  vm.draggable = (!vm.item.location.inPostmaster || vm.item.destinyVersion === 2) && vm.item.notransfer
     ? vm.item.equipment
-    : (vm.item.equipment || vm.item.location.hasTransferDestination);
+    : (vm.item.equipment || vm.item.bucket.hasTransferDestination);
 
   function processBounty(vm, item) {
     const showBountyPercentage = !item.complete && !item.hidePercentage;

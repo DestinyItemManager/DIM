@@ -99,7 +99,7 @@ function StoreBucketCtrl($scope,
       return $q.reject(new Error($i18next.t('Help.CannotMove')));
     }
 
-    if (item.owner === vm.store.id) {
+    if (item.owner === vm.store.id && !item.location.inPostmaster) {
       if ((item.equipped && equip) || (!item.equipped && !equip)) {
         return $q.resolve(item);
       }
