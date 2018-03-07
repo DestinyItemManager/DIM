@@ -40,8 +40,9 @@ export interface StoreServiceType {
     hash?: number;
     notransfer?: boolean;
   }): DimItem | undefined;
-  updateCharacters(account: DestinyAccount): IPromise<DimStore[]>;
+  updateCharacters(account?: DestinyAccount): IPromise<DimStore[]>;
   reloadStores(): Promise<DimStore[]>;
+  refreshRatingsData();
 }
 
 /**
