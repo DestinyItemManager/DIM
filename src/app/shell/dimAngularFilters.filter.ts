@@ -10,7 +10,8 @@ import { settings } from '../settings/settings';
 // different parts of DIM.
 
 const mod = module('dimAngularFilters', []);
-export default mod.name;
+const name = mod.name;
+export default name;
 
 /**
  * Take an icon path and make a full Bungie.net URL out of it

@@ -270,8 +270,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSto
   getDefinitions().then((defs) => {
     angular.extend(vm, {
       active: 'titan',
-      i18nClassNames: _.object(['titan', 'hunter', 'warlock'], _.pluck(_.sortBy(defs.Class, (classDef) => { return classDef.classType; }), 'className')),
-      i18nItemNames: _.object(['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'], _.map([45, 46, 47, 48, 49, 38, 39], (key) => { return defs.ItemCategory.get(key).title; })),
+      i18nClassNames: _.object(['titan', 'hunter', 'warlock'], _.sortBy(defs.Class, (classDef) => classDef.classType).map((c) => c.className)),
+      i18nItemNames: _.object(['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'], [45, 46, 47, 48, 49, 38, 39].map((key) => defs.ItemCategory.get(key).title)),
       activesets: '5/5/2',
       type: 'Helmet',
       scaleType: 'scaled',
@@ -707,7 +707,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSto
 
         // Process vendors here
         _.each(dimVendorService.vendors, (vendor) => {
-          const vendItems = filterItems(_.select(_.pluck(vendor.allItems, 'item'), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
+          const vendItems = filterItems(_.select(vendor.allItems.map((i) => i.item), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
           vendorItems = vendorItems.concat(vendItems);
 
           // Exclude felwinters if we have them
@@ -732,7 +732,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $i18next, dimSto
         // Remove overlapping perks in allPerks from vendorPerks
         _.each(vendorPerks, (perksWithType, classType) => {
           _.each(perksWithType, (perkArr, type) => {
-            vendorPerks[classType][type] = _.reject(perkArr, (perk) => { return _.contains(_.pluck(perks[classType][type], 'hash'), perk.hash); });
+            vendorPerks[classType][type] = _.reject(perkArr, (perk) => { return _.contains(perks[classType][type].map((i) => i.hash), perk.hash); });
           });
         });
 

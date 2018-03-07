@@ -109,7 +109,6 @@
     "restrict-plus-operands": true,
     "strict-type-predicates": true,
     "triple-equals": true,
-    "typeof-compare": true,
     "use-default-type-parameter": true,
     "use-isnan": true,
     "no-duplicate-imports": true,

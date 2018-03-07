@@ -1,5 +1,4 @@
 import angular from 'angular';
-import _ from 'underscore';
 
 import { VendorService } from './vendor.service';
 import { VendorsComponent } from './vendors.component';

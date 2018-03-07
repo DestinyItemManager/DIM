@@ -770,7 +770,7 @@ function buildHiddenStats(itemDef: DestinyInventoryItemDefinition, statDefs: Laz
       maximumValue: 100,
       bar: true
     };
-  })) as DimStat[];
+  }));
 }
 
 function buildDefaultStats(itemDef: DestinyInventoryItemDefinition, statDefs: LazyDefinition<DestinyStatDefinition>): DimStat[] {
@@ -835,7 +835,7 @@ function buildStats(
       stat.statHash !== 3871231066 &&
       stat.statHash !== 2961396640
     };
-  })) as DimStat[];
+  }));
 }
 
 function buildInvestmentStats(
@@ -862,7 +862,7 @@ function buildInvestmentStats(
         def.hash !== 3871231066 &&
         def.hash !== 2961396640
     };
-  })) as DimStat[];
+  }));
 }
 
 function buildObjectives(
@@ -989,7 +989,7 @@ function buildTalentGrid(
       // Some nodes don't show up in the grid, like purchased ascend nodes
       hidden: false
     };
-  })) as DimGridNode[];
+  }));
 
   if (!gridNodes.length) {
     return null;

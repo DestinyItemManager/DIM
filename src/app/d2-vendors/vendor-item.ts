@@ -40,7 +40,7 @@ export class VendorItem {
     this.canPurchase = canPurchase;
     this.itemComponents = itemComponents;
     if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
-      this.instance = itemComponents.instances.data[saleItem!.vendorItemIndex];
+      this.instance = itemComponents.instances.data[saleItem.vendorItemIndex];
       // TODO: more here, like perks and such
     }
   }
