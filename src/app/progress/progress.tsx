@@ -130,10 +130,10 @@ export class Progress extends React.Component<Props, State> {
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
     const profileQuests = this.questItems(profileInfo.profileInventory.data.items);
-    const profileMilestonesContent = profileMilestones.length && profileQuests.length && (
+    const profileMilestonesContent = (profileMilestones.length > 0 || profileQuests.length > 0) && (
       <>
         <div className="profile-content">
-          {profileMilestones.length && <div className="section">
+          {profileMilestones.length > 0 && <div className="section">
             <div className="title">{t('Progress.ProfileMilestones')}</div>
             <div className="progress-row">
               <div className="progress-for-character">
@@ -144,7 +144,7 @@ export class Progress extends React.Component<Props, State> {
             </div>
           </div>}
 
-          {profileQuests.length && <div className="section">
+          {profileQuests.length > 0 && <div className="section">
             <div className="title">{t('Progress.ProfileQuests')}</div>
             <div className="progress-row">
                 <div className="progress-for-character">
