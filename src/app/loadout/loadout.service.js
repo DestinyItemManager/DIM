@@ -399,10 +399,11 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
         const amountAlreadyHave = store.amountOfItem(pseudoItem);
         let amountNeeded = pseudoItem.amount - amountAlreadyHave;
         if (amountNeeded > 0) {
-          const otherStores = _.reject(getStoreService().getStores(), (otherStore) => store.id === otherStore.id);
+          const otherStores = getStoreService().getStores()
+            .filter((otherStore) => store.id !== otherStore.id);
           const storesByAmount = _.sortBy(otherStores.map((store) => {
             return {
-              store: store,
+              store,
               amount: store.amountOfItem(pseudoItem)
             };
           }), 'amount').reverse();

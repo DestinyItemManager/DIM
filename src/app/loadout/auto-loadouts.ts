@@ -7,6 +7,7 @@ import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { optimalLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { sum } from '../util';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -157,7 +158,7 @@ export function gatherEngramsLoadout(
 }
 
 export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
-  const tokens = _.filter(storeService.getAllItems(), (i) => {
+  let tokens = storeService.getAllItems().filter((i) => {
     return REP_TOKENS.has(i.hash) && !i.notransfer;
   });
 
@@ -165,15 +166,19 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
     throw new Error(t('Loadouts.NoTokens'));
   }
 
+  tokens = _.flatten(Object.values(_.mapObject(_.groupBy(tokens, (t) => t.hash), (tokens) => {
+    const token = copy(tokens[0]);
+    token.amount = sum(tokens, (t) => t.amount);
+    return token;
+  })));
+
   const itemsByType = _.groupBy(tokens, 'type');
 
-  // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
+  // Copy the items and put them in arrays, so they look like a loadout
   const finalItems = {};
   _.each(itemsByType, (items, type) => {
     if (items) {
-      finalItems[type.toLowerCase()] = items.map((i) => {
-        return copy(i);
-      });
+      finalItems[type.toLowerCase()] = items;
     }
   });
 
