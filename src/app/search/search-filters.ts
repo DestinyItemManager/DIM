@@ -1,11 +1,22 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
+import { TagInfo } from '../settings/settings';
+import { D1Categories } from '../destiny1/d1-buckets.service';
+import { D2Categories } from '../destiny2/d2-buckets.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { StoreServiceType } from '../inventory/d2-stores.service';
 
 /**
  * Builds an object that describes the available search keywords and category mappings.
  */
-export function buildSearchConfig(destinyVersion, itemTags, categories) {
+export function buildSearchConfig(
+  destinyVersion: 1 | 2,
+  itemTags: TagInfo[],
+  categories: {
+    [category: string]: string[];
+  }
+) {
   const categoryFilters = {
     pulserifle: ['CATEGORY_PULSE_RIFLE'],
     scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
@@ -30,7 +41,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
       heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
       machinegun: ['CATEGORY_MACHINE_GUN'],
     });
-    itemTypes.push(...flatMap(categories, (l) => _.map(l, (v) => v.toLowerCase())));
+    itemTypes.push(...flatMap(categories, (l) => _.map(l, (v: string[]) => v.toLowerCase())));
     stats.push('rof');
   } else {
     Object.assign(categoryFilters, {
@@ -165,29 +176,38 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
 // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
 const dupeComparator = reverseComparator(chainComparator(
   // basePower
-  compareBy((item) => item.basePower || (item.primStat && item.primStat.value)),
+  compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value)),
   // primary stat
-  compareBy((item) => item.primStat && item.primStat.value),
-  compareBy((item) => item.masterwork),
+  compareBy((item: DimItem) => item.primStat && item.primStat.value),
+  compareBy((item: DimItem) => item.masterwork),
   // has a power mod
-  compareBy((item) => item.primStat && item.basePower && (item.primStat.value !== item.basePower)),
-  compareBy((item) => item.locked),
-  compareBy((item) => ['favorite', 'keep'].includes(item.dimInfo.tag)),
-  compareBy((i) => i.id) // tiebreak by ID
+  compareBy((item: DimItem) => item.primStat && item.basePower && (item.primStat.value !== item.basePower)),
+  compareBy((item: DimItem) => item.locked),
+  compareBy((item: DimItem) => item.dimInfo && item.dimInfo.tag && ['favorite', 'keep'].includes(item.dimInfo.tag)),
+  compareBy((i: DimItem) => i.id) // tiebreak by ID
 ));
 
 /**
  * This builds an object that can be used to generate filter functions from search queried.
  *
  */
-export function searchFilters(searchConfig, storeService, toaster, $i18next) {
-  let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
+export function searchFilters(
+  searchConfig,
+  storeService: StoreServiceType,
+  toaster,
+  $i18next
+): {
+  filters: { [predicate: string]: (item: DimItem, predicate?: string) => boolean | "" | null | undefined | false | number };
+  filterFunction(query: string): (item: DimItem) => boolean;
+  reset();
+} {
+  let _duplicates: { [hash: number]: number } | null = null; // Holds a map from item hash to count of occurrances of that hash
   let _lowerDupes = {};
   let _dupeInPost = false;
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
-  const filterByStats = function(predicate, item, statType) {
+  const filterByStats = (statType) => {
     const statHash = {
       rpm: 4284893193,
       charge: 2961396640,
@@ -201,9 +221,10 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
       equipspeed: 943549884
     }[statType];
 
-    const foundStatHash = _.find(item.stats, { statHash });
-
-    return foundStatHash && foundStatHash.value && compareByOperand(foundStatHash.value, predicate);
+    return (item: DimItem, predicate: string) => {
+      const foundStatHash = item.stats && item.stats.find((s) => s.statHash === statHash);
+      return foundStatHash && foundStatHash.value && compareByOperand(foundStatHash.value, predicate);
+    };
   };
 
   function compareByOperand(compare = 0, predicate) {
@@ -257,20 +278,24 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
     /**
      * Build a complex predicate function from a full query string.
      */
-    filterFunction(query) {
+    filterFunction(query: string): (item: DimItem) => boolean {
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*"[^"]*" -> match is:"stuff here"
       // [^\s]*'[^']*' -> match is:'stuff here'
       // [^\s"']+' -> match is:stuff
-      const searchTerms = query.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g);
-      const filters = [];
+      const searchTerms = query.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g) || [];
+      const filters: {
+        invert: boolean;
+        value: string;
+        predicate: string;
+      }[] = [];
 
-      function addPredicate(predicate, filter, invert = false) {
-        filters.push({ predicate: predicate, value: filter, invert: invert });
+      function addPredicate(predicate: string, filter: string, invert = false) {
+        filters.push({ predicate, value: filter, invert });
       }
 
       // TODO: replace this if-ladder with a split and check
-      _.each(searchTerms, (term) => {
+      for (let term of searchTerms) {
         term = term.replace(/['"]/g, '');
 
         if (term.startsWith('is:')) {
@@ -323,11 +348,11 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
           // TODO: not
           addPredicate("keyword", term);
         }
-      });
+      }
 
       return (item) => {
-        return _.all(filters, (filter) => {
-          const result = this.filters[filter.predicate](filter.value, item);
+        return filters.every((filter) => {
+          const result = this.filters[filter.predicate](item, filter.value);
           return filter.invert ? !result : result;
         });
       };
@@ -341,13 +366,13 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
      * @return {Boolean} Returns true for a match, false for a non-match
      */
     filters: {
-      dmg: function(predicate, item) {
+      dmg(item: DimItem, predicate: string) {
         return item.dmg === predicate;
       },
-      type: function(predicate, item) {
-        return item.type && item.type.toLowerCase() === predicate;
+      type(item: DimItem, predicate: string) {
+        return Boolean(item.type && item.type.toLowerCase() === predicate);
       },
-      tier: function(predicate, item) {
+      tier(item: DimItem, predicate: string) {
         const tierMap = {
           white: 'common',
           green: 'uncommon',
@@ -357,7 +382,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         };
         return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
       },
-      sublime: function(predicate, item) {
+      sublime(item: DimItem) {
         const sublimeEngrams = [
           1986458096, // -gauntlet
           2218811091,
@@ -373,43 +398,42 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         return sublimeEngrams.includes(item.hash);
       },
       // Incomplete will show items that are not fully leveled.
-      incomplete: function(predicate, item) {
-        return item.talentGrid &&
-          !item.complete;
+      incomplete(item: DimItem) {
+        return Boolean(item.talentGrid && !item.complete);
       },
       // Complete shows items that are fully leveled.
-      complete: function(predicate, item) {
+      complete(item: DimItem) {
         return item.complete;
       },
       // Upgraded will show items that have enough XP to unlock all
       // their nodes and only need the nodes to be purchased.
-      upgraded: function(predicate, item) {
+      upgraded(item: DimItem) {
         return item.talentGrid &&
           item.talentGrid.xpComplete &&
           !item.complete;
       },
-      xpincomplete: function(predicate, item) {
+      xpincomplete(item: DimItem, predicate: string) {
         return item.talentGrid &&
           !item.talentGrid.xpComplete;
       },
-      xpcomplete: function(predicate, item) {
+      xpcomplete(item: DimItem, predicate: string) {
         return item.talentGrid &&
           item.talentGrid.xpComplete;
       },
-      ascended: function(predicate, item) {
+      ascended(item: DimItem, predicate: string) {
         return item.talentGrid &&
           item.talentGrid.hasAscendNode &&
           item.talentGrid.ascended;
       },
-      unascended: function(predicate, item) {
+      unascended(item: DimItem, predicate: string) {
         return item.talentGrid &&
           item.talentGrid.hasAscendNode &&
           !item.talentGrid.ascended;
       },
-      reforgeable: function(predicate, item) {
+      reforgeable(item: DimItem, predicate: string) {
         return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
       },
-      ornament: function(predicate, item) {
+      ornament(item: DimItem, predicate: string) {
         const complete = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: true });
         const missing = item.talentGrid && _.any(item.talentGrid.nodes, { ornament: false });
 
@@ -421,28 +445,28 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
           return complete || missing;
         }
       },
-      untracked: function(predicate, item) {
+      untracked(item: DimItem, predicate: string) {
         return item.trackable &&
           !item.tracked;
       },
-      tracked: function(predicate, item) {
+      tracked(item: DimItem, predicate: string) {
         return item.trackable &&
           item.tracked;
       },
-      unlocked: function(predicate, item) {
+      unlocked(item: DimItem, predicate: string) {
         return (item.lockable &&
           !item.locked) || !item.lockable;
       },
-      locked: function(predicate, item) {
+      locked(item: DimItem, predicate: string) {
         return item.lockable &&
           item.locked;
       },
-      masterwork: function(predicate, item) {
+      masterwork(item: DimItem, predicate: string) {
         return item.masterwork;
       },
-      dupe: function(predicate, item) {
+      dupe(item: DimItem, predicate: string) {
         if (_duplicates === null) {
-          _duplicates = _.groupBy(storeService.getAllItems(), 'hash');
+          _duplicates = _.groupBy(storeService.getAllItems(), (i) => i.hash);
           _.each(_duplicates, (dupes) => {
             if (dupes.length > 1) {
               dupes.sort(dupeComparator);
@@ -468,7 +492,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         // We filter out the "Default Shader" because everybody has one per character
         return item.hash !== 4248210736 && _duplicates[item.hash] && _duplicates[item.hash].length > 1;
       },
-      classType: function(predicate, item) {
+      classType(item: DimItem, predicate: string) {
         let value;
 
         switch (predicate) {
@@ -485,7 +509,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
 
         return (item.classType === value);
       },
-      glimmer: function(predicate, item) {
+      glimmer(item: DimItem, predicate: string) {
         const boosts = [
           1043138475, // -black-wax-idol
           1772853454, // -blue-polyphage
@@ -509,28 +533,28 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         }
         return false;
       },
-      itemtags: function(predicate, item) {
+      itemtags(item: DimItem, predicate: string) {
         return item.dimInfo && (item.dimInfo.tag === predicate || (item.dimInfo.tag === undefined && predicate === 'none'));
       },
-      notes: function(predicate, item) {
+      notes(item: DimItem, predicate: string) {
         return item.dimInfo && item.dimInfo.notes && item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
       },
-      stattype: function(predicate, item) {
-        return item.stats && _.any(item.stats, (s) => { return s.name.toLowerCase() === predicate && s.value > 0; });
+      stattype(item: DimItem, predicate: string) {
+        return item.stats && _.any(item.stats, (s) => s.name.toLowerCase() === predicate && s.value > 0);
       },
-      stackable: function(predicate, item) {
+      stackable(item: DimItem, predicate: string) {
         return item.maxStackSize > 1;
       },
-      stack: function(predicate, item) {
+      stack(item: DimItem, predicate: string) {
         return compareByOperand(item.amount, predicate);
       },
-      engram: function(predicate, item) {
+      engram(item: DimItem, predicate: string) {
         return item.isEngram();
       },
-      infusable: function(predicate, item) {
+      infusable(item: DimItem, predicate: string) {
         return item.infusable;
       },
-      category: function(predicate, item) {
+      category(item: DimItem, predicate: string) {
         const categories = searchConfig.categoryFilters[predicate.toLowerCase().replace(/\s/g, '')];
 
         if (!categories || !categories.length) {
@@ -538,7 +562,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         }
         return categories.every((c) => item.inCategory(c));
       },
-      keyword: function(predicate, item) {
+      keyword(item: DimItem, predicate: string) {
         return item.name.toLowerCase().includes(predicate) ||
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
@@ -554,37 +578,37 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
                socket.plug.plugItem.displayProperties.description.toLowerCase().includes(predicate));
           }));
       },
-      light: function(predicate, item) {
+      light(item: DimItem, predicate: string) {
         if (!item.primStat) {
           return false;
         }
         return compareByOperand(item.primStat.value, predicate);
       },
-      basepower: function(predicate, item) {
+      basepower(item: DimItem, predicate: string) {
         if (!item.basePower) {
           return false;
         }
         return compareByOperand(item.basePower, predicate);
       },
-      level: function(predicate, item) {
+      level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);
       },
-      quality: function(predicate, item) {
+      quality(item: DimItem, predicate: string) {
         if (!item.quality) {
           return false;
         }
         return compareByOperand(item.quality.min, predicate);
       },
-      hasRating: function(predicate, item) {
+      hasRating(item: DimItem, predicate: string) {
         return predicate.length !== 0 && item.dtrRating;
       },
-      rating: function(predicate, item) {
+      rating(item: DimItem, predicate: string) {
         return item.dtrRating && compareByOperand(item.dtrRating, predicate);
       },
-      ratingcount: function(predicate, item) {
+      ratingcount(item: DimItem, predicate: string) {
         return item.dtrRating && compareByOperand(item.dtrRatingCount, predicate);
       },
-      year: function(predicate, item) {
+      year(item: DimItem, predicate: string) {
         if (predicate === 'year1') {
           return item.year === 1;
         } else if (predicate === 'year2') {
@@ -608,7 +632,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
       //   * Crucible Quartermaster (cq)
       //   * Eris Morn (eris)
       //   * Eververse (ev)
-      vendor: function(predicate, item) {
+      vendor(item: DimItem, predicate: string) {
         const vendorHashes = { // identifier
           required: {
             fwc: [995344558], // SOURCE_VENDOR_FUTURE_WAR_CULT
@@ -660,7 +684,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
       //   * Prison of Elders (poe)
       //   * Challenge of Elders (coe)
       //   * Archon Forge (af)
-      activity: function(predicate, item) {
+      activity(item: DimItem, predicate: string) {
         const activityHashes = { // identifier
           required: {
             trials: [2650556703], // SOURCE_TRIALS_OF_OSIRIS
@@ -706,16 +730,16 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
           return (activityHashes.required[predicate].some((sourceHash) => item.sourceHashes.includes(sourceHash)));
         }
       },
-      inloadout: function(predicate, item) {
+      inloadout(item: DimItem, predicate: string) {
         return item.isInLoadout;
       },
-      new: function(predicate, item) {
+      new(item: DimItem, predicate: string) {
         return item.isNew;
       },
-      tag: function(predicate, item) {
+      tag(item: DimItem, predicate: string) {
         return item.dimInfo.tag !== undefined;
       },
-      hasLight: function(predicate, item) {
+      hasLight(item: DimItem, predicate: string) {
         const lightBuckets = ["BUCKET_CHEST",
           "BUCKET_LEGS",
           "BUCKET_ARTIFACT",
@@ -737,13 +761,13 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         ];
         return item.primStat && item.bucket && _.contains(lightBuckets, item.bucket.id);
       },
-      weapon: function(predicate, item) {
+      weapon(item: DimItem, predicate: string) {
         return item.bucket && item.bucket.sort === 'Weapons';
       },
-      armor: function(predicate, item) {
+      armor(item: DimItem, predicate: string) {
         return item.bucket && item.bucket.sort === 'Armor';
       },
-      cosmetic: function(predicate, item) {
+      cosmetic(item: DimItem, predicate: string) {
         const cosmeticBuckets = ["BUCKET_SHADER",
           "BUCKET_MODS",
           "BUCKET_EMOTES",
@@ -751,51 +775,47 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
           "BUCKET_VEHICLE",
           "BUCKET_SHIP",
           "BUCKET_HORN"];
-        return item.bucket && _.contains(cosmeticBuckets, item.bucket.id);
+        return item.bucket && cosmeticBuckets.includes(item.bucket.id.toString());
       },
-      equipment: function(predicate, item) {
+      equipment(item: DimItem, predicate: string) {
         return item.equipment;
       },
-      postmaster: function(predicate, item) {
+      postmaster(item: DimItem, predicate: string) {
         return item.location && item.location.inPostmaster;
       },
-      equipped: function(predicate, item) {
+      equipped(item: DimItem, predicate: string) {
         return item.equipped;
       },
-      transferable: function(predicate, item) {
+      transferable(item: DimItem, predicate: string) {
         return !item.notransfer;
       },
-      powermod: function(predicate, item) {
+      powermod(item: DimItem, predicate: string) {
         return item.primStat && (item.primStat.value !== item.basePower);
       },
-      rpm: function(predicate, item) {
+      rpm(item: DimItem, predicate: string) {
         return filterByStats(predicate, item, 'rpm');
       },
-      charge: function(predicate, item) {
+      charge(item: DimItem, predicate: string) {
         return filterByStats(predicate, item, 'charge');
       },
-      rof: function(predicate, item) {
+      rof(item: DimItem, predicate: string) {
         return filterByStats(predicate, item, 'rof');
       },
-      impact: function(predicate, item) {
+      impact(item: DimItem, predicate: string) {
         return filterByStats(predicate, item, 'impact');
       },
-      range: function(predicate, item) {
+      range(item: DimItem, predicate: string) {
         return filterByStats(predicate, item, 'range');
       },
-      stability: function(predicate, item) {
+      stability(item: DimItem, predicate: string) {
         return filterByStats(predicate, item, 'stability');
       },
-      reload: function(predicate, item) {
-        return filterByStats(predicate, item, 'reload');
-      },
-      magazine: function(predicate, item) {
-        return filterByStats(predicate, item, 'magazine');
-      },
-      aimassist: function(predicate, item) {
+      reload: filterByStats('reload'),
+      magazine: filterByStats('magazine'),
+      aimassist(item: DimItem, predicate: string) {
         return filterByStats(predicate, item, 'aimassist');
       },
-      equipspeed: function(predicate, item) {
+      equipspeed(item: DimItem, predicate: string) {
         return filterByStats(predicate, item, 'equipspeed');
       }
     }

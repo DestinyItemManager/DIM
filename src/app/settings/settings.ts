@@ -15,7 +15,7 @@ const itemSortPresets = {
   typeThenName: ['typeName', 'classType', 'name']
 };
 
-interface TagInfo {
+export interface TagInfo {
   type?: string;
   label: string;
   hotkey?: string;
