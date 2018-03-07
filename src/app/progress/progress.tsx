@@ -124,25 +124,40 @@ export class Progress extends React.Component<Props, State> {
       return <div className="progress dim-page">Loading...</div>;
     }
 
-    const { defs } = this.state.progress;
+    const { defs, profileInfo } = this.state.progress;
 
     const characters = this.sortedCharacters();
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
-    const profileMilestonesContent = profileMilestones.length &&
-      (
-        <div className="section">
-          <div className="title">{t('Progress.ProfileMilestones')}</div>
-          <div className="progress-row">
-            <div className="progress-for-character">
-              {profileMilestones.map((milestone) =>
-                <Milestone milestone={milestone} character={characters[0]} defs={defs} key={milestone.milestoneHash} />
-              )}
+    const profileQuests = this.questItems(profileInfo.profileInventory.data.items);
+    const profileMilestonesContent = profileMilestones.length && profileQuests.length && (
+      <>
+        <div className="profile-content">
+          {profileMilestones.length && <div className="section">
+            <div className="title">{t('Progress.ProfileMilestones')}</div>
+            <div className="progress-row">
+              <div className="progress-for-character">
+                {profileMilestones.map((milestone) =>
+                  <Milestone milestone={milestone} character={characters[0]} defs={defs} key={milestone.milestoneHash} />
+                )}
+              </div>
             </div>
-          </div>
-          <hr/>
+          </div>}
+
+          {profileQuests.length && <div className="section">
+            <div className="title">{t('Progress.ProfileQuests')}</div>
+            <div className="progress-row">
+                <div className="progress-for-character">
+                  {profileQuests.map((item) =>
+                    <Quest defs={defs} item={item} objectives={this.objectivesForItem(characters[0], item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
+                  )}
+                </div>
+            </div>
+          </div>}
         </div>
-      );
+        <hr/>
+      </>
+    );
 
     if (this.state.isPhonePortrait) {
       return (
@@ -213,7 +228,7 @@ export class Progress extends React.Component<Props, State> {
           <div className="progress-row">
             {characters.map((character) =>
               <div className="progress-for-character" key={character.characterId}>
-                {this.questItemsForCharacter(character).map((item) =>
+                {this.questItems(profileInfo.characterInventories.data[character.characterId].items).map((item) =>
                   <Quest defs={defs} item={item} objectives={this.objectivesForItem(character, item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
                 )}
               </div>
@@ -308,14 +323,20 @@ export class Progress extends React.Component<Props, State> {
    * up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
    * that represent milestones.
    */
-  private questItemsForCharacter(character: DestinyCharacterComponent): DestinyItemComponent[] {
-    const { defs, profileInfo } = this.state.progress!;
+  private questItems(allItems: DestinyItemComponent[]): DestinyItemComponent[] {
+    const { defs } = this.state.progress!;
 
-    const allItems: DestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items;
+    // const allItems: DestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items.concat(profileInfo.profileInventory.data.items);
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
+
       // This required a lot of trial and error.
-      return (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(16)) ||
+      return (itemDef.itemCategoryHashes &&
+          (
+            itemDef.itemCategoryHashes.includes(16) ||
+            itemDef.itemCategoryHashes.includes(2250046497)
+          )
+        ) ||
         (itemDef.inventory && itemDef.inventory.tierTypeHash === 0 &&
           itemDef.backgroundColor && itemDef.backgroundColor.alpha > 0);
     });
