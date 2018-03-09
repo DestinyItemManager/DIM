@@ -39,6 +39,10 @@ function controller(dimItemMoveService, dimStoreService, D2StoresService) {
       return false;
     }
 
+    if (vm.item.location.inPostmaster) {
+      return false;
+    }
+
     return true;
   };
 
@@ -48,16 +52,14 @@ function controller(dimItemMoveService, dimStoreService, D2StoresService) {
       return false;
     }
 
-    if (vm.item.notransfer) {
+    // Can pull items from the postmaster to the same character
+    if (vm.item.location.inPostmaster) {
+      return vm.store.id === buttonStore.id &&
+          vm.item.destinyVersion === 2 &&
+          vm.item.canPullFromPostmaster;
+    } else if (vm.item.notransfer) {
       // Can store an equiped item in same itemStore
       if (vm.item.equipped && vm.store.id === buttonStore.id) {
-        return true;
-      }
-      // Can pull items from the postmaster to the same character
-      if (vm.store.id === buttonStore.id &&
-          vm.item.location.inPostmaster &&
-          vm.item.destinyVersion === 2 &&
-          vm.item.canPullFromPostmaster) {
         return true;
       }
     } else if (vm.store.id !== buttonStore.id || vm.item.equipped) {
@@ -77,11 +79,5 @@ function controller(dimItemMoveService, dimStoreService, D2StoresService) {
 
   vm.moveItemTo = function(store, equip) {
     dimItemMoveService.moveItemTo(vm.item, store, equip, vm.amount);
-  };
-
-  // drag stuff
-  vm.onDrop = function(store, $event, equip) {
-    vm.moveItemTo(store, equip);
-    $event.target.parentElement.classList.remove('activated');
   };
 }
