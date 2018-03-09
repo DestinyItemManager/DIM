@@ -613,19 +613,20 @@ function makeItem(
   }
 
   if (createdItem.objectives) {
-    createdItem.complete = createdItem.objectives.every((o) => o.complete);
-    const length = createdItem.objectives.length;
-    createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
-      if (objective.completionValue) {
-        return Math.min(1, objective.progress / objective.completionValue) / length;
-      } else {
-        return 0;
-      }
-    });
+    // Counter objectives for the new emblems shouldn't count.
+    const realObjectives = createdItem.objectives.filter((o) => o.displayStyle !== 'integer');
 
-    if (createdItem.objectives.every((o) => o.displayStyle === 'integer')) {
-      createdItem.complete = false;
-      createdItem.percentComplete = 0;
+    const length = realObjectives.length;
+    if (length > 0) {
+      createdItem.complete = realObjectives.every((o) => o.complete);
+      createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
+        if (objective.completionValue) {
+          return Math.min(1, objective.progress / objective.completionValue) / length;
+        } else {
+          return 0;
+        }
+      });
+    } else {
       createdItem.hidePercentage = true;
     }
   }
