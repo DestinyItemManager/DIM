@@ -75,6 +75,9 @@ export function SettingsController(loadingTracker, $scope, dimCsvService, dimSto
     location: {
       type: 'energy'
     },
+    bucket: {
+      type: 'energy'
+    },
     visible: true,
     primStat: {
       value: 300
@@ -90,6 +93,9 @@ export function SettingsController(loadingTracker, $scope, dimCsvService, dimSto
     location: {
       type: 'energy'
     },
+    bucket: {
+      type: 'energy'
+    }
     visible: true,
     primStat: {
       value: 300
