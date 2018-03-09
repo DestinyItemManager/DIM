@@ -182,6 +182,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   rating: reverseComparator(compareBy((item: DimItem & { quality: { min: number }}) => (item.quality && item.quality.min) ? item.quality.min : item.dtrRating)),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),
+  amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   default: (_a, _b) => 0
 };
 
@@ -231,7 +232,12 @@ mod.filter('sortItems', () => {
 
     // Re-sort consumables
     if (itemLocationId === '1469714392') {
-      return items.sort(chainComparator(ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.rarity, ITEM_COMPARATORS.name));
+      return items.sort(chainComparator(
+        ITEM_COMPARATORS.typeName,
+        ITEM_COMPARATORS.rarity,
+        ITEM_COMPARATORS.name,
+        ITEM_COMPARATORS.amount
+      ));
     }
 
     // Re-sort shaders
