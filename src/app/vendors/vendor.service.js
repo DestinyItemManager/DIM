@@ -225,7 +225,7 @@ export function VendorService(
       mergedVendor.hasBounties = mergedVendor.hasBounties || vendor.hasBounties;
     });
 
-    mergedVendor.allItems = _.flatten(_.pluck(mergedVendor.categories, 'saleItems'), true);
+    mergedVendor.allItems = _.flatten(mergedVendor.categories.map((i) => i.saleItems), true);
 
     return mergedVendor;
   }
@@ -408,7 +408,7 @@ export function VendorService(
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
     });
 
-    return ItemFactory.processItems({ id: null }, _.pluck(saleItems, 'item'))
+    return ItemFactory.processItems({ id: null }, saleItems.map((i) => i.item))
       .then((items) => {
         const itemsById = _.indexBy(items, 'id');
         const categories = _.compact(_.map(vendor.saleItemCategories, (category) => {
@@ -445,7 +445,7 @@ export function VendorService(
             const item = saleItem.item;
             if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
               if (item.talentGrid) {
-                item.dtrRoll = _.compact(_.pluck(item.talentGrid.nodes, 'dtrRoll')).join(';');
+                item.dtrRoll = _.compact(item.talentGrid.nodes.map((i) => i.dtrRoll)).join(';');
               }
               hasArmorWeaps = true;
             }

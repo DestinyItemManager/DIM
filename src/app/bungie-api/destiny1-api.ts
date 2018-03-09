@@ -204,7 +204,7 @@ export function equipItems(store, items) {
     {
       characterId: store.id,
       membershipType: platform!.platformType,
-      itemIds: _.pluck(items, 'id')
+      itemIds: items.map((i) => i.id)
     }))
     .then(retryOnThrottled)
     .then(handleErrors, handleErrors)
