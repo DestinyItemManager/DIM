@@ -95,7 +95,7 @@ export function SettingsController(loadingTracker, $scope, dimCsvService, dimSto
     },
     bucket: {
       type: 'energy'
-    }
+    },
     visible: true,
     primStat: {
       value: 300
