@@ -225,7 +225,7 @@
       "Keep": "Muestra los objetos que debes quedarte.",
       "NoTag": "Muestra objetos sin una etiqueta."
     },
-    "Tracked": "Muestra búsquedas/contratos basado en su estado de seguimiento.",
+    "Tracked": "Muestra misiones/contratos basado en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
     "Vendor": "El objeto está disponible con el vendedor <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "El objeto está disponible con el vendedor <i>{{vendor}}</i>",
@@ -504,6 +504,7 @@
     "Factions": "Facciones",
     "Milestones": "Hazaña",
     "ProfileMilestones": "Hazañas de cuenta",
+    "ProfileQuests": "Misiones de cuenta",
     "Progress": "Progreso",
     "Quests": "Misiones",
     "RewardEarned": "Recompensa obtenida pero no reclamada",

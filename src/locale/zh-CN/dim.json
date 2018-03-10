@@ -155,7 +155,7 @@
       "QW": "女王之怒",
       "SRL": "快雀竞赛",
       "ToO": "奥西里斯的试练",
-      "VoG": "玻璃宝库",
+      "VoG": "玻璃穹殿",
       "WotM": "机械之怒"
     },
     "Activity": "可以从<i>{{activity}}</i>活动中获得",
@@ -268,7 +268,7 @@
     "UpdateAvailable": "DIM已更新",
     "UpdateAvailableMessage": "DIM有一个可适用更新。请刷新该页面以应用更新。",
     "Version_beta": "Beta版已经更新至 v{{version}}",
-    "Version_release": "DIM v{{version}} 版现已推出!",
+    "Version_release": "DIM v{{version}} 版现已推出！",
     "Xur": "稣尔(Xûr) 在这里"
   },
   "Hotkey": {
@@ -504,6 +504,7 @@
     "Factions": "阵营",
     "Milestones": "里程碑",
     "ProfileMilestones": "账号里程碑",
+    "ProfileQuests": "账号任务",
     "Progress": "进度",
     "Quests": "任务",
     "RewardEarned": "奖励已解锁但尚未兑换",
@@ -543,7 +544,7 @@
     "LogOut": "注销",
     "RatingInfo": "DIM支持对D1中的防具进行自动质量指数评测(基于roll)。以及对武器(和D2的装备)进行社区评测，由<a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>提供技术支持。",
     "Ratings": "评测",
-    "ReloadDIM": "刷新页面[F5] 以完成语言切换",
+    "ReloadDIM": "刷新页面 [F5] 以完成语言切换",
     "ResetToDefault": "重置",
     "ReviewsPlatformSelection": "只显示以下平台的评测",
     "SetSort": "物品排序方式:",
@@ -576,7 +577,7 @@
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉范围{{range}}",
     "PercentHelp": "点击获取更多关于品质属性的信息.",
-    "Prestige": "威望等级: {{level}}\n{{exp}}xp 于5光尘之前.",
+    "Prestige": "威望等级: {{level}}\n{{exp}}xp 于5明亮之尘之前.",
     "PrestigeD2": "威望等级: {{level}}\n{{exp}}xp 于5明亮记忆水晶之前.",
     "Quality": "品质",
     "Strength": "力量",

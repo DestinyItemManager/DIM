@@ -1,7 +1,7 @@
 {
   "Accounts": {
     "Blizzard": "PC",
-    "NoCharacters": "Du hast keine Destiny-Charaktere mit diesem Bungie.net-Account verbunden. Versuche dich in einen anderen Account einzuloggen.",
+    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
     "PlayStation": "PS4",
     "Xbox": "XB1"
   },
@@ -504,6 +504,7 @@
     "Factions": "Fraktionen",
     "Milestones": "Meilensteine",
     "ProfileMilestones": "Konto-Meilensteine",
+    "ProfileQuests": "Konto-Quests",
     "Progress": "Fortschritt",
     "Quests": "Aufgaben",
     "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
