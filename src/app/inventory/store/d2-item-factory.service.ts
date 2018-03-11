@@ -532,7 +532,6 @@ function makeItem(
     _isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     isInLoadout: false,
-
     percentComplete: 0, // filled in later
     hidePercentage: false,
     talentGrid: null, // filled in later
