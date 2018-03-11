@@ -448,7 +448,9 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
               dupes.sort(dupeComparator);
               const bestDupe = dupes[0];
               for (const dupe of dupes) {
-                _lowerDupes[dupe.id] = dupe !== bestDupe;
+                if (dupe.weaponOrArmor) {
+                  _lowerDupes[dupe.id] = dupe !== bestDupe;
+                }
               }
 
               if (!_dupeInPost) {

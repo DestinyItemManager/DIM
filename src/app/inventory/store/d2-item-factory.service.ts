@@ -209,6 +209,7 @@ export interface DimItem {
   /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
   flavorObjective: DimFlavorObjective | null;
+  weaponOrArmor: boolean;
 
   // TODO: this should be on a separate object, with the other DTR stuff
   pros: string;
@@ -531,6 +532,7 @@ function makeItem(
     _isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     isInLoadout: false,
+
     percentComplete: 0, // filled in later
     hidePercentage: false,
     talentGrid: null, // filled in later
@@ -543,7 +545,9 @@ function makeItem(
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
   createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem));
 
-  if (createdItem.primStat) {
+  createdItem.weaponOrArmor = Boolean(isWeaponOrArmor(createdItem));
+
+if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
     // TODO: hey, does this work?
     createdItem.primStat.stat = Object.create(statDef);
