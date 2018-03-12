@@ -1,5 +1,7 @@
 # Next
 
+# 4.43.0
+
 * Fix some cases where moving stacks of items would fail.
 * Fix "Gather Reputation Items" from not gathering everything.
 * More items can be successfully dragged out of the postmaster.
