@@ -191,7 +191,7 @@
       "Leveling": "显示物品在不同等级的状态：",
       "NeedsXP": "{{term}} - 显示仍能获得经验值的物品.",
       "Upgraded": "{{term}}-显示具有足够 XP 解锁其所有节点的物品， 但并非所有节点都已解锁。",
-      "XPComplete": "{{term}}-显示无法将 XP 放入其中的物品 (无论其升级是否已解锁)。"
+      "XPComplete": "{{term}}-显示无法获得更多XP的物品 (无论升级是否完成)。"
     },
     "LightLevel": "根据光等来显示物品(武器攻击力; 防具护甲值).",
     "Locked": "根据物品锁定状态显示.",
@@ -503,8 +503,8 @@
     "ExpiresIn": "于{{endTime}}过期",
     "Factions": "阵营",
     "Milestones": "里程碑",
-    "ProfileMilestones": "账号里程碑",
-    "ProfileQuests": "账号任务",
+    "ProfileMilestones": "账户里程碑",
+    "ProfileQuests": "账户任务",
     "Progress": "进度",
     "Quests": "任务",
     "RewardEarned": "奖励已解锁但尚未兑换",
