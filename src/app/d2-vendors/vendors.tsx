@@ -4,7 +4,8 @@ import {
   DestinyItemComponentSetOfint32,
   DestinyVendorComponent,
   DestinyVendorSaleItemComponent,
-  DestinyVendorsResponse
+  DestinyVendorsResponse,
+  DestinyVendorGroup
   } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
@@ -16,7 +17,7 @@ import Countdown from '../dim-ui/countdown';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import VendorItems from './vendor-items';
-import { $state } from '../ngimport-more';
+import { $state, loadingTracker } from '../ngimport-more';
 import './vendor.scss';
 
 interface Props {
@@ -61,7 +62,13 @@ export default class Vendors extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.loadVendors();
+    const promise = this.loadVendors();
+    loadingTracker.addPromise(promise);
+
+    this.props.$scope.$on('dim-refresh', () => {
+      const promise = this.loadVendors();
+      loadingTracker.addPromise(promise);
+    });
   }
 
   render() {
@@ -72,27 +79,42 @@ export default class Vendors extends React.Component<Props, State> {
       return <div className="vendor dim-page">Loading...</div>;
     }
 
-    const vendors = _.sortBy(Object.values(vendorsResponse.vendors.data), (vendor) => {
-      const def = defs.Vendor.get(vendor.vendorHash);
-      // TODO: maybe group by location?
-      return def ? def.displayProperties.name : 999;
-    });
-
     return (
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
-        {vendors.map((vendor) =>
-          <Vendor
-            key={vendor.vendorHash}
-            defs={defs}
-            vendor={vendor}
-            itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
-            sales={vendorsResponse.sales.data[vendor.vendorHash] && vendorsResponse.sales.data[vendor.vendorHash].saleItems}
-          />
+        {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
+          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse}/>
         )}
+
       </div>
     );
   }
+}
+
+function VendorGroup({
+  defs,
+  group,
+  vendorsResponse
+}: {
+  defs: D2ManifestDefinitions;
+  group: DestinyVendorGroup;
+  vendorsResponse: DestinyVendorsResponse;
+}) {
+  const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
+  return (
+    <>
+      <h2>{groupDef.categoryName}</h2>
+      {group.vendorHashes.map((h) => vendorsResponse.vendors.data[h]).map((vendor) =>
+        <Vendor
+          key={vendor.vendorHash}
+          defs={defs}
+          vendor={vendor}
+          itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
+          sales={vendorsResponse.sales.data[vendor.vendorHash] && vendorsResponse.sales.data[vendor.vendorHash].saleItems}
+        />
+      )}
+    </>
+  );
 }
 
 function Vendor({
