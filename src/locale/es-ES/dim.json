@@ -265,10 +265,10 @@
     "NeverShow": "Nunca mostrar esto de nuevo.",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tienes poco espacio en disco. DIM no puede continuar.",
-    "UpdateAvailable": "DIM Actualizato",
+    "UpdateAvailable": "DIM actualizado",
     "UpdateAvailableMessage": "Hay una actualización lista para DIM. Recarga la página para aplicarla.",
     "Version_beta": "La Beta ha sido actualizada a la v{{version}}",
-    "Version_release": "DIM v{{version}} ha sido Publicada",
+    "Version_release": "DIM v{{version}} ha sido publicada",
     "Xur": "Xûr esta aquí"
   },
   "Hotkey": {

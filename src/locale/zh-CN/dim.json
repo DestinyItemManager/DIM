@@ -1,7 +1,7 @@
 {
   "Accounts": {
     "Blizzard": "PC",
-    "NoCharacters": "没有找到与此Bungie.net账号相关联的Destiny角色，登陆其它账号试试看。",
+    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
     "PlayStation": "PS4",
     "Xbox": "XB1"
   },
@@ -28,7 +28,7 @@
     "Title": "一则来自Bungie的信息:"
   },
   "BungieService": {
-    "DestinyLegacyPlatform": "目前Bungie的服务出现了一个Bug，如果您在上一代主机上游玩过Destiny1，那么DIM将无法加载您的Destiny2账户信息。Bungie将很快修复这个Bug。但是，直到Bug修复完成前，您必须在目前世代主机上游玩Destiny1以便DIM能读取您的账户信息。",
+    "DestinyLegacyPlatform": "目前Bungie的服务出现了一个Bug，如果您在上一代主机上游玩过Destiny1，那么DIM将无法加载您的Destiny2帐户信息。Bungie将很快修复这个Bug。但是，直到Bug修复完成前，您必须在目前世代主机上游玩Destiny1以便DIM能读取您的帐户信息。",
     "DevVersion": "您是否正在运行开发版的DIM？您必须先将您的Chrome扩展与Bungie.net关联。",
     "Difficulties": "Bungie API目前遇到困难.",
     "ItemUniqueness": "物品稀有度",
@@ -37,8 +37,8 @@
     "ItemUniquenessExplanation_male": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "Maintenance": "Bungie.net服务器停机维护中.",
     "NetworkError": "网络错误 - {{status}}{{statusText}}",
-    "NoAccount": "在{{platform}} 上没有找到任何与之关联的Destiny账户，请确保您选择了正确的平台。",
-    "NoAccountForPlatform": "在{{platform}}上没有找到Destiny账户.",
+    "NoAccount": "在{{platform}} 上没有找到任何与之关联的Destiny帐户，请确保您选择了正确的平台。",
+    "NoAccountForPlatform": "在{{platform}} 上没有找到Destiny帐户.",
     "NoCookies": "没有找到cookies。",
     "NotConnected": "您可能没有连接到互联网。",
     "NotConnectedOrBlocked": "你可能没有连接到互联网，或是广告拦截和隐私拓展阻止了Bungie.net.",
@@ -401,7 +401,7 @@
     "Delete": "删除配装",
     "DeleteErrorDescription": "无法删除配装{{loadoutName}}：{{error}}。",
     "DeleteErrorTitle": "删除配装时发生错误",
-    "DoesNotExist": "{{itemname}}不存在于您的账户中。",
+    "DoesNotExist": "{{itemname}} 不存在于您的帐户中.",
     "Edit": "编辑配装",
     "FilteredItems": "已过滤的物品",
     "FromEquipped": "当前装备",
@@ -503,8 +503,8 @@
     "ExpiresIn": "于{{endTime}}过期",
     "Factions": "阵营",
     "Milestones": "里程碑",
-    "ProfileMilestones": "账户里程碑",
-    "ProfileQuests": "账户任务",
+    "ProfileMilestones": "帐户里程碑",
+    "ProfileQuests": "帐户任务",
     "Progress": "进度",
     "Quests": "任务",
     "RewardEarned": "奖励已解锁但尚未兑换",
@@ -553,7 +553,7 @@
     "ShowAnimationsHelp": "我们将为您的新物品上增加一个来回滚动的闪烁特效. 关闭此项可节约CPU资源.",
     "ShowElemental": "在武器上显示元素标志",
     "ShowOverlay": "新获得的物品高亮显示",
-    "ShowReviews": "显示武器的社区(DIM)评测",
+    "ShowReviews": "显示武器的社区(DIM)评分",
     "SizeItem": "物品显示大小",
     "SortByBasePower": "基础力量(仅限于D2)",
     "SortByClassType": "必要的类",
@@ -589,8 +589,8 @@
     "ChromeSyncStorage": "谷歌浏览器同步(仅限于扩展)",
     "ClearIgnoredUsers": "清除不理性的评论",
     "Details": {
-      "ChromeSyncStorage": "如果您已登陆到Chrome，数据将会被同步到其它登陆此Chrome账号的设备上。这与DIM网站无关。",
-      "GoogleDriveStorage": "DIM可以保存自身数据到Google云端硬盘上。如果您在多个浏览器中登陆了Google云端硬盘，您的数据将在多处共享。数据是根据Bungie账号来储存的。",
+      "ChromeSyncStorage": "如果您已登陆到Chrome，数据将会被同步到其它登陆此Chrome帐号的设备上。这与DIM网站无关。",
+      "GoogleDriveStorage": "DIM可以保存自身数据到Google云端硬盘上。如果您在多个浏览器中登陆了Google云端硬盘，您的数据将在多处共享。数据是根据Bungie帐号来储存的。",
       "IndexedDBStorage": "本地存储仅在当前浏览器上保存您的数据信息."
     },
     "Disabled": "已禁用",
@@ -671,7 +671,7 @@
       "FAQKeyboard": "我可以在DIM上使用键盘快捷键吗？",
       "FAQKeyboardAnswer": "当然! 按下\"?\"键查看所有可用的快捷键.",
       "FAQLogout": "如何注销DIM？",
-      "FAQLogoutAnswer": "点击屏幕右上角的账户，然后选择“注销”。",
+      "FAQLogoutAnswer": "点击屏幕右上角的帐户，然后选择“注销”。",
       "FAQLostItem": "在使用你们网站的过程中我丢失了我的物品！",
       "FAQLostItemAnswer": "Bungie Api不允许APP删除物品（包括他们自己的官方APP）。这看起来似乎更像是一次数据传输错误，把您的物品遗留在了另一个角色的保险库里。你可以试试看在其它角色上能否找到。如果其它角色上也没有，请刷新下页面。然后打开此链接{{link}} 查看，或者在游戏中查看物品是否存在。不过我们肯定东西没有丢失。",
       "FAQMobile": "DIM是否会支持移动端？是否会提供一个APP？",
