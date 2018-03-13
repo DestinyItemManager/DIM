@@ -44,6 +44,8 @@ export class VendorItemComponent extends React.Component<Props, {}> {
               className={classNames("item-img", { transparent: item.borderless })}
               style={bungieBackgroundStyle(item.displayProperties.icon)}
             />
+            {item.primaryStat &&
+              <div className="item-stat item-equipment">{item.primaryStat}</div>}
           </div>
         </a>
         <div className="vendor-costs">
