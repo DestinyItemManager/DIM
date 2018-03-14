@@ -1,4 +1,4 @@
-import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
+import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition } from "bungie-api-ts/destiny2";
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { equals } from 'angular';
 
@@ -11,26 +11,34 @@ import { equals } from 'angular';
  */
 export class VendorItem {
   canPurchase: boolean;
+  private vendorDef: DestinyVendorDefinition;
   private vendorItemDef: DestinyVendorItemDefinition;
   private saleItem?: DestinyVendorSaleItemComponent;
   private inventoryItem: DestinyInventoryItemDefinition;
   // TODO: each useful component
+  private instance: DestinyItemInstanceComponent;
 
   private defs: D2ManifestDefinitions;
 
   constructor(
     defs: D2ManifestDefinitions,
+    vendorDef: DestinyVendorDefinition,
     vendorItemDef: DestinyVendorItemDefinition,
     saleItem?: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
-    _itemComponents?: DestinyItemComponentSetOfint32,
+    itemComponents?: DestinyItemComponentSetOfint32,
     canPurchase = true
   ) {
     this.defs = defs;
+    this.vendorDef = vendorDef;
     this.vendorItemDef = vendorItemDef;
     this.saleItem = saleItem;
     this.inventoryItem = this.defs.InventoryItem.get(this.vendorItemDef.itemHash);
     this.canPurchase = canPurchase;
+    if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
+      this.instance = itemComponents.instances.data[saleItem!.vendorItemIndex];
+      // TODO: more here, like perks and such
+    }
   }
 
   get key() {
@@ -68,6 +76,12 @@ export class VendorItem {
     return (!this.saleItem || this.saleItem.failureIndexes.length === 0);
   }
 
+  get failureStrings(): string[] {
+    return this.saleItem
+      ? (this.saleItem.failureIndexes || []).map((i) => this.vendorDef.failureStrings[i])
+      : [];
+  }
+
   /**
    * What category should this be shown in?
    */
@@ -77,6 +91,10 @@ export class VendorItem {
 
   get costs() {
     return (this.saleItem && this.saleItem.costs) || [];
+  }
+
+  get primaryStat() {
+    return (this.instance && this.instance.primaryStat && this.instance.primaryStat.value);
   }
 
   equals(other: VendorItem) {

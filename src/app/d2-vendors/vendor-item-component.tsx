@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { settings } from '../settings/settings';
 import { DestinyItemQuantity } from "bungie-api-ts/destiny2";
+import { PressTip } from "../dim-ui/press-tip";
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -33,18 +34,27 @@ export class VendorItemComponent extends React.Component<Props, {}> {
       );
     }
 
+    let title = item.displayProperties.name;
+    if (!item.canBeSold) {
+      title = `${title}\n${item.failureStrings.join("\n")}`;
+    }
+
     return (
-      <div className="vendor-item">
+      <div className={classNames("vendor-item", { 'search-hidden': !item.canBeSold })}>
         {!item.canPurchase &&
           <div className="locked-overlay"/>
         }
         <a href={`http://db.destinytracker.com/d2/${settings.language}/items/${item.itemHash}`} target="_blank" rel="noopener">
-          <div title={item.displayProperties.name} className="item">
-            <div
-              className={classNames("item-img", { transparent: item.borderless })}
-              style={bungieBackgroundStyle(item.displayProperties.icon)}
-            />
-          </div>
+          <PressTip tooltip={title}>
+            <div className="item">
+                <div
+                  className={classNames("item-img", { transparent: item.borderless })}
+                  style={bungieBackgroundStyle(item.displayProperties.icon)}
+                />
+                {item.primaryStat &&
+                  <div className="item-stat item-equipment">{item.primaryStat}</div>}
+              </div>
+          </PressTip>
         </a>
         <div className="vendor-costs">
           {item.costs.map((cost) =>
