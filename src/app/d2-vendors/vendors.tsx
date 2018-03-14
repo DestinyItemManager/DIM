@@ -8,7 +8,6 @@ import {
   DestinyVendorGroup
   } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
-import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getBasicProfile, getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
