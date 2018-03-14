@@ -4,7 +4,8 @@ import {
   DestinyInventoryComponent,
   DestinyItemComponentSetOfint64,
   DictionaryComponentResponse,
-  SingleComponentResponse
+  SingleComponentResponse,
+  DestinyProfileResponse
   } from 'bungie-api-ts/destiny2';
 import { $q } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
@@ -103,7 +104,7 @@ function loadProgress(account: DestinyAccount): IPromise<ProgressProfile | undef
         defs,
         profileInfo,
         get lastPlayedDate() {
-          return _.reduce(_.values(this.profileInfo.characters.data), (memo, character: DestinyCharacterComponent) => {
+          return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce((memo, character: DestinyCharacterComponent) => {
             const d1 = new Date(character.dateLastPlayed);
             return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
           }, new Date(0));

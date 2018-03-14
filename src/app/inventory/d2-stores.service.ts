@@ -87,10 +87,10 @@ export function D2StoresService(
   //       nothing changed!
 
   const service = {
-    getActiveStore: () => _.find(_stores, 'current'),
+    getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
-    getStore: (id) => _.find(_stores, { id }),
-    getVault: () => _.find(_stores, { id: 'vault' }) as DimVault | undefined,
+    getStore: (id) => _stores.find((s) => s.id === id),
+    getVault: () => _stores.find((s) => s.isVault) as DimVault | undefined,
     getAllItems: () => flatMap(_stores, (s) => s.items),
     getStoresStream,
     getItemAcrossStores,
@@ -249,7 +249,7 @@ export function D2StoresService(
         _stores = stores;
 
         // TODO: update vault counts for character account-wide
-        updateVaultCounts(buckets, _.find(characters, 'current'), vault);
+        updateVaultCounts(buckets, characters.find((c) => c.current), vault);
 
         dimDestinyTrackerService.fetchReviews(stores);
 
@@ -305,7 +305,7 @@ export function D2StoresService(
     store.progression = progressions ? { progressions } : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
-    let items = characterInventory.concat(_.values(characterEquipment));
+    let items = characterInventory.concat(Object.values(characterEquipment));
     if (store.current) {
       items = items.concat(Object.values(profileInventory).filter((i) => {
         // items that can be stored in a vault
@@ -322,7 +322,7 @@ export function D2StoresService(
       });
 
       // Fill in any missing buckets
-      _.values(buckets.byType).forEach((bucket) => {
+      Object.values(buckets.byType).forEach((bucket) => {
         if (!store.buckets[bucket.id]) {
           store.buckets[bucket.id] = [];
         }
@@ -356,7 +356,7 @@ export function D2StoresService(
       store.d2VaultCounts = {};
 
       // Fill in any missing buckets
-      _.values(buckets.byType).forEach((bucket) => {
+      Object.values(buckets.byType).forEach((bucket) => {
         if (!store.buckets[bucket.id]) {
           store.buckets[bucket.id] = [];
         }
@@ -389,7 +389,7 @@ export function D2StoresService(
    * Find the date of the most recently played character.
    */
   function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
-    return _.reduce(_.values(profileInfo.characters.data), (memo, character: DestinyCharacterComponent) => {
+    return Object.values(profileInfo.characters.data).reduce((memo, character: DestinyCharacterComponent) => {
       const d1 = new Date(character.dateLastPlayed);
       return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
     }, new Date(0));
@@ -467,9 +467,9 @@ export function D2StoresService(
     };
     // 3 Weapons, 4 Armor, 1 General
     const itemWeightDenominator = 42;
-    const items = _.filter(_.flatten(_.values(loadout.items)), (i) => i.equipped);
+    const items = _.flatten(Object.values(loadout.items)).map((i) => i.equipped);
 
-    const exactBasePower = _.reduce(items, (memo, item) => {
+    const exactBasePower = items.reduce((memo, item) => {
       return memo + (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
     }, 0) / itemWeightDenominator;
 
@@ -481,7 +481,7 @@ export function D2StoresService(
   // object to represent a Profile.
   function updateVaultCounts(buckets: DimInventoryBuckets, activeStore: DimStore, vault: DimVault) {
     // Fill in any missing buckets
-    _.values(buckets.byType).forEach((bucket) => {
+    Object.values(buckets.byType).forEach((bucket) => {
       if (bucket.accountWide && bucket.vaultBucket) {
         const vaultBucketId = bucket.id;
         vault.d2VaultCounts[vaultBucketId] = vault.d2VaultCounts[vaultBucketId] || {

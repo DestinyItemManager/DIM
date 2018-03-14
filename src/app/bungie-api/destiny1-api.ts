@@ -212,9 +212,7 @@ export function equipItems(store, items) {
       const data: any = response.data.Response;
       store.updateCharacterInfoFromEquip(data.summary);
       return items.filter((i: any) => {
-        const item: any = _.find(data.equipResults, {
-          itemInstanceId: i.id
-        });
+        const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
         return item && item.equipStatus === 1;
       });
     });

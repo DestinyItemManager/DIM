@@ -154,12 +154,12 @@ export function VendorService(
    * Returns a promise for a fresh view of the vendors and their items.
    */
   function loadVendors(account, stores) {
-    const characters = _.reject(stores, 'isVault');
+    const characters = stores.filter((s) => !s.isVault);
 
     const reloadPromise = getDefinitions()
       .then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
-        const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
+        const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
 
         service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
         service.loadedVendors = 0;

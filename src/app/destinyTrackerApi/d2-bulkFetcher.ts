@@ -66,7 +66,7 @@ class D2BulkFetcher {
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
    */
   bulkFetchVendorItems(vendorContainer, platformSelection: number) {
-    const vendors = _.values(vendorContainer);
+    const vendors = Object.values(vendorContainer);
 
     this._getBulkFetchPromise(vendors, platformSelection)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,

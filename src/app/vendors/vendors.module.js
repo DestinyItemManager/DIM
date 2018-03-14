@@ -19,7 +19,7 @@ export default angular
   .component('xur', Xur)
   .filter('vendorTab', () => vendorTab)
   .filter('vendorTabItems', () => vendorTabItems)
-  .filter('values', () => _.values)
+  .filter('values', () => Object.values)
   .config(($stateProvider) => {
     'ngInject';
 

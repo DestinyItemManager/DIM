@@ -706,7 +706,7 @@ export function ItemFactory(
   }
 
   function getClassTypeNameLocalized(defs, type) {
-    const klass = _.find(_.values(defs.Class), { classType: type });
+    const klass = _.find(Object.values(defs.Class), { classType: type });
     if (klass) {
       return klass.className;
     } else {

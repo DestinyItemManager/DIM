@@ -104,7 +104,7 @@ export function buildSearchConfig(destinyVersion, itemTags, categories) {
     filterTrans.hasRating = ['rated', 'hasrating'];
   }
 
-  const keywords = _.flatten(_.flatten(_.values(filterTrans)).map((word) => {
+  const keywords = _.flatten(_.flatten(Object.values(filterTrans)).map((word) => {
     return [`is:${word}`, `not:${word}`];
   }));
 
