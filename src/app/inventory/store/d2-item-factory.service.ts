@@ -142,7 +142,7 @@ export interface DimPerk extends DestinySandboxPerkDefinition {
   requirement: string;
 }
 
-// TODO: This interface is clearly too large
+// TODO: This interface is clearly too large - break out interfaces for common subsets
 export interface DimItem {
   owner: string;
   /** The version of Destiny this comes from */
@@ -238,6 +238,31 @@ export interface DimItem {
   inCategory(categoryName: string): boolean;
   isEngram(): boolean;
   canBeInLoadout(): boolean;
+}
+
+/**
+ * Extra properties on D1 items only
+ */
+export interface DimD1Item extends DimItem {
+  trackable: boolean;
+  talentGrid?: DimD1TalentGrid | null;
+  quality: {
+    min: number;
+    max: number;
+  };
+  year: 1 | 2 | 3;
+  sourceHashes: number[];
+}
+
+export interface DimD1TalentGrid extends DimTalentGrid {
+  xpComplete: number;
+  hasAscendNode: boolean;
+  ascended: boolean;
+  nodes: DimD1GridNode[];
+}
+
+export interface DimD1GridNode extends DimGridNode {
+  ornament: boolean;
 }
 
 export interface DimMasterwork {
