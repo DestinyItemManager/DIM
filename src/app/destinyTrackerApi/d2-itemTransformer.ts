@@ -1,6 +1,7 @@
 import * as _ from 'underscore';
 import { DtrItem } from '../item-review/destiny-tracker.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { compact } from '../util';
 
 /**
  * Translates items from the objects that DIM has to the form that the DTR API expects.
@@ -37,17 +38,17 @@ class D2ItemTransformer {
     const MOD_CATEGORY = 59;
     const POWER_STAT_HASH = 1935470627;
 
-    const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
-      return plug && plug.itemCategoryHashes && plug.investmentStats &&
-        plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
-        plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
+    const powerMods = item.sockets ? compact(item.sockets.sockets.map((i) => i.plug)).filter((plug) => {
+      return plug.plugItem.itemCategoryHashes && plug.plugItem.investmentStats &&
+        plug.plugItem.itemCategoryHashes.includes(MOD_CATEGORY) &&
+        plug.plugItem.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
     }) : null;
 
     if (!powerMods) {
       return [];
     }
 
-    return _.pluck(powerMods, 'hash');
+    return powerMods.map((m) => m.plugItem.hash);
   }
 
   _getSelectedPlugs(item: DimItem) {
@@ -55,7 +56,7 @@ class D2ItemTransformer {
       return null;
     }
 
-    const allPlugs = _.compact(_.pluck(_.pluck(item.sockets.sockets, 'plug'), 'hash'));
+    const allPlugs = compact(item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash));
 
     return _.difference(allPlugs, this._getPowerMods(item));
   }

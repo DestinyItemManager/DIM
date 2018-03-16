@@ -23,7 +23,7 @@ class D2PerkRater {
       return;
     }
 
-    _.each(item.sockets.sockets, (socket) => {
+    item.sockets.sockets.forEach((socket) => {
       if ((socket.plugOptions.length) &&
           (socket.plugOptions.length > 1)) {
         const plugOptionHashes = _.pluck(socket.plugOptions, 'hash');
@@ -44,7 +44,7 @@ class D2PerkRater {
       return;
     }
 
-    const matchingPlugOption = _.find(socket.plugOptions, (plugOption) => plugOption.hash === maxReview.plugOptionHash);
+    const matchingPlugOption = socket.plugOptions.find((plugOption) => plugOption.plugItem.hash === maxReview.plugOptionHash);
 
     if (matchingPlugOption) {
       matchingPlugOption.bestRated = true;
