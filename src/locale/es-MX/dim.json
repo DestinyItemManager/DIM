@@ -89,7 +89,7 @@
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} reseñas.",
-    "BestRatedKey": " = beneficio sugerida",
+    "BestRatedKey": " = opción de configuración sugerida",
     "BestRatedTip": "Esta opción de configuración está asociada con calificaciones altas de la comunidad.",
     "Cancel": "Cancelar",
     "Cons": "Contras",
@@ -111,7 +111,7 @@
     "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker.",
     "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker.",
     "Submit": "Enviar",
-    "ThankYou": "¡Gracias por enviar una reseña! Estará en vivo pronto.",
+    "ThankYou": "¡Gracias por enviar una reseña! Estará disponible pronto.",
     "VerifyReport": "¿Estas seguro de que quieres marcar esta reseña?",
     "YourReview": "Tu Reseña"
   },
@@ -188,26 +188,26 @@
     "Leveling": {
       "Complete": "{{term}} - muestra objetos que están completamente mejorados - todas las mejoras desbloqueadas.",
       "Incomplete": "{{term}} - muestra objetos que no están completados - aún queda al menos una mejora por desbloquear.",
-      "Leveling": "Muestra objetos en diferentes estados de leveleo:",
-      "NeedsXP": "{{term}} - muestra objetos que aun pueden adquirir más XP en ellos.",
+      "Leveling": "Muestra objetos en diferentes estados de nivel:",
+      "NeedsXP": "{{term}} - muestra objetos que aún se les puede aumentar el XP.",
       "Upgraded": "{{term}} - muestra objetos que tienen suficiente XP para desbloquear todos sus nodos, pero no todos sus nodos han sido desbloqueados.",
-      "XPComplete": "{{term}} - muestra objetos que no pueden adquirir mas XP en ellos (sin importar si sus mejoras han sido o no desbloqueadas)."
+      "XPComplete": "{{term}} - muestra objetos que no se les puede poner más XP (sin importar si sus mejoras han sido desbloqueadas o no)."
     },
     "LightLevel": "Muestra objetos basado en su nivel de luz (Ataque para Armas; Defensa para Armaduras).",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
-    "NamedStat": "Muestra armadura que tiene puntos en la estadística nombrada.",
+    "NamedStat": "Muestra armadura que tiene puntos en el atributo mencionado.",
     "NewItems": "Muestra objetos nuevos.",
     "Notes": "Busca los objetos que has etiquetado con notas personalizadas",
     "Ornament": "Muestra objetos con ornamentos y filtros para su estado.",
     "PartialMatch": "Muestra objetos que en su nombre/ventaja coinciden parcialmente al filtro de texto.",
-    "Postmaster": "Objetos que están actualmente en el jefe de correos.",
-    "PowerLevel": "Muestra objetos basado en su nivel de luz (Ataque para Armas; Defensa para Armaduras).",
-    "PowerMod": "Elementos que tienen un mod para aumentar su poder.",
+    "Postmaster": "Objetos que están actualmente en la administración.",
+    "PowerLevel": "Muestra objetos basado en su nivel de poder (Ataque para Armas; Defensa para Armaduras).",
+    "PowerMod": "Elementos que tienen un modificador para aumentar su poder.",
     "Quality": "Muestra objetos basado en el porcentaje de calidad de su estadística total. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
     "RarityTier": "Muestra objetos basado en su nivel de rareza.",
     "Rated": "Muestra todas las armas que tienen calificación en Destiny Tracker.",
     "Rating": "Muestra armas basado en su calificación en Destiny Tracker.",
-    "Reforgeable": "Muestra objetos que pueden ser reforjados con el armero.",
+    "Reforgeable": "Muestra objetos que pueden ser reforjados con el Armero.",
     "Release": "Disponible desde el lanzamiento <i>{{release}}</i>",
     "Releases": {
       "RoI": "Los Señores de Hierro",
@@ -216,24 +216,24 @@
     },
     "RequiredLevel": "Muestra objetos basado en su nivel requerido.",
     "StackLevel": "Muestra los elementos según la cantidad de elementos apilados.",
-    "Stackable": "Muestra objetos que pueden ser apilados (municion sintética, monedas extrañas, etc)",
+    "Stackable": "Muestra objetos que pueden ser apilados (munición sintética, monedas extrañas, etc)",
     "Stats": "Muestra objetos basados en el valor de su estadística. Los filtros disponibles son:",
     "Tags": {
-      "Dismantle": "Muestra objetos que tú deseas desmantelar eventualmente.",
+      "Dismantle": "Muestra objetos que eventualmente deseas desmantelar.",
       "Favorite": "Muestra tus objetos favoritos.",
-      "Infuse": "Muestra objetos que deseas infundir eventualmente.",
-      "Keep": "Muestra los objetos a quedarse.",
+      "Infuse": "Muestra objetos que eventualmente deseas infundir.",
+      "Keep": "Muestra los objetos que quieres quedarte.",
       "NoTag": "Muestra objetos sin una etiqueta."
     },
-    "Tracked": "Muestra aventuras/contratos basadas en su estado de seguimiento.",
+    "Tracked": "Muestra aventuras/contratos basados en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
     "Vendor": "El objeto está disponible con el vendedor <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "El objeto está disponible con el vendedor <i>{{vendor}}</i>",
     "Vendors": {
-      "CQ": "Intendente del Crisol",
-      "DO": "Órbita Muerta",
+      "CQ": "Director del Crisol",
+      "DO": "La Órbita Muerta",
       "EV": "Eververso",
-      "FWC": "Secta de la Guerra Futura",
+      "FWC": "La Secta de la Guerra Futura",
       "Gunsmith": "Armero",
       "NM": "La Nueva Monarquía",
       "Shipwright": "Contramaestre",
@@ -241,7 +241,7 @@
     },
     "VideoExample": "Para un mejor ejemplo de cómo usar los filtros, ve este video en {{link}}",
     "WeaponClass": "Muestra objetos basados en sus clases de arma.",
-    "WeaponType": "Muestra armas basadas en su tipo de daño.",
+    "WeaponType": "Muestra armas basadas en su tipo de arma.",
     "Year": "Muestra los objetos según el año de aparición en Destiny."
   },
   "Header": {
@@ -553,7 +553,7 @@
     "ShowAnimationsHelp": "Muestra el brillo de artículo nuevo en nuevos art. Si apagas esto puede ahorrar ciclos en el CPU.",
     "ShowElemental": "Mostrar ícono de daño elemental en armas",
     "ShowOverlay": "Mostrar artículos nuevos con una capa brillante",
-    "ShowReviews": "Mostrar calificaciones de la comunidad en las armas",
+    "ShowReviews": "Mostrar en las armas calificaciones de la comunidad",
     "SizeItem": "Tamaño de objeto",
     "SortByBasePower": "Poder base (Sólo D2)",
     "SortByClassType": "Clase Requerida",
@@ -581,13 +581,13 @@
     "PrestigeD2": "Prestigio nivel: {{level}}\n{{exp}}xp para un engrama brillante.",
     "Quality": "Calidad Estadística",
     "Strength": "Fuerza",
-    "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
+    "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "Storage": {
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
     "ChromeSyncStorage": "Sincronización de Chrome (extensión solamente)",
-    "ClearIgnoredUsers": "Limpiar Analistas Ignorados",
+    "ClearIgnoredUsers": "Limpiar Reseñantes Ignorados",
     "Details": {
       "ChromeSyncStorage": "Si haz iniciado sesión en Chrome, tu información será sincronizada con otras instancias de Chrome. Esto no funciona en el sitio web de DIM.",
       "GoogleDriveStorage": "DIM puede guardar datos en la app de Google Drive. Si inicias sesión en Google Drive en navegadores multiples, tus datos serán compartidos por todas partes. Estos datos son almacenados por cada cuenta de Bungie.",
@@ -624,16 +624,16 @@
     "Move": "Mover"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "Para re-autorizar google drive, debe reiniciar su navegador.",
-    "OneItemTooLarge": "Su archivo de guardado tiene un elemento muy grande. Probablemente un equipo guardado tiene demasiados objetos.",
-    "SaveTooLarge": "Su archivo de guardado es muy grande. Elimine equipos guardados."
+    "GoogleDriveReAuth": "Para re-autorizar google drive, debes reiniciar tu navegador.",
+    "OneItemTooLarge": "Tu archivo para guardar tiene un elemento muy grande. Probablemente una carga guardada tiene demasiados objetos.",
+    "SaveTooLarge": "Tu archivo para guardar es muy grande. Elimina cargas guardadas."
   },
   "Tags": {
-    "ClearTag": "Limpiar",
+    "ClearTag": "Borrar",
     "Favorite": "Favorito",
     "Infuse": "Infundir",
     "Junk": "Basura",
-    "Keep": "Guardar",
+    "Keep": "Mantener",
     "TagItem": "Etiqueta de objeto"
   },
   "TrialsCard": {
@@ -642,18 +642,18 @@
     "SevenWins": "Recompensa de 7 victorias (Arma)"
   },
   "Vendors": {
-    "All": "Todo",
+    "All": "Todos",
     "ArmorAndWeapons": "Armadura y armas",
     "Available": "Disponible en:",
     "Bounties": "Contratos",
     "Collections": "Colecciones",
-    "Compare": "Comparar con lo que ya tienes:",
+    "Compare": "Comparado con lo que ya tienes:",
     "Consumables": "Consumibles",
     "Emotes": "Gestos",
-    "Load": "Cargando comerciantes",
-    "ShadersAndEmblems": "Shaders & Emblemas",
-    "ShipsAndVehicles": "Naves y vehículos",
-    "Vendors": "Comerciantes"
+    "Load": "Cargando Vendedores",
+    "ShadersAndEmblems": "Colores & Emblemas",
+    "ShipsAndVehicles": "Naves & Vehículos",
+    "Vendors": "Vendedores"
   },
   "Views": {
     "About": {
@@ -663,7 +663,7 @@
       "DiscordHelp": "Haz preguntas, da tu opinión y recibe soporte en nuestros canales de Discord.",
       "FAQ": "Preguntas Frecuentes",
       "FAQAccess": "¿Cómo accede DIM a mis datos de Destiny?",
-      "FAQAccessAnswer": "Utilizamos la autenticación de la app de Bungie para permitir a DIM ver y mover tus objetos. DIM nunca ve tu usuario o contraseña. Funciona del mismo modo que la App Acompañante.",
+      "FAQAccessAnswer": "Utilizamos la autenticación de la app de Bungie para permitir el acceso a que DIM vea y mueva tus objetos. DIM nunca ve tu usuario o contraseña. Esta es la misma forma que funciona la App Acompañante.",
       "FAQD2": "¿Será DIM compatible con Destiny 2?",
       "FAQD2Answer": "Sí! Esperamos dar soporte a Destiny 2 poco después de ser lanzado (y hayamos tenido la oportunidad de jugar el juego nosotros mismos). Espera que DIM empiece con las cosas sencillas (como mostrar tus artículos y permitirte moverlos), y de ahí trabajaremos en las cosas más padres, en lo que vamos descubriendo lo que D2 tiene para nosotros. La misma página de DIM dará soporte a Destiny 2 y Destiny 1 al mismo tiempo, y podrás intercambiar tus personajes entre D1 y D2.",
       "FAQDupeGally": "¡Oye, DIM duplicó mi Gjallarhorn!",
