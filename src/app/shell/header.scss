@@ -71,9 +71,9 @@
     flex-direction: row;
   }
   .header-separator {
-      display: inline;
+      display: block !important;
       width: 0;
-      height: 16px;
+      height: 16px !important;
       border-right: 1px solid #6f7070;
   }
   .dropdown {
@@ -97,7 +97,7 @@
 
     .link {
       display: block;
-      padding: 4px 2em;
+      padding: 4px 2em 4px 1em;
       font-size: 18px;
       margin: 0;
 
@@ -113,15 +113,28 @@
     }
   }
 
-  .first-to-go {
-    @media (max-width: 1100px) {
+  .header-links {
+    display: flex;
+    flex-direction: row;
+    height: 44px;
+    align-items: center;
+    flex-wrap: wrap;
+    overflow: hidden;
+    direction: rtl;
+    justify-content: flex-end;
+
+    @include phone-portrait {
       display: none;
     }
-  }
-
-  .second-to-go {
     @media (max-width: 800px) {
       display: none;
+    }
+
+    .link {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      direction: ltr;
     }
   }
 

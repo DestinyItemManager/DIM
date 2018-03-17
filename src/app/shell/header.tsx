@@ -15,6 +15,7 @@ import './header.scss';
 import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/click-outside';
 import Refresh from './refresh';
+import { IScope } from 'angular';
 
 const destiny1Links = [
   {
@@ -67,12 +68,17 @@ interface State {
   showSearch: boolean;
 }
 
-export default class Header extends React.Component<{}, State> {
+interface Props {
+  $scope: IScope;
+}
+
+export default class Header extends React.Component<Props, State> {
   private vendorsSubscription: Subscription;
   private accountSubscription: Subscription;
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHook: Function;
   private showXur = showPopupFunction('xur', '<xur></xur>');
+  private dropdownToggler: HTMLElement | null;
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
 
@@ -97,7 +103,10 @@ export default class Header extends React.Component<{}, State> {
       this.updateXur();
     });
 
-    // TODO: watch taps/clicks on document, close dropdown if outside dropdown
+    // Gonna have to figure out a better solution for this in React
+    this.props.$scope.$on('i18nextLanguageChange', () => {
+      this.setState({}); // gross, force re-render
+    });
   }
 
   componentWillUnmount() {
@@ -149,9 +158,37 @@ export default class Header extends React.Component<{}, State> {
       </>
     );
 
+    const reverseDestinyLinks = (
+      <>
+        {account && account.destinyVersion === 1 && xurAvailable &&
+          <a className="link" onClick={this.showXur}>Xûr</a>}
+        {links.slice().reverse().map((link) =>
+          <Link
+            key={link.state}
+            account={account}
+            state={link.state}
+            text={link.text}
+          />
+        )}
+      </>
+    );
+    const reverseDimLinks = (
+      <>
+      {links.length > 0 && <span className="header-separator"/>}
+      {bugReportLink &&
+        <ExternalLink
+          href="https://github.com/DestinyItemManager/DIM/issues"
+          text="Header.ReportBug"
+        />}
+        <ExternalLink href='https://teespring.com/stores/dim' text='Header.Shop'/>
+        <Link state='support' text='Header.SupportDIM'/>
+        <Link state='about' text='Header.About'/>
+      </>
+    );
+
     return (
       <div id="header">
-        <span className="menu link" onClick={this.toggleDropdown}>
+        <span className="menu link" ref={(ref) => this.dropdownToggler = ref} onClick={this.toggleDropdown}>
           <i className="fa fa-bars" />
           {dropdownOpen &&
             <ClickOutside className="dropdown" onClickOutside={this.hideDropdown}>
@@ -164,16 +201,17 @@ export default class Header extends React.Component<{}, State> {
         </span>
 
         <img
-          className={`logo link ${$DIM_FLAVOR}`}
-          ui-sref="default-account"
+          className={classNames('logo', 'link', $DIM_FLAVOR)}
+          onClick={this.goToDefaultAccount}
           title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
           src={logo}
           alt="DIM"
         />
 
-        {dimLinks}
-        {links.length > 0 && <span className="link first-to-go header-separator"/>}
-        {destinyLinks}
+        <div className="header-links">
+          {reverseDestinyLinks}
+          {reverseDimLinks}
+        </div>
 
         <span className="header-right">
           {!showSearch && <Refresh/>}
@@ -196,13 +234,16 @@ export default class Header extends React.Component<{}, State> {
     );
   }
 
+  private goToDefaultAccount = () => {
+    $state.go('default-account');
+  }
+
   private toggleDropdown = () => {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
   }
 
   private hideDropdown = (event) => {
-    console.log(event.target);
-    if (!event.target.classList.contains('fa-bars')) {
+    if (!this.dropdownToggler || !this.dropdownToggler.contains(event.target)) {
       this.setState({ dropdownOpen: false });
     }
   }

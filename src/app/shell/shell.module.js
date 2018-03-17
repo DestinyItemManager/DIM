@@ -7,7 +7,7 @@ import { CountdownComponent } from './countdown.component';
 import { BungieAlertsComponent } from './bungie-alerts.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { ScrollClass } from './scroll-class.directive';
-import Header from './header';
+import Header from './Header';
 import { ManifestProgressComponent } from './manifest-progress.component';
 import { defaultAccountRoute } from './default-account.route';
 import { destinyAccountRoute } from './destiny-account.route';
@@ -30,7 +30,7 @@ export const ShellModule = angular
   .component('bungieAlerts', BungieAlertsComponent)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
-  .component('header', react2angular(Header, []))
+  .component('header', react2angular(Header, [], ['$scope']))
   .component('dimManifestProgress', ManifestProgressComponent)
   .directive('scrollClass', ScrollClass)
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere)

@@ -18,6 +18,8 @@ interface State {
 }
 
 export default class AccountSelect extends React.Component<Props, State> {
+  private dropdownToggler: HTMLElement | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -43,7 +45,7 @@ export default class AccountSelect extends React.Component<Props, State> {
 
     return (
       <div className="account-select">
-        <Account className="selected-account" account={currentAccount} onClick={this.toggleDropdown}/>
+        <Account className="selected-account" innerRef={this.captureDropdownToggler} account={currentAccount} onClick={this.toggleDropdown}/>
         {open &&
           <ClickOutside onClickOutside={this.closeDropdown} className="accounts-popup">
             {otherAccounts.map((account) =>
@@ -57,8 +59,14 @@ export default class AccountSelect extends React.Component<Props, State> {
     );
   }
 
-  private closeDropdown = () => {
-    this.setState({ open: false });
+  private captureDropdownToggler = (ref: HTMLElement | null) => {
+    this.dropdownToggler = ref;
+  }
+
+  private closeDropdown = (e?) => {
+    if (!e || !this.dropdownToggler || !this.dropdownToggler.contains(e.target)) {
+      this.setState({ open: false });
+    }
   }
 
   private toggleDropdown = () => {
@@ -80,13 +88,15 @@ export default class AccountSelect extends React.Component<Props, State> {
 function Account({
   account,
   className,
+  innerRef,
   ...other
 }: {
   account: DestinyAccount;
   className?: string;
+  innerRef?: React.Ref<HTMLElement>;
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={classNames("account", className)} {...other}>
+    <div ref={innerRef} className={classNames("account", className)} {...other}>
       <div className="account-name">
         Destiny {account.destinyVersion === 1 ? '1' : '2'}
         •
