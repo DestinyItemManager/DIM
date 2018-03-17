@@ -50,6 +50,16 @@ const destiny2Links = [
   }
 ];
 
+if ($featureFlags.vendors) {
+  destiny2Links.push({
+    state: 'destiny2.vendors',
+    text: 'Vendors.Vendors'
+  }, {
+    state: 'destiny2.collections',
+    text: 'Vendors.Collections'
+  });
+}
+
 interface State {
   xurAvailable: boolean;
   account?: DestinyAccount;
