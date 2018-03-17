@@ -4,87 +4,89 @@ import { t } from 'i18next';
 import * as React from 'react';
 import { BungieImage } from '../dim-ui/bungie-image';
 import { PressTip } from '../dim-ui/press-tip';
-import { DimItem, DimSocketCategory } from '../inventory/store/d2-item-factory.service';
+import { DimItem, DimSocketCategory, DimPlug } from '../inventory/store/d2-item-factory.service';
 import './sockets.scss';
+import { IScope } from 'angular';
+import Objective from '../progress/Objective';
+import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
-export default function Sockets({
-  item
-}: {
+interface Props {
   item: DimItem;
-}) {
-  if (!item.sockets) {
-    return null;
+  $scope: IScope;
+}
+
+interface State {
+  defs?: D2ManifestDefinitions;
+}
+
+export default class Sockets extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
 
-  // TODO: fix that tip thing
-  // TODO: styles for mods and perks
-  // TODO: show all perks in tip
-  // TODO: break this up into smaller components
+  componentDidMount() {
+    // This is a hack / React anti-pattern so we can successfully update when the reviews async populate.
+    // It should be short-term - in the future we should load review data from separate state.
+    this.props.$scope.$watch(() => this.props.item.reviewsUpdated, () => {
+      this.setState({}); // gross
+    });
 
-  return (
-    <div className="item-sockets item-details">
-      {item.sockets.categories.map((category) =>
-        <div key={category.category.hash} className={classNames("item-socket-category", categoryStyle(category.category.categoryStyle))}>
-          <div className="item-socket-category-name">
-            <div>{category.category.displayProperties.name}</div>
-            {anyBestRatedUnselected(category) &&
-              <div className="best-rated-key">
-                <div className="best-rated-tip-container">
-                  <div className="best-rated-tip"/>
-                  <div className="circle-container">
-                    <div className="thumbs-up"><i className="fa fa-thumbs-up" aria-hidden="true"/></div>
-                  </div>
+    // This is another hack - it should be passed in, or provided via Context API.
+    getDefinitions().then((defs) => {
+      this.setState({ defs });
+    });
+  }
+
+  render() {
+    const { item } = this.props;
+
+    if (!item.sockets) {
+      return null;
+    }
+
+    // TODO: styles for mods and perks
+
+    return (
+      <div className="item-details">
+        {item.sockets.categories.map((category) =>
+          <div key={category.category.hash} className={classNames("item-socket-category", categoryStyle(category.category.categoryStyle))}>
+            <div className="item-socket-category-name">
+              <div>{category.category.displayProperties.name}</div>
+              {anyBestRatedUnselected(category) &&
+                <div className="best-rated-key">
+                  <div className="tip-text"><BestRatedIcon /> {t('DtrReview.BestRatedKey')}</div>
                 </div>
-                <div className="tip-text">{t('DtrReview.BestRatedKey')}</div>
-              </div>
-            }
-          </div>
-          <div className="item-sockets">
-            {category.sockets.map((socketInfo) =>
-              <div
-                key={socketInfo.socketIndex}
-                className={classNames("item-socket", { disabled: socketInfo.plug && !socketInfo.plug.enabled })}
-              >
-                {socketInfo.plugOptions.map((plug) =>
-                  <div
-                    key={plug.plugItem.hash}
-                    className="socket-container"
-                  >
-                    {plug.bestRated &&
-                      <div className="circle-container">
-                        <div className="thumbs-up"><i className="fa fa-thumbs-up" aria-hidden="true"/></div>
-                      </div>
-                    }
-                    <PressTip
-                      tooltip={
-                        <>
-                          <h2>{plug.plugItem.displayProperties.name}</h2>
-                          {plug.isMasterwork && item.masterworkInfo &&
-                            <strong>{item.masterworkInfo.statName} {item.masterworkInfo.statValue}</strong>
-                          }
-                          {plug.plugItem.displayProperties.description}
-                          {plug.plugItem.displayProperties.name !== plug.perks[0].displayProperties.name &&
-                              plug.perks[0].displayProperties.name}
-                          {plug.perks[0].displayProperties.description}
-                          {plug.enableFailReasons}
-                          {plug.bestRated && t('DtrReview.BestRatedTip')}
-                        </>
-                      }
+              }
+            </div>
+            <div className="item-sockets">
+              {category.sockets.map((socketInfo) =>
+                <div key={socketInfo.socketIndex} className="item-socket">
+                  {socketInfo.plugOptions.map((plug) =>
+                    <div
+                      key={plug.plugItem.hash}
+                      className={classNames("socket-container", { disabled: !plug.enabled, notChosen: plug !== socketInfo.plug })}
                     >
-                      <BungieImage
-                        className={classNames("item-mod", { notChosen: plug !== socketInfo.plug })}
-                        src={plug.plugItem.displayProperties.icon}
-                      />
-                    </PressTip>
-                  </div>
-                )}
-              </div>
-            )}
+                      {plug.bestRated && <BestRatedIcon />}
+                      <PressTip tooltip={<PlugTooltip item={item} plug={plug} defs={this.state.defs}/>}>
+                        <div>
+                          <BungieImage
+                            className="item-mod"
+                            src={plug.plugItem.displayProperties.icon}
+                          />
+                        </div>
+                      </PressTip>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
+  }
+
 }
 
 function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
@@ -108,5 +110,50 @@ function anyBestRatedUnselected(category: DimSocketCategory) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some((plugOption) =>
       plugOption !== socket.plug && plugOption.bestRated === true)
+  );
+}
+
+function BestRatedIcon() {
+  return <i className="fa fa-thumbs-up thumbs-up" title={t('DtrReview.BestRatedTip')} />;
+}
+
+function PlugTooltip({
+  item,
+  plug,
+  defs
+}: {
+  item: DimItem;
+  plug: DimPlug;
+  defs?: D2ManifestDefinitions;
+}) {
+
+  // TODO: Show objectives too, by processing plugObjectives like any other objectives
+  // TODO: show insertion costs
+
+  return (
+    <>
+      <h2>{plug.plugItem.displayProperties.name}</h2>
+      {plug.isMasterwork && item.masterworkInfo &&
+        <div><strong>{item.masterworkInfo.statName} {item.masterworkInfo.statValue}</strong></div>
+      }
+      {plug.plugItem.displayProperties.description
+        ? <div>{plug.plugItem.displayProperties.description}</div>
+        : plug.perks.map((perk) =>
+          <div key={perk.hash}>
+            {plug.plugItem.displayProperties.name !== perk.displayProperties.name &&
+              <div>{perk.displayProperties.name}</div>}
+            <div>{perk.displayProperties.description}</div>
+          </div>
+      )}
+      {defs && plug.plugObjectives.length > 0 &&
+        <div className="plug-objectives">
+          {plug.plugObjectives.map((objective) =>
+            <Objective key={objective.objectiveHash} objective={objective} defs={defs}/>
+          )}
+        </div>
+      }
+      {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
+      {plug.bestRated && <div className="best-rated-tip"><BestRatedIcon/> = {t('DtrReview.BestRatedTip')}</div>}
+    </>
   );
 }

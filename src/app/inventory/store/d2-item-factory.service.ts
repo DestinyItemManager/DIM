@@ -230,6 +230,8 @@ export interface DimItem {
   userReviewPros: string;
   userReviewCons: string;
   ratingCount: number;
+  // timestamp of when reviews were attached - a hack to help React update in the short term
+  reviewsUpdated?: number;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
@@ -974,27 +976,16 @@ function buildPlug(
     return null;
   }
 
-  let failReasons = plug ? (plug.enableFailIndexes || []).map((index) => plugItem.plug.enabledRules[index].failureMessage).join("\n") : '';
-  if (failReasons.length) {
-    // TODO: don't do this
-    failReasons = `\n\n${failReasons}`;
-  }
+  const failReasons = plug ? (plug.enableFailIndexes || []).map((index) => plugItem.plug.enabledRules[index].failureMessage).join("\n") : '';
 
   return {
     plugItem,
-    enabled,
+    enabled: enabled && (plug.plugObjectives || []).every((o) => o.complete) && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
     perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),
     isMasterwork: plugItem.plug.plugCategoryHash === 2109207426 || plugItem.plug.plugCategoryHash === 2989652629
   };
-}
-
-function isOrnamentPlug(plug: DimPlug | null) {
-  const armorOrnamentCategory = 1742617626;
-  const weaponOrnamentCategory = 3124752623;
-  return plug && plug.plugItem.itemCategoryHashes.some((hash) =>
-    hash === armorOrnamentCategory || hash === weaponOrnamentCategory);
 }
 
 function buildSocket(
@@ -1005,21 +996,14 @@ function buildSocket(
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
   const reusablePlugs = compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)));
-
-  const isOrnament = isOrnamentPlug(plug);
-  const shouldShowReusablePlugs = socket.reusablePlugs && socket.reusablePlugs.length > 0 &&
-    (!plug || (socket.reusablePlugs.some((p) => p.plugItemHash === socket.plugHash) && !isOrnament));
-  const plugOptions = shouldShowReusablePlugs
-    ? compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)))
-    : (plug ? [plug] : []);
+  const plugOptions = plug ? [plug] : [];
 
   // the merge is to enable the intrinsic mods to show up even if the user chose another
-  if (reusablePlugs.length && plugOptions.length) {
+  if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
-      if (!plugOptions.some((p) => p.plugItem.hash === socket.plugHash) &&
+      if (!plugOptions.some((p) => p.plugItem.hash === reusablePlug.plugItem.hash) &&
           // removes the reusablePlugs from masterwork
           !reusablePlug.plugItem.itemCategoryHashes.includes(141186804) &&
-          !isOrnament &&
           // removes the "Remove Shader" plug
           reusablePlug.plugItem.action
         ) {
@@ -1073,13 +1057,13 @@ function buildMasterworkInfo(
 function getBasePowerLevel(item: DimItem): number {
   const MOD_CATEGORY = 59;
   const POWER_STAT_HASH = 1935470627;
-  const powerMods = item.sockets ? _.pluck(item.sockets.sockets, 'plug').filter((plug) => {
-    return plug && plug.itemCategoryHashes && plug.investmentStats &&
+  const powerMods = item.sockets ? compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
+    return plug.itemCategoryHashes && plug.investmentStats &&
       plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
       plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
   }) : [];
 
-  const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH).value);
+  const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH)!.value);
 
   return item.primStat ? (item.primStat.value - modPower) : 0;
 }

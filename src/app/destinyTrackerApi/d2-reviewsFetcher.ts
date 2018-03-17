@@ -105,6 +105,7 @@ class D2ReviewsFetcher {
     this._reviewDataCache.addReviewsData(item, reviewData);
 
     this._perkRater.ratePerks(item);
+    item.reviewsUpdated = Date.now();
   }
 
   _sortReviews(a: DtrUserReview, b: DtrUserReview) {

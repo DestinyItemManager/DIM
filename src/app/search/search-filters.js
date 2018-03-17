@@ -539,19 +539,19 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         return categories.every((c) => item.inCategory(c));
       },
       keyword: function(predicate, item) {
-        return item.name.toLowerCase().contains(predicate) ||
+        return item.name.toLowerCase().includes(predicate) ||
           // Search for typeName (itemTypeDisplayName of modifications)
-          item.typeName.toLowerCase().contains(predicate) ||
+          item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
           (item.talentGrid && item.talentGrid.nodes.some((node) => {
             // Fixed #798 by searching on the description too.
-            return node.name.toLowerCase().contains(predicate) ||
-              node.description.toLowerCase().contains(predicate);
+            return node.name.toLowerCase().includes(predicate) ||
+              node.description.toLowerCase().includes(predicate);
           })) ||
           (item.sockets && item.sockets.sockets.some((socket) => {
             return socket.plug &&
-              (socket.plug.plugItem.displayProperties.name.toLowerCase().contains(predicate) ||
-               socket.plug.plugItem.displayProperties.description.toLowerCase().contains(predicate));
+              (socket.plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
+               socket.plug.plugItem.displayProperties.description.toLowerCase().includes(predicate));
           }));
       },
       light: function(predicate, item) {
