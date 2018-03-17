@@ -5,6 +5,7 @@ import { D2ItemTransformer } from './d2-itemTransformer';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DtrItem } from '../item-review/destiny-tracker.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
@@ -59,12 +60,16 @@ class D2ItemListBuilder {
    * Tailored to work alongside the bulkFetcher.
    * Non-obvious bit: it attempts to optimize away from sending items that already exist in the ReviewDataCache.
    */
-  getWeaponList(stores: DimStore[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
+  getItemList(stores: DimStore[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
     const dtrItems = this._getDtrItems(stores, reviewDataCache);
 
     const list = new Set(dtrItems);
 
     return Array.from(list);
+  }
+
+  getVendorItemList(vendorItems: DestinyVendorSaleItemComponent[]): DtrItem[] {
+    return vendorItems.map((vendorItem) => ({ referenceId: vendorItem.itemHash }));
   }
 }
 

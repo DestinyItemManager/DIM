@@ -57,7 +57,17 @@ export default class Vendors extends React.Component<Props, State> {
         : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
+    this.fetchRatings(vendorsResponse);
     this.setState({ vendorsResponse, defs });
+  }
+
+  fetchRatings(vendorsResponse: DestinyVendorsResponse): void {
+    const saleComponents = Object.values(vendorsResponse.sales.data).map((saleComponent) => saleComponent.saleItems);
+
+    // flatten me
+    console.log(saleComponents);
+
+    // bridge to destiny-tracker.service.ts goes here
   }
 
   componentDidMount() {

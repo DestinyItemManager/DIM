@@ -88,6 +88,7 @@ import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
+import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 
 export function DestinyTrackerService(
   $q,
@@ -141,6 +142,17 @@ export function DestinyTrackerService(
       } else if (_isDestinyTwo()) {
         _d2reviewDataCache.addUserReviewData(item,
                                              userReview);
+      }
+    },
+
+    bulkFetchVendorItems(vendorItems: DestinyVendorSaleItemComponent[]) {
+      if (settings.showReviews) {
+        if (_isDestinyOne()) {
+          throw new Error(("This is a D2-only call."));
+        } else if (_isDestinyTwo()) {
+          const platformSelection = settings.reviewsPlatformSelection;
+          _d2bulkFetcher.bulkFetchVendorItems(vendorItems, platformSelection);
+        }
       }
     },
 
