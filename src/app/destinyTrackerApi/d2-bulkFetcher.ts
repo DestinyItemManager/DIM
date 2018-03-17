@@ -1,4 +1,3 @@
-import * as _ from 'underscore';
 import { D2ItemListBuilder } from './d2-itemListBuilder';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DtrBulkItem } from '../item-review/destiny-tracker.service';
@@ -66,7 +65,7 @@ class D2BulkFetcher {
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
    */
   bulkFetchVendorItems(vendorContainer, platformSelection: number) {
-    const vendors = Object.values(vendorContainer);
+    const vendors: DimStore[] = Object.values(vendorContainer);
 
     this._getBulkFetchPromise(vendors, platformSelection)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,

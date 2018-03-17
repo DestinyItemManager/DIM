@@ -22,7 +22,7 @@ import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { flatMap } from '../util';
+import { flatMap, sum } from '../util';
 import { DimItem, resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { DimStore, DimVault, makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
@@ -467,11 +467,11 @@ export function D2StoresService(
     };
     // 3 Weapons, 4 Armor, 1 General
     const itemWeightDenominator = 42;
-    const items = _.flatten(Object.values(loadout.items)).map((i) => i.equipped);
+    const items = _.flatten(Object.values(loadout.items)).filter((i: DimItem) => i.equipped);
 
-    const exactBasePower = items.reduce((memo, item) => {
-      return memo + (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }, 0) / itemWeightDenominator;
+    const exactBasePower = sum(items, (item) => {
+      return (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
+    }) / itemWeightDenominator;
 
     // Floor-truncate to one significant digit since the game doesn't round
     return (Math.floor(exactBasePower * 10) / 10).toFixed(1);
