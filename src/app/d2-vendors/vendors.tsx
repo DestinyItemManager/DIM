@@ -62,7 +62,7 @@ export default class Vendors extends React.Component<Props, State> {
   }
 
   fetchRatings(vendorsResponse: DestinyVendorsResponse): void {
-    const saleComponents = Object.values(vendorsResponse.sales.data).map((saleComponent) => saleComponent.saleItems);
+    const saleComponents = Object.values(vendorsResponse.sales.data).map((saleItemComponent) => saleItemComponent.saleItems);
 
     // flatten me
     console.log(saleComponents);
