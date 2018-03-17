@@ -165,7 +165,7 @@ class D2ReviewsFetcher {
    */
   getItemReviews(item: DimItem, platformSelection: number) {
     if (!item.reviewable) {
-      return;
+      return $q.when();
     }
 
     const ratingData = this._reviewDataCache.getRatingData(item);
@@ -174,10 +174,10 @@ class D2ReviewsFetcher {
       this._attachCachedReviews(item,
                                 ratingData);
 
-      return;
+      return $q.when();
     }
 
-    this._getItemReviewsPromise(item, platformSelection)
+    return this._getItemReviewsPromise(item, platformSelection)
       .then((reviewData) => {
         this._markUserReview(reviewData);
         this._attachReviews(item,

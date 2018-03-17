@@ -990,6 +990,13 @@ function buildPlug(
   };
 }
 
+function isOrnamentPlug(plug: DimPlug | null) {
+  const armorOrnamentCategory = 1742617626;
+  const weaponOrnamentCategory = 3124752623;
+  return plug && plug.plugItem.itemCategoryHashes.some((hash) =>
+    hash === armorOrnamentCategory || hash === weaponOrnamentCategory);
+}
+
 function buildSocket(
   defs: D2ManifestDefinitions,
   socket: DestinyItemSocketState,
@@ -997,31 +1004,29 @@ function buildSocket(
 ): DimSocket {
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
+  const reusablePlugs = compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)));
 
-  // TODO: filter plug options to remove masterwork options, selected perk, etc
-  const plugOptions = compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)));
+  const isOrnament = isOrnamentPlug(plug);
+  const shouldShowReusablePlugs = socket.reusablePlugs && socket.reusablePlugs.length > 0 &&
+    (!plug || (socket.reusablePlugs.some((p) => p.plugItemHash === socket.plugHash) && !isOrnament));
+  const plugOptions = shouldShowReusablePlugs
+    ? compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)))
+    : (plug ? [plug] : []);
 
-  /*
-  const reusablePlugHashes = (socket.reusablePlugHashes || []);
-
-  const reusablePlugs = reusablePlugHashes.map((hash) => defs.InventoryItem.get(hash));
-  // 1742617626 - armor ornaments
-  // 3124752623 - weapon ornaments
-  const isOrnamentPlug = plug && (plug.itemCategoryHashes.some((hash) => [1742617626, 3124752623].includes(hash)));
-  const plugOptions = reusablePlugs.length > 0 && (!plug || !socket.plugHash || (reusablePlugHashes.includes(socket.plugHash) && !isOrnamentPlug))
-    ? reusablePlugs : (plug ? [plug] : []);
   // the merge is to enable the intrinsic mods to show up even if the user chose another
-  // plug.itemCategoryHashes.includes(141186804) - removes the reusablePlugs from masterwork
-  // plug.action - removes the "Remove Shader" plug
-  if (reusablePlugs.length > 0 && plugOptions.length > 0) {
-    reusablePlugs.forEach((plug) => {
-      if (!plugOptions.includes(plug) && !plug.itemCategoryHashes.includes(141186804) && !isOrnamentPlug && plug.action) {
-          plugOptions.push(plug);
+  if (reusablePlugs.length && plugOptions.length) {
+    reusablePlugs.forEach((reusablePlug) => {
+      if (!plugOptions.some((p) => p.plugItem.hash === socket.plugHash) &&
+          // removes the reusablePlugs from masterwork
+          !reusablePlug.plugItem.itemCategoryHashes.includes(141186804) &&
+          !isOrnament &&
+          // removes the "Remove Shader" plug
+          reusablePlug.plugItem.action
+        ) {
+          plugOptions.push(reusablePlug);
         }
       });
   }
-  const plugOptionsPerks = plugOptions.filter((plug) => plug.perks.length > 0).map((plug) => defs.SandboxPerk.get(plug.perks[0].perkHash));
-  */
 
   return {
     socketIndex: index,
@@ -1035,8 +1040,7 @@ function buildMasterworkInfo(
   sockets: DimSockets,
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
-  const socketIndex = sockets.sockets.findIndex((socket) => Boolean(socket.plug && socket.plug.plugObjectives.length));
-  const socket = sockets.sockets[socketIndex];
+  const socket = sockets.sockets.find((socket) => Boolean(socket.plug && socket.plug.plugObjectives.length));
   if (!socket || !socket.plug || !socket.plug.plugObjectives.length || !socket.plugOptions || !socket.plugOptions.length) {
     return null;
   }

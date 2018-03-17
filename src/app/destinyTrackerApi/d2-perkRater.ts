@@ -1,6 +1,7 @@
 import * as _ from 'underscore';
 import { DtrUserReview } from '../item-review/destiny-tracker.service';
 import { DimItem, DimSocket } from '../inventory/store/d2-item-factory.service';
+import { sum } from '../util';
 
 export interface RatingAndReview {
   ratingCount: number;
@@ -26,10 +27,9 @@ class D2PerkRater {
     item.sockets.sockets.forEach((socket) => {
       if ((socket.plugOptions.length) &&
           (socket.plugOptions.length > 1)) {
-        const plugOptionHashes = _.pluck(socket.plugOptions, 'hash');
+        const plugOptionHashes = socket.plugOptions.map((i) => i.plugItem.hash);
 
-        const ratingsAndReviews = _.map(plugOptionHashes,
-          (plugOptionHash) => this._getPlugRatingsAndReviewCount(plugOptionHash, item.reviews));
+        const ratingsAndReviews = plugOptionHashes.map((plugOptionHash) => this._getPlugRatingsAndReviewCount(plugOptionHash, item.reviews));
 
         const maxReview = this._getMaxReview(ratingsAndReviews);
 
@@ -69,7 +69,7 @@ class D2PerkRater {
                                                      reviews);
 
     const ratingCount = matchingReviews.length;
-    const averageReview = _.pluck(matchingReviews, 'rating').reduce((memo, num) => memo + num, 0) / matchingReviews.length || 1;
+    const averageReview = sum(matchingReviews, (r) => r.voted) / matchingReviews.length || 1;
 
     const ratingAndReview = {
       ratingCount,
@@ -82,10 +82,9 @@ class D2PerkRater {
 
   _getMatchingReviews(plugOptionHash,
                       reviews: DtrUserReview[]) {
-    return _.filter(reviews, (review) => {
+    return reviews.filter((review) => {
       return (review.selectedPerks && review.selectedPerks.includes(plugOptionHash)) ||
-                                                  (review.attachedMods &&
-                                                   review.attachedMods.includes(plugOptionHash));
+             (review.attachedMods && review.attachedMods.includes(plugOptionHash));
     });
   }
 }
