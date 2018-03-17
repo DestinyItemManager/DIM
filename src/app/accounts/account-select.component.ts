@@ -5,8 +5,9 @@ import dialogTemplate from './account-select.dialog.html';
 import template from './account-select.html';
 import './account-select.scss';
 import { getPlatforms } from './platform.service';
+import { IComponentOptions, IController } from 'angular';
 
-export const AccountSelectComponent = {
+export const AccountSelectComponent: IComponentOptions = {
   template,
   controller: AccountSelectController,
   bindings: {
@@ -15,6 +16,7 @@ export const AccountSelectComponent = {
 };
 
 function AccountSelectController(
+  this: IController,
   loadingTracker,
   ngDialog: IDialogService,
   $state: StateService

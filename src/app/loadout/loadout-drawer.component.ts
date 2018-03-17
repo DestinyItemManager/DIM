@@ -1,5 +1,5 @@
-import angular from 'angular';
-import _ from 'underscore';
+import { copy, IComponentOptions, IScope, IController } from 'angular';
+import * as _ from 'underscore';
 import template from './loadout-drawer.html';
 import './loadout-drawer.scss';
 import { getCharacterStatsData } from '../inventory/store/character-utils';
@@ -8,8 +8,12 @@ import { D1Categories } from '../destiny1/d1-buckets.service';
 import { flatMap } from '../util';
 import { settings } from '../settings/settings';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { Loadout } from './loadout.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
-export const LoadoutDrawerComponent = {
+export const LoadoutDrawerComponent: IComponentOptions = {
   controller: LoadoutDrawerCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -19,13 +23,23 @@ export const LoadoutDrawerComponent = {
   template
 };
 
-function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
+function LoadoutDrawerCtrl(
+  this: IController & {
+    account: DestinyAccount;
+    stores: DimStore[];
+    loadout?: Loadout & { warnitems?: DimItem[] };
+  },
+  $scope: IScope,
+  dimLoadoutService,
+  toaster,
+  $i18next
+) {
   'ngInject';
   const vm = this;
 
   const dimItemCategories = vm.account.destinyVersion === 2 ? D2Categories : D1Categories;
 
-  this.$onChanges = function(changes) {
+  this.$onChanges = (changes) => {
     if (changes.stores) {
       const stores = vm.stores || [];
       vm.classTypeValues = [{ label: $i18next.t('Loadouts.Any'), value: -1 }];
@@ -35,10 +49,10 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
       These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
       */
 
-      _.each(_.uniq(_.reject(stores, 'isVault'), false, (store) => store.classType), (store) => {
+      _.each(_.uniq(stores.filter((s) => !s.isVault), false, (store) => store.classType), (store) => {
         let classType = 0;
 
-        switch (parseInt(store.classType, 10)) {
+        switch (parseInt(store.classType.toString(), 10)) {
         case 0: {
           classType = 1;
           break;
@@ -65,13 +79,13 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
   $scope.$on('dim-delete-loadout', () => {
     vm.show = false;
     dimLoadoutService.dialogOpen = false;
-    vm.loadout = angular.copy(vm.defaults);
+    vm.loadout = copy(vm.defaults);
   });
 
-  $scope.$on('dim-edit-loadout', (event, args) => {
+  $scope.$on('dim-edit-loadout', (_event, args: { loadout?: Loadout; showClass: boolean; equipAll: boolean }) => {
     vm.showClass = args.showClass;
     if (args.loadout) {
-      vm.loadout = angular.copy(args.loadout);
+      vm.loadout = copy(args.loadout);
       vm.show = true;
       dimLoadoutService.dialogOpen = true;
       if (vm.loadout.classType === undefined) {
@@ -80,18 +94,18 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
       vm.loadout.items = vm.loadout.items || {};
 
       // Filter out any vendor items and equip all if requested
-      vm.loadout.warnitems = flatMap(Object.values(vm.loadout.items), (o, items) => _.filter(items, (item) => !item.owner));
+      vm.loadout.warnitems = flatMap(Object.values(vm.loadout.items), (items) => items.filter((item) => !item.owner));
 
       _.each(vm.loadout.items, (items, type) => {
-        vm.loadout.items[type] = _.filter(items, (item) => item.owner);
-        if (args.equipAll && vm.loadout.items[type][0]) {
-          vm.loadout.items[type][0].equipped = true;
+        vm.loadout!.items[type] = items.filter((item) => item.owner);
+        if (args.equipAll && vm.loadout!.items[type][0]) {
+          vm.loadout!.items[type][0].equipped = true;
         }
       });
     }
   });
 
-  $scope.$on('dim-store-item-clicked', (event, args) => {
+  $scope.$on('dim-store-item-clicked', (_event, args) => {
     vm.add(args.item, args.clickEvent);
   });
 
@@ -109,18 +123,22 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
     classType: -1,
     items: {}
   };
-  vm.loadout = angular.copy(vm.defaults);
+  vm.loadout = copy(vm.defaults);
 
   vm.save = function save($event) {
     $event.preventDefault();
-    vm.loadout.platform = vm.account.platformLabel; // Playstation or Xbox
-    vm.loadout.destinyVersion = vm.account.destinyVersion; // D1 or D2
+    if (!vm.loadout) {
+      return;
+    }
+    const loadout = vm.loadout;
+    loadout.platform = vm.account.platformLabel; // Playstation or Xbox
+    loadout.destinyVersion = vm.account.destinyVersion; // D1 or D2
     dimLoadoutService
-      .saveLoadout(vm.loadout)
+      .saveLoadout(loadout)
       .catch((e) => {
         toaster.pop('error',
                     $i18next.t('Loadouts.SaveErrorTitle'),
-                    $i18next.t('Loadouts.SaveErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
+                    $i18next.t('Loadouts.SaveErrorDescription', { loadoutName: loadout.name, error: e.message }));
         console.error(e);
       });
     vm.cancel($event);
@@ -128,20 +146,26 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
 
   vm.saveAsNew = function saveAsNew($event) {
     $event.preventDefault();
+    if (!vm.loadout) {
+      return;
+    }
     delete vm.loadout.id; // Let it be a new ID
     vm.save($event);
   };
 
   vm.cancel = function cancel($event) {
     $event.preventDefault();
-    vm.loadout = angular.copy(vm.defaults);
+    vm.loadout = copy(vm.defaults);
     dimLoadoutService.dialogOpen = false;
     vm.show = false;
   };
 
   vm.add = function add(item, $event) {
+    if (!vm.loadout) {
+      return;
+    }
     if (item.canBeInLoadout()) {
-      const clone = angular.copy(item);
+      const clone = copy(item);
 
       const discriminator = clone.type.toLowerCase();
       const typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
@@ -187,6 +211,9 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
   };
 
   vm.remove = function remove(item, $event) {
+    if (!vm.loadout) {
+      return;
+    }
     const discriminator = item.type.toLowerCase();
     const typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
@@ -210,13 +237,17 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
   };
 
   vm.equip = function equip(item) {
+    if (!vm.loadout) {
+      return;
+    }
+
     if (item.equipment) {
       if ((item.type === 'Class') && (!item.equipped)) {
         item.equipped = true;
       } else if (item.equipped) {
         item.equipped = false;
       } else {
-        const allItems = _.flatten(Object.values(vm.loadout.items));
+        const allItems: DimItem[] = _.flatten(Object.values(vm.loadout.items));
         if (item.equippingLabel) {
           const exotics = allItems.filter((i) => i.equippingLabel === item.equippingLabel && i.equipped);
           for (const exotic of exotics) {
@@ -224,12 +255,11 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
           }
         }
 
-        _.filter(allItems, {
-          type: item.type,
-          equipped: true
-        }).forEach((i) => {
-          i.equipped = false;
-        });
+        allItems
+          .filter((i) => i.type === item.type && i.equipped)
+          .forEach((i) => {
+            i.equipped = false;
+          });
 
         item.equipped = true;
       }
@@ -238,7 +268,7 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
     vm.recalculateStats(vm.loadout.items);
   };
 
-  vm.recalculateStats = function() {
+  vm.recalculateStats = () => {
     if (vm.account.destinyVersion !== 1 || !vm.loadout || !vm.loadout.items) {
       vm.stats = null;
       return;
@@ -248,11 +278,11 @@ function LoadoutDrawerCtrl($scope, dimLoadoutService, toaster, $i18next) {
     const interestingStats = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
 
     let numInterestingStats = 0;
-    const allItems = _.flatten(Object.values(items));
-    const equipped = _.filter(allItems, 'equipped');
-    const stats = _.flatten(_.map(equipped, 'stats'));
-    const filteredStats = _.filter(stats, (stat) => stat && interestingStats.has(stat.id));
-    const combinedStats = _.reduce(filteredStats, (stats, stat) => {
+    const allItems: DimItem[] = _.flatten(Object.values(items));
+    const equipped = allItems.filter((i) => i.equipped);
+    const stats = flatMap(equipped, (i) => i.stats!);
+    const filteredStats = stats.filter((stat) => stat && interestingStats.has(stat.id.toString()));
+    const combinedStats = filteredStats.reduce((stats, stat) => {
       numInterestingStats++;
       if (stats[stat.id]) {
         stats[stat.id].value += stat.value;

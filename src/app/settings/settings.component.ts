@@ -10,16 +10,17 @@ import { resetHiddenInfos } from '../shell/info-popup';
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleArmorImage from 'app/images/example-armor.jpg';
+import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
 import { StoreServiceType } from '../inventory/d2-stores.service';
-import { IRootScopeService, IScope } from 'angular';
 
-export const SettingsComponent = {
+export const SettingsComponent: IComponentOptions = {
   template,
   controller: SettingsController,
   controllerAs: 'vm'
 };
 
 export function SettingsController(
+  this: IController,
   loadingTracker,
   $scope: IScope,
   dimCsvService,

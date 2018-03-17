@@ -1,4 +1,6 @@
 export class ActivityTrackerService {
+  private timestamp: number;
+
   constructor() {
     this.track();
   }

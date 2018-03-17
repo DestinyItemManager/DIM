@@ -1,4 +1,4 @@
-import { copy as angularCopy, IAngularEvent, IPromise } from 'angular';
+import { copy as angularCopy, IAngularEvent, IPromise, IComponentOptions, IController } from 'angular';
 import * as _ from 'underscore';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
@@ -20,7 +20,7 @@ import { getBuckets as d2GetBuckets, DimInventoryBuckets } from '../destiny2/d2-
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
 import { ItemServiceType } from '../inventory/dimItemService.factory';
 
-export const LoadoutPopupComponent = {
+export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -29,7 +29,7 @@ export const LoadoutPopupComponent = {
   template
 };
 
-interface LoadoutPopupCtrlVM {
+interface LoadoutPopupCtrlVM extends IController {
   loadout: Loadout;
   previousLoadout?: Loadout;
   classTypeId: LoadoutClass;
