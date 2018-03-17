@@ -998,14 +998,16 @@ function buildSocket(
   const reusablePlugs = compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)));
   const plugOptions = plug ? [plug] : [];
 
-  // the merge is to enable the intrinsic mods to show up even if the user chose another
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
-      if (!plugOptions.some((p) => p.plugItem.hash === reusablePlug.plugItem.hash) &&
+      if ((!plug || reusablePlug.plugItem.hash !== plug.plugItem.hash) &&
+          // TODO: with AWA we may want to put some of these back
           // removes the reusablePlugs from masterwork
           !reusablePlug.plugItem.itemCategoryHashes.includes(141186804) &&
           // removes the "Remove Shader" plug
-          reusablePlug.plugItem.action
+          reusablePlug.plugItem.action &&
+          // removes the "Default Ornament" plug
+          ![2931483505, 1959648454, 702981643].includes(reusablePlug.plugItem.hash)
         ) {
           plugOptions.push(reusablePlug);
         }

@@ -1,5 +1,8 @@
 # Next
 
+* Fixed the "recommended perk" being wrong very often.
+* Improved the display of perks, shaders, and mods on items. Improved the popup details for those items as well - this includes ornament unlock progress.
+
 # 4.43.0
 
 * Fix some cases where moving stacks of items would fail.
