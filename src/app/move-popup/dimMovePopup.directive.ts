@@ -1,12 +1,9 @@
 import { settings } from '../settings/settings';
 import template from './dimMovePopup.directive.html';
 import './move-popup.scss';
-import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
-import { getActivePlatform } from '../accounts/platform.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { StoreServiceType } from '../inventory/d2-stores.service';
-import { AwaType } from 'bungie-api-ts/destiny2';
 
 export const MovePopupComponent = {
   controller: MovePopupController,
@@ -27,7 +24,6 @@ interface MovePopupControllerType {
   infuse(item: DimItem, e);
   consolidate();
   distribute();
-  testAwa();
 }
 
 function MovePopupController(
@@ -52,10 +48,6 @@ function MovePopupController(
     const store = getStoreService().getStore(vm.item.owner)!;
     vm.maximum = store.amountOfItem(vm.item);
   }
-
-  vm.testAwa = () => {
-    requestAdvancedWriteActionToken(getActivePlatform()!, AwaType.InsertPlugs);
-  };
 
   /*
   * Open up the dialog for infusion by passing
