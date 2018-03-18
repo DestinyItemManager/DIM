@@ -1,12 +1,10 @@
 import { DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
-import { t } from 'i18next';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
-import { percent } from '../inventory/dimPercentWidth.directive';
 import { sum } from '../util';
 import './quest.scss';
+import Objective from './Objective';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;
@@ -43,39 +41,6 @@ export function Quest(props: QuestProps) {
             <Objective defs={defs} objective={objective} key={objective.objectiveHash}/>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-interface ObjectiveProps {
-  defs: D2ManifestDefinitions;
-  objective: DestinyObjectiveProgress;
-}
-function Objective(props: ObjectiveProps) {
-  const { defs, objective } = props;
-
-  const objectiveDef = defs.Objective.get(objective.objectiveHash);
-
-  const displayName = objectiveDef.progressDescription ||
-      t(objective.complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
-
-  const classes = classNames('objective-row', {
-    'objective-complete': objective.complete,
-    'objective-boolean': objectiveDef.completionValue === 1
-  });
-
-  const progressBarStyle = {
-    width: percent((objective.progress || 0) / objectiveDef.completionValue)
-  };
-
-  return (
-    <div className={classes}>
-      <div className="objective-checkbox"><div/></div>
-      <div className="objective-progress">
-        <div className="objective-progress-bar" style={progressBarStyle}/>
-        <div className="objective-description">{displayName}</div>
-        <div className="objective-text">{objective.progress || 0}/{objectiveDef.completionValue}</div>
       </div>
     </div>
   );

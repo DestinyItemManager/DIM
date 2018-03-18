@@ -271,7 +271,7 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
 
       // TODO: replace this if-ladder with a split and check
       _.each(searchTerms, (term) => {
-        term = term.replace(/'/g, '').replace(/"/g, '');
+        term = term.replace(/['"]/g, '');
 
         if (term.startsWith('is:')) {
           const filter = term.replace('is:', '');
@@ -536,19 +536,22 @@ export function searchFilters(searchConfig, storeService, toaster, $i18next) {
         if (!categories || !categories.length) {
           return false;
         }
-        return _.all(categories, (c) => item.inCategory(c));
+        return categories.every((c) => item.inCategory(c));
       },
       keyword: function(predicate, item) {
-        return item.name.toLowerCase().indexOf(predicate) >= 0 ||
+        return item.name.toLowerCase().includes(predicate) ||
           // Search for typeName (itemTypeDisplayName of modifications)
-          item.typeName.toLowerCase().indexOf(predicate) >= 0 ||
+          item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
-          (item.talentGrid && _.any(item.talentGrid.nodes, (node) => {
+          (item.talentGrid && item.talentGrid.nodes.some((node) => {
             // Fixed #798 by searching on the description too.
-            return (`${node.name} ${node.description}`).toLowerCase().indexOf(predicate) >= 0;
+            return node.name.toLowerCase().includes(predicate) ||
+              node.description.toLowerCase().includes(predicate);
           })) ||
-          (item.sockets && _.any(item.sockets.sockets, (socket) => {
-            return socket.plug && (`${socket.plug.displayProperties.name} ${socket.plug.displayProperties.description}`).toLowerCase().indexOf(predicate) >= 0;
+          (item.sockets && item.sockets.sockets.some((socket) => {
+            return socket.plug &&
+              (socket.plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
+               socket.plug.plugItem.displayProperties.description.toLowerCase().includes(predicate));
           }));
       },
       light: function(predicate, item) {

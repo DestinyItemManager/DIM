@@ -41,3 +41,7 @@ export function flatMap<T, TResult>(list: T[], fx: _.ListIterator<T, TResult[]>)
   });
   return res;
 }
+
+export function compact<T>(arr: (T | false | undefined | 0 | '' | null)[]): T[] {
+  return arr.filter(Boolean) as T[];
+}
