@@ -1,5 +1,7 @@
 # Next
 
+* Put back "Make Room for Postmaster" in D1 - it was removed accidentally.
+
 # 4.43.0
 
 * Fix some cases where moving stacks of items would fail.
