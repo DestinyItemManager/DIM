@@ -534,7 +534,6 @@
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
     "General": "General",
-    "HideUnfiltered": "Hide items that don't match a search",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
