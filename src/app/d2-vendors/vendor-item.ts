@@ -1,6 +1,8 @@
-import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition } from "bungie-api-ts/destiny2";
+import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition, ItemBindStatus, ItemLocation, TransferStatuses, ItemState } from "bungie-api-ts/destiny2";
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { equals } from 'angular';
+import { DimItem, makeItem } from "../inventory/store/d2-item-factory.service";
+import { DimInventoryBuckets } from "../destiny2/d2-buckets.service";
 
 /**
  * A displayable vendor item. The only state it holds is raw responses/definitions - all
@@ -11,9 +13,10 @@ import { equals } from 'angular';
  */
 export class VendorItem {
   canPurchase: boolean;
-  private vendorDef: DestinyVendorDefinition;
+  private itemComponents?: DestinyItemComponentSetOfint32;
   private vendorItemDef: DestinyVendorItemDefinition;
   private saleItem?: DestinyVendorSaleItemComponent;
+  private vendorDef: DestinyVendorDefinition;
   private inventoryItem: DestinyInventoryItemDefinition;
   // TODO: each useful component
   private instance: DestinyItemInstanceComponent;
@@ -35,6 +38,7 @@ export class VendorItem {
     this.saleItem = saleItem;
     this.inventoryItem = this.defs.InventoryItem.get(this.vendorItemDef.itemHash);
     this.canPurchase = canPurchase;
+    this.itemComponents = itemComponents;
     if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
       this.instance = itemComponents.instances.data[saleItem!.vendorItemIndex];
       // TODO: more here, like perks and such
@@ -103,5 +107,31 @@ export class VendorItem {
       this.canPurchase === other.canPurchase &&
       // Deep equals
       equals(this.saleItem, other.saleItem);
+  }
+
+  /**
+   * TODO: This is really gross, but it allows us to make enough of an item to show the move popup.
+   */
+  toDimItem(buckets: DimInventoryBuckets): DimItem | null {
+    return makeItem(
+      this.defs,
+      buckets,
+      new Set(),
+      new Set(),
+      undefined,
+      this.itemComponents,
+      {
+        itemHash: this.itemHash,
+        itemInstanceId: this.saleItem ? this.saleItem.vendorItemIndex.toString() : undefined,
+        quantity: this.vendorItemDef.quantity,
+        bindStatus: ItemBindStatus.NotBound,
+        location: ItemLocation.Vendor,
+        bucketHash: 0,
+        transferStatus: TransferStatuses.NotTransferrable,
+        lockable: false,
+        state: ItemState.None
+      },
+      undefined
+    );
   }
 }

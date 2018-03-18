@@ -42,6 +42,8 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
   vm.showDescription = true;
   vm.locking = false;
 
+  dimDestinyTrackerService.getItemReviews(vm.item);
+
   // The 'i' keyboard shortcut toggles full details
   $scope.$on('dim-toggle-item-details', () => {
     vm.itemDetails = !vm.itemDetails;

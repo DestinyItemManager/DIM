@@ -8,7 +8,7 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { VendorItem } from './vendor-item';
-import { VendorItemComponent } from './vendor-item-component';
+import VendorItemComponent from './VendorItemComponent';
 
 export default function VendorItems({
   vendorDef,

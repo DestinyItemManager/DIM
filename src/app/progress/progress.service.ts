@@ -60,7 +60,7 @@ const forceReloadTrigger = new Subject();
 
 // A stream of progress that switches on account changes and supports reloading.
 // This is a ConnectableObservable that must be connected to start.
-const storesStream: ConnectableObservable<ProgressProfile> = accountStream
+const progressStream: ConnectableObservable<ProgressProfile> = accountStream
       // Only emit when the account changes
       .distinctUntilChanged(compareAccounts)
       // But also re-emit the current value of the account stream
@@ -73,10 +73,10 @@ const storesStream: ConnectableObservable<ProgressProfile> = accountStream
       .publishReplay(1);
 
 /**
- * Set the current account, and get a stream of stores updates.
- * This will keep returning stores even if something else changes
- * the account by also calling "storesStream". This won't force the
- * stores to reload unless they haven't been loaded at all.
+ * Set the current account, and get a stream of progress updates.
+ * This will keep returning progress even if something else changes
+ * the account by also calling "progressStream". This won't force the
+ * progress to reload unless they haven't been loaded at all.
  *
  * @return a stream of store updates
  */
@@ -84,8 +84,8 @@ export function getProgressStream(account: DestinyAccount) {
   accountStream.next(account);
   // Start the stream the first time it's asked for. Repeated calls
   // won't do anything.
-  storesStream.connect();
-  return storesStream;
+  progressStream.connect();
+  return progressStream;
 }
 
 /**
