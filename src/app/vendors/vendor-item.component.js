@@ -83,8 +83,6 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyT
       dialogResult.closePromise.then(() => {
         dialogResult = null;
       });
-
-      dimDestinyTrackerService.getItemReviews(item);
     }
   };
 

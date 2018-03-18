@@ -42,7 +42,6 @@ export default class Collections extends React.Component<Props, State> {
     });
 
     const profileResponse = await getKiosks(this.props.account);
-    console.log(profileResponse);
     this.setState({ profileResponse, defs });
   }
 
@@ -90,8 +89,6 @@ function Kiosk({
   items: DestinyKioskItem[];
 }) {
   const vendorDef = defs.Vendor.get(vendorHash);
-
-  console.log(vendorDef);
 
   // TODO: Some items have flavor (emblems)
 

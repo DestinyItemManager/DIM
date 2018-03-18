@@ -117,9 +117,6 @@ export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreServ
     } else if (dimCompareService.dialogOpen) {
       dimCompareService.addItemToCompare(item, e);
     } else {
-      // TODO: remove this
-      dimDestinyTrackerService.getItemReviews(item);
-
       dialogResult = ngDialog.open({
         template: dialogTemplate,
         plain: true,

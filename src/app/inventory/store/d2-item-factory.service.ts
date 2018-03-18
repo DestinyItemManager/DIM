@@ -436,18 +436,19 @@ function findCategories(itemDef): string[] {
  * @param item "raw" item from the Destiny API
  * @param owner the ID of the owning store.
  */
-function makeItem(
+// TODO: extract item components first!
+export function makeItem(
   defs: D2ManifestDefinitions,
   buckets: DimInventoryBuckets,
   previousItems: Set<string>,
   newItems: Set<string>,
-  itemInfoService: ItemInfoSource,
-  itemComponents: DestinyItemComponentSetOfint64,
+  itemInfoService: ItemInfoSource | undefined,
+  itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
-  owner: DimStore
+  owner: DimStore | undefined
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
-  const instanceDef: Partial<DestinyItemInstanceComponent> = item.itemInstanceId ? itemComponents.instances.data[item.itemInstanceId] : {};
+  const instanceDef: Partial<DestinyItemInstanceComponent> = item.itemInstanceId && itemComponents ? itemComponents.instances.data[item.itemInstanceId] : {};
   // Missing definition?
   if (!itemDef) {
     D2ManifestService.warnMissingDefinition();
@@ -474,7 +475,7 @@ function makeItem(
   // We cheat a bit for items in the vault, since we treat the
   // vault as a character. So put them in the bucket they would
   // have been in if they'd been on a character.
-  if (owner.isVault || item.location === ItemLocation.Vault) {
+  if (owner && owner.isVault || item.location === ItemLocation.Vault) {
     currentBucket = normalBucket;
   }
 
@@ -567,38 +568,56 @@ function makeItem(
   }
 
   try {
-    if (itemDef.stats && itemDef.stats.stats) {
-      createdItem.stats = _.sortBy((buildStats(item, itemComponents.stats.data, defs.Stat)).concat(
-        buildHiddenStats(itemDef, defs.Stat)
-      ), 'sort');
+    if (itemComponents && itemComponents.stats && itemComponents.stats.data) {
+      // Instanced stats
+      createdItem.stats = buildStats(item, itemComponents.stats.data, defs.Stat);
+      if (itemDef.stats && itemDef.stats.stats) {
+        // Hidden stats
+        createdItem.stats = (createdItem.stats || []).concat(buildHiddenStats(itemDef, defs.Stat));
+      }
+    } else if (itemDef.stats && itemDef.stats.stats) {
+      // Item definition stats
+      createdItem.stats = buildDefaultStats(itemDef, defs.Stat);
     }
+    // Investment stats
     if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
       createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
     }
+
+    createdItem.stats = createdItem.stats && _.sortBy(createdItem.stats, (s) => s.sort);
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
   }
 
   try {
-    createdItem.talentGrid = buildTalentGrid(item, itemComponents.talentGrids.data, defs.TalentGrid);
+    if (itemComponents && itemComponents.talentGrids && itemComponents.talentGrids.data) {
+      createdItem.talentGrid = buildTalentGrid(item, itemComponents.talentGrids.data, defs.TalentGrid);
+    }
   } catch (e) {
     console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
   }
 
   try {
-    createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
+    if (itemComponents && itemComponents.objectives && itemComponents.objectives.data) {
+      createdItem.objectives = buildObjectives(item, itemComponents.objectives.data, defs.Objective);
+    }
   } catch (e) {
     console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
   }
 
   try {
-    createdItem.flavorObjective = buildFlavorObjective(item, itemComponents.objectives.data, defs.Objective);
+    if (itemComponents && itemComponents.objectives && itemComponents.objectives.data) {
+      createdItem.flavorObjective = buildFlavorObjective(item, itemComponents.objectives.data, defs.Objective);
+    }
   } catch (e) {
     console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
   }
 
   try {
-    createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
+    // TODO: get these working with definition-only items once the socket merge is in
+    if (itemComponents && itemComponents.sockets && itemComponents.sockets.data) {
+      createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
+    }
   } catch (e) {
     console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
   }
@@ -716,6 +735,36 @@ function buildHiddenStats(itemDef: DestinyInventoryItemDefinition, statDefs: Laz
   })) as DimStat[];
 }
 
+function buildDefaultStats(itemDef: DestinyInventoryItemDefinition, statDefs: LazyDefinition<DestinyStatDefinition>): DimStat[] {
+  const itemStats = itemDef.stats.stats;
+
+  if (!itemStats) {
+    return [];
+  }
+
+  return _.compact(_.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
+    const def = statDefs.get(stat.statHash);
+
+    if (!statWhiteList.includes(stat.statHash) || !stat.value) {
+      return undefined;
+    }
+
+    return {
+      base: stat.value,
+      bonus: 0,
+      statHash: stat.statHash,
+      name: def.displayProperties.name,
+      id: stat.statHash,
+      sort: statWhiteList.indexOf(stat.statHash),
+      value: stat.value,
+      maximumValue: 100,
+      bar: stat.statHash !== 4284893193 &&
+        stat.statHash !== 3871231066 &&
+        stat.statHash !== 2961396640
+    };
+  })) as DimStat[];
+}
+
 function buildStats(
   item: DestinyItemComponent,
   stats: { [key: string]: DestinyItemStatsComponent },
@@ -771,7 +820,9 @@ function buildInvestmentStats(
       sort: statWhiteList.indexOf(itemStat.statTypeHash),
       value: itemStat.value,
       maximumValue: 0,
-      bar: false
+      bar: def.hash !== 4284893193 &&
+        def.hash !== 3871231066 &&
+        def.hash !== 2961396640
     };
   })) as DimStat[];
 }
