@@ -7,6 +7,7 @@ import { StoreServiceType } from '../inventory/d2-stores.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
+import { ItemServiceType } from '../inventory/dimItemService.factory';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -15,7 +16,7 @@ import { settings } from '../settings/settings';
 export function D2FarmingService(
   $rootScope: IRootScopeService,
   $q: IQService,
-  dimItemService,
+  dimItemService: ItemServiceType,
   D2StoresService: StoreServiceType,
   $interval: IIntervalService,
   toaster,

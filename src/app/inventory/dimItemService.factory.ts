@@ -8,16 +8,35 @@ import { StoreServiceType } from './d2-stores.service';
 import { createItemIndex as d2CreateItemIndex, DimItem } from './store/d2-item-factory.service';
 import { DimStore } from './store/d2-store-factory.service';
 
+export interface ItemServiceType {
+  getSimilarItem(item: DimItem, exclusions?: Partial<DimItem>[], excludeExotic?: boolean): DimItem | null;
+  /**
+   * Move item to target store, optionally equipping it.
+   * @param item the item to move.
+   * @param target the store to move it to.
+   * @param equip true to equip the item, false to leave it unequipped.
+   * @param amount how much of the item to move (for stacks). Can span more than one stack's worth.
+   * @param excludes A list of {id, hash} objects representing items that should not be moved aside to make the move happen.
+   * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
+   * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
+   */
+  moveTo(item: DimItem, target: DimStore, equip: boolean, amount: number, excludes?: { id: string; hash: number }[], reservations?: { [storeId: number]: number }): IPromise<DimItem>;
+  /**
+   * Bulk equip items. Only use for multiple equips at once.
+   */
+  equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]>;
+}
+
 /**
  * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
  */
 export function ItemService(
-  dimStoreService,
-  D2StoresService,
+  dimStoreService: StoreServiceType,
+  D2StoresService: StoreServiceType,
   ItemFactory,
   $q,
   $i18next
-) {
+): ItemServiceType {
   'ngInject';
 
   // We'll reload the stores to check if things have been
@@ -42,7 +61,7 @@ export function ItemService(
     return item.destinyVersion === 2 ? d2equip : d1equip;
   }
 
-  function equipItemsApi(item: DimItem): (store: DimStore, items: DimItem[]) => IPromise<any> {
+  function equipItemsApi(item: DimItem): (store: DimStore, items: DimItem[]) => IPromise<DimItem[]> {
     return item.destinyVersion === 2 ? d2EquipItems : d1EquipItems;
   }
 
@@ -254,9 +273,9 @@ export function ItemService(
   /**
    * Bulk equip items. Only use for multiple equips at once.
    */
-  function equipItems(store: DimStore, items: DimItem[]) {
+  function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]> {
     // Check for (and move aside) exotics
-    const extraItemsToEquip = _.compact(items.map((i) => {
+    const extraItemsToEquip: IPromise<DimItem>[] = _.compact(items.map((i) => {
       if (i.equippingLabel) {
         const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
         // If we aren't already equipping into that slot...
@@ -288,11 +307,7 @@ export function ItemService(
         return equipItem(items[0]);
       }
       return equipItemsApi(items[0])(store, items)
-        .then((equippedItems) => {
-          return equippedItems.map((i) => {
-            return updateItemModel(i, store, store, true);
-          });
-        });
+        .then((equippedItems) => equippedItems.map((i) => updateItemModel(i, store, store, true)));
     });
   }
 

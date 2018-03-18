@@ -6,11 +6,12 @@ import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { flatMap } from '../util';
 import { IPromise } from 'angular';
+import { ItemServiceType } from '../inventory/dimItemService.factory';
 
 export function makeRoomForPostmaster(
   storeService: StoreServiceType,
   store: DimStore,
-  dimItemService,
+  dimItemService: ItemServiceType,
   toaster,
   bucketsService: () => IPromise<DimInventoryBuckets>
 ): IPromise<void> {
