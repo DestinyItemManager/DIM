@@ -18,12 +18,14 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import VendorItems from './vendor-items';
 import { $state, loadingTracker } from '../ngimport-more';
 import './vendor.scss';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: StoreServiceType;
+  DestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
@@ -62,12 +64,14 @@ export default class Vendors extends React.Component<Props, State> {
   }
 
   fetchRatings(vendorsResponse: DestinyVendorsResponse): void {
-    const saleComponents = Object.values(vendorsResponse.sales.data).map((saleItemComponent) => saleItemComponent.saleItems);
+    const saleComponentArray = Object.values(vendorsResponse.sales.data)
+      .map((saleItemComponent) => saleItemComponent.saleItems);
 
-    // flatten me
+    const saleComponents = ([] as DestinyVendorSaleItemComponent[]).concat(...saleComponentArray.map((v) => Object.values(v)));
+
     console.log(saleComponents);
 
-    // bridge to destiny-tracker.service.ts goes here
+    this.props.DestinyTrackerService.bulkFetchVendorItems(saleComponents);
   }
 
   componentDidMount() {
