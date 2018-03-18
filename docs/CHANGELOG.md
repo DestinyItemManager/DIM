@@ -1,5 +1,6 @@
 # Next
 
+* Stackable items like mods and shaders have less chance of being left behind during search transfers.
 * Put back "Make Room for Postmaster" in D1 - it was removed accidentally.
 
 # 4.43.0

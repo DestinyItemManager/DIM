@@ -7,7 +7,7 @@ import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { optimalLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { sum } from '../util';
+import { sum, flatMap } from '../util';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -166,11 +166,7 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
     throw new Error(t('Loadouts.NoTokens'));
   }
 
-  tokens = _.flatten(Object.values(_.mapObject(_.groupBy(tokens, (t) => t.hash), (tokens) => {
-    const token = copy(tokens[0]);
-    token.amount = sum(tokens, (t) => t.amount);
-    return token;
-  })));
+  tokens = addUpStackables(tokens);
 
   const itemsByType = _.groupBy(tokens, 'type');
 
@@ -193,11 +189,13 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
  * Move items matching the current search.
  */
 export function searchLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
-  const items = _.filter(storeService.getAllItems(), (i) => {
+  let items = _.filter(storeService.getAllItems(), (i) => {
     return i.visible &&
       !i.location.inPostmaster &&
       !i.notransfer;
   });
+
+  items = addUpStackables(items);
 
   const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) => limitToBucketSize(items, store.isVault));
 
@@ -234,5 +232,20 @@ function limitToBucketSize(items: DimItem[], isVault) {
   if (!bucket) {
     return isVault ? items : _.first(items, 9);
   }
+  // TODO: this doesn't take into account stacks that need to split
   return _.first(items, bucket.capacity - (item.equipment ? 1 : 0));
+}
+
+// Add up stackable items so we don't have duplicates. This helps us actually move them, see
+// https://github.com/DestinyItemManager/DIM/issues/2691#issuecomment-373970255
+function addUpStackables(items: DimItem[]) {
+  return flatMap(Object.values(_.groupBy(items, (t) => t.hash)), (items) => {
+    if (items[0].maxStackSize > 0) {
+      const item = copy(items[0]);
+      item.amount = sum(items, (i) => i.amount);
+      return [item];
+    } else {
+      return items;
+    }
+  });
 }
