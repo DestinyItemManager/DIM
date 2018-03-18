@@ -138,7 +138,8 @@ export const SyncService = {
    */
   async remove(key: string | string[]): Promise<void> {
     if (!cached) {
-      throw new Error("Must call get at least once before removing");
+      // Nothing to do
+      return;
     }
 
     let deleted = false;
