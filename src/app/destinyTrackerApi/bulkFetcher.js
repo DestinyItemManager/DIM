@@ -50,7 +50,7 @@ class BulkFetcher {
    * @memberof BulkFetcher
    */
   bulkFetch(storesContainer) {
-    const stores = _.values(storesContainer);
+    const stores = Object.values(storesContainer);
 
     this._getBulkFetchPromise(stores)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
@@ -65,7 +65,7 @@ class BulkFetcher {
    * @memberof BulkFetcher
    */
   bulkFetchVendorItems(vendorContainer) {
-    const vendors = _.values(vendorContainer);
+    const vendors = Object.values(vendorContainer);
 
     this._getBulkFetchPromise(vendors)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,

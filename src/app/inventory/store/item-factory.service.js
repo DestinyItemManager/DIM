@@ -654,8 +654,8 @@ export function ItemFactory(
       hasAscendNode: Boolean(ascendNode),
       ascended: Boolean(ascendNode && ascendNode.activated),
       infusable: _.any(gridNodes, { hash: 1270552711 }),
-      dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
-      dtrRoll: _.compact(_.pluck(gridNodes, 'dtrRoll')).join(';'),
+      dtrPerks: _.compact(gridNodes.map((i) => i.dtrHash)).join(';'),
+      dtrRoll: _.compact(gridNodes.map((i) => i.dtrRoll)).join(';'),
       complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
     };
   }
@@ -706,7 +706,7 @@ export function ItemFactory(
   }
 
   function getClassTypeNameLocalized(defs, type) {
-    const klass = _.find(_.values(defs.Class), { classType: type });
+    const klass = _.find(Object.values(defs.Class), { classType: type });
     if (klass) {
       return klass.className;
     } else {

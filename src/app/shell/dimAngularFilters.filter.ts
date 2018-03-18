@@ -51,9 +51,7 @@ mod.filter('bungieBackground', () => {
  */
 mod.filter('equipped', () => {
   return function equipped(items: DimItem[], isEquipped) {
-    return _.filter(items || [], (item) => {
-      return item.equipped === isEquipped;
-    });
+    return (items || []).filter((item) => item.equipped === isEquipped);
   };
 });
 

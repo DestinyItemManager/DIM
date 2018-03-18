@@ -1,4 +1,3 @@
-import * as _ from 'underscore';
 import { getToken } from '../oauth/oauth-token.service';
 import { t } from 'i18next';
 import { $q, $rootScope } from 'ngimport';
@@ -200,7 +199,7 @@ export class GoogleDriveStorage implements StorageAdapter {
         const files = list.result.files;
 
         // look for the saved file.
-        const file: any = _.find(files, { name: fileName });
+        const file: any = files.find((f) => f.name === fileName);
         if (file) {
           this.fileId = file.id;
           return this.fileId;

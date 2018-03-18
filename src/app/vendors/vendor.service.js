@@ -154,12 +154,12 @@ export function VendorService(
    * Returns a promise for a fresh view of the vendors and their items.
    */
   function loadVendors(account, stores) {
-    const characters = _.reject(stores, 'isVault');
+    const characters = stores.filter((s) => !s.isVault);
 
     const reloadPromise = getDefinitions()
       .then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
-        const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
+        const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
 
         service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
         service.loadedVendors = 0;
@@ -225,7 +225,7 @@ export function VendorService(
       mergedVendor.hasBounties = mergedVendor.hasBounties || vendor.hasBounties;
     });
 
-    mergedVendor.allItems = _.flatten(_.pluck(mergedVendor.categories, 'saleItems'), true);
+    mergedVendor.allItems = _.flatten(mergedVendor.categories.map((i) => i.saleItems), true);
 
     return mergedVendor;
   }
@@ -408,7 +408,7 @@ export function VendorService(
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
     });
 
-    return ItemFactory.processItems({ id: null }, _.pluck(saleItems, 'item'))
+    return ItemFactory.processItems({ id: null }, saleItems.map((i) => i.item))
       .then((items) => {
         const itemsById = _.indexBy(items, 'id');
         const categories = _.compact(_.map(vendor.saleItemCategories, (category) => {
@@ -445,7 +445,7 @@ export function VendorService(
             const item = saleItem.item;
             if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
               if (item.talentGrid) {
-                item.dtrRoll = _.compact(_.pluck(item.talentGrid.nodes, 'dtrRoll')).join(';');
+                item.dtrRoll = _.compact(item.talentGrid.nodes.map((i) => i.dtrRoll)).join(';');
               }
               hasArmorWeaps = true;
             }

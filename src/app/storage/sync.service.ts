@@ -84,9 +84,9 @@ export const SyncService = {
       throw new Error("Must call get at least once before setting");
     }
 
-    if (!PUT && equals(_.pick(cached, _.keys(value)), value)) {
+    if (!PUT && equals(_.pick(cached, Object.keys(value)), value)) {
       if ($featureFlags.debugSync) {
-        console.log(_.pick(cached, _.keys(value)), value);
+        console.log(_.pick(cached, Object.keys(value)), value);
         console.log("Skip save, already got it");
       }
       return;

@@ -237,7 +237,7 @@ export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[
   return equipItemsApi(httpAdapterWithRetry, {
     characterId: store.id,
     membershipType: platform!.platformType,
-    itemIds: _.pluck(items, 'id')
+    itemIds: items.map((i) => i.id)
   })
     .then((response) => {
       const data: DestinyEquipItemResults = response.Response;

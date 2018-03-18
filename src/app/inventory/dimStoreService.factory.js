@@ -248,7 +248,7 @@ export function StoreService(
       });
 
       // Fill in any missing buckets
-      _.values(buckets.byType).forEach((bucket) => {
+      Object.values(buckets.byType).forEach((bucket) => {
         if (!store.buckets[bucket.id]) {
           store.buckets[bucket.id] = [];
         }

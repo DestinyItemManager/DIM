@@ -119,7 +119,7 @@ export function gatherEngramsLoadout(
   storeService: StoreServiceType,
   options: { exotics: boolean } = { exotics: false }
 ): Loadout {
-  const engrams = _.filter(storeService.getAllItems(), (i) => {
+  const engrams = storeService.getAllItems().filter((i) => {
     return i.isEngram() && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
   });
 
@@ -189,7 +189,7 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
  * Move items matching the current search.
  */
 export function searchLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
-  let items = _.filter(storeService.getAllItems(), (i) => {
+  let items = storeService.getAllItems().filter((i) => {
     return i.visible &&
       !i.location.inPostmaster &&
       !i.notransfer;

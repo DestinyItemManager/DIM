@@ -75,7 +75,7 @@ function RecordBooksController($scope, dimStoreService, $filter) {
       expirationDate: rawRecordBook.expirationDate
     };
 
-    const records = _.values(rawRecordBook.records).map((r) => processRecord(defs, r));
+    const records = Object.values(rawRecordBook.records).map((r) => processRecord(defs, r));
     const recordByHash = _.indexBy(records, 'hash');
 
     let i = 0;

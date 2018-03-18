@@ -688,7 +688,7 @@ function isLegendaryOrBetter(item) {
 }
 
 function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyClass) {
-  const klass = _.find(Object.values(defs.Class), { classType: type });
+  const klass = Object.values(defs.Class).find((c) => c.classType === type);
   if (klass) {
     return klass.displayProperties.name;
   } else {

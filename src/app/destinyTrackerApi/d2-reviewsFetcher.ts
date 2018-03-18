@@ -55,7 +55,7 @@ class D2ReviewsFetcher {
 
   _getUserReview(reviewData: DimWorkingUserReview | DtrReviewContainer) {
     // bugbug: will need to use membership service if isReviewer flag stays broke
-    return _.find(reviewData.reviews, { isReviewer: true });
+    return reviewData.reviews.find((r) => r.isReviewer);
   }
 
   _sortAndIgnoreReviews(item: DimItem) {

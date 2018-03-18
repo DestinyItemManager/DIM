@@ -251,9 +251,9 @@ export function makeCharacter(defs: D2ManifestDefinitions, character: DestinyCha
 }
 
 export function makeVault(buckets: DimInventoryBuckets, profileCurrencies: DestinyItemComponent[]): DimVault {
-  const glimmer = _.find(profileCurrencies, (cur) => cur.itemHash === 3159615086);
-  const legendary = _.find(profileCurrencies, (cur) => cur.itemHash === 1022552290);
-  const silver = _.find(profileCurrencies, (cur) => cur.itemHash === 3147280338);
+  const glimmer = profileCurrencies.find((cur) => cur.itemHash === 3159615086);
+  const legendary = profileCurrencies.find((cur) => cur.itemHash === 1022552290);
+  const silver = profileCurrencies.find((cur) => cur.itemHash === 3147280338);
   const currencies = {
     glimmer: glimmer ? glimmer.quantity : 0,
     marks: legendary ? legendary.quantity : 0,
