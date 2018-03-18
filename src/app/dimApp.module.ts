@@ -19,7 +19,6 @@ import ocLazyLoadModule from 'oclazyload';
 import 'ngimport';
 import ngimportMoreModule from './ngimport-more';
 
-import accountsModule from './accounts/accounts.module';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './inventory/inventory.module';
 import itemReviewModule from './item-review/item-review.module';
@@ -52,7 +51,6 @@ const dependencies = [
   SliderModule,
   ToasterModule,
   UIRouterModule,
-  accountsModule,
   inventoryModule,
   itemReviewModule,
   loginModule,

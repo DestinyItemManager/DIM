@@ -1,6 +1,5 @@
 declare const $DIM_VERSION: string;
 declare const $DIM_FLAVOR: string;
-declare const DIM_WEB_API_KEY: string;
 declare const $DIM_BUILD_DATE: string;
 declare const $DIM_CHANGELOG: string;
 declare const $DIM_WEB_API_KEY: string;
@@ -48,6 +47,11 @@ interface Navigator {
 }
 
 declare module "*.jpg" {
+  const value: string;
+  export default value;
+}
+
+declare module "*.svg" {
   const value: string;
   export default value;
 }

@@ -1,26 +1,27 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import UIRouterModule from '@uirouter/angularjs';
 
 import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
-import { RefreshComponent } from './refresh.component';
 import { CountdownComponent } from './countdown.component';
 import { BungieAlertsComponent } from './bungie-alerts.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { ScrollClass } from './scroll-class.directive';
-import { HeaderComponent } from './header.component';
+import Header from './Header';
 import { ManifestProgressComponent } from './manifest-progress.component';
 import { defaultAccountRoute } from './default-account.route';
 import { destinyAccountRoute } from './destiny-account.route';
+// tslint:disable-next-line:no-implicit-dependencies
 import aboutTemplate from 'app/views/about.html';
+// tslint:disable-next-line:no-implicit-dependencies
 import supportTemplate from 'app/views/support.html';
 import PageController from './page.controller';
 import { ClickAnywhereButHere } from './click-anywhere-but-here.directive';
 import loadingTracker from './dimLoadingTracker.factory';
 import dimAngularFiltersModule from './dimAngularFilters.filter';
+import { react2angular } from 'react2angular';
 
-export const ShellModule = angular
-  .module('dimShell', [
+export const ShellModule = module('dimShell', [
     UIRouterModule,
     dimAngularFiltersModule
   ])
@@ -28,10 +29,9 @@ export const ShellModule = angular
   .service('dimActivityTrackerService', ActivityTrackerService)
   .factory('loadingTracker', loadingTracker)
   .component('bungieAlerts', BungieAlertsComponent)
-  .component('refresh', RefreshComponent)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
-  .component('header', HeaderComponent)
+  .component('header', react2angular(Header, [], ['$scope']))
   .component('dimManifestProgress', ManifestProgressComponent)
   .directive('scrollClass', ScrollClass)
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere)
