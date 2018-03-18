@@ -15,7 +15,7 @@ export const VendorItem = {
 
 let otherDialog = null;
 
-function VendorItemCtrl($scope, $element, ngDialog, dimStoreService, dimDestinyTrackerService) {
+function VendorItemCtrl($scope, $element, ngDialog, dimStoreService) {
   'ngInject';
 
   const vm = this;
