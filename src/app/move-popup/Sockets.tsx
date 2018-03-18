@@ -29,7 +29,9 @@ export default class Sockets extends React.Component<Props, State> {
     // This is a hack / React anti-pattern so we can successfully update when the reviews async populate.
     // It should be short-term - in the future we should load review data from separate state.
     this.props.$scope.$watch(() => this.props.item.reviewsUpdated, () => {
-      this.setState({}); // gross
+      if (this.props.item.reviewsUpdated) {
+        this.setState({}); // gross
+      }
     });
 
     // This is another hack - it should be passed in, or provided via Context API.

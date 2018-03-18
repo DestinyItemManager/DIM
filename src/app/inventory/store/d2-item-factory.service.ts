@@ -1033,7 +1033,7 @@ function buildSockets(
 
   return {
     sockets: realSockets, // Flat list of sockets
-    categories // Sockets organized by category
+    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
   };
 }
 
@@ -1058,7 +1058,7 @@ function buildDefinedSockets(
 
   return {
     sockets: realSockets, // Flat list of sockets
-    categories // Sockets organized by category
+    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
   };
 }
 
