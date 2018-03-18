@@ -24,7 +24,9 @@ import {
   TransferStatuses,
   DestinyUnlockValueUIStyle,
   DestinyItemSocketState,
-  DestinyItemPlug
+  DestinyItemPlug,
+  DestinyItemSocketEntryDefinition,
+  DestinyItemSocketEntryPlugItemDefinition
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
@@ -648,9 +650,11 @@ export function makeItem(
   }
 
   try {
-    // TODO: get these working with definition-only items once the socket merge is in
+    // TODO: move socket handling and stuff into a different file
     if (itemComponents && itemComponents.sockets && itemComponents.sockets.data) {
       createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
+    } else if (itemDef.sockets) {
+      createdItem.sockets = buildDefinedSockets(defs, itemDef);
     }
   } catch (e) {
     console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
@@ -1020,9 +1024,6 @@ function buildSockets(
 
   const realSockets = sockets.map((socket, i) => buildSocket(defs, socket, i));
 
-  // TODO: use uiCategoryStyle to display sockets differently than perks
-  // TODO: check out intrinsicsockets as well
-
   const categories = itemDef.sockets.socketCategories.map((category): DimSocketCategory => {
     return {
       category: defs.SocketCategory.get(category.socketCategoryHash),
@@ -1033,6 +1034,62 @@ function buildSockets(
   return {
     sockets: realSockets, // Flat list of sockets
     categories // Sockets organized by category
+  };
+}
+
+function buildDefinedSockets(
+  defs: D2ManifestDefinitions,
+  itemDef: DestinyInventoryItemDefinition
+): DimSockets | null {
+  const sockets = itemDef.sockets.socketEntries;
+  if (!sockets || !sockets.length) {
+    return null;
+  }
+
+  const realSockets = sockets.map((socket, i) => buildDefinedSocket(defs, socket, i));
+  // TODO: check out intrinsicsockets as well
+
+  const categories = itemDef.sockets.socketCategories.map((category): DimSocketCategory => {
+    return {
+      category: defs.SocketCategory.get(category.socketCategoryHash),
+      sockets: category.socketIndexes.map((index) => realSockets[index]).filter((s) => s.plugOptions.length)
+    };
+  });
+
+  return {
+    sockets: realSockets, // Flat list of sockets
+    categories // Sockets organized by category
+  };
+}
+
+function buildDefinedSocket(
+  defs: D2ManifestDefinitions,
+  socket: DestinyItemSocketEntryDefinition,
+  index: number
+): DimSocket {
+  // The currently equipped plug, if any
+  const reusablePlugs = compact((socket.reusablePlugItems || []).map((reusablePlug) => buildDefinedPlug(defs, reusablePlug)));
+  const plugOptions: DimPlug[] = [];
+
+  if (reusablePlugs.length) {
+    reusablePlugs.forEach((reusablePlug) => {
+      if (// TODO: with AWA we may want to put some of these back
+          // removes the reusablePlugs from masterwork
+          !reusablePlug.plugItem.itemCategoryHashes.includes(141186804) &&
+          // removes the "Remove Shader" plug
+          reusablePlug.plugItem.action &&
+          // removes the "Default Ornament" plug
+          ![2931483505, 1959648454, 702981643].includes(reusablePlug.plugItem.hash)
+        ) {
+          plugOptions.push(reusablePlug);
+        }
+      });
+  }
+
+  return {
+    socketIndex: index,
+    plug: null,
+    plugOptions
   };
 }
 
@@ -1059,6 +1116,27 @@ function buildPlug(
     enabled: enabled && (plug.plugObjectives || []).every((o) => o.complete) && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
+    perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),
+    isMasterwork: plugItem.plug.plugCategoryHash === 2109207426 || plugItem.plug.plugCategoryHash === 2989652629
+  };
+}
+
+function buildDefinedPlug(
+  defs: D2ManifestDefinitions,
+  plug: DestinyItemSocketEntryPlugItemDefinition
+): DimPlug | null {
+  const plugHash = plug.plugItemHash;
+
+  const plugItem = plugHash && defs.InventoryItem.get(plugHash);
+  if (!plugItem) {
+    return null;
+  }
+
+  return {
+    plugItem,
+    enabled: true,
+    enableFailReasons: "",
+    plugObjectives: [],
     perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),
     isMasterwork: plugItem.plug.plugCategoryHash === 2109207426 || plugItem.plug.plugCategoryHash === 2989652629
   };

@@ -38,7 +38,7 @@ export const StoreItemComponent = {
 let otherDialog = null;
 let firstItemTimed = false;
 
-export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimDestinyTrackerService) {
+export function StoreItemCtrl($scope, $element, dimItemMoveService, dimStoreService, D2StoresService, ngDialog, dimLoadoutService, dimCompareService, $rootScope) {
   'ngInject';
 
   function getStoreService(item) {

@@ -50,38 +50,39 @@ export default class Sockets extends React.Component<Props, State> {
     return (
       <div className="item-details">
         {item.sockets.categories.map((category) =>
-          <div key={category.category.hash} className={classNames("item-socket-category", categoryStyle(category.category.categoryStyle))}>
-            <div className="item-socket-category-name">
-              <div>{category.category.displayProperties.name}</div>
-              {anyBestRatedUnselected(category) &&
-                <div className="best-rated-key">
-                  <div className="tip-text"><BestRatedIcon /> {t('DtrReview.BestRatedKey')}</div>
-                </div>
-              }
+          category.sockets.length > 0 &&
+            <div key={category.category.hash} className={classNames("item-socket-category", categoryStyle(category.category.categoryStyle))}>
+              <div className="item-socket-category-name">
+                <div>{category.category.displayProperties.name}</div>
+                {anyBestRatedUnselected(category) &&
+                  <div className="best-rated-key">
+                    <div className="tip-text"><BestRatedIcon /> {t('DtrReview.BestRatedKey')}</div>
+                  </div>
+                }
+              </div>
+              <div className="item-sockets">
+                {category.sockets.map((socketInfo) =>
+                  <div key={socketInfo.socketIndex} className="item-socket">
+                    {socketInfo.plugOptions.map((plug) =>
+                      <div
+                        key={plug.plugItem.hash}
+                        className={classNames("socket-container", { disabled: !plug.enabled, notChosen: plug !== socketInfo.plug })}
+                      >
+                        {plug.bestRated && <BestRatedIcon />}
+                        <PressTip tooltip={<PlugTooltip item={item} plug={plug} defs={this.state.defs}/>}>
+                          <div>
+                            <BungieImage
+                              className="item-mod"
+                              src={plug.plugItem.displayProperties.icon}
+                            />
+                          </div>
+                        </PressTip>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="item-sockets">
-              {category.sockets.map((socketInfo) =>
-                <div key={socketInfo.socketIndex} className="item-socket">
-                  {socketInfo.plugOptions.map((plug) =>
-                    <div
-                      key={plug.plugItem.hash}
-                      className={classNames("socket-container", { disabled: !plug.enabled, notChosen: plug !== socketInfo.plug })}
-                    >
-                      {plug.bestRated && <BestRatedIcon />}
-                      <PressTip tooltip={<PlugTooltip item={item} plug={plug} defs={this.state.defs}/>}>
-                        <div>
-                          <BungieImage
-                            className="item-mod"
-                            src={plug.plugItem.displayProperties.icon}
-                          />
-                        </div>
-                      </PressTip>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
         )}
       </div>
     );
