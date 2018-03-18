@@ -1,5 +1,7 @@
 # Next
 
+* Stackable items like mods and shaders have less chance of being left behind during search transfers.
+
 # 4.43.0
 
 * Fix some cases where moving stacks of items would fail.
