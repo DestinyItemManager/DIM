@@ -89,13 +89,27 @@ import { getActivePlatform } from '../accounts/platform.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+
+export interface DestinyTrackerServiceType {
+  bulkFetchVendorItems(vendorItems: DestinyVendorSaleItemComponent[]);
+  reattachScoresFromCache(stores: any | DimStore[]): void;
+  updateCachedUserRankings(item: any | DimItem, userReview: any);
+  updateVendorRankings(vendors: any);
+  getItemReviews(item: any | DimItem);
+  submitReview(item: any | DimItem);
+  fetchReviews(stores: any | DimStore[]);
+  reportReview(review: any);
+  clearIgnoredUsers();
+  clearCache();
+}
 
 export function DestinyTrackerService(
   $q,
   $http,
   $i18next,
   loadingTracker
-) {
+): DestinyTrackerServiceType {
   'ngInject';
 
   const _reviewDataCache = new ReviewDataCache();
@@ -121,7 +135,7 @@ export function DestinyTrackerService(
   }
 
   return {
-    reattachScoresFromCache(stores) {
+    reattachScoresFromCache(stores: any | DimStore[]): void {
       if (!stores || !stores[0]) {
         return;
       }
@@ -189,7 +203,7 @@ export function DestinyTrackerService(
       }
     },
 
-    fetchReviews(stores) {
+    fetchReviews(stores: any | DimStore[]) {
       if (!settings.showReviews ||
           !stores ||
           !stores[0]) {
