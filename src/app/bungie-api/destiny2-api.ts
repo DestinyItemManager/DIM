@@ -15,7 +15,11 @@ import {
   setItemLockState,
   transferItem,
   DestinyVendorResponse,
-  DestinyVendorsResponse
+  DestinyVendorsResponse,
+  awaInitializeRequest,
+  AwaType,
+  awaGetActionToken,
+  AwaAuthorizationResult
   } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as _ from 'underscore';
@@ -258,4 +262,16 @@ export function setLockState(store: DimStore, item: DimItem, lockState: boolean)
     itemId: item.id,
     state: lockState
   }) as IPromise<ServerResponse<number>>;
+}
+
+// TODO: owner can't be "vault" I bet
+export function requestAdvancedWriteActionToken(account: DestinyAccount, action: AwaType, item?: DimItem): IPromise<AwaAuthorizationResult> {
+  return awaInitializeRequest(httpAdapter, {
+    type: action,
+    membershipType: account.platformType,
+    affectedItemId: item ? item.id : undefined,
+    characterId: item ? item.owner : undefined
+  })
+    .then((result) => awaGetActionToken(httpAdapter, { correlationId: result.Response.correlationId }))
+    .then((result) => result.Response);
 }

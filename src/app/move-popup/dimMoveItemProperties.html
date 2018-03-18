@@ -58,9 +58,7 @@
       <div class="item-details item-perks" ng-if="vm.item.talentGrid">
         <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>
       </div>
-      <div class="item-details item-sockets" ng-if="vm.item.sockets">
-        <sockets item="vm.item" sockets="vm.item.sockets" infuse="vm.infuse(vm.item, $event)"></sockets>
-      </div>
+      <sockets item="vm.item"></sockets>
       <div class="item-details item-perks" ng-if="vm.item.perks">
         <div class="item-perk" ng-repeat="perk in vm.item.perks">
           <img ng-if="perk.displayProperties.hasIcon" ng-src="{{ perk.displayProperties.icon | bungieIcon }}">

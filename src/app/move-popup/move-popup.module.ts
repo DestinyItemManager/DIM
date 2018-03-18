@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { module } from 'angular';
 import { ItemStatsComponent } from './item-stats.component';
 import { ItemTagComponent } from './item-tag.component';
 import { MoveAmount } from './move-amount.directive';
@@ -8,12 +8,12 @@ import { MoveItemProperties } from './dimMoveItemProperties.directive';
 import { MovePopupComponent } from './dimMovePopup.directive';
 import { MoveLocationsComponent } from './move-locations.component';
 import { talentGridNodesFilter, TalentGridComponent } from './talent-grid.component';
-import { SocketsComponent } from './sockets.component';
+import Sockets from './Sockets';
 import { ItemPopup } from './item-popup.directive';
 import { PressTip } from './press-tip.directive';
+import { react2angular } from 'react2angular';
 
-export default angular
-  .module('movePopupModule', [])
+export default module('movePopupModule', [])
   .component('dimItemStats', ItemStatsComponent)
   .component('dimItemTag', ItemTagComponent)
   .directive('dimMoveAmount', MoveAmount)
@@ -23,7 +23,7 @@ export default angular
   .component('dimMoveLocations', MoveLocationsComponent)
   .component('dimMovePopup', MovePopupComponent)
   .component('dimTalentGrid', TalentGridComponent)
-  .component('sockets', SocketsComponent)
+  .component('sockets', react2angular(Sockets, ['item'], ['$scope']))
   .filter('talentGridNodes', () => talentGridNodesFilter)
   .directive('itemPopup', ItemPopup)
   .directive('pressTip', PressTip)
