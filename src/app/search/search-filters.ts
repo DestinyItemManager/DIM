@@ -579,13 +579,9 @@ export function searchFilters(
               node.description.toLowerCase().includes(predicate);
           })) ||
           (item.sockets && item.sockets.sockets.some((socket) => {
-<<<<<<< HEAD
-            return socket.plug &&
+            return Boolean(socket.plug &&
               (socket.plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
-               socket.plug.plugItem.displayProperties.description.toLowerCase().includes(predicate));
-=======
-            return Boolean(socket.plug && (`${socket.plug.displayProperties.name} ${socket.plug.displayProperties.description}`).toLowerCase().indexOf(predicate) >= 0);
->>>>>>> Finish filters
+               socket.plug.plugItem.displayProperties.description.toLowerCase().includes(predicate)));
           }));
       },
       light(item: DimItem, predicate: string) {

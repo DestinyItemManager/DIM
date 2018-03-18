@@ -16,7 +16,7 @@ export const enum LoadoutClass {
   hunter = 2
 }
 
-type LoadoutItem = Pick<DimItem, 'id' | 'hash' | 'amount' | 'equipped'>;
+type LoadoutItem = DimItem;
 
 // TODO: move into loadouts service
 export interface Loadout {
@@ -545,14 +545,14 @@ export function LoadoutService(
         result.items[discriminator] = (result.items[discriminator] || []);
         result.items[discriminator].push(item as DimItem);
       } else {
-        const loadoutItem: LoadoutItem = {
+        const loadoutItem = {
           id: itemPrimitive.id,
           hash: itemPrimitive.hash,
           amount: itemPrimitive.amount,
           equipped: itemPrimitive.equipped
         };
 
-        result.items.unknown.push(loadoutItem);
+        result.items.unknown.push(loadoutItem as DimItem);
       }
     }
 
@@ -568,7 +568,7 @@ export function LoadoutService(
         amount: item.amount,
         equipped: item.equipped
       };
-    });
+    }) as DimItem[];
 
     return {
       id: loadout.id,
