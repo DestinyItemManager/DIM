@@ -1,12 +1,14 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
+import { IRootScopeService, ITimeoutService, IDirective } from 'angular';
+import { ActivityTrackerService } from './activity-tracker.service';
 
 export function ActivityTrackerDirective(
   $document,
-  $timeout,
-  dimActivityTrackerService,
+  $timeout: ITimeoutService,
+  dimActivityTrackerService: ActivityTrackerService,
   loadingTracker,
-  $rootScope
-) {
+  $rootScope: IRootScopeService
+): IDirective {
   'ngInject';
 
   return {

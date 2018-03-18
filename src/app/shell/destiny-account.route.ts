@@ -1,10 +1,11 @@
 import { getPlatforms, setActivePlatform, getPlatformMatching } from '../accounts/platform.service';
+import { StateProvider } from '@uirouter/angularjs';
 
 /**
  * A config function that will create the Destiny account route, which is the parent of
  * all views that care about a particular Destiny account.
  */
-export function destinyAccountRoute($stateProvider) {
+export function destinyAccountRoute($stateProvider: StateProvider) {
   'ngInject';
 
   $stateProvider.state({
@@ -19,6 +20,7 @@ export function destinyAccountRoute($stateProvider) {
     parent: 'destiny-account',
     lazyLoad($transition$) {
       const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+      // tslint:disable-next-line:space-in-parens
       return import(/* webpackChunkName: "destiny1" */ '../destiny1/destiny1.module.js')
         .then((mod) => $ocLazyLoad.load(mod.default));
     }
@@ -29,7 +31,7 @@ export function destinyAccountRoute($stateProvider) {
  * This is a function that generates a resolver that can be used for both the destiny1 and destiny2
  * routes to resolve an account specific to their version.
  */
-export function destinyAccountResolver(destinyVersion) {
+export function destinyAccountResolver(destinyVersion: 1 | 2) {
   return ($transition$, $state) => {
     'ngInject';
 

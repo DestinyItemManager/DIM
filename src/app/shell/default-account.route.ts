@@ -1,10 +1,11 @@
 import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
+import { StateProvider } from '@uirouter/angularjs';
 
 /**
  * A config function that will create the default account route, which is used to redirect
  * when we don't know what to do.
  */
-export function defaultAccountRoute($stateProvider) {
+export function defaultAccountRoute($stateProvider: StateProvider) {
   'ngInject';
 
   // A dummy state that'll redirect to the selected character's Destiny 1 inventory

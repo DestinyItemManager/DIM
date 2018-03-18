@@ -42,7 +42,7 @@ export interface StoreServiceType {
   }): DimItem | undefined;
   updateCharacters(account?: DestinyAccount): IPromise<DimStore[]>;
   reloadStores(): Promise<DimStore[]>;
-  refreshRatingsData();
+  refreshRatingsData(): void;
 }
 
 /**

@@ -4,7 +4,9 @@ import {
   IQService,
   IScope,
   ITimeoutService,
-  IWindowService
+  IWindowService,
+  IComponentOptions,
+  IController
   } from 'angular';
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
@@ -20,7 +22,13 @@ declare global {
   }
 }
 
+export const StorageComponent: IComponentOptions = {
+  controller: StorageController,
+  template
+};
+
 function StorageController(
+  this: IController,
   $scope: IScope,
   dimDestinyTrackerService,
   $timeout: ITimeoutService,
@@ -158,8 +166,3 @@ function StorageController(
     dimDestinyTrackerService.clearIgnoredUsers();
   };
 }
-
-export const StorageComponent = {
-  controller: StorageController,
-  template
-};
