@@ -1,4 +1,4 @@
-<div ng-if="vm.stores.length && vm.vault" class="inventory-content" ng-class="{ 'hide-filtered': vm.settings.hideFilteredItems, 'phone-portrait': vm.isPhonePortrait }">
+<div ng-if="vm.stores.length && vm.vault" class="inventory-content" ng-class="{ 'phone-portrait': vm.isPhonePortrait }">
   <div ng-if="vm.isPhonePortrait && vm.selectedStore">
     <!-- TODO: move most of these into their own components? -->
     <div class="store-header">

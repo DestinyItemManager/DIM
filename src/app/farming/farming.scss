@@ -20,6 +20,7 @@
   left: 50%;
   transform: translateX(-50%);
   box-sizing: border-box;
+  padding-bottom: constant(safe-area-inset-bottom);
 
   button {
     color: white;

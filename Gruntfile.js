@@ -242,6 +242,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('publish_beta', [
+    'sortJSON:i18n',
     'crowdin-request:upload',
     'log_beta_version',
     'precompress',
