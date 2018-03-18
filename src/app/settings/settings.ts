@@ -49,8 +49,6 @@ let readyResolve;
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed';
 
 class Settings {
-  // Hide items that don't match the current search
-  hideFilteredItems = false;
   // Show full details in item popup
   itemDetails = true;
   // Show item quality percentages
