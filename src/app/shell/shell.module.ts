@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import UIRouterModule from '@uirouter/angularjs';
 
@@ -11,7 +11,9 @@ import Header from './Header';
 import { ManifestProgressComponent } from './manifest-progress.component';
 import { defaultAccountRoute } from './default-account.route';
 import { destinyAccountRoute } from './destiny-account.route';
+// tslint:disable-next-line:no-implicit-dependencies
 import aboutTemplate from 'app/views/about.html';
+// tslint:disable-next-line:no-implicit-dependencies
 import supportTemplate from 'app/views/support.html';
 import PageController from './page.controller';
 import { ClickAnywhereButHere } from './click-anywhere-but-here.directive';
@@ -19,8 +21,7 @@ import loadingTracker from './dimLoadingTracker.factory';
 import dimAngularFiltersModule from './dimAngularFilters.filter';
 import { react2angular } from 'react2angular';
 
-export const ShellModule = angular
-  .module('dimShell', [
+export const ShellModule = module('dimShell', [
     UIRouterModule,
     dimAngularFiltersModule
   ])
