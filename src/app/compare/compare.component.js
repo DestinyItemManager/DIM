@@ -215,7 +215,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     });
   };
 
-  $scope.$watch('vm.comparisons', () => {
+  $scope.$watchCollection('vm.comparisons', () => {
     const statBuckets = {};
 
     function bucketStat(stat) {
@@ -241,5 +241,5 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
       statRange.enabled = statRange.min !== statRange.max;
       vm.statRanges[hash] = statRange;
     });
-  }, true);
+  });
 }
