@@ -21,7 +21,7 @@ class D2ReviewDataCache {
   _getMatchingItem(item) {
     const dtrItem = this._itemTransformer.translateToDtrItem(item);
 
-    return _.find(this._itemStores, { referenceId: dtrItem.referenceId });
+    return this._itemStores.find((s) => s.referenceId === dtrItem.referenceId);
   }
 
   /**

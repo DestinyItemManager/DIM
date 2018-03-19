@@ -6,11 +6,12 @@ import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { flatMap } from '../util';
 import { IPromise } from 'angular';
+import { ItemServiceType } from '../inventory/dimItemService.factory';
 
 export function makeRoomForPostmaster(
   storeService: StoreServiceType,
   store: DimStore,
-  dimItemService,
+  dimItemService: ItemServiceType,
   toaster,
   bucketsService: () => IPromise<DimInventoryBuckets>
 ): IPromise<void> {
@@ -127,8 +128,7 @@ async function moveItemsToVault(
     const vaultSpaceLeft = vault!.spaceLeftForItem(item);
     if (vaultSpaceLeft <= 1) {
       // If we're down to one space, try putting it on other characters
-      const otherStores = _.filter(storeService.getStores(),
-                                    (store) => !store.isVault && store.id !== store.id);
+      const otherStores = storeService.getStores().filter((store) => !store.isVault && store.id !== store.id);
       const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
       if (otherStoresWithSpace.length) {

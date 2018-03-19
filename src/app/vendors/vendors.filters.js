@@ -1,5 +1,3 @@
-import _ from 'underscore';
-
 /**
  * Filters a list of categories down to only categories that match a certain property.
  */
@@ -7,7 +5,7 @@ function vendorTab(categories, prop) {
   if (!prop || !prop.length) {
     return categories;
   }
-  return _.filter(categories, prop);
+  return categories.filter(prop);
 }
 
 /**
@@ -17,7 +15,7 @@ function vendorTabItems(items, prop) {
   if (!prop || !prop.length) {
     return items;
   }
-  return _.filter(items, {
+  return items.filter({
     hasArmorWeaps: (saleItem) => (saleItem.item.bucket.sort === 'Weapons' || saleItem.item.bucket.sort === 'Armor' || saleItem.item.type === 'Artifact' || saleItem.item.type === 'Ghost'),
     hasVehicles: (saleItem) => (saleItem.item.type === 'Ship' || saleItem.item.type === 'Vehicle'),
     hasShadersEmbs: (saleItem) => (saleItem.item.type === "Emblem" || saleItem.item.type === "Shader"),

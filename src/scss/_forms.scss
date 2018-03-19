@@ -53,13 +53,3 @@ textarea.textarea-error {
     border-bottom: 1px solid $orange;
   }
 }
-
-.link {
-  color: white;
-  cursor: pointer;
-
-  &:hover, &.active {
-    color: $orange;
-    transition: color .2s linear;
-  }
-}

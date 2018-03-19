@@ -36,14 +36,7 @@ class ItemListBuilder {
   _getDtrWeapons(stores, reviewDataCache) {
     const allItems = this._getAllItems(stores);
 
-    const allWeapons = _.filter(allItems,
-                        (item) => {
-                          if (!item.primStat) {
-                            return false;
-                          }
-
-                          return (item.bucket.sort === 'Weapons');
-                        });
+    const allWeapons = allItems.filter((item) => item.primStat && item.bucket.sort === 'Weapons');
 
     const newGuns = this._getNewItems(allWeapons, reviewDataCache);
 

@@ -1,5 +1,4 @@
 import angular from 'angular';
-import _ from 'underscore';
 
 import { VendorService } from './vendor.service';
 import { VendorsComponent } from './vendors.component';
@@ -19,7 +18,7 @@ export default angular
   .component('xur', Xur)
   .filter('vendorTab', () => vendorTab)
   .filter('vendorTabItems', () => vendorTabItems)
-  .filter('values', () => _.values)
+  .filter('values', () => Object.values)
   .config(($stateProvider) => {
     'ngInject';
 

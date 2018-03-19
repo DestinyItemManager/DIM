@@ -1,11 +1,11 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { LoginComponent } from './login.component';
+import { StateProvider } from '@uirouter/angularjs';
 
-export default angular
-  .module('loginModule', [])
+export default module('loginModule', [])
   .component('login', LoginComponent)
-  .config(($stateProvider) => {
+  .config(($stateProvider: StateProvider) => {
     'ngInject';
 
     $stateProvider.state({

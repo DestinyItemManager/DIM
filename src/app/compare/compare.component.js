@@ -151,10 +151,10 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     if (args.dupes) {
       vm.compare = args.item;
       const allItems = getStoreService(args.item).getAllItems();
-      vm.similarTypes = _.filter(allItems, { typeName: vm.compare.typeName });
+      vm.similarTypes = allItems.filter((i) => i.typeName === vm.compare.typeName);
       let armorSplit;
       if (!vm.compare.location.inWeapons) {
-        vm.similarTypes = _.filter(vm.similarTypes, { classType: vm.compare.classType });
+        vm.similarTypes = vm.similarTypes.filter((i) => i.classType === vm.compare.classType);
         armorSplit = _.reduce(vm.compare.stats, (memo, stat) => {
           return memo + (stat.base === 0 ? 0 : stat.statHash);
         }, 0);
@@ -167,7 +167,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
           : 4284893193)
       });
       if (archetypeStat) {
-        vm.archeTypes = _.filter(vm.similarTypes, (item) => {
+        vm.archeTypes = vm.similarTypes.filter((item) => {
           if (item.location.inWeapons) {
             const archetypeMatch = _.find(item.stats, {
               statHash: (vm.compare.destinyVersion === 1
@@ -184,7 +184,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
           }, 0) === armorSplit;
         });
       }
-      vm.comparisons = _.map(_.filter(allItems, { hash: vm.compare.hash }), addMissingStats);
+      vm.comparisons = allItems.filter((i) => i.hash === vm.compare.hash).map(addMissingStats);
     } else if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
       addMissingStats(args.item);
       vm.comparisons.push(args.item);

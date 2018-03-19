@@ -1,0 +1,8 @@
+<div class="move-popup"
+     item-popup
+     item-popup-boundary-class="store-bounds"
+     dim-click-anywhere-but-here="closeThisDialog()">
+  <div dim-move-item-properties="vm.item"></div>
+  <div class="item-details" ng-if="vm.vendorItem" ng-repeat="failureString in vm.vendorItem.failureStrings">{{ failureString }}</div>
+  <div class="arrow" ng-class="'is-{{vm.item.dmg}}'"></div>
+</div>

@@ -1,40 +1,95 @@
-import angular from 'angular';
-import _ from 'underscore';
+import { copy, IPromise, IQService } from 'angular';
+import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { queueAction } from '../inventory/action-queue';
-import { SyncService } from '../storage/sync.service';
+import { StoreServiceType } from '../inventory/d2-stores.service';
+import { ItemServiceType } from '../inventory/dimItemService.factory';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { settings } from '../settings/settings';
+import { SyncService } from '../storage/sync.service';
 
-export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, D2StoresService, toaster, loadingTracker) {
+export const enum LoadoutClass {
+  any = -1,
+  warlock = 0,
+  titan = 1,
+  hunter = 2
+}
+
+type LoadoutItem = DimItem;
+
+// TODO: move into loadouts service
+export interface Loadout {
+  id?: string;
+  classType: LoadoutClass;
+  name: string;
+  items: {
+    [type: string]: LoadoutItem[];
+  };
+  destinyVersion?: 1 | 2;
+  platform?: string;
+}
+
+interface DehydratedLoadout {
+  id?: string;
+  classType: LoadoutClass;
+  name: string;
+  items: LoadoutItem[];
+  destinyVersion?: 1 | 2;
+  platform?: string;
+  version: 'v3.0';
+}
+
+export interface LoadoutServiceType {
+  dialogOpen: boolean;
+  previousLoadouts: { [characterId: string]: Loadout[] };
+  getLoadouts(getLatest?: boolean): IPromise<Loadout[]>;
+  deleteLoadout(loadout: Loadout): IPromise<Loadout[]>;
+  saveLoadout(loadout: Loadout): IPromise<Loadout[]>;
+  addItemToLoadout(item: DimItem, $event);
+  applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): IPromise<void>;
+  getLight(store: DimStore, loadout: Loadout): string;
+}
+
+export function LoadoutService(
+  $q: IQService,
+  $rootScope: angular.IRootScopeService,
+  $i18next,
+  dimItemService: ItemServiceType,
+  dimStoreService: StoreServiceType,
+  D2StoresService: StoreServiceType,
+  toaster,
+  loadingTracker
+): LoadoutServiceType {
   'ngInject';
 
-  function getStoreService() {
+  function getStoreService(destinyVersion = settings.destinyVersion) {
     // TODO: this needs to use account, store, or item version
-    return settings.destinyVersion === 2 ? D2StoresService : dimStoreService;
+    return destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  let _loadouts = [];
-  const _previousLoadouts = {}; // by character ID
+  let _loadouts: Loadout[] = [];
+  const _previousLoadouts: { [characterId: string]: Loadout[] } = {}; // by character ID
 
   return {
     dialogOpen: false,
-    getLoadouts: getLoadouts,
-    deleteLoadout: deleteLoadout,
-    saveLoadout: saveLoadout,
-    addItemToLoadout: addItemToLoadout,
-    applyLoadout: applyLoadout,
-    getLight: getLight,
+    getLoadouts,
+    deleteLoadout,
+    saveLoadout,
+    addItemToLoadout,
+    applyLoadout,
+    getLight,
     previousLoadouts: _previousLoadouts
   };
 
-  function addItemToLoadout(item, $event) {
+  function addItemToLoadout(item: DimItem, $event) {
     $rootScope.$broadcast('dim-store-item-clicked', {
-      item: item,
+      item,
       clickEvent: $event
     });
   }
 
-  function isGuid(stringToTest) {
+  function isGuid(stringToTest: string) {
     if (stringToTest[0] === "{") {
       stringToTest = stringToTest.substring(1, stringToTest.length - 1);
     }
@@ -44,12 +99,12 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
     return regexGuid.test(stringToTest);
   }
 
-  function processLoadout(data, version) {
+  function processLoadout(data, version): Loadout[] | Promise<Loadout[]> {
     if (!data) {
       return [];
     }
 
-    let loadouts = [];
+    let loadouts: Loadout[] = [];
     if (version === 'v3.0') {
       const ids = data['loadouts-v3.0'];
       loadouts = ids.map((id) => {
@@ -69,14 +124,14 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
 
     const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
     const hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
-    const loadoutGuids = new Set(_.pluck(loadouts, 'id'));
+    const loadoutGuids = new Set(loadouts.map((i) => i.id));
     const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
 
-    const orphanIds = _.pluck(Object.values(data).filter((item) => {
+    const orphanIds = Object.values(data).filter((item) => {
       return objectTest(item) &&
         hasGuid(item) &&
         !containsLoadoutGuids(item);
-    }), 'id');
+    }).map((i: any) => i.id);
 
     if (orphanIds.length > 0) {
       return SyncService.remove(orphanIds).then(() => loadouts);
@@ -85,7 +140,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
     return loadouts;
   }
 
-  function getLoadouts(getLatest) {
+  function getLoadouts(getLatest = false): IPromise<Loadout[]> {
     // Avoids the hit going to data store if we have data already.
     if (getLatest || !_loadouts.length) {
       return SyncService.get()
@@ -105,7 +160,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
     }
   }
 
-  function saveLoadouts(loadouts) {
+  function saveLoadouts(loadouts: Loadout[]): IPromise<Loadout[]> {
     return $q.when(loadouts || getLoadouts())
       .then((loadouts) => {
         _loadouts = loadouts;
@@ -113,19 +168,19 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
         const loadoutPrimitives = _.map(loadouts, dehydrate);
 
         const data = {
-          'loadouts-v3.0': []
+          'loadouts-v3.0': [] as string[]
         };
 
         _.each(loadoutPrimitives, (l) => {
-          data['loadouts-v3.0'].push(l.id);
-          data[l.id] = l;
+          data['loadouts-v3.0'].push(l.id!);
+          data[l.id!] = l;
         });
 
-        return SyncService.set(data).then(() => loadoutPrimitives);
+        return SyncService.set(data).then(() => loadouts) as IPromise<Loadout[]>;
       });
   }
 
-  function deleteLoadout(loadout) {
+  function deleteLoadout(loadout: Loadout): IPromise<Loadout[]> {
     return getLoadouts()
       .then((loadouts) => {
         const index = _.findIndex(loadouts, { id: loadout.id });
@@ -133,23 +188,19 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
           loadouts.splice(index, 1);
         }
 
-        return SyncService.remove(loadout.id.toString()).then(() => {
-          return loadouts;
-        });
+        return SyncService.remove(loadout.id!.toString()).then(() => loadouts) as IPromise<Loadout[]>;
       })
-      .then((loadouts) => {
-        return saveLoadouts(loadouts);
-      })
+      .then(saveLoadouts)
       .then((loadouts) => {
         $rootScope.$broadcast('dim-delete-loadout', {
-          loadout: loadout
+          loadout
         });
 
         return loadouts;
       });
   }
 
-  function saveLoadout(loadout) {
+  function saveLoadout(loadout: Loadout): IPromise<Loadout[]> {
     return getLoadouts()
       .then((loadouts) => {
         if (!_.has(loadout, 'id')) {
@@ -169,25 +220,25 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       .then((loadouts) => {
         $rootScope.$broadcast('dim-filter-invalidate');
         $rootScope.$broadcast('dim-save-loadout', {
-          loadout: loadout
+          loadout
         });
 
         return loadouts;
       });
   }
 
-  function hydrate(loadout) {
+  function hydrate(loadoutData: DehydratedLoadout): Loadout {
     const hydration = {
       'v3.0': hydratev3d0
     };
 
-    return (hydration[(loadout.version)])(loadout);
+    return (hydration[(loadoutData.version)])(loadoutData);
   }
 
   // A special getItem that takes into account the fact that
   // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
-  function getLoadoutItem(pseudoItem, store) {
-    let item = getStoreService().getItemAcrossStores(pseudoItem);
+  function getLoadoutItem(pseudoItem: DimItem, store: DimStore): DimItem | null {
+    let item = getStoreService(store.destinyVersion).getItemAcrossStores(pseudoItem);
     if (!item) {
       return null;
     }
@@ -202,7 +253,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
   // Pass in full loadout and store objects. loadout should have all types of weapon and armor
   // or it won't be accurate. function properly supports guardians w/o artifacts
   // returns to tenth decimal place.
-  function getLight(store, loadout) {
+  function getLight(store: DimStore, loadout: Loadout): string {
     // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
     const itemWeight = {
       Weapons: 6,
@@ -219,14 +270,14 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       itemWeightDenominator = 50;
     }
 
-    const items = _.filter(_.flatten(_.values(loadout.items)), 'equipped');
+    const items = _.flatten(Object.values(loadout.items)).filter((i) => i.equipped);
 
     const exactLight = _.reduce(items, (memo, item) => {
       return memo + (item.primStat.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
     }, 0) / itemWeightDenominator;
 
     // Floor-truncate to one significant digit since the game doesn't round
-    return (Math.floor(exactLight * 10.0) / 10.0).toFixed(1);
+    return (Math.floor(exactLight * 10) / 10).toFixed(1);
   }
 
   /**
@@ -234,10 +285,12 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
    * @param allowUndo whether to include this loadout in the "undo loadout" menu stack.
    * @return a promise for the completion of the whole loadout operation.
    */
-  function applyLoadout(store, loadout, allowUndo = false) {
+  function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): IPromise<void> {
     if (!store) {
       throw new Error("You need a store!");
     }
+    const storeService = getStoreService(store.destinyVersion);
+
     return queueAction(() => {
       if (allowUndo) {
         if (!_previousLoadouts[store.id]) {
@@ -255,7 +308,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
         }
       }
 
-      let items = angular.copy(_.flatten(_.values(loadout.items)));
+      let items: DimItem[] = copy(_.flatten(Object.values(loadout.items)));
 
       const loadoutItemIds = items.map((i) => {
         return {
@@ -266,11 +319,10 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
 
       // Only select stuff that needs to change state
       let totalItems = items.length;
-      items = _.filter(items, (pseudoItem) => {
+      items = items.filter((pseudoItem) => {
         const item = getLoadoutItem(pseudoItem, store);
-        const invalid = !item;
         // provide a more accurate count of total items
-        if (invalid) {
+        if (!item) {
           totalItems--;
           return true;
         }
@@ -299,31 +351,31 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
       }
 
       // We'll equip these all in one go!
-      let itemsToEquip = _.filter(items, 'equipped');
+      let itemsToEquip = items.filter((i) => i.equipped);
       if (itemsToEquip.length > 1) {
         // we'll use the equipItems function
         itemsToEquip.forEach((i) => { i.equipped = false; });
       }
 
       // Stuff that's equipped on another character. We can bulk-dequip these
-      const itemsToDequip = _.filter(items, (pseudoItem) => {
-        const item = getStoreService().getItemAcrossStores(pseudoItem);
+      const itemsToDequip = items.filter((pseudoItem) => {
+        const item = storeService.getItemAcrossStores(pseudoItem);
         return item && item.owner !== store.id && item.equipped;
       });
 
       const scope = {
         failed: 0,
         total: totalItems,
-        successfulItems: []
+        successfulItems: [] as DimItem[]
       };
 
-      let promise = $q.when();
+      let promise: IPromise<any> = $q.when();
 
       if (itemsToDequip.length > 1) {
-        const realItemsToDequip = _.compact(itemsToDequip.map((i) => getStoreService().getItemAcrossStores(i)));
+        const realItemsToDequip = _.compact(itemsToDequip.map((i) => storeService.getItemAcrossStores(i)));
         const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
-          const equipItems = _.compact(realItemsToDequip.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds)));
-          return dimItemService.equipItems(getStoreService().getStore(owner), equipItems);
+          const equipItems = _.compact(dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds)));
+          return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
         });
         promise = $q.all(dequips);
       }
@@ -333,7 +385,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
         .then(() => {
           if (itemsToEquip.length > 1) {
             // Use the bulk equipAll API to equip all at once.
-            itemsToEquip = _.filter(itemsToEquip, (i) => _.find(scope.successfulItems, { id: i.id }));
+            itemsToEquip = itemsToEquip.filter((i) => scope.successfulItems.find((si) => si.id === i.id));
             const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
             return dimItemService.equipItems(store, realItemsToEquip);
           } else {
@@ -355,9 +407,9 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
           // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
           // is fixed on Bungie's end. When that happens, just remove this call.
           if (scope.successfulItems.length > 0) {
-            return getStoreService().updateCharacters();
+            return storeService.updateCharacters();
           }
-          return undefined;
+          return [];
         })
         .then(() => {
           let value = 'success';
@@ -383,14 +435,24 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
   }
 
   // Move one loadout item at a time. Called recursively to move items!
-  function applyLoadoutItems(store, items, loadout, loadoutItemIds, scope) {
+  function applyLoadoutItems(
+    store: DimStore,
+    items: DimItem[],
+    loadout: Loadout,
+    loadoutItemIds: { id: string; hash: number }[],
+    scope: {
+      failed: number;
+      total: number;
+      successfulItems: DimItem[];
+    }
+) {
     if (items.length === 0) {
       // We're done!
       return $q.when();
     }
 
-    let promise = $q.when();
-    const pseudoItem = items.shift();
+    let promise: IPromise<any> = $q.when();
+    const pseudoItem = items.shift()!;
     const item = getLoadoutItem(pseudoItem, store);
 
     if (item) {
@@ -399,7 +461,7 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
         const amountAlreadyHave = store.amountOfItem(pseudoItem);
         let amountNeeded = pseudoItem.amount - amountAlreadyHave;
         if (amountNeeded > 0) {
-          const otherStores = getStoreService().getStores()
+          const otherStores = getStoreService(store.destinyVersion).getStores()
             .filter((otherStore) => store.id !== otherStore.id);
           const storesByAmount = _.sortBy(otherStores.map((store) => {
             return {
@@ -410,13 +472,13 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
 
           let totalAmount = amountAlreadyHave;
           while (amountNeeded > 0) {
-            const source = _.max(storesByAmount, 'amount');
+            const source = _.max(storesByAmount, (s) => s.amount);
             const amountToMove = Math.min(source.amount, amountNeeded);
             const sourceItem = _.find(source.store.items, { hash: pseudoItem.hash });
 
             if (amountToMove === 0 || !sourceItem) {
               promise = promise.then(() => {
-                const error = new Error($i18next.t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
+                const error: Error & { level?: string } = new Error($i18next.t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
                 error.level = 'warn';
                 return $q.reject(error);
               });
@@ -438,14 +500,16 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
 
     promise = promise
       .then(() => {
-        scope.successfulItems.push(item);
+        if (item) {
+          scope.successfulItems.push(item);
+        }
       })
       .catch((e) => {
         const level = e.level || 'error';
         if (level === 'error') {
           scope.failed++;
         }
-        toaster.pop(e.level || 'error', item.name, e.message);
+        toaster.pop(e.level || 'error', item ? item.name : 'Unknown', e.message);
       })
       // Keep going
       .finally(() => applyLoadoutItems(store, items, loadout, loadoutItemIds, scope));
@@ -453,21 +517,20 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
     return promise;
   }
 
-  function hydratev3d0(loadoutPrimitive) {
-    const result = {
+  function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
+    const result: Loadout = {
       id: loadoutPrimitive.id,
       name: loadoutPrimitive.name,
       platform: loadoutPrimitive.platform,
       destinyVersion: loadoutPrimitive.destinyVersion,
       classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
-      version: 'v3.0',
       items: {
         unknown: []
       }
     };
 
-    _.each(loadoutPrimitive.items, (itemPrimitive) => {
-      let item = angular.copy(getStoreService().getItemAcrossStores({
+    for (const itemPrimitive of loadoutPrimitive.items) {
+      const item = copy(getStoreService().getItemAcrossStores({
         id: itemPrimitive.id,
         hash: itemPrimitive.hash
       }));
@@ -482,42 +545,39 @@ export function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStor
         result.items[discriminator] = (result.items[discriminator] || []);
         result.items[discriminator].push(item);
       } else {
-        item = {
+        const loadoutItem = {
           id: itemPrimitive.id,
           hash: itemPrimitive.hash,
           amount: itemPrimitive.amount,
           equipped: itemPrimitive.equipped
         };
 
-        result.items.unknown.push(item);
+        result.items.unknown.push(loadoutItem as DimItem);
       }
-    });
+    }
 
     return result;
   }
 
-  function dehydrate(loadout) {
-    const result = {
-      id: loadout.id,
-      name: loadout.name,
-      classType: loadout.classType,
-      version: 'v3.0',
-      platform: loadout.platform,
-      destinyVersion: loadout.destinyVersion,
-      items: []
-    };
-
+  function dehydrate(loadout: Loadout): DehydratedLoadout {
     const allItems = _.flatten(Object.values(loadout.items));
-    result.items = allItems.map((item) => {
+    const items = allItems.map((item) => {
       return {
         id: item.id,
         hash: item.hash,
         amount: item.amount,
         equipped: item.equipped
       };
-    });
+    }) as DimItem[];
 
-    return result;
+    return {
+      id: loadout.id,
+      name: loadout.name,
+      classType: loadout.classType,
+      version: 'v3.0',
+      platform: loadout.platform,
+      destinyVersion: loadout.destinyVersion,
+      items
+    };
   }
 }
-

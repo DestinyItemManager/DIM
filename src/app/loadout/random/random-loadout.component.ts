@@ -1,9 +1,11 @@
-import _ from 'underscore';
 import { optimalLoadout } from '../loadout-utils';
 import template from './random-loadout.html';
 import './random-loadout.scss';
+import { IComponentOptions, IController, IWindowService } from 'angular';
+import { DimStore } from '../../inventory/store/d2-store-factory.service';
+import { StoreServiceType } from '../../inventory/d2-stores.service';
 
-export const RandomLoadoutComponent = {
+export const RandomLoadoutComponent: IComponentOptions = {
   template,
   controller: RandomLoadoutCtrl,
   bindings: {
@@ -11,26 +13,35 @@ export const RandomLoadoutComponent = {
   }
 };
 
-function RandomLoadoutCtrl($window, dimStoreService, D2StoresService, dimLoadoutService, $i18next) {
+function RandomLoadoutCtrl(
+  this: IController & {
+    stores: DimStore[];
+  },
+  $window: IWindowService,
+  dimStoreService: StoreServiceType,
+  D2StoresService: StoreServiceType,
+  dimLoadoutService,
+  $i18next
+) {
   'ngInject';
 
   const vm = this;
 
-  vm.$onChanges = function() {
+  vm.$onChanges = () => {
     if (vm.stores && vm.stores.length) {
       vm.showRandomLoadout = true;
     }
   };
   vm.disableRandomLoadout = false;
 
-  vm.applyRandomLoadout = function(e) {
+  vm.applyRandomLoadout = (e) => {
     e.preventDefault();
 
     if (vm.disableRandomLoadout || !$window.confirm($i18next.t('Loadouts.Randomize'))) {
       return null;
     }
 
-    const store = _.find(vm.stores, 'current');
+    const store = vm.stores.find((s) => s.current);
     if (!store) {
       return null;
     }
@@ -67,4 +78,3 @@ function RandomLoadoutCtrl($window, dimStoreService, D2StoresService, dimLoadout
       });
   };
 }
-

@@ -1,4 +1,3 @@
-import * as _ from 'underscore';
 import { SyncService } from '../storage/sync.service';
 import { t } from 'i18next';
 import { toaster } from '../ngimport-more';
@@ -65,6 +64,6 @@ export function showInfoPopup(id, content?, timeout?) {
 // Remove prefs for "don't show this again"
 export function resetHiddenInfos() {
   SyncService.get().then((data) => {
-    SyncService.remove(_.filter(_.keys(data), (k) => k.startsWith('info.')));
+    SyncService.remove(Object.keys(data).filter((k) => k.startsWith('info.')));
   });
 }

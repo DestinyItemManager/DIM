@@ -11,7 +11,7 @@ export interface DimData {
   platformType?: BungieMembershipType;
   destinyVersion?: 1 | 2;
   // membership IDs of ignored DTR reviewers
-  ignoredUsers?: number[];
+  ignoredUsers?: string[];
   // loadout ids
   'loadouts-v3.0'?: string[];
   'settings-v1.0'?: any; // settings
@@ -84,9 +84,9 @@ export const SyncService = {
       throw new Error("Must call get at least once before setting");
     }
 
-    if (!PUT && equals(_.pick(cached, _.keys(value)), value)) {
+    if (!PUT && equals(_.pick(cached, Object.keys(value)), value)) {
       if ($featureFlags.debugSync) {
-        console.log(_.pick(cached, _.keys(value)), value);
+        console.log(_.pick(cached, Object.keys(value)), value);
         console.log("Skip save, already got it");
       }
       return;
@@ -138,7 +138,8 @@ export const SyncService = {
    */
   async remove(key: string | string[]): Promise<void> {
     if (!cached) {
-      throw new Error("Must call get at least once before removing");
+      // Nothing to do
+      return;
     }
 
     let deleted = false;

@@ -55,7 +55,7 @@ class D2ReviewsFetcher {
 
   _getUserReview(reviewData: DimWorkingUserReview | DtrReviewContainer) {
     // bugbug: will need to use membership service if isReviewer flag stays broke
-    return _.find(reviewData.reviews, { isReviewer: true });
+    return reviewData.reviews.find((r) => r.isReviewer);
   }
 
   _sortAndIgnoreReviews(item: DimItem) {
@@ -105,6 +105,7 @@ class D2ReviewsFetcher {
     this._reviewDataCache.addReviewsData(item, reviewData);
 
     this._perkRater.ratePerks(item);
+    item.reviewsUpdated = Date.now();
   }
 
   _sortReviews(a: DtrUserReview, b: DtrUserReview) {
@@ -165,7 +166,7 @@ class D2ReviewsFetcher {
    */
   getItemReviews(item: DimItem, platformSelection: number) {
     if (!item.reviewable) {
-      return;
+      return $q.when();
     }
 
     const ratingData = this._reviewDataCache.getRatingData(item);
@@ -174,10 +175,10 @@ class D2ReviewsFetcher {
       this._attachCachedReviews(item,
                                 ratingData);
 
-      return;
+      return $q.when();
     }
 
-    this._getItemReviewsPromise(item, platformSelection)
+    return this._getItemReviewsPromise(item, platformSelection)
       .then((reviewData) => {
         this._markUserReview(reviewData);
         this._attachReviews(item,

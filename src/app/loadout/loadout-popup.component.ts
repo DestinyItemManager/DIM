@@ -1,4 +1,4 @@
-import { copy as angularCopy, IAngularEvent, IPromise } from 'angular';
+import { copy as angularCopy, IAngularEvent, IPromise, IComponentOptions, IController } from 'angular';
 import * as _ from 'underscore';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
@@ -12,14 +12,15 @@ import {
   } from './auto-loadouts';
 import template from './loadout-popup.html';
 import './loadout-popup.scss';
-import { Loadout, LoadoutClass } from './loadout.service';
+import { Loadout, LoadoutClass, LoadoutServiceType } from './loadout.service';
 import { makeRoomForPostmaster, pullablePostmasterItems, pullFromPostmaster } from './postmaster';
 import { getActivePlatform } from '../accounts/platform.service';
 import { IDialogService } from 'ng-dialog';
 import { getBuckets as d2GetBuckets, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
+import { ItemServiceType } from '../inventory/dimItemService.factory';
 
-export const LoadoutPopupComponent = {
+export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -28,7 +29,7 @@ export const LoadoutPopupComponent = {
   template
 };
 
-interface LoadoutPopupCtrlVM {
+interface LoadoutPopupCtrlVM extends IController {
   loadout: Loadout;
   previousLoadout?: Loadout;
   classTypeId: LoadoutClass;
@@ -59,16 +60,16 @@ function LoadoutPopupCtrl(
   $rootScope,
   $scope,
   ngDialog: IDialogService,
-  dimLoadoutService,
-  dimItemService,
+  dimLoadoutService: LoadoutServiceType,
+  dimItemService: ItemServiceType,
   toaster,
   dimFarmingService,
   D2FarmingService,
   $window,
   dimSearchService,
   $i18next,
-  dimStoreService,
-  D2StoresService,
+  dimStoreService: StoreServiceType,
+  D2StoresService: StoreServiceType,
   $stateParams
 ) {
   'ngInject';

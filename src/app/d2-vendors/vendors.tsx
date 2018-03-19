@@ -166,7 +166,7 @@ function Vendor({
         <Countdown endTime={new Date(vendor.nextRefreshDate)}/>
       </div>
       <VendorItems
-        defs={defs!}
+        defs={defs}
         vendorDef={vendorDef}
         sales={sales}
         itemComponents={itemComponents}

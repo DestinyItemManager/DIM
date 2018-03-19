@@ -15,7 +15,11 @@ import {
   setItemLockState,
   transferItem,
   DestinyVendorResponse,
-  DestinyVendorsResponse
+  DestinyVendorsResponse,
+  awaInitializeRequest,
+  AwaType,
+  awaGetActionToken,
+  AwaAuthorizationResult
   } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as _ from 'underscore';
@@ -227,20 +231,18 @@ export function equip(item: DimItem): IPromise<ServerResponse<number>> {
 export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
-  items = _.sortBy(items, (i: any) => (i.isExotic ? 1 : 0));
+  items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
   const platform = getActivePlatform();
   return equipItemsApi(httpAdapterWithRetry, {
     characterId: store.id,
     membershipType: platform!.platformType,
-    itemIds: _.pluck(items, 'id')
+    itemIds: items.map((i) => i.id)
   })
     .then((response) => {
       const data: DestinyEquipItemResults = response.Response;
       return items.filter((i) => {
-        const item = _.find(data.equipResults, {
-          itemInstanceId: i.id
-        });
+        const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
         return item && item.equipStatus === 1;
       });
     }) as IPromise<DimItem[]>;
@@ -258,4 +260,16 @@ export function setLockState(store: DimStore, item: DimItem, lockState: boolean)
     itemId: item.id,
     state: lockState
   }) as IPromise<ServerResponse<number>>;
+}
+
+// TODO: owner can't be "vault" I bet
+export function requestAdvancedWriteActionToken(account: DestinyAccount, action: AwaType, item?: DimItem): IPromise<AwaAuthorizationResult> {
+  return awaInitializeRequest(httpAdapter, {
+    type: action,
+    membershipType: account.platformType,
+    affectedItemId: item ? item.id : undefined,
+    characterId: item ? item.owner : undefined
+  })
+    .then((result) => awaGetActionToken(httpAdapter, { correlationId: result.Response.correlationId }))
+    .then((result) => result.Response);
 }

@@ -1,18 +1,20 @@
 import template from './destiny1.html';
 import { itemTags } from '../settings/settings';
+import { IComponentOptions, IController, IRootScopeService, IScope } from 'angular';
 
 /**
  * This is the parent component of all Destiny 1 views.
  */
-export const Destiny1Component = {
+export const Destiny1Component: IComponentOptions = {
   controller: Destiny1Controller,
   template
 };
 
 function Destiny1Controller(
-  $rootScope,
+  this: IController,
+  $rootScope: IRootScopeService,
   hotkeys,
-  $scope,
+  $scope: IScope,
   $i18next
 ) {
   'ngInject';

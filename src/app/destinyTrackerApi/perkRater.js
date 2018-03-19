@@ -24,7 +24,7 @@ class PerkRater {
     for (let i = 1; i < maxColumn; i++) {
       const perkNodesInColumn = this._getPerkNodesInColumn(item, i);
 
-      const ratingsAndReviews = _.map(perkNodesInColumn, (perkNode) => this._getPerkRatingsAndReviewCount(perkNode, item.reviews));
+      const ratingsAndReviews = perkNodesInColumn.map((perkNode) => this._getPerkRatingsAndReviewCount(perkNode, item.reviews));
 
       const maxReview = this._getMaxReview(ratingsAndReviews);
 
@@ -90,20 +90,18 @@ class PerkRater {
   _getMatchingReviews(perkNode,
                       reviews) {
     const perkRoll = perkNode.dtrRoll.replace('o', '');
-    return _.filter(reviews, (review) => { return this._selectedPerkNodeApplies(perkRoll, review); });
+    return reviews.filter((review) => this._selectedPerkNodeApplies(perkRoll, review));
   }
 
   _selectedPerkNodeApplies(perkRoll,
                            review) {
     const reviewSelectedPerks = this._getSelectedPerks(review);
-
-    return _.some(reviewSelectedPerks, (reviewSelectedPerk) => { return perkRoll === reviewSelectedPerk; });
+    return reviewSelectedPerks.some((reviewSelectedPerk) => perkRoll === reviewSelectedPerk);
   }
 
   _getSelectedPerks(review) {
-    const allSelectedPerks = _.filter(review.roll.split(';'), ((str) => { return str.indexOf('o') > -1; }));
-
-    return _.map(allSelectedPerks, (selectedPerk) => { return selectedPerk.replace('o', ''); });
+    const allSelectedPerks = review.roll.split(';').filter((str) => str.indexOf('o') > -1);
+    return allSelectedPerks.map((selectedPerk) => selectedPerk.replace('o', ''));
   }
 }
 

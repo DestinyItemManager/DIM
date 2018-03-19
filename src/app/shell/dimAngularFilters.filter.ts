@@ -10,7 +10,8 @@ import { settings } from '../settings/settings';
 // different parts of DIM.
 
 const mod = module('dimAngularFilters', []);
-export default mod.name;
+const name = mod.name;
+export default name;
 
 /**
  * Take an icon path and make a full Bungie.net URL out of it
@@ -51,9 +52,7 @@ mod.filter('bungieBackground', () => {
  */
 mod.filter('equipped', () => {
   return function equipped(items: DimItem[], isEquipped) {
-    return _.filter(items || [], (item) => {
-      return item.equipped === isEquipped;
-    });
+    return (items || []).filter((item) => item.equipped === isEquipped);
   };
 });
 

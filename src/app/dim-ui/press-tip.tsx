@@ -11,6 +11,9 @@ interface State {
   isOpen: boolean;
 }
 
+// TODO: Right now we have to wrap any content that's not a DOM node with a div so we get a real element. What's the real answer? React.forwardRef?
+// TODO: defer rendering the tooltip?
+
 /**
  * A "press tip" is a tooltip that can be shown by pressing on an element, or via hover.
  *
@@ -67,7 +70,8 @@ export class PressTip extends React.Component<Props, State> {
   closeToolTip = (e) => {
     e.preventDefault();
     if (this.tooltip) {
-      this.tooltip.hide();
+      this.tooltip.dispose();
+      this.tooltip = null;
     }
     this.setState({ isOpen: false });
     clearTimeout(this.timer);

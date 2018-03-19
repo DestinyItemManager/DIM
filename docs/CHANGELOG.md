@@ -1,5 +1,11 @@
 # Next
 
+* Fixed the "recommended perk" being wrong very often.
+* Improved the display of perks, shaders, and mods on items. Improved the popup details for those items as well - this includes ornament unlock progress.
+* Stackable items like mods and shaders have less chance of being left behind during search transfers.
+* Put back "Make Room for Postmaster" in D1 - it was removed accidentally.
+* Items matching a search are now more highlighted. Removed "Hide Unfiltered Items" setting.
+
 # 4.43.0
 
 * Fix some cases where moving stacks of items would fail.

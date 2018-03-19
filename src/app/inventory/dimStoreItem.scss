@@ -58,10 +58,12 @@ dim-store-item {
   contain: strict;
   cursor: pointer;
   box-sizing: border-box;
+  transition: opacity .2s, transform .2s;
 }
 
 .search-hidden {
   opacity: .2;
+  transform: scale(.85);
 }
 
 .item-xp-bar {

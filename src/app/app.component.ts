@@ -7,16 +7,18 @@ import * as _ from 'underscore';
 import { dimState } from './state';
 import { settings } from './settings/settings';
 import { showInfoPopup } from './shell/info-popup';
+import { IComponentOptions, IController, IScope, ITimeoutService } from 'angular';
 
-export const AppComponent = {
+export const AppComponent: IComponentOptions = {
   template,
   controller: AppComponentCtrl
 };
 
 function AppComponentCtrl(
-  $scope,
+  this: IController,
+  $scope: IScope,
   $i18next,
-  $timeout,
+  $timeout: ITimeoutService,
   hotkeys
 ) {
   'ngInject';
