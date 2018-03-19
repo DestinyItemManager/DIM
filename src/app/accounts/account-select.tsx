@@ -97,10 +97,7 @@ function Account({
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div ref={innerRef} className={classNames("account", className)} {...other}>
-      <div className="account-name">
-        Destiny {account.destinyVersion === 1 ? '1' : '2'}
-        •
-        <span>{t(`Accounts.${account.platformLabel}`)}</span>
+      <div className="account-name">Destiny {account.destinyVersion === 1 ? '1' : '2'} • <span>{t(`Accounts.${account.platformLabel}`)}</span>
       </div>
       <div className="account-details">{account.displayName}</div>
     </div>
