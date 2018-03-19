@@ -19,6 +19,7 @@ import VendorItems from './vendor-items';
 import { $state, loadingTracker } from '../ngimport-more';
 import './vendor.scss';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 
 interface Props {
   $scope: IScope;
@@ -31,6 +32,7 @@ interface Props {
 interface State {
   defs?: D2ManifestDefinitions;
   vendorsResponse?: DestinyVendorsResponse;
+  reviewCache?: D2ReviewDataCache;
 }
 
 export default class Vendors extends React.Component<Props, State> {
@@ -59,17 +61,19 @@ export default class Vendors extends React.Component<Props, State> {
         : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
-    this.fetchRatings(vendorsResponse);
-    this.setState({ vendorsResponse, defs });
+    const reviewCache = this.fetchRatingsAndGetCache(vendorsResponse);
+    this.setState({ vendorsResponse, defs, reviewCache });
   }
 
-  fetchRatings(vendorsResponse: DestinyVendorsResponse): void {
+  fetchRatingsAndGetCache(vendorsResponse: DestinyVendorsResponse): D2ReviewDataCache {
     const saleComponentArray = Object.values(vendorsResponse.sales.data)
       .map((saleItemComponent) => saleItemComponent.saleItems);
 
     const saleComponents = ([] as DestinyVendorSaleItemComponent[]).concat(...saleComponentArray.map((v) => Object.values(v)));
 
     this.props.dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
+
+    return this.props.dimDestinyTrackerService.getD2ReviewDataCache();
   }
 
   componentDidMount() {
@@ -83,9 +87,9 @@ export default class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorsResponse } = this.state;
+    const { defs, vendorsResponse, reviewCache } = this.state;
 
-    if (!vendorsResponse || !defs) {
+    if (!vendorsResponse || !defs || !reviewCache) {
       // TODO: loading component!
       return <div className="vendor dim-page">Loading...</div>;
     }
@@ -94,7 +98,7 @@ export default class Vendors extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
-          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse}/>
+          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} reviewCache={reviewCache}/>
         )}
 
       </div>
@@ -105,11 +109,13 @@ export default class Vendors extends React.Component<Props, State> {
 function VendorGroup({
   defs,
   group,
-  vendorsResponse
+  vendorsResponse,
+  reviewCache
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
+  reviewCache: D2ReviewDataCache;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -122,6 +128,7 @@ function VendorGroup({
           vendor={vendor}
           itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
           sales={vendorsResponse.sales.data[vendor.vendorHash] && vendorsResponse.sales.data[vendor.vendorHash].saleItems}
+          reviewCache={reviewCache}
         />
       )}
     </>
@@ -132,7 +139,8 @@ function Vendor({
   defs,
   vendor,
   itemComponents,
-  sales
+  sales,
+  reviewCache
 }: {
   defs: D2ManifestDefinitions;
   vendor: DestinyVendorComponent;
@@ -140,6 +148,7 @@ function Vendor({
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   };
+  reviewCache: D2ReviewDataCache;
 }) {
   const vendorDef = defs.Vendor.get(vendor.vendorHash);
   if (!vendorDef) {
@@ -168,6 +177,7 @@ function Vendor({
         vendorDef={vendorDef}
         sales={sales}
         itemComponents={itemComponents}
+        reviewCache={reviewCache}
       />
     </div>
   );

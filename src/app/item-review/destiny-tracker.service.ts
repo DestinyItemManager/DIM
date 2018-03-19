@@ -102,7 +102,7 @@ export interface DestinyTrackerServiceType {
   reportReview(review: any);
   clearIgnoredUsers();
   clearCache();
-  getRating(vendorItem: DestinyVendorSaleItemComponent): DimWorkingUserReview | null | undefined;
+  getD2ReviewDataCache(): D2ReviewDataCache;
 }
 
 export function DestinyTrackerService(
@@ -171,14 +171,8 @@ export function DestinyTrackerService(
       }
     },
 
-    getRating(vendorItem: DestinyVendorSaleItemComponent): DimWorkingUserReview | null | undefined {
-      if (settings.showReviews) {
-        if (_isDestinyOne()) {
-          throw new Error(("This is a D2-only call."));
-        } else if (_isDestinyTwo()) {
-          return _d2reviewDataCache.getRatingData(vendorItem);
-        }
-      }
+    getD2ReviewDataCache(): D2ReviewDataCache {
+      return this._d2reviewDataCache;
     },
 
     updateVendorRankings(vendors) {
