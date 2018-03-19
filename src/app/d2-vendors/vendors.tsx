@@ -69,8 +69,6 @@ export default class Vendors extends React.Component<Props, State> {
 
     const saleComponents = ([] as DestinyVendorSaleItemComponent[]).concat(...saleComponentArray.map((v) => Object.values(v)));
 
-    console.log(saleComponents);
-
     this.props.dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
   }
 
