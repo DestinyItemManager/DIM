@@ -1,5 +1,7 @@
 # Next
 
+# 4.44.0
+
 * Fixed the "recommended perk" being wrong very often.
 * Improved the display of perks, shaders, and mods on items. Improved the popup details for those items as well - this includes ornament unlock progress.
 * Stackable items like mods and shaders have less chance of being left behind during search transfers.
