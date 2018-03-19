@@ -12,7 +12,7 @@ textarea {
 textarea.textarea-error {
   margin: 5px 10px;
   white-space: pre-wrap;
-  color: #985C58;
+  color: #cc6666;
   width: 100%;
   text-align: right;
 }
@@ -51,15 +51,5 @@ textarea.textarea-error {
     background: transparent;
     outline: none;
     border-bottom: 1px solid $orange;
-  }
-}
-
-.link {
-  color: white;
-  cursor: pointer;
-
-  &:hover, &.active {
-    color: $orange;
-    transition: color .2s linear;
   }
 }

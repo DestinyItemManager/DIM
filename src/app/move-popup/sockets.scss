@@ -1,0 +1,103 @@
+.item-sockets {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+// TODO: different styles for mods and perks
+.item-socket-category {
+  margin-bottom: 4px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.item-socket-category-name {
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  display: flex;
+}
+
+.item-socket {
+  margin-right: 4px;
+  display: flex;
+  flex-direction: column;
+
+  .disabled {
+    opacity: .4;
+  }
+
+  .item-socket-category-Reusable & {
+    border-right: .5px solid #444;
+    padding-right: 4px;
+
+    &:last-child {
+      border: none;
+      padding-right: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+.plug-objectives {
+  margin: 4px 0;
+  padding: 8px;
+  background-color: #333;
+  border-radius: 4px;
+}
+
+.category-name {
+  display: inline-block;
+}
+
+.best-rated-key {
+  text-transform: none !important;
+  padding-left: 20px;
+}
+
+.best-rated-tip {
+  font-size: 10px;
+  margin-top: 6px;
+}
+
+.thumbs-up {
+  color: #6dcc66;
+
+  .socket-container & {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+  }
+}
+
+.socket-container {
+  position: relative;
+  display: inline-block;
+
+  .item-socket-category-Reusable .item-socket:not(:first-child) & {
+    border: 1px solid #999999;
+    border-radius: 50%;
+    background-color: #4887ba;
+    transform: scale(.9);
+
+    img {
+      transform: scale(.85);
+    }
+
+    &.notChosen {
+      background-color: transparent;
+    }
+  }
+
+  .item-socket-category-Consumable & {
+    border: 1px solid #999999;
+    margin-bottom: 2px;
+  }
+
+  img {
+    -webkit-touch-callout: none;
+    width: 32px;
+    height: 32px;
+    display: block;
+  }
+}

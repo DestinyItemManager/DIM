@@ -6,15 +6,20 @@
       "targets": {
         "uglify": true,
         "browsers": [
-          "last 2 Chrome versions",
+          "Chrome >= 51",
           "last 2 ChromeAndroid versions",
           "last 2 Firefox versions",
-          "last 1 Safari versions",
-          "iOS >= 9",
-          "last 2 Edge versions"
+          "last 2 Safari versions",
+          "iOS >= 10",
+          "last 2 Edge versions",
+          "last 2 Opera versions"
         ]
       }
     }]
   ],
-  "plugins": ["angularjs-annotate", "syntax-dynamic-import"]
+  "plugins": [
+    "angularjs-annotate",
+    "syntax-dynamic-import",
+    ["transform-object-rest-spread", { "useBuiltIns": true }]
+  ]
 }

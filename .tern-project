@@ -1,12 +1,11 @@
 {
   "libs": [
     "browser",
-    "jquery",
     "underscore",
     "angular"
   ],
   "loadEagerly": [
-    "app/scripts/**/*.js"
+    "app/app/**/*.js"
   ],
   "plugins": {
     "angular": {},

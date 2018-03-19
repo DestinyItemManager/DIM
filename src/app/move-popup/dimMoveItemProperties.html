@@ -1,0 +1,78 @@
+<div>
+  <div class="item-header" ng-class="vm.classes">
+    <div class="item-title-container">
+      <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">
+        <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, 'lock')" ng-i18next="[title:i18next]({ itemType: vm.item.typeName, context: !vm.item.locked ? 'Lock' : 'Unlock' })MovePopup.LockUnlock">
+          <i class="lock fa" ng-class="{ 'fa-lock': vm.item.locked, 'fa-unlock-alt': !vm.item.locked, 'is-locking': vm.locking }"></i>
+        </div>
+        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, 'track')" ng-i18next="[title:i18next]({ itemType: vm.item.typeName, context: !vm.item.tracked ? 'Track' : 'Untrack' })MovePopup.TrackUntrack">
+          <i class="lock fa" ng-class="{ 'fa-star': vm.item.tracked, 'fa-star-o': !vm.item.tracked, 'is-locking': vm.locking }"></i>
+        </div>
+      </div>
+      <div class="item-title-link">
+        <a target="_blank" rel="noopener noreferrer" ng-href="{{::vm.destinyDBLink}}" class="item-title">
+          {{ vm.item.name }}
+        </a>
+      </div>
+      <i ng-i18next="[title]Compare.ButtonHelp" ng-if="vm.item.comparable" class="compare-button fa fa-clone" ng-click="vm.openCompare()"></i>
+      <div ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails)" ng-click="vm.itemDetails = !vm.itemDetails">
+        <i class="info fa" ng-class="{ 'fa-chevron-circle-up': vm.itemDetails, 'fa-chevron-circle-down': !vm.itemDetails }">
+        </i>
+      </div>
+    </div>
+    <div class="item-subtitle">
+      <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">
+        <div ng-if="vm.item.dmg && vm.item.dmg !== 'kinetic'" class="element" ng-class="::vm.item.dmg"></div>
+      </div>
+      <div class="item-type-info" ng-i18next="[i18next]({ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType ? vm.classType : ' ', typeName: vm.item.typeName, context: vm.light ? 'Gear' : 'Consumable' })MovePopup.Subtitle"></div>
+      <div ng-if="vm.item.objectives && !vm.item.hidePercentage" ng-i18next="[i18next]({ percent: vm.item.percentComplete })ItemService.PercentComplete"></div>
+      <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
+    </div>
+    <div ng-if="vm.item.destinyVersion === 1 && vm.item.reviewable && vm.item.dtrRating" class="item-review-average">
+      <star-rating rating="vm.item.dtrRating" read-only></star-rating>
+      <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating, numRatings: vm.item.totalReviews || 0 })DtrReview.AverageRating"></span>
+    </div>
+    <!-- we were displaying the number of reviews rather than the total # of ratings before, which seems... wrong? -->
+    <div ng-if="vm.item.destinyVersion === 2 && vm.item.reviewable && vm.item.dtrRating" class="item-review-average">
+      <star-rating rating="vm.item.dtrRating" read-only></star-rating>
+      <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating, numRatings: vm.item.dtrRatingCount || 0 })DtrReview.AverageRating"></span>
+    </div>
+  </div>
+  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>
+  <div ng-if="vm.itemDetails" class="move-popup-details">
+    <div ng-if="vm.item.reviewable" class="move-popup-tabs">
+      <span class="move-popup-tab" ng-class="{ selected: vm.tab==='default' }" ng-click="vm.tab='default'" ng-i18next="MovePopup.OverviewTab"></span>
+      <span class="move-popup-tab" ng-class="{ selected: vm.tab==='reviews' }" ng-click="vm.tab='reviews'" ng-i18next="MovePopup.ReviewsTab"></span>
+    </div>
+    <dim-item-review item="vm.item" ng-if="vm.item.lockable" ng-show="vm.tab === 'reviews'"></dim-item-review>
+    <div ng-show="vm.tab === 'default'">
+      <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ updateOn: 'blur' }" ng-change="vm.updateNote()"></textarea></form>
+      <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
+      <div class="item-description" ng-if="vm.showDescription" ng-bind="::vm.item.description"></div>
+      <div class="masterwork-progress" ng-if="vm.item.masterworkInfo" >
+        <img ng-src="{{ ::vm.item.masterworkInfo.typeIcon | bungieIcon }}" title="{{ ::vm.item.masterworkInfo.typeName }}"/>
+        <span> {{ ::vm.item.masterworkInfo.typeDesc }} <strong> {{ ::vm.item.masterworkInfo.progress }} </strong></span>
+      </div>
+      <div class="item-details" ng-if="vm.item.classified" ng-i18next="ItemService.Classified2"></div>
+      <dim-item-stats item="vm.item" class="stats" ng-if="vm.hasDetails"></dim-item-stats>
+      <div class="item-details item-perks" ng-if="vm.item.talentGrid">
+        <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>
+      </div>
+      <sockets item="vm.item"></sockets>
+      <div class="item-details item-perks" ng-if="vm.item.perks">
+        <div class="item-perk" ng-repeat="perk in vm.item.perks">
+          <img ng-if="perk.displayProperties.hasIcon" ng-src="{{ perk.displayProperties.icon | bungieIcon }}">
+          <div class="item-perk-info">
+            <div class="item-perk-name">{{perk.displayProperties.name}}</div>
+            <div class="item-perk-description">{{perk.displayProperties.description}}</div>
+          </div>
+        </div>
+      </div>
+      <dim-objectives class="item-details" ng-if="vm.item.objectives" objectives="vm.item.objectives"></dim-objectives>
+      <dim-flavor-objective class="item-details" ng-if="vm.item.flavorObjective" objective="vm.item.flavorObjective"></dim-flavor-objective>
+      <div ng-if="vm.featureFlags.debugMode" class="item-details">
+        <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump" />
+      </div>
+    </div>
+  </div>
+</div>

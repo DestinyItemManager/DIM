@@ -1,5 +1,362 @@
 # Next
 
+* Fixed the "recommended perk" being wrong very often.
+* Improved the display of perks, shaders, and mods on items. Improved the popup details for those items as well - this includes ornament unlock progress.
+* Stackable items like mods and shaders have less chance of being left behind during search transfers.
+* Put back "Make Room for Postmaster" in D1 - it was removed accidentally.
+* Items matching a search are now more highlighted. Removed "Hide Unfiltered Items" setting.
+
+# 4.43.0
+
+* Fix some cases where moving stacks of items would fail.
+* Fix "Gather Reputation Items" from not gathering everything.
+* More items can be successfully dragged out of the postmaster.
+
+# 4.42.0
+
+* Compare tool shows ratings, and handles missing stats better.
+* Fixed display of masterwork mod and ornaments.
+* Remove Auras from inventory since they're part of Emblems now.
+* Fancy new emblems show all their counters correctly.
+* Improved moving mods, shaders, and consumables via search loadouts. They can now go to any character (not just the active one) and aren't limited to 9 items.
+* Pausing over a drop zone to trigger the move-amount dialog works every time now, not just the first time.
+
+# 4.41.1
+
+* Fix dupelower logic.
+* Fixed bugs preventing DIM from loading in some browsers.
+* See previews of the items you'll get from faction packages and Xur from links on the Progress page.
+
+# 4.41.0
+
+* Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate).
+* You can now check your emblem objectives.
+* Armor mods show more info.
+* Destiny 1 transfers are faster.
+* DIM is better at equipping exotics when you already have exotic ghosts, sparrows, and ships equipped.
+* Pulling an item from the postmaster updates the list of items quickly now.
+* Navigation from "About" or "Backers" back to your inventory works.
+* is:dupelower breaks ties more intelligently.
+
+# 4.40.0
+
+# 4.39.0
+
+* Fixed random loadout feature taking you to a blank page.
+
+# 4.38.0
+
+* Fixed display of Clan XP milestone.
+* DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
+* In D2, "Make room for Postmaster" has been replaced with "Collect Postmaster" which pulls all postmaster items we can onto your character. You can still make room by clicking "Space".
+* Fix pull from postmaster to clear exactly enough space, not too many, but also not too few.
+* Accounts with no characters will no longer show up in the account dropdown.
+* Item tagging via keyboard should be a little more international-friendly. Calling the help menu (via shift+/) is too.
+* Fixed XP required for well-rested perk after the latest Destiny update.
+
+# 4.37.0
+
+* Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
+* The "Well Rested" buff now appears as a Milestone on your Progress page.
+* Nightfall modifiers are shown on the Progress page.
+* Storage (Google Drive) settings have moved to the Settings page.
+* You can configure a custom item sorting method from the Settings page.
+* Improved display of the account selection dropdown.
+
+# 4.36.1
+
+* Attempt to fix error on app.
+* Moving an item from the postmaster will now only clear enough space for that one item.
+
+# 4.36.0
+
+* Attempt to fix error on app.
+
+# 4.35.0
+
+* The Settings page has been redesigned.
+* Your character stats now update live when you change armor.
+* New settings to help distinguish colors for colorblind users.
+* DIM should load faster.
+* DIM won't try to transfer Faction tokens anymore.
+
+# 4.34.0
+
+* Sorting characters by age should be correct for D2 on PC.
+* The infusion fuel finder now supports reverse lookups, so you can choose the best thing to infuse a particular item *into*.
+* Labeled the Infusion Fuel Finder button.
+* Trace Rifles are highlighted again on is:autorifle search.
+* Factions that you can't turn in rewards to are now greyed out. We also show the vendor name, and the raw XP values have moved to a tooltip.
+* The settings page has been cleaned up and moved to its own page.
+
+# 4.33.1
+
+* Fix DIM loading on iOS 11.2.2.
+
+# 4.33.0
+
+* A brand new Progress page for Destiny 2 displays your milestones, quests, and faction reputation all in one place. That information has been removed from the main inventory screen.
+* We've changed around the effect for masterworks a bit more.
+
+# 4.32.0
+
+* Added hotkey for search and clear (Shift+F).
+* Masterworks show up with an orange glow like in the game, and gold borders are back to meaning "has power mod".
+* Mercury reputation items are now handled by farming mode and gather reputation items.
+* Tweak max base power / max light calculations to be slightly more accurate.
+* Display D2 subclass talent trees. We can't show which ones are selected/unlocked yet.
+* Moving items on Android should work better.
+* Rotating to and from landscape and portrait should be faster.
+* Fix quest steps showing up in the "haspower" search.
+* Do a better job of figuring out what's infusable.
+* Added a reverse lookup to Infusion Fuel Finder.
+
+# 4.31.0
+
+* "is:complete" will find completed rare mod stacks in Destiny 2.
+
+# 4.30.0
+
+* NEW - Revamped rating algorithm for D2 items.
+* Fixed a bug trying to maximize power level (and sometimes transfer items) in Destiny 2.
+* When hovering over an icon, the name and type will be displayed
+* Allowing more exotic item types to be simultaneously equipped in Destiny 2
+* Initial support for masterworks weapons.
+* Fixed reporting reviews in Destiny 2.
+* Fixed item filtering in Destiny 2.
+
+# 4.29.0
+
+* Added Mercury reputation.
+* Added Crimson Exotic Hand Canon.
+
+# 4.28.0
+
+* NEW - Move items from the postmaster in DIM!
+
+# 4.27.1
+
+* Key for perk hints in D2.
+* Fixed bug loading items with Destiny 2 v1.1.0.
+
+# 4.27.0
+
+* Added setting to pick relevant platforms for reviews.
+* Fix review area not collapsing in popup.
+* Fix display of option selector on reviews tab when detailed reviews are disabled.
+
+# 4.26.0
+
+* Don't show community best rated perk tip if socket's plugged.
+* is:haslevel/haspower (D1/D2) fix in cheatsheet.
+* Fix mobile store pager width
+
+# 4.25.1
+
+* Added Net Neutrality popup.
+
+# 4.25.0
+
+# 4.24.1
+
+# 4.24.0
+
+* Bungie has reduced the throttling delay for moving items, so you may once again move items quickly.
+
+# 4.23.0
+
+# 4.22.0
+
+* Add a 'bulk tag' button to the search filter.
+* Add basepower: filter and is:goldborder filter.
+* Fix filtering in D1.
+* Add a button to clear the current search.
+* Fix moving partial stacks of items.
+* Fixed "transfer items" in the Infusion Fuel Finder.
+* Giving hints about the community's favorite plugs on D2 items.
+
+# 4.21.0
+
+* Community reviews (for weapons and armor) are in for Destiny 2 inventory.
+* Charting weapon reviews.
+* Fixed the shadow under the sticky characters bar on Chrome.
+* Add an option to farming mode that stashes reputation items in the vault.
+* Add a new smart loadout to gather reputation items for redemption.
+* Scroll the loadout drawer on mobile.
+* Show character level progression under level 20 for D2.
+* Stacks of three or more rare mods now have a yellow border
+
+# 4.20.1
+
+* Fixed an error when trying to space to move items.
+
+# 4.20.0
+
+* Sort consumables, mods, and shaders in a more useful way (generally grouping same type together, alphabetical for shaders).
+* Show the hidden recoil direction stat.
+* Link to DestinyDB in your language instead of always English.
+* Updated documentation for search filters.
+* Fixed logic that makes room for items when your vault is full for D2.
+
+# 4.19.2
+
+* Keyword searchs now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
+* Add Iron Banner reputation.
+
+# 4.19.1
+
+* Fix landscape orientation not working on mobile.
+* Fix D1 stats in loadout builder and loadout editor.
+
+# 4.19.0
+
+* Added `stack:` to search filters for easier maintenance of modifications.
+* Add missing type filters for D2 (try `is:modifications`)!
+* Bring back keyboard shortcuts for tagging (hit ? to see them all).
+* The "Max Light" calculation is even more accurate now.
+* Added `PowerMod` column to CSV export indicating whether or not a weapon or piece of armor has a power mod
+* Support sorting by base power.
+* Hide "split" and "take" button for D2 consumables.
+* OK really really fix the vault count.
+* Fix showing item popup for some D1 items.
+* Changed how we do Google Drive log-in - it should be smoother on mobile.
+* Completed objectives will now show as "complete".
+* Bring back the yellow triangle for current character on mobile.
+* Updated `is:dupelower` search filter for items to tie break by primary stat.
+
+# 4.18.0
+
+* Updated `is:dupelower` search filter for items with the same/no power level.
+* Fix some issues with Google Drive that might lead to lost data.
+* Really fix vault counts this time!
+
+# 4.17.0
+
+* Fix bug that prevented pinned apps in iOS from authenticating with Bungie.net.
+
+# 4.16.2
+
+* Added `is:dupelower` to search filters for easier trashing.
+* Added missing factions to the reputation section for Faction Rally.
+* Fix in infusion calculator to correctly consider +5 mod
+* Fix for CSV export (e.g.: First In, Last Out in 2 columns)
+
+# 4.16.1
+
+* Bugfixes for iOS 10.0 - 10.2.
+
+# 4.16.0
+
+* Added item type sort to settings group items by type (e.g. all Sniper Rifles together).
+* Reputation emblems are the same size as items now, however you have item size set.
+* Shaders show up in an item's mods now.
+* Transfering search loadouts is more reliable.
+* Fixed a serious bug with storage that may have deleted your tags and notes. It's fixed now, but hopefully you had a backup...
+* Highlight mods that increase an item's power with a gold border. New 'is:powermod' search keyword can find them all.
+* Phone mode should trigger even on really big phones.
+* More places can be pressed to show a tooltip.
+* Fixed showing quality for D1 items.
+* D2 subclasses are diamonds instead of squares.
+* Max Base Power, Mobility, Resilience, and Recovery are now shown for each character.
+* Legendary shards have the right icon now.
+* Fix newly created loadouts showing no items.
+* Inventory (mods, shaders, and consumables) in your vault now show up separated into the vault, and you can transfer them to and from the vault.
+* Search keywords are now case-insensitive.
+* You can now lock and unlock D2 items.
+* Equipping an exotic emote won't unequip your exotic sparrow and vice versa.
+* Item popups aren't weirdly tall on Firefox anymore.
+* Armor stats now match the order in the game.
+* Infusion calculator now always gives you the full value of your infusion.
+* Show a warning that your max light may be wrong if you have classified items.
+* CSV export for D2 weapons and armor is back.
+* Add text search for mods and perks.
+* Add "Random Loadout" to D2. You gotta find it though...
+
+# 4.15.0
+
+* D2 items with objectives now show them, and quests + milestones are displayed for your characters.
+* Custom loadouts return for D2.
+* D2 items now display their perks and mods.
+* DIM won't log you out if you've been idle too long.
+* Swipe left or right anywhere on the page in mobile mode to switch characters.
+* If you have lots of inventory, it won't make the page scroll anymore.
+* Power level will update when you change equipment again.
+* Searches will stay searched when you reload info.
+* Max light loadout won't try to use two exotics.
+* Farming mode looks better on mobile.
+* If you're viewing a non-current character in mobile, it won't mess up on reload anymore.
+* You can tag and write notes on classified items to help remember which they are.
+* The Infusion Fuel Finder is back for D2.
+* The "Max Light" calculation is more accurate now.
+* Mods now show more detail about what they do.
+
+# 4.14.0
+
+* Added back in Repuation for D2.
+* Max Light Loadout, Make Room for Postmaster, Farming Mode, and Search Loadout are all reenabled for D2.
+* Classified items can be transferred!
+* Fixed search filters for D2.
+* Show hidden stats on D2 items.
+* D2 inventory (mods, shaders, etc) now take the full width of the screen.
+
+# 4.13.0
+
+* DIM will remember whether you last used D2 or D1.
+* Lots of DIM functionality is back for D2.
+* We now highlight the perks from high community reviews that you don't have selected.
+
+# 4.12.0
+
+* Early Destiny 2 support! We have really basic support for your Destiny 2 characters. Select your D2 account from the dropdown on the right. This support was built before we even got to start playing, so expect some rough edges.
+* There's a new phone-optimized display for your inventory. See one character at a time, with larger items. Swipe between characters by dragging the character header directly.
+* Info popups aren't gigantic on mobile anymore.
+* Fix a case where changes to preferences may not be saved.
+
+# 4.11.0
+
+* Fix a case where DIM wouldn't work because auth tokens had expired.
+
+# 4.10.0
+
+* You can flag reviews for being offensive or arguing or whatever. Be helpful but also be nice.
+* Remove the browser compatibility warning for Opera and prerelease Chrome versions.
+
+# 4.9.0
+
+* No changes!
+
+# 4.8.0
+
+* No changes!
+
+# 4.7.0
+
+* Made loadout builder talent grids tiny again.
+* If you autocomplete the entire filter name and hit enter, it will no longer hang the browser.
+* Updated the About page and FAQ.
+* Fixed a case where DIM would fail to load the latest version, or would load to a blank page unless force-reloaded.
+* Added some helpful info for cases where DIM might fail to load or auth with Bungie.net.
+* Added a warning when your browser is not supported by DIM.
+* DIM no longer supports iOS 9.
+
+# 4.6.0
+
+* Fix a bug where the popup for Xur items was below Xur's own popup.
+* Hiding community rating for items with only one (non-highlighted) review.
+* The first item in the search autocompleter is once again selected automatically.
+* If you don't have the vault width set to "auto", the inventory is once again centered.
+
+# 4.5.0
+
+* Added "reviewcount" filter to filter on the number of reviews on an item.
+* Fix slight horizontal scroll on inventory view.
+* On mobile, tapping outside of dialogs and dropdowns to dismiss them now works.
+* The item detail popup now does a better job of fitting itself onto the screen - it may appear to the left or right of an item now!
+* Press on a talent grid node to read its description. The same goes for the stats under your character.
+* Subclasses now have the correct elemental type in their header color.
+* Drag and drop should be much smoother now.
+* You can select Destiny 2 accounts from the account dropdown now - but won't do much until Destiny 2 is released and we have a chance to update DIM to support it!
+
 # 4.4.0
 
 * New filters for ornaments - is:ornament, is:ornamentmissing, is:ornamentunlocked

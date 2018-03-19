@@ -1,0 +1,107 @@
+@import '../../scss/variables.scss';
+
+.loadout-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loadout-set {
+  display: flex;
+  flex-direction: row;
+  padding-left: 0px;
+  overflow: hidden;
+  background-color: #222;
+
+  &:last-of-type {
+      border: 0;
+  }
+
+  &:hover {
+    background-color: #151515;
+  }
+
+  > span:first-child {
+    flex: 1;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    .fa {
+      width: 12px;
+      margin-right: 2px;
+      text-align: center;
+    }
+    img.fa {
+      transform: translateY(1px);
+    }
+  }
+
+  > span:not(:first-child) {
+    padding: 0 12px;
+    text-align: center;
+    color: #888;
+    .fa {
+      font-size: 1.2em;
+    }
+    &:hover {
+      background-color: $blue;
+      color: #222;
+
+      &:delete {
+        background-color: #ff9294;
+      }
+    }
+  }
+
+  .light {
+    font-weight: 200;
+    color: $gold;
+    float: right;
+    &:before {
+      content: "\2726";
+      display: inline-block;
+      vertical-align: 7%;
+      font-size: 50%;
+    }
+  }
+
+  .badge {
+    border-radius: 50%;
+    border-radius: 10px;
+    background: $orange;
+    padding: 0 4px;
+    color: black;
+    font-size: 9px;
+  }
+}
+
+.loadout-popup-content {
+  line-height: 35px;
+  background-color: #3A4150;
+  color: #E4E4E4;
+}
+
+.ngdialog.loadout-popup {
+  position: absolute;
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 121px);
+  overflow: auto;
+  z-index: 2;
+  top: 0;
+  bottom: initial;
+  margin: 0;
+  padding: 0;
+  color: rgba(245, 245, 245, 0.6);
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  .detached & {
+    top: 103px;
+    z-index: 1000;
+    max-height: calc(100vh - 221px);
+    max-width: 230px;
+    left: calc((100% - 230px) / 2);
+  }
+}

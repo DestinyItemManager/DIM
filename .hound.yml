@@ -4,5 +4,7 @@ javascript:
   enabled: false
 eslint:
   enabled: true
-  config_file: .eslintrc-hound
+  config_file: .eslintrc
+tslint:
+  config_file: tslint.json
 fail_on_violations: true

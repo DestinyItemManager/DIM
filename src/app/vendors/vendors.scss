@@ -1,0 +1,258 @@
+.vendor {
+  .vendorTabs {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin: 10px 0;
+
+    h1 {
+      display: inline-block;
+      margin: 0;
+      line-height: 1em;
+    }
+
+    label {
+      display: inline-block;
+      font-weight: 400;
+      font-size: 15px;
+      cursor: pointer;
+      text-align: center;
+      &.active {
+        color: #FB9F28
+      }
+      & input {
+        display: none;
+      }
+      @media (max-width: 680px) {
+        font-size: 12px;
+        margin-left: 8px;
+      }
+    }
+  }
+  .vendor-char-items {
+    position: relative;
+  }
+  .vendor-col {
+    margin-right: 20px;
+  }
+  .vendor-items {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .vendor-item {
+    margin-right: 1px;
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .category-title {
+    margin-top: 10px;
+    margin-left: 2px;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #CCC;
+    margin-bottom: 4px;
+    &:first-child {
+      margin-top: 0px;
+    }
+  }
+  .fa-arrow-circle-left {
+    padding-right: 5px;
+  }
+  .vendor-headers-background {
+    position: fixed;
+    height: 44px;
+    left: 0;
+    width: 100%;
+    top: 42px;
+    background-color: #434444;
+    z-index: 4;
+    &.sticky {
+      box-shadow: 0 1px 6px 0px #222;
+    }
+  }
+  .vendorHeaderWrapper {
+    z-index: 4;
+  }
+  .vendorHeaderWrapper {
+    position:fixed;
+    top: 42px;
+    max-width: 900px;
+    width: 100%;
+
+    @supports (position: sticky) {
+      position: sticky;
+      top: 55px;
+    }
+  }
+  .vendor-headers {
+    display: flex;
+  }
+  .collapse-handle {
+    display: flex;
+    align-items: center;
+  }
+  .title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    .countdown {
+      font-size: 11px;
+    }
+  }
+  .vendor-location {
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 12px;
+    color: #999;
+    margin-left: 6px;
+  }
+  .vendor-row {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  .vendor-category {
+    margin-bottom: 8px;
+  }
+  .store-cell {
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .vendor-icon {
+    width: 30px;
+    height: 30px;
+    margin: 5px 10px 5px 5px;
+  }
+  .currency img {
+    height: 12px;
+    width: 12px;
+    margin-left: 4px;
+  }
+  .vendor-costs {
+    margin-top: -1px;
+  }
+  .cost {
+    font-size: 10px;
+    margin-top: 1px;
+    margin-left: 2px;
+    text-align: center;
+  }
+  .empty-cost {
+    height: 18px;
+  }
+  .notenough {
+    color: #CC5C58;
+  }
+  .modal-open {
+    overflow: visible;
+  }
+}
+
+.unlocked-character {
+  display: flex;
+  flex-direction: horizontal;
+  align-items: center;
+
+  .emblem {
+    width: 24px;
+    height: 24px;
+    margin: 2px 8px 2px 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    background-size: cover;
+  }
+}
+
+.locked-overlay {
+  width: calc(var(--item-size) + 4px);
+  height: calc(var(--item-size) + 4px);
+  position: absolute;
+  top: 0;
+  left: 2px;
+  pointer-events: none;
+  z-index: 1;
+  background-color: rgba(40,40,40,0.5);
+  margin-top: 2px;
+  backface-visibility: hidden;
+}
+
+.ngdialog.vendor-move-popup {
+  position: absolute;
+  // TODO: this is here so popups will show over the Xur popup, but it
+  // makes vendor item popups go over the header. Remove this when Xur
+  // is its own page instead of a popup.
+  z-index: 1000;
+  height: fit-content;
+  .compare-items {
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+  }
+  .more-item-details {
+    margin-top: 0;
+  }
+  .item {
+    opacity: 0.5;
+  }
+  .selected {
+    opacity: 1.0;
+  }
+  a {
+    outline: 0;
+  }
+}
+
+.vendor-loading {
+  float: right;
+}
+
+vendor-currencies {
+  font-size: 12px;
+  float: right;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  .vendor-currency {
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+    img {
+      vertical-align: bottom;
+      height: 16px;
+      width: 16px;
+    }
+  }
+}
+
+.xurDialog {
+  .title {
+    display: none;
+  }
+
+  .vendors, .vendor-row {
+    margin: 0;
+  }
+
+  .vendor-items {
+    flex-wrap: none;
+  }
+
+  vendor-currencies {
+    margin-top: 0;
+  }
+}
+
+.ngdialog.vendor-move-popup.xur-move-popup {
+  position: fixed;
+}
+
+.ngdialog.modal-dialog.xur {
+  align-items: flex-start;
+  .ngdialog-content {
+    margin-top: 2em;
+  }
+}

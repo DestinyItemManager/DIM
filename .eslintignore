@@ -1,5 +1,5 @@
-src/scripts/ios-drag-drop.js
 build/
 dist/
 Gruntfile.js
-karma.conf.js
+src/browsercheck.js
+

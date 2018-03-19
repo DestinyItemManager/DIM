@@ -1,0 +1,35 @@
+@import "../../scss/variables.scss";
+
+.storage {
+  h2 {
+    margin: 0 0 12px 0;
+  }
+
+  .storage-status {
+    font-size: 12px;
+    color: #DDD;
+
+    &.enabled {
+      color: #20ea42;
+    }
+  }
+
+  p {
+    margin: 8px 0;
+  }
+
+  .storage-adapter {
+    background: #353535;
+    margin: 10px 0 0 0;
+    padding: 8px;
+  }
+
+  .dim-button {
+    //font-size: 14px;
+  }
+
+  ul {
+    margin: 8px 0;
+    padding-left: 2em;
+  }
+}

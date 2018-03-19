@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Destiny Item Manager",
-  "version": "4.0.0",
-  "description": "Robust interface to manage gear, weapons, and items in Destiny.",
+  "name": "Destiny Item Manager Shortcut",
+  "version": "10.0.2",
+  "description": "A link to the DIM website which provides a robust interface to manage items in Destiny.",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -14,20 +14,10 @@
       "main.js"
     ]
   },
-  "content_scripts": [
-    {
-      "matches": ["https://app.destinyitemmanager.com/*"],
-      "js": ["content-script.js"]
-    }
-  ],
-  "permissions": [
-    "storage"
-  ],
   "browser_action": {
     "default_icon": {
       "19": "icon19.png",
       "38": "icon38.png"
     }
-  },
-  "offline_enabled": false
+  }
 }

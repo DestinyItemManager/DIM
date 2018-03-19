@@ -1,0 +1,11 @@
+.random {
+  position: fixed;
+  backface-visibility: hidden;
+  bottom: 0;
+  bottom: constant(safe-area-inset-bottom);
+  right: 0;
+  padding: .5rem;
+  color: #222;
+  text-decoration: none;
+  font-weight: normal;
+}

@@ -6,6 +6,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const WebpackNotifierPlugin = require('webpack-notifier');
+const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -18,9 +20,7 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
 const preMinifiedDeps = [
-  'underscore/underscore-min.js',
-  'indexeddbshim/dist/indexeddbshim.min.js',
-  'jquery/dist/jquery.min.js'
+  'underscore/underscore-min.js'
 ];
 
 module.exports = (env) => {
@@ -29,25 +29,22 @@ module.exports = (env) => {
   if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
+  // Used for the changelog anchor
+  const versionNoDots = version.replace(/\./g, '');
 
   const config = {
     entry: {
       main: './src/index.js',
-      authReturn: './src/authReturn.js'
+      browsercheck: './src/browsercheck.js',
+      authReturn: './src/authReturn.js',
+      gdriveReturn: './src/gdriveReturn.js'
     },
 
     output: {
       path: path.resolve('./dist'),
+      publicPath: '/',
       filename: '[name]-[chunkhash:6].js',
       chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
-    },
-
-    devServer: {
-      contentBase: path.resolve(__dirname, './src'),
-      publicPath: '/',
-      https: true,
-      host: 'localhost',
-      hot: false
     },
 
     stats: 'errors-only',
@@ -61,12 +58,10 @@ module.exports = (env) => {
         {
           test: /\.js$/,
           exclude: [/node_modules/, /sql\.js/],
-          use: [
-            'babel-loader'
-          ]
-        }, {
-          test: /\.json$/,
-          loader: 'json-loader'
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true
+          }
         }, {
           test: /\.html$/,
           use: [
@@ -75,7 +70,7 @@ module.exports = (env) => {
             'html-loader'
           ]
         }, {
-          test: /\.(png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          test: /\.(jpg|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
@@ -91,16 +86,39 @@ module.exports = (env) => {
             ],
             fallback: 'style-loader'
           })
+        }, {
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract({
+            use: [
+              'css-loader'
+            ],
+            fallback: 'style-loader'
+          })
+        },
+        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+        {
+          test: /\.tsx?$/,
+          loader: "awesome-typescript-loader",
+          options: {
+            useBabel: true,
+            useCache: true
+          }
+        },
+        // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+        {
+          enforce: "pre",
+          test: /\.js$/,
+          loader: "source-map-loader"
         }
       ],
 
-      noParse: [
-        /\/sql\.js$/
-      ]
+      noParse: function(path) {
+        return path.endsWith('sql.js/js/sql.js') || preMinifiedDeps.some((d) => path.endsWith(d));
+      }
     },
 
     resolve: {
-      extensions: ['.js', '.json'],
+      extensions: ['.js', '.json', '.ts', '.tsx'],
 
       alias: {
         app: path.resolve('./src')
@@ -108,10 +126,9 @@ module.exports = (env) => {
     },
 
     plugins: [
+      new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
+
       new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery',
         i18next: 'i18next',
         'window.i18next': 'i18next'
       }),
@@ -122,20 +139,34 @@ module.exports = (env) => {
 
       new NotifyPlugin('DIM', !isDev),
 
-      new ExtractTextPlugin('styles-[contenthash:6].css'),
+      new ExtractTextPlugin({
+        filename: 'styles-[contenthash:6].css',
+        allChunks: true
+      }),
+
+      new InlineManifestWebpackPlugin({
+        name: 'webpackManifest'
+      }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'index.html',
         template: '!handlebars-loader!src/index.html',
-        chunks: ['manifest', 'vendor', 'main']
+        chunks: ['vendor', 'main', 'browsercheck']
       }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'return.html',
         template: '!handlebars-loader!src/return.html',
-        chunks: ['manifest', 'vendor', 'authReturn']
+        chunks: ['authReturn']
+      }),
+
+      new HtmlWebpackPlugin({
+        inject: false,
+        filename: 'gdrive-return.html',
+        template: '!handlebars-loader!src/gdrive-return.html',
+        chunks: ['vendor', 'gdriveReturn']
       }),
 
       new CopyWebpackPlugin([
@@ -154,6 +185,7 @@ module.exports = (env) => {
       // Extract a stable "vendor" chunk
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
+        chunks: ['main'],
         minChunks: function(module) {
           // this assumes your vendor imports exist in the node_modules directory
           return module.context && module.context.indexOf('node_modules') !== -1;
@@ -172,7 +204,7 @@ module.exports = (env) => {
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env),
         $DIM_BUILD_DATE: JSON.stringify(Date.now()),
-        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/docs/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
+        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/master/docs/CHANGELOG.md#${env === 'release' ? versionNoDots : 'next'}`),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
@@ -180,13 +212,10 @@ module.exports = (env) => {
 
         $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify('22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'),
 
+        $BROWSERS: JSON.stringify(packageJson.browserslist),
+
         // Feature flags!
 
-        // Tags are off in release right now
-        '$featureFlags.tagsEnabled': JSON.stringify(true),
-        '$featureFlags.compareEnabled': JSON.stringify(true),
-        '$featureFlags.vendorsEnabled': JSON.stringify(true),
-        '$featureFlags.qualityEnabled': JSON.stringify(true),
         // Additional debugging / item info tools
         '$featureFlags.debugMode': JSON.stringify(false),
         // Print debug info to console about item moves
@@ -196,15 +225,19 @@ module.exports = (env) => {
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
-        '$featureFlags.debugSync': JSON.stringify(false),
-        // Use a WebAssembly version of SQLite, if possible
-        '$featureFlags.wasm': JSON.stringify(false),
+        '$featureFlags.debugSync': JSON.stringify(env !== 'release'),
+        // Use a WebAssembly version of SQLite, if possible (this crashes on Chrome 58 on Android though)
+        '$featureFlags.wasm': JSON.stringify(true),
         // Enable color-blind a11y
-        '$featureFlags.colorA11y': JSON.stringify(env !== 'release'),
+        '$featureFlags.colorA11y': JSON.stringify(true),
         // Whether to log page views for router events
-        '$featureFlags.googleAnalyticsForRouter': JSON.stringify(env !== 'release'),
-        // Enable activities tab
-        '$featureFlags.activities': JSON.stringify(env !== 'release')
+        '$featureFlags.googleAnalyticsForRouter': JSON.stringify(true),
+        // Debug ui-router
+        '$featureFlags.debugRouter': JSON.stringify(false),
+        // Send exception reports to Sentry.io on beta only
+        '$featureFlags.sentry': JSON.stringify(env === 'beta'),
+        // D2 Vendors
+        '$featureFlags.vendors': JSON.stringify(env !== 'release'),
       }),
 
       new webpack.SourceMapDevToolPlugin({
@@ -232,13 +265,22 @@ module.exports = (env) => {
   preMinifiedDeps.forEach((dep) => {
     const depPath = path.resolve(nodeModulesDir, dep);
     config.resolve.alias[dep.split(path.sep)[0]] = depPath;
-    config.module.noParse.push(new RegExp(depPath));
   });
 
-  if (!isDev) {
+  if (isDev) {
+    config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
+
+    return config;
+  } else {
     // Bail and fail hard on first error
     config.bail = true;
     config.stats = 'verbose';
+
+    // Tell React we're in Production mode
+    config.plugins.push(new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env': JSON.stringify({ NODE_ENV: 'production' })
+    }));
 
     // The sql.js library doesnt work at all (reports no tables) when minified,
     // so we exclude it from the regular minification
@@ -253,16 +295,33 @@ module.exports = (env) => {
     // Generate a service worker
     config.plugins.push(new WorkboxPlugin({
       maximumFileSizeToCacheInBytes: 5000000,
-      globPatterns: ['**/*.{html,js,css,woff2}', 'static/*.png'],
+      globPatterns: ['**/*.{html,js,css,woff2,json}', 'static/*.{png,jpg}'],
       globIgnores: [
-        'authReturn*',
+        'data/**',
+        'manifest-*.js',
         'extension-scripts/*',
-        'return.html',
+        'service-worker.js'
       ],
-      // swSrc: './src/sw.js',
-      swDest: './dist/sw.js'
+      swSrc: './dist/service-worker.js',
+      swDest: './dist/service-worker.js'
     }));
   }
 
-  return config;
+  // Build the service worker in an entirely separate configuration so
+  // it doesn't get name-mangled. It'll be used by the
+  // WorkboxPlugin. This lets us inline the dependencies.
+  const serviceWorker = {
+    entry: {
+      'service-worker': './src/service-worker.js'
+    },
+
+    output: {
+      path: path.resolve('./dist'),
+      filename: '[name].js'
+    },
+
+    stats: 'errors-only'
+  };
+
+  return [serviceWorker, config];
 };

@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/DestinyItemManager/DIM.svg?branch=master)](https://travis-ci.org/DestinyItemManager/DIM)
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/destiny-item-manager/localized.svg)](https://crowdin.com/project/destiny-item-manager)
 [![OpenCollective](https://opencollective.com/dim/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/dim/sponsors/badge.svg)](#sponsors)
 
@@ -102,12 +103,17 @@ Install dependencies:
 * Install [NodeJS](https://nodejs.org/).
 * Windows-based developers will need to install `windows-build-tools` (`npm install --global windows-build-tools`) globally prior to running `npm install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
 * Run `npm install`.
+  * Note that on Windows, the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
 
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-Build in dev mode (website)
-* `npm run server`. Visit the URL it prints out to load DIM. It will update automatically as you change files.
+Run your own local web server
+* `npm install http-server -g` will install http-server
+* `npm start` will start webpack building (and rebuilding as file changes are detected)
+* then go in to the `dist` subdirectory and run `http-server -S` to run http-server over SSL. It'll run on port 8080.
+* If it complains about missing certificates, run `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'` in the dist directory (thanks to [Stack Overflow](https://stackoverflow.com/questions/12871565/how-to-create-pem-files-for-https-web-server) and again to [Stack Overflow](https://stackoverflow.com/questions/8075274/is-it-possible-making-openssl-skipping-the-country-common-name-prompts) for the quiet recipe) and generate your own local certs
+* After the one-time setup, `npm start` and `http-server -S` and you're off to the races.
 
 Get your own API key:
 
@@ -116,6 +122,6 @@ Get your own API key:
 * Paste your extension url into the `Origin Header` section on bungie.net
 * Copy your API-key from bungie.net into DIM developer settings panel when it is loaded.
 
-Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/master/CONTRIBUTING.md) for more tips.
+Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/CONTRIBUTING.md) for more tips.
 
 Code released under the [MIT license](http://choosealicense.com/licenses/mit/).

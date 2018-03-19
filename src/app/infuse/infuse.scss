@@ -1,0 +1,137 @@
+@import '../../scss/variables.scss';
+
+.infuseDialog {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  @include phone-portrait {
+    --item-size: 48px;
+  }
+
+  .ngdialog-inner-content {
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 57px);
+  }
+
+  .bigValue {
+    font-size: 32px;
+    line-height: 1em;
+    @include phone-portrait {
+      font-size: 22px;
+    }
+  }
+
+  .infuseSourceDetailsRow {
+    margin-left: 1rem;
+  }
+
+  .black {
+    background-color: #222222;
+  }
+
+  .grey {
+    background-color: #6D6D6D;
+  }
+
+  .green {
+    color: green;
+    font-weight: bold;
+  }
+
+  .infuseHeader {
+    display: flex;
+    flex-direction: row;
+
+    @include phone-portrait {
+      flex-direction: column;
+
+      .infuseControls {
+        font-size: 11px;
+      }
+    }
+  }
+
+  .infuse-selected .item {
+    outline: 2px solid black !important;
+  }
+
+  .infuse-btn {
+    margin-top: 15px;
+  }
+
+  .infuseSourceItemInfo {
+    padding: 0px 0px 8px 8px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .infuseControls {
+    padding: 0px 8px 8px 8px;
+    label {
+      display: block;
+    }
+  }
+
+  .gearsContainer {
+    width: auto;
+    padding: 8px;
+    overflow: hidden;
+
+    .resultContainer {
+      display: flex;
+    }
+
+    .infusedItem {
+      margin: 3px 3px 3px 3px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    .plusSeparator {
+      float: left;
+      margin-top: 5px;
+      font-size: 32px;
+    }
+
+    .itemGrid {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .infusionPlan {
+      display: flex;
+
+      .infusionEquation {
+        display: flex;
+
+        .icon {
+          align-self: center;
+        }
+      }
+    }
+  }
+
+  .infuseSelector {
+    flex: 1;
+    overflow: auto;
+    justify-content: space-around;
+    display: flex;
+
+    .infuseSeparator {
+      width: 1px;
+      margin: 15px 8px 0px 8px;
+      flex: none;
+      background: white;
+    }
+  }
+
+  .infuseSources, .infuseTargets {
+    flex: 1;
+  }
+}
+
