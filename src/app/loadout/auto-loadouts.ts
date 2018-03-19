@@ -240,7 +240,7 @@ function limitToBucketSize(items: DimItem[], isVault) {
 // https://github.com/DestinyItemManager/DIM/issues/2691#issuecomment-373970255
 function addUpStackables(items: DimItem[]) {
   return flatMap(Object.values(_.groupBy(items, (t) => t.hash)), (items) => {
-    if (items[0].maxStackSize > 0) {
+    if (items[0].maxStackSize > 1) {
       const item = copy(items[0]);
       item.amount = sum(items, (i) => i.amount);
       return [item];
