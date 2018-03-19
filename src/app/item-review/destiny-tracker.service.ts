@@ -102,6 +102,7 @@ export interface DestinyTrackerServiceType {
   reportReview(review: any);
   clearIgnoredUsers();
   clearCache();
+  getRating(vendorItem: DestinyVendorSaleItemComponent): DimWorkingUserReview | null | undefined;
 }
 
 export function DestinyTrackerService(
@@ -166,6 +167,16 @@ export function DestinyTrackerService(
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
           _d2bulkFetcher.bulkFetchVendorItems(vendorItems, platformSelection);
+        }
+      }
+    },
+
+    getRating(vendorItem: DestinyVendorSaleItemComponent): DimWorkingUserReview | null | undefined {
+      if (settings.showReviews) {
+        if (_isDestinyOne()) {
+          throw new Error(("This is a D2-only call."));
+        } else if (_isDestinyTwo()) {
+          return _d2reviewDataCache.getRatingData(vendorItem);
         }
       }
     },

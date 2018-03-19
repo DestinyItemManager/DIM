@@ -2,6 +2,7 @@ import * as _ from 'underscore';
 import { DtrItem } from '../item-review/destiny-tracker.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { compact } from '../util';
+import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 
 /**
  * Translates items from the objects that DIM has to the form that the DTR API expects.
@@ -14,9 +15,9 @@ class D2ItemTransformer {
    * This does not contain personally-identifying information.
    * Meant for fetch calls.
    */
-  translateToDtrItem(item: DimItem): DtrItem {
+  translateToDtrItem(item: DimItem | DestinyVendorSaleItemComponent): DtrItem {
     return {
-      referenceId: item.hash
+      referenceId: (item as DestinyVendorSaleItemComponent !== null) ? (item as DestinyVendorSaleItemComponent).itemHash : (item as DimItem).hash
     };
   }
 

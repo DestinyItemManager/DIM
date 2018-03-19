@@ -2,6 +2,7 @@ import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimWorkingUserReview, DtrUserReview, DtrBulkItem } from '../item-review/destiny-tracker.service';
+import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 
 /**
  * Cache of review data.
@@ -18,7 +19,7 @@ class D2ReviewDataCache {
     this._maxTotalVotes = 0;
   }
 
-  _getMatchingItem(item) {
+  _getMatchingItem(item: DimItem | DestinyVendorSaleItemComponent) {
     const dtrItem = this._itemTransformer.translateToDtrItem(item);
 
     return this._itemStores.find((s) => s.referenceId === dtrItem.referenceId);
@@ -27,7 +28,7 @@ class D2ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item: DimItem): DimWorkingUserReview | null {
+  getRatingData(item: DimItem | DestinyVendorSaleItemComponent): DimWorkingUserReview | null {
     return this._getMatchingItem(item) || null;
   }
 
