@@ -25,7 +25,7 @@ interface Props {
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: StoreServiceType;
-  DestinyTrackerService: DestinyTrackerServiceType;
+  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
@@ -71,7 +71,7 @@ export default class Vendors extends React.Component<Props, State> {
 
     console.log(saleComponents);
 
-    this.props.DestinyTrackerService.bulkFetchVendorItems(saleComponents);
+    this.props.dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
   }
 
   componentDidMount() {
