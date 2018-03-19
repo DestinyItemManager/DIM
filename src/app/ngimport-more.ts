@@ -1,6 +1,7 @@
 import { module } from 'angular';
 import { StateService, TransitionService, StateParams } from '@uirouter/angularjs';
 import { IDialogService } from 'ng-dialog';
+import { Hotkey } from 'angular-hotkeys';
 
 /**
  * More ngimports (following the ngimport pattern from https://github.com/bcherny/ngimport).
@@ -14,7 +15,7 @@ export let toaster: any;
 export let $state: StateService;
 export let $transitions: TransitionService;
 export let ngDialog: IDialogService;
-export let hotkeys: any;
+export let hotkeys: Hotkey;
 export let $stateParams: StateParams;
 export let loadingTracker: {
   active: boolean;

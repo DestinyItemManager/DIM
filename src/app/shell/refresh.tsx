@@ -29,7 +29,7 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
   }
 
   componentWillUnmount() {
-    hotkeys.remove('r');
+    hotkeys.del('r');
     this.subscription.unsubscribe();
   }
 

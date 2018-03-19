@@ -98,6 +98,7 @@
   "dependencies": {
     "@destiny-item-manager/zip.js": "github:DestinyItemManager/zip.js",
     "@types/angular": "^1.6.43",
+    "@types/angular-hotkeys": "^1.7.0",
     "@types/angular-mocks": "^1.5.11",
     "@types/ng-dialog": "^0.6.2",
     "@types/prop-types": "^15.5.2",
