@@ -124,14 +124,14 @@ export function LoadoutService(
 
     const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
     const hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
-    const loadoutGuids = new Set(_.pluck(loadouts, 'id'));
+    const loadoutGuids = new Set(loadouts.map((i) => i.id));
     const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
 
-    const orphanIds = _.pluck(Object.values(data).filter((item) => {
+    const orphanIds = Object.values(data).filter((item) => {
       return objectTest(item) &&
         hasGuid(item) &&
         !containsLoadoutGuids(item);
-    }), 'id');
+    }).map((i: any) => i.id);
 
     if (orphanIds.length > 0) {
       return SyncService.remove(orphanIds).then(() => loadouts);
@@ -366,15 +366,15 @@ export function LoadoutService(
       const scope = {
         failed: 0,
         total: totalItems,
-        successfulItems: []
+        successfulItems: [] as DimItem[]
       };
 
       let promise: IPromise<any> = $q.when();
 
       if (itemsToDequip.length > 1) {
-        const realItemsToDequip = _.compact(itemsToDequip.map((i) => storeService.getItemAcrossStores(i))) as DimItem[];
+        const realItemsToDequip = _.compact(itemsToDequip.map((i) => storeService.getItemAcrossStores(i)));
         const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
-          const equipItems = _.compact(dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))) as DimItem[];
+          const equipItems = _.compact(dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds)));
           return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
         });
         promise = $q.all(dequips);
@@ -385,8 +385,8 @@ export function LoadoutService(
         .then(() => {
           if (itemsToEquip.length > 1) {
             // Use the bulk equipAll API to equip all at once.
-            itemsToEquip = itemsToEquip.filter((i) => _.find(scope.successfulItems, { id: i.id }));
-            const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store))) as DimItem[];
+            itemsToEquip = itemsToEquip.filter((i) => scope.successfulItems.find((si) => si.id === i.id));
+            const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
             return dimItemService.equipItems(store, realItemsToEquip);
           } else {
             return itemsToEquip;
@@ -536,14 +536,14 @@ export function LoadoutService(
       }));
 
       if (item) {
-        const discriminator = item.type!.toLowerCase();
+        const discriminator = item.type.toLowerCase();
 
         item.equipped = itemPrimitive.equipped;
 
         item.amount = itemPrimitive.amount;
 
         result.items[discriminator] = (result.items[discriminator] || []);
-        result.items[discriminator].push(item as DimItem);
+        result.items[discriminator].push(item);
       } else {
         const loadoutItem = {
           id: itemPrimitive.id,

@@ -1,5 +1,5 @@
 import { module } from 'angular';
-import { StateService, TransitionService } from '@uirouter/angularjs';
+import { StateService, TransitionService, StateParams } from '@uirouter/angularjs';
 import { IDialogService } from 'ng-dialog';
 
 /**
@@ -13,9 +13,13 @@ import { IDialogService } from 'ng-dialog';
 export let toaster: any;
 export let $state: StateService;
 export let $transitions: TransitionService;
-export let loadingTracker: any;
 export let ngDialog: IDialogService;
 export let hotkeys: any;
+export let $stateParams: StateParams;
+export let loadingTracker: {
+  active: boolean;
+  addPromise(PromiseLike): void;
+};
 
 // prevent double-loading, which has the potential
 // to prevent sharing state between services
@@ -24,6 +28,7 @@ export default module('dim/ngimport', [])
     toaster = $i.get('toaster');
     $state = $i.get('$state');
     $transitions = $i.get('$transitions');
+    $stateParams = $i.get('$stateParams');
     loadingTracker = $i.get('loadingTracker');
     ngDialog = $i.get('ngDialog');
     hotkeys = $i.get('hotkeys');

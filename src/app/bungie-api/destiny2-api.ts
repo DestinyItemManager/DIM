@@ -231,7 +231,7 @@ export function equip(item: DimItem): IPromise<ServerResponse<number>> {
 export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
-  items = _.sortBy(items, (i: any) => (i.isExotic ? 1 : 0));
+  items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
   const platform = getActivePlatform();
   return equipItemsApi(httpAdapterWithRetry, {
@@ -242,9 +242,7 @@ export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[
     .then((response) => {
       const data: DestinyEquipItemResults = response.Response;
       return items.filter((i) => {
-        const item = _.find(data.equipResults, {
-          itemInstanceId: i.id
-        });
+        const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
         return item && item.equipStatus === 1;
       });
     }) as IPromise<DimItem[]>;

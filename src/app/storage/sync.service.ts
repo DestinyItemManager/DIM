@@ -11,7 +11,7 @@ export interface DimData {
   platformType?: BungieMembershipType;
   destinyVersion?: 1 | 2;
   // membership IDs of ignored DTR reviewers
-  ignoredUsers?: number[];
+  ignoredUsers?: string[];
   // loadout ids
   'loadouts-v3.0'?: string[];
   'settings-v1.0'?: any; // settings
