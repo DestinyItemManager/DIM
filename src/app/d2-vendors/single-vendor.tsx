@@ -12,12 +12,16 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import { FactionIcon } from '../progress/faction';
 import VendorItems from './vendor-items';
 import './vendor.scss';
+import { fetchRatingsAndGetCache } from './vendor-ratings';
+import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: StoreServiceType;
+  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
@@ -25,6 +29,7 @@ interface State {
   defs?: D2ManifestDefinitions;
   vendorDef?: DestinyVendorDefinition;
   vendorResponse?: DestinyVendorResponse;
+  reviewCache?: D2ReviewDataCache;
 }
 
 export default class SingleVendor extends React.Component<Props, State> {
@@ -63,7 +68,8 @@ export default class SingleVendor extends React.Component<Props, State> {
           : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
       }
       const vendorResponse = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
-      this.setState({ vendorResponse });
+      const reviewCache = fetchRatingsAndGetCache(this.props.dimDestinyTrackerService, undefined, vendorResponse);
+      this.setState({ defs, vendorResponse, reviewCache });
     }
   }
 
@@ -72,9 +78,9 @@ export default class SingleVendor extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorDef, vendorResponse } = this.state;
+    const { defs, vendorDef, vendorResponse, reviewCache } = this.state;
 
-    if (!vendorDef || !defs) {
+    if (!vendorDef || !defs || !reviewCache) {
       // TODO: loading component!
       return <div className="vendor dim-page">Loading...</div>;
     }
@@ -121,6 +127,7 @@ export default class SingleVendor extends React.Component<Props, State> {
           vendorDef={vendorDef}
           sales={vendorResponse && vendorResponse.sales.data}
           itemComponents={vendorResponse && vendorResponse.itemComponents}
+          reviewCache={reviewCache}
         />
       </div>
     );

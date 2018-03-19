@@ -20,6 +20,7 @@ import { $state, loadingTracker } from '../ngimport-more';
 import './vendor.scss';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { fetchRatingsAndGetCache } from './vendor-ratings';
 
 interface Props {
   $scope: IScope;
@@ -61,19 +62,8 @@ export default class Vendors extends React.Component<Props, State> {
         : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
-    const reviewCache = this.fetchRatingsAndGetCache(vendorsResponse);
+    const reviewCache = fetchRatingsAndGetCache(this.props.dimDestinyTrackerService, vendorsResponse);
     this.setState({ vendorsResponse, defs, reviewCache });
-  }
-
-  fetchRatingsAndGetCache(vendorsResponse: DestinyVendorsResponse): D2ReviewDataCache {
-    const saleComponentArray = Object.values(vendorsResponse.sales.data)
-      .map((saleItemComponent) => saleItemComponent.saleItems);
-
-    const saleComponents = ([] as DestinyVendorSaleItemComponent[]).concat(...saleComponentArray.map((v) => Object.values(v)));
-
-    this.props.dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
-
-    return this.props.dimDestinyTrackerService.getD2ReviewDataCache();
   }
 
   componentDidMount() {
