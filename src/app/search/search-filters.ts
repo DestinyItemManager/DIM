@@ -578,11 +578,12 @@ export function searchFilters(
             return node.name.toLowerCase().includes(predicate) ||
               node.description.toLowerCase().includes(predicate);
           })) ||
-          (item.sockets && item.sockets.sockets.some((socket) => {
-            return Boolean(socket.plug &&
-              (socket.plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
-               socket.plug.plugItem.displayProperties.description.toLowerCase().includes(predicate)));
-          }));
+          (item.sockets && item.sockets.sockets.some((socket) =>
+            socket.plugOptions.some((plug) =>
+              plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
+              plug.plugItem.displayProperties.description.toLowerCase().includes(predicate)
+            )
+          ));
       },
       light(item: DimItem, predicate: string) {
         if (!item.primStat) {
