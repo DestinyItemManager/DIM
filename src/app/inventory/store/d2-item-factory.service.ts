@@ -26,7 +26,8 @@ import {
   DestinyItemSocketState,
   DestinyItemPlug,
   DestinyItemSocketEntryDefinition,
-  DestinyItemSocketEntryPlugItemDefinition
+  DestinyItemSocketEntryPlugItemDefinition,
+  DestinySocketCategoryStyle
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
@@ -1154,16 +1155,21 @@ function buildSocket(
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
-      if ((!plug || reusablePlug.plugItem.hash !== plug.plugItem.hash) &&
-          // TODO: with AWA we may want to put some of these back
-          // removes the reusablePlugs from masterwork
-          !reusablePlug.plugItem.itemCategoryHashes.includes(141186804) &&
-          // removes the "Remove Shader" plug
-          reusablePlug.plugItem.action &&
-          // removes the "Default Ornament" plug
-          ![2931483505, 1959648454, 702981643].includes(reusablePlug.plugItem.hash)
-        ) {
-          plugOptions.push(reusablePlug);
+      if (
+        // TODO: with AWA we may want to put some of these back
+        // removes the reusablePlugs from masterwork
+        !reusablePlug.plugItem.itemCategoryHashes.includes(141186804) &&
+        // removes the "Remove Shader" plug
+        reusablePlug.plugItem.action &&
+        // removes the "Default Ornament" plug
+        ![2931483505, 1959648454, 702981643].includes(reusablePlug.plugItem.hash)
+      ) {
+          if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
+            plugOptions.push(plug);
+            plugOptions.shift();
+          } else {
+            plugOptions.push(reusablePlug);
+          }
         }
       });
   }
