@@ -17,7 +17,7 @@ class D2ItemTransformer {
    */
   translateToDtrItem(item: DimItem | DestinyVendorSaleItemComponent): DtrItem {
     return {
-      referenceId: (item as DestinyVendorSaleItemComponent !== null) ? (item as DestinyVendorSaleItemComponent).itemHash : (item as DimItem).hash
+      referenceId: ((item as DestinyVendorSaleItemComponent).itemHash !== undefined) ? (item as DestinyVendorSaleItemComponent).itemHash : (item as DimItem).hash
     };
   }
 
