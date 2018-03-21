@@ -4,7 +4,7 @@ import { t } from 'i18next';
 import * as React from 'react';
 import { BungieImage } from '../dim-ui/bungie-image';
 import { PressTip } from '../dim-ui/press-tip';
-import { DimItem, DimSocketCategory, DimPlug } from '../inventory/store/d2-item-factory.service';
+import { DimItem, DimSocketCategory, DimPlug, DimSocket } from '../inventory/store/d2-item-factory.service';
 import './sockets.scss';
 import { IScope } from 'angular';
 import Objective from '../progress/Objective';
@@ -42,8 +42,9 @@ export default class Sockets extends React.Component<Props, State> {
 
   render() {
     const { item } = this.props;
+    const { defs } = this.state;
 
-    if (!item.sockets) {
+    if (!item.sockets || !defs) {
       return null;
     }
 
@@ -65,21 +66,12 @@ export default class Sockets extends React.Component<Props, State> {
               <div className="item-sockets">
                 {category.sockets.map((socketInfo) =>
                   <div key={socketInfo.socketIndex} className="item-socket">
-                    {socketInfo.plugOptions.map((plug) =>
-                      <div
-                        key={plug.plugItem.hash}
-                        className={classNames("socket-container", { disabled: !plug.enabled, notChosen: plug !== socketInfo.plug })}
-                      >
-                        {plug.bestRated && <BestRatedIcon />}
-                        <PressTip tooltip={<PlugTooltip item={item} plug={plug} defs={this.state.defs}/>}>
-                          <div>
-                            <BungieImage
-                              className="item-mod"
-                              src={plug.plugItem.displayProperties.icon}
-                            />
-                          </div>
-                        </PressTip>
-                      </div>
+                    {/* This re-sorts mods to have the currently equipped plug in front */}
+                    {socketInfo.plug && category.category.categoryStyle !== DestinySocketCategoryStyle.Reusable &&
+                      <Plug key={socketInfo.plug.plugItem.hash} plug={socketInfo.plug} item={item} socketInfo={socketInfo} defs={defs}/>
+                    }
+                    {filterPlugOptions(category.category.categoryStyle, socketInfo).map((plug) =>
+                      <Plug key={plug.plugItem.hash} plug={plug} item={item} socketInfo={socketInfo} defs={defs}/>
                     )}
                   </div>
                 )}
@@ -89,7 +81,14 @@ export default class Sockets extends React.Component<Props, State> {
       </div>
     );
   }
+}
 
+function filterPlugOptions(categoryStyle: DestinySocketCategoryStyle, socketInfo: DimSocket) {
+  if (categoryStyle === DestinySocketCategoryStyle.Reusable) {
+    return socketInfo.plugOptions;
+  } else {
+    return socketInfo.plugOptions.filter((p) => p !== socketInfo.plug);
+  }
 }
 
 function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
@@ -113,6 +112,35 @@ function anyBestRatedUnselected(category: DimSocketCategory) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some((plugOption) =>
       plugOption !== socket.plug && plugOption.bestRated === true)
+  );
+}
+
+function Plug({
+  defs,
+  plug,
+  item,
+  socketInfo
+}: {
+  defs: D2ManifestDefinitions;
+  plug: DimPlug;
+  item: DimItem;
+  socketInfo: DimSocket;
+}) {
+  return (
+    <div
+      key={plug.plugItem.hash}
+      className={classNames("socket-container", { disabled: !plug.enabled, notChosen: plug !== socketInfo.plug })}
+    >
+      {plug.bestRated && <BestRatedIcon />}
+      <PressTip tooltip={<PlugTooltip item={item} plug={plug} defs={defs}/>}>
+        <div>
+          <BungieImage
+            className="item-mod"
+            src={plug.plugItem.displayProperties.icon}
+          />
+        </div>
+      </PressTip>
+    </div>
   );
 }
 

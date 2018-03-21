@@ -52,8 +52,8 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
     }
 
     return (
-      <div className={classNames("vendor-item", { 'search-hidden': !item.canBeSold })}>
-        {!item.canPurchase &&
+      <div className={classNames("vendor-item")}>
+        {(!item.canPurchase || !item.canBeSold) &&
           <div className="locked-overlay"/>
         }
         <div className="item" ref={this.captureElementRef} onClick={this.openDetailsPopup}>
