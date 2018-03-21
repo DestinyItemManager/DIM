@@ -154,7 +154,7 @@ export function VendorService(
    * Returns a promise for a fresh view of the vendors and their items.
    */
   function loadVendors(account, stores) {
-    const characters = stores.filter((s) => !s.isVault);
+    const characters = (stores || []).filter((s) => !s.isVault);
 
     const reloadPromise = getDefinitions()
       .then((defs) => {

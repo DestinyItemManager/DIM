@@ -69,7 +69,7 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
 
     getDefinitions().then((defs) => {
       const rawActivities = stores[0].advisors.activities;
-      vm.activities = rawActivities.filter((a) => {
+      vm.activities = _.filter(rawActivities, (a) => {
         return a.activityTiers && whitelist.includes(a.identifier);
       });
       vm.activities = _.sortBy(vm.activities, (a) => {

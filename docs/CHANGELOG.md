@@ -1,5 +1,11 @@
 # Next
 
+* Searching mods and perks in D2 now searches non-selected perks as well.
+* Perks are in the correct order again (instead of the selected one being first always).
+* Unpurchaseable vendor items are displayed better.
+
+# 4.44.0
+
 * Fixed the "recommended perk" being wrong very often.
 * Improved the display of perks, shaders, and mods on items. Improved the popup details for those items as well - this includes ornament unlock progress.
 * Stackable items like mods and shaders have less chance of being left behind during search transfers.

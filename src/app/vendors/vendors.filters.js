@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 /**
  * Filters a list of categories down to only categories that match a certain property.
  */
@@ -5,7 +7,7 @@ function vendorTab(categories, prop) {
   if (!prop || !prop.length) {
     return categories;
   }
-  return categories.filter(prop);
+  return _.filter(categories, prop);
 }
 
 /**
