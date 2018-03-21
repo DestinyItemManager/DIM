@@ -26,8 +26,7 @@ import {
   DestinyItemSocketState,
   DestinyItemPlug,
   DestinyItemSocketEntryDefinition,
-  DestinyItemSocketEntryPlugItemDefinition,
-  DestinySocketCategoryStyle
+  DestinyItemSocketEntryPlugItemDefinition
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
