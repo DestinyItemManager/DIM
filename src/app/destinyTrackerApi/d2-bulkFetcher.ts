@@ -5,7 +5,7 @@ import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { IPromise } from 'angular';
 import { $q, $http } from 'ngimport';
 import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
-import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
+import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
@@ -53,13 +53,15 @@ class D2BulkFetcher {
     return promise as IPromise<DtrBulkItem[]>;
   }
 
-  _getVendorBulkFetchPromise(vendorItems: DestinyVendorSaleItemComponent[], platformSelection: number): IPromise<DtrBulkItem[]> {
-    if (!vendorItems.length) {
+  _getVendorBulkFetchPromise(platformSelection: number,
+                             vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                             vendorItems?: DestinyVendorItemDefinition[]): IPromise<DtrBulkItem[]> {
+    if ((vendorSaleItems && !vendorSaleItems.length) || (vendorItems && !vendorItems.length)) {
       const emptyVotes: DtrBulkItem[] = [];
       return $q.resolve(emptyVotes);
     }
 
-    const vendorDtrItems = this._itemListBuilder.getVendorItemList(vendorItems, this._reviewDataCache);
+    const vendorDtrItems = this._itemListBuilder.getVendorItemList(this._reviewDataCache, vendorSaleItems, vendorItems);
 
     const promise = $q
       .when(this._getBulkWeaponDataEndpointPost(vendorDtrItems, platformSelection))
@@ -85,11 +87,17 @@ class D2BulkFetcher {
     this._reviewDataCache.addScores(bulkRankings);
   }
 
+  getCache(): D2ReviewDataCache {
+    return this._reviewDataCache;
+  }
+
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
    */
-  bulkFetchVendorItems(vendorItems: DestinyVendorSaleItemComponent[], platformSelection: number) {
-    this._getVendorBulkFetchPromise(vendorItems, platformSelection)
+  bulkFetchVendorItems(platformSelection: number,
+                       vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                       vendorItems?: DestinyVendorItemDefinition[]) {
+    this._getVendorBulkFetchPromise(platformSelection, vendorSaleItems, vendorItems)
       .then((bulkRankings) => this._addScores(bulkRankings));
   }
 

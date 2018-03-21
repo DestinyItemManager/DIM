@@ -5,7 +5,7 @@ import { D2ItemTransformer } from './d2-itemTransformer';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DtrItem } from '../item-review/destiny-tracker.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
+import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
@@ -76,10 +76,20 @@ class D2ItemListBuilder {
     return Array.from(list);
   }
 
-  getVendorItemList(vendorItems: DestinyVendorSaleItemComponent[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
-    const allVendorItems = vendorItems.map((vendorItem) => ({ referenceId: vendorItem.itemHash })) as DtrItem[];
+  getVendorItemList(reviewDataCache: D2ReviewDataCache,
+                    vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                    vendorItems?: DestinyVendorItemDefinition[]): DtrItem[] {
+    if (vendorSaleItems) {
+      const allVendorItems = vendorSaleItems.map((vendorItem) => ({ referenceId: vendorItem.itemHash })) as DtrItem[];
 
-    return this._getNewVendorItems(allVendorItems, reviewDataCache);
+      return this._getNewVendorItems(allVendorItems, reviewDataCache);
+    } else if (vendorItems) {
+      const allVendorItems = vendorItems.map((vi) => ({ referenceId: vi.itemHash })) as DtrItem[];
+
+      return this._getNewVendorItems(allVendorItems, reviewDataCache);
+    } else {
+      throw new Error("Neither sale items nor vendor items were supplied.");
+    }
   }
 }
 

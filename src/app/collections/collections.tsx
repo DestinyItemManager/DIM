@@ -12,17 +12,22 @@ import { StoreServiceType } from '../inventory/d2-stores.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
 import VendorItems from '../d2-vendors/vendor-items';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { fetchRatingsAndGetCache } from '../d2-vendors/vendor-ratings';
+import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: StoreServiceType;
+  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
+  reviewCache?: D2ReviewDataCache;
 }
 
 // TODO: Should this be just in the vendors screen?
@@ -42,7 +47,8 @@ export default class Collections extends React.Component<Props, State> {
     });
 
     const profileResponse = await getKiosks(this.props.account);
-    this.setState({ profileResponse, defs });
+    const reviewCache = fetchRatingsAndGetCache(this.props.dimDestinyTrackerService, undefined, undefined, profileResponse, defs);
+    this.setState({ profileResponse, defs, reviewCache });
   }
 
   componentDidMount() {
@@ -50,9 +56,9 @@ export default class Collections extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, profileResponse } = this.state;
+    const { defs, profileResponse, reviewCache } = this.state;
 
-    if (!profileResponse || !defs) {
+    if (!profileResponse || !defs || !reviewCache) {
       // TODO: loading component!
       return <div className="collections dim-page">Loading...</div>;
     }
@@ -68,7 +74,7 @@ export default class Collections extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Array.from(kioskVendors).map((vendorHash) =>
-          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))}/>
+          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} reviewCache={reviewCache}/>
         )}
       </div>
     );
@@ -82,11 +88,13 @@ function itemsForKiosk(profileResponse: DestinyProfileResponse, vendorHash: numb
 function Kiosk({
   defs,
   vendorHash,
-  items
+  items,
+  reviewCache
 }: {
   defs: D2ManifestDefinitions;
   vendorHash: number;
   items: DestinyKioskItem[];
+  reviewCache: D2ReviewDataCache;
 }) {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -98,6 +106,7 @@ function Kiosk({
         defs={defs}
         vendorDef={vendorDef}
         kioskItems={items.filter((i) => i.canAcquire)}
+        reviewCache={reviewCache}
       />
     </div>
   );

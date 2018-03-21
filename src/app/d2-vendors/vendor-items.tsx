@@ -31,6 +31,8 @@ export default function VendorItems({
   // TODO: do this stuff in setState handlers
   const items = getItems(defs, vendorDef, reviewCache, itemComponents, sales, kioskItems);
 
+  console.log("Received items.");
+
   // TODO: sort items, maybe subgroup them
   const itemsByCategory = _.groupBy(items, (item: VendorItem) => item.displayCategoryIndex);
 
