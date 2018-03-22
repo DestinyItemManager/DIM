@@ -8,18 +8,20 @@ export function fetchRatingsAndGetCache(destinyTrackerService: DestinyTrackerSer
                                         vendorsResponse?: DestinyVendorsResponse,
                                         vendorResponse?: DestinyVendorResponse,
                                         profileResponse?: DestinyProfileResponse,
-                                        defs?: D2ManifestDefinitions): D2ReviewDataCache {
+                                        defs?: D2ManifestDefinitions): D2ReviewDataCache | undefined {
+  let reviewCache: D2ReviewDataCache | undefined;
+
   if (vendorsResponse) {
     const saleComponentArray = Object.values(vendorsResponse.sales.data)
       .map((saleItemComponent) => saleItemComponent.saleItems);
 
     const saleComponents = ([] as DestinyVendorSaleItemComponent[]).concat(...saleComponentArray.map((v) => Object.values(v)));
 
-    destinyTrackerService.bulkFetchVendorItems(saleComponents);
+    destinyTrackerService.bulkFetchVendorItems(saleComponents).then(() => reviewCache = destinyTrackerService.getD2ReviewDataCache());
   } else if (vendorResponse) {
     const saleComponents = Object.values(vendorResponse.sales.data);
 
-    destinyTrackerService.bulkFetchVendorItems(saleComponents);
+    destinyTrackerService.bulkFetchVendorItems(saleComponents).then(() => reviewCache = destinyTrackerService.getD2ReviewDataCache());
   } else if (profileResponse && defs) {
     const vendorItems = ([] as DestinyVendorItemDefinition[]);
 
@@ -35,10 +37,10 @@ export function fetchRatingsAndGetCache(destinyTrackerService: DestinyTrackerSer
       vendorItems.concat(vendorDef.itemList);
     });
 
-    destinyTrackerService.bulkFetchVendorItems(undefined, vendorItems);
+    destinyTrackerService.bulkFetchVendorItems(undefined, vendorItems).then(() => reviewCache = destinyTrackerService.getD2ReviewDataCache());
   } else {
     throw new Error("No response was supplied.");
   }
 
-  return destinyTrackerService.getD2ReviewDataCache();
+  return reviewCache;
 }

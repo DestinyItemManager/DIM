@@ -96,8 +96,8 @@ class D2BulkFetcher {
    */
   bulkFetchVendorItems(platformSelection: number,
                        vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                       vendorItems?: DestinyVendorItemDefinition[]) {
-    this._getVendorBulkFetchPromise(platformSelection, vendorSaleItems, vendorItems)
+                       vendorItems?: DestinyVendorItemDefinition[]): IPromise<void> {
+    return this._getVendorBulkFetchPromise(platformSelection, vendorSaleItems, vendorItems)
       .then((bulkRankings) => this._addScores(bulkRankings));
   }
 

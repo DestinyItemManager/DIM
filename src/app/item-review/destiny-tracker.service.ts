@@ -90,10 +90,11 @@ import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { IPromise } from 'angular';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                       vendorItems?: DestinyVendorItemDefinition[]);
+                       vendorItems?: DestinyVendorItemDefinition[]): IPromise<void>;
   reattachScoresFromCache(stores: any | DimStore[]): void;
   updateCachedUserRankings(item: any | DimItem, userReview: any);
   updateVendorRankings(vendors: any);
@@ -162,15 +163,17 @@ export function DestinyTrackerService(
     },
 
     bulkFetchVendorItems(vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                         vendorItems?: DestinyVendorItemDefinition[]) {
+                         vendorItems?: DestinyVendorItemDefinition[]): IPromise<void> {
       if (settings.showReviews) {
         if (_isDestinyOne()) {
           throw new Error(("This is a D2-only call."));
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          _d2bulkFetcher.bulkFetchVendorItems(platformSelection, vendorSaleItems, vendorItems);
+          return _d2bulkFetcher.bulkFetchVendorItems(platformSelection, vendorSaleItems, vendorItems);
         }
       }
+
+      return $q.when();
     },
 
     getD2ReviewDataCache(): D2ReviewDataCache {
