@@ -113,8 +113,6 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
       const buckets = await getBuckets();
       const dimItem = item.toDimItem(buckets, reviewData);
 
-      console.log(dimItem);
-
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,
         overlay: false,
