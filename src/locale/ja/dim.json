@@ -534,7 +534,6 @@
     "ExportSS": "保管庫のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
     "General": "General",
-    "HideUnfiltered": "検索に合致しないアイテムを非表示にする",
     "Inventory": "Inventory Display",
     "InventoryColumns": "キャラ毎のアイテム幅",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",

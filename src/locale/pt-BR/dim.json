@@ -534,7 +534,6 @@
     "ExportSS": "Planilhas do inventário",
     "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
     "General": "Geral",
-    "HideUnfiltered": "Ocultar itens que não correspondem a busca",
     "Inventory": "Exibição Inventário",
     "InventoryColumns": "Largura do inventário de personagem",
     "InventoryColumnsMobile": "Largura do inventário de personagem no celular em modo retrato",

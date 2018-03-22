@@ -534,7 +534,6 @@
     "ExportSS": "背包表格",
     "ExportSSHelp": "下載您物品的 CSV 列表, 可以在您選擇的試算表應用程式中輕鬆查看。",
     "General": "通用",
-    "HideUnfiltered": "隱藏與搜尋內容不相匹的物品",
     "Inventory": "物品欄顯示模式",
     "InventoryColumns": "物品欄顯示寬度",
     "InventoryColumnsMobile": "行動裝置物品欄顯示寬度",

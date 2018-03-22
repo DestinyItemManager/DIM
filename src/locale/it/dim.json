@@ -534,7 +534,6 @@
     "ExportSS": "Scarica inventario in formato foglio elettronico",
     "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
     "General": "Generale",
-    "HideUnfiltered": "Nascondi gli oggetti che non corrispondono a una ricerca",
     "Inventory": "Aspetto dell'inventario",
     "InventoryColumns": "Larghezza dell'inventario",
     "InventoryColumnsMobile": "Larghezza inventario su dispositivi mobili",

@@ -534,7 +534,6 @@
     "ExportSS": "Hojas de cálculo de inventario",
     "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en la aplicación de hojas de cálculo de tu preferencia.",
     "General": "General",
-    "HideUnfiltered": "Ocultar los artículos que no coincidan con la búsqueda",
     "Inventory": "Visualización del Inventario",
     "InventoryColumns": "Ancho de inventario de personaje",
     "InventoryColumnsMobile": "Ancho del Inventario del personaje en el móvil modo retrato",

@@ -534,7 +534,6 @@
     "ExportSS": "Inventar Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Items herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
     "General": "Allgemein",
-    "HideUnfiltered": "Verstecke Items die nicht der Suche entsprechen",
     "Inventory": "Inventar-Anzeige",
     "InventoryColumns": "Charakter Inventar Spalten",
     "InventoryColumnsMobile": "Charakter-Inventar-Breite auf Mobilgeräten (Portrait)",

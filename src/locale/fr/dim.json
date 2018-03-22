@@ -534,7 +534,6 @@
     "ExportSS": "Tableur de l'inventaire",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
     "General": "Général",
-    "HideUnfiltered": "Cacher les objets qui ne correspondent pas à une recherche",
     "Inventory": "Affichage de l'inventaire",
     "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
     "InventoryColumnsMobile": "Longueur de l'inventaire du personnage sur téléphone en mode portrait",
