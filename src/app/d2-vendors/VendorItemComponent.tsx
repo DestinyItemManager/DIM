@@ -8,10 +8,12 @@ import { ngDialog } from "../ngimport-more";
 import { IDialogOpenResult } from "ng-dialog";
 import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from "../destiny2/d2-buckets.service";
+import { DestinyTrackerServiceType } from "../item-review/destiny-tracker.service";
 
 interface Props {
   defs: D2ManifestDefinitions;
   item: VendorItem;
+  trackerService: DestinyTrackerServiceType;
 }
 
 export default class VendorItemComponent extends React.Component<Props, {}> {
@@ -81,7 +83,7 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
   }
 
   private openDetailsPopup = async(e) => {
-    const { item } = this.props;
+    const { item, trackerService } = this.props;
 
     e.stopPropagation();
 
@@ -100,8 +102,10 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
     } else {
       console.log(item);
 
+      const reviewData = trackerService.getItemReviews({ hash: item.itemHash });
+
       const buckets = await getBuckets();
-      const dimItem = item.toDimItem(buckets);
+      const dimItem = item.toDimItem(buckets, reviewData);
 
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,

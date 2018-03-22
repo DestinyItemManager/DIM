@@ -19,8 +19,7 @@ import VendorItems from './vendor-items';
 import { $state, loadingTracker } from '../ngimport-more';
 import './vendor.scss';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
-import { fetchRatingsAndGetCache } from './vendor-ratings';
+import { fetchRatings } from './vendor-ratings';
 
 interface Props {
   $scope: IScope;
@@ -33,7 +32,7 @@ interface Props {
 interface State {
   defs?: D2ManifestDefinitions;
   vendorsResponse?: DestinyVendorsResponse;
-  reviewCache?: D2ReviewDataCache;
+  dimDestinyTrackerService?: DestinyTrackerServiceType;
 }
 
 export default class Vendors extends React.Component<Props, State> {
@@ -62,8 +61,8 @@ export default class Vendors extends React.Component<Props, State> {
         : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
-    const reviewCache = await fetchRatingsAndGetCache(this.props.dimDestinyTrackerService, vendorsResponse);
-    this.setState({ vendorsResponse, defs, reviewCache });
+    await fetchRatings(this.props.dimDestinyTrackerService, vendorsResponse);
+    this.setState({ vendorsResponse, defs });
   }
 
   componentDidMount() {
@@ -77,9 +76,9 @@ export default class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorsResponse, reviewCache } = this.state;
+    const { defs, vendorsResponse, dimDestinyTrackerService } = this.state;
 
-    if (!vendorsResponse || !defs || !reviewCache) {
+    if (!vendorsResponse || !defs || !dimDestinyTrackerService) {
       // TODO: loading component!
       return <div className="vendor dim-page">Loading...</div>;
     }
@@ -88,7 +87,7 @@ export default class Vendors extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
-          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} reviewCache={reviewCache}/>
+          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} trackerService={dimDestinyTrackerService}/>
         )}
 
       </div>
@@ -100,12 +99,12 @@ function VendorGroup({
   defs,
   group,
   vendorsResponse,
-  reviewCache
+  trackerService
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
-  reviewCache: D2ReviewDataCache;
+  trackerService: DestinyTrackerServiceType;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -118,7 +117,7 @@ function VendorGroup({
           vendor={vendor}
           itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
           sales={vendorsResponse.sales.data[vendor.vendorHash] && vendorsResponse.sales.data[vendor.vendorHash].saleItems}
-          reviewCache={reviewCache}
+          trackerService={trackerService}
         />
       )}
     </>
@@ -130,7 +129,7 @@ function Vendor({
   vendor,
   itemComponents,
   sales,
-  reviewCache
+  trackerService
 }: {
   defs: D2ManifestDefinitions;
   vendor: DestinyVendorComponent;
@@ -138,7 +137,7 @@ function Vendor({
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   };
-  reviewCache: D2ReviewDataCache;
+  trackerService: DestinyTrackerServiceType;
 }) {
   const vendorDef = defs.Vendor.get(vendor.vendorHash);
   if (!vendorDef) {
@@ -167,7 +166,7 @@ function Vendor({
         vendorDef={vendorDef}
         sales={sales}
         itemComponents={itemComponents}
-        reviewCache={reviewCache}
+        trackerService={trackerService}
       />
     </div>
   );

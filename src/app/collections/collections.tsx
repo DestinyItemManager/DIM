@@ -13,8 +13,7 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
 import VendorItems from '../d2-vendors/vendor-items';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
-import { fetchRatingsAndGetCache } from '../d2-vendors/vendor-ratings';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { fetchRatings } from '../d2-vendors/vendor-ratings';
 
 interface Props {
   $scope: IScope;
@@ -27,7 +26,7 @@ interface Props {
 interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
-  reviewCache?: D2ReviewDataCache;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 // TODO: Should this be just in the vendors screen?
@@ -47,8 +46,8 @@ export default class Collections extends React.Component<Props, State> {
     });
 
     const profileResponse = await getKiosks(this.props.account);
-    const reviewCache = await fetchRatingsAndGetCache(this.props.dimDestinyTrackerService, undefined, undefined, profileResponse, defs);
-    this.setState({ profileResponse, defs, reviewCache });
+    await fetchRatings(this.props.dimDestinyTrackerService, undefined, undefined, profileResponse, defs);
+    this.setState({ profileResponse, defs });
   }
 
   componentDidMount() {
@@ -56,9 +55,9 @@ export default class Collections extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, profileResponse, reviewCache } = this.state;
+    const { defs, profileResponse, trackerService } = this.state;
 
-    if (!profileResponse || !defs || !reviewCache) {
+    if (!profileResponse || !defs || !trackerService) {
       // TODO: loading component!
       return <div className="collections dim-page">Loading...</div>;
     }
@@ -74,7 +73,7 @@ export default class Collections extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Array.from(kioskVendors).map((vendorHash) =>
-          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} reviewCache={reviewCache}/>
+          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} trackerService={trackerService}/>
         )}
       </div>
     );
@@ -89,12 +88,12 @@ function Kiosk({
   defs,
   vendorHash,
   items,
-  reviewCache
+  trackerService
 }: {
   defs: D2ManifestDefinitions;
   vendorHash: number;
   items: DestinyKioskItem[];
-  reviewCache: D2ReviewDataCache;
+  trackerService: DestinyTrackerServiceType;
 }) {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -106,7 +105,7 @@ function Kiosk({
         defs={defs}
         vendorDef={vendorDef}
         kioskItems={items.filter((i) => i.canAcquire)}
-        reviewCache={reviewCache}
+        trackerService={trackerService}
       />
     </div>
   );

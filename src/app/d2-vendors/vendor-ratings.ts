@@ -1,14 +1,13 @@
 import { DestinyTrackerServiceType } from "../item-review/destiny-tracker.service";
 import { DestinyVendorsResponse, DestinyVendorSaleItemComponent, DestinyVendorResponse, DestinyProfileResponse, DestinyVendorItemDefinition } from "bungie-api-ts/destiny2";
-import { D2ReviewDataCache } from "../destinyTrackerApi/d2-reviewDataCache";
 import * as _ from "underscore";
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 
-export async function fetchRatingsAndGetCache(destinyTrackerService: DestinyTrackerServiceType,
-                                              vendorsResponse?: DestinyVendorsResponse,
-                                              vendorResponse?: DestinyVendorResponse,
-                                              profileResponse?: DestinyProfileResponse,
-                                              defs?: D2ManifestDefinitions): Promise<D2ReviewDataCache> {
+export async function fetchRatings(destinyTrackerService: DestinyTrackerServiceType,
+                                   vendorsResponse?: DestinyVendorsResponse,
+                                   vendorResponse?: DestinyVendorResponse,
+                                   profileResponse?: DestinyProfileResponse,
+                                   defs?: D2ManifestDefinitions): Promise<void> {
   if (vendorsResponse) {
     const saleComponentArray = Object.values(vendorsResponse.sales.data)
       .map((saleItemComponent) => saleItemComponent.saleItems);
@@ -39,6 +38,4 @@ export async function fetchRatingsAndGetCache(destinyTrackerService: DestinyTrac
   } else {
     throw new Error("No response was supplied.");
   }
-
-  return destinyTrackerService.getD2ReviewDataCache();
 }

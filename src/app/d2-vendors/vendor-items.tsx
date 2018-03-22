@@ -10,6 +10,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { VendorItem } from './vendor-item';
 import VendorItemComponent from './VendorItemComponent';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 
 export default function VendorItems({
   vendorDef,
@@ -17,7 +18,7 @@ export default function VendorItems({
   itemComponents,
   sales,
   kioskItems,
-  reviewCache
+  trackerService
 }: {
   defs: D2ManifestDefinitions;
   vendorDef: DestinyVendorDefinition;
@@ -26,10 +27,10 @@ export default function VendorItems({
     [key: string]: DestinyVendorSaleItemComponent;
   };
   kioskItems?: DestinyKioskItem[];
-  reviewCache: D2ReviewDataCache;
+  trackerService: DestinyTrackerServiceType;
 }) {
   // TODO: do this stuff in setState handlers
-  const items = getItems(defs, vendorDef, reviewCache, itemComponents, sales, kioskItems);
+  const items = getItems(defs, vendorDef, trackerService.getD2ReviewDataCache(), itemComponents, sales, kioskItems);
 
   // TODO: sort items, maybe subgroup them
   const itemsByCategory = _.groupBy(items, (item: VendorItem) => item.displayCategoryIndex);
@@ -41,7 +42,7 @@ export default function VendorItems({
           <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
           <div className="vendor-items">
           {items.map((item) =>
-            <VendorItemComponent key={item.key} defs={defs} item={item} />
+            <VendorItemComponent key={item.key} defs={defs} item={item} trackerService={trackerService} />
           )}
           </div>
         </div>
