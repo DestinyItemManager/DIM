@@ -68,7 +68,7 @@ export default class SingleVendor extends React.Component<Props, State> {
           : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
       }
       const vendorResponse = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
-      const reviewCache = fetchRatingsAndGetCache(this.props.dimDestinyTrackerService, undefined, vendorResponse);
+      const reviewCache = await fetchRatingsAndGetCache(this.props.dimDestinyTrackerService, undefined, vendorResponse);
       this.setState({ defs, vendorResponse, reviewCache });
     }
   }
