@@ -61,8 +61,11 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
             className={classNames("item-img", { transparent: item.borderless })}
             style={bungieBackgroundStyle(item.displayProperties.icon)}
           />
-          {item.primaryStat &&
-            <div className="item-stat item-equipment">{item.rating} | {item.primaryStat}</div>}
+          {(item.primaryStat) &&
+            <div>
+              {item.rating && <div className="item-stat item-review">{item.rating}</div>}
+              <div className="item-stat item-equipment">{item.primaryStat}</div>
+            </div>}
         </div>
         <div className="vendor-costs">
           {item.costs.map((cost) =>
