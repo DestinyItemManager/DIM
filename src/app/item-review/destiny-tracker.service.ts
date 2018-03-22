@@ -167,10 +167,8 @@ export function DestinyTrackerService(
         if (_isDestinyOne()) {
           throw new Error(("This is a D2-only call."));
         } else if (_isDestinyTwo()) {
-          console.log("Bulk fetch entered.");
           const platformSelection = settings.reviewsPlatformSelection;
           _d2bulkFetcher.bulkFetchVendorItems(platformSelection, vendorSaleItems, vendorItems);
-          console.log("Bulk fetch exited.");
         }
       }
     },

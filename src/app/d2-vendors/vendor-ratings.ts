@@ -40,6 +40,5 @@ export function fetchRatingsAndGetCache(destinyTrackerService: DestinyTrackerSer
     throw new Error("No response was supplied.");
   }
 
-  console.log("Returning cache.");
   return destinyTrackerService.getD2ReviewDataCache();
 }

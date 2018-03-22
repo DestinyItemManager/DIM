@@ -62,7 +62,7 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
             style={bungieBackgroundStyle(item.displayProperties.icon)}
           />
           {item.primaryStat &&
-            <div className="item-stat item-equipment">{item.primaryStat}</div>}
+            <div className="item-stat item-equipment">{item.rating} | {item.primaryStat}</div>}
         </div>
         <div className="vendor-costs">
           {item.costs.map((cost) =>
