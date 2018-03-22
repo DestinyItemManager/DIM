@@ -102,10 +102,18 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
     } else {
       console.log(item);
 
-      const reviewData = trackerService.getItemReviews({ hash: item.itemHash });
+      const reviewData = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+
+      if (reviewData && !reviewData.reviews) {
+        const reviewsData = await trackerService.getItemReviewAsync(item.itemHash);
+
+        Object.assign(reviewData, reviewsData);
+      }
 
       const buckets = await getBuckets();
       const dimItem = item.toDimItem(buckets, reviewData);
+
+      console.log(dimItem);
 
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,

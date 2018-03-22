@@ -99,6 +99,7 @@ export interface DestinyTrackerServiceType {
   updateCachedUserRankings(item: any | DimItem, userReview: any);
   updateVendorRankings(vendors: any);
   getItemReviews(item: any | DimItem);
+  getItemReviewAsync(itemHash: number): IPromise<DtrReviewContainer>;
   submitReview(item: any | DimItem);
   fetchReviews(stores: any | DimStore[]);
   reportReview(review: any);
@@ -226,6 +227,18 @@ export function DestinyTrackerService(
         const platformSelection = settings.reviewsPlatformSelection;
         _d2bulkFetcher.bulkFetch(stores, platformSelection);
       }
+    },
+
+    getItemReviewAsync(itemHash: number): IPromise<DtrReviewContainer> {
+      if (settings.allowIdPostToDtr) {
+        if (_isDestinyOne()) {
+          console.error("This is a D2-only call.");
+        } else if (_isDestinyTwo()) {
+          const platformSelection = settings.reviewsPlatformSelection;
+          return _d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection);
+        }
+      }
+      return $q.when({});
     },
 
     reportReview(review) {

@@ -32,7 +32,6 @@ interface Props {
 interface State {
   defs?: D2ManifestDefinitions;
   vendorsResponse?: DestinyVendorsResponse;
-  dimDestinyTrackerService?: DestinyTrackerServiceType;
 }
 
 export default class Vendors extends React.Component<Props, State> {
@@ -76,9 +75,9 @@ export default class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorsResponse, dimDestinyTrackerService } = this.state;
+    const { defs, vendorsResponse } = this.state;
 
-    if (!vendorsResponse || !defs || !dimDestinyTrackerService) {
+    if (!vendorsResponse || !defs) {
       // TODO: loading component!
       return <div className="vendor dim-page">Loading...</div>;
     }
@@ -87,7 +86,7 @@ export default class Vendors extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
-          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} trackerService={dimDestinyTrackerService}/>
+          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} trackerService={this.props.dimDestinyTrackerService}/>
         )}
 
       </div>

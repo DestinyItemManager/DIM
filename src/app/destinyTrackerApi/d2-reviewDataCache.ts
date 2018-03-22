@@ -19,17 +19,25 @@ class D2ReviewDataCache {
     this._maxTotalVotes = 0;
   }
 
-  _getMatchingItem(item: DimItem | DestinyVendorSaleItemComponent) {
-    const dtrItem = this._itemTransformer.translateToDtrItem(item);
+  _getMatchingItem(item?: DimItem | DestinyVendorSaleItemComponent,
+                   itemHash?: number) {
+    if (item) {
+      const dtrItem = this._itemTransformer.translateToDtrItem(item);
 
-    return this._itemStores.find((s) => s.referenceId === dtrItem.referenceId);
+      return this._itemStores.find((s) => s.referenceId === dtrItem.referenceId);
+    } else if (itemHash) {
+      return this._itemStores.find((s) => s.referenceId === itemHash);
+    } else {
+      throw new Error("No data supplied to find a matching item from our stores.");
+    }
   }
 
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item: DimItem | DestinyVendorSaleItemComponent): DimWorkingUserReview | null {
-    return this._getMatchingItem(item) || null;
+  getRatingData(item?: DimItem | DestinyVendorSaleItemComponent,
+                itemHash?: number): DimWorkingUserReview | null {
+    return this._getMatchingItem(item, itemHash) || null;
   }
 
   _toAtMostOneDecimal(rating) {

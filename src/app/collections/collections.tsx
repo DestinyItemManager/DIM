@@ -26,7 +26,6 @@ interface Props {
 interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
-  trackerService?: DestinyTrackerServiceType;
 }
 
 // TODO: Should this be just in the vendors screen?
@@ -55,9 +54,9 @@ export default class Collections extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, profileResponse, trackerService } = this.state;
+    const { defs, profileResponse } = this.state;
 
-    if (!profileResponse || !defs || !trackerService) {
+    if (!profileResponse || !defs) {
       // TODO: loading component!
       return <div className="collections dim-page">Loading...</div>;
     }
@@ -73,7 +72,7 @@ export default class Collections extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Array.from(kioskVendors).map((vendorHash) =>
-          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} trackerService={trackerService}/>
+          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} trackerService={this.props.dimDestinyTrackerService}/>
         )}
       </div>
     );

@@ -574,6 +574,7 @@ export function makeItem(
     talentGrid: null, // filled in later
     stats: null, // filled in later
     objectives: null, // filled in later
+    dtrRatingCount: (reviewData) ? reviewData.totalReviews : undefined,
     dtrRating: (reviewData) ? reviewData.rating : undefined,
     reviews: (reviewData) ? reviewData.reviews : []
   });
@@ -581,7 +582,7 @@ export function makeItem(
   // *able
   createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem));
+  createdItem.reviewable = Boolean(($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem)) || (reviewData && reviewData.reviews));
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);

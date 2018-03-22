@@ -127,7 +127,7 @@ export class VendorItem {
    * TODO: This is really gross, but it allows us to make enough of an item to show the move popup.
    */
   toDimItem(buckets: DimInventoryBuckets,
-            reviewData: DimWorkingUserReview): DimItem | null {
+            reviewData: DimWorkingUserReview | null): DimItem | null {
     return makeItem(
       this.defs,
       buckets,
