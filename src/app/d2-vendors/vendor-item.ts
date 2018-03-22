@@ -145,7 +145,8 @@ export class VendorItem {
         lockable: false,
         state: ItemState.None
       },
-      undefined
+      undefined,
+      this.reviewData
     );
   }
 }
