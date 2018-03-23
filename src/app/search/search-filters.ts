@@ -484,7 +484,6 @@ export function searchFilters(
               dupes.sort(dupeComparator);
               const bestDupe = dupes[0];
               for (const dupe of dupes) {
-                // uses the same logic of isWeaponOrArmor from d2-item-factory
                 if (dupe.bucket && (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') && !dupe.notransfer) {
                   _lowerDupes[dupe.id] = dupe !== bestDupe;
                 }
