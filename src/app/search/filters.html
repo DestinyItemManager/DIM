@@ -89,6 +89,9 @@
             <li>stat:magazine:</li>
             <li>stat:aimassist: or stat:aa:</li>
             <li>stat:equipspeed:</li>
+            <li ng-if="vm.settings.destinyVersion === 2">stat:mobility:</li>
+            <li ng-if="vm.settings.destinyVersion === 2">stat:resilience:</li>
+            <li ng-if="vm.settings.destinyVersion === 2">stat:recovery:</li>
           </ul>
         </td>
       </tr>
