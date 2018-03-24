@@ -80,7 +80,7 @@ class D2ItemListBuilder {
                     vendorSaleItems?: DestinyVendorSaleItemComponent[],
                     vendorItems?: DestinyVendorItemDefinition[]): DtrItem[] {
     if (vendorSaleItems) {
-      const allVendorItems = vendorSaleItems.map((vendorItem) => ({ referenceId: vendorItem.itemHash })) as DtrItem[];
+      const allVendorItems = vendorSaleItems.map((vendorItem): DtrItem => ({ referenceId: vendorItem.itemHash }));
 
       return this._getNewVendorItems(allVendorItems, reviewDataCache);
     } else if (vendorItems) {
