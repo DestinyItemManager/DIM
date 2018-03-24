@@ -45,8 +45,10 @@ export default class Collections extends React.Component<Props, State> {
     });
 
     const profileResponse = await getKiosks(this.props.account);
-    await fetchRatings(this.props.dimDestinyTrackerService, undefined, undefined, profileResponse, defs);
     this.setState({ profileResponse, defs });
+
+    await fetchRatings(this.props.dimDestinyTrackerService, undefined, undefined, profileResponse, defs);
+    this.forceUpdate();
   }
 
   componentDidMount() {
