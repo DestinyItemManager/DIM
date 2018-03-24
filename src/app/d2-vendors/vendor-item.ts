@@ -119,6 +119,7 @@ export class VendorItem {
     // Defs can be ref-compared
     return this.vendorItemDef === other.vendorItemDef &&
       this.canPurchase === other.canPurchase &&
+      this.rating === other.rating &&
       // Deep equals
       equals(this.saleItem, other.saleItem);
   }
