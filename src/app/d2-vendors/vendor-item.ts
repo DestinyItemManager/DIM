@@ -48,6 +48,8 @@ export class VendorItem {
       this.instance = itemComponents.instances.data[saleItem.vendorItemIndex];
       this.reviewData = reviewCache.getRatingData(saleItem);
       // TODO: more here, like perks and such
+    } else if (vendorItemDef) {
+      this.reviewData = reviewCache.getRatingData(undefined, vendorItemDef.itemHash);
     }
   }
 

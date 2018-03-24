@@ -30,8 +30,10 @@ export async function fetchRatings(destinyTrackerService: DestinyTrackerServiceT
     });
 
     Array.from(kioskVendorHashes).map((kvh) => {
-      const vendorDef = defs.Vendor.get(Number(kvh));
-      vendorItems.concat(vendorDef.itemList);
+      const vendorHash = Number(kvh);
+      const kioskItems = profileResponse.profileKiosks.data.kioskItems[vendorHash].concat(_.flatten(Object.values(profileResponse.characterKiosks.data).map((d) => Object.values(d.kioskItems))));
+      const vendorDef = defs.Vendor.get(vendorHash);
+      vendorItems.push(...kioskItems.map((ki) => vendorDef.itemList[ki.index]));
     });
 
     await destinyTrackerService.bulkFetchVendorItems(undefined, vendorItems);
