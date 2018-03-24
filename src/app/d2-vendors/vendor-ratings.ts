@@ -20,7 +20,7 @@ export async function fetchRatings(destinyTrackerService: DestinyTrackerServiceT
 
     await destinyTrackerService.bulkFetchVendorItems(saleComponents);
   } else if (profileResponse && defs) {
-    const vendorItems = ([] as DestinyVendorItemDefinition[]);
+    const vendorItems: DestinyVendorItemDefinition[] = [];
 
     const kioskVendorHashes = new Set(Object.keys(profileResponse.profileKiosks.data.kioskItems));
     _.each(profileResponse.characterKiosks.data, (kiosk) => {
