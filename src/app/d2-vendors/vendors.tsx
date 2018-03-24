@@ -60,8 +60,11 @@ export default class Vendors extends React.Component<Props, State> {
         : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
+
+    this.setState({ defs, vendorsResponse });
+
     await fetchRatings(this.props.dimDestinyTrackerService, vendorsResponse);
-    this.setState({ vendorsResponse, defs });
+    this.forceUpdate();
   }
 
   componentDidMount() {
