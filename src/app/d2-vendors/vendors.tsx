@@ -63,7 +63,7 @@ export default class Vendors extends React.Component<Props, State> {
 
     this.setState({ defs, vendorsResponse });
 
-    await fetchRatings(this.props.dimDestinyTrackerService, vendorsResponse);
+    await fetchRatings(defs, this.props.dimDestinyTrackerService, vendorsResponse);
     this.forceUpdate();
   }
 

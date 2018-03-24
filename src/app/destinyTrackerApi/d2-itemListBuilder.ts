@@ -19,19 +19,19 @@ class D2ItemListBuilder {
     this._itemTransformer = new D2ItemTransformer();
   }
 
-  _getNewItems(allItems: DimItem[], reviewDataCache) {
+  _getNewItems(allItems: DimItem[], reviewDataCache: D2ReviewDataCache) {
     const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrItem(item));
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
-    const unmatched = _.reject(allDtrItems, (dtrItem) => _.any(allKnownDtrItems, { referenceId: String(dtrItem.referenceId) }));
+    const unmatched = allDtrItems.filter((di) => allKnownDtrItems.every((kdi) => di.referenceId !== kdi.referenceId));
 
     return unmatched;
   }
 
-  _getNewVendorItems(vendorItems: DtrItem[], reviewDataCache) {
+  _getNewVendorItems(vendorItems: DtrItem[], reviewDataCache: D2ReviewDataCache) {
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
-    const unmatched = _.reject(vendorItems, (vendorItem) => _.any(allKnownDtrItems, { referenceId: String(vendorItem.referenceId) }));
+    const unmatched = vendorItems.filter((vi) => allKnownDtrItems.every((di) => di.referenceId !== vi.referenceId));
 
     return unmatched;
   }

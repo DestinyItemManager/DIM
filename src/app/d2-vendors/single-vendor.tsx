@@ -69,7 +69,7 @@ export default class SingleVendor extends React.Component<Props, State> {
 
       this.setState({ defs, vendorResponse });
 
-      await fetchRatings(this.props.dimDestinyTrackerService, undefined, vendorResponse);
+      await fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, vendorResponse);
       this.forceUpdate();
     }
   }
