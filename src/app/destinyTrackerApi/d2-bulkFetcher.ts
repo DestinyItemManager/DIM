@@ -63,6 +63,11 @@ class D2BulkFetcher {
 
     const vendorDtrItems = this._itemListBuilder.getVendorItemList(this._reviewDataCache, vendorSaleItems, vendorItems);
 
+    if (!vendorDtrItems.length) {
+      const emptyVotes: DtrBulkItem[] = [];
+      return $q.resolve(emptyVotes);
+    }
+
     const promise = $q
       .when(this._getBulkWeaponDataEndpointPost(vendorDtrItems, platformSelection))
       .then($http)
