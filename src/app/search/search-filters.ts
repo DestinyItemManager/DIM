@@ -137,7 +137,7 @@ export function buildSearchConfig(
   });
 
   // Filters that operate on ranges (>, <, >=, <=)
-  const comparisons = [":<", ":>", ":<=", ":>=", ":", ":="];
+  const comparisons = [":<", ":>", ":<=", ":>=", ":="];
 
   stats.forEach((word) => {
     const filter = `stat:${word}`;
