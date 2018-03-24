@@ -8,12 +8,12 @@ import { ngDialog } from "../ngimport-more";
 import { IDialogOpenResult } from "ng-dialog";
 import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from "../destiny2/d2-buckets.service";
-import { DestinyTrackerServiceType } from "../item-review/destiny-tracker.service";
+import { DestinyTrackerServiceType, DimWorkingUserReview } from "../item-review/destiny-tracker.service";
 
 interface Props {
   defs: D2ManifestDefinitions;
   item: VendorItem;
-  trackerService: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 export default class VendorItemComponent extends React.Component<Props, {}> {
@@ -68,6 +68,10 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
               {item.rating && <div className="item-stat item-review">{item.rating}</div>}
               <div className="item-stat item-equipment">{item.primaryStat}</div>
             </div>}
+          {(item.rating && !item.primaryStat) &&
+            <div>
+              <div className="item-stat item-review">{item.rating}</div>
+            </div>}
         </div>
         <div className="vendor-costs">
           {item.costs.map((cost) =>
@@ -102,12 +106,16 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
     } else {
       console.log(item);
 
-      const reviewData = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+      let reviewData: DimWorkingUserReview | null = null;
 
-      if (reviewData && !reviewData.reviews) {
-        const reviewsData = await trackerService.getItemReviewAsync(item.itemHash);
+      if (trackerService) {
+        reviewData = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
 
-        Object.assign(reviewData, reviewsData);
+        if (reviewData && !reviewData.reviews) {
+          const reviewsData = await trackerService.getItemReviewAsync(item.itemHash);
+
+          Object.assign(reviewData, reviewsData);
+        }
       }
 
       const buckets = await getBuckets();
