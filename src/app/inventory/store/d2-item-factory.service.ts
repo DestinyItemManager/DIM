@@ -885,6 +885,36 @@ function buildObjectives(
   return objectives.map((objective) => {
     const def = objectiveDefs.get(objective.objectiveHash);
 
+    let complete = false;
+    let booleanValue = false;
+    let display = `${objective.progress || 0}/${def.completionValue}`;
+    let displayStyle: string | null;
+    switch (def.valueStyle) {
+      case DestinyUnlockValueUIStyle.Integer:
+        display = `${objective.progress || 0}`;
+        displayStyle = 'integer';
+        break;
+      case DestinyUnlockValueUIStyle.Multiplier:
+        display = `${(objective.progress || 0) / def.completionValue}x`;
+        displayStyle = 'integer';
+        break;
+      case DestinyUnlockValueUIStyle.DateTime:
+        const date = new Date(0);
+        date.setUTCSeconds(objective.progress || 0);
+        display = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+        displayStyle = 'integer';
+        break;
+      case DestinyUnlockValueUIStyle.Checkbox:
+      case DestinyUnlockValueUIStyle.Automatic:
+        displayStyle = null;
+        booleanValue = def.completionValue === 1;
+        complete = objective.complete;
+        break;
+      default:
+        displayStyle = null;
+        complete = objective.complete;
+    }
+
     return {
       displayName: def.displayProperties.name || def.progressDescription ||
         (objective.complete
@@ -893,10 +923,10 @@ function buildObjectives(
       description: def.displayProperties.description,
       progress: objective.progress || 0,
       completionValue: def.completionValue,
-      complete: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? false : objective.complete,
-      boolean: def.completionValue === 1 && (def.valueStyle === DestinyUnlockValueUIStyle.Checkbox || def.valueStyle === DestinyUnlockValueUIStyle.Automatic),
-      displayStyle: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? 'integer' : null,
-      display: `${objective.progress || 0}/${def.completionValue}`
+      complete,
+      boolean: booleanValue,
+      displayStyle,
+      display
     };
   });
 }
