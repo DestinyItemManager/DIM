@@ -28,6 +28,7 @@ interface State {
   defs?: D2ManifestDefinitions;
   vendorDef?: DestinyVendorDefinition;
   vendorResponse?: DestinyVendorResponse;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 export default class SingleVendor extends React.Component<Props, State> {
@@ -69,8 +70,8 @@ export default class SingleVendor extends React.Component<Props, State> {
 
       this.setState({ defs, vendorResponse });
 
-      await fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, vendorResponse);
-      this.forceUpdate();
+      fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, vendorResponse)
+        .then(() => this.setState({ trackerService: this.props.dimDestinyTrackerService }));
     }
   }
 
@@ -79,7 +80,7 @@ export default class SingleVendor extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorDef, vendorResponse } = this.state;
+    const { defs, vendorDef, vendorResponse, trackerService } = this.state;
 
     if (!vendorDef || !defs) {
       // TODO: loading component!
@@ -128,7 +129,7 @@ export default class SingleVendor extends React.Component<Props, State> {
           vendorDef={vendorDef}
           sales={vendorResponse && vendorResponse.sales.data}
           itemComponents={vendorResponse && vendorResponse.itemComponents}
-          trackerService={this.props.dimDestinyTrackerService}
+          trackerService={trackerService}
         />
       </div>
     );

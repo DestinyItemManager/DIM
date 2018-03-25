@@ -32,6 +32,7 @@ interface Props {
 interface State {
   defs?: D2ManifestDefinitions;
   vendorsResponse?: DestinyVendorsResponse;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 export default class Vendors extends React.Component<Props, State> {
@@ -63,8 +64,8 @@ export default class Vendors extends React.Component<Props, State> {
 
     this.setState({ defs, vendorsResponse });
 
-    await fetchRatings(defs, this.props.dimDestinyTrackerService, vendorsResponse);
-    this.forceUpdate();
+    fetchRatings(defs, this.props.dimDestinyTrackerService, vendorsResponse)
+      .then(() => this.setState({ trackerService: this.props.dimDestinyTrackerService }));
   }
 
   componentDidMount() {
@@ -78,7 +79,7 @@ export default class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorsResponse } = this.state;
+    const { defs, vendorsResponse, trackerService } = this.state;
 
     if (!vendorsResponse || !defs) {
       // TODO: loading component!
@@ -89,7 +90,7 @@ export default class Vendors extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
-          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} trackerService={this.props.dimDestinyTrackerService}/>
+          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} trackerService={trackerService}/>
         )}
 
       </div>
@@ -106,7 +107,7 @@ function VendorGroup({
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
-  trackerService: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerServiceType;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -139,7 +140,7 @@ function Vendor({
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   };
-  trackerService: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerServiceType;
 }) {
   const vendorDef = defs.Vendor.get(vendor.vendorHash);
   if (!vendorDef) {

@@ -27,10 +27,12 @@ export default function VendorItems({
     [key: string]: DestinyVendorSaleItemComponent;
   };
   kioskItems?: DestinyKioskItem[];
-  trackerService: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerServiceType;
 }) {
+  const reviewCache: D2ReviewDataCache | undefined = (trackerService) ? trackerService.getD2ReviewDataCache() : undefined;
+
   // TODO: do this stuff in setState handlers
-  const items = getItems(defs, vendorDef, trackerService.getD2ReviewDataCache(), itemComponents, sales, kioskItems);
+  const items = getItems(defs, vendorDef, reviewCache, itemComponents, sales, kioskItems);
 
   // TODO: sort items, maybe subgroup them
   const itemsByCategory = _.groupBy(items, (item: VendorItem) => item.displayCategoryIndex);
@@ -54,7 +56,7 @@ export default function VendorItems({
 function getItems(
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition,
-  reviewCache: D2ReviewDataCache,
+  reviewCache?: D2ReviewDataCache,
   itemComponents?: DestinyItemComponentSetOfint32,
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;

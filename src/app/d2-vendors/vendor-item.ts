@@ -31,7 +31,7 @@ export class VendorItem {
     defs: D2ManifestDefinitions,
     vendorDef: DestinyVendorDefinition,
     vendorItemDef: DestinyVendorItemDefinition,
-    reviewCache: D2ReviewDataCache,
+    reviewCache?: D2ReviewDataCache,
     saleItem?: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
@@ -46,9 +46,12 @@ export class VendorItem {
     this.itemComponents = itemComponents;
     if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
       this.instance = itemComponents.instances.data[saleItem.vendorItemIndex];
-      this.reviewData = reviewCache.getRatingData(saleItem);
+
+      if (reviewCache) {
+        this.reviewData = reviewCache.getRatingData(saleItem);
+      }
       // TODO: more here, like perks and such
-    } else if (vendorItemDef) {
+    } else if (vendorItemDef && reviewCache) {
       this.reviewData = reviewCache.getRatingData(undefined, vendorItemDef.itemHash);
     }
   }

@@ -26,6 +26,7 @@ interface Props {
 interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 // TODO: Should this be just in the vendors screen?
@@ -47,8 +48,8 @@ export default class Collections extends React.Component<Props, State> {
     const profileResponse = await getKiosks(this.props.account);
     this.setState({ profileResponse, defs });
 
-    await fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, undefined, profileResponse);
-    this.forceUpdate();
+    fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, undefined, profileResponse)
+      .then(() => this.setState({ trackerService: this.props.dimDestinyTrackerService }));
   }
 
   componentDidMount() {
@@ -56,7 +57,7 @@ export default class Collections extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, profileResponse } = this.state;
+    const { defs, profileResponse, trackerService } = this.state;
 
     if (!profileResponse || !defs) {
       // TODO: loading component!
@@ -74,7 +75,7 @@ export default class Collections extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Array.from(kioskVendors).map((vendorHash) =>
-          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} trackerService={this.props.dimDestinyTrackerService}/>
+          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} trackerService={trackerService}/>
         )}
       </div>
     );
@@ -94,7 +95,7 @@ function Kiosk({
   defs: D2ManifestDefinitions;
   vendorHash: number;
   items: DestinyKioskItem[];
-  trackerService: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerServiceType;
 }) {
   const vendorDef = defs.Vendor.get(vendorHash);
 
