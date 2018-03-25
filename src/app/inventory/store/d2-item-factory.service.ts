@@ -559,7 +559,7 @@ export function makeItem(
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeName: getClass(itemDef.classType),
+    classTypeName: itemDef.redacted ? 'unknown' : getClass(itemDef.classType),
     classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
     dmg: dmgName,
     visible: true,
