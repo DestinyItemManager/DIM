@@ -795,7 +795,8 @@ function buildDefaultStats(itemDef: DestinyInventoryItemDefinition, statDefs: La
       id: stat.statHash,
       sort: statWhiteList.indexOf(stat.statHash),
       value: stat.value,
-      maximumValue: 100,
+      // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
+      maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
       bar: stat.statHash !== 4284893193 &&
         stat.statHash !== 3871231066 &&
         stat.statHash !== 2961396640
