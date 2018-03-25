@@ -70,8 +70,8 @@ export default class SingleVendor extends React.Component<Props, State> {
 
       this.setState({ defs, vendorResponse });
 
-      fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, vendorResponse)
-        .then(() => this.setState({ trackerService: this.props.dimDestinyTrackerService }));
+      const trackerService = await fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, vendorResponse);
+      this.setState({ trackerService });
     }
   }
 

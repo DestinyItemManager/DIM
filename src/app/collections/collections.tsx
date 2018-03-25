@@ -48,8 +48,8 @@ export default class Collections extends React.Component<Props, State> {
     const profileResponse = await getKiosks(this.props.account);
     this.setState({ profileResponse, defs });
 
-    fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, undefined, profileResponse)
-      .then(() => this.setState({ trackerService: this.props.dimDestinyTrackerService }));
+    const trackerService = await fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, undefined, profileResponse);
+    this.setState({ trackerService });
   }
 
   componentDidMount() {

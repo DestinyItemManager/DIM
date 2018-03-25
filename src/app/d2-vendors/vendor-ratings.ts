@@ -15,7 +15,7 @@ export async function fetchRatings(defs: D2ManifestDefinitions,
                                    destinyTrackerService: DestinyTrackerServiceType,
                                    vendorsResponse?: DestinyVendorsResponse,
                                    vendorResponse?: DestinyVendorResponse,
-                                   profileResponse?: DestinyProfileResponse): Promise<void> {
+                                   profileResponse?: DestinyProfileResponse): Promise<DestinyTrackerServiceType> {
   if (vendorsResponse) {
     const saleComponentArray = Object.values(vendorsResponse.sales.data)
       .map((saleItemComponent) => saleItemComponent.saleItems);
@@ -23,12 +23,12 @@ export async function fetchRatings(defs: D2ManifestDefinitions,
     const saleComponents = ([] as DestinyVendorSaleItemComponent[]).concat(...saleComponentArray.map((v) => Object.values(v)))
       .filter((sc) => isWeaponOrArmor(defs, sc));
 
-    await destinyTrackerService.bulkFetchVendorItems(saleComponents);
+    return destinyTrackerService.bulkFetchVendorItems(saleComponents);
   } else if (vendorResponse) {
     const saleComponents = Object.values(vendorResponse.sales.data)
       .filter((sc) => isWeaponOrArmor(defs, sc));
 
-    await destinyTrackerService.bulkFetchVendorItems(saleComponents);
+    return destinyTrackerService.bulkFetchVendorItems(saleComponents);
   } else if (profileResponse && defs) {
     const vendorItems: DestinyVendorItemDefinition[] = [];
 
@@ -46,7 +46,7 @@ export async function fetchRatings(defs: D2ManifestDefinitions,
       vendorItems.push(...kioskItems.map((ki) => vendorDef.itemList[ki.index]).filter((vid) => isWeaponOrArmor(defs, vid)));
     });
 
-    await destinyTrackerService.bulkFetchVendorItems(undefined, vendorItems);
+    return destinyTrackerService.bulkFetchVendorItems(undefined, vendorItems);
   } else {
     throw new Error("No response was supplied.");
   }

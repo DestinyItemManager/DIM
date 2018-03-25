@@ -94,7 +94,7 @@ import { IPromise } from 'angular';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                       vendorItems?: DestinyVendorItemDefinition[]): IPromise<void>;
+                       vendorItems?: DestinyVendorItemDefinition[]): Promise<DestinyTrackerServiceType>;
   reattachScoresFromCache(stores: any | DimStore[]): void;
   updateCachedUserRankings(item: any | DimItem, userReview: any);
   updateVendorRankings(vendors: any);
@@ -163,14 +163,15 @@ export function DestinyTrackerService(
       }
     },
 
-    bulkFetchVendorItems(vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                         vendorItems?: DestinyVendorItemDefinition[]): IPromise<void> {
+    async bulkFetchVendorItems(vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                               vendorItems?: DestinyVendorItemDefinition[]): Promise<DestinyTrackerServiceType> {
       if (settings.showReviews) {
         if (_isDestinyOne()) {
           throw new Error(("This is a D2-only call."));
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          return _d2bulkFetcher.bulkFetchVendorItems(platformSelection, vendorSaleItems, vendorItems);
+          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, vendorSaleItems, vendorItems);
+          return this;
         }
       }
 
