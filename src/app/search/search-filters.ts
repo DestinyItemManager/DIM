@@ -54,6 +54,9 @@ export function buildSearchConfig(
     });
     itemTypes.push(...flatMap(Object.values(categories), (l: string[]) => l.map((v) => v.toLowerCase())));
     stats.push('rpm');
+    stats.push('mobility');
+    stats.push('recovery');
+    stats.push('resilience');
   }
 
   /**
@@ -134,7 +137,7 @@ export function buildSearchConfig(
   });
 
   // Filters that operate on ranges (>, <, >=, <=)
-  const comparisons = [":<", ":>", ":<=", ":>=", ":"];
+  const comparisons = [":<", ":>", ":<=", ":>=", ":="];
 
   stats.forEach((word) => {
     const filter = `stat:${word}`;
@@ -212,7 +215,7 @@ export function searchFilters(
   let _dupeInPost = false;
 
   // This refactored method filters items by stats
-  //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
+  //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
   const filterByStats = (statType) => {
     const statHash = {
       rpm: 4284893193,
@@ -224,7 +227,10 @@ export function searchFilters(
       reload: 4188031367,
       magazine: 387123106,
       aimassist: 1345609583,
-      equipspeed: 943549884
+      equipspeed: 943549884,
+      mobility: 2996146975,
+      resilience: 392767087,
+      recovery: 1943323491
     }[statType];
 
     return (item: DimItem, predicate: string) => {
@@ -478,7 +484,9 @@ export function searchFilters(
               dupes.sort(dupeComparator);
               const bestDupe = dupes[0];
               for (const dupe of dupes) {
-                _lowerDupes[dupe.id] = dupe !== bestDupe;
+                if (dupe.bucket && (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') && !dupe.notransfer) {
+                  _lowerDupes[dupe.id] = dupe !== bestDupe;
+                }
               }
 
               if (!_dupeInPost) {
@@ -811,7 +819,10 @@ export function searchFilters(
       reload: filterByStats('reload'),
       magazine: filterByStats('magazine'),
       aimassist: filterByStats('aimassist'),
-      equipspeed: filterByStats('equipspeed')
+      equipspeed: filterByStats('equipspeed'),
+      mobility: filterByStats('mobility'),
+      recovery: filterByStats('recovery'),
+      resilience: filterByStats('resilience')
     }
   };
 }
