@@ -54,7 +54,7 @@ export default class Collections extends React.Component<Props, State> {
 
     if (!profileResponse || !defs) {
       // TODO: loading component!
-      return <div className="collections dim-page">Loading...</div>;
+      return <div className="collections dim-page"><i className="fa fa-spinner fa-spin"/></div>;
     }
 
     const kioskVendors = new Set(Object.keys(profileResponse.profileKiosks.data.kioskItems));

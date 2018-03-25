@@ -76,7 +76,7 @@ export default class SingleVendor extends React.Component<Props, State> {
 
     if (!vendorDef || !defs) {
       // TODO: loading component!
-      return <div className="vendor dim-page">Loading...</div>;
+      return <div className="vendor dim-page"><i className="fa fa-spinner fa-spin"/></div>;
     }
 
     // TODO:

@@ -3,6 +3,8 @@
 * Searching mods and perks in D2 now searches non-selected perks as well.
 * Perks are in the correct order again (instead of the selected one being first always).
 * Unpurchaseable vendor items are displayed better.
+* Storage settings break out loadouts and tags/notes between D1 and D2 items.
+* A new revisions page allows you to restore old versions of settings from Google Drive.
 
 # 4.44.0
 

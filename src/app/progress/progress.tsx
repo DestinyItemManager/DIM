@@ -121,7 +121,7 @@ export class Progress extends React.Component<Props, State> {
 
   render() {
     if (!this.state.progress) {
-      return <div className="progress dim-page">Loading...</div>;
+      return <div className="progress dim-page"><i className="fa fa-spinner fa-spin"/></div>;
     }
 
     const { defs, profileInfo } = this.state.progress;
