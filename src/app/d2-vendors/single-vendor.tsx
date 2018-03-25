@@ -12,12 +12,15 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import { FactionIcon } from '../progress/faction';
 import VendorItems from './vendor-items';
 import './vendor.scss';
+import { fetchRatings } from './vendor-ratings';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: StoreServiceType;
+  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
@@ -25,6 +28,7 @@ interface State {
   defs?: D2ManifestDefinitions;
   vendorDef?: DestinyVendorDefinition;
   vendorResponse?: DestinyVendorResponse;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 export default class SingleVendor extends React.Component<Props, State> {
@@ -63,7 +67,11 @@ export default class SingleVendor extends React.Component<Props, State> {
           : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
       }
       const vendorResponse = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
-      this.setState({ vendorResponse });
+
+      this.setState({ defs, vendorResponse });
+
+      const trackerService = await fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, vendorResponse);
+      this.setState({ trackerService });
     }
   }
 
@@ -72,7 +80,7 @@ export default class SingleVendor extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorDef, vendorResponse } = this.state;
+    const { defs, vendorDef, vendorResponse, trackerService } = this.state;
 
     if (!vendorDef || !defs) {
       // TODO: loading component!
@@ -121,6 +129,7 @@ export default class SingleVendor extends React.Component<Props, State> {
           vendorDef={vendorDef}
           sales={vendorResponse && vendorResponse.sales.data}
           itemComponents={vendorResponse && vendorResponse.itemComponents}
+          trackerService={trackerService}
         />
       </div>
     );

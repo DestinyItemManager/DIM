@@ -1,10 +1,11 @@
 import { D2ItemListBuilder } from './d2-itemListBuilder';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { DtrBulkItem } from '../item-review/destiny-tracker.service';
+import { DtrBulkItem, DtrItem } from '../item-review/destiny-tracker.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { IPromise } from 'angular';
 import { $q, $http } from 'ngimport';
 import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
+import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
@@ -19,11 +20,11 @@ class D2BulkFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getBulkWeaponDataEndpointPost(gunList, platformSelection) {
+  _getBulkWeaponDataEndpointPost(itemList: DtrItem[], platformSelection: number) {
     return {
       method: 'POST',
       url: `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}`,
-      data: gunList,
+      data: itemList,
       dataType: 'json'
     };
   }
@@ -34,15 +35,41 @@ class D2BulkFetcher {
       return $q.resolve(emptyVotes);
     }
 
-    const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
+    const itemList = this._itemListBuilder.getItemList(stores, this._reviewDataCache);
 
-    if (!weaponList.length) {
+    if (!itemList.length) {
       const emptyVotes: DtrBulkItem[] = [];
       return $q.resolve(emptyVotes);
     }
 
     const promise = $q
-      .when(this._getBulkWeaponDataEndpointPost(weaponList, platformSelection))
+      .when(this._getBulkWeaponDataEndpointPost(itemList, platformSelection))
+      .then($http)
+      .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+      .then((response) => response.data);
+
+    this._loadingTracker.addPromise(promise);
+
+    return promise as IPromise<DtrBulkItem[]>;
+  }
+
+  _getVendorBulkFetchPromise(platformSelection: number,
+                             vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                             vendorItems?: DestinyVendorItemDefinition[]): IPromise<DtrBulkItem[]> {
+    if ((vendorSaleItems && !vendorSaleItems.length) || (vendorItems && !vendorItems.length)) {
+      const emptyVotes: DtrBulkItem[] = [];
+      return $q.resolve(emptyVotes);
+    }
+
+    const vendorDtrItems = this._itemListBuilder.getVendorItemList(this._reviewDataCache, vendorSaleItems, vendorItems);
+
+    if (!vendorDtrItems.length) {
+      const emptyVotes: DtrBulkItem[] = [];
+      return $q.resolve(emptyVotes);
+    }
+
+    const promise = $q
+      .when(this._getBulkWeaponDataEndpointPost(vendorDtrItems, platformSelection))
       .then($http)
       .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
       .then((response) => response.data);
@@ -61,15 +88,22 @@ class D2BulkFetcher {
                                                   stores));
   }
 
+  _addScores(bulkRankings: DtrBulkItem[] | null): void {
+    this._reviewDataCache.addScores(bulkRankings);
+  }
+
+  getCache(): D2ReviewDataCache {
+    return this._reviewDataCache;
+  }
+
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
    */
-  bulkFetchVendorItems(vendorContainer, platformSelection: number) {
-    const vendors: DimStore[] = Object.values(vendorContainer);
-
-    this._getBulkFetchPromise(vendors, platformSelection)
-      .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
-                                                        vendors));
+  bulkFetchVendorItems(platformSelection: number,
+                       vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                       vendorItems?: DestinyVendorItemDefinition[]): IPromise<void> {
+    return this._getVendorBulkFetchPromise(platformSelection, vendorSaleItems, vendorItems)
+      .then((bulkRankings) => this._addScores(bulkRankings));
   }
 
   attachRankings(bulkRankings: DtrBulkItem[] | null,
@@ -78,7 +112,7 @@ class D2BulkFetcher {
       return;
     }
 
-    this._reviewDataCache.addScores(bulkRankings);
+    this._addScores(bulkRankings);
 
     stores.forEach((store) => {
       store.items.forEach((storeItem) => {

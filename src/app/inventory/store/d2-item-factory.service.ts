@@ -40,7 +40,7 @@ import { NewItemsService } from './new-items.service';
 import { DimItemInfo, ItemInfoSource } from '../dim-item-info';
 import { $q } from 'ngimport';
 import { t } from 'i18next';
-import { DtrUserReview } from '../../item-review/destiny-tracker.service';
+import { DtrUserReview, DimWorkingUserReview } from '../../item-review/destiny-tracker.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -481,7 +481,8 @@ export function makeItem(
   itemInfoService: ItemInfoSource | undefined,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
-  owner: DimStore | undefined
+  owner: DimStore | undefined,
+  reviewData?: DimWorkingUserReview | null
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> = item.itemInstanceId && itemComponents ? itemComponents.instances.data[item.itemInstanceId] : {};
@@ -573,12 +574,15 @@ export function makeItem(
     talentGrid: null, // filled in later
     stats: null, // filled in later
     objectives: null, // filled in later
+    dtrRatingCount: (reviewData) ? reviewData.totalReviews : undefined,
+    dtrRating: (reviewData) ? reviewData.rating : undefined,
+    reviews: (reviewData) ? reviewData.reviews : []
   });
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem));
+  createdItem.reviewable = Boolean(($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem)) || (reviewData && reviewData.reviews));
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
