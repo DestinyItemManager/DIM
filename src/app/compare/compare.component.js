@@ -128,7 +128,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
       const stat = statHash === item.primStat.statHash
         ? item.primStat
         : (vm.sortedHash === 'Rating'
-          ? { value: item.dtrRating }
+          ? { value: (item.dtrRating || "0") }
           : _.find(item.stats, { statHash: statHash }));
       return stat.value || -1;
     }).reverse();
@@ -228,7 +228,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
       if (item.stats) {
         item.stats.forEach(bucketStat);
         bucketStat(item.primStat);
-        bucketStat({ statHash: 0, value: item.dtrRating });
+        bucketStat({ statHash: 0, value: (item.dtrRating || "0") });
       }
     });
 

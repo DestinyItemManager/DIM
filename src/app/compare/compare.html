@@ -8,7 +8,7 @@
     <div class="compare-item fixed-left">
       <div class="spacer"></div>
       <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === 'Rating', sorted: vm.sortedHash === 'Rating' }"
-           ng-mouseover="vm.highlight = 'Rating'" ng-click="vm.sort('Rating')" ng-i18next="[i18next]Compare.Rating" ng-if="vm.comparisons[0].dtrRatingCount && vm.comparisons[0].dtrRating"></div>
+           ng-mouseover="vm.highlight = 'Rating'" ng-click="vm.sort('Rating')" ng-i18next="[i18next]Compare.Rating"></div>
       <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === vm.comparisons[0].primStat.statHash, sorted: vm.sortedHash === vm.comparisons[0].primStat.statHash }"
            ng-mouseover="vm.highlight = vm.comparisons[0].primStat.statHash" ng-click="vm.sort(vm.comparisons[0].primStat.statHash)" ng-bind="vm.comparisons[0].primStat.stat.statName || vm.comparisons[0].primStat.stat.displayProperties.name"></div>
       <div class="compare-stat-label" ng-class="{ highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash }"
@@ -19,8 +19,8 @@
       <dim-item-tag item="item"></dim-item-tag>
       <div class="item-name" ng-click="vm.itemClick(item)" ng-bind="::item.name"></div>
       <dim-simple-item item-data="item"></dim-simple-item>
-      <div ng-class="{ highlight: vm.highlight === 'Rating' }" ng-mouseover="vm.highlight = 'Rating'" ng-style="{value:item.dtrRating, statHash:0} | statRange:vm.statRanges | qualityColor:'color'" ng-if="item.dtrRatingCount && item.dtrRating">
-        <span ng-bind="item.dtrRating"></span>
+      <div ng-class="{ highlight: vm.highlight === 'Rating' }" ng-mouseover="vm.highlight = 'Rating'" ng-style="{value:item.dtrRating, statHash:0} | statRange:vm.statRanges | qualityColor:'color'">
+        <span ng-bind="item.dtrRating || ('Stats.NotApplicable' | i18next)"></span>
       </div>
       <div ng-class="{ highlight: vm.highlight === item.primStat.statHash }" ng-mouseover="vm.highlight = item.primStat.statHash" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
         <span ng-bind="item.primStat.value"></span>
