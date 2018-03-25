@@ -2,8 +2,8 @@
      item-popup
      item-popup-boundary-class="store-bounds"
      dim-click-anywhere-but-here="closeThisDialog()">
-  <div dim-move-item-properties="vm.item"
-       dim-compare-item="vm.compareItem"></div>
+  <dim-move-item-properties item="vm.item"
+       compare-item="vm.compareItem"></dim-move-item-properties>
   <div class="item-details more-item-details"
        ng-if="vm.item.equipment && vm.compareItems.length">
     <div ng-i18next="Vendors.Compare">:</div>

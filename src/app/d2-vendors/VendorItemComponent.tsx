@@ -104,7 +104,6 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
         this.dialogResult = null;
       }
     } else {
-      console.log(item);
 
       let reviewData: DimWorkingUserReview | null = null;
 
