@@ -5,6 +5,7 @@ import { D2ItemTransformer } from './d2-itemTransformer';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DtrItem } from '../item-review/destiny-tracker.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
@@ -18,11 +19,19 @@ class D2ItemListBuilder {
     this._itemTransformer = new D2ItemTransformer();
   }
 
-  _getNewItems(allItems: DimItem[], reviewDataCache) {
+  _getNewItems(allItems: DimItem[], reviewDataCache: D2ReviewDataCache) {
     const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrItem(item));
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
-    const unmatched = _.reject(allDtrItems, (dtrItem) => _.any(allKnownDtrItems, { referenceId: String(dtrItem.referenceId) }));
+    const unmatched = allDtrItems.filter((di) => allKnownDtrItems.every((kdi) => di.referenceId !== kdi.referenceId));
+
+    return unmatched;
+  }
+
+  _getNewVendorItems(vendorItems: DtrItem[], reviewDataCache: D2ReviewDataCache) {
+    const allKnownDtrItems = reviewDataCache.getItemStores();
+
+    const unmatched = vendorItems.filter((vi) => allKnownDtrItems.every((di) => di.referenceId !== vi.referenceId));
 
     return unmatched;
   }
@@ -59,12 +68,28 @@ class D2ItemListBuilder {
    * Tailored to work alongside the bulkFetcher.
    * Non-obvious bit: it attempts to optimize away from sending items that already exist in the ReviewDataCache.
    */
-  getWeaponList(stores: DimStore[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
+  getItemList(stores: DimStore[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
     const dtrItems = this._getDtrItems(stores, reviewDataCache);
 
     const list = new Set(dtrItems);
 
     return Array.from(list);
+  }
+
+  getVendorItemList(reviewDataCache: D2ReviewDataCache,
+                    vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                    vendorItems?: DestinyVendorItemDefinition[]): DtrItem[] {
+    if (vendorSaleItems) {
+      const allVendorItems = vendorSaleItems.map((vendorItem): DtrItem => ({ referenceId: vendorItem.itemHash }));
+
+      return this._getNewVendorItems(allVendorItems, reviewDataCache);
+    } else if (vendorItems) {
+      const allVendorItems = vendorItems.map((vi) => ({ referenceId: vi.itemHash })) as DtrItem[];
+
+      return this._getNewVendorItems(allVendorItems, reviewDataCache);
+    } else {
+      throw new Error("Neither sale items nor vendor items were supplied.");
+    }
   }
 }
 

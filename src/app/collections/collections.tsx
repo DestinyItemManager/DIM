@@ -12,17 +12,21 @@ import { StoreServiceType } from '../inventory/d2-stores.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
 import VendorItems from '../d2-vendors/vendor-items';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { fetchRatings } from '../d2-vendors/vendor-ratings';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: StoreServiceType;
+  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 // TODO: Should this be just in the vendors screen?
@@ -43,6 +47,9 @@ export default class Collections extends React.Component<Props, State> {
 
     const profileResponse = await getKiosks(this.props.account);
     this.setState({ profileResponse, defs });
+
+    const trackerService = await fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, undefined, profileResponse);
+    this.setState({ trackerService });
   }
 
   componentDidMount() {
@@ -50,7 +57,7 @@ export default class Collections extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, profileResponse } = this.state;
+    const { defs, profileResponse, trackerService } = this.state;
 
     if (!profileResponse || !defs) {
       // TODO: loading component!
@@ -68,7 +75,7 @@ export default class Collections extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Array.from(kioskVendors).map((vendorHash) =>
-          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))}/>
+          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} trackerService={trackerService}/>
         )}
       </div>
     );
@@ -82,11 +89,13 @@ function itemsForKiosk(profileResponse: DestinyProfileResponse, vendorHash: numb
 function Kiosk({
   defs,
   vendorHash,
-  items
+  items,
+  trackerService
 }: {
   defs: D2ManifestDefinitions;
   vendorHash: number;
   items: DestinyKioskItem[];
+  trackerService?: DestinyTrackerServiceType;
 }) {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -98,6 +107,7 @@ function Kiosk({
         defs={defs}
         vendorDef={vendorDef}
         kioskItems={items.filter((i) => i.canAcquire)}
+        trackerService={trackerService}
       />
     </div>
   );

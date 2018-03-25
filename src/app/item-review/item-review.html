@@ -111,7 +111,7 @@
           <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
           <div ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
                           'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"
-                ng-click="$ctrl.openFlagContext(review.reviewId)"></div>
+               ng-click="$ctrl.openFlagContext(review.reviewId)"></div>
         </div>
         <div class="community-review--review" ng-bind="review.review"></div>
       </div>
@@ -147,9 +147,10 @@
             </div>
             <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
             <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
-            <div ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
+            <div ng-if="!$ctrl.item.isVendorItem"
+                 ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
                             'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"
-                  ng-click="$ctrl.openFlagContext(review.id)"></div>
+                 ng-click="$ctrl.openFlagContext(review.id)"></div>
           </div>
           <div class="community-review--review" ng-bind="review.text"></div>
         </div>

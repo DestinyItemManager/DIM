@@ -9,13 +9,16 @@ import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { VendorItem } from './vendor-item';
 import VendorItemComponent from './VendorItemComponent';
+import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 
 export default function VendorItems({
   vendorDef,
   defs,
   itemComponents,
   sales,
-  kioskItems
+  kioskItems,
+  trackerService
 }: {
   defs: D2ManifestDefinitions;
   vendorDef: DestinyVendorDefinition;
@@ -24,9 +27,12 @@ export default function VendorItems({
     [key: string]: DestinyVendorSaleItemComponent;
   };
   kioskItems?: DestinyKioskItem[];
+  trackerService?: DestinyTrackerServiceType;
 }) {
+  const reviewCache: D2ReviewDataCache | undefined = (trackerService) ? trackerService.getD2ReviewDataCache() : undefined;
+
   // TODO: do this stuff in setState handlers
-  const items = getItems(defs, vendorDef, itemComponents, sales, kioskItems);
+  const items = getItems(defs, vendorDef, reviewCache, itemComponents, sales, kioskItems);
 
   // TODO: sort items, maybe subgroup them
   const itemsByCategory = _.groupBy(items, (item: VendorItem) => item.displayCategoryIndex);
@@ -38,7 +44,7 @@ export default function VendorItems({
           <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
           <div className="vendor-items">
           {items.map((item) =>
-            <VendorItemComponent key={item.key} defs={defs} item={item}/>
+            <VendorItemComponent key={item.key} defs={defs} item={item} trackerService={trackerService} />
           )}
           </div>
         </div>
@@ -50,6 +56,7 @@ export default function VendorItems({
 function getItems(
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition,
+  reviewCache?: D2ReviewDataCache,
   itemComponents?: DestinyItemComponentSetOfint32,
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
@@ -57,13 +64,14 @@ function getItems(
   kioskItems?: DestinyKioskItem[]
 ) {
   if (kioskItems) {
-    return vendorDef.itemList.map((i, index) => new VendorItem(defs, vendorDef, i, undefined, undefined, kioskItems.some((k) => k.index === index)));
+    return vendorDef.itemList.map((i, index) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, kioskItems.some((k) => k.index === index)));
   } else if (sales && itemComponents) {
     const components = Object.values(sales);
     return components.map((component) => new VendorItem(
       defs,
       vendorDef,
       vendorDef.itemList[component.vendorItemIndex],
+      reviewCache,
       component,
       itemComponents
     ));
@@ -71,6 +79,6 @@ function getItems(
     // If the sales should come from the server, don't show anything until we have them
     return [];
   } else {
-    return vendorDef.itemList.map((i) => new VendorItem(defs, vendorDef, i));
+    return vendorDef.itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache));
   }
 }
