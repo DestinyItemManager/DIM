@@ -9,8 +9,6 @@ declare const $GOOGLE_DRIVE_CLIENT_ID: string;
 declare const $BROWSERS: string[];
 
 declare const $featureFlags: {
-  /** Additional debugging / item info tools */
-  debugMode: boolean;
   /** Print debug info to console about item moves */
   debugMoves: boolean;
   /** show changelog toaster */

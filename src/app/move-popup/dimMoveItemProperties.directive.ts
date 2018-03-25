@@ -1,29 +1,35 @@
-import _ from 'underscore';
-import { dimState } from '../state';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { settings } from '../settings/settings';
-import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { IController, IRootScopeService, IScope, IComponentOptions, IAngularEvent } from 'angular';
 import template from './dimMoveItemProperties.html';
+import { StoreServiceType } from '../inventory/d2-stores.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
-export function MoveItemProperties() {
-  return {
-    bindToController: true,
-    controller: MoveItemPropertiesCtrl,
-    controllerAs: 'vm',
-    scope: {
-      item: '=dimMoveItemProperties',
-      compareItem: '=dimCompareItem',
-      infuse: '=dimInfuse'
-    },
-    restrict: 'A',
-    replace: true,
-    template
-  };
-}
+export const MoveItemPropertiesComponent: IComponentOptions = {
+  controller: MoveItemPropertiesCtrl,
+  controllerAs: 'vm',
+  bindings: {
+    item: '<',
+    compareItem: '<',
+    infuse: '&'
+  },
+  template
+};
 
-
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimItemService, ngDialog, $scope, $rootScope, dimDestinyTrackerService) {
+function MoveItemPropertiesCtrl(
+  this: IController & {
+    item: DimItem;
+    compareItem?: DimItem;
+    infuse(item: DimItem, $event: IAngularEvent): void;
+  },
+  dimStoreService: StoreServiceType,
+  D2StoresService: StoreServiceType,
+  ngDialog,
+  $scope: IScope,
+  $rootScope: IRootScopeService,
+  dimDestinyTrackerService
+) {
   'ngInject';
   const vm = this;
 
@@ -33,13 +39,9 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
 
   vm.tab = 'default';
 
-  vm.featureFlags = {
-    debugMode: dimState.debug
-  };
-
   vm.hasDetails = Boolean((vm.item.stats && vm.item.stats.length) ||
                           vm.item.talentGrid || vm.item.objectives);
-  vm.showDescription = true;
+  vm.showDescription = Boolean(vm.item.description && vm.item.description.length);
   vm.locking = false;
 
   dimDestinyTrackerService.getItemReviews(vm.item);
@@ -55,7 +57,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     }
   });
 
-  vm.openCompare = function() {
+  vm.openCompare = () => {
     ngDialog.closeAll();
     $rootScope.$broadcast('dim-store-item-compare', {
       item: vm.item,
@@ -63,21 +65,21 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     });
   };
 
-  vm.openDiscuss = function() {
+  vm.openDiscuss = () => {
     ngDialog.closeAll();
     $rootScope.$broadcast('dim-store-item-discuss', {
       item: vm.item
     });
   };
 
-  vm.updateNote = function() {
+  vm.updateNote = () => {
     if (vm.item.dimInfo.notes === '') {
       delete vm.item.dimInfo.notes;
     }
-    vm.item.dimInfo.save();
+    vm.item.dimInfo!.save!();
   };
 
-  vm.reviewBlur = function() {
+  vm.reviewBlur = () => {
     const item = vm.item;
     const userReview = vm.toUserReview(item);
 
@@ -85,7 +87,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
                                                       userReview);
   };
 
-  vm.toUserReview = function(item) {
+  vm.toUserReview = (item) => {
     const newRating = item.userRating;
     const review = item.userReview;
     const pros = item.userReviewPros;
@@ -93,15 +95,15 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
 
     const userReview = {
       rating: newRating,
-      review: review,
-      pros: pros,
-      cons: cons
+      review,
+      pros,
+      cons
     };
 
     return userReview;
   };
 
-  vm.submitReview = function() {
+  vm.submitReview = () => {
     const item = vm.item;
 
     dimDestinyTrackerService.submitReview(item);
@@ -114,12 +116,9 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
       return;
     }
 
-    let store;
-    if (item.owner === 'vault') {
-      store = getStoreService(item).getActiveStore();
-    } else {
-      store = getStoreService(item).getStore(item.owner);
-    }
+    const store = item.ownere === 'vault'
+      ? getStoreService(item).getActiveStore()!
+      : getStoreService(item).getStore(item.owner)!;
 
     vm.locking = true;
 
@@ -212,7 +211,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
       for (const key in Object.getOwnPropertyNames(vm.item.stats)) {
         const itemStats = item.stats && item.stats[key];
         if (itemStats) {
-          const vmItemStats = vm.item.stats[key];
+          const vmItemStats: any = vm.item.stats[key];
           if (vmItemStats) {
             vmItemStats.equippedStatsValue = itemStats.value;
             vmItemStats.equippedStatsName = itemStats.name;
@@ -233,21 +232,10 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, D2StoresService, dimI
     if (vm.compareItem) {
       $scope.$watch('vm.compareItem', compareItems);
     } else {
-      $scope.$watch('$parent.$parent.vm.store.items', (items) => {
-        const item = _.find(items, (item) => {
-          return item.equipped && item.type === vm.item.type;
-        });
+      $scope.$watch('$parent.$parent.vm.store.items', (items: DimItem[]) => {
+        const item = items.find((item) => item.equipped && item.type === vm.item.type);
         compareItems(item);
       });
     }
   }
-
-  vm.dumpDebugInfo = function() {
-    console.log(`DEBUG INFO for '${vm.item.name}'`);
-    console.log("DIM Item", vm.item);
-    console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+alt+shift+d) and refresh items to see this.");
-    getDefinitions().then((defs) => {
-      console.log("Manifest Item Definition", defs.InventoryItem.get(vm.item.hash));
-    });
-  };
 }

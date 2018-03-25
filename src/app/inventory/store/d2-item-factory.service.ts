@@ -163,6 +163,7 @@ export interface DimItem {
   name: string;
   description: string;
   icon: string;
+  secondaryIcon: string;
   notransfer: boolean;
   canPullFromPostmaster: boolean;
   id: string; // zero for non-instanced is legacy hack
@@ -181,6 +182,7 @@ export interface DimItem {
   complete: boolean;
   amount: number;
   primStat: EnhancedStat | null;
+  /** Localized name of this item's type. */
   typeName: string;
   equipRequiredLevel: number;
   maxStackSize: number;
@@ -541,6 +543,7 @@ export function makeItem(
     name: itemDef.displayProperties.name,
     description: itemDef.displayProperties.description,
     icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
+    secondaryIcon: itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
     notransfer: Boolean(itemDef.nonTransferrable ||
       item.transferStatus === TransferStatuses.NotTransferrable),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,

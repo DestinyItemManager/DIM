@@ -4,7 +4,6 @@ import changelog from '../views/changelog-toaster-release.html';
 import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
 import { subscribeOnScope } from './rx-utils';
 import * as _ from 'underscore';
-import { dimState } from './state';
 import { settings } from './settings/settings';
 import { showInfoPopup } from './shell/info-popup';
 import { IComponentOptions, IController, IScope, ITimeoutService } from 'angular';
@@ -57,14 +56,6 @@ function AppComponentCtrl(
     });
 
     hotkeys = hotkeys.bindTo($scope);
-
-    hotkeys.add({
-      combo: ['ctrl+alt+shift+d'],
-      callback() {
-        dimState.debug = true;
-        console.log("***** DIM DEBUG MODE ENABLED *****");
-      }
-    });
 
     if ($featureFlags.colorA11y) {
       $scope.$watch(() => this.settings.colorA11y, (color) => {

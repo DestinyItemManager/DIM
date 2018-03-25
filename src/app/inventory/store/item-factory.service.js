@@ -5,7 +5,6 @@ import missingSources from 'app/data/missing_sources.json';
 import { getClass, getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
-import { dimState } from '../../state';
 import { D1ManifestService } from '../../manifest/manifest-service';
 import { getDefinitions } from '../../destiny1/d1-definitions.service';
 import { getBuckets } from '../../destiny1/d1-buckets.service';
@@ -287,6 +286,7 @@ export function ItemFactory(
       name: itemDef.itemName,
       description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
       icon: itemDef.icon,
+      secondaryIcon: itemDef.secondaryIcon,
       notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
       id: item.itemInstanceId,
       equipped: item.isEquipped,
@@ -407,11 +407,6 @@ export function ItemFactory(
     // "The Life Exotic" perk means you can equip other exotics, so clear out the equipping label
     if (createdItem.isExotic && createdItem.talentGrid && createdItem.talentGrid.nodes.some((n) => n.hash === 4044819214)) {
       createdItem.equippingLabel = undefined;
-    }
-
-    // In debug mode, keep the original JSON around
-    if (dimState.debug) {
-      createdItem.originalItem = item;
     }
 
     // do specific things for specific items

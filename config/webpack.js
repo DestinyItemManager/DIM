@@ -216,8 +216,6 @@ module.exports = (env) => {
 
         // Feature flags!
 
-        // Additional debugging / item info tools
-        '$featureFlags.debugMode': JSON.stringify(false),
         // Print debug info to console about item moves
         '$featureFlags.debugMoves': JSON.stringify(false),
         // show changelog toaster

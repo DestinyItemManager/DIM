@@ -95,7 +95,6 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
         this.dialogResult = null;
       }
     } else {
-      console.log(item);
 
       const buckets = await getBuckets();
       const dimItem = item.toDimItem(buckets);

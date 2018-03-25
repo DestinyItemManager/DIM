@@ -3,6 +3,7 @@
 * Searching mods and perks in D2 now searches non-selected perks as well.
 * Perks are in the correct order again (instead of the selected one being first always).
 * Unpurchaseable vendor items are displayed better.
+* Emblems show a preview of the nameplate graphic.
 
 # 4.44.0
 

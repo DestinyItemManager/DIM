@@ -19,18 +19,6 @@
     "no-switch-case-fall-through": false,
     "no-multi-spaces": true,
     "no-duplicate-variable": [true, "check-parameters"],
-    "indent": [true, 2, {
-      "MemberExpression": false,
-      "FunctionExpression": {
-        "parameters": false
-      },
-      "FunctionDeclaration": {
-        "parameters": false
-      },
-      "CallExpression": {
-        "arguments": false
-      }
-    }],
     "ter-max-len": false,
     "max-line-length": false,
     "no-console": false,
@@ -39,7 +27,6 @@
     "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
     "indent": [true, "spaces", 2],
     "ter-func-call-spacing": [true, "never"],
-    "new-parens": true,
     "no-trailing-whitespace": true,
     "object-curly-spacing": [true, "always"],
     "object-literal-key-quotes": [true, "as-needed"],
@@ -148,7 +135,9 @@
     "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-rest-spread", "check-type", "check-typecast", "check-type-operator", "check-preblock"],
     "interface-name": false,
     "jsx-no-multiline-js": false,
-    "max-classes-per-file": false
+    "max-classes-per-file": false,
+    "jsx-no-lambda": false,
+    "forin": false
   },
   "rulesDirectory": []
 }
