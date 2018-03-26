@@ -12,7 +12,9 @@
     "build-dev": "npm run bundle -s -- --env=dev --watch",
     "start": "npm run build-dev -s",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
-    "publish-release": "npm run build-release -s && grunt publish_release"
+    "publish-release": "npm run build-release -s && grunt publish_release",
+    "pretty": "prettier --write 'src/**/*.{js,ts,tsx}'",
+    "precommit": "pretty-quick --staged"
   },
   "repository": {
     "type": "git",
@@ -67,6 +69,7 @@
     "html-webpack-include-sibling-chunks-plugin": "^0.1.4",
     "html-webpack-plugin": "^3.2.0",
     "htmlhint": "^0.9.13",
+    "husky": "^0.14.3",
     "imports-loader": "^0.8.0",
     "load-grunt-tasks": "^4.0.0",
     "mini-css-extract-plugin": "^0.4.0",
@@ -74,6 +77,8 @@
     "notify-webpack-plugin": "^1.0.0",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.0.1",
+    "prettier": "^1.11.1",
+    "pretty-quick": "^1.4.1",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.23.0",
     "tslint": "^5.9.1",
