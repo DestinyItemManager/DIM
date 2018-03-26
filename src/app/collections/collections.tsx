@@ -13,7 +13,7 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
 import VendorItems from '../d2-vendors/vendor-items';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
-import { fetchRatings } from '../d2-vendors/vendor-ratings';
+import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 
 interface Props {
   $scope: IScope;
@@ -48,7 +48,7 @@ export default class Collections extends React.Component<Props, State> {
     const profileResponse = await getKiosks(this.props.account);
     this.setState({ profileResponse, defs });
 
-    const trackerService = await fetchRatings(defs, this.props.dimDestinyTrackerService, undefined, undefined, profileResponse);
+    const trackerService = await fetchRatingsForKiosks(defs, this.props.dimDestinyTrackerService, profileResponse);
     this.setState({ trackerService });
   }
 
