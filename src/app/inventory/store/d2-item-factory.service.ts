@@ -808,7 +808,7 @@ function buildDefaultStats(itemDef: DestinyInventoryItemDefinition, statDefs: La
         stat.statHash !== 3871231066 &&
         stat.statHash !== 2961396640
     };
-  })) as DimStat[];
+  }));
 }
 
 function buildStats(

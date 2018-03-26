@@ -76,7 +76,7 @@ function MoveItemPropertiesCtrl(
     if (vm.item.dimInfo.notes === '') {
       delete vm.item.dimInfo.notes;
     }
-    vm.item.dimInfo!.save!();
+    vm.item.dimInfo.save!();
   };
 
   vm.reviewBlur = () => {

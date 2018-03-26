@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import { ItemListBuilder } from './itemListBuilder';
 
 class BulkFetcher {

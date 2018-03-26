@@ -16,7 +16,7 @@ interface Props {
   trackerService?: DestinyTrackerServiceType;
 }
 
-export default class VendorItemComponent extends React.Component<Props, {}> {
+export default class VendorItemComponent extends React.Component<Props> {
   private static otherDialog: IDialogOpenResult | null = null;
   private dialogResult: IDialogOpenResult | null = null;
   private itemElement: HTMLElement | null;

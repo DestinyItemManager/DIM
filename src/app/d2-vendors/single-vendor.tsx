@@ -48,7 +48,7 @@ export default class SingleVendor extends React.Component<Props, State> {
 
     const vendorDef = defs.Vendor.get(this.state.vendorHash);
     if (!vendorDef) {
-      throw new Error("No known vendor with hash " + this.state.vendorHash);
+      throw new Error(`No known vendor with hash ${this.state.vendorHash}`);
     }
     this.setState({ defs, vendorDef });
 

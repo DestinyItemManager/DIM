@@ -89,7 +89,7 @@ function generatePlatforms(accounts: UserMembershipData): IPromise<DestinyAccoun
   });
 
   const allPromise = $q.all(accountPromises) as IPromise<(DestinyAccount | null)[]>;
-  return allPromise.then((accounts) => _.compact(accounts) as DestinyAccount[]);
+  return allPromise.then((accounts) => _.compact(accounts));
 }
 
 function findD2Characters(account: DestinyAccount): IPromise<DestinyAccount | null> {

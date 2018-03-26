@@ -69,7 +69,7 @@
         </div>
       </div>
       <dim-objectives class="item-details" ng-if="vm.item.objectives" objectives="vm.item.objectives"></dim-objectives>
-      <img class=item-details ng-if="vm.item.type === 'Emblems' || vm.item.type === 'Emblem'" ng-src="{{vm.item.secondaryIcon | bungieIcon}}" width="237"
+      <img class="item-details" ng-if="vm.item.type === 'Emblems' || vm.item.type === 'Emblem'" ng-src="{{vm.item.secondaryIcon | bungieIcon}}" width="237"
       height="48"/>
       <dim-flavor-objective class="item-details" ng-if="vm.item.flavorObjective" objective="vm.item.flavorObjective"></dim-flavor-objective>
       <div ng-if="vm.featureFlags.debugMode" class="item-details">

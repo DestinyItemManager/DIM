@@ -34,7 +34,7 @@
       <div ng-if="::vm.selectedStore.destinyVersion != 2" class="title" ng-click="vm.toggleSection('Reputation')">
         <span><i class="fa collapse" ng-class="vm.settings.collapsedSections['Reputation'] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.Reputation"></span></span>
       </div>
-      <div ng-if="::vm.selectedStore.destinyVersion != 2" class="store-row items reputation" ng-if="!vm.settings.collapsedSections['Reputation']">
+      <div ng-if="vm.selectedStore.destinyVersion != 2 && !vm.settings.collapsedSections['Reputation']" class="store-row items reputation">
         <div class="store-cell" ng-class="::{ vault: vm.selectedStore.isVault }">
           <dim-store-reputation store-data="vm.selectedStore"></dim-store-reputation>
         </div>
@@ -82,7 +82,7 @@
     <div ng-if="::vm.stores[0].destinyVersion != 2" class="title" ng-click="vm.toggleSection('Reputation')">
       <span><i class="fa collapse" ng-class="vm.settings.collapsedSections['Reputation'] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i> <span ng-i18next="Bucket.Reputation"></span></span>
     </div>
-    <div ng-if="::vm.stores[0].destinyVersion != 2" class="store-row items reputation" ng-if="!vm.settings.collapsedSections['Reputation']">
+    <div ng-if="vm.stores[0].destinyVersion != 2 && !vm.settings.collapsedSections['Reputation']" class="store-row items reputation">
       <div class="store-cell" ng-class="::{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
         <dim-store-reputation store-data="store"></dim-store-reputation>
       </div>

@@ -70,7 +70,7 @@
     "no-bitwise": false,
     "no-duplicate-super": true,
     "no-duplicate-switch-case": true,
-    "no-floating-promises": [true, "Thenable", "IPromise"],
+    "no-floating-promises": [false, "Thenable", "IPromise"],
     "no-for-in-array": true,
     "no-implicit-dependencies": true,
     "no-invalid-template-strings": true,

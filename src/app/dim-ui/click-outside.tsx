@@ -7,7 +7,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 /**
  * Component that fires an event if you click or tap outside of it.
  */
-export default class ClickOutside extends React.Component<Props, {}> {
+export default class ClickOutside extends React.Component<Props> {
   private wrapperRef: Element;
 
   componentDidMount() {
