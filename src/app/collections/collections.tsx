@@ -83,7 +83,7 @@ export default class Collections extends React.Component<Props, State> {
 }
 
 function itemsForKiosk(profileResponse: DestinyProfileResponse, vendorHash: number) {
-  return profileResponse.profileKiosks.data.kioskItems[vendorHash].concat(_.flatten(Object.values(profileResponse.characterKiosks.data).map((d) => Object.values(d.kioskItems))));
+  return profileResponse.profileKiosks.data.kioskItems[vendorHash].concat(_.flatten(Object.values(profileResponse.characterKiosks.data).map((d) => d.kioskItems[vendorHash])));
 }
 
 function Kiosk({

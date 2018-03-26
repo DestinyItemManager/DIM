@@ -53,9 +53,8 @@ export async function fetchRatingsForKiosks(
 
   const vendorItems = flatMap(Array.from(kioskVendorHashes), (kvh) => {
     const vendorHash = Number(kvh);
-    const kioskItems = profileResponse.profileKiosks.data.kioskItems[vendorHash].concat(_.flatten(Object.values(profileResponse.characterKiosks.data).map((d) => Object.values(d.kioskItems))));
     const vendorDef = defs.Vendor.get(vendorHash);
-    return kioskItems.map((ki) => vendorDef.itemList[ki.index]).filter((vid) => isWeaponOrArmor(defs, vid));
+    return vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
   });
 
   return destinyTrackerService.bulkFetchKioskItems(vendorItems);
