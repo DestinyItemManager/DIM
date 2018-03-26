@@ -47,14 +47,12 @@ export function Faction(props: FactionProps) {
       <div className="faction-info">
         <div className="faction-name" title={vendorDef.displayProperties.description}>{vendorDef.displayProperties.name}</div>
         <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
-        {engramsAvailable > 0 &&
-          <div className="faction-rewards">
-            {factionDef.rewardVendorHash && $featureFlags.vendors
-              ? <a onClick={rewardClick}>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</a>
-              : <>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</>
-            }
-          </div>
-        }
+        <div className="faction-rewards">
+          {factionDef.rewardVendorHash && $featureFlags.vendors
+            ? <a onClick={rewardClick}>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</a>
+            : <>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</>
+          }
+        </div>
       </div>
     </div>
   );
