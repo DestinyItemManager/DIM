@@ -8,10 +8,12 @@ import { ngDialog } from "../ngimport-more";
 import { IDialogOpenResult } from "ng-dialog";
 import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from "../destiny2/d2-buckets.service";
+import { DestinyTrackerServiceType, DimWorkingUserReview } from "../item-review/destiny-tracker.service";
 
 interface Props {
   defs: D2ManifestDefinitions;
   item: VendorItem;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 export default class VendorItemComponent extends React.Component<Props, {}> {
@@ -61,8 +63,15 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
             className={classNames("item-img", { transparent: item.borderless })}
             style={bungieBackgroundStyle(item.displayProperties.icon)}
           />
-          {item.primaryStat &&
-            <div className="item-stat item-equipment">{item.primaryStat}</div>}
+          {(item.primaryStat) &&
+            <div>
+              {item.rating && <div className="item-stat item-review">{item.rating}</div>}
+              <div className="item-stat item-equipment">{item.primaryStat}</div>
+            </div>}
+          {(item.rating && !item.primaryStat) &&
+            <div>
+              <div className="item-stat item-review">{item.rating}</div>
+            </div>}
         </div>
         <div className="vendor-costs">
           {item.costs.map((cost) =>
@@ -78,7 +87,7 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
   }
 
   private openDetailsPopup = async(e) => {
-    const { item } = this.props;
+    const { item, trackerService } = this.props;
 
     e.stopPropagation();
 
@@ -95,10 +104,21 @@ export default class VendorItemComponent extends React.Component<Props, {}> {
         this.dialogResult = null;
       }
     } else {
-      console.log(item);
+
+      let reviewData: DimWorkingUserReview | null = null;
+
+      if (trackerService) {
+        reviewData = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+
+        if (reviewData && !reviewData.reviews) {
+          const reviewsData = await trackerService.getItemReviewAsync(item.itemHash);
+
+          Object.assign(reviewData, reviewsData);
+        }
+      }
 
       const buckets = await getBuckets();
-      const dimItem = item.toDimItem(buckets);
+      const dimItem = item.toDimItem(buckets, reviewData);
 
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,

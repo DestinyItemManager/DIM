@@ -3,6 +3,8 @@ import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { equals } from 'angular';
 import { DimItem, makeItem } from "../inventory/store/d2-item-factory.service";
 import { DimInventoryBuckets } from "../destiny2/d2-buckets.service";
+import { D2ReviewDataCache } from "../destinyTrackerApi/d2-reviewDataCache";
+import { DimWorkingUserReview } from "../item-review/destiny-tracker.service";
 
 /**
  * A displayable vendor item. The only state it holds is raw responses/definitions - all
@@ -23,14 +25,17 @@ export class VendorItem {
 
   private defs: D2ManifestDefinitions;
 
+  private reviewData: DimWorkingUserReview | null;
+
   constructor(
     defs: D2ManifestDefinitions,
     vendorDef: DestinyVendorDefinition,
     vendorItemDef: DestinyVendorItemDefinition,
+    reviewCache?: D2ReviewDataCache,
     saleItem?: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
-    canPurchase = true
+    canPurchase = true,
   ) {
     this.defs = defs;
     this.vendorDef = vendorDef;
@@ -41,7 +46,13 @@ export class VendorItem {
     this.itemComponents = itemComponents;
     if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
       this.instance = itemComponents.instances.data[saleItem.vendorItemIndex];
+
+      if (reviewCache) {
+        this.reviewData = reviewCache.getRatingData(saleItem);
+      }
       // TODO: more here, like perks and such
+    } else if (vendorItemDef && reviewCache) {
+      this.reviewData = reviewCache.getRatingData(undefined, vendorItemDef.itemHash);
     }
   }
 
@@ -101,10 +112,19 @@ export class VendorItem {
     return (this.instance && this.instance.primaryStat && this.instance.primaryStat.value);
   }
 
+  get rating(): number | null {
+    if (this.reviewData) {
+      return this.reviewData.rating;
+    }
+
+    return null;
+  }
+
   equals(other: VendorItem) {
     // Defs can be ref-compared
     return this.vendorItemDef === other.vendorItemDef &&
       this.canPurchase === other.canPurchase &&
+      this.rating === other.rating &&
       // Deep equals
       equals(this.saleItem, other.saleItem);
   }
@@ -112,7 +132,8 @@ export class VendorItem {
   /**
    * TODO: This is really gross, but it allows us to make enough of an item to show the move popup.
    */
-  toDimItem(buckets: DimInventoryBuckets): DimItem | null {
+  toDimItem(buckets: DimInventoryBuckets,
+            reviewData: DimWorkingUserReview | null): DimItem | null {
     return makeItem(
       this.defs,
       buckets,
@@ -131,7 +152,8 @@ export class VendorItem {
         lockable: false,
         state: ItemState.None
       },
-      undefined
+      undefined,
+      reviewData
     );
   }
 }

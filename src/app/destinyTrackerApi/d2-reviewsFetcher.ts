@@ -39,7 +39,7 @@ class D2ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item, platformSelection): IPromise<DtrReviewContainer> {
+  _getItemReviewsPromise(item, platformSelection: number): IPromise<DtrReviewContainer> {
     const dtrItem = this._itemTransformer.getRollAndPerks(item);
 
     const promise = $q
@@ -184,6 +184,18 @@ class D2ReviewsFetcher {
         this._attachReviews(item,
                             reviewData);
       });
+  }
+
+  fetchItemReviews(itemHash: number, platformSelection: number): IPromise<DtrReviewContainer> {
+    const ratingData = this._reviewDataCache.getRatingData(undefined, itemHash);
+
+    if (ratingData && ratingData.reviewsDataFetched) {
+      return $q.when(ratingData);
+    }
+
+    const fakeItem = { hash: itemHash, id: -1 };
+
+    return this._getItemReviewsPromise(fakeItem, platformSelection);
   }
 }
 

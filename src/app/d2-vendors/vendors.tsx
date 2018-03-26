@@ -18,17 +18,21 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import VendorItems from './vendor-items';
 import { $state, loadingTracker } from '../ngimport-more';
 import './vendor.scss';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { fetchRatings } from './vendor-ratings';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: StoreServiceType;
+  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
   defs?: D2ManifestDefinitions;
   vendorsResponse?: DestinyVendorsResponse;
+  trackerService?: DestinyTrackerServiceType;
 }
 
 export default class Vendors extends React.Component<Props, State> {
@@ -57,7 +61,11 @@ export default class Vendors extends React.Component<Props, State> {
         : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
-    this.setState({ vendorsResponse, defs });
+
+    this.setState({ defs, vendorsResponse });
+
+    const trackerService = await fetchRatings(defs, this.props.dimDestinyTrackerService, vendorsResponse);
+    this.setState({ trackerService });
   }
 
   componentDidMount() {
@@ -71,7 +79,7 @@ export default class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorsResponse } = this.state;
+    const { defs, vendorsResponse, trackerService } = this.state;
 
     if (!vendorsResponse || !defs) {
       // TODO: loading component!
@@ -82,7 +90,7 @@ export default class Vendors extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
-          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse}/>
+          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} trackerService={trackerService}/>
         )}
 
       </div>
@@ -93,11 +101,13 @@ export default class Vendors extends React.Component<Props, State> {
 function VendorGroup({
   defs,
   group,
-  vendorsResponse
+  vendorsResponse,
+  trackerService
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
+  trackerService?: DestinyTrackerServiceType;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -110,6 +120,7 @@ function VendorGroup({
           vendor={vendor}
           itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
           sales={vendorsResponse.sales.data[vendor.vendorHash] && vendorsResponse.sales.data[vendor.vendorHash].saleItems}
+          trackerService={trackerService}
         />
       )}
     </>
@@ -120,7 +131,8 @@ function Vendor({
   defs,
   vendor,
   itemComponents,
-  sales
+  sales,
+  trackerService
 }: {
   defs: D2ManifestDefinitions;
   vendor: DestinyVendorComponent;
@@ -128,6 +140,7 @@ function Vendor({
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   };
+  trackerService?: DestinyTrackerServiceType;
 }) {
   const vendorDef = defs.Vendor.get(vendor.vendorHash);
   if (!vendorDef) {
@@ -156,6 +169,7 @@ function Vendor({
         vendorDef={vendorDef}
         sales={sales}
         itemComponents={itemComponents}
+        trackerService={trackerService}
       />
     </div>
   );

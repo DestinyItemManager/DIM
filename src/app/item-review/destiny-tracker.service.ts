@@ -88,13 +88,32 @@ import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
+import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { IPromise } from 'angular';
+
+export interface DestinyTrackerServiceType {
+  bulkFetchVendorItems(vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                       vendorItems?: DestinyVendorItemDefinition[]): Promise<DestinyTrackerServiceType>;
+  reattachScoresFromCache(stores: any | DimStore[]): void;
+  updateCachedUserRankings(item: any | DimItem, userReview: any);
+  updateVendorRankings(vendors: any);
+  getItemReviews(item: any | DimItem);
+  getItemReviewAsync(itemHash: number): IPromise<DtrReviewContainer>;
+  submitReview(item: any | DimItem);
+  fetchReviews(stores: any | DimStore[]);
+  reportReview(review: any);
+  clearIgnoredUsers();
+  clearCache();
+  getD2ReviewDataCache(): D2ReviewDataCache;
+}
 
 export function DestinyTrackerService(
   $q,
   $http,
   $i18next,
   loadingTracker
-) {
+): DestinyTrackerServiceType {
   'ngInject';
 
   const _reviewDataCache = new ReviewDataCache();
@@ -120,7 +139,7 @@ export function DestinyTrackerService(
   }
 
   return {
-    reattachScoresFromCache(stores) {
+    reattachScoresFromCache(stores: any | DimStore[]): void {
       if (!stores || !stores[0]) {
         return;
       }
@@ -142,6 +161,25 @@ export function DestinyTrackerService(
         _d2reviewDataCache.addUserReviewData(item,
                                              userReview);
       }
+    },
+
+    async bulkFetchVendorItems(vendorSaleItems?: DestinyVendorSaleItemComponent[],
+                               vendorItems?: DestinyVendorItemDefinition[]): Promise<DestinyTrackerServiceType> {
+      if (settings.showReviews) {
+        if (_isDestinyOne()) {
+          throw new Error(("This is a D2-only call."));
+        } else if (_isDestinyTwo()) {
+          const platformSelection = settings.reviewsPlatformSelection;
+          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, vendorSaleItems, vendorItems);
+          return this;
+        }
+      }
+
+      return $q.when();
+    },
+
+    getD2ReviewDataCache(): D2ReviewDataCache {
+      return _d2bulkFetcher.getCache();
     },
 
     updateVendorRankings(vendors) {
@@ -177,7 +215,7 @@ export function DestinyTrackerService(
       }
     },
 
-    fetchReviews(stores) {
+    fetchReviews(stores: any | DimStore[]) {
       if (!settings.showReviews ||
           !stores ||
           !stores[0]) {
@@ -190,6 +228,18 @@ export function DestinyTrackerService(
         const platformSelection = settings.reviewsPlatformSelection;
         _d2bulkFetcher.bulkFetch(stores, platformSelection);
       }
+    },
+
+    getItemReviewAsync(itemHash: number): IPromise<DtrReviewContainer> {
+      if (settings.allowIdPostToDtr) {
+        if (_isDestinyOne()) {
+          console.error("This is a D2-only call.");
+        } else if (_isDestinyTwo()) {
+          const platformSelection = settings.reviewsPlatformSelection;
+          return _d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection);
+        }
+      }
+      return $q.when({});
     },
 
     reportReview(review) {

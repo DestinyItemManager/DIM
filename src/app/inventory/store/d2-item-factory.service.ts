@@ -40,7 +40,7 @@ import { NewItemsService } from './new-items.service';
 import { DimItemInfo, ItemInfoSource } from '../dim-item-info';
 import { $q } from 'ngimport';
 import { t } from 'i18next';
-import { DtrUserReview } from '../../item-review/destiny-tracker.service';
+import { DtrUserReview, DimWorkingUserReview } from '../../item-review/destiny-tracker.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -163,6 +163,7 @@ export interface DimItem {
   name: string;
   description: string;
   icon: string;
+  secondaryIcon: string;
   notransfer: boolean;
   canPullFromPostmaster: boolean;
   id: string; // zero for non-instanced is legacy hack
@@ -181,6 +182,7 @@ export interface DimItem {
   complete: boolean;
   amount: number;
   primStat: EnhancedStat | null;
+  /** Localized name of this item's type. */
   typeName: string;
   equipRequiredLevel: number;
   maxStackSize: number;
@@ -481,7 +483,8 @@ export function makeItem(
   itemInfoService: ItemInfoSource | undefined,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
-  owner: DimStore | undefined
+  owner: DimStore | undefined,
+  reviewData?: DimWorkingUserReview | null
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> = item.itemInstanceId && itemComponents ? itemComponents.instances.data[item.itemInstanceId] : {};
@@ -541,6 +544,7 @@ export function makeItem(
     name: itemDef.displayProperties.name,
     description: itemDef.displayProperties.description,
     icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
+    secondaryIcon: itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
     notransfer: Boolean(itemDef.nonTransferrable ||
       item.transferStatus === TransferStatuses.NotTransferrable),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
@@ -556,7 +560,7 @@ export function makeItem(
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeName: getClass(itemDef.classType),
+    classTypeName: itemDef.redacted ? 'unknown' : getClass(itemDef.classType),
     classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
     dmg: dmgName,
     visible: true,
@@ -573,12 +577,15 @@ export function makeItem(
     talentGrid: null, // filled in later
     stats: null, // filled in later
     objectives: null, // filled in later
+    dtrRatingCount: (reviewData) ? reviewData.totalReviews : undefined,
+    dtrRating: (reviewData) ? reviewData.rating : undefined,
+    reviews: (reviewData) ? reviewData.reviews : []
   });
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem));
+  createdItem.reviewable = Boolean(($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem)) || (reviewData && reviewData.reviews));
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
@@ -795,7 +802,8 @@ function buildDefaultStats(itemDef: DestinyInventoryItemDefinition, statDefs: La
       id: stat.statHash,
       sort: statWhiteList.indexOf(stat.statHash),
       value: stat.value,
-      maximumValue: 100,
+      // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
+      maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
       bar: stat.statHash !== 4284893193 &&
         stat.statHash !== 3871231066 &&
         stat.statHash !== 2961396640
@@ -885,6 +893,36 @@ function buildObjectives(
   return objectives.map((objective) => {
     const def = objectiveDefs.get(objective.objectiveHash);
 
+    let complete = false;
+    let booleanValue = false;
+    let display = `${objective.progress || 0}/${def.completionValue}`;
+    let displayStyle: string | null;
+    switch (def.valueStyle) {
+      case DestinyUnlockValueUIStyle.Integer:
+        display = `${objective.progress || 0}`;
+        displayStyle = 'integer';
+        break;
+      case DestinyUnlockValueUIStyle.Multiplier:
+        display = `${(objective.progress || 0) / def.completionValue}x`;
+        displayStyle = 'integer';
+        break;
+      case DestinyUnlockValueUIStyle.DateTime:
+        const date = new Date(0);
+        date.setUTCSeconds(objective.progress || 0);
+        display = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+        displayStyle = 'integer';
+        break;
+      case DestinyUnlockValueUIStyle.Checkbox:
+      case DestinyUnlockValueUIStyle.Automatic:
+        displayStyle = null;
+        booleanValue = def.completionValue === 1;
+        complete = objective.complete;
+        break;
+      default:
+        displayStyle = null;
+        complete = objective.complete;
+    }
+
     return {
       displayName: def.displayProperties.name || def.progressDescription ||
         (objective.complete
@@ -893,10 +931,10 @@ function buildObjectives(
       description: def.displayProperties.description,
       progress: objective.progress || 0,
       completionValue: def.completionValue,
-      complete: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? false : objective.complete,
-      boolean: def.completionValue === 1 && (def.valueStyle === DestinyUnlockValueUIStyle.Checkbox || def.valueStyle === DestinyUnlockValueUIStyle.Automatic),
-      displayStyle: def.valueStyle === DestinyUnlockValueUIStyle.Integer ? 'integer' : null,
-      display: `${objective.progress || 0}/${def.completionValue}`
+      complete,
+      boolean: booleanValue,
+      displayStyle,
+      display
     };
   });
 }

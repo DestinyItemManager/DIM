@@ -4,7 +4,7 @@ import { ItemTagComponent } from './item-tag.component';
 import { MoveAmount } from './move-amount.directive';
 import { ObjectivesComponent } from './objectives.component';
 import { FlavorObjectiveComponent } from './flavor-objective.component';
-import { MoveItemProperties } from './dimMoveItemProperties.directive';
+import { MoveItemPropertiesComponent } from './dimMoveItemProperties.directive';
 import { MovePopupComponent } from './dimMovePopup.directive';
 import { MoveLocationsComponent } from './move-locations.component';
 import { talentGridNodesFilter, TalentGridComponent } from './talent-grid.component';
@@ -19,7 +19,7 @@ export default module('movePopupModule', [])
   .directive('dimMoveAmount', MoveAmount)
   .component('dimObjectives', ObjectivesComponent)
   .component('dimFlavorObjective', FlavorObjectiveComponent)
-  .directive('dimMoveItemProperties', MoveItemProperties)
+  .component('dimMoveItemProperties', MoveItemPropertiesComponent)
   .component('dimMoveLocations', MoveLocationsComponent)
   .component('dimMovePopup', MovePopupComponent)
   .component('dimTalentGrid', TalentGridComponent)
