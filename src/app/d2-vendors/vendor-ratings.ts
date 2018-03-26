@@ -1,5 +1,5 @@
 import { DestinyTrackerServiceType } from "../item-review/destiny-tracker.service";
-import { DestinyVendorsResponse, DestinyVendorSaleItemComponent, DestinyVendorResponse, DestinyProfileResponse, DestinyVendorItemDefinition } from "bungie-api-ts/destiny2";
+import { DestinyVendorsResponse, DestinyVendorSaleItemComponent, DestinyVendorResponse, DestinyProfileResponse, DestinyVendorItemDefinition, DestinyVendorDefinition } from "bungie-api-ts/destiny2";
 import * as _ from "underscore";
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { flatMap } from "../util";
@@ -56,6 +56,16 @@ export async function fetchRatingsForKiosks(
     const vendorDef = defs.Vendor.get(vendorHash);
     return vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
   });
+
+  return destinyTrackerService.bulkFetchKioskItems(vendorItems);
+}
+
+export async function fetchRatingsForVendorDef(
+  defs: D2ManifestDefinitions,
+  destinyTrackerService: DestinyTrackerServiceType,
+  vendorDef: DestinyVendorDefinition
+): Promise<DestinyTrackerServiceType> {
+  const vendorItems = vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
 
   return destinyTrackerService.bulkFetchKioskItems(vendorItems);
 }

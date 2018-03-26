@@ -12,7 +12,7 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import { FactionIcon } from '../progress/faction';
 import VendorItems from './vendor-items';
 import './vendor.scss';
-import { fetchRatingsForVendor } from './vendor-ratings';
+import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 
 interface Props {
@@ -71,6 +71,9 @@ export default class SingleVendor extends React.Component<Props, State> {
       this.setState({ defs, vendorResponse });
 
       const trackerService = await fetchRatingsForVendor(defs, this.props.dimDestinyTrackerService, vendorResponse);
+      this.setState({ trackerService });
+    } else {
+      const trackerService = await fetchRatingsForVendorDef(defs, this.props.dimDestinyTrackerService, vendorDef);
       this.setState({ trackerService });
     }
   }
