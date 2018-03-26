@@ -14,6 +14,7 @@ import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.servic
 import { bungieBackgroundStyle } from '../dim-ui/bungie-image';
 import { $state } from '../ngimport-more';
 import { t } from 'i18next';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 
 export default function VendorItems({
   vendorDef,
@@ -21,7 +22,8 @@ export default function VendorItems({
   itemComponents,
   sales,
   kioskItems,
-  trackerService
+  trackerService,
+  ownedItemHashes
 }: {
   defs: D2ManifestDefinitions;
   vendorDef: DestinyVendorDefinition;
@@ -31,6 +33,8 @@ export default function VendorItems({
   };
   kioskItems?: DestinyKioskItem[];
   trackerService?: DestinyTrackerServiceType;
+  stores?: DimStore[];
+  ownedItemHashes?: Set<number>;
 }) {
   const reviewCache: D2ReviewDataCache | undefined = (trackerService) ? trackerService.getD2ReviewDataCache() : undefined;
 
@@ -62,7 +66,13 @@ export default function VendorItems({
           <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
           <div className="vendor-items">
           {items.map((item) =>
-            <VendorItemComponent key={item.key} defs={defs} item={item} trackerService={trackerService} />
+            <VendorItemComponent
+              key={item.key}
+              defs={defs}
+              item={item}
+              trackerService={trackerService}
+              owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.itemHash))}
+            />
           )}
           </div>
         </div>

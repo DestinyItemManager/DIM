@@ -1,4 +1,5 @@
 // This inherits a lot of styles from ../vendors/vendors.scss
+@import '../../scss/variables.scss';
 
 .under-construction {
   background-color: #0a40c2;
@@ -31,6 +32,26 @@
       width: 48px;
       margin-right: 8px;
     }
+  }
+}
+
+.vendor-item.owned {
+  //opacity: .35;
+
+  &::after {
+    content: "✔";
+    color: white;
+    background-color: green;
+    position: absolute;
+    top: 0px;
+    right: 0;
+    border-radius: 50%;
+    height: 18px;
+    width: 18px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

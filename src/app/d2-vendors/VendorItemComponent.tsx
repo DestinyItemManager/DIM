@@ -17,6 +17,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   item: VendorItem;
   trackerService?: DestinyTrackerServiceType;
+  owned: boolean;
 }
 
 export default class VendorItemComponent extends React.Component<Props> {
@@ -36,7 +37,7 @@ export default class VendorItemComponent extends React.Component<Props> {
   }
 
   render() {
-    const { item, defs } = this.props;
+    const { item, defs, owned } = this.props;
 
     if (item.displayTile) {
       return (
@@ -57,7 +58,7 @@ export default class VendorItemComponent extends React.Component<Props> {
     }
 
     return (
-      <div className={classNames("vendor-item")}>
+      <div className={classNames("vendor-item", { owned })}>
         {(!item.canPurchase || !item.canBeSold) &&
           <div className="locked-overlay"/>
         }
