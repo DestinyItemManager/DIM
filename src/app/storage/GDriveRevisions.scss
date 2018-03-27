@@ -1,0 +1,34 @@
+.gdrive-revisions {
+  width: 100%;
+  border-spacing: 0 4px;
+  border-collapse:separate;
+
+  th {
+    text-align: left;
+  }
+
+  tr, td {
+    padding: 0 8px;
+  }
+
+  td {
+    vertical-align: top;
+    background-color: #353535;
+    padding: 8px;
+    margin: 0 0 4px 0;
+  }
+
+  ul {
+    margin: 8px 0 0 0;
+    padding-left: 3em;
+  }
+
+  .revision-date, .revision-controls {
+    width: 1px;
+    white-space: nowrap;
+  }
+
+  .revision-controls {
+    text-align: right;
+  }
+}

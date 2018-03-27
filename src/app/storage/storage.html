@@ -41,6 +41,10 @@
           <i class="fa fa-sign-out"></i>
           <span ng-i18next="Storage.DriveLogout"></span>
         </button>
+        <button ng-if="adapter.enabled" class="dim-button" ui-sref="gdrive-revisions">
+            <i class="fa fa-upload"></i>
+            <span ng-i18next="Storage.GDriveRevisions"></span>
+          </button>
       </div>
     </div>
 
@@ -50,7 +54,7 @@
 
     <p ng-i18next="Storage.StatLabel"></p>
     <ul>
-      <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" ng-i18next="[i18next]({value: value})Storage.{{key}}"></li>
+      <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" ng-if="value > 0" ng-i18next="[i18next]({value: value})Storage.{{key}}"></li>
       <li ng-if="!$ctrl.adapterStats[adapter.name]" ng-i18next="Storage.NoData"></li>
     </ul>
   </div>

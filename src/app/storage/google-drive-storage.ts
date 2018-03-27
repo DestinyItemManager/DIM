@@ -2,12 +2,20 @@ import { getToken } from '../oauth/oauth-token.service';
 import { t } from 'i18next';
 import { $q, $rootScope } from 'ngimport';
 import { StorageAdapter, DimData } from './sync.service';
+import { IPromise } from 'angular';
 
 declare const gapi: any;
 declare global {
   interface Window {
     gapi: any;
   }
+}
+
+export interface GDriveRevision {
+  id: string;
+  kind: 'drive#revision';
+  mimeType: 'application/json';
+  modifiedTime: string;
 }
 
 export class GoogleDriveStorage implements StorageAdapter {
@@ -71,7 +79,7 @@ export class GoogleDriveStorage implements StorageAdapter {
             // TODO: error handling
             // this.revokeDrive();
             console.error('Error saving to Google Drive', resp);
-            throw new Error(`error saving. ${resp.error}`);
+            throw new Error(`error saving. ${gdriveErrorMessage(resp)}`);
           });
       });
   }
@@ -147,7 +155,7 @@ export class GoogleDriveStorage implements StorageAdapter {
           // This won't happen since we'll redirect
           .then(() => this.updateSigninStatus(true))
           .catch((e) => {
-            throw new Error(`Failed to sign in to Google Drive: ${e.error}`);
+            throw new Error(`Failed to sign in to Google Drive: ${gdriveErrorMessage(e)}`);
           });
       }
     });
@@ -169,7 +177,7 @@ export class GoogleDriveStorage implements StorageAdapter {
    * Get the ID (not the filename) of the file in Google Drive. We
    * may have to create it.
    */
-  getFileId() {
+  getFileId(): IPromise<string> {
     // if we already have the fileId, just return.
     if (this.fileId) {
       return $q.resolve(this.fileId);
@@ -244,7 +252,42 @@ export class GoogleDriveStorage implements StorageAdapter {
     gapi.auth2.getAuthInstance().signOut();
   }
 
-  private _get(triedFallback = false) {
+  async getRevisions(): Promise<GDriveRevision[]> {
+    try {
+      await this.ready;
+      const fileId = await this.getFileId();
+      const revisions = await gapi.client.drive.revisions.list({ fileId });
+      if (revisions.status === 200) {
+        return revisions.result.revisions as GDriveRevision[];
+      } else {
+        throw new Error("Error getting revisions: " + gdriveErrorMessage(revisions));
+      }
+    } catch (e) {
+      throw new Error(`Unable to load GDrive revisions for ${this.fileId}: ${gdriveErrorMessage(e)}`);
+    }
+  }
+
+  async getRevisionContent(revisionId: string): Promise<object> {
+    await this.ready;
+    try {
+      const fileId = await this.getFileId();
+      const file = await gapi.client.drive.files.get({
+        fileId,
+        revisionId,
+        alt: 'media'
+      });
+
+      if (file.status === 200) {
+        return file.result;
+      } else {
+        throw new Error("Error getting revisions: " + gdriveErrorMessage(file));
+      }
+    } catch (e) {
+      throw new Error(`Unable to load revision ${revisionId}: ${gdriveErrorMessage(e)}`);
+    }
+  }
+
+  private _get(triedFallback = false): IPromise<string> {
     return this.getFileId()
       .then((fileId) => {
         return gapi.client.drive.files.get({
@@ -256,7 +299,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       .catch((e) => {
         if (triedFallback || e.status !== 404) {
           console.error(`Unable to load GDrive file ${this.fileId}`);
-          throw new Error(`GDrive Error: ${e.status} ${e.statusText}`);
+          throw new Error(`GDrive Error: ${gdriveErrorMessage(e)}`);
         } else {
           this.fileId = null;
           localStorage.removeItem('gdrive-fileid');
@@ -268,7 +311,7 @@ export class GoogleDriveStorage implements StorageAdapter {
   /**
    * React to changes in sign-in status.
    */
-  private updateSigninStatus(isSignedIn) {
+  private updateSigninStatus(isSignedIn: boolean): IPromise<string | undefined> {
     if (isSignedIn) {
       if ($featureFlags.debugSync) {
         console.log('signed in to Google Drive');
@@ -280,7 +323,20 @@ export class GoogleDriveStorage implements StorageAdapter {
         console.log('not signed in to Google Drive');
       }
       this.enabled = false;
-      return $q.resolve();
+      return $q.resolve(undefined);
     }
   }
+}
+
+function gdriveErrorMessage(error) {
+  if (error.result && error.result.error && error.result.error.message) {
+    return error.result.error.message;
+  }
+  if (error.status) {
+    return `${error.status} ${error.statusText}`;
+  }
+  if (error.message) {
+    return error.message;
+  }
+  return "Unknown error";
 }

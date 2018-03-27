@@ -15,7 +15,7 @@
   "rules": {
     "brace-style": [true, "1tbs", { "allowSingleLine": true }],
     "curly": true,
-    "ban": [true, ["alert"]],
+    "ban": [true, []],
     "no-switch-case-fall-through": false,
     "no-multi-spaces": true,
     "no-duplicate-variable": [true, "check-parameters"],

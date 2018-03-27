@@ -11,7 +11,7 @@ import {
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
 import { settings } from '../settings/settings';
-import { sum } from '../util';
+import { sum, count } from '../util';
 import template from './storage.html';
 import './storage.scss';
 import { StorageAdapter, SyncService } from './sync.service';
@@ -20,6 +20,27 @@ declare global {
   interface Window {
     MSStream: any;
   }
+}
+
+export function dataStats(data) {
+  const taggedItemsD1 = sum(Object.keys(data)
+                          .filter((k) => k.startsWith('dimItemInfo') && k.endsWith("-d1"))
+                          .map((k) => _.size(data[k])), (v) => v);
+  const taggedItemsD2 = sum(Object.keys(data)
+                          .filter((k) => k.startsWith('dimItemInfo') && k.endsWith("-d2"))
+                          .map((k) => _.size(data[k])), (v) => v);
+
+  const loadoutsD1 = count(data['loadouts-v3.0'] || [], (loadoutId: string) => data[loadoutId].destinyVersion !== 2);
+  const loadoutsD2 = count(data['loadouts-v3.0'] || [], (loadoutId: string) => data[loadoutId].destinyVersion === 2);
+
+  return {
+    LoadoutsD1: loadoutsD1,
+    LoadoutsD2: loadoutsD2,
+    TagNotesD1: taggedItemsD1,
+    TagNotesD2: taggedItemsD2,
+    Settings: _.size(data['settings-v1.0']),
+    IgnoredUsers: _.size(data.ignoredUsers)
+  };
 }
 
 export const StorageComponent: IComponentOptions = {
@@ -50,19 +71,6 @@ function StorageController(
 
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   vm.supportsExport = !iOS;
-
-  function dataStats(data) {
-    const taggedItems = sum(Object.keys(data)
-                            .filter((k) => k.startsWith('dimItemInfo'))
-                            .map((k) => _.size(data[k])), (v) => v);
-
-    return {
-      Loadouts: _.size(data['loadouts-v3.0']),
-      TagNotes: taggedItems,
-      Settings: _.size(data['settings-v1.0']),
-      IgnoredUsers: _.size(data.ignoredUsers)
-    };
-  }
 
   function refreshAdapter(adapter: StorageAdapter) {
     if (adapter.enabled) {
