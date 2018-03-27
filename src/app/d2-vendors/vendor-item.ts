@@ -51,7 +51,7 @@ export class VendorItem {
         this.reviewData = reviewCache.getRatingData(saleItem);
       }
       // TODO: more here, like perks and such
-    } else if (vendorItemDef && reviewCache) {
+    } else if (reviewCache) {
       this.reviewData = reviewCache.getRatingData(undefined, vendorItemDef.itemHash);
     }
   }

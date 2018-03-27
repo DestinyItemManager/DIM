@@ -53,6 +53,7 @@ export default function VendorItems({
   );
 }
 
+// TODO: do this in parent components, pass in the right thing
 function getItems(
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition,

@@ -19,7 +19,7 @@ import VendorItems from './vendor-items';
 import { $state, loadingTracker } from '../ngimport-more';
 import './vendor.scss';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
-import { fetchRatings } from './vendor-ratings';
+import { fetchRatingsForVendors } from './vendor-ratings';
 
 interface Props {
   $scope: IScope;
@@ -64,7 +64,7 @@ export default class Vendors extends React.Component<Props, State> {
 
     this.setState({ defs, vendorsResponse });
 
-    const trackerService = await fetchRatings(defs, this.props.dimDestinyTrackerService, vendorsResponse);
+    const trackerService = await fetchRatingsForVendors(defs, this.props.dimDestinyTrackerService, vendorsResponse);
     this.setState({ trackerService });
   }
 

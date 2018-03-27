@@ -233,7 +233,7 @@ function MoveItemPropertiesCtrl(
       $scope.$watch('vm.compareItem', compareItems);
     } else {
       $scope.$watch('$parent.$parent.vm.store.items', (items: DimItem[]) => {
-        const item = items.find((item) => item.equipped && item.type === vm.item.type);
+        const item = (items || []).find((item) => item.equipped && item.type === vm.item.type);
         compareItems(item);
       });
     }
