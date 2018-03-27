@@ -69,8 +69,8 @@ export default class VendorItemComponent extends React.Component<Props> {
           {(item.primaryStat || item.rating) &&
             <div>
               {item.rating && <div className="item-stat item-review">
-                <i className="fa fa-star" style={dtrRatingColor(item.rating)}/>
                 {item.rating}
+                <i className="fa fa-star" style={dtrRatingColor(item.rating)}/>
               </div>}
               {item.primaryStat && <div className="item-stat item-equipment">{item.primaryStat}</div>}
             </div>}
