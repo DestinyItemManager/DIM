@@ -61,7 +61,7 @@ export default class VendorItemComponent extends React.Component<Props> {
         {(!item.canPurchase || !item.canBeSold) &&
           <div className="locked-overlay"/>
         }
-        <div className="item" ref={this.captureElementRef} onClick={this.openDetailsPopup}>
+        <div className="item" title={item.displayProperties.name} ref={this.captureElementRef} onClick={this.openDetailsPopup}>
           <div
             className={classNames("item-img", { transparent: item.borderless })}
             style={bungieBackgroundStyle(item.displayProperties.icon)}

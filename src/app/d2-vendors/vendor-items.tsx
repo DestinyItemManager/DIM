@@ -11,6 +11,9 @@ import { VendorItem } from './vendor-item';
 import VendorItemComponent from './VendorItemComponent';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { bungieBackgroundStyle } from '../dim-ui/bungie-image';
+import { $state } from '../ngimport-more';
+import { t } from 'i18next';
 
 export default function VendorItems({
   vendorDef,
@@ -37,8 +40,23 @@ export default function VendorItems({
   // TODO: sort items, maybe subgroup them
   const itemsByCategory = _.groupBy(items, (item: VendorItem) => item.displayCategoryIndex);
 
+  const faction = vendorDef.factionHash ? defs.Faction[vendorDef.factionHash] : undefined;
+  const rewardVendorHash = faction && faction.rewardVendorHash || undefined;
+  const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
+  const goToRewardVendor = rewardVendorHash && (() => $state.go('destiny2.vendor', { id: rewardVendorHash }));
+
   return (
     <div className="vendor-char-items">
+      {rewardVendorHash && rewardItem && goToRewardVendor &&
+        <div className="vendor-row">
+          <h3 className="category-title">{t('Vendors.Engram')}</h3>
+          <div className="item" title={rewardItem.displayProperties.name} onClick={goToRewardVendor}>
+            <div
+              className="item-img transparent"
+              style={bungieBackgroundStyle(rewardItem.displayProperties.icon)}
+            />
+          </div>
+        </div>}
       {_.map(itemsByCategory, (items, categoryIndex) =>
         <div className="vendor-row" key={categoryIndex}>
           <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
