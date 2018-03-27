@@ -360,7 +360,7 @@
       "HelpScaled": "Calcula los equipos como si todos los objetos tuvieran 350 de defensa.",
       "LightMode": "Modo de Luz"
     },
-    "Loading": "Cargar los mejores equipos ({{percent, pct}})",
+    "Loading": "Cargar los mejores equipos",
     "LockEquipped": "Bloquear equipado",
     "LockPerk": "Bloquear mejora",
     "Locked": "Objetos bloqueados",

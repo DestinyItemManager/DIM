@@ -360,7 +360,7 @@
       "HelpScaled": "Calcule les pré sets comme si tous les objets avaient 350 de défense.",
       "LightMode": "Mode lumière"
     },
-    "Loading": "Chargement des meilleurs sets ({{percent, pct}})",
+    "Loading": "Chargement des meilleurs sets",
     "LockEquipped": "Verrouiller équipé",
     "LockPerk": "Verrouiller amélioration",
     "Locked": "Objets verrouillés",

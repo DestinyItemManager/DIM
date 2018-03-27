@@ -360,7 +360,7 @@
       "HelpScaled": "Calcular set como se todo os itens fossem 350 de defesa.",
       "LightMode": "Modo de luz"
     },
-    "Loading": "Carregando os melhores sets ({{percent, pct}})",
+    "Loading": "Carregando os melhores sets",
     "LockEquipped": "Travar itens equipados",
     "LockPerk": "Travar perk",
     "Locked": "Itens travados",

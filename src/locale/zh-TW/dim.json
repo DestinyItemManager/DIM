@@ -360,7 +360,7 @@
       "HelpScaled": "計算使所有角色都都擁有350防禦.",
       "LightMode": "光亮模式"
     },
-    "Loading": "裝備最佳套裝({{percent, pct}})",
+    "Loading": "裝備最佳套裝",
     "LockEquipped": "鎖定裝備",
     "LockPerk": "鎖定特性",
     "Locked": "鎖定的物品",

@@ -360,7 +360,7 @@
       "HelpScaled": "Calculates loadouts as if all items were 350 defense.",
       "LightMode": "Light mode"
     },
-    "Loading": "Loading best sets ({{percent, pct}})",
+    "Loading": "Loading best sets",
     "LockEquipped": "Lock Equipped",
     "LockPerk": "Lock perk",
     "Locked": "Locked Items",
