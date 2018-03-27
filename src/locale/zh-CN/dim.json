@@ -360,7 +360,7 @@
       "HelpScaled": "计算使所有角色都都拥有350防御.",
       "LightMode": "光亮模式"
     },
-    "Loading": "装备最佳套装({{percent, pct}})",
+    "Loading": "装备最佳套装",
     "LockEquipped": "锁定装备",
     "LockPerk": "锁定特性",
     "Locked": "锁定的物品",

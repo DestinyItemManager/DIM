@@ -360,7 +360,7 @@
       "HelpScaled": "すべてのアイテムが350防御であるかのように負荷を計算します。",
       "LightMode": "ライトモード"
     },
-    "Loading": "ベストセットをロードする ({{percent, pct}})",
+    "Loading": "ベストセットをロードする",
     "LockEquipped": "装備をロック",
     "LockPerk": "パークを固定する",
     "Locked": "ロックされたアイテム",

@@ -360,7 +360,7 @@
       "HelpScaled": "Berechne Loadouts als ob alle Items 350 Verteidigung hätten.",
       "LightMode": "Licht Modus"
     },
-    "Loading": "Lade die besten Sets ({{percent, pct}})",
+    "Loading": "Lade die besten Sets",
     "LockEquipped": "Ausgerüstetes sperren",
     "LockPerk": "Perk sperren",
     "Locked": "Gesperrte Items",

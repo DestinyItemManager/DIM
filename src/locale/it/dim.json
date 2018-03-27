@@ -360,7 +360,7 @@
       "HelpScaled": "Calcola i loadout, supponendo che tutti gli oggetti abbiano 350 di difesa.",
       "LightMode": "Modalità Luce"
     },
-    "Loading": "Caricando i migliori set ({{percent, pct}})",
+    "Loading": "Caricando i migliori set",
     "LockEquipped": "Blocca Equipaggiati",
     "LockPerk": "Blocca perk",
     "Locked": "Oggetti Bloccati",
