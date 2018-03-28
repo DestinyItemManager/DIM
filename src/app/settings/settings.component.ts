@@ -73,6 +73,7 @@ export function SettingsController(
     4: $i18next.t('DtrReview.Platforms.Pc')
   };
 
+  // these values correspond to DestinyActivityModeType
   vm.reviewsModeOptions = {
     0: $i18next.t('DtrReview.Modes.None'),
     7: $i18next.t('DtrReview.Modes.AllPvE'),
