@@ -132,6 +132,8 @@ class D2ReviewDataCache {
 
     matchingItem.userRating = matchingItem.rating;
 
+    matchingItem.mode = matchingItem.mode;
+
     matchingItem.userVote = userVote;
   }
 

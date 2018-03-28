@@ -57,6 +57,7 @@ export interface DimWorkingUserReview extends DtrReviewContainer {
   userVote: number;
   rating: number;
   userRating: number;
+  mode: number;
   reviewsDataFetched: boolean;
   highlightedRatingCount: number;
   review: string;

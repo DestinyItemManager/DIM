@@ -100,6 +100,7 @@ class D2ReviewsFetcher {
       item.userReview = userReview.text;
       item.userReviewPros = userReview.pros;
       item.userReviewCons = userReview.cons;
+      item.mode = userReview.mode;
     }
 
     this._reviewDataCache.addReviewsData(item, reviewData);

@@ -3,7 +3,7 @@ import { settings } from '../settings/settings';
 import template from './item-review.html';
 import './item-review.scss';
 
-function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
+function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -92,6 +92,16 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
 
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
+  // these values correspond to DestinyActivityModeType
+  // TODO: this is copied from settings.component.ts; figure out how to share
+  vm.reviewModeOptions = {
+    0: $i18next.t('DtrReview.Modes.None'),
+    7: $i18next.t('DtrReview.Modes.AllPvE'),
+    5: $i18next.t('DtrReview.Modes.AllPvP'),
+    4: $i18next.t('DtrReview.Modes.Raid'),
+    39: $i18next.t('DtrReview.Modes.TrialsOfTheNine')
+  };
+
   vm.getReviewData = function() {
     if (!vm.item.reviews) {
       return [];
@@ -160,12 +170,14 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     const review = item.userReview;
     const pros = item.userReviewPros;
     const cons = item.userReviewCons;
+    const mode = item.mode;
 
     const userReview = {
       voted: userVote,
       review: review,
       pros: pros,
-      cons: cons
+      cons: cons,
+      mode
     };
 
     return userReview;

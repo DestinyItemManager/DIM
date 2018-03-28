@@ -72,6 +72,13 @@
 </div>
 
 <div ng-if="$ctrl.canReview" class="community-review--details" ng-show="$ctrl.expandReview">
+  <div ng-if="$ctrl.item.destinyVersion === 2" class="community-review--mode">
+    <label for="reviewMode" ng-i18next="DtrReview.ForGameMode"></label>
+    <select id="reviewMode"
+      ng-model="$ctrl.item.mode"
+      ng-options="::code as name for (code, name) in $ctrl.reviewModeOptions">
+    </select>
+  </div>
   <textarea ng-i18next="[placeholder]DtrReview.Help"
             ng-model="$ctrl.item.userReview"
             ng-blur="$ctrl.reviewBlur()"></textarea>

@@ -92,12 +92,14 @@ function MoveItemPropertiesCtrl(
     const review = item.userReview;
     const pros = item.userReviewPros;
     const cons = item.userReviewCons;
+    const mode = item.mode;
 
     const userReview = {
       rating: newRating,
       review,
       pros,
-      cons
+      cons,
+      mode
     };
 
     return userReview;

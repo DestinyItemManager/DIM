@@ -233,6 +233,7 @@ export interface DimItem {
   reviews: DtrUserReview[];
   userReviewPros: string;
   userReviewCons: string;
+  mode: number;
   ratingCount: number;
   // timestamp of when reviews were attached - a hack to help React update in the short term
   reviewsUpdated?: number;
