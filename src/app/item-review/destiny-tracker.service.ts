@@ -44,8 +44,8 @@ export interface DtrUserReview {
   isIgnored?: boolean;
   selectedPerks: number[];
   attachedMods: number[];
-  mode?: number;  // play mode; corresponds to DestinyActivityModeType
-  sandbox?: number; // sandbox season (1 was the first, 2 is the March 2018 "go fast" update)
+  mode: number;  // play mode; corresponds to DestinyActivityModeType
+  sandbox: number; // sandbox season (1 was the first, 2 is the March 2018 "go fast" update)
 }
 
 export interface DtrReviewContainer extends DtrBulkItem {
@@ -93,6 +93,7 @@ import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { IPromise } from 'angular';
+import { getReviewMode } from './reviewModeTranslator';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -108,6 +109,7 @@ export interface DestinyTrackerServiceType {
   clearIgnoredUsers();
   clearCache();
   getD2ReviewDataCache(): D2ReviewDataCache;
+  getReviewMode(review: DtrUserReview): string;
 }
 
 export function DestinyTrackerService(
@@ -199,6 +201,10 @@ export function DestinyTrackerService(
 
     getD2ReviewDataCache(): D2ReviewDataCache {
       return _d2bulkFetcher.getCache();
+    },
+
+    getReviewMode(review: DtrUserReview): string {
+      return getReviewMode(review);
     },
 
     updateVendorRankings(vendors) {

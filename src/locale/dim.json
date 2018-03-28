@@ -95,6 +95,7 @@
     "Cons": "Cons",
     "Delete": "Delete",
     "Edit": "Edit",
+    "ForGameMode": "For game mode",
     "Help": "Write a review (optional)",
     "HelpCons": "Describe the negatives of this weapon (optional)",
     "HelpPros": "Describe the positives of this weapon (optional)",
@@ -119,6 +120,7 @@
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
+    "UnknownGameMode": "Unknown",
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review"
   },

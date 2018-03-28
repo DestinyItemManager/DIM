@@ -209,6 +209,10 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     }
   };
 
+  vm.getReviewMode = function(review) {
+    return dimDestinyTrackerService.getReviewMode(review);
+  };
+
   vm.setUserVote = function(userVote) {
     if (vm.item.userVote === userVote) {
       vm.item.userVote = 0;

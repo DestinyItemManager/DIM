@@ -152,6 +152,10 @@
                             'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"
                  ng-click="$ctrl.openFlagContext(review.id)"></div>
           </div>
+          <div class="community-review--game-mode">
+            <div ng-i18next="DtrReview.ForGameMode"></div>
+            <div ng-bind="$ctrl.getReviewMode(review)"></div>
+          </div>
           <div class="community-review--review" ng-bind="review.text"></div>
         </div>
         <div class="community-revew--report-container" ng-show="$ctrl.toggledFlags.indexOf(review.id) != -1">
