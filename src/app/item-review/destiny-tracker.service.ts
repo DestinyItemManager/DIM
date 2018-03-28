@@ -176,7 +176,8 @@ export function DestinyTrackerService(
           throw new Error(("This is a D2-only call."));
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, vendorSaleItems, undefined);
+          const mode = settings.reviewsModeSelection;
+          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, mode, vendorSaleItems);
           return this;
         }
       }
@@ -192,7 +193,8 @@ export function DestinyTrackerService(
           throw new Error(("This is a D2-only call."));
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, undefined, vendorItems);
+          const mode = settings.reviewsModeSelection;
+          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, mode, undefined, vendorItems);
           return this;
         }
       }
@@ -224,7 +226,8 @@ export function DestinyTrackerService(
           _reviewsFetcher.getItemReviews(item);
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          _d2reviewsFetcher.getItemReviews(item, platformSelection);
+          const mode = settings.reviewsModeSelection;
+          _d2reviewsFetcher.getItemReviews(item, platformSelection, mode);
         }
       }
     },
@@ -252,7 +255,8 @@ export function DestinyTrackerService(
         _bulkFetcher.bulkFetch(stores);
       } else if (stores[0].destinyVersion === 2) {
         const platformSelection = settings.reviewsPlatformSelection;
-        _d2bulkFetcher.bulkFetch(stores, platformSelection);
+        const mode = settings.reviewsModeSelection;
+        _d2bulkFetcher.bulkFetch(stores, platformSelection, mode);
       }
     },
 
@@ -262,7 +266,8 @@ export function DestinyTrackerService(
           console.error("This is a D2-only call.");
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          return _d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection);
+          const mode = settings.reviewsModeSelection;
+          return _d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection, mode);
         }
       }
       return $q.when({});

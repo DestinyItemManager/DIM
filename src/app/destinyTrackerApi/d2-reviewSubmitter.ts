@@ -48,10 +48,11 @@ class D2ReviewSubmitter {
     };
   }
 
-  _submitItemReviewCall(itemReview: RatingAndReviewRequest) {
+  _submitItemReviewCall(itemReview: RatingAndReviewRequest,
+                        mode: number) {
     return {
       method: 'POST',
-      url: 'https://db-api.destinytracker.com/api/external/reviews/submit',
+      url: `https://db-api.destinytracker.com/api/external/reviews/submit?mode=${mode}`,
       data: itemReview,
       dataType: 'json'
     };
@@ -63,9 +64,10 @@ class D2ReviewSubmitter {
     const review = this.toRatingAndReview(item);
 
     const rating = { ...rollAndPerks, ...review, reviewer };
+    const mode = item.mode;
 
     const promise = $q
-              .when(this._submitItemReviewCall(rating))
+              .when(this._submitItemReviewCall(rating, mode))
               .then($http)
               .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
 
