@@ -73,6 +73,14 @@ export function SettingsController(
     4: $i18next.t('DtrReview.Platforms.Pc')
   };
 
+  vm.reviewsModeOptions = {
+    0: $i18next.t('DtrReview.Modes.None'),
+    7: $i18next.t('DtrReview.Modes.AllPvE'),
+    5: $i18next.t('DtrReview.Modes.AllPvP'),
+    4: $i18next.t('DtrReview.Modes.Raid'),
+    39: $i18next.t('DtrReview.Modes.TrialsOfTheNine')
+  };
+
   if ($featureFlags.colorA11y) {
     vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
   }
@@ -135,7 +143,7 @@ export function SettingsController(
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
   };
 
-  vm.reviewsPlatformChanged = () => {
+  vm.saveAndReloadReviews = () => {
     settings.save();
     D2StoresService.refreshRatingsData();
   };

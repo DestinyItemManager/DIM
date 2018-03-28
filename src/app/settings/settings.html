@@ -105,7 +105,16 @@
         <select id="reviewsPlatformSelection"
           ng-model="vm.settings.reviewsPlatformSelection"
           ng-options="::code as name for (code, name) in vm.reviewsPlatformOptions"
-          ng-change="vm.reviewsPlatformChanged()">
+          ng-change="vm.saveAndReloadReviews()">
+        </select>
+      </div>
+
+      <div class="setting horizontal" ng-if="::vm.featureFlags.reviewsEnabled || vm.settings.allowIdPostToDtr">
+        <label for="reviewsModeSelection" ng-i18next="Settings.ReviewsModeSelection"></label>
+        <select id="reviewsModeSelection"
+          ng-model="vm.settings.reviewsModeSelection"
+          ng-options="::code as name for (code, name) in vm.reviewsModeOptions"
+          ng-change="vm.saveAndReloadReviews()">
         </select>
       </div>
     </section>
