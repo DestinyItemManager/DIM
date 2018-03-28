@@ -44,6 +44,8 @@ export interface DtrUserReview {
   isIgnored?: boolean;
   selectedPerks: number[];
   attachedMods: number[];
+  mode?: number;  // play mode; corresponds to DestinyActivityModeType
+  sandbox?: number; // sandbox season (1 was the first, 2 is the March 2018 "go fast" update)
 }
 
 export interface DtrReviewContainer extends DtrBulkItem {
