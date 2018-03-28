@@ -153,8 +153,8 @@
                  ng-click="$ctrl.openFlagContext(review.id)"></div>
           </div>
           <div class="community-review--game-mode">
-            <div ng-i18next="DtrReview.ForGameMode"></div>
-            <div ng-bind="$ctrl.getReviewMode(review)"></div>
+            <div class="community-review--game-mode-for" ng-i18next="DtrReview.ForGameMode"></div>
+            <div class="community-review--game-mode" ng-bind="$ctrl.getReviewMode(review)"></div>
           </div>
           <div class="community-review--review" ng-bind="review.text"></div>
         </div>
