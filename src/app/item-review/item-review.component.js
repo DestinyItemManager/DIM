@@ -14,6 +14,10 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18
   vm.expandReview = ((vm.item.isLocallyCached) && (vm.item.userVote !== 0));
   vm.toggledFlags = [];
 
+  if (!vm.item.mode) {
+    vm.item.mode = settings.reviewsModeSelection;
+  }
+
   vm.isCollapsed = false;
 
   vm.toggleChart = function() {
