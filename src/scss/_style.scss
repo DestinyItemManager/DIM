@@ -21,8 +21,8 @@
 
 @include phone-portrait {
   :root {
-    --item-size: calc((100vw - 80px - 8px * var(--character-columns)) / (var(--character-columns) + 1));
-    --vault-max-columns: 999;
+    --item-size: calc((100vw - 80px - 8px * var(--character-columns)) / (var(--character-columns) + 1)) !important;
+    --vault-max-columns: 999 !important;
   }
 }
 
