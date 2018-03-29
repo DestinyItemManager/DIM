@@ -98,13 +98,13 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18
 
   // these values correspond to DestinyActivityModeType
   // TODO: this is copied from settings.component.ts; figure out how to share
-  vm.reviewModeOptions = {
-    0: $i18next.t('DtrReview.Modes.None'),
-    7: $i18next.t('DtrReview.Modes.AllPvE'),
-    5: $i18next.t('DtrReview.Modes.AllPvP'),
-    4: $i18next.t('DtrReview.Modes.Raid'),
-    39: $i18next.t('DtrReview.Modes.TrialsOfTheNine')
-  };
+  vm.reviewModeOptions = [
+    { key: 0, value: $i18next.t('DtrReview.Modes.None') },
+    { key: 7, value: $i18next.t('DtrReview.Modes.AllPvE') },
+    { key: 5, value: $i18next.t('DtrReview.Modes.AllPvP') },
+    { key: 4, value: $i18next.t('DtrReview.Modes.Raid') },
+    { key: 39, value: $i18next.t('DtrReview.Modes.TrialsOfTheNine') }
+  ];
 
   vm.getReviewData = function() {
     if (!vm.item.reviews) {

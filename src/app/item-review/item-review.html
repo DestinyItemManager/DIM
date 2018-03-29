@@ -76,7 +76,7 @@
     <label for="reviewMode" ng-i18next="DtrReview.ForGameMode"></label>
     <select id="reviewMode"
       ng-model="$ctrl.item.mode"
-      ng-options="::code as name for (code, name) in $ctrl.reviewModeOptions">
+      ng-options="::reviewModeOption.key as reviewModeOption.value for reviewModeOption in $ctrl.reviewModeOptions">
     </select>
   </div>
   <textarea ng-i18next="[placeholder]DtrReview.Help"
