@@ -12,6 +12,7 @@ export interface RatingAndReviewRequest {
   text: string;
   pros: string;
   cons: string;
+  mode: number;
   isReviewer?: boolean;
   timestamp?: string;
 }
@@ -39,20 +40,20 @@ class D2ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item): RatingAndReviewRequest {
+  toRatingAndReview(item: DimItem): RatingAndReviewRequest {
     return {
       voted: item.userVote,
       text: item.userReview,
       pros: item.pros,
-      cons: item.cons
+      cons: item.cons,
+      mode: item.mode
     };
   }
 
-  _submitItemReviewCall(itemReview: RatingAndReviewRequest,
-                        mode: number) {
+  _submitItemReviewCall(itemReview: RatingAndReviewRequest) {
     return {
       method: 'POST',
-      url: `https://db-api.destinytracker.com/api/external/reviews/submit?mode=${mode}`,
+      url: `https://db-api.destinytracker.com/api/external/reviews/submit`,
       data: itemReview,
       dataType: 'json'
     };
@@ -64,10 +65,9 @@ class D2ReviewSubmitter {
     const review = this.toRatingAndReview(item);
 
     const rating = { ...rollAndPerks, ...review, reviewer };
-    const mode = item.mode;
 
     const promise = $q
-              .when(this._submitItemReviewCall(rating, mode))
+              .when(this._submitItemReviewCall(rating))
               .then($http)
               .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
 
