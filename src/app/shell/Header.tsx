@@ -16,6 +16,7 @@ import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/click-outside';
 import Refresh from './refresh';
 import { IScope } from 'angular';
+import RatingMode from './rating-mode';
 
 const destiny1Links = [
   {
@@ -214,6 +215,7 @@ export default class Header extends React.Component<Props, State> {
         </div>
 
         <span className="header-right">
+          {(!showSearch && account && account.destinyVersion === 2) && <RatingMode/>}
           {!showSearch && <Refresh/>}
           {!showSearch &&
             <a
