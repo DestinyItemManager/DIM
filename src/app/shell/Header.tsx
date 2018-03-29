@@ -8,15 +8,17 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
 import { $state, $transitions, ngDialog } from '../ngimport-more';
 import { SearchFilterComponent } from '../search/search-filter.component';
+import { StoreServiceType } from '../inventory/d2-stores.service';
 import AccountSelect from '../accounts/account-select';
 import './header.scss';
-import RatingMode from './rating-mode';
 
 // tslint:disable-next-line:no-implicit-dependencies
 import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/click-outside';
 import Refresh from './refresh';
 import { IScope } from 'angular';
+import RatingMode from '../rating-mode/rating-mode';
+import { settings } from '../settings/settings';
 
 const destiny1Links = [
   {
@@ -71,6 +73,7 @@ interface State {
 
 interface Props {
   $scope: IScope;
+  D2StoresService: StoreServiceType;
 }
 
 export default class Header extends React.Component<Props, State> {
@@ -215,7 +218,7 @@ export default class Header extends React.Component<Props, State> {
         </div>
 
         <span className="header-right">
-          {(!showSearch && account && account.destinyVersion === 2) && <RatingMode/>}
+          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews) && <RatingMode D2StoresService={this.props.D2StoresService} />}
           {!showSearch && <Refresh/>}
           {!showSearch &&
             <a
