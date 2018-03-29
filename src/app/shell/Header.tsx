@@ -10,6 +10,7 @@ import { $state, $transitions, ngDialog } from '../ngimport-more';
 import { SearchFilterComponent } from '../search/search-filter.component';
 import AccountSelect from '../accounts/account-select';
 import './header.scss';
+import RatingMode from './rating-mode';
 
 // tslint:disable-next-line:no-implicit-dependencies
 import logo from 'app/images/logo-type-right-light.svg';
@@ -214,6 +215,7 @@ export default class Header extends React.Component<Props, State> {
         </div>
 
         <span className="header-right">
+          {(!showSearch && account && account.destinyVersion === 2) && <RatingMode/>}
           {!showSearch && <Refresh/>}
           {!showSearch &&
             <a
