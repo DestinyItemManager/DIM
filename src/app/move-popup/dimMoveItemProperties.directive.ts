@@ -40,7 +40,8 @@ function MoveItemPropertiesCtrl(
   vm.tab = 'default';
 
   vm.hasDetails = Boolean((vm.item.stats && vm.item.stats.length) ||
-                          vm.item.talentGrid || vm.item.objectives);
+                          vm.item.talentGrid || vm.item.objectives ||
+                          vm.item.flavorObjective || vm.item.secondaryIcon);
   vm.showDescription = Boolean(vm.item.description && vm.item.description.length);
   vm.locking = false;
 
