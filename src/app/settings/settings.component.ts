@@ -12,6 +12,7 @@ import exampleWeaponImage from 'app/images/example-weapon.jpg';
 import exampleArmorImage from 'app/images/example-armor.jpg';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
 import { StoreServiceType } from '../inventory/d2-stores.service';
+import { getDefinitions } from '../destiny2/d2-definitions.service';
 
 export const SettingsComponent: IComponentOptions = {
   template,
@@ -73,14 +74,15 @@ export function SettingsController(
     4: $i18next.t('DtrReview.Platforms.Pc')
   };
 
-  // these values correspond to DestinyActivityModeType
-  vm.reviewModeOptions = [
-    { key: 0, value: $i18next.t('DtrReview.Modes.None') },
-    { key: 7, value: $i18next.t('DtrReview.Modes.AllPvE') },
-    { key: 5, value: $i18next.t('DtrReview.Modes.AllPvP') },
-    { key: 4, value: $i18next.t('DtrReview.Modes.Raid') },
-    { key: 39, value: $i18next.t('DtrReview.Modes.TrialsOfTheNine') }
-  ];
+  getDefinitions().then((defs) => {
+    vm.reviewModeOptions = [
+        { key: 0, value: $i18next.t('DtrReview.Modes.None') },
+        { key: 7, value: defs.ActivityMode[1164760493].displayProperties.name },
+        { key: 5, value: defs.ActivityMode[1164760504].displayProperties.name },
+        { key: 4, value: defs.ActivityMode[2043403989].displayProperties.name },
+        { key: 39, value: defs.ActivityMode[1370326378].displayProperties.name }
+      ];
+  });
 
   if ($featureFlags.colorA11y) {
     vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
