@@ -43,19 +43,18 @@ export default class RatingMode extends React.Component<Props, State> {
 
     return (
       <div>
-        <span className="link" onClick={this.toggleDropdown} title={t('DtrReview.ForGameMode')}>
-          <i className={classNames('fa', 'fa fa-thumbs-up')}/>
-        </span>
-        {open &&
-          <ClickOutside onClickOutside={this.closeDropdown}>
+        <ClickOutside onClickOutside={this.closeDropdown}>
+          <span className="link" onClick={this.toggleDropdown} title={t('DtrReview.ForGameMode')}>
+            <i className={classNames('fa', 'fa fa-thumbs-up')}/>
+          </span>
+          {open &&
             <div className="mode-popup">
               <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>
               <select name="reviewMode" value={reviewsModeSelection} onChange={this.modeChange}>
                 {this.reviewModeOptions.map((r) => <option key={r.key} value={r.key}>{r.text}</option>)}
               </select>
-
-            </div>
-          </ClickOutside>}
+            </div>}
+          </ClickOutside>
       </div>
     );
   }
