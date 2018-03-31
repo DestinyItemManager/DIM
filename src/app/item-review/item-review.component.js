@@ -2,6 +2,7 @@ import _ from 'underscore';
 import { settings } from '../settings/settings';
 import template from './item-review.html';
 import './item-review.scss';
+import { getDefinitions } from '../destiny2/d2-definitions.service';
 
 function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18next) {
   'ngInject';
@@ -96,15 +97,15 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18
 
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
-  // these values correspond to DestinyActivityModeType
-  // TODO: this is copied from settings.component.ts; figure out how to share
-  vm.reviewModeOptions = [
-    { key: 0, value: $i18next.t('DtrReview.Modes.None') },
-    { key: 7, value: $i18next.t('DtrReview.Modes.AllPvE') },
-    { key: 5, value: $i18next.t('DtrReview.Modes.AllPvP') },
-    { key: 4, value: $i18next.t('DtrReview.Modes.Raid') },
-    { key: 39, value: $i18next.t('DtrReview.Modes.TrialsOfTheNine') }
-  ];
+  getDefinitions().then((defs) => {
+    vm.reviewModeOptions = [
+      { key: 0, value: $i18next.t('DtrReview.Modes.None') },
+      { key: 7, value: defs.ActivityMode[1164760493].displayProperties.name },
+      { key: 5, value: defs.ActivityMode[1164760504].displayProperties.name },
+      { key: 4, value: defs.ActivityMode[2043403989].displayProperties.name },
+      { key: 39, value: defs.ActivityMode[1370326378].displayProperties.name }
+    ];
+  });
 
   vm.getReviewData = function() {
     if (!vm.item.reviews) {

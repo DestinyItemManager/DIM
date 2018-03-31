@@ -6,8 +6,10 @@ import ClickOutside from '../dim-ui/click-outside';
 import { settings } from '../settings/settings';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { $rootScope } from 'ngimport';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 interface Props {
+  defs: D2ManifestDefinitions;
   D2StoresService: StoreServiceType;
 }
 
@@ -21,10 +23,10 @@ export default class RatingMode extends React.Component<Props, State> {
 
   private reviewModeOptions = [
     { key: 0, text: t('DtrReview.Modes.None') },
-    { key: 7, text: t('DtrReview.Modes.AllPvE') },
-    { key: 5, text: t('DtrReview.Modes.AllPvP') },
-    { key: 4, text: t('DtrReview.Modes.Raid') },
-    { key: 39, text: t('DtrReview.Modes.TrialsOfTheNine') }
+    { key: 7, text: this.props.defs.ActivityMode[1164760493].displayProperties.name },
+    { key: 5, text: this.props.defs.ActivityMode[1164760504].displayProperties.name },
+    { key: 4, text: this.props.defs.ActivityMode[2043403989].displayProperties.name },
+    { key: 39, text: this.props.defs.ActivityMode[1370326378].displayProperties.name }
   ];
 
   constructor(props: Props) {
@@ -34,6 +36,10 @@ export default class RatingMode extends React.Component<Props, State> {
 
   render() {
     const { open, reviewsModeSelection } = this.state;
+
+    if (!this.props.defs) {
+      return;
+    }
 
     return (
       <div>

@@ -19,6 +19,7 @@ import Refresh from './refresh';
 import { IScope } from 'angular';
 import RatingMode from '../rating-mode/rating-mode';
 import { settings } from '../settings/settings';
+import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 const destiny1Links = [
   {
@@ -69,6 +70,7 @@ interface State {
   account?: DestinyAccount;
   dropdownOpen: boolean;
   showSearch: boolean;
+  defs?: D2ManifestDefinitions;
 }
 
 interface Props {
@@ -94,8 +96,19 @@ export default class Header extends React.Component<Props, State> {
     this.state = {
       xurAvailable: false,
       dropdownOpen: false,
-      showSearch: false
+      showSearch: false,
+      defs: undefined
     };
+  }
+
+  async getDefinitions() {
+    const defs = await getDefinitions();
+
+    if (defs.eagerTablesLoaded) {
+      this.setState({ defs });
+    } else {
+      setTimeout(() => getDefinitions, 1000);
+    }
   }
 
   componentDidMount() {
@@ -111,6 +124,8 @@ export default class Header extends React.Component<Props, State> {
     this.props.$scope.$on('i18nextLanguageChange', () => {
       this.setState({}); // gross, force re-render
     });
+
+    this.getDefinitions();
   }
 
   componentWillUnmount() {
@@ -122,7 +137,7 @@ export default class Header extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, showSearch, dropdownOpen, xurAvailable } = this.state;
+    const { account, showSearch, dropdownOpen, xurAvailable, defs } = this.state;
     const { SearchFilter } = this;
 
     // TODO: new fontawesome
@@ -218,7 +233,7 @@ export default class Header extends React.Component<Props, State> {
         </div>
 
         <span className="header-right">
-          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews) && <RatingMode D2StoresService={this.props.D2StoresService} />}
+          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews && defs && defs.ActivityMode) && <RatingMode defs={defs} D2StoresService={this.props.D2StoresService} />}
           {!showSearch && <Refresh/>}
           {!showSearch &&
             <a
