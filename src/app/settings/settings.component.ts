@@ -76,7 +76,7 @@ export function SettingsController(
 
   getDefinitions().then((defs) => {
     vm.reviewModeOptions = [
-        { key: 0, value: $i18next.t('DtrReview.Modes.None') },
+        { key: 0, value: $i18next.t('DtrReview.ModeNotSpecified') },
         { key: 7, value: defs.ActivityMode[1164760493].displayProperties.name },
         { key: 5, value: defs.ActivityMode[1164760504].displayProperties.name },
         { key: 4, value: defs.ActivityMode[2043403989].displayProperties.name },

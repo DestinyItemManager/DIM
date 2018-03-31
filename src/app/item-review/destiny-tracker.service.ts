@@ -95,6 +95,7 @@ import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bun
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { IPromise } from 'angular';
 import { getReviewMode } from './reviewModeTranslator';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -110,7 +111,7 @@ export interface DestinyTrackerServiceType {
   clearIgnoredUsers();
   clearCache();
   getD2ReviewDataCache(): D2ReviewDataCache;
-  getReviewMode(review: DtrUserReview): string;
+  getReviewMode(defs: D2ManifestDefinitions, review: DtrUserReview): string;
 }
 
 export function DestinyTrackerService(
@@ -206,8 +207,8 @@ export function DestinyTrackerService(
       return _d2bulkFetcher.getCache();
     },
 
-    getReviewMode(review: DtrUserReview): string {
-      return getReviewMode(review);
+    getReviewMode(defs: D2ManifestDefinitions, review: DtrUserReview): string {
+      return getReviewMode(defs, review);
     },
 
     updateVendorRankings(vendors) {

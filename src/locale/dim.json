@@ -99,13 +99,7 @@
     "Help": "Write a review (optional)",
     "HelpCons": "Describe the negatives of this weapon (optional)",
     "HelpPros": "Describe the positives of this weapon (optional)",
-    "Modes": {
-      "None": "Not Specified",
-      "Raid": "Raid",
-      "AllPvP": "PvP",
-      "AllPvE": "PvE",
-      "TrialsOfTheNine": "Trials of the Nine"
-    },
+    "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
     "Platforms": {
       "All": "Show All",

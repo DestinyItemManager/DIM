@@ -22,7 +22,7 @@ export default class RatingMode extends React.Component<Props, State> {
   private dropdownToggler: HTMLElement | null;
 
   private reviewModeOptions = [
-    { key: 0, text: t('DtrReview.Modes.None') },
+    { key: 0, text: t('DtrReview.ModeNotSpecified') },
     { key: 7, text: this.props.defs.ActivityMode[1164760493].displayProperties.name },
     { key: 5, text: this.props.defs.ActivityMode[1164760504].displayProperties.name },
     { key: 4, text: this.props.defs.ActivityMode[2043403989].displayProperties.name },

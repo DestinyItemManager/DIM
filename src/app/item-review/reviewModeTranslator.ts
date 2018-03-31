@@ -1,18 +1,19 @@
 import { t } from 'i18next';
 import { DtrUserReview } from './destiny-tracker.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
-export function getReviewMode(review: DtrUserReview): string {
+export function getReviewMode(defs: D2ManifestDefinitions, review: DtrUserReview): string {
   switch (review.mode) {
     case 0:
-      return t('DtrReview.Modes.None');
+      return t('DtrReview.ModeNotSpecified');
     case 7:
-      return t('DtrReview.Modes.AllPvE');
+      return defs.ActivityMode[1164760493].displayProperties.name;
     case 5:
-      return t('DtrReview.Modes.AllPvP');
+      return defs.ActivityMode[1164760504].displayProperties.name;
     case 4:
-      return t('DtrReview.Modes.Raid');
+      return defs.ActivityMode[2043403989].displayProperties.name;
     case 39:
-      return t('DtrReview.Modes.TrialsOfTheNine');
+      return defs.ActivityMode[1370326378].displayProperties.name;
     default:
       return t('DtrReview.Modes.UnknownGameMode');
   }
