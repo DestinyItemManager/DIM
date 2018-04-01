@@ -8,5 +8,5 @@ export function translateReviewMode(defs: D2ManifestDefinitions, review: DtrUser
 
   const matchingMode = modes.find((rm) => rm.mode === review.mode);
 
-  return matchingMode ? matchingMode.description : t('DtrReview.Modes.UnknownGameMode');
+  return matchingMode ? matchingMode.description : t('DtrReview.UnknownGameMode');
 }
