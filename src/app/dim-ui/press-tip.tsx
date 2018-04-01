@@ -48,6 +48,9 @@ export class PressTip extends React.Component<Props, State> {
   }
 
   showTip = () => {
+    if (!this.ref) {
+      return;
+    }
     if (this.tooltip) {
       this.tooltip.show();
     } else {
