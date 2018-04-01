@@ -216,7 +216,6 @@ function LoadoutDrawerCtrl(
     if (!vm.loadout) {
       return;
     }
-    console.log(item);
     const discriminator = item.type.toLowerCase();
     const typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
