@@ -1,5 +1,7 @@
 # Next
 
+* Added a page to browse and restore old revisions of Google Drive data.
+
 # 4.45.0
 
 * Searching mods and perks in D2 now searches non-selected perks as well.
