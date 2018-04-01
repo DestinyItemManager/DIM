@@ -99,17 +99,19 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18
 
   vm.defs = {};
 
-  getDefinitions().then((defs) => {
-    vm.reviewModeOptions = [
-      { key: 0, value: $i18next.t('DtrReview.ModeNotSpecified') },
-      { key: 7, value: defs.ActivityMode[1164760493].displayProperties.name },
-      { key: 5, value: defs.ActivityMode[1164760504].displayProperties.name },
-      { key: 4, value: defs.ActivityMode[2043403989].displayProperties.name },
-      { key: 39, value: defs.ActivityMode[1370326378].displayProperties.name }
-    ];
+  if (vm.item.destinyVersion === 2) {
+    getDefinitions().then((defs) => {
+      vm.reviewModeOptions = [
+        { key: 0, value: $i18next.t('DtrReview.ModeNotSpecified') },
+        { key: 7, value: defs.ActivityMode[1164760493].displayProperties.name },
+        { key: 5, value: defs.ActivityMode[1164760504].displayProperties.name },
+        { key: 4, value: defs.ActivityMode[2043403989].displayProperties.name },
+        { key: 39, value: defs.ActivityMode[1370326378].displayProperties.name }
+      ];
 
-    vm.defs = defs;
-  });
+      vm.defs = defs;
+    });
+  }
 
   vm.getReviewData = function() {
     if (!vm.item.reviews) {
