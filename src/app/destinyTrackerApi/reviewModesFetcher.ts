@@ -6,16 +6,31 @@ export interface D2ReviewMode {
   description: string;
 }
 
+export enum ActivityModeHashes {
+  playerVersusEnemy = 1164760493,
+  playerVersusPlayer = 1164760504,
+  raid = 2043403989,
+  trials = 1370326378
+}
+
+export enum DtrActivityModes {
+  notSpecified = 0,
+  playerVersusEnemy = 7,
+  playerVersusPlayer = 5,
+  raid = 4,
+  trials = 39
+}
+
 export function getReviewModes(defs?: D2ManifestDefinitions): D2ReviewMode[] {
   if (!defs) {
     return [];
   }
 
   return [
-    { mode: 0, description: t('DtrReview.ModeNotSpecified') },
-    { mode: 7, description: defs.ActivityMode[1164760493].displayProperties.name },
-    { mode: 5, description: defs.ActivityMode[1164760504].displayProperties.name },
-    { mode: 4, description: defs.ActivityMode[2043403989].displayProperties.name },
-    { mode: 39, description: defs.ActivityMode[1370326378].displayProperties.name }
+    { mode: DtrActivityModes.notSpecified, description: t('DtrReview.ModeNotSpecified') },
+    { mode: DtrActivityModes.playerVersusEnemy, description: defs.ActivityMode[ActivityModeHashes.playerVersusEnemy].displayProperties.name },
+    { mode: DtrActivityModes.playerVersusPlayer, description: defs.ActivityMode[ActivityModeHashes.playerVersusPlayer].displayProperties.name },
+    { mode: DtrActivityModes.raid, description: defs.ActivityMode[ActivityModeHashes.raid].displayProperties.name },
+    { mode: DtrActivityModes.trials, description: defs.ActivityMode[ActivityModeHashes.trials].displayProperties.name }
   ];
 }
