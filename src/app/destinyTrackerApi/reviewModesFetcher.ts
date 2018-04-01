@@ -22,7 +22,7 @@ export enum DtrActivityModes {
 }
 
 export function getReviewModes(defs?: D2ManifestDefinitions): D2ReviewMode[] {
-  if (!defs) {
+  if (!defs || !defs.ActivityMode) {
     return [];
   }
 

@@ -234,12 +234,10 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
 
   vm.translateReviewMode = function(review) {
     if (!vm.defs || !vm.defs.ActivityMode) {
-      getDefinitions().then((defs) => { vm.defs = defs; });
-      setTimeout(translateReviewMode(review), 1000);
-      return;
+      getDefinitions().then((defs) => { translateReviewMode(defs, review); });
     }
 
-    translateReviewMode(vm.defs, review);
+    return translateReviewMode(vm.defs, review);
   };
 
   vm.setUserVote = function(userVote) {
