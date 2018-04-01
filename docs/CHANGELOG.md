@@ -5,6 +5,7 @@
 * New Vendors page shows all the items you can buy from various vendors.
 * New Collections page shows your exotics, emotes, and emblems kiosks.
 * Engram previews from the faction display and vendors pages show what could be in an engram.
+* Keyword search now includes item descriptions and socket perk names and descriptions.
 
 # 4.45.0
 
