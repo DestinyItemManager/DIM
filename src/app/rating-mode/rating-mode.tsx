@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { t } from 'i18next';
-import classNames from 'classnames';
 import './rating-mode.scss';
 import ClickOutside from '../dim-ui/click-outside';
 import { settings } from '../settings/settings';
@@ -41,7 +40,7 @@ export default class RatingMode extends React.Component<Props, State> {
       <div>
         <ClickOutside onClickOutside={this.closeDropdown}>
           <span className="link" onClick={this.toggleDropdown} title={t('DtrReview.ForGameMode')}>
-            <i className={classNames('fa', 'fa fa-thumbs-up')}/>
+            <i className='fa fa fa-thumbs-up'/>
           </span>
           {open &&
             <div className="mode-popup">
