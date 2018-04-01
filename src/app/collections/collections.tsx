@@ -14,6 +14,8 @@ import './collections.scss';
 import VendorItems from '../d2-vendors/vendor-items';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
+import { Subscription } from 'rxjs/Subscription';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 
 interface Props {
   $scope: IScope;
@@ -27,10 +29,14 @@ interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
   trackerService?: DestinyTrackerServiceType;
+  stores?: DimStore[];
+  ownedItemHashes?: Set<number>;
 }
 
 // TODO: Should this be just in the vendors screen?
 export default class Collections extends React.Component<Props, State> {
+  private storesSubscription: Subscription;
+
   constructor(props: Props) {
     super(props);
     this.state = {};
@@ -54,10 +60,25 @@ export default class Collections extends React.Component<Props, State> {
 
   componentDidMount() {
     this.loadCollections();
+    this.storesSubscription = this.props.D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
+      if (stores) {
+        const ownedItemHashes = new Set<number>();
+        for (const store of stores) {
+          for (const item of store.items) {
+            ownedItemHashes.add(item.hash);
+          }
+        }
+        this.setState({ stores, ownedItemHashes });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.storesSubscription.unsubscribe();
   }
 
   render() {
-    const { defs, profileResponse, trackerService } = this.state;
+    const { defs, profileResponse, trackerService, ownedItemHashes } = this.state;
 
     if (!profileResponse || !defs) {
       // TODO: loading component!
@@ -75,7 +96,14 @@ export default class Collections extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Array.from(kioskVendors).map((vendorHash) =>
-          <Kiosk key={vendorHash} defs={defs} vendorHash={Number(vendorHash)} items={itemsForKiosk(profileResponse, Number(vendorHash))} trackerService={trackerService}/>
+          <Kiosk
+            key={vendorHash}
+            defs={defs}
+            vendorHash={Number(vendorHash)}
+            items={itemsForKiosk(profileResponse, Number(vendorHash))}
+            trackerService={trackerService}
+            ownedItemHashes={ownedItemHashes}
+          />
         )}
       </div>
     );
@@ -90,12 +118,14 @@ function Kiosk({
   defs,
   vendorHash,
   items,
-  trackerService
+  trackerService,
+  ownedItemHashes
 }: {
   defs: D2ManifestDefinitions;
   vendorHash: number;
   items: DestinyKioskItem[];
   trackerService?: DestinyTrackerServiceType;
+  ownedItemHashes?: Set<number>;
 }) {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -108,6 +138,7 @@ function Kiosk({
         vendorDef={vendorDef}
         kioskItems={items.filter((i) => i.canAcquire)}
         trackerService={trackerService}
+        ownedItemHashes={ownedItemHashes}
       />
     </div>
   );

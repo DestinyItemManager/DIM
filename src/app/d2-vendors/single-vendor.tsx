@@ -3,7 +3,7 @@ import { IScope } from 'angular';
 import { DestinyVendorDefinition, DestinyVendorResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getBasicProfile, getVendor as getVendorApi } from '../bungie-api/destiny2-api';
+import { getVendor as getVendorApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
 import Countdown from '../dim-ui/countdown';
@@ -14,6 +14,8 @@ import VendorItems from './vendor-items';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { Subscription } from 'rxjs/Subscription';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 
 interface Props {
   $scope: IScope;
@@ -25,6 +27,8 @@ interface Props {
 
 interface State {
   vendorHash: number;
+  stores?: DimStore[];
+  ownedItemHashes?: Set<number>;
   defs?: D2ManifestDefinitions;
   vendorDef?: DestinyVendorDefinition;
   vendorResponse?: DestinyVendorResponse;
@@ -32,6 +36,8 @@ interface State {
 }
 
 export default class SingleVendor extends React.Component<Props, State> {
+  private storesSubscription: Subscription;
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -57,14 +63,10 @@ export default class SingleVendor extends React.Component<Props, State> {
     if (vendorDef.returnWithVendorRequest) {
       // TODO: get for all characters, or let people select a character? This is a hack
       // we at least need to display that character!
-      let characterId = this.props.$stateParams.characterId;
+      let characterId: string = this.props.$stateParams.characterId;
       if (!characterId) {
-        // uggggh
-        // TODO: maybe load the whole stores anyway so we can count currencies and such, a la the old thing
-        const activeStore = this.props.D2StoresService.getActiveStore();
-        characterId = activeStore
-          ? activeStore.id
-          : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
+        const stores = this.state.stores || await this.props.D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
+        characterId = stores.find((s) => s.current)!.id;
       }
       const vendorResponse = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
 
@@ -79,11 +81,26 @@ export default class SingleVendor extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    this.storesSubscription = this.props.D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
+      if (stores) {
+        const ownedItemHashes = new Set<number>();
+        for (const store of stores) {
+          for (const item of store.items) {
+            ownedItemHashes.add(item.hash);
+          }
+        }
+        this.setState({ stores, ownedItemHashes });
+      }
+    });
     this.loadVendor();
   }
 
+  componentWillUnmount() {
+    this.storesSubscription.unsubscribe();
+  }
+
   render() {
-    const { defs, vendorDef, vendorResponse, trackerService } = this.state;
+    const { defs, vendorDef, vendorResponse, trackerService, ownedItemHashes } = this.state;
 
     if (!vendorDef || !defs) {
       // TODO: loading component!
@@ -133,6 +150,7 @@ export default class SingleVendor extends React.Component<Props, State> {
           sales={vendorResponse && vendorResponse.sales.data}
           itemComponents={vendorResponse && vendorResponse.itemComponents}
           trackerService={trackerService}
+          ownedItemHashes={ownedItemHashes}
         />
       </div>
     );
