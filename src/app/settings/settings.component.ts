@@ -13,6 +13,7 @@ import exampleArmorImage from 'app/images/example-armor.jpg';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
+import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 
 export const SettingsComponent: IComponentOptions = {
   template,
@@ -75,13 +76,7 @@ export function SettingsController(
   };
 
   getDefinitions().then((defs) => {
-    vm.reviewModeOptions = [
-        { key: 0, value: $i18next.t('DtrReview.ModeNotSpecified') },
-        { key: 7, value: defs.ActivityMode[1164760493].displayProperties.name },
-        { key: 5, value: defs.ActivityMode[1164760504].displayProperties.name },
-        { key: 4, value: defs.ActivityMode[2043403989].displayProperties.name },
-        { key: 39, value: defs.ActivityMode[1370326378].displayProperties.name }
-      ];
+    vm.reviewModeOptions = getReviewModes(defs);
   });
 
   if ($featureFlags.colorA11y) {

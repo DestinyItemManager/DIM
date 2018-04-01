@@ -113,7 +113,7 @@
         <label for="reviewsModeSelection" ng-i18next="Settings.ReviewsModeSelection"></label>
         <select id="reviewsModeSelection"
           ng-model="vm.settings.reviewsModeSelection"
-          ng-options="::reviewModeOption.key.toString() as reviewModeOption.value for reviewModeOption in vm.reviewModeOptions"
+          ng-options="::reviewModeOption.mode.toString() as reviewModeOption.description for reviewModeOption in vm.reviewModeOptions"
           ng-change="vm.saveAndReloadReviews()">
         </select>
       </div>
