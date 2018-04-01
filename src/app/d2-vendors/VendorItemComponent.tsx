@@ -12,6 +12,7 @@ import { DestinyTrackerServiceType, DimWorkingUserReview } from "../item-review/
 import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { DimItem } from "../inventory/store/d2-item-factory.service";
 import { D2PerkRater } from "../destinyTrackerApi/d2-perkRater";
+import checkMark from '../../images/check.svg';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -67,6 +68,7 @@ export default class VendorItemComponent extends React.Component<Props> {
             className={classNames("item-img", { transparent: item.borderless })}
             style={bungieBackgroundStyle(item.displayProperties.icon)}
           />
+          {owned && <img className="owned-icon" src={checkMark}/>}
           {(item.primaryStat || item.rating) &&
             <div>
               {item.rating && <div className="item-stat item-review">

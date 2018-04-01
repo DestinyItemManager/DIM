@@ -35,23 +35,15 @@
   }
 }
 
-.vendor-item.owned {
-  //opacity: .35;
-
-  &::after {
-    content: "✔";
-    color: white;
-    background-color: green;
+.vendor-item {
+  .owned-icon {
+    z-index: 10;
     position: absolute;
-    top: 0px;
-    right: 0;
-    border-radius: 50%;
-    height: 18px;
-    width: 18px;
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    top: 3px;
+    right: 3px;
+    pointer-events: none;
+    width: 14px;
+    height: 14px;
   }
 }
 
