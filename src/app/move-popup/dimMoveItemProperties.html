@@ -49,12 +49,14 @@
       <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ updateOn: 'blur' }" ng-change="vm.updateNote()"></textarea></form>
       <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
       <div class="item-description" ng-if="vm.showDescription" ng-bind="::vm.item.description"></div>
+      <img class="item-details" ng-if="vm.item.type === 'Emblems' || vm.item.type === 'Emblem'" ng-src="{{vm.item.secondaryIcon | bungieIcon}}" width="237"
+      height="48"/>
       <div class="masterwork-progress" ng-if="vm.item.masterworkInfo" >
         <img ng-src="{{ ::vm.item.masterworkInfo.typeIcon | bungieIcon }}" title="{{ ::vm.item.masterworkInfo.typeName }}"/>
         <span> {{ ::vm.item.masterworkInfo.typeDesc }} <strong> {{ ::vm.item.masterworkInfo.progress }} </strong></span>
       </div>
       <div class="item-details" ng-if="vm.item.classified" ng-i18next="ItemService.Classified2"></div>
-      <dim-item-stats item="vm.item" class="stats" ng-if="vm.hasDetails"></dim-item-stats>
+      <dim-item-stats item="vm.item" class="stats" ng-if="vm.hasDetails && vm.item.stats.length"></dim-item-stats>
       <div class="item-details item-perks" ng-if="vm.item.talentGrid">
         <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>
       </div>
@@ -69,8 +71,6 @@
         </div>
       </div>
       <dim-objectives class="item-details" ng-if="vm.item.objectives" objectives="vm.item.objectives"></dim-objectives>
-      <img class="item-details" ng-if="vm.item.type === 'Emblems' || vm.item.type === 'Emblem'" ng-src="{{vm.item.secondaryIcon | bungieIcon}}" width="237"
-      height="48"/>
       <dim-flavor-objective class="item-details" ng-if="vm.item.flavorObjective" objective="vm.item.flavorObjective"></dim-flavor-objective>
       <div ng-if="vm.featureFlags.debugMode" class="item-details">
         <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump" />
