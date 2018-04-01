@@ -151,6 +151,7 @@ export default class SingleVendor extends React.Component<Props, State> {
           itemComponents={vendorResponse && vendorResponse.itemComponents}
           trackerService={trackerService}
           ownedItemHashes={ownedItemHashes}
+          currencyLookups={vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}}
         />
       </div>
     );

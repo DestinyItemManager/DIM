@@ -152,7 +152,8 @@ export function getVendor(account: DestinyAccount, characterId: string, vendorHa
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
-      DestinyComponentType.ItemPlugStates
+      DestinyComponentType.ItemPlugStates,
+      DestinyComponentType.CurrencyLookups
     ],
     vendorHash
   })
@@ -173,7 +174,8 @@ export function getVendors(account: DestinyAccount, characterId: string): IPromi
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
-      DestinyComponentType.ItemPlugStates
+      DestinyComponentType.ItemPlugStates,
+      DestinyComponentType.CurrencyLookups
     ]
   })
   .then((response) => response.Response) as IPromise<DestinyVendorsResponse>;

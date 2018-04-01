@@ -2,7 +2,8 @@ import {
   DestinyItemComponentSetOfint32,
   DestinyVendorDefinition,
   DestinyVendorSaleItemComponent,
-  DestinyKioskItem
+  DestinyKioskItem,
+  DestinyInventoryItemDefinition
 } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
@@ -11,10 +12,11 @@ import { VendorItem } from './vendor-item';
 import VendorItemComponent from './VendorItemComponent';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
-import { bungieBackgroundStyle } from '../dim-ui/bungie-image';
+import { bungieBackgroundStyle, BungieImage } from '../dim-ui/bungie-image';
 import { $state } from '../ngimport-more';
 import { t } from 'i18next';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { compact } from '../util';
 
 export default function VendorItems({
   vendorDef,
@@ -23,7 +25,8 @@ export default function VendorItems({
   sales,
   kioskItems,
   trackerService,
-  ownedItemHashes
+  ownedItemHashes,
+  currencyLookups
 }: {
   defs: D2ManifestDefinitions;
   vendorDef: DestinyVendorDefinition;
@@ -35,6 +38,9 @@ export default function VendorItems({
   trackerService?: DestinyTrackerServiceType;
   stores?: DimStore[];
   ownedItemHashes?: Set<number>;
+  currencyLookups: {
+    [itemHash: number]: number;
+  };
 }) {
   const reviewCache: D2ReviewDataCache | undefined = (trackerService) ? trackerService.getD2ReviewDataCache() : undefined;
 
@@ -49,8 +55,24 @@ export default function VendorItems({
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
   const goToRewardVendor = rewardVendorHash && (() => $state.go('destiny2.vendor', { id: rewardVendorHash }));
 
+  const vendorCurrencyHashes = new Set<number>();
+  for (const item of items) {
+    for (const cost of item.costs) {
+      vendorCurrencyHashes.add(cost.itemHash);
+    }
+  }
+  const vendorCurrencies = compact(Array.from(vendorCurrencyHashes).map((h) => defs.InventoryItem.get(h)));
+
   return (
     <div className="vendor-char-items">
+      {vendorCurrencies.length > 0 && <div className="vendor-currencies">
+        {vendorCurrencies.map((currency) =>
+          <div className="vendor-currency" key={currency.hash}>
+            {currencyLookups[currency.hash]}{' '}
+            <BungieImage src={currency.displayProperties.icon} title={currency.displayProperties.name}/>
+          </div>
+        )}
+      </div>}
       {rewardVendorHash && rewardItem && goToRewardVendor &&
         <div className="vendor-row">
           <h3 className="category-title">{t('Vendors.Engram')}</h3>
