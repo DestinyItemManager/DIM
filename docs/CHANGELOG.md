@@ -2,6 +2,9 @@
 
 * Added a page to browse and restore old revisions of Google Drive data.
 * Emblems now show a preview of their nameplate in the item details popup.
+* New Vendors page shows all the items you can buy from various vendors.
+* New Collections page shows your exotics, emotes, and emblems kiosks.
+* Engram previews from the faction display and vendors pages show what could be in an engram.
 
 # 4.45.0
 
