@@ -56,6 +56,10 @@ export function error(message: string, errorCode: PlatformErrorCodes): DimError 
 }
 
 export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHttpResponse<ServerResponse<T>> {
+  if (response instanceof Error) {
+    throw response;
+  }
+
   if (response.status === -1) {
     throw new Error(navigator.onLine
       ? t('BungieService.NotConnectedOrBlocked')
@@ -137,7 +141,7 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
     e.status = response.data.ErrorStatus;
     throw e;
   } else {
-    console.error('No response data:', response.status, response.statusText, response.xhrStatus, (response as any).message, Object.keys(response));
+    console.error('No response data:', response.status, response.statusText, response.xhrStatus);
     throw new Error(t('BungieService.Difficulties'));
   }
 }
