@@ -1,4 +1,6 @@
 .vendor {
+  padding: 0 1em;
+
   .vendorTabs {
     display: flex;
     flex-direction: row;
@@ -96,11 +98,10 @@
     align-items: center;
   }
   .title {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     .countdown {
       font-size: 11px;
+      text-align: right;
+      flex: 1;
     }
   }
   .vendor-location {
@@ -109,6 +110,7 @@
     font-size: 12px;
     color: #999;
     margin-left: 6px;
+    flex: 1;
   }
   .vendor-row {
     margin-bottom: 10px;

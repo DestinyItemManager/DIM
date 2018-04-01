@@ -33,8 +33,8 @@
         <img class="small-icon" ng-src="{{ ::activity.icon | bungieIcon }}" />
         <span class="activity-name">{{ ::activity.name }}</span>
         <i ng-if="::activity.featured"  class="fa fa-star"></i>
-        <span class="activity-type" ng-bind="::activity.type"></span>
       </span>
+      <span class="activity-type" ng-bind="::activity.type"></span>
     </div>
 
     <div class="activity-info" ng-if="!$ctrl.settings.collapsedSections['activities-' + activity.hash]">
