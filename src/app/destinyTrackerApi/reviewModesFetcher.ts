@@ -6,7 +6,11 @@ export interface D2ReviewMode {
   description: string;
 }
 
-export function getReviewModes(defs: D2ManifestDefinitions): D2ReviewMode[] {
+export function getReviewModes(defs?: D2ManifestDefinitions): D2ReviewMode[] {
+  if (!defs) {
+    return [];
+  }
+
   return [
     { mode: 0, description: t('DtrReview.ModeNotSpecified') },
     { mode: 7, description: defs.ActivityMode[1164760493].displayProperties.name },
