@@ -4,6 +4,7 @@ import template from './item-review.html';
 import './item-review.scss';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
+import { translateReviewMode } from './reviewModeTranslator';
 
 function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   'ngInject';
@@ -228,7 +229,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   };
 
   vm.translateReviewMode = function(review) {
-    return dimDestinyTrackerService.translateReviewMode(vm.defs, review);
+    return translateReviewMode(vm.defs, review);
   };
 
   vm.setUserVote = function(userVote) {
