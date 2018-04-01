@@ -2,8 +2,7 @@ import {
   DestinyItemComponentSetOfint32,
   DestinyVendorDefinition,
   DestinyVendorSaleItemComponent,
-  DestinyKioskItem,
-  DestinyInventoryItemDefinition
+  DestinyKioskItem
 } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
