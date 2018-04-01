@@ -207,9 +207,7 @@ export function DestinyTrackerService(
       return _d2bulkFetcher.getCache();
     },
 
-    getReviewMode(defs: D2ManifestDefinitions, review: DtrUserReview): string {
-      return getReviewMode(defs, review);
-    },
+    getReviewMode,
 
     updateVendorRankings(vendors) {
       if (settings.showReviews) {
