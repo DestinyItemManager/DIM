@@ -7,6 +7,7 @@ typings/
 build/common
 build/img
 build/manifest
+build/mainfest2
 build/api-manifest/*.json
 build/*.json
 build/*.zip
