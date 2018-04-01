@@ -232,8 +232,8 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18
     }
   };
 
-  vm.getReviewMode = function(review) {
-    return dimDestinyTrackerService.getReviewMode(vm.defs, review);
+  vm.translateReviewMode = function(review) {
+    return dimDestinyTrackerService.translateReviewMode(vm.defs, review);
   };
 
   vm.setUserVote = function(userVote) {

@@ -94,7 +94,7 @@ import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { IPromise } from 'angular';
-import { getReviewMode } from './reviewModeTranslator';
+import { translateReviewMode } from './reviewModeTranslator';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 export interface DestinyTrackerServiceType {
@@ -111,7 +111,7 @@ export interface DestinyTrackerServiceType {
   clearIgnoredUsers();
   clearCache();
   getD2ReviewDataCache(): D2ReviewDataCache;
-  getReviewMode(defs: D2ManifestDefinitions, review: DtrUserReview): string;
+  translateReviewMode(defs: D2ManifestDefinitions, review: DtrUserReview): string;
 }
 
 export function DestinyTrackerService(
@@ -207,7 +207,7 @@ export function DestinyTrackerService(
       return _d2bulkFetcher.getCache();
     },
 
-    getReviewMode,
+    translateReviewMode,
 
     updateVendorRankings(vendors) {
       if (settings.showReviews) {
