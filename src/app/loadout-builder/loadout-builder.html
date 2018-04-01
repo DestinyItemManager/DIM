@@ -136,7 +136,7 @@
     </p>
   </div>
   <div ng-show="vm.progress < 1 && vm.hasSets">
-    <p><span ng-i18next="[i18next]({ percent: vm.progress })LB.Loading"></span></p>
+    <p><span ng-i18next="[i18next]LB.Loading"></span> <i class="fa fa-spinner fa-spin"></i></p>
   </div>
   <div ng-show="vm.progress >= 1">
     <div class="section loadout" ng-repeat="setType in vm.activeHighestSets track by setType.set.setHash">

@@ -295,7 +295,7 @@
     "Uninfusable": "Questo oggetto non può essere infuso."
   },
   "ItemInfoService": {
-    "SaveInfoErrorDescription": "Si è presentato un problema salvando informazioni specifiche di DIM riguardo un oggetto. Un problema è dato dal fatto che è presente un limite sul numero di dati che possono essere conservati. Per questo motivo i tag e le note non sono ancora state consentite al di fuori della versione Beta. L'errore era: {{error}}.",
+    "SaveInfoErrorDescription": "Si è presentato un problema salvando informazioni specifiche di DIM riguardo un oggetto. Un problema è dato dal fatto che è presente un limite sul numero di dati che possono essere conservati. Per questo motivo le etichette e le note non sono ancora state consentite al di fuori della versione Beta. L'errore era: {{error}}.",
     "SaveInfoErrorTitle": "Si è presentato un errore salvando le informazioni dell'oggetto"
   },
   "ItemMove": {
@@ -360,7 +360,7 @@
       "HelpScaled": "Calcola i loadout, supponendo che tutti gli oggetti abbiano 350 di difesa.",
       "LightMode": "Modalità Luce"
     },
-    "Loading": "Caricando i migliori set ({{percent, pct}})",
+    "Loading": "Caricando i migliori set",
     "LockEquipped": "Blocca Equipaggiati",
     "LockPerk": "Blocca perk",
     "Locked": "Oggetti Bloccati",
@@ -600,21 +600,28 @@
     "Export": "Fai il backup dei dati di DIM",
     "ForceSync": "Forza sincronizzazione dati",
     "GDriveLogout": "I tuoi dati sono ancora su Google Drive - Se effettui di nuovo l'accesso, DIM ricomincerà ad utilizzarli.",
+    "GDriveRevisions": "Ripristina Vecchia Versione",
     "GDriveSignInError": "Errore durante l'accesso a Google Drive:",
     "GDriveSignInWarning": "Se ci sono già dati di DIM salvati su Google Drive, quelli salvati localmente verranno sovrascritti. Potresti voler salvare questi dati prima di effettuare l'accesso.\n\nContinuare con l'accesso a Google Drive?",
     "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il JavaScript di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
     "GoogleDriveStorage": "Google Drive",
-    "IgnoredUsers": "{{value}} utenti ignorati",
+    "IgnoredUsers": "{{value}} recensori della comunità ignorati",
     "Import": "Importa i dati di DIM da un file",
+    "ImportConfirm": "Sei sicuro di voler sovrascrivere le tue impostazioni attuali con questa versione?",
     "ImportExport": "Back up dati",
     "ImportNoFile": "Nessun file selezionato!",
     "ImportSuccess": "Dati DIM importati!",
     "IndexedDBStorage": "Memoria del browser locale",
-    "Loadouts": "{{value}} equipaggiamento",
+    "LoadRevision": "Carica Contenuto",
+    "LoadoutsD1": "{{value}} loadouts di Destiny 1",
+    "LoadoutsD2": "{{value}} loadouts di Destiny 2",
     "NoData": "Nessun dato",
+    "RestoreRevision": "Ripristina",
+    "RevisionsDescription": "Google Drive salva gli ultimi 100 aggiornamenti delle tue impostazioni. Usa questa pagina per caricare vecchie versioni e ripristinarle.",
     "Settings": "Le tue impostazioni e preferenze di DIM",
     "StatLabel": "Questo al momento contiene:",
-    "TagNotes": "{{value}} oggetti con etichette o note",
+    "TagNotesD1": "{{value}} oggetti di Destiny 1 con etichette o note",
+    "TagNotesD2": "{{value}} oggetti di Destiny 2 con etichette o note",
     "Title": "Immagazzinamento dati DIM"
   },
   "StoreBucket": {
@@ -633,7 +640,7 @@
     "Infuse": "Infondi",
     "Junk": "Smantella",
     "Keep": "Tieni",
-    "TagItem": "Segna Oggetto"
+    "TagItem": "Etichetta Oggetto"
   },
   "TrialsCard": {
     "FiveWins": "Ricompensa 5 Vittorie (Armatura)",
@@ -649,6 +656,7 @@
     "Compare": "Confronta con quello che hai già:",
     "Consumables": "Consumabili",
     "Emotes": "Emotes",
+    "Engram": "Engramma Ricompensa",
     "Load": "Caricamento Mercanti",
     "ShadersAndEmblems": "Shader & Emblemi",
     "ShipsAndVehicles": "Navi & Veicoli",
