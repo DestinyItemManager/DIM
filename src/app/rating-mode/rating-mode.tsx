@@ -19,6 +19,7 @@ interface State {
   reviewsModeSelection: number;
 }
 
+// TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.
 export default class RatingMode extends React.Component<Props, State> {
   private dropdownToggler: HTMLElement | null;
 
