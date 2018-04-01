@@ -2,9 +2,10 @@ import _ from 'underscore';
 import { settings } from '../settings/settings';
 import template from './item-review.html';
 import './item-review.scss';
+import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 
-function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18next) {
+function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   'ngInject';
 
   const vm = this;
@@ -101,13 +102,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope, $i18
 
   if (vm.item.destinyVersion === 2) {
     getDefinitions().then((defs) => {
-      vm.reviewModeOptions = [
-        { key: 0, value: $i18next.t('DtrReview.ModeNotSpecified') },
-        { key: 7, value: defs.ActivityMode[1164760493].displayProperties.name },
-        { key: 5, value: defs.ActivityMode[1164760504].displayProperties.name },
-        { key: 4, value: defs.ActivityMode[2043403989].displayProperties.name },
-        { key: 39, value: defs.ActivityMode[1370326378].displayProperties.name }
-      ];
+      vm.reviewModeOptions = getReviewModes(defs);
 
       vm.defs = defs;
     });
