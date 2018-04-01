@@ -128,7 +128,6 @@ export default class SingleVendor extends React.Component<Props, State> {
     // TODO: localize
     return (
       <div className="vendor dim-page">
-        <div className="under-construction">This feature is a preview - we're still working on it!</div>
         <div className="vendor-featured">
           <div className="vendor-featured-header">
             {factionProgress && faction

@@ -106,7 +106,6 @@ export default class Vendors extends React.Component<Props, State> {
 
     return (
       <div className="vendor d2-vendors dim-page">
-        <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
           <VendorGroup
             key={group.vendorGroupHash}
