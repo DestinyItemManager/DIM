@@ -138,7 +138,6 @@
   .cost {
     font-size: 10px;
     margin-top: 1px;
-    margin-left: 2px;
     text-align: center;
   }
   .empty-cost {
@@ -209,10 +208,9 @@
   float: right;
 }
 
-vendor-currencies {
+vendor-currencies, .vendor-currencies {
   font-size: 12px;
   float: right;
-  margin-top: 10px;
   display: flex;
   flex-direction: row;
   .vendor-currency {

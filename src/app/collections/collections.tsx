@@ -139,6 +139,7 @@ function Kiosk({
         kioskItems={items.filter((i) => i.canAcquire)}
         trackerService={trackerService}
         ownedItemHashes={ownedItemHashes}
+        currencyLookups={{}}
       />
     </div>
   );

@@ -149,6 +149,7 @@ function VendorGroup({
           sales={vendorsResponse.sales.data[vendor.vendorHash] && vendorsResponse.sales.data[vendor.vendorHash].saleItems}
           trackerService={trackerService}
           ownedItemHashes={ownedItemHashes}
+          currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
         />
       )}
     </>
@@ -161,7 +162,8 @@ function Vendor({
   itemComponents,
   sales,
   trackerService,
-  ownedItemHashes
+  ownedItemHashes,
+  currencyLookups
 }: {
   defs: D2ManifestDefinitions;
   vendor: DestinyVendorComponent;
@@ -171,6 +173,9 @@ function Vendor({
   };
   trackerService?: DestinyTrackerServiceType;
   ownedItemHashes?: Set<number>;
+  currencyLookups: {
+    [itemHash: number]: number;
+  };
 }) {
   const vendorDef = defs.Vendor.get(vendor.vendorHash);
   if (!vendorDef) {
@@ -201,6 +206,7 @@ function Vendor({
         itemComponents={itemComponents}
         trackerService={trackerService}
         ownedItemHashes={ownedItemHashes}
+        currencyLookups={currencyLookups}
       />
     </div>
   );
