@@ -118,10 +118,10 @@ rzslider, .rzslider {
     }
   }
   .rz-pointer {
-    top: -6px;
+    top: -7px;
     z-index: 3;
-    width: 16px;
-    height: 16px;
+    width: 8px;
+    height: 8px;
     cursor: pointer;
     border: 5px solid white;
     background-color: white;
@@ -134,7 +134,7 @@ rzslider, .rzslider {
   .rz-bubble {
     display: none;
     &.rz-selection {
-      top: 16px;
+      top: 8px;
     }
     &.rz-limit {
       color: #55637d;
