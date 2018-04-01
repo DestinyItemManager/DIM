@@ -101,19 +101,21 @@ export default class Header extends React.Component<Props, State> {
     };
   }
 
-  async getDefinitions() {
+  async getDefinitions(account?: DestinyAccount) {
+    if (!account || account.destinyVersion !== 2) {
+      return;
+    }
+
     const defs = await getDefinitions();
 
-    if (defs.eagerTablesLoaded) {
-      this.setState({ defs });
-    } else {
-      setTimeout(() => getDefinitions, 1000);
-    }
+    this.setState({ defs });
   }
 
   componentDidMount() {
     this.accountSubscription = getActiveAccountStream().subscribe((account) => {
       this.setState({ account: account || undefined });
+
+      this.getDefinitions(account || undefined);
     });
 
     this.unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, () => {
@@ -124,8 +126,6 @@ export default class Header extends React.Component<Props, State> {
     this.props.$scope.$on('i18nextLanguageChange', () => {
       this.setState({}); // gross, force re-render
     });
-
-    this.getDefinitions();
   }
 
   componentWillUnmount() {

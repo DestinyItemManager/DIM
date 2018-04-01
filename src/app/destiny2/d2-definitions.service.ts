@@ -82,8 +82,6 @@ export interface D2ManifestDefinitions {
   Place: LazyDefinition<DestinyPlaceDefinition>;
   VendorGroup: LazyDefinition<DestinyVendorGroupDefinition>;
 
-  eagerTablesLoaded: boolean;
-
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
   Gender: { [hash: number]: DestinyGenderDefinition };
@@ -131,9 +129,6 @@ function getDefinitionsUncached(): IPromise<D2ManifestDefinitions> {
         const table = `Destiny${tableShort}Definition`;
         defs[tableShort] = D2ManifestService.getAllRecords(db, table);
       });
-
-      const eagerTablesLoaded = 'eagerTablesLoaded';
-      defs[eagerTablesLoaded] = true;
 
       return defs as D2ManifestDefinitions;
     });
