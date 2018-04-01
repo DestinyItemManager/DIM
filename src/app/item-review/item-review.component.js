@@ -95,7 +95,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     }
 
     if (review.mode) {
-      vm.item.mode = review.mode;
+      vm.item.mode = review.mode.toString();
     }
   };
 
