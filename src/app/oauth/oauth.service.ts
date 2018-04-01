@@ -7,7 +7,8 @@ const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 // https://www.bungie.net/en/Clan/Post/1777779/227330965/0/0
 
 export function getAccessTokenFromRefreshToken(refreshToken) {
-  return fetch(TOKEN_URL, {
+  // https://github.com/zloirock/core-js/issues/178#issuecomment-192081350
+  return Promise.resolve(fetch(TOKEN_URL, {
     method: 'POST',
     body: stringify({
       grant_type: 'refresh_token',
@@ -20,11 +21,11 @@ export function getAccessTokenFromRefreshToken(refreshToken) {
     }
   })
     .then((response) => response.ok ? response.json() : Promise.reject(response))
-    .then(handleAccessToken);
+    .then(handleAccessToken));
 }
 
 export function getAccessTokenFromCode(code) {
-  return fetch(TOKEN_URL, {
+  return Promise.resolve(fetch(TOKEN_URL, {
     method: 'POST',
     body: stringify({
       grant_type: 'authorization_code',
@@ -37,7 +38,7 @@ export function getAccessTokenFromCode(code) {
     }
   })
     .then((response) => response.ok ? response.json() : Promise.reject(response))
-    .then(handleAccessToken);
+    .then(handleAccessToken));
 }
 
 function handleAccessToken(response): Tokens {
