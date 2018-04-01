@@ -137,7 +137,7 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
     e.status = response.data.ErrorStatus;
     throw e;
   } else {
-    console.error('No response data:', response.status, response.statusText, response.xhrStatus, response.config.url);
+    console.error('No response data:', response.status, response.statusText, response.xhrStatus, (response as any).message, Object.keys(response));
     throw new Error(t('BungieService.Difficulties'));
   }
 }
