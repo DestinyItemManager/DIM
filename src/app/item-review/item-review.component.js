@@ -103,13 +103,9 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
 
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
-  vm.defs = {};
-
   if (vm.item.destinyVersion === 2) {
     getDefinitions().then((defs) => {
       vm.reviewModeOptions = getReviewModes(defs);
-
-      vm.defs = defs;
     });
   }
 
@@ -233,11 +229,13 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   };
 
   vm.translateReviewMode = function(review) {
-    if (!vm.defs || !vm.defs.ActivityMode) {
-      getDefinitions().then((defs) => { translateReviewMode(defs, review); });
+    if (!vm.reviewModeOptions) {
+      getDefinitions().then((defs) => { vm.reviewModeOptions = getReviewModes(defs); });
+
+      return translateReviewMode(vm.reviewModeOptions, review);
     }
 
-    return translateReviewMode(vm.defs, review);
+    return translateReviewMode(vm.reviewModeOptions, review);
   };
 
   vm.setUserVote = function(userVote) {
