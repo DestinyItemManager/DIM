@@ -696,6 +696,16 @@ export function makeItem(
     }
   }
 
+  // Secondary Icon
+  if (createdItem.sockets) {
+    const multiEmblem = createdItem.sockets.sockets.filter((plug) => plug.plug && plug.plug.plugItem.itemType === 14);
+    const selectedEmblem = multiEmblem[0] && multiEmblem[0].plug;
+
+    if (selectedEmblem) {
+      createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
+    }
+  }
+
   // Infusion
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
   createdItem.infusionProcess = tier && tier.infusionProcess;

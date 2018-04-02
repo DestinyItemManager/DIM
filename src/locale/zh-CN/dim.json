@@ -55,8 +55,8 @@
     "Close": "关闭",
     "Compare": "对比",
     "Error": {
-      "Archetype": "无法与此物品进行比较，因为它并不是{{type}}.",
-      "Class": "无法与此物品进行比较，因为它并不适用于{{class}}."
+      "Archetype": "无法与此物品进行对比，因为它并不是{{type}}.",
+      "Class": "无法与此物品进行对比，因为它并不适用于{{class}}."
     },
     "ItemCount": "您有{{num}} 个物品.",
     "Rating": "评分",
@@ -116,8 +116,8 @@
     "YourReview": "您的评测"
   },
   "Faction": {
-    "EngramsAvailable": "1记忆水晶可用",
-    "EngramsAvailable_plural": "{{count}}记忆水晶可用"
+    "EngramsAvailable": "1记忆水晶可兑换",
+    "EngramsAvailable_plural": "{{count}}记忆水晶可兑换"
   },
   "FarmingMode": {
     "Configuration": "配置",
@@ -186,7 +186,7 @@
     "InLoadout": "显示已被用于配装的物品.",
     "Infusable": "显示可以灌注的物品.",
     "Leveling": {
-      "Complete": "{{term}}-显示完全完成的物品-每次升级解锁.",
+      "Complete": "{{term}}-显示完全完成的物品-每次升级均解锁.",
       "Incomplete": "{{term}}-显示尚未完成的物品-至少升一级才能解锁.",
       "Leveling": "显示物品在不同等级的状态：",
       "NeedsXP": "{{term}} - 显示仍能获得经验值的物品.",
@@ -360,7 +360,7 @@
       "HelpScaled": "计算使所有角色都都拥有350防御.",
       "LightMode": "光亮模式"
     },
-    "Loading": "装备最佳套装",
+    "Loading": "正在载入最佳套装",
     "LockEquipped": "锁定装备",
     "LockPerk": "锁定特性",
     "Locked": "锁定的物品",
@@ -600,21 +600,28 @@
     "Export": "备份DIM数据",
     "ForceSync": "强制同步数据",
     "GDriveLogout": "您的数据仍在Google云端硬盘之中 - 如果您再次登录，DIM 将继续使用它。",
+    "GDriveRevisions": "还原之前的设置",
     "GDriveSignInError": "登陆Google云端硬盘时出错:",
     "GDriveSignInWarning": "如果您已经在Google云端硬盘上保存了DIM数据，它将覆盖您本地存储的数据。 您也许需要在登陆前备份您的数据。\n\n确定要继续登录Google云端硬盘吗?",
     "GoogleApiBlocked": "Google云端硬盘不可用，可能是内容拦截器或广告拦截拓展阻止了Google云端硬盘的JavaScript。请在您的内容拦截器中设置DIM为白名单后重试。",
     "GoogleDriveStorage": "Google云端硬盘",
-    "IgnoredUsers": "{{value}} 位忽略用户",
+    "IgnoredUsers": "{{value}} 个被忽略的评论",
     "Import": "导入DIM数据文件",
+    "ImportConfirm": "您确定要使用此设置覆盖当前的设置吗？",
     "ImportExport": "备份数据",
     "ImportNoFile": "没有选择文件！",
     "ImportSuccess": "已导入DIM数据！",
     "IndexedDBStorage": "本地浏览器存储",
-    "Loadouts": "{{value}} 套配装",
+    "LoadRevision": "加载此设置",
+    "LoadoutsD1": "{{value}} 项命运1的配装",
+    "LoadoutsD2": "{{value}} 项命运2的配装",
     "NoData": "无数据",
+    "RestoreRevision": "还原为此设置",
+    "RevisionsDescription": "Goole云端硬盘会保存您最近100次修改的设置，您可以在此页面加载之前的旧版设置并恢复它们。",
     "Settings": "您的 DIM 设置和首选项",
     "StatLabel": "目前包含:",
-    "TagNotes": "{{value}} 个带标签或备注的物品",
+    "TagNotesD1": "{{value}} 个带标签或备注的命运1物品",
+    "TagNotesD2": "{{value}} 个带标签或备注的命运2物品",
     "Title": "DIM存储"
   },
   "StoreBucket": {
@@ -646,10 +653,11 @@
     "Available": "可用:",
     "Bounties": "赏金",
     "Collections": "收藏品",
-    "Compare": "与您现有物品比较：",
+    "Compare": "与您现有的物品对比：",
     "Consumables": "消耗品",
     "Emotes": "表情动作",
-    "Load": "加载商贩",
+    "Engram": "奖励记忆水晶",
+    "Load": "加载商贩中",
     "ShadersAndEmblems": "造型和徽章",
     "ShipsAndVehicles": "飞船和交通工具",
     "Vendors": "商贩"

@@ -9,7 +9,7 @@ import {
   } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getBasicProfile, getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
+import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
 import Countdown from '../dim-ui/countdown';
@@ -20,6 +20,8 @@ import { $state, loadingTracker } from '../ngimport-more';
 import './vendor.scss';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForVendors } from './vendor-ratings';
+import { Subscription } from 'rxjs/Subscription';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 
 interface Props {
   $scope: IScope;
@@ -33,9 +35,13 @@ interface State {
   defs?: D2ManifestDefinitions;
   vendorsResponse?: DestinyVendorsResponse;
   trackerService?: DestinyTrackerServiceType;
+  stores?: DimStore[];
+  ownedItemHashes?: Set<number>;
 }
 
 export default class Vendors extends React.Component<Props, State> {
+  private storesSubscription: Subscription;
+
   constructor(props: Props) {
     super(props);
     this.state = {};
@@ -51,14 +57,10 @@ export default class Vendors extends React.Component<Props, State> {
 
     // TODO: get for all characters, or let people select a character? This is a hack
     // we at least need to display that character!
-    let characterId = this.props.$stateParams.characterId;
+    let characterId: string = this.props.$stateParams.characterId;
     if (!characterId) {
-      // uggggh
-      // TODO: maybe load the whole stores anyway so we can count currencies and such, a la the old thing
-      const activeStore = this.props.D2StoresService.getActiveStore();
-      characterId = activeStore
-        ? activeStore.id
-        : (await getBasicProfile(this.props.account)).profile.data.characterIds[0];
+      const stores = this.state.stores || await this.props.D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
+      characterId = stores.find((s) => s.current)!.id;
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
 
@@ -76,10 +78,26 @@ export default class Vendors extends React.Component<Props, State> {
       const promise = this.loadVendors();
       loadingTracker.addPromise(promise);
     });
+
+    this.storesSubscription = this.props.D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
+      if (stores) {
+        const ownedItemHashes = new Set<number>();
+        for (const store of stores) {
+          for (const item of store.items) {
+            ownedItemHashes.add(item.hash);
+          }
+        }
+        this.setState({ stores, ownedItemHashes });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.storesSubscription.unsubscribe();
   }
 
   render() {
-    const { defs, vendorsResponse, trackerService } = this.state;
+    const { defs, vendorsResponse, trackerService, ownedItemHashes } = this.state;
 
     if (!vendorsResponse || !defs) {
       // TODO: loading component!
@@ -88,9 +106,15 @@ export default class Vendors extends React.Component<Props, State> {
 
     return (
       <div className="vendor d2-vendors dim-page">
-        <div className="under-construction">This feature is a preview - we're still working on it!</div>
         {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
-          <VendorGroup key={group.vendorGroupHash} defs={defs} group={group} vendorsResponse={vendorsResponse} trackerService={trackerService}/>
+          <VendorGroup
+            key={group.vendorGroupHash}
+            defs={defs}
+            group={group}
+            vendorsResponse={vendorsResponse}
+            trackerService={trackerService}
+            ownedItemHashes={ownedItemHashes}
+          />
         )}
 
       </div>
@@ -102,12 +126,14 @@ function VendorGroup({
   defs,
   group,
   vendorsResponse,
-  trackerService
+  trackerService,
+  ownedItemHashes
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
   trackerService?: DestinyTrackerServiceType;
+  ownedItemHashes?: Set<number>;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -121,6 +147,8 @@ function VendorGroup({
           itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
           sales={vendorsResponse.sales.data[vendor.vendorHash] && vendorsResponse.sales.data[vendor.vendorHash].saleItems}
           trackerService={trackerService}
+          ownedItemHashes={ownedItemHashes}
+          currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
         />
       )}
     </>
@@ -132,7 +160,9 @@ function Vendor({
   vendor,
   itemComponents,
   sales,
-  trackerService
+  trackerService,
+  ownedItemHashes,
+  currencyLookups
 }: {
   defs: D2ManifestDefinitions;
   vendor: DestinyVendorComponent;
@@ -141,6 +171,10 @@ function Vendor({
     [key: string]: DestinyVendorSaleItemComponent;
   };
   trackerService?: DestinyTrackerServiceType;
+  ownedItemHashes?: Set<number>;
+  currencyLookups: {
+    [itemHash: number]: number;
+  };
 }) {
   const vendorDef = defs.Vendor.get(vendor.vendorHash);
   if (!vendorDef) {
@@ -170,6 +204,8 @@ function Vendor({
         sales={sales}
         itemComponents={itemComponents}
         trackerService={trackerService}
+        ownedItemHashes={ownedItemHashes}
+        currencyLookups={currencyLookups}
       />
     </div>
   );

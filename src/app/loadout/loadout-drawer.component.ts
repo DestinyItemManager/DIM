@@ -7,7 +7,8 @@ import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
 import { flatMap } from '../util';
 import { settings } from '../settings/settings';
-import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
+import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout } from './loadout.service';
@@ -95,6 +96,7 @@ function LoadoutDrawerCtrl(
 
       // Filter out any vendor items and equip all if requested
       vm.loadout.warnitems = flatMap(Object.values(vm.loadout.items), (items) => items.filter((item) => !item.owner));
+      fillInDefinitionsForWarnItems(vm.loadout);
 
       _.each(vm.loadout.items, (items, type) => {
         vm.loadout!.items[type] = items.filter((item) => item.owner);
@@ -217,9 +219,7 @@ function LoadoutDrawerCtrl(
     const discriminator = item.type.toLowerCase();
     const typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
-    const index = _.findIndex(typeInventory, (i) => {
-      return i.hash === item.hash && i.id === item.id;
-    });
+    const index = typeInventory.findIndex((i) => i.hash === item.hash && i.id === item.id);
 
     if (index >= 0) {
       const decrement = $event.shiftKey ? 5 : 1;
@@ -234,6 +234,18 @@ function LoadoutDrawerCtrl(
     }
 
     vm.recalculateStats();
+  };
+
+  // TODO: In D2 we should probably just sub in another item w/ the same hash
+  vm.removeWarnItem = (item) => {
+    if (!vm.loadout) {
+      return;
+    }
+
+    const index = (vm.loadout.warnitems || []).findIndex((i) => i.hash === item.hash && i.id === item.id);
+    if (index >= 0) {
+      vm.warnItems.splice(index, 1);
+    }
   };
 
   vm.equip = function equip(item) {
@@ -305,8 +317,36 @@ function LoadoutDrawerCtrl(
       return;
     }
 
-    getDefinitions().then((defs) => {
+    getD1Definitions().then((defs) => {
       vm.stats = getCharacterStatsData(defs.Stat, { stats: combinedStats });
     });
   };
+}
+
+function fillInDefinitionsForWarnItems(loadout: Loadout & { warnitems?: DimItem[] }) {
+  if (!loadout.warnitems || !loadout.warnitems.length) {
+    return;
+  }
+
+  if (loadout.destinyVersion === 2) {
+    getD2Definitions().then((defs) => {
+      for (const warnItem of loadout.warnitems!) {
+        const itemDef = defs.InventoryItem.get(warnItem.hash);
+        if (itemDef) {
+          warnItem.icon = itemDef.displayProperties.icon;
+          warnItem.name = itemDef.displayProperties.name;
+        }
+      }
+    });
+  } else {
+    getD1Definitions().then((defs) => {
+      for (const warnItem of loadout.warnitems!) {
+        const itemDef = defs.InventoryItem.get(warnItem.hash);
+        if (itemDef) {
+          warnItem.icon = itemDef.icon;
+          warnItem.name = itemDef.itemName;
+        }
+      }
+    });
+  }
 }

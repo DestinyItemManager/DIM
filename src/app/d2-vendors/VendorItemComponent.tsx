@@ -12,11 +12,13 @@ import { DestinyTrackerServiceType, DimWorkingUserReview } from "../item-review/
 import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { DimItem } from "../inventory/store/d2-item-factory.service";
 import { D2PerkRater } from "../destinyTrackerApi/d2-perkRater";
+import checkMark from '../../images/check.svg';
 
 interface Props {
   defs: D2ManifestDefinitions;
   item: VendorItem;
   trackerService?: DestinyTrackerServiceType;
+  owned: boolean;
 }
 
 export default class VendorItemComponent extends React.Component<Props> {
@@ -36,7 +38,7 @@ export default class VendorItemComponent extends React.Component<Props> {
   }
 
   render() {
-    const { item, defs } = this.props;
+    const { item, defs, owned } = this.props;
 
     if (item.displayTile) {
       return (
@@ -57,7 +59,7 @@ export default class VendorItemComponent extends React.Component<Props> {
     }
 
     return (
-      <div className={classNames("vendor-item")}>
+      <div className={classNames("vendor-item", { owned })}>
         {(!item.canPurchase || !item.canBeSold) &&
           <div className="locked-overlay"/>
         }
@@ -66,6 +68,7 @@ export default class VendorItemComponent extends React.Component<Props> {
             className={classNames("item-img", { transparent: item.borderless })}
             style={bungieBackgroundStyle(item.displayProperties.icon)}
           />
+          {owned && <img className="owned-icon" src={checkMark}/>}
           {(item.primaryStat || item.rating) &&
             <div>
               {item.rating && <div className="item-stat item-review">
@@ -163,7 +166,7 @@ function VendorItemCost({
   const currencyItem = defs.InventoryItem.get(cost.itemHash);
   return (
     <div key={cost.itemHash} className="cost">
-      {cost.quantity}
+      {cost.quantity}{' '}
       <span className="currency">
         <BungieImage
           src={currencyItem.displayProperties.icon}
