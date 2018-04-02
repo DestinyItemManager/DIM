@@ -67,7 +67,7 @@ export default function VendorItems({
       {vendorCurrencies.length > 0 && <div className="vendor-currencies">
         {vendorCurrencies.map((currency) =>
           <div className="vendor-currency" key={currency.hash}>
-            {currencyLookups[currency.hash]}{' '}
+            {currencyLookups[currency.hash] || 0}{' '}
             <BungieImage src={currency.displayProperties.icon} title={currency.displayProperties.name}/>
           </div>
         )}
