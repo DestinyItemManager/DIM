@@ -1,5 +1,7 @@
 # Next
 
+# 4.46.0
+
 * Added a page to browse and restore old revisions of Google Drive data.
 * Emblems now show a preview of their nameplate in the item details popup.
 * New Vendors page shows all the items you can buy from various vendors.
