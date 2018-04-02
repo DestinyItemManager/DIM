@@ -6,14 +6,14 @@ export interface D2ReviewMode {
   description: string;
 }
 
-export enum ActivityModeHashes {
+enum ActivityModeHashes {
   playerVersusEnemy = 1164760493,
   playerVersusPlayer = 1164760504,
   raid = 2043403989,
   trials = 1370326378
 }
 
-export enum DtrActivityModes {
+enum DtrActivityModes {
   notSpecified = 0,
   playerVersusEnemy = 7,
   playerVersusPlayer = 5,
