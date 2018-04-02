@@ -19,6 +19,8 @@ import { initi18n } from './app/i18n';
 import { polyfill } from "mobile-drag-drop";
 import 'mobile-drag-drop/default.css';
 
+import registerServiceWorker from './register-service-worker';
+
 polyfill({
   holdToDrag: 300
 });
@@ -27,10 +29,7 @@ polyfill({
 window.addEventListener('touchmove', () => { });
 
 if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
-  navigator.serviceWorker.register('/service-worker.js')
-    .catch((err) => {
-      console.error('Unable to register service worker.', err);
-    });
+  registerServiceWorker();
 }
 
 initi18n().then(() => {

@@ -100,6 +100,8 @@ function AppComponentCtrl(
     if (window.BroadcastChannel) {
       const updateChannel = new BroadcastChannel('precache-updates');
 
+      // TODO: check for index.html
+      // TODO: publish to an observable
       const updateMessage = _.once(() => {
         $timeout(() => {
           showInfoPopup('update-available', {

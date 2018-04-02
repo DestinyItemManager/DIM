@@ -1,5 +1,17 @@
-import _ from 'underscore';
-import { getGlobalAlerts } from '../bungie-api/bungie-core-api';
+import * as _ from 'underscore';
+import { equals } from 'angular';
+import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
+import { Observable } from 'rxjs/Observable';
+import '../rx-operators';
+
+export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
+  // Fetch global alerts, but swallow errors
+  .switchMap(() => Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty()))
+  .startWith([])
+  // Deep equals
+  .distinctUntilChanged(equals);
+  // TODO: Publish? this is the part I never get
+  // TODO: redux?
 
 export const BungieAlertsComponent = {
   controller: BungieAlertsCtrl
@@ -35,13 +47,13 @@ function BungieAlertsCtrl($interval, toaster, $i18next) {
       showCloseButton: true,
       body: `<p>${alert.body}</p>${twitter}`
     });
-  }, (alert) => `${alert.key}-${alert.timestamp}`);
+  }, (alert) => `${alert.key}-${alert.timestamp}`) as (alert: GlobalAlert) => void;
 
   function pollBungieAlerts() {
     getGlobalAlerts()
       .then((alerts) => {
         alerts.forEach(showAlertToaster);
       })
-      .catch((e) => { });
+      .catch(() => { return; });
   }
 }
