@@ -71,7 +71,6 @@ export default class RatingMode extends React.Component<Props, State> {
 
     const newModeSelection = e.target.value;
     settings.reviewsModeSelection = newModeSelection;
-    settings.reviewsModeSelection = newModeSelection;
     this.props.D2StoresService.refreshRatingsData();
     this.setState({ reviewsModeSelection: newModeSelection });
     $rootScope.$broadcast('dim-refresh');
