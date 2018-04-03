@@ -447,7 +447,7 @@
     "SaveErrorTitle": "保存设置时出错",
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个.",
     "VendorsCanEquip": "这些物品可以被装备:",
-    "VendorsCannotEquip": "这些物品无法被装备:"
+    "VendorsCannotEquip": "某些物品无法被装备，因为你未拥有："
   },
   "Manifest": {
     "Build": "生成命运信息数据库",
@@ -686,7 +686,7 @@
       "GitHub": "Github",
       "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 上的项目地址！",
       "Header": "关于命运物品管理器 (DIM)",
-      "HowItsMade": "DIM是基于Bungie.net和Destiny同伴应用所使用的相同服务编译的。DIM可以从PlayStation, Xbox和PC平台读取您守护者的背包和保险库。使您可以用拖拽来移动物品。",
+      "HowItsMade": "DIM是基于Bungie.net和命运同伴应用(Destiny Companion APP)所使用的相同服务编译的。DIM可以从PlayStation、Xbox和PC平台读取您守护者的背包和保险库，使您可以用拖拽来移动物品。",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意见,疑问或者建议，请在Reddit上留下评论，务必让我们知晓。",
       "Schedule_beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",

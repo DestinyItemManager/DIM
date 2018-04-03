@@ -447,7 +447,7 @@
     "SaveErrorTitle": "Ошибка сохранения набора",
     "TooManyRequested": "У вас есть {{total}} {{itemname}} но ваш набор требует {{requested}}. Мы передали всё что у вас есть.",
     "VendorsCanEquip": "Предметы, которые возможно надеть:",
-    "VendorsCannotEquip": "Предметы, которые невозможно надеть:"
+    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
   },
   "Manifest": {
     "Build": "Создание локальной базы данных Destiny",

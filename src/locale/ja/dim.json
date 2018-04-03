@@ -447,7 +447,7 @@
     "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
     "TooManyRequested": "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。",
     "VendorsCanEquip": "これらのアイテムは装備出来ません。",
-    "VendorsCannotEquip": "これらのアイテムは装備できません。"
+    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
   },
   "Manifest": {
     "Build": "Destinyのデータを再構築する。",

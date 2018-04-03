@@ -447,7 +447,7 @@
     "SaveErrorTitle": "Error al guardar equipo",
     "TooManyRequested": "Tu tienes {{total}} {{itemname}} pero tu configuración pregunta por {{requested}}. Transferimos todo lo que tenías.",
     "VendorsCanEquip": "Estos objetos pueden equiparse:",
-    "VendorsCannotEquip": "Estos objetos no pueden equiparse:"
+    "VendorsCannotEquip": "Estos objetos no pueden ser equipados porque no los tienes:"
   },
   "Manifest": {
     "Build": "Creando información de la base de datos de Destiny",
