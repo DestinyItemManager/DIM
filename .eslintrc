@@ -5,17 +5,8 @@
     "node": true
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings"
+    "eslint:recommended"
   ],
-  "settings": {
-    "import/resolver": {
-      "webpack": {
-        "config": "config/webpack.js"
-      }
-    }
-  },
   "root": true,
   "parser": "babel-eslint",
   "parserOptions": {
@@ -172,9 +163,6 @@
     "rest-spread-spacing": "error",
     "template-curly-spacing": "error",
     "yield-star-spacing": "error",
-    "import/no-duplicates": "error",
-    "import/no-namespace": "error",
-    "import/newline-after-import": "error",
     "angular/no-private-call": "error",
     "angular/controller-as-vm": "error",
     "angular/controller-as": "error",
