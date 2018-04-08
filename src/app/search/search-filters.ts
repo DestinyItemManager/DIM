@@ -136,6 +136,9 @@ export function buildSearchConfig(
     }
   });
 
+  keywords.push("ghostdupe:partial");
+  keywords.push("ghostdupe:full");
+
   // Filters that operate on ranges (>, <, >=, <=)
   const comparisons = [":<", ":>", ":<=", ":>=", ":="];
 
@@ -213,6 +216,9 @@ export function searchFilters(
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   let _lowerDupes = {};
   let _dupeInPost = false;
+  let _ghosts: DimItem[];
+  let _partialDupes: number[] = [];
+  let _notFullDupes: number[] = [];
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
@@ -285,6 +291,9 @@ export function searchFilters(
       _duplicates = null;
       _lowerDupes = {};
       _dupeInPost = false;
+      _ghosts = [];
+      _partialDupes = [];
+      _notFullDupes = [];
     },
 
     /**
@@ -356,6 +365,9 @@ export function searchFilters(
             const filter = pieces[1];
             addPredicate(filter, pieces[2]);
           }
+        } else if (term.startsWith('ghost:')) {
+          const filter = term.replace('ghost:', '');
+          addPredicate("ghost", filter);
         } else if (!/^\s*$/.test(term)) {
           // TODO: not
           addPredicate("keyword", term);
@@ -475,6 +487,32 @@ export function searchFilters(
       },
       masterwork(item: DimItem) {
         return item.masterwork;
+      },
+      ghost(item: DimItem, predicate: string) {
+        if (!_ghosts.length) {
+          _ghosts = storeService.getAllItems().filter((i) => i.type === "Ghost");
+          _ghosts.forEach((ghost) => {
+            ghost.sockets && ghost.sockets.sockets.forEach((socket) =>
+              Boolean(socket.plug && socket.plug.plugItem.itemCategoryHashes.includes(59) &&
+                      _ghosts.filter((g) => g.id !== ghost.id).forEach((otherGhost) => {
+                Boolean(otherGhost.sockets && otherGhost.sockets.sockets.forEach((otherSocket) => {
+                  if (otherSocket.plug && otherSocket.plug.plugItem.itemCategoryHashes.includes(59)) {
+                    if (socket.plug && otherSocket.plug.plugItem.hash === socket.plug.plugItem.hash) {
+                      _partialDupes[ghost.id] = true;
+                    } else {
+                      _notFullDupes[ghost.id] = true;
+                    }
+                  }
+                }));
+              }))
+            );
+          });
+        }
+        if (predicate === "partialdupe") {
+          return _partialDupes[item.id];
+        } else if (predicate === "fulldupe") {
+          return _partialDupes[item.id] && !_notFullDupes[item.id];
+        }
       },
       dupe(item: DimItem, predicate: string) {
         if (_duplicates === null) {
