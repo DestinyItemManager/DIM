@@ -217,8 +217,8 @@ export function searchFilters(
   let _lowerDupes = {};
   let _dupeInPost = false;
   let _ghosts: DimItem[];
-  let _partialDupes: number[] = [];
-  let _notFullDupes: number[] = [];
+  let _partialDupes: number[];
+  let _notFullDupes: number[];
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
@@ -493,9 +493,9 @@ export function searchFilters(
           _ghosts = storeService.getAllItems().filter((i) => i.type === "Ghost");
           _ghosts.forEach((ghost) => {
             ghost.sockets && ghost.sockets.sockets.forEach((socket) =>
-              Boolean(socket.plug && socket.plug.plugItem.itemCategoryHashes.includes(59) &&
+              socket.plug && socket.plug.plugItem.itemCategoryHashes.includes(59) &&
                       _ghosts.filter((g) => g.id !== ghost.id).forEach((otherGhost) => {
-                Boolean(otherGhost.sockets && otherGhost.sockets.sockets.forEach((otherSocket) => {
+                otherGhost.sockets && otherGhost.sockets.sockets.forEach((otherSocket) => {
                   if (otherSocket.plug && otherSocket.plug.plugItem.itemCategoryHashes.includes(59)) {
                     if (socket.plug && otherSocket.plug.plugItem.hash === socket.plug.plugItem.hash) {
                       _partialDupes[ghost.id] = true;
@@ -503,8 +503,8 @@ export function searchFilters(
                       _notFullDupes[ghost.id] = true;
                     }
                   }
-                }));
-              }))
+                });
+              })
             );
           });
         }
