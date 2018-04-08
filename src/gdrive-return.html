@@ -1,10 +1,6 @@
 <html !doctype>
   <head>
     <title>Authorizing Google Drive</title>
-
-    {{#each htmlWebpackPlugin.files.css}}
-    <link href="{{ webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
-    {{/each}}
   </head>
 
   <body>
@@ -18,9 +14,5 @@
     </div>
 
     <script src="https://apis.google.com/js/api.js"></script>
-    {{{htmlWebpackPlugin.files.webpackManifest}}}
-    {{#each htmlWebpackPlugin.files.js}}
-    <script type="text/javascript" src="{{ webpackConfig.output.publicPath }}{{ this }}"></script>
-    {{/each}}
   </body>
 </html>

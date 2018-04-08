@@ -28,11 +28,6 @@
     <!-- We cannot use this, because our OAuth flow redirects to another site, and Safari cannot bring us back. Thus we'll never be able to log in. -->
     <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    {{#each htmlWebpackPlugin.files.css}}
-    <link href="{{ webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
-    {{/each}}
-
   </head>
 
   <body>
@@ -45,10 +40,5 @@
 
     <script async src="https://www.google-analytics.com/analytics.js"></script>
     <script src="https://apis.google.com/js/api.js"></script>
-
-    {{{htmlWebpackPlugin.files.webpackManifest}}}
-    {{#each htmlWebpackPlugin.files.js}}
-    <script type="text/javascript" src="{{ webpackConfig.output.publicPath }}{{ this }}"></script>
-    {{/each}}
   </body>
 </html>
