@@ -149,6 +149,7 @@
     "tooltip.js": "^1.2.0",
     "ua-parser-js": "^0.7.17",
     "underscore": "^1.8.3",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "whatwg-fetch": "^2.0.4"
   }
 }
