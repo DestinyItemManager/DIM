@@ -1,5 +1,7 @@
 # Next
 
+* Added "ghost:" filters to enable a way to filter partial (at least one equal perk) or full (all perks equal) dupes.
+
 # 4.46.0
 
 * Added a page to browse and restore old revisions of Google Drive data.
