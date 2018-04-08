@@ -136,8 +136,8 @@ export function buildSearchConfig(
     }
   });
 
-  keywords.push("ghostdupe:partial");
-  keywords.push("ghostdupe:full");
+  keywords.push("ghost:partialdupe");
+  keywords.push("ghost:fulldupe");
 
   // Filters that operate on ranges (>, <, >=, <=)
   const comparisons = [":<", ":>", ":<=", ":>=", ":="];
