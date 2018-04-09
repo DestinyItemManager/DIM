@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import template from './item-tag.html';
 import './item-tag.scss';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';

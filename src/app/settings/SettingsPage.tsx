@@ -13,7 +13,7 @@ import exampleArmorImage from 'app/images/example-armor.jpg';
 import './settings.scss';
 import { $rootScope } from 'ngimport';
 import { DimItem } from '../inventory/item-types';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
@@ -198,13 +198,16 @@ class SettingsPage extends React.Component<Props, State> {
     }
 
     const itemSortCustom = _.sortBy(
-      _.map(itemSortProperties, (displayName, id) => {
-        return {
-          id,
-          displayName,
-          enabled: sortOrder.includes(id)
-        };
-      }),
+      _.map(
+        itemSortProperties,
+        (displayName, id): SortProperty => {
+          return {
+            id,
+            displayName,
+            enabled: sortOrder.includes(id)
+          };
+        }
+      ),
       (o) => {
         const index = sortOrder.indexOf(o.id);
         return index >= 0 ? index : 999;

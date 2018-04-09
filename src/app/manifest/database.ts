@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 
 // tslint:disable-next-line:no-implicit-dependencies
 import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wasm.js';
@@ -18,7 +18,7 @@ declare const WebAssembly: any;
 // if they need it. So we can minify sql.js specifically (as explained
 // in the Webpack config, we need to explicitly name this chunk, which
 // can only be done using the dynamic import method.
-export const requireSqlLib = _.memoize(() => {
+export const requireSqlLib = _.once(() => {
   function importAsmJs() {
     delete window.Module;
     delete window.SQL;

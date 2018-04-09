@@ -1,5 +1,5 @@
 import { IComponentOptions, extend } from 'angular';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import template from './loadout-builder-locks.html';
 import dialogTemplate from './loadout-builder-locks-dialog.html';
 

@@ -2,7 +2,7 @@ import { IPromise } from 'angular';
 import { $q, $rootScope } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import {
   compareAccounts,
   DestinyAccount,

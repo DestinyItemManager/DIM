@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import BungieImage from '../../dim-ui/BungieImage';
 import PressTip from '../../dim-ui/PressTip';
 import StoreInventoryItem from '../../inventory/StoreInventoryItem';

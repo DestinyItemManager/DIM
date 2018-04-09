@@ -1,6 +1,5 @@
 import { extend, copy, IComponentOptions, IController, IQService } from 'angular';
-import * as _ from 'underscore';
-import { flatMap } from '../util';
+import * as _ from 'lodash';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
 import './infuse.scss';
@@ -101,7 +100,7 @@ function InfuseCtrl(
       }
 
       if (vm.query.infusable) {
-        let targetItems = flatMap(stores, (store) => {
+        let targetItems = _.flatMap(stores, (store) => {
           return store.items.filter((item) => {
             return (!item.locked || vm.showLockedItems) && vm.isInfusable(vm.query, item);
           });
@@ -113,7 +112,7 @@ function InfuseCtrl(
       }
 
       if (vm.query.infusionFuel) {
-        let sourceItems = flatMap(stores, (store) => {
+        let sourceItems = _.flatMap(stores, (store) => {
           return store.items.filter((item) => {
             return vm.isInfusable(item, vm.query);
           });

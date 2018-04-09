@@ -1,8 +1,6 @@
 import { copy } from 'angular';
 import { settings } from '../settings/settings';
-import * as _ from 'underscore';
-import { sum } from '../util';
-import { getBuckets } from '../destiny1/d1-buckets.service';
+import * as _ from 'lodash';
 import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
 import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
@@ -10,6 +8,7 @@ import { t } from 'i18next';
 import { toaster } from '../ngimport-more';
 import { $q, $interval, $rootScope } from 'ngimport';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { getBuckets } from '../destiny1/d1-buckets.service';
 
 export const D1FarmingService = FarmingService();
 
@@ -143,7 +142,7 @@ function FarmingService() {
     },
     farmItems() {
       const store = D1StoresService.getStore(this.store.id)!;
-      const toMove = _.select(store.items, (i) => {
+      const toMove = store.items.filter((i) => {
         return (
           !i.notransfer &&
           (i.isEngram || (i.equipment && i.type === 'Uncommon') || glimmerHashes.has(i.hash))
@@ -170,7 +169,7 @@ function FarmingService() {
         const items = store.buckets[makeRoomType];
         if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
           // We'll move the lowest-value item to the vault.
-          const itemToMove = _.min(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
+          const itemToMove = _.minBy(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
             let value = {
               Common: 0,
               Uncommon: 1,
@@ -185,7 +184,7 @@ function FarmingService() {
             return value;
           });
           if (!_.isNumber(itemToMove)) {
-            itemsToMove.push(itemToMove);
+            itemsToMove.push(itemToMove!);
           }
         }
       });
@@ -216,7 +215,7 @@ function FarmingService() {
               })
             );
             if (ret) {
-              ret.amount = sum(D1StoresService.getStores(), (s) => s.amountOfItem(ret));
+              ret.amount = _.sumBy(D1StoresService.getStores(), (s) => s.amountOfItem(ret));
             }
             return ret;
           })

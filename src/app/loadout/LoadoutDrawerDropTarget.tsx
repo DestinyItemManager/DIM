@@ -8,7 +8,7 @@ import {
 } from 'react-dnd';
 import * as classNames from 'classnames';
 import { DimItem } from '../inventory/item-types';
-import { flatMap } from '../util';
+import * as _ from 'lodash';
 
 interface ExternalProps {
   bucketTypes: string[];
@@ -27,8 +27,8 @@ type Props = InternalProps & ExternalProps;
 
 // This determines what types can be dropped on this target
 function dragType(props: ExternalProps) {
-  return flatMap(props.bucketTypes, (bucketType) =>
-    flatMap(props.storeIds, (storeId) => [bucketType, `${storeId}-${bucketType}`])
+  return _.flatMap(props.bucketTypes, (bucketType) =>
+    _.flatMap(props.storeIds, (storeId) => [bucketType, `${storeId}-${bucketType}`])
   );
 }
 

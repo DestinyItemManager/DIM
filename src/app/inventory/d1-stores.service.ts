@@ -1,9 +1,7 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
-
-import { flatMap } from '../util';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
@@ -63,7 +61,7 @@ function StoreService(): D1StoreServiceType {
     getStores: () => _stores,
     getStore: (id) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
-    getAllItems: () => flatMap(_stores, (s) => s.items),
+    getAllItems: () => _.flatMap(_stores, (s) => s.items),
     refreshRatingsData() {
       return;
     },
@@ -123,7 +121,7 @@ function StoreService(): D1StoreServiceType {
     return $q.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
-          const bStore: any = _.find(bungieStores, { id: dStore.id });
+          const bStore = bungieStores.find((s) => s.id === dStore.id)!;
           dStore.updateCharacterInfo(defs, bStore.base);
         }
       });

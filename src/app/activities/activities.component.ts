@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';

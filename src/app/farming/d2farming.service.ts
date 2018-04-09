@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
@@ -55,7 +55,7 @@ function makeD2FarmingService() {
         const items = store.buckets[makeRoomBucket.id];
         if (items.length > 0 && items.length >= makeRoomBucket.capacity) {
           // We'll move the lowest-value item to the vault.
-          const itemToMove = _.min(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
+          const itemToMove = _.minBy(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
             let value = {
               Common: 0,
               Uncommon: 1,
@@ -69,7 +69,7 @@ function makeD2FarmingService() {
             }
             return value;
           });
-          if (!_.isNumber(itemToMove)) {
+          if (itemToMove) {
             itemsToMove.push(itemToMove);
           }
         }

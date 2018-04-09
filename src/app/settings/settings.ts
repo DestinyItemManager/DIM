@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { $rootScope } from 'ngimport';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { SyncService } from '../storage/sync.service';
 import store from '../store/store';
 import { loaded } from './actions';

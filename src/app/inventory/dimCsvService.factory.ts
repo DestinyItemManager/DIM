@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DimItem } from './item-types';
 import { t } from 'i18next';
 
@@ -41,7 +41,7 @@ function downloadCsv(filename, csv) {
 function buildNodeString(nodes) {
   let data = '';
   nodes.forEach((node) => {
-    if (_.contains(FILTER_NODE_NAMES, node.name)) {
+    if (FILTER_NODE_NAMES.includes(node.name)) {
       return;
     }
     data += node.name;

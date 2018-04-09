@@ -7,7 +7,7 @@ import { router } from '../../router';
 import { $rootScope } from 'ngimport';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import classNames from 'classnames';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { dataStats } from './data-stats';
 

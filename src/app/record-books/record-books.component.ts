@@ -1,6 +1,6 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { extend, IComponentOptions, IController, IScope } from 'angular';
-import { sum, count } from '../util';
+import { count } from '../util';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
@@ -97,7 +97,7 @@ function RecordBooksController(
     };
 
     const records = Object.values(rawRecordBook.records).map((r) => processRecord(defs, r));
-    const recordByHash = _.indexBy(records, 'hash');
+    const recordByHash = _.keyBy(records, (r) => r.hash);
 
     let i = 0;
     recordBook.pages = recordBookDef.pages.map((page) => {
@@ -130,7 +130,7 @@ function RecordBooksController(
       rawRecordBook.progress = rawRecordBook.progression;
       rawRecordBook.percentComplete =
         rawRecordBook.progress.currentProgress /
-        sum(rawRecordBook.progress.steps, (s: any) => s.progressTotal);
+        _.sumBy(rawRecordBook.progress.steps, (s: any) => s.progressTotal);
     } else {
       // TODO: not accurate for multi-objectives
       recordBook.percentComplete = count(records, (r) => r.complete) / records.length;

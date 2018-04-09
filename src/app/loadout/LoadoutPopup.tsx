@@ -9,7 +9,7 @@ import { previousLoadoutSelector, loadoutsSelector } from './reducer';
 import { currentAccountSelector } from '../accounts/reducer';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets.service';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { connect } from 'react-redux';
 import {
   maxLightLoadout,
@@ -386,7 +386,7 @@ export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
 
 function filterLoadoutToEquipped(loadout: Loadout) {
   const filteredLoadout = angularCopy(loadout);
-  filteredLoadout.items = _.mapObject(filteredLoadout.items, (items) =>
+  filteredLoadout.items = _.mapValues(filteredLoadout.items, (items) =>
     items.filter((i) => i.equipped)
   );
   return filteredLoadout;

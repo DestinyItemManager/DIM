@@ -9,7 +9,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
@@ -21,7 +21,6 @@ import { optimalLoadout } from '../loadout/loadout-utils';
 import { getLight } from '../loadout/loadout.service';
 import '../rx-operators';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { flatMap } from '../util';
 import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
@@ -79,7 +78,7 @@ function makeD2StoresService(): D2StoreServiceType {
     getStores: () => _stores,
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
-    getAllItems: () => flatMap(_stores, (s) => s.items),
+    getAllItems: () => _.flatMap(_stores, (s) => s.items),
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,
@@ -440,7 +439,7 @@ function makeD2StoresService(): D2StoreServiceType {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
-      const hasClassified = flatMap(_stores, (s) => s.items).some((i) => {
+      const hasClassified = _.flatMap(_stores, (s) => s.items).some((i) => {
         return (
           i.classified &&
           (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
@@ -485,7 +484,7 @@ function makeD2StoresService(): D2StoreServiceType {
       3897883278 // Defense
     ]);
 
-    const applicableItems = flatMap(stores, (s) => s.items).filter((i) => {
+    const applicableItems = _.flatMap(stores, (s) => s.items).filter((i) => {
       return (
         i.canBeEquippedBy(store) &&
         i.primStat && // has a primary stat (sanity check)

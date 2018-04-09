@@ -1,4 +1,5 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
+import { VendorSaleItem } from './vendor.service';
 
 /**
  * Filters a list of categories down to only categories that match a certain property.
@@ -7,13 +8,13 @@ export function vendorTab(categories, prop) {
   if (!prop || !prop.length) {
     return categories;
   }
-  return _.filter(categories, prop);
+  return categories.filter((c) => c === prop);
 }
 
 /**
  * Filters a list of items down to items that match one of a set of named filters.
  */
-export function vendorTabItems(items, prop) {
+export function vendorTabItems(items: VendorSaleItem[], prop) {
   if (!prop || !prop.length) {
     return items;
   }

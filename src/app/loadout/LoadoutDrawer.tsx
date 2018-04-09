@@ -3,11 +3,10 @@ import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { toaster } from '../ngimport-more';
 import { dimLoadoutService, Loadout } from './loadout.service';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { $rootScope } from 'ngimport';
 import { sortItems } from '../shell/dimAngularFilters.filter';
 import { copy } from 'angular';
-import { flatMap } from '../util';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DimItem } from '../inventory/item-types';
@@ -56,7 +55,7 @@ const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     label: string;
     value: number;
   }[] = [{ label: t('Loadouts.Any'), value: -1 }];
-  _.each(_.uniq(stores.filter((s) => !s.isVault), false, (store) => store.classType), (store) => {
+  _.each(_.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType), (store) => {
     let classType = 0;
 
     /*
@@ -119,7 +118,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       loadout.items = loadout.items || {};
 
       // Filter out any vendor items and equip all if requested
-      const warnitems = flatMap(Object.values(loadout.items), (items) =>
+      const warnitems = _.flatMap(Object.values(loadout.items), (items) =>
         items.filter((item) => !item.owner)
       );
       this.fillInDefinitionsForWarnItems(this.props.destinyVersion, warnitems);
