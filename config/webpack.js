@@ -43,7 +43,7 @@ module.exports = (env) => {
       chunkFilename: '[id]-[contenthash:6].js'
     },
 
-    stats: 'errors-only',
+    stats: 'minimal',
 
     devtool: 'source-map',
 
@@ -53,6 +53,9 @@ module.exports = (env) => {
     },
 
     optimization: {
+      // We always want the chunk name, otherwise it's just numbers
+      namedChunks: true,
+      // Extract the runtime into a separate chunk
       runtimeChunk: 'single',
       splitChunks: {
         chunks: "all",
@@ -259,7 +262,7 @@ module.exports = (env) => {
   } else {
     // Bail and fail hard on first error
     config.bail = true;
-    config.stats = 'verbose';
+    config.stats = 'normal';
 
     config.plugins.push(new CleanWebpackPlugin([
       'dist',
