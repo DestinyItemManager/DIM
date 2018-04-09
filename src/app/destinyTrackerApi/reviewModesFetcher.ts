@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
+import { DtrActivityModes } from '../item-review/destiny-tracker.service';
 
 export interface D2ReviewMode {
   mode: number;
@@ -11,14 +12,6 @@ enum ActivityModeHashes {
   playerVersusPlayer = 1164760504,
   raid = 2043403989,
   trials = 1370326378
-}
-
-enum DtrActivityModes {
-  notSpecified = 0,
-  playerVersusEnemy = 7,
-  playerVersusPlayer = 5,
-  raid = 4,
-  trials = 39
 }
 
 export function getReviewModes(defs?: D2ManifestDefinitions): D2ReviewMode[] {

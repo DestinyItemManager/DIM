@@ -44,7 +44,7 @@ export interface DtrUserReview {
   isIgnored?: boolean;
   selectedPerks: number[];
   attachedMods: number[];
-  mode: number;  // play mode; corresponds to DestinyActivityModeType
+  mode: DtrActivityModes;
   sandbox: number; // sandbox season (1 was the first, 2 is the March 2018 "go fast" update)
 }
 
@@ -57,7 +57,7 @@ export interface DimWorkingUserReview extends DtrReviewContainer {
   userVote: number;
   rating: number;
   userRating: number;
-  mode: number;
+  mode: DtrActivityModes;
   reviewsDataFetched: boolean;
   highlightedRatingCount: number;
   review: string;
@@ -72,6 +72,14 @@ export interface DimReviewReport {
   reviewId: string;
   reporter: Reviewer;
   text: string;
+}
+
+export enum DtrActivityModes {
+  notSpecified = 0,
+  playerVersusEnemy = 7,
+  playerVersusPlayer = 5,
+  raid = 4,
+  trials = 39
 }
 
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
