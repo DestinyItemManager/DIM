@@ -38,14 +38,14 @@ export const ShellModule = module('dimShell', [
 
     $stateProvider.state({
       name: 'about',
-      template: aboutTemplate,
+      templateUrl: aboutTemplate,
       controller: PageController,
       url: '/about'
     });
 
     $stateProvider.state({
       name: 'support',
-      template: supportTemplate,
+      templateUrl: supportTemplate,
       controller: PageController,
       url: '/backers'
     });
