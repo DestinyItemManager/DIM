@@ -2,6 +2,9 @@ import _ from 'underscore';
 import { settings } from '../settings/settings';
 import template from './item-review.html';
 import './item-review.scss';
+import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
+import { getDefinitions } from '../destiny2/d2-definitions.service';
+import { translateReviewMode } from './reviewModeTranslator';
 
 function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   'ngInject';
@@ -13,6 +16,10 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
   vm.hasUserReview = ((vm.item.userRating) || (vm.item.userVote));
   vm.expandReview = ((vm.item.isLocallyCached) && (vm.item.userVote !== 0));
   vm.toggledFlags = [];
+
+  if (!vm.item.mode) {
+    vm.item.mode = settings.reviewsModeSelection;
+  }
 
   vm.isCollapsed = false;
 
@@ -86,11 +93,21 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     if (review.voted) {
       vm.item.userVote = review.voted;
     }
+
+    if (review.mode) {
+      vm.item.mode = review.mode.toString();
+    }
   };
 
   vm.totalReviews = 0;
 
   vm.reviewLabels = [5, 4, 3, 2, 1];
+
+  if (vm.item.destinyVersion === 2) {
+    getDefinitions().then((defs) => {
+      vm.reviewModeOptions = getReviewModes(defs);
+    });
+  }
 
   vm.getReviewData = function() {
     if (!vm.item.reviews) {
@@ -160,12 +177,14 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     const review = item.userReview;
     const pros = item.userReviewPros;
     const cons = item.userReviewCons;
+    const mode = item.mode;
 
     const userReview = {
       voted: userVote,
       review: review,
       pros: pros,
-      cons: cons
+      cons: cons,
+      mode
     };
 
     return userReview;
@@ -207,6 +226,16 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);
     }
+  };
+
+  vm.translateReviewMode = function(review) {
+    if (!vm.reviewModeOptions) {
+      getDefinitions().then((defs) => { vm.reviewModeOptions = getReviewModes(defs); });
+
+      return translateReviewMode(vm.reviewModeOptions, review);
+    }
+
+    return translateReviewMode(vm.reviewModeOptions, review);
   };
 
   vm.setUserVote = function(userVote) {

@@ -86,7 +86,10 @@ class Settings {
   };
   // Active destiny version
   destinyVersion = 2;
+  // Destiny 2 platform selection for ratings + reviews
   reviewsPlatformSelection = 0;
+  // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
+  reviewsModeSelection = 0;
 
   ready = new Promise((resolve) => readyResolve = resolve);
 

@@ -99,9 +99,11 @@
     "Cons": "Cons",
     "Delete": "Delete",
     "Edit": "Edit",
+    "ForGameMode": "For game mode",
     "Help": "Write a review (optional)",
     "HelpCons": "Describe the negatives of this weapon (optional)",
     "HelpPros": "Describe the positives of this weapon (optional)",
+    "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
     "Platforms": {
       "All": "Show All",
@@ -116,6 +118,7 @@
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
+    "UnknownGameMode": "Unknown",
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review"
   },
@@ -549,6 +552,7 @@
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
+    "ReviewsModeSelection": "Only show ratings for the following play mode",
     "ReviewsPlatformSelection": "Only show ratings from the following platform",
     "SetSort": "Sort items by:",
     "Settings": "Settings",

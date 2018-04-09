@@ -12,6 +12,8 @@ import exampleWeaponImage from 'app/images/example-weapon.jpg';
 import exampleArmorImage from 'app/images/example-armor.jpg';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
 import { StoreServiceType } from '../inventory/d2-stores.service';
+import { getDefinitions } from '../destiny2/d2-definitions.service';
+import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 
 export const SettingsComponent: IComponentOptions = {
   template,
@@ -72,6 +74,10 @@ export function SettingsController(
     3: $i18next.t('DtrReview.Platforms.AllConsoles'),
     4: $i18next.t('DtrReview.Platforms.Pc')
   };
+
+  getDefinitions().then((defs) => {
+    vm.reviewModeOptions = getReviewModes(defs);
+  });
 
   if ($featureFlags.colorA11y) {
     vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
@@ -135,7 +141,7 @@ export function SettingsController(
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
   };
 
-  vm.reviewsPlatformChanged = () => {
+  vm.saveAndReloadReviews = () => {
     settings.save();
     D2StoresService.refreshRatingsData();
   };

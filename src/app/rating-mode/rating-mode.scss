@@ -1,0 +1,16 @@
+.mode-popup {
+  position: absolute;
+  display: block;
+  overflow: auto;
+  top: 42px;
+  margin: 0;
+  padding: 15px;
+  min-width: 150px;
+  height: fit-content;
+  background-color: #222;
+  float: left;
+}
+
+.mode-label {
+  padding-right: 10px;
+}
