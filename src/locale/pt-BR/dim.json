@@ -447,7 +447,7 @@
     "SaveErrorTitle": "Erro ao salvar o set",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "VendorsCanEquip": "Estes itens podem ser equipados:",
-    "VendorsCannotEquip": "Estes itens não podem ser equipados:"
+    "VendorsCannotEquip": "Estes itens não podem ser equipados porque você não os tem:"
   },
   "Manifest": {
     "Build": "Construindo banco de dados de informações",

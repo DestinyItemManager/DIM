@@ -447,7 +447,7 @@
     "SaveErrorTitle": "保存設置時發生錯誤",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個.",
     "VendorsCanEquip": "這些物品可以被裝備:",
-    "VendorsCannotEquip": "這些物品無法被裝備:"
+    "VendorsCannotEquip": "某些物品無法被裝備，因為你為擁有："
   },
   "Manifest": {
     "Build": "建立天命資訊資料庫",

@@ -1,3 +1,9 @@
+import 'babel-polyfill';
+// Promise.finally isn't in the base polyfill
+import 'core-js/fn/promise/finally';
+// Polyfill fetch for iOS < 10.3
+import 'whatwg-fetch';
+
 import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/oauth/oauth.service';
 import { setToken } from './app/oauth/oauth-token.service';

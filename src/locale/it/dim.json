@@ -447,7 +447,7 @@
     "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "VendorsCanEquip": "Questi oggetti possono essere equipaggiati:",
-    "VendorsCannotEquip": "Questi oggetti non possono essere equipaggiati:"
+    "VendorsCannotEquip": "Questi oggetti non possono essere equipaggiati perchè non li possiedi:"
   },
   "Manifest": {
     "Build": "Costruisco il database di informazioni di Destiny",

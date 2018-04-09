@@ -447,7 +447,7 @@
     "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
     "TooManyRequested": "Du hast {{total}} {{itemname}}. Dein Loadout verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "VendorsCanEquip": "Folgende Items können ausgerüstet werden:",
-    "VendorsCannotEquip": "Folgende Items können nicht ausgerüstet werden:"
+    "VendorsCannotEquip": "Diese Gegenstände können nicht ausgerüstet werden, weil du sie nicht besitzt:"
   },
   "Manifest": {
     "Build": "Lege Destiny Datenbank an",

@@ -1,6 +1,8 @@
 # Next
 * You can specify game modes for reading and making ratings and reviews.
 
+# 4.47.0
+
 # 4.46.0
 
 * Added a page to browse and restore old revisions of Google Drive data.
