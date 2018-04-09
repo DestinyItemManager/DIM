@@ -100,12 +100,12 @@
     "@types/angular": "^1.6.43",
     "@types/angular-hotkeys": "^1.7.0",
     "@types/angular-mocks": "^1.5.11",
+    "@types/lodash-es": "^4.17.0",
     "@types/ng-dialog": "^0.6.2",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^16.3.10",
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^6.0.4",
-    "@types/underscore": "^1.8.8",
     "@uirouter/angularjs": "^1.0.15",
     "@uirouter/react": "^0.8.2",
     "@uirouter/visualizer": "^6.0.0",
@@ -130,6 +130,7 @@
     "i18next": "^11.2.3",
     "i18next-xhr-backend": "^1.5.1",
     "idb-keyval": "^2.3.0",
+    "lodash-es": "^4.17.8",
     "mobile-drag-drop": "^2.3.0-rc.1",
     "ng-dialog": "^1.4.0",
     "ng-i18next": "^1.0.5",
@@ -158,7 +159,6 @@
     "tooltip.js": "1.2.0",
     "typesafe-actions": "^2.0.4",
     "ua-parser-js": "^0.7.17",
-    "underscore": "^1.8.3",
     "uuid": "^3.2.1"
   }
 }
