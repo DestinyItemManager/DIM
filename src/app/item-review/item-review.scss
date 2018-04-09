@@ -67,6 +67,15 @@
     display: flex;
     justify-content: space-between;
     padding-top: 5px;
+  }
+
+  &--game-mode-for {
+    display: flex;
+    margin-right: 9px;
+  }
+
+  &--game-mode {
+    display: flex;
     opacity: .9;
   }
 
@@ -124,7 +133,7 @@
   &--review-chart {
     &.stats {
       border-spacing: 0 3px;
-    
+
       .stat-box-row {
         margin-bottom: 3px;
       }

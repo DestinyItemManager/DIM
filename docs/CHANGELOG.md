@@ -1,4 +1,5 @@
 # Next
+* You can specify game modes for reading and making ratings and reviews.
 
 # 4.47.0
 
