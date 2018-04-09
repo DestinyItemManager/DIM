@@ -233,6 +233,7 @@ export interface DimItem {
   reviews: DtrUserReview[];
   userReviewPros: string;
   userReviewCons: string;
+  mode: number;
   ratingCount: number;
   // timestamp of when reviews were attached - a hack to help React update in the short term
   reviewsUpdated?: number;
@@ -692,6 +693,16 @@ export function makeItem(
       });
     } else {
       createdItem.hidePercentage = true;
+    }
+  }
+
+  // Secondary Icon
+  if (createdItem.sockets) {
+    const multiEmblem = createdItem.sockets.sockets.filter((plug) => plug.plug && plug.plug.plugItem.itemType === 14);
+    const selectedEmblem = multiEmblem[0] && multiEmblem[0].plug;
+
+    if (selectedEmblem) {
+      createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
     }
   }
 

@@ -22,7 +22,8 @@ import {
   DestinyVendorDefinition,
   DestinyDestinationDefinition,
   DestinyPlaceDefinition,
-  DestinyVendorGroupDefinition
+  DestinyVendorGroupDefinition,
+  DestinyActivityModeDefinition
   } from 'bungie-api-ts/destiny2';
 import { $q } from 'ngimport';
 import * as _ from 'underscore';
@@ -54,7 +55,8 @@ const eagerTables = [
   'Gender', // DestinyGenderDefinition
   'Race', // DestinyRaceDefinition
   'Faction', // DestinyFactionDefinition
-  'ItemTierType' // DestinyItemTierTypeDefinition
+  'ItemTierType', // DestinyItemTierTypeDefinition
+  'ActivityMode' // DestinyActivityModeDefinition
 ];
 
 export interface LazyDefinition<T> {
@@ -86,6 +88,7 @@ export interface D2ManifestDefinitions {
   Race: { [hash: number]: DestinyRaceDefinition };
   Faction: { [hash: number]: DestinyFactionDefinition };
   ItemTierType: { [hash: number]: DestinyItemTierTypeDefinition };
+  ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
 }
 
 /**

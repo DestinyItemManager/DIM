@@ -1,15 +1,8 @@
 // This inherits a lot of styles from ../vendors/vendors.scss
-
-.under-construction {
-  background-color: #0a40c2;
-  border: 1px solid #256eff;
-  margin-bottom: 1em;
-  padding: .5em;
-  text-align: center;
-  font-size: 14px;
-}
+@import '../../scss/variables.scss';
 
 .d2-vendors {
+  padding: 0 1em;
   .vendor-icon {
     margin: 5px 5px 5px 0;
   }
@@ -31,6 +24,18 @@
       width: 48px;
       margin-right: 8px;
     }
+  }
+}
+
+.vendor-item {
+  .owned-icon {
+    z-index: 10;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    pointer-events: none;
+    width: 14px;
+    height: 14px;
   }
 }
 

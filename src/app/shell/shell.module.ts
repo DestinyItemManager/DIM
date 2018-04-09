@@ -31,7 +31,7 @@ export const ShellModule = module('dimShell', [
   .component('bungieAlerts', BungieAlertsComponent)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
-  .component('header', react2angular(Header, [], ['$scope']))
+  .component('header', react2angular(Header, [], ['$scope', 'D2StoresService']))
   .component('dimManifestProgress', ManifestProgressComponent)
   .directive('scrollClass', ScrollClass)
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere)

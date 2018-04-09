@@ -1,4 +1,6 @@
 .vendor {
+  padding: 0 1em;
+
   .vendorTabs {
     display: flex;
     flex-direction: row;
@@ -96,11 +98,10 @@
     align-items: center;
   }
   .title {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     .countdown {
       font-size: 11px;
+      text-align: right;
+      flex: 1;
     }
   }
   .vendor-location {
@@ -109,6 +110,7 @@
     font-size: 12px;
     color: #999;
     margin-left: 6px;
+    flex: 1;
   }
   .vendor-row {
     margin-bottom: 10px;
@@ -138,7 +140,6 @@
   .cost {
     font-size: 10px;
     margin-top: 1px;
-    margin-left: 2px;
     text-align: center;
   }
   .empty-cost {
@@ -174,7 +175,7 @@
   left: 2px;
   pointer-events: none;
   z-index: 1;
-  background-color: rgba(40,40,40,0.5);
+  background-color: rgba(40,40,40,0.6);
   margin-top: 2px;
   backface-visibility: hidden;
 }
@@ -209,10 +210,9 @@
   float: right;
 }
 
-vendor-currencies {
+vendor-currencies, .vendor-currencies {
   font-size: 12px;
   float: right;
-  margin-top: 10px;
   display: flex;
   flex-direction: row;
   .vendor-currency {

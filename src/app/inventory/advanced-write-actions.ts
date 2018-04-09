@@ -50,9 +50,11 @@ export async function getAwaToken(account: DestinyAccount, action: AwaType, item
       };
 
       // Deletes of "group A" require an item and shouldn't be cached
+      /*
       if (action === AwaType.DismantleGroupA) {
         delete awaCache[action]; // don't cache
       }
+      */
 
       // TODO: really should use a separate db for this
       // without blocking, save this

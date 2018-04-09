@@ -123,6 +123,8 @@ export class GoogleDriveStorage implements StorageAdapter {
               }
               this.readyResolve();
             });
+        }, (e) => {
+          console.warn("Google Auth Client failed to initialize: ", e.details);
         });
       });
     } else {

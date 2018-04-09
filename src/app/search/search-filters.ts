@@ -578,6 +578,7 @@ export function searchFilters(
       },
       keyword(item: DimItem, predicate: string) {
         return item.name.toLowerCase().includes(predicate) ||
+          item.description.toLowerCase().includes(predicate) ||
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
@@ -589,7 +590,10 @@ export function searchFilters(
           (item.sockets && item.sockets.sockets.some((socket) =>
             socket.plugOptions.some((plug) =>
               plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
-              plug.plugItem.displayProperties.description.toLowerCase().includes(predicate)
+              plug.plugItem.displayProperties.description.toLowerCase().includes(predicate) ||
+              plug.perks.some((perk) => Boolean(
+                (perk.displayProperties.name && perk.displayProperties.name.toLowerCase().includes(predicate)) ||
+                (perk.displayProperties.description && perk.displayProperties.description.toLowerCase().includes(predicate))))
             )
           ));
       },

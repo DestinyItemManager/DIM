@@ -8,6 +8,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
 import { $state, $transitions, ngDialog } from '../ngimport-more';
 import { SearchFilterComponent } from '../search/search-filter.component';
+import { StoreServiceType } from '../inventory/d2-stores.service';
 import AccountSelect from '../accounts/account-select';
 import './header.scss';
 
@@ -16,6 +17,9 @@ import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/click-outside';
 import Refresh from './refresh';
 import { IScope } from 'angular';
+import RatingMode from '../rating-mode/rating-mode';
+import { settings } from '../settings/settings';
+import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
 const destiny1Links = [
   {
@@ -66,10 +70,12 @@ interface State {
   account?: DestinyAccount;
   dropdownOpen: boolean;
   showSearch: boolean;
+  defs?: D2ManifestDefinitions;
 }
 
 interface Props {
   $scope: IScope;
+  D2StoresService: StoreServiceType;
 }
 
 export default class Header extends React.Component<Props, State> {
@@ -90,13 +96,26 @@ export default class Header extends React.Component<Props, State> {
     this.state = {
       xurAvailable: false,
       dropdownOpen: false,
-      showSearch: false
+      showSearch: false,
+      defs: undefined
     };
+  }
+
+  async getDefinitions(account?: DestinyAccount) {
+    if (!account || account.destinyVersion !== 2) {
+      return;
+    }
+
+    const defs = await getDefinitions();
+
+    this.setState({ defs });
   }
 
   componentDidMount() {
     this.accountSubscription = getActiveAccountStream().subscribe((account) => {
       this.setState({ account: account || undefined });
+
+      this.getDefinitions(account || undefined);
     });
 
     this.unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, () => {
@@ -118,7 +137,7 @@ export default class Header extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, showSearch, dropdownOpen, xurAvailable } = this.state;
+    const { account, showSearch, dropdownOpen, xurAvailable, defs } = this.state;
     const { SearchFilter } = this;
 
     // TODO: new fontawesome
@@ -214,6 +233,7 @@ export default class Header extends React.Component<Props, State> {
         </div>
 
         <span className="header-right">
+          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews && defs) && <RatingMode defs={defs} D2StoresService={this.props.D2StoresService} />}
           {!showSearch && <Refresh/>}
           {!showSearch &&
             <a

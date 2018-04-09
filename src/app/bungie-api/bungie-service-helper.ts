@@ -56,6 +56,10 @@ export function error(message: string, errorCode: PlatformErrorCodes): DimError 
 }
 
 export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHttpResponse<ServerResponse<T>> {
+  if (response instanceof Error) {
+    throw response;
+  }
+
   if (response.status === -1) {
     throw new Error(navigator.onLine
       ? t('BungieService.NotConnectedOrBlocked')
@@ -132,17 +136,14 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
   }
 
   // Any other error
-  if (errorCode > 1) {
-    if (response.data.Message) {
-      const e = error(t('BungieService.UnknownError', { message: response.data.Message }), errorCode);
-      e.status = response.data.ErrorStatus;
-      throw e;
-    } else {
-      throw new Error(t('BungieService.Difficulties'));
-    }
+  if (response.data && response.data.Message) {
+    const e = error(t('BungieService.UnknownError', { message: response.data.Message }), errorCode);
+    e.status = response.data.ErrorStatus;
+    throw e;
+  } else {
+    console.error('No response data:', response.status, response.statusText, response.xhrStatus);
+    throw new Error(t('BungieService.Difficulties'));
   }
-
-  return response;
 }
 
 /**

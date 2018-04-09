@@ -28,8 +28,8 @@ class D2ReviewsFetcher {
     this._perkRater = new D2PerkRater();
   }
 
-  _getItemReviewsCall(item: DtrItem, platformSelection: number) {
-    const queryString = `page=1&platform=${platformSelection}`;
+  _getItemReviewsCall(item: DtrItem, platformSelection: number, mode: number) {
+    const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
 
     return {
       method: 'POST',
@@ -39,11 +39,11 @@ class D2ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item, platformSelection: number): IPromise<DtrReviewContainer> {
+  _getItemReviewsPromise(item, platformSelection: number, mode: number): IPromise<DtrReviewContainer> {
     const dtrItem = this._itemTransformer.getRollAndPerks(item);
 
     const promise = $q
-      .when(this._getItemReviewsCall(dtrItem, platformSelection))
+      .when(this._getItemReviewsCall(dtrItem, platformSelection, mode))
       .then($http)
       .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
       .then((response) => response.data);
@@ -100,6 +100,7 @@ class D2ReviewsFetcher {
       item.userReview = userReview.text;
       item.userReviewPros = userReview.pros;
       item.userReviewCons = userReview.cons;
+      item.mode = userReview.mode;
     }
 
     this._reviewDataCache.addReviewsData(item, reviewData);
@@ -164,7 +165,7 @@ class D2ReviewsFetcher {
    * them to the item.
    * Attempts to fetch data from the cache first.
    */
-  getItemReviews(item: DimItem, platformSelection: number) {
+  getItemReviews(item: DimItem, platformSelection: number, mode: number) {
     if (!item.reviewable) {
       return $q.when();
     }
@@ -178,7 +179,7 @@ class D2ReviewsFetcher {
       return $q.when();
     }
 
-    return this._getItemReviewsPromise(item, platformSelection)
+    return this._getItemReviewsPromise(item, platformSelection, mode)
       .then((reviewData) => {
         this._markUserReview(reviewData);
         this._attachReviews(item,
@@ -186,7 +187,7 @@ class D2ReviewsFetcher {
       });
   }
 
-  fetchItemReviews(itemHash: number, platformSelection: number): IPromise<DtrReviewContainer> {
+  fetchItemReviews(itemHash: number, platformSelection: number, mode: number): IPromise<DtrReviewContainer> {
     const ratingData = this._reviewDataCache.getRatingData(undefined, itemHash);
 
     if (ratingData && ratingData.reviewsDataFetched) {
@@ -195,7 +196,7 @@ class D2ReviewsFetcher {
 
     const fakeItem = { hash: itemHash, id: -1 };
 
-    return this._getItemReviewsPromise(fakeItem, platformSelection);
+    return this._getItemReviewsPromise(fakeItem, platformSelection, mode);
   }
 }
 

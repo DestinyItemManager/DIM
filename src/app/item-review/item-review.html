@@ -72,6 +72,13 @@
 </div>
 
 <div ng-if="$ctrl.canReview" class="community-review--details" ng-show="$ctrl.expandReview">
+  <div ng-if="$ctrl.item.destinyVersion === 2" class="community-review--mode">
+    <label for="reviewMode" ng-i18next="DtrReview.ForGameMode"></label>
+    <select id="reviewMode"
+      ng-model="$ctrl.item.mode"
+      ng-options="::reviewModeOption.mode.toString() as reviewModeOption.description for reviewModeOption in $ctrl.reviewModeOptions">
+    </select>
+  </div>
   <textarea ng-i18next="[placeholder]DtrReview.Help"
             ng-model="$ctrl.item.userReview"
             ng-blur="$ctrl.reviewBlur()"></textarea>
@@ -151,6 +158,10 @@
                  ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
                             'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"
                  ng-click="$ctrl.openFlagContext(review.id)"></div>
+          </div>
+          <div class="community-review--game-mode">
+            <div class="community-review--game-mode-for" ng-i18next="DtrReview.ForGameMode"></div>
+            <div class="community-review--game-mode" ng-bind="$ctrl.translateReviewMode(review)"></div>
           </div>
           <div class="community-review--review" ng-bind="review.text"></div>
         </div>

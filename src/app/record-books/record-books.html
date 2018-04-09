@@ -14,8 +14,8 @@
         <i class="fa collapse" ng-class="$ctrl.settings.collapsedSections[book.hash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
         <img class="book-icon" ng-src="{{ ::book.icon | bungieIcon }}" />
         {{ ::book.name }}
-        <span class="record-book-completion">{{ book.completedCount }} / {{ ::book.recordCount }}</span>
       </div>
+      <span class="record-book-completion">{{ book.completedCount }} / {{ ::book.recordCount }}</span>
     </div>
 
     <div ng-if="!$ctrl.settings.collapsedSections[book.hash]">

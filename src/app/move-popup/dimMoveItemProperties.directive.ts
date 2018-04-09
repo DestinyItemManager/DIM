@@ -33,14 +33,15 @@ function MoveItemPropertiesCtrl(
   'ngInject';
   const vm = this;
 
-  function getStoreService(item) {
+  function getStoreService(item: DimItem) {
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
   vm.tab = 'default';
 
   vm.hasDetails = Boolean((vm.item.stats && vm.item.stats.length) ||
-                          vm.item.talentGrid || vm.item.objectives);
+                          vm.item.talentGrid || vm.item.objectives ||
+                          vm.item.flavorObjective || vm.item.secondaryIcon);
   vm.showDescription = Boolean(vm.item.description && vm.item.description.length);
   vm.locking = false;
 
@@ -87,17 +88,19 @@ function MoveItemPropertiesCtrl(
                                                       userReview);
   };
 
-  vm.toUserReview = (item) => {
+  vm.toUserReview = (item: DimItem) => {
     const newRating = item.userRating;
     const review = item.userReview;
     const pros = item.userReviewPros;
     const cons = item.userReviewCons;
+    const mode = item.mode;
 
     const userReview = {
       rating: newRating,
       review,
       pros,
-      cons
+      cons,
+      mode
     };
 
     return userReview;
@@ -111,12 +114,12 @@ function MoveItemPropertiesCtrl(
     return false;
   };
 
-  vm.setItemState = function setItemState(item, type) {
+  vm.setItemState = function setItemState(item: DimItem, type: 'lock' | 'track') {
     if (vm.locking) {
       return;
     }
 
-    const store = item.ownere === 'vault'
+    const store = item.owner === 'vault'
       ? getStoreService(item).getActiveStore()!
       : getStoreService(item).getStore(item.owner)!;
 
@@ -206,7 +209,7 @@ function MoveItemPropertiesCtrl(
     vm.classType = vm.item.classTypeNameLocalized[0].toUpperCase() + vm.item.classTypeNameLocalized.slice(1);
   }
 
-  function compareItems(item) {
+  function compareItems(item?: DimItem) {
     if (item && vm.item.stats) {
       for (const key in Object.getOwnPropertyNames(vm.item.stats)) {
         const itemStats = item.stats && item.stats[key];

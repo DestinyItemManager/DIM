@@ -95,9 +95,11 @@
     "Cons": "Cons",
     "Delete": "Delete",
     "Edit": "Edit",
+    "ForGameMode": "For game mode",
     "Help": "Write a review (optional)",
     "HelpCons": "Describe the negatives of this weapon (optional)",
     "HelpPros": "Describe the positives of this weapon (optional)",
+    "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
     "Platforms": {
       "All": "Show All",
@@ -112,6 +114,7 @@
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
+    "UnknownGameMode": "Unknown",
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review"
   },
@@ -447,7 +450,7 @@
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transfered all you had.",
     "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These items cannot be equipped:"
+    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
   },
   "Manifest": {
     "Build": "Building Destiny info database",
@@ -545,6 +548,7 @@
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
+    "ReviewsModeSelection": "Only show ratings for the following play mode",
     "ReviewsPlatformSelection": "Only show ratings from the following platform",
     "SetSort": "Sort items by:",
     "Settings": "Settings",
@@ -600,29 +604,29 @@
     "Export": "Back up DIM data",
     "ForceSync": "Force sync data",
     "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
+    "GDriveRevisions": "Restore Old Versions",
     "GDriveSignInError": "Error signing in to Google Drive:",
     "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
     "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
     "GoogleDriveStorage": "Google Drive",
     "IgnoredUsers": "{{value}} ignored community reviewers",
     "Import": "Import DIM data from file",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version?",
     "ImportExport": "Back Up Data",
     "ImportNoFile": "No file selected!",
     "ImportSuccess": "Imported DIM data!",
     "IndexedDBStorage": "Local Browser Storage",
+    "LoadRevision": "Load Content",
     "LoadoutsD1": "{{value}} Destiny 1 loadouts",
     "LoadoutsD2": "{{value}} Destiny 2 loadouts",
     "NoData": "No data",
+    "RestoreRevision": "Restore",
+    "RevisionsDescription": "Google Drive saves the last 100 revisions of your settings. Use this page to load old versions and restore them.",
     "Settings": "Your DIM settings and preferences",
     "StatLabel": "This currently contains:",
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
-    "Title": "DIM Storage",
-    "LoadRevision": "Load Content",
-    "RestoreRevision": "Restore",
-    "RevisionsDescription": "Google Drive saves the last 100 revisions of your settings. Use this page to load old versions and restore them.",
-    "GDriveRevisions": "Restore Old Versions",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version?"
+    "Title": "DIM Storage"
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",
@@ -656,11 +660,11 @@
     "Compare": "Compare with what you already have:",
     "Consumables": "Consumables",
     "Emotes": "Emotes",
+    "Engram": "Reward Engram",
     "Load": "Loading Vendors",
     "ShadersAndEmblems": "Shaders & Emblems",
     "ShipsAndVehicles": "Ships & Vehicles",
-    "Vendors": "Vendors",
-    "Engram": "Reward Engram"
+    "Vendors": "Vendors"
   },
   "Views": {
     "About": {

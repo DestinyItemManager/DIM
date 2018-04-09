@@ -183,11 +183,14 @@ img {
   padding: 0 16px;
   background-color: #353535;
   color: white;
-  line-height: 34px;
-  height: 34px;
+  min-height: 34px;
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 
   &:hover {
     background-color: #2f2f2f;

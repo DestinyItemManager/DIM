@@ -96,13 +96,13 @@ class ManifestService {
 
         if (e.status === -1) {
           message = navigator.onLine
-            ? t('Bungie.NotConnectedOrBlocked')
-            : t('Bungie.NotConnected');
+            ? t('BungieService.NotConnectedOrBlocked')
+            : t('BungieService.NotConnected');
         // tslint:disable-next-line:space-in-parens
         } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-          message = t('Bungie.Down');
+          message = t('BungieService.Difficulties');
         } else if (e.status < 200 || e.status >= 400) {
-          message = t('Bungie.NetworkError', {
+          message = t('BungieService.NetworkError', {
             status: e.status,
             statusText: e.statusText
           });

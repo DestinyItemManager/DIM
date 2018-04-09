@@ -20,16 +20,16 @@ class D2BulkFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getBulkWeaponDataEndpointPost(itemList: DtrItem[], platformSelection: number) {
+  _getBulkWeaponDataEndpointPost(itemList: DtrItem[], platformSelection: number, mode: number) {
     return {
       method: 'POST',
-      url: `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}`,
+      url: `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
       data: itemList,
       dataType: 'json'
     };
   }
 
-  _getBulkFetchPromise(stores: DimStore[], platformSelection: number): IPromise<DtrBulkItem[]> {
+  _getBulkFetchPromise(stores: DimStore[], platformSelection: number, mode: number): IPromise<DtrBulkItem[]> {
     if (!stores.length) {
       const emptyVotes: DtrBulkItem[] = [];
       return $q.resolve(emptyVotes);
@@ -43,7 +43,7 @@ class D2BulkFetcher {
     }
 
     const promise = $q
-      .when(this._getBulkWeaponDataEndpointPost(itemList, platformSelection))
+      .when(this._getBulkWeaponDataEndpointPost(itemList, platformSelection, mode))
       .then($http)
       .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
       .then((response) => response.data);
@@ -54,6 +54,7 @@ class D2BulkFetcher {
   }
 
   _getVendorBulkFetchPromise(platformSelection: number,
+                             mode: number,
                              vendorSaleItems?: DestinyVendorSaleItemComponent[],
                              vendorItems?: DestinyVendorItemDefinition[]): IPromise<DtrBulkItem[]> {
     if ((vendorSaleItems && !vendorSaleItems.length) || (vendorItems && !vendorItems.length)) {
@@ -69,7 +70,7 @@ class D2BulkFetcher {
     }
 
     const promise = $q
-      .when(this._getBulkWeaponDataEndpointPost(vendorDtrItems, platformSelection))
+      .when(this._getBulkWeaponDataEndpointPost(vendorDtrItems, platformSelection, mode))
       .then($http)
       .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
       .then((response) => response.data);
@@ -82,8 +83,8 @@ class D2BulkFetcher {
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
    */
-  bulkFetch(stores: DimStore[], platformSelection: number) {
-    this._getBulkFetchPromise(stores, platformSelection)
+  bulkFetch(stores: DimStore[], platformSelection: number, mode: number) {
+    this._getBulkFetchPromise(stores, platformSelection, mode)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
                                                   stores));
   }
@@ -100,9 +101,10 @@ class D2BulkFetcher {
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
    */
   bulkFetchVendorItems(platformSelection: number,
+                       mode: number,
                        vendorSaleItems?: DestinyVendorSaleItemComponent[],
                        vendorItems?: DestinyVendorItemDefinition[]): IPromise<void> {
-    return this._getVendorBulkFetchPromise(platformSelection, vendorSaleItems, vendorItems)
+    return this._getVendorBulkFetchPromise(platformSelection, mode, vendorSaleItems, vendorItems)
       .then((bulkRankings) => this._addScores(bulkRankings));
   }
 

@@ -44,6 +44,8 @@ export interface DtrUserReview {
   isIgnored?: boolean;
   selectedPerks: number[];
   attachedMods: number[];
+  mode: DtrActivityModes;
+  sandbox: number; // sandbox season (1 was the first, 2 is the March 2018 "go fast" update)
 }
 
 export interface DtrReviewContainer extends DtrBulkItem {
@@ -55,6 +57,7 @@ export interface DimWorkingUserReview extends DtrReviewContainer {
   userVote: number;
   rating: number;
   userRating: number;
+  mode: DtrActivityModes;
   reviewsDataFetched: boolean;
   highlightedRatingCount: number;
   review: string;
@@ -69,6 +72,14 @@ export interface DimReviewReport {
   reviewId: string;
   reporter: Reviewer;
   text: string;
+}
+
+export enum DtrActivityModes {
+  notSpecified = 0,
+  playerVersusEnemy = 7,
+  playerVersusPlayer = 5,
+  raid = 4,
+  trials = 39
 }
 
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
@@ -171,7 +182,8 @@ export function DestinyTrackerService(
           throw new Error(("This is a D2-only call."));
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, vendorSaleItems, undefined);
+          const mode = settings.reviewsModeSelection;
+          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, mode, vendorSaleItems);
           return this;
         }
       }
@@ -187,7 +199,8 @@ export function DestinyTrackerService(
           throw new Error(("This is a D2-only call."));
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, undefined, vendorItems);
+          const mode = settings.reviewsModeSelection;
+          await _d2bulkFetcher.bulkFetchVendorItems(platformSelection, mode, undefined, vendorItems);
           return this;
         }
       }
@@ -215,7 +228,8 @@ export function DestinyTrackerService(
           _reviewsFetcher.getItemReviews(item);
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          _d2reviewsFetcher.getItemReviews(item, platformSelection);
+          const mode = settings.reviewsModeSelection;
+          _d2reviewsFetcher.getItemReviews(item, platformSelection, mode);
         }
       }
     },
@@ -243,7 +257,8 @@ export function DestinyTrackerService(
         _bulkFetcher.bulkFetch(stores);
       } else if (stores[0].destinyVersion === 2) {
         const platformSelection = settings.reviewsPlatformSelection;
-        _d2bulkFetcher.bulkFetch(stores, platformSelection);
+        const mode = settings.reviewsModeSelection;
+        _d2bulkFetcher.bulkFetch(stores, platformSelection, mode);
       }
     },
 
@@ -253,7 +268,8 @@ export function DestinyTrackerService(
           console.error("This is a D2-only call.");
         } else if (_isDestinyTwo()) {
           const platformSelection = settings.reviewsPlatformSelection;
-          return _d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection);
+          const mode = settings.reviewsModeSelection;
+          return _d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection, mode);
         }
       }
       return $q.when({});
