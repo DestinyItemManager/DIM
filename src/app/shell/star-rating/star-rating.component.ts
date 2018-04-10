@@ -1,8 +1,24 @@
 
 import template from './star-rating.html';
 import './star-rating.scss';
+import { IComponentOptions, IController, IRootElementService } from 'angular';
 
-function StarRatingController($element) {
+export const StarRatingComponent: IComponentOptions = {
+  bindings: {
+    rating: '<',
+    onRatingChange: '&'
+  },
+  controller: StarRatingController,
+  template
+};
+
+function StarRatingController(
+  this: IController & {
+    rating: number;
+    onRatingChange(arg: { rating: number }): void;
+  },
+  $element: IRootElementService
+) {
   'ngInject';
 
   const vm = this;
@@ -17,7 +33,7 @@ function StarRatingController($element) {
     }
   }
 
-  vm.toggle = function(index) {
+  vm.toggle = (index) => {
     vm.rating = index;
 
     if (vm.onRatingChange && typeof vm.onRatingChange === 'function') {
@@ -28,13 +44,13 @@ function StarRatingController($element) {
     updateStars();
   };
 
-  vm.hover = function(index) {
+  vm.hover = (index) => {
     vm.stars.forEach((star, id) => {
       star.hovered = index !== undefined && id <= index;
     });
   };
 
-  vm.$onChanges = function(update) {
+  vm.$onChanges = (update) => {
     if (!update.rating.currentValue === undefined) {
       return;
     }
@@ -42,12 +58,3 @@ function StarRatingController($element) {
     updateStars();
   };
 }
-
-export const StarRatingComponent = {
-  bindings: {
-    rating: '<',
-    onRatingChange: '&'
-  },
-  controller: StarRatingController,
-  template: template
-};

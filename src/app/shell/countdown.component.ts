@@ -1,7 +1,17 @@
+import { IComponentOptions, IController, IIntervalService } from "angular";
+
+export const CountdownComponent: IComponentOptions = {
+  bindings: {
+    endTime: '<'
+  },
+  controller: CountdownController,
+  template: '<span class="countdown">{{$ctrl.text}}</span>'
+};
+
 /**
  * A really simple countdown timer.
  */
-function CountdownController($interval, $i18next) {
+function CountdownController(this: IController, $interval: IIntervalService, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -41,15 +51,7 @@ function CountdownController($interval, $i18next) {
   vm.timer = $interval(update, 60000);
   update();
 
-  vm.$onDestroy = function() {
+  vm.$onDestroy = () => {
     $interval.cancel(vm.timer);
   };
 }
-
-export const CountdownComponent = {
-  bindings: {
-    endTime: '<'
-  },
-  controller: CountdownController,
-  template: '<span class="countdown">{{$ctrl.text}}</span>'
-};
