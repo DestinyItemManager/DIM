@@ -3,6 +3,7 @@ import Dragend from 'dragend';
 import { settings } from '../settings/settings';
 import './store-pager.scss';
 import { DimStore } from './store/d2-store-factory.service';
+import { sortStores } from '../shell/dimAngularFilters.filter';
 
 export const StorePagerComponent: IComponentOptions = {
   controller: StorePagerCtrl,
@@ -24,8 +25,7 @@ function StorePagerCtrl(
     onStoreChange(store: DimStore): void;
   },
   $element: IRootElementService,
-  $scope: IScope,
-  $filter
+  $scope: IScope
 ) {
   'ngInject';
 
@@ -43,7 +43,7 @@ function StorePagerCtrl(
 
   this.$onChanges = () => {
     if (this.dragend && this.selectedStore) {
-      const storeIndex = $filter('sortStores')(this.stores, settings.characterOrder).indexOf(this.selectedStore);
+      const storeIndex = sortStores(this.stores, settings.characterOrder).indexOf(this.selectedStore);
       this.dragend.jumpToPage(storeIndex + 1);
     }
   };

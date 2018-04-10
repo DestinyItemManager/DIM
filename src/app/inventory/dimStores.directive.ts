@@ -9,6 +9,7 @@ import { IComponentOptions, IController, IScope, IRootScopeService } from 'angul
 import { DimInventoryBuckets } from '../destiny2/d2-buckets.service';
 import { DimStore } from './store/d2-store-factory.service';
 import { DimItem } from './store/d2-item-factory.service';
+import { sortStores } from '../shell/dimAngularFilters.filter';
 
 export const StoresComponent: IComponentOptions = {
   controller: StoresCtrl,
@@ -29,8 +30,7 @@ function StoresCtrl(
   },
   $scope: IScope,
   $rootScope: IRootScopeService & { dragItem: DimItem },
-  $i18next,
-  $filter
+  $i18next
 ) {
   'ngInject';
 
@@ -47,11 +47,11 @@ function StoresCtrl(
   });
 
   vm.swipeLeft = () => {
-    if ($rootScope.dragItem) {
+    if ($rootScope.dragItem || !vm.selectedStore) {
       return;
     }
 
-    const sortedStores = $filter('sortStores')(vm.stores, settings.characterOrder);
+    const sortedStores = sortStores(vm.stores, settings.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
     if (currentIndex < (sortedStores.length - 1)) {
@@ -60,11 +60,11 @@ function StoresCtrl(
   };
 
   vm.swipeRight = () => {
-    if ($rootScope.dragItem) {
+    if ($rootScope.dragItem || !vm.selectedStore) {
       return;
     }
 
-    const sortedStores = $filter('sortStores')(vm.stores, settings.characterOrder);
+    const sortedStores = sortStores(vm.stores, settings.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
     if (currentIndex > 0) {
@@ -98,7 +98,9 @@ function StoresCtrl(
       vm.selectedStore = (!vm.selectedStore || !vm.stores.find((s) => s.id === vm.selectedStore!.id))
         ? vm.currentStore
         : vm.stores.find((s) => s.id === vm.selectedStore!.id) || null;
-      vm.selectedStoreIndex = $filter('sortStores')(vm.stores, settings.characterOrder).indexOf(vm.selectedStore);
+      if (vm.selectedStore) {
+        vm.selectedStoreIndex = sortStores(vm.stores, settings.characterOrder).indexOf(vm.selectedStore);
+      }
     } else {
       vm.selectedStore = null;
       vm.currentStore = null;
