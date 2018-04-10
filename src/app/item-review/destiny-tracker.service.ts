@@ -82,6 +82,43 @@ export enum DtrActivityModes {
   trials = 39
 }
 
+export interface D1FetchRequest {
+  referenceId: string;
+  roll?: string;
+}
+
+export interface D1FetchResponse extends D1FetchRequest {
+  rating: number;
+  ratingCount: number;
+}
+
+export interface D1ReviewRequest extends D1FetchRequest {
+  selectedPerks?: string;
+  instanceId: string;
+}
+
+export interface D1MembershipInfo {
+  membershipId: string;
+  membershipType: number;
+  displayName: string;
+}
+
+export interface D1UserReview {
+  reviewer: D1MembershipInfo;
+  timestamp: string;
+  selectedPerks?: string;
+  rating: number;
+  pros: string;
+  cons: string;
+  review: string;
+  isHighlighted: boolean;
+  isReviewer: boolean;
+}
+
+export interface D1ReviewResponse extends D1FetchRequest {
+  reviews: D1UserReview[];
+}
+
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
 import { TrackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler';
 import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
