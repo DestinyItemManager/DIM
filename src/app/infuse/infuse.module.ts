@@ -1,8 +1,7 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { InfuseComponent } from './infuse.component';
 
-export default angular
-  .module('infuseModule', [])
+export default module('infuseModule', [])
   .component('infuse', InfuseComponent)
   .name;

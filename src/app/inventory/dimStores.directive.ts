@@ -1,12 +1,16 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import template from './dimStores.directive.html';
 import './dimStores.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
 import { showInfoPopup } from '../shell/info-popup';
+import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
+import { DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { DimStore } from './store/d2-store-factory.service';
+import { DimItem } from './store/d2-item-factory.service';
 
-export const StoresComponent = {
+export const StoresComponent: IComponentOptions = {
   controller: StoresCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -16,7 +20,18 @@ export const StoresComponent = {
   template
 };
 
-function StoresCtrl($scope, $rootScope, loadingTracker, $i18next, $filter) {
+function StoresCtrl(
+  this: IController & {
+    stores: DimStore[];
+    buckets: DimInventoryBuckets;
+    currentStore: DimStore | null;
+    selectedStore: DimStore | null;
+  },
+  $scope: IScope,
+  $rootScope: IRootScopeService & { dragItem: DimItem },
+  $i18next,
+  $filter
+) {
   'ngInject';
 
   const vm = this;
@@ -56,9 +71,8 @@ function StoresCtrl($scope, $rootScope, loadingTracker, $i18next, $filter) {
       vm.selectedStore = sortedStores[currentIndex - 1];
     }
   };
-  vm.buckets = null;
   vm.settings = settings;
-  vm.toggleSection = function(id) {
+  vm.toggleSection = (id) => {
     // Only tip when collapsing
     if (!vm.settings.collapsedSections[id]) {
       didYouKnow();
@@ -73,19 +87,17 @@ function StoresCtrl($scope, $rootScope, loadingTracker, $i18next, $filter) {
     });
   });
 
-  vm.$onChanges = function() {
+  vm.$onChanges = () => {
     vm.vault = _.find(vm.stores, 'isVault');
 
     if (vm.stores && vm.stores.length) {
       // This is the character that was last played
-      vm.currentStore = _.find(vm.stores, 'current');
+      vm.currentStore = _.find(vm.stores, 'current') || null;
 
       // This is the character selected to display in mobile view
-      if (!vm.selectedStore || !_.find(vm.stores, { id: vm.selectedStore.id })) {
-        vm.selectedStore = vm.currentStore;
-      } else {
-        vm.selectedStore = _.find(vm.stores, { id: vm.selectedStore.id });
-      }
+      vm.selectedStore = (!vm.selectedStore || !vm.stores.find((s) => s.id === vm.selectedStore!.id))
+        ? vm.currentStore
+        : vm.stores.find((s) => s.id === vm.selectedStore!.id) || null;
       vm.selectedStoreIndex = $filter('sortStores')(vm.stores, settings.characterOrder).indexOf(vm.selectedStore);
     } else {
       vm.selectedStore = null;

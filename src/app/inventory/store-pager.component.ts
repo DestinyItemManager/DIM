@@ -1,9 +1,10 @@
-import angular from 'angular';
+import { IComponentOptions, IController, IScope, IRootElementService, element } from 'angular';
 import Dragend from 'dragend';
 import { settings } from '../settings/settings';
 import './store-pager.scss';
+import { DimStore } from './store/d2-store-factory.service';
 
-export const StorePagerComponent = {
+export const StorePagerComponent: IComponentOptions = {
   controller: StorePagerCtrl,
   transclude: true,
   template: '<ng-transclude></ng-transclude>',
@@ -15,16 +16,26 @@ export const StorePagerComponent = {
   }
 };
 
-function StorePagerCtrl($element, $scope, $filter) {
+function StorePagerCtrl(
+  this: IController & {
+    stores: DimStore[];
+    initialIndex: number;
+    selectedStore: DimStore;
+    onStoreChange(store: DimStore): void;
+  },
+  $element: IRootElementService,
+  $scope: IScope,
+  $filter
+) {
   'ngInject';
 
   this.$onInit = function() {
     this.dragend = new Dragend($element[0], {
       pageClass: 'character-swipe',
       page: this.initialIndex + 1,
-      onSwipeEnd: (pager, page) => {
+      onSwipeEnd: (_pager, page) => {
         $scope.$apply(() => {
-          this.onStoreChange({ store: angular.element(page).scope().store });
+          this.onStoreChange({ store: (element(page).scope() as any).store });
         });
       }
     });

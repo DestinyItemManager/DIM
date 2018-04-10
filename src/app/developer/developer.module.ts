@@ -1,11 +1,11 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { DeveloperComponent } from './developer.component';
+import { StateProvider } from '@uirouter/angularjs';
 
-export default angular
-  .module('developerModule', [])
+export default module('developerModule', [])
   .component('developer', DeveloperComponent)
-  .config(($stateProvider) => {
+  .config(($stateProvider: StateProvider) => {
     'ngInject';
 
     $stateProvider.state({

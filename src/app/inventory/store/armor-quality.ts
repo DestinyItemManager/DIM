@@ -1,23 +1,23 @@
 /**
- * Utilities for calculating armor quality.
- */
-export {
-  getQualityRating
-};
-
-/**
  * Calculate stat ranges for armor. This also modifies the input stats to add per-stat quality ratings.
  *
- * @param {Array} stats a list of the item's stats
- * @param {Number} light the item's defense
- * @param {String} type a string indicating the item's type
- * @return {{ min, max, range }}
+ * @param stats a list of the item's stats
+ * @param light the item's defense
+ * @param type a string indicating the item's type
  */
 // thanks to bungie armory for the max-base stats
 // thanks to /u/iihavetoes for rates + equation
 // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
 // TODO set a property on a bucket saying whether it can have quality rating, etc
-function getQualityRating(stats, light, type) {
+export function getQualityRating(
+  stats: any[],
+  light: { value: number },
+  type: string
+): {
+  min: number;
+  max: number;
+  range: string;
+} | null {
   if (!stats || !stats.length || !light || light.value < 280) {
     return null;
   }
@@ -90,7 +90,8 @@ function getQualityRating(stats, light, type) {
 
   let quality = {
     min: Math.round(ret.total.min / ret.max * 100),
-    max: Math.round(ret.total.max / ret.max * 100)
+    max: Math.round(ret.total.max / ret.max * 100),
+    range: ''
   };
 
   if (type.toLowerCase() !== 'artifact') {
@@ -102,7 +103,8 @@ function getQualityRating(stats, light, type) {
     });
     quality = {
       min: Math.min(100, quality.min),
-      max: Math.min(100, quality.max)
+      max: Math.min(100, quality.max),
+      range: ''
     };
   }
 
@@ -115,7 +117,7 @@ function getQualityRating(stats, light, type) {
 }
 
 // For a quality property, return a range string (min-max percentage)
-function getQualityRange(light, quality) {
+function getQualityRange(light: number, quality: { min: number; max: number }): string {
   if (!quality) {
     return '';
   }
@@ -132,7 +134,7 @@ function getQualityRange(light, quality) {
 function fitValue(light) {
   if (light > 300) {
     return (0.2546 * light) - 23.825;
-  } if (light > 200) {
+  } else if (light > 200) {
     return (0.1801 * light) - 1.4612;
   } else {
     return -1;

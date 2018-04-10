@@ -1,11 +1,13 @@
-import angular from 'angular';
-import _ from 'underscore';
+import { extend, copy, IComponentOptions, IController, IQService } from 'angular';
+import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
 import './infuse.scss';
+import { StoreServiceType } from '../inventory/d2-stores.service';
+import { LoadoutServiceType, Loadout } from '../loadout/loadout.service';
 
-export const InfuseComponent = {
+export const InfuseComponent: IComponentOptions = {
   template,
   bindings: {
     query: '<'
@@ -14,7 +16,16 @@ export const InfuseComponent = {
   controllerAs: 'vm'
 };
 
-function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService, toaster, $q, $i18next) {
+function InfuseCtrl(
+  this: IController,
+  $scope,
+  dimStoreService: StoreServiceType,
+  D2StoresService: StoreServiceType,
+  dimLoadoutService: LoadoutServiceType,
+  toaster,
+  $q: IQService,
+  $i18next
+) {
   'ngInject';
 
   const vm = this;
@@ -35,7 +46,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService,
     });
   }
 
-  angular.extend(vm, {
+  extend(vm, {
     getAllItems: true,
     showLockedItems: false,
     source: null,
@@ -45,7 +56,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService,
     targetItems: [],
     transferInProgress: false,
 
-    $onInit: function() {
+    $onInit() {
       // Set the source and reset the targets
       vm.infused = 0;
       vm.target = null;
@@ -53,7 +64,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService,
       vm.getItems();
     },
 
-    setSourceAndTarget: function(source, target, e) {
+    setSourceAndTarget(source, target, e) {
       if (e) {
         e.stopPropagation();
       }
@@ -89,12 +100,12 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService,
         vm.wildcardMaterialHash = 1542293174;
       }
 
-      vm.result = angular.copy(vm.source);
+      vm.result = copy(vm.source);
       vm.result.primStat.value = vm.infused;
     },
 
     // get Items for infusion
-    getItems: function() {
+    getItems() {
       let stores = vm.query.destinyVersion === 1 ? dimStoreService.getStores() : D2StoresService.getStores();
 
       // If we want ALL our weapons, including vault's one
@@ -130,7 +141,7 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService,
       vm.infused = 0;
     },
 
-    isInfusable: function(source, target) {
+    isInfusable(source, target) {
       if (!source.infusable || !target.infusionFuel) {
         return false;
       }
@@ -153,16 +164,16 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService,
       return false;
     },
 
-    itemToSortKey: function(item) {
+    itemToSortKey(item) {
       return -((item.basePower || item.primStat.value) +
       (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
     },
 
-    closeDialog: function() {
+    closeDialog() {
       $scope.$parent.closeThisDialog();
     },
 
-    transferItems: function() {
+    transferItems() {
       if (vm.target.notransfer || vm.source.notransfer) {
         const name = vm.source.notransfer ? vm.source.name : vm.target.name;
 
@@ -170,11 +181,11 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService,
         return $q.resolve();
       }
 
-      const store = (vm.source.destinyVersion === 1 ? dimStoreService : D2StoresService).getStore(vm.query.owner);
-      const items = {};
+      const store = (vm.source.destinyVersion === 1 ? dimStoreService : D2StoresService).getStore(vm.query.owner)!;
+      const items: { [key: string]: any[] } = {};
       const targetKey = vm.target.type.toLowerCase();
       items[targetKey] = items[targetKey] || [];
-      const itemCopy = angular.copy(vm.target);
+      const itemCopy = copy(vm.target);
       itemCopy.equipped = false;
       items[targetKey].push(itemCopy);
       // Include the source, since we wouldn't want it to get moved out of the way
@@ -218,10 +229,10 @@ function InfuseCtrl($scope, dimStoreService, D2StoresService, dimLoadoutService,
         });
       }
 
-      const loadout = {
+      const loadout: Loadout = {
         classType: -1,
         name: $i18next.t('Infusion.InfusionMaterials'),
-        items: items
+        items
       };
 
       vm.transferInProgress = true;

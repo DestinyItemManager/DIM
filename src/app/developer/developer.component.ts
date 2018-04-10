@@ -1,12 +1,13 @@
 import template from './developer.html';
+import { IComponentOptions, IController } from 'angular';
 
-export const DeveloperComponent = {
+export const DeveloperComponent: IComponentOptions = {
   template,
   controller: DeveloperCtrl,
   controllerAs: 'vm'
 };
 
-function DeveloperCtrl() {
+function DeveloperCtrl(this: IController) {
   const vm = this;
 
   vm.apiKey = localStorage.apiKey;
@@ -19,11 +20,10 @@ function DeveloperCtrl() {
     vm.warning = 'Bungie.net will not accept the http protocol. Serve over https:// and try again.';
   }
 
-  vm.save = function() {
+  vm.save = () => {
     localStorage.apiKey = vm.apiKey;
     localStorage.oauthClientId = vm.clientId;
     localStorage.oauthClientSecret = vm.clientSecret;
-    window.location = `${window.location.origin}/index.html`;
+    window.location.href = `${window.location.origin}/index.html`;
   };
 }
-

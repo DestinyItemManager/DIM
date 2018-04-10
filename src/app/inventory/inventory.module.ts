@@ -1,7 +1,6 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { InventoryComponent } from './inventory.component';
-import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
 import { StoreService } from './dimStoreService.factory';
@@ -16,20 +15,17 @@ import { SimpleItemComponent } from './dimSimpleItem.directive';
 import { PercentWidth, percent } from './dimPercentWidth.directive';
 import { ItemService } from './dimItemService.factory';
 import { ItemMoveService } from './dimItemMoveService.factory';
-import { CsvService } from './dimCsvService.factory';
 import { ClearNewItemsComponent } from './dimClearNewItems.directive';
 import { StorePagerComponent } from './store-pager.component';
+import { StateProvider } from '@uirouter/angularjs';
 
-export default angular
-  .module('inventoryModule', [])
+export default module('inventoryModule', [])
   .factory('dimStoreService', StoreService)
   .factory('D2StoresService', D2StoresService)
-  .factory('ClassifiedDataService', ClassifiedDataService)
   .factory('StoreFactory', StoreFactory)
   .factory('ItemFactory', ItemFactory)
   .factory('dimItemService', ItemService)
   .factory('dimItemMoveService', ItemMoveService)
-  .factory('dimCsvService', CsvService)
   .component('inventory', InventoryComponent)
   .component('dimStores', StoresComponent)
   .component('storePager', StorePagerComponent)
@@ -43,7 +39,7 @@ export default angular
   .directive('dimPercentWidth', PercentWidth)
   .filter('tagIcon', tagIconFilter)
   .filter('percent', () => percent)
-  .config(($stateProvider) => {
+  .config(($stateProvider: StateProvider) => {
     'ngInject';
 
     $stateProvider.state({

@@ -1,15 +1,14 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { ItemReviewComponent } from './item-review.component';
 import { DestinyTrackerService } from './destiny-tracker.service';
 
-export default angular
-  .module('ReviewModule', [])
+export default module('ReviewModule', [])
   .factory('dimDestinyTrackerService', DestinyTrackerService)
   .component('dimItemReview', ItemReviewComponent)
   // http://jasonwatmore.com/post/2016/03/31/angularjs-utc-to-local-date-time-filter
   .filter('utcToLocal', ($filter) => {
-    return function(utcDateString, format) {
+    return (utcDateString, format) => {
       // return if input date is null or undefined
       if (!utcDateString) {
         return null;

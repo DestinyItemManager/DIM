@@ -1,3 +1,10 @@
+// tslint:disable-next-line:no-implicit-dependencies
+import intellectIcon from 'app/images/intellect.png';
+// tslint:disable-next-line:no-implicit-dependencies
+import disciplineIcon from 'app/images/discipline.png';
+// tslint:disable-next-line:no-implicit-dependencies
+import strengthIcon from 'app/images/strength.png';
+
 // Cooldowns
 const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
 const cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
@@ -7,7 +14,7 @@ const cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 // thanks to /u/iihavetoes for the bonuses at each level
 // thanks to /u/tehdaw for the spreadsheet with bonuses
 // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
-export function getBonus(light, type) {
+export function getBonus(light: number, type: string): number {
   switch (type.toLowerCase()) {
   case 'helmet':
   case 'helmets':
@@ -70,23 +77,23 @@ export function getCharacterStatsData(statDefs, data) {
   const stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
   const ret = {};
   stats.forEach((statId) => {
-    const statHash = {};
+    const statHash: any = {};
     statHash.id = statId;
     switch (statId) {
     case 'STAT_INTELLECT':
       statHash.name = 'Intellect';
       statHash.effect = 'Super';
-      statHash.icon = require('app/images/intellect.png');
+      statHash.icon = intellectIcon;
       break;
     case 'STAT_DISCIPLINE':
       statHash.name = 'Discipline';
       statHash.effect = 'Grenade';
-      statHash.icon = require('app/images/discipline.png');
+      statHash.icon = disciplineIcon;
       break;
     case 'STAT_STRENGTH':
       statHash.name = 'Strength';
       statHash.effect = 'Melee';
-      statHash.icon = require('app/images/strength.png');
+      statHash.icon = strengthIcon;
       break;
     }
 
@@ -124,39 +131,40 @@ export function getCharacterStatsData(statDefs, data) {
 
 // following code is from https://github.com/DestinyTrialsReport
 export function getAbilityCooldown(subclass, ability, tier) {
-  if (ability === 'STAT_INTELLECT') {
-    switch (subclass) {
-    case 2007186000: // Defender
-    case 4143670656: // Nightstalker
-    case 2455559914: // Striker
-    case 3658182170: // Sunsinger
-      return cooldownsSuperA[tier];
-    default:
-      return cooldownsSuperB[tier];
-    }
-  } else if (ability === 'STAT_DISCIPLINE') {
-    return cooldownsGrenade[tier];
-  } else if (ability === 'STAT_STRENGTH') {
-    switch (subclass) {
-    case 4143670656: // Nightstalker
-    case 1716862031: // Gunslinger
-      return cooldownsMelee[tier];
-    default:
+  switch (ability) {
+    case 'STAT_INTELLECT':
+      switch (subclass) {
+        case 2007186000: // Defender
+        case 4143670656: // Nightstalker
+        case 2455559914: // Striker
+        case 3658182170: // Sunsinger
+          return cooldownsSuperA[tier];
+        default:
+          return cooldownsSuperB[tier];
+      }
+    case 'STAT_DISCIPLINE':
       return cooldownsGrenade[tier];
-    }
-  } else {
-    return '-:--';
+    case 'STAT_STRENGTH':
+      switch (subclass) {
+        case 4143670656: // Nightstalker
+        case 1716862031: // Gunslinger
+          return cooldownsMelee[tier];
+        default:
+          return cooldownsGrenade[tier];
+      }
+    default:
+      return '-:--';
   }
 }
 
-export function getClass(type) {
+export function getClass(type: number) {
   switch (type) {
-  case 0:
-    return 'titan';
-  case 1:
-    return 'hunter';
-  case 2:
-    return 'warlock';
+    case 0:
+      return 'titan';
+    case 1:
+      return 'hunter';
+    case 2:
+      return 'warlock';
   }
   return 'unknown';
 }

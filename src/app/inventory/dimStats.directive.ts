@@ -1,7 +1,8 @@
 import template from './dimStats.directive.html';
 import './dimStats.scss';
+import { IComponentOptions, IController, IScope } from 'angular';
 
-export const StatsComponent = {
+export const StatsComponent: IComponentOptions = {
   controller: StatsCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -11,8 +12,7 @@ export const StatsComponent = {
   template
 };
 
-
-function StatsCtrl($scope, $i18next) {
+function StatsCtrl(this: IController, $scope: IScope, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -38,10 +38,10 @@ function StatsCtrl($scope, $i18next) {
         // compute tooltip
         if (vm.destinyVersion === 1) {
           const tier = stat.tier;
-          const next = $i18next.t('Stats.TierProgress', { context: tier === 5 ? 'Max' : '', progress: tier === 5 ? stat.value : (stat.value % 60), tier: tier, nextTier: tier + 1, statName: stat.name });
+          const next = $i18next.t('Stats.TierProgress', { context: tier === 5 ? 'Max' : '', progress: tier === 5 ? stat.value : (stat.value % 60), tier, nextTier: tier + 1, statName: stat.name });
           let cooldown = stat.cooldown || '';
           if (cooldown) {
-            cooldown = $i18next.t(`Cooldown.${stat.effect}`, { cooldown: cooldown });
+            cooldown = $i18next.t(`Cooldown.${stat.effect}`, { cooldown });
           }
           stat.tooltip = next + cooldown;
         } else {

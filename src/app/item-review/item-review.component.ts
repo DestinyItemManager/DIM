@@ -1,12 +1,30 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { settings } from '../settings/settings';
 import template from './item-review.html';
 import './item-review.scss';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
+import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DestinyTrackerServiceType } from './destiny-tracker.service';
 
-function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
+export const ItemReviewComponent: IComponentOptions = {
+  bindings: {
+    item: '<'
+  },
+  controller: ItemReviewController,
+  template
+};
+
+function ItemReviewController(
+  this: IController & {
+    item: DimItem;
+  },
+  dimDestinyTrackerService: DestinyTrackerServiceType,
+  $scope: IScope,
+  $rootScope: IRootScopeService
+) {
   'ngInject';
 
   const vm = this;
@@ -23,7 +41,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
 
   vm.isCollapsed = false;
 
-  vm.toggleChart = function() {
+  vm.toggleChart = () => {
     vm.isCollapsed = !vm.isCollapsed;
   };
 
@@ -33,7 +51,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     cons: ['ok']
   };
 
-  vm.toggleEdit = function() {
+  vm.toggleEdit = () => {
     vm.expandReview = !vm.expandReview;
 
     if ((vm.item.userVote === 1) ||
@@ -43,7 +61,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     }
   };
 
-  vm.clickReview = function(reviewId) {
+  vm.clickReview = (reviewId) => {
     const review = this.findReview(reviewId);
 
     if (review.isReviewer) {
@@ -53,7 +71,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     }
   };
 
-  vm.openFlagContext = function(reviewId) {
+  vm.openFlagContext = (reviewId) => {
     const review = this.findReview(reviewId);
 
     if ((review.isReviewer) || (review.isHighlighted)) {
@@ -67,21 +85,21 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     }
   };
 
-  vm.closeFlagContext = function(reviewId) {
+  vm.closeFlagContext = (reviewId) => {
     const toggledReviewIndex = vm.toggledFlags.indexOf(reviewId);
 
     vm.toggledFlags.splice(toggledReviewIndex);
   };
 
-  vm.findReview = function(reviewId) {
+  vm.findReview = (reviewId) => {
     if (vm.item.destinyVersion === 1) {
-      return _.find(vm.item.reviews, { reviewId: reviewId });
+      return _.find(vm.item.reviews, { reviewId });
     } else {
       return _.find(vm.item.reviews, { id: reviewId });
     }
   };
 
-  vm.editReview = function(reviewId) {
+  vm.editReview = (reviewId) => {
     const review = this.findReview(reviewId);
 
     if (!review || !review.isReviewer) {
@@ -109,7 +127,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     });
   }
 
-  vm.getReviewData = function() {
+  vm.getReviewData = () => {
     if (!vm.item.reviews) {
       return [];
     }
@@ -123,34 +141,34 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
       return matchingReviews.length + (highlightedReviews.length * 4);
     });
 
-    vm.totalReviews = mapData.reduce((sum, cur) => { return sum + cur; }, 0);
+    vm.totalReviews = mapData.reduce((sum, cur) => sum + cur, 0);
 
     return mapData;
   };
 
   vm.reviewData = vm.getReviewData();
 
-  vm.shouldDrawChart = function() {
+  vm.shouldDrawChart = () => {
     vm.reviewData = vm.getReviewData();
 
     return ((vm.reviewData.length > 0) &&
-            (_.some(vm.reviewData, (item) => { return item > 0; })));
+            (_.some(vm.reviewData, (item) => item > 0)));
   };
 
-  vm.submitReview = function() {
+  vm.submitReview = () => {
     dimDestinyTrackerService.submitReview(vm.item);
     vm.expandReview = false;
     vm.submitted = true;
   };
 
-  vm.setRating = function(rating) {
+  vm.setRating = (rating) => {
     if (rating) {
       vm.item.userRating = rating;
     }
     vm.expandReview = true;
   };
 
-  vm.reviewBlur = function() {
+  vm.reviewBlur = () => {
     const item = vm.item;
     const userReview = vm.toUserReview(item);
 
@@ -158,13 +176,13 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
                                                       userReview);
   };
 
-  vm.reportReview = function(reviewId) {
+  vm.reportReview = (reviewId) => {
     const review = this.findReview(reviewId);
 
     dimDestinyTrackerService.reportReview(review);
   };
 
-  vm.toUserReview = function(item) {
+  vm.toUserReview = (item) => {
     if (vm.item.destinyVersion === 1) {
       return this.toDestinyOneUserReview(item);
     }
@@ -172,7 +190,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     return this.toDestinyTwoUserReview(item);
   };
 
-  vm.toDestinyTwoUserReview = function(item) {
+  vm.toDestinyTwoUserReview = (item) => {
     const userVote = item.userVote;
     const review = item.userReview;
     const pros = item.userReviewPros;
@@ -181,16 +199,16 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
 
     const userReview = {
       voted: userVote,
-      review: review,
-      pros: pros,
-      cons: cons,
+      review,
+      pros,
+      cons,
       mode
     };
 
     return userReview;
   };
 
-  vm.toDestinyOneUserReview = function(item) {
+  vm.toDestinyOneUserReview = (item) => {
     const newRating = item.userRating;
     const review = item.userReview;
     const pros = item.userReviewPros;
@@ -198,9 +216,9 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
 
     const userReview = {
       rating: newRating,
-      review: review,
-      pros: pros,
-      cons: cons
+      review,
+      pros,
+      cons
     };
 
     return userReview;
@@ -220,7 +238,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     vm.reviewData = vm.getReviewData();
   });
 
-  vm.valueChanged = function() {
+  vm.valueChanged = () => {
     vm.canReview = settings.allowIdPostToDtr;
 
     if (vm.canReview) {
@@ -228,7 +246,7 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     }
   };
 
-  vm.translateReviewMode = function(review) {
+  vm.translateReviewMode = (review) => {
     if (!vm.reviewModeOptions) {
       getDefinitions().then((defs) => { vm.reviewModeOptions = getReviewModes(defs); });
 
@@ -238,23 +256,11 @@ function ItemReviewController(dimDestinyTrackerService, $scope, $rootScope) {
     return translateReviewMode(vm.reviewModeOptions, review);
   };
 
-  vm.setUserVote = function(userVote) {
-    if (vm.item.userVote === userVote) {
-      vm.item.userVote = 0;
-    } else {
-      vm.item.userVote = userVote;
-    }
+  vm.setUserVote = (userVote) => {
+    vm.item.userVote = (vm.item.userVote === userVote) ? 0 : userVote;
 
     vm.expandReview = (vm.item.userVote !== 0);
 
     vm.reviewBlur();
   };
 }
-
-export const ItemReviewComponent = {
-  bindings: {
-    item: '<'
-  },
-  controller: ItemReviewController,
-  template: template
-};
