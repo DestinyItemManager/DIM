@@ -233,8 +233,8 @@ export default class Header extends React.Component<Props, State> {
         </div>
 
         <span className="header-right">
-          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews && defs) && <RatingMode defs={defs} D2StoresService={this.props.D2StoresService} />}
           {!showSearch && <Refresh/>}
+          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews && defs) && <RatingMode defs={defs} D2StoresService={this.props.D2StoresService} />}
           {!showSearch &&
             <a
               className="link fa fa-cog"
