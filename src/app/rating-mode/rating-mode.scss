@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .mode-popup {
   position: absolute;
   display: block;
@@ -9,6 +11,9 @@
   height: fit-content;
   background-color: #222;
   float: left;
+  @include phone-portrait {
+    right: 0px;
+  }
 }
 
 .mode-label {
