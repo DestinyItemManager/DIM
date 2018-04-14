@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
+    "ConfirmTitle": "Confirm Action"
+  },
   "Accounts": {
     "Blizzard": "ПК",
     "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
@@ -95,9 +99,11 @@
     "Cons": "Недостатки",
     "Delete": "Удалить",
     "Edit": "Изменить",
+    "ForGameMode": "For game mode",
     "Help": "Написать отзыв (опционально)",
     "HelpCons": "Опиши недостатки этого оружия (опционально)",
     "HelpPros": "Опиши преимущества этого оружия (опционально)",
+    "ModeNotSpecified": "Not Specified",
     "NoReviews": "Ещё нет отзывов об этом предмете, будь первым!",
     "Platforms": {
       "All": "Показывать все",
@@ -112,6 +118,7 @@
     "ServiceSubmitError": "Ошибка отправки на Destiny Tracker Service.",
     "Submit": "Отправить",
     "ThankYou": "Спасибо за отправку вашего отзыва! Вскоре он будет показан в общем списке.",
+    "UnknownGameMode": "Unknown",
     "VerifyReport": "Вы уверены, что хотите пожаловаться на этот отзыв?",
     "YourReview": "Ваш отзыв"
   },
@@ -545,6 +552,7 @@
     "Ratings": "Рейтинги",
     "ReloadDIM": "Обновите [F5] приложения для смены языка",
     "ResetToDefault": "Сбросить",
+    "ReviewsModeSelection": "Only show ratings for the following play mode",
     "ReviewsPlatformSelection": "Показывать рейтинги для конкретной платформы",
     "SetSort": "Сортировать по:",
     "Settings": "Настройки",

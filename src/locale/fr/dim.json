@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "Veuillez utiliser l'application Destiny 2 pour donner à DIM l'autorisation de modifier vos objets.",
+    "ConfirmTitle": "Confirmer l'action"
+  },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
@@ -95,9 +99,11 @@
     "Cons": "Désavantages",
     "Delete": "Supprimer",
     "Edit": "Éditer",
+    "ForGameMode": "Pour le mode de jeu",
     "Help": "Écrire une évaluation (optionnel)",
     "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
     "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
+    "ModeNotSpecified": "Non spécifié",
     "NoReviews": "Il n'y a aucune évaluation pour cet objet, soyez le premier!",
     "Platforms": {
       "All": "Montrer tout",
@@ -112,6 +118,7 @@
     "ServiceSubmitError": "Envoie au service de Destiny tracker échoué.",
     "Submit": "Envoyer",
     "ThankYou": "Merci d'avoir envoyé une évaluation! Elle apparaitra bientôt.",
+    "UnknownGameMode": "Inconnu",
     "VerifyReport": "Êtes-vous sûr de vouloir signaler cette évaluation?",
     "YourReview": "Votre évaluation"
   },
@@ -545,6 +552,7 @@
     "Ratings": "Notes",
     "ReloadDIM": "Recharger DIM pour finaliser le changement de langue",
     "ResetToDefault": "Réinitialiser",
+    "ReviewsModeSelection": "Montrer les évaluations uniquement pour le mode de jeu suivant",
     "ReviewsPlatformSelection": "Montrer uniquement les évaluations de la plateforme suivante",
     "SetSort": "Trier les items par:",
     "Settings": "Paramètres",

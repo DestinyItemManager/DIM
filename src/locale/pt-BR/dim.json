@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
+    "ConfirmTitle": "Confirmar a Ação"
+  },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente se logar com uma conta diferente.",
@@ -95,9 +99,11 @@
     "Cons": "Contras",
     "Delete": "Apagar",
     "Edit": "Editar",
+    "ForGameMode": "For game mode",
     "Help": "Escreva uma análise (opcional)",
     "HelpCons": "Descreva os aspectos negativos desta arma (opcional)",
     "HelpPros": "Descreva os aspectos positivos desta arma (opcional)",
+    "ModeNotSpecified": "Não Especificado",
     "NoReviews": "Ainda não há análises para este item, seja o primeiro!",
     "Platforms": {
       "All": "Exibir Tudo",
@@ -112,6 +118,7 @@
     "ServiceSubmitError": "O serviço de submissão do Destiny tracker falhou.",
     "Submit": "Enviar",
     "ThankYou": "Obrigado por submeter sua análise! Ficará disponível em breve.",
+    "UnknownGameMode": "Desconhecido",
     "VerifyReport": "Tem certeza que deseja sinalizar esta revisão?",
     "YourReview": "Sua avaliação"
   },
@@ -545,6 +552,7 @@
     "Ratings": "Classificações",
     "ReloadDIM": "Recarregar o DIM para concluir a mudança de idioma",
     "ResetToDefault": "Resetar",
+    "ReviewsModeSelection": "Exibir somente avaliações para o seguinte modo de jogo",
     "ReviewsPlatformSelection": "Exibir somente avaliações da seguinte plataforma",
     "SetSort": "Ordenar itens por:",
     "Settings": "Configurações",
