@@ -1,14 +1,16 @@
-import _ from 'underscore';
-import angular from 'angular';
+import * as _ from 'underscore';
+import { extend, IComponentOptions, IController, IScope } from 'angular';
 import { sum, count } from '../util';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
-import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 
 import template from './record-books.html';
 import './record-books.scss';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { StoreServiceType } from '../inventory/d2-stores.service';
 
-export const RecordBooksComponent = {
+export const RecordBooksComponent: IComponentOptions = {
   controller: RecordBooksController,
   template,
   bindings: {
@@ -16,7 +18,14 @@ export const RecordBooksComponent = {
   }
 };
 
-function RecordBooksController($scope, dimStoreService, $filter) {
+function RecordBooksController(
+  this: IController & {
+    account: DestinyAccount;
+  },
+  $scope: IScope,
+  dimStoreService: StoreServiceType,
+  $filter
+) {
   'ngInject';
 
   const vm = this;
@@ -24,16 +33,16 @@ function RecordBooksController($scope, dimStoreService, $filter) {
   vm.settings = settings;
 
   // TODO: it's time for a directive
-  vm.toggleSection = function(id) {
+  vm.toggleSection = (id) => {
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
     vm.settings.save();
   };
 
-  vm.settingsChanged = function() {
+  vm.settingsChanged = () => {
     vm.settings.save();
   };
 
-  this.$onInit = function() {
+  this.$onInit = () => {
     subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
   };
 
@@ -59,7 +68,17 @@ function RecordBooksController($scope, dimStoreService, $filter) {
     });
   }
 
-  function processRecordBook(defs, rawRecordBook) {
+  interface RecordBookPage {
+    id: string;
+    name: string;
+    description: string;
+    rewardsPage: boolean;
+    records: any[];
+    complete: boolean;
+    completedCount: number;
+  }
+
+  function processRecordBook(defs: D1ManifestDefinitions, rawRecordBook) {
     // TODO: rewards are in "spotlights"
     // TODO: rank
 
@@ -72,7 +91,10 @@ function RecordBooksController($scope, dimStoreService, $filter) {
       icon: recordBookDef.icon,
       banner: recordBookDef.bannerImage,
       startDate: rawRecordBook.startDate,
-      expirationDate: rawRecordBook.expirationDate
+      expirationDate: rawRecordBook.expirationDate,
+      pages: [] as RecordBookPage[],
+      complete: false,
+      percentComplete: undefined as (number | undefined)
     };
 
     const records = Object.values(rawRecordBook.records).map((r) => processRecord(defs, r));
@@ -80,19 +102,21 @@ function RecordBooksController($scope, dimStoreService, $filter) {
 
     let i = 0;
     recordBook.pages = recordBookDef.pages.map((page) => {
-      const createdPage = {
+      const createdPage: RecordBookPage = {
         id: `${recordBook.hash}-${i++}`,
         name: page.displayName,
         description: page.displayDescription,
         rewardsPage: page.displayStyle === 1,
-        records: page.records.map((r) => recordByHash[r.recordHash])
+        records: page.records.map((r) => recordByHash[r.recordHash]),
         // rewards - map to items!
         // ItemFactory.processItems({ id: null }
         // may have to extract store service bits...
+        complete: false,
+        completedCount: 0
       };
 
-      createdPage.complete = _.all(createdPage.records, 'complete');
-      createdPage.completedCount = count(createdPage.records, 'complete');
+      createdPage.complete = createdPage.records.every((r) => r.complete);
+      createdPage.completedCount = count(createdPage.records, (r: any) => r.complete);
 
       return createdPage;
     });
@@ -100,20 +124,20 @@ function RecordBooksController($scope, dimStoreService, $filter) {
     // TODO: show rewards
 
     if (rawRecordBook.progression) {
-      rawRecordBook.progression = angular.extend(rawRecordBook.progression, defs.Progression.get(rawRecordBook.progression.progressionHash));
+      rawRecordBook.progression = extend(rawRecordBook.progression, defs.Progression.get(rawRecordBook.progression.progressionHash));
       rawRecordBook.progress = rawRecordBook.progression;
-      rawRecordBook.percentComplete = rawRecordBook.progress.currentProgress / sum(rawRecordBook.progress.steps, 'progressTotal');
+      rawRecordBook.percentComplete = rawRecordBook.progress.currentProgress / sum(rawRecordBook.progress.steps, (s: any) => s.progressTotal);
     } else {
       // TODO: not accurate for multi-objectives
-      recordBook.percentComplete = count(records, 'complete') / records.length;
+      recordBook.percentComplete = count(records, (r) => r.complete) / records.length;
     }
 
-    recordBook.complete = _.all(recordBook.pages, 'complete');
+    recordBook.complete = recordBook.pages.every((p) => p.complete);
 
     return recordBook;
   }
 
-  function processRecord(defs, record) {
+  function processRecord(defs: D1ManifestDefinitions, record) {
     const recordDef = defs.Record.get(record.recordHash);
 
     const objectives = record.objectives.map((objective) => {
@@ -132,8 +156,8 @@ function RecordBooksController($scope, dimStoreService, $filter) {
       }
 
       return {
-        progress: progress,
-        display: display,
+        progress,
+        display,
         completionValue: objectiveDef.completionValue,
         complete: objective.isComplete,
         boolean: objectiveDef.completionValue === 1
@@ -145,8 +169,8 @@ function RecordBooksController($scope, dimStoreService, $filter) {
       icon: recordDef.icon,
       description: recordDef.description,
       name: recordDef.displayName,
-      objectives: objectives,
-      complete: _.all(objectives, 'complete')
+      objectives,
+      complete: objectives.every((o) => o.complete)
     };
   }
 }

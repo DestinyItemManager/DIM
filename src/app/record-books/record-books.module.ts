@@ -1,12 +1,12 @@
-import angular from 'angular';
+import { module } from 'angular';
 import 'angular-duration-format';
 
 import { RecordBooksComponent } from './record-books.component';
+import { StateProvider } from '@uirouter/angularjs';
 
-export default angular
-  .module('recordBooksModule', ['angular-duration-format'])
+export default module('recordBooksModule', ['angular-duration-format'])
   .component('recordBooks', RecordBooksComponent)
-  .config(($stateProvider) => {
+  .config(($stateProvider: StateProvider) => {
     'ngInject';
 
     $stateProvider.state({
