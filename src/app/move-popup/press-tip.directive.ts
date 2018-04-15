@@ -1,14 +1,15 @@
 import Tooltip from 'tooltip.js';
 import './press-tip.scss';
+import { IDirective } from 'angular';
 
-export function PressTip() {
+export function PressTip(): IDirective {
   'ngInject';
 
   return {
     restrict: 'A',
     link($scope, $element, $attrs) {
-      let tooltip = null;
-      let timer = null;
+      let tooltip: Tooltip | null = null;
+      let timer: number | null = null;
 
       function showTip() {
         if (!tooltip) {
@@ -27,8 +28,8 @@ export function PressTip() {
         }
       }
 
-      $element.on('mouseenter', (e) => {
-        timer = setTimeout(() => {
+      $element.on('mouseenter', () => {
+        timer = window.setTimeout(() => {
           showTip();
         }, 100);
       });
@@ -44,7 +45,9 @@ export function PressTip() {
           tooltip.dispose();
           tooltip = null;
         }
-        clearTimeout(timer);
+        if (timer) {
+          clearTimeout(timer);
+        }
       });
 
       $scope.$on('$destroy', () => {

@@ -1,15 +1,15 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import template from './talent-grid.html';
 import './talent-grid.scss';
 import { showInfoPopup } from '../shell/info-popup';
+import { IComponentOptions, IController, IAngularEvent } from 'angular';
+import { DimTalentGrid, DimGridNode } from '../inventory/store/d2-item-factory.service';
 
-export function talentGridNodesFilter(nodes, hiddenColumns) {
-  return _.filter(nodes || [], (node) => {
-    return !node.hidden && node.column >= hiddenColumns;
-  });
+export function talentGridNodesFilter(nodes: DimGridNode[], hiddenColumns: number) {
+  return (nodes || []).filter((node) => !node.hidden && node.column >= hiddenColumns);
 }
 
-export const TalentGridComponent = {
+export const TalentGridComponent: IComponentOptions = {
   controller: TalentGridCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -20,7 +20,14 @@ export const TalentGridComponent = {
   template
 };
 
-function TalentGridCtrl($i18next) {
+function TalentGridCtrl(
+  this: IController & {
+    talentGrid: DimTalentGrid;
+    perksOnly: boolean;
+    infuse(args: { $event: IAngularEvent }): void;
+  },
+  $i18next
+) {
   'ngInject';
 
   const infuseHash = 1270552711;
@@ -30,7 +37,7 @@ function TalentGridCtrl($i18next) {
   vm.scaleFactor = 1.1;
   vm.totalNodeSize = vm.nodeSize + vm.nodePadding;
 
-  vm.nodeClick = function(node, $event) {
+  vm.nodeClick = (node: DimGridNode, $event) => {
     if (node.hash === infuseHash) {
       vm.infuse({ $event });
     } else if (node.exclusiveInColumn) {
@@ -55,8 +62,8 @@ function TalentGridCtrl($i18next) {
   }
 
   if (vm.talentGrid) {
-    const visibleNodes = _.reject(vm.talentGrid.nodes, 'hidden');
-    vm.numColumns = _.max(visibleNodes, 'column').column + 1 - vm.hiddenColumns;
-    vm.numRows = vm.perksOnly ? 2 : (_.max(visibleNodes, 'row').row + 1);
+    const visibleNodes = vm.talentGrid.nodes.filter((n) => !n.hidden);
+    vm.numColumns = _.max(visibleNodes, (n) => n.column).column + 1 - vm.hiddenColumns;
+    vm.numRows = vm.perksOnly ? 2 : (_.max(visibleNodes, (n) => n.row).row + 1);
   }
 }

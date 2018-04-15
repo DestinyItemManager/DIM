@@ -1,8 +1,12 @@
 import { settings } from '../settings/settings';
 import template from './move-locations.html';
 import './move-locations.scss';
+import { IComponentOptions, IController } from 'angular';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { StoreServiceType } from '../inventory/d2-stores.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 
-export const MoveLocationsComponent = {
+export const MoveLocationsComponent: IComponentOptions = {
   template,
   controller,
   bindings: {
@@ -11,7 +15,17 @@ export const MoveLocationsComponent = {
   }
 };
 
-function controller(dimItemMoveService, dimStoreService, D2StoresService) {
+function controller(
+  this: IController & {
+    item: DimItem;
+    amount: number;
+    store: DimStore;
+    stores: DimStore[];
+  },
+  dimItemMoveService,
+  dimStoreService: StoreServiceType,
+  D2StoresService: StoreServiceType
+) {
   'ngInject';
   const vm = this;
 
@@ -19,10 +33,10 @@ function controller(dimItemMoveService, dimStoreService, D2StoresService) {
 
   vm.settings = settings;
 
-  vm.store = storeService.getStore(vm.item.owner);
+  vm.store = storeService.getStore(vm.item.owner)!;
   vm.stores = storeService.getStores();
 
-  vm.canShowVault = function canShowVault(buttonStore) {
+  vm.canShowVault = function canShowVault(buttonStore: DimStore) {
     // If my itemStore is the vault, don't show a vault button.
     // Can't vault a vaulted item.
     if (vm.store.isVault) {
@@ -46,7 +60,7 @@ function controller(dimItemMoveService, dimStoreService, D2StoresService) {
     return true;
   };
 
-  vm.canShowStore = function canShowStore(buttonStore) {
+  vm.canShowStore = function canShowStore(buttonStore: DimStore) {
     // Can't store into a vault
     if (buttonStore.isVault) {
       return false;
@@ -77,7 +91,7 @@ function controller(dimItemMoveService, dimStoreService, D2StoresService) {
     return false;
   };
 
-  vm.moveItemTo = function(store, equip) {
+  vm.moveItemTo = (store: DimStore, equip: boolean) => {
     dimItemMoveService.moveItemTo(vm.item, store, equip, vm.amount);
   };
 }

@@ -1,4 +1,5 @@
 import Popper from 'popper.js';
+import { IDirective } from 'angular';
 
 /**
  * Common functionality for positioning a popup next to an item (or
@@ -8,19 +9,19 @@ import Popper from 'popper.js';
  * an arrow to show, also include a (properly styled) element with the
  * class "arrow" somewhere in your popup template.
  */
-export function ItemPopup() {
+export function ItemPopup(): IDirective {
   return {
     restrict: 'A',
     link: ItemPopupLink
   };
 }
 
-function ItemPopupLink($scope, $element, $attrs) {
+function ItemPopupLink($scope, _$element, $attrs) {
   'ngInject';
 
   // Capture the dialog element
-  let dialog = null;
-  $scope.$on('ngDialog.opened', (event, $dialog) => {
+  let dialog: any = null;
+  $scope.$on('ngDialog.opened', (_event, $dialog) => {
     dialog = $dialog;
     reposition();
   });
@@ -68,7 +69,7 @@ function ItemPopupLink($scope, $element, $attrs) {
               element: '.arrow'
             }
           }
-        };
+        } as any;
 
         const boundariesElement = $attrs.itemPopupBoundaryClass ? document.getElementsByClassName($attrs.itemPopupBoundaryClass)[0] : undefined;
         if (boundariesElement) {
