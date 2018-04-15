@@ -27,4 +27,8 @@ function LoginCtrl(
   const reauth = $stateParams.reauth;
 
   vm.authorizationURL = `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${localStorage.authorizationState}${reauth ? '&reauth=true' : ''}`;
+
+  vm.login = () => {
+    window.document.location.assign(vm.authorizationURL);
+  };
 }
