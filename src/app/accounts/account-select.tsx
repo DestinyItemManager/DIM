@@ -8,6 +8,26 @@ import { compareAccounts, DestinyAccount } from './destiny-account.service';
 import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
 
+const Account = React.forwardRef((
+  {
+    account,
+    className,
+    ...other
+  }: {
+    account: DestinyAccount;
+    className?: string;
+  } & React.HTMLAttributes<HTMLDivElement>,
+  ref?: React.Ref<HTMLDivElement>
+) => {
+  return (
+    <div ref={ref} className={classNames("account", className)} {...other}>
+      <div className="account-name">Destiny {account.destinyVersion === 1 ? '1' : '2'} • <span>{t(`Accounts.${account.platformLabel}`)}</span>
+      </div>
+      <div className="account-details">{account.displayName}</div>
+    </div>
+  );
+});
+
 interface Props {
   currentAccount?: DestinyAccount;
 }
@@ -18,7 +38,7 @@ interface State {
 }
 
 export default class AccountSelect extends React.Component<Props, State> {
-  private dropdownToggler: HTMLElement | null;
+  private dropdownToggler = React.createRef<HTMLDivElement>();
 
   constructor(props) {
     super(props);
@@ -45,7 +65,7 @@ export default class AccountSelect extends React.Component<Props, State> {
 
     return (
       <div className="account-select">
-        <Account className="selected-account" innerRef={this.captureDropdownToggler} account={currentAccount} onClick={this.toggleDropdown}/>
+        <Account className="selected-account" ref={this.dropdownToggler} account={currentAccount} onClick={this.toggleDropdown}/>
         {open &&
           <ClickOutside onClickOutside={this.closeDropdown} className="accounts-popup">
             {otherAccounts.map((account) =>
@@ -59,12 +79,8 @@ export default class AccountSelect extends React.Component<Props, State> {
     );
   }
 
-  private captureDropdownToggler = (ref: HTMLElement | null) => {
-    this.dropdownToggler = ref;
-  }
-
   private closeDropdown = (e?) => {
-    if (!e || !this.dropdownToggler || !this.dropdownToggler.contains(e.target)) {
+    if (!e || !this.dropdownToggler.current || !this.dropdownToggler.current.contains(e.target)) {
       this.setState({ open: false });
     }
   }
@@ -83,23 +99,4 @@ export default class AccountSelect extends React.Component<Props, State> {
     removeToken();
     $state.go('login', { reauth: true });
   }
-}
-
-function Account({
-  account,
-  className,
-  innerRef,
-  ...other
-}: {
-  account: DestinyAccount;
-  className?: string;
-  innerRef?: React.Ref<HTMLDivElement>;
-} & React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div ref={innerRef} className={classNames("account", className)} {...other}>
-      <div className="account-name">Destiny {account.destinyVersion === 1 ? '1' : '2'} • <span>{t(`Accounts.${account.platformLabel}`)}</span>
-      </div>
-      <div className="account-details">{account.displayName}</div>
-    </div>
-  );
 }

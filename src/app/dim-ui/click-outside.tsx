@@ -8,7 +8,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
  * Component that fires an event if you click or tap outside of it.
  */
 export default class ClickOutside extends React.Component<Props> {
-  private wrapperRef: Element;
+  private wrapperRef = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
@@ -24,7 +24,7 @@ export default class ClickOutside extends React.Component<Props> {
     const { onClickOutside, ...other } = this.props;
 
     return (
-      <div ref={this.setWrapperRef} {...other}>
+      <div ref={this.wrapperRef} {...other}>
         {this.props.children}
       </div>
     );
@@ -34,7 +34,7 @@ export default class ClickOutside extends React.Component<Props> {
    * Alert if clicked on outside of element
    */
   private handleClickOutside = (event) => {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+    if (this.wrapperRef.current && !this.wrapperRef.current.contains(event.target)) {
       // TODO:
       /*
       // This fixes an event ordering bug in Safari that can cause closed dialogs to reopen
@@ -44,12 +44,5 @@ export default class ClickOutside extends React.Component<Props> {
       */
       this.props.onClickOutside(event);
     }
-  }
-
-  /**
-   * Set the wrapper ref
-   */
-  private setWrapperRef = (node: HTMLDivElement) => {
-    this.wrapperRef = node;
   }
 }

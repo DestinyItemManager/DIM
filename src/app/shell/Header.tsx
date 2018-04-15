@@ -84,7 +84,7 @@ export default class Header extends React.Component<Props, State> {
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHook: Function;
   private showXur = showPopupFunction('xur', '<xur></xur>');
-  private dropdownToggler: HTMLElement | null;
+  private dropdownToggler = React.createRef<HTMLElement>();
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
 
@@ -207,7 +207,7 @@ export default class Header extends React.Component<Props, State> {
 
     return (
       <div id="header">
-        <span className="menu link" ref={(ref) => this.dropdownToggler = ref} onClick={this.toggleDropdown}>
+        <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>
           <i className="fa fa-bars" />
           {dropdownOpen &&
             <ClickOutside className="dropdown" onClickOutside={this.hideDropdown}>
@@ -263,7 +263,7 @@ export default class Header extends React.Component<Props, State> {
   }
 
   private hideDropdown = (event) => {
-    if (!this.dropdownToggler || !this.dropdownToggler.contains(event.target)) {
+    if (!this.dropdownToggler.current || !this.dropdownToggler.current.contains(event.target)) {
       this.setState({ dropdownOpen: false });
     }
   }
