@@ -109,7 +109,9 @@ h2, h3 {
 body {
   overflow-y: auto;
   margin: 0 auto;
-  padding-top: 40px;
+  padding-top: 44px;
+  padding-top: calc(44px + constant(safe-area-inset-top));
+  padding-top: calc(44px + env(safe-area-inset-top));
   background-color: #434444;
   color: white;
   font-family: 'Open Sans', sans-serif;
@@ -244,6 +246,8 @@ img {
   user-select: none;
   padding-left: constant(safe-area-inset-left);
   padding-right: constant(safe-area-inset-right);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 .bucket-padding {

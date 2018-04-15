@@ -244,7 +244,7 @@ function LoadoutDrawerCtrl(
 
     const index = (vm.loadout.warnitems || []).findIndex((i) => i.hash === item.hash && i.id === item.id);
     if (index >= 0) {
-      vm.warnItems.splice(index, 1);
+      vm.loadout.warnitems!.splice(index, 1);
     }
   };
 

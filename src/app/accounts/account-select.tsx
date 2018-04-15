@@ -93,7 +93,7 @@ function Account({
 }: {
   account: DestinyAccount;
   className?: string;
-  innerRef?: React.Ref<HTMLElement>;
+  innerRef?: React.Ref<HTMLDivElement>;
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div ref={innerRef} className={classNames("account", className)} {...other}>

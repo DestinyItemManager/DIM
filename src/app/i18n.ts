@@ -1,15 +1,15 @@
 // tslint:disable:no-implicit-dependencies
-import en from 'file-loader?name=[name]-[hash:6].[ext]!../locale/dim.json';
-import it from 'file-loader?name=[name]-[hash:6].[ext]!../locale/it/dim.json';
-import de from 'file-loader?name=[name]-[hash:6].[ext]!../locale/de/dim.json';
-import fr from 'file-loader?name=[name]-[hash:6].[ext]!../locale/fr/dim.json';
-import es from 'file-loader?name=[name]-[hash:6].[ext]!../locale/es-ES/dim.json';
-import esMX from 'file-loader?name=[name]-[hash:6].[ext]!../locale/es-MX/dim.json';
-import ja from 'file-loader?name=[name]-[hash:6].[ext]!../locale/ja/dim.json';
-import pl from 'file-loader?name=[name]-[hash:6].[ext]!../locale/pl/dim.json';
-import ptBR from 'file-loader?name=[name]-[hash:6].[ext]!../locale/pt-BR/dim.json';
-import ru from 'file-loader?name=[name]-[hash:6].[ext]!../locale/ru/dim.json';
-import zhCHT from 'file-loader?name=[name]-[hash:6].[ext]!../locale/zh-CN/dim.json';
+import en from '../locale/dim.json';
+import it from '../locale/it/dim.json';
+import de from '../locale/de/dim.json';
+import fr from '../locale/fr/dim.json';
+import es from '../locale/es-ES/dim.json';
+import esMX from '../locale/es-MX/dim.json';
+import ja from '../locale/ja/dim.json';
+import pl from '../locale/pl/dim.json';
+import ptBR from '../locale/pt-BR/dim.json';
+import ru from '../locale/ru/dim.json';
+import zhCHT from '../locale/zh-CN/dim.json';
 
 import { init as i18init, use as i18use } from 'i18next';
 import XHR from 'i18next-xhr-backend';

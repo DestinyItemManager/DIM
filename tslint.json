@@ -87,13 +87,13 @@
     "no-unused-variable": [true, {
       "ignore-pattern": "(^e$|^_)"
     }],
-    "no-use-before-declare": true,
+    "no-use-before-declare": false,
     "no-var-keyword": true,
     "no-void-expression": [true, "ignore-arrow-function-shorthand"],
     "prefer-conditional-expression": [true, "check-else-if"],
     "prefer-object-spread": true,
     "radix": true,
-    "restrict-plus-operands": true,
+    "restrict-plus-operands": false,
     "strict-type-predicates": true,
     "triple-equals": true,
     "use-default-type-parameter": true,

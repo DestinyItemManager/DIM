@@ -720,6 +720,12 @@ AddEncoding br .br
     RewriteEngine On
     RewriteBase /
 
+    # Serve a different manifest to iOS
+    RewriteCond %{REQUEST_URI} =/manifest-webapp.json
+    RewriteCond %{HTTP_USER_AGENT} "iPhone|iPad"
+    RewriteRule ^(.*)$ /manifest-webapp-ios.json [L]
+
+    # Serve pre-gzipped stuff if we got it
     # for any request, search for pre-compressed versions (gzip or brotli) and serve that directly if it's supported
 
     # Serve pre-brotli stuff if we got it

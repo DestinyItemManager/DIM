@@ -58,6 +58,8 @@
   display: block;
   overflow: auto;
   top: 42px;
+  top: calc(42px + constant(safe-area-inset-top));
+  top: calc(42px + env(safe-area-inset-top));
   right: 0;
   margin: 0;
   padding: 0;
