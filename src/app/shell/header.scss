@@ -29,6 +29,10 @@
   align-items: center;
   padding-left: constant(safe-area-inset-left);
   padding-right: constant(safe-area-inset-right);
+  padding-top: constant(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-top: env(safe-area-inset-top);
 
   #user {
     color: white;
@@ -81,7 +85,11 @@
     display: block;
     overflow: auto;
     top: 44px;
+    top: calc(44px + constant(safe-area-inset-top));
+    top: calc(44px + env(safe-area-inset-top));
     height: calc(100vh - 44px);
+    top: calc(100vh - 44px - constant(safe-area-inset-top));
+    top: calc(100vh - 44px - env(safe-area-inset-top));
     left: 0;
     margin: 0;
     padding: 0;

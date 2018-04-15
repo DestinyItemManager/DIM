@@ -3,6 +3,7 @@
   backface-visibility: hidden;
   bottom: 0;
   bottom: constant(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom);
   right: 0;
   padding: .5rem;
   color: #222;

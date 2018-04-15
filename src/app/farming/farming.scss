@@ -21,6 +21,7 @@
   transform: translateX(-50%);
   box-sizing: border-box;
   padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 
   button {
     color: white;
