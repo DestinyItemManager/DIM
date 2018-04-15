@@ -172,6 +172,9 @@ module.exports = (env) => {
         chunkFilename: "[id]-[contenthash:6].css"
       }),
 
+      // Fix some chunks not showing up in Webpack 4
+      new HtmlWebpackIncludeSiblingChunksPlugin(),
+
       new HtmlWebpackPlugin({
         inject: true,
         filename: 'index.html',
@@ -192,9 +195,6 @@ module.exports = (env) => {
         template: '!html-loader!src/gdrive-return.html',
         chunks: ['gdriveReturn']
       }),
-
-      // Fix some chunks not showing up in Webpack 4
-      new HtmlWebpackIncludeSiblingChunksPlugin(),
 
       new CopyWebpackPlugin([
         { from: './src/.htaccess' },
