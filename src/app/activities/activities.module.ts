@@ -1,11 +1,11 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { ActivitiesComponent } from './activities.component';
+import { StateProvider } from '@uirouter/angularjs';
 
-export default angular
-  .module('activitiesModule', [])
+export default module('activitiesModule', [])
   .component('activities', ActivitiesComponent)
-  .config(($stateProvider) => {
+  .config(($stateProvider: StateProvider) => {
     'ngInject';
 
     $stateProvider.state({

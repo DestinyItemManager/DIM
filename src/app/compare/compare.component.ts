@@ -1,11 +1,14 @@
-import angular from 'angular';
-import _ from 'underscore';
+import * as _ from 'underscore';
 import template from './compare.html';
 import './compare.scss';
+import { element as angularElement, IController, IComponentOptions, IScope } from 'angular';
+import { StoreServiceType } from '../inventory/d2-stores.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { sum } from '../util';
 
 export function StatRangeFilter() {
   // Turns a stat and a list of ranges into a 0-100 scale
-  return function(stat, statRanges) {
+  return (stat, statRanges) => {
     if (!stat) {
       return -1;
     }
@@ -22,22 +25,37 @@ export function StatRangeFilter() {
   };
 }
 
-export const CompareComponent = {
+export const CompareComponent: IComponentOptions = {
   controller: CompareCtrl,
   controllerAs: 'vm',
   template
 };
 
-function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2StoresService, $i18next) {
+function CompareCtrl(
+  this: IController & {
+    comparisons: DimItem[];
+    compare: DimItem;
+  },
+  $scope: IScope,
+  toaster,
+  dimCompareService,
+  dimStoreService: StoreServiceType,
+  D2StoresService: StoreServiceType,
+  $i18next
+) {
   'ngInject';
 
   const vm = this;
 
-  function getStoreService(item) {
+  function getStoreService(item: DimItem) {
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  function addMissingStats(item) {
+  function addMissingStats(item: DimItem): DimItem {
+    if (!item.stats) {
+      return item;
+    }
+
     if (!vm.comparisons[0]) {
       item.stats.forEach((stat, idx) => {
         vm.statsMap[stat.id] = { index: idx, name: stat.name };
@@ -49,44 +67,59 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
       itemStatsMap[stat.id] = { index: idx, name: stat.name };
     });
 
-    _.difference(_.keys(vm.statsMap), _.keys(itemStatsMap)).forEach((statId) => {
-      item.stats.splice(vm.statsMap[statId].index, 0, {
+    _.difference(Object.keys(vm.statsMap), Object.keys(itemStatsMap)).forEach((statId) => {
+      item.stats!.splice(vm.statsMap[statId].index, 0, {
         value: undefined,
         id: Number(statId),
         statHash: Number(statId),
         name: vm.statsMap[statId].name,
-        missingStat: true
+        missingStat: true,
+        // Fill in other required stat values
+        base: 0,
+        bonus: 0,
+        sort: 0,
+        maximumValue: 0,
+        bar: true
       });
       vm.statRanges[statId] = { min: 0, max: 0, enabled: false };
     });
 
-    _.difference(_.keys(itemStatsMap), _.keys(vm.statsMap)).forEach((statId) => {
-      _.keys(vm.statsMap).forEach((statMapId) => {
+    _.difference(Object.keys(itemStatsMap), Object.keys(vm.statsMap)).forEach((statId) => {
+      Object.keys(vm.statsMap).forEach((statMapId) => {
         if (vm.statsMap[statMapId].index >= itemStatsMap[statId].index) {
           vm.statsMap[statMapId].index++;
         }
       });
       vm.statsMap[statId] = itemStatsMap[statId];
 
-      const missingStatItemIdx = vm.comparisons.findIndex((compItem) => !compItem.stats.some((stat) => stat.id === Number(statId)));
+      const missingStatItemIdx = vm.comparisons.findIndex((compItem: DimItem) => !(compItem.stats || []).some((stat) => stat.id === Number(statId)));
       if (missingStatItemIdx >= 0) {
-        vm.comparisons[missingStatItemIdx].stats.splice(vm.statsMap[statId].index, 0, {
+        vm.comparisons[missingStatItemIdx].stats!.splice(vm.statsMap[statId].index, 0, {
           value: undefined,
           id: Number(statId),
           statHash: Number(statId),
           name: itemStatsMap[statId].name,
-          missingStat: true
+          missingStat: true,
+          // Fill in other required stat values
+          base: 0,
+          bonus: 0,
+          sort: 0,
+          maximumValue: 0,
+          bar: true
         });
       }
     });
     return item;
   }
 
+  // TODO: Rather than mutating the actual item stats, keep a separate array of just what we need!
   function removeMissingStats() {
-    _.each(vm.comparisons, (compItem) => {
-      const statIndex = compItem.stats.findIndex((stat) => stat.missingStat);
-      if (statIndex >= 0) {
-        compItem.stats.splice(statIndex, 1);
+    vm.comparisons.forEach((compItem: DimItem) => {
+      if (compItem.stats) {
+        const statIndex = compItem.stats.findIndex((stat) => Boolean(stat.missingStat));
+        if (statIndex >= 0) {
+          compItem.stats.splice(statIndex, 1);
+        }
       }
     });
   }
@@ -97,7 +130,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   vm.statRanges = {};
   vm.statsMap = {};
 
-  $scope.$on('dim-store-item-compare', (event, args) => {
+  $scope.$on('dim-store-item-compare', (_event, args) => {
     vm.show = true;
     dimCompareService.dialogOpen = true;
 
@@ -117,24 +150,24 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     dimCompareService.dialogOpen = false;
   };
 
-  vm.compareSimilar = function(type) {
+  vm.compareSimilar = (type) => {
     vm.comparisons = type === 'archetype' ? vm.archeTypes : vm.similarTypes;
     vm.comparisons.forEach(addMissingStats);
   };
 
-  vm.sort = function(statHash) {
+  vm.sort = (statHash) => {
     vm.sortedHash = statHash;
-    vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), (item) => {
-      const stat = statHash === item.primStat.statHash
+    vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), (item: DimItem) => {
+      const stat = (item.primStat && statHash === item.primStat.statHash)
         ? item.primStat
         : (vm.sortedHash === 'Rating'
           ? { value: (item.dtrRating || "0") }
-          : _.find(item.stats, { statHash: statHash }));
-      return stat.value || -1;
+          : (item.stats || []).find((s) => s.statHash === statHash));
+      return (stat && stat.value) || -1;
     }).reverse();
   };
 
-  vm.add = function add(args) {
+  vm.add = function add(args: { item: DimItem; dupes: boolean }) {
     if (!args.item.equipment) {
       return;
     }
@@ -155,33 +188,29 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
       let armorSplit;
       if (!vm.compare.location.inWeapons) {
         vm.similarTypes = vm.similarTypes.filter((i) => i.classType === vm.compare.classType);
-        armorSplit = _.reduce(vm.compare.stats, (memo, stat) => {
-          return memo + (stat.base === 0 ? 0 : stat.statHash);
-        }, 0);
+        armorSplit = sum(vm.compare.stats!, (stat) => stat.base === 0 ? 0 : stat.statHash);
       }
 
       // 4284893193 is RPM in D2
-      const archetypeStat = _.find(vm.compare.stats, {
+      const archetypeStat = _.find(vm.compare.stats!, {
         statHash: (vm.compare.destinyVersion === 1
-          ? vm.compare.stats[0].statHash
+          ? vm.compare.stats![0].statHash
           : 4284893193)
       });
       if (archetypeStat) {
-        vm.archeTypes = vm.similarTypes.filter((item) => {
+        vm.archeTypes = vm.similarTypes.filter((item: DimItem) => {
           if (item.location.inWeapons) {
-            const archetypeMatch = _.find(item.stats, {
-              statHash: (vm.compare.destinyVersion === 1
-                ? vm.compare.stats[0].statHash
+            const archetypeMatch = item.stats!.find((s) =>
+              s.statHash === (vm.compare.destinyVersion === 1
+                ? vm.compare.stats![0].statHash
                 : 4284893193)
-            });
+            );
             if (!archetypeMatch) {
               return false;
             }
             return archetypeMatch.base === archetypeStat.base;
           }
-          return _.reduce(item.stats, (memo, stat) => {
-            return memo + (stat.base === 0 ? 0 : stat.statHash);
-          }, 0) === armorSplit;
+          return sum(item.stats!, (stat) => stat.base === 0 ? 0 : stat.statHash) === armorSplit;
         });
       }
       vm.comparisons = allItems.filter((i) => i.hash === vm.compare.hash).map(addMissingStats);
@@ -191,7 +220,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     }
   };
 
-  vm.remove = function remove(item) {
+  vm.remove = function remove(item: DimItem) {
     vm.comparisons = vm.comparisons.filter((compare) => {
       return compare.index !== item.index;
     });
@@ -201,8 +230,8 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
     }
   };
 
-  vm.itemClick = function itemClick(item) {
-    const element = angular.element(document.getElementById(item.index));
+  vm.itemClick = function itemClick(item: DimItem) {
+    const element = angularElement(document.getElementById(item.index)!);
     if (!element || !element[0]) {
       throw new Error(`No element with id ${item.index}`);
     }
@@ -218,25 +247,26 @@ function CompareCtrl($scope, toaster, dimCompareService, dimStoreService, D2Stor
   $scope.$watchCollection('vm.comparisons', () => {
     const statBuckets = {};
 
-    function bucketStat(stat) {
+    function bucketStat(stat: { statHash: number; value?: number }) {
       if (stat && stat.value) {
         (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
       }
     }
 
-    vm.comparisons.forEach((item) => {
-      if (item.stats) {
+    vm.comparisons.forEach((item: DimItem) => {
+      if (item.stats && item.primStat) {
         item.stats.forEach(bucketStat);
         bucketStat(item.primStat);
-        bucketStat({ statHash: 0, value: (item.dtrRating || "0") });
+        bucketStat({ statHash: 0, value: (item.dtrRating || 0) });
       }
     });
 
     vm.statRanges = {};
-    _.each(statBuckets, (bucket, hash) => {
+    _.each(statBuckets, (bucket: any, hash) => {
       const statRange = {
         min: Math.min(...bucket),
-        max: Math.max(...bucket)
+        max: Math.max(...bucket),
+        enabled: false
       };
       statRange.enabled = statRange.min !== statRange.max;
       vm.statRanges[hash] = statRange;

@@ -1,12 +1,16 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
-import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 
 import template from './activities.html';
 import './activities.scss';
+import { IComponentOptions, IController, IScope } from 'angular';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { StoreServiceType } from '../inventory/d2-stores.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 
-export const ActivitiesComponent = {
+export const ActivitiesComponent: IComponentOptions = {
   controller: ActivitiesController,
   template,
   bindings: {
@@ -14,7 +18,20 @@ export const ActivitiesComponent = {
   }
 };
 
-function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next) {
+interface DimStoreWithActivities extends DimStore {
+  advisors: any;
+}
+
+function ActivitiesController(
+  this: IController & {
+    account: DestinyAccount;
+    settings: typeof settings;
+  },
+  $scope: IScope,
+  D2StoresService: StoreServiceType,
+  dimStoreService: StoreServiceType,
+  $i18next
+) {
   'ngInject';
 
   const vm = this;
@@ -25,17 +42,17 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
     return vm.settings.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  vm.settingsChanged = function() {
+  vm.settingsChanged = () => {
     vm.settings.save();
   };
 
   // TODO: it's time for a directive
-  vm.toggleSection = function(id) {
+  vm.toggleSection = (id) => {
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
     vm.settings.save();
   };
 
-  this.$onInit = function() {
+  this.$onInit = () => {
     subscribeOnScope($scope, getStoreService().getStoresStream(vm.account), init);
   };
 
@@ -50,7 +67,7 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
   // extra info in Trials cards in Store service, and it's more
   // efficient to just fish the info out of there.
 
-  function init(stores) {
+  function init(stores: DimStoreWithActivities[]) {
     if (_.isEmpty(stores)) {
       return;
     }
@@ -69,10 +86,8 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
 
     getDefinitions().then((defs) => {
       const rawActivities = stores[0].advisors.activities;
-      vm.activities = _.filter(rawActivities, (a) => {
-        return a.activityTiers && whitelist.includes(a.identifier);
-      });
-      vm.activities = _.sortBy(vm.activities, (a) => {
+      vm.activities = rawActivities.filter((a) => a.activityTiers && whitelist.includes(a.identifier));
+      vm.activities = _.sortBy(vm.activities, (a: any) => {
         const ix = whitelist.indexOf(a.identifier);
         return (ix === -1) ? 999 : ix;
       }).map((a) => processActivities(defs, stores, a));
@@ -88,7 +103,7 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
     });
   }
 
-  function processActivities(defs, stores, rawActivity) {
+  function processActivities(defs: D1ManifestDefinitions, stores: DimStoreWithActivities[], rawActivity) {
     const def = defs.Activity.get(rawActivity.display.activityHash);
     const activity = {
       hash: rawActivity.display.activityHash,
@@ -97,7 +112,9 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
       image: rawActivity.display.image,
       type: rawActivity.identifier === "nightfall" ? $i18next.t('Activities.Nightfall')
         : rawActivity.identifier === "heroicstrike" ? $i18next.t('Activities.WeeklyHeroic')
-          : defs.ActivityType.get(def.activityTypeHash).activityTypeName
+          : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
+      skulls: null as (Skull[] | null),
+      tiers: [] as ActivityTier[]
     };
 
     if (rawActivity.extended) {
@@ -125,7 +142,27 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
     return activity;
   }
 
-  function processActivity(defs, activityId, stores, tier, index) {
+  interface ActivityTier {
+    hash: string;
+    icon: string;
+    name: string;
+    complete: boolean;
+    characters: {
+      name: string;
+      lastPlayed: Date;
+      id: string;
+      icon: string;
+      steps: number[];
+    }[];
+  }
+
+  function processActivity(
+    defs: D1ManifestDefinitions,
+    activityId: string,
+    stores: DimStoreWithActivities[],
+    tier: any,
+    index: number
+  ): ActivityTier {
     const tierDef = defs.Activity.get(tier.activityHash);
 
     const name = tier.activityData.recommendedLight === 390 ? 390
@@ -143,20 +180,25 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
         lastPlayed: store.lastPlayed,
         id: store.id,
         icon: store.icon,
-        steps: steps
+        steps
       };
     });
 
     return {
       hash: tierDef.activityHash,
       icon: tierDef.icon,
-      name: name,
+      name,
       complete: tier.activityData.isCompleted,
-      characters: characters
+      characters
     };
   }
 
-  function i18nActivitySkulls(skulls, defs) {
+  interface Skull {
+    displayName: string;
+    description: string;
+  }
+
+  function i18nActivitySkulls(skulls, defs: D1ManifestDefinitions): Skull[] {
     const skullHashes = [
       { displayName: "Heroic", hash: 0 },
       { displayName: "Arc Burn", hash: 1 },
@@ -179,16 +221,18 @@ function ActivitiesController($scope, D2StoresService, dimStoreService, $i18next
       { displayName: "Catapult", hash: 18 },
       { displayName: "Epic", hash: 20 }];
 
-    for (let i = 0, hash; i < skulls[0].length; i++) {
-      hash = _.where(skullHashes, { displayName: skulls[0][i].displayName });
-      hash = hash.length ? hash[0].hash : -1;
+    for (const skull of skulls[0]) {
+      const skullHash = skullHashes.find((sh) => sh.displayName === skull.displayName);
+      const hash = skullHash ? skullHash[0].hash : -1;
       if (hash >= 0) {
         if (hash < 20) { // set all skulls except for epic from heroic playlist...
-          skulls[0][i].displayName = defs.Activity.get(870614351).skulls[hash].displayName;
-          skulls[0][i].description = defs.Activity.get(870614351).skulls[hash].description;
+          const activity = defs.Activity.get(870614351);
+          skull.displayName = activity.skulls[hash].displayName;
+          skull.description = activity.skulls[hash].description;
         } else { // set Epic skull based off of a nightfall
-          skulls[0][i].displayName = defs.Activity.get(2234107290).skulls[0].displayName;
-          skulls[0][i].description = defs.Activity.get(2234107290).skulls[0].description;
+          const activity = defs.Activity.get(870614351);
+          skull.displayName = activity.skulls[0].displayName;
+          skull.description = activity.skulls[0].description;
         }
       }
     }

@@ -64,9 +64,11 @@ export interface DimStat {
   name: string;
   id: number;
   sort: number;
-  value: number;
+  value?: number;
   maximumValue: number;
   bar: boolean;
+  /** Is this a placeholder for a "missing" stat (for compare view) */
+  missingStat?: boolean;
 }
 
 export interface DimObjective {

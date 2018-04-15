@@ -554,7 +554,7 @@ export function searchFilters(
         return item.dimInfo && item.dimInfo.notes && item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
       },
       stattype(item: DimItem, predicate: string) {
-        return item.stats && _.any(item.stats, (s) => s.name.toLowerCase() === predicate && s.value > 0);
+        return item.stats && _.any(item.stats, (s) => Boolean(s.name.toLowerCase() === predicate && s.value && s.value > 0));
       },
       stackable(item: DimItem) {
         return item.maxStackSize > 1;
