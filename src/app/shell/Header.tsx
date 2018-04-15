@@ -10,6 +10,7 @@ import { $state, $transitions, ngDialog } from '../ngimport-more';
 import { SearchFilterComponent } from '../search/search-filter.component';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import AccountSelect from '../accounts/account-select';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './header.scss';
 
 // tslint:disable-next-line:no-implicit-dependencies
@@ -209,14 +210,21 @@ export default class Header extends React.Component<Props, State> {
       <div id="header">
         <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>
           <i className="fa fa-bars" />
-          {dropdownOpen &&
-            <ClickOutside className="dropdown" onClickOutside={this.hideDropdown}>
-              {destinyLinks}
-              {links.length > 0 && <hr/>}
-              <Link state='settings' text='Settings.Settings'/>
-              <hr/>
-              {dimLinks}
-            </ClickOutside>}
+          <TransitionGroup>
+            {dropdownOpen &&
+              <CSSTransition
+                classNames="dropdown"
+                timeout={{ enter: 500, exit: 3000 }}
+              >
+                <ClickOutside key="dropdown" className="dropdown" onClickOutside={this.hideDropdown}>
+                  {destinyLinks}
+                  {links.length > 0 && <hr/>}
+                  <Link state='settings' text='Settings.Settings'/>
+                  <hr/>
+                  {dimLinks}
+                </ClickOutside>
+              </CSSTransition>}
+          </TransitionGroup>
         </span>
 
         <img

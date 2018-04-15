@@ -37,6 +37,7 @@
   "devDependencies": {
     "@sentry/cli": "^1.30.4",
     "@types/classnames": "^2.2.3",
+    "@types/react-transition-group": "^2.0.8",
     "autoprefixer": "^8.2.0",
     "awesome-typescript-loader": "^5.0.0",
     "babel-core": "^6.26.0",
@@ -136,6 +137,7 @@
     "react": "^16.3.1",
     "react-beautiful-dnd": "^6.0.2",
     "react-dom": "^16.3.1",
+    "react-transition-group": "^2.3.1",
     "react-view-pager": "^0.6.0",
     "react2angular": "^3.2.1",
     "rxjs": "^5.5.10",

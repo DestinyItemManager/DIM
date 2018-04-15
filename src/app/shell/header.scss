@@ -118,6 +118,23 @@
       }
     }
   }
+  .dropdown-enter {
+    transform: translateX(-250px);
+  }
+
+  .dropdown-enter.dropdown-enter-active {
+    transform: translateX(0);
+    transition: transform 200ms ease-out;
+  }
+
+  .dropdown-exit {
+    transform: translateX(0);
+  }
+
+  .dropdown-exit.dropdown-exit-active {
+    transform: translateX(-250px);
+    transition: transform 200ms ease-out;
+  }
 
   .header-links {
     display: flex;
