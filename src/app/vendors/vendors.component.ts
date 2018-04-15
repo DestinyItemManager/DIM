@@ -3,17 +3,23 @@ import { settings } from '../settings/settings';
 
 import template from './vendors.html';
 import './vendors.scss';
+import { IComponentOptions, IController, IScope } from 'angular';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
-export const VendorsComponent = {
+export const VendorsComponent: IComponentOptions = {
   controller: VendorsController,
-  template: template,
+  template,
   bindings: {
     account: '<'
   },
   controllerAs: 'vm'
 };
 
-function VendorsController($scope, $state, $q, dimStoreService, dimVendorService) {
+function VendorsController(
+  this: IController & { account: DestinyAccount },
+  $scope: IScope,
+  dimVendorService
+) {
   'ngInject';
 
   const vm = this;
@@ -28,7 +34,7 @@ function VendorsController($scope, $state, $q, dimStoreService, dimVendorService
 
   vm.settings = settings;
 
-  this.$onInit = function() {
+  this.$onInit = () => {
     subscribeOnScope($scope, dimVendorService.getVendorsStream(vm.account), ([stores, vendors]) => {
       vm.stores = stores;
       vm.vendors = vendors;

@@ -1,9 +1,9 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 /**
  * Filters a list of categories down to only categories that match a certain property.
  */
-function vendorTab(categories, prop) {
+export function vendorTab(categories, prop) {
   if (!prop || !prop.length) {
     return categories;
   }
@@ -13,7 +13,7 @@ function vendorTab(categories, prop) {
 /**
  * Filters a list of items down to items that match one of a set of named filters.
  */
-function vendorTabItems(items, prop) {
+export function vendorTabItems(items, prop) {
   if (!prop || !prop.length) {
     return items;
   }
@@ -26,8 +26,3 @@ function vendorTabItems(items, prop) {
     hasBounties: (saleItem) => (saleItem.item.type === 'Bounties')
   }[prop]);
 }
-
-export {
-  vendorTab,
-  vendorTabItems
-};

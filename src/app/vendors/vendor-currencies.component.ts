@@ -1,7 +1,8 @@
 import { flatMap } from '../util';
 import template from './vendor-currencies.component.html';
+import { IComponentOptions, IController, IScope } from 'angular';
 
-export const VendorCurrencies = {
+export const VendorCurrencies: IComponentOptions = {
   controller: VendorCurrenciesCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -9,10 +10,10 @@ export const VendorCurrencies = {
     totalCoins: '<',
     propertyFilter: '<'
   },
-  template: template
+  template
 };
 
-function VendorCurrenciesCtrl($scope, $filter) {
+function VendorCurrenciesCtrl(this: IController, $scope: IScope, $filter) {
   'ngInject';
 
   const vm = this;
@@ -20,7 +21,7 @@ function VendorCurrenciesCtrl($scope, $filter) {
   $scope.$watchGroup(['vm.vendorCategories', 'vm.propertyFilter'], () => {
     const allCurrencies = {};
     const vendorTabItems = $filter('vendorTabItems');
-    const allItems = vendorTabItems(flatMap(vm.vendorCategories, (category) => {
+    const allItems = vendorTabItems(flatMap(vm.vendorCategories, (category: any) => {
       if (!vm.propertyFilter || !vm.propertyFilter.length || category[vm.propertyFilter]) {
         return category.saleItems;
       }

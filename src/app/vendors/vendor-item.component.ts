@@ -1,28 +1,35 @@
-import angular from 'angular';
-import _ from 'underscore';
-import { sum } from '../util';
+import { IComponentOptions, IController, extend } from 'angular';
+import * as _ from 'underscore';
+import { sum, flatMap } from '../util';
 import template from './vendor-item.html';
 import dialogTemplate from './vendor-item-dialog.html';
+import { StoreServiceType } from '../inventory/d2-stores.service';
 
-export const VendorItem = {
+export const VendorItem: IComponentOptions = {
   bindings: {
     saleItem: '<',
     totalCoins: '<'
   },
-  template: template,
+  template,
   controller: VendorItemCtrl
 };
 
-let otherDialog = null;
+let otherDialog: any = null;
 
-function VendorItemCtrl($scope, $element, ngDialog, dimStoreService) {
+function VendorItemCtrl(
+  this: IController,
+  $scope,
+  $element,
+  ngDialog,
+  dimStoreService: StoreServiceType
+) {
   'ngInject';
 
   const vm = this;
 
-  let dialogResult = null;
+  let dialogResult: any = null;
 
-  vm.clicked = function(e) {
+  vm.clicked = (e) => {
     e.stopPropagation();
 
     if (otherDialog) {
@@ -40,11 +47,11 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService) {
     } else {
       const item = vm.saleItem.item;
 
-      const compareItems = _.flatten(dimStoreService.getStores().map((store) => {
-        return _.filter(store.items, { hash: item.hash });
-      }));
+      const compareItems = flatMap(dimStoreService.getStores(), (store) => {
+        return store.items.filter((i) => i.hash === item.hash);
+      });
 
-      const compareItemCount = sum(compareItems, 'amount');
+      const compareItemCount = sum(compareItems, (i) => i.amount);
 
       const itemElement = $element[0].getElementsByClassName('item')[0];
 
@@ -53,21 +60,20 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService) {
         overlay: false,
         className: `move-popup-dialog vendor-move-popup ${vm.extraMovePopupClass || ''}`,
         showClose: false,
-        scope: angular.extend($scope.$new(true), {
+        scope: extend($scope.$new(true), {
         }),
         data: itemElement, // Dialog anchor
         controllerAs: 'vm',
-        controller: function() {
-          const innerVm = this;
-          angular.extend(innerVm, {
-            settings: innerVm.settings,
-            item: item,
+        controller() {
+          extend(this, {
+            settings: this.settings,
+            item,
             saleItem: vm.saleItem,
             unlockStores: vm.saleItem.unlockedByCharacter.map((id) => _.find(dimStoreService.getStores(), { id })),
-            compareItems: compareItems,
+            compareItems,
             compareItem: _.first(compareItems),
-            compareItemCount: compareItemCount,
-            setCompareItem: function(item) {
+            compareItemCount,
+            setCompareItem(item) {
               this.compareItem = item;
             }
           });
@@ -86,7 +92,7 @@ function VendorItemCtrl($scope, $element, ngDialog, dimStoreService) {
     }
   };
 
-  vm.$onDestroy = function() {
+  vm.$onDestroy = () => {
     if (dialogResult) {
       dialogResult.close();
     }

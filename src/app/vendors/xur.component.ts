@@ -1,15 +1,16 @@
 import { subscribeOnScope } from '../rx-utils';
 import template from './xur.html';
 import { getActivePlatform } from '../accounts/platform.service';
+import { IComponentOptions, IController, IScope } from 'angular';
 
-export const Xur = {
-  template: template,
+export const Xur: IComponentOptions = {
+  template,
   controller: XurController
 };
 
 const xurVendorId = 2796397637;
 
-function XurController($scope, dimVendorService) {
+function XurController(this: IController, $scope: IScope, dimVendorService) {
   'ngInject';
 
   const vm = this;

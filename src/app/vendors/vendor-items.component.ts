@@ -1,7 +1,8 @@
 import { settings } from '../settings/settings';
 import template from './vendor-items.html';
+import { IComponentOptions } from 'angular';
 
-export const VendorItems = {
+export const VendorItems: IComponentOptions = {
   controller: VendorItemsCtrl,
   bindings: {
     vendors: '=vendorsData',
@@ -10,7 +11,7 @@ export const VendorItems = {
     activeTab: '<',
     extraMovePopupClass: '<'
   },
-  template: template
+  template
 };
 
 function VendorItemsCtrl() {
@@ -20,7 +21,7 @@ function VendorItemsCtrl() {
 
   vm.settings = settings;
 
-  vm.toggleSection = function(id) {
+  vm.toggleSection = (id) => {
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
     vm.settings.save();
   };

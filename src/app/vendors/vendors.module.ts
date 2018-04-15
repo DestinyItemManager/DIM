@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { VendorService } from './vendor.service';
 import { VendorsComponent } from './vendors.component';
@@ -7,9 +7,9 @@ import { VendorItem } from './vendor-item.component';
 import { VendorCurrencies } from './vendor-currencies.component';
 import { vendorTab, vendorTabItems } from './vendors.filters';
 import { Xur } from './xur.component';
+import { StateProvider } from '@uirouter/angularjs';
 
-export default angular
-  .module('VendorsModule', [])
+export default module('VendorsModule', [])
   .factory('dimVendorService', VendorService)
   .component('vendors', VendorsComponent)
   .component('vendorItems', VendorItems)
@@ -19,7 +19,7 @@ export default angular
   .filter('vendorTab', () => vendorTab)
   .filter('vendorTabItems', () => vendorTabItems)
   .filter('values', () => Object.values)
-  .config(($stateProvider) => {
+  .config(($stateProvider: StateProvider) => {
     'ngInject';
 
     $stateProvider.state({
