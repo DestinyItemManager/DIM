@@ -15,6 +15,6 @@
   ],
   "theme_color": "#404141",
   "background_color": "#434444",
-  "display": "minimal-ui",
+  "display": "browser",
   "start_url": "/index.html?utm_source=homescreen"
 }
