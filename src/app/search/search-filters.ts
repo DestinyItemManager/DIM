@@ -5,6 +5,7 @@ import { TagInfo, settings } from '../settings/settings';
 import { DimItem, DimD1Item } from '../inventory/store/d2-item-factory.service';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { sortStores } from '../shell/dimAngularFilters.filter';
 
 interface SearchConfig {
   keywords: string[];
@@ -87,7 +88,8 @@ export function buildSearchConfig(
     equipped: ['equipped'],
     transferable: ['transferable', 'movable'],
     infusable: ['infusable', 'infuse'],
-    location: ['invault', 'incurrentchar', 'inleftchar', 'inmiddlechar', 'inrightchar']
+    owner: ['invault', 'incurrentchar'],
+    location: ['inleftchar', 'inmiddlechar', 'inrightchar']
   };
 
   if (destinyVersion === 1) {
@@ -366,6 +368,8 @@ export function searchFilters(
         }
       }
 
+      _sortedStores = null;
+
       return (item) => {
         return filters.every((filter) => {
           const result = this.filters[filter.predicate](item, filter.value);
@@ -510,39 +514,29 @@ export function searchFilters(
         // We filter out the "Default Shader" because everybody has one per character
         return item.hash !== 4248210736 && _duplicates[item.hash] && _duplicates[item.hash].length > 1;
       },
-      location(item: DimItem, predicate: string) {
-        const activeStore = storeService.getActiveStore();
-        let storeIndex = 0;
+      owner(item: DimItem, predicate: string) {
         let desiredStore = "";
-        if (_sortedStores === null) {
-          const stores = storeService.getStores();
-
-          // sortStores code from dimAngularFilters.filter.ts
-          // switch (settings.characterOrder) {
-          switch (predicate) {
-              case 'mostRecent':
-              _sortedStores = _.sortBy(stores, 'lastPlayed').reverse();
-              break;
-            case 'mostRecentReverse':
-              _sortedStores = _.sortBy(stores, (store) => (store.isVault) ? Infinity : store.lastPlayed);
-              break;
-            default:
-              _sortedStores = (stores.length && stores[0].destinyVersion === 1) ? _.sortBy(stores, 'id') : stores;
-          }
-
-        }
-
         switch (predicate) {
           case 'invault':
             desiredStore = "vault";
             break;
           case 'incurrentchar':
+            const activeStore = storeService.getActiveStore();
             if (activeStore) {
               desiredStore = activeStore.id;
             } else {
               return false;
             }
-            break;
+        }
+        return item.owner === desiredStore;
+      },
+      location(item: DimItem, predicate: string) {
+        let storeIndex = 0;
+        if (_sortedStores === null) {
+          _sortedStores = sortStores(storeService.getStores(), settings.characterOrder);
+        }
+
+        switch (predicate) {
           case 'inleftchar':
             storeIndex = 0;
             break;
@@ -560,11 +554,7 @@ export function searchFilters(
             return false;
         }
 
-        if (['invault', 'incurrentchar'].includes(predicate)) {
-          return item.id === desiredStore;
-        } else {
-          return item.owner === _sortedStores[storeIndex].id || (item.bucket.accountWide && item.owner !== "vault");
-        }
+        return item.bucket.accountWide ? item.owner !== 'vault' : item.owner === _sortedStores[storeIndex].id;
       },
       classType(item: DimItem, predicate: string) {
         let value;
