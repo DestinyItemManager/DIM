@@ -87,7 +87,7 @@ function SearchFilterCtrl(
       {
         words: searchConfig.keywords,
         match: /\b([\w:]{3,})$/i,
-        search: (term, callback) => {
+        search(term, callback) {
           if (term) {
             let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
             words = _.sortBy(words, (word: string) => word.indexOf(term.toLowerCase()));
@@ -102,7 +102,7 @@ function SearchFilterCtrl(
         },
         // TODO: use "template" to include help text
         index: 1,
-        replace: (word) => {
+        replace(word) {
           word = word.toLowerCase();
           return (word.startsWith('is:') && word.startsWith('not:'))
             ? `${word} ` : word;
