@@ -12,7 +12,7 @@ import {
   DestinyActivityModifierDefinition,
   DestinyCharacterComponent
   } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
 import * as _ from 'underscore';

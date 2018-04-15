@@ -1,5 +1,5 @@
 import { angular2react } from 'angular2react';
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 import { t } from 'i18next';
 import { $injector } from 'ngimport';
 import * as React from 'react';

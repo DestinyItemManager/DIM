@@ -6,7 +6,7 @@ import { removeToken } from '../oauth/oauth-token.service';
 import './account-select.scss';
 import { compareAccounts, DestinyAccount } from './destiny-account.service';
 import { getPlatforms } from './platform.service';
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 
 const Account = React.forwardRef((
   {

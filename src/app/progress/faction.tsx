@@ -6,7 +6,7 @@ import {
   DestinyProgression,
   DestinyCharacterComponent
   } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
