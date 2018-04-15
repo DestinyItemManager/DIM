@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { LoadoutBuilderComponent } from './loadout-builder.component';
 import { LoadoutBuilderItem } from './loadout-builder-item.component';
@@ -7,15 +7,15 @@ import { LoadoutBuilderCharacterSelect } from './loadout-builder-character-selec
 import { LoadoutBuilderCharacterPopup } from './loadout-builder-character-popup.component';
 
 import './loadout-builder.scss';
+import { StateProvider } from '@uirouter/angularjs';
 
-export default angular
-  .module('loadoutBuilderModule', [])
+export default module('loadoutBuilderModule', [])
   .component('loadoutBuilder', LoadoutBuilderComponent)
   .component('loadoutBuilderItem', LoadoutBuilderItem)
   .component('loadoutBuilderLocks', LoadoutBuilderLocks)
   .component('loadoutBuilderCharacterSelect', LoadoutBuilderCharacterSelect)
   .component('loadoutBuilderCharacterPopup', LoadoutBuilderCharacterPopup)
-  .config(($stateProvider) => {
+  .config(($stateProvider: StateProvider) => {
     'ngInject';
 
     $stateProvider.state({

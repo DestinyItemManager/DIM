@@ -1,8 +1,10 @@
-import angular from 'angular';
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { sum, flatMap } from '../util';
 import template from './loadout-builder-item.html';
 import dialogTemplate from './loadout-builder-item-dialog.html';
+import { extend, IController } from 'angular';
+import { StoreServiceType } from '../inventory/d2-stores.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 export const LoadoutBuilderItem = {
   controller: LoadoutBuilderItemCtrl,
@@ -11,17 +13,25 @@ export const LoadoutBuilderItem = {
     itemData: '<',
     shiftClickCallback: '='
   },
-  template: template
+  template
 };
 
-function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
+function LoadoutBuilderItemCtrl(
+  this: IController & {
+    itemData: DimItem;
+  },
+  $scope,
+  $element,
+  ngDialog,
+  dimStoreService: StoreServiceType
+) {
   'ngInject';
 
   const vm = this;
-  let dialogResult = null;
+  let dialogResult: any = null;
 
-  angular.extend(vm, {
-    itemClicked: function(item, e) {
+  extend(vm, {
+    itemClicked(item: DimItem, e) {
       e.stopPropagation();
 
       if (dialogResult) {
@@ -33,10 +43,10 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
         vm.shiftClickCallback(vm.itemData);
       } else {
         const compareItems = flatMap(dimStoreService.getStores(), (store) => {
-          return _.filter(store.items, { hash: item.hash });
+          return store.items.filter((i) => i.hash === item.hash);
         });
 
-        const compareItemCount = sum(compareItems, 'amount');
+        const compareItemCount = sum(compareItems, (i) => i.amount);
         const itemElement = $element[0].getElementsByClassName('item')[0];
 
         dialogResult = ngDialog.open({
@@ -44,22 +54,22 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
           overlay: false,
           className: 'move-popup-dialog vendor-move-popup',
           showClose: false,
-          scope: angular.extend($scope.$new(true), {
+          scope: extend($scope.$new(true), {
           }),
           data: itemElement,
           controllerAs: 'vm',
-          controller: [function() {
+          controller() {
             const vm = this;
-            angular.extend(vm, {
-              item: item,
-              compareItems: compareItems,
+            extend(vm, {
+              item,
+              compareItems,
               compareItem: _.first(compareItems),
-              compareItemCount: compareItemCount,
-              setCompareItem: function(item) {
+              compareItemCount,
+              setCompareItem(item) {
                 this.compareItem = item;
               }
             });
-          }],
+          },
           // Setting these focus options prevents the page from
           // jumping as dialogs are shown/hidden
           trapFocus: false,
@@ -71,7 +81,7 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
         });
       }
     },
-    close: function() {
+    close() {
       if (dialogResult) {
         dialogResult.close();
       }
@@ -85,4 +95,3 @@ function LoadoutBuilderItemCtrl($scope, $element, ngDialog, dimStoreService) {
     }
   });
 }
-

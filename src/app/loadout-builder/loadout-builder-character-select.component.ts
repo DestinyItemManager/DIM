@@ -1,7 +1,8 @@
 import template from './loadout-builder-character-select.html';
 import dialogTemplate from './loadout-builder-character-select-dialog.html';
+import { IComponentOptions, IController } from 'angular';
 
-export const LoadoutBuilderCharacterSelect = {
+export const LoadoutBuilderCharacterSelect: IComponentOptions = {
   controller: LoadoutBuilderCharacterSelectCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -9,20 +10,20 @@ export const LoadoutBuilderCharacterSelect = {
     selectedCharacter: '=',
     onSelectedChange: '&'
   },
-  template: template
+  template
 };
 
-function LoadoutBuilderCharacterSelectCtrl($scope, ngDialog) {
+function LoadoutBuilderCharacterSelectCtrl(this: IController, $scope, ngDialog) {
   'ngInject';
 
   const vm = this;
-  let dialogResult = null;
+  let dialogResult: any = null;
 
   vm.onSelected = function onSelected(idx) {
     if (vm.selectedCharacter !== idx) {
       const prev = vm.selectedCharacter;
       vm.selectedCharacter = idx;
-      vm.onSelectedChange({ prev: prev, new: idx });
+      vm.onSelectedChange({ prev, new: idx });
     }
     ngDialog.closeAll();
   };

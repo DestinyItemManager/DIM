@@ -1,9 +1,9 @@
-import angular from 'angular';
-import _ from 'underscore';
+import { IComponentOptions, extend } from 'angular';
+import * as _ from 'underscore';
 import template from './loadout-builder-locks.html';
 import dialogTemplate from './loadout-builder-locks-dialog.html';
 
-export const LoadoutBuilderLocks = {
+export const LoadoutBuilderLocks: IComponentOptions = {
   controller: LoadoutBuilderLocksCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -17,23 +17,23 @@ export const LoadoutBuilderLocks = {
     getStore: '&',
     onPerkLocked: '&'
   },
-  template: template
+  template
 };
 
 function LoadoutBuilderLocksCtrl($scope, ngDialog) {
   'ngInject';
 
   const vm = this;
-  let dialogResult = null;
+  let dialogResult: any = null;
 
-  angular.extend(vm, {
-    getFirstPerk: function(lockedPerks, type) {
-      return vm.lockedPerks[type][_.keys(vm.lockedPerks[type])[0]];
+  extend(vm, {
+    getFirstPerk(lockedPerks, type) {
+      return lockedPerks[type][_.keys(lockedPerks[type])[0]];
     },
-    hasLockedPerks: function(lockedPerks, type) {
+    hasLockedPerks(lockedPerks, type) {
       return _.keys(lockedPerks[type]).length > 0;
     },
-    addPerkClicked: function(perks, lockedPerks, type, e) {
+    addPerkClicked(perks, lockedPerks, type, e) {
       e.stopPropagation();
       if (dialogResult) {
         dialogResult.close();
@@ -45,9 +45,9 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
         className: 'perk-select-popup',
         showClose: false,
         appendTo: `#locked-perks-${type}`,
-        scope: angular.extend($scope.$new(true), {}),
+        scope: extend($scope.$new(true), {}),
         controllerAs: 'vmd',
-        controller: function($document, $scope) {
+        controller($document, $scope) {
           'ngInject';
           const vmd = this;
 
@@ -75,11 +75,11 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
             $document.off('keyup', keydown);
           });
 
-          angular.extend(vmd, {
-            perks: perks,
-            lockedPerks: lockedPerks,
+          extend(vmd, {
+            perks,
+            lockedPerks,
             shiftHeld: false,
-            type: type,
+            type,
             onPerkLocked: vm.onPerkLocked
           });
         },
@@ -89,7 +89,7 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
         preserveFocus: false
       });
     },
-    close: function() {
+    close() {
       if (dialogResult) {
         dialogResult.close();
       }
@@ -97,4 +97,3 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
     }
   });
 }
-
