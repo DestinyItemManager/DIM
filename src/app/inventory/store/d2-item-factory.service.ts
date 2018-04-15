@@ -64,9 +64,11 @@ export interface DimStat {
   name: string;
   id: number;
   sort: number;
-  value: number;
+  value?: number;
   maximumValue: number;
   bar: boolean;
+  /** Is this a placeholder for a "missing" stat (for compare view) */
+  missingStat?: boolean;
 }
 
 export interface DimObjective {
@@ -237,12 +239,15 @@ export interface DimItem {
   ratingCount: number;
   // timestamp of when reviews were attached - a hack to help React update in the short term
   reviewsUpdated?: number;
+  /** Is the review data locally cached? */
+  isLocallyCached?: boolean;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   inCategory(categoryName: string): boolean;
   isEngram(): boolean;
   canBeInLoadout(): boolean;
+  updateManualMoveTimestamp(): void;
 }
 
 /**

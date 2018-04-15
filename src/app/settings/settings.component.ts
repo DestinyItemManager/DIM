@@ -14,6 +14,7 @@ import { IComponentOptions, IController, IScope, IRootScopeService } from 'angul
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
+import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
 
 export const SettingsComponent: IComponentOptions = {
   template,
@@ -25,7 +26,6 @@ export function SettingsController(
   this: IController,
   loadingTracker,
   $scope: IScope,
-  dimCsvService,
   dimStoreService: StoreServiceType,
   D2StoresService: StoreServiceType,
   $i18next,
@@ -126,12 +126,12 @@ export function SettingsController(
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
 
   vm.downloadWeaponCsv = () => {
-    dimCsvService.downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Weapons");
+    downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Weapons");
     ga('send', 'event', 'Download CSV', 'Weapons');
   };
 
   vm.downloadArmorCsv = () => {
-    dimCsvService.downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Armor");
+    downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Armor");
     ga('send', 'event', 'Download CSV', 'Armor');
   };
 

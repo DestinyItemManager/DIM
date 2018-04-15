@@ -21,7 +21,7 @@ export function destinyAccountRoute($stateProvider: StateProvider) {
     lazyLoad($transition$) {
       const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
       // tslint:disable-next-line:space-in-parens
-      return import(/* webpackChunkName: "destiny1" */ '../destiny1/destiny1.module.js')
+      return import(/* webpackChunkName: "destiny1" */ '../destiny1/destiny1.module')
         .then((mod) => $ocLazyLoad.load(mod.default));
     }
   });
