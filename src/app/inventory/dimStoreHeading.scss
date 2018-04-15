@@ -192,6 +192,11 @@ dim-store-heading {
   .vault-full {
     background-color: #cc3535;
   }
+  .vault-bucket-full {
+    color: #e12929;
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3)
+  }
 }
 
 .loadout-button {

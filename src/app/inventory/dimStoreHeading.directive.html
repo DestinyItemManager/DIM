@@ -37,6 +37,7 @@
 
   <div class="vault-bucket"
        ng-repeat="(bucketId, vaultCount) in vm.store.d2VaultCounts"
+       ng-class="{ 'vault-bucket-full': vaultCount.count == capacity }"
        ng-if="::vm.store.destinyVersion === 2"
        ng-init="capacity = vaultCount.bucket.capacity"
        press-tip="{{ vaultCount.count }}/{{ ::capacity }}"
