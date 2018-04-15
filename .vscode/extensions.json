@@ -6,7 +6,6 @@
 		"eg2.tslint",
 		"dbaeumer.vscode-eslint",
 		"Angular.ng-template",
-		"miclo.sort-typescript-imports",
 		"mkaufman.htmlhint"
 	]
 }
