@@ -1,4 +1,4 @@
-import angular from 'angular';
+import { module } from 'angular';
 
 import { SearchFilterComponent } from './search-filter.component';
 import { FilterLinkComponent } from './filter-link.component';
@@ -8,8 +8,7 @@ function SearchService() {
   return { query: '' };
 }
 
-export default angular
-  .module('searchModule', [])
+export default module('searchModule', [])
   .component('dimSearchFilter', SearchFilterComponent)
   .component('dimFilterLink', FilterLinkComponent)
   .service('dimSearchService', SearchService)

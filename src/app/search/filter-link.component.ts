@@ -1,32 +1,33 @@
 import template from './filter-link.html';
+import { IController, IWindowService, IComponentOptions } from 'angular';
 
 /**
  * Link to a specific filter in search. Clicking adds this term to the search.
  * Example: <dim-filter-link filter="is:arc"></dim-filter-link>
  */
-export const FilterLinkComponent = {
-  template: template,
+export const FilterLinkComponent: IComponentOptions = {
+  template,
   controller: FilterLinkCtrl,
   bindings: {
     filter: '@'
   }
 };
 
-function FilterLinkCtrl(dimSearchService, $window, $i18next) {
+function FilterLinkCtrl(this: IController, dimSearchService, $window: IWindowService, $i18next) {
   'ngInject';
 
-  this.addFilter = function(filter) {
+  this.addFilter = (filter: string) => {
     let itemNameFilter = false;
 
     if (filter === 'item name') {
       itemNameFilter = true;
-      filter = $window.prompt($i18next.t('Filter.EnterName'));
+      filter = $window.prompt($i18next.t('Filter.EnterName')) || '';
       filter = filter.trim();
     }
 
     if (filter === 'notes:value') {
       itemNameFilter = true;
-      filter = $window.prompt($i18next.t('Filter.EnterNote'));
+      filter = $window.prompt($i18next.t('Filter.EnterNote')) || '';
       filter = `notes:"${filter.trim()}"`;
     }
 
@@ -67,11 +68,7 @@ function FilterLinkCtrl(dimSearchService, $window, $i18next) {
     if (itemNameFilter) {
       dimSearchService.query = filter + (text.length ? ` ${text}` : '');
     } else if ((`${text} `).indexOf(`${filter} `) < 0) {
-      if (text.length > 0) {
-        dimSearchService.query = `${text} ${filter}`;
-      } else {
-        dimSearchService.query = filter;
-      }
+      dimSearchService.query = (text.length > 0) ? `${text} ${filter}` : filter;
     }
   };
 }
