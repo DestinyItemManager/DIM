@@ -86,7 +86,7 @@ function ActivitiesController(
 
     getDefinitions().then((defs) => {
       const rawActivities = stores[0].advisors.activities;
-      vm.activities = rawActivities.filter((a) => a.activityTiers && whitelist.includes(a.identifier));
+      vm.activities = Object.values(rawActivities).filter((a: any) => a.activityTiers && whitelist.includes(a.identifier));
       vm.activities = _.sortBy(vm.activities, (a: any) => {
         const ix = whitelist.indexOf(a.identifier);
         return (ix === -1) ? 999 : ix;
