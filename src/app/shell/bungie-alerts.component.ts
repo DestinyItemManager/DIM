@@ -3,6 +3,7 @@ import { equals } from 'angular';
 import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
 import { Observable } from 'rxjs/Observable';
 import '../rx-operators';
+import { subscribeOnScope } from '../rx-utils';
 
 export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   // Fetch global alerts, but swallow errors
@@ -21,17 +22,13 @@ export const BungieAlertsComponent = {
  * A component that will check for Bungie alerts every 5 minutes and publish them as toasts.
  * Each alert will only be shown once per session.
  */
-function BungieAlertsCtrl($interval, toaster, $i18next) {
+function BungieAlertsCtrl($scope, toaster, $i18next) {
   'ngInject';
 
-  this.$onInit = function() {
-    // Poll every 10 minutes for new alerts
-    this.interval = $interval(pollBungieAlerts, 10 * 60 * 1000);
-    pollBungieAlerts();
-  };
-
-  this.$onDestroy = function() {
-    $interval.cancel(this.interval);
+  this.$onInit = () => {
+    subscribeOnScope($scope, alerts$, (alerts) => {
+      alerts.forEach(showAlertToaster);
+    });
   };
 
   // Memoize so we only show each alert once per session
@@ -48,12 +45,4 @@ function BungieAlertsCtrl($interval, toaster, $i18next) {
       body: `<p>${alert.body}</p>${twitter}`
     });
   }, (alert) => `${alert.key}-${alert.timestamp}`) as (alert: GlobalAlert) => void;
-
-  function pollBungieAlerts() {
-    getGlobalAlerts()
-      .then((alerts) => {
-        alerts.forEach(showAlertToaster);
-      })
-      .catch(() => { return; });
-  }
 }
