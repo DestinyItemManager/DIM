@@ -3,11 +3,12 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
-const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -15,13 +16,6 @@ const NotifyPlugin = require('notify-webpack-plugin');
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 const packageJson = require('../package.json');
-
-const nodeModulesDir = path.join(__dirname, '../node_modules');
-
-// https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
-const preMinifiedDeps = [
-  'underscore/underscore-min.js'
-];
 
 module.exports = (env) => {
   const isDev = env === 'dev';
@@ -33,6 +27,8 @@ module.exports = (env) => {
   const versionNoDots = version.replace(/\./g, '');
 
   const config = {
+    mode: isDev ? 'development' : 'production',
+
     entry: {
       main: './src/index.js',
       browsercheck: './src/browsercheck.js',
@@ -43,17 +39,45 @@ module.exports = (env) => {
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: '[name]-[chunkhash:6].js',
-      chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
+      filename: '[name]-[contenthash:6].js',
+      chunkFilename: '[id]-[contenthash:6].js'
     },
 
-    stats: 'errors-only',
+    stats: 'minimal',
+
+    devtool: 'source-map',
 
     performance: {
+      // Don't warn about too-large chunks
       hints: false
     },
 
+    optimization: {
+      // We always want the chunk name, otherwise it's just numbers
+      namedChunks: true,
+      // Extract the runtime into a separate chunk
+      runtimeChunk: 'single',
+      splitChunks: {
+        chunks: "all",
+        automaticNameDelimiter: "-"
+      },
+      minimizer: [
+        new UglifyJSPlugin({
+          cache: true,
+          parallel: true,
+          exclude: [/sqlLib/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
+          uglifyOptions: {
+            compress: { warnings: false },
+            output: { comments: false }
+          },
+          sourceMap: true
+        })
+      ]
+    },
+
     module: {
+      strictExportPresence: true,
+
       rules: [
         {
           test: /\.js$/,
@@ -64,11 +88,10 @@ module.exports = (env) => {
           }
         }, {
           test: /\.html$/,
-          use: [
-            'raw-loader',
-            'extract-loader',
-            'html-loader'
-          ]
+          loader: 'html-loader',
+          options: {
+            exportAsEs6Default: true
+          }
         }, {
           test: /\.(jpg|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
@@ -78,22 +101,18 @@ module.exports = (env) => {
           }
         }, {
           test: /\.scss$/,
-          loader: ExtractTextPlugin.extract({
-            use: [
-              'css-loader',
-              'postcss-loader',
-              'sass-loader'
-            ],
-            fallback: 'style-loader'
-          })
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'postcss-loader',
+            'sass-loader'
+          ]
         }, {
           test: /\.css$/,
-          loader: ExtractTextPlugin.extract({
-            use: [
-              'css-loader'
-            ],
-            fallback: 'style-loader'
-          })
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader'
+          ]
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
         {
@@ -109,11 +128,24 @@ module.exports = (env) => {
           enforce: "pre",
           test: /\.js$/,
           loader: "source-map-loader"
+        },
+        {
+          type: 'javascript/auto',
+          test: /\.json/,
+          include: /src\/locale/,
+          use: [{
+            loader: 'file-loader',
+            options: { name: '[name]-[hash:6].[ext]' },
+          }],
+        },
+        {
+          type: 'javascript/auto',
+          test: /\.wasm/
         }
       ],
 
       noParse: function(path) {
-        return path.endsWith('sql.js/js/sql.js') || preMinifiedDeps.some((d) => path.endsWith(d));
+        return path.endsWith('sql.js/js/sql.js');
       }
     },
 
@@ -133,41 +165,36 @@ module.exports = (env) => {
         'window.i18next': 'i18next'
       }),
 
-      new CleanWebpackPlugin(['dist'], {
-        root: path.resolve('./')
-      }),
-
       new NotifyPlugin('DIM', !isDev),
 
-      new ExtractTextPlugin({
-        filename: 'styles-[contenthash:6].css',
-        allChunks: true
-      }),
-
-      new InlineManifestWebpackPlugin({
-        name: 'webpackManifest'
+      new MiniCssExtractPlugin({
+        filename: "[name]-[contenthash:6].css",
+        chunkFilename: "[id]-[contenthash:6].css"
       }),
 
       new HtmlWebpackPlugin({
-        inject: false,
+        inject: true,
         filename: 'index.html',
-        template: '!handlebars-loader!src/index.html',
-        chunks: ['vendor', 'main', 'browsercheck']
+        template: '!html-loader!src/index.html',
+        chunks: ['main', 'browsercheck']
       }),
 
       new HtmlWebpackPlugin({
-        inject: false,
+        inject: true,
         filename: 'return.html',
-        template: '!handlebars-loader!src/return.html',
+        template: '!html-loader!src/return.html',
         chunks: ['authReturn']
       }),
 
       new HtmlWebpackPlugin({
-        inject: false,
+        inject: true,
         filename: 'gdrive-return.html',
-        template: '!handlebars-loader!src/gdrive-return.html',
-        chunks: ['vendor', 'gdriveReturn']
+        template: '!html-loader!src/gdrive-return.html',
+        chunks: ['gdriveReturn']
       }),
+
+      // Fix some chunks not showing up in Webpack 4
+      new HtmlWebpackIncludeSiblingChunksPlugin(),
 
       new CopyWebpackPlugin([
         { from: './src/.htaccess' },
@@ -178,27 +205,6 @@ module.exports = (env) => {
         { from: `./icons/${env}/` },
         { from: './src/safari-pinned-tab.svg' },
       ]),
-
-      // Optimize chunk IDs
-      new webpack.optimize.OccurrenceOrderPlugin(true),
-
-      // Extract a stable "vendor" chunk
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        chunks: ['main'],
-        minChunks: function(module) {
-          // this assumes your vendor imports exist in the node_modules directory
-          return module.context && module.context.indexOf('node_modules') !== -1;
-        }
-      }),
-
-      // CommonChunksPlugin will now extract all the common modules
-      // from vendor and main bundles.  But since there are no more
-      // common modules between them we end up with just the runtime
-      // code included in the manifest file
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'manifest'
-      }),
 
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
@@ -238,13 +244,6 @@ module.exports = (env) => {
         '$featureFlags.vendors': JSON.stringify(true),
       }),
 
-      new webpack.SourceMapDevToolPlugin({
-        filename: '[file].map',
-        exclude: /(manifest|chunk-0-sqlLib)-\S{6}.js$/
-      }),
-
-      new webpack.optimize.ModuleConcatenationPlugin(),
-
       // Enable if you want to debug the size of the chunks
       // new Visualizer(),
     ],
@@ -256,15 +255,6 @@ module.exports = (env) => {
     }
   };
 
-  // Run through big deps and extract the first part of the path,
-  // as that is what you use to require the actual node modules
-  // in your code. Then use the complete path to point to the correct
-  // file and make sure webpack does not try to parse it
-  preMinifiedDeps.forEach((dep) => {
-    const depPath = path.resolve(nodeModulesDir, dep);
-    config.resolve.alias[dep.split(path.sep)[0]] = depPath;
-  });
-
   if (isDev) {
     config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
 
@@ -272,22 +262,20 @@ module.exports = (env) => {
   } else {
     // Bail and fail hard on first error
     config.bail = true;
-    config.stats = 'verbose';
+    config.stats = 'normal';
+
+    config.plugins.push(new CleanWebpackPlugin([
+      'dist',
+      '.awcache',
+      'node_modules/.cache'
+    ], {
+      root: path.resolve('./')
+    }));
 
     // Tell React we're in Production mode
     config.plugins.push(new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env': JSON.stringify({ NODE_ENV: 'production' })
-    }));
-
-    // The sql.js library doesnt work at all (reports no tables) when minified,
-    // so we exclude it from the regular minification
-    // FYI, uglification runs on final chunks rather than individual modules
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      exclude: [/-sqlLib-/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
-      compress: { warnings: false },
-      output: { comments: false },
-      sourceMap: true
     }));
 
     // Generate a service worker
@@ -309,6 +297,8 @@ module.exports = (env) => {
   // it doesn't get name-mangled. It'll be used by the
   // WorkboxPlugin. This lets us inline the dependencies.
   const serviceWorker = {
+    mode: isDev ? 'development' : 'production',
+
     entry: {
       'service-worker': './src/service-worker.js'
     },

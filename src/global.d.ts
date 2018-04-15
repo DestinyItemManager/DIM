@@ -73,3 +73,8 @@ declare module "file-loader?*" {
   const value: string;
   export default value;
 }
+
+declare module "*dim.json" {
+  const value: string;
+  export default value;
+}
