@@ -1,9 +1,10 @@
 import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
-import { TagInfo } from '../settings/settings';
+import { TagInfo, settings } from '../settings/settings';
 import { DimItem, DimD1Item } from '../inventory/store/d2-item-factory.service';
 import { StoreServiceType } from '../inventory/d2-stores.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
 
 interface SearchConfig {
   keywords: string[];
@@ -85,7 +86,8 @@ export function buildSearchConfig(
     postmaster: ['postmaster', 'inpostmaster'],
     equipped: ['equipped'],
     transferable: ['transferable', 'movable'],
-    infusable: ['infusable', 'infuse']
+    infusable: ['infusable', 'infuse'],
+    location: ['invault', 'incurrentchar', 'inleftchar', 'inmiddlechar', 'inrightchar']
   };
 
   if (destinyVersion === 1) {
@@ -213,6 +215,7 @@ export function searchFilters(
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   let _lowerDupes = {};
   let _dupeInPost = false;
+  let _sortedStores: DimStore[] | null = null;
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
@@ -285,6 +288,7 @@ export function searchFilters(
       _duplicates = null;
       _lowerDupes = {};
       _dupeInPost = false;
+      _sortedStores = null;
     },
 
     /**
@@ -505,6 +509,62 @@ export function searchFilters(
 
         // We filter out the "Default Shader" because everybody has one per character
         return item.hash !== 4248210736 && _duplicates[item.hash] && _duplicates[item.hash].length > 1;
+      },
+      location(item: DimItem, predicate: string) {
+        const activeStore = storeService.getActiveStore();
+        let storeIndex = 0;
+        let desiredStore = "";
+        if (_sortedStores === null) {
+          const stores = storeService.getStores();
+
+          // sortStores code from dimAngularFilters.filter.ts
+          // switch (settings.characterOrder) {
+          switch (predicate) {
+              case 'mostRecent':
+              _sortedStores = _.sortBy(stores, 'lastPlayed').reverse();
+              break;
+            case 'mostRecentReverse':
+              _sortedStores = _.sortBy(stores, (store) => (store.isVault) ? Infinity : store.lastPlayed);
+              break;
+            default:
+              _sortedStores = (stores.length && stores[0].destinyVersion === 1) ? _.sortBy(stores, 'id') : stores;
+          }
+
+        }
+
+        switch (predicate) {
+          case 'invault':
+            desiredStore = "vault";
+            break;
+          case 'incurrentchar':
+            if (activeStore) {
+              desiredStore = activeStore.id;
+            } else {
+              return false;
+            }
+            break;
+          case 'inleftchar':
+            storeIndex = 0;
+            break;
+          case 'inmiddlechar':
+            if (_sortedStores.length === 4) {
+              storeIndex = 1;
+            }
+            break;
+          case 'inrightchar':
+            if (_sortedStores.length > 2) {
+              storeIndex = _sortedStores.length - 2;
+            }
+            break;
+          default:
+            return false;
+        }
+
+        if (['invault', 'incurrentchar'].includes(predicate)) {
+          return item.id === desiredStore;
+        } else {
+          return item.owner === _sortedStores[storeIndex].id || (item.bucket.accountWide && item.owner !== "vault");
+        }
       },
       classType(item: DimItem, predicate: string) {
         let value;
