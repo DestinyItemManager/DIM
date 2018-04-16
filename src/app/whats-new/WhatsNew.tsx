@@ -5,6 +5,9 @@ import { Timeline } from 'react-twitter-widgets';
 import { settings } from '../settings/settings';
 import './WhatsNew.scss';
 
+/**
+ * What's new in the world of DIM?
+ */
 export default function WhatsNew() {
   return (
     <div className="dim-page dim-static-page">

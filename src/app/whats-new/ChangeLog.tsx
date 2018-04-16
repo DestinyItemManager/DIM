@@ -1,8 +1,11 @@
 import * as React from 'react';
 import changelog from '../../../docs/CHANGELOG.md';
 import './ChangeLog.scss';
-import { DimVersions } from '../shell/versions';
+import { DimVersions } from './versions';
 
+/**
+ * Show the DIM Changelog, with highlights for new changes.
+ */
 export default function ChangeLog() {
   const rendered = (
     <div className="changelog">

@@ -4,7 +4,6 @@ import UIRouterModule from '@uirouter/angularjs';
 
 import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
 import { CountdownComponent } from './countdown.component';
-import { BungieAlertsComponent } from './bungie-alerts.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { ScrollClass } from './scroll-class.directive';
 import Header from './Header';
@@ -28,7 +27,6 @@ export const ShellModule = module('dimShell', [
   .directive('dimActivityTracker', ActivityTrackerDirective)
   .service('dimActivityTrackerService', ActivityTrackerService)
   .factory('loadingTracker', loadingTracker)
-  .component('bungieAlerts', BungieAlertsComponent)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
   .component('header', react2angular(Header, [], ['$scope', 'D2StoresService']))
