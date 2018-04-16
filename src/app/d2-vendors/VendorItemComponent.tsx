@@ -24,7 +24,7 @@ interface Props {
 export default class VendorItemComponent extends React.Component<Props> {
   private static otherDialog: IDialogOpenResult | null = null;
   private dialogResult: IDialogOpenResult | null = null;
-  private itemElement: HTMLElement | null;
+  private itemElement = React.createRef<HTMLDivElement>();
 
   shouldComponentUpdate(
     nextProps: Readonly<Props>) {
@@ -63,7 +63,7 @@ export default class VendorItemComponent extends React.Component<Props> {
         {(!item.canPurchase || !item.canBeSold) &&
           <div className="locked-overlay"/>
         }
-        <div className="item" title={item.displayProperties.name} ref={this.captureElementRef} onClick={this.openDetailsPopup}>
+        <div className="item" title={item.displayProperties.name} ref={this.itemElement} onClick={this.openDetailsPopup}>
           <div
             className={classNames("item-img", { transparent: item.borderless })}
             style={bungieBackgroundStyle(item.displayProperties.icon)}
@@ -85,10 +85,6 @@ export default class VendorItemComponent extends React.Component<Props> {
         </div>
       </div>
     );
-  }
-
-  private captureElementRef = (ref: HTMLElement | null) => {
-    this.itemElement = ref;
   }
 
   private openDetailsPopup = async(e) => {
@@ -135,7 +131,7 @@ export default class VendorItemComponent extends React.Component<Props> {
         overlay: false,
         className: 'move-popup-dialog vendor-move-popup',
         showClose: false,
-        data: this.itemElement as {}, // Dialog anchor
+        data: this.itemElement.current as {}, // Dialog anchor
         controllerAs: 'vm',
         controller() {
           this.item = dimItem;
