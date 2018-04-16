@@ -137,6 +137,7 @@
     "react-beautiful-dnd": "^6.0.2",
     "react-dom": "^16.3.1",
     "react-transition-group": "^2.3.1",
+    "react-twitter-widgets": "^1.7.1",
     "react-view-pager": "^0.6.0",
     "react2angular": "^3.2.1",
     "rxjs": "^5.5.10",

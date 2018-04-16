@@ -1,0 +1,21 @@
+.bungie-alerts {
+  .bungie-alert {
+    margin: 1em 0;
+    padding: 1em;
+    border: 2px solid rgba(255, 255, 255, .5);
+    a {
+      color: white;
+      font-size: 12px;
+    }
+  }
+
+  .bungie-alert-error {
+    background-color: #bd362f;
+  }
+  .bungie-alert-info {
+    background-color: #2f96b4;
+  }
+  .bungie-alert-warn {
+    background-color: #f89406;
+  }
+}

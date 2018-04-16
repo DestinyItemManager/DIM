@@ -7,10 +7,10 @@ import { subscribeOnScope } from '../rx-utils';
 
 export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   // Fetch global alerts, but swallow errors
-  .switchMap(() => Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty()))
-  .startWith([])
+  .switchMap(() => Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty<GlobalAlert[]>()))
+  .startWith([] as GlobalAlert[])
   // Deep equals
-  .distinctUntilChanged(equals);
+  .distinctUntilChanged<GlobalAlert[]>(equals);
   // TODO: Publish? this is the part I never get
   // TODO: redux?
 
@@ -33,8 +33,8 @@ function BungieAlertsCtrl($scope, toaster, $i18next) {
 
   // Memoize so we only show each alert once per session
   const showAlertToaster = _.memoize((alert) => {
-    const bungieTwitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp">@BungieHelp Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp"></a>';
-    const dimTwitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">@ThisIsDIM Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"></a>';
+    const bungieTwitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp">@BungieHelp Twitter</a>';
+    const dimTwitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">@ThisIsDIM Twitter</a>';
     const twitter = `<div>${$i18next.t('BungieService.Twitter')} ${bungieTwitterLink} | ${dimTwitterLink}</div>`;
 
     toaster.pop({

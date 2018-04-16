@@ -1,0 +1,18 @@
+@import '../../scss/variables.scss';
+
+.twitter {
+  float: right;
+  height: 80vh;
+  max-width: 300px;
+
+  div {
+    height: 100%;
+  }
+
+  @include phone-portrait {
+    max-width: 100%;
+    float: none;
+    margin: 1em 0;
+    height: 50vh;
+  }
+}
