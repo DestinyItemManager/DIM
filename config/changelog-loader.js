@@ -9,7 +9,7 @@ module.exports = function(source) {
         changelog.push(current);
       }
 
-      const match = /^# (Next|v?[\d.]+)( \((.*)\))?/.exec(line);
+      const match = /^# v?(Next|[\d.]+)( \((.*)\))?/.exec(line);
 
       if (match) {
         current = {

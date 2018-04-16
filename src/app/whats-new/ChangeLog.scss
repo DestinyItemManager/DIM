@@ -1,5 +1,17 @@
+@import '../../scss/variables.scss';
+
 .changelog-date {
   font-size: 12px;
   color: #CCC;
   margin-left: 8px;
+}
+
+.badge-new {
+  display: inline-block;
+  background-color: $orange;
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
