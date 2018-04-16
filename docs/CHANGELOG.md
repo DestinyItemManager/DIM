@@ -1,5 +1,7 @@
 # Next
+
 * You can specify game modes for reading and making ratings and reviews.
+* Full General Vault, Mods, and Shaders buckets are highlighted in red.
 
 # 4.47.0
 
