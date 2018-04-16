@@ -23,6 +23,7 @@ import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
+import MenuBadge from './MenuBadge';
 
 const destiny1Links = [
   {
@@ -210,26 +211,29 @@ export default class Header extends React.Component<Props, State> {
       </>
     );
 
+    // TODO: replace the bars with badged hamburger!
     return (
       <div id="header">
         <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>
           <i className="fa fa-bars" />
-          <TransitionGroup>
-            {dropdownOpen &&
-              <CSSTransition
-                classNames="dropdown"
-                timeout={{ enter: 500, exit: 3000 }}
-              >
-                <ClickOutside key="dropdown" className="dropdown" onClickOutside={this.hideDropdown}>
-                  {destinyLinks}
-                  {links.length > 0 && <hr/>}
-                  <Link state='settings' text='Settings.Settings'/>
-                  <hr/>
-                  {dimLinks}
-                </ClickOutside>
-              </CSSTransition>}
-          </TransitionGroup>
+          <MenuBadge />
         </span>
+
+        <TransitionGroup>
+          {dropdownOpen &&
+            <CSSTransition
+              classNames="dropdown"
+              timeout={{ enter: 500, exit: 3000 }}
+            >
+              <ClickOutside key="dropdown" className="dropdown" onClickOutside={this.hideDropdown}>
+                {destinyLinks}
+                {links.length > 0 && <hr/>}
+                <Link state='settings' text='Settings.Settings'/>
+                <hr/>
+                {dimLinks}
+              </ClickOutside>
+            </CSSTransition>}
+        </TransitionGroup>
 
         <img
           className={classNames('logo', 'link', $DIM_FLAVOR)}

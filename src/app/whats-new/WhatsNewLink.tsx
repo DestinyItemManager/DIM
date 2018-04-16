@@ -30,6 +30,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
   }
 
   componentDidMount() {
+    // TODO: merge these into a single badgeState observable?
     this.subscriptions.push(
       DimVersions.showChangelog$.subscribe((showChangelog) =>
         this.setState({ showChangelog })
@@ -45,7 +46,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
-  render() {
+  render(): JSX.Element | null {
     const { dimNeedsUpdate, alerts, showChangelog } = this.state;
 
     // TODO: use presstip/tooltip to help?
@@ -70,11 +71,9 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
     if (showChangelog) {
       return (
-        <>
-          <Link state="whats-new" text="Header.WhatsNew">
-            <span className="badge-new" />
-          </Link>
-        </>
+        <Link state="whats-new" text="Header.WhatsNew">
+          <span className="badge-new" />
+        </Link>
       );
     }
 
