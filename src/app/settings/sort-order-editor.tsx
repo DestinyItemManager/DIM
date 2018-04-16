@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import './sort-order-editor.scss';
 
 export interface SortProperty {

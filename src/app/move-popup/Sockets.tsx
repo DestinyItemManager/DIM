@@ -1,5 +1,5 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
 import { BungieImage } from '../dim-ui/bungie-image';

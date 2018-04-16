@@ -2,7 +2,7 @@ import * as React from 'react';
 import { hotkeys } from '../ngimport-more';
 import { $rootScope } from 'ngimport';
 import { t } from 'i18next';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { loadingTrackerStream } from './dimLoadingTracker.factory';
 import { Subscription } from 'rxjs/Subscription';
 

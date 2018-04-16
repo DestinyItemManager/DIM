@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { DestinyObjectiveProgress } from "bungie-api-ts/destiny2";
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { t } from 'i18next';
 import { percent } from '../inventory/dimPercentWidth.directive';
 

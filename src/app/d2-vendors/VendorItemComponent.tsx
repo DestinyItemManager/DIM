@@ -1,7 +1,7 @@
 import { VendorItem } from "./vendor-item";
 import * as React from "react";
 import { bungieBackgroundStyle, BungieImage } from "../dim-ui/bungie-image";
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { DestinyItemQuantity } from "bungie-api-ts/destiny2";
 import { ngDialog } from "../ngimport-more";
