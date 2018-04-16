@@ -17,7 +17,7 @@ import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/click-outside';
 import Refresh from './refresh';
 import { IScope } from 'angular';
-import RatingMode from '../rating-mode/rating-mode';
+import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 

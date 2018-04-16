@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { t } from 'i18next';
-import './rating-mode.scss';
-import ClickOutside from '../dim-ui/click-outside';
-import { settings } from '../settings/settings';
-import { StoreServiceType } from '../inventory/d2-stores.service';
+import './RatingMode.scss';
+import ClickOutside from '../../dim-ui/click-outside';
+import { settings } from '../../settings/settings';
+import { StoreServiceType } from '../../inventory/d2-stores.service';
 import { $rootScope } from 'ngimport';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
+import { getReviewModes } from '../../destinyTrackerApi/reviewModesFetcher';
 
 interface Props {
   defs: D2ManifestDefinitions;
