@@ -8,9 +8,15 @@ import '../rx-operators';
 import './BungieAlerts.scss';
 
 // TODO: Move this back to a shared file so we can observe it from the header?
-const alerts$ = Observable.timer(0, 10 * 60 * 1000)
+export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   // Fetch global alerts, but swallow errors
   .switchMap(() => Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty<GlobalAlert[]>()))
+  // .switchMap(() => [[{
+  //   body: 'foo',
+  //   type: 'info',
+  //   timestamp: 'foo',
+  //   key: 'foo'
+  // }] as GlobalAlert[]])
   .startWith([] as GlobalAlert[])
   // Deep equals
   .distinctUntilChanged<GlobalAlert[]>(equals);
@@ -24,6 +30,7 @@ interface State {
 /**
  * Displays maintenance alerts from Bungie.net.
  */
+// TODO: How to mark that they've been "seen"?
 export default class BungieAlerts extends React.Component<{}, State> {
   private subscription: Subscription;
 

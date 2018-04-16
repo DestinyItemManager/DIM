@@ -11,6 +11,7 @@ import { SearchFilterComponent } from '../search/search-filter.component';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import Link from './Link';
 import './header.scss';
 
 // tslint:disable-next-line:no-implicit-dependencies
@@ -21,6 +22,7 @@ import { IScope } from 'angular';
 import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import WhatsNewLink from '../whats-new/WhatsNewLink';
 
 const destiny1Links = [
   {
@@ -150,6 +152,7 @@ export default class Header extends React.Component<Props, State> {
         <Link state='about' text='Header.About'/>
         <Link state='support' text='Header.SupportDIM'/>
         <ExternalLink href='https://teespring.com/stores/dim' text='Header.Shop'/>
+        <WhatsNewLink />
         {bugReportLink &&
           <ExternalLink
             href="https://github.com/DestinyItemManager/DIM/issues"
@@ -200,6 +203,7 @@ export default class Header extends React.Component<Props, State> {
           href="https://github.com/DestinyItemManager/DIM/issues"
           text="Header.ReportBug"
         />}
+        <WhatsNewLink />
         <ExternalLink href='https://teespring.com/stores/dim' text='Header.Shop'/>
         <Link state='support' text='Header.SupportDIM'/>
         <Link state='about' text='Header.About'/>
@@ -320,45 +324,6 @@ function showPopupFunction(name, template) {
       });
     }
   };
-}
-
-class Link extends React.Component<{
-  account?: DestinyAccount;
-  state: string;
-  text: string;
-}, {
-  active: boolean;
-}> {
-  private listener;
-
-  constructor(props) {
-    super(props);
-    this.state = { active: false };
-  }
-
-  componentDidMount() {
-    this.listener = $transitions.onEnter({}, (_transition, state) => {
-      this.setState({ active: (state.name === this.props.state) });
-    });
-  }
-
-  componentWillUnmount() {
-    this.listener();
-  }
-
-  render() {
-    const { text } = this.props;
-    const { active } = this.state;
-
-    return (
-      <a className={active ? 'link active' : 'link'} onClick={this.clicked}>{t(text)}</a>
-    );
-  }
-
-  private clicked = () => {
-    const { state, account } = this.props;
-    $state.go(state, account);
-  }
 }
 
 function ExternalLink({

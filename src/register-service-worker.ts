@@ -1,3 +1,8 @@
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+
+// TODO: Move this elsewhere, and drive it off of server JSON as well
+export const dimNeedsUpdate$ = new BehaviorSubject(false);
+
 export default function registerServiceWorker() {
   navigator.serviceWorker
     .register('/service-worker.js')
@@ -17,7 +22,8 @@ export default function registerServiceWorker() {
               // available; please refresh." message in your web app.
               console.log('SW: New content is available; please refresh.');
               // At this point, is it really cached??
-              // TODO: push to an observable
+
+              dimNeedsUpdate$.next(true);
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a

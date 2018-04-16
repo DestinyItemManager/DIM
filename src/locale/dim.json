@@ -259,9 +259,12 @@
     "Filters": "Filters",
     "Inventory": "Inventory",
     "Refresh": "Refresh Destiny Data",
-    "ReportBug": "Report an Issue",
+    "ReportBug": "Bug Report",
     "Shop": "Shop",
-    "SupportDIM": "Backers"
+    "SupportDIM": "Backers",
+    "WhatsNew": "What's New",
+    "BungieNetAlert": "Bungie Alert",
+    "UpgradeDIM": "Upgrade DIM"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
