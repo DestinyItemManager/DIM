@@ -46,6 +46,15 @@ interface Navigator {
   storage: any;
 }
 
+declare module "*/CHANGELOG.md" {
+  const value: {
+    version: string;
+    date?: string;
+    changes: string[]
+  }[];
+  export default value;
+}
+
 declare module "*.jpg" {
   const value: string;
   export default value;

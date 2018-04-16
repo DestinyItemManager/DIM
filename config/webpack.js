@@ -141,6 +141,10 @@ module.exports = (env) => {
         {
           type: 'javascript/auto',
           test: /\.wasm/
+        },
+        {
+          test: /CHANGELOG\.md$/,
+          loader: path.resolve('./config/changelog-loader')
         }
       ],
 
