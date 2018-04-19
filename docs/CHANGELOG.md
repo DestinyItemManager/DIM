@@ -1,5 +1,10 @@
 # Next
+
+# 4.48.0 (2018-04-15)
+
 * You can specify game modes for reading and making ratings and reviews.
+* Full General Vault, Mods, and Shaders buckets are highlighted in red.
+* Adding DIM to your home screen on iOS was broken for iOS 11.3. It's fixed now!
 
 # 4.47.0
 

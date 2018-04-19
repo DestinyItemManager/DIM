@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "Bitte benutze die Destiny 2-Gefährten-App um DIM das Modifizieren deiner Items zu erlauben.",
+    "ConfirmTitle": "Aktion bestätigen"
+  },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
@@ -95,9 +99,11 @@
     "Cons": "Nachteile",
     "Delete": "Löschen",
     "Edit": "Ändern",
+    "ForGameMode": "Für Spielmodus",
     "Help": "Schreibe einen Bericht (Optional)",
     "HelpCons": "Beschreibe die negativen Eigenschaften dieser Waffe (Optional)",
     "HelpPros": "Beschreibe die positiven Eigenschaften dieser Waffe (Optional)",
+    "ModeNotSpecified": "Keine Angabe",
     "NoReviews": "Bisher gibt es keine Berichte für diesen Item, sei der Erste!",
     "Platforms": {
       "All": "Alles anzeigen",
@@ -112,6 +118,7 @@
     "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen.",
     "Submit": "Absenden",
     "ThankYou": "Vielen Dank für den eingereichten Bericht! Er wird bald veröffentlicht.",
+    "UnknownGameMode": "Unbekannt",
     "VerifyReport": "Bist du dir sicher dass du diesen Bericht melden möchtest?",
     "YourReview": "Dein Bericht"
   },
@@ -545,6 +552,7 @@
     "Ratings": "Bewertungen",
     "ReloadDIM": "Aktualisiere DIM um die Sprache abschließend zu wechseln",
     "ResetToDefault": "Zurücksetzen",
+    "ReviewsModeSelection": "Zeige nur Bewertungen für den folgenden Spielmodus",
     "ReviewsPlatformSelection": "Nur Bewertungen der folgenden Plattform anzeigen",
     "SetSort": "Sortiere Items nach:",
     "Settings": "Einstellungen",
@@ -670,7 +678,7 @@
       "DiscordHelp": "Stelle Fragen, gib Feedback und erhalte Unterstützung in unseren Discord-Kanälen.",
       "FAQ": "FAQ (Häufig gestellte Fragen)",
       "FAQAccess": "Wie bekommt DIM Zugriff auf meine Destiny-Daten?",
-      "FAQAccessAnswer": "Wir benutzen Bungie's App Authentifizierung um DIM deine Items sehen und verschieben lassen zu können. DIM sieht niemals deinen Benutzernamen oder Passwort. So arbeitet auch Bungie's Begleiter-App.",
+      "FAQAccessAnswer": "Wir benutzen Bungies App Authentifizierung um DIM deine Items sehen und verschieben lassen zu können. DIM sieht niemals deinen Benutzernamen oder Passwort. So arbeitet auch Bungies eigene Gefährten-App.",
       "FAQD2": "Wird DIM Destiny 2 unterstützen?",
       "FAQD2Answer": "Ja! Wir erwarten Destiny 2 kurz nach Erscheinen zu unterstützen (und nachdem wir selbst die Chance hatten es zu spielen). Erwarte von DIM zuerst nur die einfachen Sachen (Anzeigen und Verschieben von Items) und später die cooleren Features, da wir alle herausfinden müssen, was D2 für uns auf Lager hat. Die selbe DIM Webseite wird Destiny 2 und Destiny 1 gleichzeitig unterstützen und es wird dir möglich sein zwischen deinen D1 und D2 Charaktern hin und her zu wechseln.",
       "FAQDupeGally": "Hey, DIM hat mein Gjallarhorn dupliziert!",

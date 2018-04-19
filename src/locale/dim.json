@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
+    "ConfirmTitle": "Confirm Action"
+  },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
@@ -23,10 +27,6 @@
     "Unknown": "Unknown",
     "Vault": "Vault",
     "Weapons": "Weapons"
-  },
-  "AWA": {
-    "ConfirmTitle": "Confirm Action",
-    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items."
   },
   "BungieAlert": {
     "Title": "A message from Bungie:"

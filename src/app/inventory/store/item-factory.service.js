@@ -9,6 +9,7 @@ import { D1ManifestService } from '../../manifest/manifest-service';
 import { getDefinitions } from '../../destiny1/d1-definitions.service';
 import { getBuckets } from '../../destiny1/d1-buckets.service';
 import { NewItemsService } from './new-items.service';
+import { buildClassifiedItem, getClassifiedData } from './classified-data.service';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -33,7 +34,6 @@ const tiers = [
  */
 export function ItemFactory(
   $i18next,
-  ClassifiedDataService,
   $q
 ) {
   'ngInject';
@@ -132,7 +132,7 @@ export function ItemFactory(
       previousItems,
       newItems,
       itemInfoService,
-      ClassifiedDataService.getClassifiedData()])
+      getClassifiedData()])
       .then((args) => {
         const result = [];
         D1ManifestService.statusText = `${$i18next.t('Manifest.LoadCharInv')}...`;
@@ -194,7 +194,7 @@ export function ItemFactory(
     }
 
     if (itemDef.classified) {
-      const classifiedItemDef = ClassifiedDataService.buildClassifiedItem(classifiedData, itemDef.hash);
+      const classifiedItemDef = buildClassifiedItem(classifiedData, itemDef.hash);
       if (classifiedItemDef) {
         itemDef = classifiedItemDef;
         item.primaryStat = itemDef.primaryStat;

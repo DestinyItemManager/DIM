@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "請使用\"命運2同伴應用\"授予DIM修改您物品的權限。",
+    "ConfirmTitle": "確認操作"
+  },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "沒有找到與此Bungie.net賬戶相關聯的Destiny角色，登入其它賬戶試試看。",
@@ -95,9 +99,11 @@
     "Cons": "缺點",
     "Delete": "刪除",
     "Edit": "編輯",
+    "ForGameMode": "遊戲模式：",
     "Help": "撰寫評測 (可選)",
     "HelpCons": "描述此武器的缺點（可選）",
     "HelpPros": "描述此武器的優點（可選）",
+    "ModeNotSpecified": "未指定",
     "NoReviews": "尚無評測，來做第一個評測這個物品的人！",
     "Platforms": {
       "All": "顯示全部",
@@ -112,6 +118,7 @@
     "ServiceSubmitError": "無法訪問Destiny tracker伺服器.",
     "Submit": "提交",
     "ThankYou": "感謝您的評測！它將很快上線。",
+    "UnknownGameMode": "未知",
     "VerifyReport": "您確定要檢舉此評論嗎?",
     "YourReview": "您的評測"
   },
@@ -545,6 +552,7 @@
     "Ratings": "評測",
     "ReloadDIM": "請重新整理頁面[F5] 以完成語言切換",
     "ResetToDefault": "重設",
+    "ReviewsModeSelection": "只顯示來自以下遊戲模式的評測",
     "ReviewsPlatformSelection": "只顯示以下平臺的評測",
     "SetSort": "物品排序方式:",
     "Settings": "設定",

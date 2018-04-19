@@ -34,7 +34,7 @@ export class PressTip extends React.Component<Props, State> {
   private tooltip?: Tooltip;
   private timer: number;
   private tooltipContent: Element;
-  private ref;
+  private ref: HTMLElement | null;
 
   constructor(props) {
     super(props);

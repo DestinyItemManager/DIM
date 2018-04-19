@@ -76,25 +76,25 @@ function rarity(item: DimItem) {
 /**
  * Sort the stores according to the user's preferences (via the order parameter).
  */
-mod.filter('sortStores', () => {
-  return function sortStores(stores: DimStore[], order) {
-    if (order === 'mostRecent') {
-      return _.sortBy(stores, 'lastPlayed').reverse();
-    } else if (order === 'mostRecentReverse') {
-      return _.sortBy(stores, (store) => {
-        if (store.isVault) {
-          return Infinity;
-        } else {
-          return store.lastPlayed;
-        }
-      });
-    } else if (stores.length && stores[0].destinyVersion === 1) {
-      return _.sortBy(stores, 'id');
-    } else {
-      return stores;
-    }
-  };
-});
+mod.filter('sortStores', () => sortStores);
+
+export function sortStores(stores: DimStore[], order) {
+  if (order === 'mostRecent') {
+    return _.sortBy(stores, 'lastPlayed').reverse();
+  } else if (order === 'mostRecentReverse') {
+    return _.sortBy(stores, (store) => {
+      if (store.isVault) {
+        return Infinity;
+      } else {
+        return store.lastPlayed;
+      }
+    });
+  } else if (stores.length && stores[0].destinyVersion === 1) {
+    return _.sortBy(stores, 'id');
+  } else {
+    return stores;
+  }
+}
 
 const D1_CONSUMABLE_SORT_ORDER = [
   1043138475, // black-wax-idol
@@ -185,96 +185,96 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   default: (_a, _b) => 0
 };
 
+mod.filter('sortItems', () => sortItems);
+
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-mod.filter('sortItems', () => {
-  return (items: DimItem[]) => {
-    if (!items.length) {
-      return items;
+export function sortItems(items: DimItem[]) {
+  if (!items.length) {
+    return items;
+  }
+
+  const itemLocationId = items[0].location.id.toString();
+  if (!items.length || ITEM_SORT_BLACKLIST.has(itemLocationId)) {
+    return items;
+  }
+
+  let specificSortOrder: number[] = [];
+  // Group like items in the General Section
+  if (itemLocationId === "BUCKET_CONSUMABLES") {
+    specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
+  }
+
+  // Group like items in the General Section
+  if (itemLocationId === "BUCKET_MATERIALS") {
+    specificSortOrder = D1_MATERIAL_SORT_ORDER;
+  }
+
+  const sortOrder: string[] = settings.itemSortOrder();
+
+  if (specificSortOrder.length > 0 && !sortOrder.includes('rarity')) {
+    items = _.sortBy(items, (item) => {
+      const ix = specificSortOrder.indexOf(item.hash);
+      return (ix === -1) ? 999 : ix;
+    });
+    return items;
+  }
+
+  // Re-sort mods
+  if (itemLocationId === '3313201758') {
+    const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
+    if (sortOrder.includes('rarity')) {
+      comparators.unshift(ITEM_COMPARATORS.rarity);
     }
+    return items.sort(chainComparator(...comparators));
+  }
 
-    const itemLocationId = items[0].location.id.toString();
-    if (!items.length || ITEM_SORT_BLACKLIST.has(itemLocationId)) {
-      return items;
-    }
+  // Re-sort consumables
+  if (itemLocationId === '1469714392') {
+    return items.sort(chainComparator(
+      ITEM_COMPARATORS.typeName,
+      ITEM_COMPARATORS.rarity,
+      ITEM_COMPARATORS.name,
+      ITEM_COMPARATORS.amount
+    ));
+  }
 
-    let specificSortOrder: number[] = [];
-    // Group like items in the General Section
-    if (itemLocationId === "BUCKET_CONSUMABLES") {
-      specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
-    }
+  // Re-sort shaders
+  if (items[0].location.id === 2973005342) {
+    // Just sort by name
+    return items.sort(ITEM_COMPARATORS.name);
+  }
 
-    // Group like items in the General Section
-    if (itemLocationId === "BUCKET_MATERIALS") {
-      specificSortOrder = D1_MATERIAL_SORT_ORDER;
-    }
+  const comparator = chainComparator(...sortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default));
+  return items.sort(comparator);
+}
 
-    const sortOrder: string[] = settings.itemSortOrder();
-
-    if (specificSortOrder.length > 0 && !sortOrder.includes('rarity')) {
-      items = _.sortBy(items, (item) => {
-        const ix = specificSortOrder.indexOf(item.hash);
-        return (ix === -1) ? 999 : ix;
-      });
-      return items;
-    }
-
-    // Re-sort mods
-    if (itemLocationId === '3313201758') {
-      const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
-      if (sortOrder.includes('rarity')) {
-        comparators.unshift(ITEM_COMPARATORS.rarity);
-      }
-      return items.sort(chainComparator(...comparators));
-    }
-
-    // Re-sort consumables
-    if (itemLocationId === '1469714392') {
-      return items.sort(chainComparator(
-        ITEM_COMPARATORS.typeName,
-        ITEM_COMPARATORS.rarity,
-        ITEM_COMPARATORS.name,
-        ITEM_COMPARATORS.amount
-      ));
-    }
-
-    // Re-sort shaders
-    if (items[0].location.id === 2973005342) {
-      // Just sort by name
-      return items.sort(ITEM_COMPARATORS.name);
-    }
-
-    const comparator = chainComparator(...sortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default));
-    return items.sort(comparator);
-  };
-});
+mod.filter('qualityColor', () => getColor);
 
 /**
  * A filter that will heatmap-color a background according to a percentage.
  */
-mod.filter('qualityColor', () => {
-  return function getColor(value, property) {
-    property = property || 'background-color';
-    let color = 0;
-    if (value < 0) {
-      return { [property]: 'white' };
-    } else if (value <= 85) {
-      color = 0;
-    } else if (value <= 90) {
-      color = 20;
-    } else if (value <= 95) {
-      color = 60;
-    } else if (value <= 99) {
-      color = 120;
-    } else if (value >= 100) {
-      color = 190;
-    }
-    const result = {};
-    result[property] = `hsla(${color},65%,50%, .85)`;
-    return result;
-  };
-});
+export function getColor(value: number, property: string) {
+  property = property || 'background-color';
+  let color = 0;
+  if (value < 0) {
+    return { [property]: 'white' };
+  } else if (value <= 85) {
+    color = 0;
+  } else if (value <= 90) {
+    color = 20;
+  } else if (value <= 95) {
+    color = 60;
+  } else if (value <= 99) {
+    color = 120;
+  } else if (value >= 100) {
+    color = 190;
+  }
+  const result = {};
+  result[property] = `hsla(${color},65%,50%, .85)`;
+  return result;
+}
 
 export function dtrRatingColor(value: number, property?: string) {
   if (!value) {

@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
+    "ConfirmTitle": "Confirm Action"
+  },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
@@ -95,9 +99,11 @@
     "Cons": "短所",
     "Delete": "削除",
     "Edit": "編集",
+    "ForGameMode": "For game mode",
     "Help": "レビューを書く(オプション)",
     "HelpCons": "この武器の悪いところを書いてください(オプション)",
     "HelpPros": "この武器の良いところを書いてください(オプション)",
+    "ModeNotSpecified": "Not Specified",
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "Platforms": {
       "All": "すべて表示",
@@ -112,6 +118,7 @@
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
     "Submit": "提出",
     "ThankYou": "レビューの提出ありがとうございます！　間もなく表示されます。",
+    "UnknownGameMode": "Unknown",
     "VerifyReport": "レビューを削除してもよろしいですか？",
     "YourReview": "レビュー"
   },
@@ -545,6 +552,7 @@
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "リセット",
+    "ReviewsModeSelection": "Only show ratings for the following play mode",
     "ReviewsPlatformSelection": "Only show ratings from the following platform",
     "SetSort": "Sort items by:",
     "Settings": "設定",

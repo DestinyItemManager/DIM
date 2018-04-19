@@ -8,11 +8,13 @@ import { t } from 'i18next';
 import { DimStore } from './store/d2-store-factory.service';
 import { DimItem } from './store/d2-item-factory.service';
 
+export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
+
 /**
  * Extra DIM-specific info, stored per item.
  */
 export interface DimItemInfo {
-  tag?: 'favorite' | 'keep' | 'junk' | 'infuse';
+  tag?: TagValue;
   notes?: string;
   save?(): void;
 }

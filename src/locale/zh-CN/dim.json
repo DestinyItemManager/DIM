@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的权限。",
+    "ConfirmTitle": "确认操作"
+  },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
@@ -95,16 +99,18 @@
     "Cons": "缺点",
     "Delete": "删除",
     "Edit": "编辑",
+    "ForGameMode": "游戏模式：",
     "Help": "撰写评测 (可选)",
     "HelpCons": "描述此武器的缺点（可选）",
     "HelpPros": "描述此武器的优点（可选）",
+    "ModeNotSpecified": "未指定",
     "NoReviews": "尚无评测，来做第一个评测这个物品的人！",
     "Platforms": {
       "All": "显示全部",
       "AllConsoles": "所有主机平台",
-      "Pc": "仅限PC",
-      "Playstation": "仅限Playstation",
-      "Xbox": "仅限XBox"
+      "Pc": "仅PC",
+      "Playstation": "仅Playstation",
+      "Xbox": "仅XBox"
     },
     "Pros": "优点",
     "ReallyReport": "举报",
@@ -112,6 +118,7 @@
     "ServiceSubmitError": "无法访问Destiny tracker服务器.",
     "Submit": "提交",
     "ThankYou": "感谢您的评测！它将很快上线。",
+    "UnknownGameMode": "未知",
     "VerifyReport": "您确定要举报此评论吗?",
     "YourReview": "您的评测"
   },
@@ -545,6 +552,7 @@
     "Ratings": "评分",
     "ReloadDIM": "刷新页面 [F5] 以完成语言切换",
     "ResetToDefault": "重置",
+    "ReviewsModeSelection": "只显示来自以下游戏模式的评测",
     "ReviewsPlatformSelection": "只显示来自以下平台的评测",
     "SetSort": "物品排序方式:",
     "Settings": "设置",

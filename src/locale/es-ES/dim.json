@@ -1,4 +1,8 @@
 {
+  "AWA": {
+    "ConfirmDescription": "Por favor, use la App del Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
+    "ConfirmTitle": "Confirmar Acción"
+  },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "No tiene ningún personaje de Destiny asociadado a esta cuenta de Bungie.net. Trate de iniciar sesión en una cuenta diferente.",
@@ -95,9 +99,11 @@
     "Cons": "Contras",
     "Delete": "Borrar",
     "Edit": "Editar",
+    "ForGameMode": "Para el modo de juego",
     "Help": "Escribir una calificación (opcional)",
     "HelpCons": "Describe las cosas negativas de esta arma (opcional)",
     "HelpPros": "Describe las cosas positivas de esta arma (opcional)",
+    "ModeNotSpecified": "Sin Especificar",
     "NoReviews": "¡No hay calificaciones para este objeto, sé el primero!",
     "Platforms": {
       "All": "Mostrar todas",
@@ -112,6 +118,7 @@
     "ServiceSubmitError": "Fallo al enviar al servicio de Destiny Tracker.",
     "Submit": "Enviar",
     "ThankYou": "¡Gracias por enviar una calificación! Se mostrará pronto.",
+    "UnknownGameMode": "Desconocido",
     "VerifyReport": "¿Estás seguro de que quieres marcar esta calificación?",
     "YourReview": "Tu calificación"
   },
@@ -517,8 +524,8 @@
     "RecordBooks": "Libros de hazañas"
   },
   "Settings": {
-    "AllowIdPostToDtr": "Mostrar reseña detallada de armas y permitir calificación de armas",
-    "AllowIdPostToDtrLine2": "Esto compartirá tu nombre de usuario y artículos con reseña en Destiny Tracker.",
+    "AllowIdPostToDtr": "Mostrar análisis detallado de armas y permitir calificación de armas",
+    "AllowIdPostToDtrLine2": "Esto compartirá tu nombre de usuario y artículos con análisis en Destiny Tracker.",
     "AlwaysShowDetails": "Mostrar siempre la ventana expandida de los artículos",
     "CharacterOrder": "Ordenar personajes por",
     "CharacterOrderFixed": "edad de personaje",
@@ -545,6 +552,7 @@
     "Ratings": "Calificaciones",
     "ReloadDIM": "Recarga DIM para terminar de cambiar el idioma",
     "ResetToDefault": "Reiniciar",
+    "ReviewsModeSelection": "Solo mostrar calificaciones para el siguiente modo de juego",
     "ReviewsPlatformSelection": "Mostrar solo calificaciones de la siguiente plataforma",
     "SetSort": "Ordenar objetos por:",
     "Settings": "Configuración",
