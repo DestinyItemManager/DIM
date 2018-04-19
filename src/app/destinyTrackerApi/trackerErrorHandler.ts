@@ -1,7 +1,7 @@
 import { $q } from 'ngimport';
 import { t } from 'i18next';
 
-class D2TrackerErrorHandler {
+export class TrackerErrorHandler {
   handleErrors(response) {
     if (response.status !== 200) {
       return $q.reject(new Error(t('DtrReview.ServiceCallError')));
@@ -11,14 +11,10 @@ class D2TrackerErrorHandler {
   }
 
   handleSubmitErrors(response) {
-    if ((response.status !== 200) ||
-        (!response.data) ||
-        (!response.data.success)) {
+    if (response.status !== 204) {
       return $q.reject(new Error(t('DtrReview.ServiceSubmitError')));
     }
 
     return response;
   }
 }
-
-export { D2TrackerErrorHandler };

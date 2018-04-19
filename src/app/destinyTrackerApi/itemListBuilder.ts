@@ -1,28 +1,30 @@
 import { flatMap } from '../util';
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
+import { ReviewDataCache } from './reviewDataCache';
+import { D1ItemFetchRequest } from '../item-review/destiny-tracker.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
  * Generally tailored to work with weapon data.
- *
- * @class ItemListBuilder
  */
-class ItemListBuilder {
+export class ItemListBuilder {
+  _itemTransformer: ItemTransformer;
   constructor() {
     this._itemTransformer = new ItemTransformer();
   }
 
-  _getNewItems(allItems, reviewDataCache) {
+  _getNewItems(allItems: DimItem[], reviewDataCache: ReviewDataCache): D1ItemFetchRequest[] {
     const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrWeapon(item));
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
-    const unmatched = _.reject(allDtrItems, (dtrItem) => _.any(allKnownDtrItems, { referenceId: String(dtrItem.referenceId), roll: dtrItem.roll }));
+    const unmatched = _.reject(allDtrItems, (dtrItem) => _.any(allKnownDtrItems, { referenceId: dtrItem.referenceId.toString(), roll: dtrItem.roll }));
 
     return unmatched;
   }
 
-  _getAllItems(stores) {
+  _getAllItems(stores: any[]) {
     const firstItem = stores[0];
 
     if (firstItem.allItems !== undefined) {
@@ -33,7 +35,7 @@ class ItemListBuilder {
   }
 
   // Get all of the weapons from our stores in a DTR API-friendly format.
-  _getDtrWeapons(stores, reviewDataCache) {
+  _getDtrWeapons(stores, reviewDataCache: ReviewDataCache): D1ItemFetchRequest[] {
     const allItems = this._getAllItems(stores);
 
     const allWeapons = allItems.filter((item) => item.primStat && item.bucket.sort === 'Weapons');
@@ -51,14 +53,8 @@ class ItemListBuilder {
    * Translate the universe of weapons that the user has in their stores into a collection of data that we can send the DTR API.
    * Tailored to work alongside the bulkFetcher.
    * Non-obvious bit: it attempts to optimize away from sending items that already exist in the ReviewDataCache.
-   *
-   * @param {any} stores
-   * @param {ReviewDataCache} reviewDataCache
-   * @returns {array<DtrItem>}
-   *
-   * @memberof ItemListBuilder
    */
-  getWeaponList(stores, reviewDataCache) {
+  getWeaponList(stores, reviewDataCache: ReviewDataCache): D1ItemFetchRequest[] {
     const dtrWeapons = this._getDtrWeapons(stores, reviewDataCache);
 
     const list = new Set(dtrWeapons);
@@ -66,5 +62,3 @@ class ItemListBuilder {
     return Array.from(list);
   }
 }
-
-export { ItemListBuilder };

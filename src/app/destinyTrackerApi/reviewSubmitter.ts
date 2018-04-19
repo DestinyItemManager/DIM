@@ -1,12 +1,21 @@
 import { ItemTransformer } from './itemTransformer';
+import { ReviewDataCache } from './reviewDataCache';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { D1MembershipInfo, D1ItemUserReview, D1ItemWorkingUserReview } from '../item-review/destiny-tracker.service';
 
 /**
  * Supports submitting review data to the DTR API.
  *
  * @class ReviewSubmitter
  */
-class ReviewSubmitter {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
+export class ReviewSubmitter {
+  $q: any;
+  $http: any;
+  _trackerErrorHandler: any;
+  _loadingTracker: any;
+  _reviewDataCache: ReviewDataCache;
+  _itemTransformer: ItemTransformer;
+  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache: ReviewDataCache) {
     this.$q = $q;
     this.$http = $http;
     this._itemTransformer = new ItemTransformer();
@@ -23,7 +32,7 @@ class ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item) {
+  toRatingAndReview(item: DimItem): D1ItemWorkingUserReview {
     return {
       rating: item.userRating,
       review: item.userReview,
@@ -41,7 +50,7 @@ class ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item, membershipInfo) {
+  _submitReviewPromise(item: DimItem, membershipInfo: D1MembershipInfo) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
@@ -64,8 +73,8 @@ class ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item, membershipInfo) {
-    const review = this.toRatingAndReview(item);
+  _markItemAsReviewedAndSubmitted(item: DimItem, membershipInfo: D1MembershipInfo) {
+    const review = this.toRatingAndReview(item) as D1ItemUserReview;
     review.isReviewer = true;
     review.reviewer = this._getReviewer(membershipInfo);
     review.timestamp = new Date().toISOString();
@@ -81,4 +90,3 @@ class ReviewSubmitter {
   }
 }
 
-export { ReviewSubmitter };

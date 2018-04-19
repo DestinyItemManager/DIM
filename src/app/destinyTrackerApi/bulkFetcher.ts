@@ -1,11 +1,20 @@
 import { ItemListBuilder } from './itemListBuilder';
+import { TrackerErrorHandler } from './trackerErrorHandler';
+import { ReviewDataCache } from './reviewDataCache';
+import { D1ItemFetchResponse, D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
 
 class BulkFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
+  _reviewDataCache: ReviewDataCache;
+  _loadingTracker: any;
+  _trackerErrorHandler: TrackerErrorHandler;
+  _itemListBuilder: any;
+  $http: any;
+  $q: any;
+  constructor($q, $http, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;
     this._itemListBuilder = new ItemListBuilder();
-    this._trackerErrorHandler = trackerErrorHandler;
+    this._trackerErrorHandler = new TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
   }
@@ -43,10 +52,6 @@ class BulkFetcher {
 
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
-   *
-   * @param {any} storesContainer
-   *
-   * @memberof BulkFetcher
    */
   bulkFetch(storesContainer) {
     const stores = Object.values(storesContainer);
@@ -58,10 +63,6 @@ class BulkFetcher {
 
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
-   *
-   * @param {any} vendorContainer
-   *
-   * @memberof BulkFetcher
    */
   bulkFetchVendorItems(vendorContainer) {
     const vendors = Object.values(vendorContainer);
@@ -71,24 +72,22 @@ class BulkFetcher {
                                                         vendors));
   }
 
-  attachRankings(bulkRankings,
+  attachRankings(bulkRankings: D1ItemFetchResponse[],
                  stores) {
     if (!bulkRankings && !stores) {
       return;
     }
 
-    const self = this;
-
     if (bulkRankings) {
       bulkRankings.forEach((bulkRanking) => {
-        self._reviewDataCache.addScore(bulkRanking);
+        this._reviewDataCache.addScore(bulkRanking);
       });
     }
 
     stores.forEach((store) => {
       store.items.forEach((storeItem) => {
         if (storeItem.reviewable) {
-          const matchingItem = self._reviewDataCache.getRatingData(storeItem);
+          const matchingItem = this._reviewDataCache.getRatingData(storeItem);
 
           if (matchingItem) {
             storeItem.dtrRating = matchingItem.rating;

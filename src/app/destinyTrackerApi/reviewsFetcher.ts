@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
+import { D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -29,7 +30,7 @@ class ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item) {
+  _getItemReviewsPromise(item): Promise<D1ItemReviewResponse> {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     const promise = this.$q

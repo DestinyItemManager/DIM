@@ -1,19 +1,22 @@
-import _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
+import * as _ from 'underscore';
+import { D1ItemFetchResponse, D1ItemReviewResponse, D1ItemWorkingUserReview } from '../item-review/destiny-tracker.service';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
- *
- * @class ReviewDataCache
  */
-class ReviewDataCache {
+export class ReviewDataCache {
+  _itemStores: D1ItemFetchResponse[] | D1ItemReviewResponse[];
+  _itemTransformer: ItemTransformer;
+
   constructor() {
     this._itemTransformer = new ItemTransformer();
     this._itemStores = [];
   }
 
-  _getMatchingItem(item) {
+  _getMatchingItem(item): D1ItemFetchResponse | D1ItemReviewResponse {
     const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
@@ -25,14 +28,9 @@ class ReviewDataCache {
 
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
-   *
-   * @param {any} item
-   * @returns {any}
-   *
-   * @memberof ReviewDataCache
    */
-  getRatingData(item) {
-    return this._getMatchingItem(item) || null;
+  getRatingData(item): D1ItemFetchResponse | D1ItemReviewResponse | undefined {
+    return this._getMatchingItem(item) || undefined;
   }
 
   _toAtMostOneDecimal(rating) {
@@ -49,12 +47,8 @@ class ReviewDataCache {
 
   /**
    * Add (and track) the community score.
-   *
-   * @param {any} dtrRating
-   *
-   * @memberof ReviewDataCache
    */
-  addScore(dtrRating) {
+  addScore(dtrRating: D1ItemFetchResponse | D1ItemReviewResponse) {
     dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
 
     this._itemStores.push(dtrRating);
@@ -66,11 +60,6 @@ class ReviewDataCache {
    * happens in the background, then they go back to the item.  Or they post data and the DTR API
    * is still feeding back cached data or processing it or whatever.
    * The expectation is that this will be building on top of reviews data that's already been supplied.
-   *
-   * @param {any} item
-   * @param {any} userReview
-   *
-   * @memberof ReviewDataCache
    */
   addUserReviewData(item,
                     userReview) {
@@ -91,11 +80,6 @@ class ReviewDataCache {
   /**
    * Keep track of expanded item review data from the DTR API for this DIM store item.
    * The expectation is that this will be building on top of community score data that's already been supplied.
-   *
-   * @param {any} item
-   * @param {any} reviewsData
-   *
-   * @memberof ReviewDataCache
    */
   addReviewsData(item,
                  reviewsData) {
@@ -108,12 +92,8 @@ class ReviewDataCache {
 
   /**
    * Fetch the collection of review data that we've stored locally.
-   *
-   * @returns {array}
-   *
-   * @memberof ReviewDataCache
    */
-  getItemStores() {
+  getItemStores(): any[] {
     return this._itemStores;
   }
 
@@ -126,16 +106,12 @@ class ReviewDataCache {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(item,
-                                 userReview) {
+  markItemAsReviewedAndSubmitted(item: DimItem,
+                                 userReview: D1ItemWorkingUserReview) {
     this._markItemAsLocallyCached(item, false);
     const matchingItem = this._getMatchingItem(item);
 
-    if (matchingItem.reviews) {
-      matchingItem.reviews = _.reject(matchingItem.reviews, { isReviewer: true });
-    } else {
-      matchingItem.reviews = [];
-    }
+    matchingItem.reviews = (matchingItem.reviews) ? _.reject(matchingItem.reviews, { isReviewer: true }) : [];
 
     matchingItem.reviews.unshift(userReview);
   }
@@ -147,17 +123,12 @@ class ReviewDataCache {
    * 10 minutes, then we'll purge it (so that it can be re-pulled).
    *
    * Item is just an item from DIM's stores.
-   *
-   * @param {any} item
-   *
-   * @memberof ReviewDataCache
    */
   eventuallyPurgeCachedData(item) {
     const tenMinutes = 1000 * 60 * 10;
-    const self = this;
 
     setTimeout(() => {
-      const matchingItem = self._getMatchingItem(item);
+      const matchingItem = this._getMatchingItem(item);
 
       matchingItem.reviews = null;
       matchingItem.reviewsDataFetched = false;
@@ -165,5 +136,3 @@ class ReviewDataCache {
       tenMinutes);
   }
 }
-
-export { ReviewDataCache };

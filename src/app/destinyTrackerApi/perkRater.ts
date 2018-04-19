@@ -1,18 +1,14 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
+import { DimItem, DimGridNode } from '../inventory/store/d2-item-factory.service';
 
 /**
  * Rate perks on an item (based off of its attached user reviews).
- *
- * @class PerkRater
  */
-class PerkRater {
+export class PerkRater {
   /**
    * Rate the perks on an item based off of its attached user reviews.
-   *
-   * @param {any} item
-   * @memberof PerkRater
    */
-  ratePerks(item) {
+  ratePerks(item: DimItem) {
     if ((!item.talentGrid) ||
         (!item.reviews) ||
         (!item.reviews.length)) {
@@ -20,6 +16,10 @@ class PerkRater {
     }
 
     const maxColumn = this._getMaxColumn(item);
+
+    if (!maxColumn) {
+      return;
+    }
 
     for (let i = 1; i < maxColumn; i++) {
       const perkNodesInColumn = this._getPerkNodesInColumn(item, i);
@@ -41,7 +41,7 @@ class PerkRater {
   }
 
   _getMaxReview(ratingsAndReviews) {
-    const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) => { return ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview; }).reverse();
+    const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) => ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview).reverse();
 
     if ((orderedRatingsAndReviews.length > 0) &&
         (orderedRatingsAndReviews[0].ratingCount > 1)) {
@@ -51,13 +51,21 @@ class PerkRater {
     return null;
   }
 
-  _getMaxColumn(item) {
-    return _.max(item.talentGrid.nodes, (node) => { return node.column; }).column;
+  _getMaxColumn(item: DimItem): number | undefined {
+    if (!item.talentGrid) {
+      return undefined;
+    }
+
+    return _.max(item.talentGrid.nodes, (node: DimGridNode) => node.column).column;
   }
 
-  _getPerkNodesInColumn(item,
-                        column) {
-    return _.where(item.talentGrid.nodes, { column: column });
+  _getPerkNodesInColumn(item: DimItem,
+                        column): DimGridNode[] {
+    if (!item.talentGrid) {
+      return [];
+    }
+
+    return _.where(item.talentGrid.nodes, { column });
   }
 
   _getPerkRatingsAndReviewCount(perkNode,
@@ -69,9 +77,9 @@ class PerkRater {
     const averageReview = _.pluck(matchingReviews, 'rating').reduce((memo, num) => memo + num, 0) / matchingReviews.length || 1;
 
     const ratingAndReview = {
-      ratingCount: ratingCount,
-      averageReview: averageReview,
-      perkNode: perkNode
+      ratingCount,
+      averageReview,
+      perkNode
     };
 
     return ratingAndReview;
@@ -81,7 +89,7 @@ class PerkRater {
     const selectedPerks = this._getSelectedPerks(review);
 
     return {
-      selectedPerks: selectedPerks,
+      selectedPerks,
       rating: review.rating,
       isHighlighted: review.isHighlighted
     };
@@ -104,5 +112,3 @@ class PerkRater {
     return allSelectedPerks.map((selectedPerk) => selectedPerk.replace('o', ''));
   }
 }
-
-export { PerkRater };

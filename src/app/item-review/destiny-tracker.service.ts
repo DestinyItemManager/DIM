@@ -82,17 +82,17 @@ export enum DtrActivityModes {
   trials = 39
 }
 
-export interface D1FetchRequest {
+export interface D1ItemFetchRequest {
   referenceId: string;
   roll?: string;
 }
 
-export interface D1FetchResponse extends D1FetchRequest {
+export interface D1ItemFetchResponse extends D1ItemFetchRequest {
   rating: number;
   ratingCount: number;
 }
 
-export interface D1ReviewRequest extends D1FetchRequest {
+export interface D1ItemReviewRequest extends D1ItemFetchRequest {
   selectedPerks?: string;
   instanceId: string;
 }
@@ -103,20 +103,23 @@ export interface D1MembershipInfo {
   displayName: string;
 }
 
-export interface D1UserReview {
-  reviewer: D1MembershipInfo;
-  timestamp: string;
-  selectedPerks?: string;
+export interface D1ItemWorkingUserReview {
   rating: number;
   pros: string;
   cons: string;
   review: string;
+}
+
+export interface D1ItemUserReview extends D1ItemWorkingUserReview {
+  reviewer: D1MembershipInfo;
+  timestamp: string;
+  selectedPerks?: string;
   isHighlighted: boolean;
   isReviewer: boolean;
 }
 
-export interface D1ReviewResponse extends D1FetchRequest {
-  reviews: D1UserReview[];
+export interface D1ItemReviewResponse extends D1ItemFetchResponse {
+  reviews: D1ItemUserReview[];
 }
 
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
@@ -166,7 +169,6 @@ export function DestinyTrackerService(
 
   const _reviewDataCache = new ReviewDataCache();
   const _userFilter = new UserFilter(SyncService);
-  const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
   const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
   const _reviewSubmitter = new ReviewSubmitter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
