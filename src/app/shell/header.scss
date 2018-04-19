@@ -22,7 +22,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 44px;
+  height: $header-height;
   background-color: #222;
   display: flex;
   flex-direction: row;
@@ -81,15 +81,13 @@
       border-right: 1px solid #6f7070;
   }
   .dropdown {
+    @include below-header;
     position: absolute;
     display: block;
     overflow: auto;
-    top: 44px;
-    top: calc(44px + constant(safe-area-inset-top));
-    top: calc(44px + env(safe-area-inset-top));
-    height: calc(100vh - 44px);
-    height: calc(100vh - 44px - constant(safe-area-inset-top));
-    height: calc(100vh - 44px - env(safe-area-inset-top));
+    height: calc(100vh - $header-height);
+    height: calc(100vh - $header-height - constant(safe-area-inset-top));
+    height: calc(100vh - $header-height - env(safe-area-inset-top));
     left: 0;
     margin: 0;
     padding: 0;
@@ -124,7 +122,7 @@
   .header-links {
     display: flex;
     flex-direction: row;
-    height: 44px;
+    height: $header-height;
     align-items: center;
     flex-wrap: wrap;
     overflow: hidden;

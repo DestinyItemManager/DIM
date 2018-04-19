@@ -21,3 +21,11 @@ $character-box-height: 46px;
     @content;
   }
 }
+
+$header-height: 44px;
+
+@mixin below-header {
+  top: $header-height;
+  top: calc($header-height + constant(safe-area-inset-top));
+  top: calc($header-height + env(safe-area-inset-top));
+}
