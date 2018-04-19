@@ -1,20 +1,25 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
+import { $q, $http } from 'ngimport';
 import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
-import { D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
+import { UserFilter } from './userFilter';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { TrackerErrorHandler } from './trackerErrorHandler';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
  * This was tailored to work for weapons.  Items (armor, etc.) may or may not work.
- *
- * @class ReviewsFetcher
  */
-class ReviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
-    this.$q = $q;
-    this.$http = $http;
+export class ReviewsFetcher {
+  _perkRater: PerkRater;
+  _userFilter: any;
+  _reviewDataCache: any;
+  _loadingTracker: any;
+  _trackerErrorHandler: TrackerErrorHandler;
+  _itemTransformer: ItemTransformer;
+  constructor(loadingTracker, reviewDataCache, userFilter: UserFilter) {
     this._itemTransformer = new ItemTransformer();
-    this._trackerErrorHandler = trackerErrorHandler;
+    this._trackerErrorHandler = new TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
     this._userFilter = userFilter;
@@ -30,14 +35,14 @@ class ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item): Promise<D1ItemReviewResponse> {
+  _getItemReviewsPromise(item) {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
-    const promise = this.$q
+    const promise = $q
               .when(this._getItemReviewsCall(postWeapon))
-              .then(this.$http)
+              .then($http)
               .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
-              .then((response) => { return response.data; });
+              .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
 
@@ -63,7 +68,8 @@ class ReviewsFetcher {
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
     item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
-    item.reviews = _.filter(reviewData.reviews, 'review'); // only attach reviews with text associated
+
+    item.reviews = reviewData.reviews.filter((review) => review.review); // only attach reviews with text associated
 
     this._sortAndIgnoreReviews(item);
 
@@ -135,13 +141,8 @@ class ReviewsFetcher {
    * Get community (which may include the current user's) reviews for a given item and attach
    * them to the item.
    * Attempts to fetch data from the cache first.
-   *
-   * @param {any} item
-   * @returns {void}
-   *
-   * @memberof ReviewsFetcher
    */
-  getItemReviews(item) {
+  getItemReviews(item: DimItem) {
     if (!item.reviewable) {
       return;
     }
@@ -160,4 +161,3 @@ class ReviewsFetcher {
   }
 }
 
-export { ReviewsFetcher };

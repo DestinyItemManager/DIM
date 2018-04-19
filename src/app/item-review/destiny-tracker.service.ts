@@ -111,6 +111,7 @@ export interface D1ItemWorkingUserReview {
 }
 
 export interface D1ItemUserReview extends D1ItemWorkingUserReview {
+  reviewId: string; //string or number?
   reviewer: D1MembershipInfo;
   timestamp: string;
   selectedPerks?: string;
@@ -123,7 +124,6 @@ export interface D1ItemReviewResponse extends D1ItemFetchResponse {
 }
 
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
-import { TrackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler';
 import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
 import { ReviewsFetcher } from '../destinyTrackerApi/reviewsFetcher';
 import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
@@ -142,6 +142,7 @@ import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { IPromise } from 'angular';
+import { $q } from 'ngimport';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -160,19 +161,16 @@ export interface DestinyTrackerServiceType {
 }
 
 export function DestinyTrackerService(
-  $q,
-  $http,
-  $i18next,
   loadingTracker
 ): DestinyTrackerServiceType {
   'ngInject';
 
   const _reviewDataCache = new ReviewDataCache();
   const _userFilter = new UserFilter(SyncService);
-  const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
-  const _reviewSubmitter = new ReviewSubmitter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  const _reviewReporter = new ReviewReporter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
+  const _bulkFetcher = new BulkFetcher(loadingTracker, _reviewDataCache);
+  const _reviewsFetcher = new ReviewsFetcher(loadingTracker, _reviewDataCache, _userFilter);
+  const _reviewSubmitter = new ReviewSubmitter(loadingTracker, _reviewDataCache);
+  const _reviewReporter = new ReviewReporter(loadingTracker, _reviewDataCache, _userFilter);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
   const _d2bulkFetcher = new D2BulkFetcher(loadingTracker, _d2reviewDataCache);

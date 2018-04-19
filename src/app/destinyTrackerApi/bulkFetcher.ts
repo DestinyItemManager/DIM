@@ -1,3 +1,4 @@
+import { $q, $http } from 'ngimport';
 import { ItemListBuilder } from './itemListBuilder';
 import { TrackerErrorHandler } from './trackerErrorHandler';
 import { ReviewDataCache } from './reviewDataCache';
@@ -8,11 +9,7 @@ class BulkFetcher {
   _loadingTracker: any;
   _trackerErrorHandler: TrackerErrorHandler;
   _itemListBuilder: any;
-  $http: any;
-  $q: any;
-  constructor($q, $http, loadingTracker, reviewDataCache) {
-    this.$q = $q;
-    this.$http = $http;
+  constructor(loadingTracker, reviewDataCache) {
     this._itemListBuilder = new ItemListBuilder();
     this._trackerErrorHandler = new TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
@@ -30,18 +27,18 @@ class BulkFetcher {
 
   _getBulkFetchPromise(stores) {
     if (!stores.length) {
-      return this.$q.resolve();
+      return $q.resolve();
     }
 
     const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
-      return this.$q.resolve();
+      return $q.resolve();
     }
 
-    const promise = this.$q
+    const promise = $q
               .when(this._getBulkWeaponDataEndpointPost(weaponList))
-              .then(this.$http)
+              .then($http)
               .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
               .then((response) => response.data);
 
@@ -72,7 +69,7 @@ class BulkFetcher {
                                                         vendors));
   }
 
-  attachRankings(bulkRankings: D1ItemFetchResponse[],
+  attachRankings(bulkRankings: D1ItemFetchResponse[] | null,
                  stores) {
     if (!bulkRankings && !stores) {
       return;

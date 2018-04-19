@@ -2,6 +2,8 @@ import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { D1MembershipInfo, D1ItemUserReview, D1ItemWorkingUserReview } from '../item-review/destiny-tracker.service';
+import { TrackerErrorHandler } from './trackerErrorHandler';
+import { $q, $http } from 'ngimport';
 
 /**
  * Supports submitting review data to the DTR API.
@@ -11,15 +13,13 @@ import { D1MembershipInfo, D1ItemUserReview, D1ItemWorkingUserReview } from '../
 export class ReviewSubmitter {
   $q: any;
   $http: any;
-  _trackerErrorHandler: any;
+  _trackerErrorHandler: TrackerErrorHandler;
   _loadingTracker: any;
   _reviewDataCache: ReviewDataCache;
   _itemTransformer: ItemTransformer;
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache: ReviewDataCache) {
-    this.$q = $q;
-    this.$http = $http;
+  constructor(loadingTracker, reviewDataCache: ReviewDataCache) {
     this._itemTransformer = new ItemTransformer();
-    this._trackerErrorHandler = trackerErrorHandler;
+    this._trackerErrorHandler = new TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
   }
