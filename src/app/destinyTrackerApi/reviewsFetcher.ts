@@ -1,10 +1,10 @@
-import * as _ from 'underscore';
 import { $q, $http } from 'ngimport';
 import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { TrackerErrorHandler } from './trackerErrorHandler';
+import { D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -49,8 +49,8 @@ export class ReviewsFetcher {
     return promise;
   }
 
-  _getUserReview(reviewData) {
-    return _.find(reviewData.reviews, { isReviewer: true });
+  _getUserReview(reviewData: D1ItemReviewResponse) {
+    return reviewData.reviews.find((review) => review.isReviewer);
   }
 
   _sortAndIgnoreReviews(item) {
@@ -108,8 +108,8 @@ export class ReviewsFetcher {
       return ratingDiff;
     }
 
-    const aDate = new Date(a.timestamp);
-    const bDate = new Date(b.timestamp);
+    const aDate = new Date(a.timestamp).getTime();
+    const bDate = new Date(b.timestamp).getTime();
 
     return bDate - aDate;
   }
@@ -160,4 +160,3 @@ export class ReviewsFetcher {
                                          data));
   }
 }
-

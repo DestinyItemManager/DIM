@@ -2,7 +2,8 @@ import { $q, $http } from 'ngimport';
 import { ItemListBuilder } from './itemListBuilder';
 import { TrackerErrorHandler } from './trackerErrorHandler';
 import { ReviewDataCache } from './reviewDataCache';
-import { D1ItemFetchResponse, D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
+import { D1ItemFetchResponse } from '../item-review/destiny-tracker.service';
+import { IPromise } from 'angular';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
@@ -25,15 +26,17 @@ class BulkFetcher {
     };
   }
 
-  _getBulkFetchPromise(stores) {
+  _getBulkFetchPromise(stores): IPromise<D1ItemFetchResponse[]> {
     if (!stores.length) {
-      return $q.resolve();
+      const emptyResponse: D1ItemFetchResponse[] = [];
+      return $q.resolve(emptyResponse);
     }
 
     const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
-      return $q.resolve();
+      const emptyResponse: D1ItemFetchResponse[] = [];
+      return $q.resolve(emptyResponse);
     }
 
     const promise = $q
@@ -44,7 +47,7 @@ class BulkFetcher {
 
     this._loadingTracker.addPromise(promise);
 
-    return promise;
+    return promise as IPromise<D1ItemFetchResponse[]>;
   }
 
   /**
@@ -106,11 +109,9 @@ class BulkFetcher {
       return;
     }
 
-    const self = this;
-
     if (bulkRankings) {
       bulkRankings.forEach((bulkRanking) => {
-        self._reviewDataCache.addScore(bulkRanking);
+        this._reviewDataCache.addScore(bulkRanking);
       });
     }
 
@@ -118,7 +119,7 @@ class BulkFetcher {
       vendor.allItems.forEach((vendorItemContainer) => {
         const vendorItem = vendorItemContainer.item;
 
-        const matchingItem = self._reviewDataCache.getRatingData(vendorItem);
+        const matchingItem = this._reviewDataCache.getRatingData(vendorItem);
 
         if (matchingItem) {
           vendorItem.dtrRating = matchingItem.rating;

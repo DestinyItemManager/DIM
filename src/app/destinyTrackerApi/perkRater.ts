@@ -1,5 +1,12 @@
 import * as _ from 'underscore';
 import { DimItem, DimGridNode } from '../inventory/store/d2-item-factory.service';
+import { DtrUserReview } from '../item-review/destiny-tracker.service';
+
+interface RatingAndReview {
+  ratingCount: number;
+  averageReview: number;
+  perkNode: string;
+}
 
 /**
  * Rate perks on an item (based off of its attached user reviews).
@@ -40,8 +47,8 @@ export class PerkRater {
     maxReview.perkNode.bestRated = true;
   }
 
-  _getMaxReview(ratingsAndReviews) {
-    const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) => ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview).reverse();
+  _getMaxReview(ratingsAndReviews: RatingAndReview[]) {
+    const orderedRatingsAndReviews = ratingsAndReviews.sort((ratingAndReview) => ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview).reverse();
 
     if ((orderedRatingsAndReviews.length > 0) &&
         (orderedRatingsAndReviews[0].ratingCount > 1)) {
@@ -69,7 +76,7 @@ export class PerkRater {
   }
 
   _getPerkRatingsAndReviewCount(perkNode,
-                                reviews) {
+                                reviews: DtrUserReview[]): RatingAndReview {
     const matchingReviews = this._getMatchingReviews(perkNode,
                                                      reviews);
 
@@ -96,7 +103,7 @@ export class PerkRater {
   }
 
   _getMatchingReviews(perkNode,
-                      reviews) {
+                      reviews: DtrUserReview[]) {
     const perkRoll = perkNode.dtrRoll.replace('o', '');
     return reviews.filter((review) => this._selectedPerkNodeApplies(perkRoll, review));
   }

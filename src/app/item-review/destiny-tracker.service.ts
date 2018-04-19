@@ -90,6 +90,7 @@ export interface D1ItemFetchRequest {
 export interface D1ItemFetchResponse extends D1ItemFetchRequest {
   rating: number;
   ratingCount: number;
+  highlightedRatingCount: number;
 }
 
 export interface D1ItemReviewRequest extends D1ItemFetchRequest {
@@ -108,10 +109,11 @@ export interface D1ItemWorkingUserReview {
   pros: string;
   cons: string;
   review: string;
+  userRating: number;
 }
 
 export interface D1ItemUserReview extends D1ItemWorkingUserReview {
-  reviewId: string; //string or number?
+  reviewId: string; // string or number?
   reviewer: D1MembershipInfo;
   timestamp: string;
   selectedPerks?: string;
@@ -121,6 +123,10 @@ export interface D1ItemUserReview extends D1ItemWorkingUserReview {
 
 export interface D1ItemReviewResponse extends D1ItemFetchResponse {
   reviews: D1ItemUserReview[];
+}
+
+export interface D1CachedItem extends D1ItemReviewResponse, D1ItemWorkingUserReview {
+  reviewsDataFetched: boolean;
 }
 
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
@@ -225,7 +231,7 @@ export function DestinyTrackerService(
         }
       }
 
-      return $q.when();
+      return $q.when(this);
     },
 
     async bulkFetchKioskItems(
@@ -242,7 +248,7 @@ export function DestinyTrackerService(
         }
       }
 
-      return $q.when();
+      return $q.when(this);
     },
 
     getD2ReviewDataCache(): D2ReviewDataCache {
@@ -309,7 +315,7 @@ export function DestinyTrackerService(
           return _d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection, mode);
         }
       }
-      return $q.when({});
+      return $q.when(this);
     },
 
     reportReview(review) {

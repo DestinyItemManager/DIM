@@ -1,7 +1,7 @@
 import { $q, $http } from 'ngimport';
 import { TrackerErrorHandler } from './trackerErrorHandler';
 import { ReviewDataCache } from './reviewDataCache';
-import { D1ItemUserReview } from '../item-review/destiny-tracker.service';
+import { D1ItemUserReview, D1MembershipInfo } from '../item-review/destiny-tracker.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 
 /**
@@ -19,7 +19,7 @@ export class ReviewReporter {
     this._userFilter = userFilter;
   }
 
-  _getReporter(membershipInfo: DestinyAccount) {
+  _getReporter(membershipInfo: DestinyAccount): D1MembershipInfo {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,
@@ -40,9 +40,9 @@ export class ReviewReporter {
     const reporter = this._getReporter(membershipInfo);
 
     return {
-      reviewId: reviewId,
+      reviewId,
       report: "",
-      reporter: reporter
+      reporter
     };
   }
 
@@ -68,13 +68,13 @@ export class ReviewReporter {
    * Report a written review.
    * Also quietly adds the associated user to a block list.
    */
-  reportReview(review: D1ItemUserReview, membershipInfo: DestinyAccount) {
-    if (review.isHighlighted || review.isReviewer) {
+  reportReview(review: D1ItemUserReview, membershipInfo: DestinyAccount | null) {
+    if (review.isHighlighted || review.isReviewer || !membershipInfo) {
       return;
     }
 
     this._submitReportReviewPromise(review.reviewId, membershipInfo)
-      .then(this._reviewDataCache.markReviewAsIgnored(review))
-      .then(this._ignoreReportedUser(review));
+      .then(() => this._reviewDataCache.markReviewAsIgnored(review))
+      .then(() => this._ignoreReportedUser(review));
   }
 }

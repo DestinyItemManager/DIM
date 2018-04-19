@@ -1,6 +1,6 @@
 import { ItemTransformer } from './itemTransformer';
 import * as _ from 'underscore';
-import { D1ItemFetchResponse, D1ItemReviewResponse, D1ItemWorkingUserReview } from '../item-review/destiny-tracker.service';
+import { D1ItemFetchResponse, D1ItemWorkingUserReview, D1CachedItem, D1ItemUserReview } from '../item-review/destiny-tracker.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 /**
@@ -8,7 +8,7 @@ import { DimItem } from '../inventory/store/d2-item-factory.service';
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
  */
 export class ReviewDataCache {
-  _itemStores: D1ItemFetchResponse[] | D1ItemReviewResponse[];
+  _itemStores: D1CachedItem[];
   _itemTransformer: ItemTransformer;
 
   constructor() {
@@ -16,7 +16,7 @@ export class ReviewDataCache {
     this._itemStores = [];
   }
 
-  _getMatchingItem(item): D1ItemFetchResponse | D1ItemReviewResponse {
+  _getMatchingItem(item): D1CachedItem | undefined {
     const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
@@ -29,8 +29,8 @@ export class ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item): D1ItemFetchResponse | D1ItemReviewResponse | undefined {
-    return this._getMatchingItem(item) || undefined;
+  getRatingData(item): D1CachedItem | undefined {
+    return this._getMatchingItem(item);
   }
 
   _toAtMostOneDecimal(rating) {
@@ -48,10 +48,10 @@ export class ReviewDataCache {
   /**
    * Add (and track) the community score.
    */
-  addScore(dtrRating: D1ItemFetchResponse | D1ItemReviewResponse) {
+  addScore(dtrRating: D1ItemFetchResponse) {
     dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
 
-    this._itemStores.push(dtrRating);
+    this._itemStores.push(dtrRating as D1CachedItem);
   }
 
   /**
@@ -61,9 +61,13 @@ export class ReviewDataCache {
    * is still feeding back cached data or processing it or whatever.
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
-  addUserReviewData(item,
+  addUserReviewData(item: DimItem,
                     userReview) {
     const matchingItem = this._getMatchingItem(item);
+
+    if (!matchingItem) {
+      return;
+    }
 
     this._markItemAsLocallyCached(item, true);
 
@@ -111,9 +115,17 @@ export class ReviewDataCache {
     this._markItemAsLocallyCached(item, false);
     const matchingItem = this._getMatchingItem(item);
 
-    matchingItem.reviews = (matchingItem.reviews) ? _.reject(matchingItem.reviews, { isReviewer: true }) : [];
+    if (!matchingItem) {
+      return;
+    }
 
-    matchingItem.reviews.unshift(userReview);
+    if (!matchingItem.reviews) {
+      matchingItem.reviews = [];
+    } else {
+      matchingItem.reviews.filter((review) => !review.isReviewer);
+    }
+
+    matchingItem.reviews.unshift(userReview as D1ItemUserReview);
   }
 
   /**
@@ -124,14 +136,16 @@ export class ReviewDataCache {
    *
    * Item is just an item from DIM's stores.
    */
-  eventuallyPurgeCachedData(item) {
+  eventuallyPurgeCachedData(item: DimItem) {
     const tenMinutes = 1000 * 60 * 10;
 
     setTimeout(() => {
       const matchingItem = this._getMatchingItem(item);
 
-      matchingItem.reviews = null;
-      matchingItem.reviewsDataFetched = false;
+      if (matchingItem) {
+        matchingItem.reviews = [];
+        matchingItem.reviewsDataFetched = false;
+      }
     },
       tenMinutes);
   }

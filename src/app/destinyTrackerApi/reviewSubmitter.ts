@@ -1,18 +1,14 @@
 import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { D1MembershipInfo, D1ItemUserReview, D1ItemWorkingUserReview } from '../item-review/destiny-tracker.service';
+import { D1MembershipInfo, D1ItemUserReview } from '../item-review/destiny-tracker.service';
 import { TrackerErrorHandler } from './trackerErrorHandler';
 import { $q, $http } from 'ngimport';
 
 /**
  * Supports submitting review data to the DTR API.
- *
- * @class ReviewSubmitter
  */
 export class ReviewSubmitter {
-  $q: any;
-  $http: any;
   _trackerErrorHandler: TrackerErrorHandler;
   _loadingTracker: any;
   _reviewDataCache: ReviewDataCache;
@@ -32,7 +28,7 @@ export class ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item: DimItem): D1ItemWorkingUserReview {
+  toRatingAndReview(item: DimItem) {
     return {
       rating: item.userRating,
       review: item.userReview,
@@ -55,12 +51,11 @@ export class ReviewSubmitter {
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
 
-    const rating = Object.assign(rollAndPerks, review);
-    rating.reviewer = reviewer;
+    const rating = { ...rollAndPerks, ...review, reviewer };
 
-    const promise = this.$q
+    const promise = $q
               .when(this._submitItemReviewCall(rating))
-              .then(this.$http)
+              .then($http)
               .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
 
     this._loadingTracker.addPromise(promise);
@@ -85,8 +80,7 @@ export class ReviewSubmitter {
 
   submitReview(item, membershipInfo) {
     this._submitReviewPromise(item, membershipInfo)
-      .then(this._markItemAsReviewedAndSubmitted(item, membershipInfo))
-      .then(this._eventuallyPurgeCachedData(item));
+      .then(() => this._markItemAsReviewedAndSubmitted(item, membershipInfo))
+      .then(() => this._eventuallyPurgeCachedData(item));
   }
 }
-
