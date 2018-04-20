@@ -51,7 +51,7 @@ export interface DimStore {
   percentToNextLevel: number;
   powerLevel: number;
   stats: DimCharacterStat[];
-  class: string;
+  class: 'titan' | 'warlock' | 'hunter';
   classType: DestinyClass;
   className: string;
   gender: string;
