@@ -4,7 +4,9 @@ import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { TrackerErrorHandler } from './trackerErrorHandler';
-import { D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
+import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-tracker.service';
+import { ReviewDataCache } from './reviewDataCache';
+import { IPromise } from 'angular';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -12,12 +14,12 @@ import { D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
  */
 export class ReviewsFetcher {
   _perkRater: PerkRater;
-  _userFilter: any;
-  _reviewDataCache: any;
+  _userFilter: UserFilter;
+  _reviewDataCache: ReviewDataCache;
   _loadingTracker: any;
   _trackerErrorHandler: TrackerErrorHandler;
   _itemTransformer: ItemTransformer;
-  constructor(loadingTracker, reviewDataCache, userFilter: UserFilter) {
+  constructor(loadingTracker, reviewDataCache: ReviewDataCache, userFilter: UserFilter) {
     this._itemTransformer = new ItemTransformer();
     this._trackerErrorHandler = new TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
@@ -35,7 +37,7 @@ export class ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item) {
+  _getItemReviewsPromise(item: DimItem): IPromise<D1ItemReviewResponse[]> {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     const promise = $q
@@ -46,10 +48,10 @@ export class ReviewsFetcher {
 
     this._loadingTracker.addPromise(promise);
 
-    return promise;
+    return promise as IPromise<D1ItemReviewResponse[]>;
   }
 
-  _getUserReview(reviewData: D1ItemReviewResponse) {
+  _getUserReview(reviewData: D1ItemReviewResponse | D1CachedItem) {
     return reviewData.reviews.find((review) => review.isReviewer);
   }
 
@@ -63,7 +65,7 @@ export class ReviewsFetcher {
     }
   }
 
-  _attachReviews(item, reviewData) {
+  _attachReviews(item: DimItem, reviewData) {
     const userReview = this._getUserReview(reviewData);
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
@@ -114,10 +116,8 @@ export class ReviewsFetcher {
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item,
-                       cachedItem) {
-    item.communityReviews = cachedItem.reviews;
-
+  _attachCachedReviews(item: DimItem,
+                       cachedItem: D1CachedItem) {
     this._attachReviews(item, cachedItem);
 
     if (cachedItem.userRating) {
@@ -150,13 +150,13 @@ export class ReviewsFetcher {
 
     if (ratingData && ratingData.reviewsDataFetched) {
       this._attachCachedReviews(item,
-                               ratingData);
+                                ratingData);
 
       return;
     }
 
     this._getItemReviewsPromise(item)
       .then((data) => this._attachReviews(item,
-                                         data));
+                                          data));
   }
 }

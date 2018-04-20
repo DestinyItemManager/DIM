@@ -127,6 +127,7 @@ export interface D1ItemReviewResponse extends D1ItemFetchResponse {
 
 export interface D1CachedItem extends D1ItemReviewResponse, D1ItemWorkingUserReview {
   reviewsDataFetched: boolean;
+  totalReviews?: number;
 }
 
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';

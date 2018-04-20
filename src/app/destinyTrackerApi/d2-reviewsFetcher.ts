@@ -60,6 +60,7 @@ class D2ReviewsFetcher {
 
   _sortAndIgnoreReviews(item: DimItem) {
     if (item.reviews) {
+      item.reviews = item.reviews as DtrUserReview[]; // D1 and D2 reviews take different shapes
       item.reviews.sort(this._sortReviews);
 
       item.reviews.forEach((writtenReview) => {

@@ -1,6 +1,6 @@
 import { ItemTransformer } from './itemTransformer';
 import * as _ from 'underscore';
-import { D1ItemFetchResponse, D1ItemWorkingUserReview, D1CachedItem, D1ItemUserReview } from '../item-review/destiny-tracker.service';
+import { D1ItemFetchResponse, D1ItemWorkingUserReview, D1CachedItem, D1ItemUserReview, D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 
 /**
@@ -16,7 +16,7 @@ export class ReviewDataCache {
     this._itemStores = [];
   }
 
-  _getMatchingItem(item): D1CachedItem | undefined {
+  _getMatchingItem(item: DimItem): D1CachedItem | undefined {
     const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
@@ -29,27 +29,25 @@ export class ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item): D1CachedItem | undefined {
+  getRatingData(item: DimItem): D1CachedItem | undefined {
     return this._getMatchingItem(item);
   }
 
-  _toAtMostOneDecimal(rating) {
-    if (!rating) {
-      return null;
-    }
-
+  _toAtMostOneDecimal(rating: number): number {
     if ((rating % 1) === 0) {
       return rating;
     }
 
-    return rating.toFixed(1);
+    return Number(rating.toFixed(1));
   }
 
   /**
    * Add (and track) the community score.
    */
   addScore(dtrRating: D1ItemFetchResponse) {
-    dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
+    if (dtrRating) {  // not sure if we were sometimes receiving empty ratings or what
+      dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
+    }
 
     this._itemStores.push(dtrRating as D1CachedItem);
   }
@@ -62,7 +60,7 @@ export class ReviewDataCache {
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
   addUserReviewData(item: DimItem,
-                    userReview) {
+                    userReview: D1ItemWorkingUserReview) {
     const matchingItem = this._getMatchingItem(item);
 
     if (!matchingItem) {
@@ -85,8 +83,8 @@ export class ReviewDataCache {
    * Keep track of expanded item review data from the DTR API for this DIM store item.
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
-  addReviewsData(item,
-                 reviewsData) {
+  addReviewsData(item: DimItem,
+                 reviewsData: D1ItemReviewResponse | D1CachedItem) {
     const matchingItem = this._getMatchingItem(item);
     if (matchingItem) {
       matchingItem.reviews = reviewsData.reviews;
