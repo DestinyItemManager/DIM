@@ -497,13 +497,10 @@ function LoadoutBuilderController(
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onPerkLocked(perk: DimGridNode, type: ArmorTypes, $event) {
-        let activeType: 'none' | 'and' | 'or' | '' = 'none';
-        if ($event.shiftKey) {
-          const lockedPerk = vm.lockedperks[type][perk.hash];
-          activeType = ($event.shiftKey)
-            ? (lockedPerk && lockedPerk.lockType === 'and') ? 'none' : 'and'
-            : (lockedPerk && lockedPerk.lockType === 'or') ? 'none' : 'or';
-        }
+        const lockedPerk = vm.lockedperks[type][perk.hash];
+        const activeType = $event.shiftKey
+          ? (lockedPerk && lockedPerk.lockType === 'and') ? 'none' : 'and'
+          : (lockedPerk && lockedPerk.lockType === 'or') ? 'none' : 'or';
 
         if (activeType === 'none') {
           delete vm.lockedperks[type][perk.hash];
