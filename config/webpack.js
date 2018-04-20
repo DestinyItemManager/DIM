@@ -132,7 +132,7 @@ module.exports = (env) => {
         {
           type: 'javascript/auto',
           test: /\.json/,
-          include: /src(\/|\)locale/,
+          include: /src(\/|\\)locale/,
           use: [{
             loader: 'file-loader',
             options: { name: '[name]-[hash:6].[ext]' },
