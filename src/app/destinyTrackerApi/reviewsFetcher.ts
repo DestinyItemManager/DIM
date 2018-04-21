@@ -3,29 +3,24 @@ import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { TrackerErrorHandler } from './trackerErrorHandler';
 import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-tracker.service';
 import { ReviewDataCache } from './reviewDataCache';
 import { IPromise } from 'angular';
+import { handleErrors } from './trackerErrorHandler';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
  * This was tailored to work for weapons.  Items (armor, etc.) may or may not work.
  */
 export class ReviewsFetcher {
-  _perkRater: PerkRater;
-  _userFilter: UserFilter;
+  _perkRater = new PerkRater();
+  _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
   _loadingTracker: any;
-  _trackerErrorHandler: TrackerErrorHandler;
-  _itemTransformer: ItemTransformer;
-  constructor(loadingTracker, reviewDataCache: ReviewDataCache, userFilter: UserFilter) {
-    this._itemTransformer = new ItemTransformer();
-    this._trackerErrorHandler = new TrackerErrorHandler();
+  _itemTransformer = new ItemTransformer();
+  constructor(loadingTracker, reviewDataCache: ReviewDataCache) {
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
-    this._userFilter = userFilter;
-    this._perkRater = new PerkRater();
   }
 
   _getItemReviewsCall(item) {
@@ -43,7 +38,7 @@ export class ReviewsFetcher {
     const promise = $q
               .when(this._getItemReviewsCall(postWeapon))
               .then($http)
-              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+              .then(handleErrors)
               .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);

@@ -1,18 +1,15 @@
 import { $q, $http } from 'ngimport';
 import { ItemListBuilder } from './itemListBuilder';
-import { TrackerErrorHandler } from './trackerErrorHandler';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemFetchResponse } from '../item-review/destiny-tracker.service';
 import { IPromise } from 'angular';
+import { handleErrors } from './trackerErrorHandler';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
   _loadingTracker: any;
-  _trackerErrorHandler: TrackerErrorHandler;
-  _itemListBuilder: any;
+  _itemListBuilder = new ItemListBuilder();
   constructor(loadingTracker, reviewDataCache) {
-    this._itemListBuilder = new ItemListBuilder();
-    this._trackerErrorHandler = new TrackerErrorHandler();
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
   }
@@ -42,7 +39,7 @@ class BulkFetcher {
     const promise = $q
               .when(this._getBulkWeaponDataEndpointPost(weaponList))
               .then($http)
-              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+              .then(handleErrors)
               .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);

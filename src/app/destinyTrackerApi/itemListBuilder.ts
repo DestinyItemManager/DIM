@@ -10,10 +10,7 @@ import { DimItem } from '../inventory/store/d2-item-factory.service';
  * Generally tailored to work with weapon data.
  */
 export class ItemListBuilder {
-  _itemTransformer: ItemTransformer;
-  constructor() {
-    this._itemTransformer = new ItemTransformer();
-  }
+  _itemTransformer = new ItemTransformer();
 
   _getNewItems(allItems: DimItem[], reviewDataCache: ReviewDataCache): D1ItemFetchRequest[] {
     const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrWeapon(item));

@@ -135,13 +135,11 @@ import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
 import { ReviewsFetcher } from '../destinyTrackerApi/reviewsFetcher';
 import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
 import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
-import { UserFilter } from '../destinyTrackerApi/userFilter';
 
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
-import { SyncService } from '../storage/sync.service';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
@@ -150,6 +148,7 @@ import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bun
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { IPromise } from 'angular';
 import { $q } from 'ngimport';
+import { UserFilter } from '../destinyTrackerApi/userFilter';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -173,17 +172,16 @@ export function DestinyTrackerService(
   'ngInject';
 
   const _reviewDataCache = new ReviewDataCache();
-  const _userFilter = new UserFilter(SyncService);
   const _bulkFetcher = new BulkFetcher(loadingTracker, _reviewDataCache);
-  const _reviewsFetcher = new ReviewsFetcher(loadingTracker, _reviewDataCache, _userFilter);
+  const _reviewsFetcher = new ReviewsFetcher(loadingTracker, _reviewDataCache);
   const _reviewSubmitter = new ReviewSubmitter(loadingTracker, _reviewDataCache);
-  const _reviewReporter = new ReviewReporter(loadingTracker, _reviewDataCache, _userFilter);
+  const _reviewReporter = new ReviewReporter(loadingTracker, _reviewDataCache);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
   const _d2bulkFetcher = new D2BulkFetcher(loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher(loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2reviewsFetcher = new D2ReviewsFetcher(loadingTracker, _d2reviewDataCache);
   const _d2reviewSubmitter = new D2ReviewSubmitter(loadingTracker, _d2reviewDataCache);
-  const _d2reviewReporter = new D2ReviewReporter(loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2reviewReporter = new D2ReviewReporter(loadingTracker, _d2reviewDataCache);
 
   function _isDestinyOne() {
     return (settings.destinyVersion === 1);
@@ -331,7 +329,8 @@ export function DestinyTrackerService(
       }
     },
     clearIgnoredUsers() {
-      _userFilter.clearIgnoredUsers();
+      const userFilter = new UserFilter();
+      userFilter.clearIgnoredUsers();
     },
     clearCache() {
       if (_isDestinyTwo()) {

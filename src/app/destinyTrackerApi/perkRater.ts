@@ -63,7 +63,7 @@ export class PerkRater {
       return undefined;
     }
 
-    return _.max(item.talentGrid.nodes, (node: DimGridNode) => node.column).column;
+    return _.max(item.talentGrid.nodes, (node) => node.column).column;
   }
 
   _getPerkNodesInColumn(item: DimItem,

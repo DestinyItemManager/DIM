@@ -8,24 +8,21 @@ import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DtrItem, DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
 import { $q, $http } from 'ngimport';
+import { UserFilter } from './userFilter';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
  */
 class D2ReviewsFetcher {
-  _trackerErrorHandler: D2TrackerErrorHandler;
-  _perkRater: D2PerkRater;
-  _userFilter: any;
+  _trackerErrorHandler = new D2TrackerErrorHandler();
+  _perkRater = new D2PerkRater();
+  _userFilter = new UserFilter();
   _reviewDataCache: D2ReviewDataCache;
   _loadingTracker: any;
-  _itemTransformer: D2ItemTransformer;
-  constructor(loadingTracker, reviewDataCache, userFilter) {
-    this._itemTransformer = new D2ItemTransformer();
-    this._trackerErrorHandler = new D2TrackerErrorHandler();
+  _itemTransformer = new D2ItemTransformer();
+  constructor(loadingTracker, reviewDataCache) {
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
-    this._userFilter = userFilter;
-    this._perkRater = new D2PerkRater();
   }
 
   _getItemReviewsCall(item: DtrItem, platformSelection: number, mode: number) {
@@ -64,7 +61,7 @@ class D2ReviewsFetcher {
       item.reviews.sort(this._sortReviews);
 
       item.reviews.forEach((writtenReview) => {
-        writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
+        this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
   }

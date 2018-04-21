@@ -1,22 +1,20 @@
 import { $q, $http } from 'ngimport';
-import { TrackerErrorHandler } from './trackerErrorHandler';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemUserReview, D1MembershipInfo } from '../item-review/destiny-tracker.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { UserFilter } from './userFilter';
+import { handleSubmitErrors } from './trackerErrorHandler';
 
 /**
  * Class to support reporting bad takes.
  */
 export class ReviewReporter {
-  _userFilter: any;
+  _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
   _loadingTracker: any;
-  _trackerErrorHandler: TrackerErrorHandler;
-  constructor(loadingTracker, reviewDataCache, userFilter) {
-    this._trackerErrorHandler = new TrackerErrorHandler();
+  constructor(loadingTracker, reviewDataCache) {
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = reviewDataCache;
-    this._userFilter = userFilter;
   }
 
   _getReporter(membershipInfo: DestinyAccount): D1MembershipInfo {
@@ -52,7 +50,7 @@ export class ReviewReporter {
     const promise = $q
               .when(this._submitReviewReportCall(reviewReport))
               .then($http)
-              .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
+              .then(handleSubmitErrors);
 
     this._loadingTracker.addPromise(promise);
 

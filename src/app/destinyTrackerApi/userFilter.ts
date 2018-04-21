@@ -1,15 +1,12 @@
+import { SyncService } from "../storage/sync.service";
+
 /**
  * Class to support registering (and remembering) displeasure with other reviewers.
  */
 export class UserFilter {
-  _syncService: any;
-  constructor(syncService) {
-    this._syncService = syncService;
-  }
-
   _getIgnoredUsersPromise() {
     const ignoredUsersKey = 'ignoredUsers';
-    return this._syncService.get()
+    return SyncService.get()
       .then((data) => {
         return data[ignoredUsersKey] || [];
       });
@@ -24,7 +21,7 @@ export class UserFilter {
       .then((ignoredUsers) => {
         ignoredUsers.push(reportedMembershipId);
 
-        this._syncService.set({ ignoredUsers });
+        SyncService.set({ ignoredUsers });
       });
   }
 
@@ -46,6 +43,6 @@ export class UserFilter {
    * This is in for development, but maybe someone else will eventually want?
    */
   clearIgnoredUsers() {
-    this._syncService.set({ ignoredUsers: [] });
+    SyncService.set({ ignoredUsers: [] });
   }
 }
