@@ -1,5 +1,7 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as _ from 'underscore';
+import { Observable } from 'rxjs/Observable';
+import '../rx-operators';
 
 const localStorageKey = 'dim-changelog-viewed-version';
 
@@ -10,6 +12,15 @@ class Versions {
 
   /** An observable for whether to show the changelog. */
   showChangelog$ = new BehaviorSubject(this.showChangelog);
+
+  /** An observable for whether the server thinks there's a new version. */
+  // TODO: does this belong here?
+  // TODO: if the versions are different (vs. currentVersion), force SW update and then go
+  serverVersion$ = Observable.timer(0, 10 * 60 * 1000)
+    // Fetch but swallow errors
+    .switchMap(() => Observable.fromPromise(getServerVersion()).catch(() => Observable.empty<string>()))
+    // Deep equals
+    .distinctUntilChanged();
 
   /**
    * Signify that the changelog page has been viewed.
@@ -68,6 +79,19 @@ export function compareVersions(version1: string, version2: string) {
   }
 
   return 0;
+}
+
+async function getServerVersion() {
+  const response = await fetch('/version.json');
+  if (response.ok) {
+    const data = await response.json();
+    if (!data.version) {
+      throw new Error("No version property");
+    }
+    return data.version as string;
+  } else {
+    throw response;
+  }
 }
 
 export const DimVersions = new Versions();

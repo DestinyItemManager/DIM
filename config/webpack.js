@@ -9,6 +9,7 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
+const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -196,6 +197,11 @@ module.exports = (env) => {
         filename: 'gdrive-return.html',
         template: '!html-loader!src/gdrive-return.html',
         chunks: ['gdriveReturn']
+      }),
+
+      // Generate a version info JSON file we can poll. We could theoretically add more info here too.
+      new GenerateJsonPlugin('./version.json', {
+        version
       }),
 
       new CopyWebpackPlugin([
