@@ -3,7 +3,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { $transitions, $state } from '../ngimport-more';
 import { t } from 'i18next';
 
-export default class Link extends React.Component<{
+export default class Link extends React.PureComponent<{
   account?: DestinyAccount;
   state: string;
   text?: string;
