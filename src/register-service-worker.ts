@@ -109,6 +109,8 @@ export default function registerServiceWorker() {
           if ($featureFlags.debugSW) {
             console.error('SW: Unable to update service worker.', err);
           }
+        }).then(() => {
+          console.log('SW: New content is available; please refresh.');
         });
       };
     })

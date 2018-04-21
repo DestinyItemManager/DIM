@@ -1,6 +1,5 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as _ from 'underscore';
-import '../rx-operators';
 
 const localStorageKey = 'dim-changelog-viewed-version';
 
