@@ -4,13 +4,12 @@ import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemFetchResponse } from '../item-review/destiny-tracker.service';
 import { IPromise } from 'angular';
 import { handleErrors } from './trackerErrorHandler';
+import { loadingTracker } from '../ngimport-more';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
-  _loadingTracker: any;
   _itemListBuilder = new ItemListBuilder();
-  constructor(loadingTracker, reviewDataCache) {
-    this._loadingTracker = loadingTracker;
+  constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
@@ -25,24 +24,22 @@ class BulkFetcher {
 
   _getBulkFetchPromise(stores): IPromise<D1ItemFetchResponse[]> {
     if (!stores.length) {
-      const emptyResponse: D1ItemFetchResponse[] = [];
-      return $q.resolve(emptyResponse);
+      return $q.resolve([] as D1ItemFetchResponse[]);
     }
 
     const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
-      const emptyResponse: D1ItemFetchResponse[] = [];
-      return $q.resolve(emptyResponse);
+      return $q.resolve([] as D1ItemFetchResponse[]);
     }
 
     const promise = $q
               .when(this._getBulkWeaponDataEndpointPost(weaponList))
               .then($http)
-              .then(handleErrors)
+              .then(handleErrors, handleErrors)
               .then((response) => response.data);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise as IPromise<D1ItemFetchResponse[]>;
   }

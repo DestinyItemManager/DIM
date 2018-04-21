@@ -4,6 +4,7 @@ import { D1ItemUserReview, D1MembershipInfo } from '../item-review/destiny-track
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { UserFilter } from './userFilter';
 import { handleSubmitErrors } from './trackerErrorHandler';
+import { loadingTracker } from '../ngimport-more';
 
 /**
  * Class to support reporting bad takes.
@@ -11,9 +12,7 @@ import { handleSubmitErrors } from './trackerErrorHandler';
 export class ReviewReporter {
   _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
-  _loadingTracker: any;
-  constructor(loadingTracker, reviewDataCache) {
-    this._loadingTracker = loadingTracker;
+  constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
@@ -50,9 +49,9 @@ export class ReviewReporter {
     const promise = $q
               .when(this._submitReviewReportCall(reviewReport))
               .then($http)
-              .then(handleSubmitErrors);
+              .then(handleSubmitErrors, handleSubmitErrors);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise;
   }

@@ -4,16 +4,15 @@ import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { D1MembershipInfo, D1ItemUserReview } from '../item-review/destiny-tracker.service';
 import { $q, $http } from 'ngimport';
 import { handleSubmitErrors } from './trackerErrorHandler';
+import { loadingTracker } from '../ngimport-more';
 
 /**
  * Supports submitting review data to the DTR API.
  */
 export class ReviewSubmitter {
-  _loadingTracker: any;
   _reviewDataCache: ReviewDataCache;
   _itemTransformer = new ItemTransformer();
-  constructor(loadingTracker, reviewDataCache: ReviewDataCache) {
-    this._loadingTracker = loadingTracker;
+  constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
@@ -53,9 +52,9 @@ export class ReviewSubmitter {
     const promise = $q
               .when(this._submitItemReviewCall(rating))
               .then($http)
-              .then(handleSubmitErrors);
+              .then(handleSubmitErrors, handleSubmitErrors);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise;
   }

@@ -74,6 +74,10 @@ export interface DimReviewReport {
   text: string;
 }
 
+export interface DtrSubmitResponse {
+  success?: boolean;
+}
+
 export enum DtrActivityModes {
   notSpecified = 0,
   playerVersusEnemy = 7,
@@ -166,22 +170,20 @@ export interface DestinyTrackerServiceType {
   getD2ReviewDataCache(): D2ReviewDataCache;
 }
 
-export function DestinyTrackerService(
-  loadingTracker
-): DestinyTrackerServiceType {
+export function DestinyTrackerService(): DestinyTrackerServiceType {
   'ngInject';
 
   const _reviewDataCache = new ReviewDataCache();
-  const _bulkFetcher = new BulkFetcher(loadingTracker, _reviewDataCache);
-  const _reviewsFetcher = new ReviewsFetcher(loadingTracker, _reviewDataCache);
-  const _reviewSubmitter = new ReviewSubmitter(loadingTracker, _reviewDataCache);
-  const _reviewReporter = new ReviewReporter(loadingTracker, _reviewDataCache);
+  const _bulkFetcher = new BulkFetcher(_reviewDataCache);
+  const _reviewsFetcher = new ReviewsFetcher(_reviewDataCache);
+  const _reviewSubmitter = new ReviewSubmitter(_reviewDataCache);
+  const _reviewReporter = new ReviewReporter(_reviewDataCache);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
-  const _d2bulkFetcher = new D2BulkFetcher(loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher(loadingTracker, _d2reviewDataCache);
-  const _d2reviewSubmitter = new D2ReviewSubmitter(loadingTracker, _d2reviewDataCache);
-  const _d2reviewReporter = new D2ReviewReporter(loadingTracker, _d2reviewDataCache);
+  const _d2bulkFetcher = new D2BulkFetcher(_d2reviewDataCache);
+  const _d2reviewsFetcher = new D2ReviewsFetcher(_d2reviewDataCache);
+  const _d2reviewSubmitter = new D2ReviewSubmitter(_d2reviewDataCache);
+  const _d2reviewReporter = new D2ReviewReporter(_d2reviewDataCache);
 
   function _isDestinyOne() {
     return (settings.destinyVersion === 1);

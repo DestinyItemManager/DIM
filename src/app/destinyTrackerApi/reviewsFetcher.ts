@@ -7,6 +7,7 @@ import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-track
 import { ReviewDataCache } from './reviewDataCache';
 import { IPromise } from 'angular';
 import { handleErrors } from './trackerErrorHandler';
+import { loadingTracker } from '../ngimport-more';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -16,10 +17,8 @@ export class ReviewsFetcher {
   _perkRater = new PerkRater();
   _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
-  _loadingTracker: any;
   _itemTransformer = new ItemTransformer();
-  constructor(loadingTracker, reviewDataCache: ReviewDataCache) {
-    this._loadingTracker = loadingTracker;
+  constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
@@ -38,10 +37,10 @@ export class ReviewsFetcher {
     const promise = $q
               .when(this._getItemReviewsCall(postWeapon))
               .then($http)
-              .then(handleErrors)
+              .then(handleErrors, handleErrors)
               .then((response) => response.data);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise as IPromise<D1ItemReviewResponse[]>;
   }

@@ -1,10 +1,11 @@
 import { D2ItemTransformer } from './d2-itemTransformer';
-import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { Reviewer } from '../item-review/destiny-tracker.service';
 import { $q, $http } from 'ngimport';
+import { loadingTracker } from '../ngimport-more';
+import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
 
 export interface RatingAndReviewRequest {
   reviewer?: Reviewer;
@@ -22,13 +23,8 @@ export interface RatingAndReviewRequest {
  */
 class D2ReviewSubmitter {
   _reviewDataCache: D2ReviewDataCache;
-  _loadingTracker: any;
-  _trackerErrorHandler: D2TrackerErrorHandler;
-  _itemTransformer: D2ItemTransformer;
-  constructor(loadingTracker, reviewDataCache) {
-    this._itemTransformer = new D2ItemTransformer();
-    this._trackerErrorHandler = new D2TrackerErrorHandler();
-    this._loadingTracker = loadingTracker;
+  _itemTransformer = new D2ItemTransformer();
+  constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
@@ -69,9 +65,9 @@ class D2ReviewSubmitter {
     const promise = $q
               .when(this._submitItemReviewCall(rating))
               .then($http)
-              .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
+              .then(handleD2SubmitErrors, handleD2SubmitErrors);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise;
   }

@@ -3,25 +3,23 @@ import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
 import { IPromise } from 'angular';
-import { D2TrackerErrorHandler } from './d2-trackerErrorHandler';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DtrItem, DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
 import { $q, $http } from 'ngimport';
 import { UserFilter } from './userFilter';
+import { loadingTracker } from '../ngimport-more';
+import { handleD2Errors } from './d2-trackerErrorHandler';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
  */
 class D2ReviewsFetcher {
-  _trackerErrorHandler = new D2TrackerErrorHandler();
   _perkRater = new D2PerkRater();
   _userFilter = new UserFilter();
   _reviewDataCache: D2ReviewDataCache;
-  _loadingTracker: any;
   _itemTransformer = new D2ItemTransformer();
-  constructor(loadingTracker, reviewDataCache) {
-    this._loadingTracker = loadingTracker;
+  constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
@@ -42,10 +40,10 @@ class D2ReviewsFetcher {
     const promise = $q
       .when(this._getItemReviewsCall(dtrItem, platformSelection, mode))
       .then($http)
-      .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+      .then(handleD2Errors, handleD2Errors)
       .then((response) => response.data);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise as IPromise<DtrReviewContainer>;
   }
