@@ -255,13 +255,16 @@
     "About": "Über",
     "Back": "Zurück",
     "BulkTag": "Massenbeschriftung Items",
+    "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "Suche nach Item/Perk oder {{example}}",
     "Filters": "Filter",
     "Inventory": "Inventar",
     "Refresh": "Aktualisiere Destiny Daten",
-    "ReportBug": "Problem melden",
+    "ReportBug": "Bug Report",
     "Shop": "Shop",
-    "SupportDIM": "Unterstützer"
+    "SupportDIM": "Unterstützer",
+    "UpgradeDIM": "Upgrade DIM",
+    "WhatsNew": "What's New"
   },
   "Help": {
     "CannotMove": "Item kann nicht von diesem Charakter wegbewegt werden.",

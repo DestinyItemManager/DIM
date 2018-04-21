@@ -255,13 +255,16 @@
     "About": "О проекте",
     "Back": "Вернуться",
     "BulkTag": "Массовая маркировка предметов",
+    "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "Поиск предмета/модуля или {{example}}",
     "Filters": "Фильтры",
     "Inventory": "Инвентарь",
     "Refresh": "Обновить данные Destiny",
-    "ReportBug": "Сообщить о проблеме",
+    "ReportBug": "Bug Report",
     "Shop": "Магазин",
-    "SupportDIM": "Поддержавшие"
+    "SupportDIM": "Поддержавшие",
+    "UpgradeDIM": "Upgrade DIM",
+    "WhatsNew": "What's New"
   },
   "Help": {
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",

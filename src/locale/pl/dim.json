@@ -255,13 +255,16 @@
     "About": "About",
     "Back": "Go Back",
     "BulkTag": "Bulk tag items",
+    "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "Search item/perk or {{example}}",
     "Filters": "Filters",
     "Inventory": "Inventory",
     "Refresh": "Refresh Destiny Data",
-    "ReportBug": "Report an Issue",
+    "ReportBug": "Bug Report",
     "Shop": "Shop",
-    "SupportDIM": "Backers"
+    "SupportDIM": "Backers",
+    "UpgradeDIM": "Upgrade DIM",
+    "WhatsNew": "What's New"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",

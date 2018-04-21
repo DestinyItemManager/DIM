@@ -255,13 +255,16 @@
     "About": "À propos",
     "Back": "Retour",
     "BulkTag": "Tag de masse des objets",
+    "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
     "Filters": "Filtres",
     "Inventory": "Inventaire",
     "Refresh": "Rafraîchir les données Destiny",
-    "ReportBug": "Signaler un bug",
+    "ReportBug": "Bug Report",
     "Shop": "Boutique",
-    "SupportDIM": "Supporteurs"
+    "SupportDIM": "Supporteurs",
+    "UpgradeDIM": "Upgrade DIM",
+    "WhatsNew": "What's New"
   },
   "Help": {
     "CannotMove": "Impossible de déplacer cet objet de ce personnage.",

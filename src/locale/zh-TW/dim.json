@@ -255,13 +255,16 @@
     "About": "關於",
     "Back": "返回",
     "BulkTag": "批量標記物品",
+    "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "搜尋物品/特性或使用{{example}}查找重複物品",
     "Filters": "篩選器",
     "Inventory": "背包",
     "Refresh": "重新載入天命資料",
-    "ReportBug": "回饋問題",
+    "ReportBug": "Bug Report",
     "Shop": "商店",
-    "SupportDIM": "支持者"
+    "SupportDIM": "支持者",
+    "UpgradeDIM": "Upgrade DIM",
+    "WhatsNew": "What's New"
   },
   "Help": {
     "CannotMove": "無法從該角色中移出物品.",

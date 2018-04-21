@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
+    "ConfirmDescription": "Por favor utilize a aplicação Destiny Companion para dar permissão ao DIM modificar seus items.",
     "ConfirmTitle": "Confirmar a Ação"
   },
   "Accounts": {
@@ -99,7 +99,7 @@
     "Cons": "Contras",
     "Delete": "Apagar",
     "Edit": "Editar",
-    "ForGameMode": "For game mode",
+    "ForGameMode": "Para o modo de jogo",
     "Help": "Escreva uma análise (opcional)",
     "HelpCons": "Descreva os aspectos negativos desta arma (opcional)",
     "HelpPros": "Descreva os aspectos positivos desta arma (opcional)",
@@ -255,13 +255,16 @@
     "About": "Sobre",
     "Back": "Voltar",
     "BulkTag": "Marcar items em massa",
+    "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "Buscar por item/perk ou {{example}}",
     "Filters": "Filtros",
     "Inventory": "Inventário",
     "Refresh": "Atualizar dados do Destiny",
-    "ReportBug": "Reportar um Problema",
+    "ReportBug": "Bug Report",
     "Shop": "Loja",
-    "SupportDIM": "Apoiadores"
+    "SupportDIM": "Apoiadores",
+    "UpgradeDIM": "Upgrade DIM",
+    "WhatsNew": "What's New"
   },
   "Help": {
     "CannotMove": "Não é possível remover o item deste personagem.",
@@ -678,7 +681,7 @@
       "DiscordHelp": "Faça perguntas, dê seu feedback e obtenha suporte em nossos canais no Discord.",
       "FAQ": "FAQ",
       "FAQAccess": "Como o DIM obtém acesso aos meus dados do Destiny?",
-      "FAQAccessAnswer": "Nós usamos o aplicativo de autenticação da Bungie para conceder acesso ao DIM para ver e mover seus itens. DIM nunca vê seu nome de usuário ou senha. Esse é o mesmo modo que o aplicativo complementar funciona.",
+      "FAQAccessAnswer": "Nós usamos o aplicativo de autenticação da Bungie para conceder acesso ao DIM para ver e mover seus itens. DIM nunca vê seu nome de usuário ou senha. Esse é o mesmo modo que o aplicativo Companion funciona.",
       "FAQD2": "DIM terá suporte ao Destiny 2?",
       "FAQD2Answer": "Sim! Nós esperamos dar suporte a Destiny 2 pouco tempo depois de lançado (e de nós mesmos termos a chance de jogá-lo). Espere DIM começar com as coisas mais fáceis (mostrando e movendo seus itens) a medida que trabalha para ter funções mais legais enquanto todos nós descobrimos o que D2 tem guardado para nós. O mesmo site DIM suportará Destiny 2 e Destiny 1 ao mesmo tempo, e você será capaz de alternar entre seus personagens do D1 e D2.",
       "FAQDupeGally": "Ei, o DIM duplicou minha Gjallarhorn!",

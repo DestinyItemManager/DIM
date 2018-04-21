@@ -255,13 +255,16 @@
     "About": "情報",
     "Back": "戻る",
     "BulkTag": "ロットマークピンは",
+    "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "アイテム、効果または{{example}}から検索",
     "Filters": "フィルター",
     "Inventory": "インベントリー",
     "Refresh": "デスティニーデータを更新",
-    "ReportBug": "問題を報告する",
+    "ReportBug": "Bug Report",
     "Shop": "店",
-    "SupportDIM": "支持者"
+    "SupportDIM": "支持者",
+    "UpgradeDIM": "Upgrade DIM",
+    "WhatsNew": "What's New"
   },
   "Help": {
     "CannotMove": "キャラクターからこのアイテムを外せません",

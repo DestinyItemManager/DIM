@@ -255,13 +255,16 @@
     "About": "Acerca de",
     "Back": "Ir atrás",
     "BulkTag": "Etiquetar los objetos en general",
+    "BungieNetAlert": "Alerta de Bungie",
     "FilterHelp": "Buscar objeto/talento o {{example}}",
     "Filters": "Filtros",
     "Inventory": "Inventario",
     "Refresh": "Actualizar datos de Destiny",
-    "ReportBug": "Reportar un Problema",
+    "ReportBug": "Informe de Errores",
     "Shop": "Tienda",
-    "SupportDIM": "Patrocinadores"
+    "SupportDIM": "Patrocinadores",
+    "UpgradeDIM": "Actualizar DIM",
+    "WhatsNew": "¿Qué hay de nuevo?"
   },
   "Help": {
     "CannotMove": "No se puede mover ese objeto de este personaje.",
