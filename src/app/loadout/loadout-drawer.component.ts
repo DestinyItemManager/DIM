@@ -38,8 +38,6 @@ function LoadoutDrawerCtrl(
   'ngInject';
   const vm = this;
 
-  const dimItemCategories = vm.account.destinyVersion === 2 ? D2Categories : D1Categories;
-
   this.$onChanges = (changes) => {
     if (changes.stores) {
       const stores = vm.stores || [];
@@ -74,6 +72,8 @@ function LoadoutDrawerCtrl(
 
     if (changes.account) {
       vm.show = false;
+      const dimItemCategories = vm.account.destinyVersion === 2 ? D2Categories : D1Categories;
+      vm.types = _.flatten(Object.values(dimItemCategories)).map((t) => t.toLowerCase());
     }
   };
 
@@ -116,8 +116,6 @@ function LoadoutDrawerCtrl(
   });
 
   vm.settings = settings;
-
-  vm.types = _.flatten(Object.values(dimItemCategories)).map((t) => t.toLowerCase());
 
   vm.show = false;
   dimLoadoutService.dialogOpen = false;

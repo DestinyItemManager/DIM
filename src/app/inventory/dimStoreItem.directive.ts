@@ -70,31 +70,72 @@ export function StoreItemCtrl(
   const vm = this;
   let dialogResult: any = null;
 
-  if (vm.item.maxStackSize > 1) {
-    const dragHelp = document.getElementById("drag-help")!;
-    $element.on("dragstart", (element) => {
-      $rootScope.$broadcast("drag-start-item", {
-        item: vm.item,
-        element
+  vm.$onInit = () => {
+    if (vm.item.maxStackSize > 1) {
+      const dragHelp = document.getElementById("drag-help")!;
+      $element.on("dragstart", (element) => {
+        $rootScope.$broadcast("drag-start-item", {
+          item: vm.item,
+          element
+        });
+        $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
+        if (vm.item.amount > 1) {
+          dragHelp.classList.remove("drag-help-hidden");
+        }
       });
-      $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
-      if (vm.item.amount > 1) {
-        dragHelp.classList.remove("drag-help-hidden");
-      }
-    });
-    $element.on("dragend", () => {
-      $rootScope.$broadcast("drag-stop-item");
-      dragHelp.classList.add("drag-help-hidden");
-      delete $rootScope.dragItem;
-    });
-    $element.on("drag", (e) => {
-      if (e.shiftKey) {
-        dragHelp.classList.add("drag-shift-activated");
-      } else {
-        dragHelp.classList.remove("drag-shift-activated");
-      }
-    });
-  }
+      $element.on("dragend", () => {
+        $rootScope.$broadcast("drag-stop-item");
+        dragHelp.classList.add("drag-help-hidden");
+        delete $rootScope.dragItem;
+      });
+      $element.on("drag", (e) => {
+        if (e.shiftKey) {
+          dragHelp.classList.add("drag-shift-activated");
+        } else {
+          dragHelp.classList.remove("drag-shift-activated");
+        }
+      });
+    }
+
+    // Perf hack: the item's "index" property is computed based on:
+    //  * its ID
+    //  * amount (and a unique-ifier) if it's a stackable
+    //  * primary stat
+    //  * completion percentage
+    //  * quality minimum
+    //
+    // As a result we can bind-once or compute up front properties that depend
+    // on those values, since if any of them change, the *entire* item directive
+    // will be recreated from scratch. This is cheaper overall since the number of
+    // items that get infused or have XP added to them in any given refresh is much
+    // smaller than the number of items that don't.
+    //
+    // Note that this hack means that dim-store-items used outside of ng-repeat won't
+    // update!
+
+    vm.badgeClassNames = {};
+
+    if (!vm.item.primStat && vm.item.objectives) {
+      processBounty(vm, vm.item);
+    } else if (vm.item.maxStackSize > 1) {
+      processStackable(vm, vm.item);
+    } else {
+      processItem(vm, vm.item);
+    }
+
+    // TODO: once we rewrite this in react and don't need the perf hack, we should show ghost affinity and flavor objective here
+
+    vm.dragChannel =
+      vm.item.notransfer ||
+      (vm.item.location.inPostmaster && vm.item.destinyVersion === 2)
+        ? vm.item.owner + vm.item.bucket.type
+        : vm.item.bucket.type;
+    vm.draggable =
+      (!vm.item.location.inPostmaster || vm.item.destinyVersion === 2) &&
+      vm.item.notransfer
+        ? vm.item.equipment
+        : vm.item.equipment || vm.item.bucket.hasTransferDestination;
+  };
 
   vm.doubleClicked = queuedAction((item, e) => {
     if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
@@ -172,45 +213,6 @@ export function StoreItemCtrl(
       dialogResult.close();
     }
   });
-
-  // Perf hack: the item's "index" property is computed based on:
-  //  * its ID
-  //  * amount (and a unique-ifier) if it's a stackable
-  //  * primary stat
-  //  * completion percentage
-  //  * quality minimum
-  //
-  // As a result we can bind-once or compute up front properties that depend
-  // on those values, since if any of them change, the *entire* item directive
-  // will be recreated from scratch. This is cheaper overall since the number of
-  // items that get infused or have XP added to them in any given refresh is much
-  // smaller than the number of items that don't.
-  //
-  // Note that this hack means that dim-store-items used outside of ng-repeat won't
-  // update!
-
-  vm.badgeClassNames = {};
-
-  if (!vm.item.primStat && vm.item.objectives) {
-    processBounty(vm, vm.item);
-  } else if (vm.item.maxStackSize > 1) {
-    processStackable(vm, vm.item);
-  } else {
-    processItem(vm, vm.item);
-  }
-
-  // TODO: once we rewrite this in react and don't need the perf hack, we should show ghost affinity and flavor objective here
-
-  vm.dragChannel =
-    vm.item.notransfer ||
-    (vm.item.location.inPostmaster && vm.item.destinyVersion === 2)
-      ? vm.item.owner + vm.item.bucket.type
-      : vm.item.bucket.type;
-  vm.draggable =
-    (!vm.item.location.inPostmaster || vm.item.destinyVersion === 2) &&
-    vm.item.notransfer
-      ? vm.item.equipment
-      : vm.item.equipment || vm.item.bucket.hasTransferDestination;
 
   function processBounty(vm, item: DimItem) {
     const showBountyPercentage = !item.complete && !item.hidePercentage;

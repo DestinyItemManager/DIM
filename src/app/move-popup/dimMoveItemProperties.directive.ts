@@ -38,14 +38,78 @@ function MoveItemPropertiesCtrl(
   }
 
   vm.tab = 'default';
-
-  vm.hasDetails = Boolean((vm.item.stats && vm.item.stats.length) ||
-                          vm.item.talentGrid || vm.item.objectives ||
-                          vm.item.flavorObjective || vm.item.secondaryIcon);
-  vm.showDescription = Boolean(vm.item.description && vm.item.description.length);
   vm.locking = false;
+  vm.classes = {
+    'is-arc': false,
+    'is-solar': false,
+    'is-void': false
+  };
+  vm.light = null;
+  vm.settings = settings;
 
-  dimDestinyTrackerService.getItemReviews(vm.item);
+  vm.$onInit = () => {
+    vm.hasDetails = Boolean((vm.item.stats && vm.item.stats.length) ||
+                            vm.item.talentGrid || vm.item.objectives ||
+                            vm.item.flavorObjective || vm.item.secondaryIcon);
+    vm.showDescription = Boolean(vm.item.description && vm.item.description.length);
+    vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
+    vm.itemDetails = vm.showDetailsByDefault;
+
+    dimDestinyTrackerService.getItemReviews(vm.item);
+
+    // DTR 404s on the new D2 languages for D1 items
+    let language = vm.settings.language;
+    if (vm.item.destinyVersion === 1) {
+      switch (language) {
+      case 'es-mx':
+        language = 'es';
+        break;
+      case 'pl':
+      case 'ru':
+      case 'zh-cht':
+        language = 'en';
+        break;
+      }
+    } else {
+      // For D2, DTR uses English for es-mx
+      switch (language) {
+      case 'es-mx':
+        language = 'es';
+        break;
+      }
+    }
+    vm.destinyDBLink = `http://db.destinytracker.com/d${vm.item.destinyVersion}/${vm.settings.language}/items/${vm.item.hash}`;
+
+    if (vm.item.primStat) {
+      vm.light = vm.item.primStat.value.toString();
+    }
+    if (vm.item.dmg) {
+      vm.classes[`is-${vm.item.dmg}`] = true;
+    }
+
+    if (vm.item.classTypeName !== 'unknown' &&
+        // These already include the class name
+        vm.item.type !== 'ClassItem' &&
+        vm.item.type !== 'Artifact' &&
+        vm.item.type !== 'Class') {
+      vm.classType = vm.item.classTypeNameLocalized[0].toUpperCase() + vm.item.classTypeNameLocalized.slice(1);
+    }
+
+    /*
+    * Get the item stats and its stat name
+    * of the equipped item for comparison
+    */
+    if (vm.item.equipment) {
+      if (vm.compareItem) {
+        $scope.$watch('vm.compareItem', compareItems);
+      } else {
+        $scope.$watch('$parent.$parent.vm.store.items', (items: DimItem[]) => {
+          const item = (items || []).find((item) => item.equipped && item.type === vm.item.type);
+          compareItems(item);
+        });
+      }
+    }
+  };
 
   // The 'i' keyboard shortcut toggles full details
   $scope.$on('dim-toggle-item-details', () => {
@@ -157,57 +221,9 @@ function MoveItemPropertiesCtrl(
     }
   };
 
-  vm.classes = {
-    'is-arc': false,
-    'is-solar': false,
-    'is-void': false
-  };
-
-  vm.light = null;
-  vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
-  vm.itemDetails = vm.showDetailsByDefault;
-  vm.settings = settings;
   $scope.$watch('vm.settings.itemDetails', (show) => {
     vm.itemDetails = vm.itemDetails || show;
   });
-
-  // DTR 404s on the new D2 languages for D1 items
-  let language = vm.settings.language;
-  if (vm.item.destinyVersion === 1) {
-    switch (language) {
-    case 'es-mx':
-      language = 'es';
-      break;
-    case 'pl':
-    case 'ru':
-    case 'zh-cht':
-      language = 'en';
-      break;
-    }
-  } else {
-    // For D2, DTR uses English for es-mx
-    switch (language) {
-    case 'es-mx':
-      language = 'es';
-      break;
-    }
-  }
-  vm.destinyDBLink = `http://db.destinytracker.com/d${vm.item.destinyVersion}/${vm.settings.language}/items/${vm.item.hash}`;
-
-  if (vm.item.primStat) {
-    vm.light = vm.item.primStat.value.toString();
-  }
-  if (vm.item.dmg) {
-    vm.classes[`is-${vm.item.dmg}`] = true;
-  }
-
-  if (vm.item.classTypeName !== 'unknown' &&
-      // These already include the class name
-      vm.item.type !== 'ClassItem' &&
-      vm.item.type !== 'Artifact' &&
-      vm.item.type !== 'Class') {
-    vm.classType = vm.item.classTypeNameLocalized[0].toUpperCase() + vm.item.classTypeNameLocalized.slice(1);
-  }
 
   function compareItems(item?: DimItem) {
     if (item && vm.item.stats) {
@@ -224,21 +240,6 @@ function MoveItemPropertiesCtrl(
           }
         }
       }
-    }
-  }
-
-  /*
-   * Get the item stats and its stat name
-   * of the equipped item for comparison
-   */
-  if (vm.item.equipment) {
-    if (vm.compareItem) {
-      $scope.$watch('vm.compareItem', compareItems);
-    } else {
-      $scope.$watch('$parent.$parent.vm.store.items', (items: DimItem[]) => {
-        const item = (items || []).find((item) => item.equipped && item.type === vm.item.type);
-        compareItems(item);
-      });
     }
   }
 }

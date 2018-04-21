@@ -1,7 +1,7 @@
 import { D1ManifestService, D2ManifestService } from '../manifest/manifest-service';
 import template from './dimManifestProgress.directive.html';
 import './dimManifestProgress.scss';
-import { IComponentOptions } from 'angular';
+import { IComponentOptions, IController } from 'angular';
 
 /**
  * A dialog that shows the progress of loading the manifest.
@@ -14,6 +14,8 @@ export const ManifestProgressComponent: IComponentOptions = {
   }
 };
 
-function ManifestProgressCtrl() {
-  this.manifest = this.destinyVersion === 2 ? D2ManifestService : D1ManifestService;
+function ManifestProgressCtrl(this: IController) {
+  this.$onInit = () => {
+    this.manifest = this.destinyVersion === 2 ? D2ManifestService : D1ManifestService;
+  };
 }

@@ -16,7 +16,17 @@ function CountdownController(this: IController, $interval: IIntervalService, $i1
 
   const vm = this;
 
-  vm.endTime = new Date(vm.endTime);
+  vm.$onInit = () => {
+    vm.endTime = new Date(vm.endTime);
+
+    // Update once a minute
+    vm.timer = $interval(update, 60000);
+    update();
+  };
+
+  vm.$onDestroy = () => {
+    $interval.cancel(vm.timer);
+  };
 
   function update() {
     const diff = vm.endTime.getTime() - Date.now();
@@ -46,12 +56,4 @@ function CountdownController(this: IController, $interval: IIntervalService, $i1
     }
     return text;
   }
-
-  // Update once a minute
-  vm.timer = $interval(update, 60000);
-  update();
-
-  vm.$onDestroy = () => {
-    $interval.cancel(vm.timer);
-  };
 }

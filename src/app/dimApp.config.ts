@@ -6,8 +6,6 @@ export default function config(
   ngDialogProvider) {
   'ngInject';
 
-  // TODO: remove this dependency by fixing component bindings https://github.com/angular/angular.js/blob/master/docs/CHANGELOG.md#breaking-changes-1
-  $compileProvider.preAssignBindingsEnabled(true);
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?:|data:image\/)/);
 
   $httpProvider.interceptors.push('ngHttpRateLimiterInterceptor');

@@ -53,7 +53,9 @@ function StoreBucketCtrl(
 
   vm.settings = settings;
 
-  vm.dropChannel = `${vm.bucket.type},${vm.store.id}${vm.bucket.type}`;
+  vm.$onInit = () => {
+    vm.dropChannel = `${vm.bucket.type},${vm.store.id}${vm.bucket.type}`;
+  };
 
   // Detect when we're hovering a dragged item over a target
   let dragTimer: IPromise<void> | undefined;
