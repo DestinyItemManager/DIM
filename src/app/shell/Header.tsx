@@ -21,7 +21,6 @@ import Refresh from './refresh';
 import { IScope } from 'angular';
 import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
-import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 
@@ -74,7 +73,6 @@ interface State {
   account?: DestinyAccount;
   dropdownOpen: boolean;
   showSearch: boolean;
-  defs?: D2ManifestDefinitions;
 }
 
 interface Props {
@@ -82,7 +80,7 @@ interface Props {
   D2StoresService: StoreServiceType;
 }
 
-export default class Header extends React.Component<Props, State> {
+export default class Header extends React.PureComponent<Props, State> {
   private vendorsSubscription: Subscription;
   private accountSubscription: Subscription;
   // tslint:disable-next-line:ban-types
@@ -100,26 +98,13 @@ export default class Header extends React.Component<Props, State> {
     this.state = {
       xurAvailable: false,
       dropdownOpen: false,
-      showSearch: false,
-      defs: undefined
+      showSearch: false
     };
-  }
-
-  async getDefinitions(account?: DestinyAccount) {
-    if (!account || account.destinyVersion !== 2) {
-      return;
-    }
-
-    const defs = await getDefinitions();
-
-    this.setState({ defs });
   }
 
   componentDidMount() {
     this.accountSubscription = getActiveAccountStream().subscribe((account) => {
       this.setState({ account: account || undefined });
-
-      this.getDefinitions(account || undefined);
     });
 
     this.unregisterTransitionHooks = [
@@ -146,7 +131,7 @@ export default class Header extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, showSearch, dropdownOpen, xurAvailable, defs } = this.state;
+    const { account, showSearch, dropdownOpen, xurAvailable } = this.state;
     const { SearchFilter } = this;
 
     // TODO: new fontawesome
@@ -254,7 +239,8 @@ export default class Header extends React.Component<Props, State> {
 
         <span className="header-right">
           {!showSearch && <Refresh/>}
-          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews && defs) && <RatingMode defs={defs} D2StoresService={this.props.D2StoresService} />}
+          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews) &&
+            <RatingMode D2StoresService={this.props.D2StoresService} />}
           {!showSearch &&
             <a
               className="link fa fa-cog"

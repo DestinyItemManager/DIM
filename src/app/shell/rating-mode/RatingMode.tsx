@@ -5,35 +5,38 @@ import ClickOutside from '../../dim-ui/click-outside';
 import { settings } from '../../settings/settings';
 import { StoreServiceType } from '../../inventory/d2-stores.service';
 import { $rootScope } from 'ngimport';
-import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
-import { getReviewModes } from '../../destinyTrackerApi/reviewModesFetcher';
+import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
+import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
 
 interface Props {
-  defs: D2ManifestDefinitions;
   D2StoresService: StoreServiceType;
 }
 
 interface State {
   open: boolean;
   reviewsModeSelection: number;
+  defs?: D2ManifestDefinitions;
 }
 
 // TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.
 export default class RatingMode extends React.Component<Props, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
-
-  private reviewModeOptions = getReviewModes(this.props.defs);
+  private _reviewModeOptions?: D2ReviewMode[];
 
   constructor(props: Props) {
     super(props);
     this.state = { open: false, reviewsModeSelection: settings.reviewsModeSelection };
   }
 
-  render() {
-    const { open, reviewsModeSelection } = this.state;
+  componentDidMount() {
+    getDefinitions().then((defs) => this.setState({ defs }));
+  }
 
-    if (!this.props.defs) {
-      return;
+  render() {
+    const { open, reviewsModeSelection, defs } = this.state;
+
+    if (!defs) {
+      return null;
     }
 
     return (
@@ -52,6 +55,13 @@ export default class RatingMode extends React.Component<Props, State> {
           </ClickOutside>}
       </div>
     );
+  }
+
+  private get reviewModeOptions() {
+    if (!this._reviewModeOptions) {
+      this._reviewModeOptions = getReviewModes(this.state.defs);
+    }
+    return this._reviewModeOptions;
   }
 
   private toggleDropdown = () => {
