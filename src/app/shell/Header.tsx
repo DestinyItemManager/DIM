@@ -86,7 +86,7 @@ export default class Header extends React.Component<Props, State> {
   private vendorsSubscription: Subscription;
   private accountSubscription: Subscription;
   // tslint:disable-next-line:ban-types
-  private unregisterTransitionHook: Function;
+  private unregisterTransitionHooks: Function[];
   private showXur = showPopupFunction('xur', '<xur></xur>');
   private dropdownToggler = React.createRef<HTMLElement>();
 
@@ -122,9 +122,14 @@ export default class Header extends React.Component<Props, State> {
       this.getDefinitions(account || undefined);
     });
 
-    this.unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, () => {
-      this.updateXur();
-    });
+    this.unregisterTransitionHooks = [
+      $transitions.onBefore({}, () => {
+        this.setState({ dropdownOpen: false });
+      }),
+      $transitions.onSuccess({ to: 'destiny1.*' }, () => {
+        this.updateXur();
+      })
+    ];
 
     // Gonna have to figure out a better solution for this in React
     this.props.$scope.$on('i18nextLanguageChange', () => {
@@ -133,7 +138,7 @@ export default class Header extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.unregisterTransitionHook();
+    this.unregisterTransitionHooks.forEach((f) => f());
     this.accountSubscription.unsubscribe();
     if (this.vendorsSubscription) {
       this.vendorsSubscription.unsubscribe();

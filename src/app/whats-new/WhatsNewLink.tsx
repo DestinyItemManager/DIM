@@ -30,7 +30,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
   }
 
   componentDidMount() {
-    this.subscriptions.push(
+    this.subscriptions = [
       DimVersions.showChangelog$.subscribe((showChangelog) =>
         this.setState({ showChangelog })
       ),
@@ -38,11 +38,12 @@ export default class WhatsNewLink extends React.Component<{}, State> {
       dimNeedsUpdate$.subscribe((dimNeedsUpdate) =>
         this.setState({ dimNeedsUpdate })
       )
-    );
+    ];
   }
 
   componentWillUnmount() {
     this.subscriptions.forEach((s) => s.unsubscribe());
+    this.subscriptions = [];
   }
 
   render(): JSX.Element | null {
