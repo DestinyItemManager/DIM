@@ -76,7 +76,9 @@ export class ReviewsFetcher {
     this._sortAndIgnoreReviews(item);
 
     if (userReview) {
-      item.userRating = userReview.rating;
+      if (userReview.rating) {
+        item.userRating = userReview.rating;
+      }
       item.userReview = userReview.review;
       item.userReviewPros = userReview.pros;
       item.userReviewCons = userReview.cons;

@@ -45,7 +45,7 @@ export class ReviewDataCache {
    * Add (and track) the community score.
    */
   addScore(dtrRating: D1ItemFetchResponse) {
-    if (dtrRating) {  // not sure if we were sometimes receiving empty ratings or what
+    if (dtrRating && dtrRating.rating) {  // not sure if we were sometimes receiving empty ratings or what
       dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
     }
 

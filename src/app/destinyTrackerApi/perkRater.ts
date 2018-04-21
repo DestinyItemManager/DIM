@@ -92,16 +92,6 @@ export class PerkRater {
     return ratingAndReview;
   }
 
-  _getSelectedPerksAndRating(review) {
-    const selectedPerks = this._getSelectedPerks(review);
-
-    return {
-      selectedPerks,
-      rating: review.rating,
-      isHighlighted: review.isHighlighted
-    };
-  }
-
   _getMatchingReviews(perkNode,
                       reviews: D1ItemUserReview[]) {
     const perkRoll = perkNode.dtrRoll.replace('o', '');
@@ -110,12 +100,12 @@ export class PerkRater {
 
   _selectedPerkNodeApplies(perkRoll,
                            review) {
-    const reviewSelectedPerks = this._getSelectedPerks(review);
+    const reviewSelectedPerks = this._getSelectedPerks(review, perkRoll);
     return reviewSelectedPerks.some((reviewSelectedPerk) => perkRoll === reviewSelectedPerk);
   }
 
-  _getSelectedPerks(review) {
-    const allSelectedPerks = review.roll.split(';').filter((str) => str.indexOf('o') > -1);
+  _getSelectedPerks(review, perkRoll) {
+    const allSelectedPerks = (review.roll) ? review.roll.split(';').filter((str) => str.indexOf('o') > -1) : perkRoll; // in narrow cases, we can be supplied a D1ItemWorkingUserReview
     return allSelectedPerks.map((selectedPerk) => selectedPerk.replace('o', ''));
   }
 }

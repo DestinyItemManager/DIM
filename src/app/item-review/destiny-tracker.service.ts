@@ -88,7 +88,7 @@ export interface D1ItemFetchRequest {
 }
 
 export interface D1ItemFetchResponse extends D1ItemFetchRequest {
-  rating: number;
+  rating?: number;
   ratingCount: number;
   highlightedRatingCount: number;
 }
@@ -105,11 +105,11 @@ export interface D1MembershipInfo {
 }
 
 export interface D1ItemWorkingUserReview {
-  rating: number;
+  rating?: number;
   pros: string;
   cons: string;
   review: string;
-  userRating: number;
+  userRating?: number;
 }
 
 export interface D1ItemUserReview extends D1ItemWorkingUserReview {
