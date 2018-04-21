@@ -30,7 +30,6 @@ export default class WhatsNewLink extends React.Component<{}, State> {
   }
 
   componentDidMount() {
-    // TODO: merge these into a single badgeState observable?
     this.subscriptions.push(
       DimVersions.showChangelog$.subscribe((showChangelog) =>
         this.setState({ showChangelog })

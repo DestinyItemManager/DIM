@@ -211,7 +211,6 @@ export default class Header extends React.Component<Props, State> {
       </>
     );
 
-    // TODO: replace the bars with badged hamburger!
     return (
       <div id="header">
         <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>

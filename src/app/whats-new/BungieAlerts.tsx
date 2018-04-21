@@ -7,21 +7,12 @@ import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
 import '../rx-operators';
 import './BungieAlerts.scss';
 
-// TODO: Move this back to a shared file so we can observe it from the header?
 export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   // Fetch global alerts, but swallow errors
   .switchMap(() => Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty<GlobalAlert[]>()))
-  // .switchMap(() => [[{
-  //   body: 'foo',
-  //   type: 'info',
-  //   timestamp: 'foo',
-  //   key: 'foo'
-  // }] as GlobalAlert[]])
   .startWith([] as GlobalAlert[])
   // Deep equals
   .distinctUntilChanged<GlobalAlert[]>(equals);
-  // TODO: Publish? this is the part I never get
-  // TODO: redux?
 
 interface State {
   alerts: GlobalAlert[];
