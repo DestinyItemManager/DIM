@@ -6,6 +6,5 @@ export default function PageController($scope) {
   // Variables for templates
   $scope.$DIM_VERSION = $DIM_VERSION;
   $scope.$DIM_FLAVOR = $DIM_FLAVOR;
-  $scope.$DIM_CHANGELOG = $DIM_CHANGELOG;
   $scope.$DIM_BUILD_DATE = new Date($DIM_BUILD_DATE).toLocaleString();
 }
