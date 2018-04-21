@@ -1,9 +1,7 @@
 import template from './app.html';
 import './app.scss';
-import changelog from '../views/changelog-toaster-release.html';
 import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
 import { subscribeOnScope } from './rx-utils';
-import * as _ from 'underscore';
 import { settings } from './settings/settings';
 import { showInfoPopup } from './shell/info-popup';
 import { IComponentOptions, IController, IScope, ITimeoutService } from 'angular';
@@ -67,19 +65,6 @@ function AppComponentCtrl(
       });
     }
 
-    // Show the changelog
-    if ($featureFlags.changelogToaster) {
-      $timeout(() => {
-        showInfoPopup(`changelogv${$DIM_VERSION.replace(/\./gi, '')}`, {
-          title: $i18next.t('Help.Version', {
-            version: $DIM_VERSION,
-            context: $DIM_FLAVOR
-          }),
-          body: changelog
-        });
-      });
-    }
-
     try {
       localStorage.setItem('test', 'true');
       if (!window.indexedDB) {
@@ -94,28 +79,6 @@ function AppComponentCtrl(
           type: 'error',
           hideable: false
         }, 0);
-      });
-    }
-
-    if (window.BroadcastChannel) {
-      const updateChannel = new BroadcastChannel('precache-updates');
-
-      // TODO: check for index.html
-      // TODO: publish to an observable
-      const updateMessage = _.once(() => {
-        $timeout(() => {
-          showInfoPopup('update-available', {
-            title: $i18next.t('Help.UpdateAvailable'),
-            body: $i18next.t('Help.UpdateAvailableMessage'),
-            type: 'warn',
-            hideable: false
-          }, 0);
-        });
-      });
-
-      updateChannel.addEventListener('message', updateMessage);
-      $scope.$on('$destroy', () => {
-        updateChannel.removeEventListener('message', updateMessage);
       });
     }
   };

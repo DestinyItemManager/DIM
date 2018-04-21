@@ -28,7 +28,7 @@ polyfill({
 // https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
 window.addEventListener('touchmove', () => { });
 
-if ($DIM_FLAVOR !== 'dev' && navigator.serviceWorker) {
+if ($DIM_FLAVOR !== 'dev') {
   registerServiceWorker();
 }
 
