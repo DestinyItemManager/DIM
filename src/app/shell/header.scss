@@ -85,9 +85,9 @@
     position: absolute;
     display: block;
     overflow: auto;
-    height: calc(100vh - $header-height);
-    height: calc(100vh - $header-height - constant(safe-area-inset-top));
-    height: calc(100vh - $header-height - env(safe-area-inset-top));
+    height: calc(100vh - #{$header-height});
+    height: calc(100vh - #{$header-height} - constant(safe-area-inset-top));
+    height: calc(100vh - #{$header-height} - env(safe-area-inset-top));
     left: 0;
     margin: 0;
     padding: 0;
