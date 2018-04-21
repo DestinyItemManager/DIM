@@ -23,8 +23,6 @@ module.exports = (env) => {
   if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
-  // Used for the changelog anchor
-  const versionNoDots = version.replace(/\./g, '');
 
   const config = {
     mode: isDev ? 'development' : 'production',
