@@ -16,6 +16,7 @@ import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.servic
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { t } from 'i18next';
 
 interface Props {
   $scope: IScope;
@@ -104,6 +105,9 @@ export default class Collections extends React.Component<Props, State> {
             ownedItemHashes={ownedItemHashes}
           />
         )}
+        <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://destinysets.com">
+          {t('Vendors.DestinySets')}
+        </a>
       </div>
     );
   }
