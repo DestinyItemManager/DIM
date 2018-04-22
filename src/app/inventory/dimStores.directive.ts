@@ -25,8 +25,10 @@ function StoresCtrl(
   this: IController & {
     stores: DimStore[];
     buckets: DimInventoryBuckets;
+    vault: DimStore | null;
     currentStore: DimStore | null;
     selectedStore: DimStore | null;
+    selectedStoreIndex: number;
   },
   $scope: IScope,
   $rootScope: IRootScopeService & { dragItem: DimItem },
@@ -88,11 +90,11 @@ function StoresCtrl(
   });
 
   vm.$onChanges = () => {
-    vm.vault = _.find(vm.stores, 'isVault');
+    vm.vault = vm.stores && vm.stores.find((s) => s.isVault) || null;
 
     if (vm.stores && vm.stores.length) {
       // This is the character that was last played
-      vm.currentStore = _.find(vm.stores, 'current') || null;
+      vm.currentStore = vm.stores.find((s) => s.current) || null;
 
       // This is the character selected to display in mobile view
       vm.selectedStore = (!vm.selectedStore || !vm.stores.find((s) => s.id === vm.selectedStore!.id))

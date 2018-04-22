@@ -167,10 +167,13 @@ export const getBuckets = _.memoize(() => {
           sort
         };
 
-        // Add an easy helper property like "inPostmaster"
-        bucket[`in${bucket.sort}`] = true;
+        if (bucket.type) {
+          buckets.byType[bucket.type] = bucket;
+        }
 
         if (sort) {
+          // Add an easy helper property like "inPostmaster"
+          bucket[`in${sort}`] = true;
           buckets.bySort[sort] = bucket;
         }
 
