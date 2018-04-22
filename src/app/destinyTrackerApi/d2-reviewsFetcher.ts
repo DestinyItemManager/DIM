@@ -4,12 +4,12 @@ import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
 import { IPromise } from 'angular';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DtrItem, DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
 import { $q, $http } from 'ngimport';
 import { UserFilter } from './userFilter';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
+import { D2Item } from '../inventory/item-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -53,7 +53,7 @@ class D2ReviewsFetcher {
     return reviewData.reviews.find((r) => r.isReviewer);
   }
 
-  _sortAndIgnoreReviews(item: DimItem) {
+  _sortAndIgnoreReviews(item: D2Item) {
     if (item.reviews) {
       item.reviews = item.reviews as DtrUserReview[]; // D1 and D2 reviews take different shapes
       item.reviews.sort(this._sortReviews);
@@ -82,7 +82,7 @@ class D2ReviewsFetcher {
     return reviewData;
   }
 
-  _attachReviews(item: DimItem, reviewData: DtrReviewContainer | DimWorkingUserReview) {
+  _attachReviews(item: D2Item, reviewData: DtrReviewContainer | DimWorkingUserReview) {
     const userReview = this._getUserReview(reviewData);
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
@@ -134,7 +134,7 @@ class D2ReviewsFetcher {
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item: DimItem, cachedItem: DimWorkingUserReview) {
+  _attachCachedReviews(item: D2Item, cachedItem: DimWorkingUserReview) {
     item.reviews = cachedItem.reviews;
 
     this._attachReviews(item, cachedItem);
@@ -161,7 +161,7 @@ class D2ReviewsFetcher {
    * them to the item.
    * Attempts to fetch data from the cache first.
    */
-  getItemReviews(item: DimItem, platformSelection: number, mode: number) {
+  getItemReviews(item: D2Item, platformSelection: number, mode: number) {
     if (!item.reviewable) {
       return $q.when();
     }

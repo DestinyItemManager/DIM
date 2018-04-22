@@ -1,5 +1,4 @@
 import { D2ItemListBuilder } from './d2-itemListBuilder';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DtrBulkItem, DtrItem } from '../item-review/destiny-tracker.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { IPromise } from 'angular';
@@ -7,6 +6,7 @@ import { $q, $http } from 'ngimport';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
+import { D2Store } from '../inventory/store-types';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
@@ -25,7 +25,7 @@ class D2BulkFetcher {
     };
   }
 
-  _getBulkFetchPromise(stores: DimStore[], platformSelection: number, mode: number): IPromise<DtrBulkItem[]> {
+  _getBulkFetchPromise(stores: D2Store[], platformSelection: number, mode: number): IPromise<DtrBulkItem[]> {
     if (!stores.length) {
       return $q.resolve([] as DtrBulkItem[]);
     }
@@ -75,7 +75,7 @@ class D2BulkFetcher {
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
    */
-  bulkFetch(stores: DimStore[], platformSelection: number, mode: number) {
+  bulkFetch(stores: D2Store[], platformSelection: number, mode: number) {
     this._getBulkFetchPromise(stores, platformSelection, mode)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
                                                   stores));
@@ -101,7 +101,7 @@ class D2BulkFetcher {
   }
 
   attachRankings(bulkRankings: DtrBulkItem[] | null,
-                 stores: DimStore[]): void {
+                 stores: D2Store[]): void {
     if (!bulkRankings && !stores) {
       return;
     }

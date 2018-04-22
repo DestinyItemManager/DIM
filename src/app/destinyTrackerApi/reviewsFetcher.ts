@@ -2,12 +2,12 @@ import { $q, $http } from 'ngimport';
 import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-tracker.service';
 import { ReviewDataCache } from './reviewDataCache';
 import { IPromise } from 'angular';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
+import { D1Item } from '../inventory/item-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -31,7 +31,7 @@ export class ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item: DimItem): IPromise<D1ItemReviewResponse[]> {
+  _getItemReviewsPromise(item: D1Item): IPromise<D1ItemReviewResponse[]> {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     const promise = $q
@@ -59,7 +59,7 @@ export class ReviewsFetcher {
     }
   }
 
-  _attachReviews(item: DimItem, reviewData) {
+  _attachReviews(item: D1Item, reviewData) {
     const userReview = this._getUserReview(reviewData);
 
     // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
@@ -112,7 +112,7 @@ export class ReviewsFetcher {
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item: DimItem,
+  _attachCachedReviews(item: D1Item,
                        cachedItem: D1CachedItem) {
     this._attachReviews(item, cachedItem);
 
@@ -138,7 +138,7 @@ export class ReviewsFetcher {
    * them to the item.
    * Attempts to fetch data from the cache first.
    */
-  getItemReviews(item: DimItem) {
+  getItemReviews(item: D1Item) {
     if (!item.reviewable) {
       return;
     }

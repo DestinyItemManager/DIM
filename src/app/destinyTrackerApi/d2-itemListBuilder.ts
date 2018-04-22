@@ -2,10 +2,10 @@ import { flatMap } from '../util';
 import * as _ from 'underscore';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ItemTransformer } from './d2-itemTransformer';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DtrItem } from '../item-review/destiny-tracker.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
+import { D2Item } from '../inventory/item-types';
+import { D2Store } from '../inventory/store-types';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
@@ -19,7 +19,7 @@ class D2ItemListBuilder {
     this._itemTransformer = new D2ItemTransformer();
   }
 
-  _getNewItems(allItems: DimItem[], reviewDataCache: D2ReviewDataCache) {
+  _getNewItems(allItems: D2Item[], reviewDataCache: D2ReviewDataCache) {
     const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrItem(item));
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
@@ -41,12 +41,12 @@ class D2ItemListBuilder {
    * extracting all of the vendor items. If the interface is the same for both, this can go
    * away.
    */
-  _getAllItems(stores: DimStore[]): DimItem[] {
+  _getAllItems(stores: D2Store[]): D2Item[] {
     return flatMap(stores, (store) => store.items);
   }
 
   // Get all of the weapons from our stores in a DTR API-friendly format.
-  _getDtrItems(stores: DimStore[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
+  _getDtrItems(stores: D2Store[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
     const allItems = this._getAllItems(stores);
 
     const allReviewableItems = _.filter(allItems,
@@ -68,7 +68,7 @@ class D2ItemListBuilder {
    * Tailored to work alongside the bulkFetcher.
    * Non-obvious bit: it attempts to optimize away from sending items that already exist in the ReviewDataCache.
    */
-  getItemList(stores: DimStore[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
+  getItemList(stores: D2Store[], reviewDataCache: D2ReviewDataCache): DtrItem[] {
     const dtrItems = this._getDtrItems(stores, reviewDataCache);
 
     const list = new Set(dtrItems);

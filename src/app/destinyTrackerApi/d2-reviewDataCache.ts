@@ -1,8 +1,8 @@
 import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimWorkingUserReview, DtrUserReview, DtrBulkItem } from '../item-review/destiny-tracker.service';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
+import { D2Item } from '../inventory/item-types';
 
 /**
  * Cache of review data.
@@ -19,7 +19,7 @@ class D2ReviewDataCache {
     this._maxTotalVotes = 0;
   }
 
-  _getMatchingItem(item?: DimItem | DestinyVendorSaleItemComponent,
+  _getMatchingItem(item?: D2Item | DestinyVendorSaleItemComponent,
                    itemHash?: number) {
     if (item) {
       const dtrItem = this._itemTransformer.translateToDtrItem(item);
@@ -35,7 +35,7 @@ class D2ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item?: DimItem | DestinyVendorSaleItemComponent,
+  getRatingData(item?: D2Item | DestinyVendorSaleItemComponent,
                 itemHash?: number): DimWorkingUserReview | null {
     return this._getMatchingItem(item, itemHash) || null;
   }
@@ -115,7 +115,7 @@ class D2ReviewDataCache {
    * is still feeding back cached data or processing it or whatever.
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
-  addUserReviewData(item: DimItem,
+  addUserReviewData(item: D2Item,
                     userReview: DimWorkingUserReview) {
     const matchingItem = this._getMatchingItem(item);
 
@@ -171,7 +171,7 @@ class D2ReviewDataCache {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(item: DimItem,
+  markItemAsReviewedAndSubmitted(item: D2Item,
                                  userReview) {
     this._markItemAsLocallyCached(item, false);
     const matchingItem = this._getMatchingItem(item);
@@ -204,7 +204,7 @@ class D2ReviewDataCache {
    *
    * Item is just an item from DIM's stores.
    */
-  eventuallyPurgeCachedData(item: DimItem) {
+  eventuallyPurgeCachedData(item: D2Item) {
     const tenMinutes = 1000 * 60 * 10;
 
     setTimeout(() => {
