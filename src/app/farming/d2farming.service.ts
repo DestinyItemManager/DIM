@@ -4,7 +4,7 @@ import { D2InventoryBucket, getBuckets } from '../destiny2/d2-buckets.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
-import { ItemServiceType } from '../inventory/dimItemService.factory';
+import { ItemServiceType, MoveReservations } from '../inventory/dimItemService.factory';
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
 import { D2Item } from '../inventory/item-types';
 
@@ -134,7 +134,7 @@ export function D2FarmingService(
   };
 
   async function moveItemsToVault(store: D2Store, items: D2Item[], makeRoomBuckets: D2InventoryBucket[]) {
-    const reservations = {};
+    const reservations: MoveReservations = {};
     // reserve one space in the active character
     reservations[store.id] = {};
     makeRoomBuckets.forEach((bucket) => {

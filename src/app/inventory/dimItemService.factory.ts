@@ -9,6 +9,15 @@ import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory.se
 import { DimItem } from './item-types';
 import { DimStore, D1StoreServiceType, D2StoreServiceType, StoreServiceType } from './store-types';
 
+/**
+ * You can reserve a number of each type of item in each store.
+ */
+export interface MoveReservations {
+  [storeId: number]: {
+    [type: string]: number;
+  };
+}
+
 export interface ItemServiceType {
   getSimilarItem(item: DimItem, exclusions?: Partial<DimItem>[], excludeExotic?: boolean): DimItem | null;
   /**
@@ -21,7 +30,7 @@ export interface ItemServiceType {
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  moveTo(item: DimItem, target: DimStore, equip: boolean, amount: number, excludes?: { id: string; hash: number }[], reservations?: { [storeId: number]: number }): IPromise<DimItem>;
+  moveTo(item: DimItem, target: DimStore, equip: boolean, amount: number, excludes?: { id: string; hash: number }[], reservations?: MoveReservations): IPromise<DimItem>;
   /**
    * Bulk equip items. Only use for multiple equips at once.
    */
@@ -605,13 +614,13 @@ export function ItemService(
   function canMoveToStore(item: DimItem, store: DimStore, amount: number, options: {
     triedFallback?: boolean;
     excludes?: DimItem[];
-    reservations?: { [storeId: number]: number };
+    reservations?: MoveReservations;
     numRetries?: number;
   } = {}): IPromise<void> {
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
     const storeService = getStoreService(item);
 
-    function spaceLeftWithReservations(s, i) {
+    function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = s.spaceLeftForItem(i);
       // minus any reservations
       if (reservations[s.id] && reservations[s.id][i.type]) {
@@ -740,7 +749,7 @@ export function ItemService(
    * Check whether this transfer can happen. If necessary, make secondary inventory moves
    * in order to make the primary transfer possible, such as making room or dequipping exotics.
    */
-  function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, amount: number, excludes?: DimItem[], reservations?: { [storeId: number]: number }): IPromise<any> {
+  function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, amount: number, excludes?: DimItem[], reservations?: MoveReservations): IPromise<any> {
     let promise = $q.when();
 
     if (equip) {
@@ -763,7 +772,7 @@ export function ItemService(
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: { [storeId: number]: number }): IPromise<DimItem> {
+  function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: MoveReservations): IPromise<DimItem> {
     // Reassign the target store to the active store if we're moving the item to an account-wide bucket
     if (!target.isVault && item.bucket.accountWide) {
       target = getStoreService(item).getActiveStore()!;
