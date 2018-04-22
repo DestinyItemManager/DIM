@@ -51,19 +51,21 @@ function TalentGridCtrl(
     }
   };
 
-  vm.hiddenColumns = 0;
-  if (vm.perksOnly) {
-    if (_.find(vm.talentGrid.nodes, { hash: infuseHash })) {
-      vm.hiddenColumns += 1;
+  vm.$onInit = () => {
+    vm.hiddenColumns = 0;
+    if (vm.perksOnly) {
+      if (_.find(vm.talentGrid.nodes, { hash: infuseHash })) {
+        vm.hiddenColumns += 1;
+      }
+      if (_.find(vm.talentGrid.nodes, { hash: 2133116599 })) {
+        vm.hiddenColumns += 1;
+      }
     }
-    if (_.find(vm.talentGrid.nodes, { hash: 2133116599 })) {
-      vm.hiddenColumns += 1;
-    }
-  }
 
-  if (vm.talentGrid) {
-    const visibleNodes = vm.talentGrid.nodes.filter((n) => !n.hidden);
-    vm.numColumns = _.max(visibleNodes, (n) => n.column).column + 1 - vm.hiddenColumns;
-    vm.numRows = vm.perksOnly ? 2 : (_.max(visibleNodes, (n) => n.row).row + 1);
-  }
+    if (vm.talentGrid) {
+      const visibleNodes = vm.talentGrid.nodes.filter((n) => !n.hidden);
+      vm.numColumns = _.max(visibleNodes, (n) => n.column).column + 1 - vm.hiddenColumns;
+      vm.numRows = vm.perksOnly ? 2 : (_.max(visibleNodes, (n) => n.row).row + 1);
+    }
+  };
 }

@@ -74,22 +74,37 @@ function LoadoutPopupCtrl(
 ) {
   'ngInject';
   const vm = this;
-  vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
-  vm.classTypeId = {
-    warlock: 0,
-    titan: 1,
-    hunter: 2
-  }[vm.store.class];
-  if (vm.classTypeId === undefined) {
-    vm.classTypeId = -1;
+  function getStoreService() {
+    return vm.store.destinyVersion === 1 ? dimStoreService : D2StoresService;
   }
 
-  vm.numPostmasterItems = pullablePostmasterItems(this.store).length;
+  vm.$onInit = () => {
+    vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
+
+    vm.classTypeId = {
+      warlock: 0,
+      titan: 1,
+      hunter: 2
+    }[vm.store.class];
+    if (vm.classTypeId === undefined) {
+      vm.classTypeId = -1;
+    }
+
+    vm.numPostmasterItems = pullablePostmasterItems(this.store).length;
+
+    initLoadouts();
+
+    vm.hasClassified = getStoreService().getAllItems().some((i) => {
+      return i.classified &&
+        (i.location.sort === 'Weapons' ||
+        i.location.sort === 'Armor' ||
+        i.type === 'Ghost');
+    });
+    vm.maxLightValue = dimLoadoutService.getLight(vm.store, maxLightLoadout(getStoreService(), vm.store)) + (vm.hasClassified ? '*' : '');
+  };
 
   vm.search = dimSearchService;
-
-  const storeService: StoreServiceType = this.store.destinyVersion === 1 ? dimStoreService : D2StoresService;
 
   function initLoadouts() {
     dimLoadoutService.getLoadouts()
@@ -114,7 +129,6 @@ function LoadoutPopupCtrl(
   }
   $scope.$on('dim-save-loadout', initLoadouts);
   $scope.$on('dim-delete-loadout', initLoadouts);
-  initLoadouts();
 
   vm.newLoadout = function newLoadout($event: IAngularEvent) {
     ngDialog.closeAll();
@@ -166,14 +180,6 @@ function LoadoutPopupCtrl(
     });
   };
 
-  vm.hasClassified = storeService.getAllItems().some((i) => {
-    return i.classified &&
-      (i.location.sort === 'Weapons' ||
-       i.location.sort === 'Armor' ||
-       i.type === 'Ghost');
-  });
-  vm.maxLightValue = dimLoadoutService.getLight(vm.store, maxLightLoadout(storeService, vm.store)) + (vm.hasClassified ? '*' : '');
-
   // TODO: move all these fancy loadouts to a new service
 
   vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
@@ -199,13 +205,13 @@ function LoadoutPopupCtrl(
 
   // A dynamic loadout set up to level weapons and armor
   vm.itemLevelingLoadout = ($event: IAngularEvent) => {
-    const loadout = itemLevelingLoadout(storeService, vm.store);
+    const loadout = itemLevelingLoadout(getStoreService(), vm.store);
     vm.applyLoadout(loadout, $event);
   };
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   vm.maxLightLoadout = ($event: IAngularEvent) => {
-    const loadout = maxLightLoadout(storeService, vm.store);
+    const loadout = maxLightLoadout(getStoreService(), vm.store);
     vm.applyLoadout(loadout, $event);
   };
 
@@ -213,7 +219,7 @@ function LoadoutPopupCtrl(
   vm.gatherEngramsLoadout = ($event: IAngularEvent, options: { exotics: boolean } = { exotics: false }) => {
     let loadout;
     try {
-      loadout = gatherEngramsLoadout(storeService, options);
+      loadout = gatherEngramsLoadout(getStoreService(), options);
     } catch (e) {
       toaster.pop('warning', $i18next.t('Loadouts.GatherEngrams'), e.message);
       return;
@@ -224,7 +230,7 @@ function LoadoutPopupCtrl(
   vm.gatherTokensLoadout = ($event: IAngularEvent) => {
     let loadout;
     try {
-      loadout = gatherTokensLoadout(storeService);
+      loadout = gatherTokensLoadout(getStoreService());
     } catch (e) {
       toaster.pop('warning', $i18next.t('Loadouts.GatherTokens'), e.message);
       return;
@@ -234,14 +240,14 @@ function LoadoutPopupCtrl(
 
   // Move items matching the current search. Max 9 per type.
   vm.searchLoadout = ($event: IAngularEvent) => {
-    const loadout = searchLoadout(storeService, vm.store);
+    const loadout = searchLoadout(getStoreService(), vm.store);
     vm.applyLoadout(loadout, $event);
   };
 
   vm.makeRoomForPostmaster = () => {
     ngDialog.closeAll();
     const bucketsService = vm.store.destinyVersion === 1 ? (d1GetBuckets as () => IPromise<DimInventoryBuckets>) : d2GetBuckets;
-    return queueAction(() => makeRoomForPostmaster(storeService, vm.store, dimItemService, toaster, bucketsService));
+    return queueAction(() => makeRoomForPostmaster(getStoreService(), vm.store, dimItemService, toaster, bucketsService));
   };
 
   vm.pullFromPostmaster = () => {

@@ -23,7 +23,10 @@ function StarRatingController(
 
   const vm = this;
 
-  vm.isReadOnly = $element[0].hasAttribute('read-only');
+  vm.$postLink = () => {
+    vm.isReadOnly = $element[0].hasAttribute('read-only');
+  };
+
   function updateStars() {
     vm.stars = [];
     for (let id = 0; id < 5; id++) {

@@ -4,6 +4,7 @@ import './move-popup.scss';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { StoreServiceType } from '../inventory/d2-stores.service';
+import { IController } from 'angular';
 
 export const MovePopupComponent = {
   controller: MovePopupController,
@@ -27,7 +28,7 @@ interface MovePopupControllerType {
 }
 
 function MovePopupController(
-  this: MovePopupControllerType,
+  this: IController & MovePopupControllerType,
   $scope,
   D2StoresService: StoreServiceType,
   dimStoreService: StoreServiceType,
@@ -36,18 +37,19 @@ function MovePopupController(
 ) {
   'ngInject';
   const vm = this;
+  vm.settings = settings;
 
   function getStoreService() {
     return vm.item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 
-  vm.moveAmount = vm.item.amount;
-  vm.settings = settings;
-
-  if (vm.item.maxStackSize > 1) {
-    const store = getStoreService().getStore(vm.item.owner)!;
-    vm.maximum = store.amountOfItem(vm.item);
-  }
+  vm.$onInit = () => {
+    vm.moveAmount = vm.item.amount;
+    if (vm.item.maxStackSize > 1) {
+      const store = getStoreService().getStore(vm.item.owner)!;
+      vm.maximum = store.amountOfItem(vm.item);
+    }
+  };
 
   /*
   * Open up the dialog for infusion by passing

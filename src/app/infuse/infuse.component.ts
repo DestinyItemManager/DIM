@@ -30,23 +30,8 @@ function InfuseCtrl(
 
   const vm = this;
 
-  vm.items = {};
-  if (vm.query.destinyVersion === 1) {
-    getDefinitions().then((defs) => {
-      [
-        452597397,
-        2534352370,
-        3159615086,
-        937555249,
-        1898539128,
-        1542293174
-      ].forEach((hash) => {
-        vm.items[hash] = defs.InventoryItem.get(hash);
-      });
-    });
-  }
-
   extend(vm, {
+    items: {},
     getAllItems: true,
     showLockedItems: false,
     source: null,
@@ -60,6 +45,21 @@ function InfuseCtrl(
       // Set the source and reset the targets
       vm.infused = 0;
       vm.target = null;
+
+      if (vm.query.destinyVersion === 1) {
+        getDefinitions().then((defs) => {
+          [
+            452597397,
+            2534352370,
+            3159615086,
+            937555249,
+            1898539128,
+            1542293174
+          ].forEach((hash) => {
+            vm.items[hash] = defs.InventoryItem.get(hash);
+          });
+        });
+      }
 
       vm.getItems();
     },

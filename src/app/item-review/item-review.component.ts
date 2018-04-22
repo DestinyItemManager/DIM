@@ -29,17 +29,27 @@ function ItemReviewController(
 
   const vm = this;
   vm.canReview = settings.allowIdPostToDtr;
-  vm.canCreateReview = (vm.canReview && vm.item.owner);
-  vm.submitted = false;
-  vm.hasUserReview = ((vm.item.userRating) || (vm.item.userVote));
-  vm.expandReview = ((vm.item.isLocallyCached) && (vm.item.userVote !== 0));
   vm.toggledFlags = [];
-
-  if (!vm.item.mode) {
-    vm.item.mode = settings.reviewsModeSelection;
-  }
-
+  vm.submitted = false;
   vm.isCollapsed = false;
+
+  vm.$onInit = () => {
+    vm.canCreateReview = (vm.canReview && vm.item.owner);
+    vm.hasUserReview = ((vm.item.userRating) || (vm.item.userVote));
+    vm.expandReview = ((vm.item.isLocallyCached) && (vm.item.userVote !== 0));
+    if (!vm.item.mode) {
+      vm.item.mode = settings.reviewsModeSelection;
+    }
+
+    vm.reviewData = vm.getReviewData();
+
+    if (vm.item.destinyVersion === 2) {
+      getDefinitions().then((defs) => {
+        vm.reviewModeOptions = getReviewModes(defs);
+      });
+    }
+  };
+
 
   vm.toggleChart = () => {
     vm.isCollapsed = !vm.isCollapsed;
@@ -121,12 +131,6 @@ function ItemReviewController(
 
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
-  if (vm.item.destinyVersion === 2) {
-    getDefinitions().then((defs) => {
-      vm.reviewModeOptions = getReviewModes(defs);
-    });
-  }
-
   vm.getReviewData = () => {
     if (!vm.item.reviews) {
       return [];
@@ -151,8 +155,6 @@ function ItemReviewController(
 
     return mapData;
   };
-
-  vm.reviewData = vm.getReviewData();
 
   vm.shouldDrawChart = () => {
     vm.reviewData = vm.getReviewData();

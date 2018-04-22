@@ -29,12 +29,14 @@ function controller(
   'ngInject';
   const vm = this;
 
-  const storeService = vm.item.destinyVersion === 2 ? D2StoresService : dimStoreService;
-
   vm.settings = settings;
 
-  vm.store = storeService.getStore(vm.item.owner)!;
-  vm.stores = storeService.getStores();
+  vm.$onInit = () => {
+    const storeService = vm.item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+
+    vm.store = storeService.getStore(vm.item.owner)!;
+    vm.stores = storeService.getStores();
+  };
 
   vm.canShowVault = function canShowVault(buttonStore: DimStore) {
     // If my itemStore is the vault, don't show a vault button.
