@@ -4,7 +4,7 @@
   <div class="interaction">
     <dim-move-locations item="vm.item" amount="vm.moveAmount"></dim-move-locations>
     <div class="move-button move-consolidate" ng-i18next="[title]MovePopup.Consolidate;[alt]MovePopup.Consolidate"
-      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.consolidate()">
+      ng-if="!vm.item.notransfer && vm.item.location.hasTransferDestination && vm.item.maxStackSize > 1" ng-click="vm.consolidate()">
       <span ng-i18next="MovePopup.Take"></span>
     </div>
     <div class="move-button move-distribute" ng-i18next="[title]MovePopup.DistributeEvenly;[alt]MovePopup.DistributeEvenly"
