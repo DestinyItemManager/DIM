@@ -1,3 +1,5 @@
+import { D1Stat } from "../item-types";
+
 /**
  * Calculate stat ranges for armor. This also modifies the input stats to add per-stat quality ratings.
  *
@@ -10,7 +12,7 @@
 // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
 // TODO set a property on a bucket saying whether it can have quality rating, etc
 export function getQualityRating(
-  stats: any[],
+  stats: D1Stat[] | null,
   light: { value: number },
   type: string
 ): {
@@ -68,6 +70,7 @@ export function getQualityRating(
     stat.scaled = scaled;
     stat.split = split;
     stat.qualityPercentage = {
+      range: '',
       min: Math.round(100 * stat.scaled.min / stat.split),
       max: Math.round(100 * stat.scaled.max / stat.split)
     };
@@ -77,14 +80,19 @@ export function getQualityRating(
 
   if (pure === ret.total.min) {
     stats.forEach((stat) => {
-      stat.scaled = {
-        min: Math.floor(stat.scaled.min / 2),
-        max: Math.floor(stat.scaled.max / 2)
-      };
-      stat.qualityPercentage = {
-        min: Math.round(100 * stat.scaled.min / stat.split),
-        max: Math.round(100 * stat.scaled.max / stat.split)
-      };
+      if (stat.scaled) {
+        stat.scaled = {
+          min: Math.floor(stat.scaled.min / 2),
+          max: Math.floor(stat.scaled.max / 2)
+        };
+        if (stat.split) {
+          stat.qualityPercentage = {
+            range: '',
+            min: Math.round(100 * stat.scaled.min / stat.split),
+            max: Math.round(100 * stat.scaled.max / stat.split)
+          };
+        }
+      }
     });
   }
 
@@ -96,10 +104,13 @@ export function getQualityRating(
 
   if (type.toLowerCase() !== 'artifact') {
     stats.forEach((stat) => {
-      stat.qualityPercentage = {
-        min: Math.min(100, stat.qualityPercentage.min),
-        max: Math.min(100, stat.qualityPercentage.max)
-      };
+      if (stat.qualityPercentage) {
+        stat.qualityPercentage = {
+          range: '',
+          min: Math.min(100, stat.qualityPercentage.min),
+          max: Math.min(100, stat.qualityPercentage.max)
+        };
+      }
     });
     quality = {
       min: Math.min(100, quality.min),
@@ -109,7 +120,9 @@ export function getQualityRating(
   }
 
   stats.forEach((stat) => {
-    stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
+    if (stat.qualityPercentage) {
+      stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
+    }
   });
   quality.range = getQualityRange(light.value, quality);
 

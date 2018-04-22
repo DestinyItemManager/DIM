@@ -115,7 +115,7 @@ export function FarmingService(
       const store = dimStoreService.getStore(this.store.id);
       const toMove = _.select(store.items, (i) => {
         return !i.notransfer && (
-          i.isEngram() ||
+          i.isEngram ||
           (i.equipment && i.type === 'Uncommon') ||
           glimmerHashes.has(i.hash));
       });

@@ -1,37 +1,38 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
 
 import { flatMap } from '../util';
-import { compareAccounts } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
 import { D1ManifestService } from '../manifest/manifest-service';
-import { getDefinitions } from '../destiny1/d1-definitions.service';
-import { getBuckets } from '../destiny1/d1-buckets.service';
+import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
+import { getBuckets, D1InventoryBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
-import { getItemInfoSource } from './dim-item-info';
+import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';
+import { $rootScope, $q } from 'ngimport';
+import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
+import { IPromise } from 'angular';
+import { resetIdTracker, processItems } from './store/d1-item-factory.service';
+import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
+import { D1Item } from './item-types';
 
 export function StoreService(
-  $rootScope,
-  $q,
-  dimDestinyTrackerService,
-  toaster,
-  StoreFactory,
-  ItemFactory,
-  $stateParams,
-  loadingTracker
-) {
+  dimDestinyTrackerService: DestinyTrackerServiceType
+): D1StoreServiceType {
   'ngInject';
 
-  let _stores = [];
+  let _stores: D1Store[] = [];
 
   // A subject that keeps track of the current account. Because it's a
   // behavior subject, any new subscriber will always see its last
   // value.
-  const accountStream = new BehaviorSubject(null);
+  const accountStream = new BehaviorSubject<DestinyAccount | null>(null);
 
   // The triggering observable for force-reloading stores.
   const forceReloadTrigger = new Subject();
@@ -45,7 +46,7 @@ export function StoreService(
         // whenever the force reload triggers
         .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
         // Whenever either trigger happens, load stores
-        .switchMap((account) => loadStores(account))
+        .switchMap(loadStores)
         // Keep track of the last value for new subscribers
         .publishReplay(1);
 
@@ -54,11 +55,12 @@ export function StoreService(
   //       nothing changed!
 
   const service = {
-    getActiveStore: () => _.find(_stores, 'current'),
+    getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
-    getStore: (id) => _.find(_stores, { id: id }),
-    getVault: () => _.find(_stores, { id: 'vault' }),
-    getAllItems: () => flatMap(_stores, 'items'),
+    getStore: (id) => _stores.find((s) => s.id === id),
+    getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
+    getAllItems: () => flatMap(_stores, (s) => s.items),
+    refreshRatingsData() { return; },
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,
@@ -69,12 +71,11 @@ export function StoreService(
 
   /**
    * Find an item among all stores that matches the params provided.
-   * @param {{ id, hash, notransfer }} params
    */
-  function getItemAcrossStores(params) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer'));
-    for (let i = 0; i < _stores.length; i++) {
-      const result = _stores[i].items.find(predicate);
+  function getItemAcrossStores(params: { id?: string; hash?: number; notransfer?: boolean }) {
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer')) as (D1Item) => boolean;
+    for (const store of _stores) {
+      const result = store.items.find(predicate);
       if (result) {
         return result;
       }
@@ -87,13 +88,16 @@ export function StoreService(
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  function updateCharacters(account) {
+  function updateCharacters(account: DestinyAccount) {
     // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
       if ($stateParams.membershipId && $stateParams.platformType) {
         account = {
           membershipId: $stateParams.membershipId,
-          platformType: $stateParams.platformType
+          platformType: $stateParams.platformType,
+          displayName: 'Unknown',
+          platformLabel: 'Unknown',
+          destinyVersion: 1
         };
       } else {
         throw new Error("Don't know membership ID and platform type");
@@ -106,7 +110,7 @@ export function StoreService(
     ]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
-          const bStore = _.find(bungieStores, { id: dStore.id });
+          const bStore: any = _.find(bungieStores, { id: dStore.id });
           dStore.updateCharacterInfo(defs, bStore.base);
         }
       });
@@ -120,9 +124,9 @@ export function StoreService(
    * the account by also calling "storesStream". This won't force the
    * stores to reload unless they haven't been loaded at all.
    *
-   * @return {Observable} a stream of store updates
+   * @return a stream of store updates
    */
-  function getStoresStream(account) {
+  function getStoresStream(account: DestinyAccount) {
     accountStream.next(account);
     // Start the stream the first time it's asked for. Repeated calls
     // won't do anything.
@@ -132,9 +136,9 @@ export function StoreService(
 
   /**
    * Force the inventory and characters to reload.
-   * @return {Promise} the new stores
+   * @return the new stores
    */
-  function reloadStores() {
+  function reloadStores(): Promise<D1Store[] | undefined> {
     // adhere to the old contract by returning the next value as a
     // promise We take 2 from the stream because the publishReplay
     // will always return the latest value instantly, and we want the
@@ -148,39 +152,37 @@ export function StoreService(
   /**
    * Returns a promise for a fresh view of the stores and their items.
    */
-  function loadStores(account) {
+  function loadStores(account: DestinyAccount): IPromise<D1Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
 
-    ItemFactory.resetIdTracker();
+    resetIdTracker();
 
-    const dataDependencies = [
+    const reloadPromise = $q.all([
       getDefinitions(),
       getBuckets(),
       NewItemsService.loadNewItems(account),
       getItemInfoSource(account),
       getStores(account)
-    ];
-
-    const reloadPromise = $q.all(dataDependencies)
+    ])
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
         const lastPlayedDate = findLastPlayedDate(rawStores);
 
         // Currencies object gets mutated by processStore
-        const currencies = {
+        const currencies: D1Currencies = {
           glimmer: 0,
           marks: 0,
           silver: 0
         };
 
-        const processStorePromises = rawStores.map((raw) => processStore(raw, defs, buckets, previousItems, newItems, itemInfoService, currencies, lastPlayedDate));
+        const processStorePromises = _.compact((rawStores as any[]).map((raw) => processStore(raw, defs, buckets, previousItems, newItems, itemInfoService, currencies, lastPlayedDate)));
 
         return $q.all([newItems, itemInfoService, ...processStorePromises]);
       })
-      .then(([newItems, itemInfoService, ...stores]) => {
+      .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, D1Store[]]) => {
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -188,18 +190,19 @@ export function StoreService(
           NewItemsService.saveNewItems(newItems, account);
         }
 
-        _stores = stores;
+        const realStores: D1Store[] = stores;
+        _stores = realStores;
 
-        dimDestinyTrackerService.fetchReviews(_stores);
+        dimDestinyTrackerService.fetchReviews(realStores);
 
-        itemInfoService.cleanInfos(stores);
+        itemInfoService.cleanInfos(realStores);
 
         // Let our styling know how many characters there are
-        document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
+        document.querySelector('html')!.style.setProperty("--num-characters", String(realStores.length - 1));
 
-        dimDestinyTrackerService.reattachScoresFromCache(stores);
+        dimDestinyTrackerService.reattachScoresFromCache(realStores);
 
-        return stores;
+        return realStores;
       })
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));
@@ -209,6 +212,7 @@ export function StoreService(
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to
         // just make this never fail.
+        return undefined;
       })
       .finally(() => {
         D1ManifestService.isLoaded = true;
@@ -222,24 +226,33 @@ export function StoreService(
   /**
    * Process a single store from its raw form to a DIM store, with all the items.
    */
-  function processStore(raw, defs, buckets, previousItems, newItems, itemInfoService, currencies, lastPlayedDate) {
+  function processStore(
+    raw,
+    defs: D1ManifestDefinitions,
+    buckets: D1InventoryBuckets,
+    previousItems: Set<string>,
+    newItems: Set<string>,
+    itemInfoService: ItemInfoSource,
+    currencies: D1Currencies,
+    lastPlayedDate: Date
+  ) {
     if (!raw) {
       return undefined;
     }
 
-    let store;
-    let items;
+    let store: D1Store;
+    let items: D1Item[];
     if (raw.id === 'vault') {
-      const result = StoreFactory.makeVault(raw, buckets, currencies);
+      const result = makeVault(raw, buckets, currencies);
       store = result.store;
       items = result.items;
     } else {
-      const result = StoreFactory.makeCharacter(raw, defs, lastPlayedDate, currencies);
+      const result = makeCharacter(raw, defs, lastPlayedDate, currencies);
       store = result.store;
       items = result.items;
     }
 
-    return ItemFactory.processItems(store, items, previousItems, newItems, itemInfoService).then((items) => {
+    return processItems(store, items, previousItems, newItems, itemInfoService).then((items) => {
       store.items = items;
 
       // by type-bucket
@@ -254,13 +267,14 @@ export function StoreService(
         }
       });
 
-      if (store.isVault) {
-        store.vaultCounts = {};
+      if (isVault(store)) {
+        const vault = store;
+        vault.vaultCounts = {};
         ['Weapons', 'Armor', 'General'].forEach((category) => {
-          store.vaultCounts[category] = 0;
+          vault.vaultCounts[category] = 0;
           buckets.byCategory[category].forEach((bucket) => {
             if (store.buckets[bucket.id]) {
-              store.vaultCounts[category] += store.buckets[bucket.id].length;
+              vault.vaultCounts[category] += store.buckets[bucket.id].length;
             }
           });
         });
@@ -270,11 +284,15 @@ export function StoreService(
     });
   }
 
+  function isVault(store: D1Store): store is D1Vault {
+    return store.isVault;
+  }
+
   /**
    * Find the date of the most recently played character.
    */
-  function findLastPlayedDate(rawStores) {
-    return _.reduce(rawStores, (memo, rawStore) => {
+  function findLastPlayedDate(rawStores: any[]): Date {
+    return Object.values(rawStores).reduce((memo, rawStore) => {
       if (rawStore.id === 'vault') {
         return memo;
       }
@@ -282,6 +300,6 @@ export function StoreService(
       const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
 
       return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
-    }, null);
+    }, new Date(0));
   }
 }

@@ -1,9 +1,7 @@
 import { module } from 'angular';
 
 import { InventoryComponent } from './inventory.component';
-import { StoreFactory } from './store/store-factory.service';
-import { ItemFactory } from './store/item-factory.service';
-import { StoreService } from './dimStoreService.factory';
+import { StoreService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { StoresComponent } from './dimStores.directive';
 import { StoreReputation } from './dimStoreReputation.directive';
@@ -22,8 +20,6 @@ import { StateProvider } from '@uirouter/angularjs';
 export default module('inventoryModule', [])
   .factory('dimStoreService', StoreService)
   .factory('D2StoresService', D2StoresService)
-  .factory('StoreFactory', StoreFactory)
-  .factory('ItemFactory', ItemFactory)
   .factory('dimItemService', ItemService)
   .factory('dimItemMoveService', ItemMoveService)
   .component('inventory', InventoryComponent)

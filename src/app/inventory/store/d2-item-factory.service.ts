@@ -8,15 +8,10 @@ import {
   DestinyItemInstanceComponent,
   DestinyItemInvestmentStatDefinition,
   DestinyItemObjectivesComponent,
-  DestinyItemQualityBlockDefinition,
   DestinyItemSocketsComponent,
   DestinyItemStatsComponent,
   DestinyItemTalentGridComponent,
-  DestinyItemTierTypeInfusionBlock,
   DestinyObjectiveDefinition,
-  DestinyObjectiveProgress,
-  DestinySandboxPerkDefinition,
-  DestinySocketCategoryDefinition,
   DestinyStat,
   DestinyStatDefinition,
   DestinyTalentGridDefinition,
@@ -29,18 +24,19 @@ import {
   DestinyItemSocketEntryPlugItemDefinition
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { getBuckets, D2InventoryBucket, D2InventoryBuckets } from '../../destiny2/d2-buckets.service';
+import { getBuckets, D2InventoryBuckets } from '../../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 import { sum, compact } from '../../util';
 import { D2ManifestService } from '../../manifest/manifest-service';
 import { getClass } from './character-utils';
-import { DimStore } from './d2-store-factory.service';
 import { NewItemsService } from './new-items.service';
-import { DimItemInfo, ItemInfoSource } from '../dim-item-info';
+import { ItemInfoSource } from '../dim-item-info';
 import { $q } from 'ngimport';
 import { t } from 'i18next';
-import { DtrUserReview, DimWorkingUserReview, D1ItemUserReview } from '../../item-review/destiny-tracker.service';
+import { DimWorkingUserReview } from '../../item-review/destiny-tracker.service';
+import { D2Item, DimPerk, DimStat, DimObjective, DimFlavorObjective, DimTalentGrid, DimGridNode, DimSockets, DimSocketCategory, DimSocket, DimPlug, DimMasterwork } from '../item-types';
+import { D2Store } from '../store-types';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -53,248 +49,13 @@ const tiers = [
   'Exotic'
 ];
 
-export interface EnhancedStat extends DestinyStat {
-  stat: DestinyStatDefinition & { statName: string };
-}
-
-export interface DimStat {
-  base: number;
-  bonus: number;
-  statHash: number;
-  name: string;
-  id: number;
-  sort: number;
-  value?: number;
-  maximumValue: number;
-  bar: boolean;
-  /** Is this a placeholder for a "missing" stat (for compare view) */
-  missingStat?: boolean;
-}
-
-export interface DimObjective {
-  displayName: string;
-  description: string;
-  progress: number;
-  completionValue: number;
-  complete: boolean;
-  boolean: boolean;
-  display: string;
-  displayStyle: string | null;
-}
-
-export interface DimFlavorObjective {
-  description: string;
-  icon: string;
-  progress: number;
-}
-
-export interface DimGridNode {
-  name: string;
-  hash: number;
-  description: string;
-  icon: string;
-  /** Position in the grid */
-  column: number;
-  row: number;
-  /** Is the node selected (lit up in the grid) */
-  activated: boolean;
-  /** The item level at which this node can be unlocked */
-  activatedAtGridLevel: number;
-  /** Only one node in this column can be selected (scopes, etc) */
-  exclusiveInColumn: boolean;
-  /** Whether or not the material cost has been paid for the node */
-  unlocked: boolean;
-  /** Some nodes don't show up in the grid, like purchased ascend nodes */
-  hidden: boolean;
-
-  bestRated?: boolean; // used for D1 perk ratings
-}
-
-export interface DimTalentGrid {
-  nodes: DimGridNode[];
-  complete: boolean;
-}
-
-export interface DimPlug {
-  plugItem: DestinyInventoryItemDefinition;
-  bestRated?: boolean;
-  perks: DestinySandboxPerkDefinition[];
-  plugObjectives: DestinyObjectiveProgress[];
-  enabled: boolean;
-  /** If not enabled, this is the localized reasons why, as a single string. */
-  enableFailReasons: string;
-  isMasterwork: boolean;
-}
-
-export interface DimSocket {
-  socketIndex: number;
-  /** The currently inserted plug item, if any. */
-  plug: DimPlug | null;
-  /** Potential plugs for this socket. */
-  plugOptions: DimPlug[];
-}
-
-export interface DimSocketCategory {
-  category: DestinySocketCategoryDefinition;
-  sockets: DimSocket[];
-}
-
-export interface DimSockets {
-  sockets: DimSocket[];
-  categories: DimSocketCategory[];
-}
-
-export interface DimPerk extends DestinySandboxPerkDefinition {
-  requirement: string;
-}
-
-// TODO: This interface is clearly too large - break out interfaces for common subsets
-export interface DimItem {
-  owner: string;
-  /** The version of Destiny this comes from */
-  destinyVersion: 1 | 2;
-  /** The bucket the item is currently in */
-  location: D2InventoryBucket;
-  /** The bucket the item normally resides in (even though it may be in the vault/postmaster) */
-  bucket: D2InventoryBucket;
-  hash: number;
-  /** This is the type of the item (see D2Category/D2Buckets) regardless of location */
-  type: string;
-  categories: string[];
-  tier: string;
-  isExotic: boolean;
-  isVendorItem: boolean;
-  name: string;
-  description: string;
-  icon: string;
-  secondaryIcon: string;
-  notransfer: boolean;
-  canPullFromPostmaster: boolean;
-  id: string; // zero for non-instanced is legacy hack
-  equipped: boolean;
-  equipment: boolean;
-  /**
-   * If defined, this is the label used to check if the character has other items of
-   * matching types already equipped.
-   *
-   * For instance, when you aren't allowed to equip more than one Exotic Weapon, that's
-   * because all exotic weapons have identical labels and the game checks the
-   * to-be-equipped item's label vs. all other already equipped items (other
-   * than the item in the slot that's about to be occupied).
-   */
-  equippingLabel?: string;
-  complete: boolean;
-  amount: number;
-  primStat: EnhancedStat | null;
-  /** Localized name of this item's type. */
-  typeName: string;
-  equipRequiredLevel: number;
-  maxStackSize: number;
-  classType: DestinyClass;
-  classTypeName: string;
-  classTypeNameLocalized: string;
-  dmg: string;
-  visible: boolean;
-  lockable: boolean;
-  tracked: boolean;
-  locked: boolean;
-  masterwork: boolean;
-  classified: boolean;
-  isInLoadout: boolean;
-  sockets: DimSockets | null;
-  percentComplete: number;
-  hidePercentage: boolean;
-  talentGrid?: DimTalentGrid | null;
-  stats: DimStat[] | null;
-  objectives: DimObjective[] | null;
-  taggable: boolean;
-  comparable: boolean;
-  reviewable: boolean;
-  isNew: boolean;
-  dimInfo: DimItemInfo;
-  perks: DimPerk[] | null;
-  basePower: number;
-  index: string;
-  infusionProcess: DestinyItemTierTypeInfusionBlock | null;
-  infusable: boolean;
-  infusionQuality: DestinyItemQualityBlockDefinition | null;
-  infusionFuel: boolean;
-  masterworkInfo: DimMasterwork | null;
-  _isEngram: boolean;
-  /** A timestamp of when, in this session, the item was last manually moved */
-  lastManuallyMoved: number;
-  flavorObjective: DimFlavorObjective | null;
-
-  // TODO: this should be on a separate object, with the other DTR stuff
-  pros: string;
-  cons: string;
-  userRating: number;
-  userReview: string;
-  userVote: number;
-  dtrRating: number;
-  dtrRatingCount: number;
-  dtrHighlightedRatingCount: number;
-  reviews: DtrUserReview[] | D1ItemUserReview[];
-  userReviewPros: string;
-  userReviewCons: string;
-  mode: number;
-  ratingCount: number;
-  // timestamp of when reviews were attached - a hack to help React update in the short term
-  reviewsUpdated?: number;
-  /** Is the review data locally cached? */
-  isLocallyCached?: boolean;
-  totalReviews: number;
-
-  /** Can this item be equipped by the given store? */
-  canBeEquippedBy(store: DimStore): boolean;
-  inCategory(categoryName: string): boolean;
-  isEngram(): boolean;
-  canBeInLoadout(): boolean;
-  updateManualMoveTimestamp(): void;
-}
-
-/**
- * Extra properties on D1 items only
- */
-export interface DimD1Item extends DimItem {
-  trackable: boolean;
-  talentGrid?: DimD1TalentGrid | null;
-  quality: {
-    min: number;
-    max: number;
-  };
-  year: 1 | 2 | 3;
-  sourceHashes: number[];
-}
-
-export interface DimD1TalentGrid extends DimTalentGrid {
-  xpComplete: number;
-  hasAscendNode: boolean;
-  ascended: boolean;
-  nodes: DimD1GridNode[];
-}
-
-export interface DimD1GridNode extends DimGridNode {
-  ornament: boolean;
-}
-
-export interface DimMasterwork {
-  progress?: number;
-  typeName: 'Vanguard' | 'Crucible' | null;
-  typeIcon: string;
-  typeDesc: string | null;
-  statHash?: number;
-  statName: string;
-  statValue?: number;
-}
-
 /**
  * A factory service for producing DIM inventory items.
  */
 
-let _idTracker = {};
+let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
-const _moveTouchTimestamps: Map<string, number> = new Map();
+const _moveTouchTimestamps = new Map<string, number>();
 
 const statWhiteList = [
   4284893193, // Rounds Per Minute
@@ -349,7 +110,7 @@ const categoryFromInfusionHash = {
 // items.
 const ItemProto = {
   // Can this item be equipped by the given store?
-  canBeEquippedBy(this: DimItem, store: DimStore) {
+  canBeEquippedBy(this: D2Item, store: D2Store) {
     if (store.isVault) {
       return false;
     }
@@ -363,21 +124,24 @@ const ItemProto = {
       (!this.notransfer || this.owner === store.id) &&
       !this.location.inPostmaster;
   },
-  inCategory(this: DimItem, categoryName: string) {
+  inCategory(this: D2Item, categoryName: string) {
     return this.categories.includes(categoryName);
   },
-  isEngram(this: DimItem) {
-    return this._isEngram;
-  },
-  canBeInLoadout(this: DimItem) {
+  canBeInLoadout(this: D2Item) {
     return this.equipment || this.type === 'Material' || this.type === 'Consumable';
   },
   // Mark that this item has been moved manually
-  updateManualMoveTimestamp(this: DimItem) {
+  updateManualMoveTimestamp(this: D2Item) {
     this.lastManuallyMoved = Date.now();
     if (this.id !== '0') {
       _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
     }
+  },
+  isDestiny1(this: D2Item) {
+    return false;
+  },
+  isDestiny2(this: D2Item) {
+    return true;
   }
 };
 
@@ -395,25 +159,25 @@ export function resetIdTracker() {
  * @return a promise for the list of items
  */
 export function processItems(
-  owner: DimStore,
+  owner: D2Store,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
-  itemInfoService: ItemInfoSource): IPromise<DimItem[]> {
+  itemInfoService: ItemInfoSource): IPromise<D2Item[]> {
   return $q.all([
     getDefinitions(),
     getBuckets()])
     .then(([defs, buckets]) => {
-      const result: DimItem[] = [];
+      const result: D2Item[] = [];
       D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
       _.each(items, (item) => {
-        let createdItem: DimItem | null = null;
+        let createdItem: D2Item | null = null;
         try {
           createdItem = makeItem(defs, buckets, previousItems, newItems, itemInfoService, itemComponents, item, owner);
         } catch (e) {
           console.error("Error processing item", item, e);
-          reportException('Processing D2 item', e);
+          reportException('Processing Dim item', e);
         }
         if (createdItem !== null) {
           createdItem.owner = owner.id;
@@ -425,7 +189,7 @@ export function processItems(
 }
 
 /** Set an ID for the item that should be unique across all items */
-export function createItemIndex(item: DimItem): string {
+export function createItemIndex(item: D2Item): string {
   // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
   let index = item.id;
   if (item.id === '0') {
@@ -492,9 +256,9 @@ export function makeItem(
   itemInfoService: ItemInfoSource | undefined,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
-  owner: DimStore | undefined,
+  owner: D2Store | undefined,
   reviewData?: DimWorkingUserReview | null
-): DimItem | null {
+): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> = item.itemInstanceId && itemComponents ? itemComponents.instances.data[item.itemInstanceId] : {};
   // Missing definition?
@@ -536,7 +300,7 @@ export function makeItem(
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   const primaryStat = itemType === 'Class' ? null : instanceDef.primaryStat || null;
 
-  const createdItem: DimItem = Object.assign(Object.create(ItemProto), {
+  const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
     destinyVersion: 2,
     // The bucket the item is currently in
@@ -544,7 +308,7 @@ export function makeItem(
     // The bucket the item normally resides in (even though it may be in the vault/postmaster)
     bucket: normalBucket,
     hash: item.itemHash,
-    // This is the type of the item (see D2Category/D2Buckets) regardless of location
+    // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
     categories, // see defs.ItemCategories
     tier: tiers[itemDef.inventory.tierType] || 'Common',
@@ -578,7 +342,7 @@ export function makeItem(
     locked: item.state & 1,
     masterwork: item.state & 4,
     classified: Boolean(itemDef.redacted),
-    _isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
+    isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     isInLoadout: false,
     percentComplete: 0, // filled in later
@@ -751,7 +515,7 @@ export function makeItem(
   return createdItem;
 }
 
-function isWeaponOrArmor(item: DimItem) {
+function isWeaponOrArmor(item: D2Item) {
   return item.primStat &&
           ((item.primStat.statHash === 1480404414) || // weapon
           (item.primStat.statHash === 3897883278)); // armor
@@ -1272,7 +1036,7 @@ function buildMasterworkInfo(
   };
 }
 
-function getBasePowerLevel(item: DimItem): number {
+function getBasePowerLevel(item: D2Item): number {
   const MOD_CATEGORY = 59;
   const POWER_STAT_HASH = 1935470627;
   const powerMods = item.sockets ? compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {

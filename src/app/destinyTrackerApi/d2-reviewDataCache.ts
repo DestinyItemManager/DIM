@@ -116,7 +116,7 @@ class D2ReviewDataCache {
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
   addUserReviewData(item: DimItem,
-                    userReview) {
+                    userReview: DimWorkingUserReview) {
     const matchingItem = this._getMatchingItem(item);
 
     if (!matchingItem) {

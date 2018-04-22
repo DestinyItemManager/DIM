@@ -46,7 +46,7 @@ export function getCharacters(platform) {
   }
 }
 
-export function getStores(platform) {
+export function getStores(platform): IPromise<any> {
   return getCharacters(platform)
     .then((characters) => {
       return $q.all([

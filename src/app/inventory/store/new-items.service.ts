@@ -1,8 +1,8 @@
 import * as idbKeyval from 'idb-keyval';
 import { getActivePlatform } from '../../accounts/platform.service';
-import { DimItem } from './d2-item-factory.service';
 import { DestinyAccount } from '../../accounts/destiny-account.service';
-import { DimStore } from './d2-store-factory.service';
+import { DimItem } from '../item-types';
+import { DimStore } from '../store-types';
 
 const _removedNewItems = new Set<string>();
 
@@ -42,7 +42,7 @@ export const NewItemsService = {
     _removedNewItems.add(item.id);
     item.isNew = false;
     const account = getActivePlatform();
-    this.loadNewItems(account).then((newItems) => {
+    return this.loadNewItems(account).then((newItems) => {
       newItems.delete(item.id);
       this.hasNewItems = (newItems.size !== 0);
       this.saveNewItems(newItems, account, item.destinyVersion);
@@ -65,12 +65,12 @@ export const NewItemsService = {
     this.saveNewItems(new Set(), account);
   },
 
-  loadNewItems(account: DestinyAccount) {
+  loadNewItems(account: DestinyAccount): Promise<Set<string>> {
     if (account) {
       const key = newItemsKey(account);
-      return Promise.resolve(idbKeyval.get(key)).then((v) => v || new Set());
+      return Promise.resolve(idbKeyval.get(key)).then((v) => v as Set<string> || new Set<string>());
     }
-    return Promise.resolve(new Set());
+    return Promise.resolve(new Set<string>());
   },
 
   saveNewItems(newItems: Set<string>, account: DestinyAccount) {

@@ -4,9 +4,10 @@ import { DimError } from '../bungie-api/bungie-service-helper';
 import { equip as d1equip, equipItems as d1EquipItems, transfer as d1Transfer } from '../bungie-api/destiny1-api';
 import { equip as d2equip, equipItems as d2EquipItems, transfer as d2Transfer } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../comparators';
-import { StoreServiceType } from './d2-stores.service';
-import { createItemIndex as d2CreateItemIndex, DimItem } from './store/d2-item-factory.service';
-import { DimStore } from './store/d2-store-factory.service';
+import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory.service';
+import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory.service';
+import { DimItem } from './item-types';
+import { DimStore, D1StoreServiceType, D2StoreServiceType, StoreServiceType } from './store-types';
 
 export interface ItemServiceType {
   getSimilarItem(item: DimItem, exclusions?: Partial<DimItem>[], excludeExotic?: boolean): DimItem | null;
@@ -31,9 +32,8 @@ export interface ItemServiceType {
  * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
  */
 export function ItemService(
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
-  ItemFactory,
+  dimStoreService: D1StoreServiceType,
+  D2StoresService: D2StoreServiceType,
   $q,
   $i18next
 ): ItemServiceType {
@@ -70,7 +70,13 @@ export function ItemService(
   }
 
   function createItemIndex(item: DimItem): string {
-    return item.destinyVersion === 2 ? d2CreateItemIndex(item) : ItemFactory.createItemIndex(item);
+    if (item.isDestiny2()) {
+      return d2CreateItemIndex(item);
+    } else if (item.isDestiny1()) {
+      return d1CreateItemIndex(item);
+    } else {
+      throw new Error("Destiny 3??");
+    }
   }
 
   function getStoreService(item: DimItem): StoreServiceType {
@@ -98,7 +104,7 @@ export function ItemService(
           return i.hash === item.hash &&
                 i.id === item.id &&
                 !i.notransfer;
-        }), 'amount') : [item];
+        }), (i) => i.amount) : [item];
       // Items to be incremented. There's really only ever at most one of these, but
       // it's easier to deal with as a list.
       const targetItems = stackable
@@ -108,7 +114,7 @@ export function ItemService(
                 // Don't consider full stacks as targets
                 i.amount !== i.maxStackSize &&
                 !i.notransfer;
-        }), 'amount') : [];
+        }), (i) => i.amount) : [];
       // moveAmount could be more than maxStackSize if there is more than one stack on a character!
       const moveAmount = amount || item.amount;
       let addAmount = moveAmount;
@@ -493,7 +499,7 @@ export function ItemService(
       // prefer same type over everything
       compareBy((i) => i.type === item.typeName),
       // Engrams prefer to be in the vault, so not-engram is larger than engram
-      compareBy((i) => !i.isEngram()),
+      compareBy((i) => !i.isEngram),
       // Never unequip something
       compareBy((i) => i.equipped),
       // Always prefer keeping something that was manually moved where it is
@@ -693,8 +699,8 @@ export function ItemService(
       }
     } else {
       // Refresh the stores to see if anything has changed
-      const reloadPromise = (item.destinyVersion === 2 ? throttledD2ReloadStores() : throttledReloadStores()) ||
-            $q.when(storeService.getStores());
+      const reloadPromise = ((item.destinyVersion === 2 ? throttledD2ReloadStores() : throttledReloadStores()) ||
+            $q.when(storeService.getStores())) as Promise<DimStore[] | undefined>;
       const storeId = store.id;
       return reloadPromise.then((reloadedStores) => {
         options.triedFallback = true;

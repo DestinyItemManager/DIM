@@ -7,9 +7,9 @@ import { settings } from '../settings/settings';
 import { showInfoPopup } from '../shell/info-popup';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
 import { DimInventoryBuckets } from '../inventory/inventory-types';
-import { DimStore } from './store/d2-store-factory.service';
-import { DimItem } from './store/d2-item-factory.service';
 import { sortStores } from '../shell/dimAngularFilters.filter';
+import { DimStore } from './store-types';
+import { DimItem } from './item-types';
 
 export const StoresComponent: IComponentOptions = {
   controller: StoresCtrl,

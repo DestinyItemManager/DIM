@@ -120,7 +120,7 @@ export function gatherEngramsLoadout(
   options: { exotics: boolean } = { exotics: false }
 ): Loadout {
   const engrams = storeService.getAllItems().filter((i) => {
-    return i.isEngram() && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
+    return i.isEngram && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
   });
 
   if (engrams.length === 0) {

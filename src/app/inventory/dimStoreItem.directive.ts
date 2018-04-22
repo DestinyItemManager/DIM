@@ -5,9 +5,9 @@ import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import template from './dimStoreItem.directive.html';
 import './dimStoreItem.scss';
 import { IComponentOptions, IController, IScope, IRootElementService, IRootScopeService } from 'angular';
-import { DimItem } from './store/d2-item-factory.service';
-import { StoreServiceType } from './d2-stores.service';
 import { LoadoutServiceType } from '../loadout/loadout.service';
+import { DimItem } from './item-types';
+import { StoreServiceType } from './store-types';
 
 export function tagIconFilter() {
   'ngInject';

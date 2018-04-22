@@ -8,14 +8,13 @@ import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getKiosks } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
 import VendorItems from '../d2-vendors/vendor-items';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { DimStore, StoreServiceType } from '../inventory/store-types';
 
 interface Props {
   $scope: IScope;

@@ -7,8 +7,7 @@ import template from './activities.html';
 import './activities.scss';
 import { IComponentOptions, IController, IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { D1StoreServiceType, D1Store } from '../inventory/store-types';
 
 export const ActivitiesComponent: IComponentOptions = {
   controller: ActivitiesController,
@@ -18,18 +17,13 @@ export const ActivitiesComponent: IComponentOptions = {
   }
 };
 
-interface DimStoreWithActivities extends DimStore {
-  advisors: any;
-}
-
 function ActivitiesController(
   this: IController & {
     account: DestinyAccount;
     settings: typeof settings;
   },
   $scope: IScope,
-  D2StoresService: StoreServiceType,
-  dimStoreService: StoreServiceType,
+  dimStoreService: D1StoreServiceType,
   $i18next
 ) {
   'ngInject';
@@ -37,10 +31,6 @@ function ActivitiesController(
   const vm = this;
 
   vm.settings = settings;
-
-  function getStoreService() {
-    return vm.settings.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
 
   vm.settingsChanged = () => {
     vm.settings.save();
@@ -53,12 +43,12 @@ function ActivitiesController(
   };
 
   this.$onInit = () => {
-    subscribeOnScope($scope, getStoreService().getStoresStream(vm.account), init);
+    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
   };
 
   $scope.$on('dim-refresh', () => {
     // TODO: refresh just advisors
-    getStoreService().reloadStores();
+    dimStoreService.reloadStores();
   });
 
   // TODO: Ideally there would be an Advisors service that would
@@ -67,7 +57,7 @@ function ActivitiesController(
   // extra info in Trials cards in Store service, and it's more
   // efficient to just fish the info out of there.
 
-  function init(stores: DimStoreWithActivities[]) {
+  function init(stores: D1Store[]) {
     if (_.isEmpty(stores)) {
       return;
     }
@@ -103,7 +93,7 @@ function ActivitiesController(
     });
   }
 
-  function processActivities(defs: D1ManifestDefinitions, stores: DimStoreWithActivities[], rawActivity) {
+  function processActivities(defs: D1ManifestDefinitions, stores: D1Store[], rawActivity) {
     const def = defs.Activity.get(rawActivity.display.activityHash);
     const activity = {
       hash: rawActivity.display.activityHash,
@@ -159,7 +149,7 @@ function ActivitiesController(
   function processActivity(
     defs: D1ManifestDefinitions,
     activityId: string,
-    stores: DimStoreWithActivities[],
+    stores: D1Store[],
     tier: any,
     index: number
   ): ActivityTier {

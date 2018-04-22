@@ -208,11 +208,11 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       }
     },
 
-    updateCachedUserRankings(item, userReview) {
-      if (_isDestinyOne()) {
+    updateCachedUserRankings(item: DimItem, userReview) {
+      if (item.destinyVersion === 1) {
         _reviewDataCache.addUserReviewData(item,
                                            userReview);
-      } else if (_isDestinyTwo()) {
+      } else {
         _d2reviewDataCache.addUserReviewData(item,
                                              userReview);
       }
@@ -266,11 +266,11 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       }
     },
 
-    getItemReviews(item) {
+    getItemReviews(item: DimItem) {
       if (settings.allowIdPostToDtr) {
-        if (_isDestinyOne()) {
+        if (item.destinyVersion === 1) {
           _reviewsFetcher.getItemReviews(item);
-        } else if (_isDestinyTwo()) {
+        } else {
           const platformSelection = settings.reviewsPlatformSelection;
           const mode = settings.reviewsModeSelection;
           _d2reviewsFetcher.getItemReviews(item, platformSelection, mode);
@@ -278,7 +278,7 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       }
     },
 
-    submitReview(item) {
+    submitReview(item: DimItem) {
       if (settings.allowIdPostToDtr) {
         const membershipInfo = getActivePlatform();
 

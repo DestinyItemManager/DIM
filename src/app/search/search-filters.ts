@@ -563,7 +563,7 @@ export function searchFilters(
         return compareByOperand(item.amount, predicate);
       },
       engram(item: DimItem) {
-        return item.isEngram();
+        return item.isEngram;
       },
       infusable(item: DimItem) {
         return item.infusable;
