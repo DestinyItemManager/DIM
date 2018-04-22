@@ -20,6 +20,10 @@ import { D2InventoryBucket } from '../destiny2/d2-buckets.service';
 
 // TODO: maybe break these out into separate files for D1/D2?
 
+/**
+ * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
+ * or you don't use anything specific to one of them.
+ */
 // TODO: This interface is clearly too large - break out interfaces for common subsets
 export interface DimItem {
   owner: string;
@@ -118,10 +122,19 @@ export interface DimItem {
   canBeInLoadout(): boolean;
   updateManualMoveTimestamp(): void;
 
+  /**
+   * Check if this item is from D1. Inside an if statement, this item will be narrowed to type D1Item.
+   */
   isDestiny1(): this is D1Item;
+  /**
+   * Check if this item is from D2. Inside an if statement, this item will be narrowed to type D2Item.
+   */
   isDestiny2(): this is D2Item;
 }
 
+/**
+ * A Destiny 1 item. Use this type when you need specific D1 properties.
+ */
 export interface D1Item extends DimItem {
   primStat: D1PrimStat | null;
   talentGrid: D1TalentGrid | null;
@@ -136,6 +149,9 @@ export interface D1Item extends DimItem {
   trackable: boolean;
 }
 
+/**
+ * A Destiny 2 item. Use this type when you need specific D2 properties.
+ */
 export interface D2Item extends DimItem {
   location: D2InventoryBucket;
   bucket: D2InventoryBucket;
@@ -257,6 +273,10 @@ export interface D1GridNode extends DimGridNode {
   bestRated?: boolean; // used for D1 perk ratings
 }
 
+/**
+ * Dim's view of a "Plug" - an item that can go into a socket.
+ * In D2, both perk grids and mods/shaders are sockets with plugs.
+ */
 export interface DimPlug {
   plugItem: DestinyInventoryItemDefinition;
   bestRated?: boolean;

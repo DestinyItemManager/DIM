@@ -2,8 +2,8 @@ import { IComponentOptions, IController, IScope, IRootElementService, element } 
 import Dragend from 'dragend';
 import { settings } from '../settings/settings';
 import './store-pager.scss';
-import { DimStore } from './store/d2-store-factory.service';
 import { sortStores } from '../shell/dimAngularFilters.filter';
+import { DimStore } from './store-types';
 
 export const StorePagerComponent: IComponentOptions = {
   controller: StorePagerCtrl,

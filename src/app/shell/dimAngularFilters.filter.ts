@@ -1,10 +1,10 @@
 import { module } from 'angular';
 import * as _ from 'underscore';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';
+import { DimItem } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
 
 // This file defines Angular filters for DIM that may be shared among
 // different parts of DIM.

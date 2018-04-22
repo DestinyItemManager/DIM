@@ -3,7 +3,7 @@ import template from './dimStoreHeading.directive.html';
 import dialogTemplate from './dimStoreHeading.directive.dialog.html';
 import './dimStoreHeading.scss';
 import { IComponentOptions, IController, IScope } from 'angular';
-import { DimStore } from './store/d2-store-factory.service';
+import { DimStore } from './store-types';
 
 export const StoreHeadingComponent: IComponentOptions = {
   controller: StoreHeadingCtrl,

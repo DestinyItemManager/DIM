@@ -4,8 +4,8 @@ import { flatMap } from '../util';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
 import './infuse.scss';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import { LoadoutServiceType, Loadout } from '../loadout/loadout.service';
+import { StoreServiceType } from '../inventory/store-types';
 
 export const InfuseComponent: IComponentOptions = {
   template,

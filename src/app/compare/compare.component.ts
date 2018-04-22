@@ -2,9 +2,9 @@ import * as _ from 'underscore';
 import template from './compare.html';
 import './compare.scss';
 import { element as angularElement, IController, IComponentOptions, IScope } from 'angular';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { sum } from '../util';
+import { DimItem } from '../inventory/item-types';
+import { StoreServiceType } from '../inventory/store-types';
 
 export function StatRangeFilter() {
   // Turns a stat and a list of ranges into a 0-100 scale

@@ -9,10 +9,10 @@ import { flatMap } from '../util';
 import { settings } from '../settings/settings';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout } from './loadout.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DimStore } from '../inventory/store-types';
+import { DimItem } from '../inventory/item-types';
 
 export const LoadoutDrawerComponent: IComponentOptions = {
   controller: LoadoutDrawerCtrl,

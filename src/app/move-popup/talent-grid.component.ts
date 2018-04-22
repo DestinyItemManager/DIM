@@ -3,7 +3,7 @@ import template from './talent-grid.html';
 import './talent-grid.scss';
 import { showInfoPopup } from '../shell/info-popup';
 import { IComponentOptions, IController, IAngularEvent } from 'angular';
-import { DimTalentGrid, DimGridNode } from '../inventory/store/d2-item-factory.service';
+import { DimTalentGrid, DimGridNode } from '../inventory/item-types';
 
 export function talentGridNodesFilter(nodes: DimGridNode[], hiddenColumns: number) {
   return (nodes || []).filter((node) => !node.hidden && node.column >= hiddenColumns);

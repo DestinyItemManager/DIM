@@ -8,7 +8,6 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
 import { $state, $transitions, ngDialog } from '../ngimport-more';
 import { SearchFilterComponent } from '../search/search-filter.component';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
@@ -23,6 +22,7 @@ import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
+import { StoreServiceType } from '../inventory/store-types';
 
 const destiny1Links = [
   {

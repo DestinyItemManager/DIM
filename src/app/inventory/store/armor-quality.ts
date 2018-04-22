@@ -1,4 +1,4 @@
-import { D1Stat } from "../item-types";
+import { D1Stat } from '../item-types';
 
 /**
  * Calculate stat ranges for armor. This also modifies the input stats to add per-stat quality ratings.

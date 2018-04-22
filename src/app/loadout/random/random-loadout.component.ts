@@ -2,8 +2,7 @@ import { optimalLoadout } from '../loadout-utils';
 import template from './random-loadout.html';
 import './random-loadout.scss';
 import { IComponentOptions, IController, IWindowService } from 'angular';
-import { DimStore } from '../../inventory/store/d2-store-factory.service';
-import { StoreServiceType } from '../../inventory/d2-stores.service';
+import { DimStore, StoreServiceType } from '../../inventory/store-types';
 
 export const RandomLoadoutComponent: IComponentOptions = {
   template,

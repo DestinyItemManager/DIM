@@ -1,13 +1,12 @@
 import * as _ from 'underscore';
 import { REP_TOKENS } from './rep-tokens';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { D2InventoryBucket, getBuckets } from '../destiny2/d2-buckets.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
 import { ItemServiceType } from '../inventory/dimItemService.factory';
+import { D2StoreServiceType, D2Store } from '../inventory/store-types';
+import { D2Item } from '../inventory/item-types';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -17,7 +16,7 @@ export function D2FarmingService(
   $rootScope: IRootScopeService,
   $q: IQService,
   dimItemService: ItemServiceType,
-  D2StoresService: StoreServiceType,
+  D2StoresService: D2StoreServiceType,
   $interval: IIntervalService,
   toaster,
   $i18next
@@ -47,11 +46,11 @@ export function D2FarmingService(
 
     // Ensure that there's one open space in each category that could
     // hold an item, so they don't go to the postmaster.
-    async makeRoomForItems(store: DimStore) {
+    async makeRoomForItems(store: D2Store) {
       const makeRoomBuckets = await getMakeRoomBuckets();
 
       // If any category is full, we'll move one aside
-      let itemsToMove: DimItem[] = [];
+      let itemsToMove: D2Item[] = [];
       makeRoomBuckets.forEach((makeRoomBucket) => {
         const items = store.buckets[makeRoomBucket.id];
         if (items.length > 0 && items.length >= makeRoomBucket.capacity) {
@@ -87,7 +86,7 @@ export function D2FarmingService(
       return moveItemsToVault(store, itemsToMove, makeRoomBuckets);
     },
 
-    async farm(store: DimStore) {
+    async farm(store: D2Store) {
       this.makingRoom = true;
       try {
         // Then make room for items
@@ -134,7 +133,7 @@ export function D2FarmingService(
     }
   };
 
-  async function moveItemsToVault(store: DimStore, items: DimItem[], makeRoomBuckets: D2InventoryBucket[]) {
+  async function moveItemsToVault(store: D2Store, items: D2Item[], makeRoomBuckets: D2InventoryBucket[]) {
     const reservations = {};
     // reserve one space in the active character
     reservations[store.id] = {};

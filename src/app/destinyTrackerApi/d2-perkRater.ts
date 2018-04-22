@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { DtrUserReview } from '../item-review/destiny-tracker.service';
-import { DimItem, DimSocket } from '../inventory/store/d2-item-factory.service';
 import { sum } from '../util';
+import { D2Item, DimSocket } from '../inventory/item-types';
 
 export interface RatingAndReview {
   ratingCount: number;
@@ -16,7 +16,7 @@ class D2PerkRater {
   /**
    * Rate the perks on a Destiny 2 item based off of its attached user reviews.
    */
-  ratePerks(item: DimItem) {
+  ratePerks(item: D2Item) {
     if (!item.reviews ||
         !item.reviews.length ||
         !item.sockets ||

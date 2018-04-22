@@ -1,7 +1,5 @@
 import { copy as angularCopy, IAngularEvent, IComponentOptions, IController } from 'angular';
 import * as _ from 'underscore';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { queueAction } from '../inventory/action-queue';
 import {
   gatherEngramsLoadout,
@@ -19,6 +17,7 @@ import { IDialogService } from 'ng-dialog';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets.service';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
 import { ItemServiceType } from '../inventory/dimItemService.factory';
+import { DimStore, StoreServiceType } from '../inventory/store-types';
 
 export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,

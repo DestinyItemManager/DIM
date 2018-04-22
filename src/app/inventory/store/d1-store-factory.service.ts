@@ -227,6 +227,7 @@ export function makeCharacter(
   });
 
   if (store.progression) {
+    console.log('progression', store.progression.progressions);
     store.progression.progressions.forEach((prog) => {
       Object.assign(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
       const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });

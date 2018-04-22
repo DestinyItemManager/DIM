@@ -1,10 +1,9 @@
 import { settings } from '../settings/settings';
 import template from './dimMovePopup.directive.html';
 import './move-popup.scss';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import { IController } from 'angular';
+import { DimStore, StoreServiceType } from '../inventory/store-types';
+import { DimItem } from '../inventory/item-types';
 
 export const MovePopupComponent = {
   controller: MovePopupController,

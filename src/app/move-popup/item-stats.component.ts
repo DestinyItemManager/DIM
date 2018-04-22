@@ -2,7 +2,7 @@ import { settings } from '../settings/settings';
 import template from './item-stats.html';
 import './item-stats.scss';
 import { IComponentOptions, IController } from 'angular';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DimItem } from '../inventory/item-types';
 
 function ItemStatsController(this: IController & { item: DimItem }) {
   'ngInject';

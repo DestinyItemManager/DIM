@@ -8,7 +8,7 @@ import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definition
 import template from './record-books.html';
 import './record-books.scss';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
+import { StoreServiceType } from '../inventory/store-types';
 
 export const RecordBooksComponent: IComponentOptions = {
   controller: RecordBooksController,

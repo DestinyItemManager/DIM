@@ -3,8 +3,8 @@ import { NewItemsService } from './store/new-items.service';
 import template from './dimClearNewItems.directive.html';
 import './dimClearNewItems.scss';
 import { IComponentOptions, IController, IScope } from 'angular';
-import { StoreServiceType } from './d2-stores.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { StoreServiceType } from './store-types';
 
 /**
  * A button that marks all new items as "seen".

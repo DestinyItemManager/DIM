@@ -1,13 +1,12 @@
 import { t } from 'i18next';
 import * as _ from 'underscore';
 import { DimInventoryBucket, DimInventoryBuckets } from '../inventory/inventory-types';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { flatMap } from '../util';
 import { IPromise } from 'angular';
 import { ItemServiceType } from '../inventory/dimItemService.factory';
 import { D1InventoryBuckets, D1InventoryBucket } from '../destiny1/d1-buckets.service';
+import { StoreServiceType, DimStore } from '../inventory/store-types';
+import { DimItem } from '../inventory/item-types';
 
 export function makeRoomForPostmaster(
   storeService: StoreServiceType,

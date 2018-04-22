@@ -7,6 +7,7 @@ import '../rx-operators';
 import { compareAccounts } from '../accounts/destiny-account.service';
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { processItems } from '../inventory/store/d1-item-factory.service';
 
 /*
 const allVendors = [
@@ -67,7 +68,6 @@ const xur = 2796397637;
 export function VendorService(
   $rootScope,
   dimStoreService,
-  ItemFactory,
   dimDestinyTrackerService,
   loadingTracker,
   $q
@@ -408,7 +408,7 @@ export function VendorService(
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
     });
 
-    return ItemFactory.processItems({ id: null }, saleItems.map((i) => i.item))
+    return processItems({ id: null }, saleItems.map((i) => i.item))
       .then((items) => {
         const itemsById = _.indexBy(items, 'id');
         const categories = _.compact(_.map(vendor.saleItemCategories, (category) => {

@@ -1,5 +1,5 @@
-import { DimItem } from "../inventory/store/d2-item-factory.service";
 import { D1ItemFetchRequest, D1ItemReviewRequest } from "../item-review/destiny-tracker.service";
+import { DimItem } from "../inventory/item-types";
 
 /**
  * Translates items from the objects that DIM has to the form that the DTR API expects.

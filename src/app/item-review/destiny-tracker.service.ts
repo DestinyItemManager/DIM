@@ -146,13 +146,13 @@ import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { IPromise } from 'angular';
 import { $q } from 'ngimport';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
+import { DimStore, D2Store } from '../inventory/store-types';
+import { DimItem } from '../inventory/item-types';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -194,25 +194,25 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
   }
 
   return {
-    reattachScoresFromCache(stores: any | DimStore[]): void {
+    reattachScoresFromCache(stores: DimStore[]): void {
       if (!stores || !stores[0]) {
         return;
       }
 
-      if (stores[0].destinyVersion === 1) {
+      if (stores[0].isDestiny1()) {
         _bulkFetcher.attachRankings(null,
                                     stores);
-      } else if (stores[0].destinyVersion === 2) {
+      } else if (stores[0].isDestiny2()) {
         _d2bulkFetcher.attachRankings(null,
-                                      stores as DimStore[]);
+                                      stores as D2Store[]);
       }
     },
 
     updateCachedUserRankings(item: DimItem, userReview) {
-      if (item.destinyVersion === 1) {
+      if (item.isDestiny1()) {
         _reviewDataCache.addUserReviewData(item,
                                            userReview);
-      } else {
+      } else if (item.isDestiny2()) {
         _d2reviewDataCache.addUserReviewData(item,
                                              userReview);
       }
@@ -268,9 +268,9 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
 
     getItemReviews(item: DimItem) {
       if (settings.allowIdPostToDtr) {
-        if (item.destinyVersion === 1) {
+        if (item.isDestiny1()) {
           _reviewsFetcher.getItemReviews(item);
-        } else {
+        } else if (item.isDestiny2()) {
           const platformSelection = settings.reviewsPlatformSelection;
           const mode = settings.reviewsModeSelection;
           _d2reviewsFetcher.getItemReviews(item, platformSelection, mode);
@@ -282,27 +282,27 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       if (settings.allowIdPostToDtr) {
         const membershipInfo = getActivePlatform();
 
-        if (_isDestinyOne()) {
+        if (item.isDestiny1()) {
           _reviewSubmitter.submitReview(item, membershipInfo);
-        } else if (_isDestinyTwo()) {
+        } else if (item.isDestiny2()) {
           _d2reviewSubmitter.submitReview(item, membershipInfo);
         }
       }
     },
 
-    fetchReviews(stores: any | DimStore[]) {
+    fetchReviews(stores: DimStore[]) {
       if (!settings.showReviews ||
           !stores ||
           !stores[0]) {
         return;
       }
 
-      if (stores[0].destinyVersion === 1) {
+      if (stores[0].isDestiny1()) {
         _bulkFetcher.bulkFetch(stores);
-      } else if (stores[0].destinyVersion === 2) {
+      } else if (stores[0].isDestiny2()) {
         const platformSelection = settings.reviewsPlatformSelection;
         const mode = settings.reviewsModeSelection;
-        _d2bulkFetcher.bulkFetch(stores, platformSelection, mode);
+        _d2bulkFetcher.bulkFetch(stores as D2Store[], platformSelection, mode);
       }
     },
 

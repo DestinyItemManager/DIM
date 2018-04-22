@@ -145,7 +145,8 @@ export const getBuckets = _.memoize(() => {
     };
     _.each(defs.InventoryBucket, (def: any) => {
       if (def.enabled) {
-        const id = def.hash;
+        console.log('BUCKET', def);
+        const id = def.bucketIdentifier;
         const type = bucketToType[def.hash];
         let sort: string | undefined;
         if (type) {
