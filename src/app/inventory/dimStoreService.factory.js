@@ -69,10 +69,10 @@ export function StoreService(
 
   /**
    * Find an item among all stores that matches the params provided.
-   * @param {{ id, hash, notransfer }} params
+   * @param {{ id, hash, location, owner }} params
    */
   function getItemAcrossStores(params) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer'));
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'location', 'owner'));
     for (let i = 0; i < _stores.length; i++) {
       const result = _stores[i].items.find(predicate);
       if (result) {
