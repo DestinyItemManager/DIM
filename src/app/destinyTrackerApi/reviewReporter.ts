@@ -1,19 +1,22 @@
+import { $q, $http } from 'ngimport';
+import { ReviewDataCache } from './reviewDataCache';
+import { D1ItemUserReview, D1MembershipInfo } from '../item-review/destiny-tracker.service';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { UserFilter } from './userFilter';
+import { handleSubmitErrors } from './trackerErrorHandler';
+import { loadingTracker } from '../ngimport-more';
+
 /**
  * Class to support reporting bad takes.
- *
- * @class ReviewReporter
  */
-class ReviewReporter {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache, userFilter) {
-    this.$q = $q;
-    this.$http = $http;
-    this._trackerErrorHandler = trackerErrorHandler;
-    this._loadingTracker = loadingTracker;
+export class ReviewReporter {
+  _userFilter = new UserFilter();
+  _reviewDataCache: ReviewDataCache;
+  constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
-    this._userFilter = userFilter;
   }
 
-  _getReporter(membershipInfo) {
+  _getReporter(membershipInfo: DestinyAccount): D1MembershipInfo {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,
@@ -30,25 +33,25 @@ class ReviewReporter {
     };
   }
 
-  _generateReviewReport(reviewId, membershipInfo) {
+  _generateReviewReport(reviewId, membershipInfo: DestinyAccount) {
     const reporter = this._getReporter(membershipInfo);
 
     return {
-      reviewId: reviewId,
+      reviewId,
       report: "",
-      reporter: reporter
+      reporter
     };
   }
 
   _submitReportReviewPromise(reviewId, membershipInfo) {
     const reviewReport = this._generateReviewReport(reviewId, membershipInfo);
 
-    const promise = this.$q
+    const promise = $q
               .when(this._submitReviewReportCall(reviewReport))
-              .then(this.$http)
-              .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
+              .then($http)
+              .then(handleSubmitErrors, handleSubmitErrors);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise;
   }
@@ -61,20 +64,14 @@ class ReviewReporter {
   /**
    * Report a written review.
    * Also quietly adds the associated user to a block list.
-   *
-   * @param {review} review
-   * @param {Account} membershipInfo
-   * @memberof ReviewReporter
    */
-  reportReview(review, membershipInfo) {
-    if (review.isHighlighted || review.isReviewer) {
+  reportReview(review: D1ItemUserReview, membershipInfo: DestinyAccount | null) {
+    if (review.isHighlighted || review.isReviewer || !membershipInfo) {
       return;
     }
 
     this._submitReportReviewPromise(review.reviewId, membershipInfo)
-      .then(this._reviewDataCache.markReviewAsIgnored(review))
-      .then(this._ignoreReportedUser(review));
+      .then(() => this._reviewDataCache.markReviewAsIgnored(review))
+      .then(() => this._ignoreReportedUser(review));
   }
 }
-
-export { ReviewReporter };

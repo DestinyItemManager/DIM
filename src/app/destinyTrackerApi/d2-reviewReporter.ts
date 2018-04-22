@@ -1,22 +1,19 @@
-import { D2TrackerErrorHandler } from "./d2-trackerErrorHandler";
 import { D2ReviewDataCache } from "./d2-reviewDataCache";
 import { DestinyAccount } from "../accounts/destiny-account.service";
 import { DtrUserReview, Reviewer, DimReviewReport } from '../item-review/destiny-tracker.service';
 import { $q, $http } from 'ngimport';
+import { UserFilter } from "./userFilter";
+import { loadingTracker } from "../ngimport-more";
+import { handleD2SubmitErrors } from "./d2-trackerErrorHandler";
 
 /**
  * Class to support reporting bad takes.
  */
 class D2ReviewReporter {
-  _userFilter: any;
+  _userFilter = new UserFilter();
   _reviewDataCache: D2ReviewDataCache;
-  _loadingTracker: any;
-  _trackerErrorHandler: D2TrackerErrorHandler;
-  constructor(loadingTracker, reviewDataCache, userFilter) {
-    this._trackerErrorHandler = new D2TrackerErrorHandler();
-    this._loadingTracker = loadingTracker;
+  constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
-    this._userFilter = userFilter;
   }
 
   _getReporter(membershipInfo: DestinyAccount): Reviewer {
@@ -52,9 +49,9 @@ class D2ReviewReporter {
     const promise = $q
                 .when(this._submitReviewReportCall(reviewReport))
                 .then($http)
-                .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
+                .then(handleD2SubmitErrors, handleD2SubmitErrors);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise;
   }

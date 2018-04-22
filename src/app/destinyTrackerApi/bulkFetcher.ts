@@ -1,12 +1,15 @@
+import { $q, $http } from 'ngimport';
 import { ItemListBuilder } from './itemListBuilder';
+import { ReviewDataCache } from './reviewDataCache';
+import { D1ItemFetchResponse } from '../item-review/destiny-tracker.service';
+import { IPromise } from 'angular';
+import { handleErrors } from './trackerErrorHandler';
+import { loadingTracker } from '../ngimport-more';
 
 class BulkFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
-    this.$q = $q;
-    this.$http = $http;
-    this._itemListBuilder = new ItemListBuilder();
-    this._trackerErrorHandler = trackerErrorHandler;
-    this._loadingTracker = loadingTracker;
+  _reviewDataCache: ReviewDataCache;
+  _itemListBuilder = new ItemListBuilder();
+  constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
@@ -19,34 +22,30 @@ class BulkFetcher {
     };
   }
 
-  _getBulkFetchPromise(stores) {
+  _getBulkFetchPromise(stores): IPromise<D1ItemFetchResponse[]> {
     if (!stores.length) {
-      return this.$q.resolve();
+      return $q.resolve([] as D1ItemFetchResponse[]);
     }
 
     const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
-      return this.$q.resolve();
+      return $q.resolve([] as D1ItemFetchResponse[]);
     }
 
-    const promise = this.$q
+    const promise = $q
               .when(this._getBulkWeaponDataEndpointPost(weaponList))
-              .then(this.$http)
-              .then(this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleErrors.bind(this._trackerErrorHandler))
+              .then($http)
+              .then(handleErrors, handleErrors)
               .then((response) => response.data);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
-    return promise;
+    return promise as IPromise<D1ItemFetchResponse[]>;
   }
 
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
-   *
-   * @param {any} storesContainer
-   *
-   * @memberof BulkFetcher
    */
   bulkFetch(storesContainer) {
     const stores = Object.values(storesContainer);
@@ -58,10 +57,6 @@ class BulkFetcher {
 
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
-   *
-   * @param {any} vendorContainer
-   *
-   * @memberof BulkFetcher
    */
   bulkFetchVendorItems(vendorContainer) {
     const vendors = Object.values(vendorContainer);
@@ -71,24 +66,22 @@ class BulkFetcher {
                                                         vendors));
   }
 
-  attachRankings(bulkRankings,
+  attachRankings(bulkRankings: D1ItemFetchResponse[] | null,
                  stores) {
     if (!bulkRankings && !stores) {
       return;
     }
 
-    const self = this;
-
     if (bulkRankings) {
       bulkRankings.forEach((bulkRanking) => {
-        self._reviewDataCache.addScore(bulkRanking);
+        this._reviewDataCache.addScore(bulkRanking);
       });
     }
 
     stores.forEach((store) => {
       store.items.forEach((storeItem) => {
         if (storeItem.reviewable) {
-          const matchingItem = self._reviewDataCache.getRatingData(storeItem);
+          const matchingItem = this._reviewDataCache.getRatingData(storeItem);
 
           if (matchingItem) {
             storeItem.dtrRating = matchingItem.rating;
@@ -110,11 +103,9 @@ class BulkFetcher {
       return;
     }
 
-    const self = this;
-
     if (bulkRankings) {
       bulkRankings.forEach((bulkRanking) => {
-        self._reviewDataCache.addScore(bulkRanking);
+        this._reviewDataCache.addScore(bulkRanking);
       });
     }
 
@@ -122,7 +113,7 @@ class BulkFetcher {
       vendor.allItems.forEach((vendorItemContainer) => {
         const vendorItem = vendorItemContainer.item;
 
-        const matchingItem = self._reviewDataCache.getRatingData(vendorItem);
+        const matchingItem = this._reviewDataCache.getRatingData(vendorItem);
 
         if (matchingItem) {
           vendorItem.dtrRating = matchingItem.rating;

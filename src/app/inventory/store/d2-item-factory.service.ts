@@ -40,7 +40,7 @@ import { NewItemsService } from './new-items.service';
 import { DimItemInfo, ItemInfoSource } from '../dim-item-info';
 import { $q } from 'ngimport';
 import { t } from 'i18next';
-import { DtrUserReview, DimWorkingUserReview } from '../../item-review/destiny-tracker.service';
+import { DtrUserReview, DimWorkingUserReview, D1ItemUserReview } from '../../item-review/destiny-tracker.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -106,6 +106,8 @@ export interface DimGridNode {
   unlocked: boolean;
   /** Some nodes don't show up in the grid, like purchased ascend nodes */
   hidden: boolean;
+
+  bestRated?: boolean; // used for D1 perk ratings
 }
 
 export interface DimTalentGrid {
@@ -232,7 +234,7 @@ export interface DimItem {
   dtrRating: number;
   dtrRatingCount: number;
   dtrHighlightedRatingCount: number;
-  reviews: DtrUserReview[];
+  reviews: DtrUserReview[] | D1ItemUserReview[];
   userReviewPros: string;
   userReviewCons: string;
   mode: number;
@@ -241,6 +243,7 @@ export interface DimItem {
   reviewsUpdated?: number;
   /** Is the review data locally cached? */
   isLocallyCached?: boolean;
+  totalReviews: number;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;

@@ -74,6 +74,10 @@ export interface DimReviewReport {
   text: string;
 }
 
+export interface DtrSubmitResponse {
+  success?: boolean;
+}
+
 export enum DtrActivityModes {
   notSpecified = 0,
   playerVersusEnemy = 7,
@@ -82,19 +86,64 @@ export enum DtrActivityModes {
   trials = 39
 }
 
+export interface D1ItemFetchRequest {
+  referenceId: string;
+  roll?: string;
+}
+
+export interface D1ItemFetchResponse extends D1ItemFetchRequest {
+  rating?: number;
+  ratingCount: number;
+  highlightedRatingCount: number;
+}
+
+export interface D1ItemReviewRequest extends D1ItemFetchRequest {
+  selectedPerks?: string;
+  instanceId: string;
+}
+
+export interface D1MembershipInfo {
+  membershipId: string;
+  membershipType: number;
+  displayName: string;
+}
+
+export interface D1ItemWorkingUserReview {
+  rating?: number;
+  pros: string;
+  cons: string;
+  review: string;
+  userRating?: number;
+}
+
+export interface D1ItemUserReview extends D1ItemWorkingUserReview {
+  reviewId: string; // string or number?
+  reviewer: D1MembershipInfo;
+  timestamp: string;
+  selectedPerks?: string;
+  isHighlighted: boolean;
+  isReviewer: boolean;
+}
+
+export interface D1ItemReviewResponse extends D1ItemFetchResponse {
+  reviews: D1ItemUserReview[];
+}
+
+export interface D1CachedItem extends D1ItemReviewResponse, D1ItemWorkingUserReview {
+  reviewsDataFetched: boolean;
+  totalReviews?: number;
+}
+
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
-import { TrackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler';
 import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
 import { ReviewsFetcher } from '../destinyTrackerApi/reviewsFetcher';
 import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
 import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
-import { UserFilter } from '../destinyTrackerApi/userFilter';
 
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
-import { SyncService } from '../storage/sync.service';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
@@ -102,6 +151,8 @@ import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { IPromise } from 'angular';
+import { $q } from 'ngimport';
+import { UserFilter } from '../destinyTrackerApi/userFilter';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -119,27 +170,20 @@ export interface DestinyTrackerServiceType {
   getD2ReviewDataCache(): D2ReviewDataCache;
 }
 
-export function DestinyTrackerService(
-  $q,
-  $http,
-  $i18next,
-  loadingTracker
-): DestinyTrackerServiceType {
+export function DestinyTrackerService(): DestinyTrackerServiceType {
   'ngInject';
 
   const _reviewDataCache = new ReviewDataCache();
-  const _userFilter = new UserFilter(SyncService);
-  const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
-  const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
-  const _reviewSubmitter = new ReviewSubmitter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  const _reviewReporter = new ReviewReporter($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache, _userFilter);
+  const _bulkFetcher = new BulkFetcher(_reviewDataCache);
+  const _reviewsFetcher = new ReviewsFetcher(_reviewDataCache);
+  const _reviewSubmitter = new ReviewSubmitter(_reviewDataCache);
+  const _reviewReporter = new ReviewReporter(_reviewDataCache);
 
   const _d2reviewDataCache = new D2ReviewDataCache();
-  const _d2bulkFetcher = new D2BulkFetcher(loadingTracker, _d2reviewDataCache);
-  const _d2reviewsFetcher = new D2ReviewsFetcher(loadingTracker, _d2reviewDataCache, _userFilter);
-  const _d2reviewSubmitter = new D2ReviewSubmitter(loadingTracker, _d2reviewDataCache);
-  const _d2reviewReporter = new D2ReviewReporter(loadingTracker, _d2reviewDataCache, _userFilter);
+  const _d2bulkFetcher = new D2BulkFetcher(_d2reviewDataCache);
+  const _d2reviewsFetcher = new D2ReviewsFetcher(_d2reviewDataCache);
+  const _d2reviewSubmitter = new D2ReviewSubmitter(_d2reviewDataCache);
+  const _d2reviewReporter = new D2ReviewReporter(_d2reviewDataCache);
 
   function _isDestinyOne() {
     return (settings.destinyVersion === 1);
@@ -188,7 +232,7 @@ export function DestinyTrackerService(
         }
       }
 
-      return $q.when();
+      return $q.when(this);
     },
 
     async bulkFetchKioskItems(
@@ -205,7 +249,7 @@ export function DestinyTrackerService(
         }
       }
 
-      return $q.when();
+      return $q.when(this);
     },
 
     getD2ReviewDataCache(): D2ReviewDataCache {
@@ -272,7 +316,7 @@ export function DestinyTrackerService(
           return _d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection, mode);
         }
       }
-      return $q.when({});
+      return $q.when(this);
     },
 
     reportReview(review) {
@@ -287,7 +331,8 @@ export function DestinyTrackerService(
       }
     },
     clearIgnoredUsers() {
-      _userFilter.clearIgnoredUsers();
+      const userFilter = new UserFilter();
+      userFilter.clearIgnoredUsers();
     },
     clearCache() {
       if (_isDestinyTwo()) {

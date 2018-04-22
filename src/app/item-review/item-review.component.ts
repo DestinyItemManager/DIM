@@ -7,7 +7,7 @@ import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DestinyTrackerServiceType } from './destiny-tracker.service';
+import { DestinyTrackerServiceType, D1ItemUserReview, DtrUserReview } from './destiny-tracker.service';
 
 export const ItemReviewComponent: IComponentOptions = {
   bindings: {
@@ -93,9 +93,9 @@ function ItemReviewController(
 
   vm.findReview = (reviewId) => {
     if (vm.item.destinyVersion === 1) {
-      return _.find(vm.item.reviews, { reviewId });
+      return (vm.item.reviews as D1ItemUserReview[]).find((review) => review.reviewId === reviewId);
     } else {
-      return _.find(vm.item.reviews, { id: reviewId });
+      return (vm.item.reviews as DtrUserReview[]).find((review) => review.id === reviewId);
     }
   };
 
@@ -134,11 +134,17 @@ function ItemReviewController(
 
     const labels = vm.reviewLabels;
 
+    // the score histogram is a D1-only thing
     const mapData = _.map(labels, (label) => {
-      const matchingReviews = _.where(vm.item.reviews, { rating: label });
-      const highlightedReviews = _.where(matchingReviews, { isHighlighted: true });
+      if (vm.item.destinyVersion === 1) {
+        const matchingReviews = _.where((vm.item.reviews as D1ItemUserReview[]), { rating: label });
+        const highlightedReviews = _.where(matchingReviews, { isHighlighted: true });
 
-      return matchingReviews.length + (highlightedReviews.length * 4);
+        return matchingReviews.length + (highlightedReviews.length * 4);
+      } else {
+        const highlightedReviews = (vm.item.reviews as DtrUserReview[]).filter((review) => review.isHighlighted);
+        return vm.item.reviews.length + (highlightedReviews.length * 4);
+      }
     });
 
     vm.totalReviews = mapData.reduce((sum, cur) => sum + cur, 0);

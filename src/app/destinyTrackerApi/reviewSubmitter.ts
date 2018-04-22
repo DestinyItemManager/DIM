@@ -1,17 +1,18 @@
 import { ItemTransformer } from './itemTransformer';
+import { ReviewDataCache } from './reviewDataCache';
+import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { D1MembershipInfo, D1ItemUserReview } from '../item-review/destiny-tracker.service';
+import { $q, $http } from 'ngimport';
+import { handleSubmitErrors } from './trackerErrorHandler';
+import { loadingTracker } from '../ngimport-more';
 
 /**
  * Supports submitting review data to the DTR API.
- *
- * @class ReviewSubmitter
  */
-class ReviewSubmitter {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
-    this.$q = $q;
-    this.$http = $http;
-    this._itemTransformer = new ItemTransformer();
-    this._trackerErrorHandler = trackerErrorHandler;
-    this._loadingTracker = loadingTracker;
+export class ReviewSubmitter {
+  _reviewDataCache: ReviewDataCache;
+  _itemTransformer = new ItemTransformer();
+  constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
@@ -23,7 +24,7 @@ class ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item) {
+  toRatingAndReview(item: DimItem) {
     return {
       rating: item.userRating,
       review: item.userReview,
@@ -41,20 +42,19 @@ class ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item, membershipInfo) {
+  _submitReviewPromise(item: DimItem, membershipInfo: D1MembershipInfo) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
 
-    const rating = Object.assign(rollAndPerks, review);
-    rating.reviewer = reviewer;
+    const rating = { ...rollAndPerks, ...review, reviewer };
 
-    const promise = this.$q
+    const promise = $q
               .when(this._submitItemReviewCall(rating))
-              .then(this.$http)
-              .then(this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler), this._trackerErrorHandler.handleSubmitErrors.bind(this._trackerErrorHandler));
+              .then($http)
+              .then(handleSubmitErrors, handleSubmitErrors);
 
-    this._loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
     return promise;
   }
@@ -64,8 +64,8 @@ class ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item, membershipInfo) {
-    const review = this.toRatingAndReview(item);
+  _markItemAsReviewedAndSubmitted(item: DimItem, membershipInfo: D1MembershipInfo) {
+    const review = this.toRatingAndReview(item) as D1ItemUserReview;
     review.isReviewer = true;
     review.reviewer = this._getReviewer(membershipInfo);
     review.timestamp = new Date().toISOString();
@@ -76,9 +76,7 @@ class ReviewSubmitter {
 
   submitReview(item, membershipInfo) {
     this._submitReviewPromise(item, membershipInfo)
-      .then(this._markItemAsReviewedAndSubmitted(item, membershipInfo))
-      .then(this._eventuallyPurgeCachedData(item));
+      .then(() => this._markItemAsReviewedAndSubmitted(item, membershipInfo))
+      .then(() => this._eventuallyPurgeCachedData(item));
   }
 }
-
-export { ReviewSubmitter };
