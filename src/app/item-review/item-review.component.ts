@@ -50,7 +50,6 @@ function ItemReviewController(
     }
   };
 
-
   vm.toggleChart = () => {
     vm.isCollapsed = !vm.isCollapsed;
   };

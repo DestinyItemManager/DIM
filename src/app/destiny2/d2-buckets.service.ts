@@ -80,7 +80,7 @@ const bucketToType: { [hash: number]: string | undefined } = {
   138197802: "General"
 };
 
-export interface DimInventoryBucket {
+export interface D2InventoryBucket {
   readonly id: number;
   readonly description: string;
   readonly name: string;
@@ -91,7 +91,7 @@ export interface DimInventoryBucket {
   readonly category: BucketCategory;
   readonly type?: string;
   readonly sort?: string;
-  vaultBucket?: DimInventoryBucket;
+  vaultBucket?: D2InventoryBucket;
   // TODO: how to handle inPostmaster, etc? should probably be a function
   inPostmaster?: boolean;
   inWeapons?: boolean;
@@ -100,12 +100,12 @@ export interface DimInventoryBucket {
   inInventory?: boolean;
 }
 
-export interface DimInventoryBuckets {
-  byHash: { [hash: number]: DimInventoryBucket };
-  byType: { [type: string]: DimInventoryBucket };
-  byId: { [hash: number]: DimInventoryBucket };
-  byCategory: { [category: string]: DimInventoryBucket[] };
-  unknown: DimInventoryBucket; // TODO: get rid of this?
+export interface D2InventoryBuckets {
+  byHash: { [hash: number]: D2InventoryBucket };
+  byType: { [type: string]: D2InventoryBucket };
+  byId: { [hash: number]: D2InventoryBucket };
+  byCategory: { [category: string]: D2InventoryBucket[] };
+  unknown: D2InventoryBucket; // TODO: get rid of this?
   setHasUnknown();
 }
 
@@ -116,11 +116,11 @@ _.each(D2Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.memoize(getBucketsUncached) as () => IPromise<DimInventoryBuckets>;
+export const getBuckets = _.memoize(getBucketsUncached) as () => IPromise<D2InventoryBuckets>;
 
 function getBucketsUncached() {
   return getDefinitions().then((defs) => {
-    const buckets: DimInventoryBuckets = {
+    const buckets: D2InventoryBuckets = {
       byHash: {}, // numeric hash -> bucket
       byType: {}, // names ("ClassItem, Special") -> bucket
       byId: {}, // TODO hack
@@ -151,7 +151,7 @@ function getBucketsUncached() {
         sort = typeToSort[type];
       }
 
-      const bucket: DimInventoryBucket = {
+      const bucket: D2InventoryBucket = {
         id,
         description: def.displayProperties.description,
         name: def.displayProperties.name,
@@ -182,7 +182,7 @@ function getBucketsUncached() {
       vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
     });
 
-    _.each(buckets.byHash, (bucket: DimInventoryBucket) => {
+    _.each(buckets.byHash, (bucket: D2InventoryBucket) => {
       if (vaultMappings[bucket.hash]) {
         bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
       }

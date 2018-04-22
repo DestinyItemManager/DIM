@@ -29,7 +29,7 @@ import {
   DestinyItemSocketEntryPlugItemDefinition
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { getBuckets, DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
+import { getBuckets, D2InventoryBucket, D2InventoryBuckets } from '../../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 import { sum, compact } from '../../util';
@@ -154,9 +154,9 @@ export interface DimItem {
   /** The version of Destiny this comes from */
   destinyVersion: 1 | 2;
   /** The bucket the item is currently in */
-  location: DimInventoryBucket;
+  location: D2InventoryBucket;
   /** The bucket the item normally resides in (even though it may be in the vault/postmaster) */
-  bucket: DimInventoryBucket;
+  bucket: D2InventoryBucket;
   hash: number;
   /** This is the type of the item (see D2Category/D2Buckets) regardless of location */
   type: string;
@@ -349,7 +349,7 @@ const categoryFromInfusionHash = {
 // items.
 const ItemProto = {
   // Can this item be equipped by the given store?
-  canBeEquippedBy(store) {
+  canBeEquippedBy(this: DimItem, store: DimStore) {
     if (store.isVault) {
       return false;
     }
@@ -363,17 +363,17 @@ const ItemProto = {
       (!this.notransfer || this.owner === store.id) &&
       !this.location.inPostmaster;
   },
-  inCategory(categoryName) {
+  inCategory(this: DimItem, categoryName: string) {
     return this.categories.includes(categoryName);
   },
-  isEngram() {
+  isEngram(this: DimItem) {
     return this._isEngram;
   },
-  canBeInLoadout() {
+  canBeInLoadout(this: DimItem) {
     return this.equipment || this.type === 'Material' || this.type === 'Consumable';
   },
   // Mark that this item has been moved manually
-  updateManualMoveTimestamp() {
+  updateManualMoveTimestamp(this: DimItem) {
     this.lastManuallyMoved = Date.now();
     if (this.id !== '0') {
       _moveTouchTimestamps.set(this.id, this.lastManuallyMoved);
@@ -486,7 +486,7 @@ function findCategories(itemDef): string[] {
 // TODO: extract item components first!
 export function makeItem(
   defs: D2ManifestDefinitions,
-  buckets: DimInventoryBuckets,
+  buckets: D2InventoryBuckets,
   previousItems: Set<string>,
   newItems: Set<string>,
   itemInfoService: ItemInfoSource | undefined,

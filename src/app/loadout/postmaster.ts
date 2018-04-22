@@ -1,23 +1,24 @@
 import { t } from 'i18next';
 import * as _ from 'underscore';
-import { DimInventoryBucket, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { DimInventoryBucket, DimInventoryBuckets } from '../inventory/inventory-types';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { flatMap } from '../util';
 import { IPromise } from 'angular';
 import { ItemServiceType } from '../inventory/dimItemService.factory';
+import { D1InventoryBuckets, D1InventoryBucket } from '../destiny1/d1-buckets.service';
 
 export function makeRoomForPostmaster(
   storeService: StoreServiceType,
   store: DimStore,
   dimItemService: ItemServiceType,
   toaster,
-  bucketsService: () => IPromise<DimInventoryBuckets>
+  bucketsService: () => IPromise<DimInventoryBuckets | D1InventoryBuckets>
 ): IPromise<void> {
   return bucketsService().then((buckets) => {
     const postmasterItems: DimItem[] = flatMap(buckets.byCategory.Postmaster,
-                                    (bucket: DimInventoryBucket) => store.buckets[bucket.id]);
+                                    (bucket: DimInventoryBucket | D1InventoryBucket) => store.buckets[bucket.id]);
     const postmasterItemCountsByType = _.countBy(postmasterItems,
                                                 (i) => i.bucket.id);
 

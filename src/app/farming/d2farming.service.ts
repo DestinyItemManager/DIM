@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import { REP_TOKENS } from './rep-tokens';
 import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DimInventoryBucket, getBuckets } from '../destiny2/d2-buckets.service';
+import { D2InventoryBucket, getBuckets } from '../destiny2/d2-buckets.service';
 import { StoreServiceType } from '../inventory/d2-stores.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -134,7 +134,7 @@ export function D2FarmingService(
     }
   };
 
-  async function moveItemsToVault(store: DimStore, items: DimItem[], makeRoomBuckets: DimInventoryBucket[]) {
+  async function moveItemsToVault(store: DimStore, items: DimItem[], makeRoomBuckets: D2InventoryBucket[]) {
     const reservations = {};
     // reserve one space in the active character
     reservations[store.id] = {};

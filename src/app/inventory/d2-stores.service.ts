@@ -14,7 +14,7 @@ import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { getBuckets, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { getBuckets, D2InventoryBuckets } from '../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { reportException } from '../exceptions';
@@ -201,7 +201,7 @@ export function D2StoresService(
     ];
 
     const reloadPromise: IPromise<DimStore[]> = $q.all(dataDependencies)
-      .then(([defs, buckets, newItems, itemInfoService, profileInfo]: [D2ManifestDefinitions, DimInventoryBuckets, Set<string>, any, DestinyProfileResponse]) => {
+      .then(([defs, buckets, newItems, itemInfoService, profileInfo]: [D2ManifestDefinitions, D2InventoryBuckets, Set<string>, any, DestinyProfileResponse]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);
@@ -238,7 +238,7 @@ export function D2StoresService(
 
         return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
-      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, DimInventoryBuckets, Set<string>, any, DimVault, DimStore[]]) => {
+      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, D2InventoryBuckets, Set<string>, any, DimVault, DimStore[]]) => {
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -294,7 +294,7 @@ export function D2StoresService(
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
-    buckets: DimInventoryBuckets,
+    buckets: D2InventoryBuckets,
     previousItems,
     newItems,
     itemInfoService,
@@ -337,7 +337,7 @@ export function D2StoresService(
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
-    buckets: DimInventoryBuckets,
+    buckets: D2InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
     itemInfoService
@@ -480,7 +480,7 @@ export function D2StoresService(
 
   // TODO: vault counts are silly and convoluted. We really need an
   // object to represent a Profile.
-  function updateVaultCounts(buckets: DimInventoryBuckets, activeStore: DimStore, vault: DimVault) {
+  function updateVaultCounts(buckets: D2InventoryBuckets, activeStore: DimStore, vault: DimVault) {
     // Fill in any missing buckets
     Object.values(buckets.byType).forEach((bucket) => {
       if (bucket.accountWide && bucket.vaultBucket) {

@@ -6,7 +6,7 @@ import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
 import { showInfoPopup } from '../shell/info-popup';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
-import { DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { DimInventoryBuckets } from '../inventory/inventory-types';
 import { DimStore } from './store/d2-store-factory.service';
 import { DimItem } from './store/d2-item-factory.service';
 import { sortStores } from '../shell/dimAngularFilters.filter';

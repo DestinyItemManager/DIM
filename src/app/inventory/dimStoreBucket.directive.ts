@@ -12,7 +12,7 @@ import { StoreServiceType } from './d2-stores.service';
 import { ItemServiceType } from './dimItemService.factory';
 import { DimItem } from './store/d2-item-factory.service';
 import { DimError } from '../bungie-api/bungie-service-helper';
-import { DimInventoryBucket } from '../destiny2/d2-buckets.service';
+import { DimInventoryBucket } from '../inventory/inventory-types';
 import { DimStore } from './store/d2-store-factory.service';
 
 export const StoreBucketComponent: IComponentOptions = {

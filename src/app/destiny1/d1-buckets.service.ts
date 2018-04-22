@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
-import { DimInventoryBucket } from '../destiny2/d2-buckets.service';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { IPromise } from 'angular';
 
 export const D1Categories = {
   Weapons: [
@@ -85,6 +85,33 @@ const sortToVault = {
   General: 'BUCKET_VAULT_ITEMS'
 };
 
+export interface D1InventoryBucket {
+  readonly id: string;
+  readonly description: string;
+  readonly name: string;
+  readonly hash: number;
+  readonly hasTransferDestination: boolean;
+  readonly capacity: number;
+  readonly accountWide: false;
+  readonly type?: string;
+  readonly sort?: string;
+  vaultBucket?: D1InventoryBucket;
+  inPostmaster?: boolean;
+  inWeapons?: boolean;
+  inArmor?: boolean;
+  inGeneral?: boolean;
+  inProgress?: boolean;
+}
+
+export interface D1InventoryBuckets {
+  byHash: { [hash: number]: D1InventoryBucket };
+  byId: { [hash: string]: D1InventoryBucket };
+  byType: { [type: string]: D1InventoryBucket };
+  byCategory: { [category: string]: D1InventoryBucket[] };
+  unknown: D1InventoryBucket; // TODO: get rid of this?
+  setHasUnknown();
+}
+
 const typeToSort = {};
 _.each(D1Categories, (types, category) => {
   types.forEach((type) => {
@@ -94,7 +121,7 @@ _.each(D1Categories, (types, category) => {
 
 export const getBuckets = _.memoize(() => {
   return getDefinitions().then((defs) => {
-    const buckets = {
+    const buckets: D1InventoryBuckets = {
       byHash: {}, // numeric hash -> bucket
       byId: {}, // BUCKET_LEGS -> bucket
       byType: {}, // DIM types ("ClassItem, Special") -> bucket
@@ -118,24 +145,25 @@ export const getBuckets = _.memoize(() => {
     };
     _.each(defs.InventoryBucket, (def: any) => {
       if (def.enabled) {
-        const bucket: any = {
-          id: def.bucketIdentifier,
+        const id = def.hash;
+        const type = bucketToType[def.hash];
+        let sort: string | undefined;
+        if (type) {
+          sort = typeToSort[type];
+        } else if (vaultTypes[id]) {
+          sort = vaultTypes[id];
+        }
+        const bucket: D1InventoryBucket = {
+          id,
           description: def.bucketDescription,
           name: def.bucketName,
           hash: def.hash,
           hasTransferDestination: def.hasTransferDestination,
           capacity: def.itemCount,
           accountWide: false,
-          type: bucketToType[def.bucketIdentifier]
+          type: bucketToType[def.bucketIdentifier],
+          sort
         };
-
-        if (bucket.type) {
-          bucket.sort = typeToSort[bucket.type];
-          buckets.byType[bucket.type] = bucket;
-        } else if (vaultTypes[bucket.id]) {
-          bucket.sort = vaultTypes[bucket.id];
-          buckets[bucket.sort] = bucket;
-        }
 
         // Add an easy helper property like "inPostmaster"
         bucket[`in${bucket.sort}`] = true;
@@ -145,7 +173,7 @@ export const getBuckets = _.memoize(() => {
       }
     });
 
-    _.each(buckets.byHash, (bucket: DimInventoryBucket) => {
+    _.each(buckets.byHash, (bucket: D1InventoryBucket) => {
       if (bucket.sort && sortToVault[bucket.sort]) {
         bucket.vaultBucket = buckets.byId[sortToVault[bucket.sort]];
       }
@@ -159,4 +187,4 @@ export const getBuckets = _.memoize(() => {
 
     return buckets;
   });
-});
+}) as () => IPromise<D1InventoryBuckets>;

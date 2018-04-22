@@ -2,7 +2,7 @@ import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyIte
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { equals } from 'angular';
 import { DimItem, makeItem } from "../inventory/store/d2-item-factory.service";
-import { DimInventoryBuckets } from "../destiny2/d2-buckets.service";
+import { D2InventoryBuckets } from "../destiny2/d2-buckets.service";
 import { D2ReviewDataCache } from "../destinyTrackerApi/d2-reviewDataCache";
 import { DimWorkingUserReview } from "../item-review/destiny-tracker.service";
 
@@ -132,7 +132,7 @@ export class VendorItem {
   /**
    * TODO: This is really gross, but it allows us to make enough of an item to show the move popup.
    */
-  toDimItem(buckets: DimInventoryBuckets,
+  toDimItem(buckets: D2InventoryBuckets,
             reviewData: DimWorkingUserReview | null): DimItem | null {
     return makeItem(
       this.defs,

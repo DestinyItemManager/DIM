@@ -10,7 +10,7 @@ import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { bungieNetPath } from '../../dim-ui/bungie-image';
 import { count, sum } from '../../util';
-import { DimInventoryBucket, DimInventoryBuckets } from '../../destiny2/d2-buckets.service';
+import { D2InventoryBucket, D2InventoryBuckets } from '../../destiny2/d2-buckets.service';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
@@ -39,7 +39,7 @@ export interface DimStore {
   name: string;
   items: DimItem[];
   isVault: boolean;
-  vault?: DimStore;
+  vault?: DimVault;
   buckets: { [bucketId: number]: DimItem[] };
 
   destinyVersion: 1 | 2;
@@ -88,7 +88,7 @@ export interface DimStore {
 }
 
 export interface DimVault extends DimStore {
-  d2VaultCounts: { [bucketId: number]: { count: number; bucket: DimInventoryBucket } };
+  d2VaultCounts: { [bucketId: number]: { count: number; bucket: D2InventoryBucket } };
   vaultCounts: { [category: string]: number };
 
   legendaryMarks: number;
@@ -107,8 +107,8 @@ const StoreProto = {
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
    */
-  amountOfItem(item: DimItem) {
-    return sum(this.items as DimItem[], (i) => {
+  amountOfItem(this: DimStore, item: DimItem) {
+    return sum(this.items, (i) => {
       return (i.hash === item.hash && !i.location.inPostmaster) ? i.amount : 0;
     });
   },
@@ -117,7 +117,7 @@ const StoreProto = {
    * How much of items like this item can fit in this store? For
    * stackables, this is in stacks, not individual pieces.
    */
-  capacityForItem(item: DimItem) {
+  capacityForItem(this: DimStore, item: DimItem) {
     if (!item.bucket) {
       console.error("item needs a 'bucket' field", item);
       return 10;
@@ -130,7 +130,7 @@ const StoreProto = {
    * This takes into account stackables, so the answer will be in
    * terms of individual pieces.
    */
-  spaceLeftForItem(item: DimItem) {
+  spaceLeftForItem(this: DimStore, item: DimItem) {
     if (!item.type) {
       throw new Error("item needs a 'type' field");
     }
@@ -150,7 +150,7 @@ const StoreProto = {
     }
   },
 
-  updateCharacterInfo(defs: D2ManifestDefinitions, character: DestinyCharacterComponent) {
+  updateCharacterInfo(this: DimStore, defs: D2ManifestDefinitions, character: DestinyCharacterComponent) {
     this.level = character.levelProgression.level; // Maybe?
     this.powerLevel = character.light;
     this.background = bungieNetPath(character.emblemBackgroundPath);
@@ -159,7 +159,7 @@ const StoreProto = {
   },
 
   // Remove an item from this store. Returns whether it actually removed anything.
-  removeItem(item) {
+  removeItem(this: DimStore, item: DimItem) {
     // Completely remove the source item
     const match = (i) => item.index === i.index;
     const sourceIndex = this.items.findIndex(match);
@@ -170,7 +170,7 @@ const StoreProto = {
       const bucketIndex = bucketItems.findIndex(match);
       bucketItems.splice(bucketIndex, 1);
 
-      if (this.current && item.location.accountWide) {
+      if (this.current && item.location.accountWide && this.vault) {
         this.vault.d2VaultCounts[item.location.id].count--;
       }
 
@@ -179,7 +179,7 @@ const StoreProto = {
     return false;
   },
 
-  addItem(item: DimItem) {
+  addItem(this: DimStore, item: DimItem) {
     this.items.push(item);
     const bucketItems = this.buckets[item.location.id];
     bucketItems.push(item);
@@ -193,13 +193,13 @@ const StoreProto = {
     }
     item.owner = this.id;
 
-    if (this.current && item.location.accountWide) {
+    if (this.current && item.location.accountWide && this.vault) {
       this.vault.d2VaultCounts[item.location.id].count++;
     }
   },
 
   // Create a loadout from this store's equipped items
-  loadoutFromCurrentlyEquipped(name: string): Loadout {
+  loadoutFromCurrentlyEquipped(this: DimStore, name: string): Loadout {
     const allItems = (this.items as DimItem[])
       .filter((item) => item.canBeInLoadout())
       // tslint:disable-next-line:no-unnecessary-callback-wrapper
@@ -212,7 +212,7 @@ const StoreProto = {
     };
   },
 
-  factionAlignment() {
+  factionAlignment(this: DimStore) {
     return null;
   }
 };
@@ -250,7 +250,7 @@ export function makeCharacter(defs: D2ManifestDefinitions, character: DestinyCha
   return store;
 }
 
-export function makeVault(buckets: DimInventoryBuckets, profileCurrencies: DestinyItemComponent[]): DimVault {
+export function makeVault(buckets: D2InventoryBuckets, profileCurrencies: DestinyItemComponent[]): DimVault {
   const glimmer = profileCurrencies.find((cur) => cur.itemHash === 3159615086);
   const legendary = profileCurrencies.find((cur) => cur.itemHash === 1022552290);
   const silver = profileCurrencies.find((cur) => cur.itemHash === 3147280338);
