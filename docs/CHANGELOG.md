@@ -1,6 +1,8 @@
 # Next
 
 * The DIM changelog popup has moved to a "What's New" page along with Bungie.net alerts and our Twitter feed. We also moved the "Update DIM" popup to the "What's New" link.
+* The Collections page now has a link to DestinySets.com.
+
 
 # 4.48.0 (2018-04-15)
 
