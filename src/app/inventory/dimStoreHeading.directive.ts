@@ -1,4 +1,3 @@
-import * as _ from 'underscore';
 import template from './dimStoreHeading.directive.html';
 import dialogTemplate from './dimStoreHeading.directive.dialog.html';
 import './dimStoreHeading.scss';
@@ -38,9 +37,7 @@ function StoreHeadingCtrl(
       return vm.store.percentToNextLevel;
     }
     if (vm.store.progression && vm.store.progression.progressions) {
-      const prestige = _.find(vm.store.progression.progressions, {
-        progressionHash: 2030054750
-      })!;
+      const prestige = vm.store.progression.progressions.find((p) => p.progressionHash === 2030054750)!;
       vm.xpTillMote = $i18next.t(
         vm.store.destinyVersion === 1 ? "Stats.Prestige" : "Stats.PrestigeD2",
         {

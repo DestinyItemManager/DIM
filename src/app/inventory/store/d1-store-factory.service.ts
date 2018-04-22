@@ -227,7 +227,6 @@ export function makeCharacter(
   });
 
   if (store.progression) {
-    console.log('progression', store.progression.progressions);
     store.progression.progressions.forEach((prog) => {
       Object.assign(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
       const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
@@ -290,13 +289,16 @@ export function makeVault(
     // Vault has different capacity rules
     capacityForItem(this: D1Vault, item: D1Item) {
       let sort = item.sort;
+      if (item.bucket && item.bucket.vaultBucket) {
+        return item.bucket.vaultBucket.capacity;
+      }
       if (item.bucket && item.bucket.sort) {
         sort = item.bucket.sort;
       }
       if (!sort) {
         throw new Error("item needs a 'sort' field");
       }
-      return buckets[sort].capacity;
+      return buckets.bySort[sort].capacity;
     },
     spaceLeftForItem(this: D1Vault, item: D1Item) {
       let sort = item.sort;

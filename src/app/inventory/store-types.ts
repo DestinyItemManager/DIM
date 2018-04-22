@@ -1,7 +1,8 @@
 import {
   DestinyClass,
   DestinyProgression,
-  DestinyCharacterComponent
+  DestinyCharacterComponent,
+  DestinyFactionDefinition
 } from 'bungie-api-ts/destiny2';
 import { Loadout } from '../loadout/loadout.service';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
@@ -71,7 +72,7 @@ export interface DimStore {
   isVault: boolean;
   stats: {};
   progression: null | {
-    progressions: { [key: number]: DestinyProgression };
+    progressions: DestinyProgression[];
   };
 
   updateCharacterInfo(
@@ -162,6 +163,10 @@ export interface D1CharacterStat {
   percentage?: string;
 }
 
+export interface D1Progression extends DestinyProgression {
+  faction: DestinyFactionDefinition;
+}
+
 /**
  * A D1 character. Use this when you need D1-specific properties or D1-specific items.
  */
@@ -170,6 +175,9 @@ export interface D1Store extends DimStore {
   buckets: { [bucketId: string]: D1Item[] };
   stats: {
     [statHash: string]: D1CharacterStat;
+  };
+  progression: null | {
+    progressions: D1Progression[];
   };
 
   // TODO: shape?

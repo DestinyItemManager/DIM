@@ -107,6 +107,7 @@ export interface D1InventoryBuckets {
   byHash: { [hash: number]: D1InventoryBucket };
   byId: { [hash: string]: D1InventoryBucket };
   byType: { [type: string]: D1InventoryBucket };
+  bySort: { [sort: string]: D1InventoryBucket };
   byCategory: { [category: string]: D1InventoryBucket[] };
   unknown: D1InventoryBucket; // TODO: get rid of this?
   setHasUnknown();
@@ -126,6 +127,7 @@ export const getBuckets = _.memoize(() => {
       byId: {}, // BUCKET_LEGS -> bucket
       byType: {}, // DIM types ("ClassItem, Special") -> bucket
       byCategory: {}, // Mirrors the dimCategory heirarchy
+      bySort: {},
       unknown: {
         id: 'BUCKET_UNKNOWN',
         description: 'Unknown items. DIM needs a manifest update.',
@@ -145,7 +147,6 @@ export const getBuckets = _.memoize(() => {
     };
     _.each(defs.InventoryBucket, (def: any) => {
       if (def.enabled) {
-        console.log('BUCKET', def);
         const id = def.bucketIdentifier;
         const type = bucketToType[def.hash];
         let sort: string | undefined;
@@ -168,6 +169,10 @@ export const getBuckets = _.memoize(() => {
 
         // Add an easy helper property like "inPostmaster"
         bucket[`in${bucket.sort}`] = true;
+
+        if (sort) {
+          buckets.bySort[sort] = bucket;
+        }
 
         buckets.byHash[bucket.hash] = bucket;
         buckets.byId[bucket.id] = bucket;

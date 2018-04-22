@@ -283,7 +283,7 @@ export function D2StoresService(
     const store = makeCharacter(defs, character, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
-    store.progression = progressions ? { progressions } : null;
+    store.progression = progressions ? { progressions: Object.values(progressions) } : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
     let items = characterInventory.concat(Object.values(characterEquipment));
