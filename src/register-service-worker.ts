@@ -1,6 +1,14 @@
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import './app/rx-operators';
 import { reportException } from "./app/exceptions";
+import { Observable } from 'rxjs/Observable';
+
+/**
+ * A function that will attempt to update the service worker in place.
+ * It will return a promise for when the update is complete.
+ * If service workers are not enabled or installed, this is a no-op.
+ */
+let updateServiceWorker = () => Promise.resolve();
 
 /** Whether a new service worker has been installed */
 const serviceWorkerUpdated$ = new BehaviorSubject(false);
@@ -8,13 +16,31 @@ const serviceWorkerUpdated$ = new BehaviorSubject(false);
 const contentChanged$ = new BehaviorSubject(false);
 
 /**
+ * An observable for what version the server thinks is current.
+ * This is to handle cases where folks have DIM open for a long time.
+ * It will attempt to update the service worker before reporting true.
+ */
+const serverVersionChanged$ = Observable.timer(0, 15 * 60 * 1000)
+  // Fetch but swallow errors
+  .switchMap(() => Observable.fromPromise(getServerVersion()).catch(() => Observable.empty<string>()))
+  .map((version) => version !== $DIM_VERSION)
+  .distinctUntilChanged()
+  // At this point the value of the observable will flip to true once and only once
+  .switchMap((needsUpdate) => needsUpdate
+    ? Observable.fromPromise(updateServiceWorker().then(() => true))
+    : Observable.of(false));
+
+/**
  * Whether there is new content available if you reload DIM.
  *
- * We only need to update when there's new cached content and
+ * We only need to update when there's new content and we've already updated the service worker.
  */
-// TODO: mix in version updates from server-provided JSON as well, so we don't require service workers
-export const dimNeedsUpdate$ = serviceWorkerUpdated$
-  .combineLatest(contentChanged$, (updated, changed) => updated && changed)
+export const dimNeedsUpdate$ = Observable.combineLatest(
+  serverVersionChanged$,
+  serviceWorkerUpdated$,
+  contentChanged$,
+  (serverVersionChanged, updated, changed) => serverVersionChanged || (updated && changed)
+)
   .distinctUntilChanged();
 
 /**
@@ -77,9 +103,35 @@ export default function registerServiceWorker() {
           }
         };
       };
+
+      updateServiceWorker = () => {
+        return registration.update().catch((err) => {
+          if ($featureFlags.debugSW) {
+            console.error('SW: Unable to update service worker.', err);
+          }
+        }).then(() => {
+          console.log('SW: New content is available; please refresh.');
+        });
+      };
     })
     .catch((err) => {
       console.error('SW: Unable to register service worker.', err);
       reportException('service-worker', err);
     });
+}
+
+/**
+ * Fetch a file on the server that contains the currently uploaded version number.
+ */
+async function getServerVersion() {
+  const response = await fetch('/version.json');
+  if (response.ok) {
+    const data = await response.json();
+    if (!data.version) {
+      throw new Error("No version property");
+    }
+    return data.version as string;
+  } else {
+    throw response;
+  }
 }
