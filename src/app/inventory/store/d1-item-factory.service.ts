@@ -122,7 +122,7 @@ export function processItems(
   items: any[],
   previousItems = new Set<string>(),
   newItems = new Set<string>(),
-  itemInfoService: ItemInfoSource
+  itemInfoService?: ItemInfoSource
 ): IPromise<D1Item[]> {
   return $q.all([
     getDefinitions(),
@@ -167,7 +167,7 @@ function makeItem(
   buckets: D1InventoryBuckets,
   previousItems: Set<string>,
   newItems: Set<string>,
-  itemInfoService: ItemInfoSource,
+  itemInfoService: ItemInfoSource | undefined,
   classifiedData: ClassifiedData,
   item: any,
   owner: D1Store

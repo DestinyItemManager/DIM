@@ -34,7 +34,7 @@ const StoreProto = {
    */
   amountOfItem(this: D2Store, item: D2Item) {
     return sum(this.items, (i) => {
-      return (i.hash === item.hash && !i.location.inPostmaster) ? i.amount : 0;
+      return (i.hash === item.hash && (!i.location || !i.location.inPostmaster)) ? i.amount : 0;
     });
   },
 

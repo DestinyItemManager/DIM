@@ -6,6 +6,8 @@ import { error, handleErrors, retryOnThrottled } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
 import { IPromise } from 'angular';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
+import { D1Store } from '../inventory/store-types';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
 /**
  * APIs for interacting with Destiny 1 game data.
@@ -134,7 +136,7 @@ export function getDestinyAdvisors(platform, characters) {
   }
 }
 
-export function getVendorForCharacter(account, character, vendorHash) {
+export function getVendorForCharacter(account: DestinyAccount, character: D1Store, vendorHash: number) {
   return $http(bungieApiQuery(
     `/D1/Platform/Destiny/${account.platformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
   ))
