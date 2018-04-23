@@ -26,7 +26,7 @@ polyfill({
 });
 
 // https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
-window.addEventListener('touchmove', () => { });
+window.addEventListener('touchmove', () => { return; });
 
 if ($DIM_FLAVOR !== 'dev') {
   registerServiceWorker();

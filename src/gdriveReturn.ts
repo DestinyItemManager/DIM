@@ -1,3 +1,5 @@
+declare const gapi: any;
+
 const drive = {
   client_id: $GOOGLE_DRIVE_CLIENT_ID,
   scope: 'https://www.googleapis.com/auth/drive.appdata',
@@ -13,13 +15,13 @@ if (window.gapi) {
       }
       const auth = gapi.auth2.getAuthInstance();
       if (auth && auth.isSignedIn.get()) {
-        window.location = '/index.html#!/settings?gdrive=true';
+        window.location.href = '/index.html#!/settings?gdrive=true';
       } else {
-        document.getElementById('return-error').style.display = 'block';
+        document.getElementById('return-error')!.style.display = 'block';
       }
     });
   });
 } else {
-  document.getElementById('return-error').style.display = 'block';
+  document.getElementById('return-error')!.style.display = 'block';
   console.warn("Google Drive API blocked");
 }
