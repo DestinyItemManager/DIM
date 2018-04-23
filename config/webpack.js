@@ -9,6 +9,7 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
+const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -198,6 +199,11 @@ module.exports = (env) => {
         chunks: ['gdriveReturn']
       }),
 
+      // Generate a version info JSON file we can poll. We could theoretically add more info here too.
+      new GenerateJsonPlugin('./version.json', {
+        version
+      }),
+
       new CopyWebpackPlugin([
         { from: './src/.htaccess' },
         { from: './extension', to: '../extension-dist' },
@@ -225,7 +231,7 @@ module.exports = (env) => {
         // Feature flags!
 
         // Print debug info to console about item moves
-        '$featureFlags.debugMoves': JSON.stringify(false),
+        '$featureFlags.debugMoves': JSON.stringify(env !== 'release'),
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),

@@ -361,7 +361,7 @@ export function ItemService(
     return moveToStore(item, getStoreService(item).getVault()!, false, amount);
   }
 
-  function moveToStore(item: DimItem, store: DimStore, equip: boolean = false, amount: number = 0) {
+  function moveToStore(item: DimItem, store: DimStore, equip: boolean = false, amount: number = item.amount) {
     if ($featureFlags.debugMoves) {
       console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', getStoreService(item).getStore(item.owner)!.name);
     }
@@ -788,7 +788,7 @@ export function ItemService(
         let promise: IPromise<DimItem> = $q.when(item);
 
         if (!source.isVault && !target.isVault) { // Guardian to Guardian
-          if (source.id !== target.id) { // Different Guardian
+          if (source.id !== target.id && !item.bucket.accountWide) { // Different Guardian
             if (item.equipped) {
               promise = promise.then(dequipItem);
             }

@@ -21,6 +21,7 @@ import { IPromise } from 'angular';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item } from './item-types';
+import { DimInventoryBucket } from './inventory-types';
 
 export function StoreService(
   dimDestinyTrackerService: DestinyTrackerServiceType
@@ -72,8 +73,13 @@ export function StoreService(
   /**
    * Find an item among all stores that matches the params provided.
    */
-  function getItemAcrossStores(params: { id?: string; hash?: number; notransfer?: boolean }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer')) as (D1Item) => boolean;
+  function getItemAcrossStores(params: {
+    id?: string;
+    hash?: number;
+    location?: DimInventoryBucket;
+    owner?: string;
+  }) {
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'location', 'owner')) as (DimItem) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
       if (result) {

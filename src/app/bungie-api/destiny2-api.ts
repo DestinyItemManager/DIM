@@ -187,7 +187,7 @@ export function getVendors(account: DestinyAccount, characterId: string): IPromi
 export function transfer(item: DimItem, store: DimStore, amount: number): IPromise<ServerResponse<number>> {
   const platform = getActivePlatform();
   const request = {
-    characterId: store.isVault ? item.owner : store.id,
+    characterId: (store.isVault || item.location.inPostmaster) ? item.owner : store.id,
     membershipType: platform!.platformType,
     itemId: item.id,
     itemReferenceHash: item.hash,
