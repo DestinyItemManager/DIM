@@ -255,16 +255,16 @@
     "About": "Chi siamo",
     "Back": "Indietro",
     "BulkTag": "Etichetta oggetti in massa",
-    "BungieNetAlert": "Bungie Alert",
+    "BungieNetAlert": "Avviso da Bungie",
     "FilterHelp": "Cerca oggetti/potenziamenti o {{example}}",
     "Filters": "Filtri",
     "Inventory": "Inventario",
     "Refresh": "Aggiorna i dati di Destiny",
-    "ReportBug": "Bug Report",
+    "ReportBug": "Segnala un bug",
     "Shop": "Negozio",
     "SupportDIM": "Donatori",
-    "UpgradeDIM": "Upgrade DIM",
-    "WhatsNew": "What's New"
+    "UpgradeDIM": "Aggiorna DIM",
+    "WhatsNew": "Cosa c'è di nuovo"
   },
   "Help": {
     "CannotMove": "Non posso spostare quell'oggetto da questo personaggio.",
@@ -666,6 +666,7 @@
     "Collections": "Collezioni",
     "Compare": "Confronta con quello che hai già:",
     "Consumables": "Consumabili",
+    "DestinySets": "Sfoglia più oggetti su Destiny Sets",
     "Emotes": "Emotes",
     "Engram": "Engramma Ricompensa",
     "Load": "Caricamento Mercanti",
