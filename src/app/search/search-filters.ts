@@ -1,9 +1,11 @@
 import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
-import { TagInfo } from '../settings/settings';
+import { TagInfo, settings } from '../settings/settings';
 import { DimItem, DimD1Item } from '../inventory/store/d2-item-factory.service';
 import { StoreServiceType } from '../inventory/d2-stores.service';
+import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { sortStores } from '../shell/dimAngularFilters.filter';
 
 interface SearchConfig {
   keywords: string[];
@@ -85,7 +87,9 @@ export function buildSearchConfig(
     postmaster: ['postmaster', 'inpostmaster'],
     equipped: ['equipped'],
     transferable: ['transferable', 'movable'],
-    infusable: ['infusable', 'infuse']
+    infusable: ['infusable', 'infuse'],
+    owner: ['invault', 'incurrentchar'],
+    location: ['inleftchar', 'inmiddlechar', 'inrightchar']
   };
 
   if (destinyVersion === 1) {
@@ -213,6 +217,7 @@ export function searchFilters(
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   let _lowerDupes = {};
   let _dupeInPost = false;
+  let _sortedStores: DimStore[] | null = null;
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
@@ -285,6 +290,7 @@ export function searchFilters(
       _duplicates = null;
       _lowerDupes = {};
       _dupeInPost = false;
+      _sortedStores = null;
     },
 
     /**
@@ -361,6 +367,8 @@ export function searchFilters(
           addPredicate("keyword", term);
         }
       }
+
+      _sortedStores = null;
 
       return (item) => {
         return filters.every((filter) => {
@@ -505,6 +513,48 @@ export function searchFilters(
 
         // We filter out the "Default Shader" because everybody has one per character
         return item.hash !== 4248210736 && _duplicates[item.hash] && _duplicates[item.hash].length > 1;
+      },
+      owner(item: DimItem, predicate: string) {
+        let desiredStore = "";
+        switch (predicate) {
+          case 'invault':
+            desiredStore = "vault";
+            break;
+          case 'incurrentchar':
+            const activeStore = storeService.getActiveStore();
+            if (activeStore) {
+              desiredStore = activeStore.id;
+            } else {
+              return false;
+            }
+        }
+        return item.owner === desiredStore;
+      },
+      location(item: DimItem, predicate: string) {
+        let storeIndex = 0;
+        if (_sortedStores === null) {
+          _sortedStores = sortStores(storeService.getStores(), settings.characterOrder);
+        }
+
+        switch (predicate) {
+          case 'inleftchar':
+            storeIndex = 0;
+            break;
+          case 'inmiddlechar':
+            if (_sortedStores.length === 4) {
+              storeIndex = 1;
+            }
+            break;
+          case 'inrightchar':
+            if (_sortedStores.length > 2) {
+              storeIndex = _sortedStores.length - 2;
+            }
+            break;
+          default:
+            return false;
+        }
+
+        return item.bucket.accountWide ? item.owner !== 'vault' : item.owner === _sortedStores[storeIndex].id;
       },
       classType(item: DimItem, predicate: string) {
         let value;
