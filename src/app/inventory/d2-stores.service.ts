@@ -14,7 +14,7 @@ import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { getBuckets, DimInventoryBuckets, DimInventoryBucket } from '../destiny2/d2-buckets.service';
+import { getBuckets, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { reportException } from '../exceptions';
@@ -38,8 +38,7 @@ export interface StoreServiceType {
   getItemAcrossStores(params: {
     id?: string;
     hash?: number;
-    location?: DimInventoryBucket;
-    owner?: string;
+    notransfer?: boolean;
   }): DimItem | undefined;
   updateCharacters(account?: DestinyAccount): IPromise<DimStore[]>;
   reloadStores(): Promise<DimStore[]>;
@@ -106,13 +105,8 @@ export function D2StoresService(
   /**
    * Find an item among all stores that matches the params provided.
    */
-  function getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    location?: DimInventoryBucket;
-    owner?: string;
-  }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'location', 'owner')) as (DimItem) => boolean;
+  function getItemAcrossStores(params: { id?: string; hash?: number; notransfer?: boolean }) {
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer')) as (DimItem) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
       if (result) {
