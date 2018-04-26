@@ -30,8 +30,7 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
   getItemAcrossStores(params: {
     id?: string;
     hash?: number;
-    location?: DimInventoryBucket;
-    owner?: string;
+    notransfer?: boolean;
   }): ItemType | undefined;
   updateCharacters(account?: DestinyAccount): IPromise<StoreType[]>;
   reloadStores(): Promise<StoreType[] | undefined>;

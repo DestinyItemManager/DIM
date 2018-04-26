@@ -255,16 +255,16 @@
     "About": "À propos",
     "Back": "Retour",
     "BulkTag": "Tag de masse des objets",
-    "BungieNetAlert": "Bungie Alert",
+    "BungieNetAlert": "Alerte Bungie",
     "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
     "Filters": "Filtres",
     "Inventory": "Inventaire",
     "Refresh": "Rafraîchir les données Destiny",
-    "ReportBug": "Bug Report",
+    "ReportBug": "Signaler un bug",
     "Shop": "Boutique",
     "SupportDIM": "Supporteurs",
-    "UpgradeDIM": "Upgrade DIM",
-    "WhatsNew": "What's New"
+    "UpgradeDIM": "Mettre à jour DIM",
+    "WhatsNew": "Quoi de neuf"
   },
   "Help": {
     "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
@@ -666,6 +666,7 @@
     "Collections": "Collections",
     "Compare": "Comparez avec ce que vous avez déjà:",
     "Consumables": "Consommables",
+    "DestinySets": "Browse more item sets at Destiny Sets",
     "Emotes": "Intéractions",
     "Engram": "Engramme de récompense",
     "Load": "Chargement des Marchands",

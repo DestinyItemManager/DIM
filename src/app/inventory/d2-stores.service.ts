@@ -87,13 +87,8 @@ export function D2StoresService(
   /**
    * Find an item among all stores that matches the params provided.
    */
-  function getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    location?: DimInventoryBucket;
-    owner?: string;
-  }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'location', 'owner')) as (DimItem) => boolean;
+  function getItemAcrossStores(params: { id?: string; hash?: number; notransfer?: boolean }) {
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer')) as (DimItem) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
       if (result) {
