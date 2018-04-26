@@ -4,14 +4,14 @@ import { t } from 'i18next';
 import * as React from 'react';
 import { BungieImage } from '../dim-ui/bungie-image';
 import { PressTip } from '../dim-ui/press-tip';
-import { DimItem, DimSocketCategory, DimPlug, DimSocket } from '../inventory/store/d2-item-factory.service';
 import './sockets.scss';
 import { IScope } from 'angular';
 import Objective from '../progress/Objective';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
 
 interface Props {
-  item: DimItem;
+  item: D2Item;
   $scope: IScope;
 }
 
@@ -123,7 +123,7 @@ function Plug({
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
-  item: DimItem;
+  item: D2Item;
   socketInfo: DimSocket;
 }) {
   return (
@@ -153,7 +153,7 @@ function PlugTooltip({
   plug,
   defs
 }: {
-  item: DimItem;
+  item: D2Item;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
 }) {

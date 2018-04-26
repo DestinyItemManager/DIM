@@ -3,9 +3,8 @@ import { reportException } from '../exceptions';
 import { queuedAction } from '../inventory/action-queue';
 import { showInfoPopup } from '../shell/info-popup';
 import { IQService, IPromise } from 'angular';
-import { StoreServiceType } from './d2-stores.service';
 import { ItemServiceType } from './dimItemService.factory';
-import { DimStore } from './store/d2-store-factory.service';
+import { StoreServiceType, DimStore } from './store-types';
 
 export function ItemMoveService(
   $q: IQService,

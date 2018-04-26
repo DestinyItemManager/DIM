@@ -24,10 +24,10 @@ import {
 import { t } from 'i18next';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { DimError, httpAdapter, httpAdapterWithRetry } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
+import { DimItem } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
 
 /**
  * APIs for interacting with Destiny 2 game data.

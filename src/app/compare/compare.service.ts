@@ -1,5 +1,5 @@
-import { DimItem } from "../inventory/store/d2-item-factory.service";
 import { IRootScopeService } from "angular";
+import { DimItem } from "../inventory/item-types";
 
 export function CompareService($rootScope: IRootScopeService) {
   'ngInject';

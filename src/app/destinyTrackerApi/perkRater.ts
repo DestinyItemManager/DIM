@@ -1,11 +1,11 @@
 import * as _ from 'underscore';
-import { DimItem, DimGridNode } from '../inventory/store/d2-item-factory.service';
 import { D1ItemUserReview } from '../item-review/destiny-tracker.service';
+import { D1GridNode, D1Item } from '../inventory/item-types';
 
 interface RatingAndReview {
   ratingCount: number;
   averageReview: number;
-  perkNode: DimGridNode;
+  perkNode: D1GridNode;
 }
 
 /**
@@ -15,7 +15,7 @@ export class PerkRater {
   /**
    * Rate the perks on an item based off of its attached user reviews.
    */
-  ratePerks(item: DimItem) {
+  ratePerks(item: D1Item) {
     if ((!item.talentGrid) ||
         (!item.reviews) ||
         (!item.reviews.length)) {
@@ -58,7 +58,7 @@ export class PerkRater {
     return null;
   }
 
-  _getMaxColumn(item: DimItem): number | undefined {
+  _getMaxColumn(item: D1Item): number | undefined {
     if (!item.talentGrid) {
       return undefined;
     }
@@ -66,8 +66,8 @@ export class PerkRater {
     return _.max(item.talentGrid.nodes, (node) => node.column).column;
   }
 
-  _getPerkNodesInColumn(item: DimItem,
-                        column): DimGridNode[] {
+  _getPerkNodesInColumn(item: D1Item,
+                        column): D1GridNode[] {
     if (!item.talentGrid) {
       return [];
     }
@@ -75,7 +75,7 @@ export class PerkRater {
     return _.where(item.talentGrid.nodes, { column });
   }
 
-  _getPerkRatingsAndReviewCount(perkNode: DimGridNode,
+  _getPerkRatingsAndReviewCount(perkNode: D1GridNode,
                                 reviews: D1ItemUserReview[]): RatingAndReview {
     const matchingReviews = this._getMatchingReviews(perkNode,
                                                      reviews);

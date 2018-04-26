@@ -4,6 +4,7 @@ import intellectIcon from 'app/images/intellect.png';
 import disciplineIcon from 'app/images/discipline.png';
 // tslint:disable-next-line:no-implicit-dependencies
 import strengthIcon from 'app/images/strength.png';
+import { D1CharacterStat } from '../store-types';
 
 // Cooldowns
 const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -69,15 +70,25 @@ export function getBonus(light: number, type: string): number {
   return 0;
 }
 
+const statsWithTiers = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
+const stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
+
 /**
  * Compute character-level stats (int, dis, str).
  */
 export function getCharacterStatsData(statDefs, data) {
-  const statsWithTiers = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
-  const stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
-  const ret = {};
+  const ret: { [statHash: string]: D1CharacterStat } = {};
   stats.forEach((statId) => {
-    const statHash: any = {};
+    const stat = data.stats[statId];
+    if (!stat) {
+      return;
+    }
+
+    const statHash: D1CharacterStat = {
+      id: statId,
+      value: stat.value
+    };
+
     statHash.id = statId;
     switch (statId) {
     case 'STAT_INTELLECT':
@@ -97,11 +108,6 @@ export function getCharacterStatsData(statDefs, data) {
       break;
     }
 
-    const stat = data.stats[statId];
-    if (!stat) {
-      return;
-    }
-    statHash.value = stat.value;
     const statDef = statDefs.get(stat.statHash);
     if (statDef) {
       statHash.name = statDef.statName; // localized name

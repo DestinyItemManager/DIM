@@ -11,8 +11,8 @@ import { getItemInfoSource } from '../inventory/dim-item-info';
 import './search-filter.scss';
 import { IComponentOptions, IController, IScope, IRootElementService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { StoreServiceType } from '../inventory/store-types';
+import { DimItem } from '../inventory/item-types';
 
 export const SearchFilterComponent: IComponentOptions = {
   controller: SearchFilterCtrl,

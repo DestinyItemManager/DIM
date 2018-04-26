@@ -2,8 +2,8 @@ import template from "./inventory.html";
 import { subscribeOnScope } from "../rx-utils";
 import { getBuckets } from "../destiny1/d1-buckets.service";
 import { IComponentOptions, IController, IScope } from "angular";
-import { StoreServiceType } from "./d2-stores.service";
 import { DestinyAccount } from "../accounts/destiny-account.service";
+import { StoreServiceType } from "./store-types";
 
 export const InventoryComponent: IComponentOptions = {
   template,

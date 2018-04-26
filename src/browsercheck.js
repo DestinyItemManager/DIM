@@ -3,7 +3,7 @@ import browserslist from 'browserslist';
 import parser from 'ua-parser-js';
 
 // Adapted from 'is-browser-supported' npm package. Separate from index.js so it'll run even if that fails.
-// This is also intentionally written in es5.
+// This is also intentionally written in es5 and not TypeScript because it should not use any new features.
 
 function getBrowserName(agent) {
   if (agent.browser.name === 'Chrome' && agent.os.name === 'Android') {

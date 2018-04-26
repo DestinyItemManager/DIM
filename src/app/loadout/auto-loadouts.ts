@@ -2,12 +2,11 @@ import { copy } from 'angular';
 import { t } from 'i18next';
 import * as _ from 'underscore';
 import { REP_TOKENS } from '../farming/rep-tokens';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { optimalLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { sum, flatMap } from '../util';
+import { StoreServiceType, DimStore } from '../inventory/store-types';
+import { DimItem } from '../inventory/item-types';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -120,7 +119,7 @@ export function gatherEngramsLoadout(
   options: { exotics: boolean } = { exotics: false }
 ): Loadout {
   const engrams = storeService.getAllItems().filter((i) => {
-    return i.isEngram() && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
+    return i.isEngram && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
   });
 
   if (engrams.length === 0) {

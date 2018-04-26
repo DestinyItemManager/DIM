@@ -3,8 +3,8 @@ import { sum, flatMap } from '../util';
 import template from './loadout-builder-item.html';
 import dialogTemplate from './loadout-builder-item-dialog.html';
 import { extend, IController } from 'angular';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DimItem } from '../inventory/item-types';
+import { StoreServiceType } from '../inventory/store-types';
 
 export const LoadoutBuilderItem = {
   controller: LoadoutBuilderItemCtrl,

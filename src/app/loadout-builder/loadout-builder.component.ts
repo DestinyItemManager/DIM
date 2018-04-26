@@ -10,13 +10,12 @@ import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import { IComponentOptions, IController, IScope, ITimeoutService, extend, copy } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import { LoadoutServiceType, Loadout } from '../loadout/loadout.service';
 import { StateService } from '@uirouter/angularjs';
-import { DimItem, DimGridNode } from '../inventory/store/d2-item-factory.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { sum } from '../util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { D1Item, D1GridNode } from '../inventory/item-types';
+import { D1StoreServiceType, D1Store } from '../inventory/store-types';
 
 export const LoadoutBuilderComponent: IComponentOptions = {
   controller: LoadoutBuilderController,
@@ -27,7 +26,7 @@ export const LoadoutBuilderComponent: IComponentOptions = {
   }
 };
 
-interface DimItemWithNormalStats extends DimItem {
+interface D1ItemWithNormalStats extends D1Item {
   normalStats: {
     [hash: number]: {
       statHash: number;
@@ -57,7 +56,7 @@ type StatTypes =
 type ClassTypes = 'titan' | 'warlock' | 'hunter';
 
 interface ArmorSet {
-  armor: { [armorType in ArmorTypes]: DimItem & { bonusType: string } };
+  armor: { [armorType in ArmorTypes]: D1Item & { bonusType: string } };
   stats: {
     [statType in StatTypes] : {
       value: number;
@@ -76,8 +75,8 @@ interface LockedPerk {
   lockType: 'and' | 'or';
 }
 
-type ItemBucket = { [armorType in ArmorTypes]: DimItemWithNormalStats[] };
-type PerkCombination = { [armorType in ArmorTypes]: DimGridNode[] };
+type ItemBucket = { [armorType in ArmorTypes]: D1ItemWithNormalStats[] };
+type PerkCombination = { [armorType in ArmorTypes]: D1GridNode[] };
 
 interface LockedPerkHash { [hash: number]: LockedPerk; }
 
@@ -94,8 +93,8 @@ interface SetType {
 function LoadoutBuilderController(
   this: IController & {
     account: DestinyAccount;
-    excludeditems: DimItem[];
-    activeCharacters: DimStore[];
+    excludeditems: D1Item[];
+    activeCharacters: D1Store[];
     lockedperks: { [armorType in ArmorTypes]: LockedPerkHash };
     reviewsEnabled: boolean;
     active: ClassTypes;
@@ -117,7 +116,7 @@ function LoadoutBuilderController(
     ranked: ItemBucket;
     activePerks: PerkCombination;
     collapsedConfigs: boolean[];
-    lockeditems: { [armorType in ArmorTypes]: DimItemWithNormalStats | null };
+    lockeditems: { [armorType in ArmorTypes]: D1ItemWithNormalStats | null };
     setOrderValues: string;
     lockedchanged: boolean;
   },
@@ -125,7 +124,7 @@ function LoadoutBuilderController(
   $state: StateService,
   $timeout: ITimeoutService,
   $i18next,
-  dimStoreService: StoreServiceType,
+  dimStoreService: D1StoreServiceType,
   ngDialog,
   dimLoadoutService: LoadoutServiceType,
   dimVendorService
@@ -161,7 +160,7 @@ function LoadoutBuilderController(
     hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] }
   };
 
-  function getBonusType(armorpiece: DimItemWithNormalStats): string {
+  function getBonusType(armorpiece: D1ItemWithNormalStats): string {
     if (!armorpiece.normalStats) {
       return '';
     }
@@ -170,7 +169,7 @@ function LoadoutBuilderController(
       (armorpiece.normalStats[4244567218].bonus > 0 ? 'str' : '');
   }
 
-  function getBestItem(armor: DimItemWithNormalStats[], stats: number[], type: string, nonExotic = false) {
+  function getBestItem(armor: D1ItemWithNormalStats[], stats: number[], type: string, nonExotic = false) {
     // for specific armor (Helmet), look at stats (int/dis), return best one.
     return {
       item: _.max(armor, (o) => {
@@ -272,7 +271,7 @@ function LoadoutBuilderController(
       { stats: [4244567218], type: 'str' }
     ];
     const armor = {};
-    let best: { item: DimItemWithNormalStats; bonusType: string }[] = [];
+    let best: { item: D1ItemWithNormalStats; bonusType: string }[] = [];
     let curbest;
     let bestCombs;
     let armortype: ArmorTypes;
@@ -287,7 +286,7 @@ function LoadoutBuilderController(
       } else {
         best = [];
 
-        let hasPerks: (item: DimItem) => boolean = () => true;
+        let hasPerks: (item: D1Item) => boolean = () => true;
 
         if (!_.isEmpty(lockedPerks[armortype])) {
           const lockedPerkKeys = Object.keys(lockedPerks[armortype]);
@@ -369,12 +368,12 @@ function LoadoutBuilderController(
     return split[0] === 'vendor' ? index : split[0];
   }
 
-  function getItemById(id, type): DimItem | undefined {
+  function getItemById(id, type): D1Item | undefined {
     return buckets[vm.active][type].find((i) => i.id === id) ||
       vendorBuckets[vm.active][type].find((i) => i.index === id);
   }
 
-  function alreadyExists(set: DimItem[], id: string) {
+  function alreadyExists(set: D1Item[], id: string) {
     return _.findWhere(set, { id }) || _.findWhere(set, { index: id });
   }
 
@@ -459,7 +458,7 @@ function LoadoutBuilderController(
         vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
-        vm.excludeditems = vm.excludeditems.filter((item: DimItem) => item.hash === 2672107540);
+        vm.excludeditems = vm.excludeditems.filter((item: D1Item) => item.hash === 2672107540);
         vm.activesets = '';
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
@@ -496,7 +495,7 @@ function LoadoutBuilderController(
         }
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
-      onPerkLocked(perk: DimGridNode, type: ArmorTypes, $event) {
+      onPerkLocked(perk: D1GridNode, type: ArmorTypes, $event) {
         const lockedPerk = vm.lockedperks[type][perk.hash];
         const activeType = $event.shiftKey
           ? (lockedPerk && lockedPerk.lockType === 'and') ? 'none' : 'and'
@@ -532,7 +531,7 @@ function LoadoutBuilderController(
           vm.lockedchanged = true;
         }
       },
-      excludeItem(item: DimItem) {
+      excludeItem(item: D1Item) {
         vm.onExcludedDrop(item.index, item.type);
       },
       onExcludedDrop(droppedId, type) {
@@ -797,7 +796,7 @@ function LoadoutBuilderController(
           return;
         }
 
-        function filterPerks(perks: DimGridNode[], item: DimItem) {
+        function filterPerks(perks: D1GridNode[], item: D1Item) {
           // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
           const unwantedPerkHashes = [1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599];
           return _.chain(perks.concat(item.talentGrid!.nodes))
@@ -806,7 +805,7 @@ function LoadoutBuilderController(
                   .value();
         }
 
-        function filterItems(items: DimItem[]) {
+        function filterItems(items: D1Item[]) {
           return items.filter((item) => {
             return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defense hash
@@ -821,8 +820,8 @@ function LoadoutBuilderController(
         vm.activeCharacters = _.reject(dimStoreService.getStores(), (s) => s.isVault);
         vm.selectedCharacter = _.findIndex(vm.activeCharacters, (char) => char.id === vm.selectedCharacter.id);
 
-        let allItems: DimItem[] = [];
-        let vendorItems: DimItem[] = [];
+        let allItems: D1Item[] = [];
+        let vendorItems: D1Item[] = [];
         _.each(stores, (store) => {
           const items = filterItems(store.items);
 
@@ -879,7 +878,7 @@ function LoadoutBuilderController(
         });
 
         function initBuckets() {
-          function normalizeStats(item: DimItemWithNormalStats) {
+          function normalizeStats(item: D1ItemWithNormalStats) {
             item.normalStats = {};
             _.each(item.stats!, (stat: any) => {
               item.normalStats[stat.statHash] = {
@@ -893,7 +892,7 @@ function LoadoutBuilderController(
             });
             return item;
           }
-          function getBuckets(items: DimItem[]): ItemBucket {
+          function getBuckets(items: D1Item[]): ItemBucket {
             return {
               Helmet: items.filter((item) => {
                 return item.type === 'Helmet';

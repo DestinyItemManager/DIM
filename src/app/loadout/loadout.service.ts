@@ -2,12 +2,11 @@ import { copy, IPromise, IQService } from 'angular';
 import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { queueAction } from '../inventory/action-queue';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import { ItemServiceType } from '../inventory/dimItemService.factory';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { settings } from '../settings/settings';
 import { SyncService } from '../storage/sync.service';
+import { DimItem } from '../inventory/item-types';
+import { DimStore, StoreServiceType } from '../inventory/store-types';
 
 export const enum LoadoutClass {
   any = -1,

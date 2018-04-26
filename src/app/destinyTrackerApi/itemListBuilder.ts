@@ -3,7 +3,7 @@ import * as _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemFetchRequest } from '../item-review/destiny-tracker.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { D1Item } from '../inventory/item-types';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
@@ -12,7 +12,7 @@ import { DimItem } from '../inventory/store/d2-item-factory.service';
 export class ItemListBuilder {
   _itemTransformer = new ItemTransformer();
 
-  _getNewItems(allItems: DimItem[], reviewDataCache: ReviewDataCache): D1ItemFetchRequest[] {
+  _getNewItems(allItems: D1Item[], reviewDataCache: ReviewDataCache): D1ItemFetchRequest[] {
     const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrWeapon(item));
     const allKnownDtrItems = reviewDataCache.getItemStores();
 

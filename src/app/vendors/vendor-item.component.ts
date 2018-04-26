@@ -3,7 +3,7 @@ import * as _ from 'underscore';
 import { sum, flatMap } from '../util';
 import template from './vendor-item.html';
 import dialogTemplate from './vendor-item-dialog.html';
-import { StoreServiceType } from '../inventory/d2-stores.service';
+import { StoreServiceType } from '../inventory/store-types';
 
 export const VendorItem: IComponentOptions = {
   bindings: {

@@ -6,23 +6,10 @@ engines:
           mass_threshold: 170
         php: ~
     enabled: true
-  eslint:
-    channel: eslint-2
-    checks:
-      complexity:
-        enabled: true
-      no-mixed-operators:
-        enabled: false
-      rest-spread-spacing:
-        enabled: false
-    config:
-      config: ./.eslintrc
-    enabled: true
   fixme:
     enabled: true
 exclude_paths:
   - "**/dist"
-  - "**/jquery-ui.position.js"
 ratings:
   paths:
     - "**.js"

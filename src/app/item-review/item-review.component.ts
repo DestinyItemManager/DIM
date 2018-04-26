@@ -6,8 +6,8 @@ import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { DestinyTrackerServiceType, D1ItemUserReview, DtrUserReview } from './destiny-tracker.service';
+import { DimItem } from '../inventory/item-types';
 
 export const ItemReviewComponent: IComponentOptions = {
   bindings: {
@@ -49,7 +49,6 @@ function ItemReviewController(
       });
     }
   };
-
 
   vm.toggleChart = () => {
     vm.isCollapsed = !vm.isCollapsed;

@@ -1,11 +1,11 @@
 import { DestinyAccount } from "../accounts/destiny-account.service";
-import { DimItem, DimSocket } from "./store/d2-item-factory.service";
 import { AwaType, AwaAuthorizationResult, AwaUserSelection, insertSocketPlug, DestinySocketArrayType } from "bungie-api-ts/destiny2";
 import { requestAdvancedWriteActionToken } from "../bungie-api/destiny2-api";
 import * as idbKeyval from 'idb-keyval';
 import { httpAdapterWithRetry } from "../bungie-api/bungie-service-helper";
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
+import { DimSocket, D2Item } from "./item-types";
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
@@ -13,7 +13,7 @@ let awaCache: {
 
 // TODO: we need an interface for presenting non-reusable plugs like mods and shaders
 // TODO: owner can't be "vault" I bet
-export async function insertPlug(account: DestinyAccount, item: DimItem, socket: DimSocket, plugItemHash: number) {
+export async function insertPlug(account: DestinyAccount, item: D2Item, socket: DimSocket, plugItemHash: number) {
   const actionToken = await getAwaToken(account, AwaType.InsertPlugs, item);
 
   // TODO: if the plug costs resources to insert, add a confirmation
@@ -41,7 +41,7 @@ export async function insertPlug(account: DestinyAccount, item: DimItem, socket:
  *
  * @param item The item is optional unless the type is DismantleGroupA, but it's best to pass it when possible.
  */
-export async function getAwaToken(account: DestinyAccount, action: AwaType, item?: DimItem): Promise<string> {
+export async function getAwaToken(account: DestinyAccount, action: AwaType, item?: D2Item): Promise<string> {
   if (!awaCache) {
     // load from cache first time
     awaCache = (await idbKeyval.get('awa-tokens') || {}) as {

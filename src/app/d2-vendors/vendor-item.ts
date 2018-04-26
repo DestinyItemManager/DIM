@@ -1,10 +1,11 @@
 import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition, ItemBindStatus, ItemLocation, TransferStatuses, ItemState } from "bungie-api-ts/destiny2";
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { equals } from 'angular';
-import { DimItem, makeItem } from "../inventory/store/d2-item-factory.service";
-import { DimInventoryBuckets } from "../destiny2/d2-buckets.service";
+import { makeItem } from "../inventory/store/d2-item-factory.service";
+import { D2InventoryBuckets } from "../destiny2/d2-buckets.service";
 import { D2ReviewDataCache } from "../destinyTrackerApi/d2-reviewDataCache";
 import { DimWorkingUserReview } from "../item-review/destiny-tracker.service";
+import { D2Item } from "../inventory/item-types";
 
 /**
  * A displayable vendor item. The only state it holds is raw responses/definitions - all
@@ -132,8 +133,10 @@ export class VendorItem {
   /**
    * TODO: This is really gross, but it allows us to make enough of an item to show the move popup.
    */
-  toDimItem(buckets: DimInventoryBuckets,
-            reviewData: DimWorkingUserReview | null): DimItem | null {
+  toDimItem(
+    buckets: D2InventoryBuckets,
+    reviewData: DimWorkingUserReview | null
+  ): D2Item | null {
     return makeItem(
       this.defs,
       buckets,

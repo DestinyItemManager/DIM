@@ -29,10 +29,10 @@ module.exports = (env) => {
     mode: isDev ? 'development' : 'production',
 
     entry: {
-      main: './src/index.js',
+      main: './src/index.ts',
       browsercheck: './src/browsercheck.js',
-      authReturn: './src/authReturn.js',
-      gdriveReturn: './src/gdriveReturn.js'
+      authReturn: './src/authReturn.ts',
+      gdriveReturn: './src/gdriveReturn.ts'
     },
 
     output: {

@@ -8,12 +8,11 @@ import { showInfoPopup } from '../shell/info-popup';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 import template from './dimStoreBucket.directive.html';
 import './dimStoreBucket.scss';
-import { StoreServiceType } from './d2-stores.service';
 import { ItemServiceType } from './dimItemService.factory';
-import { DimItem } from './store/d2-item-factory.service';
 import { DimError } from '../bungie-api/bungie-service-helper';
-import { DimInventoryBucket } from '../destiny2/d2-buckets.service';
-import { DimStore } from './store/d2-store-factory.service';
+import { DimInventoryBucket } from '../inventory/inventory-types';
+import { DimStore, StoreServiceType } from './store-types';
+import { DimItem } from './item-types';
 
 export const StoreBucketComponent: IComponentOptions = {
   controller: StoreBucketCtrl,
@@ -47,7 +46,7 @@ function StoreBucketCtrl(
   "ngInject";
   const vm = this;
 
-  function getStoreService(item) {
+  function getStoreService(item: DimItem) {
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
   }
 

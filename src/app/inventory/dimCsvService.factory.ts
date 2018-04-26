@@ -1,5 +1,5 @@
 import * as _ from "underscore";
-import { DimItem } from "./store/d2-item-factory.service";
+import { DimItem } from "./item-types";
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [

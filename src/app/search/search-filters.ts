@@ -2,8 +2,8 @@ import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { TagInfo } from '../settings/settings';
-import { DimItem, DimD1Item } from '../inventory/store/d2-item-factory.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
+import { DimItem, D1Item } from '../inventory/item-types';
+import { StoreServiceType } from '../inventory/store-types';
 
 interface SearchConfig {
   keywords: string[];
@@ -419,25 +419,25 @@ export function searchFilters(
       },
       // Upgraded will show items that have enough XP to unlock all
       // their nodes and only need the nodes to be purchased.
-      upgraded(item: DimD1Item) {
+      upgraded(item: D1Item) {
         return item.talentGrid &&
           item.talentGrid.xpComplete &&
           !item.complete;
       },
-      xpincomplete(item: DimD1Item) {
+      xpincomplete(item: D1Item) {
         return item.talentGrid &&
           !item.talentGrid.xpComplete;
       },
-      xpcomplete(item: DimD1Item) {
+      xpcomplete(item: D1Item) {
         return item.talentGrid &&
           item.talentGrid.xpComplete;
       },
-      ascended(item: DimD1Item) {
+      ascended(item: D1Item) {
         return item.talentGrid &&
           item.talentGrid.hasAscendNode &&
           item.talentGrid.ascended;
       },
-      unascended(item: DimD1Item) {
+      unascended(item: D1Item) {
         return item.talentGrid &&
           item.talentGrid.hasAscendNode &&
           !item.talentGrid.ascended;
@@ -445,7 +445,7 @@ export function searchFilters(
       reforgeable(item: DimItem) {
         return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
       },
-      ornament(item: DimD1Item, predicate: string) {
+      ornament(item: D1Item, predicate: string) {
         const complete = item.talentGrid && item.talentGrid.nodes.some((n) => n.ornament);
         const missing = item.talentGrid && item.talentGrid.nodes.some((n) => !n.ornament);
 
@@ -457,11 +457,11 @@ export function searchFilters(
           return complete || missing;
         }
       },
-      untracked(item: DimD1Item) {
+      untracked(item: D1Item) {
         return item.trackable &&
           !item.tracked;
       },
-      tracked(item: DimD1Item) {
+      tracked(item: D1Item) {
         return item.trackable &&
           item.tracked;
       },
@@ -563,7 +563,7 @@ export function searchFilters(
         return compareByOperand(item.amount, predicate);
       },
       engram(item: DimItem) {
-        return item.isEngram();
+        return item.isEngram;
       },
       infusable(item: DimItem) {
         return item.infusable;
@@ -587,7 +587,7 @@ export function searchFilters(
             return node.name.toLowerCase().includes(predicate) ||
               node.description.toLowerCase().includes(predicate);
           })) ||
-          (item.sockets && item.sockets.sockets.some((socket) =>
+          (item.isDestiny2() && item.sockets && item.sockets.sockets.some((socket) =>
             socket.plugOptions.some((plug) =>
               plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
               plug.plugItem.displayProperties.description.toLowerCase().includes(predicate) ||
@@ -612,7 +612,7 @@ export function searchFilters(
       level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);
       },
-      quality(item: DimD1Item, predicate: string) {
+      quality(item: D1Item, predicate: string) {
         if (!item.quality) {
           return false;
         }
@@ -627,7 +627,7 @@ export function searchFilters(
       ratingcount(item: DimItem, predicate: string) {
         return item.dtrRating && compareByOperand(item.dtrRatingCount, predicate);
       },
-      year(item: DimD1Item, predicate: string) {
+      year(item: D1Item, predicate: string) {
         switch (predicate) {
           case 'year1':
             return item.year === 1;
@@ -652,7 +652,7 @@ export function searchFilters(
       //   * Crucible Quartermaster (cq)
       //   * Eris Morn (eris)
       //   * Eververse (ev)
-      vendor(item: DimD1Item, predicate: string) {
+      vendor(item: D1Item, predicate: string) {
         const vendorHashes = { // identifier
           required: {
             fwc: [995344558], // SOURCE_VENDOR_FUTURE_WAR_CULT
@@ -704,7 +704,7 @@ export function searchFilters(
       //   * Prison of Elders (poe)
       //   * Challenge of Elders (coe)
       //   * Archon Forge (af)
-      activity(item: DimD1Item, predicate: string) {
+      activity(item: D1Item, predicate: string) {
         const activityHashes = { // identifier
           required: {
             trials: [2650556703], // SOURCE_TRIALS_OF_OSIRIS

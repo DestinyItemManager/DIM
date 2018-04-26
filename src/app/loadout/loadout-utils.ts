@@ -2,7 +2,7 @@ import { copy } from 'angular';
 import * as _ from 'underscore';
 import { sum } from '../util';
 import { Loadout } from './loadout.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DimItem } from '../inventory/item-types';
 
 // Generate an optimized loadout based on a filtered set of items and a value function
 export function optimalLoadout(applicableItems: DimItem[], bestItemFn: (item: DimItem) => number, name: string): Loadout {

@@ -1,5 +1,4 @@
-import { StateParams } from '@uirouter/angularjs';
-import { IPromise, IRootScopeService } from 'angular';
+import { IPromise } from 'angular';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
@@ -8,13 +7,12 @@ import {
   DestinyProgression
   } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { getBuckets, DimInventoryBuckets } from '../destiny2/d2-buckets.service';
+import { getBuckets, D2InventoryBuckets } from '../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { reportException } from '../exceptions';
@@ -23,49 +21,33 @@ import { Loadout } from '../loadout/loadout.service';
 import '../rx-operators';
 import { D2ManifestService } from '../manifest/manifest-service';
 import { flatMap, sum } from '../util';
-import { DimItem, resetIdTracker, processItems } from './store/d2-item-factory.service';
-import { DimStore, DimVault, makeVault, makeCharacter } from './store/d2-store-factory.service';
+import { resetIdTracker, processItems } from './store/d2-item-factory.service';
+import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource } from './dim-item-info';
-
-export interface StoreServiceType {
-  getActiveStore(): DimStore | undefined;
-  getStores(): DimStore[];
-  getStore(id: string): DimStore | undefined;
-  getVault(): DimVault | undefined;
-  getAllItems(): DimItem[];
-  getStoresStream(account: DestinyAccount): ConnectableObservable<DimStore[]>;
-  getItemAcrossStores(params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-  }): DimItem | undefined;
-  updateCharacters(account?: DestinyAccount): IPromise<DimStore[]>;
-  reloadStores(): Promise<DimStore[]>;
-  refreshRatingsData(): void;
-}
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { $rootScope, $q } from 'ngimport';
+import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
+import { t } from 'i18next';
+import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
+import { DimItem } from './item-types';
+import { DimInventoryBucket } from './inventory-types';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
  * consolidate them, or at least organize them better.
  */
 export function D2StoresService(
-  $rootScope: IRootScopeService,
-  $q,
-  $i18next,
-  toaster,
-  $stateParams: StateParams,
-  loadingTracker,
-  dimDestinyTrackerService
-): StoreServiceType {
+  dimDestinyTrackerService: DestinyTrackerServiceType
+): D2StoreServiceType {
   'ngInject';
 
-  let _stores: DimStore[] = [];
+  let _stores: D2Store[] = [];
 
   // A subject that keeps track of the current account. Because it's a
   // behavior subject, any new subscriber will always see its last
   // value.
-  const accountStream = new BehaviorSubject(null);
+  const accountStream = new BehaviorSubject<DestinyAccount | null>(null);
 
   // The triggering observable for force-reloading stores.
   const forceReloadTrigger = new Subject();
@@ -91,7 +73,7 @@ export function D2StoresService(
     getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
     getStore: (id) => _stores.find((s) => s.id === id),
-    getVault: () => _stores.find((s) => s.isVault) as DimVault | undefined,
+    getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
     getAllItems: () => flatMap(_stores, (s) => s.items),
     getStoresStream,
     getItemAcrossStores,
@@ -121,7 +103,7 @@ export function D2StoresService(
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  function updateCharacters(account: DestinyAccount): IPromise<DimStore[]> {
+  function updateCharacters(account: DestinyAccount): IPromise<D2Store[]> {
     // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
       if ($stateParams.membershipId && $stateParams.platformType) {
@@ -159,7 +141,7 @@ export function D2StoresService(
    *
    * @return a stream of store updates
    */
-  function getStoresStream(account) {
+  function getStoresStream(account: DestinyAccount) {
     accountStream.next(account);
     // Start the stream the first time it's asked for. Repeated calls
     // won't do anything.
@@ -185,23 +167,21 @@ export function D2StoresService(
   /**
    * Returns a promise for a fresh view of the stores and their items.
    */
-  function loadStores(account): IPromise<DimStore[]> {
+  function loadStores(account): IPromise<D2Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
 
     resetIdTracker();
 
-    const dataDependencies = [
+    const reloadPromise = $q.all([
       getDefinitions(),
       getBuckets(),
       NewItemsService.loadNewItems(account),
       getItemInfoSource(account),
       getStores(account)
-    ];
-
-    const reloadPromise: IPromise<DimStore[]> = $q.all(dataDependencies)
-      .then(([defs, buckets, newItems, itemInfoService, profileInfo]: [D2ManifestDefinitions, DimInventoryBuckets, Set<string>, any, DestinyProfileResponse]) => {
+    ])
+      .then(([defs, buckets, newItems, itemInfoService, profileInfo]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);
@@ -210,7 +190,7 @@ export function D2StoresService(
 
         if (!profileInfo.profileInventory.data || !profileInfo.characterInventories.data) {
           console.error("Vault or character inventory was missing - bailing in order to avoid corruption");
-          throw new Error($i18next.t('BungieService.Difficulties'));
+          throw new Error(t('BungieService.Difficulties'));
         }
 
         const processVaultPromise = processVault(
@@ -238,7 +218,7 @@ export function D2StoresService(
 
         return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
-      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, DimInventoryBuckets, Set<string>, any, DimVault, DimStore[]]) => {
+      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, D2InventoryBuckets, Set<string>, any, D2Vault, D2Store[]]) => {
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -246,7 +226,7 @@ export function D2StoresService(
           NewItemsService.saveNewItems(newItems, account);
         }
 
-        const stores: DimStore[] = [...characters, vault];
+        const stores: D2Store[] = [...characters, vault];
         _stores = stores;
 
         // TODO: update vault counts for character account-wide
@@ -273,6 +253,7 @@ export function D2StoresService(
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to
         // just make this never fail.
+        return undefined;
       })
       .finally(() => {
         $rootScope.$broadcast('dim-filter-invalidate');
@@ -294,16 +275,16 @@ export function D2StoresService(
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
-    buckets: DimInventoryBuckets,
+    buckets: D2InventoryBuckets,
     previousItems,
     newItems,
     itemInfoService,
     lastPlayedDate: Date
-  ): IPromise<DimStore> {
+  ): IPromise<D2Store> {
     const store = makeCharacter(defs, character, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
-    store.progression = progressions ? { progressions } : null;
+    store.progression = progressions ? { progressions: Object.values(progressions) } : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
     let items = characterInventory.concat(Object.values(characterEquipment));
@@ -337,11 +318,11 @@ export function D2StoresService(
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
-    buckets: DimInventoryBuckets,
+    buckets: D2InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
     itemInfoService
-  ): IPromise<DimVault> {
+  ): IPromise<D2Vault> {
     const store = makeVault(buckets, profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
@@ -411,7 +392,7 @@ export function D2StoresService(
 
       store.stats.maxBasePower = {
         id: 'maxBasePower',
-        name: $i18next.t('Stats.MaxBasePower'),
+        name: t('Stats.MaxBasePower'),
         hasClassified,
         description: def.displayProperties.description,
         value: hasClassified ? `${maxBasePower}*` : maxBasePower,
@@ -423,7 +404,7 @@ export function D2StoresService(
     }
   }
 
-  function maxBasePowerLoadout(stores: DimStore[], store: DimStore) {
+  function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {
     const statHashes = new Set([
       1480404414, // Attack
       3897883278, // Defense
@@ -480,7 +461,7 @@ export function D2StoresService(
 
   // TODO: vault counts are silly and convoluted. We really need an
   // object to represent a Profile.
-  function updateVaultCounts(buckets: DimInventoryBuckets, activeStore: DimStore, vault: DimVault) {
+  function updateVaultCounts(buckets: D2InventoryBuckets, activeStore: D2Store, vault: D2Vault) {
     // Fill in any missing buckets
     Object.values(buckets.byType).forEach((bucket) => {
       if (bucket.accountWide && bucket.vaultBucket) {

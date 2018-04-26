@@ -1,8 +1,8 @@
 import * as _ from 'underscore';
 import { DtrItem } from '../item-review/destiny-tracker.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { compact } from '../util';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
+import { D2Item } from '../inventory/item-types';
 
 /**
  * Translates items from the objects that DIM has to the form that the DTR API expects.
@@ -15,9 +15,9 @@ class D2ItemTransformer {
    * This does not contain personally-identifying information.
    * Meant for fetch calls.
    */
-  translateToDtrItem(item: DimItem | DestinyVendorSaleItemComponent): DtrItem {
+  translateToDtrItem(item: D2Item | DestinyVendorSaleItemComponent): DtrItem {
     return {
-      referenceId: ((item as DestinyVendorSaleItemComponent).itemHash !== undefined) ? (item as DestinyVendorSaleItemComponent).itemHash : (item as DimItem).hash
+      referenceId: ((item as DestinyVendorSaleItemComponent).itemHash !== undefined) ? (item as DestinyVendorSaleItemComponent).itemHash : (item as D2Item).hash
     };
   }
 
@@ -25,7 +25,7 @@ class D2ItemTransformer {
    * Get the roll and perks for the selected DIM item (to send to the DTR API).
    * Will contain personally-identifying information.
    */
-  getRollAndPerks(item: DimItem): DtrItem {
+  getRollAndPerks(item: D2Item): DtrItem {
     return {
       selectedPerks: this._getSelectedPlugs(item),
       attachedMods: this._getPowerMods(item),
@@ -35,7 +35,7 @@ class D2ItemTransformer {
   }
 
   // borrowed from d2-item-factory.service
-  _getPowerMods(item: DimItem) {
+  _getPowerMods(item: D2Item) {
     const MOD_CATEGORY = 59;
     const POWER_STAT_HASH = 1935470627;
 
@@ -52,7 +52,7 @@ class D2ItemTransformer {
     return powerMods.map((m) => m.plugItem.hash);
   }
 
-  _getSelectedPlugs(item: DimItem) {
+  _getSelectedPlugs(item: D2Item) {
     if (!item.sockets) {
       return null;
     }

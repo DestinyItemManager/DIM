@@ -1,7 +1,7 @@
 import { ItemTransformer } from './itemTransformer';
 import * as _ from 'underscore';
 import { D1ItemFetchResponse, D1ItemWorkingUserReview, D1CachedItem, D1ItemUserReview, D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { D1Item } from '../inventory/item-types';
 
 /**
  * Cache of review data.
@@ -16,7 +16,7 @@ export class ReviewDataCache {
     this._itemStores = [];
   }
 
-  _getMatchingItem(item: DimItem): D1CachedItem | undefined {
+  _getMatchingItem(item: D1Item): D1CachedItem | undefined {
     const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
@@ -29,7 +29,7 @@ export class ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item: DimItem): D1CachedItem | undefined {
+  getRatingData(item: D1Item): D1CachedItem | undefined {
     return this._getMatchingItem(item);
   }
 
@@ -59,7 +59,7 @@ export class ReviewDataCache {
    * is still feeding back cached data or processing it or whatever.
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
-  addUserReviewData(item: DimItem,
+  addUserReviewData(item: D1Item,
                     userReview: D1ItemWorkingUserReview) {
     const matchingItem = this._getMatchingItem(item);
 
@@ -83,7 +83,7 @@ export class ReviewDataCache {
    * Keep track of expanded item review data from the DTR API for this DIM store item.
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
-  addReviewsData(item: DimItem,
+  addReviewsData(item: D1Item,
                  reviewsData: D1ItemReviewResponse | D1CachedItem) {
     const matchingItem = this._getMatchingItem(item);
     if (matchingItem) {
@@ -108,7 +108,7 @@ export class ReviewDataCache {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(item: DimItem,
+  markItemAsReviewedAndSubmitted(item: D1Item,
                                  userReview: D1ItemWorkingUserReview) {
     this._markItemAsLocallyCached(item, false);
     const matchingItem = this._getMatchingItem(item);
@@ -134,7 +134,7 @@ export class ReviewDataCache {
    *
    * Item is just an item from DIM's stores.
    */
-  eventuallyPurgeCachedData(item: DimItem) {
+  eventuallyPurgeCachedData(item: D1Item) {
     const tenMinutes = 1000 * 60 * 10;
 
     setTimeout(() => {

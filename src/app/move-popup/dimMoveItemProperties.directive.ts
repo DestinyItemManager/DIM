@@ -3,8 +3,8 @@ import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { settings } from '../settings/settings';
 import { IController, IRootScopeService, IScope, IComponentOptions, IAngularEvent } from 'angular';
 import template from './dimMoveItemProperties.html';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
+import { DimItem } from '../inventory/item-types';
+import { StoreServiceType } from '../inventory/store-types';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -48,11 +48,12 @@ function MoveItemPropertiesCtrl(
   vm.settings = settings;
 
   vm.$onInit = () => {
-    vm.hasDetails = Boolean((vm.item.stats && vm.item.stats.length) ||
-                            vm.item.talentGrid || vm.item.objectives ||
-                            vm.item.flavorObjective || vm.item.secondaryIcon);
-    vm.showDescription = Boolean(vm.item.description && vm.item.description.length);
-    vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
+    const item = vm.item;
+    vm.hasDetails = Boolean((item.stats && item.stats.length) ||
+                            item.talentGrid || item.objectives ||
+                            (item.isDestiny2() && item.flavorObjective) || item.secondaryIcon);
+    vm.showDescription = Boolean(item.description && item.description.length);
+    vm.showDetailsByDefault = (!item.equipment && item.notransfer);
     vm.itemDetails = vm.showDetailsByDefault;
 
     dimDestinyTrackerService.getItemReviews(vm.item);

@@ -1,12 +1,17 @@
-import angular from 'angular';
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { sum, flatMap } from '../util';
-import idbKeyval from 'idb-keyval';
+import * as idbKeyval from 'idb-keyval';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
-import { compareAccounts } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
-import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
+import { processItems } from '../inventory/store/d1-item-factory.service';
+import { IRootScopeService, IPromise, copy, IQService } from 'angular';
+import { D1StoreServiceType, D1Store } from '../inventory/store-types';
+import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { Observable } from 'rxjs/Observable';
+import { D1Item } from '../inventory/item-types';
 
 /*
 const allVendors = [
@@ -64,19 +69,78 @@ const categoryBlacklist = [
 
 const xur = 2796397637;
 
+export interface Vendor {
+  failed: boolean;
+  nextRefreshDate: string;
+  hash: number;
+  name: string;
+  icon: string;
+  vendorOrder: number;
+  faction: number;
+  location: string;
+  enabled: boolean;
+
+  expires: number;
+  factionLevel: number;
+  factionAligned: boolean;
+
+  allItems: D1Item[];
+  categories: {
+    index: number;
+    title: string;
+    saleItems: D1Item[];
+    hasArmorWeaps: boolean;
+    hasVehicles: boolean;
+    hasShadersEmbs: boolean;
+    hasEmotes: boolean;
+    hasConsumables: boolean;
+    hasBounties: boolean;
+  }[];
+  def;
+
+  cacheKeys: {
+    [storeId: string]: {
+      expires: number;
+      factionLevel: number;
+      factionAligned: boolean;
+    };
+  };
+
+  hasArmorWeaps: boolean;
+  hasVehicles: boolean;
+  hasShadersEmbs: boolean;
+  hasEmotes: boolean;
+  hasConsumables: boolean;
+  hasBounties: boolean;
+}
+
+export interface VendorServiceType {
+  vendorsLoaded: boolean;
+  // By hash
+  vendors: { [vendorHash: number]: Vendor };
+  totalVendors: number;
+  loadedVendors: number;
+  getVendorsStream(account: DestinyAccount): Observable<[D1Store[], this['vendors']]>;
+  reloadVendors(account: DestinyAccount): void;
+  getVendors(): this['vendors'];
+  requestRatings(): void;
+  countCurrencies(stores: D1Store[], vendors: this['vendors']): {
+    [currencyHash: number]: number;
+  };
+}
+
 export function VendorService(
-  $rootScope,
-  dimStoreService,
-  ItemFactory,
-  dimDestinyTrackerService,
+  $rootScope: IRootScopeService,
+  dimStoreService: D1StoreServiceType,
+  dimDestinyTrackerService: DestinyTrackerServiceType,
   loadingTracker,
-  $q
-) {
+  $q: IQService
+): VendorServiceType {
   'ngInject';
 
   let _ratingsRequested = false;
 
-  const service = {
+  const service: VendorServiceType = {
     vendorsLoaded: false,
     getVendorsStream,
     reloadVendors,
@@ -95,7 +159,7 @@ export function VendorService(
   // A subject that keeps track of the current account. Because it's a
   // behavior subject, any new subscriber will always see its last
   // value.
-  const accountStream = new BehaviorSubject(null);
+  const accountStream = new BehaviorSubject<DestinyAccount | null>(null);
 
   // A stream of stores that switches on account changes and supports reloading.
   // This is a ConnectableObservable that must be connected to start.
@@ -106,8 +170,8 @@ export function VendorService(
       service.vendors = {};
       service.vendorsLoaded = false;
     })
-    .switchMap((account) => dimStoreService.getStoresStream(account), (account, stores) => [account, stores])
-    .switchMap(([account, stores]) => loadVendors(account, stores))
+    .switchMap((account) => dimStoreService.getStoresStream(account!), (account, stores) => [account!, stores!])
+    .switchMap(([account, stores]: [DestinyAccount, D1Store[]]) => loadVendors(account, stores))
     // Keep track of the last value for new subscribers
     .publishReplay(1);
 
@@ -136,9 +200,9 @@ export function VendorService(
    * the account by also calling "vendorsStream". This won't force the
    * vendors to reload unless they haven't been loaded at all.
    *
-   * @return {Observable} a stream of vendor updates
+   * @return a stream of vendor updates
    */
-  function getVendorsStream(account) {
+  function getVendorsStream(account: DestinyAccount) {
     accountStream.next(account);
     // Start the stream the first time it's asked for. Repeated calls
     // won't do anything.
@@ -153,7 +217,7 @@ export function VendorService(
   /**
    * Returns a promise for a fresh view of the vendors and their items.
    */
-  function loadVendors(account, stores) {
+  function loadVendors(account: DestinyAccount, stores: D1Store[]): IPromise<[D1Store[], { [vendorHash: number]: Vendor }]> {
     const characters = (stores || []).filter((s) => !s.isVault);
 
     const reloadPromise = getDefinitions()
@@ -171,7 +235,7 @@ export function VendorService(
 
           if (service.vendors[vendorDef.hash] &&
               _.all(stores, (store) =>
-                cachedVendorUpToDate(service.vendors[vendorDef.hash].cacheKeys,
+                cachedVendorUpToDate(service.vendors[vendorDef.hash].cacheKeys[store.id],
                                          store,
                                          vendorDef))) {
             service.loadedVendors++;
@@ -195,7 +259,7 @@ export function VendorService(
         $rootScope.$broadcast('dim-vendors-updated');
         service.vendorsLoaded = true;
         fulfillRatingsRequest();
-        return [stores, service.vendors];
+        return [stores, service.vendors] as [D1Store[], { [vendorHash: number]: Vendor }];
       });
 
     loadingTracker.addPromise(reloadPromise);
@@ -203,10 +267,10 @@ export function VendorService(
   }
 
   function mergeVendors([firstVendor, ...otherVendors]) {
-    const mergedVendor = angular.copy(firstVendor);
+    const mergedVendor = copy(firstVendor);
 
     otherVendors.forEach((vendor) => {
-      angular.extend(firstVendor.cacheKeys, vendor.cacheKeys);
+      Object.assign(firstVendor.cacheKeys, vendor.cacheKeys);
 
       vendor.categories.forEach((category) => {
         const existingCategory = _.find(mergedVendor.categories, { title: category.title });
@@ -232,7 +296,7 @@ export function VendorService(
 
   function mergeCategory(mergedCategory, otherCategory) {
     otherCategory.saleItems.forEach((saleItem) => {
-      const existingSaleItem = _.find(mergedCategory.saleItems, { index: saleItem.index });
+      const existingSaleItem: any = _.find(mergedCategory.saleItems, { index: saleItem.index });
       if (existingSaleItem) {
         existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
         if (saleItem.unlocked) {
@@ -251,7 +315,7 @@ export function VendorService(
     mergedCategory.hasBounties = mergedCategory.hasBounties || otherCategory.hasBounties;
   }
 
-  function loadVendorForCharacter(account, store, vendorDef, defs) {
+  function loadVendorForCharacter(account: DestinyAccount, store: D1Store, vendorDef, defs: D1ManifestDefinitions) {
     return loadVendor(account, store, vendorDef, defs)
       .then((vendor) => {
         service.loadedVendors++;
@@ -269,9 +333,9 @@ export function VendorService(
   /**
    * Get this character's level for the given faction.
    */
-  function factionLevel(store, factionHash) {
-    const rep = store.progression.progressions.find((rep) => {
-      return rep.faction && rep.faction.factionHash === factionHash;
+  function factionLevel(store: D1Store, factionHash: number) {
+    const rep = store.progression && store.progression.progressions.find((rep) => {
+      return rep.faction && rep.faction.hash === factionHash;
     });
     return (rep && rep.level) || 0;
   }
@@ -279,7 +343,7 @@ export function VendorService(
   /**
    * Whether or not this character is aligned with the given faction.
    */
-  function factionAligned(store, factionHash) {
+  function factionAligned(store: D1Store, factionHash: number) {
     const factionsByHash = {
       489342053: 'Future War Cult',
       2397602219: 'Dead Orbit',
@@ -295,19 +359,26 @@ export function VendorService(
    * changed level for the faction associated with this vendor (or changed whether
    * they're aligned with that faction).
    */
-  function cachedVendorUpToDate(vendor, store, vendorDef) {
+  function cachedVendorUpToDate(
+    vendor: {
+      expires: number;
+      factionLevel: number;
+      factionAligned: boolean;
+    },
+    store: D1Store,
+    vendorDef
+  ) {
     return vendor &&
       vendor.expires > Date.now() &&
       vendor.factionLevel === factionLevel(store, vendorDef.summary.factionHash) &&
       vendor.factionAligned === factionAligned(store, vendorDef.summary.factionHash);
   }
 
-  function loadVendor(account, store, vendorDef, defs) {
+  function loadVendor(account: DestinyAccount, store: D1Store, vendorDef, defs: D1ManifestDefinitions) {
     const vendorHash = vendorDef.hash;
 
     const key = vendorKey(store, vendorHash);
-    return idbKeyval
-      .get(key)
+    return $q.when(idbKeyval.get<Vendor>(key))
       .then((vendor) => {
         if (cachedVendorUpToDate(vendor, store, vendorDef)) {
           // console.log("loaded local", vendorDef.summary.vendorName, key, vendor);
@@ -318,12 +389,11 @@ export function VendorService(
         } else {
           // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
           return getVendorForCharacter(account, store, vendorHash)
-            .then((vendor) => {
+            .then((vendor: Vendor) => {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
               vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
-              return idbKeyval
-                .set(key, vendor)
+              return $q.when(idbKeyval.set(key, vendor))
                 .then(() => vendor);
             })
             .catch((e) => {
@@ -354,15 +424,15 @@ export function VendorService(
           return processed;
         }
         // console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
-        return null;
+        return $q.resolve(null);
       });
   }
 
-  function vendorKey(store, vendorHash) {
+  function vendorKey(store: D1Store, vendorHash: number) {
     return ['vendor', store.id, vendorHash].join('-');
   }
 
-  function calculateExpiration(nextRefreshDate, vendorHash) {
+  function calculateExpiration(nextRefreshDate: string, vendorHash: number): number {
     const date = new Date(nextRefreshDate).getTime();
 
     if (vendorHash === xur) {
@@ -380,9 +450,9 @@ export function VendorService(
     return date;
   }
 
-  function processVendor(vendor, vendorDef, defs, store) {
+  function processVendor(vendor, vendorDef, defs: D1ManifestDefinitions, store: D1Store) {
     const def = vendorDef.summary;
-    const createdVendor = {
+    const createdVendor: Vendor = {
       def: vendorDef,
       hash: vendorDef.hash,
       name: def.vendorName,
@@ -397,21 +467,32 @@ export function VendorService(
       },
       vendorOrder: def.vendorSubcategoryHash + def.vendorOrder,
       faction: def.factionHash, // TODO: show rep!
-      location: defs.VendorCategory.get(def.vendorCategoryHash).categoryName
+      location: defs.VendorCategory.get(def.vendorCategoryHash).categoryName,
+      failed: false,
+      enabled: true,
+      expires: 0,
+      factionLevel: 0,
+      factionAligned: false,
+      allItems: [],
+      categories: [],
+      hasArmorWeaps: false,
+      hasVehicles: false,
+      hasShadersEmbs: false,
+      hasEmotes: false,
+      hasConsumables: false,
+      hasBounties: false
     };
 
-    const saleItems = flatMap(vendor.saleItemCategories, (categoryData) => {
-      return categoryData.saleItems;
-    });
+    const saleItems: any[] = flatMap(vendor.saleItemCategories, (categoryData: any) => categoryData.saleItems);
 
     saleItems.forEach((saleItem) => {
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
     });
 
-    return ItemFactory.processItems({ id: null }, saleItems.map((i) => i.item))
+    return processItems({ id: null } as any, saleItems.map((i) => i.item))
       .then((items) => {
         const itemsById = _.indexBy(items, 'id');
-        const categories = _.compact(_.map(vendor.saleItemCategories, (category) => {
+        const categories = _.compact(_.map(vendor.saleItemCategories, (category: any) => {
           const categoryInfo = vendorDef.categories[category.categoryIndex];
           if (_.contains(categoryBlacklist, categoryInfo.categoryHash)) {
             return null;
@@ -429,7 +510,7 @@ export function VendorService(
               }).filter((c) => c.value > 0),
               item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
               // TODO: caveat, this won't update very often!
-              unlocked: unlocked,
+              unlocked,
               unlockedByCharacter: unlocked ? [store.id] : [],
               failureStrings: saleItem.failureIndexes.map((i) => vendorDef.failureStrings[i]).join('. ')
             };
@@ -470,35 +551,35 @@ export function VendorService(
             index: category.categoryIndex,
             title: categoryInfo.displayTitle,
             saleItems: categoryItems,
-            hasArmorWeaps: hasArmorWeaps,
-            hasVehicles: hasVehicles,
-            hasShadersEmbs: hasShadersEmbs,
-            hasEmotes: hasEmotes,
-            hasConsumables: hasConsumables,
-            hasBounties: hasBounties
+            hasArmorWeaps,
+            hasVehicles,
+            hasShadersEmbs,
+            hasEmotes,
+            hasConsumables,
+            hasBounties
           };
         }));
 
-        items.forEach((item) => {
+        items.forEach((item: any) => {
           item.vendorIcon = createdVendor.icon;
         });
 
         createdVendor.allItems = items;
         createdVendor.categories = categories;
 
-        createdVendor.hasArmorWeaps = _.any(categories, 'hasArmorWeaps');
-        createdVendor.hasVehicles = _.any(categories, 'hasVehicles');
-        createdVendor.hasShadersEmbs = _.any(categories, 'hasShadersEmbs');
-        createdVendor.hasEmotes = _.any(categories, 'hasEmotes');
-        createdVendor.hasConsumables = _.any(categories, 'hasConsumables');
-        createdVendor.hasBounties = _.any(categories, 'hasBounties');
+        createdVendor.hasArmorWeaps = _.any(categories, (c) => c.hasArmorWeaps);
+        createdVendor.hasVehicles = _.any(categories, (c) => c.hasVehicles);
+        createdVendor.hasShadersEmbs = _.any(categories, (c) => c.hasShadersEmbs);
+        createdVendor.hasEmotes = _.any(categories, (c) => c.hasEmotes);
+        createdVendor.hasConsumables = _.any(categories, (c) => c.hasConsumables);
+        createdVendor.hasBounties = _.any(categories, (c) => c.hasBounties);
 
         return createdVendor;
       });
   }
 
   function isSaleItemUnlocked(saleItem) {
-    return _.every(saleItem.unlockStatuses, 'isSet');
+    return saleItem.unlockStatuses.every((s) => s.isSet);
   }
 
   // TODO: do this with another observable!
@@ -520,29 +601,34 @@ export function VendorService(
    * have on all characters, limited to only currencies required to
    * buy items from the provided vendors.
    */
-  function countCurrencies(stores, vendors) {
+  function countCurrencies(stores: D1Store[], vendors: { [vendorHash: number]: Vendor }) {
     if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
       return {};
     }
 
-    const categories = flatMap(Object.values(vendors), 'categories');
-    const saleItems = flatMap(categories, 'saleItems');
-    const costs = flatMap(saleItems, 'costs');
-    const currencies = costs.map((c) => c.currency.itemHash);
+    const categories = flatMap(Object.values(vendors), (v) => v.categories);
+    const saleItems = flatMap(categories, (c) => c.saleItems);
+    const costs = flatMap(saleItems, (i: any) => i.costs);
+    const currencies = costs.map((c: any) => c.currency.itemHash);
 
-    const totalCoins = {};
+    const totalCoins: { [currencyHash: number]: number } = {};
     currencies.forEach((currencyHash) => {
       // Legendary marks and glimmer are special cases
-      if (currencyHash === 2534352370) {
-        totalCoins[currencyHash] = dimStoreService.getVault().legendaryMarks;
-      } else if (currencyHash === 3159615086) {
-        totalCoins[currencyHash] = dimStoreService.getVault().glimmer;
-      } else if (currencyHash === 2749350776) {
-        totalCoins[currencyHash] = dimStoreService.getVault().silver;
-      } else {
+      switch (currencyHash) {
+      case 2534352370:
+        totalCoins[currencyHash] = dimStoreService.getVault()!.legendaryMarks;
+        break;
+      case 3159615086:
+        totalCoins[currencyHash] = dimStoreService.getVault()!.glimmer;
+        break;
+      case 2749350776:
+        totalCoins[currencyHash] = dimStoreService.getVault()!.silver;
+        break;
+      default:
         totalCoins[currencyHash] = sum(stores, (store) => {
-          return store.amountOfItem({ hash: currencyHash });
+          return store.amountOfItem({ hash: currencyHash } as any);
         });
+        break;
       }
     });
     return totalCoins;

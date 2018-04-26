@@ -32,7 +32,7 @@ function handleAuthReturn() {
   getAccessTokenFromCode(code)
     .then((token) => {
       setToken(token);
-      window.location = "/index.html";
+      window.location.href = "/index.html";
     })
     .catch((error) => {
       if (error.status === -1) {
@@ -45,9 +45,9 @@ function handleAuthReturn() {
 }
 
 function setError(error) {
-  document.getElementById('error-message').innerText = error;
-  document.getElementById('error-display').style.display = 'block';
-  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error-message')!.innerText = error;
+  document.getElementById('error-display')!.style.display = 'block';
+  document.getElementById('loading')!.style.display = 'none';
 }
 
 handleAuthReturn();

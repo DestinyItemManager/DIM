@@ -14,8 +14,8 @@ import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.servic
 import { bungieBackgroundStyle, BungieImage } from '../dim-ui/bungie-image';
 import { $state } from '../ngimport-more';
 import { t } from 'i18next';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
 import { compact } from '../util';
+import { D2Store } from '../inventory/store-types';
 
 export default function VendorItems({
   vendorDef,
@@ -35,7 +35,7 @@ export default function VendorItems({
   };
   kioskItems?: DestinyKioskItem[];
   trackerService?: DestinyTrackerServiceType;
-  stores?: DimStore[];
+  stores?: D2Store[];
   ownedItemHashes?: Set<number>;
   currencyLookups: {
     [itemHash: number]: number;

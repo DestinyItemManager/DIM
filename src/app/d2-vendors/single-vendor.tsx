@@ -7,7 +7,6 @@ import { getVendor as getVendorApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
 import Countdown from '../dim-ui/countdown';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import { FactionIcon } from '../progress/faction';
 import VendorItems from './vendor-items';
@@ -15,19 +14,19 @@ import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { Subscription } from 'rxjs/Subscription';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { D2StoreServiceType, D2Store } from '../inventory/store-types';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
-  D2StoresService: StoreServiceType;
+  D2StoresService: D2StoreServiceType;
   dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
   vendorHash: number;
-  stores?: DimStore[];
+  stores?: D2Store[];
   ownedItemHashes?: Set<number>;
   defs?: D2ManifestDefinitions;
   vendorDef?: DestinyVendorDefinition;
@@ -66,7 +65,9 @@ export default class SingleVendor extends React.Component<Props, State> {
       let characterId: string = this.props.$stateParams.characterId;
       if (!characterId) {
         const stores = this.state.stores || await this.props.D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
-        characterId = stores.find((s) => s.current)!.id;
+        if (stores) {
+          characterId = stores.find((s) => s.current)!.id;
+        }
       }
       const vendorResponse = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
 

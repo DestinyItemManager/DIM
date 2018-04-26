@@ -5,8 +5,8 @@ import { SyncService } from '../storage/sync.service';
 
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
-import { DimStore } from './store/d2-store-factory.service';
-import { DimItem } from './store/d2-item-factory.service';
+import { DimStore } from './store-types';
+import { DimItem } from './item-types';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 

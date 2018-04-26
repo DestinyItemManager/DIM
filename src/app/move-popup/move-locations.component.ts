@@ -2,9 +2,8 @@ import { settings } from '../settings/settings';
 import template from './move-locations.html';
 import './move-locations.scss';
 import { IComponentOptions, IController } from 'angular';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
-import { StoreServiceType } from '../inventory/d2-stores.service';
-import { DimStore } from '../inventory/store/d2-store-factory.service';
+import { DimItem } from '../inventory/item-types';
+import { DimStore, StoreServiceType } from '../inventory/store-types';
 
 export const MoveLocationsComponent: IComponentOptions = {
   template,

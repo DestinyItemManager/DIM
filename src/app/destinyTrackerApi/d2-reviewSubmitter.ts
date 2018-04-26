@@ -1,11 +1,11 @@
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { Reviewer } from '../item-review/destiny-tracker.service';
 import { $q, $http } from 'ngimport';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
+import { D2Item } from '../inventory/item-types';
 
 export interface RatingAndReviewRequest {
   reviewer?: Reviewer;
@@ -36,7 +36,7 @@ class D2ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item: DimItem): RatingAndReviewRequest {
+  toRatingAndReview(item: D2Item): RatingAndReviewRequest {
     return {
       voted: item.userVote,
       text: item.userReview,
@@ -55,7 +55,7 @@ class D2ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item: DimItem, membershipInfo: DestinyAccount | null) {
+  _submitReviewPromise(item: D2Item, membershipInfo: DestinyAccount | null) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
@@ -73,11 +73,11 @@ class D2ReviewSubmitter {
   }
 
   // Submitted data takes a while to wend its way into live reviews.  In the interim, don't lose track of what we sent.
-  _eventuallyPurgeCachedData(item: DimItem) {
+  _eventuallyPurgeCachedData(item: D2Item) {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item: DimItem, membershipInfo: DestinyAccount | null) {
+  _markItemAsReviewedAndSubmitted(item: D2Item, membershipInfo: DestinyAccount | null) {
     const review = this.toRatingAndReview(item);
     review.isReviewer = true;
     review.reviewer = this._getReviewer(membershipInfo);
@@ -87,7 +87,7 @@ class D2ReviewSubmitter {
                                                          review);
   }
 
-  submitReview(item: DimItem, membershipInfo: DestinyAccount | null) {
+  submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
     this._submitReviewPromise(item, membershipInfo)
       .then(() => {
         this._markItemAsReviewedAndSubmitted(item, membershipInfo);

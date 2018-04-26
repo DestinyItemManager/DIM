@@ -3,10 +3,10 @@ import { t } from 'i18next';
 import './RatingMode.scss';
 import ClickOutside from '../../dim-ui/click-outside';
 import { settings } from '../../settings/settings';
-import { StoreServiceType } from '../../inventory/d2-stores.service';
 import { $rootScope } from 'ngimport';
 import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
 import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
+import { StoreServiceType } from '../../inventory/store-types';
 
 interface Props {
   D2StoresService: StoreServiceType;

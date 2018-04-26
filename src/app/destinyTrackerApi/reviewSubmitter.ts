@@ -1,10 +1,10 @@
 import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
-import { DimItem } from '../inventory/store/d2-item-factory.service';
 import { D1MembershipInfo, D1ItemUserReview } from '../item-review/destiny-tracker.service';
 import { $q, $http } from 'ngimport';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
+import { D1Item } from '../inventory/item-types';
 
 /**
  * Supports submitting review data to the DTR API.
@@ -24,7 +24,7 @@ export class ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item: DimItem) {
+  toRatingAndReview(item: D1Item) {
     return {
       rating: item.userRating,
       review: item.userReview,
@@ -42,7 +42,7 @@ export class ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item: DimItem, membershipInfo: D1MembershipInfo) {
+  _submitReviewPromise(item: D1Item, membershipInfo: D1MembershipInfo) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
@@ -64,7 +64,7 @@ export class ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item: DimItem, membershipInfo: D1MembershipInfo) {
+  _markItemAsReviewedAndSubmitted(item: D1Item, membershipInfo: D1MembershipInfo) {
     const review = this.toRatingAndReview(item) as D1ItemUserReview;
     review.isReviewer = true;
     review.reviewer = this._getReviewer(membershipInfo);

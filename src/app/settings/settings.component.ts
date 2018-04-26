@@ -11,10 +11,10 @@ import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleArmorImage from 'app/images/example-armor.jpg';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
-import { StoreServiceType } from '../inventory/d2-stores.service';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
+import { StoreServiceType } from '../inventory/store-types';
 
 export const SettingsComponent: IComponentOptions = {
   template,
