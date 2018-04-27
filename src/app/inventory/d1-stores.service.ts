@@ -21,7 +21,6 @@ import { IPromise } from 'angular';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item } from './item-types';
-import { DimInventoryBucket } from './inventory-types';
 
 export function StoreService(
   dimDestinyTrackerService: DestinyTrackerServiceType

@@ -31,7 +31,6 @@ import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem } from './item-types';
-import { DimInventoryBucket } from './inventory-types';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
