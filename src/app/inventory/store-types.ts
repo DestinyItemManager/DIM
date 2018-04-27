@@ -12,7 +12,6 @@ import { DimItem, D2Item, D1Item } from './item-types';
 import { D2InventoryBucket } from '../destiny2/d2-buckets.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
-import { DimInventoryBucket } from './inventory-types';
 
 // TODO: maybe break these out into separate files for D1/D2?
 
