@@ -33,9 +33,9 @@ export class ItemListBuilder {
 
   // Get all of the weapons from our stores in a DTR API-friendly format.
   _getDtrWeapons(stores, reviewDataCache: ReviewDataCache): D1ItemFetchRequest[] {
-    const allItems = this._getAllItems(stores);
+    const allItems: D1Item[] = this._getAllItems(stores);
 
-    const allWeapons = allItems.filter((item) => item.primStat && item.bucket.sort === 'Weapons');
+    const allWeapons = allItems.filter((item) => item.reviewable);
 
     const newGuns = this._getNewItems(allWeapons, reviewDataCache);
 
