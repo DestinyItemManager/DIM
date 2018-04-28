@@ -101,19 +101,20 @@ Clone the repo:
 Install dependencies:
 
 * Install [NodeJS](https://nodejs.org/).
-* Windows-based developers will need to install `windows-build-tools` (`npm install --global windows-build-tools`) globally prior to running `npm install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
-* Run `npm install`.
+* Install [Yarn](https://yarnpkg.com/en/docs/install). If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)". If you were already using NPM with DIM, run `yarn` to convert to Yarn. **Note (2018/4/25): Yarn from Homebrew will come with NodeJS 10, which isn't ready for prime time. Either install via `npm install -g yarn` or downgrade Node after installing.**
+* Windows-based developers will need to install `windows-build-tools` (`yarn global add windows-build-tools`) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
+* Run `yarn install`.
   * Note that on Windows, the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
 
 Check code Style
-* `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
+* `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
 Run your own local web server
-* `npm install http-server -g` will install http-server
-* `npm start` will start webpack building (and rebuilding as file changes are detected)
+* `yarn global add http-server` will install http-server
+* `yarn start` will start webpack building (and rebuilding as file changes are detected)
 * then go in to the `dist` subdirectory and run `http-server -S` to run http-server over SSL. It'll run on port 8080.
 * If it complains about missing certificates, run `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'` in the dist directory (thanks to [Stack Overflow](https://stackoverflow.com/questions/12871565/how-to-create-pem-files-for-https-web-server) and again to [Stack Overflow](https://stackoverflow.com/questions/8075274/is-it-possible-making-openssl-skipping-the-country-common-name-prompts) for the quiet recipe) and generate your own local certs
-* After the one-time setup, `npm start` and `http-server -S` and you're off to the races.
+* After the one-time setup, `yarn start` and `http-server -S` and you're off to the races.
 
 Get your own API key:
 
