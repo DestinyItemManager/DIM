@@ -1,7 +1,7 @@
 {
   "AWA": {
-    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
-    "ConfirmTitle": "Confirm Action"
+    "ConfirmDescription": "Пожалуйста подтвердите доступ DIM к Вашим предметам в приложении Destiny 2 Companion.",
+    "ConfirmTitle": "Подтверждение"
   },
   "Accounts": {
     "Blizzard": "ПК",
@@ -99,11 +99,11 @@
     "Cons": "Недостатки",
     "Delete": "Удалить",
     "Edit": "Изменить",
-    "ForGameMode": "For game mode",
+    "ForGameMode": "Для режима:",
     "Help": "Написать отзыв (опционально)",
     "HelpCons": "Опиши недостатки этого оружия (опционально)",
     "HelpPros": "Опиши преимущества этого оружия (опционально)",
-    "ModeNotSpecified": "Not Specified",
+    "ModeNotSpecified": "Не определён",
     "NoReviews": "Ещё нет отзывов об этом предмете, будь первым!",
     "Platforms": {
       "All": "Показывать все",
@@ -118,7 +118,7 @@
     "ServiceSubmitError": "Ошибка отправки на Destiny Tracker Service.",
     "Submit": "Отправить",
     "ThankYou": "Спасибо за отправку вашего отзыва! Вскоре он будет показан в общем списке.",
-    "UnknownGameMode": "Unknown",
+    "UnknownGameMode": "Неизвестный",
     "VerifyReport": "Вы уверены, что хотите пожаловаться на этот отзыв?",
     "YourReview": "Ваш отзыв"
   },
@@ -255,16 +255,16 @@
     "About": "О проекте",
     "Back": "Вернуться",
     "BulkTag": "Массовая маркировка предметов",
-    "BungieNetAlert": "Bungie Alert",
+    "BungieNetAlert": "Оповещение Bungie",
     "FilterHelp": "Поиск предмета/модуля или {{example}}",
     "Filters": "Фильтры",
     "Inventory": "Инвентарь",
     "Refresh": "Обновить данные Destiny",
-    "ReportBug": "Bug Report",
+    "ReportBug": "Отчёт об ошибке",
     "Shop": "Магазин",
     "SupportDIM": "Поддержавшие",
-    "UpgradeDIM": "Upgrade DIM",
-    "WhatsNew": "What's New"
+    "UpgradeDIM": "Обновление DIM",
+    "WhatsNew": "Свежие Изменения"
   },
   "Help": {
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",
@@ -457,7 +457,7 @@
     "SaveErrorTitle": "Ошибка сохранения набора",
     "TooManyRequested": "У вас есть {{total}} {{itemname}} но ваш набор требует {{requested}}. Мы передали всё что у вас есть.",
     "VendorsCanEquip": "Предметы, которые возможно надеть:",
-    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
+    "VendorsCannotEquip": "Данные предметы не выходит надеть, поскольку у Вас их нет:"
   },
   "Manifest": {
     "Build": "Создание локальной базы данных Destiny",
@@ -555,7 +555,7 @@
     "Ratings": "Рейтинги",
     "ReloadDIM": "Обновите [F5] приложения для смены языка",
     "ResetToDefault": "Сбросить",
-    "ReviewsModeSelection": "Only show ratings for the following play mode",
+    "ReviewsModeSelection": "Отображать рейтинги определнного режима игры",
     "ReviewsPlatformSelection": "Показывать рейтинги для конкретной платформы",
     "SetSort": "Сортировать по:",
     "Settings": "Настройки",
@@ -666,7 +666,7 @@
     "Collections": "Коллекции",
     "Compare": "Сравнить с тем, что у вас уже есть:",
     "Consumables": "Расходники",
-    "DestinySets": "Browse more item sets at Destiny Sets",
+    "DestinySets": "Увидеть больше наборов на Destiny Sets",
     "Emotes": "Эмоции",
     "Engram": "Наградные энграммы",
     "Load": "Загрузка Вендоров",
