@@ -78,7 +78,7 @@ export enum DtrActivityModes {
 
 export interface D1ItemFetchRequest {
   referenceId: string;
-  roll?: string;
+  roll: string | null;
 }
 
 export interface D1ItemFetchResponse extends D1ItemFetchRequest {
@@ -88,7 +88,7 @@ export interface D1ItemFetchResponse extends D1ItemFetchRequest {
 }
 
 export interface D1ItemReviewRequest extends D1ItemFetchRequest {
-  selectedPerks?: string;
+  selectedPerks: string | null;
   instanceId: string;
 }
 
