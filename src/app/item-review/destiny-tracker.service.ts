@@ -74,10 +74,6 @@ export interface DimReviewReport {
   text: string;
 }
 
-export interface DtrSubmitResponse {
-  success?: boolean;
-}
-
 export enum DtrActivityModes {
   notSpecified = 0,
   playerVersusEnemy = 7,

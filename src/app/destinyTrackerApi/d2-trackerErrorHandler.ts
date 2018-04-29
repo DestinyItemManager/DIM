@@ -1,7 +1,10 @@
 import { $q } from 'ngimport';
 import { t } from 'i18next';
 import { IHttpResponse } from 'angular';
-import { DtrSubmitResponse } from '../item-review/destiny-tracker.service';
+
+interface DtrSubmitResponse {
+  success?: boolean;
+}
 
 export function handleD2Errors<T>(response: IHttpResponse<T>) {
     if (response.status !== 200) {
