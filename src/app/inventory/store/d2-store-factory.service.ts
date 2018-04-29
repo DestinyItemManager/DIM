@@ -267,7 +267,9 @@ function getCharacterStatsData(
       name: def.displayProperties.name,
       description: def.displayProperties.description,
       value,
-      icon: bungieNetPath(def.displayProperties.icon)
+      icon: bungieNetPath(def.displayProperties.icon),
+      tiers: [value],
+      tierMax: 10
     };
     ret[statHash] = stat;
   });

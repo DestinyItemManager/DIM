@@ -37,7 +37,7 @@ function StatsCtrl(this: IController, $scope: IScope, $i18next) {
       if (stat) {
         // compute tooltip
         if (vm.destinyVersion === 1) {
-          const tier = stat.tier;
+          const tier = stat.tier || 0;
           const next = $i18next.t('Stats.TierProgress', { context: tier === 5 ? 'Max' : '', progress: tier === 5 ? stat.value : (stat.value % 60), tier, nextTier: tier + 1, statName: stat.name });
           let cooldown = stat.cooldown || '';
           if (cooldown) {
