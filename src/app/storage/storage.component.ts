@@ -166,6 +166,13 @@ function StorageController(
     });
   }
 
+  vm.quota = null;
+  if ('storage' in navigator && 'estimate' in navigator.storage) {
+    navigator.storage.estimate().then((quota: { quota: number; usage: number }) => {
+      vm.quota = quota;
+    });
+  }
+
   vm.clearIgnoredUsers = () => {
     if (!vm.canClearIgnoredUsers) {
       return;

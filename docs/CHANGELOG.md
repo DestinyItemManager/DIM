@@ -1,5 +1,7 @@
 # Next
 
+* The settings page now shows how much of your local storage quota is being used by DIM (if your browser supports it).g
+
 # 4.49.1 (2018-04-23)
 
 * Fix loadouts.

@@ -2,78 +2,83 @@
   <h2 ng-i18next="Storage.Title"></h2>
 
   <section>
-  <p ng-i18next="Storage.Explain"></p>
+    <p ng-i18next="Storage.Explain"></p>
 
-  <button class="dim-button" ng-click="$ctrl.forceSync()">
-    <i class="fa fa-save"></i>
-    <span ng-i18next="Storage.ForceSync"></span>
-  </button>
+    <button class="dim-button" ng-click="$ctrl.forceSync()">
+      <i class="fa fa-save"></i>
+      <span ng-i18next="Storage.ForceSync"></span>
+    </button>
 
-  <button class="dim-button"
-          ng-click="$ctrl.clearIgnoredUsers()"
-          ng-show="$ctrl.canClearIgnoredUsers">
-    <i class="fa fa-eraser"></i>
-    <span ng-i18next="Storage.ClearIgnoredUsers"></span>
-  </button>
+    <button class="dim-button"
+            ng-click="$ctrl.clearIgnoredUsers()"
+            ng-show="$ctrl.canClearIgnoredUsers">
+      <i class="fa fa-eraser"></i>
+      <span ng-i18next="Storage.ClearIgnoredUsers"></span>
+    </button>
 
-  <div ng-repeat="adapter in $ctrl.syncService.adapters | orderBy:'-' track by adapter.name"
-       ng-switch="adapter.name"
-       class="storage-adapter">
-    <h2>
-      <span ng-i18next="Storage.{{adapter.name}}"></span>
-      <span class="storage-status"
-            ng-class="{ enabled: adapter.enabled }">
-        <i class="fa" ng-class="adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'"></i>
-        <span ng-i18next="Storage.{{adapter.enabled ? 'Enabled' : 'Disabled'}}"></span>
-      </span>
-    </h2>
+    <div ng-if="$ctrl.quota" class="storage-adapter">
+      <div class="storage-guage"><div dim-percent-width="{{$ctrl.quota.usage / $ctrl.quota.quota}}"></div></div>
+      <p ng-i18next="[i18next]({ usage: $ctrl.quota.usage, quota: $ctrl.quota.quota })Storage.Usage">DIM is using {{$ctrl.quota.usage | humanBytes}} out of {{$ctrl.quota.quota | humanBytes}} available to it.</p>
+    </div>
 
-    <p ng-i18next="Storage.Details.{{adapter.name}}"></p>
+    <div ng-repeat="adapter in $ctrl.syncService.adapters | orderBy:'-' track by adapter.name"
+        ng-switch="adapter.name"
+        class="storage-adapter">
+      <h2>
+        <span ng-i18next="Storage.{{adapter.name}}"></span>
+        <span class="storage-status"
+              ng-class="{ enabled: adapter.enabled }">
+          <i class="fa" ng-class="adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'"></i>
+          <span ng-i18next="Storage.{{adapter.enabled ? 'Enabled' : 'Disabled'}}"></span>
+        </span>
+      </h2>
 
-    <div ng-switch-when="GoogleDriveStorage">
-      <p class="warning-block" ng-if="$ctrl.googleApiBlocked" ng-i18next="Storage.GoogleApiBlocked"></p>
-      <div ng-if="!$ctrl.googleApiBlocked">
-        <button ng-if="!adapter.enabled" class="dim-button" ng-click="$ctrl.driveSync()">
-          <i class="fa fa-sign-in"></i>
-          <span ng-i18next="Storage.DriveSync"></span>
-        </button>
-        <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.driveLogout()">
-          <i class="fa fa-sign-out"></i>
-          <span ng-i18next="Storage.DriveLogout"></span>
-        </button>
-        <button ng-if="adapter.enabled" class="dim-button" ui-sref="gdrive-revisions">
-            <i class="fa fa-upload"></i>
-            <span ng-i18next="Storage.GDriveRevisions"></span>
+      <p ng-i18next="Storage.Details.{{adapter.name}}"></p>
+
+      <div ng-switch-when="GoogleDriveStorage">
+        <p class="warning-block" ng-if="$ctrl.googleApiBlocked" ng-i18next="Storage.GoogleApiBlocked"></p>
+        <div ng-if="!$ctrl.googleApiBlocked">
+          <button ng-if="!adapter.enabled" class="dim-button" ng-click="$ctrl.driveSync()">
+            <i class="fa fa-sign-in"></i>
+            <span ng-i18next="Storage.DriveSync"></span>
           </button>
+          <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.driveLogout()">
+            <i class="fa fa-sign-out"></i>
+            <span ng-i18next="Storage.DriveLogout"></span>
+          </button>
+          <button ng-if="adapter.enabled" class="dim-button" ui-sref="gdrive-revisions">
+              <i class="fa fa-upload"></i>
+              <span ng-i18next="Storage.GDriveRevisions"></span>
+            </button>
+        </div>
       </div>
+
+      <div ng-switch-when="IndexedDBStorage">
+        <p class="warning-block" ng-if="$ctrl.browserMayClearData" ng-i18next="Storage.BrowserMayClearData"></p>
+      </div>
+
+      <p ng-i18next="Storage.StatLabel"></p>
+      <ul>
+        <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" ng-if="value > 0" ng-i18next="[i18next]({value: value})Storage.{{key}}"></li>
+        <li ng-if="!$ctrl.adapterStats[adapter.name]" ng-i18next="Storage.NoData"></li>
+      </ul>
     </div>
 
-    <div ng-switch-when="IndexedDBStorage">
-      <p class="warning-block" ng-if="$ctrl.browserMayClearData" ng-i18next="Storage.BrowserMayClearData"></p>
+    <div class="storage-adapter" ng-if="$ctrl.supportsExport">
+      <h2 ng-i18next="Storage.ImportExport"></h2>
+      <p>
+        <button class="dim-button" ng-click="$ctrl.exportData()">
+          <i class="fa fa-download"></i>
+          <span ng-i18next="Storage.Export"></span>
+        </button>
+      </p>
+      <p>
+        <button class="dim-button" ng-click="$ctrl.importData()">
+          <i class="fa fa-upload"></i>
+          <span ng-i18next="Storage.Import"></span>
+        </button>
+        <input type="file" id="importFile">
+      </p>
     </div>
-
-    <p ng-i18next="Storage.StatLabel"></p>
-    <ul>
-      <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" ng-if="value > 0" ng-i18next="[i18next]({value: value})Storage.{{key}}"></li>
-      <li ng-if="!$ctrl.adapterStats[adapter.name]" ng-i18next="Storage.NoData"></li>
-    </ul>
-  </div>
-
-  <div class="storage-adapter" ng-if="$ctrl.supportsExport">
-    <h2 ng-i18next="Storage.ImportExport"></h2>
-    <p>
-      <button class="dim-button" ng-click="$ctrl.exportData()">
-        <i class="fa fa-download"></i>
-        <span ng-i18next="Storage.Export"></span>
-      </button>
-    </p>
-    <p>
-      <button class="dim-button" ng-click="$ctrl.importData()">
-        <i class="fa fa-upload"></i>
-        <span ng-i18next="Storage.Import"></span>
-      </button>
-      <input type="file" id="importFile">
-    </p>
-  </div>
   </section>
 </div>
