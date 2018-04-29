@@ -3,6 +3,7 @@ import { DtrItem } from '../item-review/destiny-tracker.service';
 import { compact } from '../util';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
+import { getPowerMods } from '../inventory/store/d2-item-factory.service';
 
 /**
  * Translates items from the objects that DIM has to the form that the DTR API expects.
@@ -26,40 +27,23 @@ class D2ItemTransformer {
    * Will contain personally-identifying information.
    */
   getRollAndPerks(item: D2Item): DtrItem {
+    const powerModHashes = getPowerMods(item).map((m) => m.hash);
     return {
-      selectedPerks: this._getSelectedPlugs(item),
-      attachedMods: this._getPowerMods(item),
+      selectedPerks: this._getSelectedPlugs(item, powerModHashes),
+      attachedMods: powerModHashes,
       referenceId: item.hash,
       instanceId: item.id,
     };
   }
 
-  // borrowed from d2-item-factory.service
-  _getPowerMods(item: D2Item) {
-    const MOD_CATEGORY = 59;
-    const POWER_STAT_HASH = 1935470627;
-
-    const powerMods = item.sockets ? compact(item.sockets.sockets.map((i) => i.plug)).filter((plug) => {
-      return plug.plugItem.itemCategoryHashes && plug.plugItem.investmentStats &&
-        plug.plugItem.itemCategoryHashes.includes(MOD_CATEGORY) &&
-        plug.plugItem.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
-    }) : [];
-
-    if (!powerMods) {
-      return [];
-    }
-
-    return powerMods.map((m) => m.plugItem.hash);
-  }
-
-  _getSelectedPlugs(item: D2Item) {
+  _getSelectedPlugs(item: D2Item, powerModHashes: number[]) {
     if (!item.sockets) {
       return [];
     }
 
     const allPlugs = compact(item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash));
 
-    return _.difference(allPlugs, this._getPowerMods(item));
+    return _.difference(allPlugs, powerModHashes);
   }
 }
 

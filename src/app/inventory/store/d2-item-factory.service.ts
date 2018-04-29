@@ -1036,16 +1036,20 @@ function buildMasterworkInfo(
   };
 }
 
+const MOD_CATEGORY = 59;
+const POWER_STAT_HASH = 1935470627;
+
 function getBasePowerLevel(item: D2Item): number {
-  const MOD_CATEGORY = 59;
-  const POWER_STAT_HASH = 1935470627;
-  const powerMods = item.sockets ? compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
+  const powerMods = getPowerMods(item);
+  const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH)!.value);
+
+  return item.primStat ? (item.primStat.value - modPower) : 0;
+}
+
+export function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
+  return item.sockets ? compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
     return plug.itemCategoryHashes && plug.investmentStats &&
       plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
       plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
   }) : [];
-
-  const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH)!.value);
-
-  return item.primStat ? (item.primStat.value - modPower) : 0;
 }
