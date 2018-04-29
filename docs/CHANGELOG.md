@@ -1,5 +1,7 @@
 # Next
 
+* Fixed a bug where the "Restore Old Versions" tool wouldn't actually let you see and restore old versions.
+
 # 4.49.1 (2018-04-23)
 
 * Fix loadouts.
