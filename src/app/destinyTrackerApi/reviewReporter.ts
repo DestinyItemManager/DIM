@@ -1,6 +1,6 @@
 import { $q, $http } from 'ngimport';
 import { ReviewDataCache } from './reviewDataCache';
-import { D1ItemUserReview, D1MembershipInfo } from '../item-review/destiny-tracker.service';
+import { D1ItemUserReview, DtrReviewer } from '../item-review/destiny-tracker.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { UserFilter } from './userFilter';
 import { handleSubmitErrors } from './trackerErrorHandler';
@@ -16,7 +16,7 @@ export class ReviewReporter {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getReporter(membershipInfo: DestinyAccount): D1MembershipInfo {
+  _getReporter(membershipInfo: DestinyAccount): DtrReviewer {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,

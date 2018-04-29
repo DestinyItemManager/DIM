@@ -16,14 +16,14 @@ export interface DtrBulkItem extends DtrItem {
   votes: DtrVote;
 }
 
-export interface Reviewer {
+export interface DtrReviewer {
   membershipType: number;
   membershipId: string;
   displayName: string;
 }
 
 export interface DimUserReview extends DtrBulkItem {
-  reviewer: Reviewer;
+  reviewer: DtrReviewer;
   voted: number;
   pros: string;
   cons: string;
@@ -36,7 +36,7 @@ export interface DtrUserReview {
   isReviewer: boolean;
   isHighlighted: boolean;
   instanceId?: string;
-  reviewer: Reviewer;
+  reviewer: DtrReviewer;
   voted: number;
   pros: string;
   cons: string;
@@ -68,12 +68,6 @@ export interface DimWorkingUserReview extends DtrReviewContainer {
   text: string;
 }
 
-export interface DimReviewReport {
-  reviewId: string;
-  reporter: Reviewer;
-  text: string;
-}
-
 export enum DtrActivityModes {
   notSpecified = 0,
   playerVersusEnemy = 7,
@@ -98,12 +92,6 @@ export interface D1ItemReviewRequest extends D1ItemFetchRequest {
   instanceId: string;
 }
 
-export interface D1MembershipInfo {
-  membershipId: string;
-  membershipType: number;
-  displayName: string;
-}
-
 export interface D1ItemWorkingUserReview {
   rating?: number;
   pros: string;
@@ -114,7 +102,7 @@ export interface D1ItemWorkingUserReview {
 
 export interface D1ItemUserReview extends D1ItemWorkingUserReview {
   reviewId: string; // string or number?
-  reviewer: D1MembershipInfo;
+  reviewer: DtrReviewer;
   timestamp: string;
   selectedPerks?: string;
   isHighlighted: boolean;
