@@ -148,13 +148,14 @@ export const getBuckets = _.memoize(() => {
     _.each(defs.InventoryBucket, (def: any) => {
       if (def.enabled) {
         const id = def.bucketIdentifier;
-        const type = bucketToType[def.hash];
+        const type = bucketToType[def.bucketIdentifier];
         let sort: string | undefined;
         if (type) {
           sort = typeToSort[type];
         } else if (vaultTypes[id]) {
           sort = vaultTypes[id];
         }
+
         const bucket: D1InventoryBucket = {
           id,
           description: def.bucketDescription,
