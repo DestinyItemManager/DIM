@@ -1,5 +1,7 @@
 # Next
 
+* Add search filters based on character location on dim (is:inleftchar / inmiddlechar / inrightchar) and for vault (is:invault) and current/last logged character (incurrentchar), that is marked with a yellow triangle.
+
 # 4.49.1 (2018-04-23)
 
 * Fix loadouts.
