@@ -319,7 +319,7 @@ h2, h3, h4 {
 .sticky-header-background {
   left: 0;
   right: 0;
-  top: 42px;
+  top: $header-height;
   background-color: #434444;
   height: 82px;
   position: fixed;
