@@ -123,7 +123,7 @@ class D2ReviewDataCache {
       return;
     }
 
-    this._markItemAsLocallyCached(item, true);
+    item.isLocallyCached = true;
 
     const userVote = matchingItem.userVote;
 
@@ -162,18 +162,15 @@ class D2ReviewDataCache {
     return this._itemStores;
   }
 
-  _markItemAsLocallyCached(item,
-                           isCached) {
-    item.isLocallyCached = isCached;
-  }
-
   markReviewAsIgnored(writtenReview: DtrUserReview): void {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(item: D2Item,
-                                 userReview) {
-    this._markItemAsLocallyCached(item, false);
+  markItemAsReviewedAndSubmitted(
+    item: D2Item,
+    userReview
+  ) {
+    item.isLocallyCached = false;
     const matchingItem = this._getMatchingItem(item);
 
     if (!matchingItem) {

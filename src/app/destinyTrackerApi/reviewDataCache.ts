@@ -67,7 +67,7 @@ export class ReviewDataCache {
       return;
     }
 
-    this._markItemAsLocallyCached(item, true);
+    item.isLocallyCached = true;
 
     const rating = matchingItem.rating;
 
@@ -99,18 +99,15 @@ export class ReviewDataCache {
     return this._itemStores;
   }
 
-  _markItemAsLocallyCached(item,
-                           isCached) {
-    item.isLocallyCached = isCached;
-  }
-
   markReviewAsIgnored(writtenReview) {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(item: D1Item,
-                                 userReview: D1ItemWorkingUserReview) {
-    this._markItemAsLocallyCached(item, false);
+  markItemAsReviewedAndSubmitted(
+    item: D1Item,
+    userReview: D1ItemWorkingUserReview
+  ) {
+    item.isLocallyCached = false;
     const matchingItem = this._getMatchingItem(item);
 
     if (!matchingItem) {
