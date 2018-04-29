@@ -273,7 +273,7 @@ export class GoogleDriveStorage implements StorageAdapter {
     await this.ready;
     try {
       const fileId = await this.getFileId();
-      const file = await gapi.client.drive.files.get({
+      const file = await gapi.client.drive.revisions.get({
         fileId,
         revisionId,
         alt: 'media'
