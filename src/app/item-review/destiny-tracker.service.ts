@@ -8,8 +8,8 @@ export interface DtrVote {
 export interface DtrItem {
   referenceId: number;
   instanceId?: string;
-  attachedMods?: any[] | null;
-  selectedPerks?: any[] | null;
+  attachedMods?: number[];
+  selectedPerks?: number[];
 }
 
 export interface DtrBulkItem extends DtrItem {

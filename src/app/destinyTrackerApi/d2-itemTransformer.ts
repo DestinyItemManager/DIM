@@ -43,7 +43,7 @@ class D2ItemTransformer {
       return plug.plugItem.itemCategoryHashes && plug.plugItem.investmentStats &&
         plug.plugItem.itemCategoryHashes.includes(MOD_CATEGORY) &&
         plug.plugItem.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH);
-    }) : null;
+    }) : [];
 
     if (!powerMods) {
       return [];
@@ -54,7 +54,7 @@ class D2ItemTransformer {
 
   _getSelectedPlugs(item: D2Item) {
     if (!item.sockets) {
-      return null;
+      return [];
     }
 
     const allPlugs = compact(item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash));
