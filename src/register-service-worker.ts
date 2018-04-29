@@ -20,7 +20,7 @@ const contentChanged$ = new BehaviorSubject(false);
  * This is to handle cases where folks have DIM open for a long time.
  * It will attempt to update the service worker before reporting true.
  */
-const serverVersionChanged$ = Observable.timer(0, 15 * 60 * 1000)
+const serverVersionChanged$ = Observable.timer(10 * 1000, 15 * 60 * 1000)
   // Fetch but swallow errors
   .switchMap(() => Observable.fromPromise(getServerVersion()).catch(() => Observable.empty<string>()))
   .map((version) => version !== $DIM_VERSION)
@@ -28,7 +28,8 @@ const serverVersionChanged$ = Observable.timer(0, 15 * 60 * 1000)
   // At this point the value of the observable will flip to true once and only once
   .switchMap((needsUpdate) => needsUpdate
     ? Observable.fromPromise(updateServiceWorker().then(() => true))
-    : Observable.of(false));
+    : Observable.of(false))
+  .shareReplay();
 
 /**
  * Whether there is new content available if you reload DIM.

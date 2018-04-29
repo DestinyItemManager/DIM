@@ -4,13 +4,12 @@ import { IPromise, IDeferred } from "angular";
 
 const subject = new BehaviorSubject(false);
 
-export const loadingTrackerStream = subject.distinctUntilChanged().publishReplay(1);
+export const loadingTrackerStream = subject.distinctUntilChanged().shareReplay(1);
 
 export default function loadingTracker(promiseTracker) {
   'ngInject';
 
   const tracker = promiseTracker();
-  loadingTrackerStream.connect();
 
   return {
     addPromise(promise: IPromise<any>) {
