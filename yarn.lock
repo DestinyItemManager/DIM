@@ -1408,8 +1408,8 @@ builtin-status-codes@^3.0.0:
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
 bungie-api-ts@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-1.6.0.tgz#14c49ed509b514e3a706d88cee2691f8c20f4c35"
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-1.7.0.tgz#4cc5cb0028c1538e5a3796a151df9f2f1a19af33"
 
 bytes@3.0.0:
   version "3.0.0"
