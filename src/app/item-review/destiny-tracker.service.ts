@@ -69,11 +69,11 @@ export interface DimWorkingUserReview extends DtrReviewContainer {
 }
 
 export enum DtrActivityModes {
-  notSpecified = 0,
-  playerVersusEnemy = 7,
-  playerVersusPlayer = 5,
-  raid = 4,
-  trials = 39
+  notSpecified = DestinyActivityModeType.None,
+  playerVersusEnemy = DestinyActivityModeType.AllPvE,
+  playerVersusPlayer = DestinyActivityModeType.AllPvP,
+  raid = DestinyActivityModeType.Raid,
+  trials = DestinyActivityModeType.TrialsOfTheNine
 }
 
 export interface D1ItemFetchRequest {
@@ -131,7 +131,7 @@ import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
-import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition, DestinyActivityModeType } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
 import { $q } from 'ngimport';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
