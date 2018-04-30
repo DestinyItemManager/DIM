@@ -145,6 +145,9 @@ export interface D2CharacterStat {
   description: string;
   value: number;
   icon: string;
+  tierMax?: number;
+  tiers?: number[];
+  hasClassified?: boolean;
 }
 
 export interface D1CharacterStat {
@@ -174,7 +177,7 @@ export interface D1Store extends DimStore {
   items: D1Item[];
   buckets: { [bucketId: string]: D1Item[] };
   stats: {
-    [statHash: string]: D1CharacterStat;
+    [hash: string]: D1CharacterStat;
   };
   progression: null | {
     progressions: D1Progression[];
@@ -199,7 +202,8 @@ export interface D2Store extends DimStore {
   buckets: { [bucketId: string]: D2Item[] };
   vault?: D2Vault;
   stats: {
-    [hash: number]: D2CharacterStat;
+    basePower?: D2CharacterStat;
+    [statHash: number]: D2CharacterStat;
   };
   updateCharacterInfo(
     defs: D2ManifestDefinitions,

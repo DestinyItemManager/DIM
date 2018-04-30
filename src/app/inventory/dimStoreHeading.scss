@@ -177,21 +177,6 @@ dim-store-heading {
     text-align: center;
   }
 
-  .vault-fill-bar {
-    flex: 1;
-    height: 7px;
-    background-color: gray;
-    border-radius: 1px;
-    overflow: auto;
-    margin-left: 2px;
-  }
-  .fill-bar {
-    background-color: #FB9F28;
-    height: 100%;
-  }
-  .vault-full {
-    background-color: #cc3535;
-  }
   .vault-bucket-full {
     color: #e12929;
     font-weight: bold;

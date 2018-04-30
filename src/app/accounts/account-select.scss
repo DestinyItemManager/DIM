@@ -3,6 +3,7 @@
 .account-select {
   display: block;
   color: white;
+  height: 100%;
 }
 
 .account {
@@ -33,6 +34,8 @@
     margin: 0 0 0 2px;
     padding-right: 22px;
     border-bottom: 2px solid $orange;
+    height: 100%;
+    box-sizing: border-box;
 
     &::after {
       content: "▼";
@@ -57,9 +60,9 @@
   position: absolute;
   display: block;
   overflow: auto;
-  top: 42px;
-  top: calc(42px + constant(safe-area-inset-top));
-  top: calc(42px + env(safe-area-inset-top));
+  top: $header-height;
+  top: calc(#{$header-height} + constant(safe-area-inset-top));
+  top: calc(#{$header-height} + env(safe-area-inset-top));
   right: 0;
   margin: 0;
   padding: 0;

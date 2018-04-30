@@ -12,7 +12,8 @@ export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   .switchMap(() => Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty<GlobalAlert[]>()))
   .startWith([] as GlobalAlert[])
   // Deep equals
-  .distinctUntilChanged<GlobalAlert[]>(equals);
+  .distinctUntilChanged<GlobalAlert[]>(equals)
+  .shareReplay();
 
 interface State {
   alerts: GlobalAlert[];
