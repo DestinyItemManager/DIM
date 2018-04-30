@@ -125,7 +125,6 @@
     "idb-keyval": "^2.3.0",
     "mobile-drag-drop": "^2.3.0-rc.1",
     "ng-dialog": "^1.4.0",
-    "ng-http-rate-limiter": "^1.0.1",
     "ng-i18next": "^1.0.5",
     "ngimport": "^1.0.0",
     "oclazyload": "^1.1.0",

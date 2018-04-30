@@ -1,15 +1,7 @@
 import { getAccessTokenFromRefreshToken } from './oauth.service';
 import { Tokens, removeToken, setToken, getToken, hasTokenExpired } from './oauth-token.service';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import { IRequestConfig, IHttpResponse } from 'angular';
 import { $rootScope } from 'ngimport';
-
-declare module 'angular' {
-  interface IRequestConfig {
-    /** Track whether we've tried refreshing access tokens */
-    triedRefresh?: boolean;
-  }
-}
 
 let cache: Promise<Tokens> | null = null;
 const matcher = /www\.bungie\.net\/(D1\/)?Platform\/(User|Destiny|Destiny2)\//;
@@ -51,75 +43,16 @@ export async function fetchWithBungieOAuth(request: Request | string, options?: 
   return fetch(request, options);
 }
 
-function responseIsFromAngular(response: Response | IHttpResponse<any>): response is IHttpResponse<any> {
-  return (response as IHttpResponse<any>).config !== undefined;
-}
-
-async function responseIndicatesBadToken(response: Response | IHttpResponse<any>) {
+async function responseIndicatesBadToken(response: Response) {
   if (response.status === 401) {
     return true;
   }
-  const data = responseIsFromAngular(response) ? response.data : await response.clone().json();
+  const data = await response.clone().json();
   return data &&
       (data.ErrorCode === PlatformErrorCodes.AccessTokenHasExpired ||
       data.ErrorCode === PlatformErrorCodes.WebAuthRequired ||
       // (also means the access token has expired)
       data.ErrorCode === PlatformErrorCodes.WebAuthModuleAsyncFailed);
-}
-
-/**
- * This is an interceptor for the $http service that watches for missing or expired
- * OAuth tokens and attempts to acquire them.
- */
-export function HttpRefreshTokenService($rootScope, $injector) {
-  'ngInject';
-
-  return {
-    request: requestHandler,
-    response: responseHandler
-  };
-
-  async function requestHandler(request: IRequestConfig) {
-    request.headers = request.headers || {};
-
-    if (request.url.match(matcher) && !request.headers.hasOwnProperty('Authorization')) {
-      try {
-        const token = await getActiveToken();
-        request.headers!.Authorization = `Bearer ${token.accessToken.value}`;
-      } catch (e) {
-        if (e instanceof FatalTokenError) {
-          console.warn("Unable to get auth token, clearing auth tokens & going to login: ", e);
-          removeToken();
-          $rootScope.$broadcast('dim-no-token-found');
-        }
-        throw e;
-      }
-    }
-
-    return request;
-  }
-
-  /**
-   * A limited version of the error handler in bungie-service-helper.service.js,
-   * which can detect errors related to auth (expired token, etc), refresh and retry.
-   */
-  function responseHandler(response: IHttpResponse<any>) {
-    if (response.config.url.match(matcher) &&
-        responseIndicatesBadToken(response)) {
-      // Only try once, to avoid infinite loop
-      if (response.config.triedRefresh) {
-        throw new Error("Access token expired, and we've already tried to refresh. Failing.");
-      }
-      // OK, Bungie has told us our access token is expired or
-      // invalid. Refresh it and try again.
-      console.log(`Access token expired (code ${response.data.ErrorCode}), removing tokens and trying again`);
-      removeToken();
-      response.config.triedRefresh = true;
-      return $injector.get('$http')(response.config);
-    }
-
-    return response;
-  }
 }
 
 function isTokenValid(token) {
