@@ -1,12 +1,11 @@
 import { D2ItemListBuilder } from './d2-itemListBuilder';
 import { DtrBulkItem, DtrItem } from '../item-review/destiny-tracker.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
-import { IPromise } from 'angular';
-import { $q, $http } from 'ngimport';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
+import { dtrFetch } from './dtr-service-helper';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
@@ -16,60 +15,40 @@ class D2BulkFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getBulkWeaponDataEndpointPost(itemList: DtrItem[], platformSelection: number, mode: number) {
-    return {
-      method: 'POST',
-      url: `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
-      data: itemList,
-      dataType: 'json'
-    };
-  }
-
-  _getBulkFetchPromise(stores: D2Store[], platformSelection: number, mode: number): IPromise<DtrBulkItem[]> {
+  _getBulkFetchPromise(stores: D2Store[], platformSelection: number, mode: number): Promise<DtrBulkItem[]> {
     if (!stores.length) {
-      return $q.resolve([] as DtrBulkItem[]);
+      return Promise.resolve<DtrBulkItem[]>([]);
     }
 
     const itemList = this._itemListBuilder.getItemList(stores, this._reviewDataCache);
-
-    if (!itemList.length) {
-      return $q.resolve([] as DtrBulkItem[]);
-    }
-
-    const promise = $q
-      .when(this._getBulkWeaponDataEndpointPost(itemList, platformSelection, mode))
-      .then($http)
-      .then(handleD2Errors, handleD2Errors)
-      .then((response) => response.data);
-
-    loadingTracker.addPromise(promise);
-
-    return promise as IPromise<DtrBulkItem[]>;
+    return this._getBulkItems(itemList, platformSelection, mode);
   }
 
   _getVendorBulkFetchPromise(platformSelection: number,
                              mode: number,
                              vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                             vendorItems?: DestinyVendorItemDefinition[]): IPromise<DtrBulkItem[]> {
+                             vendorItems?: DestinyVendorItemDefinition[]): Promise<DtrBulkItem[]> {
     if ((vendorSaleItems && !vendorSaleItems.length) || (vendorItems && !vendorItems.length)) {
-      return $q.resolve([] as DtrBulkItem[]);
+      return Promise.resolve<DtrBulkItem[]>([]);
     }
 
     const vendorDtrItems = this._itemListBuilder.getVendorItemList(this._reviewDataCache, vendorSaleItems, vendorItems);
+    return this._getBulkItems(vendorDtrItems, platformSelection, mode);
+  }
 
-    if (!vendorDtrItems.length) {
-      return $q.resolve([] as DtrBulkItem[]);
+  _getBulkItems(itemList: DtrItem[], platformSelection: number, mode: number): Promise<DtrBulkItem[]> {
+    if (!itemList.length) {
+      return Promise.resolve<DtrBulkItem[]>([]);
     }
 
-    const promise = $q
-      .when(this._getBulkWeaponDataEndpointPost(vendorDtrItems, platformSelection, mode))
-      .then($http)
-      .then(handleD2Errors, handleD2Errors)
-      .then((response) => response.data);
+    const promise = dtrFetch(
+      `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
+      itemList
+    ).then(handleD2Errors, handleD2Errors);
 
     loadingTracker.addPromise(promise);
 
-    return promise as IPromise<DtrBulkItem[]>;
+    return promise;
   }
 
   /**
@@ -95,7 +74,7 @@ class D2BulkFetcher {
   bulkFetchVendorItems(platformSelection: number,
                        mode: number,
                        vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                       vendorItems?: DestinyVendorItemDefinition[]): IPromise<void> {
+                       vendorItems?: DestinyVendorItemDefinition[]): Promise<void> {
     return this._getVendorBulkFetchPromise(platformSelection, mode, vendorSaleItems, vendorItems)
       .then((bulkRankings) => this._addScores(bulkRankings));
   }

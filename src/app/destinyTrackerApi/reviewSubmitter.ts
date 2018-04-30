@@ -1,10 +1,10 @@
 import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1MembershipInfo, D1ItemUserReview } from '../item-review/destiny-tracker.service';
-import { $q, $http } from 'ngimport';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
+import { dtrFetch } from './dtr-service-helper';
 
 /**
  * Supports submitting review data to the DTR API.
@@ -49,10 +49,10 @@ export class ReviewSubmitter {
 
     const rating = { ...rollAndPerks, ...review, reviewer };
 
-    const promise = $q
-              .when(this._submitItemReviewCall(rating))
-              .then($http)
-              .then(handleSubmitErrors, handleSubmitErrors);
+    const promise = dtrFetch(
+      'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/submit',
+      rating
+    ).then(handleSubmitErrors, handleSubmitErrors);
 
     loadingTracker.addPromise(promise);
 

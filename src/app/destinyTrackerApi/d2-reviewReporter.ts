@@ -1,10 +1,10 @@
 import { D2ReviewDataCache } from "./d2-reviewDataCache";
 import { DestinyAccount } from "../accounts/destiny-account.service";
 import { DtrUserReview, Reviewer, DimReviewReport } from '../item-review/destiny-tracker.service';
-import { $q, $http } from 'ngimport';
 import { UserFilter } from "./userFilter";
 import { loadingTracker } from "../ngimport-more";
 import { handleD2SubmitErrors } from "./d2-trackerErrorHandler";
+import { dtrFetch } from "./dtr-service-helper";
 
 /**
  * Class to support reporting bad takes.
@@ -24,15 +24,6 @@ class D2ReviewReporter {
     };
   }
 
-  _submitReviewReportCall(reviewReport: DimReviewReport) {
-    return {
-      method: 'POST',
-      url: 'https://db-api.destinytracker.com/api/external/reviews/report',
-      data: reviewReport,
-      dataType: 'json'
-    };
-  }
-
   _generateReviewReport(reviewId: string, membershipInfo: DestinyAccount): DimReviewReport {
     const reporter = this._getReporter(membershipInfo);
 
@@ -45,11 +36,10 @@ class D2ReviewReporter {
 
   _submitReportReviewPromise(reviewId: string, membershipInfo: DestinyAccount) {
     const reviewReport = this._generateReviewReport(reviewId, membershipInfo);
-
-    const promise = $q
-                .when(this._submitReviewReportCall(reviewReport))
-                .then($http)
-                .then(handleD2SubmitErrors, handleD2SubmitErrors);
+    const promise = dtrFetch(
+      'https://db-api.destinytracker.com/api/external/reviews/report',
+      reviewReport
+    ).then(handleD2SubmitErrors, handleD2SubmitErrors);
 
     loadingTracker.addPromise(promise);
 

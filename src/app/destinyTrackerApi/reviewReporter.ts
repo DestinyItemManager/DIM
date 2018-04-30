@@ -1,10 +1,10 @@
-import { $q, $http } from 'ngimport';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemUserReview, D1MembershipInfo } from '../item-review/destiny-tracker.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { UserFilter } from './userFilter';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
+import { dtrFetch } from './dtr-service-helper';
 
 /**
  * Class to support reporting bad takes.
@@ -24,15 +24,6 @@ export class ReviewReporter {
     };
   }
 
-  _submitReviewReportCall(reviewReport) {
-    return {
-      method: 'POST',
-      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/report',
-      data: reviewReport,
-      dataType: 'json'
-    };
-  }
-
   _generateReviewReport(reviewId, membershipInfo: DestinyAccount) {
     const reporter = this._getReporter(membershipInfo);
 
@@ -46,10 +37,10 @@ export class ReviewReporter {
   _submitReportReviewPromise(reviewId, membershipInfo) {
     const reviewReport = this._generateReviewReport(reviewId, membershipInfo);
 
-    const promise = $q
-              .when(this._submitReviewReportCall(reviewReport))
-              .then($http)
-              .then(handleSubmitErrors, handleSubmitErrors);
+    const promise = dtrFetch(
+      'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/report',
+      reviewReport
+    ).then(handleSubmitErrors, handleSubmitErrors);
 
     loadingTracker.addPromise(promise);
 
