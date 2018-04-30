@@ -1,3 +1,5 @@
+import { RateLimiterConfig, RateLimiterQueue } from "./bungie-api/rate-limiter";
+
 export default function config(
   $compileProvider,
   $httpProvider,
@@ -26,6 +28,11 @@ export default function config(
   ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/D1\/Platform\/Destiny\/EquipItem/, 1, 1100);
   ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/TransferItem/, 1, 100);
   ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItem/, 1, 100);
+
+  RateLimiterConfig.addLimiter(new RateLimiterQueue(/www\.bungie\.net\/D1\/Platform\/Destiny\/TransferItem/, 1, 1100));
+  RateLimiterConfig.addLimiter(new RateLimiterQueue(/www\.bungie\.net\/D1\/Platform\/Destiny\/EquipItem/, 1, 1100));
+  RateLimiterConfig.addLimiter(new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/TransferItem/, 1, 100));
+  RateLimiterConfig.addLimiter(new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItem/, 1, 100));
 
   // https://github.com/likeastore/ngDialog/issues/327
   ngDialogProvider.setDefaults({
