@@ -1,5 +1,6 @@
 import template from './filter-link.html';
 import { IController, IWindowService, IComponentOptions } from 'angular';
+import { SearchService } from './search-filter.component';
 
 /**
  * Link to a specific filter in search. Clicking adds this term to the search.
@@ -13,7 +14,7 @@ export const FilterLinkComponent: IComponentOptions = {
   }
 };
 
-function FilterLinkCtrl(this: IController, dimSearchService, $window: IWindowService, $i18next) {
+function FilterLinkCtrl(this: IController, $window: IWindowService, $i18next) {
   'ngInject';
 
   this.addFilter = (filter: string) => {
@@ -63,12 +64,12 @@ function FilterLinkCtrl(this: IController, dimSearchService, $window: IWindowSer
       }
     }
 
-    const text = dimSearchService.query;
+    const text = SearchService.query;
 
     if (itemNameFilter) {
-      dimSearchService.query = filter + (text.length ? ` ${text}` : '');
+      SearchService.query = filter + (text.length ? ` ${text}` : '');
     } else if ((`${text} `).indexOf(`${filter} `) < 0) {
-      dimSearchService.query = (text.length > 0) ? `${text} ${filter}` : filter;
+      SearchService.query = (text.length > 0) ? `${text} ${filter}` : filter;
     }
   };
 }
