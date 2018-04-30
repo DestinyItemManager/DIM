@@ -1,6 +1,6 @@
 import { getAccessTokenFromRefreshToken } from './oauth.service';
 import { Tokens, removeToken, setToken, getToken, hasTokenExpired } from './oauth-token.service';
-import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/user';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { IRequestConfig, IHttpResponse } from 'angular';
 import { $rootScope } from 'ngimport';
 
@@ -33,14 +33,13 @@ export async function fetchWithBungieOAuth(request: Request | string, options?: 
     }
 
     return fetch(request, options).then(async(response) => {
-      const data = await response.json();
-      if (responseIndicatesBadToken(response, data)) {
+      if (await responseIndicatesBadToken(response)) {
         if (triedRefresh) {
           throw new Error("Access token expired, and we've already tried to refresh. Failing.");
         }
         // OK, Bungie has told us our access token is expired or
         // invalid. Refresh it and try again.
-        console.log(`Access token expired (code ${data.ErrorCode}), removing tokens and trying again`);
+        console.log(`Access token expired, removing tokens and trying again`);
         removeToken();
         return fetchWithBungieOAuth(request, options, true);
       }
@@ -52,13 +51,20 @@ export async function fetchWithBungieOAuth(request: Request | string, options?: 
   return fetch(request, options);
 }
 
-function responseIndicatesBadToken(response: Response | IHttpResponse<any>, data: ServerResponse<any>) {
-  return response.status === 401 ||
-    (data &&
+function responseIsFromAngular(response: Response | IHttpResponse<any>): response is IHttpResponse<any> {
+  return (response as IHttpResponse<any>).config !== undefined;
+}
+
+async function responseIndicatesBadToken(response: Response | IHttpResponse<any>) {
+  if (response.status === 401) {
+    return true;
+  }
+  const data = responseIsFromAngular(response) ? response.data : await response.clone().json();
+  return data &&
       (data.ErrorCode === PlatformErrorCodes.AccessTokenHasExpired ||
       data.ErrorCode === PlatformErrorCodes.WebAuthRequired ||
       // (also means the access token has expired)
-      data.ErrorCode === PlatformErrorCodes.WebAuthModuleAsyncFailed));
+      data.ErrorCode === PlatformErrorCodes.WebAuthModuleAsyncFailed);
 }
 
 /**
@@ -76,7 +82,7 @@ export function HttpRefreshTokenService($rootScope, $injector) {
   async function requestHandler(request: IRequestConfig) {
     request.headers = request.headers || {};
 
-    if (request.url.match(matcher) && !request.headers.hasOwnPropetry('Authorization')) {
+    if (request.url.match(matcher) && !request.headers.hasOwnProperty('Authorization')) {
       try {
         const token = await getActiveToken();
         request.headers!.Authorization = `Bearer ${token.accessToken.value}`;
@@ -99,7 +105,7 @@ export function HttpRefreshTokenService($rootScope, $injector) {
    */
   function responseHandler(response: IHttpResponse<any>) {
     if (response.config.url.match(matcher) &&
-        responseIndicatesBadToken(response, response.data)) {
+        responseIndicatesBadToken(response)) {
       // Only try once, to avoid infinite loop
       if (response.config.triedRefresh) {
         throw new Error("Access token expired, and we've already tried to refresh. Failing.");

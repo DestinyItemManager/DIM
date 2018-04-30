@@ -1,51 +1,48 @@
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 import { t } from 'i18next';
-import { $http, $rootScope, $timeout } from 'ngimport';
+import { $rootScope } from 'ngimport';
 import { API_KEY } from './bungie-api-utils';
-import {
-  IHttpResponse,
-  IPromise,
-  IRequestConfig,
-} from 'angular';
 import { getActivePlatform } from '../accounts/platform.service';
+import { fetchWithBungieOAuth } from '../oauth/http-refresh-token.service';
+import { rateLimitedFetch } from './rate-limiter';
+import { stringify } from 'simple-query-string';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
   status?: string;
 }
 
-export function httpAdapter(config: HttpClientConfig): Promise<any> {
-  return $http(buildOptions(config))
-      .then(handleErrors, handleErrors)
-      .then((response) => response.data) as Promise<any>;
+const ourFetch = rateLimitedFetch(fetchWithBungieOAuth);
+
+export function httpAdapter(config: HttpClientConfig): Promise<ServerResponse<any>> {
+  return Promise.resolve(ourFetch(buildOptions(config)))
+      .then(handleErrors, handleErrors);
 }
 
-export function httpAdapterWithRetry(config: HttpClientConfig): Promise<any> {
-  return $http(buildOptions(config))
-      .then(handleErrors, handleErrors)
-      .then(retryOnThrottled)
-      .then((response) => response.data) as Promise<any>;
+export function httpAdapterWithRetry(config: HttpClientConfig): Promise<ServerResponse<any>> {
+  return Promise.resolve(ourFetch(buildOptions(config)))
+      .then(handleErrors, handleErrors);
 }
 
-function buildOptions(config: HttpClientConfig): IRequestConfig {
-  const options: IRequestConfig = {
-    method: config.method,
-    url: config.url,
-    headers: {
-      'X-API-Key': API_KEY
-    },
-    withCredentials: true
-  };
-
+function buildOptions(config: HttpClientConfig): Request {
+  let url = config.url;
   if (config.params) {
-    options.params = config.params;
-  }
-  if (config.body) {
-    options.data = config.body;
+    url = `${url}?${stringify(config.params)}`;
   }
 
-  return options;
+  console.log(config);
+  return new Request(
+    url,
+    {
+      method: config.method,
+      body: JSON.stringify(config.body),
+      headers: {
+        'X-API-Key': API_KEY,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 }
 
 /** Generate an error with a bit more info */
@@ -55,7 +52,7 @@ export function error(message: string, errorCode: PlatformErrorCodes): DimError 
   return error;
 }
 
-export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHttpResponse<ServerResponse<T>> {
+export async function handleErrors<T>(response: Response): Promise<ServerResponse<T>> {
   if (response instanceof Error) {
     throw response;
   }
@@ -81,12 +78,15 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
     }));
   }
 
-  const errorCode = response.data ? response.data.ErrorCode : -1;
+  console.log(response);
+  const data: ServerResponse<any> = await response.json();
+
+  const errorCode = data ? data.ErrorCode : -1;
 
   // See https://github.com/DestinyDevs/BungieNetPlatform/wiki/Enums#platformerrorcodes
   switch (errorCode) {
   case PlatformErrorCodes.Success:
-    return response;
+    return data;
 
   case PlatformErrorCodes.DestinyVendorNotFound:
     throw error(t('BungieService.VendorNotFound'), errorCode);
@@ -112,8 +112,8 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
 
   case PlatformErrorCodes.DestinyAccountNotFound:
   case PlatformErrorCodes.DestinyUnexpectedError:
-    if (response.config.url.indexOf('/Account/') >= 0 &&
-        response.config.url.indexOf('/Character/') < 0) {
+    if (response.url.indexOf('/Account/') >= 0 &&
+        response.url.indexOf('/Character/') < 0) {
       const account = getActivePlatform();
       throw error(t('BungieService.NoAccount', {
         platform: account ? account.platformLabel : 'Unknown'
@@ -136,12 +136,12 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
   }
 
   // Any other error
-  if (response.data && response.data.Message) {
-    const e = error(t('BungieService.UnknownError', { message: response.data.Message }), errorCode);
-    e.status = response.data.ErrorStatus;
+  if (data && data.Message) {
+    const e = error(t('BungieService.UnknownError', { message: data.Message }), errorCode);
+    e.status = data.ErrorStatus;
     throw e;
   } else {
-    console.error('No response data:', response.status, response.statusText, response.xhrStatus);
+    console.error('No response data:', response.status, response.statusText);
     throw new Error(t('BungieService.Difficulties'));
   }
 }
@@ -150,15 +150,21 @@ export function handleErrors<T>(response: IHttpResponse<ServerResponse<T>>): IHt
  * A response handler that can be used to retry the response if it
  * receives the specific Bungie throttling error codes.
  */
-export function retryOnThrottled<T>(response: IHttpResponse<ServerResponse<T>>, retries: number = 3): IPromise<IHttpResponse<ServerResponse<T>>> | IHttpResponse<ServerResponse<T>> {
+/*
+export function retryOnThrottled<T>(response: ServerResponse<T>, retries: number = 3): Promise<ServerResponse<T>> | ServerResponse<T> {
   // TODO: these different statuses suggest different backoffs
-  if (response.data &&
-      (response.data.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededMinutes ||
-        response.data.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededMomentarily ||
-        response.data.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededSeconds)) {
+  if (response &&
+      (response.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededMinutes ||
+        response.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededMomentarily ||
+        response.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededSeconds)) {
     if (retries <= 0) {
       return response;
     } else {
+      return Promise.new((resolve, reject) => {
+        setTimeout(() => {
+          ourFetch()
+        }, Math.pow(2, 4 - retries) * 1000);
+      });
       return $timeout(Math.pow(2, 4 - retries) * 1000)
         .then(() => $http(response.config))
         .then((response: IHttpResponse<ServerResponse<T>>) => retryOnThrottled(response, retries - 1));
@@ -167,3 +173,4 @@ export function retryOnThrottled<T>(response: IHttpResponse<ServerResponse<T>>, 
     return response;
   }
 }
+*/
