@@ -20,18 +20,12 @@ export function httpAdapter(config: HttpClientConfig): Promise<ServerResponse<an
       .then(handleErrors, handleErrors);
 }
 
-export function httpAdapterWithRetry(config: HttpClientConfig): Promise<ServerResponse<any>> {
-  return Promise.resolve(ourFetch(buildOptions(config)))
-      .then(handleErrors, handleErrors);
-}
-
 function buildOptions(config: HttpClientConfig): Request {
   let url = config.url;
   if (config.params) {
     url = `${url}?${stringify(config.params)}`;
   }
 
-  console.log(config);
   return new Request(
     url,
     {
@@ -78,7 +72,6 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     }));
   }
 
-  console.log(response);
   const data: ServerResponse<any> = await response.json();
 
   const errorCode = data ? data.ErrorCode : -1;
@@ -145,32 +138,3 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     throw new Error(t('BungieService.Difficulties'));
   }
 }
-
-/**
- * A response handler that can be used to retry the response if it
- * receives the specific Bungie throttling error codes.
- */
-/*
-export function retryOnThrottled<T>(response: ServerResponse<T>, retries: number = 3): Promise<ServerResponse<T>> | ServerResponse<T> {
-  // TODO: these different statuses suggest different backoffs
-  if (response &&
-      (response.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededMinutes ||
-        response.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededMomentarily ||
-        response.ErrorCode === PlatformErrorCodes.ThrottleLimitExceededSeconds)) {
-    if (retries <= 0) {
-      return response;
-    } else {
-      return Promise.new((resolve, reject) => {
-        setTimeout(() => {
-          ourFetch()
-        }, Math.pow(2, 4 - retries) * 1000);
-      });
-      return $timeout(Math.pow(2, 4 - retries) * 1000)
-        .then(() => $http(response.config))
-        .then((response: IHttpResponse<ServerResponse<T>>) => retryOnThrottled(response, retries - 1));
-    }
-  } else {
-    return response;
-  }
-}
-*/

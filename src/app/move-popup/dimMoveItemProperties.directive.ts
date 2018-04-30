@@ -197,7 +197,7 @@ function MoveItemPropertiesCtrl(
       state = !item.tracked;
     }
 
-    if (item.destinyVersion === 2) {
+    if (item.isDestiny2()) {
       d2SetLockState(store, item, state)
         .then(() => {
           item.locked = state;
@@ -206,7 +206,7 @@ function MoveItemPropertiesCtrl(
         .finally(() => {
           vm.locking = false;
         });
-    } else {
+    } else if (item.isDestiny1()) {
       d1SetItemState(item, store, state, type)
         .then(() => {
           if (type === 'lock') {

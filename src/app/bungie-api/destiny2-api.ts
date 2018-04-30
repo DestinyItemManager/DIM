@@ -1,4 +1,3 @@
-import { IPromise } from 'angular';
 import {
   DestinyComponentType,
   DestinyEquipItemResults,
@@ -24,7 +23,7 @@ import {
 import { t } from 'i18next';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { DimError, httpAdapter, httpAdapterWithRetry } from './bungie-service-helper';
+import { DimError, httpAdapter } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -38,15 +37,15 @@ import { DimStore } from '../inventory/store-types';
  /**
   * Get the information about the current manifest.
   */
-export function getManifest(): IPromise<DestinyManifest> {
+export function getManifest(): Promise<DestinyManifest> {
   return getDestinyManifest(httpAdapter)
-    .then((response) => response.Response) as IPromise<DestinyManifest>;
+    .then((response) => response.Response);
 }
 
 /**
  * Get the user's stores on this platform. This includes characters, vault, and item information.
  */
-export function getStores(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
+export function getStores(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(platform,
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.ProfileCurrencies,
@@ -69,7 +68,7 @@ export function getStores(platform: DestinyAccount): IPromise<DestinyProfileResp
  * Get the user's progression for all characters on this platform. This is a completely separate
  * call in hopes of separating the progress page into an independent thing.
  */
-export function getProgression(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
+export function getProgression(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(platform,
     DestinyComponentType.Characters,
     DestinyComponentType.CharacterProgressions,
@@ -83,7 +82,7 @@ export function getProgression(platform: DestinyAccount): IPromise<DestinyProfil
  * Get the user's kiosk status for all characters on this platform. This is a completely separate
  * call in hopes of separating the collections page into an independent thing.
  */
-export function getKiosks(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
+export function getKiosks(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(platform,
     DestinyComponentType.Characters,
     DestinyComponentType.ItemObjectives,
@@ -101,7 +100,7 @@ export function getKiosks(platform: DestinyAccount): IPromise<DestinyProfileResp
 /**
  * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh stats.
  */
-export function getCharacters(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
+export function getCharacters(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(platform,
     DestinyComponentType.Characters
   );
@@ -110,7 +109,7 @@ export function getCharacters(platform: DestinyAccount): IPromise<DestinyProfile
 /**
  * Get the minimum profile required to figure out if there are any characters.
  */
-export function getBasicProfile(platform: DestinyAccount): IPromise<DestinyProfileResponse> {
+export function getBasicProfile(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(platform,
     DestinyComponentType.Profiles
   );
@@ -120,7 +119,7 @@ export function getBasicProfile(platform: DestinyAccount): IPromise<DestinyProfi
  * Get parameterized profile information for the whole account. Pass in components to select what
  * you want. This can handle just characters, full inventory, vendors, kiosks, activities, etc.
  */
-function getProfile(platform: DestinyAccount, ...components: DestinyComponentType[]): IPromise<DestinyProfileResponse> {
+function getProfile(platform: DestinyAccount, ...components: DestinyComponentType[]): Promise<DestinyProfileResponse> {
   return getProfileApi(httpAdapter, {
     destinyMembershipId: platform.membershipId,
     membershipType: platform.platformType,
@@ -128,17 +127,17 @@ function getProfile(platform: DestinyAccount, ...components: DestinyComponentTyp
   })
   .then((response) => {
     // TODO: what does it actually look like to not have an account?
-    if (_.size(response.Response) === 0) {
+    if (Object.keys(response.Response).length === 0) {
       throw new Error(t('BungieService.NoAccountForPlatform', {
         platform: platform.platformLabel
       }));
     }
 
     return response.Response;
-  }) as IPromise<DestinyProfileResponse>;
+  });
 }
 
-export function getVendor(account: DestinyAccount, characterId: string, vendorHash: number): IPromise<DestinyVendorResponse> {
+export function getVendor(account: DestinyAccount, characterId: string, vendorHash: number): Promise<DestinyVendorResponse> {
   return getVendorApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
@@ -157,10 +156,10 @@ export function getVendor(account: DestinyAccount, characterId: string, vendorHa
     ],
     vendorHash
   })
-  .then((response) => response.Response) as IPromise<DestinyVendorResponse>;
+  .then((response) => response.Response);
 }
 
-export function getVendors(account: DestinyAccount, characterId: string): IPromise<DestinyVendorsResponse> {
+export function getVendors(account: DestinyAccount, characterId: string): Promise<DestinyVendorsResponse> {
   return getVendorsApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
@@ -178,13 +177,13 @@ export function getVendors(account: DestinyAccount, characterId: string): IPromi
       DestinyComponentType.CurrencyLookups
     ]
   })
-  .then((response) => response.Response) as IPromise<DestinyVendorsResponse>;
+  .then((response) => response.Response);
 }
 
 /**
  * Transfer an item to another store.
  */
-export function transfer(item: DimItem, store: DimStore, amount: number): IPromise<ServerResponse<number>> {
+export function transfer(item: DimItem, store: DimStore, amount: number): Promise<ServerResponse<number>> {
   const platform = getActivePlatform();
   const request = {
     characterId: (store.isVault || item.location.inPostmaster) ? item.owner : store.id,
@@ -196,9 +195,9 @@ export function transfer(item: DimItem, store: DimStore, amount: number): IPromi
   };
 
   const response = item.location.inPostmaster
-    ? pullFromPostmaster(httpAdapterWithRetry, request)
-    : transferItem(httpAdapterWithRetry, request);
-  return response.catch((e) => handleUniquenessViolation(e, item, store)) as IPromise<ServerResponse<number>>;
+    ? pullFromPostmaster(httpAdapter, request)
+    : transferItem(httpAdapter, request);
+  return response.catch((e) => handleUniquenessViolation(e, item, store));
 
   // Handle "DestinyUniquenessViolation" (1648)
   function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
@@ -216,27 +215,27 @@ export function transfer(item: DimItem, store: DimStore, amount: number): IPromi
   }
 }
 
-export function equip(item: DimItem): IPromise<ServerResponse<number>> {
+export function equip(item: DimItem): Promise<ServerResponse<number>> {
   const platform = getActivePlatform();
 
-  return equipItem(httpAdapterWithRetry, {
+  return equipItem(httpAdapter, {
     characterId: item.owner,
     membershipType: platform!.platformType,
     itemId: item.id
-  }) as IPromise<ServerResponse<number>>;
+  });
 }
 
 /**
  * Equip multiple items at once.
  * @returns a list of items that were successfully equipped
  */
-export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]> {
+export function equipItems(store: DimStore, items: DimItem[]): Promise<DimItem[]> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
   const platform = getActivePlatform();
-  return equipItemsApi(httpAdapterWithRetry, {
+  return equipItemsApi(httpAdapter, {
     characterId: store.id,
     membershipType: platform!.platformType,
     itemIds: items.map((i) => i.id)
@@ -247,25 +246,25 @@ export function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[
         const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
         return item && item.equipStatus === 1;
       });
-    }) as IPromise<DimItem[]>;
+    });
 }
 
 /**
  * Set the lock state of an item.
  */
-export function setLockState(store: DimStore, item: DimItem, lockState: boolean): IPromise<ServerResponse<number>> {
+export function setLockState(store: DimStore, item: DimItem, lockState: boolean): Promise<ServerResponse<number>> {
   const account = getActivePlatform();
 
-  return setItemLockState(httpAdapterWithRetry, {
+  return setItemLockState(httpAdapter, {
     characterId: store.isVault ? item.owner : store.id,
     membershipType: account!.platformType,
     itemId: item.id,
     state: lockState
-  }) as IPromise<ServerResponse<number>>;
+  });
 }
 
 // TODO: owner can't be "vault" I bet
-export function requestAdvancedWriteActionToken(account: DestinyAccount, action: AwaType, item?: DimItem): IPromise<AwaAuthorizationResult> {
+export function requestAdvancedWriteActionToken(account: DestinyAccount, action: AwaType, item?: DimItem): Promise<AwaAuthorizationResult> {
   return awaInitializeRequest(httpAdapter, {
     type: action,
     membershipType: account.platformType,

@@ -1,28 +1,20 @@
-import { IRequestConfig } from "angular";
+import { HttpClientConfig } from "bungie-api-ts/http";
 
 export const API_KEY = ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') ? $DIM_WEB_API_KEY : localStorage.apiKey;
 
-export function bungieApiUpdate(path: string, data?: object): IRequestConfig {
+export function bungieApiUpdate(path: string, data?: object): HttpClientConfig {
   return {
     method: 'POST',
     url: `https://www.bungie.net${path}`,
-    headers: {
-      'X-API-Key': API_KEY
-    },
-    withCredentials: true,
-    data
+    body: data
   };
 }
 
-export function bungieApiQuery(path: string, params?: object): IRequestConfig {
+export function bungieApiQuery(path: string, params?: object): HttpClientConfig {
   return {
     method: 'GET',
     url: `https://www.bungie.net${path}`,
-    params,
-    headers: {
-      'X-API-Key': API_KEY
-    },
-    withCredentials: true
+    params
   };
 }
 
