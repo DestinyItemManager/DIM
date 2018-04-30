@@ -1,5 +1,6 @@
 # Next
 
+* The settings page now shows how much of your local storage quota is being used by DIM (if your browser supports it).g
 * Add search filters based on character location on dim (is:inleftchar / inmiddlechar / inrightchar) and for vault (is:invault) and current/last logged character (incurrentchar), that is marked with a yellow triangle.
 * Fixed a bug where the "Restore Old Versions" tool wouldn't actually let you see and restore old versions.
 

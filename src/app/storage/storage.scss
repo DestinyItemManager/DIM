@@ -32,4 +32,22 @@
     margin: 8px 0;
     padding-left: 2em;
   }
+
+  .storage-guage {
+    flex: 1;
+    background-color: rgba(0, 0, 0, .6);
+    position: relative;
+    min-height: 17px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: white;
+    div {
+      background-color: #6dcc66;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+    }
+  }
 }

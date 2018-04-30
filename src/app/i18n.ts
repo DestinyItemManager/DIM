@@ -13,6 +13,8 @@ import zhCHT from '../locale/zh-CN/dim.json';
 
 import { init as i18init, use as i18use } from 'i18next';
 import XHR from 'i18next-xhr-backend';
+import { humanBytes } from './storage/human-bytes';
+import { percent } from './inventory/dimPercentWidth.directive';
 
 export const DIM_LANGS = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'pl', 'pt-br', 'ru', 'zh-cht'];
 
@@ -40,7 +42,9 @@ export function initi18n(): Promise<never> {
         escapeValue: false,
         format(val, format) {
           if (format === 'pct') {
-            return `${Math.min(100, Math.floor(100 * parseInt(val, 10)))}%`;
+            return percent(parseInt(val, 10));
+          } else if (format === 'humanBytes') {
+            return humanBytes(parseInt(val, 10));
           }
           return val;
         }

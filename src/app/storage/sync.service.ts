@@ -6,6 +6,8 @@ import { GoogleDriveStorage } from './google-drive-storage';
 import { BungieMembershipType } from 'bungie-api-ts/user';
 import { $rootScope } from 'ngimport';
 import { initSettings } from '../settings/settings';
+import { percent } from '../inventory/dimPercentWidth.directive';
+import { humanBytes } from './human-bytes';
 
 export interface DimData {
   platformType?: BungieMembershipType;
@@ -45,6 +47,11 @@ if (navigator.storage && navigator.storage.persist) {
     } else {
       console.log("Sync: Storage may be cleared under storage pressure.");
     }
+  });
+}
+if ('storage' in navigator && 'estimate' in navigator.storage) {
+  navigator.storage.estimate().then(({ usage, quota }) => {
+    console.log(`Sync: DIM is using ${humanBytes(usage)} total out of ${humanBytes(quota)} in storage quota (${percent(usage / quota)}).`);
   });
 }
 
