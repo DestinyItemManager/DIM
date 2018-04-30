@@ -1,13 +1,64 @@
 import { getAccessTokenFromRefreshToken } from './oauth.service';
 import { Tokens, removeToken, setToken, getToken, hasTokenExpired } from './oauth-token.service';
-import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/user';
 import { IRequestConfig, IHttpResponse } from 'angular';
+import { $rootScope } from 'ngimport';
 
 declare module 'angular' {
   interface IRequestConfig {
     /** Track whether we've tried refreshing access tokens */
     triedRefresh?: boolean;
   }
+}
+
+let cache: Promise<Tokens> | null = null;
+const matcher = /www\.bungie\.net\/(D1\/)?Platform\/(User|Destiny|Destiny2)\//;
+
+export async function fetchWithBungieOAuth(request: Request | string, options?: RequestInit, triedRefresh = false): Promise<Response> {
+  if (typeof request === "string") {
+    request = new Request(request);
+  }
+
+  if (request.url.match(matcher) && !request.headers.has('Authorization')) {
+    try {
+      const token = await getActiveToken();
+      request.headers.set('Authorization', `Bearer ${token.accessToken.value}`);
+    } catch (e) {
+      if (e instanceof FatalTokenError) {
+        console.warn("Unable to get auth token, clearing auth tokens & going to login: ", e);
+        removeToken();
+        $rootScope.$broadcast('dim-no-token-found');
+      }
+      throw e;
+    }
+
+    return fetch(request, options).then(async(response) => {
+      const data = await response.json();
+      if (responseIndicatesBadToken(response, data)) {
+        if (triedRefresh) {
+          throw new Error("Access token expired, and we've already tried to refresh. Failing.");
+        }
+        // OK, Bungie has told us our access token is expired or
+        // invalid. Refresh it and try again.
+        console.log(`Access token expired (code ${data.ErrorCode}), removing tokens and trying again`);
+        removeToken();
+        return fetchWithBungieOAuth(request, options, true);
+      }
+
+      return response;
+    });
+  }
+
+  return fetch(request, options);
+}
+
+function responseIndicatesBadToken(response: Response | IHttpResponse<any>, data: ServerResponse<any>) {
+  return response.status === 401 ||
+    (data &&
+      (data.ErrorCode === PlatformErrorCodes.AccessTokenHasExpired ||
+      data.ErrorCode === PlatformErrorCodes.WebAuthRequired ||
+      // (also means the access token has expired)
+      data.ErrorCode === PlatformErrorCodes.WebAuthModuleAsyncFailed));
 }
 
 /**
@@ -17,91 +68,29 @@ declare module 'angular' {
 export function HttpRefreshTokenService($rootScope, $injector) {
   'ngInject';
 
-  let cache: Promise<Tokens> | null = null;
-  const matcher = /www\.bungie\.net\/(D1\/)?Platform\/(User|Destiny|Destiny2)\//;
-
   return {
     request: requestHandler,
     response: responseHandler
   };
 
-  function requestHandler(config: IRequestConfig) {
-    config.headers = config.headers || {};
+  async function requestHandler(request: IRequestConfig) {
+    request.headers = request.headers || {};
 
-    if (config.url.match(matcher) &&
-        !config.headers.hasOwnProperty('Authorization')) {
-      const token = getToken();
-      if (token) {
-        const accessTokenIsValid = token && isTokenValid(token.accessToken);
-
-        if (accessTokenIsValid) {
-          config.headers.Authorization = `Bearer ${token.accessToken.value}`;
-        } else {
-          const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
-
-          if (refreshTokenIsValid) {
-            cache = cache || getAccessTokenFromRefreshToken(token.refreshToken);
-
-            return cache
-              .then((token) => {
-                setToken(token);
-
-                console.log("Successfully updated auth token from refresh token.");
-                config.headers!.Authorization = `Bearer ${token.accessToken.value}`;
-                return config;
-              })
-              .catch(handleRefreshTokenError)
-              .finally(() => {
-                cache = null;
-              });
-          } else {
-            console.warn("Refresh token invalid, clearing auth tokens & going to login");
-            removeToken();
-            $rootScope.$broadcast('dim-no-token-found');
-            // TODO: throw error?
-          }
-        }
-      } else {
-        console.warn("No auth token exists, redirect to login");
-        removeToken();
-        $rootScope.$broadcast('dim-no-token-found');
-        // TODO: throw error?
-      }
-    }
-
-    return config;
-  }
-
-  function handleRefreshTokenError(response: IHttpResponse<any>) {
-    if (response.status === -1) {
-      console.warn("Error getting auth token from refresh token because there's no internet connection. Not clearing token.", response);
-    } else if (response.status === 400 || response.status === 401 || response.status === 403) {
-      console.warn("Refresh token expired or not valid, clearing auth tokens & going to login", response);
-      removeToken();
-      $rootScope.$broadcast('dim-no-token-found');
-    } else if (response.data && response.data.ErrorCode) {
-      switch (response.data.ErrorCode) {
-        case PlatformErrorCodes.RefreshTokenNotYetValid:
-        case PlatformErrorCodes.AccessTokenHasExpired:
-        case PlatformErrorCodes.AuthorizationCodeInvalid:
-          console.warn("Refresh token expired or not valid, clearing auth tokens & going to login", response);
+    if (request.url.match(matcher) && !request.headers.hasOwnPropetry('Authorization')) {
+      try {
+        const token = await getActiveToken();
+        request.headers!.Authorization = `Bearer ${token.accessToken.value}`;
+      } catch (e) {
+        if (e instanceof FatalTokenError) {
+          console.warn("Unable to get auth token, clearing auth tokens & going to login: ", e);
           removeToken();
           $rootScope.$broadcast('dim-no-token-found');
-          break;
+        }
+        throw e;
       }
-    } else {
-      console.warn("Other error getting auth token from refresh token. Not clearing auth tokens", response);
     }
-    throw response;
-  }
 
-  function isTokenValid(token) {
-    // reject refresh tokens from the old auth process
-    if (token && token.name === 'refresh' && token.readyin) {
-      return false;
-    }
-    const expired = hasTokenExpired(token);
-    return !expired;
+    return request;
   }
 
   /**
@@ -110,40 +99,102 @@ export function HttpRefreshTokenService($rootScope, $injector) {
    */
   function responseHandler(response: IHttpResponse<any>) {
     if (response.config.url.match(matcher) &&
-        !response.config.triedRefresh && // Only try once, to avoid infinite loop
-        (response.status === 401 ||
-         (response.data &&
-          (response.data.ErrorCode === PlatformErrorCodes.AccessTokenHasExpired ||
-           response.data.ErrorCode === PlatformErrorCodes.WebAuthRequired ||
-           response.data.ErrorCode === PlatformErrorCodes.WebAuthModuleAsyncFailed)))) { // (also means the access token has expired)
+        responseIndicatesBadToken(response, response.data)) {
+      // Only try once, to avoid infinite loop
+      if (response.config.triedRefresh) {
+        throw new Error("Access token expired, and we've already tried to refresh. Failing.");
+      }
       // OK, Bungie has told us our access token is expired or
       // invalid. Refresh it and try again.
-      console.log(`Access token expired (code ${response.data.ErrorCode}), refreshing`);
-      const token = getToken();
-      const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
-
-      if (token && refreshTokenIsValid) {
-        response.config.triedRefresh = true;
-        cache = cache || getAccessTokenFromRefreshToken(token.refreshToken);
-        return cache
-          .then((token) => {
-            setToken(token);
-
-            console.log("Successfully updated auth token from refresh token after failed request.");
-            response.config.headers!.Authorization = `Bearer ${token.accessToken.value}`;
-            return $injector.get('$http')(response.config);
-          })
-          .catch(handleRefreshTokenError)
-          .finally(() => {
-            cache = null;
-          });
-      } else {
-        console.warn("Refresh token invalid, clearing auth tokens & going to login");
-        removeToken();
-        $rootScope.$broadcast('dim-no-token-found');
-      }
+      console.log(`Access token expired (code ${response.data.ErrorCode}), removing tokens and trying again`);
+      removeToken();
+      response.config.triedRefresh = true;
+      return $injector.get('$http')(response.config);
     }
 
     return response;
   }
+}
+
+function isTokenValid(token) {
+  // reject refresh tokens from the old auth process
+  if (token && token.name === 'refresh' && token.readyin) {
+    return false;
+  }
+  const expired = hasTokenExpired(token);
+  return !expired;
+}
+
+/**
+ * A fatal token error means we have to log in again.
+ */
+class FatalTokenError extends Error {}
+
+async function getActiveToken(): Promise<Tokens> {
+  let token = getToken();
+  if (!token) {
+    removeToken();
+    $rootScope.$broadcast('dim-no-token-found');
+    throw new FatalTokenError("No auth token exists, redirect to login");
+  }
+
+  const accessTokenIsValid = token && isTokenValid(token.accessToken);
+  if (accessTokenIsValid) {
+    return token;
+  }
+
+  // Get a new token from refresh token
+  const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
+  if (!refreshTokenIsValid) {
+    removeToken();
+    $rootScope.$broadcast('dim-no-token-found');
+    throw new FatalTokenError("Refresh token invalid, clearing auth tokens & going to login");
+  }
+
+  try {
+    token = await (cache || getAccessTokenFromRefreshToken(token.refreshToken!));
+    setToken(token);
+    console.log("Successfully updated auth token from refresh token.");
+    return token;
+  } catch (e) {
+    return handleRefreshTokenError(e);
+  } finally {
+    cache = null;
+  }
+}
+
+async function handleRefreshTokenError(response: Error | Response): Promise<Tokens> {
+  if (response instanceof TypeError) {
+    console.warn("Error getting auth token from refresh token because there's no internet connection (or a permissions issue). Not clearing token.", response);
+    throw response;
+  }
+  if (response instanceof Error) {
+    console.warn("Other error getting auth token from refresh token. Not clearing auth tokens", response);
+    throw response;
+  }
+  switch (response.status) {
+    case -1:
+      throw new Error("Error getting auth token from refresh token because there's no internet connection. Not clearing token.");
+    case 400:
+    case 401:
+    case 403: {
+      throw new FatalTokenError("Refresh token expired or not valid");
+    }
+    default: {
+      try {
+        const data = await response.json();
+        if (data && data.ErrorCode) {
+          switch (data.ErrorCode) {
+            case PlatformErrorCodes.RefreshTokenNotYetValid:
+            case PlatformErrorCodes.AccessTokenHasExpired:
+            case PlatformErrorCodes.AuthorizationCodeInvalid:
+              throw new FatalTokenError("Refresh token expired or not valid");
+          }
+        }
+      } catch (e) {
+        throw new Error("Error response wasn't json: " + response);
+      }
+    }
+  }
+  throw new Error("Unknown error getting response token: " + response);
 }
