@@ -299,9 +299,7 @@ export function D2StoresService(
       store.items = items;
 
       // by type-bucket
-      store.buckets = _.groupBy(items, (i) => {
-        return i.location.id;
-      });
+      store.buckets = _.groupBy(items, (i) => i.location.id);
 
       // Fill in any missing buckets
       Object.values(buckets.byType).forEach((bucket) => {
