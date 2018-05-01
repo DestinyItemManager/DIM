@@ -4,13 +4,6 @@ extension-dist/
 .idea/
 node_modules/
 typings/
-build/common
-build/img
-build/manifest
-build/mainfest2
-build/api-manifest/*.json
-build/*.json
-build/*.zip
 *.DS_Store
 config/dim_travis.rsa
 .awcache
