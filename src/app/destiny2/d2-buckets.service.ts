@@ -96,7 +96,6 @@ function getBucketsUncached() {
       byHash: {}, // numeric hash -> bucket
       byType: {}, // names ("ClassItem, Special") -> bucket
       byId: {}, // TODO hack
-      bySort: {},
       byCategory: {}, // Mirrors the dimCategory heirarchy
       unknown: {
         description: 'Unknown items. DIM needs a manifest update.',

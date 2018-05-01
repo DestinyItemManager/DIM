@@ -26,8 +26,6 @@ export interface InventoryBuckets {
   byType: { [type: string]: InventoryBucket };
   /** @deprecated */
   byId: { [hash: number]: InventoryBucket };
-  /** @deprecated */
-  bySort: { [sort: string]: InventoryBucket };
   byCategory: { [category: string]: InventoryBucket[] };
   unknown: InventoryBucket; // TODO: get rid of this?
   setHasUnknown();

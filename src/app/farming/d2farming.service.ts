@@ -8,6 +8,7 @@ import { ItemServiceType, MoveReservations } from '../inventory/dimItemService.f
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
 import { D2Item } from '../inventory/item-types';
 import { InventoryBucket } from '../inventory/inventory-buckets';
+import { BucketCategory } from 'bungie-api-ts/destiny2';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -35,7 +36,7 @@ export function D2FarmingService(
 
   function getMakeRoomBuckets() {
     return getBuckets().then((buckets) => {
-      return Object.values(buckets.byHash).filter((b) => b.category === 3 && b.type);
+      return Object.values(buckets.byHash).filter((b) => b.category === BucketCategory.Equippable && b.type);
     });
   }
 

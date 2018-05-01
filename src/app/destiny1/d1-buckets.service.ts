@@ -101,7 +101,6 @@ export const getBuckets = _.memoize(() => {
       byId: {}, // BUCKET_LEGS -> bucket
       byType: {}, // DIM types ("ClassItem, Special") -> bucket
       byCategory: {}, // Mirrors the dimCategory heirarchy
-      bySort: {},
       unknown: {
         id: 'BUCKET_UNKNOWN',
         description: 'Unknown items. DIM needs a manifest update.',
@@ -151,7 +150,6 @@ export const getBuckets = _.memoize(() => {
         if (sort) {
           // Add an easy helper property like "inPostmaster"
           bucket[`in${sort}`] = true;
-          buckets.bySort[sort] = bucket;
         }
 
         buckets.byHash[bucket.hash] = bucket;
