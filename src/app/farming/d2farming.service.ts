@@ -1,12 +1,13 @@
 import * as _ from 'underscore';
 import { REP_TOKENS } from './rep-tokens';
-import { D2InventoryBucket, getBuckets } from '../destiny2/d2-buckets.service';
+import { getBuckets } from '../destiny2/d2-buckets.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
 import { ItemServiceType, MoveReservations } from '../inventory/dimItemService.factory';
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
 import { D2Item } from '../inventory/item-types';
+import { InventoryBucket } from '../inventory/inventory-buckets';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -133,7 +134,7 @@ export function D2FarmingService(
     }
   };
 
-  async function moveItemsToVault(store: D2Store, items: D2Item[], makeRoomBuckets: D2InventoryBucket[]) {
+  async function moveItemsToVault(store: D2Store, items: D2Item[], makeRoomBuckets: InventoryBucket[]) {
     const reservations: MoveReservations = {};
     // reserve one space in the active character
     reservations[store.id] = {};

@@ -6,10 +6,10 @@ import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
 import { showInfoPopup } from '../shell/info-popup';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
-import { DimInventoryBuckets } from '../inventory/inventory-types';
 import { sortStores } from '../shell/dimAngularFilters.filter';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
+import { InventoryBuckets } from './inventory-buckets';
 
 export const StoresComponent: IComponentOptions = {
   controller: StoresCtrl,
@@ -24,7 +24,7 @@ export const StoresComponent: IComponentOptions = {
 function StoresCtrl(
   this: IController & {
     stores: DimStore[];
-    buckets: DimInventoryBuckets;
+    buckets: InventoryBuckets;
     vault: DimStore | null;
     currentStore: DimStore | null;
     selectedStore: DimStore | null;

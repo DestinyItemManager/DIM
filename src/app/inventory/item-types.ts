@@ -9,14 +9,13 @@ import {
   DestinyItemTierTypeInfusionBlock,
   DestinyItemQualityBlockDefinition
 } from 'bungie-api-ts/destiny2';
-import { DimInventoryBucket } from './inventory-types';
 import { DimItemInfo } from './dim-item-info';
 import {
   DtrUserReview,
   D1ItemUserReview
 } from '../item-review/destiny-tracker.service';
 import { DimStore } from './store-types';
-import { D2InventoryBucket } from '../destiny2/d2-buckets.service';
+import { InventoryBucket } from './inventory-buckets';
 
 // TODO: maybe break these out into separate files for D1/D2?
 
@@ -30,9 +29,9 @@ export interface DimItem {
   /** The version of Destiny this comes from */
   destinyVersion: 1 | 2;
   /** The bucket the item is currently in */
-  location: DimInventoryBucket;
+  location: InventoryBucket;
   /** The bucket the item normally resides in (even though it may be in the vault/postmaster) */
-  bucket: DimInventoryBucket;
+  bucket: InventoryBucket;
   hash: number;
   /** This is the type of the item (see DimCategory/DimBuckets) regardless of location */
   type: string;
@@ -153,8 +152,8 @@ export interface D1Item extends DimItem {
  * A Destiny 2 item. Use this type when you need specific D2 properties.
  */
 export interface D2Item extends DimItem {
-  location: D2InventoryBucket;
-  bucket: D2InventoryBucket;
+  location: InventoryBucket;
+  bucket: InventoryBucket;
   primStat: D2PrimStat | null;
   sockets: DimSockets | null;
   flavorObjective: DimFlavorObjective | null;

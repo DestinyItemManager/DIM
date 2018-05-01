@@ -5,7 +5,6 @@ import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
 import { showInfoPopup } from '../../shell/info-popup';
 import { copy as angularCopy } from 'angular';
-import { D1InventoryBuckets } from '../../destiny1/d1-buckets.service';
 import { t } from 'i18next';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';
@@ -265,7 +264,6 @@ export function makeCharacter(
 
 export function makeVault(
   raw,
-  buckets: D1InventoryBuckets,
   currencies: D1Currencies
 ): {
   store: D1Vault;
@@ -288,17 +286,11 @@ export function makeVault(
     isVault: true,
     // Vault has different capacity rules
     capacityForItem(this: D1Vault, item: D1Item) {
-      let sort = item.sort;
-      if (item.bucket && item.bucket.vaultBucket) {
-        return item.bucket.vaultBucket.capacity;
+      if (!item.bucket) {
+        throw new Error("item needs a 'bucket' field");
       }
-      if (item.bucket && item.bucket.sort) {
-        sort = item.bucket.sort;
-      }
-      if (!sort) {
-        throw new Error("item needs a 'sort' field");
-      }
-      return buckets.bySort[sort].capacity;
+      const vaultBucket = item.bucket.vaultBucket;
+      return vaultBucket ? vaultBucket.capacity : 0;
     },
     spaceLeftForItem(this: D1Vault, item: D1Item) {
       let sort = item.sort;
@@ -321,15 +313,15 @@ export function makeVault(
     },
     removeItem(this: D1Vault, item: D1Item) {
       const result = StoreProto.removeItem.call(this, item);
-      if (item.location.sort) {
-        this.vaultCounts[item.location.sort]--;
+      if (item.location.vaultBucket) {
+        this.vaultCounts[item.location.vaultBucket.id].count--;
       }
       return result;
     },
     addItem(this: D1Vault, item: D1Item) {
       StoreProto.addItem.call(this, item);
-      if (item.location.sort) {
-        this.vaultCounts[item.location.sort]++;
+      if (item.location.vaultBucket) {
+        this.vaultCounts[item.location.vaultBucket.id].count++;
       }
     }
   });
