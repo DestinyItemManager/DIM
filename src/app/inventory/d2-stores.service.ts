@@ -342,12 +342,12 @@ export function D2StoresService(
         }
 
         if (bucket.vaultBucket) {
-          const vaultBucketId = bucket.vaultBucket.hash;
+          const vaultBucketId = bucket.vaultBucket.id;
           store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
             count: 0,
             bucket: bucket.accountWide ? bucket : bucket.vaultBucket
           };
-          store.vaultCounts[vaultBucketId].count += store.buckets[bucket.hash].length;
+          store.vaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
         }
       });
 
