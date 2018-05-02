@@ -8,6 +8,7 @@ import { IComponentOptions, IController, IScope, IRootElementService, IRootScope
 import { LoadoutServiceType } from '../loadout/loadout.service';
 import { DimItem } from './item-types';
 import { StoreServiceType } from './store-types';
+import { CompareService } from '../compare/compare.service';
 
 export function tagIconFilter() {
   'ngInject';
@@ -54,7 +55,6 @@ export function StoreItemCtrl(
   D2StoresService: StoreServiceType,
   ngDialog,
   dimLoadoutService: LoadoutServiceType,
-  dimCompareService,
   $rootScope: IRootScopeService & { dragItem: DimItem }
 ) {
   "ngInject";
@@ -138,7 +138,7 @@ export function StoreItemCtrl(
   };
 
   vm.doubleClicked = queuedAction((item, e) => {
-    if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
+    if (!dimLoadoutService.dialogOpen && !CompareService.dialogOpen) {
       e.stopPropagation();
       const active = getStoreService(item).getActiveStore()!;
 
@@ -178,8 +178,8 @@ export function StoreItemCtrl(
       }
     } else if (dimLoadoutService.dialogOpen) {
       dimLoadoutService.addItemToLoadout(item, e);
-    } else if (dimCompareService.dialogOpen) {
-      dimCompareService.addItemToCompare(item, e);
+    } else if (CompareService.dialogOpen) {
+      CompareService.addItemToCompare(item, e);
     } else {
       dialogResult = ngDialog.open({
         template: dialogTemplate,

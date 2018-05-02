@@ -4897,10 +4897,6 @@ ng-dialog@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/ng-dialog/-/ng-dialog-1.4.0.tgz#3f81330e7caac614e99fbceb76f304bf820c413e"
 
-ng-http-rate-limiter@^1.0.1:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/ng-http-rate-limiter/-/ng-http-rate-limiter-1.0.4.tgz#1b698dbc9f98715bc84e5d20e433370df2584dcd"
-
 ng-i18next@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/ng-i18next/-/ng-i18next-1.0.5.tgz#fa3e924bb50f81e51c71ec3cd5bd84c0e7a9b013"

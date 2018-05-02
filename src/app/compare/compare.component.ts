@@ -5,6 +5,7 @@ import { element as angularElement, IController, IComponentOptions, IScope } fro
 import { sum } from '../util';
 import { DimItem } from '../inventory/item-types';
 import { StoreServiceType } from '../inventory/store-types';
+import { CompareService } from './compare.service';
 
 export function StatRangeFilter() {
   // Turns a stat and a list of ranges into a 0-100 scale
@@ -38,7 +39,6 @@ function CompareCtrl(
   },
   $scope: IScope,
   toaster,
-  dimCompareService,
   dimStoreService: StoreServiceType,
   D2StoresService: StoreServiceType,
   $i18next
@@ -124,7 +124,7 @@ function CompareCtrl(
     });
   }
 
-  vm.show = dimCompareService.dialogOpen;
+  vm.show = CompareService.dialogOpen;
 
   vm.comparisons = [];
   vm.statRanges = {};
@@ -132,7 +132,7 @@ function CompareCtrl(
 
   $scope.$on('dim-store-item-compare', (_event, args) => {
     vm.show = true;
-    dimCompareService.dialogOpen = true;
+    CompareService.dialogOpen = true;
 
     vm.add(args);
   });
@@ -147,7 +147,7 @@ function CompareCtrl(
     vm.highlight = null;
     vm.sortedHash = null;
     vm.show = false;
-    dimCompareService.dialogOpen = false;
+    CompareService.dialogOpen = false;
   };
 
   vm.compareSimilar = (type) => {

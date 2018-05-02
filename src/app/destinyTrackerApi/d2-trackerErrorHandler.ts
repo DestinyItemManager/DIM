@@ -1,22 +1,23 @@
-import { $q } from 'ngimport';
 import { t } from 'i18next';
-import { IHttpResponse } from 'angular';
-import { DtrSubmitResponse } from '../item-review/destiny-tracker.service';
 
-export function handleD2Errors<T>(response: IHttpResponse<T>) {
+export function handleD2Errors(response: Response) {
     if (response.status !== 200) {
-      return $q.reject(new Error(t('DtrReview.ServiceCallError')));
+      throw new Error(t('DtrReview.ServiceCallError'));
     }
 
-    return response;
+    return response.json();
   }
 
-export function handleD2SubmitErrors(response: IHttpResponse<DtrSubmitResponse>) {
-  if ((response.status !== 200) ||
-      (!response.data) ||
-      (!response.data.success)) {
-    return $q.reject(new Error(t('DtrReview.ServiceSubmitError')));
+export async function handleD2SubmitErrors(response: Response) {
+  if (response.status !== 200) {
+    throw new Error(t('DtrReview.ServiceSubmitError'));
   }
 
-  return response;
+  const data = await response.json();
+
+  if (!data || !data.success) {
+    throw new Error(t('DtrReview.ServiceSubmitError'));
+  }
+
+  return data;
 }

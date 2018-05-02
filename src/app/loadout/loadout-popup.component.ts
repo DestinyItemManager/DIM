@@ -18,6 +18,7 @@ import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets.service';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
 import { ItemServiceType } from '../inventory/dimItemService.factory';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
+import { SearchService } from '../search/search-filter.component';
 
 export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,
@@ -65,7 +66,6 @@ function LoadoutPopupCtrl(
   dimFarmingService,
   D2FarmingService,
   $window,
-  dimSearchService,
   $i18next,
   dimStoreService: StoreServiceType,
   D2StoresService: StoreServiceType,
@@ -103,7 +103,7 @@ function LoadoutPopupCtrl(
     vm.maxLightValue = dimLoadoutService.getLight(vm.store, maxLightLoadout(getStoreService(), vm.store)) + (vm.hasClassified ? '*' : '');
   };
 
-  vm.search = dimSearchService;
+  vm.search = SearchService;
 
   function initLoadouts() {
     dimLoadoutService.getLoadouts()

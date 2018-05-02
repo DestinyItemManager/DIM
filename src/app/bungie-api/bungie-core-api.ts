@@ -1,7 +1,6 @@
-import { IPromise, IHttpResponse } from 'angular';
-import { $http } from 'ngimport';
 import { bungieApiQuery } from './bungie-api-utils';
 import { ServerResponse } from 'bungie-api-ts/common';
+import { httpAdapter } from './bungie-service-helper';
 
 export interface GlobalAlert {
   key: string;
@@ -21,11 +20,11 @@ const GlobalAlertLevelsToToastLevels = [
 /**
  * Get global alerts (like maintenance warnings) from Bungie.
  */
-export function getGlobalAlerts(): IPromise<GlobalAlert[]> {
-  return $http(bungieApiQuery(`/Platform/GlobalAlerts/`))
-    .then((response: IHttpResponse<ServerResponse<any>>) => {
-      if (response && response.data && response.data.Response) {
-        return response.data.Response.map((alert) => {
+export function getGlobalAlerts(): Promise<GlobalAlert[]> {
+  return httpAdapter(bungieApiQuery(`/Platform/GlobalAlerts/`))
+    .then((response: ServerResponse<any>) => {
+      if (response && response.Response) {
+        return response.Response.map((alert) => {
           return {
             key: alert.AlertKey,
             type: GlobalAlertLevelsToToastLevels[alert.AlertLevel],

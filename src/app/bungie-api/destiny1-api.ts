@@ -1,13 +1,12 @@
 import { t } from 'i18next';
-import { $http, $q } from 'ngimport';
 import * as _ from 'underscore';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
-import { error, handleErrors, retryOnThrottled } from './bungie-service-helper';
+import { error, httpAdapter, DimError } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
-import { IPromise } from 'angular';
-import { DestinyManifest } from 'bungie-api-ts/destiny2';
-import { D1Store } from '../inventory/store-types';
+import { DestinyManifest, ServerResponse } from 'bungie-api-ts/destiny2';
+import { D1Store, DimStore } from '../inventory/store-types';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { D1Item, DimItem } from '../inventory/item-types';
 
 /**
  * APIs for interacting with Destiny 1 game data.
@@ -15,43 +14,37 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
  * DestinyService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
 
-export function getManifest(): IPromise<DestinyManifest> {
-  return $http(bungieApiQuery('/D1/Platform/Destiny/Manifest/'))
-    .then(handleErrors, handleErrors)
-    .then((response) => response.data.Response) as IPromise<DestinyManifest>;
+export function getManifest(): Promise<DestinyManifest> {
+  return httpAdapter(bungieApiQuery('/D1/Platform/Destiny/Manifest/'))
+    .then((response) => response.Response);
 }
 
-export function getCharacters(platform) {
-  const charactersPromise = $http(bungieApiQuery(
+export function getCharacters(platform: DestinyAccount) {
+  return httpAdapter(bungieApiQuery(
     `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/`
   ))
-      .then(handleErrors, handleErrors)
-      .then(processBnetCharactersRequest);
-
-  return charactersPromise;
-
-  function processBnetCharactersRequest(response) {
-    if (!response.data || _.size(response.data.Response) === 0) {
+  .then((response: ServerResponse<any>) => {
+    if (!response || Object.keys(response.Response).length === 0) {
       throw error(t('BungieService.NoAccountForPlatform', {
-        platform: platform.label
+        platform: platform.platformLabel
       }), 1601);
     }
 
-    return _.map(response.data.Response.data.characters, (c: any) => {
-      c.inventory = response.data.Response.data.inventory;
+    return _.map(response.Response.data.characters, (c: any) => {
+      c.inventory = response.Response.data.inventory;
 
       return {
         id: c.characterBase.characterId,
         base: c
       };
     });
-  }
+  });
 }
 
-export function getStores(platform): IPromise<any> {
+export function getStores(platform: DestinyAccount): Promise<any> {
   return getCharacters(platform)
     .then((characters) => {
-      return $q.all([
+      return Promise.all([
         getDestinyInventories(platform, characters),
         getDestinyProgression(platform, characters)
         // Don't let failure of progression fail other requests.
@@ -62,13 +55,10 @@ export function getStores(platform): IPromise<any> {
       ]).then((data) => {
         return data[0];
       });
-    })
-    .catch((e) => {
-      return $q.reject(e);
     });
 
-  function processInventoryResponse(character, response) {
-    const payload = response.data.Response;
+  function processInventoryResponse(character, response: ServerResponse<any>) {
+    const payload = response.Response;
 
     payload.id = character.id;
     payload.character = character;
@@ -76,13 +66,12 @@ export function getStores(platform): IPromise<any> {
     return payload;
   }
 
-  function getDestinyInventories(platform, characters) {
+  function getDestinyInventories(platform: DestinyAccount, characters: any[]) {
     // Guardians
     const promises = characters.map((character) => {
-      return $http(bungieApiQuery(
+      return httpAdapter(bungieApiQuery(
         `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
       ))
-        .then(handleErrors, handleErrors)
         .then((response) => processInventoryResponse(character, response));
     });
 
@@ -92,61 +81,57 @@ export function getStores(platform): IPromise<any> {
       base: null
     };
 
-    const vaultPromise = $http(bungieApiQuery(`/D1/Platform/Destiny/${platform.platformType}/MyAccount/Vault/`))
-      .then(handleErrors, handleErrors)
-        .then((response) => processInventoryResponse(vault, response));
+    const vaultPromise = httpAdapter(bungieApiQuery(`/D1/Platform/Destiny/${platform.platformType}/MyAccount/Vault/`))
+      .then((response) => processInventoryResponse(vault, response));
 
     promises.push(vaultPromise);
 
-    return $q.all(promises);
+    return Promise.all(promises);
   }
 }
 
-export function getDestinyProgression(platform, characters) {
+export function getDestinyProgression(platform: DestinyAccount, characters: any[]) {
   const promises = characters.map((character) => {
-    return $http(bungieApiQuery(
+    return httpAdapter(bungieApiQuery(
       `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
     ))
-      .then(handleErrors, handleErrors)
       .then((response) => processProgressionResponse(character, response));
   });
 
-  function processProgressionResponse(character, response) {
-    character.progression = response.data.Response.data;
+  function processProgressionResponse(character, response: ServerResponse<any>) {
+    character.progression = response.Response.data;
     return character;
   }
 
-  return $q.all(promises);
+  return Promise.all(promises);
 }
 
-export function getDestinyAdvisors(platform, characters) {
+export function getDestinyAdvisors(platform: DestinyAccount, characters: any[]) {
   const promises = characters.map((character) => {
-    return $http(bungieApiQuery(
+    return httpAdapter(bungieApiQuery(
       `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
     ))
-      .then(handleErrors, handleErrors)
       .then((response) => processAdvisorsResponse(character, response));
   });
 
-  return $q.all(promises);
+  return Promise.all(promises);
 
-  function processAdvisorsResponse(character, response) {
-    character.advisors = response.data.Response.data;
+  function processAdvisorsResponse(character, response: ServerResponse<any>) {
+    character.advisors = response.Response.data;
     return character;
   }
 }
 
 export function getVendorForCharacter(account: DestinyAccount, character: D1Store, vendorHash: number) {
-  return $http(bungieApiQuery(
+  return httpAdapter(bungieApiQuery(
     `/D1/Platform/Destiny/${account.platformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
   ))
-    .then(handleErrors, handleErrors)
-    .then((response: any) => response.data.Response.data);
+    .then((response) => response.Response.data);
 }
 
-export function transfer(item, store, amount) {
+export function transfer(item: D1Item, store: D1Store, amount: number) {
   const platform = getActivePlatform();
-  const promise = $http(bungieApiUpdate(
+  const promise = httpAdapter(bungieApiUpdate(
     '/D1/Platform/Destiny/TransferItem/',
     {
       characterId: store.isVault ? item.owner : store.id,
@@ -157,16 +142,12 @@ export function transfer(item, store, amount) {
       transferToVault: store.isVault
     }
   ))
-    .then(retryOnThrottled)
-    .then(handleErrors, handleErrors)
-    .catch((e) => {
-      return handleUniquenessViolation(e, item, store);
-    });
+    .catch((e) => handleUniquenessViolation(e, item, store));
 
   return promise;
 
   // Handle "DestinyUniquenessViolation" (1648)
-  function handleUniquenessViolation(e, item, store) {
+  function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore) {
     if (e && e.code === 1648) {
       throw error(t('BungieService.ItemUniquenessExplanation', {
         name: item.name,
@@ -175,43 +156,39 @@ export function transfer(item, store, amount) {
         context: store.gender
       }), e.code);
     }
-    return $q.reject(e);
+    throw e;
   }
 }
 
-export function equip(item) {
+export function equip(item: DimItem) {
   const platform = getActivePlatform();
-  return $http(bungieApiUpdate(
+  return httpAdapter(bungieApiUpdate(
     '/D1/Platform/Destiny/EquipItem/',
     {
       characterId: item.owner,
       membershipType: platform!.platformType,
       itemId: item.id
     }
-  ))
-    .then(retryOnThrottled)
-    .then(handleErrors, handleErrors);
+  ));
 }
 
 // Returns a list of items that were successfully equipped
-export function equipItems(store, items) {
+export function equipItems(store: D1Store, items: D1Item[]) {
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i: any) => {
     return i.isExotic ? 1 : 0;
   });
 
   const platform = getActivePlatform();
-  return $http(bungieApiUpdate(
+  return httpAdapter(bungieApiUpdate(
     '/D1/Platform/Destiny/EquipItems/',
     {
       characterId: store.id,
       membershipType: platform!.platformType,
       itemIds: items.map((i) => i.id)
     }))
-    .then(retryOnThrottled)
-    .then(handleErrors, handleErrors)
     .then((response) => {
-      const data: any = response.data.Response;
+      const data: any = response.Response;
       store.updateCharacterInfoFromEquip(data.summary);
       return items.filter((i: any) => {
         const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
@@ -220,26 +197,25 @@ export function equipItems(store, items) {
     });
 }
 
-export function setItemState(item, store, lockState, type) {
+export function setItemState(item: DimItem, store: DimStore, lockState: boolean, type: 'lock' | 'track') {
+  let method;
   switch (type) {
   case 'lock':
-    type = 'SetLockState';
+    method = 'SetLockState';
     break;
   case 'track':
-    type = 'SetQuestTrackedState';
+    method = 'SetQuestTrackedState';
     break;
   }
 
   const platform = getActivePlatform();
-  return $http(bungieApiUpdate(
-    `/D1/Platform/Destiny/${type}/`,
+  return httpAdapter(bungieApiUpdate(
+    `/D1/Platform/Destiny/${method}/`,
     {
       characterId: store.isVault ? item.owner : store.id,
       membershipType: platform!.platformType,
       itemId: item.id,
       state: lockState
     }
-  ))
-    .then(retryOnThrottled)
-    .then(handleErrors, handleErrors);
+  ));
 }
