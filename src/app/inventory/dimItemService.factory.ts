@@ -459,20 +459,21 @@ export function ItemService(
     // Find any stackable that could be combined with another stack
     // on a different store to form a single stack
     if (item.maxStackSize > 1) {
-      let otherStore;
+      let otherStore: DimStore | undefined;
       const stackable = moveAsideCandidates.find((i) => {
         if (i.maxStackSize > 1) {
           // Find another store that has an appropriate stackable
-          otherStore = otherStores.find(
-            (otherStore) => otherStore.items.some((otherItem) =>
+          otherStore = otherStores.find((s) =>
+            s.items.some((otherItem) =>
               // Same basic item
               otherItem.hash === i.hash &&
-                                  // Enough space to absorb this stack
-                                  (i.maxStackSize - otherItem.amount) >= i.amount));
+              !otherItem.location.inPostmaster &&
+              // Enough space to absorb this stack
+              (i.maxStackSize - otherItem.amount) >= i.amount));
         }
-        return otherStore;
+        return Boolean(otherStore);
       });
-      if (stackable) {
+      if (stackable && otherStore) {
         return {
           item: stackable,
           target: otherStore
