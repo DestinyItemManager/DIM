@@ -1,5 +1,7 @@
 # Next
 
+* Fix a bug where having mods, shaders, or materials in the postmaster might make it impossible to move any mod/shader/material into or out of the vault.
+
 # 4.50.0 (2018-04-30)
 
 * The settings page now shows how much of your local storage quota is being used by DIM (if your browser supports it).
