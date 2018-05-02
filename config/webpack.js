@@ -89,7 +89,8 @@ module.exports = (env) => {
           test: /\.html$/,
           loader: 'html-loader',
           options: {
-            exportAsEs6Default: true
+            exportAsEs6Default: true,
+            minimize: true
           }
         }, {
           test: /\.(jpg|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
