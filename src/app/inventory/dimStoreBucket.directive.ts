@@ -10,9 +10,9 @@ import template from './dimStoreBucket.directive.html';
 import './dimStoreBucket.scss';
 import { ItemServiceType } from './dimItemService.factory';
 import { DimError } from '../bungie-api/bungie-service-helper';
-import { DimInventoryBucket } from '../inventory/inventory-types';
 import { DimStore, StoreServiceType } from './store-types';
 import { DimItem } from './item-types';
+import { InventoryBucket } from './inventory-buckets';
 
 export const StoreBucketComponent: IComponentOptions = {
   controller: StoreBucketCtrl,
@@ -29,7 +29,7 @@ function StoreBucketCtrl(
   this: IController & {
     store: DimStore;
     items: DimItem[];
-    bucket: DimInventoryBucket;
+    bucket: InventoryBucket;
   },
   $scope: IScope,
   loadingTracker,

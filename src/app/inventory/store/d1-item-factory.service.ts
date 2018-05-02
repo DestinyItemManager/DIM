@@ -7,7 +7,7 @@ import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
 import { D1ManifestService } from '../../manifest/manifest-service';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
-import { getBuckets, D1InventoryBuckets } from '../../destiny1/d1-buckets.service';
+import { getBuckets } from '../../destiny1/d1-buckets.service';
 import { NewItemsService } from './new-items.service';
 import { buildClassifiedItem, getClassifiedData, ClassifiedData } from './classified-data.service';
 import { ItemInfoSource } from '../dim-item-info';
@@ -16,6 +16,7 @@ import { $q } from 'ngimport';
 import { t } from 'i18next';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
+import { InventoryBuckets } from '../inventory-buckets';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -164,7 +165,7 @@ export function processItems(
  */
 function makeItem(
   defs: D1ManifestDefinitions,
-  buckets: D1InventoryBuckets,
+  buckets: InventoryBuckets,
   previousItems: Set<string>,
   newItems: Set<string>,
   itemInfoService: ItemInfoSource | undefined,

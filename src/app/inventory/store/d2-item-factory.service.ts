@@ -24,7 +24,7 @@ import {
   DestinyItemSocketEntryPlugItemDefinition
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { getBuckets, D2InventoryBuckets } from '../../destiny2/d2-buckets.service';
+import { getBuckets } from '../../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 import { sum, compact } from '../../util';
@@ -37,6 +37,7 @@ import { t } from 'i18next';
 import { DimWorkingUserReview } from '../../item-review/destiny-tracker.service';
 import { D2Item, DimPerk, DimStat, DimObjective, DimFlavorObjective, DimTalentGrid, DimGridNode, DimSockets, DimSocketCategory, DimSocket, DimPlug, DimMasterwork } from '../item-types';
 import { D2Store } from '../store-types';
+import { InventoryBuckets } from '../inventory-buckets';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -250,7 +251,7 @@ function findCategories(itemDef): string[] {
 // TODO: extract item components first!
 export function makeItem(
   defs: D2ManifestDefinitions,
-  buckets: D2InventoryBuckets,
+  buckets: InventoryBuckets,
   previousItems: Set<string>,
   newItems: Set<string>,
   itemInfoService: ItemInfoSource | undefined,
@@ -506,7 +507,7 @@ export function makeItem(
   if (createdItem.maxStackSize > 1 &&
       createdItem.amount >= 3 &&
       createdItem.tier === 'Rare' &&
-      createdItem.bucket.id === 3313201758) {
+      createdItem.bucket.hash === 3313201758) {
     createdItem.complete = true;
   }
 

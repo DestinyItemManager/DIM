@@ -9,9 +9,9 @@ import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { IPromise } from 'angular';
 import { DimItem, D2Item, D1Item } from './item-types';
-import { D2InventoryBucket } from '../destiny2/d2-buckets.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
+import { InventoryBucket } from './inventory-buckets';
 
 // TODO: maybe break these out into separate files for D1/D2?
 
@@ -112,28 +112,26 @@ export interface DimStore {
   isDestiny2(): this is D2Store;
 }
 
-export interface DimVault extends DimStore {
-  vaultCounts: { [category: string]: number };
+interface VaultCounts {
+  [bucketId: number]: { count: number; bucket: InventoryBucket };
+}
 
+export interface DimVault extends DimStore {
+  vaultCounts: VaultCounts;
   legendaryMarks: number;
   glimmer: number;
   silver: number;
 }
 
 export interface D1Vault extends D1Store {
-  vaultCounts: { [category: string]: number };
-
+  vaultCounts: VaultCounts;
   legendaryMarks: number;
   glimmer: number;
   silver: number;
 }
 
 export interface D2Vault extends D2Store {
-  d2VaultCounts: {
-    [bucketId: number]: { count: number; bucket: D2InventoryBucket };
-  };
-  vaultCounts: { [category: string]: number };
-
+  vaultCounts: VaultCounts;
   legendaryMarks: number;
   glimmer: number;
   silver: number;

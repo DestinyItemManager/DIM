@@ -2,6 +2,7 @@ import { IPromise } from 'angular';
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getDefinitions } from './d2-definitions.service';
+import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 
 // TODO: These have to change
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
@@ -80,35 +81,6 @@ const bucketToType: { [hash: number]: string | undefined } = {
   138197802: "General"
 };
 
-export interface D2InventoryBucket {
-  readonly id: number;
-  readonly description: string;
-  readonly name: string;
-  readonly hash: number;
-  readonly hasTransferDestination: boolean;
-  readonly capacity: number;
-  readonly accountWide: boolean;
-  readonly category: BucketCategory;
-  readonly type?: string;
-  readonly sort?: string;
-  vaultBucket?: D2InventoryBucket;
-  // TODO: how to handle inPostmaster, etc? should probably be a function
-  inPostmaster?: boolean;
-  inWeapons?: boolean;
-  inArmor?: boolean;
-  inGeneral?: boolean;
-  inInventory?: boolean;
-}
-
-export interface D2InventoryBuckets {
-  byHash: { [hash: number]: D2InventoryBucket };
-  byType: { [type: string]: D2InventoryBucket };
-  byId: { [hash: number]: D2InventoryBucket };
-  byCategory: { [category: string]: D2InventoryBucket[] };
-  unknown: D2InventoryBucket; // TODO: get rid of this?
-  setHasUnknown();
-}
-
 const typeToSort: { [type: string]: string } = {};
 _.each(D2Categories, (types, category) => {
   types.forEach((type) => {
@@ -116,11 +88,11 @@ _.each(D2Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.memoize(getBucketsUncached) as () => IPromise<D2InventoryBuckets>;
+export const getBuckets = _.memoize(getBucketsUncached) as () => IPromise<InventoryBuckets>;
 
 function getBucketsUncached() {
   return getDefinitions().then((defs) => {
-    const buckets: D2InventoryBuckets = {
+    const buckets: InventoryBuckets = {
       byHash: {}, // numeric hash -> bucket
       byType: {}, // names ("ClassItem, Special") -> bucket
       byId: {}, // TODO hack
@@ -128,7 +100,7 @@ function getBucketsUncached() {
       unknown: {
         description: 'Unknown items. DIM needs a manifest update.',
         name: 'Unknown',
-        id: -1,
+        id: "-1",
         hash: -1,
         hasTransferDestination: false,
         capacity: Number.MAX_SAFE_INTEGER,
@@ -144,18 +116,18 @@ function getBucketsUncached() {
     };
 
     _.each(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
-      const id = def.hash;
+      const id = def.hash.toString();
       const type = bucketToType[def.hash];
       let sort: string | undefined;
       if (type) {
         sort = typeToSort[type];
       }
 
-      const bucket: D2InventoryBucket = {
+      const bucket: InventoryBucket = {
         id,
         description: def.displayProperties.description,
         name: def.displayProperties.name,
-        hash: id,
+        hash: def.hash,
         hasTransferDestination: def.hasTransferDestination,
         capacity: def.itemCount,
         accountWide: def.scope === 1,
@@ -182,7 +154,7 @@ function getBucketsUncached() {
       vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
     });
 
-    _.each(buckets.byHash, (bucket: D2InventoryBucket) => {
+    _.each(buckets.byHash, (bucket: InventoryBucket) => {
       if (vaultMappings[bucket.hash]) {
         bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
       }
