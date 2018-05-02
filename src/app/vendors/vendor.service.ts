@@ -378,7 +378,7 @@ export function VendorService(
     const vendorHash = vendorDef.hash;
 
     const key = vendorKey(store, vendorHash);
-    return $q.when(idbKeyval.get<Vendor>(key))
+    return idbKeyval.get<Vendor>(key)
       .then((vendor) => {
         if (cachedVendorUpToDate(vendor, store, vendorDef)) {
           // console.log("loaded local", vendorDef.summary.vendorName, key, vendor);
@@ -393,7 +393,7 @@ export function VendorService(
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
               vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
-              return $q.when(idbKeyval.set(key, vendor))
+              return idbKeyval.set(key, vendor)
                 .then(() => vendor);
             })
             .catch((e) => {

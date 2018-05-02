@@ -2,10 +2,11 @@ import * as _ from 'underscore';
 import { IRootScopeService, ITimeoutService, IDirective } from 'angular';
 import { ActivityTrackerService } from './activity-tracker.service';
 
+const dimActivityTrackerService = new ActivityTrackerService();
+
 export function ActivityTrackerDirective(
   $document,
   $timeout: ITimeoutService,
-  dimActivityTrackerService: ActivityTrackerService,
   loadingTracker,
   $rootScope: IRootScopeService
 ): IDirective {

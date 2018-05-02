@@ -8,7 +8,6 @@ import ngSanitize from 'angular-sanitize';
 import MessagesModule from 'angular-messages';
 import TouchModule from 'angular-touch';
 
-import RateLimiterModule from 'ng-http-rate-limiter';
 import 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
 import UIRouterModule from '@uirouter/angularjs';
@@ -47,7 +46,6 @@ const dependencies = [
   ngI18Next,
   ocLazyLoadModule,
   ngSanitize,
-  RateLimiterModule,
   ShellModule,
   'rzModule',
   ToasterModule,

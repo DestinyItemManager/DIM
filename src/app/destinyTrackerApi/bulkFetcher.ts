@@ -1,10 +1,9 @@
-import { $q, $http } from 'ngimport';
 import { ItemListBuilder } from './itemListBuilder';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemFetchResponse } from '../item-review/destiny-tracker.service';
-import { IPromise } from 'angular';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
+import { dtrFetch } from './dtr-service-helper';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
@@ -13,35 +12,25 @@ class BulkFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getBulkWeaponDataEndpointPost(gunList) {
-    return {
-      method: 'POST',
-      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
-      data: gunList,
-      dataType: 'json'
-    };
-  }
-
-  _getBulkFetchPromise(stores): IPromise<D1ItemFetchResponse[]> {
+  _getBulkFetchPromise(stores): Promise<D1ItemFetchResponse[]> {
     if (!stores.length) {
-      return $q.resolve([] as D1ItemFetchResponse[]);
+      return Promise.resolve<D1ItemFetchResponse[]>([]);
     }
 
     const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
-      return $q.resolve([] as D1ItemFetchResponse[]);
+      return Promise.resolve<D1ItemFetchResponse[]>([]);
     }
 
-    const promise = $q
-              .when(this._getBulkWeaponDataEndpointPost(weaponList))
-              .then($http)
-              .then(handleErrors, handleErrors)
-              .then((response) => response.data);
+    const promise = dtrFetch(
+      'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
+      weaponList
+    ).then(handleErrors, handleErrors);
 
     loadingTracker.addPromise(promise);
 
-    return promise as IPromise<D1ItemFetchResponse[]>;
+    return promise;
   }
 
   /**

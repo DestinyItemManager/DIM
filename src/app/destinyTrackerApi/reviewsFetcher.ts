@@ -1,13 +1,12 @@
-import { $q, $http } from 'ngimport';
 import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
 import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-tracker.service';
 import { ReviewDataCache } from './reviewDataCache';
-import { IPromise } from 'angular';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
+import { dtrFetch } from './dtr-service-helper';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -31,18 +30,17 @@ export class ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item: D1Item): IPromise<D1ItemReviewResponse[]> {
+  _getItemReviewsPromise(item: D1Item): Promise<D1ItemReviewResponse[]> {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
-    const promise = $q
-              .when(this._getItemReviewsCall(postWeapon))
-              .then($http)
-              .then(handleErrors, handleErrors)
-              .then((response) => response.data);
+    const promise = dtrFetch(
+      'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',
+      postWeapon
+    ).then(handleErrors, handleErrors);
 
     loadingTracker.addPromise(promise);
 
-    return promise as IPromise<D1ItemReviewResponse[]>;
+    return promise;
   }
 
   _getUserReview(reviewData: D1ItemReviewResponse | D1CachedItem) {

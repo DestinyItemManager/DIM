@@ -2,7 +2,7 @@ import { module } from 'angular';
 
 import UIRouterModule from '@uirouter/angularjs';
 
-import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
+import { ActivityTrackerDirective } from './activity-tracker';
 import { CountdownComponent } from './countdown.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { ScrollClass } from './scroll-class.directive';
@@ -25,7 +25,6 @@ export const ShellModule = module('dimShell', [
     dimAngularFiltersModule
   ])
   .directive('dimActivityTracker', ActivityTrackerDirective)
-  .service('dimActivityTrackerService', ActivityTrackerService)
   .factory('loadingTracker', loadingTracker)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)

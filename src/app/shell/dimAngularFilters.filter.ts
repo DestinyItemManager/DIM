@@ -241,7 +241,7 @@ export function sortItems(items: DimItem[]) {
   }
 
   // Re-sort shaders
-  if (items[0].location.id === 2973005342) {
+  if (items[0].location.hash === 2973005342) {
     // Just sort by name
     return items.sort(ITEM_COMPARATORS.name);
   }

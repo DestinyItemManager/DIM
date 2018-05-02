@@ -6,7 +6,7 @@ const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
 // https://www.bungie.net/en/Clan/Post/1777779/227330965/0/0
 
-export function getAccessTokenFromRefreshToken(refreshToken) {
+export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tokens> {
   // https://github.com/zloirock/core-js/issues/178#issuecomment-192081350
   return Promise.resolve(fetch(TOKEN_URL, {
     method: 'POST',
@@ -24,7 +24,7 @@ export function getAccessTokenFromRefreshToken(refreshToken) {
     .then(handleAccessToken));
 }
 
-export function getAccessTokenFromCode(code) {
+export function getAccessTokenFromCode(code: number): Promise<Tokens> {
   return Promise.resolve(fetch(TOKEN_URL, {
     method: 'POST',
     body: stringify({
@@ -68,6 +68,6 @@ function handleAccessToken(response): Tokens {
 
     return tokens;
   } else {
-    throw response;
+    throw new Error("No data or access token in response: " + JSON.stringify(response));
   }
 }

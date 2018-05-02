@@ -1,9 +1,7 @@
 import * as idbKeyval from 'idb-keyval';
 import { settings } from '../../settings/settings';
-import { $http } from 'ngimport';
-import { IPromise } from 'angular';
 
-let classifiedDataPromise: IPromise<ClassifiedData> | undefined;
+let classifiedDataPromise: Promise<ClassifiedData> | undefined;
 
 export interface ClassifiedData {
   itemHash: {
@@ -33,7 +31,7 @@ export interface ClassifiedData {
  * release website, but the release website can still use the
  * updated definitions.
  */
-export function getClassifiedData(): IPromise<ClassifiedData> {
+export function getClassifiedData(): Promise<ClassifiedData> {
   if (classifiedDataPromise) {
     return classifiedDataPromise;
   }
@@ -51,21 +49,13 @@ export function getClassifiedData(): IPromise<ClassifiedData> {
       ? '/data/classified.json'
       : 'https://beta.destinyitemmanager.com/data/classified.json';
 
-    return $http.get<ClassifiedData>(url)
-      .then((response) => {
-        if (response && response.status === 200) {
-          const remoteData = response.data;
-          remoteData.time = Date.now();
-          // Don't wait for the set - for some reason this was hanging
-          idbKeyval.set('classified-data', remoteData);
-          return remoteData;
-        }
-
-        console.error(`Couldn't load classified info from ${url}`);
-
-        return {
-          itemHash: {}
-        };
+    return Promise.resolve(fetch(url))
+      .then((response) => response.ok ? response.json() : Promise.reject(response))
+      .then((remoteData: ClassifiedData) => {
+        remoteData.time = Date.now();
+        // Don't wait for the set - for some reason this was hanging
+        idbKeyval.set('classified-data', remoteData);
+        return remoteData;
       })
       .catch((e) => {
         console.error(`Couldn't load classified info from ${url}`, e);

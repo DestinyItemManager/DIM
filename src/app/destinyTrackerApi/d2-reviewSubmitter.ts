@@ -1,11 +1,11 @@
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { $q, $http } from 'ngimport';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { DtrReviewer } from '../item-review/destiny-tracker.service';
+import { dtrFetch } from './dtr-service-helper';
 
 export interface RatingAndReviewRequest {
   reviewer?: DtrReviewer;
@@ -46,15 +46,6 @@ class D2ReviewSubmitter {
     };
   }
 
-  _submitItemReviewCall(itemReview: RatingAndReviewRequest) {
-    return {
-      method: 'POST',
-      url: `https://db-api.destinytracker.com/api/external/reviews/submit`,
-      data: itemReview,
-      dataType: 'json'
-    };
-  }
-
   _submitReviewPromise(item: D2Item, membershipInfo: DestinyAccount | null) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
@@ -62,10 +53,10 @@ class D2ReviewSubmitter {
 
     const rating = { ...rollAndPerks, ...review, reviewer };
 
-    const promise = $q
-              .when(this._submitItemReviewCall(rating))
-              .then($http)
-              .then(handleD2SubmitErrors, handleD2SubmitErrors);
+    const promise = dtrFetch(
+      `https://db-api.destinytracker.com/api/external/reviews/submit`,
+      rating
+    ).then(handleD2SubmitErrors, handleD2SubmitErrors);
 
     loadingTracker.addPromise(promise);
 

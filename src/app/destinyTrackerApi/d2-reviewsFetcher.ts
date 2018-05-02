@@ -2,14 +2,13 @@ import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
-import { IPromise } from 'angular';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
-import { DtrItem, DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
-import { $q, $http } from 'ngimport';
+import { DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
 import { UserFilter } from './userFilter';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
+import { dtrFetch } from './dtr-service-helper';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -23,29 +22,18 @@ class D2ReviewsFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getItemReviewsCall(item: DtrItem, platformSelection: number, mode: number) {
-    const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
-
-    return {
-      method: 'POST',
-      url: `https://db-api.destinytracker.com/api/external/reviews?${queryString}`, // TODO: pagination
-      data: item,
-      dataType: 'json'
-    };
-  }
-
-  _getItemReviewsPromise(item, platformSelection: number, mode: number): IPromise<DtrReviewContainer> {
+  _getItemReviewsPromise(item, platformSelection: number, mode: number): Promise<DtrReviewContainer> {
     const dtrItem = this._itemTransformer.getRollAndPerks(item);
 
-    const promise = $q
-      .when(this._getItemReviewsCall(dtrItem, platformSelection, mode))
-      .then($http)
-      .then(handleD2Errors, handleD2Errors)
-      .then((response) => response.data);
+    const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
+    const promise = dtrFetch(
+      `https://db-api.destinytracker.com/api/external/reviews?${queryString}`, // TODO: pagination
+      dtrItem
+    ).then(handleD2Errors, handleD2Errors);
 
     loadingTracker.addPromise(promise);
 
-    return promise as IPromise<DtrReviewContainer>;
+    return promise;
   }
 
   _getUserReview(reviewData: DimWorkingUserReview | DtrReviewContainer) {
@@ -163,7 +151,7 @@ class D2ReviewsFetcher {
    */
   getItemReviews(item: D2Item, platformSelection: number, mode: number) {
     if (!item.reviewable) {
-      return $q.when();
+      return Promise.resolve();
     }
 
     const ratingData = this._reviewDataCache.getRatingData(item);
@@ -172,7 +160,7 @@ class D2ReviewsFetcher {
       this._attachCachedReviews(item,
                                 ratingData);
 
-      return $q.when();
+      return Promise.resolve();
     }
 
     return this._getItemReviewsPromise(item, platformSelection, mode)
@@ -183,11 +171,11 @@ class D2ReviewsFetcher {
       });
   }
 
-  fetchItemReviews(itemHash: number, platformSelection: number, mode: number): IPromise<DtrReviewContainer> {
+  fetchItemReviews(itemHash: number, platformSelection: number, mode: number): Promise<DtrReviewContainer> {
     const ratingData = this._reviewDataCache.getRatingData(undefined, itemHash);
 
     if (ratingData && ratingData.reviewsDataFetched) {
-      return $q.when(ratingData);
+      return Promise.resolve(ratingData);
     }
 
     const fakeItem = { hash: itemHash, id: -1 };

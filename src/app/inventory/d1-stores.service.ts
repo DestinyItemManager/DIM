@@ -10,7 +10,7 @@ import { reportException } from '../exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
 import { D1ManifestService } from '../manifest/manifest-service';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
-import { getBuckets, D1InventoryBuckets } from '../destiny1/d1-buckets.service';
+import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
@@ -21,6 +21,7 @@ import { IPromise } from 'angular';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item } from './item-types';
+import { InventoryBuckets } from './inventory-buckets';
 
 export function StoreService(
   dimDestinyTrackerService: DestinyTrackerServiceType
@@ -233,7 +234,7 @@ export function StoreService(
   function processStore(
     raw,
     defs: D1ManifestDefinitions,
-    buckets: D1InventoryBuckets,
+    buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
     itemInfoService: ItemInfoSource,
@@ -247,7 +248,7 @@ export function StoreService(
     let store: D1Store;
     let items: D1Item[];
     if (raw.id === 'vault') {
-      const result = makeVault(raw, buckets, currencies);
+      const result = makeVault(raw, currencies);
       store = result.store;
       items = result.items;
     } else {
@@ -274,13 +275,22 @@ export function StoreService(
       if (isVault(store)) {
         const vault = store;
         vault.vaultCounts = {};
-        ['Weapons', 'Armor', 'General'].forEach((category) => {
-          vault.vaultCounts[category] = 0;
-          buckets.byCategory[category].forEach((bucket) => {
-            if (store.buckets[bucket.id]) {
-              vault.vaultCounts[category] += store.buckets[bucket.id].length;
-            }
-          });
+        const vaultBucketOrder = [
+          'BUCKET_VAULT_WEAPONS',
+          'BUCKET_VAULT_ARMOR',
+          'BUCKET_VAULT_ITEMS'
+        ];
+
+        _.sortBy(
+          Object.values(buckets.byType).filter((b) => b.vaultBucket),
+          (b) => vaultBucketOrder.indexOf(b.vaultBucket!.id)
+        ).forEach((bucket) => {
+          const vaultBucketId = bucket.vaultBucket!.id;
+          vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
+            count: 0,
+            bucket: bucket.accountWide ? bucket : bucket.vaultBucket
+          };
+          vault.vaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
         });
       }
 

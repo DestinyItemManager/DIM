@@ -1,16 +1,12 @@
-import { IRootScopeService } from "angular";
 import { DimItem } from "../inventory/item-types";
+import { $rootScope } from 'ngimport';
 
-export function CompareService($rootScope: IRootScopeService) {
-  'ngInject';
-
-  return {
-    dialogOpen: false,
-    addItemToCompare(item: DimItem, $event) {
-      $rootScope.$broadcast('dim-store-item-compare', {
-        item,
-        clickEvent: $event
-      });
-    }
-  };
-}
+export const CompareService = {
+  dialogOpen: false,
+  addItemToCompare(item: DimItem, $event) {
+    $rootScope.$broadcast('dim-store-item-compare', {
+      item,
+      clickEvent: $event
+    });
+  }
+};

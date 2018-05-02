@@ -12,7 +12,7 @@ import * as _ from 'underscore';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { getBuckets, D2InventoryBuckets } from '../destiny2/d2-buckets.service';
+import { getBuckets } from '../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/bungie-image';
 import { reportException } from '../exceptions';
@@ -31,6 +31,7 @@ import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem } from './item-types';
+import { InventoryBuckets } from './inventory-buckets';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
@@ -217,7 +218,7 @@ export function D2StoresService(
 
         return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
-      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, D2InventoryBuckets, Set<string>, any, D2Vault, D2Store[]]) => {
+      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, InventoryBuckets, Set<string>, any, D2Vault, D2Store[]]) => {
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -274,7 +275,7 @@ export function D2StoresService(
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
-    buckets: D2InventoryBuckets,
+    buckets: InventoryBuckets,
     previousItems,
     newItems,
     itemInfoService,
@@ -298,9 +299,7 @@ export function D2StoresService(
       store.items = items;
 
       // by type-bucket
-      store.buckets = _.groupBy(items, (i) => {
-        return i.location.id;
-      });
+      store.buckets = _.groupBy(items, (i) => i.location.id);
 
       // Fill in any missing buckets
       Object.values(buckets.byType).forEach((bucket) => {
@@ -317,12 +316,12 @@ export function D2StoresService(
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
-    buckets: D2InventoryBuckets,
+    buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
     itemInfoService
   ): IPromise<D2Vault> {
-    const store = makeVault(buckets, profileCurrencies);
+    const store = makeVault(profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
       // items that cannot be stored in the vault, and are therefore *in* a vault
@@ -334,7 +333,7 @@ export function D2StoresService(
       // by type-bucket
       store.buckets = _.groupBy(items, (i) => i.location.id);
 
-      store.d2VaultCounts = {};
+      store.vaultCounts = {};
 
       // Fill in any missing buckets
       Object.values(buckets.byType).forEach((bucket) => {
@@ -344,22 +343,12 @@ export function D2StoresService(
 
         if (bucket.vaultBucket) {
           const vaultBucketId = bucket.vaultBucket.id;
-          store.d2VaultCounts[vaultBucketId] = store.d2VaultCounts[vaultBucketId] || {
+          store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
             count: 0,
             bucket: bucket.accountWide ? bucket : bucket.vaultBucket
           };
-          store.d2VaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
+          store.vaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
         }
-      });
-
-      store.vaultCounts = {};
-      ['Weapons', 'Armor', 'General', 'Inventory'].forEach((category) => {
-        store.vaultCounts[category] = 0;
-        buckets.byCategory[category].forEach((bucket) => {
-          if (store.buckets[bucket.id]) {
-            store.vaultCounts[category] += store.buckets[bucket.id].length;
-          }
-        });
       });
 
       return store;
@@ -459,16 +448,16 @@ export function D2StoresService(
 
   // TODO: vault counts are silly and convoluted. We really need an
   // object to represent a Profile.
-  function updateVaultCounts(buckets: D2InventoryBuckets, activeStore: D2Store, vault: D2Vault) {
+  function updateVaultCounts(buckets: InventoryBuckets, activeStore: D2Store, vault: D2Vault) {
     // Fill in any missing buckets
     Object.values(buckets.byType).forEach((bucket) => {
       if (bucket.accountWide && bucket.vaultBucket) {
         const vaultBucketId = bucket.id;
-        vault.d2VaultCounts[vaultBucketId] = vault.d2VaultCounts[vaultBucketId] || {
+        vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
           count: 0,
           bucket
         };
-        vault.d2VaultCounts[vaultBucketId].count += activeStore.buckets[bucket.id].length;
+        vault.vaultCounts[vaultBucketId].count += activeStore.buckets[bucket.id].length;
       }
     });
     activeStore.vault = vault; // god help me

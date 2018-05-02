@@ -8,7 +8,6 @@ import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { bungieNetPath } from '../../dim-ui/bungie-image';
 import { count, sum } from '../../util';
-import { D2InventoryBuckets } from '../../destiny2/d2-buckets.service';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
@@ -96,7 +95,7 @@ const StoreProto = {
       bucketItems.splice(bucketIndex, 1);
 
       if (this.current && item.location.accountWide && this.vault) {
-        this.vault.d2VaultCounts[item.location.id].count--;
+        this.vault.vaultCounts[item.location.id].count--;
       }
 
       return true;
@@ -119,7 +118,7 @@ const StoreProto = {
     item.owner = this.id;
 
     if (this.current && item.location.accountWide && this.vault) {
-      this.vault.d2VaultCounts[item.location.id].count++;
+      this.vault.vaultCounts[item.location.id].count++;
     }
   },
 
@@ -179,7 +178,7 @@ export function makeCharacter(defs: D2ManifestDefinitions, character: DestinyCha
   return store;
 }
 
-export function makeVault(buckets: D2InventoryBuckets, profileCurrencies: DestinyItemComponent[]): D2Vault {
+export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
   const glimmer = profileCurrencies.find((cur) => cur.itemHash === 3159615086);
   const legendary = profileCurrencies.find((cur) => cur.itemHash === 1022552290);
   const silver = profileCurrencies.find((cur) => cur.itemHash === 3147280338);
@@ -209,7 +208,7 @@ export function makeVault(buckets: D2InventoryBuckets, profileCurrencies: Destin
       if (!item.bucket) {
         throw new Error("item needs a 'bucket' field");
       }
-      const vaultBucket = buckets.byHash[item.bucket.hash].vaultBucket;
+      const vaultBucket = item.bucket.vaultBucket;
       return vaultBucket ? vaultBucket.capacity : 0;
     },
     spaceLeftForItem(this: D2Vault, item: D2Item) {
@@ -233,14 +232,14 @@ export function makeVault(buckets: D2InventoryBuckets, profileCurrencies: Destin
     removeItem(this: D2Vault, item): D2Item {
       const result = StoreProto.removeItem.call(this, item);
       if (item.location.vaultBucket) {
-        this.d2VaultCounts[item.location.vaultBucket.id].count--;
+        this.vaultCounts[item.location.vaultBucket.id].count--;
       }
       return result;
     },
     addItem(this: D2Vault, item: D2Item) {
       StoreProto.addItem.call(this, item);
       if (item.location.vaultBucket) {
-        this.d2VaultCounts[item.location.vaultBucket.id].count++;
+        this.vaultCounts[item.location.vaultBucket.id].count++;
       }
     }
   });

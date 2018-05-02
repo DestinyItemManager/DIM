@@ -13,9 +13,8 @@ import { requireSqlLib } from './database';
 import { reportException } from '../exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
-import { IPromise } from 'angular';
 import { settings } from '../settings/settings';
-import { $q, $http, $rootScope } from 'ngimport';
+import { $rootScope } from 'ngimport';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
@@ -67,7 +66,7 @@ class ManifestService {
   constructor(
     readonly localStorageKey: string,
     readonly idbKey: string,
-    readonly getManifestApi: () => IPromise<DestinyManifest>
+    readonly getManifestApi: () => Promise<DestinyManifest>
   ) {}
 
   // TODO: redo all this with rxjs
@@ -166,13 +165,14 @@ class ManifestService {
   /**
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
-  private loadManifestRemote(version, path): IPromise<Uint8Array> {
+  private loadManifestRemote(version, path): Promise<Uint8Array> {
     this.statusText = `${t('Manifest.Download')}...`;
 
-    return $http.get(`https://www.bungie.net${path}?host=${window.location.hostname}`, { responseType: "blob" })
-      .then((response) => {
+    return fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`)
+      .then((response) => response.ok ? response.blob() : Promise.reject(response))
+      .then((response: Blob) => {
         this.statusText = `${t('Manifest.Unzip')}...`;
-        return unzipManifest(response.data);
+        return unzipManifest(response);
       })
       .then((arraybuffer) => {
         this.statusText = `${t('Manifest.Save')}...`;
@@ -207,15 +207,15 @@ class ManifestService {
    * Returns a promise for the cached manifest of the specified
    * version as a Uint8Array, or rejects.
    */
-  private loadManifestFromCache(version): IPromise<Uint8Array> {
+  private loadManifestFromCache(version): Promise<Uint8Array> {
     if (alwaysLoadRemote) {
-      return $q.reject(new Error("Testing - always load remote"));
+      return Promise.reject(new Error("Testing - always load remote"));
     }
 
     this.statusText = `${t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
     if (currentManifestVersion === version) {
-      return $q.when(idbKeyval.get(this.idbKey)).then((typedArray: Uint8Array) => {
+      return idbKeyval.get(this.idbKey).then((typedArray: Uint8Array) => {
         if (!typedArray) {
           throw new Error("Empty cached manifest file");
         }
@@ -223,7 +223,7 @@ class ManifestService {
       });
     } else {
       ga('send', 'event', 'Manifest', 'Need New Manifest');
-      return $q.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
+      return Promise.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }
   }
 }
@@ -231,8 +231,8 @@ class ManifestService {
 /**
  * Unzip a file from a ZIP Blob into an ArrayBuffer. Returns a promise.
  */
-function unzipManifest(blob): IPromise<ArrayBuffer> {
-  return $q((resolve, reject) => {
+function unzipManifest(blob: Blob): Promise<ArrayBuffer> {
+  return new Promise((resolve, reject) => {
     zip.useWebWorkers = true;
     zip.workerScripts = {
       inflater: [zipWorker, inflate]

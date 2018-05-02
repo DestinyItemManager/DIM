@@ -14,6 +14,13 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { StoreServiceType } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 
+/**
+ * A simple holder to share the search query among components
+ */
+export const SearchService = {
+  query: ''
+};
+
 export const SearchFilterComponent: IComponentOptions = {
   controller: SearchFilterCtrl,
   bindings: {
@@ -29,7 +36,6 @@ function SearchFilterCtrl(
   $scope: IScope,
   dimStoreService: StoreServiceType,
   D2StoresService: StoreServiceType,
-  dimSearchService,
   hotkeys,
   $i18next,
   $element: IRootElementService,
@@ -40,7 +46,7 @@ function SearchFilterCtrl(
 ) {
   'ngInject';
   const vm = this;
-  vm.search = dimSearchService;
+  vm.search = SearchService;
   vm.bulkItemTags = _.clone(itemTags);
   vm.bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 

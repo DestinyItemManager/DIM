@@ -24,20 +24,8 @@
 <dim-stats destiny-version="vm.store.destinyVersion" stats="vm.store.stats" ng-if="::!vm.store.isVault"></dim-stats>
 <div ng-if="::vm.store.isVault" class="vault-capacity">
   <div class="vault-bucket"
-        ng-class="{ 'vault-bucket-full': size == capacity }"
-        ng-if="::vm.store.destinyVersion === 1"
-        press-tip="{{ size }}/{{ ::capacity }}"
-        press-tip-title="{{ ::bucket | i18next }}"
-        ng-repeat="(sort, size) in vm.store.vaultCounts"
-        ng-init="capacity = vm.store.capacityForItem({ sort: sort }); bucket = 'Bucket.' + sort">
-    <div class="vault-bucket-tag">{{ ::bucket | i18next | firstLetter }}</div>
-    {{ size }}/{{ ::capacity }}
-  </div>
-
-  <div class="vault-bucket"
-       ng-repeat="(bucketId, vaultCount) in vm.store.d2VaultCounts"
+       ng-repeat="(bucketId, vaultCount) in vm.store.vaultCounts"
        ng-class="{ 'vault-bucket-full': vaultCount.count == capacity }"
-       ng-if="::vm.store.destinyVersion === 2"
        ng-init="capacity = vaultCount.bucket.capacity"
        press-tip="{{ vaultCount.count }}/{{ ::capacity }}"
        press-tip-title="{{ ::vaultCount.bucket.name }}">

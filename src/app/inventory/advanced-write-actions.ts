@@ -2,10 +2,10 @@ import { DestinyAccount } from "../accounts/destiny-account.service";
 import { AwaType, AwaAuthorizationResult, AwaUserSelection, insertSocketPlug, DestinySocketArrayType } from "bungie-api-ts/destiny2";
 import { requestAdvancedWriteActionToken } from "../bungie-api/destiny2-api";
 import * as idbKeyval from 'idb-keyval';
-import { httpAdapterWithRetry } from "../bungie-api/bungie-service-helper";
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DimSocket, D2Item } from "./item-types";
+import { httpAdapter } from "../bungie-api/bungie-service-helper";
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
@@ -18,7 +18,7 @@ export async function insertPlug(account: DestinyAccount, item: D2Item, socket: 
 
   // TODO: if the plug costs resources to insert, add a confirmation
 
-  return insertSocketPlug(httpAdapterWithRetry, {
+  return insertSocketPlug(httpAdapter, {
     actionToken,
     itemInstanceId: item.id,
     plug: {
