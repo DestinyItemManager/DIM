@@ -9,9 +9,9 @@
       <form name="vm.form">
         <input class="dim-input" name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" ng-i18next="[placeholder]Loadouts.LoadoutName" />
         <select name="classType" ng-if="vm.showClass" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>
-        <button ng-disabled="vm.form.$invalid" ng-click="vm.save($event)" ng-i18next="Loadouts.Save"></button>
-        <button ng-disabled="vm.form.$invalid || !vm.loadout.id" ng-click="vm.saveAsNew($event)" ng-i18next="Loadouts.SaveAsNew"></button>
-        <button ng-click="vm.cancel($event)" ng-i18next="Loadouts.Cancel"></button>
+        <button class="dim-button" ng-disabled="vm.form.$invalid" ng-click="vm.save($event)" ng-i18next="Loadouts.Save"></button>
+        <button class="dim-button" ng-disabled="vm.form.$invalid || !vm.loadout.id" ng-click="vm.saveAsNew($event)" ng-i18next="Loadouts.SaveAsNew"></button>
+        <button class="dim-button" ng-click="vm.cancel($event)"><span ng-i18next="Loadouts.Cancel"></span> <i class="fa fa-close"></i></button>
         <span><img src="~app/images/spartan.png" style="border: 1px solid #333; background-color: #f00; margin: 0 2px; width: 16px; height: 16px;  vertical-align: text-bottom;"> <span ng-i18next="Loadouts.ItemsWithIcon"></span></span>
         <p id="loadout-error"></p>
       </form>
