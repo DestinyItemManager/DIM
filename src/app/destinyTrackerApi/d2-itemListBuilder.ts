@@ -1,11 +1,11 @@
 import { flatMap } from '../util';
 import * as _ from 'underscore';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
-import { D2ItemTransformer } from './d2-itemTransformer';
 import { DtrItem } from '../item-review/destiny-tracker.service';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2Store } from '../inventory/store-types';
+import { translateToDtrItem } from './d2-itemTransformer';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
@@ -13,14 +13,8 @@ import { D2Store } from '../inventory/store-types';
  * Also tailored for the D2 version.
  */
 class D2ItemListBuilder {
-  _itemTransformer: D2ItemTransformer;
-
-  constructor() {
-    this._itemTransformer = new D2ItemTransformer();
-  }
-
   _getNewItems(allItems: D2Item[], reviewDataCache: D2ReviewDataCache) {
-    const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrItem(item));
+    const allDtrItems = allItems.map(translateToDtrItem);
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
     const unmatched = allDtrItems.filter((di) => allKnownDtrItems.every((kdi) => di.referenceId !== kdi.referenceId));
@@ -60,7 +54,7 @@ class D2ItemListBuilder {
       return newItems;
     }
 
-    return allReviewableItems.map((item) => this._itemTransformer.translateToDtrItem(item));
+    return allReviewableItems.map(translateToDtrItem);
   }
 
   /**

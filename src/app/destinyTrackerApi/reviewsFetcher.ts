@@ -1,4 +1,3 @@
-import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
 import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-tracker.service';
@@ -7,6 +6,7 @@ import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
+import { getRollAndPerks } from './itemTransformer';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -16,7 +16,6 @@ export class ReviewsFetcher {
   _perkRater = new PerkRater();
   _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
-  _itemTransformer = new ItemTransformer();
   constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
@@ -31,7 +30,7 @@ export class ReviewsFetcher {
   }
 
   _getItemReviewsPromise(item: D1Item): Promise<D1ItemReviewResponse[]> {
-    const postWeapon = this._itemTransformer.getRollAndPerks(item);
+    const postWeapon = getRollAndPerks(item);
 
     const promise = dtrFetch(
       'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',

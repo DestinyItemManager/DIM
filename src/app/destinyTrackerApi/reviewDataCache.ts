@@ -1,7 +1,7 @@
-import { ItemTransformer } from './itemTransformer';
 import * as _ from 'underscore';
 import { D1ItemFetchResponse, D1ItemWorkingUserReview, D1CachedItem, D1ItemUserReview, D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
 import { D1Item } from '../inventory/item-types';
+import { translateToDtrWeapon } from './itemTransformer';
 
 /**
  * Cache of review data.
@@ -9,15 +9,13 @@ import { D1Item } from '../inventory/item-types';
  */
 export class ReviewDataCache {
   _itemStores: D1CachedItem[];
-  _itemTransformer: ItemTransformer;
 
   constructor() {
-    this._itemTransformer = new ItemTransformer();
     this._itemStores = [];
   }
 
   _getMatchingItem(item: D1Item): D1CachedItem | undefined {
-    const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
+    const dtrItem = translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
     // and findWhere considers 123 !== "123".

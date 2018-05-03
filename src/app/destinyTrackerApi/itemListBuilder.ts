@@ -1,19 +1,17 @@
 import { flatMap } from '../util';
 import * as _ from 'underscore';
-import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemFetchRequest } from '../item-review/destiny-tracker.service';
 import { D1Item } from '../inventory/item-types';
+import { translateToDtrWeapon } from './itemTransformer';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
  * Generally tailored to work with weapon data.
  */
 export class ItemListBuilder {
-  _itemTransformer = new ItemTransformer();
-
   _getNewItems(allItems: D1Item[], reviewDataCache: ReviewDataCache): D1ItemFetchRequest[] {
-    const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrWeapon(item));
+    const allDtrItems = allItems.map(translateToDtrWeapon);
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
     const unmatched = _.reject(allDtrItems, (dtrItem) => _.any(allKnownDtrItems, { referenceId: dtrItem.referenceId.toString(), roll: dtrItem.roll }));
@@ -43,7 +41,7 @@ export class ItemListBuilder {
       return newGuns;
     }
 
-    return allWeapons.map((weapon) => this._itemTransformer.translateToDtrWeapon(weapon));
+    return allWeapons.map(translateToDtrWeapon);
   }
 
   /**

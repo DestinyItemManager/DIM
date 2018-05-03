@@ -1,17 +1,16 @@
-import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemUserReview, DtrReviewer } from '../item-review/destiny-tracker.service';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
+import { getRollAndPerks } from './itemTransformer';
 
 /**
  * Supports submitting review data to the DTR API.
  */
 export class ReviewSubmitter {
   _reviewDataCache: ReviewDataCache;
-  _itemTransformer = new ItemTransformer();
   constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
@@ -43,7 +42,7 @@ export class ReviewSubmitter {
   }
 
   _submitReviewPromise(item: D1Item, membershipInfo: DtrReviewer) {
-    const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
+    const rollAndPerks = getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
 
