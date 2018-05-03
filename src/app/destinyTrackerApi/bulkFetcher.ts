@@ -1,13 +1,12 @@
-import { ItemListBuilder } from './itemListBuilder';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemFetchResponse } from '../item-review/destiny-tracker.service';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
+import { getWeaponList } from './itemListBuilder';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
-  _itemListBuilder = new ItemListBuilder();
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
@@ -17,7 +16,7 @@ class BulkFetcher {
       return Promise.resolve<D1ItemFetchResponse[]>([]);
     }
 
-    const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
+    const weaponList = getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
       return Promise.resolve<D1ItemFetchResponse[]>([]);
