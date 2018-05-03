@@ -1,5 +1,4 @@
 import * as _ from 'underscore';
-import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
@@ -9,12 +8,12 @@ import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { getRollAndPerks } from './d2-itemTransformer';
+import { ratePerks } from './d2-perkRater';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
  */
 class D2ReviewsFetcher {
-  _perkRater = new D2PerkRater();
   _userFilter = new UserFilter();
   _reviewDataCache: D2ReviewDataCache;
   constructor(reviewDataCache) {
@@ -88,7 +87,7 @@ class D2ReviewsFetcher {
 
     this._reviewDataCache.addReviewsData(item, reviewData);
 
-    this._perkRater.ratePerks(item);
+    ratePerks(item);
     item.reviewsUpdated = Date.now();
   }
 
