@@ -2,19 +2,18 @@ import * as _ from 'underscore';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
-import { UserFilter } from './userFilter';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { getRollAndPerks } from './d2-itemTransformer';
 import { ratePerks } from './d2-perkRater';
+import { conditionallyIgnoreReview } from './userFilter';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
  */
 class D2ReviewsFetcher {
-  _userFilter = new UserFilter();
   _reviewDataCache: D2ReviewDataCache;
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
@@ -44,9 +43,7 @@ class D2ReviewsFetcher {
       item.reviews = item.reviews as DtrUserReview[]; // D1 and D2 reviews take different shapes
       item.reviews.sort(this._sortReviews);
 
-      item.reviews.forEach((writtenReview) => {
-        this._userFilter.conditionallyIgnoreReview(writtenReview);
-      });
+      item.reviews.forEach(conditionallyIgnoreReview);
     }
   }
 

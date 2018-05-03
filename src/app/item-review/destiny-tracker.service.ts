@@ -134,9 +134,9 @@ import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition, DestinyActivityModeType } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
 import { $q } from 'ngimport';
-import { UserFilter } from '../destinyTrackerApi/userFilter';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
+import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -314,10 +314,7 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
         }
       }
     },
-    clearIgnoredUsers() {
-      const userFilter = new UserFilter();
-      userFilter.clearIgnoredUsers();
-    },
+    clearIgnoredUsers,
     clearCache() {
       if (_isDestinyTwo()) {
         _d2reviewDataCache.clearAllItems();

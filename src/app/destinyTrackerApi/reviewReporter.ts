@@ -1,16 +1,15 @@
 import { ReviewDataCache } from './reviewDataCache';
 import { D1ItemUserReview, DtrReviewer } from '../item-review/destiny-tracker.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { UserFilter } from './userFilter';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
+import { ignoreUser } from './userFilter';
 
 /**
  * Class to support reporting bad takes.
  */
 export class ReviewReporter {
-  _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
@@ -49,7 +48,7 @@ export class ReviewReporter {
 
   _ignoreReportedUser(review) {
     const reportedMembershipId = review.reviewer.membershipId;
-    this._userFilter.ignoreUser(reportedMembershipId);
+    ignoreUser(reportedMembershipId);
   }
 
   /**
