@@ -136,7 +136,6 @@ import { IPromise } from 'angular';
 import { $q } from 'ngimport';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
-import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -149,7 +148,6 @@ export interface DestinyTrackerServiceType {
   submitReview(item: any | DimItem);
   fetchReviews(stores: any | DimStore[]);
   reportReview(review: any);
-  clearIgnoredUsers();
   clearCache();
   getD2ReviewDataCache(): D2ReviewDataCache;
 }
@@ -314,7 +312,6 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
         }
       }
     },
-    clearIgnoredUsers,
     clearCache() {
       if (_isDestinyTwo()) {
         _d2reviewDataCache.clearAllItems();
