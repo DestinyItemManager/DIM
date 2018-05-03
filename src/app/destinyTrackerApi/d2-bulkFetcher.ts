@@ -5,8 +5,7 @@ import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
 import { dtrFetch } from './dtr-service-helper';
-import { DtrItemFetchResponse } from '../item-review/d2-dtr-api-types';
-import { D2Item } from '../inventory/item-types';
+import { DtrItemFetchResponse, DtrItemFetchRequest } from '../item-review/d2-dtr-api-types';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
@@ -37,7 +36,7 @@ class D2BulkFetcher {
     return this._getBulkItems(vendorDtrItems, platformSelection, mode);
   }
 
-  _getBulkItems(itemList: D2Item[], platformSelection: number, mode: number): Promise<DtrItemFetchResponse[]> {
+  _getBulkItems(itemList: DtrItemFetchRequest[], platformSelection: number, mode: number): Promise<DtrItemFetchResponse[]> {
     if (!itemList.length) {
       return Promise.resolve<DtrItemFetchResponse[]>([]);
     }

@@ -157,7 +157,7 @@ export interface D2Item extends DimItem {
   masterworkInfo: DimMasterwork | null;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
-  ratingData: D2CachedItem | undefined;
+  ratingData: D2CachedItem | null;
 }
 
 export interface D2PrimStat extends DestinyStat {

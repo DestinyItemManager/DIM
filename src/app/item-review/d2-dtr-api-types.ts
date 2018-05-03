@@ -15,6 +15,10 @@ export interface DtrVote {
   score: number;
 }
 
+export interface DtrItemFetchRequest {
+  referenceId: number;
+}
+
 export interface DtrItemFetchResponse extends DtrBasicItem {
   votes: DtrVote;
 }

@@ -8,7 +8,7 @@ import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { DtrItemReviewsResponse, DtrUserReview } from '../item-review/d2-dtr-api-types';
+import { DtrItemReviewsResponse, DtrUserReview, D2CachedItem } from '../item-review/d2-dtr-api-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -70,20 +70,10 @@ class D2ReviewsFetcher {
   }
 
   _attachReviews(item: D2Item, reviewData: DtrItemReviewsResponse) {
-    const userReview = this._getUserReview(reviewData);
-
     this._sortAndIgnoreReviews(reviewData);
 
-    if (userReview) {
-      item.userVote = userReview.voted;
-      item.userReview = userReview.text;
-      item.userReviewPros = userReview.pros;
-      item.userReviewCons = userReview.cons;
-      item.mode = userReview.mode;
-    }
-
     this._reviewDataCache.addReviewsData(reviewData);
-    item.dtrRating = this._reviewDataCache.getRatingData(item);
+    item.ratingData = this._reviewDataCache.getRatingData(item);
 
     this._perkRater.ratePerks(item);
   }
@@ -117,28 +107,6 @@ class D2ReviewsFetcher {
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item: D2Item, cachedItem: DimWorkingUserReview) {
-    item.reviews = cachedItem.reviews;
-
-    this._attachReviews(item, cachedItem);
-
-    if (cachedItem.userRating) {
-      item.userRating = cachedItem.userRating;
-    }
-
-    if (cachedItem.review) {
-      item.userReview = cachedItem.review;
-    }
-
-    if (cachedItem.pros) {
-      item.userReviewPros = cachedItem.pros;
-    }
-
-    if (cachedItem.cons) {
-      item.userReviewCons = cachedItem.cons;
-    }
-  }
-
   /**
    * Get community (which may include the current user's) reviews for a given item and attach
    * them to the item.
@@ -152,8 +120,7 @@ class D2ReviewsFetcher {
     const cachedData = this._reviewDataCache.getRatingData(item);
 
     if (cachedData && cachedData.reviewsResponse) {
-      this._attachCachedReviews(item,
-                                cachedData);
+      item.ratingData = cachedData;
 
       return Promise.resolve();
     }

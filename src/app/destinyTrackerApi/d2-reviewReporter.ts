@@ -1,10 +1,11 @@
 import { D2ReviewDataCache } from "./d2-reviewDataCache";
 import { DestinyAccount } from "../accounts/destiny-account.service";
-import { DtrUserReview, DtrReviewer } from '../item-review/destiny-tracker.service';
 import { UserFilter } from "./userFilter";
 import { loadingTracker } from "../ngimport-more";
 import { handleD2SubmitErrors } from "./d2-trackerErrorHandler";
 import { dtrFetch } from "./dtr-service-helper";
+import { DtrReviewer } from "../item-review/dtr-api-types";
+import { DtrUserReview } from "../item-review/d2-dtr-api-types";
 
 export interface DimReviewReport {
   reviewId: string;
