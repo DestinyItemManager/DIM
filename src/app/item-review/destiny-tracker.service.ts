@@ -8,22 +8,22 @@ export interface DtrVote {
 export interface DtrItem {
   referenceId: number;
   instanceId?: string;
-  attachedMods?: any[] | null;
-  selectedPerks?: any[] | null;
+  attachedMods?: number[];
+  selectedPerks?: number[];
 }
 
 export interface DtrBulkItem extends DtrItem {
   votes: DtrVote;
 }
 
-export interface Reviewer {
+export interface DtrReviewer {
   membershipType: number;
   membershipId: string;
   displayName: string;
 }
 
 export interface DimUserReview extends DtrBulkItem {
-  reviewer: Reviewer;
+  reviewer: DtrReviewer;
   voted: number;
   pros: string;
   cons: string;
@@ -36,7 +36,7 @@ export interface DtrUserReview {
   isReviewer: boolean;
   isHighlighted: boolean;
   instanceId?: string;
-  reviewer: Reviewer;
+  reviewer: DtrReviewer;
   voted: number;
   pros: string;
   cons: string;
@@ -68,27 +68,17 @@ export interface DimWorkingUserReview extends DtrReviewContainer {
   text: string;
 }
 
-export interface DimReviewReport {
-  reviewId: string;
-  reporter: Reviewer;
-  text: string;
-}
-
-export interface DtrSubmitResponse {
-  success?: boolean;
-}
-
 export enum DtrActivityModes {
-  notSpecified = 0,
-  playerVersusEnemy = 7,
-  playerVersusPlayer = 5,
-  raid = 4,
-  trials = 39
+  notSpecified = DestinyActivityModeType.None,
+  playerVersusEnemy = DestinyActivityModeType.AllPvE,
+  playerVersusPlayer = DestinyActivityModeType.AllPvP,
+  raid = DestinyActivityModeType.Raid,
+  trials = DestinyActivityModeType.TrialsOfTheNine
 }
 
 export interface D1ItemFetchRequest {
   referenceId: string;
-  roll?: string;
+  roll: string | null;
 }
 
 export interface D1ItemFetchResponse extends D1ItemFetchRequest {
@@ -98,14 +88,8 @@ export interface D1ItemFetchResponse extends D1ItemFetchRequest {
 }
 
 export interface D1ItemReviewRequest extends D1ItemFetchRequest {
-  selectedPerks?: string;
+  selectedPerks: string | null;
   instanceId: string;
-}
-
-export interface D1MembershipInfo {
-  membershipId: string;
-  membershipType: number;
-  displayName: string;
 }
 
 export interface D1ItemWorkingUserReview {
@@ -118,7 +102,7 @@ export interface D1ItemWorkingUserReview {
 
 export interface D1ItemUserReview extends D1ItemWorkingUserReview {
   reviewId: string; // string or number?
-  reviewer: D1MembershipInfo;
+  reviewer: DtrReviewer;
   timestamp: string;
   selectedPerks?: string;
   isHighlighted: boolean;
@@ -147,7 +131,7 @@ import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
-import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition, DestinyActivityModeType } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
 import { $q } from 'ngimport';
 import { UserFilter } from '../destinyTrackerApi/userFilter';

@@ -1,14 +1,14 @@
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { Reviewer } from '../item-review/destiny-tracker.service';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
+import { DtrReviewer } from '../item-review/destiny-tracker.service';
 import { dtrFetch } from './dtr-service-helper';
 
 export interface RatingAndReviewRequest {
-  reviewer?: Reviewer;
+  reviewer?: DtrReviewer;
   voted: number;
   text: string;
   pros: string;
@@ -28,7 +28,7 @@ class D2ReviewSubmitter {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getReviewer(membershipInfo): Reviewer {
+  _getReviewer(membershipInfo): DtrReviewer {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,

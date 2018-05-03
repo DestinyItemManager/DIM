@@ -1,10 +1,16 @@
 import { D2ReviewDataCache } from "./d2-reviewDataCache";
 import { DestinyAccount } from "../accounts/destiny-account.service";
-import { DtrUserReview, Reviewer, DimReviewReport } from '../item-review/destiny-tracker.service';
+import { DtrUserReview, DtrReviewer } from '../item-review/destiny-tracker.service';
 import { UserFilter } from "./userFilter";
 import { loadingTracker } from "../ngimport-more";
 import { handleD2SubmitErrors } from "./d2-trackerErrorHandler";
 import { dtrFetch } from "./dtr-service-helper";
+
+export interface DimReviewReport {
+  reviewId: string;
+  reporter: DtrReviewer;
+  text: string;
+}
 
 /**
  * Class to support reporting bad takes.
@@ -16,7 +22,7 @@ class D2ReviewReporter {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getReporter(membershipInfo: DestinyAccount): Reviewer {
+  _getReporter(membershipInfo: DestinyAccount): DtrReviewer {
     return {
       membershipId: membershipInfo.membershipId,
       membershipType: membershipInfo.platformType,

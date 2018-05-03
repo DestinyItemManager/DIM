@@ -1,6 +1,6 @@
 import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
-import { D1MembershipInfo, D1ItemUserReview } from '../item-review/destiny-tracker.service';
+import { D1ItemUserReview, DtrReviewer } from '../item-review/destiny-tracker.service';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
@@ -42,7 +42,7 @@ export class ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item: D1Item, membershipInfo: D1MembershipInfo) {
+  _submitReviewPromise(item: D1Item, membershipInfo: DtrReviewer) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item);
@@ -64,7 +64,7 @@ export class ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item: D1Item, membershipInfo: D1MembershipInfo) {
+  _markItemAsReviewedAndSubmitted(item: D1Item, membershipInfo: DtrReviewer) {
     const review = this.toRatingAndReview(item) as D1ItemUserReview;
     review.isReviewer = true;
     review.reviewer = this._getReviewer(membershipInfo);
