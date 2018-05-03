@@ -49,6 +49,10 @@
       <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ updateOn: 'blur' }" ng-change="vm.updateNote()"></textarea></form>
       <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
       <div class="item-description" ng-if="vm.showDescription" ng-bind="::vm.item.description"></div>
+      <div class="item-lore" ng-if="::vm.item.loreHash">
+        <a target="_blank" rel="noopener noreferrer" ng-href="http://www.ishtar-collective.net/entries/{{::vm.item.loreHash}}"><img src="~app/images/ishtar-collective.svg" height="16" width="16"/></a>
+        <a target="_blank" rel="noopener noreferrer" ng-href="http://www.ishtar-collective.net/entries/{{::vm.item.loreHash}}"><span>Read lore on Ishtar Collective</span></a>
+      </div>
       <img class="item-details" ng-if="vm.item.type === 'Emblems' || vm.item.type === 'Emblem'" ng-src="{{vm.item.secondaryIcon | bungieIcon}}" width="237"
       height="48"/>
       <div class="masterwork-progress" ng-if="vm.item.masterworkInfo" >

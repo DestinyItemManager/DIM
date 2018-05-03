@@ -257,6 +257,13 @@ $item-header-spacing: 5px;
   white-space: pre-wrap;
 }
 
+.item-lore {
+  margin: 5px 10px;
+  img {
+    vertical-align: text-bottom;
+  }
+}
+
 .masterwork-progress {
   margin: 4px 0px;
   padding: 3px 10px 5px;

@@ -344,6 +344,7 @@ export function makeItem(
     masterwork: item.state & 4,
     classified: Boolean(itemDef.redacted),
     isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
+    loreHash: itemDef.loreHash,
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     isInLoadout: false,
     percentComplete: 0, // filled in later

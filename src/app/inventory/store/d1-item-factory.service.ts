@@ -321,6 +321,7 @@ function makeItem(
     locked: item.locked,
     redacted: Boolean(itemDef.redacted),
     classified: Boolean(itemDef.classified),
+    loreHash: null,
     lastManuallyMoved: item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
     isInLoadout: false,
     dtrRating: item.dtrRating,
