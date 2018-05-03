@@ -55,15 +55,6 @@ async function responseIndicatesBadToken(response: Response) {
       data.ErrorCode === PlatformErrorCodes.WebAuthModuleAsyncFailed);
 }
 
-function isTokenValid(token) {
-  // reject refresh tokens from the old auth process
-  if (token && token.name === 'refresh' && token.readyin) {
-    return false;
-  }
-  const expired = hasTokenExpired(token);
-  return !expired;
-}
-
 /**
  * A fatal token error means we have to log in again.
  */
