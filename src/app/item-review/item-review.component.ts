@@ -36,6 +36,8 @@ function ItemReviewController(
   vm.$onInit = () => {
     vm.canCreateReview = (vm.canReview && vm.item.owner);
     vm.hasUserReview = ((vm.item.userRating) || (vm.item.userVote));
+
+    // BUGBUG: vm.item.workingUserReview && vm.item.workingUserReview.score !== 0
     vm.expandReview = ((vm.item.isLocallyCached) && (vm.item.userVote !== 0));
     if (!vm.item.mode) {
       vm.item.mode = settings.reviewsModeSelection;

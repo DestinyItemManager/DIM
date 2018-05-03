@@ -10,12 +10,9 @@ import {
   DestinyItemQualityBlockDefinition
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
-import {
-  DtrUserReview,
-  D1ItemUserReview
-} from '../item-review/destiny-tracker.service';
 import { DimStore } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
+import { D2CachedItem } from '../item-review/d2-dtr-api-types';
 
 // TODO: maybe break these out into separate files for D1/D2?
 
@@ -95,25 +92,25 @@ export interface DimItem {
   /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
 
-  // TODO: this should be on a separate object, with the other DTR stuff
-  pros: string;
-  cons: string;
-  userRating: number;
-  userReview: string;
-  userVote: number;
-  dtrRating: number;
-  dtrRatingCount: number;
-  dtrHighlightedRatingCount: number;
-  reviews: DtrUserReview[] | D1ItemUserReview[];
-  userReviewPros: string;
-  userReviewCons: string;
-  mode: number;
-  ratingCount: number;
-  // timestamp of when reviews were attached - a hack to help React update in the short term
-  reviewsUpdated?: number;
-  /** Is the review data locally cached? */
-  isLocallyCached?: boolean;
-  totalReviews: number;
+  // // TODO: this should be on a separate object, with the other DTR stuff
+  // pros: string;
+  // cons: string;
+  // userRating: number;
+  // userReview: string;
+  // userVote: number;
+  // dtrRating: number;
+  // dtrRatingCount: number;
+  // dtrHighlightedRatingCount: number;
+  // reviews: DtrUserReview[] | D1ItemUserReview[];
+  // userReviewPros: string;
+  // userReviewCons: string;
+  // mode: number;
+  // ratingCount: number;
+  // // timestamp of when reviews were attached - a hack to help React update in the short term
+  // reviewsUpdated?: number;
+  // /** Is the review data locally cached? */
+  // isLocallyCached?: boolean;
+  // totalReviews: number;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
@@ -160,6 +157,7 @@ export interface D2Item extends DimItem {
   masterworkInfo: DimMasterwork | null;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
+  ratingData: D2CachedItem | undefined;
 }
 
 export interface D2PrimStat extends DestinyStat {
