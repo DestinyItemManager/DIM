@@ -77,13 +77,13 @@ async function getActiveToken(): Promise<Tokens> {
     throw new FatalTokenError("No auth token exists, redirect to login");
   }
 
-  const accessTokenIsValid = token && isTokenValid(token.accessToken);
+  const accessTokenIsValid = token && !hasTokenExpired(token.accessToken);
   if (accessTokenIsValid) {
     return token;
   }
 
   // Get a new token from refresh token
-  const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
+  const refreshTokenIsValid = token && !hasTokenExpired(token.refreshToken);
   if (!refreshTokenIsValid) {
     removeToken();
     $rootScope.$broadcast('dim-no-token-found');
@@ -117,7 +117,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     case 400:
     case 401:
     case 403: {
-      throw new FatalTokenError("Refresh token expired or not valid");
+      throw new FatalTokenError("Refresh token expired or not valid, status " + response.status);
     }
     default: {
       try {
@@ -127,11 +127,11 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
             case PlatformErrorCodes.RefreshTokenNotYetValid:
             case PlatformErrorCodes.AccessTokenHasExpired:
             case PlatformErrorCodes.AuthorizationCodeInvalid:
-              throw new FatalTokenError("Refresh token expired or not valid");
+              throw new FatalTokenError("Refresh token expired or not valid, platform error " + data.ErrorCode);
           }
         }
       } catch (e) {
-        throw new Error("Error response wasn't json: " + response);
+        throw new Error("Error response wasn't json: " + e.message);
       }
     }
   }

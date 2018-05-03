@@ -51,7 +51,7 @@ export function removeToken() {
  * Get an absolute UTC epoch milliseconds timestamp for either the 'expires' property.
  * @return UTC epoch milliseconds timestamp
  */
-function getTokenExpiration(token: Token): number {
+function getTokenExpiration(token?: Token): number {
   if (token && token.hasOwnProperty('inception') && token.hasOwnProperty('expires')) {
     const inception = token.inception;
     return inception + (token.expires * 1000);
@@ -63,7 +63,10 @@ function getTokenExpiration(token: Token): number {
 /**
  * Has the token expired, based on its 'expires' property?
  */
-export function hasTokenExpired(token: Token) {
+export function hasTokenExpired(token?: Token) {
+  if (!token) {
+    return true;
+  }
   const expires = getTokenExpiration(token);
   const now = Date.now();
 
