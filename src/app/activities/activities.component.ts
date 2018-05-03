@@ -189,31 +189,31 @@ function ActivitiesController(
   }
 
   function i18nActivitySkulls(skulls, defs: D1ManifestDefinitions): Skull[] {
-    const skullHashes = [
-      { displayName: "Heroic", hash: 0 },
-      { displayName: "Arc Burn", hash: 1 },
-      { displayName: "Solar Burn", hash: 2 },
-      { displayName: "Void Burn", hash: 3 },
-      { displayName: "Berserk", hash: 4 },
-      { displayName: "Brawler", hash: 5 },
-      { displayName: "Lightswitch", hash: 6 },
-      { displayName: "Small Arms", hash: 7 },
-      { displayName: "Specialist", hash: 8 },
-      { displayName: "Juggler", hash: 9 },
-      { displayName: "Grounded", hash: 10 },
-      { displayName: "Bloodthirsty", hash: 11 },
-      { displayName: "Chaff", hash: 12 },
-      { displayName: "Fresh Troops", hash: 13 },
-      { displayName: "Ironclad", hash: 14 },
-      { displayName: "Match Game", hash: 15 },
-      { displayName: "Exposure", hash: 16 },
-      { displayName: "Airborne", hash: 17 },
-      { displayName: "Catapult", hash: 18 },
-      { displayName: "Epic", hash: 20 }];
+    const skullHashesByName = {
+      Heroic: 0,
+      "Arc Burn": 1,
+      "Solar Burn": 2,
+      "Void Burn": 3,
+      Berserk: 4,
+      Brawler: 5,
+      Lightswitch: 6,
+      "Small Arms": 7,
+      Specialist: 8,
+      Juggler: 9,
+      Grounded: 10,
+      Bloodthirsty: 11,
+      Chaff: 12,
+      "Fresh Troops": 13,
+      Ironclad: 14,
+      "Match Game": 15,
+      Exposure: 16,
+      Airborne: 17,
+      Catapult: 18,
+      Epic: 20
+    };
 
     for (const skull of skulls[0]) {
-      const skullHash = skullHashes.find((sh) => sh.displayName === skull.displayName);
-      const hash = skullHash ? skullHash[0].hash : -1;
+      const hash = skullHashesByName[skull.displayName] || -1;
       if (hash >= 0) {
         if (hash < 20) { // set all skulls except for epic from heroic playlist...
           const activity = defs.Activity.get(870614351);
