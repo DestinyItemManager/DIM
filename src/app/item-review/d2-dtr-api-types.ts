@@ -30,6 +30,7 @@ export interface WorkingD2Rating {
   text: string;
   mode: number;
 
+  // dealing with the 10 minute lag time between submittal and remote cache invalidation
   treatAsSubmitted: boolean;
 }
 
