@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
-import { D1ItemUserReview } from '../item-review/destiny-tracker.service';
 import { D1GridNode, D1Item } from '../inventory/item-types';
+import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 
 interface RatingAndReview {
   ratingCount: number;
@@ -17,10 +17,13 @@ export class PerkRater {
    */
   ratePerks(item: D1Item) {
     if ((!item.talentGrid) ||
-        (!item.reviews) ||
-        (!item.reviews.length)) {
+        (!item.ratingData) ||
+        (!item.ratingData.reviewsResponse) ||
+        (!item.ratingData.reviewsResponse.reviews.length)) {
       return;
     }
+
+    const reviews = item.ratingData.reviewsResponse.reviews;
 
     const maxColumn = this._getMaxColumn(item);
 
@@ -31,7 +34,7 @@ export class PerkRater {
     for (let i = 1; i < maxColumn; i++) {
       const perkNodesInColumn = this._getPerkNodesInColumn(item, i);
 
-      const ratingsAndReviews = perkNodesInColumn.map((perkNode) => this._getPerkRatingsAndReviewCount(perkNode, item.reviews as D1ItemUserReview[]));
+      const ratingsAndReviews = perkNodesInColumn.map((perkNode) => this._getPerkRatingsAndReviewCount(perkNode, reviews));
 
       const maxReview = this._getMaxReview(ratingsAndReviews);
 
