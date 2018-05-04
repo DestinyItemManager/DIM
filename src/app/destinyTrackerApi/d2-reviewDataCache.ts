@@ -21,7 +21,7 @@ class D2ReviewDataCache {
   }
 
   _getMatchingItem(item?: D2Item | DestinyVendorSaleItemComponent,
-                   itemHash?: number) {
+                   itemHash?: number): D2CachedItem | undefined {
     if (item) {
       const dtrItem = this._itemTransformer.translateToDtrItem(item);
 
@@ -170,7 +170,13 @@ class D2ReviewDataCache {
   ) {
     const cachedItem = this._getMatchingItem(item);
 
-    if ((!cachedItem) || (!cachedItem.reviewsResponse) || (!cachedItem.userReview)) {
+    if ((!cachedItem) || (!cachedItem.userReview)) {
+      return;
+    }
+
+    cachedItem.userReview.treatAsSubmitted = true;
+
+    if (!cachedItem.reviewsResponse) {
       return;
     }
 
@@ -178,8 +184,6 @@ class D2ReviewDataCache {
     cachedItem.reviewsResponse.reviews = (cachedItem.reviewsResponse.reviews) ?
        cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer) :
        [];
-
-    cachedItem.userReview.treatAsSubmitted = true;
   }
 
   /**

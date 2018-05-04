@@ -1,7 +1,7 @@
 import { ItemTransformer } from './itemTransformer';
 import * as _ from 'underscore';
-import { D1ItemFetchResponse, D1ItemWorkingUserReview, D1CachedItem, D1ItemUserReview, D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
 import { D1Item } from '../inventory/item-types';
+import { D1CachedItem, D1ItemFetchResponse, WorkingD1Rating, D1ItemReviewResponse } from '../item-review/d1-dtr-api-types';
 
 /**
  * Cache of review data.
@@ -49,7 +49,13 @@ export class ReviewDataCache {
       dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
     }
 
-    this._itemStores.push(dtrRating as D1CachedItem);
+    const cachedItem: D1CachedItem = {
+      referenceId: dtrRating.referenceId,
+      fetchResponse: dtrRating,
+      lastUpdated: new Date()
+    };
+
+    this._itemStores.push(cachedItem);
   }
 
   /**
@@ -60,23 +66,14 @@ export class ReviewDataCache {
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
   addUserReviewData(item: D1Item,
-                    userReview: D1ItemWorkingUserReview) {
-    const matchingItem = this._getMatchingItem(item);
+                    userReview: WorkingD1Rating) {
+    const cachedItem = this._getMatchingItem(item);
 
-    if (!matchingItem) {
+    if (!cachedItem) {
       return;
     }
 
-    item.isLocallyCached = true;
-
-    const rating = matchingItem.rating;
-
-    Object.assign(matchingItem,
-                  userReview);
-
-    matchingItem.userRating = matchingItem.rating;
-
-    matchingItem.rating = rating;
+    cachedItem.userReview = userReview;
   }
 
   /**
@@ -84,11 +81,11 @@ export class ReviewDataCache {
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
   addReviewsData(item: D1Item,
-                 reviewsData: D1ItemReviewResponse | D1CachedItem) {
-    const matchingItem = this._getMatchingItem(item);
-    if (matchingItem) {
-      matchingItem.reviews = reviewsData.reviews;
-      matchingItem.reviewsDataFetched = true;
+                 reviewsData: D1ItemReviewResponse) {
+    const cachedItem = this._getMatchingItem(item);
+
+    if (cachedItem) {
+      cachedItem.reviewsResponse = reviewsData;
     }
   }
 
@@ -104,23 +101,23 @@ export class ReviewDataCache {
   }
 
   markItemAsReviewedAndSubmitted(
-    item: D1Item,
-    userReview: D1ItemWorkingUserReview
+    item: D1Item
   ) {
-    item.isLocallyCached = false;
-    const matchingItem = this._getMatchingItem(item);
+    const cachedItem = this._getMatchingItem(item);
 
-    if (!matchingItem) {
+    if ((!cachedItem) || (!cachedItem.userReview)) {
       return;
     }
 
-    if (!matchingItem.reviews) {
-      matchingItem.reviews = [];
-    } else {
-      matchingItem.reviews.filter((review) => !review.isReviewer);
+    cachedItem.userReview.treatAsSubmitted = true;
+
+    if (!cachedItem.reviewsResponse) {
+      return;
     }
 
-    matchingItem.reviews.unshift(userReview as D1ItemUserReview);
+    cachedItem.reviewsResponse.reviews = (cachedItem.reviewsResponse.reviews) ?
+       cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer) :
+       [];
   }
 
   /**
@@ -135,11 +132,11 @@ export class ReviewDataCache {
     const tenMinutes = 1000 * 60 * 10;
 
     setTimeout(() => {
-      const matchingItem = this._getMatchingItem(item);
+      const cachedItem = this._getMatchingItem(item);
 
-      if (matchingItem) {
-        matchingItem.reviews = [];
-        matchingItem.reviewsDataFetched = false;
+      if (cachedItem) {
+        cachedItem.reviewsResponse = undefined;
+        cachedItem.userReview = undefined;
       }
     },
       tenMinutes);

@@ -41,11 +41,10 @@ export interface D1ItemReviewResponse extends D1ItemFetchResponse {
 }
 
 export interface D1CachedItem {
-  referenceId: number;
+  referenceId: string;
   fetchResponse: D1ItemFetchResponse;
   reviewsResponse?: D1ItemReviewResponse;
   userReview?: WorkingD1Rating;
 
-  dimScore: number;
   lastUpdated: Date;
 }
