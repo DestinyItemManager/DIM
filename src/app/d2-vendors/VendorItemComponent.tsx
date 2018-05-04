@@ -8,11 +8,12 @@ import { ngDialog } from "../ngimport-more";
 import { IDialogOpenResult } from "ng-dialog";
 import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from "../destiny2/d2-buckets.service";
-import { DestinyTrackerServiceType, DimWorkingUserReview } from "../item-review/destiny-tracker.service";
+import { DestinyTrackerServiceType } from "../item-review/destiny-tracker.service";
 import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { D2PerkRater } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
 import { D2Item } from "../inventory/item-types";
+import { DtrItemReviewsResponse } from "../item-review/d2-dtr-api-types";
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -106,11 +107,15 @@ export default class VendorItemComponent extends React.Component<Props> {
       }
     } else {
 
-      let reviewData: DimWorkingUserReview | null = null;
+      let reviewData: DtrItemReviewsResponse | null = null;
       let dimItem: D2Item | null = null;
 
       if (trackerService) {
-        reviewData = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+        const cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+
+        if (cachedItem && cachedItem.reviewsResponse) {
+          reviewData = cachedItem.reviewsResponse;
+        }
 
         if (reviewData && !reviewData.reviews) {
           trackerService.getItemReviewAsync(item.itemHash).then((reviewsData) => {
@@ -118,7 +123,6 @@ export default class VendorItemComponent extends React.Component<Props> {
             // TODO: it'd be nice to push this into tracker service
             Object.assign(dimItem, item.toDimItem(buckets, reviewData));
             new D2PerkRater().ratePerks(dimItem!);
-            dimItem!.reviewsUpdated = Date.now();
           });
         }
       }
