@@ -1,9 +1,10 @@
 import { ItemListBuilder } from './itemListBuilder';
 import { ReviewDataCache } from './reviewDataCache';
-import { D1ItemFetchResponse } from '../item-review/destiny-tracker.service';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
+import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
+import { DimStore, D1Store } from '../inventory/store-types';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
@@ -36,9 +37,7 @@ class BulkFetcher {
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
    */
-  bulkFetch(storesContainer) {
-    const stores = Object.values(storesContainer);
-
+  bulkFetch(stores: D1Store[]) {
     this._getBulkFetchPromise(stores)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
                                                   stores));
@@ -56,7 +55,7 @@ class BulkFetcher {
   }
 
   attachRankings(bulkRankings: D1ItemFetchResponse[] | null,
-                 stores) {
+                 stores: D1Store[]) {
     if (!bulkRankings && !stores) {
       return;
     }
@@ -73,13 +72,7 @@ class BulkFetcher {
           const matchingItem = this._reviewDataCache.getRatingData(storeItem);
 
           if (matchingItem) {
-            storeItem.dtrRating = matchingItem.rating;
-            storeItem.dtrRatingCount = matchingItem.ratingCount;
-            storeItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
-            storeItem.userRating = matchingItem.userRating;
-            storeItem.userReview = matchingItem.review;
-            storeItem.pros = matchingItem.pros;
-            storeItem.cons = matchingItem.cons;
+            storeItem.ratingData = matchingItem;
           }
         }
       });

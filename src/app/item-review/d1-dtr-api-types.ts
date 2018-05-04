@@ -1,4 +1,4 @@
-import { DtrReviewer } from "./dtr-api-types";
+import { DtrReviewer, DimWorkingUserReview } from "./dtr-api-types";
 
 export interface D1ItemFetchRequest {
   referenceId: string;
@@ -16,22 +16,36 @@ export interface D1ItemReviewRequest extends D1ItemFetchRequest {
   instanceId: string;
 }
 
-export interface D1ItemWorkingUserReview {
-  rating?: number;
+export interface WorkingD1Rating extends DimWorkingUserReview {
+  rating: number;
   pros: string;
   cons: string;
   review: string;
 }
 
-export interface D1ItemUserReview extends D1ItemWorkingUserReview {
+export interface D1ItemUserReview {
   reviewId: string; // string or number?
   reviewer: DtrReviewer;
   timestamp: string;
   selectedPerks?: string;
   isHighlighted: boolean;
   isReviewer: boolean;
+  rating: number;
+  pros: string;
+  cons: string;
+  review: string;
 }
 
 export interface D1ItemReviewResponse extends D1ItemFetchResponse {
   reviews: D1ItemUserReview[];
+}
+
+export interface D1CachedItem {
+  referenceId: number;
+  fetchResponse: D1ItemFetchResponse;
+  reviewsResponse?: D1ItemReviewResponse;
+  userReview?: WorkingD1Rating;
+
+  dimScore: number;
+  lastUpdated: Date;
 }

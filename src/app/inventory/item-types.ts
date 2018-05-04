@@ -13,6 +13,7 @@ import { DimItemInfo } from './dim-item-info';
 import { DimStore } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
 import { D2CachedItem } from '../item-review/d2-dtr-api-types';
+import { D1CachedItem } from '../item-review/d1-dtr-api-types';
 
 // TODO: maybe break these out into separate files for D1/D2?
 
@@ -143,6 +144,8 @@ export interface D1Item extends DimItem {
   year: number;
   sourceHashes: number[];
   trackable: boolean;
+
+  ratingData?: D1CachedItem;
 }
 
 /**

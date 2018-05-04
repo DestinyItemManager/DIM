@@ -1,4 +1,4 @@
-import { DtrReviewer } from "./dtr-api-types";
+import { DtrReviewer, DimWorkingUserReview } from "./dtr-api-types";
 import { DestinyActivityModeType } from "bungie-api-ts/destiny2";
 
 export interface DtrBasicItem {
@@ -23,15 +23,12 @@ export interface DtrItemFetchResponse extends DtrBasicItem {
   votes: DtrVote;
 }
 
-export interface WorkingD2Rating {
+export interface WorkingD2Rating extends DimWorkingUserReview {
   voted: number;
   pros: string;
   cons: string;
   text: string;
   mode: number;
-
-  // dealing with the 10 minute lag time between submittal and remote cache invalidation
-  treatAsSubmitted: boolean;
 }
 
 export interface DimUserReview extends DtrItemFetchResponse {
@@ -65,6 +62,14 @@ export interface DtrItemReviewsResponse extends DtrItemFetchResponse {
   reviews: DtrUserReview[];
 }
 
+export enum DtrActivityModes {
+  notSpecified = DestinyActivityModeType.None,
+  playerVersusEnemy = DestinyActivityModeType.AllPvE,
+  playerVersusPlayer = DestinyActivityModeType.AllPvP,
+  raid = DestinyActivityModeType.Raid,
+  trials = DestinyActivityModeType.TrialsOfTheNine
+}
+
 export interface D2CachedItem {
   referenceId: number;
   fetchResponse: DtrItemFetchResponse;
@@ -73,12 +78,4 @@ export interface D2CachedItem {
 
   dimScore: number;
   lastUpdated: Date;
-}
-
-export enum DtrActivityModes {
-  notSpecified = DestinyActivityModeType.None,
-  playerVersusEnemy = DestinyActivityModeType.AllPvE,
-  playerVersusPlayer = DestinyActivityModeType.AllPvP,
-  raid = DestinyActivityModeType.Raid,
-  trials = DestinyActivityModeType.TrialsOfTheNine
 }

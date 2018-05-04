@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
-import { DtrActivityModes } from '../item-review/destiny-tracker.service';
+import { DtrActivityModes } from '../item-review/d2-dtr-api-types';
 
 export interface D2ReviewMode {
   mode: number;
