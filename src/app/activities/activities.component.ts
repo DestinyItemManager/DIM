@@ -212,17 +212,20 @@ function ActivitiesController(
       Epic: 20
     };
 
+    const activity = {
+      heroic: defs.Activity.get(870614351),
+      epic: defs.Activity.get(2234107290)
+    };
+
     for (const skull of skulls[0]) {
       const hash = skullHashesByName[skull.displayName];
       if (hash >= 0) {
         if (hash < 20) { // set all skulls except for epic from heroic playlist...
-          const activity = defs.Activity.get(870614351);
-          skull.displayName = activity.skulls[hash].displayName;
-          skull.description = activity.skulls[hash].description;
+          skull.displayName = activity.heroic.skulls[hash].displayName;
+          skull.description = activity.heroic.skulls[hash].description;
         } else { // set Epic skull based off of a nightfall
-          const activity = defs.Activity.get(2234107290);
-          skull.displayName = activity.skulls[0].displayName;
-          skull.description = activity.skulls[0].description;
+          skull.displayName = activity.epic.skulls[0].displayName;
+          skull.description = activity.epic.skulls[0].description;
         }
       }
     }
