@@ -4,7 +4,7 @@ import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
 import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
-import { DimStore, D1Store } from '../inventory/store-types';
+import { D1Store } from '../inventory/store-types';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
