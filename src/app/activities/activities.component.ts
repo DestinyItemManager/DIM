@@ -220,7 +220,7 @@ function ActivitiesController(
           skull.displayName = activity.skulls[hash].displayName;
           skull.description = activity.skulls[hash].description;
         } else { // set Epic skull based off of a nightfall
-          const activity = defs.Activity.get(870614351);
+          const activity = defs.Activity.get(2234107290);
           skull.displayName = activity.skulls[0].displayName;
           skull.description = activity.skulls[0].description;
         }
