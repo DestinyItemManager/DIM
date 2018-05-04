@@ -219,15 +219,10 @@ function ActivitiesController(
 
     for (const skull of skulls[0]) {
       const hash = skullHashesByName[skull.displayName];
-      if (hash >= 0) {
-        if (hash < 20) { // set all skulls except for epic from heroic playlist...
-          skull.displayName = activity.heroic.skulls[hash].displayName;
-          skull.description = activity.heroic.skulls[hash].description;
-        } else { // set Epic skull based off of a nightfall
-          skull.displayName = activity.epic.skulls[0].displayName;
-          skull.description = activity.epic.skulls[0].description;
-        }
-      }
+      skull.displayName = hash === 20 ? activity.epic.skulls[0].displayName
+        : activity.heroic.skulls[hash].displayName;
+      skull.description = hash === 20 ? activity.epic.skulls[0].description
+        : activity.heroic.skulls[hash].description;
     }
     return skulls;
   }
