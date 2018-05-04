@@ -1,10 +1,11 @@
 import { ReviewDataCache } from './reviewDataCache';
-import { D1ItemUserReview, DtrReviewer } from '../item-review/destiny-tracker.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { UserFilter } from './userFilter';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
+import { DtrReviewer } from '../item-review/dtr-api-types';
+import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 
 /**
  * Class to support reporting bad takes.

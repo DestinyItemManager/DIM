@@ -1,10 +1,19 @@
 import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
-import { D1ItemUserReview, DtrReviewer } from '../item-review/destiny-tracker.service';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
+import { WorkingD1Rating, D1ItemReviewRequest } from '../item-review/d1-dtr-api-types';
+import { DtrReviewer } from '../item-review/dtr-api-types';
+
+export interface D1RatingAndReviewRequest extends D1ItemReviewRequest {
+  reviewer?: DtrReviewer;
+  rating: number;
+  text: string;
+  pros: string;
+  cons: string;
+}
 
 /**
  * Supports submitting review data to the DTR API.
@@ -24,10 +33,10 @@ export class ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item: D1Item) {
+  toRatingAndReview(item: WorkingD1Rating) {
     return {
-      rating: item.userRating,
-      review: item.userReview,
+      rating: item.rating,
+      review: item.review,
       pros: item.pros,
       cons: item.cons
     };
@@ -43,9 +52,14 @@ export class ReviewSubmitter {
   }
 
   _submitReviewPromise(item: D1Item, membershipInfo: DtrReviewer) {
+    if (!item.ratingData ||
+        !item.ratingData.userReview) {
+          return Promise.resolve({});
+        }
+
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
-    const review = this.toRatingAndReview(item);
+    const review = this.toRatingAndReview(item.ratingData.userReview);
 
     const rating = { ...rollAndPerks, ...review, reviewer };
 
@@ -64,19 +78,15 @@ export class ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item: D1Item, membershipInfo: DtrReviewer) {
-    const review = this.toRatingAndReview(item) as D1ItemUserReview;
-    review.isReviewer = true;
-    review.reviewer = this._getReviewer(membershipInfo);
-    review.timestamp = new Date().toISOString();
-
-    this._reviewDataCache.markItemAsReviewedAndSubmitted(item,
-                                                         review);
+  _markItemAsReviewedAndSubmitted(item: D1Item) {
+    this._reviewDataCache.markItemAsReviewedAndSubmitted(item);
   }
 
   submitReview(item, membershipInfo) {
     this._submitReviewPromise(item, membershipInfo)
-      .then(() => this._markItemAsReviewedAndSubmitted(item, membershipInfo))
-      .then(() => this._eventuallyPurgeCachedData(item));
+      .then(() => {
+        this._markItemAsReviewedAndSubmitted(item);
+        this._eventuallyPurgeCachedData(item);
+      });
   }
 }

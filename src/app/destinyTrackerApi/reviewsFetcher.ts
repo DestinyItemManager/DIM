@@ -1,12 +1,12 @@
 import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
-import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-tracker.service';
 import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
+import { D1ItemReviewResponse, D1CachedItem } from '../item-review/d1-dtr-api-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -43,10 +43,6 @@ export class ReviewsFetcher {
     return promise;
   }
 
-  _getUserReview(reviewData: D1ItemReviewResponse | D1CachedItem) {
-    return reviewData.reviews.find((review) => review.isReviewer);
-  }
-
   _sortAndIgnoreReviews(item) {
     if (item.reviews) {
       item.reviews.sort(this._sortReviews);
@@ -58,23 +54,9 @@ export class ReviewsFetcher {
   }
 
   _attachReviews(item: D1Item, reviewData) {
-    const userReview = this._getUserReview(reviewData);
-
-    // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
-    item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
-
-    item.reviews = reviewData.reviews.filter((review) => review.review); // only attach reviews with text associated
+    reviewData.reviews = reviewData.reviews.filter((review) => review.review); // only attach reviews with text associated
 
     this._sortAndIgnoreReviews(item);
-
-    if (userReview) {
-      if (userReview.rating) {
-        item.userRating = userReview.rating;
-      }
-      item.userReview = userReview.review;
-      item.userReviewPros = userReview.pros;
-      item.userReviewCons = userReview.cons;
-    }
 
     this._reviewDataCache.addReviewsData(item, reviewData);
 
@@ -113,22 +95,6 @@ export class ReviewsFetcher {
   _attachCachedReviews(item: D1Item,
                        cachedItem: D1CachedItem) {
     this._attachReviews(item, cachedItem);
-
-    if (cachedItem.userRating) {
-      item.userRating = cachedItem.userRating;
-    }
-
-    if (cachedItem.review) {
-      item.userReview = cachedItem.review;
-    }
-
-    if (cachedItem.pros) {
-      item.userReviewPros = cachedItem.pros;
-    }
-
-    if (cachedItem.cons) {
-      item.userReviewCons = cachedItem.cons;
-    }
   }
 
   /**
@@ -140,11 +106,11 @@ export class ReviewsFetcher {
     if (!item.reviewable) {
       return;
     }
-    const ratingData = this._reviewDataCache.getRatingData(item);
+    const cachedData = this._reviewDataCache.getRatingData(item);
 
-    if (ratingData && ratingData.reviewsDataFetched) {
+    if (cachedData && cachedData.reviewsResponse) {
       this._attachCachedReviews(item,
-                                ratingData);
+                                cachedData);
 
       return;
     }

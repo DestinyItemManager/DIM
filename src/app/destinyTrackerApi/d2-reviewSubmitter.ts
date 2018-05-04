@@ -9,7 +9,7 @@ import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
 import { $q } from 'ngimport';
 
-export interface RatingAndReviewRequest {
+export interface D2RatingAndReviewRequest {
   reviewer?: DtrReviewer;
   voted: number;
   text: string;
@@ -38,7 +38,7 @@ class D2ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(dimUserReview: WorkingD2Rating): RatingAndReviewRequest {
+  toRatingAndReview(dimUserReview: WorkingD2Rating): D2RatingAndReviewRequest {
     return {
       voted: dimUserReview.voted,
       text: dimUserReview.text,

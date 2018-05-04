@@ -5,6 +5,7 @@ import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
 import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
 import { D1Store } from '../inventory/store-types';
+import { Vendor } from '../vendors/vendor.service';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
@@ -98,13 +99,7 @@ class BulkFetcher {
         const matchingItem = this._reviewDataCache.getRatingData(vendorItem);
 
         if (matchingItem) {
-          vendorItem.dtrRating = matchingItem.rating;
-          vendorItem.dtrRatingCount = matchingItem.ratingCount;
-          vendorItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
-          vendorItem.userRating = matchingItem.userRating;
-          vendorItem.userReview = matchingItem.review;
-          vendorItem.pros = matchingItem.pros;
-          vendorItem.cons = matchingItem.cons;
+          vendorItem.ratingData = matchingItem;
         }
       });
     });
