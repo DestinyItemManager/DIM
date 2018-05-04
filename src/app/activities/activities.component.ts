@@ -213,7 +213,7 @@ function ActivitiesController(
     };
 
     for (const skull of skulls[0]) {
-      const hash = skullHashesByName[skull.displayName] || -1;
+      const hash = skullHashesByName[skull.displayName];
       if (hash >= 0) {
         if (hash < 20) { // set all skulls except for epic from heroic playlist...
           const activity = defs.Activity.get(870614351);
