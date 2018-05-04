@@ -2,10 +2,12 @@ import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { loadingTracker } from '../ngimport-more';
-import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
+import { handleD2SubmitErrors, DtrSubmitResponse } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
-import { DtrReviewer } from '../item-review/destiny-tracker.service';
 import { dtrFetch } from './dtr-service-helper';
+import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
+import { DtrReviewer } from '../item-review/dtr-api-types';
+import { $q } from 'ngimport';
 
 export interface RatingAndReviewRequest {
   reviewer?: DtrReviewer;
@@ -36,20 +38,26 @@ class D2ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(item: D2Item): RatingAndReviewRequest {
+  toRatingAndReview(dimUserReview: WorkingD2Rating): RatingAndReviewRequest {
     return {
-      voted: item.userVote,
-      text: item.userReview,
-      pros: item.pros,
-      cons: item.cons,
-      mode: item.mode
+      voted: dimUserReview.voted,
+      text: dimUserReview.text,
+      pros: dimUserReview.pros,
+      cons: dimUserReview.cons,
+      mode: dimUserReview.mode
     };
   }
 
   _submitReviewPromise(item: D2Item, membershipInfo: DestinyAccount | null) {
+    if (!item.ratingData ||
+        !item.ratingData.userReview) {
+      return Promise.resolve<DtrSubmitResponse>({});
+    }
+
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
-    const review = this.toRatingAndReview(item);
+
+    const review = this.toRatingAndReview(item.ratingData.userReview);
 
     const rating = { ...rollAndPerks, ...review, reviewer };
 
@@ -68,20 +76,24 @@ class D2ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  _markItemAsReviewedAndSubmitted(item: D2Item, membershipInfo: DestinyAccount | null) {
-    const review = this.toRatingAndReview(item);
-    review.isReviewer = true;
-    review.reviewer = this._getReviewer(membershipInfo);
-    review.timestamp = new Date().toISOString();
+  _markItemAsReviewedAndSubmitted(item: D2Item) {
+    if (!item.ratingData ||
+        !item.ratingData.userReview) {
+      return;
+    }
 
-    this._reviewDataCache.markItemAsReviewedAndSubmitted(item,
-                                                         review);
+    this._reviewDataCache.markItemAsReviewedAndSubmitted(item);
   }
 
   submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
+    if (!item.ratingData ||
+        !item.ratingData.userReview) {
+      return $q.resolve();
+    }
+
     this._submitReviewPromise(item, membershipInfo)
       .then(() => {
-        this._markItemAsReviewedAndSubmitted(item, membershipInfo);
+        this._markItemAsReviewedAndSubmitted(item);
         this._eventuallyPurgeCachedData(item);
       });
   }

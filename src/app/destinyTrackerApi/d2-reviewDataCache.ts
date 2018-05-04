@@ -166,8 +166,7 @@ class D2ReviewDataCache {
   }
 
   markItemAsReviewedAndSubmitted(
-    item: D2Item,
-    userReview
+    item: D2Item
   ) {
     const cachedItem = this._getMatchingItem(item);
 
@@ -179,9 +178,6 @@ class D2ReviewDataCache {
     cachedItem.reviewsResponse.reviews = (cachedItem.reviewsResponse.reviews) ?
        cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer) :
        [];
-
-    // and add their new review to the local cache
-    cachedItem.reviewsResponse.reviews.unshift(userReview);
   }
 
   /**
@@ -207,6 +203,7 @@ class D2ReviewDataCache {
 
       if (cachedItem) {
         cachedItem.reviewsResponse = undefined;
+        cachedItem.userReview = undefined;
       }
     },
       tenMinutes);
