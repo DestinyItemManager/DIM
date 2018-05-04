@@ -170,7 +170,7 @@ class D2ReviewDataCache {
   ) {
     const cachedItem = this._getMatchingItem(item);
 
-    if ((!cachedItem) || (!cachedItem.reviewsResponse)) {
+    if ((!cachedItem) || (!cachedItem.reviewsResponse) || (!cachedItem.userReview)) {
       return;
     }
 
@@ -178,6 +178,8 @@ class D2ReviewDataCache {
     cachedItem.reviewsResponse.reviews = (cachedItem.reviewsResponse.reviews) ?
        cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer) :
        [];
+
+    cachedItem.userReview.treatAsSubmitted = true;
   }
 
   /**

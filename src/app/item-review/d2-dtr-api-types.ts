@@ -29,6 +29,8 @@ export interface WorkingD2Rating {
   cons: string;
   text: string;
   mode: number;
+
+  treatAsSubmitted: boolean;
 }
 
 export interface DimUserReview extends DtrItemFetchResponse {
