@@ -14,5 +14,5 @@ export interface DimWorkingUserReview {
 }
 
 export interface DimDtrCachedItem {
-  dimScore: number;
+  overallScore: number;
 }

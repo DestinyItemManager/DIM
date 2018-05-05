@@ -113,7 +113,7 @@ class D2ReviewDataCache {
 
     const cachedItem: D2CachedItem = {
       referenceId: dtrRating.referenceId,
-      dimScore,
+      overallScore : dimScore,
       fetchResponse: dtrRating,
       lastUpdated: new Date()
     };

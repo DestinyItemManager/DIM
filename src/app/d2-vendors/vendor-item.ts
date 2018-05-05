@@ -115,7 +115,7 @@ export class VendorItem {
 
   get rating(): number | null {
     if (this.reviewData) {
-      return this.reviewData.dimScore;
+      return this.reviewData.overallScore;
     }
 
     return null;

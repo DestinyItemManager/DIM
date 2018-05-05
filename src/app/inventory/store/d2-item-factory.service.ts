@@ -352,7 +352,7 @@ export function makeItem(
     stats: null, // filled in later
     objectives: null, // filled in later
     dtrRatingCount: (reviewData && reviewData.fetchResponse) ? reviewData.fetchResponse.votes.total : undefined,
-    dtrRating: (reviewData) ? reviewData.dimScore : undefined,
+    dtrRating: (reviewData) ? reviewData.overallScore : undefined,
     reviews: (reviewData && reviewData.reviewsResponse) ? reviewData.reviewsResponse.reviews : []
   });
 

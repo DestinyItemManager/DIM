@@ -53,7 +53,7 @@ export class ReviewDataCache {
       referenceId: dtrRating.referenceId,
       fetchResponse: dtrRating,
       lastUpdated: new Date(),
-      dimScore: (dtrRating.rating) ? dtrRating.rating : 0
+      overallScore: (dtrRating.rating) ? dtrRating.rating : 0
     };
 
     this._itemStores.push(cachedItem);
