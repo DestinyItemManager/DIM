@@ -26,7 +26,7 @@ export interface DestinyTrackerServiceType {
   updateVendorRankings(vendors: any);
   getItemReviews(item: any | DimItem);
   getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse>;
-  submitReview(item: any | DimItem);
+  submitReview(item: DimItem);
   fetchReviews(stores: any | DimStore[]);
   reportReview(review: any);
   clearIgnoredUsers();

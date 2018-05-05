@@ -7,9 +7,9 @@ import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
 import { DestinyTrackerServiceType } from './destiny-tracker.service';
-import { DimItem } from '../inventory/item-types';
-import { D1ItemUserReview } from './d1-dtr-api-types';
-import { D2UserReview } from './d2-dtr-api-types';
+import { DimItem, D1Item, D2Item } from '../inventory/item-types';
+import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
+import { D2UserReview, WorkingD2Rating } from './d2-dtr-api-types';
 
 export const ItemReviewComponent: IComponentOptions = {
   bindings: {
@@ -171,7 +171,7 @@ function ItemReviewController(
     vm.submitted = true;
   };
 
-  vm.setRating = (rating) => {
+  vm.setRating = (rating: number) => {
     if (rating) {
       vm.item.userRating = rating;
     }
@@ -192,15 +192,15 @@ function ItemReviewController(
     dimDestinyTrackerService.reportReview(review);
   };
 
-  vm.toUserReview = (item) => {
+  vm.toUserReview = (item: DimItem): WorkingD1Rating | WorkingD2Rating => {
     if (vm.item.destinyVersion === 1) {
-      return this.toDestinyOneUserReview(item);
+      return this.toDestinyOneUserReview(item as D1Item);
     }
 
-    return this.toDestinyTwoUserReview(item);
+    return this.toDestinyTwoUserReview(item as D2Item);
   };
 
-  vm.toDestinyTwoUserReview = (item) => {
+  vm.toDestinyTwoUserReview = (item: D2Item): WorkingD2Rating => {
     const userVote = item.userVote;
     const review = item.userReview;
     const pros = item.userReviewPros;
@@ -212,13 +212,14 @@ function ItemReviewController(
       review,
       pros,
       cons,
-      mode
+      mode,
+      treatAsSubmitted: false
     };
 
     return userReview;
   };
 
-  vm.toDestinyOneUserReview = (item) => {
+  vm.toDestinyOneUserReview = (item: D1Item): WorkingD1Rating => {
     const newRating = item.userRating;
     const review = item.userReview;
     const pros = item.userReviewPros;
@@ -228,7 +229,8 @@ function ItemReviewController(
       rating: newRating,
       review,
       pros,
-      cons
+      cons,
+      treatAsSubmitted: false
     };
 
     return userReview;
@@ -266,7 +268,7 @@ function ItemReviewController(
     return translateReviewMode(vm.reviewModeOptions, review);
   };
 
-  vm.setUserVote = (userVote) => {
+  vm.setUserVote = (userVote: number) => {
     vm.item.userVote = (vm.item.userVote === userVote) ? 0 : userVote;
 
     vm.expandReview = (vm.item.userVote !== 0);
