@@ -13,7 +13,7 @@ import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { D2PerkRater } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
 import { D2Item } from "../inventory/item-types";
-import { DtrItemReviewsResponse } from "../item-review/d2-dtr-api-types";
+import { DtrItemReviewsResponse, D2CachedItem } from "../item-review/d2-dtr-api-types";
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -106,29 +106,24 @@ export default class VendorItemComponent extends React.Component<Props> {
         this.dialogResult = null;
       }
     } else {
-
-      let reviewData: DtrItemReviewsResponse | null = null;
       let dimItem: D2Item | null = null;
+      let cachedItem: D2CachedItem | null = null;
 
       if (trackerService) {
-        const cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+        cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
 
-        if (cachedItem && cachedItem.reviewsResponse) {
-          reviewData = cachedItem.reviewsResponse;
-        }
-
-        if (reviewData && !reviewData.reviews) {
-          trackerService.getItemReviewAsync(item.itemHash).then((reviewsData) => {
-            Object.assign(reviewData, reviewsData);
+        if (cachedItem && (!cachedItem.reviewsResponse || !cachedItem.reviewsResponse.reviews)) {
+          trackerService.getItemReviewAsync(item.itemHash).then(() => {
+            cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
             // TODO: it'd be nice to push this into tracker service
-            Object.assign(dimItem, item.toDimItem(buckets, reviewData));
+            Object.assign(dimItem, item.toDimItem(buckets, cachedItem));
             new D2PerkRater().ratePerks(dimItem!);
           });
         }
       }
 
       const buckets = await getBuckets();
-      dimItem = item.toDimItem(buckets, reviewData);
+      dimItem = item.toDimItem(buckets, cachedItem);
 
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,

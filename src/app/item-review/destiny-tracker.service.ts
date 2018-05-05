@@ -3,7 +3,6 @@ import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
 import { ReviewsFetcher } from '../destinyTrackerApi/reviewsFetcher';
 import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
 import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
-
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
@@ -15,7 +14,7 @@ import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bun
 import { IPromise } from 'angular';
 import { $q } from 'ngimport';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
-import { DimStore, D2Store } from '../inventory/store-types';
+import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DtrItemReviewsResponse } from './d2-dtr-api-types';
 
@@ -66,7 +65,7 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
 
       if (stores[0].isDestiny1()) {
         _bulkFetcher.attachRankings(null,
-                                    stores);
+                                    stores as D1Store[]);
       } else if (stores[0].isDestiny2()) {
         _d2bulkFetcher.attachRankings(null,
                                       stores as D2Store[]);
@@ -163,7 +162,7 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       }
 
       if (stores[0].isDestiny1()) {
-        _bulkFetcher.bulkFetch(stores);
+        _bulkFetcher.bulkFetch(stores as D1Store[]);
       } else if (stores[0].isDestiny2()) {
         const platformSelection = settings.reviewsPlatformSelection;
         const mode = settings.reviewsModeSelection;

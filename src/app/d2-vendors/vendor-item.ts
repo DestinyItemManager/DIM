@@ -3,9 +3,9 @@ import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { equals } from 'angular';
 import { makeItem } from "../inventory/store/d2-item-factory.service";
 import { D2ReviewDataCache } from "../destinyTrackerApi/d2-reviewDataCache";
-import { DimWorkingUserReview } from "../item-review/destiny-tracker.service";
 import { D2Item } from "../inventory/item-types";
 import { InventoryBuckets } from "../inventory/inventory-buckets";
+import { D2CachedItem } from "../item-review/d2-dtr-api-types";
 
 /**
  * A displayable vendor item. The only state it holds is raw responses/definitions - all
@@ -26,7 +26,7 @@ export class VendorItem {
 
   private defs: D2ManifestDefinitions;
 
-  private reviewData: DimWorkingUserReview | null;
+  private reviewData: D2CachedItem | null;
 
   constructor(
     defs: D2ManifestDefinitions,
@@ -115,7 +115,7 @@ export class VendorItem {
 
   get rating(): number | null {
     if (this.reviewData) {
-      return this.reviewData.rating;
+      return this.reviewData.dimScore;
     }
 
     return null;
@@ -135,7 +135,7 @@ export class VendorItem {
    */
   toDimItem(
     buckets: InventoryBuckets,
-    reviewData: DimWorkingUserReview | null
+    reviewData: D2CachedItem | null
   ): D2Item | null {
     return makeItem(
       this.defs,
