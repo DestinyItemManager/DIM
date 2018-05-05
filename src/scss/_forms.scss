@@ -17,16 +17,23 @@ textarea.textarea-error {
   text-align: right;
 }
 
+select {
+  background: gray;
+  border: none;
+  color: white;
+}
+
 .dim-button {
   cursor: pointer;
   background-color: gray;
-  padding: 3px 10px;
-  box-shadow: inset 0px 0px 1px black;
+  padding: 4px 10px;
   display: inline-block;
   border: none;
-  color: #e0e0e0;
+  color: white;
   font-size: 12px;
   font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, .25);
+  border-radius: 2px;
   &:hover {
     background-color: $orange;
   }
