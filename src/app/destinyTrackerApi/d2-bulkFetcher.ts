@@ -5,7 +5,7 @@ import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
 import { dtrFetch } from './dtr-service-helper';
-import { DtrItemFetchResponse, DtrItemFetchRequest } from '../item-review/d2-dtr-api-types';
+import { D2ItemFetchResponse, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
@@ -15,9 +15,9 @@ class D2BulkFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getBulkFetchPromise(stores: D2Store[], platformSelection: number, mode: number): Promise<DtrItemFetchResponse[]> {
+  _getBulkFetchPromise(stores: D2Store[], platformSelection: number, mode: number): Promise<D2ItemFetchResponse[]> {
     if (!stores.length) {
-      return Promise.resolve<DtrItemFetchResponse[]>([]);
+      return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
     const itemList = this._itemListBuilder.getItemList(stores, this._reviewDataCache);
@@ -27,18 +27,18 @@ class D2BulkFetcher {
   _getVendorBulkFetchPromise(platformSelection: number,
                              mode: number,
                              vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                             vendorItems?: DestinyVendorItemDefinition[]): Promise<DtrItemFetchResponse[]> {
+                             vendorItems?: DestinyVendorItemDefinition[]): Promise<D2ItemFetchResponse[]> {
     if ((vendorSaleItems && !vendorSaleItems.length) || (vendorItems && !vendorItems.length)) {
-      return Promise.resolve<DtrItemFetchResponse[]>([]);
+      return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
     const vendorDtrItems = this._itemListBuilder.getVendorItemList(this._reviewDataCache, vendorSaleItems, vendorItems);
     return this._getBulkItems(vendorDtrItems, platformSelection, mode);
   }
 
-  _getBulkItems(itemList: DtrItemFetchRequest[], platformSelection: number, mode: number): Promise<DtrItemFetchResponse[]> {
+  _getBulkItems(itemList: D2ItemFetchRequest[], platformSelection: number, mode: number): Promise<D2ItemFetchResponse[]> {
     if (!itemList.length) {
-      return Promise.resolve<DtrItemFetchResponse[]>([]);
+      return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
     const promise = dtrFetch(
@@ -60,7 +60,7 @@ class D2BulkFetcher {
                                                   stores));
   }
 
-  _addScores(bulkRankings: DtrItemFetchResponse[]): void {
+  _addScores(bulkRankings: D2ItemFetchResponse[]): void {
     this._reviewDataCache.addScores(bulkRankings);
   }
 
@@ -79,7 +79,7 @@ class D2BulkFetcher {
       .then((bulkRankings) => this._addScores(bulkRankings));
   }
 
-  attachRankings(bulkRankings: DtrItemFetchResponse[] | null,
+  attachRankings(bulkRankings: D2ItemFetchResponse[] | null,
                  stores: D2Store[]): void {
     if (!bulkRankings && !stores) {
       return;

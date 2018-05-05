@@ -16,7 +16,7 @@ import { $q } from 'ngimport';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
 import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
-import { DtrItemReviewsResponse } from './d2-dtr-api-types';
+import { D2ItemReviewResponse } from './d2-dtr-api-types';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -25,7 +25,7 @@ export interface DestinyTrackerServiceType {
   updateCachedUserRankings(item: any | DimItem, userReview: any);
   updateVendorRankings(vendors: any);
   getItemReviews(item: any | DimItem);
-  getItemReviewAsync(itemHash: number): IPromise<DtrItemReviewsResponse>;
+  getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse>;
   submitReview(item: any | DimItem);
   fetchReviews(stores: any | DimStore[]);
   reportReview(review: any);
@@ -170,7 +170,7 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       }
     },
 
-    getItemReviewAsync(itemHash: number): IPromise<DtrItemReviewsResponse> {
+    getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse> {
       if (settings.allowIdPostToDtr) {
         if (_isDestinyOne()) {
           console.error("This is a D2-only call.");

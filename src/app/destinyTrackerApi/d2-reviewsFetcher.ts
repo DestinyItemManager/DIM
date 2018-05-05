@@ -8,7 +8,7 @@ import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { DtrItemReviewsResponse, DtrUserReview } from '../item-review/d2-dtr-api-types';
+import { D2ItemReviewResponse, D2UserReview } from '../item-review/d2-dtr-api-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -22,7 +22,7 @@ class D2ReviewsFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getItemReviewsPromise(item, platformSelection: number, mode: number): Promise<DtrItemReviewsResponse> {
+  _getItemReviewsPromise(item, platformSelection: number, mode: number): Promise<D2ItemReviewResponse> {
     const dtrItem = this._itemTransformer.getRollAndPerks(item);
 
     const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
@@ -36,12 +36,12 @@ class D2ReviewsFetcher {
     return promise;
   }
 
-  _getUserReview(reviewData: DtrItemReviewsResponse) {
+  _getUserReview(reviewData: D2ItemReviewResponse) {
     // bugbug: will need to use membership service if isReviewer flag stays broke
     return reviewData.reviews.find((r) => r.isReviewer);
   }
 
-  _sortAndIgnoreReviews(reviewResponse: DtrItemReviewsResponse) {
+  _sortAndIgnoreReviews(reviewResponse: D2ItemReviewResponse) {
     if (reviewResponse.reviews) {
       reviewResponse.reviews.sort(this._sortReviews);
 
@@ -51,7 +51,7 @@ class D2ReviewsFetcher {
     }
   }
 
-  _markUserReview(reviewData: DtrItemReviewsResponse) {
+  _markUserReview(reviewData: D2ItemReviewResponse) {
     const membershipInfo = getActivePlatform();
 
     if (!membershipInfo) {
@@ -69,7 +69,7 @@ class D2ReviewsFetcher {
     return reviewData;
   }
 
-  _attachReviews(item: D2Item, reviewData: DtrItemReviewsResponse) {
+  _attachReviews(item: D2Item, reviewData: D2ItemReviewResponse) {
     this._sortAndIgnoreReviews(reviewData);
 
     this._reviewDataCache.addReviewsData(reviewData);
@@ -78,7 +78,7 @@ class D2ReviewsFetcher {
     this._perkRater.ratePerks(item);
   }
 
-  _sortReviews(a: DtrUserReview, b: DtrUserReview) {
+  _sortReviews(a: D2UserReview, b: D2UserReview) {
     if (a.isReviewer) {
       return -1;
     }
@@ -133,7 +133,7 @@ class D2ReviewsFetcher {
       });
   }
 
-  fetchItemReviews(itemHash: number, platformSelection: number, mode: number): Promise<DtrItemReviewsResponse> {
+  fetchItemReviews(itemHash: number, platformSelection: number, mode: number): Promise<D2ItemReviewResponse> {
     const cachedData = this._reviewDataCache.getRatingData(undefined, itemHash);
 
     if (cachedData && cachedData.reviewsResponse) {

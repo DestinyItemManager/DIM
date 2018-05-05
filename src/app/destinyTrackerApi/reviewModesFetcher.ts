@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
-import { DtrActivityModes } from '../item-review/d2-dtr-api-types';
+import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
 
 export interface D2ReviewMode {
   mode: number;
@@ -20,10 +20,10 @@ export function getReviewModes(defs?: D2ManifestDefinitions): D2ReviewMode[] {
   }
 
   return [
-    { mode: DtrActivityModes.notSpecified, description: t('DtrReview.ModeNotSpecified') },
-    { mode: DtrActivityModes.playerVersusEnemy, description: defs.ActivityMode[ActivityModeHashes.playerVersusEnemy].displayProperties.name },
-    { mode: DtrActivityModes.playerVersusPlayer, description: defs.ActivityMode[ActivityModeHashes.playerVersusPlayer].displayProperties.name },
-    { mode: DtrActivityModes.raid, description: defs.ActivityMode[ActivityModeHashes.raid].displayProperties.name },
-    { mode: DtrActivityModes.trials, description: defs.ActivityMode[ActivityModeHashes.trials].displayProperties.name }
+    { mode: DtrD2ActivityModes.notSpecified, description: t('DtrReview.ModeNotSpecified') },
+    { mode: DtrD2ActivityModes.playerVersusEnemy, description: defs.ActivityMode[ActivityModeHashes.playerVersusEnemy].displayProperties.name },
+    { mode: DtrD2ActivityModes.playerVersusPlayer, description: defs.ActivityMode[ActivityModeHashes.playerVersusPlayer].displayProperties.name },
+    { mode: DtrD2ActivityModes.raid, description: defs.ActivityMode[ActivityModeHashes.raid].displayProperties.name },
+    { mode: DtrD2ActivityModes.trials, description: defs.ActivityMode[ActivityModeHashes.trials].displayProperties.name }
   ];
 }

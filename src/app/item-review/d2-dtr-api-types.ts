@@ -1,26 +1,26 @@
-import { DtrReviewer, DimWorkingUserReview, DimDtrCachedItem } from "./dtr-api-types";
+import { DtrReviewer, DimWorkingUserReview, DimDtrCachedItem, DimUserReview } from "./dtr-api-types";
 import { DestinyActivityModeType } from "bungie-api-ts/destiny2";
 
-export interface DtrBasicItem {
+export interface DtrD2BasicItem {
   referenceId: number;
   instanceId?: string;
   attachedMods?: number[];
   selectedPerks?: number[];
 }
 
-export interface DtrVote {
+export interface DtrD2Vote {
   upvotes: number;
   downvotes: number;
   total: number;
   score: number;
 }
 
-export interface DtrItemFetchRequest {
+export interface D2ItemFetchRequest {
   referenceId: number;
 }
 
-export interface DtrItemFetchResponse extends DtrBasicItem {
-  votes: DtrVote;
+export interface D2ItemFetchResponse extends DtrD2BasicItem {
+  votes: DtrD2Vote;
 }
 
 export interface WorkingD2Rating extends DimWorkingUserReview {
@@ -31,15 +31,7 @@ export interface WorkingD2Rating extends DimWorkingUserReview {
   mode: number;
 }
 
-export interface DimUserReview extends DtrItemFetchResponse {
-  reviewer: DtrReviewer;
-  voted: number;
-  pros: string;
-  cons: string;
-  text: string;
-}
-
-export interface DtrUserReview extends DimUserReview {
+export interface D2UserReview extends DimUserReview {
   id: string;
   timestamp: Date;
   isReviewer: boolean;
@@ -50,19 +42,18 @@ export interface DtrUserReview extends DimUserReview {
   pros: string;
   cons: string;
   text: string;
-  isIgnored?: boolean;
   selectedPerks: number[];
   attachedMods: number[];
-  mode: DtrActivityModes;
+  mode: DtrD2ActivityModes;
   sandbox: number; // sandbox season (1 was the first, 2 is the March 2018 "go fast" update)
 }
 
-export interface DtrItemReviewsResponse extends DtrItemFetchResponse {
+export interface D2ItemReviewResponse extends D2ItemFetchResponse {
   totalReviews: number;
-  reviews: DtrUserReview[];
+  reviews: D2UserReview[];
 }
 
-export enum DtrActivityModes {
+export enum DtrD2ActivityModes {
   notSpecified = DestinyActivityModeType.None,
   playerVersusEnemy = DestinyActivityModeType.AllPvE,
   playerVersusPlayer = DestinyActivityModeType.AllPvP,
@@ -72,8 +63,8 @@ export enum DtrActivityModes {
 
 export interface D2CachedItem extends DimDtrCachedItem {
   referenceId: number;
-  fetchResponse: DtrItemFetchResponse;
-  reviewsResponse?: DtrItemReviewsResponse;
+  fetchResponse: D2ItemFetchResponse;
+  reviewsResponse?: D2ItemReviewResponse;
   userReview?: WorkingD2Rating;
 
   lastUpdated: Date;

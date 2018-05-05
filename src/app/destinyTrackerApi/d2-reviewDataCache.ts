@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
-import { D2CachedItem, DtrItemFetchResponse, WorkingD2Rating, DtrUserReview, DtrItemReviewsResponse } from '../item-review/d2-dtr-api-types';
+import { D2CachedItem, D2ItemFetchResponse, WorkingD2Rating, D2UserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
 
 /**
  * Cache of review data.
@@ -53,7 +53,7 @@ class D2ReviewDataCache {
     return rating.toFixed(1);
   }
 
-  _getDownvoteMultiplier(dtrRating: DtrItemFetchResponse) {
+  _getDownvoteMultiplier(dtrRating: D2ItemFetchResponse) {
     if (dtrRating.votes.total > (this._maxTotalVotes * 0.75)) {
       return 1;
     }
@@ -82,14 +82,14 @@ class D2ReviewDataCache {
     return rating;
   }
 
-  _setMaximumTotalVotes(bulkRankings: DtrItemFetchResponse[]) {
+  _setMaximumTotalVotes(bulkRankings: D2ItemFetchResponse[]) {
     this._maxTotalVotes = _.max(_.pluck(_.pluck(bulkRankings, 'votes'), 'total'));
   }
 
   /**
    * Add (and track) the community scores.
    */
-  addScores(bulkRankings: DtrItemFetchResponse[]) {
+  addScores(bulkRankings: D2ItemFetchResponse[]) {
     if (bulkRankings) {
       this._setMaximumTotalVotes(bulkRankings);
 
@@ -108,7 +108,7 @@ class D2ReviewDataCache {
   /**
    * Add (and track) the community score.
    */
-  _addScore(dtrRating: DtrItemFetchResponse) {
+  _addScore(dtrRating: D2ItemFetchResponse) {
     const dimScore = this._getScore(dtrRating);
 
     const cachedItem: D2CachedItem = {
@@ -143,7 +143,7 @@ class D2ReviewDataCache {
    * Keep track of expanded item review data from the DTR API for this DIM store item.
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
-  addReviewsData(reviewsData: DtrItemReviewsResponse) {
+  addReviewsData(reviewsData: D2ItemReviewResponse) {
     const cachedItem = this._itemStores.find((s) => s.referenceId === reviewsData.referenceId);
 
     if (!cachedItem) {
@@ -161,7 +161,7 @@ class D2ReviewDataCache {
     return this._itemStores;
   }
 
-  markReviewAsIgnored(writtenReview: DtrUserReview): void {
+  markReviewAsIgnored(writtenReview: D2UserReview): void {
     writtenReview.isIgnored = true;
   }
 

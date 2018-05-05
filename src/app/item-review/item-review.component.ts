@@ -6,8 +6,10 @@ import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
-import { DestinyTrackerServiceType, D1ItemUserReview, DtrUserReview } from './destiny-tracker.service';
+import { DestinyTrackerServiceType } from './destiny-tracker.service';
 import { DimItem } from '../inventory/item-types';
+import { D1ItemUserReview } from './d1-dtr-api-types';
+import { D2UserReview } from './d2-dtr-api-types';
 
 export const ItemReviewComponent: IComponentOptions = {
   bindings: {
@@ -105,7 +107,7 @@ function ItemReviewController(
     if (vm.item.destinyVersion === 1) {
       return (vm.item.reviews as D1ItemUserReview[]).find((review) => review.reviewId === reviewId);
     } else {
-      return (vm.item.reviews as DtrUserReview[]).find((review) => review.id === reviewId);
+      return (vm.item.reviews as D2UserReview[]).find((review) => review.id === reviewId);
     }
   };
 
@@ -146,7 +148,7 @@ function ItemReviewController(
 
         return matchingReviews.length + (highlightedReviews.length * 4);
       } else {
-        const highlightedReviews = (vm.item.reviews as DtrUserReview[]).filter((review) => review.isHighlighted);
+        const highlightedReviews = (vm.item.reviews as D2UserReview[]).filter((review) => review.isHighlighted);
         return vm.item.reviews.length + (highlightedReviews.length * 4);
       }
     });

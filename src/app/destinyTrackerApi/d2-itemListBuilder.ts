@@ -5,7 +5,7 @@ import { D2ItemTransformer } from './d2-itemTransformer';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2Store } from '../inventory/store-types';
-import { DtrItemFetchRequest } from '../item-review/d2-dtr-api-types';
+import { D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.
@@ -28,7 +28,7 @@ class D2ItemListBuilder {
     return unmatched;
   }
 
-  _getNewVendorItems(vendorItems: DtrItemFetchRequest[], reviewDataCache: D2ReviewDataCache) {
+  _getNewVendorItems(vendorItems: D2ItemFetchRequest[], reviewDataCache: D2ReviewDataCache) {
     const allKnownDtrItems = reviewDataCache.getItemStores();
 
     const unmatched = vendorItems.filter((vi) => allKnownDtrItems.every((di) => di.referenceId !== vi.referenceId));
@@ -46,7 +46,7 @@ class D2ItemListBuilder {
   }
 
   // Get all of the weapons from our stores in a DTR API-friendly format.
-  _getDtrItems(stores: D2Store[], reviewDataCache: D2ReviewDataCache): DtrItemFetchRequest[] {
+  _getDtrItems(stores: D2Store[], reviewDataCache: D2ReviewDataCache): D2ItemFetchRequest[] {
     const allItems = this._getAllItems(stores);
 
     const allReviewableItems = _.filter(allItems,
@@ -68,7 +68,7 @@ class D2ItemListBuilder {
    * Tailored to work alongside the bulkFetcher.
    * Non-obvious bit: it attempts to optimize away from sending items that already exist in the ReviewDataCache.
    */
-  getItemList(stores: D2Store[], reviewDataCache: D2ReviewDataCache): DtrItemFetchRequest[] {
+  getItemList(stores: D2Store[], reviewDataCache: D2ReviewDataCache): D2ItemFetchRequest[] {
     const dtrItems = this._getDtrItems(stores, reviewDataCache);
 
     const list = new Set(dtrItems);
@@ -78,13 +78,13 @@ class D2ItemListBuilder {
 
   getVendorItemList(reviewDataCache: D2ReviewDataCache,
                     vendorSaleItems?: DestinyVendorSaleItemComponent[],
-                    vendorItems?: DestinyVendorItemDefinition[]): DtrItemFetchRequest[] {
+                    vendorItems?: DestinyVendorItemDefinition[]): D2ItemFetchRequest[] {
     if (vendorSaleItems) {
-      const allVendorItems = vendorSaleItems.map((vendorItem): DtrItemFetchRequest => ({ referenceId: vendorItem.itemHash }));
+      const allVendorItems = vendorSaleItems.map((vendorItem): D2ItemFetchRequest => ({ referenceId: vendorItem.itemHash }));
 
       return this._getNewVendorItems(allVendorItems, reviewDataCache);
     } else if (vendorItems) {
-      const allVendorItems = vendorItems.map((vi) => ({ referenceId: vi.itemHash })) as DtrItemFetchRequest[];
+      const allVendorItems = vendorItems.map((vi) => ({ referenceId: vi.itemHash })) as D2ItemFetchRequest[];
 
       return this._getNewVendorItems(allVendorItems, reviewDataCache);
     } else {

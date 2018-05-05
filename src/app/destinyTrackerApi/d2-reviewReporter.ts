@@ -5,7 +5,7 @@ import { loadingTracker } from "../ngimport-more";
 import { handleD2SubmitErrors } from "./d2-trackerErrorHandler";
 import { dtrFetch } from "./dtr-service-helper";
 import { DtrReviewer } from "../item-review/dtr-api-types";
-import { DtrUserReview } from "../item-review/d2-dtr-api-types";
+import { D2UserReview } from "../item-review/d2-dtr-api-types";
 
 export interface DimReviewReport {
   reviewId: string;
@@ -53,7 +53,7 @@ class D2ReviewReporter {
     return promise;
   }
 
-  _ignoreReportedUser(review: DtrUserReview) {
+  _ignoreReportedUser(review: D2UserReview) {
     const reportedMembershipId = review.reviewer.membershipId;
     this._userFilter.ignoreUser(reportedMembershipId);
   }
@@ -62,7 +62,7 @@ class D2ReviewReporter {
    * Report a written review.
    * Also quietly adds the associated user to a block list.
    */
-  reportReview(review: DtrUserReview, membershipInfo: DestinyAccount | null) {
+  reportReview(review: D2UserReview, membershipInfo: DestinyAccount | null) {
     if (review.isHighlighted || review.isReviewer || !membershipInfo) {
       return;
     }

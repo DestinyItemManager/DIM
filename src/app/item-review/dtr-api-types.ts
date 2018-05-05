@@ -5,7 +5,7 @@ export interface DtrReviewer {
 }
 
 export interface DimUserReview {
-  isIgnored: boolean;
+  isIgnored?: boolean;
 }
 
 export interface DimWorkingUserReview {
