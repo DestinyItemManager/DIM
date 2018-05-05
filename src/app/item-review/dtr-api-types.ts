@@ -12,3 +12,7 @@ export interface DimWorkingUserReview {
   // dealing with the 10 minute lag time between submittal and remote cache invalidation
   treatAsSubmitted: boolean;
 }
+
+export interface DimDtrCachedItem {
+  dimScore: number;
+}

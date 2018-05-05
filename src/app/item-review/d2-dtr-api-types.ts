@@ -1,4 +1,4 @@
-import { DtrReviewer, DimWorkingUserReview } from "./dtr-api-types";
+import { DtrReviewer, DimWorkingUserReview, DimDtrCachedItem } from "./dtr-api-types";
 import { DestinyActivityModeType } from "bungie-api-ts/destiny2";
 
 export interface DtrBasicItem {
@@ -70,12 +70,11 @@ export enum DtrActivityModes {
   trials = DestinyActivityModeType.TrialsOfTheNine
 }
 
-export interface D2CachedItem {
+export interface D2CachedItem extends DimDtrCachedItem {
   referenceId: number;
   fetchResponse: DtrItemFetchResponse;
   reviewsResponse?: DtrItemReviewsResponse;
   userReview?: WorkingD2Rating;
 
-  dimScore: number;
   lastUpdated: Date;
 }

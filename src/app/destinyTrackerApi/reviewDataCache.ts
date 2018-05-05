@@ -52,7 +52,8 @@ export class ReviewDataCache {
     const cachedItem: D1CachedItem = {
       referenceId: dtrRating.referenceId,
       fetchResponse: dtrRating,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
+      dimScore: (dtrRating.rating) ? dtrRating.rating : 0
     };
 
     this._itemStores.push(cachedItem);
