@@ -633,7 +633,8 @@
     "StatLabel": "當前包含:",
     "TagNotesD1": "{{value}} 個帶標簽或備注的天命1物品",
     "TagNotesD2": "{{value}} 個帶標簽或備注的天命2物品",
-    "Title": "DIM儲存"
+    "Title": "DIM儲存",
+    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
   },
   "StoreBucket": {
     "FillStack": "填滿堆疊 ({{amount}})",

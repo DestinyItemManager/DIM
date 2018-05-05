@@ -633,7 +633,8 @@
     "StatLabel": "В настоящий момент содержит:",
     "TagNotesD1": "{{value}} предметов Destiny 1 с тегами или заметками",
     "TagNotesD2": "{{value}} предметов Destiny 2 с тегами или заметками",
-    "Title": "Хранилище DIM"
+    "Title": "Хранилище DIM",
+    "Usage": "Данные DIM занимают {{usage, humanBytes}} из {{quota, humanBytes}} доступных."
   },
   "StoreBucket": {
     "FillStack": "Переместить все ({{amount}})",

@@ -633,7 +633,8 @@
     "StatLabel": "Das beinhaltet derzeit:",
     "TagNotesD1": "{{value}} Destiny 1 Items mit Markierungen oder Notizen",
     "TagNotesD2": "{{value}} Destiny 2 Items mit Markierungen oder Notizen",
-    "Title": "DIM Speicher"
+    "Title": "DIM Speicher",
+    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
   },
   "StoreBucket": {
     "FillStack": "Stapel auffüllen ({{amount}})",

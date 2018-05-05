@@ -633,7 +633,8 @@
     "StatLabel": "現在の仕様:",
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
-    "Title": "DIMのストレージ"
+    "Title": "DIMのストレージ",
+    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
   },
   "StoreBucket": {
     "FillStack": "フルスタック ({{amount}})",

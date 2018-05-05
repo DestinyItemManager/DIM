@@ -255,16 +255,16 @@
     "About": "Sobre",
     "Back": "Voltar",
     "BulkTag": "Marcar items em massa",
-    "BungieNetAlert": "Bungie Alert",
+    "BungieNetAlert": "Alerta da Bungie",
     "FilterHelp": "Buscar por item/perk ou {{example}}",
     "Filters": "Filtros",
     "Inventory": "Inventário",
     "Refresh": "Atualizar dados do Destiny",
-    "ReportBug": "Bug Report",
+    "ReportBug": "Relatar Falhas",
     "Shop": "Loja",
     "SupportDIM": "Apoiadores",
-    "UpgradeDIM": "Upgrade DIM",
-    "WhatsNew": "What's New"
+    "UpgradeDIM": "Atualize o DIM",
+    "WhatsNew": "Novidades"
   },
   "Help": {
     "CannotMove": "Não é possível remover o item deste personagem.",
@@ -633,7 +633,8 @@
     "StatLabel": "Isso contém:",
     "TagNotesD1": "{{value}} items do Destiny 1 com marcas ou anotações",
     "TagNotesD2": "{{value}} items do Destiny 2 com marcas ou anotações",
-    "Title": "Armazenamento do DIM"
+    "Title": "Armazenamento do DIM",
+    "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo."
   },
   "StoreBucket": {
     "FillStack": "Encher Pilha ({{amount}})",
@@ -666,7 +667,7 @@
     "Collections": "Coleções",
     "Compare": "Compare com o que você já possui:",
     "Consumables": "Consumíveis",
-    "DestinySets": "Browse more item sets at Destiny Sets",
+    "DestinySets": "Procure mais itens em Destiny Sets",
     "Emotes": "Gestos",
     "Engram": "Engrama de Recompensa",
     "Load": "Carregando vendedores",

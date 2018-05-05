@@ -633,7 +633,8 @@
     "StatLabel": "Esto contiene:",
     "TagNotesD1": "{{value}} objetos de Destiny 1 con etiquetas o notas",
     "TagNotesD2": "{{value}} objetos de Destiny 2 con etiquetas o notas",
-    "Title": "Almacenamiento de DIM"
+    "Title": "Almacenamiento de DIM",
+    "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles en este dispositivo."
   },
   "StoreBucket": {
     "FillStack": "Llena la pila ({{amount}})",
