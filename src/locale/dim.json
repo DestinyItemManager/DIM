@@ -494,7 +494,8 @@
     "Take": "Take",
     "TrackUntrack_Track": "Track {{itemType}}",
     "TrackUntrack_Untrack": "Untrack {{itemType}}",
-    "Vault": "Vault"
+    "Vault": "Vault",
+    "ReadLore": "Read lore on Ishtar Collective"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",

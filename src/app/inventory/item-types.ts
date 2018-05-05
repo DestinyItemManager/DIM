@@ -92,6 +92,7 @@ export interface DimItem {
   stats: DimStat[] | null;
   objectives: DimObjective[] | null;
   isEngram: boolean;
+  loreHash: number;
   /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
 

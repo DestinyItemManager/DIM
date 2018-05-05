@@ -1,6 +1,7 @@
 # Next
 
 * Fix a bug where having mods, shaders, or materials in the postmaster might make it impossible to move any mod/shader/material into or out of the vault.
+* Add links to Ishtar Collective on items with lore.
 
 # 4.50.0 (2018-04-30)
 
