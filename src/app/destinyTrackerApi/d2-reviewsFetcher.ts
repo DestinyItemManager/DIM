@@ -8,7 +8,7 @@ import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { DtrItemReviewsResponse, DtrUserReview, D2CachedItem } from '../item-review/d2-dtr-api-types';
+import { DtrItemReviewsResponse, DtrUserReview } from '../item-review/d2-dtr-api-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
