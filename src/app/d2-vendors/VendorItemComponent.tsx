@@ -13,7 +13,7 @@ import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { D2PerkRater } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
 import { D2Item } from "../inventory/item-types";
-import { DtrItemReviewsResponse, D2CachedItem } from "../item-review/d2-dtr-api-types";
+import { D2CachedItem } from "../item-review/d2-dtr-api-types";
 
 interface Props {
   defs: D2ManifestDefinitions;
