@@ -486,6 +486,7 @@
     "LockUnlock_Lock": "Bloquear {{itemType}}",
     "LockUnlock_Unlock": "Desbloquear {{itemType}}",
     "OverviewTab": "Resumen",
+    "ReadLore": "Lee historia en Ishtar Collective",
     "ReviewsTab": "Calificaciones",
     "Split": "Partir",
     "Store": "Meter",

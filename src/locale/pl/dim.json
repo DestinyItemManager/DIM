@@ -486,6 +486,7 @@
     "LockUnlock_Lock": "Lock {{itemType}}",
     "LockUnlock_Unlock": "Unlock {{itemType}}",
     "OverviewTab": "Overview",
+    "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
     "Split": "Split",
     "Store": "Store",

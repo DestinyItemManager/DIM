@@ -486,6 +486,7 @@
     "LockUnlock_Lock": "固定する {{itemType}}",
     "LockUnlock_Unlock": "固定解除する {{itemType}}",
     "OverviewTab": "概要",
+    "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "レビュー",
     "Split": "分割",
     "Store": "保管する",

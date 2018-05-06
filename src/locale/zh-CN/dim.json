@@ -486,6 +486,7 @@
     "LockUnlock_Lock": "锁定 {{itemType}}",
     "LockUnlock_Unlock": "解锁{{itemType}}",
     "OverviewTab": "概述",
+    "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "评测",
     "Split": "拆分",
     "Store": "寄存",
