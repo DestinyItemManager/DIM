@@ -71,9 +71,7 @@ class BulkFetcher {
         if (storeItem.reviewable) {
           const matchingItem = this._reviewDataCache.getRatingData(storeItem);
 
-          if (matchingItem) {
-            storeItem.ratingData = matchingItem;
-          }
+          storeItem.ratingData = matchingItem;
         }
       });
     });

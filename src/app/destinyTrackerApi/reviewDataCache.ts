@@ -82,18 +82,28 @@ export class ReviewDataCache {
       dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
     }
 
-    const cachedItem: D1CachedItem = {
-      referenceId: dtrRating.referenceId,
-      fetchResponse: dtrRating,
-      lastUpdated: new Date(),
-      overallScore: (dtrRating.rating) ? dtrRating.rating : 0,
-      ratingCount: dtrRating.ratingCount,
-      highlightedRatingCount: dtrRating.highlightedRatingCount,
-      roll: dtrRating.roll,
-      userReview: this._createBlankUserReview()
-    };
+    const previouslyCachedItem = this._itemStores.find((ci) => ci.roll === dtrRating.roll && ci.referenceId === dtrRating.referenceId);
 
-    this._itemStores.push(cachedItem);
+    if (previouslyCachedItem) {
+      previouslyCachedItem.fetchResponse = dtrRating;
+      previouslyCachedItem.lastUpdated = new Date();
+      previouslyCachedItem.overallScore = (dtrRating.rating) ? dtrRating.rating : 0;
+      previouslyCachedItem.ratingCount = dtrRating.ratingCount;
+      dtrRating.highlightedRatingCount = dtrRating.highlightedRatingCount;
+    } else {
+      const cachedItem: D1CachedItem = {
+        referenceId: dtrRating.referenceId,
+        fetchResponse: dtrRating,
+        lastUpdated: new Date(),
+        overallScore: (dtrRating.rating) ? dtrRating.rating : 0,
+        ratingCount: dtrRating.ratingCount,
+        highlightedRatingCount: dtrRating.highlightedRatingCount,
+        roll: dtrRating.roll,
+        userReview: this._createBlankUserReview()
+      };
+
+      this._itemStores.push(cachedItem);
+    }
   }
 
   /**
