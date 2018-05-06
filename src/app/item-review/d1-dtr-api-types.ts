@@ -45,6 +45,7 @@ export interface D1CachedItem extends DimDtrCachedItem {
   fetchResponse?: D1ItemFetchResponse;
   reviewsResponse?: D1ItemReviewResponse;
   userReview: WorkingD1Rating;
+  roll: string | null;
 
   lastUpdated: Date;
 }

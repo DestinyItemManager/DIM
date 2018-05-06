@@ -57,7 +57,9 @@ class D2ReviewDataCache {
       referenceId,
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
-      overallScore: 0
+      overallScore: 0,
+      ratingCount: 0,
+      highlightedRatingCount: 0
     };
 
     this._itemStores.push(blankItem);
@@ -154,7 +156,9 @@ class D2ReviewDataCache {
       overallScore : dimScore,
       fetchResponse: dtrRating,
       lastUpdated: new Date(),
-      userReview: this._getBlankWorkingD2Rating()
+      userReview: this._getBlankWorkingD2Rating(),
+      ratingCount: dtrRating.votes.total,
+      highlightedRatingCount: 0 // bugbug: D2 API doesn't seem to be returning highlighted ratings in fetch
     };
 
     this._itemStores.push(cachedItem);
@@ -189,10 +193,14 @@ class D2ReviewDataCache {
       return;
     }
 
-    // todo: resurrect isReviewer logic, make any review that the user submitted a working user review with the treat as submitted flag true
-
     cachedItem.lastUpdated = new Date();
     cachedItem.reviewsResponse = reviewsData;
+
+    const userReview = reviewsData.reviews.find((r) => r.isReviewer);
+
+    if (userReview && cachedItem.userReview.voted === 0) {
+      Object.assign(cachedItem.userReview, userReview);
+    }
   }
 
   /**

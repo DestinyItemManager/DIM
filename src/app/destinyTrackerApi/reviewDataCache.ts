@@ -29,8 +29,41 @@ export class ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item: D1Item): D1CachedItem | undefined {
-    return this._getMatchingItem(item);
+  getRatingData(item: D1Item): D1CachedItem {
+    const cachedItem = this._getMatchingItem(item);
+
+    if (cachedItem) {
+      return cachedItem;
+    }
+
+    const blankCacheItem = this._createBlankCacheItem(item);
+    this._itemStores.push(blankCacheItem);
+
+    return blankCacheItem;
+  }
+
+  _createBlankUserReview(): WorkingD1Rating {
+    return {
+      rating: 0,
+      pros: "",
+      review: "",
+      cons: "",
+      treatAsSubmitted: false
+    };
+  }
+
+  _createBlankCacheItem(item: D1Item): D1CachedItem {
+    const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
+
+    return {
+      referenceId : dtrItem.referenceId,
+      roll: dtrItem.roll,
+      userReview: this._createBlankUserReview(),
+      lastUpdated: new Date(),
+      overallScore: 0,
+      ratingCount: 0,
+      highlightedRatingCount: 0
+    };
   }
 
   _toAtMostOneDecimal(rating: number): number {
@@ -53,7 +86,11 @@ export class ReviewDataCache {
       referenceId: dtrRating.referenceId,
       fetchResponse: dtrRating,
       lastUpdated: new Date(),
-      overallScore: (dtrRating.rating) ? dtrRating.rating : 0
+      overallScore: (dtrRating.rating) ? dtrRating.rating : 0,
+      ratingCount: dtrRating.ratingCount,
+      highlightedRatingCount: dtrRating.highlightedRatingCount,
+      roll: dtrRating.roll,
+      userReview: this._createBlankUserReview()
     };
 
     this._itemStores.push(cachedItem);
@@ -83,10 +120,16 @@ export class ReviewDataCache {
    */
   addReviewsData(item: D1Item,
                  reviewsData: D1ItemReviewResponse) {
-    const cachedItem = this._getMatchingItem(item);
+    const cachedItem = this.getRatingData(item);
 
     if (cachedItem) {
       cachedItem.reviewsResponse = reviewsData;
+    }
+
+    const userReview = reviewsData.reviews.find((r) => r.isReviewer);
+
+    if (userReview && cachedItem.userReview.rating === 0) {
+      Object.assign(cachedItem.userReview, userReview);
     }
   }
 
@@ -104,7 +147,7 @@ export class ReviewDataCache {
   markItemAsReviewedAndSubmitted(
     item: D1Item
   ) {
-    const cachedItem = this._getMatchingItem(item);
+    const cachedItem = this.getRatingData(item);
 
     if ((!cachedItem) || (!cachedItem.userReview)) {
       return;
@@ -133,12 +176,10 @@ export class ReviewDataCache {
     const tenMinutes = 1000 * 60 * 10;
 
     setTimeout(() => {
-      const cachedItem = this._getMatchingItem(item);
+      const cachedItem = this.getRatingData(item);
 
-      if (cachedItem) {
-        cachedItem.reviewsResponse = undefined;
-        cachedItem.userReview = undefined;
-      }
+      cachedItem.reviewsResponse = undefined;
+      cachedItem.userReview.treatAsSubmitted = true;
     },
       tenMinutes);
   }
