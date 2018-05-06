@@ -1,4 +1,4 @@
-import { DtrReviewer, DimWorkingUserReview, DimDtrCachedItem } from "./dtr-api-types";
+import { DtrReviewer, DimWorkingUserReview, DimDtrCachedItem, DimUserReview } from "./dtr-api-types";
 
 export interface D1ItemFetchRequest {
   referenceId: string;
@@ -23,7 +23,7 @@ export interface WorkingD1Rating extends DimWorkingUserReview {
   review: string;
 }
 
-export interface D1ItemUserReview {
+export interface D1ItemUserReview extends DimUserReview {
   reviewId: string; // string or number?
   reviewer: DtrReviewer;
   timestamp: string;

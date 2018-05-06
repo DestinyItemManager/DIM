@@ -6,7 +6,7 @@ import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { D1ItemReviewResponse, D1CachedItem } from '../item-review/d1-dtr-api-types';
+import { D1ItemReviewResponse } from '../item-review/d1-dtr-api-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -30,7 +30,7 @@ export class ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item: D1Item): Promise<D1ItemReviewResponse[]> {
+  _getItemReviewsPromise(item: D1Item): Promise<D1ItemReviewResponse> {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     const promise = dtrFetch(
@@ -43,20 +43,20 @@ export class ReviewsFetcher {
     return promise;
   }
 
-  _sortAndIgnoreReviews(item) {
-    if (item.reviews) {
-      item.reviews.sort(this._sortReviews);
+  _sortAndIgnoreReviews(reviewData: D1ItemReviewResponse) {
+    if (reviewData.reviews) {
+      reviewData.reviews.sort(this._sortReviews);
 
-      item.reviews.forEach((writtenReview) => {
-        writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
+      reviewData.reviews.forEach((writtenReview) => {
+        this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
   }
 
-  _attachReviews(item: D1Item, reviewData) {
+  _attachReviews(item: D1Item, reviewData: D1ItemReviewResponse) {
     reviewData.reviews = reviewData.reviews.filter((review) => review.review); // only attach reviews with text associated
 
-    this._sortAndIgnoreReviews(item);
+    this._sortAndIgnoreReviews(reviewData);
 
     this._reviewDataCache.addReviewsData(item, reviewData);
 
@@ -92,11 +92,6 @@ export class ReviewsFetcher {
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item: D1Item,
-                       cachedItem: D1CachedItem) {
-    this._attachReviews(item, cachedItem);
-  }
-
   /**
    * Get community (which may include the current user's) reviews for a given item and attach
    * them to the item.
@@ -109,9 +104,6 @@ export class ReviewsFetcher {
     const cachedData = this._reviewDataCache.getRatingData(item);
 
     if (cachedData && cachedData.reviewsResponse) {
-      this._attachCachedReviews(item,
-                                cachedData);
-
       return;
     }
 

@@ -80,7 +80,12 @@
     </select>
   </div>
   <textarea ng-i18next="[placeholder]DtrReview.Help"
-            ng-model="($ctrl.item.destinyVersion === 1) ? $ctrl.item.ratingData.userReview.review : $ctrl.item.ratingData.userReview.text"
+            ng-if="$ctrl.item.destinyVersion === 1"
+            ng-model="$ctrl.item.ratingData.userReview.review"
+            ng-blur="$ctrl.reviewBlur()"></textarea>
+  <textarea ng-i18next="[placeholder]DtrReview.Help"
+            ng-if="$ctrl.item.destinyVersion === 2"
+            ng-model="$ctrl.item.ratingData.userReview.text"
             ng-blur="$ctrl.reviewBlur()"></textarea>
   <div ng-if="$ctrl.procon" class="community-review--procon">
     <textarea ng-i18next="[placeholder]DtrReview.HelpPros"
