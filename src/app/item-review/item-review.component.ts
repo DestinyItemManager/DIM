@@ -81,10 +81,7 @@ function ItemReviewController(
 
     const d2Item = vm.item as D2Item;
 
-    if (d2Item &&
-        d2Item.ratingData &&
-        d2Item.ratingData.userReview &&
-        d2Item.ratingData.userReview.voted !== 0) {
+    if (d2Item.ratingData.userReview.voted !== 0) {
       d2Item.ratingData.userReview.voted = 0;
       vm.reviewBlur();
     }
@@ -123,14 +120,14 @@ function ItemReviewController(
   vm.findReview = (reviewId: string): D1ItemUserReview | D2ItemUserReview | null => {
     if (vm.item.destinyVersion === 1) {
       const d1Item = vm.item as D1Item;
-      if (!d1Item || !d1Item.ratingData || !d1Item.ratingData.reviewsResponse) {
+      if (!d1Item || !d1Item.ratingData.reviewsResponse) {
         return null;
       }
 
       return d1Item.ratingData.reviewsResponse.reviews.find((review) => review.reviewId === reviewId) || null;
     } else {
       const d2Item = vm.item as D2Item;
-      if (!d2Item || !d2Item.ratingData || !d2Item.ratingData.reviewsResponse) {
+      if (!d2Item || !d2Item.ratingData.reviewsResponse) {
         return null;
       }
       return d2Item.ratingData.reviewsResponse.reviews.find((review) => review.id === reviewId) || null;
@@ -166,22 +163,25 @@ function ItemReviewController(
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
   vm.getReviewData = () => {
-    if (!vm.item.reviews) {
+    const d1Item = vm.item as D1Item;
+
+    if (!d1Item || !d1Item.ratingData.reviewsResponse || !d1Item.ratingData.reviewsResponse.reviews) {
       return [];
     }
 
     const labels = vm.reviewLabels;
+    const itemReviews = d1Item.ratingData.reviewsResponse.reviews;
 
     // the score histogram is a D1-only thing
     const mapData = _.map(labels, (label) => {
       if (vm.item.destinyVersion === 1) {
-        const matchingReviews = _.where((vm.item.reviews as D1ItemUserReview[]), { rating: label });
+        const matchingReviews = _.where(itemReviews, { rating: label });
         const highlightedReviews = _.where(matchingReviews, { isHighlighted: true });
 
         return matchingReviews.length + (highlightedReviews.length * 4);
       } else {
-        const highlightedReviews = (vm.item.reviews as D2ItemUserReview[]).filter((review) => review.isHighlighted);
-        return vm.item.reviews.length + (highlightedReviews.length * 4);
+        const highlightedReviews = itemReviews.filter((review) => review.isHighlighted);
+        return itemReviews.length + (highlightedReviews.length * 4);
       }
     });
 
@@ -205,7 +205,13 @@ function ItemReviewController(
 
   vm.setRating = (rating: number) => {
     if (rating) {
-      vm.item.userRating = rating;
+      const d1Item = vm.item as D1Item;
+
+      if (!d1Item) {
+        return;
+      }
+
+      d1Item.ratingData.userReview.rating = rating;
     }
     vm.expandReview = true;
   };
@@ -226,46 +232,10 @@ function ItemReviewController(
 
   vm.toUserReview = (item: DimItem): WorkingD1Rating | WorkingD2Rating => {
     if (vm.item.destinyVersion === 1) {
-      return this.toDestinyOneUserReview(item as D1Item);
+      return (item as D1Item).ratingData.userReview;
     }
 
-    return this.toDestinyTwoUserReview(item as D2Item);
-  };
-
-  vm.toDestinyTwoUserReview = (item: D2Item): WorkingD2Rating => {
-    const userVote = item.userVote;
-    const review = item.userReview;
-    const pros = item.userReviewPros;
-    const cons = item.userReviewCons;
-    const mode = item.mode;
-
-    const userReview = {
-      voted: userVote,
-      review,
-      pros,
-      cons,
-      mode,
-      treatAsSubmitted: false
-    };
-
-    return userReview;
-  };
-
-  vm.toDestinyOneUserReview = (item: D1Item): WorkingD1Rating => {
-    const newRating = item.userRating;
-    const review = item.userReview;
-    const pros = item.userReviewPros;
-    const cons = item.userReviewCons;
-
-    const userReview = {
-      rating: newRating,
-      review,
-      pros,
-      cons,
-      treatAsSubmitted: false
-    };
-
-    return userReview;
+    return (item as D2Item).ratingData.userReview;
   };
 
   vm.featureFlags = {
@@ -301,9 +271,18 @@ function ItemReviewController(
   };
 
   vm.setUserVote = (userVote: number) => {
-    vm.item.userVote = (vm.item.userVote === userVote) ? 0 : userVote;
+    const d2Item = vm.item as D2Item;
 
-    vm.expandReview = (vm.item.userVote !== 0);
+    if (!d2Item) {
+      return;
+    }
+
+    d2Item.ratingData.userReview.voted = (d2Item.ratingData.userReview.voted === userVote) ? 0 : userVote;
+
+    const treatAsTouched = (d2Item.ratingData.userReview.voted !== 0);
+
+    vm.expandReview = treatAsTouched;
+    d2Item.ratingData.userReview.treatAsSubmitted = !treatAsTouched;
 
     vm.reviewBlur();
   };

@@ -668,13 +668,13 @@ export function searchFilters(
         return compareByOperand(item.quality.min, predicate);
       },
       hasRating(item: DimItem, predicate: string) {
-        return predicate.length !== 0 && item.dtrRating;
+        return predicate.length !== 0 && item.ratingData.overallScore;
       },
       rating(item: DimItem, predicate: string) {
-        return item.dtrRating && compareByOperand(item.dtrRating, predicate);
+        return item.ratingData.overallScore && compareByOperand(item.ratingData.overallScore, predicate);
       },
       ratingcount(item: DimItem, predicate: string) {
-        return item.dtrRating && compareByOperand(item.dtrRatingCount, predicate);
+        return item.ratingData.ratingCount && compareByOperand(item.ratingData.ratingCount, predicate);
       },
       year(item: D1Item, predicate: string) {
         switch (predicate) {

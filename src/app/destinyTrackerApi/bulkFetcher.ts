@@ -5,7 +5,6 @@ import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
 import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
 import { D1Store } from '../inventory/store-types';
-import { Vendor } from '../vendors/vendor.service';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;

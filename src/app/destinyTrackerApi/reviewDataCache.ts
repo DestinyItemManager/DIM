@@ -105,11 +105,7 @@ export class ReviewDataCache {
    */
   addUserReviewData(item: D1Item,
                     userReview: WorkingD1Rating) {
-    const cachedItem = this._getMatchingItem(item);
-
-    if (!cachedItem) {
-      return;
-    }
+    const cachedItem = this.getRatingData(item);
 
     cachedItem.userReview = userReview;
   }
@@ -122,9 +118,7 @@ export class ReviewDataCache {
                  reviewsData: D1ItemReviewResponse) {
     const cachedItem = this.getRatingData(item);
 
-    if (cachedItem) {
-      cachedItem.reviewsResponse = reviewsData;
-    }
+    cachedItem.reviewsResponse = reviewsData;
 
     const userReview = reviewsData.reviews.find((r) => r.isReviewer);
 
