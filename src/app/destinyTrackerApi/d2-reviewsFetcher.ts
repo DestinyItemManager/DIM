@@ -8,7 +8,7 @@ import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { D2ItemReviewResponse, D2UserReview } from '../item-review/d2-dtr-api-types';
+import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -78,7 +78,7 @@ class D2ReviewsFetcher {
     this._perkRater.ratePerks(item);
   }
 
-  _sortReviews(a: D2UserReview, b: D2UserReview) {
+  _sortReviews(a: D2ItemUserReview, b: D2ItemUserReview) {
     if (a.isReviewer) {
       return -1;
     }

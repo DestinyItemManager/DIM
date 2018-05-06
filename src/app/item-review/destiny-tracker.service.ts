@@ -16,13 +16,14 @@ import { $q } from 'ngimport';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
 import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
-import { D2ItemReviewResponse } from './d2-dtr-api-types';
+import { D2ItemReviewResponse, WorkingD2Rating } from './d2-dtr-api-types';
+import { WorkingD1Rating } from './d1-dtr-api-types';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
   bulkFetchKioskItems(vendorItems: DestinyVendorItemDefinition[]): Promise<DestinyTrackerServiceType>;
   reattachScoresFromCache(stores: any | DimStore[]): void;
-  updateCachedUserRankings(item: any | DimItem, userReview: any);
+  updateCachedUserRankings(item: DimItem, userReview: WorkingD1Rating | WorkingD2Rating);
   updateVendorRankings(vendors: any);
   getItemReviews(item: any | DimItem);
   getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse>;
@@ -72,13 +73,13 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       }
     },
 
-    updateCachedUserRankings(item: DimItem, userReview) {
+    updateCachedUserRankings(item: DimItem, userReview: WorkingD1Rating | WorkingD2Rating) {
       if (item.isDestiny1()) {
         _reviewDataCache.addUserReviewData(item,
-                                           userReview);
+                                           userReview as WorkingD1Rating);
       } else if (item.isDestiny2()) {
         _d2reviewDataCache.addUserReviewData(item,
-                                             userReview);
+                                             userReview as WorkingD2Rating);
       }
     },
 

@@ -9,7 +9,7 @@ import { IComponentOptions, IController, IScope, IRootScopeService } from 'angul
 import { DestinyTrackerServiceType } from './destiny-tracker.service';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
-import { D2UserReview, WorkingD2Rating } from './d2-dtr-api-types';
+import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
 
 export const ItemReviewComponent: IComponentOptions = {
   bindings: {
@@ -34,14 +34,27 @@ function ItemReviewController(
   vm.toggledFlags = [];
   vm.submitted = false;
   vm.isCollapsed = false;
+  vm.expandReview = false;
 
   vm.$onInit = () => {
     vm.canCreateReview = (vm.canReview && vm.item.owner);
 
-    // BUGBUG: vm.item.workingUserReview && vm.item.workingUserReview.score !== 0
-    vm.expandReview = ((vm.item.isLocallyCached) && (vm.item.userVote !== 0));
-    if (!vm.item.mode) {
-      vm.item.mode = settings.reviewsModeSelection;
+    if (vm.item.destinyVersion === 1) {
+      const d1Item = vm.item as D1Item;
+
+      if (d1Item && d1Item.ratingData && d1Item.ratingData.userReview) {
+        vm.expandReview = (d1Item.ratingData.userReview.rating !== 0 && !d1Item.ratingData.userReview.treatAsSubmitted);
+      }
+    } else if (vm.item.destinyVersion === 2) {
+      const d2Item = vm.item as D2Item;
+
+      if (d2Item && d2Item.ratingData && d2Item.ratingData.userReview) {
+        vm.expandReview = (d2Item.ratingData.userReview.voted !== 0 && !d2Item.ratingData.userReview.treatAsSubmitted);
+
+        if (!d2Item.ratingData.userReview.mode) {
+          d2Item.ratingData.userReview.mode = settings.reviewsModeSelection;
+        }
+      }
     }
 
     vm.reviewData = vm.getReviewData();
@@ -66,9 +79,13 @@ function ItemReviewController(
   vm.toggleEdit = () => {
     vm.expandReview = !vm.expandReview;
 
-    if ((vm.item.userVote === 1) ||
-        (vm.item.userVote === -1)) {
-      vm.item.userVote = 0;
+    const d2Item = vm.item as D2Item;
+
+    if (d2Item &&
+        d2Item.ratingData &&
+        d2Item.ratingData.userReview &&
+        d2Item.ratingData.userReview.voted !== 0) {
+      d2Item.ratingData.userReview.voted = 0;
       vm.reviewBlur();
     }
   };
@@ -103,16 +120,25 @@ function ItemReviewController(
     vm.toggledFlags.splice(toggledReviewIndex);
   };
 
-  vm.findReview = (reviewId) => {
+  vm.findReview = (reviewId: string): D1ItemUserReview | D2ItemUserReview | null => {
     if (vm.item.destinyVersion === 1) {
-      return (vm.item.reviews as D1ItemUserReview[]).find((review) => review.reviewId === reviewId);
+      const d1Item = vm.item as D1Item;
+      if (!d1Item || !d1Item.ratingData || !d1Item.ratingData.reviewsResponse) {
+        return null;
+      }
+
+      return d1Item.ratingData.reviewsResponse.reviews.find((review) => review.reviewId === reviewId) || null;
     } else {
-      return (vm.item.reviews as D2UserReview[]).find((review) => review.id === reviewId);
+      const d2Item = vm.item as D2Item;
+      if (!d2Item || !d2Item.ratingData || !d2Item.ratingData.reviewsResponse) {
+        return null;
+      }
+      return d2Item.ratingData.reviewsResponse.reviews.find((review) => review.id === reviewId) || null;
     }
   };
 
   vm.editReview = (reviewId) => {
-    const review = this.findReview(reviewId);
+    const review = vm.findReview(reviewId);
 
     if (!review || !review.isReviewer) {
       return;
@@ -120,13 +146,19 @@ function ItemReviewController(
 
     vm.expandReview = true;
 
-    if (review.voted) {
-      vm.item.userVote = review.voted;
-    }
+    // if (vm.item.destinyVersion === 1) {
+    //   const d1Item = vm.item as D1Item;
+    // } else if (vm.item.destinyVersion === 2) {
+    //   const d2Item = vm.item as D2Item;
+    // }
 
-    if (review.mode) {
-      vm.item.mode = review.mode.toString();
-    }
+    // if (review.voted) {
+    //   vm.item.userVote = review.voted;
+    // }
+
+    // if (review.mode) {
+    //   vm.item.mode = review.mode.toString();
+    // }
   };
 
   vm.totalReviews = 0;
@@ -148,7 +180,7 @@ function ItemReviewController(
 
         return matchingReviews.length + (highlightedReviews.length * 4);
       } else {
-        const highlightedReviews = (vm.item.reviews as D2UserReview[]).filter((review) => review.isHighlighted);
+        const highlightedReviews = (vm.item.reviews as D2ItemUserReview[]).filter((review) => review.isHighlighted);
         return vm.item.reviews.length + (highlightedReviews.length * 4);
       }
     });

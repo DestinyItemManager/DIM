@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { sum } from '../util';
 import { D2Item, DimSocket } from '../inventory/item-types';
-import { D2UserReview } from '../item-review/d2-dtr-api-types';
+import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 
 export interface RatingAndReview {
   ratingCount: number;
@@ -68,7 +68,7 @@ class D2PerkRater {
   }
 
   _getPlugRatingsAndReviewCount(plugOptionHash,
-                                reviews: D2UserReview[]): RatingAndReview {
+                                reviews: D2ItemUserReview[]): RatingAndReview {
     const matchingReviews = this._getMatchingReviews(plugOptionHash,
                                                      reviews);
 
@@ -85,7 +85,7 @@ class D2PerkRater {
   }
 
   _getMatchingReviews(plugOptionHash,
-                      reviews: D2UserReview[]) {
+                      reviews: D2ItemUserReview[]) {
     return reviews.filter((review) => {
       return (review.selectedPerks && review.selectedPerks.includes(plugOptionHash)) ||
              (review.attachedMods && review.attachedMods.includes(plugOptionHash));

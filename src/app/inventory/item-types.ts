@@ -145,7 +145,7 @@ export interface D1Item extends DimItem {
   sourceHashes: number[];
   trackable: boolean;
 
-  ratingData?: D1CachedItem;
+  ratingData: D1CachedItem;
 }
 
 /**
@@ -160,7 +160,7 @@ export interface D2Item extends DimItem {
   masterworkInfo: DimMasterwork | null;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
-  ratingData: D2CachedItem | null;
+  ratingData: D2CachedItem;
 }
 
 export interface D2PrimStat extends DestinyStat {

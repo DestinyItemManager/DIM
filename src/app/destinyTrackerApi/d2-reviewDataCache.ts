@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
-import { D2CachedItem, D2ItemFetchResponse, WorkingD2Rating, D2UserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
+import { D2CachedItem, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
 
 /**
  * Cache of review data.
@@ -22,23 +22,61 @@ class D2ReviewDataCache {
 
   _getMatchingItem(item?: D2Item | DestinyVendorSaleItemComponent,
                    itemHash?: number): D2CachedItem | undefined {
+    const referenceId = this._getReferenceId(item, itemHash);
+    return this._itemStores.find((s) => s.referenceId === referenceId);
+  }
+
+  _getReferenceId(item?: D2Item | DestinyVendorSaleItemComponent,
+                  itemHash?: number): number {
     if (item) {
       const dtrItem = this._itemTransformer.translateToDtrItem(item);
 
-      return this._itemStores.find((s) => s.referenceId === dtrItem.referenceId);
+      return dtrItem.referenceId;
     } else if (itemHash) {
-      return this._itemStores.find((s) => s.referenceId === itemHash);
+      return itemHash;
     } else {
       throw new Error("No data supplied to find a matching item from our stores.");
     }
   }
 
+  _getBlankWorkingD2Rating(): WorkingD2Rating {
+    return {
+      voted: 0,
+      pros: "",
+      cons: "",
+      text: "",
+      mode: 0,
+      treatAsSubmitted: false
+    };
+  }
+
+  _addAndReturnBlankItem(item?: D2Item | DestinyVendorSaleItemComponent,
+                         itemHash?: number): D2CachedItem {
+    const referenceId = this._getReferenceId(item, itemHash);
+    const blankItem: D2CachedItem = {
+      referenceId,
+      lastUpdated: new Date(),
+      userReview: this._getBlankWorkingD2Rating(),
+      overallScore: 0
+    };
+
+    this._itemStores.push(blankItem);
+    return blankItem;
+  }
+
   /**
-   * Get the locally-cached review data for the given item from the DIM store, if it exists.
+   * Get the locally-cached review data for the given item from the DIM store.
+   * Creates a blank rating cache item if it doesn't.
    */
   getRatingData(item?: D2Item | DestinyVendorSaleItemComponent,
-                itemHash?: number): D2CachedItem | null {
-    return this._getMatchingItem(item, itemHash) || null;
+                itemHash?: number): D2CachedItem {
+    const cachedItem = this._getMatchingItem(item, itemHash);
+
+    if (cachedItem) {
+      return cachedItem;
+    }
+
+    return this._addAndReturnBlankItem(item, itemHash);
   }
 
   _toAtMostOneDecimal(rating) {
@@ -115,7 +153,8 @@ class D2ReviewDataCache {
       referenceId: dtrRating.referenceId,
       overallScore : dimScore,
       fetchResponse: dtrRating,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
+      userReview: this._getBlankWorkingD2Rating()
     };
 
     this._itemStores.push(cachedItem);
@@ -150,6 +189,8 @@ class D2ReviewDataCache {
       return;
     }
 
+    // todo: resurrect isReviewer logic, make any review that the user submitted a working user review with the treat as submitted flag true
+
     cachedItem.lastUpdated = new Date();
     cachedItem.reviewsResponse = reviewsData;
   }
@@ -161,7 +202,7 @@ class D2ReviewDataCache {
     return this._itemStores;
   }
 
-  markReviewAsIgnored(writtenReview: D2UserReview): void {
+  markReviewAsIgnored(writtenReview: D2ItemUserReview): void {
     writtenReview.isIgnored = true;
   }
 
@@ -209,7 +250,7 @@ class D2ReviewDataCache {
 
       if (cachedItem) {
         cachedItem.reviewsResponse = undefined;
-        cachedItem.userReview = undefined;
+        cachedItem.userReview = this._getBlankWorkingD2Rating();
       }
     },
       tenMinutes);

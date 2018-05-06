@@ -31,7 +31,7 @@ export interface WorkingD2Rating extends DimWorkingUserReview {
   mode: number;
 }
 
-export interface D2UserReview extends DimUserReview {
+export interface D2ItemUserReview extends DimUserReview {
   id: string;
   timestamp: Date;
   isReviewer: boolean;
@@ -50,7 +50,7 @@ export interface D2UserReview extends DimUserReview {
 
 export interface D2ItemReviewResponse extends D2ItemFetchResponse {
   totalReviews: number;
-  reviews: D2UserReview[];
+  reviews: D2ItemUserReview[];
 }
 
 export enum DtrD2ActivityModes {
@@ -63,9 +63,9 @@ export enum DtrD2ActivityModes {
 
 export interface D2CachedItem extends DimDtrCachedItem {
   referenceId: number;
-  fetchResponse: D2ItemFetchResponse;
+  fetchResponse?: D2ItemFetchResponse;
   reviewsResponse?: D2ItemReviewResponse;
-  userReview?: WorkingD2Rating;
+  userReview: WorkingD2Rating;
 
   lastUpdated: Date;
 }
