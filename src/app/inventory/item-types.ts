@@ -96,26 +96,6 @@ export interface DimItem {
 
   ratingData: DimDtrCachedItem;
 
-  // // TODO: this should be on a separate object, with the other DTR stuff
-  // pros: string;
-  // cons: string;
-  // userRating: number;
-  // userReview: string;
-  // userVote: number;
-  // dtrRating: number;
-  // dtrRatingCount: number;
-  // dtrHighlightedRatingCount: number;
-  // reviews: DtrUserReview[] | D1ItemUserReview[];
-  // userReviewPros: string;
-  // userReviewCons: string;
-  // mode: number;
-  // ratingCount: number;
-  // // timestamp of when reviews were attached - a hack to help React update in the short term
-  // reviewsUpdated?: number;
-  // /** Is the review data locally cached? */
-  // isLocallyCached?: boolean;
-  // totalReviews: number;
-
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   inCategory(categoryName: string): boolean;
