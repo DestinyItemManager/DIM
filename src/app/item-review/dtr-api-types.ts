@@ -17,6 +17,7 @@ export interface DimDtrCachedItem {
   overallScore: number;
   ratingCount: number;
   highlightedRatingCount: number;
+  lastUpdated: Date;
 
   userReview: DimWorkingUserReview;
 }
