@@ -109,7 +109,7 @@ class D2ReviewDataCache {
     return 2.5;
   }
 
-  _getScore(dtrRating): number {
+  _getScore(dtrRating: D2ItemFetchResponse): number {
     const downvoteMultipler = this._getDownvoteMultiplier(dtrRating);
 
     const rating = ((dtrRating.votes.total - (dtrRating.votes.downvotes * downvoteMultipler)) / dtrRating.votes.total) * 5;
@@ -138,6 +138,9 @@ class D2ReviewDataCache {
 
         if (matchingStore) {
           matchingStore.fetchResponse = bulkRanking;
+          matchingStore.lastUpdated = new Date();
+          matchingStore.overallScore = this._getScore(bulkRanking);
+          matchingStore.ratingCount = bulkRanking.votes.total;
         } else {
           this._addScore(bulkRanking);
         }
