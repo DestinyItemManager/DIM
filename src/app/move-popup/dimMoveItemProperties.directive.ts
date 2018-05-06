@@ -145,40 +145,6 @@ function MoveItemPropertiesCtrl(
     vm.item.dimInfo.save!();
   };
 
-  vm.reviewBlur = () => {
-    const item = vm.item;
-    const userReview = vm.toUserReview(item);
-
-    dimDestinyTrackerService.updateCachedUserRankings(item,
-                                                      userReview);
-  };
-
-  vm.toUserReview = (item: DimItem) => {
-    const newRating = item.userRating;
-    const review = item.userReview;
-    const pros = item.userReviewPros;
-    const cons = item.userReviewCons;
-    const mode = item.mode;
-
-    const userReview = {
-      rating: newRating,
-      review,
-      pros,
-      cons,
-      mode
-    };
-
-    return userReview;
-  };
-
-  vm.submitReview = () => {
-    const item = vm.item;
-
-    dimDestinyTrackerService.submitReview(item);
-
-    return false;
-  };
-
   vm.setItemState = function setItemState(item: DimItem, type: 'lock' | 'track') {
     if (vm.locking) {
       return;
