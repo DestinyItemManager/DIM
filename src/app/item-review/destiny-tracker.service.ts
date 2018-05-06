@@ -16,20 +16,20 @@ import { $q } from 'ngimport';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
 import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
-import { D2ItemReviewResponse, WorkingD2Rating } from './d2-dtr-api-types';
-import { WorkingD1Rating } from './d1-dtr-api-types';
+import { D2ItemReviewResponse, WorkingD2Rating, D2ItemUserReview } from './d2-dtr-api-types';
+import { WorkingD1Rating, D1ItemUserReview } from './d1-dtr-api-types';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
   bulkFetchKioskItems(vendorItems: DestinyVendorItemDefinition[]): Promise<DestinyTrackerServiceType>;
-  reattachScoresFromCache(stores: any | DimStore[]): void;
+  reattachScoresFromCache(stores: DimStore[]): void;
   updateCachedUserRankings(item: DimItem, userReview: WorkingD1Rating | WorkingD2Rating);
   updateVendorRankings(vendors: any);
-  getItemReviews(item: any | DimItem);
+  getItemReviews(item: DimItem);
   getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse>;
   submitReview(item: DimItem);
-  fetchReviews(stores: any | DimStore[]);
-  reportReview(review: any);
+  fetchReviews(stores: DimStore[]);
+  reportReview(review: D1ItemUserReview | D2ItemUserReview);
   clearIgnoredUsers();
   clearCache();
   getD2ReviewDataCache(): D2ReviewDataCache;
@@ -184,14 +184,14 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       return $q.when(this);
     },
 
-    reportReview(review) {
+    reportReview(review: D1ItemUserReview | D2ItemUserReview) {
       if (settings.allowIdPostToDtr) {
         const membershipInfo = getActivePlatform();
 
         if (_isDestinyOne()) {
-          _reviewReporter.reportReview(review, membershipInfo);
+          _reviewReporter.reportReview(review as D1ItemUserReview, membershipInfo);
         } else if (_isDestinyTwo()) {
-          _d2reviewReporter.reportReview(review, membershipInfo);
+          _d2reviewReporter.reportReview(review as D2ItemUserReview, membershipInfo);
         }
       }
     },
