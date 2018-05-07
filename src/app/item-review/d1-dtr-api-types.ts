@@ -88,7 +88,6 @@ export interface D1RatingData extends RatingData {
   fetchResponse?: D1ItemFetchResponse;
   /** The item reviews response (if there was one). */
   reviewsResponse?: D1ItemReviewResponse;
-
   /** The user's local review. */
   userReview: WorkingD1Rating;
 }
