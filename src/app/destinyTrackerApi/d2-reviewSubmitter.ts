@@ -5,19 +5,17 @@ import { loadingTracker } from '../ngimport-more';
 import { handleD2SubmitErrors, DtrSubmitResponse } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
+import { WorkingD2Rating, DtrD2BasicItem } from '../item-review/d2-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
 import { $q } from 'ngimport';
 
-export interface D2RatingAndReviewRequest {
-  reviewer?: DtrReviewer;
+interface D2ReviewSubmitRequest extends DtrD2BasicItem {
+  reviewer: DtrReviewer;
   voted: number;
   text: string;
   pros: string;
   cons: string;
   mode: number;
-  isReviewer?: boolean;
-  timestamp?: string;
 }
 
 /**
@@ -38,7 +36,7 @@ class D2ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(dimUserReview: WorkingD2Rating): D2RatingAndReviewRequest {
+  toRatingAndReview(dimUserReview: WorkingD2Rating) {
     return {
       voted: dimUserReview.voted,
       text: dimUserReview.text,
@@ -59,7 +57,7 @@ class D2ReviewSubmitter {
 
     const review = this.toRatingAndReview(item.ratingData.userReview);
 
-    const rating = { ...rollAndPerks, ...review, reviewer };
+    const rating: D2ReviewSubmitRequest = { ...rollAndPerks, ...review, reviewer };
 
     const promise = dtrFetch(
       `https://db-api.destinytracker.com/api/external/reviews/submit`,
