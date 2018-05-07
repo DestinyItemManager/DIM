@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import { D2ItemTransformer } from './d2-itemTransformer';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
-import { D2CachedItem, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
+import { D2RatingData, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
 
 /**
  * Cache of review data.
@@ -11,7 +11,7 @@ import { D2CachedItem, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D
  */
 class D2ReviewDataCache {
   _maxTotalVotes: number;
-  _itemStores: D2CachedItem[];
+  _itemStores: D2RatingData[];
   _itemTransformer: D2ItemTransformer;
 
   constructor() {
@@ -21,7 +21,7 @@ class D2ReviewDataCache {
   }
 
   _getMatchingItem(item?: D2Item | DestinyVendorSaleItemComponent,
-                   itemHash?: number): D2CachedItem | undefined {
+                   itemHash?: number): D2RatingData | undefined {
     const referenceId = this._getReferenceId(item, itemHash);
     return this._itemStores.find((s) => s.referenceId === referenceId);
   }
@@ -51,9 +51,9 @@ class D2ReviewDataCache {
   }
 
   _addAndReturnBlankItem(item?: D2Item | DestinyVendorSaleItemComponent,
-                         itemHash?: number): D2CachedItem {
+                         itemHash?: number): D2RatingData {
     const referenceId = this._getReferenceId(item, itemHash);
-    const blankItem: D2CachedItem = {
+    const blankItem: D2RatingData = {
       referenceId,
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
@@ -71,7 +71,7 @@ class D2ReviewDataCache {
    * Creates a blank rating cache item if it doesn't.
    */
   getRatingData(item?: D2Item | DestinyVendorSaleItemComponent,
-                itemHash?: number): D2CachedItem {
+                itemHash?: number): D2RatingData {
     const cachedItem = this._getMatchingItem(item, itemHash);
 
     if (cachedItem) {
@@ -154,7 +154,7 @@ class D2ReviewDataCache {
   _addScore(dtrRating: D2ItemFetchResponse) {
     const dimScore = this._getScore(dtrRating);
 
-    const cachedItem: D2CachedItem = {
+    const cachedItem: D2RatingData = {
       referenceId: dtrRating.referenceId,
       overallScore : dimScore,
       fetchResponse: dtrRating,
@@ -209,7 +209,7 @@ class D2ReviewDataCache {
   /**
    * Fetch the collection of review data that we've stored locally.
    */
-  getItemStores(): D2CachedItem[] {
+  getItemStores(): D2RatingData[] {
     return this._itemStores;
   }
 

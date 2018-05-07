@@ -37,7 +37,7 @@ import { t } from 'i18next';
 import { D2Item, DimPerk, DimStat, DimObjective, DimFlavorObjective, DimTalentGrid, DimGridNode, DimSockets, DimSocketCategory, DimSocket, DimPlug, DimMasterwork } from '../item-types';
 import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
-import { D2CachedItem } from '../../item-review/d2-dtr-api-types';
+import { D2RatingData } from '../../item-review/d2-dtr-api-types';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -258,7 +258,7 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
-  reviewData?: D2CachedItem | null
+  reviewData?: D2RatingData | null
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> = item.itemInstanceId && itemComponents ? itemComponents.instances.data[item.itemInstanceId] : {};

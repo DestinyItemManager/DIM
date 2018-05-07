@@ -12,9 +12,9 @@ import {
 import { DimItemInfo } from './dim-item-info';
 import { DimStore } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
-import { D2CachedItem } from '../item-review/d2-dtr-api-types';
-import { D1CachedItem } from '../item-review/d1-dtr-api-types';
-import { DimDtrCachedItem } from '../item-review/dtr-api-types';
+import { D2RatingData } from '../item-review/d2-dtr-api-types';
+import { D1RatingData } from '../item-review/d1-dtr-api-types';
+import { RatingData } from '../item-review/dtr-api-types';
 
 // TODO: maybe break these out into separate files for D1/D2?
 
@@ -94,7 +94,7 @@ export interface DimItem {
   /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
 
-  ratingData: DimDtrCachedItem;
+  ratingData: RatingData;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
@@ -128,7 +128,7 @@ export interface D1Item extends DimItem {
   sourceHashes: number[];
   trackable: boolean;
 
-  ratingData: D1CachedItem;
+  ratingData: D1RatingData;
 }
 
 /**
@@ -143,7 +143,7 @@ export interface D2Item extends DimItem {
   masterworkInfo: DimMasterwork | null;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
-  ratingData: D2CachedItem;
+  ratingData: D2RatingData;
 }
 
 export interface D2PrimStat extends DestinyStat {

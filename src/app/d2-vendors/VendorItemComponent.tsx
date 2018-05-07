@@ -13,7 +13,7 @@ import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { D2PerkRater } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
 import { D2Item } from "../inventory/item-types";
-import { D2CachedItem } from "../item-review/d2-dtr-api-types";
+import { D2RatingData } from "../item-review/d2-dtr-api-types";
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -107,7 +107,7 @@ export default class VendorItemComponent extends React.Component<Props> {
       }
     } else {
       let dimItem: D2Item | null = null;
-      let cachedItem: D2CachedItem | null = null;
+      let cachedItem: D2RatingData | null = null;
 
       if (trackerService) {
         cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);

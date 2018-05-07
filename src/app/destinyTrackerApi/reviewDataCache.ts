@@ -1,14 +1,14 @@
 import { ItemTransformer } from './itemTransformer';
 import * as _ from 'underscore';
 import { D1Item } from '../inventory/item-types';
-import { D1CachedItem, D1ItemFetchResponse, WorkingD1Rating, D1ItemReviewResponse } from '../item-review/d1-dtr-api-types';
+import { D1RatingData, D1ItemFetchResponse, WorkingD1Rating, D1ItemReviewResponse } from '../item-review/d1-dtr-api-types';
 
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
  */
 export class ReviewDataCache {
-  _itemStores: D1CachedItem[];
+  _itemStores: D1RatingData[];
   _itemTransformer: ItemTransformer;
 
   constructor() {
@@ -16,7 +16,7 @@ export class ReviewDataCache {
     this._itemStores = [];
   }
 
-  _getMatchingItem(item: D1Item): D1CachedItem | undefined {
+  _getMatchingItem(item: D1Item): D1RatingData | undefined {
     const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
@@ -29,7 +29,7 @@ export class ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item: D1Item): D1CachedItem {
+  getRatingData(item: D1Item): D1RatingData {
     const cachedItem = this._getMatchingItem(item);
 
     if (cachedItem) {
@@ -52,7 +52,7 @@ export class ReviewDataCache {
     };
   }
 
-  _createBlankCacheItem(item: D1Item): D1CachedItem {
+  _createBlankCacheItem(item: D1Item): D1RatingData {
     const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     return {
@@ -91,7 +91,7 @@ export class ReviewDataCache {
       previouslyCachedItem.ratingCount = dtrRating.ratingCount;
       dtrRating.highlightedRatingCount = dtrRating.highlightedRatingCount;
     } else {
-      const cachedItem: D1CachedItem = {
+      const cachedItem: D1RatingData = {
         referenceId: dtrRating.referenceId,
         fetchResponse: dtrRating,
         lastUpdated: new Date(),
