@@ -1,5 +1,7 @@
 # Next
 
+* Fix progress page not displaying after the Warmind update.
+
 # 4.51.0 (2018-05-06)
 
 * Fix a bug where having mods, shaders, or materials in the postmaster might make it impossible to move any mod/shader/material into or out of the vault.
