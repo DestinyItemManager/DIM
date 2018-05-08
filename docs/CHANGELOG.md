@@ -1,5 +1,7 @@
 # Next
 
+# 4.51.1 (2018-05-08)
+
 * Fix progress page not displaying after the Warmind update.
 
 # 4.51.0 (2018-05-06)
