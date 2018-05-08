@@ -86,7 +86,7 @@ export function FactionIcon(props: {
  */
 function calculateEngramsAvailable(profileInventory: DestinyInventoryComponent, factionDef: DestinyFactionDefinition, factionProgress: DestinyFactionProgression): number {
   const totalXPAvailable: number = sum(profileInventory.items, (item: DestinyItemComponent) => {
-    return (factionDef.tokenValues[item.itemHash] || 0) * item.quantity;
+    return ((factionDef.tokenValues && factionDef.tokenValues[item.itemHash]) || 0) * item.quantity;
   });
 
   return Math.floor((factionProgress.progressToNextLevel + totalXPAvailable) / factionProgress.nextLevelAt);
