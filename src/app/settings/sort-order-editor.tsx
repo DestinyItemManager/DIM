@@ -147,20 +147,17 @@ function SortEditorItem(props: {
   return (
     <Draggable draggableId={item.id} index={index}>
       {(provided, snapshot) => (
-        <div>
-          <div
-            className={classNames('sort-order-editor-item', { 'is-dragging': snapshot.isDragging, disabled: !item.enabled })}
-            data-index={index}
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-          >
-            <i className="fa fa-bars" {...provided.dragHandleProps}/>
-            <span className="name" {...provided.dragHandleProps}>{item.displayName}</span>
-            <i className="sort-button sort-up fa fa-chevron-up"/>
-            <i className="sort-button sort-down fa fa-chevron-down"/>
-            <i className={classNames('sort-button', 'sort-toggle', 'fa', item.enabled ? 'fa-check-circle-o' : 'fa-circle-o')} />
-          </div>
-            {provided.placeholder}
+        <div
+          className={classNames('sort-order-editor-item', { 'is-dragging': snapshot.isDragging, disabled: !item.enabled })}
+          data-index={index}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          <i className="fa fa-bars" {...provided.dragHandleProps}/>
+          <span className="name" {...provided.dragHandleProps}>{item.displayName}</span>
+          <i className="sort-button sort-up fa fa-chevron-up"/>
+          <i className="sort-button sort-down fa fa-chevron-down"/>
+          <i className={classNames('sort-button', 'sort-toggle', 'fa', item.enabled ? 'fa-check-circle-o' : 'fa-circle-o')} />
         </div>
       )}
     </Draggable>

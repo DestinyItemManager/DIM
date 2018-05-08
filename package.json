@@ -128,7 +128,7 @@
     "popper.js": "^1.14.3",
     "raven-js": "^3.24.1",
     "react": "^16.3.1",
-    "react-beautiful-dnd": "^6.0.2",
+    "react-beautiful-dnd": "^7.1.2",
     "react-dom": "^16.3.1",
     "react-transition-group": "^2.3.1",
     "react-twitter-widgets": "^1.7.1",
