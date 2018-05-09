@@ -74,6 +74,10 @@ export interface D1ItemUserReview extends DimUserReview {
   selectedPerks?: string;
   /** What rating did they give it (1-5)? */
   rating: number;
+  /** Pros - shouldn't be present. */
+  pros: string;
+  /** Cons - shouldn't be present. */
+  cons: string;
   /** Text (optionally) associated with the review. */
   review: string;
 }

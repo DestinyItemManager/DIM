@@ -7,7 +7,8 @@ export interface DtrReviewer {
 
 /** A user's review returned from DTR. */
 export interface DimUserReview {
-  /** This is not returned from DTR, it's calculated on our end.
+  /**
+   * This is not returned from DTR, it's calculated on our end.
    * Will be set on reviews associated with any other reviwer that the user reports.
    */
   isIgnored?: boolean;
@@ -29,7 +30,10 @@ export interface DimWorkingUserReview {
   treatAsSubmitted: boolean;
 }
 
-/** Data associated with item reviews. Look for D1CachedItem/D2CachedItem for more specifics. */
+/**
+ * Data associated with item reviews.
+ * Look for D1CachedItem/D2CachedItem for more specifics.
+ */
 export interface RatingData {
   /** The rating, based off of information from a fetch. */
   overallScore: number;
@@ -37,12 +41,14 @@ export interface RatingData {
   ratingCount: number;
   /** The number of highlighted reviewers. */
   highlightedRatingCount: number;
-  /** When was the rating data last updated?
-   * This is touched when we recieve new data, not when the user makes changes to their working review.
+  /**
+   * When was the rating data last updated?
+   * This is touched when we recieve new data (bulk rating/reviews response).
+   * We don't currently touch it when the user makes changes to their working review.
    */
   lastUpdated: Date;
-
-  /** A user's (local) review. We sometimes treat it as though it were submitted.
+  /**
+   * A user's (local) review. We sometimes treat it as though it were submitted.
    * There's a lag betwen successfully posting data and the remote cache clearing to return it.
    */
   userReview: DimWorkingUserReview;
