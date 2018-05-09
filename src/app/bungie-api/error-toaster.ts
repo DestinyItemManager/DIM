@@ -12,7 +12,7 @@ export function bungieErrorToaster(e: Error) {
   return {
     type: 'error',
     bodyOutputType: 'trustedHtml',
-    title: 'Bungie.net Error',
+    title: t('BungieService.ErrorTitle'),
     body: e.message + twitter,
     showCloseButton: false
   };

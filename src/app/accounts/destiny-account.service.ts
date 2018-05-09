@@ -13,6 +13,7 @@ import { reportException } from '../exceptions';
 import { $state, toaster } from '../ngimport-more';
 import { removeToken } from '../oauth/oauth-token.service';
 import { flatMap } from '../util';
+import { DimError } from '../bungie-api/bungie-service-helper';
 
 /**
  * Platform types (membership types) in the Bungie API.
@@ -62,7 +63,7 @@ export function getDestinyAccountsForBungieAccount(bungieMembershipId: string): 
       }
       return platforms;
     })
-    .catch((e) => {
+    .catch((e: DimError) => {
       // TODO: show a full-page error, or show a diagnostics page, rather than a popup
       toaster.pop(bungieErrorToaster(e));
       reportException('getDestinyAccountsForBungieAccount', e);
@@ -107,11 +108,19 @@ function findD2Characters(account: DestinyAccount): IPromise<DestinyAccount | nu
       }
       return null;
     })
-    .catch((e) => {
+    .catch((e: DimError) => {
       if (e.code && e.code === PlatformErrorCodes.DestinyAccountNotFound) {
         return null;
       }
-      throw e;
+      console.error("Error getting D2 characters for", account, e);
+      reportException('findD2Characters', e);
+
+      // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
+      const result: DestinyAccount = {
+        ...account,
+        destinyVersion: 2
+      };
+      return result;
     });
 }
 
@@ -127,13 +136,21 @@ function findD1Characters(account): IPromise<any | null> {
       }
       return null;
     })
-    .catch((e) => {
+    .catch((e: DimError) => {
       if (e.code &&
         (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
           e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)) {
         return null;
       }
-      throw e;
+      console.error("Error getting D1 characters for", account, e);
+      reportException('findD1Characters', e);
+
+      // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
+      const result: DestinyAccount = {
+        ...account,
+        destinyVersion: 1
+      };
+      return result;
     });
 }
 

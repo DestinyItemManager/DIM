@@ -4,7 +4,8 @@ import {
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
-  DestinyProgression
+  DestinyProgression,
+  PlatformErrorCodes
   } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
@@ -32,6 +33,7 @@ import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
+import { DimError } from '../bungie-api/bungie-service-helper';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
@@ -245,8 +247,18 @@ export function D2StoresService(
 
         return stores;
       })
-      .catch((e) => {
-        toaster.pop(bungieErrorToaster(e));
+      .catch((e: DimError) => {
+        // Special messaging for the Warmind error
+        if (e.code && e.code === PlatformErrorCodes.DestinyUnexpectedError) {
+          toaster.pop({
+            type: 'error',
+            title: t('BungieService.ErrorTitle'),
+            body: t('BungieService.WarmindLoginNeeded'),
+            showCloseButton: false
+          });
+        } else {
+          toaster.pop(bungieErrorToaster(e));
+        }
         console.error('Error loading stores', e);
         reportException('d2stores', e);
         // It's important that we swallow all errors here - otherwise
