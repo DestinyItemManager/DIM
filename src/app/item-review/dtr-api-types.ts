@@ -22,12 +22,26 @@ export interface DimUserReview {
    * Broken in D2.
    */
   isReviewer: boolean;
+  /**
+   * Pros.
+   * Shouldn't be present (yet).
+   */
+  pros: string;
+  /**
+   * Cons.
+   * shouldn't be present (yet).
+   */
+  cons: string;
 }
 
 /** Review that a user's working with */
 export interface DimWorkingUserReview {
   /** Do we treat this as a submitted (untouched) review? */
   treatAsSubmitted: boolean;
+  /** Pros - reserved for future use. */
+  pros: string;
+  /** Cons - reserved for future use. */
+  cons: string;
 }
 
 /**

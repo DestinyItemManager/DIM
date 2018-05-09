@@ -57,10 +57,6 @@ export interface WorkingD2Rating extends DimWorkingUserReview {
    * 1 (thumbs up)
    */
   voted: number;
-  /** Pros - reserved for future use. */
-  pros: string;
-  /** Cons - reserved for future use. */
-  cons: string;
   /**
    * Text of the review.
    * Optional.
