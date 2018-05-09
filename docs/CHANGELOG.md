@@ -1,5 +1,7 @@
 # Next
 
+* Handle the Warmind API bug better, and provide helpful info on how to fix it.
+
 # 4.51.1 (2018-05-08)
 
 * Fix progress page not displaying after the Warmind update.
