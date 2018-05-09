@@ -16,9 +16,9 @@
   <div ng-if="::vm.item.quality"
        class="item-stat item-quality"
        ng-style="::vm.item.quality.min | qualityColor">{{ ::vm.item.quality.min }}%</div>
-  <div ng-if="vm.item.ratingData.overallScore && (vm.item.ratingData.ratingCount > (vm.item.destinyVersion == 2 ? 0 : 1) || vm.item.ratingData.highlightedRatingCount > 0)"
-       class="item-stat item-review">{{ vm.item.ratingData.overallScore }}<i class="fa fa-star"
-        ng-style="vm.item.ratingData.overallScore | dtrRatingColor"></i></div>
+  <div ng-if="vm.item.dtrRating.overallScore && (vm.item.dtrRating.ratingCount > (vm.item.destinyVersion == 2 ? 0 : 1) || vm.item.dtrRating.highlightedRatingCount > 0)"
+       class="item-stat item-review">{{ vm.item.dtrRating.overallScore }}<i class="fa fa-star"
+        ng-style="vm.item.dtrRating.overallScore | dtrRatingColor"></i></div>
   <div class="item-element"
        ng-class="::vm.item.dmg"></div>
   <div ng-class="vm.item.dimInfo.tag | tagIcon"></div>

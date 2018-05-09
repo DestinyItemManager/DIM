@@ -34,7 +34,7 @@ export interface DimWorkingUserReview {
  * Data associated with item reviews.
  * Look for D1CachedItem/D2CachedItem for more specifics.
  */
-export interface RatingData {
+export interface DtrRating {
   /** The rating, based off of information from a fetch. */
   overallScore: number;
   /** The number of reviews that the item has. */

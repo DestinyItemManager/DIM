@@ -5,6 +5,7 @@ import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
 import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
 import { D1Store } from '../inventory/store-types';
+import { Vendor } from '../vendors/vendor.service';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
@@ -47,7 +48,7 @@ class BulkFetcher {
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
    */
   bulkFetchVendorItems(vendorContainer) {
-    const vendors = Object.values(vendorContainer);
+    const vendors: Vendor[] = Object.values(vendorContainer);
 
     this._getBulkFetchPromise(vendors)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
@@ -71,14 +72,14 @@ class BulkFetcher {
         if (storeItem.reviewable) {
           const matchingItem = this._reviewDataCache.getRatingData(storeItem);
 
-          storeItem.ratingData = matchingItem;
+          storeItem.dtrRating = matchingItem;
         }
       });
     });
   }
 
-  attachVendorRankings(bulkRankings,
-                       vendors) {
+  attachVendorRankings(bulkRankings: D1ItemFetchResponse[],
+                       vendors: Vendor[]) {
     if (!bulkRankings && !vendors) {
       return;
     }
@@ -90,13 +91,11 @@ class BulkFetcher {
     }
 
     vendors.forEach((vendor) => {
-      vendor.allItems.forEach((vendorItemContainer) => {
-        const vendorItem = vendorItemContainer.item;
-
+      vendor.allItems.forEach((vendorItem) => {
         const matchingItem = this._reviewDataCache.getRatingData(vendorItem);
 
         if (matchingItem) {
-          vendorItem.ratingData = matchingItem;
+          vendorItem.dtrRating = matchingItem;
         }
       });
     });

@@ -28,14 +28,14 @@
       <div ng-if="vm.item.objectives && !vm.item.hidePercentage" ng-i18next="[i18next]({ percent: vm.item.percentComplete })ItemService.PercentComplete"></div>
       <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
     </div>
-    <div ng-if="vm.item.destinyVersion === 1 && vm.item.reviewable && vm.item.ratingData.overallScore" class="item-review-average">
-      <star-rating rating="vm.item.ratingData.overallScore" read-only></star-rating>
-      <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.ratingData.overallScore, numRatings: vm.item.ratingData.ratingCount || 0 })DtrReview.AverageRating"></span>
+    <div ng-if="vm.item.destinyVersion === 1 && vm.item.reviewable && vm.item.dtrRating.overallScore" class="item-review-average">
+      <star-rating rating="vm.item.dtrRating.overallScore" read-only></star-rating>
+      <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating.overallScore, numRatings: vm.item.dtrRating.ratingCount || 0 })DtrReview.AverageRating"></span>
     </div>
     <!-- we were displaying the number of reviews rather than the total # of ratings before, which seems... wrong? -->
-    <div ng-if="vm.item.destinyVersion === 2 && vm.item.reviewable && vm.item.ratingData.overallScore" class="item-review-average">
-      <star-rating rating="vm.item.ratingData.overallScore" read-only></star-rating>
-      <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.ratingData.overallScore, numRatings: vm.item.ratingData.ratingCount || 0 })DtrReview.AverageRating"></span>
+    <div ng-if="vm.item.destinyVersion === 2 && vm.item.reviewable && vm.item.dtrRating.overallScore" class="item-review-average">
+      <star-rating rating="vm.item.dtrRating.overallScore" read-only></star-rating>
+      <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating.overallScore, numRatings: vm.item.dtrRating.ratingCount || 0 })DtrReview.AverageRating"></span>
     </div>
   </div>
   <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>

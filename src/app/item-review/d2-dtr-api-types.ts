@@ -1,4 +1,4 @@
-import { DtrReviewer, DimWorkingUserReview, RatingData, DimUserReview } from "./dtr-api-types";
+import { DtrReviewer, DimWorkingUserReview, DtrRating, DimUserReview } from "./dtr-api-types";
 import { DestinyActivityModeType } from "bungie-api-ts/destiny2";
 
 /**
@@ -129,7 +129,7 @@ export enum DtrD2ActivityModes {
  * Rating + review + working user data.
  * Contains keys for lookups, response data from the API and user's local working review data (if they make any changes).
  */
-export interface D2RatingData extends RatingData {
+export interface D2RatingData extends DtrRating {
   /** Reference ID (hash ID). This is all we need to look up an item for D2 (currently). */
   referenceId: number;
   /** The bulk rating fetch response (if there was one). */

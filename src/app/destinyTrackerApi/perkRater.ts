@@ -17,13 +17,13 @@ export class PerkRater {
    */
   ratePerks(item: D1Item) {
     if ((!item.talentGrid) ||
-        (!item.ratingData) ||
-        (!item.ratingData.reviewsResponse) ||
-        (!item.ratingData.reviewsResponse.reviews.length)) {
+        (!item.dtrRating) ||
+        (!item.dtrRating.reviewsResponse) ||
+        (!item.dtrRating.reviewsResponse.reviews.length)) {
       return;
     }
 
-    const reviews = item.ratingData.reviewsResponse.reviews;
+    const reviews = item.dtrRating.reviewsResponse.reviews;
 
     const maxColumn = this._getMaxColumn(item);
 

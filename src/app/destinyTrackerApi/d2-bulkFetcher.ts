@@ -94,7 +94,7 @@ class D2BulkFetcher {
         if (storeItem.reviewable) {
           const ratingData = this._reviewDataCache.getRatingData(storeItem);
 
-          storeItem.ratingData = ratingData;
+          storeItem.dtrRating = ratingData;
         }
       });
     });

@@ -17,15 +17,15 @@ class D2PerkRater {
    * Rate the perks on a Destiny 2 item based off of its attached user reviews.
    */
   ratePerks(item: D2Item) {
-    if (!item.ratingData ||
-        !item.ratingData.reviewsResponse ||
-        !item.ratingData.reviewsResponse.reviews.length ||
+    if (!item.dtrRating ||
+        !item.dtrRating.reviewsResponse ||
+        !item.dtrRating.reviewsResponse.reviews.length ||
         !item.sockets ||
         !item.sockets.sockets) {
       return;
     }
 
-    const itemReviews = item.ratingData.reviewsResponse.reviews;
+    const itemReviews = item.dtrRating.reviewsResponse.reviews;
 
     item.sockets.sockets.forEach((socket) => {
       if ((socket.plugOptions.length) &&

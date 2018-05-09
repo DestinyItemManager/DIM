@@ -73,7 +73,7 @@ class D2ReviewsFetcher {
     this._sortAndIgnoreReviews(reviewData);
 
     this._reviewDataCache.addReviewsData(reviewData);
-    item.ratingData = this._reviewDataCache.getRatingData(item);
+    item.dtrRating = this._reviewDataCache.getRatingData(item);
 
     this._perkRater.ratePerks(item);
   }
@@ -120,7 +120,7 @@ class D2ReviewsFetcher {
     const cachedData = this._reviewDataCache.getRatingData(item);
 
     if (cachedData && cachedData.reviewsResponse) {
-      item.ratingData = cachedData;
+      item.dtrRating = cachedData;
 
       return Promise.resolve();
     }

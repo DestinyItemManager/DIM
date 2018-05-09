@@ -57,15 +57,15 @@ class D2ReviewSubmitter {
   }
 
   _submitReviewPromise(item: D2Item, membershipInfo: DestinyAccount | null) {
-    if (!item.ratingData ||
-        !item.ratingData.userReview) {
+    if (!item.dtrRating ||
+        !item.dtrRating.userReview) {
       return Promise.resolve<DtrSubmitResponse>({});
     }
 
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
 
-    const review = this.toRatingAndReview(item.ratingData.userReview);
+    const review = this.toRatingAndReview(item.dtrRating.userReview);
 
     const rating: D2ReviewSubmitRequest = { ...rollAndPerks, ...review, reviewer };
 
@@ -85,8 +85,8 @@ class D2ReviewSubmitter {
   }
 
   _markItemAsReviewedAndSubmitted(item: D2Item) {
-    if (!item.ratingData ||
-        !item.ratingData.userReview) {
+    if (!item.dtrRating ||
+        !item.dtrRating.userReview) {
       return;
     }
 
@@ -94,8 +94,8 @@ class D2ReviewSubmitter {
   }
 
   submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
-    if (!item.ratingData ||
-        !item.ratingData.userReview) {
+    if (!item.dtrRating ||
+        !item.dtrRating.userReview) {
       return $q.resolve();
     }
 

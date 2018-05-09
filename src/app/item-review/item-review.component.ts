@@ -42,17 +42,17 @@ function ItemReviewController(
     if (vm.item.destinyVersion === 1) {
       const d1Item = vm.item as D1Item;
 
-      if (d1Item && d1Item.ratingData && d1Item.ratingData.userReview) {
-        vm.expandReview = (d1Item.ratingData.userReview.rating !== 0 && !d1Item.ratingData.userReview.treatAsSubmitted);
+      if (d1Item && d1Item.dtrRating && d1Item.dtrRating.userReview) {
+        vm.expandReview = (d1Item.dtrRating.userReview.rating !== 0 && !d1Item.dtrRating.userReview.treatAsSubmitted);
       }
     } else if (vm.item.destinyVersion === 2) {
       const d2Item = vm.item as D2Item;
 
-      if (d2Item && d2Item.ratingData && d2Item.ratingData.userReview) {
-        vm.expandReview = (d2Item.ratingData.userReview.voted !== 0 && !d2Item.ratingData.userReview.treatAsSubmitted);
+      if (d2Item && d2Item.dtrRating && d2Item.dtrRating.userReview) {
+        vm.expandReview = (d2Item.dtrRating.userReview.voted !== 0 && !d2Item.dtrRating.userReview.treatAsSubmitted);
 
-        if (!d2Item.ratingData.userReview.mode) {
-          d2Item.ratingData.userReview.mode = settings.reviewsModeSelection;
+        if (!d2Item.dtrRating.userReview.mode) {
+          d2Item.dtrRating.userReview.mode = settings.reviewsModeSelection;
         }
       }
     }
@@ -81,8 +81,8 @@ function ItemReviewController(
 
     const d2Item = vm.item as D2Item;
 
-    if (d2Item.ratingData.userReview.voted !== 0) {
-      d2Item.ratingData.userReview.voted = 0;
+    if (d2Item.dtrRating.userReview.voted !== 0) {
+      d2Item.dtrRating.userReview.voted = 0;
       vm.reviewBlur();
     }
   };
@@ -120,17 +120,17 @@ function ItemReviewController(
   vm.findReview = (reviewId: string): D1ItemUserReview | D2ItemUserReview | null => {
     if (vm.item.destinyVersion === 1) {
       const d1Item = vm.item as D1Item;
-      if (!d1Item || !d1Item.ratingData.reviewsResponse) {
+      if (!d1Item || !d1Item.dtrRating.reviewsResponse) {
         return null;
       }
 
-      return d1Item.ratingData.reviewsResponse.reviews.find((review) => review.reviewId === reviewId) || null;
+      return d1Item.dtrRating.reviewsResponse.reviews.find((review) => review.reviewId === reviewId) || null;
     } else {
       const d2Item = vm.item as D2Item;
-      if (!d2Item || !d2Item.ratingData.reviewsResponse) {
+      if (!d2Item || !d2Item.dtrRating.reviewsResponse) {
         return null;
       }
-      return d2Item.ratingData.reviewsResponse.reviews.find((review) => review.id === reviewId) || null;
+      return d2Item.dtrRating.reviewsResponse.reviews.find((review) => review.id === reviewId) || null;
     }
   };
 
@@ -165,12 +165,12 @@ function ItemReviewController(
   vm.getReviewData = () => {
     const d1Item = vm.item as D1Item;
 
-    if (!d1Item || !d1Item.ratingData.reviewsResponse || !d1Item.ratingData.reviewsResponse.reviews) {
+    if (!d1Item || !d1Item.dtrRating.reviewsResponse || !d1Item.dtrRating.reviewsResponse.reviews) {
       return [];
     }
 
     const labels = vm.reviewLabels;
-    const itemReviews = d1Item.ratingData.reviewsResponse.reviews;
+    const itemReviews = d1Item.dtrRating.reviewsResponse.reviews;
 
     // the score histogram is a D1-only thing
     const mapData = _.map(labels, (label) => {
@@ -211,7 +211,7 @@ function ItemReviewController(
         return;
       }
 
-      d1Item.ratingData.userReview.rating = rating;
+      d1Item.dtrRating.userReview.rating = rating;
     }
     vm.expandReview = true;
   };
@@ -232,10 +232,10 @@ function ItemReviewController(
 
   vm.toUserReview = (item: DimItem): WorkingD1Rating | WorkingD2Rating => {
     if (vm.item.destinyVersion === 1) {
-      return (item as D1Item).ratingData.userReview;
+      return (item as D1Item).dtrRating.userReview;
     }
 
-    return (item as D2Item).ratingData.userReview;
+    return (item as D2Item).dtrRating.userReview;
   };
 
   vm.featureFlags = {
@@ -277,12 +277,12 @@ function ItemReviewController(
       return;
     }
 
-    d2Item.ratingData.userReview.voted = (d2Item.ratingData.userReview.voted === userVote) ? 0 : userVote;
+    d2Item.dtrRating.userReview.voted = (d2Item.dtrRating.userReview.voted === userVote) ? 0 : userVote;
 
-    const treatAsTouched = (d2Item.ratingData.userReview.voted !== 0);
+    const treatAsTouched = (d2Item.dtrRating.userReview.voted !== 0);
 
     vm.expandReview = treatAsTouched;
-    d2Item.ratingData.userReview.treatAsSubmitted = !treatAsTouched;
+    d2Item.dtrRating.userReview.treatAsSubmitted = !treatAsTouched;
 
     vm.reviewBlur();
   };

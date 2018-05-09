@@ -1,4 +1,4 @@
-import { DtrReviewer, DimWorkingUserReview, RatingData, DimUserReview } from "./dtr-api-types";
+import { DtrReviewer, DimWorkingUserReview, DtrRating, DimUserReview } from "./dtr-api-types";
 
 /**
  * A fetch request for a single weapon. Expected to be part of a bulk (array) fetch request.
@@ -107,7 +107,7 @@ export interface D1ItemReviewResponse {
  * Rating + review + working user data.
  * Contains keys for lookups, response data from the API and user's local working review data (if they make any changes).
  */
-export interface D1RatingData extends RatingData {
+export interface D1RatingData extends DtrRating {
   /** Reference ID (weapon hash ID). */
   referenceId: string;
   /** The roll (perk hashes in the form that DTR expects). */

@@ -52,14 +52,14 @@ export class ReviewSubmitter {
   }
 
   _submitReviewPromise(item: D1Item, membershipInfo: DtrReviewer) {
-    if (!item.ratingData ||
-        !item.ratingData.userReview) {
+    if (!item.dtrRating ||
+        !item.dtrRating.userReview) {
           return Promise.resolve({});
         }
 
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
-    const review = this.toRatingAndReview(item.ratingData.userReview);
+    const review = this.toRatingAndReview(item.dtrRating.userReview);
 
     const rating = { ...rollAndPerks, ...review, reviewer };
 
