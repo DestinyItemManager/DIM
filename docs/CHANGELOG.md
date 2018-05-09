@@ -1,5 +1,7 @@
 # Next
 
+# 4.51.2 (2018-05-09)
+
 * Handle the Warmind API bug better, and provide helpful info on how to fix it.
 
 # 4.51.1 (2018-05-08)
