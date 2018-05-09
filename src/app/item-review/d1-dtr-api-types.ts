@@ -1,18 +1,27 @@
 import { DtrReviewer, DimWorkingUserReview, RatingData, DimUserReview } from "./dtr-api-types";
 
-/** A fetch request for a single weapon. Expected to be part of a bulk (array) fetch request.
+/**
+ * A fetch request for a single weapon. Expected to be part of a bulk (array) fetch request.
  */
 export interface D1ItemFetchRequest {
   /** Reference ID for the weapon. */
   referenceId: string;
-  /** The roll (available perks).
+  /**
+   * The roll (available perks).
    * Note that we only send random perks, so exotics, some raid weapons and other weapons don't pass this.
    */
   roll: string | null;
 }
 
 /** Bulk fetch response for a single weapon. */
-export interface D1ItemFetchResponse extends D1ItemFetchRequest {
+export interface D1ItemFetchResponse {
+  /** Reference ID for the weapon. */
+  referenceId: string;
+  /**
+   * The roll (available perks).
+   * Note that we only send random perks, so exotics, some raid weapons and other weapons don't pass this.
+   */
+  roll: string | null;
   /** The rating from DTR. We use this. */
   rating?: number;
   /** The number of ratings that DTR has for the weapon (roll). */
@@ -22,7 +31,14 @@ export interface D1ItemFetchResponse extends D1ItemFetchRequest {
 }
 
 /** A request for reviews for a single weapon. */
-export interface D1ItemReviewRequest extends D1ItemFetchRequest {
+export interface D1ItemReviewRequest {
+  /** Reference ID for the weapon. */
+  referenceId: string;
+  /**
+   * The roll (available perks).
+   * Note that we only send random perks, so exotics, some raid weapons and other weapons don't pass this.
+   */
+  roll: string | null;
   /** What perks does the user have selected on it? */
   selectedPerks: string | null;
   /** What's the particular instance ID of the weapon? */
@@ -31,7 +47,8 @@ export interface D1ItemReviewRequest extends D1ItemFetchRequest {
 
 /** The local user's working rating. */
 export interface WorkingD1Rating extends DimWorkingUserReview {
-  /** What's the weapon's rating?
+  /**
+   * What's the weapon's rating?
    * In D1, ratings are on a scale of 1-5.
    */
   rating: number;
@@ -55,28 +72,35 @@ export interface D1ItemUserReview extends DimUserReview {
   timestamp: string;
   /** What perks did the user have selected when they made the review? */
   selectedPerks?: string;
-  /** Is this reviewer a featured reviewer? */
-  isHighlighted: boolean;
-  /** Was this review written by the DIM user that requested the reviews? */
-  isReviewer: boolean;
   /** What rating did they give it (1-5)? */
   rating: number;
-  /** Pros - shouldn't be present. */
-  pros: string;
-  /** Cons - shouldn't be present. */
-  cons: string;
   /** Text (optionally) associated with the review. */
   review: string;
 }
 
-/** The DTR item reviews response.
+/**
+ * The DTR item reviews response.
  * For our purposes, we mostly care that it's a collection of user reviews.
  */
-export interface D1ItemReviewResponse extends D1ItemFetchResponse {
+export interface D1ItemReviewResponse {
+  /** Reference ID for the weapon. */
+  referenceId: string;
+  /**
+   * The roll (available perks).
+   * Note that we only send random perks, so exotics, some raid weapons and other weapons don't pass this.
+   */
+  roll: string | null;
+  /** The rating from DTR. We use this. */
+  rating?: number;
+  /** The number of ratings that DTR has for the weapon (roll). */
+  ratingCount: number;
+  /** The number of highlighted ratings that DTR has for the weapon (roll). */
+  highlightedRatingCount: number;
   reviews: D1ItemUserReview[];
 }
 
-/** Cached rating/review data.
+/**
+ * Rating + review + working user data.
  * Contains keys for lookups, response data from the API and user's local working review data (if they make any changes).
  */
 export interface D1RatingData extends RatingData {

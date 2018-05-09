@@ -11,6 +11,16 @@ export interface DimUserReview {
    * Will be set on reviews associated with any other reviwer that the user reports.
    */
   isIgnored?: boolean;
+  /**
+   * Is this reviewer a featured reviewer?
+   * Broken in D2.
+   */
+  isHighlighted: boolean;
+  /**
+   * Was this review written by the DIM user that requested the reviews?
+   * Broken in D2.
+   */
+  isReviewer: boolean;
 }
 
 /** Review that a user's working with */

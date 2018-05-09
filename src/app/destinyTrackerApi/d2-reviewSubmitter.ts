@@ -5,11 +5,21 @@ import { loadingTracker } from '../ngimport-more';
 import { handleD2SubmitErrors, DtrSubmitResponse } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { WorkingD2Rating, DtrD2BasicItem } from '../item-review/d2-dtr-api-types';
+import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
 import { $q } from 'ngimport';
 
-interface D2ReviewSubmitRequest extends DtrD2BasicItem {
+/** Request to add a new rating (and optional review) for an item. */
+interface D2ReviewSubmitRequest {
+  /** Reference ID (item hash). */
+  referenceId: number;
+  /** Instance ID (vaguely personally identifying). */
+  instanceId?: string;
+  /** What mods does the user have attached? */
+  attachedMods?: number[];
+  /** What perks does the user have selected? */
+  selectedPerks?: number[];
+
   reviewer: DtrReviewer;
   voted: number;
   text: string;
