@@ -173,18 +173,7 @@ export class ReviewsFetcher {
   _translateReview(actualReview: ActualD1ItemUserReview): D1ItemUserReview {
     const timestamp = this._toUtcTime(actualReview.timestamp);
 
-    return {
-      reviewId: actualReview.reviewId,
-      timestamp,
-      reviewer: actualReview.reviewer,
-      rating: actualReview.rating,
-      review: actualReview.review,
-      isHighlighted: actualReview.isHighlighted,
-      isReviewer: actualReview.isReviewer,
-      pros: actualReview.pros,
-      cons: actualReview.cons,
-      roll: actualReview.roll
-    };
+    return { ...actualReview, timestamp };
   }
 
   /**
@@ -195,14 +184,7 @@ export class ReviewsFetcher {
   _translateReviewResponse(actualResponse: ActualD1ItemReviewResponse): D1ItemReviewResponse {
     const reviews = actualResponse.reviews.map((review) => this._translateReview(review));
 
-    return {
-      referenceId: actualResponse.referenceId,
-      roll: actualResponse.roll,
-      ratingCount: actualResponse.ratingCount,
-      rating: actualResponse.rating,
-      highlightedRatingCount: actualResponse.highlightedRatingCount,
-      reviews
-    };
+    return { ...actualResponse, reviews };
   }
 
   /**
