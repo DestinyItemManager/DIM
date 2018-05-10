@@ -32,6 +32,8 @@ export interface DimUserReview {
    * shouldn't be present (yet).
    */
   cons: string;
+  /** Timestamp that DTR received the review. */
+  timestamp: Date;
 }
 
 /** Review that a user's working with */

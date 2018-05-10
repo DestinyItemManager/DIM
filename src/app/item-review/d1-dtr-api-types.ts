@@ -68,14 +68,14 @@ export interface D1ItemUserReview extends DimUserReview {
   reviewId: string;
   /** Who reviewed it? */
   reviewer: DtrReviewer;
-  /** Timestamp associated with the review. */
-  timestamp: string;
   /** What perks did the user have selected when they made the review? */
   selectedPerks?: string;
   /** What rating did they give it (1-5)? */
   rating: number;
   /** Text (optionally) associated with the review. */
   review: string;
+  /** The roll that the user had on their review. */
+  roll: string | null;
 }
 
 /**

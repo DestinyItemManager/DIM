@@ -70,8 +70,6 @@ export interface WorkingD2Rating extends DimWorkingUserReview {
 export interface D2ItemUserReview extends DimUserReview {
   /** The DTR review ID. */
   id: string;
-  /** Timestamp that DTR received the review. */
-  timestamp: Date;
   /** The instance ID for the item reviewed. */
   instanceId?: string;
   /** Who made the review? */

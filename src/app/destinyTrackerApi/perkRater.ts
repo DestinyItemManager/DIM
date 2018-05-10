@@ -95,20 +95,30 @@ export class PerkRater {
     return ratingAndReview;
   }
 
-  _getMatchingReviews(perkNode,
+  _getMatchingReviews(perkNode: D1GridNode,
                       reviews: D1ItemUserReview[]) {
     const perkRoll = perkNode.dtrRoll.replace('o', '');
     return reviews.filter((review) => this._selectedPerkNodeApplies(perkRoll, review));
   }
 
-  _selectedPerkNodeApplies(perkRoll,
-                           review) {
+  _selectedPerkNodeApplies(perkRoll: string,
+                           review: D1ItemUserReview) {
     const reviewSelectedPerks = this._getSelectedPerks(review, perkRoll);
+
+    if (typeof reviewSelectedPerks === "string") {
+      return reviewSelectedPerks === perkRoll;
+    }
+
     return reviewSelectedPerks.some((reviewSelectedPerk) => perkRoll === reviewSelectedPerk);
   }
 
-  _getSelectedPerks(review, perkRoll) {
+  _getSelectedPerks(review: D1ItemUserReview, perkRoll: string): string | string[] {
     const allSelectedPerks = (review.roll) ? review.roll.split(';').filter((str) => str.indexOf('o') > -1) : perkRoll; // in narrow cases, we can be supplied a D1ItemWorkingUserReview
+
+    if (typeof allSelectedPerks === "string") {
+      return allSelectedPerks.replace('o', '');
+    }
+
     return allSelectedPerks.map((selectedPerk) => selectedPerk.replace('o', ''));
   }
 }
