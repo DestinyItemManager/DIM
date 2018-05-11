@@ -35,6 +35,7 @@
     "DestinyLegacyPlatform": "Los servicios de Bungie tienen actualmente un error que impide que DIM pueda cargar tu perfil de Destiny 2 si has jugado Destiny 1 en una consola de la generación anterior. Bungie arreglará esto pronto, mientras tanto una solución es jugar Destiny 1 en una consola de la generación actual para poder acceder a tu perfil.",
     "DevVersion": "¿Estás corriendo una versión de desarrollo de DIM? Debes primero registrar tu extensión de Chrome con Bungie.net.",
     "Difficulties": "La API de Bungie esta teniendo dificultades.",
+    "ErrorTitle": "Error de Bungie.net",
     "ItemUniqueness": "Peculiaridad del objeto",
     "ItemUniquenessExplanation": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
     "ItemUniquenessExplanation_female": "Intentaste mover la '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
@@ -50,7 +51,8 @@
     "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelve a intentarlo.",
     "Twitter": "Obtén actualizaciones de estado en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
-    "VendorNotFound": "La información de los vendedores no está disponible."
+    "VendorNotFound": "La información de los vendedores no está disponible.",
+    "WarmindLoginNeeded": "No podemos cargar tu intentario debido a un fallo en la API de Destiny. Para arreglarlo, carga cada uno de tus personajes y configura los multigestos."
   },
   "Compare": {
     "All": "Comparaciones de {{type}} ({{quantity}})",

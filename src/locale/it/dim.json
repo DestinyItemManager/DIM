@@ -35,6 +35,7 @@
     "DestinyLegacyPlatform": "I servizi di Bungie al momento hanno un bug che impedisce a DIM di caricare le informazioni del tuo account di Destiny 2 se hai giocato a Destiny 1 su una console di vecchia generazione. Bungie lo risolverà presto, ma fino ad allora, dovrai giocare Destiny 1 su una console della generazione attuale per accedere ai tuoi dati.",
     "DevVersion": "Stai usando una versione di DIM in via di sviluppo? Devi registrare la tua estensione per Chrome con Bungie.net.",
     "Difficulties": "Al momento le API di Bungie hanno dei problemi.",
+    "ErrorTitle": "Errore di Bungie.NET",
     "ItemUniqueness": "Unicità dell'elemento",
     "ItemUniquenessExplanation": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già uno e solo uno è concesso.",
     "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
@@ -50,7 +51,8 @@
     "Throttled": "Superato il limite di aggiornamento delle API di Bungie. Riprovare fra poco.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
-    "VendorNotFound": "I dati dei mercanti non sono disponibili."
+    "VendorNotFound": "I dati dei mercanti non sono disponibili.",
+    "WarmindLoginNeeded": "Non possiamo caricare il tuo inventario per colpa di un bug nelle API di Destiny. Per risolverlo, entra in ognuno dei tuoi personaggi e configura la ruota delle emote."
   },
   "Compare": {
     "All": "Confronta ogni {{type}} ({{quantity}})",

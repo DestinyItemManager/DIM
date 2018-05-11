@@ -35,6 +35,7 @@
     "DestinyLegacyPlatform": "目前Bungie的服务出现了一个Bug，如果您在上一代主机上游玩过Destiny1，那么DIM将无法加载您的Destiny2帐户信息。Bungie将很快修复这个Bug。但是，直到Bug修复完成前，您必须在目前世代主机上游玩Destiny1以便DIM能读取您的帐户信息。",
     "DevVersion": "您是否正在运行开发版的DIM？您必须先将您的Chrome扩展与Bungie.net关联。",
     "Difficulties": "Bungie API目前遇到困难.",
+    "ErrorTitle": "Bungie.net Error",
     "ItemUniqueness": "物品稀有度",
     "ItemUniquenessExplanation": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "ItemUniquenessExplanation_female": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
@@ -50,7 +51,8 @@
     "Throttled": "Bungie API流量限制已超出。请稍后重试。",
     "Twitter": "查看服务器更新状态:",
     "UnknownError": "来自Bungie.net的消息：{{message}}",
-    "VendorNotFound": "商贩数据不可用."
+    "VendorNotFound": "商贩数据不可用.",
+    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
   },
   "Compare": {
     "All": "{{type}}对比 ({{quantity}})",

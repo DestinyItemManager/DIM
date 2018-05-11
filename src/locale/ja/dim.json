@@ -35,6 +35,7 @@
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
     "Difficulties": "Bungie APIに問題が発生しています。",
+    "ErrorTitle": "Bungie.net Error",
     "ItemUniqueness": "アイテムのレア度",
     "ItemUniquenessExplanation": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
@@ -50,7 +51,8 @@
     "Throttled": "Bungie APIの制限が超えました。しばらくしてからお待ちください。",
     "Twitter": "最新情報に更新します。:",
     "UnknownError": "Bungie.netからのメッセージ: {{message}}",
-    "VendorNotFound": "ベンダー情報ありません"
+    "VendorNotFound": "ベンダー情報ありません",
+    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
   },
   "Compare": {
     "All": "{{type}} 比較 ({{quantity}})",

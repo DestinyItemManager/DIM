@@ -35,6 +35,7 @@
     "DestinyLegacyPlatform": "Сервисы Bungie содержат баг, который препятствует DIM загрузить информацию вашего аккаунта в Destiny 2, если вы играли в Destiny 1 на консоли прошлого поколения. Bungie скоро это исправят, но до тех пор вы должны играть в Destiny 1 на консоли текущего поколения, чтобы иметь доступ к своим данным.",
     "DevVersion": "Вы используете нестабильную версию DIM? Вы должны зарегистрировать ваше расширение Chrome на bungie.net.",
     "Difficulties": "API Bungie в настоящий момент работает нестабильно.",
+    "ErrorTitle": "Bungie.net Error",
     "ItemUniqueness": "Уникальность предмета",
     "ItemUniquenessExplanation": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_female": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
@@ -50,7 +51,8 @@
     "Throttled": "Превышен лимит частоты запросов к Bungie API. Пожалуйста, подождите немного и повторите попытку.",
     "Twitter": "Получить обновления статуса сервиса:",
     "UnknownError": "Сообщение от Bungie.net: {{message}}",
-    "VendorNotFound": "Данные вендоров недоступны."
+    "VendorNotFound": "Данные вендоров недоступны.",
+    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
   },
   "Compare": {
     "All": "Сравнить каждый {{type}} ({{quantity}})",

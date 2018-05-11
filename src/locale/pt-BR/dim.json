@@ -35,6 +35,7 @@
     "DestinyLegacyPlatform": "Os serviços da Bungie tem atualmente um bug que impede que o DIM carregue informação da sua conta de Destiny 2 se você jogou o Destiny 1 em um console de última geração. A Bungie irá corrigir isso em breve, mas até lá, você deve jogar Destiny 1 em um console de geração atual para ser capaz de acessar a sua informação.",
     "DevVersion": "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
     "Difficulties": "A API da Bungie está atualmente passando por dificuldades.",
+    "ErrorTitle": "Bungie.net Error",
     "ItemUniqueness": "Unicidade de itens",
     "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
@@ -50,7 +51,8 @@
     "Throttled": "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
     "Twitter": "Veja atualizações em:",
     "UnknownError": "Mensagem da Bungie.net: {{message}}",
-    "VendorNotFound": "Dados do vendedor não disponíveis."
+    "VendorNotFound": "Dados do vendedor não disponíveis.",
+    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
   },
   "Compare": {
     "All": "Comparações de {{type}} ({{quantity}})",
@@ -486,7 +488,7 @@
     "LockUnlock_Lock": "Travar {{itemType}}",
     "LockUnlock_Unlock": "Destravar {{itemType}}",
     "OverviewTab": "Visão geral",
-    "ReadLore": "Read lore on Ishtar Collective",
+    "ReadLore": "Leia a história no Ishtar Collective (somente em inglês)",
     "ReviewsTab": "Análises",
     "Split": "Dividir",
     "Store": "Mover",

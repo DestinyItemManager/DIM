@@ -35,6 +35,7 @@
     "DestinyLegacyPlatform": "Les services Bungie ont actuellement un bug empêchant DIM de charger les informations pour votre compte Destiny 2 si vous avez joué à Destiny 1 sur une console d'ancienne génération. Bungie corrigera bientôt ce bug, mais en attendant vous devez jouer à Destiny 1 sur une console de génération actuelle pour pouvoir accéder à vos informations.",
     "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec bungie.net.",
     "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
+    "ErrorTitle": "Erreur Bungie.net",
     "ItemUniqueness": "Unicité d'un objet",
     "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
@@ -50,7 +51,8 @@
     "Throttled": "La limite de connexions à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
     "Twitter": "Tenez-vous informé sur:",
     "UnknownError": "Message de Bungie.net: {{message}}",
-    "VendorNotFound": "Les données du vendeur sont indisponible."
+    "VendorNotFound": "Les données du vendeur sont indisponible.",
+    "WarmindLoginNeeded": "Nous ne pouvons pas charger votre inventaire à cause d'un bug dans l'API Destiny. Pour régler cela, connectez vous sur chacun de vos personnages et équipez vos emplacements d'interaction."
   },
   "Compare": {
     "All": "Comparaison de {{type}} ({{quantity}})",
