@@ -34,6 +34,7 @@ interface MilestoneProps {
  */
 export function Milestone(props: MilestoneProps) {
   const { milestone, defs, character } = props;
+
   const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
 
   if (milestone.availableQuests) {
