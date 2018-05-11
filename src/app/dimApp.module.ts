@@ -16,6 +16,7 @@ import 'angular-promise-tracker';
 import ocLazyLoadModule from 'oclazyload';
 import 'ngimport';
 import ngimportMoreModule from './ngimport-more';
+import ngSanitize from 'angular-sanitize';
 
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './inventory/inventory.module';
@@ -43,6 +44,7 @@ const dependencies = [
   MessagesModule,
   TouchModule,
   ngI18Next,
+  ngSanitize,
   ocLazyLoadModule,
   ShellModule,
   'rzModule',
