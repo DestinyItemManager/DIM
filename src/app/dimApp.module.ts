@@ -3,7 +3,6 @@ import { module } from 'angular';
 import AriaModule from 'angular-aria';
 import 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
-import ngSanitize from 'angular-sanitize';
 
 import MessagesModule from 'angular-messages';
 import TouchModule from 'angular-touch';
@@ -45,7 +44,6 @@ const dependencies = [
   TouchModule,
   ngI18Next,
   ocLazyLoadModule,
-  ngSanitize,
   ShellModule,
   'rzModule',
   ToasterModule,
