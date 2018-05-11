@@ -105,6 +105,7 @@
     "angular-messages": "^1.6.9",
     "angular-native-dragdrop": "github:DestinyItemManager/angular-dragdrop",
     "angular-promise-tracker": "^2.2.2",
+    "angular-sanitize": "^1.6.9",
     "angular-touch": "^1.6.9",
     "angular2react": "^3.0.2",
     "angularjs-slider": "^6.5.1",
