@@ -18,6 +18,7 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';
+import { settings } from '../settings/settings';
 import { $state } from '../ngimport-more';
 import './milestone.scss';
 
@@ -288,7 +289,7 @@ function MilestoneObjectiveStatus(props: MilestoneObjectiveStatusProps) {
     if (status.completed) {
       return <span><i className="fa fa-check-circle-o"/></span>;
     } else if (completionValue > 1) {
-      const formatter = new Intl.NumberFormat(window.navigator.language);
+      const formatter = new Intl.NumberFormat(settings.language);
       return <span>{formatter.format(progress)}<wbr/>/<wbr/>{formatter.format(completionValue)}</span>;
     }
   }
