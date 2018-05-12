@@ -228,7 +228,7 @@ module.exports = (env) => {
         $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify('22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'),
 
         $BROWSERS: JSON.stringify(packageJson.browserslist),
-        $MAX_BASE_POWER: JSON.stringify('380'),
+
         // Feature flags!
 
         // Print debug info to console about item moves

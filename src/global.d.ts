@@ -5,7 +5,6 @@ declare const $DIM_WEB_API_KEY: string;
 declare const $DIM_WEB_CLIENT_ID: string;
 declare const $DIM_WEB_CLIENT_SECRET: string;
 declare const $GOOGLE_DRIVE_CLIENT_ID: string;
-declare const $MAX_BASE_POWER: string;
 declare const $BROWSERS: string[];
 
 declare const $featureFlags: {
