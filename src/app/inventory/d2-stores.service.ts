@@ -398,7 +398,7 @@ export function D2StoresService(
         value: hasClassified ? `${maxBasePower}*` : maxBasePower,
         icon: bungieNetPath(def.displayProperties.icon),
         tiers: [maxBasePower],
-        tierMax: 330
+        tierMax: 380
       };
     }
   }
