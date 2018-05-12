@@ -35,7 +35,7 @@
     "DestinyLegacyPlatform": "Bungies Dienste haben derzeit einen Bug, der DIM daran hindert Informationen für deinen Destiny 2 Account zu laden, wenn du Destiny 1 auf einer älteren Konsolengeneration gespielt hast. Bungie wird den Fehler bald beheben, aber bis dahin musst du Destiny 1 auf einer neuen Konsole spielen, um die Informationen laden zu können.",
     "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
     "Difficulties": "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
-    "ErrorTitle": "Bungie.net Error",
+    "ErrorTitle": "Bungie.net Fehler",
     "ItemUniqueness": "Item Einzigartigkeit",
     "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_female": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
@@ -52,7 +52,7 @@
     "Twitter": "Hol dir Status-Updates auf:",
     "UnknownError": "Bungie.net Nachricht: {{message}}",
     "VendorNotFound": "Händler Daten nicht verfügbar.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "WarmindLoginNeeded": "Wir können dein Inventar aufgrund eines Bugs der Destiny API nicht laden. Lade jeden deiner Charaktere und erstelle ein Emote-Rad um das Problem zu lösen."
   },
   "Compare": {
     "All": "{{type}} Vergleich ({{quantity}})",
@@ -257,16 +257,16 @@
     "About": "Über",
     "Back": "Zurück",
     "BulkTag": "Massenbeschriftung Items",
-    "BungieNetAlert": "Bungie Alert",
+    "BungieNetAlert": "Bungie-Warnung",
     "FilterHelp": "Suche nach Item/Perk oder {{example}}",
     "Filters": "Filter",
     "Inventory": "Inventar",
     "Refresh": "Aktualisiere Destiny Daten",
-    "ReportBug": "Bug Report",
+    "ReportBug": "Fehler melden",
     "Shop": "Shop",
     "SupportDIM": "Unterstützer",
-    "UpgradeDIM": "Upgrade DIM",
-    "WhatsNew": "What's New"
+    "UpgradeDIM": "DIM Upgrade",
+    "WhatsNew": "Was ist neu"
   },
   "Help": {
     "CannotMove": "Item kann nicht von diesem Charakter wegbewegt werden.",
@@ -488,7 +488,7 @@
     "LockUnlock_Lock": "{{itemType}} sperren",
     "LockUnlock_Unlock": "{{itemType}} entsperren",
     "OverviewTab": "Übersicht",
-    "ReadLore": "Read lore on Ishtar Collective",
+    "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReviewsTab": "Berichte",
     "Split": "Teilen",
     "Store": "Lagern",
@@ -637,7 +637,7 @@
     "TagNotesD1": "{{value}} Destiny 1 Items mit Markierungen oder Notizen",
     "TagNotesD2": "{{value}} Destiny 2 Items mit Markierungen oder Notizen",
     "Title": "DIM Speicher",
-    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
+    "Usage": "DIM benutzt {{usage, humanBytes}} der auf diesem Gerät verfügbaren {{quota, humanBytes}}."
   },
   "StoreBucket": {
     "FillStack": "Stapel auffüllen ({{amount}})",
@@ -670,7 +670,7 @@
     "Collections": "Sammlungen",
     "Compare": "Vergleiche mit dem was du bereits hast:",
     "Consumables": "Verbrauchs-Items",
-    "DestinySets": "Browse more item sets at Destiny Sets",
+    "DestinySets": "Siehe dir mehr Item-Sets auf Destiny Sets an",
     "Emotes": "Gesten",
     "Engram": "Belohnungs-Engramm",
     "Load": "Lade Händler",
