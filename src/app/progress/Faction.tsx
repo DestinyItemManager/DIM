@@ -12,7 +12,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { sum } from '../util';
 import { $state } from '../ngimport-more';
 import './faction.scss';
-import { PressTip } from '../dim-ui/press-tip';
+import PressTip from '../dim-ui/PressTip';
 import FactionIcon from './FactionIcon';
 
 interface FactionProps {

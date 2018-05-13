@@ -4,7 +4,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import * as React from 'react';
-import { bungieNetPath } from '../dim-ui/bungie-image';
+import { bungieNetPath } from '../dim-ui/BungieImage';
 import './faction.scss';
 
 export default function FactionIcon(props: {

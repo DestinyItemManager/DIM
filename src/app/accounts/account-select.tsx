@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import * as React from 'react';
-import ClickOutside from '../dim-ui/click-outside';
+import ClickOutside from '../dim-ui/ClickOutside';
 import { $state, loadingTracker } from '../ngimport-more';
 import { removeToken } from '../oauth/oauth-token.service';
 import './account-select.scss';

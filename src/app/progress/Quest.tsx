@@ -1,7 +1,7 @@
 import { DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { BungieImage } from '../dim-ui/bungie-image';
+import BungieImage from '../dim-ui/BungieImage';
 import { sum } from '../util';
 import './quest.scss';
 import Objective from './Objective';
