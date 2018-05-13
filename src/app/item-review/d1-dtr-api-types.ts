@@ -52,10 +52,6 @@ export interface WorkingD1Rating extends DimWorkingUserReview {
    * In D1, ratings are on a scale of 1-5.
    */
   rating: number;
-  /** Pros - set aside for future use. */
-  pros: string;
-  /** Cons - set aside for future use. */
-  cons: string;
   /** Text for the review.
    * Optional.
    */
