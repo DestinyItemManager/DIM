@@ -4,6 +4,7 @@
 * Updated max power to 380.
 * Vendors and collections will no longer show items exclusive to platforms other than the current account's platform.
 * Fix masterworks not showing as masterworks.
+* Set the max base power depending on which DLC you own.
 
 # 4.51.2 (2018-05-09)
 

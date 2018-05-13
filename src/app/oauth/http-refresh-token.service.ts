@@ -16,7 +16,8 @@ export async function fetchWithBungieOAuth(request: Request | string, options?: 
       const token = await getActiveToken();
       request.headers.set('Authorization', `Bearer ${token.accessToken.value}`);
     } catch (e) {
-      if (e instanceof FatalTokenError) {
+      // Note: instanceof doesn't work due to a babel bug:
+      if (e.name === 'FatalTokenError') {
         console.warn("Unable to get auth token, clearing auth tokens & going to login: ", e);
         removeToken();
         $rootScope.$broadcast('dim-no-token-found');
@@ -58,7 +59,12 @@ async function responseIndicatesBadToken(response: Response) {
 /**
  * A fatal token error means we have to log in again.
  */
-class FatalTokenError extends Error {}
+class FatalTokenError extends Error {
+  constructor(msg) {
+    super(msg);
+    this.name = 'FatalTokenError';
+  }
+}
 
 async function getActiveToken(): Promise<Tokens> {
   let token = getToken();
