@@ -1,7 +1,7 @@
 import { StateParams } from '@uirouter/angularjs';
 import { IScope } from 'angular';
 import {
-  DestinyProfileResponse, DestinyKioskItem
+  DestinyProfileResponse, DestinyKioskItem, BungieMembershipType
 } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
@@ -81,6 +81,7 @@ export default class Collections extends React.Component<Props, State> {
 
   render() {
     const { defs, profileResponse, trackerService, ownedItemHashes } = this.state;
+    const { account } = this.props;
 
     if (!profileResponse || !defs) {
       // TODO: loading component!
@@ -104,6 +105,7 @@ export default class Collections extends React.Component<Props, State> {
             items={itemsForKiosk(profileResponse, Number(vendorHash))}
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
+            account={account}
           />
         )}
         <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://destinysets.com">
@@ -123,13 +125,15 @@ function Kiosk({
   vendorHash,
   items,
   trackerService,
-  ownedItemHashes
+  ownedItemHashes,
+  account
 }: {
   defs: D2ManifestDefinitions;
   vendorHash: number;
   items: DestinyKioskItem[];
   trackerService?: DestinyTrackerServiceType;
   ownedItemHashes?: Set<number>;
+  account: DestinyAccount;
 }) {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -143,7 +147,11 @@ function Kiosk({
     } else {
       return l.find((i) => items.some((k) => k.index === i.vendorItemIndex)) || l[0];
     }
-  });
+  }).filter((i) =>
+    !i.exclusivity ||
+    i.exclusivity === BungieMembershipType.All ||
+    i.exclusivity === account.platformType
+  );
 
   const vendorItems = itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, items.some((k) => k.index === i.vendorItemIndex && k.canAcquire)));
 

@@ -103,6 +103,7 @@ export default class SingleVendor extends React.Component<Props, State> {
 
   render() {
     const { defs, vendorDef, vendorResponse, trackerService, ownedItemHashes } = this.state;
+    const { account } = this.props;
 
     if (!vendorDef || !defs) {
       // TODO: loading component!
@@ -127,7 +128,7 @@ export default class SingleVendor extends React.Component<Props, State> {
     const placeString = [(destinationDef && destinationDef.displayProperties.name), (placeDef && placeDef.displayProperties.name)].filter((n) => n && n.length).join(', ');
     // TODO: there's a cool background image but I'm not sure how to use it
 
-    const vendorItems = getVendorItems(defs, vendorDef, trackerService, vendorResponse && vendorResponse.itemComponents, vendorResponse && vendorResponse.sales.data);
+    const vendorItems = getVendorItems(account, defs, vendorDef, trackerService, vendorResponse && vendorResponse.itemComponents, vendorResponse && vendorResponse.sales.data);
 
     // TODO: localize
     return (

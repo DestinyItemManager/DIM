@@ -6,7 +6,8 @@ import {
   DestinyVendorSaleItemComponent,
   DestinyVendorsResponse,
   DestinyVendorGroup,
-  DestinyVendorDefinition
+  DestinyVendorDefinition,
+  BungieMembershipType
   } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -102,6 +103,7 @@ export default class Vendors extends React.Component<Props, State> {
 
   render() {
     const { defs, vendorsResponse, trackerService, ownedItemHashes } = this.state;
+    const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
       // TODO: loading component!
@@ -118,6 +120,7 @@ export default class Vendors extends React.Component<Props, State> {
             vendorsResponse={vendorsResponse}
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
+            account={account}
           />
         )}
 
@@ -131,13 +134,15 @@ function VendorGroup({
   group,
   vendorsResponse,
   trackerService,
-  ownedItemHashes
+  ownedItemHashes,
+  account
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
   trackerService?: DestinyTrackerServiceType;
   ownedItemHashes?: Set<number>;
+  account: DestinyAccount;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -146,6 +151,7 @@ function VendorGroup({
       {group.vendorHashes.map((h) => vendorsResponse.vendors.data[h]).map((vendor) =>
         <Vendor
           key={vendor.vendorHash}
+          account={account}
           defs={defs}
           vendor={vendor}
           itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
@@ -166,7 +172,8 @@ function Vendor({
   sales,
   trackerService,
   ownedItemHashes,
-  currencyLookups
+  currencyLookups,
+  account
 }: {
   defs: D2ManifestDefinitions;
   vendor: DestinyVendorComponent;
@@ -179,6 +186,7 @@ function Vendor({
   currencyLookups: {
     [itemHash: number]: number;
   };
+  account: DestinyAccount;
 }) {
   const vendorDef = defs.Vendor.get(vendor.vendorHash);
   if (!vendorDef) {
@@ -205,7 +213,7 @@ function Vendor({
       <VendorItems
         defs={defs}
         vendorDef={vendorDef}
-        vendorItems={getVendorItems(defs, vendorDef, trackerService, itemComponents, sales)}
+        vendorItems={getVendorItems(account, defs, vendorDef, trackerService, itemComponents, sales)}
         trackerService={trackerService}
         ownedItemHashes={ownedItemHashes}
         currencyLookups={currencyLookups}
@@ -215,6 +223,7 @@ function Vendor({
 }
 
 export function getVendorItems(
+  account: DestinyAccount,
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition,
   trackerService?: DestinyTrackerServiceType,
@@ -239,6 +248,10 @@ export function getVendorItems(
     // If the sales should come from the server, don't show anything until we have them
     return [];
   } else {
-    return vendorDef.itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache));
+    return vendorDef.itemList.filter((i) =>
+      !i.exclusivity ||
+      i.exclusivity === BungieMembershipType.All ||
+      i.exclusivity === account.platformType
+    ).map((i) => new VendorItem(defs, vendorDef, i, reviewCache));
   }
 }
