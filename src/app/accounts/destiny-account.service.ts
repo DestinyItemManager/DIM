@@ -1,6 +1,6 @@
 import { IPromise } from 'angular';
 import { BungieMembershipType } from 'bungie-api-ts/common';
-import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { PlatformErrorCodes, DestinyGameVersions } from 'bungie-api-ts/destiny2';
 import { UserMembershipData } from 'bungie-api-ts/user';
 import { t } from 'i18next';
 import { $q } from 'ngimport';
@@ -38,6 +38,8 @@ export interface DestinyAccount {
   membershipId: string;
   /** Which version of Destiny is this account for? */
   destinyVersion: 1 | 2;
+  /** Which version of Destiny 2 / DLC do they own? */
+  versionsOwned?: DestinyGameVersions;
 }
 
 /**
@@ -102,7 +104,8 @@ function findD2Characters(account: DestinyAccount): IPromise<DestinyAccount | nu
         response.profile.data.characterIds.length) {
         const result: DestinyAccount = {
           ...account,
-          destinyVersion: 2
+          destinyVersion: 2,
+          versionsOwned: response.profile.data.versionsOwned
         };
         return result;
       }

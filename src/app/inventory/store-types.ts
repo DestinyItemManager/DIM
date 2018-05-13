@@ -141,10 +141,10 @@ export interface D2CharacterStat {
   id: number;
   name: string;
   description: string;
-  value: number;
+  value: number | string;
   icon: string;
   tierMax?: number;
-  tiers?: number[];
+  tiers?: number[] | string[];
   hasClassified?: boolean;
 }
 
@@ -200,7 +200,7 @@ export interface D2Store extends DimStore {
   buckets: { [bucketId: string]: D2Item[] };
   vault?: D2Vault;
   stats: {
-    basePower?: D2CharacterStat;
+    maxBasePower?: D2CharacterStat;
     [statHash: number]: D2CharacterStat;
   };
   updateCharacterInfo(

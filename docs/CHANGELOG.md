@@ -1,5 +1,7 @@
 # Next
 
+* Set the max base power depending on which DLC you own.
+
 # 4.51.2 (2018-05-09)
 
 * Handle the Warmind API bug better, and provide helpful info on how to fix it.

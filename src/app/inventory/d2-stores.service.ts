@@ -5,7 +5,8 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
   DestinyProgression,
-  PlatformErrorCodes
+  PlatformErrorCodes,
+  DestinyGameVersions
   } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
@@ -169,7 +170,7 @@ export function D2StoresService(
   /**
    * Returns a promise for a fresh view of the stores and their items.
    */
-  function loadStores(account): IPromise<D2Store[] | undefined> {
+  function loadStores(account: DestinyAccount): IPromise<D2Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
     const firstLoad = (previousItems.size === 0);
@@ -238,7 +239,7 @@ export function D2StoresService(
 
         itemInfoService.cleanInfos(stores);
 
-        stores.forEach((s) => updateBasePower(stores, s, defs));
+        stores.forEach((s) => updateBasePower(account, stores, s, defs));
 
         // Let our styling know how many characters there are
         document.querySelector('html')!.style.setProperty("--num-characters", String(_stores.length - 1));
@@ -378,7 +379,7 @@ export function D2StoresService(
   }
 
   // Add a fake stat for "max base power"
-  function updateBasePower(stores, store, defs) {
+  function updateBasePower(account: DestinyAccount, stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getBasePower(maxBasePowerLoadout(stores, store));
@@ -391,33 +392,28 @@ export function D2StoresService(
       });
 
       store.stats.maxBasePower = {
-        id: 'maxBasePower',
+        id: -1,
         name: t('Stats.MaxBasePower'),
         hasClassified,
         description: def.displayProperties.description,
         value: hasClassified ? `${maxBasePower}*` : maxBasePower,
         icon: bungieNetPath(def.displayProperties.icon),
         tiers: [maxBasePower],
-        tierMax: getCurrentMaxBasePower()
+        tierMax: getCurrentMaxBasePower(account)
       };
     }
   }
 
-  function getCurrentMaxBasePower() {
-    // const Vanilla = new Date("September 6 2017 11:00 PST"); // 300
-    // const CoO = new Date("December 5 2017 11:00 PST");      // 330
-    // const Warmind = new Date("May 8 2018 11:00 PST");       // 380
-
-    /* const currentDate = new Date(Date.now());
-
-    if (currentDate > Warmind) {
-      return 380;
+  function getCurrentMaxBasePower(account: DestinyAccount) {
+    switch (account.versionsOwned) {
+      case DestinyGameVersions.Destiny2:
+        return 300;
+      case DestinyGameVersions.DLC1:
+        return 330;
+      case 3: // DLC2 doesn't have an enum value yet
+      default: // If they don't own Destiny, or it's an unknown version
+        return 380;
     }
-    if (currentDate > CoO) {
-      return 330;
-    } */
-
-    return 380;
   }
 
   function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {
