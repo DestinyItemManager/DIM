@@ -30,14 +30,15 @@ export interface Tokens {
  * Get all token information from saved storage.
  */
 export function getToken(): Tokens | null {
-  return localStorage.authorization ? JSON.parse(localStorage.authorization) : null;
+  const tokenString = localStorage.getItem('authorization');
+  return tokenString ? JSON.parse(tokenString) : null;
 }
 
 /**
  * Save all the information about access/refresh tokens.
  */
 export function setToken(token: Tokens) {
-  localStorage.authorization = JSON.stringify(token);
+  localStorage.setItem('authorization', JSON.stringify(token));
 }
 
 /**
