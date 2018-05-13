@@ -18,6 +18,7 @@ import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { D2ItemReviewResponse, WorkingD2Rating, D2ItemUserReview } from './d2-dtr-api-types';
 import { WorkingD1Rating, D1ItemUserReview } from './d1-dtr-api-types';
+import { DimUserReview } from './dtr-api-types';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
@@ -29,7 +30,7 @@ export interface DestinyTrackerServiceType {
   getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse>;
   submitReview(item: DimItem);
   fetchReviews(stores: DimStore[]);
-  reportReview(review: D1ItemUserReview | D2ItemUserReview);
+  reportReview(review: DimUserReview);
   clearIgnoredUsers();
   clearCache();
   getD2ReviewDataCache(): D2ReviewDataCache;
@@ -184,7 +185,7 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       return $q.when(this);
     },
 
-    reportReview(review: D1ItemUserReview | D2ItemUserReview) {
+    reportReview(review: DimUserReview) {
       if (settings.allowIdPostToDtr) {
         const membershipInfo = getActivePlatform();
 
