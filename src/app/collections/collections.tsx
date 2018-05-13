@@ -135,7 +135,17 @@ function Kiosk({
 
   // TODO: Some items have flavor (emblems)
   const reviewCache: D2ReviewDataCache | undefined = trackerService ? trackerService.getD2ReviewDataCache() : undefined;
-  const vendorItems = vendorDef.itemList.map((i, index) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, items.some((k) => k.index === index && k.canAcquire)));
+
+  // Work around https://github.com/Bungie-net/api/issues/480
+  const itemList = _.map(_.groupBy(vendorDef.itemList, (i) => i.itemHash), (l) => {
+    if (l.length === 0) {
+      return l[0];
+    } else {
+      return l.find((i) => items.some((k) => k.index === i.vendorItemIndex)) || l[0];
+    }
+  });
+
+  const vendorItems = itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, items.some((k) => k.index === i.vendorItemIndex && k.canAcquire)));
 
   return (
     <div className="vendor-char-items">

@@ -67,7 +67,7 @@ export default function VendorItems({
         <div className="vendor-row" key={categoryIndex}>
           <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
           <div className="vendor-items">
-          {items.map((item) =>
+          {_.sortBy(items, (i) => i.displayProperties.name).map((item) =>
             <VendorItemComponent
               key={item.key}
               defs={defs}

@@ -14,6 +14,7 @@ import { InventoryBuckets } from "../inventory/inventory-buckets";
  *
  * This is the pattern I want to follow for our main items!
  */
+// TODO: Replace with DimItem
 export class VendorItem {
   canPurchase: boolean;
   private itemComponents?: DestinyItemComponentSetOfint32;

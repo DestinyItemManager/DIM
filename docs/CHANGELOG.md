@@ -1,5 +1,8 @@
 # Next
 
+* Collection exotics are no longer duplicated. They are also sorted by name.
+* Updated max power to 380.
+
 # 4.51.2 (2018-05-09)
 
 * Handle the Warmind API bug better, and provide helpful info on how to fix it.
