@@ -14,8 +14,8 @@ import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.servic
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
-import { t } from 'i18next';
 import Kiosk from './Kiosk';
+import { t } from 'i18next';
 
 interface Props {
   $scope: IScope;

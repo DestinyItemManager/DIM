@@ -8,7 +8,7 @@ import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definition
 import { BungieImage } from '../dim-ui/bungie-image';
 import Countdown from '../dim-ui/countdown';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { FactionIcon } from '../progress/faction';
+import FactionIcon from '../progress/FactionIcon';
 import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
