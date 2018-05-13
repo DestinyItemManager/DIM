@@ -488,9 +488,13 @@ export function makeItem(
   createdItem.infusionQuality = itemDef.quality || null;
 
   // Masterwork
-  if (createdItem.masterwork && createdItem.sockets) {
+  if (createdItem.sockets) {
     try {
       createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
+      // TODO: this is a temporary fix for https://github.com/Bungie-net/api/issues/469
+      if (createdItem.masterworkInfo) {
+        createdItem.masterwork = true;
+      }
     } catch (e) {
       console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
     }
