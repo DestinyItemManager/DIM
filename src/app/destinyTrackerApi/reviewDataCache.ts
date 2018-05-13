@@ -95,7 +95,7 @@ export class ReviewDataCache {
         referenceId: dtrRating.referenceId,
         fetchResponse: dtrRating,
         lastUpdated: new Date(),
-        overallScore: (dtrRating.rating) ? dtrRating.rating : 0,
+        overallScore: dtrRating.rating || 0,
         ratingCount: dtrRating.ratingCount,
         highlightedRatingCount: dtrRating.highlightedRatingCount,
         roll: dtrRating.roll,
@@ -153,7 +153,7 @@ export class ReviewDataCache {
   ) {
     const cachedItem = this.getRatingData(item);
 
-    if ((!cachedItem) || (!cachedItem.userReview)) {
+    if (!cachedItem || !cachedItem.userReview) {
       return;
     }
 
