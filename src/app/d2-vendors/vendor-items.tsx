@@ -1,53 +1,34 @@
-import {
-  DestinyItemComponentSetOfint32,
-  DestinyVendorDefinition,
-  DestinyVendorSaleItemComponent,
-  DestinyKioskItem
-} from 'bungie-api-ts/destiny2';
+import { DestinyVendorDefinition } from 'bungie-api-ts/destiny2';
+import { t } from 'i18next';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { VendorItem } from './vendor-item';
-import VendorItemComponent from './VendorItemComponent';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { BungieImage, bungieBackgroundStyle } from '../dim-ui/bungie-image';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
-import { bungieBackgroundStyle, BungieImage } from '../dim-ui/bungie-image';
 import { $state } from '../ngimport-more';
-import { t } from 'i18next';
 import { compact } from '../util';
-import { D2Store } from '../inventory/store-types';
+import VendorItemComponent from './VendorItemComponent';
+import { VendorItem } from './vendor-item';
 
 export default function VendorItems({
   vendorDef,
   defs,
-  itemComponents,
-  sales,
-  kioskItems,
+  vendorItems,
   trackerService,
   ownedItemHashes,
   currencyLookups
 }: {
-  defs: D2ManifestDefinitions;
   vendorDef: DestinyVendorDefinition;
-  itemComponents?: DestinyItemComponentSetOfint32;
-  sales?: {
-    [key: string]: DestinyVendorSaleItemComponent;
-  };
-  kioskItems?: DestinyKioskItem[];
+  defs: D2ManifestDefinitions;
+  vendorItems: VendorItem[];
   trackerService?: DestinyTrackerServiceType;
-  stores?: D2Store[];
   ownedItemHashes?: Set<number>;
-  currencyLookups: {
+  currencyLookups?: {
     [itemHash: number]: number;
   };
 }) {
-  const reviewCache: D2ReviewDataCache | undefined = (trackerService) ? trackerService.getD2ReviewDataCache() : undefined;
-
-  // TODO: do this stuff in setState handlers
-  const items = getItems(defs, vendorDef, reviewCache, itemComponents, sales, kioskItems);
-
   // TODO: sort items, maybe subgroup them
-  const itemsByCategory = _.groupBy(items, (item: VendorItem) => item.displayCategoryIndex);
+  const itemsByCategory = _.groupBy(vendorItems, (item: VendorItem) => item.displayCategoryIndex);
 
   const faction = vendorDef.factionHash ? defs.Faction[vendorDef.factionHash] : undefined;
   const rewardVendorHash = faction && faction.rewardVendorHash || undefined;
@@ -55,7 +36,7 @@ export default function VendorItems({
   const goToRewardVendor = rewardVendorHash && (() => $state.go('destiny2.vendor', { id: rewardVendorHash }));
 
   const vendorCurrencyHashes = new Set<number>();
-  for (const item of items) {
+  for (const item of vendorItems) {
     for (const cost of item.costs) {
       vendorCurrencyHashes.add(cost.itemHash);
     }
@@ -67,7 +48,7 @@ export default function VendorItems({
       {vendorCurrencies.length > 0 && <div className="vendor-currencies">
         {vendorCurrencies.map((currency) =>
           <div className="vendor-currency" key={currency.hash}>
-            {currencyLookups[currency.hash] || 0}{' '}
+            {(currencyLookups && currencyLookups[currency.hash]) || 0}{' '}
             <BungieImage src={currency.displayProperties.icon} title={currency.displayProperties.name}/>
           </div>
         )}
@@ -86,7 +67,7 @@ export default function VendorItems({
         <div className="vendor-row" key={categoryIndex}>
           <h3 className="category-title">{vendorDef.displayCategories[categoryIndex] && vendorDef.displayCategories[categoryIndex].displayProperties.name || 'Unknown'}</h3>
           <div className="vendor-items">
-          {items.map((item) =>
+          {_.sortBy(items, (i) => i.displayProperties.name).map((item) =>
             <VendorItemComponent
               key={item.key}
               defs={defs}
@@ -100,35 +81,4 @@ export default function VendorItems({
       )}
     </div>
   );
-}
-
-// TODO: do this in parent components, pass in the right thing
-function getItems(
-  defs: D2ManifestDefinitions,
-  vendorDef: DestinyVendorDefinition,
-  reviewCache?: D2ReviewDataCache,
-  itemComponents?: DestinyItemComponentSetOfint32,
-  sales?: {
-    [key: string]: DestinyVendorSaleItemComponent;
-  },
-  kioskItems?: DestinyKioskItem[]
-) {
-  if (kioskItems) {
-    return vendorDef.itemList.map((i, index) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, kioskItems.some((k) => k.index === index)));
-  } else if (sales && itemComponents) {
-    const components = Object.values(sales);
-    return components.map((component) => new VendorItem(
-      defs,
-      vendorDef,
-      vendorDef.itemList[component.vendorItemIndex],
-      reviewCache,
-      component,
-      itemComponents
-    ));
-  } else if (vendorDef.returnWithVendorRequest) {
-    // If the sales should come from the server, don't show anything until we have them
-    return [];
-  } else {
-    return vendorDef.itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache));
-  }
 }

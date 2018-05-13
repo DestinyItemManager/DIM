@@ -15,6 +15,7 @@ import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-rating
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { Subscription } from 'rxjs/Subscription';
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
+import { getVendorItems } from './vendors';
 
 interface Props {
   $scope: IScope;
@@ -102,6 +103,7 @@ export default class SingleVendor extends React.Component<Props, State> {
 
   render() {
     const { defs, vendorDef, vendorResponse, trackerService, ownedItemHashes } = this.state;
+    const { account } = this.props;
 
     if (!vendorDef || !defs) {
       // TODO: loading component!
@@ -126,6 +128,8 @@ export default class SingleVendor extends React.Component<Props, State> {
     const placeString = [(destinationDef && destinationDef.displayProperties.name), (placeDef && placeDef.displayProperties.name)].filter((n) => n && n.length).join(', ');
     // TODO: there's a cool background image but I'm not sure how to use it
 
+    const vendorItems = getVendorItems(account, defs, vendorDef, trackerService, vendorResponse && vendorResponse.itemComponents, vendorResponse && vendorResponse.sales.data);
+
     // TODO: localize
     return (
       <div className="vendor dim-page">
@@ -147,8 +151,7 @@ export default class SingleVendor extends React.Component<Props, State> {
         <VendorItems
           defs={defs}
           vendorDef={vendorDef}
-          sales={vendorResponse && vendorResponse.sales.data}
-          itemComponents={vendorResponse && vendorResponse.itemComponents}
+          vendorItems={vendorItems}
           trackerService={trackerService}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}}

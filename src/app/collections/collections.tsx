@@ -1,7 +1,7 @@
 import { StateParams } from '@uirouter/angularjs';
 import { IScope } from 'angular';
 import {
-  DestinyProfileResponse, DestinyKioskItem
+  DestinyProfileResponse, DestinyKioskItem, BungieMembershipType
 } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
@@ -16,6 +16,8 @@ import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
 import { t } from 'i18next';
+import { VendorItem } from '../d2-vendors/vendor-item';
+import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 
 interface Props {
   $scope: IScope;
@@ -79,6 +81,7 @@ export default class Collections extends React.Component<Props, State> {
 
   render() {
     const { defs, profileResponse, trackerService, ownedItemHashes } = this.state;
+    const { account } = this.props;
 
     if (!profileResponse || !defs) {
       // TODO: loading component!
@@ -102,6 +105,7 @@ export default class Collections extends React.Component<Props, State> {
             items={itemsForKiosk(profileResponse, Number(vendorHash))}
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
+            account={account}
           />
         )}
         <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://destinysets.com">
@@ -121,27 +125,44 @@ function Kiosk({
   vendorHash,
   items,
   trackerService,
-  ownedItemHashes
+  ownedItemHashes,
+  account
 }: {
   defs: D2ManifestDefinitions;
   vendorHash: number;
   items: DestinyKioskItem[];
   trackerService?: DestinyTrackerServiceType;
   ownedItemHashes?: Set<number>;
+  account: DestinyAccount;
 }) {
   const vendorDef = defs.Vendor.get(vendorHash);
 
   // TODO: Some items have flavor (emblems)
+  const reviewCache: D2ReviewDataCache | undefined = trackerService ? trackerService.getD2ReviewDataCache() : undefined;
+
+  // Work around https://github.com/Bungie-net/api/issues/480
+  const itemList = _.map(_.groupBy(vendorDef.itemList, (i) => i.itemHash), (l) => {
+    if (l.length === 0) {
+      return l[0];
+    } else {
+      return l.find((i) => items.some((k) => k.index === i.vendorItemIndex)) || l[0];
+    }
+  }).filter((i) =>
+    !i.exclusivity ||
+    i.exclusivity === BungieMembershipType.All ||
+    i.exclusivity === account.platformType
+  );
+
+  const vendorItems = itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, items.some((k) => k.index === i.vendorItemIndex && k.canAcquire)));
 
   return (
     <div className="vendor-char-items">
       <VendorItems
         defs={defs}
         vendorDef={vendorDef}
-        kioskItems={items.filter((i) => i.canAcquire)}
+        vendorItems={vendorItems}
         trackerService={trackerService}
         ownedItemHashes={ownedItemHashes}
-        currencyLookups={{}}
       />
     </div>
   );

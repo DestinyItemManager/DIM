@@ -330,6 +330,11 @@ export class Progress extends React.Component<Props, State> {
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
 
+      // Pursuits
+      if (itemDef.inventory && itemDef.inventory.bucketTypeHash === 1345459588) {
+        return true;
+      }
+
       // This required a lot of trial and error.
       return (itemDef.itemCategoryHashes &&
           (

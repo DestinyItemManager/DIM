@@ -26,7 +26,6 @@ export const D2Categories = {
     'Vehicle',
     'Ships',
     'Emblems',
-    'Emotes',
     'Engrams'
   ],
   Inventory: [
@@ -56,7 +55,6 @@ const bucketToType: { [hash: number]: string | undefined } = {
   2689798310: "Silver",
   2689798311: "Bright Dust",
   2973005342: "Shaders",
-  3054419239: "Emotes",
   3161908920: "Messages",
   3284755031: "Class",
   3313201758: "Modifications",
@@ -78,7 +76,9 @@ const bucketToType: { [hash: number]: string | undefined } = {
   1585787867: "ClassItem",
   2025709351: "Vehicle",
   1469714392: "Consumables",
-  138197802: "General"
+  138197802: "General",
+  1107761855: "Emotes",
+  1345459588: "Pursuits"
 };
 
 const typeToSort: { [type: string]: string } = {};
