@@ -398,9 +398,26 @@ export function D2StoresService(
         value: hasClassified ? `${maxBasePower}*` : maxBasePower,
         icon: bungieNetPath(def.displayProperties.icon),
         tiers: [maxBasePower],
-        tierMax: 380
+        tierMax: getCurrentMaxBasePower()
       };
     }
+  }
+
+  function getCurrentMaxBasePower() {
+    // const Vanilla = new Date("September 6 2017 11:00 PST"); // 300
+    // const CoO = new Date("December 5 2017 11:00 PST");      // 330
+    // const Warmind = new Date("May 8 2018 11:00 PST");       // 380
+
+    /* const currentDate = new Date(Date.now());
+
+    if (currentDate > Warmind) {
+      return 380;
+    }
+    if (currentDate > CoO) {
+      return 330;
+    } */
+
+    return 380;
   }
 
   function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {
