@@ -5,7 +5,8 @@ import {
   DestinyVendorComponent,
   DestinyVendorSaleItemComponent,
   DestinyVendorsResponse,
-  DestinyVendorGroup
+  DestinyVendorGroup,
+  DestinyVendorDefinition
   } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -21,6 +22,8 @@ import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.servic
 import { fetchRatingsForVendors } from './vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
+import { VendorItem } from './vendor-item';
+import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 
 interface Props {
   $scope: IScope;
@@ -202,12 +205,40 @@ function Vendor({
       <VendorItems
         defs={defs}
         vendorDef={vendorDef}
-        sales={sales}
-        itemComponents={itemComponents}
+        vendorItems={getVendorItems(defs, vendorDef, trackerService, itemComponents, sales)}
         trackerService={trackerService}
         ownedItemHashes={ownedItemHashes}
         currencyLookups={currencyLookups}
       />
     </div>
   );
+}
+
+export function getVendorItems(
+  defs: D2ManifestDefinitions,
+  vendorDef: DestinyVendorDefinition,
+  trackerService?: DestinyTrackerServiceType,
+  itemComponents?: DestinyItemComponentSetOfint32,
+  sales?: {
+    [key: string]: DestinyVendorSaleItemComponent;
+  }
+) {
+  const reviewCache: D2ReviewDataCache | undefined = trackerService ? trackerService.getD2ReviewDataCache() : undefined;
+
+  if (sales && itemComponents) {
+    const components = Object.values(sales);
+    return components.map((component) => new VendorItem(
+      defs,
+      vendorDef,
+      vendorDef.itemList[component.vendorItemIndex],
+      reviewCache,
+      component,
+      itemComponents
+    ));
+  } else if (vendorDef.returnWithVendorRequest) {
+    // If the sales should come from the server, don't show anything until we have them
+    return [];
+  } else {
+    return vendorDef.itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache));
+  }
 }

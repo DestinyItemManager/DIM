@@ -16,6 +16,8 @@ import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
 import { t } from 'i18next';
+import { VendorItem } from '../d2-vendors/vendor-item';
+import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 
 interface Props {
   $scope: IScope;
@@ -132,16 +134,17 @@ function Kiosk({
   const vendorDef = defs.Vendor.get(vendorHash);
 
   // TODO: Some items have flavor (emblems)
+  const reviewCache: D2ReviewDataCache | undefined = trackerService ? trackerService.getD2ReviewDataCache() : undefined;
+  const vendorItems = vendorDef.itemList.map((i, index) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, items.some((k) => k.index === index && k.canAcquire)));
 
   return (
     <div className="vendor-char-items">
       <VendorItems
         defs={defs}
         vendorDef={vendorDef}
-        kioskItems={items.filter((i) => i.canAcquire)}
+        vendorItems={vendorItems}
         trackerService={trackerService}
         ownedItemHashes={ownedItemHashes}
-        currencyLookups={{}}
       />
     </div>
   );
