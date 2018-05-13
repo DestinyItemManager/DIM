@@ -9,13 +9,13 @@ import { BungieImage } from '../dim-ui/bungie-image';
 import Countdown from '../dim-ui/countdown';
 import { D2ManifestService } from '../manifest/manifest-service';
 import { FactionIcon } from '../progress/faction';
-import VendorItems from './vendor-items';
+import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { Subscription } from 'rxjs/Subscription';
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
-import { getVendorItems } from './vendors';
+import { getVendorItems } from './Vendor';
 
 interface Props {
   $scope: IScope;
@@ -35,6 +35,9 @@ interface State {
   trackerService?: DestinyTrackerServiceType;
 }
 
+/**
+ * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
+ */
 export default class SingleVendor extends React.Component<Props, State> {
   private storesSubscription: Subscription;
 

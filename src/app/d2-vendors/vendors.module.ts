@@ -1,8 +1,8 @@
 import { StateProvider } from '@uirouter/angularjs';
 import { module } from 'angular';
 import { react2angular } from 'react2angular';
-import SingleVendor from './single-vendor';
-import Vendors from './vendors';
+import SingleVendor from './SingleVendor';
+import Vendors from './Vendors';
 
 // This is the Destiny 2 "Vendors" pages
 export const d2VendorsModule = module('d2VendorsModule', [])

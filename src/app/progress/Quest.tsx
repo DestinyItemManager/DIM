@@ -12,7 +12,7 @@ interface QuestProps {
   objectives: DestinyObjectiveProgress[];
 }
 
-export function Quest(props: QuestProps) {
+export default function Quest(props: QuestProps) {
   const { defs, item, objectives } = props;
 
   const itemDef = defs.InventoryItem.get(item.itemHash);

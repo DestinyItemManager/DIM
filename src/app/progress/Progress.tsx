@@ -19,12 +19,12 @@ import {
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { isPhonePortrait, isPhonePortraitStream } from '../mediaQueries';
-import { characterIsCurrent, CharacterTile } from './character-tile';
+import CharacterTile, { characterIsCurrent } from './CharacterTile';
 import { Faction } from './faction';
 import { Milestone } from './milestone';
 import './progress.scss';
 import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
-import { Quest } from './quest';
+import Quest from './quest';
 import { isWellRested } from '../inventory/store/well-rested';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { BungieImage } from '../dim-ui/bungie-image';

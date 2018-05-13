@@ -10,6 +10,9 @@ import { compact } from '../util';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';
 
+/**
+ * Display the items for a single vendor, organized by category.
+ */
 export default function VendorItems({
   vendorDef,
   defs,

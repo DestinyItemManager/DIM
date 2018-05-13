@@ -15,7 +15,7 @@ export function characterIsCurrent(character: DestinyCharacterComponent, lastPla
   return lastPlayedDate.getTime() === new Date(character.dateLastPlayed).getTime();
 }
 
-export function CharacterTile(props: CharacterTileProps) {
+export default function CharacterTile(props: CharacterTileProps) {
   const { defs, character, lastPlayedDate } = props;
 
   const race = defs.Race[character.raceHash];
