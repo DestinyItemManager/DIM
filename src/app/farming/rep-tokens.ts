@@ -24,6 +24,9 @@ export const REP_TOKENS = new Set([
   3899548068, // Vanguard Tactician Token
   3957264072, // Vanguard Research Token
   3022799524, // Mercury Token
-  49145143, // Simulation Seed
+  49145143,   // Simulation Seed
   2386485406, // Simulation Bloom
+  3135658658, // Mars Token
+  31293053,   // Seraphite
+  685095924,  // Harmonic Seraphite
 ]);
