@@ -487,14 +487,18 @@ export function makeItem(
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
 
-  // Masterwork
+  // TODO: this is a temporary fix for https://github.com/Bungie-net/api/issues/469
   if (createdItem.sockets) {
+    if (createdItem.sockets.sockets.some((s) =>
+      Boolean(s.plug && s.plug.isMasterwork))) {
+      createdItem.masterwork = true;
+    }
+  }
+
+  // Masterwork
+  if (createdItem.masterwork && createdItem.sockets) {
     try {
       createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
-      // TODO: this is a temporary fix for https://github.com/Bungie-net/api/issues/469
-      if (createdItem.masterworkInfo) {
-        createdItem.masterwork = true;
-      }
     } catch (e) {
       console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
     }
@@ -944,7 +948,8 @@ function buildPlug(
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
     perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),
-    isMasterwork: plugItem.plug.plugCategoryHash === 2109207426 || plugItem.plug.plugCategoryHash === 2989652629
+    // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
+    isMasterwork: plugItem.hash !== 236077174 && plugItem.hash !== 1176735155 && plugItem.itemCategoryHashes.includes(141186804)
   };
 }
 
