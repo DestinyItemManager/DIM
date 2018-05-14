@@ -1,5 +1,7 @@
 # Next
 
+# 4.52.0 (2018-05-13)
+
 * Collection exotics are no longer duplicated. They are also sorted by name.
 * Updated max power to 380.
 * Vendors and collections will no longer show items exclusive to platforms other than the current account's platform.
