@@ -1,5 +1,6 @@
 import * as _ from "underscore";
 import { DimItem } from "./item-types";
+import { t } from 'i18next';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -35,7 +36,9 @@ function downloadCsv(filename, csv) {
     `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`
   );
   pom.setAttribute("download", filename);
+  document.body.appendChild(pom);
   pom.click();
+  document.body.removeChild(pom);
 }
 
 function buildNodeString(nodes) {
@@ -214,6 +217,7 @@ function cleanNotes(item) {
 export function downloadCsvFiles(stores, type) {
   // perhaps we're loading
   if (stores.length === 0) {
+    alert(t('Settings.ExportSSNoStores'));
     return;
   }
   const nameMap = {};

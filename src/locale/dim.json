@@ -546,6 +546,7 @@
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
+    "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",

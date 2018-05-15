@@ -103,7 +103,7 @@ class Settings {
       throw new Error("Settings haven't loaded - they can't be saved.");
     }
     SyncService.set({
-      'settings-v1.0': _.omit(this, 'save', 'itemSortOrder')
+      'settings-v1.0': _.omit(this, 'save', 'itemSortOrder', 'ready')
     });
   }, 1000);
 
