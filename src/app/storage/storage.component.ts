@@ -169,7 +169,9 @@ function StorageController(
   vm.quota = null;
   if ('storage' in navigator && 'estimate' in navigator.storage) {
     navigator.storage.estimate().then((quota: { quota: number; usage: number }) => {
-      vm.quota = quota;
+      if (quota.usage >= 0 && quota.quota >= 0) {
+        vm.quota = quota;
+      }
     });
   }
 
