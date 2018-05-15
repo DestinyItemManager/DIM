@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
-import { DestinyObjectiveProgress } from "bungie-api-ts/destiny2";
+import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from "bungie-api-ts/destiny2";
 import classNames from 'classnames';
 import { t } from 'i18next';
 import { percent } from '../inventory/dimPercentWidth.directive';
@@ -19,7 +19,7 @@ export default function Objective({
 
   const classes = classNames('objective-row', {
     'objective-complete': objective.complete,
-    'objective-boolean': objectiveDef.completionValue === 1
+    'objective-boolean': objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox || (objectiveDef.completionValue === 1 && !objectiveDef.allowOvercompletion)
   });
 
   const progressBarStyle = {
@@ -32,7 +32,10 @@ export default function Objective({
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle}/>
         <div className="objective-description">{displayName}</div>
-        <div className="objective-text">{objective.progress || 0}/{objectiveDef.completionValue}</div>
+        {objectiveDef.allowOvercompletion && objectiveDef.completionValue === 1
+          ? <div className="objective-text">{objective.progress || 0}</div>
+          : <div className="objective-text">{objective.progress || 0}/{objectiveDef.completionValue}</div>
+        }
       </div>
     </div>
   );
