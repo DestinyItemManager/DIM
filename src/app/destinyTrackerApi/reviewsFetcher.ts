@@ -10,7 +10,7 @@ import { D1ItemReviewResponse, D1ItemUserReview } from '../item-review/d1-dtr-ap
 import { DtrReviewer } from '../item-review/dtr-api-types';
 
 /** A single user's review for a D1 weapon. */
-export interface ActualD1ItemUserReview {
+interface ActualD1ItemUserReview {
   /**
    * Is this reviewer a featured reviewer?
    * Broken in D2.
