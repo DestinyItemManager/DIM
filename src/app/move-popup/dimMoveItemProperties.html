@@ -76,6 +76,9 @@
       </div>
       <dim-objectives class="item-details" ng-if="vm.item.objectives" objectives="vm.item.objectives"></dim-objectives>
       <dim-flavor-objective class="item-details" ng-if="vm.item.flavorObjective" objective="vm.item.flavorObjective"></dim-flavor-objective>
+      <div class="item-description" ng-if="vm.item.previewVendor">
+        <a ui-sref="destiny2.vendor({id: vm.item.previewVendor})" ng-i18next="[i18next]({ type: vm.item.typeName })ItemService.PreviewVendor"></a>
+      </div>
       <div ng-if="vm.featureFlags.debugMode" class="item-details">
         <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump" />
       </div>

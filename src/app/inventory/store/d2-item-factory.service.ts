@@ -354,7 +354,8 @@ export function makeItem(
     objectives: null, // filled in later
     dtrRatingCount: (reviewData) ? reviewData.totalReviews : undefined,
     dtrRating: (reviewData) ? reviewData.rating : undefined,
-    reviews: (reviewData) ? reviewData.reviews : []
+    reviews: (reviewData) ? reviewData.reviews : [],
+    previewVendor: itemDef.preview && itemDef.preview.previewVendorHash
   });
 
   // *able
