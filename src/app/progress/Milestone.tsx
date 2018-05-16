@@ -17,7 +17,7 @@ import { t } from 'i18next';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { BungieImage } from '../dim-ui/bungie-image';
+import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
 import { $state } from '../ngimport-more';
 import './milestone.scss';

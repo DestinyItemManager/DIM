@@ -1,7 +1,7 @@
 import { StateParams } from '@uirouter/angularjs';
 import { IScope } from 'angular';
 import {
-  DestinyProfileResponse, DestinyKioskItem, BungieMembershipType
+  DestinyProfileResponse
 } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
@@ -10,14 +10,12 @@ import { getKiosks } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
-import VendorItems from '../d2-vendors/vendor-items';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
+import Kiosk from './Kiosk';
 import { t } from 'i18next';
-import { VendorItem } from '../d2-vendors/vendor-item';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 
 interface Props {
   $scope: IScope;
@@ -35,7 +33,9 @@ interface State {
   ownedItemHashes?: Set<number>;
 }
 
-// TODO: Should this be just in the vendors screen?
+/**
+ * The collections screen that shows items you can get back from the vault, like emblems and exotics.
+ */
 export default class Collections extends React.Component<Props, State> {
   private storesSubscription: Subscription;
 
@@ -85,9 +85,10 @@ export default class Collections extends React.Component<Props, State> {
 
     if (!profileResponse || !defs) {
       // TODO: loading component!
-      return <div className="collections dim-page"><i className="fa fa-spinner fa-spin"/></div>;
+      return <div className="vendor d2-vendors dim-page"><i className="fa fa-spinner fa-spin"/></div>;
     }
 
+    // Note that today, there is only one kiosk vendor
     const kioskVendors = new Set(Object.keys(profileResponse.profileKiosks.data.kioskItems));
     _.each(profileResponse.characterKiosks.data, (kiosk) => {
       _.each(kiosk.kioskItems, (_, kioskHash) => {
@@ -118,52 +119,4 @@ export default class Collections extends React.Component<Props, State> {
 
 function itemsForKiosk(profileResponse: DestinyProfileResponse, vendorHash: number) {
   return profileResponse.profileKiosks.data.kioskItems[vendorHash].concat(_.flatten(Object.values(profileResponse.characterKiosks.data).map((d) => d.kioskItems[vendorHash])));
-}
-
-function Kiosk({
-  defs,
-  vendorHash,
-  items,
-  trackerService,
-  ownedItemHashes,
-  account
-}: {
-  defs: D2ManifestDefinitions;
-  vendorHash: number;
-  items: DestinyKioskItem[];
-  trackerService?: DestinyTrackerServiceType;
-  ownedItemHashes?: Set<number>;
-  account: DestinyAccount;
-}) {
-  const vendorDef = defs.Vendor.get(vendorHash);
-
-  // TODO: Some items have flavor (emblems)
-  const reviewCache: D2ReviewDataCache | undefined = trackerService ? trackerService.getD2ReviewDataCache() : undefined;
-
-  // Work around https://github.com/Bungie-net/api/issues/480
-  const itemList = _.map(_.groupBy(vendorDef.itemList, (i) => i.itemHash), (l) => {
-    if (l.length === 0) {
-      return l[0];
-    } else {
-      return l.find((i) => items.some((k) => k.index === i.vendorItemIndex)) || l[0];
-    }
-  }).filter((i) =>
-    !i.exclusivity ||
-    i.exclusivity === BungieMembershipType.All ||
-    i.exclusivity === account.platformType
-  );
-
-  const vendorItems = itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, items.some((k) => k.index === i.vendorItemIndex && k.canAcquire)));
-
-  return (
-    <div className="vendor-char-items">
-      <VendorItems
-        defs={defs}
-        vendorDef={vendorDef}
-        vendorItems={vendorItems}
-        trackerService={trackerService}
-        ownedItemHashes={ownedItemHashes}
-      />
-    </div>
-  );
 }

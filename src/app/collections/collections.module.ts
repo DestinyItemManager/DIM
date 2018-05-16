@@ -1,7 +1,7 @@
 import { StateProvider } from '@uirouter/angularjs';
 import { module } from 'angular';
 import { react2angular } from 'react2angular';
-import Collections from './collections';
+import Collections from './Collections';
 
 // This is the Destiny 2 "collections" pages
 export const collectionsModule = module('d2collectionsModule', [])

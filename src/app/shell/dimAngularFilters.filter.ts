@@ -1,6 +1,6 @@
 import { module } from 'angular';
 import * as _ from 'underscore';
-import { bungieNetPath } from '../dim-ui/bungie-image';
+import { bungieNetPath } from '../dim-ui/BungieImage';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';

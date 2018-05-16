@@ -10,6 +10,8 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
@@ -162,6 +164,8 @@ module.exports = (env) => {
     },
 
     plugins: [
+      new CaseSensitivePathsPlugin(),
+
       new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
 
       new webpack.ProvidePlugin({

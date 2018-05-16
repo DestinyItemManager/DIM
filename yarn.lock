@@ -1615,6 +1615,10 @@ caniuse-lite@^1.0.30000832, caniuse-lite@^1.0.30000835:
   version "1.0.30000839"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000839.tgz#41fcc036cf1cb77a0e0be041210f77f1ced44a7b"
 
+case-sensitive-paths-webpack-plugin@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.1.2.tgz#c899b52175763689224571dad778742e133f0192"
+
 caseless@~0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.11.0.tgz#715b96ea9841593cc33067923f5ec60ebda4f7d7"
