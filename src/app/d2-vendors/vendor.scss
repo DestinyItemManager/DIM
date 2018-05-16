@@ -22,8 +22,10 @@
     img, .faction-icon {
       position: relative;
       height: 48px;
-      width: 48px;
       margin-right: 8px;
+    }
+    .faction-icon {
+      width: 48px;
     }
   }
 }
