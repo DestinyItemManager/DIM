@@ -1,22 +1,19 @@
-import { ItemTransformer } from './itemTransformer';
-import { PerkRater } from './perkRater';
-import { UserFilter } from './userFilter';
 import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-tracker.service';
 import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
+import { getRollAndPerks } from './itemTransformer';
+import { ratePerks } from './perkRater';
+import { conditionallyIgnoreReview } from './userFilter';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
  * This was tailored to work for weapons.  Items (armor, etc.) may or may not work.
  */
 export class ReviewsFetcher {
-  _perkRater = new PerkRater();
-  _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
-  _itemTransformer = new ItemTransformer();
   constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
@@ -31,7 +28,7 @@ export class ReviewsFetcher {
   }
 
   _getItemReviewsPromise(item: D1Item): Promise<D1ItemReviewResponse[]> {
-    const postWeapon = this._itemTransformer.getRollAndPerks(item);
+    const postWeapon = getRollAndPerks(item);
 
     const promise = dtrFetch(
       'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',
@@ -52,7 +49,7 @@ export class ReviewsFetcher {
       item.reviews.sort(this._sortReviews);
 
       item.reviews.forEach((writtenReview) => {
-        writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
+        writtenReview.isIgnored = conditionallyIgnoreReview(writtenReview);
       });
     }
   }
@@ -78,7 +75,7 @@ export class ReviewsFetcher {
 
     this._reviewDataCache.addReviewsData(item, reviewData);
 
-    this._perkRater.ratePerks(item);
+    ratePerks(item);
   }
 
   _sortReviews(a, b) {
