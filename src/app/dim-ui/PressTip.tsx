@@ -30,7 +30,7 @@ interface State {
  *   <div>PressTip context element</div>
  * </PressTip>
  */
-export class PressTip extends React.Component<Props, State> {
+export default class PressTip extends React.Component<Props, State> {
   private tooltip?: Tooltip;
   private timer: number;
   private tooltipContent: Element;

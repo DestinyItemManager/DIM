@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
-import { D1ItemUserReview } from '../item-review/destiny-tracker.service';
 import { D1GridNode, D1Item } from '../inventory/item-types';
+import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 
 interface RatingAndReview {
   ratingCount: number;
@@ -17,10 +17,13 @@ export class PerkRater {
    */
   ratePerks(item: D1Item) {
     if ((!item.talentGrid) ||
-        (!item.reviews) ||
-        (!item.reviews.length)) {
+        (!item.dtrRating) ||
+        (!item.dtrRating.reviewsResponse) ||
+        (!item.dtrRating.reviewsResponse.reviews.length)) {
       return;
     }
+
+    const reviews = item.dtrRating.reviewsResponse.reviews;
 
     const maxColumn = this._getMaxColumn(item);
 
@@ -31,7 +34,7 @@ export class PerkRater {
     for (let i = 1; i < maxColumn; i++) {
       const perkNodesInColumn = this._getPerkNodesInColumn(item, i);
 
-      const ratingsAndReviews = perkNodesInColumn.map((perkNode) => this._getPerkRatingsAndReviewCount(perkNode, item.reviews as D1ItemUserReview[]));
+      const ratingsAndReviews = perkNodesInColumn.map((perkNode) => this._getPerkRatingsAndReviewCount(perkNode, reviews));
 
       const maxReview = this._getMaxReview(ratingsAndReviews);
 
@@ -92,20 +95,26 @@ export class PerkRater {
     return ratingAndReview;
   }
 
-  _getMatchingReviews(perkNode,
-                      reviews: D1ItemUserReview[]) {
+  _getMatchingReviews(perkNode: D1GridNode,
+                      reviews: D1ItemUserReview[]): D1ItemUserReview[] {
     const perkRoll = perkNode.dtrRoll.replace('o', '');
     return reviews.filter((review) => this._selectedPerkNodeApplies(perkRoll, review));
   }
 
-  _selectedPerkNodeApplies(perkRoll,
-                           review) {
+  _selectedPerkNodeApplies(perkRoll: string,
+                           review: D1ItemUserReview): boolean {
     const reviewSelectedPerks = this._getSelectedPerks(review, perkRoll);
+
     return reviewSelectedPerks.some((reviewSelectedPerk) => perkRoll === reviewSelectedPerk);
   }
 
-  _getSelectedPerks(review, perkRoll) {
+  _getSelectedPerks(review: D1ItemUserReview, perkRoll: string): string[] {
     const allSelectedPerks = (review.roll) ? review.roll.split(';').filter((str) => str.indexOf('o') > -1) : perkRoll; // in narrow cases, we can be supplied a D1ItemWorkingUserReview
+
+    if (typeof allSelectedPerks === "string") {
+      return [allSelectedPerks.replace('o', '')];
+    }
+
     return allSelectedPerks.map((selectedPerk) => selectedPerk.replace('o', ''));
   }
 }

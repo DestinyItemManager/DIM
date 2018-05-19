@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
-import { DtrUserReview } from '../item-review/destiny-tracker.service';
 import { sum } from '../util';
 import { D2Item, DimSocket } from '../inventory/item-types';
+import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 
 export interface RatingAndReview {
   ratingCount: number;
@@ -17,19 +17,23 @@ class D2PerkRater {
    * Rate the perks on a Destiny 2 item based off of its attached user reviews.
    */
   ratePerks(item: D2Item) {
-    if (!item.reviews ||
-        !item.reviews.length ||
+    if (!item.dtrRating ||
+        !item.dtrRating.reviewsResponse ||
+        !item.dtrRating.reviewsResponse.reviews.length ||
         !item.sockets ||
         !item.sockets.sockets) {
       return;
     }
+
+    const itemReviews = item.dtrRating.reviewsResponse.reviews;
 
     item.sockets.sockets.forEach((socket) => {
       if ((socket.plugOptions.length) &&
           (socket.plugOptions.length > 1)) {
         const plugOptionHashes = socket.plugOptions.map((i) => i.plugItem.hash);
 
-        const ratingsAndReviews = plugOptionHashes.map((plugOptionHash) => this._getPlugRatingsAndReviewCount(plugOptionHash, item.reviews));
+        const ratingsAndReviews = plugOptionHashes.map((plugOptionHash) =>
+          this._getPlugRatingsAndReviewCount(plugOptionHash, itemReviews));
 
         const maxReview = this._getMaxReview(ratingsAndReviews);
 
@@ -64,7 +68,7 @@ class D2PerkRater {
   }
 
   _getPlugRatingsAndReviewCount(plugOptionHash,
-                                reviews): RatingAndReview {
+                                reviews: D2ItemUserReview[]): RatingAndReview {
     const matchingReviews = this._getMatchingReviews(plugOptionHash,
                                                      reviews);
 
@@ -81,7 +85,7 @@ class D2PerkRater {
   }
 
   _getMatchingReviews(plugOptionHash,
-                      reviews: DtrUserReview[]) {
+                      reviews: D2ItemUserReview[]) {
     return reviews.filter((review) => {
       return (review.selectedPerks && review.selectedPerks.includes(plugOptionHash)) ||
              (review.attachedMods && review.attachedMods.includes(plugOptionHash));

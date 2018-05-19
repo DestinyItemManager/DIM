@@ -15,7 +15,7 @@ import './header.scss';
 
 // tslint:disable-next-line:no-implicit-dependencies
 import logo from 'app/images/logo-type-right-light.svg';
-import ClickOutside from '../dim-ui/click-outside';
+import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
 import { IScope } from 'angular';
 import RatingMode from './rating-mode/RatingMode';

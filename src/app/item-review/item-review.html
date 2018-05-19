@@ -47,7 +47,7 @@
     <div class="user-review--thumbs-up link" ng-click="$ctrl.setUserVote(1)">
         <span class="user-review--thumbs-up-button">
           <i class="fa fa-2x"
-             ng-class="{'fa-thumbs-o-up': $ctrl.item.userVote !== 1, 'fa-thumbs-up': $ctrl.item.userVote === 1}"
+             ng-class="{'fa-thumbs-o-up': $ctrl.item.dtrRating.userReview.voted !== 1, 'fa-thumbs-up': $ctrl.item.dtrRating.userReview.voted === 1}"
              aria-hidden="true"></i>
         </span>
     </div>
@@ -55,14 +55,14 @@
     <div class="user-review--thumbs-down">
       <span class="user-review--thumbs-down-button" ng-click="$ctrl.setUserVote(-1)">
         <i class="fa fa-2x"
-           ng-class="{'fa-thumbs-o-down': $ctrl.item.userVote !== -1, 'fa-thumbs-down': $ctrl.item.userVote === -1}"
+           ng-class="{'fa-thumbs-o-down': $ctrl.item.dtrRating.userReview.voted !== -1, 'fa-thumbs-down': $ctrl.item.dtrRating.userReview.voted === -1}"
            aria-hidden="true"></i>
       </span>
     </div>
   </div>
 
   <div ng-if="$ctrl.item.destinyVersion === 1">
-    <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>
+    <star-rating rating="$ctrl.item.dtrRating.userReview.rating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>
   </div>
 
   <span ng-show="$ctrl.expandReview">
@@ -75,19 +75,24 @@
   <div ng-if="$ctrl.item.destinyVersion === 2" class="community-review--mode">
     <label for="reviewMode" ng-i18next="DtrReview.ForGameMode"></label>
     <select id="reviewMode"
-      ng-model="$ctrl.item.mode"
-      ng-options="::reviewModeOption.mode.toString() as reviewModeOption.description for reviewModeOption in $ctrl.reviewModeOptions">
+      ng-model="$ctrl.item.dtrRating.userReview.mode"
+      ng-options="::reviewModeOption.mode as reviewModeOption.description for reviewModeOption in $ctrl.reviewModeOptions">
     </select>
   </div>
   <textarea ng-i18next="[placeholder]DtrReview.Help"
-            ng-model="$ctrl.item.userReview"
+            ng-if="$ctrl.item.destinyVersion === 1"
+            ng-model="$ctrl.item.dtrRating.userReview.review"
+            ng-blur="$ctrl.reviewBlur()"></textarea>
+  <textarea ng-i18next="[placeholder]DtrReview.Help"
+            ng-if="$ctrl.item.destinyVersion === 2"
+            ng-model="$ctrl.item.dtrRating.userReview.text"
             ng-blur="$ctrl.reviewBlur()"></textarea>
   <div ng-if="$ctrl.procon" class="community-review--procon">
     <textarea ng-i18next="[placeholder]DtrReview.HelpPros"
-              ng-model="$ctrl.item.userReviewPros"
+              ng-model="$ctrl.item.dtrRating.userReview.pros"
               ng-blur="$ctrl.reviewBlur()"></textarea>
     <textarea ng-i18next="[placeholder]DtrReview.HelpCons"
-              ng-model="$ctrl.item.userReviewCons"
+              ng-model="$ctrl.item.dtrRating.userReview.cons"
               ng-blur="$ctrl.reviewBlur()"></textarea>
   </div>
 </div>
@@ -96,7 +101,7 @@
   <div ng-if="$ctrl.submitted"
        class="community-review--message"
        ng-i18next="DtrReview.ThankYou"></div>
-  <div ng-if="!$ctrl.item.reviews.length && !$ctrl.submitted"
+  <div ng-if="!$ctrl.item.dtrRating.reviewsResponse.reviews.length && !$ctrl.submitted"
        class="community-review--message"
        ng-i18next="DtrReview.NoReviews"></div>
   <div ng-if="$ctrl.procon" class="community-review--procon">
@@ -109,13 +114,13 @@
       <div ng-repeat="con in $ctrl.aggregate.cons" ng-bind="con"></div>
     </div>
   </div>
-  <div class="community-review" ng-repeat="review in $ctrl.item.reviews | filter : { isIgnored: '!true' }">
+  <div class="community-review" ng-repeat="review in $ctrl.item.dtrRating.reviewsResponse.reviews | filter : { isIgnored: '!true' }">
     <div ng-if="$ctrl.item.destinyVersion === 1">
       <div ng-class="{'link community-review--clickable' : review.isReviewer}" ng-click="$ctrl.editReview(review.reviewId)">
         <div class="community-review--who">
           <star-rating rating="review.rating" read-only></star-rating>
           <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
-          <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
+          <div ng-bind="review.timestamp | date:'mediumDate'"></div>
           <div ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
                           'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"
                ng-click="$ctrl.openFlagContext(review.reviewId)"></div>
@@ -153,7 +158,7 @@
               </span>
             </div>
             <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
-            <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
+            <div ng-bind="review.timestamp | date:'mediumDate'"></div>
             <div ng-if="!$ctrl.item.isVendorItem"
                  ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
                             'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"

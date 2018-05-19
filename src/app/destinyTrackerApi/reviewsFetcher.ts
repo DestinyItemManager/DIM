@@ -1,12 +1,72 @@
 import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
-import { D1ItemReviewResponse, D1CachedItem } from '../item-review/destiny-tracker.service';
 import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
+import { D1ItemReviewResponse, D1ItemUserReview } from '../item-review/d1-dtr-api-types';
+import { DtrReviewer } from '../item-review/dtr-api-types';
+
+/** A single user's review for a D1 weapon. */
+interface ActualD1ItemUserReview {
+  /**
+   * Is this reviewer a featured reviewer?
+   * Broken in D2.
+   */
+  isHighlighted: boolean;
+  /**
+   * Was this review written by the DIM user that requested the reviews?
+   * Broken in D2.
+   */
+  isReviewer: boolean;
+  /**
+   * Pros.
+   * Shouldn't be present (yet).
+   */
+  pros: string;
+  /**
+   * Cons.
+   * shouldn't be present (yet).
+   */
+  cons: string;
+  /** The DTR review ID. */
+  reviewId: string;
+  /** Who reviewed it? */
+  reviewer: DtrReviewer;
+  /** Timestamp associated with the review. */
+  timestamp: string;
+  /** What perks did the user have selected when they made the review? */
+  selectedPerks?: string;
+  /** What rating did they give it (1-5)? */
+  rating: number;
+  /** Text (optionally) associated with the review. */
+  review: string;
+  /** The roll that the user had on their weapon. */
+  roll: string | null;
+}
+
+/**
+ * The DTR item reviews response.
+ * For our purposes, we mostly care that it's a collection of user reviews.
+ */
+interface ActualD1ItemReviewResponse {
+  /** Reference ID for the weapon. */
+  referenceId: string;
+  /**
+   * The roll (available perks).
+   * Note that we only send random perks, so exotics, some raid weapons and other weapons don't pass this.
+   */
+  roll: string | null;
+  /** The rating from DTR. We use this. */
+  rating?: number;
+  /** The number of ratings that DTR has for the weapon (roll). */
+  ratingCount: number;
+  /** The number of highlighted ratings that DTR has for the weapon (roll). */
+  highlightedRatingCount: number;
+  reviews: ActualD1ItemUserReview[];
+}
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -30,7 +90,7 @@ export class ReviewsFetcher {
     };
   }
 
-  _getItemReviewsPromise(item: D1Item): Promise<D1ItemReviewResponse[]> {
+  _getItemReviewsPromise(item: D1Item): Promise<ActualD1ItemReviewResponse> {
     const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     const promise = dtrFetch(
@@ -43,45 +103,27 @@ export class ReviewsFetcher {
     return promise;
   }
 
-  _getUserReview(reviewData: D1ItemReviewResponse | D1CachedItem) {
-    return reviewData.reviews.find((review) => review.isReviewer);
-  }
+  _sortAndIgnoreReviews(reviewData: D1ItemReviewResponse) {
+    if (reviewData.reviews) {
+      reviewData.reviews.sort(this._sortReviews);
 
-  _sortAndIgnoreReviews(item) {
-    if (item.reviews) {
-      item.reviews.sort(this._sortReviews);
-
-      item.reviews.forEach((writtenReview) => {
-        writtenReview.isIgnored = this._userFilter.conditionallyIgnoreReview(writtenReview);
+      reviewData.reviews.forEach((writtenReview) => {
+        this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
   }
 
-  _attachReviews(item: D1Item, reviewData) {
-    const userReview = this._getUserReview(reviewData);
+  _attachReviews(item: D1Item, reviewData: D1ItemReviewResponse) {
+    reviewData.reviews = reviewData.reviews.filter((review) => review.review); // only attach reviews with text associated
 
-    // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
-    item.totalReviews = reviewData.totalReviews === undefined ? reviewData.ratingCount : reviewData.totalReviews;
-
-    item.reviews = reviewData.reviews.filter((review) => review.review); // only attach reviews with text associated
-
-    this._sortAndIgnoreReviews(item);
-
-    if (userReview) {
-      if (userReview.rating) {
-        item.userRating = userReview.rating;
-      }
-      item.userReview = userReview.review;
-      item.userReviewPros = userReview.pros;
-      item.userReviewCons = userReview.cons;
-    }
+    this._sortAndIgnoreReviews(reviewData);
 
     this._reviewDataCache.addReviewsData(item, reviewData);
 
     this._perkRater.ratePerks(item);
   }
 
-  _sortReviews(a, b) {
+  _sortReviews(a: D1ItemUserReview, b: D1ItemUserReview) {
     if (a.isReviewer) {
       return -1;
     }
@@ -110,25 +152,39 @@ export class ReviewsFetcher {
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item: D1Item,
-                       cachedItem: D1CachedItem) {
-    this._attachReviews(item, cachedItem);
-
-    if (cachedItem.userRating) {
-      item.userRating = cachedItem.userRating;
+  /**
+   * The D1 API returns an almost-ISO 8601 UTC datetime. This gets us over the hump.
+   * http://jasonwatmore.com/post/2016/03/31/angularjs-utc-to-local-date-time-filter
+   */
+  _toUtcTime(utcDateString: string): Date {
+    // right meow unless they tell us otherwise
+    if (!utcDateString) {
+      return new Date();
     }
 
-    if (cachedItem.review) {
-      item.userReview = cachedItem.review;
+    // append 'Z' to the date string to indicate UTC time if the timezone isn't already specified
+    if (utcDateString.indexOf('Z') === -1 && utcDateString.indexOf('+') === -1) {
+      utcDateString += 'Z';
     }
 
-    if (cachedItem.pros) {
-      item.userReviewPros = cachedItem.pros;
-    }
+    return new Date(utcDateString);
+  }
 
-    if (cachedItem.cons) {
-      item.userReviewCons = cachedItem.cons;
-    }
+  _translateReview(actualReview: ActualD1ItemUserReview): D1ItemUserReview {
+    const timestamp = this._toUtcTime(actualReview.timestamp);
+
+    return { ...actualReview, timestamp };
+  }
+
+  /**
+   * tl;dr - actual responses from the D1 API are UTC strings, but they don't specify the TZ.
+   * We'll slap a time zone on to each of the nested reviews from the actual response and return
+   * an item review response that we can use without fuss elsewhere.
+   */
+  _translateReviewResponse(actualResponse: ActualD1ItemReviewResponse): D1ItemReviewResponse {
+    const reviews = actualResponse.reviews.map((review) => this._translateReview(review));
+
+    return { ...actualResponse, reviews };
   }
 
   /**
@@ -140,17 +196,15 @@ export class ReviewsFetcher {
     if (!item.reviewable) {
       return;
     }
-    const ratingData = this._reviewDataCache.getRatingData(item);
+    const cachedData = this._reviewDataCache.getRatingData(item);
 
-    if (ratingData && ratingData.reviewsDataFetched) {
-      this._attachCachedReviews(item,
-                                ratingData);
-
+    if (cachedData && cachedData.reviewsResponse) {
       return;
     }
 
     this._getItemReviewsPromise(item)
-      .then((data) => this._attachReviews(item,
-                                          data));
+      .then((data) => this._translateReviewResponse(data))
+      .then((translatedData) => this._attachReviews(item,
+                                                    translatedData));
   }
 }

@@ -2,8 +2,8 @@ import { flatMap } from '../util';
 import * as _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
-import { D1ItemFetchRequest } from '../item-review/destiny-tracker.service';
 import { D1Item } from '../inventory/item-types';
+import { D1ItemFetchRequest } from '../item-review/d1-dtr-api-types';
 
 /**
  * Translates collections of DIM items into a collection of data almost ready to ship to the DTR API.

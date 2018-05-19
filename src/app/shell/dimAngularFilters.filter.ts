@@ -1,6 +1,6 @@
 import { module } from 'angular';
 import * as _ from 'underscore';
-import { bungieNetPath } from '../dim-ui/bungie-image';
+import { bungieNetPath } from '../dim-ui/BungieImage';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';
@@ -178,7 +178,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   rarity: compareBy(rarity),
   primStat: reverseComparator(compareBy((item: DimItem) => item.primStat && item.primStat.value)),
   basePower: reverseComparator(compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))),
-  rating: reverseComparator(compareBy((item: DimItem & { quality: { min: number }}) => (item.quality && item.quality.min) ? item.quality.min : item.dtrRating)),
+  rating: reverseComparator(compareBy((item: DimItem & { quality: { min: number }}) => (item.quality && item.quality.min) ? item.quality.min : item.dtrRating.overallScore)),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),

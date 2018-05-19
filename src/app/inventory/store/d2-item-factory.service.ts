@@ -34,10 +34,10 @@ import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
 import { $q } from 'ngimport';
 import { t } from 'i18next';
-import { DimWorkingUserReview } from '../../item-review/destiny-tracker.service';
 import { D2Item, DimPerk, DimStat, DimObjective, DimFlavorObjective, DimTalentGrid, DimGridNode, DimSockets, DimSocketCategory, DimSocket, DimPlug, DimMasterwork } from '../item-types';
 import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
+import { D2RatingData } from '../../item-review/d2-dtr-api-types';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -258,7 +258,7 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
-  reviewData?: DimWorkingUserReview | null
+  reviewData?: D2RatingData | null
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> = item.itemInstanceId && itemComponents ? itemComponents.instances.data[item.itemInstanceId] : {};
@@ -298,8 +298,7 @@ export function makeItem(
 
   const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
-  // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
-  const primaryStat = itemType === 'Class' ? null : instanceDef.primaryStat || null;
+  const primaryStat = (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) ? null : instanceDef.primaryStat || null;
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
@@ -351,17 +350,14 @@ export function makeItem(
     hidePercentage: false,
     talentGrid: null, // filled in later
     stats: null, // filled in later
-    objectives: null, // filled in later
-    dtrRatingCount: (reviewData) ? reviewData.totalReviews : undefined,
-    dtrRating: (reviewData) ? reviewData.rating : undefined,
-    reviews: (reviewData) ? reviewData.reviews : [],
+    objectives: null // filled in later,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash
   });
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean(($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem)) || (reviewData && reviewData.reviews));
+  createdItem.reviewable = Boolean(($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem)) || (reviewData && reviewData.reviewsResponse && reviewData.reviewsResponse.reviews));
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
@@ -945,7 +941,7 @@ function buildPlug(
 
   return {
     plugItem,
-    enabled: enabled && (plug.plugObjectives || []).every((o) => o.complete) && (!isDestinyItemPlug(plug) || plug.canInsert),
+    enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
     perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),

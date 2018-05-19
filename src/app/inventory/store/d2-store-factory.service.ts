@@ -6,7 +6,7 @@ import {
   } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
-import { bungieNetPath } from '../../dim-ui/bungie-image';
+import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count, sum } from '../../util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { Loadout } from '../../loadout/loadout.service';

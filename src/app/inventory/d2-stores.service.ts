@@ -16,7 +16,7 @@ import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { bungieNetPath } from '../dim-ui/bungie-image';
+import { bungieNetPath } from '../dim-ui/BungieImage';
 import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { Loadout } from '../loadout/loadout.service';

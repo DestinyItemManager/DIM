@@ -3,13 +3,16 @@ import { t } from 'i18next';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { BungieImage, bungieBackgroundStyle } from '../dim-ui/bungie-image';
+import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { $state } from '../ngimport-more';
 import { compact } from '../util';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';
 
+/**
+ * Display the items for a single vendor, organized by category.
+ */
 export default function VendorItems({
   vendorDef,
   defs,

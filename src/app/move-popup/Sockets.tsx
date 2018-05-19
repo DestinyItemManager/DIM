@@ -2,8 +2,8 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
-import { BungieImage } from '../dim-ui/bungie-image';
-import { PressTip } from '../dim-ui/press-tip';
+import BungieImage from '../dim-ui/BungieImage';
+import PressTip from '../dim-ui/PressTip';
 import './sockets.scss';
 import { IScope } from 'angular';
 import Objective from '../progress/Objective';
@@ -28,8 +28,8 @@ export default class Sockets extends React.Component<Props, State> {
   componentDidMount() {
     // This is a hack / React anti-pattern so we can successfully update when the reviews async populate.
     // It should be short-term - in the future we should load review data from separate state.
-    this.props.$scope.$watch(() => this.props.item.reviewsUpdated, () => {
-      if (this.props.item.reviewsUpdated) {
+    this.props.$scope.$watch(() => this.props.item.dtrRating && this.props.item.dtrRating.lastUpdated, () => {
+      if (this.props.item.dtrRating && this.props.item.dtrRating.lastUpdated) {
         this.setState({}); // gross
       }
     });

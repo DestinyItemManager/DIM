@@ -3,12 +3,12 @@ import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
-import { DtrReviewContainer, DimWorkingUserReview, DtrUserReview } from '../item-review/destiny-tracker.service';
 import { UserFilter } from './userFilter';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
+import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -22,7 +22,7 @@ class D2ReviewsFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getItemReviewsPromise(item, platformSelection: number, mode: number): Promise<DtrReviewContainer> {
+  _getItemReviewsPromise(item, platformSelection: number, mode: number): Promise<D2ItemReviewResponse> {
     const dtrItem = this._itemTransformer.getRollAndPerks(item);
 
     const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
@@ -36,23 +36,22 @@ class D2ReviewsFetcher {
     return promise;
   }
 
-  _getUserReview(reviewData: DimWorkingUserReview | DtrReviewContainer) {
+  _getUserReview(reviewData: D2ItemReviewResponse) {
     // bugbug: will need to use membership service if isReviewer flag stays broke
     return reviewData.reviews.find((r) => r.isReviewer);
   }
 
-  _sortAndIgnoreReviews(item: D2Item) {
-    if (item.reviews) {
-      item.reviews = item.reviews as DtrUserReview[]; // D1 and D2 reviews take different shapes
-      item.reviews.sort(this._sortReviews);
+  _sortAndIgnoreReviews(reviewResponse: D2ItemReviewResponse) {
+    if (reviewResponse.reviews) {
+      reviewResponse.reviews.sort(this._sortReviews);
 
-      item.reviews.forEach((writtenReview) => {
+      reviewResponse.reviews.forEach((writtenReview) => {
         this._userFilter.conditionallyIgnoreReview(writtenReview);
       });
     }
   }
 
-  _markUserReview(reviewData: DtrReviewContainer) {
+  _markUserReview(reviewData: D2ItemReviewResponse) {
     const membershipInfo = getActivePlatform();
 
     if (!membershipInfo) {
@@ -70,30 +69,16 @@ class D2ReviewsFetcher {
     return reviewData;
   }
 
-  _attachReviews(item: D2Item, reviewData: DtrReviewContainer | DimWorkingUserReview) {
-    const userReview = this._getUserReview(reviewData);
+  _attachReviews(item: D2Item, reviewData: D2ItemReviewResponse) {
+    this._sortAndIgnoreReviews(reviewData);
 
-    // TODO: reviewData has two very different shapes depending on whether it's from cache or from the service
-    item.ratingCount = reviewData.totalReviews;
-    item.reviews = reviewData.reviews.filter((review) => review.text);
-
-    this._sortAndIgnoreReviews(item);
-
-    if (userReview) {
-      item.userVote = userReview.voted;
-      item.userReview = userReview.text;
-      item.userReviewPros = userReview.pros;
-      item.userReviewCons = userReview.cons;
-      item.mode = userReview.mode;
-    }
-
-    this._reviewDataCache.addReviewsData(item, reviewData);
+    this._reviewDataCache.addReviewsData(reviewData);
+    item.dtrRating = this._reviewDataCache.getRatingData(item);
 
     this._perkRater.ratePerks(item);
-    item.reviewsUpdated = Date.now();
   }
 
-  _sortReviews(a: DtrUserReview, b: DtrUserReview) {
+  _sortReviews(a: D2ItemUserReview, b: D2ItemUserReview) {
     if (a.isReviewer) {
       return -1;
     }
@@ -122,28 +107,6 @@ class D2ReviewsFetcher {
     return bDate - aDate;
   }
 
-  _attachCachedReviews(item: D2Item, cachedItem: DimWorkingUserReview) {
-    item.reviews = cachedItem.reviews;
-
-    this._attachReviews(item, cachedItem);
-
-    if (cachedItem.userRating) {
-      item.userRating = cachedItem.userRating;
-    }
-
-    if (cachedItem.review) {
-      item.userReview = cachedItem.review;
-    }
-
-    if (cachedItem.pros) {
-      item.userReviewPros = cachedItem.pros;
-    }
-
-    if (cachedItem.cons) {
-      item.userReviewCons = cachedItem.cons;
-    }
-  }
-
   /**
    * Get community (which may include the current user's) reviews for a given item and attach
    * them to the item.
@@ -154,11 +117,10 @@ class D2ReviewsFetcher {
       return Promise.resolve();
     }
 
-    const ratingData = this._reviewDataCache.getRatingData(item);
+    const cachedData = this._reviewDataCache.getRatingData(item);
 
-    if (ratingData && ratingData.reviewsDataFetched) {
-      this._attachCachedReviews(item,
-                                ratingData);
+    if (cachedData && cachedData.reviewsResponse) {
+      item.dtrRating = cachedData;
 
       return Promise.resolve();
     }
@@ -171,11 +133,11 @@ class D2ReviewsFetcher {
       });
   }
 
-  fetchItemReviews(itemHash: number, platformSelection: number, mode: number): Promise<DtrReviewContainer> {
-    const ratingData = this._reviewDataCache.getRatingData(undefined, itemHash);
+  fetchItemReviews(itemHash: number, platformSelection: number, mode: number): Promise<D2ItemReviewResponse> {
+    const cachedData = this._reviewDataCache.getRatingData(undefined, itemHash);
 
-    if (ratingData && ratingData.reviewsDataFetched) {
-      return Promise.resolve(ratingData);
+    if (cachedData && cachedData.reviewsResponse) {
+      return Promise.resolve(cachedData.reviewsResponse);
     }
 
     const fakeItem = { hash: itemHash, id: -1 };
