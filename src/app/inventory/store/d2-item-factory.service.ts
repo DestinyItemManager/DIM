@@ -298,8 +298,7 @@ export function makeItem(
 
   const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
-  // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
-  const primaryStat = itemType === 'Class' ? null : instanceDef.primaryStat || null;
+  const primaryStat = (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) ? null : instanceDef.primaryStat || null;
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
@@ -944,7 +943,7 @@ function buildPlug(
 
   return {
     plugItem,
-    enabled: enabled && (plug.plugObjectives || []).every((o) => o.complete) && (!isDestinyItemPlug(plug) || plug.canInsert),
+    enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
     perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),
