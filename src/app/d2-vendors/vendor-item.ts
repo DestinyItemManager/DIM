@@ -122,6 +122,13 @@ export class VendorItem {
     return null;
   }
 
+  get previewVendorHash(): number | null {
+    if (this.inventoryItem.preview && this.inventoryItem.preview.previewVendorHash) {
+      return this.inventoryItem.preview.previewVendorHash;
+    }
+    return null;
+  }
+
   equals(other: VendorItem) {
     // Defs can be ref-compared
     return this.vendorItemDef === other.vendorItemDef &&

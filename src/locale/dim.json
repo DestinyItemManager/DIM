@@ -332,7 +332,8 @@
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
     "PercentComplete": "({{percent, pct}} Complete)",
     "TooMuch": "Looks like you requested to move more of this item than exists in the source!",
-    "TwoExotics": "We don't know how you got more than 2 equipped exotics!"
+    "TwoExotics": "We don't know how you got more than 2 equipped exotics!",
+    "PreviewVendor": "Preview {{type}} contents"
   },
   "LB": {
     "AdvancedOptions": "Advanced Options",

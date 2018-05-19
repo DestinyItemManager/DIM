@@ -1,5 +1,7 @@
 # Next
 
+* Add previews for engrams and other preview-able items.
+
 # 4.52.0 (2018-05-13)
 
 * Collection exotics are no longer duplicated. They are also sorted by name.

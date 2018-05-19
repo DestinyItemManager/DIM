@@ -94,7 +94,7 @@ dim-store-item {
   &.complete {
     border-color: $gold;
   }
-  &.transparent {
+  &.transparent, .sort-375726501 & {
     border-color: transparent;
   }
   &.diamond {
