@@ -1,8 +1,8 @@
 import * as _ from 'underscore';
-import { D2ItemTransformer } from './d2-itemTransformer';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2RatingData, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
+import { translateToDtrItem } from './d2-itemTransformer';
 
 /**
  * Cache of review data.
@@ -10,15 +10,8 @@ import { D2RatingData, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D
  * Tailored for the Destiny 2 version.
  */
 class D2ReviewDataCache {
-  _maxTotalVotes: number;
-  _itemStores: D2RatingData[];
-  _itemTransformer: D2ItemTransformer;
-
-  constructor() {
-    this._itemTransformer = new D2ItemTransformer();
-    this._itemStores = [];
-    this._maxTotalVotes = 0;
-  }
+  _maxTotalVotes = 0;
+  _itemStores: D2RatingData[] = [];
 
   _getMatchingItem(item?: D2Item | DestinyVendorSaleItemComponent,
                    itemHash?: number): D2RatingData | undefined {
@@ -29,7 +22,7 @@ class D2ReviewDataCache {
   _getReferenceId(item?: D2Item | DestinyVendorSaleItemComponent,
                   itemHash?: number): number {
     if (item) {
-      const dtrItem = this._itemTransformer.translateToDtrItem(item);
+      const dtrItem = translateToDtrItem(item);
 
       return dtrItem.referenceId;
     } else if (itemHash) {
