@@ -98,7 +98,7 @@ export function LoadoutService(
     return regexGuid.test(stringToTest);
   }
 
-  function processLoadout(data, version): Loadout[] | Promise<Loadout[]> {
+  function processLoadout(data, version): Loadout[] {
     if (!data) {
       return [];
     }
@@ -133,7 +133,7 @@ export function LoadoutService(
     }).map((i: any) => i.id);
 
     if (orphanIds.length > 0) {
-      return SyncService.remove(orphanIds).then(() => loadouts);
+      SyncService.remove(orphanIds);
     }
 
     return loadouts;
@@ -142,7 +142,7 @@ export function LoadoutService(
   function getLoadouts(getLatest = false): IPromise<Loadout[]> {
     // Avoids the hit going to data store if we have data already.
     if (getLatest || !_loadouts.length) {
-      return SyncService.get()
+      return $q.when(SyncService.get()
         .then((data) => {
           if (_.has(data, 'loadouts-v3.0')) {
             return processLoadout(data, 'v3.0');
@@ -153,7 +153,7 @@ export function LoadoutService(
         .then((newLoadouts) => {
           _loadouts = newLoadouts;
           return _loadouts;
-        });
+        }));
     } else {
       return $q.when(_loadouts);
     }
