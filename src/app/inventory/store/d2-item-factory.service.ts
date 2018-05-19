@@ -350,7 +350,7 @@ export function makeItem(
     hidePercentage: false,
     talentGrid: null, // filled in later
     stats: null, // filled in later
-    objectives: null // filled in later,
+    objectives: null, // filled in later
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash
   });
 
