@@ -49,6 +49,19 @@ export function removeToken() {
 }
 
 /**
+ * Clear any saved access token information.
+ */
+export function removeAccessToken() {
+  const token = getToken();
+  if (token) {
+    // Force expiration
+    token.accessToken.inception = 0;
+    token.accessToken.expires = 0;
+    setToken(token);
+  }
+}
+
+/**
  * Get an absolute UTC epoch milliseconds timestamp for either the 'expires' property.
  * @return UTC epoch milliseconds timestamp
  */

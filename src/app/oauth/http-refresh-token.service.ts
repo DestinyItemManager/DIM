@@ -1,47 +1,44 @@
 import { getAccessTokenFromRefreshToken } from './oauth.service';
-import { Tokens, removeToken, setToken, getToken, hasTokenExpired } from './oauth-token.service';
+import { Tokens, removeToken, setToken, getToken, hasTokenExpired, removeAccessToken } from './oauth-token.service';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { $rootScope } from 'ngimport';
 
 let cache: Promise<Tokens> | null = null;
-const matcher = /www\.bungie\.net\/(D1\/)?Platform\/(User|Destiny|Destiny2)\//;
 
 export async function fetchWithBungieOAuth(request: Request | string, options?: RequestInit, triedRefresh = false): Promise<Response> {
   if (typeof request === "string") {
     request = new Request(request);
   }
 
-  if (request.url.match(matcher) && !request.headers.has('Authorization')) {
-    try {
-      const token = await getActiveToken();
-      request.headers.set('Authorization', `Bearer ${token.accessToken.value}`);
-    } catch (e) {
-      // Note: instanceof doesn't work due to a babel bug:
-      if (e.name === 'FatalTokenError') {
-        console.warn("Unable to get auth token, clearing auth tokens & going to login: ", e);
-        removeToken();
-        $rootScope.$broadcast('dim-no-token-found');
-      }
-      throw e;
+  try {
+    const token = await getActiveToken();
+    request.headers.set('Authorization', `Bearer ${token.accessToken.value}`);
+  } catch (e) {
+    // Note: instanceof doesn't work due to a babel bug:
+    if (e.name === 'FatalTokenError') {
+      console.warn("Unable to get auth token, clearing auth tokens & going to login: ", e);
+      removeToken();
+      $rootScope.$broadcast('dim-no-token-found');
     }
-
-    return fetch(request, options).then(async(response) => {
-      if (await responseIndicatesBadToken(response)) {
-        if (triedRefresh) {
-          throw new Error("Access token expired, and we've already tried to refresh. Failing.");
-        }
-        // OK, Bungie has told us our access token is expired or
-        // invalid. Refresh it and try again.
-        console.log(`Access token expired, removing tokens and trying again`);
-        removeToken();
-        return fetchWithBungieOAuth(request, options, true);
-      }
-
-      return response;
-    });
+    throw e;
   }
 
-  return fetch(request, options);
+  const response = await fetch(request, options);
+  if (await responseIndicatesBadToken(response)) {
+    if (triedRefresh) {
+      // Give up
+      removeToken();
+      $rootScope.$broadcast('dim-no-token-found');
+      throw new Error("Access token expired, and we've already tried to refresh. Failing.");
+    }
+    // OK, Bungie has told us our access token is expired or
+    // invalid. Refresh it and try again.
+    console.log(`Access token expired, removing access token and trying again`);
+    removeAccessToken();
+    return fetchWithBungieOAuth(request, options, true);
+  }
+
+  return response;
 }
 
 async function responseIndicatesBadToken(response: Response) {
