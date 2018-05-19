@@ -4,20 +4,20 @@ import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 
-interface CharacterTileProps {
-  character: DestinyCharacterComponent;
-  defs: D2ManifestDefinitions;
-  lastPlayedDate: Date;
-}
-
 // TODO: this should probably move to a library of character functions
 export function characterIsCurrent(character: DestinyCharacterComponent, lastPlayedDate: Date): boolean {
   return lastPlayedDate.getTime() === new Date(character.dateLastPlayed).getTime();
 }
 
-export default function CharacterTile(props: CharacterTileProps) {
-  const { defs, character, lastPlayedDate } = props;
-
+export default function CharacterTile({
+  defs,
+  character,
+  lastPlayedDate
+}: {
+  character: DestinyCharacterComponent;
+  defs: D2ManifestDefinitions;
+  lastPlayedDate: Date;
+}) {
   const race = defs.Race[character.raceHash];
   const gender = defs.Gender[character.genderHash];
   const classy = defs.Class[character.classHash];
