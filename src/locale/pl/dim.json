@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
     "PercentComplete": "({{percent, pct}} Complete)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "Looks like you requested to move more of this item than exists in the source!",
     "TwoExotics": "We don't know how you got more than 2 equipped exotics!"
   },
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
+    "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",

@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "Este item só pode ser equipado em um {{class}} igual ou acima do nível {{level}}.",
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
     "PercentComplete": "({{percent, pct}} Completo)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "Parece que você quis mover mais deste item do que existe na fonte!",
     "TwoExotics": "Nós não sabemos como você conseguiu equipar mais de 2 equipamentos exóticos!"
   },
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "Mostrar a avaliação de estatísticas de qualidade em armaduras (D1)",
     "ExportSS": "Planilhas do inventário",
     "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
+    "ExportSSNoStores": "Você precisa carregar seu inventário uma vez antes de clicar neste botão.",
     "General": "Geral",
     "Inventory": "Exibição Inventário",
     "InventoryColumns": "Largura do inventário de personagem",

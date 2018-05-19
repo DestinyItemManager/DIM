@@ -35,7 +35,7 @@
     "DestinyLegacyPlatform": "Сервисы Bungie содержат баг, который препятствует DIM загрузить информацию вашего аккаунта в Destiny 2, если вы играли в Destiny 1 на консоли прошлого поколения. Bungie скоро это исправят, но до тех пор вы должны играть в Destiny 1 на консоли текущего поколения, чтобы иметь доступ к своим данным.",
     "DevVersion": "Вы используете нестабильную версию DIM? Вы должны зарегистрировать ваше расширение Chrome на bungie.net.",
     "Difficulties": "API Bungie в настоящий момент работает нестабильно.",
-    "ErrorTitle": "Bungie.net Error",
+    "ErrorTitle": "Ошибка метода Bungie.Net",
     "ItemUniqueness": "Уникальность предмета",
     "ItemUniquenessExplanation": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_female": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
@@ -52,7 +52,7 @@
     "Twitter": "Получить обновления статуса сервиса:",
     "UnknownError": "Сообщение от Bungie.net: {{message}}",
     "VendorNotFound": "Данные вендоров недоступны.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "WarmindLoginNeeded": "Баг в Bungie. Net API не позволяет загрузить Ваш инвентарь. Для исправления - загрузитесь на орбиту каждым из персонажей аккаунта и настройте Жесты."
   },
   "Compare": {
     "All": "Сравнить каждый {{type}} ({{quantity}})",
@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "Это может быть надето только на персонаже класса {{class}} с уровнем {{level}} или выше.",
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
     "PercentComplete": "({{percent, pct}} Выполнено)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "Похоже Вы хотите переместить больше предметов чем доступно!",
     "TwoExotics": "Мы не понимаем как Вы надели более двух Экзотических предметов!"
   },
@@ -488,7 +489,7 @@
     "LockUnlock_Lock": "Заблокировать {{itemType}}",
     "LockUnlock_Unlock": "Разблокировать {{itemType}}",
     "OverviewTab": "Обзор",
-    "ReadLore": "Read lore on Ishtar Collective",
+    "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
     "Split": "Делить",
     "Store": "Дать",
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "Показать рейтинг качества характеристик брони (D1)",
     "ExportSS": "Скачать таблицу инвентаря",
     "ExportSSHelp": "Скачать список ваших предметов в формате CSV, который может быть легко просмотрен в любом приложении для работы с таблицами по вашему выбору.",
+    "ExportSSNoStores": "Загрузите Ваш инвентарь, прежде чем нажимать данную кнопку.",
     "General": "Основное",
     "Inventory": "Отображение инвентаря",
     "InventoryColumns": "Ширина (в предметах) столбца Персонажа",

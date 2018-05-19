@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "该物品仅可以装备在{{class}} 上，且至少大于{{level}} 级。",
     "OnlyEquippedLevel": "该物品仅可以装备在至少{{level}} 级的角色上。",
     "PercentComplete": "({{percent, pct}} 已完成)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "您请求移动的数量超过了您所拥有的物品数量!",
     "TwoExotics": "我们不知道您如何装备了两个异域装备。"
   },
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "在装备上显示质量指数(D1)",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下载您物品的 CSV 列表, 可以在您选择的电子表格应用程序中轻松查看。",
+    "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
     "General": "通用",
     "Inventory": "物品栏显示模式",
     "InventoryColumns": "物品栏显示宽度",

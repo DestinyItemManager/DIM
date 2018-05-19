@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "該物品僅可以裝備在{{class}} 上，且至少大於{{level}} 級。",
     "OnlyEquippedLevel": "該物品僅可以裝備在至少{{level}} 級的角色上。",
     "PercentComplete": "({{percent, pct}} 已完成)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "您請求移動的數量超過了您所擁有的物品數量!",
     "TwoExotics": "我們不知道您如何裝備了兩個異域裝備。"
   },
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "在防具上顯示評分(D1)",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下載您物品的 CSV 列表, 可以在您選擇的試算表應用程式中輕鬆查看。",
+    "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
     "General": "通用",
     "Inventory": "物品欄顯示模式",
     "InventoryColumns": "物品欄顯示寬度",

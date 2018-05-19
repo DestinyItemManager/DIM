@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
     "PercentComplete": "({{percent, pct}} Achevé)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source!",
     "TwoExotics": "On ne sait pas comment tu as fait pour avoir plus de 2 exotiques équipés!"
   },
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures (D1)",
     "ExportSS": "Tableur de l'inventaire",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
+    "ExportSSNoStores": "Vous devez charger votre inventaire une première fois avant de cliquer sur ce bouton.",
     "General": "Général",
     "Inventory": "Affichage de l'inventaire",
     "InventoryColumns": "Nombre de colonne d'inventaire de personnage",

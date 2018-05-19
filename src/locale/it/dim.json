@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
     "PercentComplete": "({{percent, pct}} Completato)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
     "TwoExotics": "Non sappiamo come tu abbia equipaggiati più di 2 esotici!"
   },
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature (D1)",
     "ExportSS": "Scarica inventario in formato foglio elettronico",
     "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
+    "ExportSSNoStores": "Devi caricare il tuo inventario una volta prima di cliccare questo pulsante.",
     "General": "Generale",
     "Inventory": "Aspetto dell'inventario",
     "InventoryColumns": "Larghezza dell'inventario",

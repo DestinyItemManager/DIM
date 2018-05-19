@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "これは、レベル{{level}}以上の{{class}}にしか装備できません。",
     "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
     "PercentComplete": "({{percent, pct}} 完了)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "保有している数より多めに移動しようとしています。",
     "TwoExotics": "エキゾチックをどうやって2つを装備できたのかわかりません。"
   },
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExportSS": "保管庫のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
+    "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "キャラ毎のアイテム幅",

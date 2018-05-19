@@ -331,6 +331,7 @@
     "OnlyEquippedClassLevel": "Das kann nur von einem {{class}} ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "OnlyEquippedLevel": "Das kann nur von Charakteren ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "PercentComplete": "({{percent, pct}} Fertig)",
+    "PreviewVendor": "Preview {{type}} contents",
     "TooMuch": "Es hat den Anschein dass du mehr Einheiten dieses Items verschieben wolltest als in der Quelle existieren!",
     "TwoExotics": "Wir wissen nicht wie du es geschafft hast mehr als 2 exotische Items auszurüsten!"
   },
@@ -546,6 +547,7 @@
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",
     "ExportSS": "Inventar Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Items herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
+    "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
     "General": "Allgemein",
     "Inventory": "Inventar-Anzeige",
     "InventoryColumns": "Charakter Inventar Spalten",
