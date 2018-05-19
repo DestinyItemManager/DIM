@@ -1,14 +1,14 @@
 import { ItemTransformer } from './itemTransformer';
 import * as _ from 'underscore';
-import { D1ItemFetchResponse, D1ItemWorkingUserReview, D1CachedItem, D1ItemUserReview, D1ItemReviewResponse } from '../item-review/destiny-tracker.service';
 import { D1Item } from '../inventory/item-types';
+import { D1RatingData, D1ItemFetchResponse, WorkingD1Rating, D1ItemReviewResponse } from '../item-review/d1-dtr-api-types';
 
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
  */
 export class ReviewDataCache {
-  _itemStores: D1CachedItem[];
+  _itemStores: D1RatingData[];
   _itemTransformer: ItemTransformer;
 
   constructor() {
@@ -16,7 +16,7 @@ export class ReviewDataCache {
     this._itemStores = [];
   }
 
-  _getMatchingItem(item: D1Item): D1CachedItem | undefined {
+  _getMatchingItem(item: D1Item): D1RatingData | undefined {
     const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
@@ -29,8 +29,41 @@ export class ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item: D1Item): D1CachedItem | undefined {
-    return this._getMatchingItem(item);
+  getRatingData(item: D1Item): D1RatingData {
+    const cachedItem = this._getMatchingItem(item);
+
+    if (cachedItem) {
+      return cachedItem;
+    }
+
+    const blankCacheItem = this._createBlankCacheItem(item);
+    this._itemStores.push(blankCacheItem);
+
+    return blankCacheItem;
+  }
+
+  _createBlankUserReview(): WorkingD1Rating {
+    return {
+      rating: 0,
+      pros: "",
+      review: "",
+      cons: "",
+      treatAsSubmitted: false
+    };
+  }
+
+  _createBlankCacheItem(item: D1Item): D1RatingData {
+    const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
+
+    return {
+      referenceId : dtrItem.referenceId,
+      roll: dtrItem.roll,
+      userReview: this._createBlankUserReview(),
+      lastUpdated: new Date(),
+      overallScore: 0,
+      ratingCount: 0,
+      highlightedRatingCount: 0
+    };
   }
 
   _toAtMostOneDecimal(rating: number): number {
@@ -49,7 +82,28 @@ export class ReviewDataCache {
       dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
     }
 
-    this._itemStores.push(dtrRating as D1CachedItem);
+    const previouslyCachedItem = this._itemStores.find((ci) => ci.roll === dtrRating.roll && ci.referenceId === dtrRating.referenceId);
+
+    if (previouslyCachedItem) {
+      previouslyCachedItem.fetchResponse = dtrRating;
+      previouslyCachedItem.lastUpdated = new Date();
+      previouslyCachedItem.overallScore = (dtrRating.rating) ? dtrRating.rating : 0;
+      previouslyCachedItem.ratingCount = dtrRating.ratingCount;
+      dtrRating.highlightedRatingCount = dtrRating.highlightedRatingCount;
+    } else {
+      const cachedItem: D1RatingData = {
+        referenceId: dtrRating.referenceId,
+        fetchResponse: dtrRating,
+        lastUpdated: new Date(),
+        overallScore: dtrRating.rating || 0,
+        ratingCount: dtrRating.ratingCount,
+        highlightedRatingCount: dtrRating.highlightedRatingCount,
+        roll: dtrRating.roll,
+        userReview: this._createBlankUserReview()
+      };
+
+      this._itemStores.push(cachedItem);
+    }
   }
 
   /**
@@ -60,23 +114,10 @@ export class ReviewDataCache {
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
   addUserReviewData(item: D1Item,
-                    userReview: D1ItemWorkingUserReview) {
-    const matchingItem = this._getMatchingItem(item);
+                    userReview: WorkingD1Rating) {
+    const cachedItem = this.getRatingData(item);
 
-    if (!matchingItem) {
-      return;
-    }
-
-    item.isLocallyCached = true;
-
-    const rating = matchingItem.rating;
-
-    Object.assign(matchingItem,
-                  userReview);
-
-    matchingItem.userRating = matchingItem.rating;
-
-    matchingItem.rating = rating;
+    cachedItem.userReview = userReview;
   }
 
   /**
@@ -84,11 +125,15 @@ export class ReviewDataCache {
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
   addReviewsData(item: D1Item,
-                 reviewsData: D1ItemReviewResponse | D1CachedItem) {
-    const matchingItem = this._getMatchingItem(item);
-    if (matchingItem) {
-      matchingItem.reviews = reviewsData.reviews;
-      matchingItem.reviewsDataFetched = true;
+                 reviewsData: D1ItemReviewResponse) {
+    const cachedItem = this.getRatingData(item);
+
+    cachedItem.reviewsResponse = reviewsData;
+
+    const userReview = reviewsData.reviews.find((r) => r.isReviewer);
+
+    if (userReview && cachedItem.userReview.rating === 0) {
+      Object.assign(cachedItem.userReview, userReview);
     }
   }
 
@@ -104,23 +149,23 @@ export class ReviewDataCache {
   }
 
   markItemAsReviewedAndSubmitted(
-    item: D1Item,
-    userReview: D1ItemWorkingUserReview
+    item: D1Item
   ) {
-    item.isLocallyCached = false;
-    const matchingItem = this._getMatchingItem(item);
+    const cachedItem = this.getRatingData(item);
 
-    if (!matchingItem) {
+    if (!cachedItem || !cachedItem.userReview) {
       return;
     }
 
-    if (!matchingItem.reviews) {
-      matchingItem.reviews = [];
-    } else {
-      matchingItem.reviews.filter((review) => !review.isReviewer);
+    cachedItem.userReview.treatAsSubmitted = true;
+
+    if (!cachedItem.reviewsResponse) {
+      return;
     }
 
-    matchingItem.reviews.unshift(userReview as D1ItemUserReview);
+    cachedItem.reviewsResponse.reviews = (cachedItem.reviewsResponse.reviews) ?
+       cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer) :
+       [];
   }
 
   /**
@@ -135,12 +180,10 @@ export class ReviewDataCache {
     const tenMinutes = 1000 * 60 * 10;
 
     setTimeout(() => {
-      const matchingItem = this._getMatchingItem(item);
+      const cachedItem = this.getRatingData(item);
 
-      if (matchingItem) {
-        matchingItem.reviews = [];
-        matchingItem.reviewsDataFetched = false;
-      }
+      cachedItem.reviewsResponse = undefined;
+      cachedItem.userReview.treatAsSubmitted = true;
     },
       tenMinutes);
   }

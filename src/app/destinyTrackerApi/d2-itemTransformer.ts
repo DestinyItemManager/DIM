@@ -1,9 +1,9 @@
 import * as _ from 'underscore';
-import { DtrItem } from '../item-review/destiny-tracker.service';
 import { compact } from '../util';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { getPowerMods } from '../inventory/store/d2-item-factory.service';
+import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 
 /**
  * Translates items from the objects that DIM has to the form that the DTR API expects.
@@ -16,7 +16,7 @@ class D2ItemTransformer {
    * This does not contain personally-identifying information.
    * Meant for fetch calls.
    */
-  translateToDtrItem(item: D2Item | DestinyVendorSaleItemComponent): DtrItem {
+  translateToDtrItem(item: D2Item | DestinyVendorSaleItemComponent): D2ItemFetchRequest {
     return {
       referenceId: ((item as DestinyVendorSaleItemComponent).itemHash !== undefined) ? (item as DestinyVendorSaleItemComponent).itemHash : (item as D2Item).hash
     };
@@ -26,7 +26,7 @@ class D2ItemTransformer {
    * Get the roll and perks for the selected DIM item (to send to the DTR API).
    * Will contain personally-identifying information.
    */
-  getRollAndPerks(item: D2Item): DtrItem {
+  getRollAndPerks(item: D2Item): DtrD2BasicItem {
     const powerModHashes = getPowerMods(item).map((m) => m.hash);
     return {
       selectedPerks: this._getSelectedPlugs(item, powerModHashes),

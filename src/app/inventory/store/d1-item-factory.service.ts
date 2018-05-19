@@ -324,7 +324,6 @@ function makeItem(
     loreHash: null,
     lastManuallyMoved: item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
     isInLoadout: false,
-    dtrRating: item.dtrRating,
     percentComplete: null, // filled in later
     talentGrid: null, // filled in later
     stats: null, // filled in later

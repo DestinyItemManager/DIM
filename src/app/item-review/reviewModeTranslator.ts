@@ -1,8 +1,8 @@
 import { t } from 'i18next';
-import { DtrUserReview } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
+import { D2ItemUserReview } from './d2-dtr-api-types';
 
-export function translateReviewMode(reviewModes: D2ReviewMode[], review: DtrUserReview): string {
+export function translateReviewMode(reviewModes: D2ReviewMode[], review: D2ItemUserReview): string {
   if (!reviewModes) {
     return '';
   }

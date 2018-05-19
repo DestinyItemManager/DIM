@@ -1,129 +1,8 @@
-export interface DtrVote {
-  upvotes: number;
-  downvotes: number;
-  total: number;
-  score: number;
-}
-
-export interface DtrItem {
-  referenceId: number;
-  instanceId?: string;
-  attachedMods?: number[];
-  selectedPerks?: number[];
-}
-
-export interface DtrBulkItem extends DtrItem {
-  votes: DtrVote;
-}
-
-export interface DtrReviewer {
-  membershipType: number;
-  membershipId: string;
-  displayName: string;
-}
-
-export interface DimUserReview extends DtrBulkItem {
-  reviewer: DtrReviewer;
-  voted: number;
-  pros: string;
-  cons: string;
-  text: string;
-}
-
-export interface DtrUserReview {
-  id: string;
-  timestamp: Date;
-  isReviewer: boolean;
-  isHighlighted: boolean;
-  instanceId?: string;
-  reviewer: DtrReviewer;
-  voted: number;
-  pros: string;
-  cons: string;
-  text: string;
-  isIgnored?: boolean;
-  selectedPerks: number[];
-  attachedMods: number[];
-  mode: DtrActivityModes;
-  sandbox: number; // sandbox season (1 was the first, 2 is the March 2018 "go fast" update)
-}
-
-export interface DtrReviewContainer extends DtrBulkItem {
-  totalReviews: number;
-  reviews: DtrUserReview[];
-}
-
-export interface DimWorkingUserReview extends DtrReviewContainer {
-  userVote: number;
-  rating: number;
-  userRating: number;
-  mode: DtrActivityModes;
-  reviewsDataFetched: boolean;
-  highlightedRatingCount: number;
-  review: string;
-  pros: string;
-  cons: string;
-  votes: DtrVote;
-  voted: number;
-  text: string;
-}
-
-export enum DtrActivityModes {
-  notSpecified = DestinyActivityModeType.None,
-  playerVersusEnemy = DestinyActivityModeType.AllPvE,
-  playerVersusPlayer = DestinyActivityModeType.AllPvP,
-  raid = DestinyActivityModeType.Raid,
-  trials = DestinyActivityModeType.TrialsOfTheNine
-}
-
-export interface D1ItemFetchRequest {
-  referenceId: string;
-  roll: string | null;
-}
-
-export interface D1ItemFetchResponse extends D1ItemFetchRequest {
-  rating?: number;
-  ratingCount: number;
-  highlightedRatingCount: number;
-}
-
-export interface D1ItemReviewRequest extends D1ItemFetchRequest {
-  selectedPerks: string | null;
-  instanceId: string;
-}
-
-export interface D1ItemWorkingUserReview {
-  rating?: number;
-  pros: string;
-  cons: string;
-  review: string;
-  userRating?: number;
-}
-
-export interface D1ItemUserReview extends D1ItemWorkingUserReview {
-  reviewId: string; // string or number?
-  reviewer: DtrReviewer;
-  timestamp: string;
-  selectedPerks?: string;
-  isHighlighted: boolean;
-  isReviewer: boolean;
-}
-
-export interface D1ItemReviewResponse extends D1ItemFetchResponse {
-  reviews: D1ItemUserReview[];
-}
-
-export interface D1CachedItem extends D1ItemReviewResponse, D1ItemWorkingUserReview {
-  reviewsDataFetched: boolean;
-  totalReviews?: number;
-}
-
 import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
 import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
 import { ReviewsFetcher } from '../destinyTrackerApi/reviewsFetcher';
 import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
 import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
-
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewsFetcher } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { D2ReviewSubmitter } from '../destinyTrackerApi/d2-reviewSubmitter';
@@ -131,24 +10,27 @@ import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
-import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition, DestinyActivityModeType } from 'bungie-api-ts/destiny2';
+import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
 import { $q } from 'ngimport';
 import { UserFilter } from '../destinyTrackerApi/userFilter';
-import { DimStore, D2Store } from '../inventory/store-types';
+import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
+import { D2ItemReviewResponse, WorkingD2Rating, D2ItemUserReview } from './d2-dtr-api-types';
+import { WorkingD1Rating, D1ItemUserReview } from './d1-dtr-api-types';
+import { DimUserReview } from './dtr-api-types';
 
 export interface DestinyTrackerServiceType {
   bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<DestinyTrackerServiceType>;
   bulkFetchKioskItems(vendorItems: DestinyVendorItemDefinition[]): Promise<DestinyTrackerServiceType>;
-  reattachScoresFromCache(stores: any | DimStore[]): void;
-  updateCachedUserRankings(item: any | DimItem, userReview: any);
+  reattachScoresFromCache(stores: DimStore[]): void;
+  updateCachedUserRankings(item: DimItem, userReview: WorkingD1Rating | WorkingD2Rating);
   updateVendorRankings(vendors: any);
-  getItemReviews(item: any | DimItem);
-  getItemReviewAsync(itemHash: number): IPromise<DtrReviewContainer>;
-  submitReview(item: any | DimItem);
-  fetchReviews(stores: any | DimStore[]);
-  reportReview(review: any);
+  getItemReviews(item: DimItem);
+  getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse>;
+  submitReview(item: DimItem);
+  fetchReviews(stores: DimStore[]);
+  reportReview(review: DimUserReview);
   clearIgnoredUsers();
   clearCache();
   getD2ReviewDataCache(): D2ReviewDataCache;
@@ -185,20 +67,20 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
 
       if (stores[0].isDestiny1()) {
         _bulkFetcher.attachRankings(null,
-                                    stores);
+                                    stores as D1Store[]);
       } else if (stores[0].isDestiny2()) {
         _d2bulkFetcher.attachRankings(null,
                                       stores as D2Store[]);
       }
     },
 
-    updateCachedUserRankings(item: DimItem, userReview) {
+    updateCachedUserRankings(item: DimItem, userReview: WorkingD1Rating | WorkingD2Rating) {
       if (item.isDestiny1()) {
         _reviewDataCache.addUserReviewData(item,
-                                           userReview);
+                                           userReview as WorkingD1Rating);
       } else if (item.isDestiny2()) {
         _d2reviewDataCache.addUserReviewData(item,
-                                             userReview);
+                                             userReview as WorkingD2Rating);
       }
     },
 
@@ -282,7 +164,7 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       }
 
       if (stores[0].isDestiny1()) {
-        _bulkFetcher.bulkFetch(stores);
+        _bulkFetcher.bulkFetch(stores as D1Store[]);
       } else if (stores[0].isDestiny2()) {
         const platformSelection = settings.reviewsPlatformSelection;
         const mode = settings.reviewsModeSelection;
@@ -290,7 +172,7 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       }
     },
 
-    getItemReviewAsync(itemHash: number): IPromise<DtrReviewContainer> {
+    getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse> {
       if (settings.allowIdPostToDtr) {
         if (_isDestinyOne()) {
           console.error("This is a D2-only call.");
@@ -303,14 +185,14 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
       return $q.when(this);
     },
 
-    reportReview(review) {
+    reportReview(review: DimUserReview) {
       if (settings.allowIdPostToDtr) {
         const membershipInfo = getActivePlatform();
 
         if (_isDestinyOne()) {
-          _reviewReporter.reportReview(review, membershipInfo);
+          _reviewReporter.reportReview(review as D1ItemUserReview, membershipInfo);
         } else if (_isDestinyTwo()) {
-          _d2reviewReporter.reportReview(review, membershipInfo);
+          _d2reviewReporter.reportReview(review as D2ItemUserReview, membershipInfo);
         }
       }
     },

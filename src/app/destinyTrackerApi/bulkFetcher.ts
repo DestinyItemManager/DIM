@@ -1,9 +1,11 @@
 import { ItemListBuilder } from './itemListBuilder';
 import { ReviewDataCache } from './reviewDataCache';
-import { D1ItemFetchResponse } from '../item-review/destiny-tracker.service';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
+import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
+import { D1Store } from '../inventory/store-types';
+import { Vendor } from '../vendors/vendor.service';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
@@ -36,9 +38,7 @@ class BulkFetcher {
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
    */
-  bulkFetch(storesContainer) {
-    const stores = Object.values(storesContainer);
-
+  bulkFetch(stores: D1Store[]) {
     this._getBulkFetchPromise(stores)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
                                                   stores));
@@ -48,7 +48,7 @@ class BulkFetcher {
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
    */
   bulkFetchVendorItems(vendorContainer) {
-    const vendors = Object.values(vendorContainer);
+    const vendors: Vendor[] = Object.values(vendorContainer);
 
     this._getBulkFetchPromise(vendors)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
@@ -56,7 +56,7 @@ class BulkFetcher {
   }
 
   attachRankings(bulkRankings: D1ItemFetchResponse[] | null,
-                 stores) {
+                 stores: D1Store[]) {
     if (!bulkRankings && !stores) {
       return;
     }
@@ -72,22 +72,14 @@ class BulkFetcher {
         if (storeItem.reviewable) {
           const matchingItem = this._reviewDataCache.getRatingData(storeItem);
 
-          if (matchingItem) {
-            storeItem.dtrRating = matchingItem.rating;
-            storeItem.dtrRatingCount = matchingItem.ratingCount;
-            storeItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
-            storeItem.userRating = matchingItem.userRating;
-            storeItem.userReview = matchingItem.review;
-            storeItem.pros = matchingItem.pros;
-            storeItem.cons = matchingItem.cons;
-          }
+          storeItem.dtrRating = matchingItem;
         }
       });
     });
   }
 
-  attachVendorRankings(bulkRankings,
-                       vendors) {
+  attachVendorRankings(bulkRankings: D1ItemFetchResponse[],
+                       vendors: Vendor[]) {
     if (!bulkRankings && !vendors) {
       return;
     }
@@ -99,19 +91,11 @@ class BulkFetcher {
     }
 
     vendors.forEach((vendor) => {
-      vendor.allItems.forEach((vendorItemContainer) => {
-        const vendorItem = vendorItemContainer.item;
-
+      vendor.allItems.forEach((vendorItem) => {
         const matchingItem = this._reviewDataCache.getRatingData(vendorItem);
 
         if (matchingItem) {
-          vendorItem.dtrRating = matchingItem.rating;
-          vendorItem.dtrRatingCount = matchingItem.ratingCount;
-          vendorItem.dtrHighlightedRatingCount = matchingItem.highlightedRatingCount;
-          vendorItem.userRating = matchingItem.userRating;
-          vendorItem.userReview = matchingItem.review;
-          vendorItem.pros = matchingItem.pros;
-          vendorItem.cons = matchingItem.cons;
+          vendorItem.dtrRating = matchingItem;
         }
       });
     });

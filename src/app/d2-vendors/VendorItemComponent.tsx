@@ -8,11 +8,12 @@ import { ngDialog } from "../ngimport-more";
 import { IDialogOpenResult } from "ng-dialog";
 import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from "../destiny2/d2-buckets.service";
-import { DestinyTrackerServiceType, DimWorkingUserReview } from "../item-review/destiny-tracker.service";
+import { DestinyTrackerServiceType } from "../item-review/destiny-tracker.service";
 import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { D2PerkRater } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
 import { D2Item } from "../inventory/item-types";
+import { D2RatingData } from "../item-review/d2-dtr-api-types";
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -105,26 +106,24 @@ export default class VendorItemComponent extends React.Component<Props> {
         this.dialogResult = null;
       }
     } else {
-
-      let reviewData: DimWorkingUserReview | null = null;
       let dimItem: D2Item | null = null;
+      let cachedItem: D2RatingData | null = null;
 
       if (trackerService) {
-        reviewData = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+        cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
 
-        if (reviewData && !reviewData.reviews) {
-          trackerService.getItemReviewAsync(item.itemHash).then((reviewsData) => {
-            Object.assign(reviewData, reviewsData);
+        if (cachedItem && (!cachedItem.reviewsResponse || !cachedItem.reviewsResponse.reviews)) {
+          trackerService.getItemReviewAsync(item.itemHash).then(() => {
+            cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
             // TODO: it'd be nice to push this into tracker service
-            Object.assign(dimItem, item.toDimItem(buckets, reviewData));
+            Object.assign(dimItem, item.toDimItem(buckets, cachedItem));
             new D2PerkRater().ratePerks(dimItem!);
-            dimItem!.reviewsUpdated = Date.now();
           });
         }
       }
 
       const buckets = await getBuckets();
-      dimItem = item.toDimItem(buckets, reviewData);
+      dimItem = item.toDimItem(buckets, cachedItem);
 
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,

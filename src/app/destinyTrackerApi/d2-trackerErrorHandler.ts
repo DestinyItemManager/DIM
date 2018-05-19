@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-interface DtrSubmitResponse {
+export interface DtrSubmitResponse {
   success?: boolean;
 }
 
