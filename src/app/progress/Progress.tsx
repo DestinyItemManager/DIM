@@ -5,7 +5,10 @@ import {
   DestinyFactionProgression,
   DestinyItemComponent,
   DestinyMilestone,
-  DestinyObjectiveProgress
+  DestinyObjectiveProgress,
+  DestinyProgression,
+  DestinyFactionVendorDefinition,
+  DestinyFactionDefinition
 } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
@@ -26,6 +29,8 @@ import { ProgressProfile, reloadProgress, getProgressStream } from './progress.s
 import Quest from './Quest';
 import { settings, CharacterOrder } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
+import FactionIcon from './FactionIcon';
+import { CrucibleRank } from './CrucibleRank';
 
 /* Label isn't used, but it helps us understand what each one is */
 const progressionMeta = {
@@ -127,6 +132,15 @@ export class Progress extends React.Component<Props, State> {
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
     const profileQuests = this.questItems(profileInfo.profileInventory.data.items);
+
+    const firstCharacterProgression = Object.values(profileInfo.characterProgressions.data)[0].progressions;
+    const crucibleRanks = [
+      // Valor
+      firstCharacterProgression[3882308435],
+      // Glory
+      firstCharacterProgression[2679551909]
+    ];
+
     const profileMilestonesContent = (profileMilestones.length > 0 || profileQuests.length > 0) && (
       <>
         <div className="profile-content">
@@ -151,6 +165,21 @@ export class Progress extends React.Component<Props, State> {
                 </div>
             </div>
           </div>}
+
+          <div className="section crucible-ranks">
+            <div className="title">{t('Progress.CrucibleRank')}</div>
+            <div className="progress-row">
+              <div className="progress-for-character">
+                {crucibleRanks.map((progression) =>
+                  <CrucibleRank
+                    key={progression.progressionHash}
+                    defs={defs}
+                    progress={progression}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
         <hr/>
       </>

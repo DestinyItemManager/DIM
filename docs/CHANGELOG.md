@@ -1,6 +1,7 @@
 # Next
 
 * Add previews for engrams and other preview-able items.
+* Display Crucible ranks on the progress page.
 * Add emotes back to the collections page.
 * Remove masterwork objectives that never complete.
 * Fix loading loadouts the first time you open a character menu.

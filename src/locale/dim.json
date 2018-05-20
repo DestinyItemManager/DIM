@@ -517,6 +517,7 @@
     "Limit": "Postmaster Limit"
   },
   "Progress": {
+    "CrucibleRank": "Crucible Ranks",
     "Daily": "Daily",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",
