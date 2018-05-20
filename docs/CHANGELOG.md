@@ -1,6 +1,7 @@
 # Next
 
 * Add previews for engrams and other preview-able items.
+* Display Crucible ranks on the progress page.
 
 # 4.52.0 (2018-05-13)
 
