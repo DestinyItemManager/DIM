@@ -27,6 +27,7 @@ import { DimError, httpAdapter } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
+import { reportException } from '../exceptions';
 
 /**
  * APIs for interacting with Destiny 2 game data.
@@ -217,6 +218,13 @@ export function transfer(item: DimItem, store: DimStore, amount: number): Promis
 
 export function equip(item: DimItem): Promise<ServerResponse<number>> {
   const platform = getActivePlatform();
+
+  if (item.owner === 'vault') {
+    // TODO: trying to track down https://sentry.io/destiny-item-manager/dim/issues/541412672/?query=is:unresolved
+    console.error("Cannot equip to vault!");
+    reportException("equipVault", new Error("Cannot equip to vault"));
+    return Promise.resolve({}) as Promise<ServerResponse<number>>;
+  }
 
   return equipItem(httpAdapter, {
     characterId: item.owner,
