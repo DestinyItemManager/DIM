@@ -114,6 +114,7 @@
     "babel-polyfill": "^6.26.0",
     "browserslist": "^3.2.4",
     "bungie-api-ts": "^1.6.0",
+    "caniuse-lite": ">=1.0.30000843",
     "classnames": "^2.2.5",
     "components-font-awesome": "^4.7.0",
     "core-js": "^2.5.5",

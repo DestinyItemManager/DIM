@@ -14,6 +14,8 @@ function getBrowserName(agent) {
     return 'ios_saf';
   } else if (agent.browser.name === 'Chromium') {
     return 'chrome';
+  } else if (agent.browser.name === 'Opera') {
+    return 'opera';
   }
   return agent.browser.name;
 }
