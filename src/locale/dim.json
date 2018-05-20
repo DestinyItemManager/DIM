@@ -206,7 +206,7 @@
       "XPComplete": "{{term}} - shows items that cannot have XP put into them (whether or not their upgrades have been unlocked)."
     },
     "LightLevel": "Shows items based on their light level (Attack for Weapons; Defense for Armor).",
-    "Location": "Shows items based on their location within the app. left/lmddle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
+    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "Shows items based on their locked status.",
     "NamedStat": "Shows armor that has points in the named stat.",
     "NewItems": "Shows new items.",
