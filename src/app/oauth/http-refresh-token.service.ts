@@ -35,7 +35,7 @@ export async function fetchWithBungieOAuth(request: Request | string, options?: 
     // invalid. Refresh it and try again.
     console.log(`Access token expired, removing access token and trying again`);
     removeAccessToken();
-    return fetchWithBungieOAuth(request, options, true);
+    return fetchWithBungieOAuth(request.clone(), options, true);
   }
 
   return response;
