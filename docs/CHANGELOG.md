@@ -2,6 +2,10 @@
 
 * Add previews for engrams and other preview-able items.
 * Display Crucible ranks on the progress page.
+* Add emotes back to the collections page.
+* Remove masterwork objectives that never complete.
+* Fix loading loadouts the first time you open a character menu.
+* Fix exporting CSV inventories in Firefox.
 
 # 4.52.0 (2018-05-13)
 

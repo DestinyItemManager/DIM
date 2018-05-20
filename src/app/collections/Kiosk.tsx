@@ -48,7 +48,7 @@ export default function Kiosk({
     i.exclusivity === account.platformType
   );
 
-  const vendorItems = itemList.map((i) => new VendorItem(defs, vendorDef, i, reviewCache, undefined, undefined, items.some((k) => k.index === i.vendorItemIndex && k.canAcquire)));
+  const vendorItems = itemList.map((i) => VendorItem.forKioskItem(defs, vendorDef, i, items.some((k) => k.index === i.vendorItemIndex && k.canAcquire), reviewCache));
 
   return (
     <div className="vendor-char-items">

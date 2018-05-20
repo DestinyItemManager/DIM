@@ -1,4 +1,3 @@
-import { ItemTransformer } from './itemTransformer';
 import { PerkRater } from './perkRater';
 import { UserFilter } from './userFilter';
 import { ReviewDataCache } from './reviewDataCache';
@@ -8,6 +7,7 @@ import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { D1ItemReviewResponse, D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
+import { getRollAndPerks } from './itemTransformer';
 
 /** A single user's review for a D1 weapon. */
 interface ActualD1ItemUserReview {
@@ -76,7 +76,6 @@ export class ReviewsFetcher {
   _perkRater = new PerkRater();
   _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
-  _itemTransformer = new ItemTransformer();
   constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
@@ -91,7 +90,7 @@ export class ReviewsFetcher {
   }
 
   _getItemReviewsPromise(item: D1Item): Promise<ActualD1ItemReviewResponse> {
-    const postWeapon = this._itemTransformer.getRollAndPerks(item);
+    const postWeapon = getRollAndPerks(item);
 
     const promise = dtrFetch(
       'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',

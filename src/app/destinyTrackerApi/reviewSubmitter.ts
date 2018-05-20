@@ -1,4 +1,3 @@
-import { ItemTransformer } from './itemTransformer';
 import { ReviewDataCache } from './reviewDataCache';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
@@ -6,6 +5,7 @@ import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { WorkingD1Rating, D1ItemReviewRequest } from '../item-review/d1-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
+import { getRollAndPerks } from './itemTransformer';
 
 export interface D1RatingAndReviewRequest extends D1ItemReviewRequest {
   reviewer?: DtrReviewer;
@@ -20,7 +20,6 @@ export interface D1RatingAndReviewRequest extends D1ItemReviewRequest {
  */
 export class ReviewSubmitter {
   _reviewDataCache: ReviewDataCache;
-  _itemTransformer = new ItemTransformer();
   constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
@@ -57,7 +56,7 @@ export class ReviewSubmitter {
           return Promise.resolve({});
         }
 
-    const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
+    const rollAndPerks = getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
     const review = this.toRatingAndReview(item.dtrRating.userReview);
 
