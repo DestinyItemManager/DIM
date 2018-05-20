@@ -6,9 +6,6 @@ import {
   DestinyItemComponent,
   DestinyMilestone,
   DestinyObjectiveProgress,
-  DestinyProgression,
-  DestinyFactionVendorDefinition,
-  DestinyFactionDefinition
 } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
@@ -29,7 +26,6 @@ import { ProgressProfile, reloadProgress, getProgressStream } from './progress.s
 import Quest from './Quest';
 import { settings, CharacterOrder } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
-import FactionIcon from './FactionIcon';
 import { CrucibleRank } from './CrucibleRank';
 
 /* Label isn't used, but it helps us understand what each one is */
