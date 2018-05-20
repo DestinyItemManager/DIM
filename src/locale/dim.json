@@ -124,6 +124,9 @@
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review"
   },
+  "ErrorBoundary": {
+    "Title": "Something went wrong"
+  },
   "Faction": {
     "EngramsAvailable": "1 engram available",
     "EngramsAvailable_plural": "{{count}} engrams available"

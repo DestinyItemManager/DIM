@@ -1,5 +1,5 @@
 /** Sentry.io exception reporting */
-export let reportException: (name, e) => void = () => { return; };
+export let reportException: (name: string, e: Error) => void = () => { return; };
 
 if ($featureFlags.sentry) {
   // The require instead of import helps us trim this from the production bundle
@@ -25,7 +25,7 @@ if ($featureFlags.sentry) {
     .addPlugin(require('raven-js/plugins/angular'), require('angular'))
     .install();
 
-  reportException = (name, e) => {
+  reportException = (name: string, e: Error) => {
     // TODO: we can also do this in some situations to gather more feedback from users
     // Raven.showReportDialog();
     Raven.captureException(e, { extra: { context: name } });

@@ -1,4 +1,4 @@
-import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition, ItemBindStatus, ItemLocation, TransferStatuses, ItemState } from "bungie-api-ts/destiny2";
+import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition, ItemBindStatus, ItemLocation, TransferStatuses, ItemState, DestinyItemSocketEntryPlugItemDefinition } from "bungie-api-ts/destiny2";
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { equals } from 'angular';
 import { makeItem } from "../inventory/store/d2-item-factory.service";
@@ -16,54 +16,125 @@ import { D2RatingData } from "../item-review/d2-dtr-api-types";
  */
 // TODO: Replace with DimItem
 export class VendorItem {
+  static forPlugSetItem(
+    defs: D2ManifestDefinitions,
+    plugItemDef: DestinyItemSocketEntryPlugItemDefinition,
+    reviewCache?: D2ReviewDataCache,
+    canPurchase = true,
+  ): VendorItem {
+    return new VendorItem(
+      defs,
+      defs.InventoryItem.get(plugItemDef.plugItemHash),
+      undefined,
+      undefined,
+      reviewCache ? reviewCache.getRatingData(undefined, plugItemDef.plugItemHash) : null,
+      undefined,
+      undefined,
+      undefined,
+      canPurchase
+    );
+  }
+
+  static forKioskItem(
+    defs: D2ManifestDefinitions,
+    vendorDef: DestinyVendorDefinition,
+    vendorItemDef: DestinyVendorItemDefinition,
+    canPurchase: boolean,
+    reviewCache?: D2ReviewDataCache
+  ): VendorItem {
+    return new VendorItem(
+      defs,
+      defs.InventoryItem.get(vendorItemDef.itemHash),
+      vendorDef,
+      vendorItemDef,
+      reviewCache ? reviewCache.getRatingData(undefined, vendorItemDef.itemHash) : null,
+      undefined,
+      undefined,
+      undefined,
+      canPurchase
+    );
+  }
+
+  static forVendorSaleItem(
+    defs: D2ManifestDefinitions,
+    vendorDef: DestinyVendorDefinition,
+    saleItem: DestinyVendorSaleItemComponent,
+    reviewCache?: D2ReviewDataCache,
+    // TODO: this'll be useful for showing the move-popup details
+    itemComponents?: DestinyItemComponentSetOfint32
+  ): VendorItem {
+    let instance;
+    if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
+      instance = itemComponents.instances.data[saleItem.vendorItemIndex];
+    }
+    const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
+
+    return new VendorItem(
+      defs,
+      defs.InventoryItem.get(vendorItemDef.itemHash),
+      vendorDef,
+      vendorItemDef,
+      reviewCache ? reviewCache.getRatingData(saleItem) : null,
+      saleItem,
+      itemComponents,
+      instance
+    );
+  }
+
+  static forVendorDefinitionItem(
+    defs: D2ManifestDefinitions,
+    vendorDef: DestinyVendorDefinition,
+    vendorItemDef: DestinyVendorItemDefinition,
+    reviewCache?: D2ReviewDataCache
+  ): VendorItem {
+    return new VendorItem(
+      defs,
+      defs.InventoryItem.get(vendorItemDef.itemHash),
+      vendorDef,
+      vendorItemDef,
+      reviewCache ? reviewCache.getRatingData(undefined, vendorItemDef.itemHash) : null
+    );
+  }
+
   canPurchase: boolean;
   private itemComponents?: DestinyItemComponentSetOfint32;
-  private vendorItemDef: DestinyVendorItemDefinition;
+  private vendorItemDef?: DestinyVendorItemDefinition;
   private saleItem?: DestinyVendorSaleItemComponent;
-  private vendorDef: DestinyVendorDefinition;
+  private vendorDef?: DestinyVendorDefinition;
   private inventoryItem: DestinyInventoryItemDefinition;
-  // TODO: each useful component
-  private instance: DestinyItemInstanceComponent;
-
+  private instance?: DestinyItemInstanceComponent;
   private defs: D2ManifestDefinitions;
-
   private reviewData: D2RatingData | null;
 
   constructor(
     defs: D2ManifestDefinitions,
-    vendorDef: DestinyVendorDefinition,
-    vendorItemDef: DestinyVendorItemDefinition,
-    reviewCache?: D2ReviewDataCache,
+    inventoryItem: DestinyInventoryItemDefinition,
+    vendorDef?: DestinyVendorDefinition,
+    vendorItemDef?: DestinyVendorItemDefinition,
+    reviewData?: D2RatingData | null,
     saleItem?: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
+    instance?: DestinyItemInstanceComponent,
     canPurchase = true,
   ) {
     this.defs = defs;
     this.vendorDef = vendorDef;
     this.vendorItemDef = vendorItemDef;
     this.saleItem = saleItem;
-    this.inventoryItem = this.defs.InventoryItem.get(this.vendorItemDef.itemHash);
+    this.inventoryItem = inventoryItem;
     this.canPurchase = canPurchase;
     this.itemComponents = itemComponents;
-    if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
-      this.instance = itemComponents.instances.data[saleItem.vendorItemIndex];
-
-      if (reviewCache) {
-        this.reviewData = reviewCache.getRatingData(saleItem);
-      }
-      // TODO: more here, like perks and such
-    } else if (reviewCache) {
-      this.reviewData = reviewCache.getRatingData(undefined, vendorItemDef.itemHash);
-    }
+    this.reviewData = reviewData || null;
+    this.instance = instance;
   }
 
   get key() {
-    return this.saleItem ? this.saleItem.vendorItemIndex : this.vendorItemDef.itemHash;
+    return this.saleItem ? this.saleItem.vendorItemIndex : this.inventoryItem.hash;
   }
 
   get itemHash() {
-    return this.vendorItemDef.itemHash;
+    return this.inventoryItem.hash;
   }
 
   // TODO: I'm not sold on having a bunch of property getters, vs just exposing the raw underlying stuff
@@ -94,8 +165,8 @@ export class VendorItem {
   }
 
   get failureStrings(): string[] {
-    return this.saleItem
-      ? (this.saleItem.failureIndexes || []).map((i) => this.vendorDef.failureStrings[i])
+    return this.saleItem && this.vendorDef
+      ? (this.saleItem.failureIndexes || []).map((i) => this.vendorDef!.failureStrings[i])
       : [];
   }
 
@@ -103,7 +174,7 @@ export class VendorItem {
    * What category should this be shown in?
    */
   get displayCategoryIndex() {
-    return this.vendorItemDef.displayCategoryIndex;
+    return this.vendorItemDef ? this.vendorItemDef.displayCategoryIndex : undefined;
   }
 
   get costs() {
@@ -155,7 +226,7 @@ export class VendorItem {
       {
         itemHash: this.itemHash,
         itemInstanceId: this.saleItem ? this.saleItem.vendorItemIndex.toString() : undefined,
-        quantity: this.vendorItemDef.quantity,
+        quantity: this.vendorItemDef ? this.vendorItemDef.quantity : 1,
         bindStatus: ItemBindStatus.NotBound,
         location: ItemLocation.Vendor,
         bucketHash: 0,

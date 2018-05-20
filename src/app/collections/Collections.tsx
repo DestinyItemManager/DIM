@@ -16,6 +16,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
 import Kiosk from './Kiosk';
 import { t } from 'i18next';
+import PlugSet from './PlugSet';
+import ErrorBoundary from '../dim-ui/ErrorBoundary';
 
 interface Props {
   $scope: IScope;
@@ -96,19 +98,39 @@ export default class Collections extends React.Component<Props, State> {
       });
     });
 
+    const plugSetHashes = new Set(Object.keys(profileResponse.profilePlugSets.data.plugs));
+    _.each(profileResponse.characterPlugSets.data, (plugSet) => {
+      _.each(plugSet.plugs, (_, plugSetHash) => {
+        plugSetHashes.add(plugSetHash);
+      });
+    });
+
     return (
       <div className="vendor d2-vendors dim-page">
-        {Array.from(kioskVendors).map((vendorHash) =>
-          <Kiosk
-            key={vendorHash}
-            defs={defs}
-            vendorHash={Number(vendorHash)}
-            items={itemsForKiosk(profileResponse, Number(vendorHash))}
-            trackerService={trackerService}
-            ownedItemHashes={ownedItemHashes}
-            account={account}
-          />
-        )}
+        <ErrorBoundary name="Kiosks">
+          {Array.from(kioskVendors).map((vendorHash) =>
+            <Kiosk
+              key={vendorHash}
+              defs={defs}
+              vendorHash={Number(vendorHash)}
+              items={itemsForKiosk(profileResponse, Number(vendorHash))}
+              trackerService={trackerService}
+              ownedItemHashes={ownedItemHashes}
+              account={account}
+            />
+          )}
+        </ErrorBoundary>
+        <ErrorBoundary name="PlugSets">
+          {Array.from(plugSetHashes).map((plugSetHash) =>
+            <PlugSet
+              key={plugSetHash}
+              defs={defs}
+              plugSetHash={Number(plugSetHash)}
+              items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
+              trackerService={trackerService}
+            />
+          )}
+        </ErrorBoundary>
         <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://destinysets.com">
           {t('Vendors.DestinySets')}
         </a>
@@ -119,4 +141,8 @@ export default class Collections extends React.Component<Props, State> {
 
 function itemsForKiosk(profileResponse: DestinyProfileResponse, vendorHash: number) {
   return profileResponse.profileKiosks.data.kioskItems[vendorHash].concat(_.flatten(Object.values(profileResponse.characterKiosks.data).map((d) => d.kioskItems[vendorHash])));
+}
+
+function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
+  return profileResponse.profilePlugSets.data.plugs[plugSetHash].concat(_.flatten(Object.values(profileResponse.characterPlugSets.data).map((d) => d.plugs[plugSetHash])));
 }

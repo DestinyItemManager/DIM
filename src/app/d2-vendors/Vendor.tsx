@@ -91,13 +91,12 @@ export function getVendorItems(
 
   if (sales && itemComponents) {
     const components = Object.values(sales);
-    return components.map((component) => new VendorItem(
+    return components.map((component) => VendorItem.forVendorSaleItem(
       defs,
       vendorDef,
-      vendorDef.itemList[component.vendorItemIndex],
-      reviewCache,
       component,
-      itemComponents
+      reviewCache,
+      itemComponents,
     ));
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
@@ -107,6 +106,6 @@ export function getVendorItems(
       !i.exclusivity ||
       i.exclusivity === BungieMembershipType.All ||
       i.exclusivity === account.platformType
-    ).map((i) => new VendorItem(defs, vendorDef, i, reviewCache));
+    ).map((i) => VendorItem.forVendorDefinitionItem(defs, vendorDef, i, reviewCache));
   }
 }

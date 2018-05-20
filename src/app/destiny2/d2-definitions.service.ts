@@ -23,7 +23,8 @@ import {
   DestinyDestinationDefinition,
   DestinyPlaceDefinition,
   DestinyVendorGroupDefinition,
-  DestinyActivityModeDefinition
+  DestinyActivityModeDefinition,
+  DestinyPlugSetDefinition
   } from 'bungie-api-ts/destiny2';
 import { $q } from 'ngimport';
 import * as _ from 'underscore';
@@ -46,7 +47,8 @@ const lazyTables = [
   'Milestone',
   'Destination',
   'Place',
-  'VendorGroup'
+  'VendorGroup',
+  'PlugSet'
 ];
 
 const eagerTables = [
@@ -81,6 +83,7 @@ export interface D2ManifestDefinitions {
   Destination: LazyDefinition<DestinyDestinationDefinition>;
   Place: LazyDefinition<DestinyPlaceDefinition>;
   VendorGroup: LazyDefinition<DestinyVendorGroupDefinition>;
+  PlugSet: LazyDefinition<DestinyPlugSetDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
