@@ -26,13 +26,13 @@ import { flatMap, sum } from '../util';
 import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
-import { getItemInfoSource } from './dim-item-info';
+import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { $rootScope, $q } from 'ngimport';
 import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
-import { DimItem } from './item-types';
+import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimError } from '../bungie-api/bungie-service-helper';
 
@@ -75,7 +75,7 @@ export function D2StoresService(
   const service = {
     getActiveStore: () => _stores.find((s) => s.current),
     getStores: () => _stores,
-    getStore: (id) => _stores.find((s) => s.id === id),
+    getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
     getAllItems: () => flatMap(_stores, (s) => s.items),
     getStoresStream,
@@ -91,7 +91,7 @@ export function D2StoresService(
    * Find an item among all stores that matches the params provided.
    */
   function getItemAcrossStores(params: { id?: string; hash?: number; notransfer?: boolean }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer')) as (DimItem) => boolean;
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer')) as (i: DimItem) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
       if (result) {
@@ -289,9 +289,9 @@ export function D2StoresService(
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
     buckets: InventoryBuckets,
-    previousItems,
-    newItems,
-    itemInfoService,
+    previousItems: Set<string>,
+    newItems: Set<string>,
+    itemInfoService: ItemInfoSource,
     lastPlayedDate: Date
   ): IPromise<D2Store> {
     const store = makeCharacter(defs, character, lastPlayedDate);
@@ -332,7 +332,7 @@ export function D2StoresService(
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
-    itemInfoService
+    itemInfoService: ItemInfoSource
   ): IPromise<D2Vault> {
     const store = makeVault(profileCurrencies);
 
@@ -428,7 +428,7 @@ export function D2StoresService(
         statHashes.has(i.primStat.statHash); // one of our selected stats
     });
 
-    const bestItemFn = (item) => {
+    const bestItemFn = (item: D2Item) => {
       let value = item.basePower;
 
       // Break ties when items have the same stats. Note that this should only

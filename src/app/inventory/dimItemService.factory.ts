@@ -160,9 +160,9 @@ export function ItemService(
       }
 
       // Add inventory to the target (destination)
-      let targetItem;
+      let targetItem: DimItem;
       while (addAmount > 0) {
-        targetItem = targetItems.shift();
+        targetItem = targetItems.shift()!;
 
         if (!targetItem) {
           targetItem = item;
@@ -191,7 +191,7 @@ export function ItemService(
         target.addItem(targetItem);
         addAmount -= amountToAdd;
       }
-      item = targetItem; // The item we're operating on switches to the last target
+      item = targetItem!; // The item we're operating on switches to the last target
     }
 
     if (equip) {
@@ -435,7 +435,7 @@ export function ItemService(
     target: DimStore;
   } {
     // Check whether an item cannot or should not be moved
-    function movable(otherItem) {
+    function movable(otherItem: DimItem) {
       return !otherItem.notransfer &&
         !moveContext.excludes.some((i) => i.id === otherItem.id && i.hash === otherItem.hash);
     }
@@ -528,7 +528,7 @@ export function ItemService(
     moveAsideCandidates.sort(store.isVault ? reverseComparator(itemValueComparator) : itemValueComparator);
 
     // A cached version of the space-left function
-    const cachedSpaceLeft = _.memoize((store, item) => {
+    const cachedSpaceLeft = _.memoize((store: DimStore, item: DimItem) => {
       return moveContext.spaceLeft(store, item);
     }, (store, item) => {
       // cache key

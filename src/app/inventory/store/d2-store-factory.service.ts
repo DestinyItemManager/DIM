@@ -85,7 +85,7 @@ const StoreProto = {
   // Remove an item from this store. Returns whether it actually removed anything.
   removeItem(this: D2Store, item: D2Item) {
     // Completely remove the source item
-    const match = (i) => item.index === i.index;
+    const match = (i: D2Item) => item.index === i.index;
     const sourceIndex = this.items.findIndex(match);
     if (sourceIndex >= 0) {
       this.items.splice(sourceIndex, 1);
@@ -229,7 +229,7 @@ export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
         return (openStacks * maxStackSize) + stackSpace;
       }
     },
-    removeItem(this: D2Vault, item): D2Item {
+    removeItem(this: D2Vault, item: D2Item): D2Item {
       const result = StoreProto.removeItem.call(this, item);
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.id].count--;

@@ -84,7 +84,7 @@ function ItemReviewController(
     }
   };
 
-  vm.clickReview = (reviewId) => {
+  vm.clickReview = (reviewId: string) => {
     const review = this.findReview(reviewId);
 
     if (review && review.isReviewer) {
@@ -94,7 +94,7 @@ function ItemReviewController(
     }
   };
 
-  vm.openFlagContext = (reviewId) => {
+  vm.openFlagContext = (reviewId: string) => {
     const review = this.findReview(reviewId);
 
     if (review && (review.isReviewer || review.isHighlighted)) {
@@ -108,7 +108,7 @@ function ItemReviewController(
     }
   };
 
-  vm.closeFlagContext = (reviewId) => {
+  vm.closeFlagContext = (reviewId: string) => {
     const toggledReviewIndex = vm.toggledFlags.indexOf(reviewId);
 
     vm.toggledFlags.splice(toggledReviewIndex);
@@ -131,7 +131,7 @@ function ItemReviewController(
     return null;
   };
 
-  vm.editReview = (reviewId) => {
+  vm.editReview = (reviewId: string) => {
     const review = vm.findReview(reviewId);
 
     if (!review || !review.isReviewer) {
@@ -203,7 +203,7 @@ function ItemReviewController(
                                                       userReview);
   };
 
-  vm.reportReview = (reviewId) => {
+  vm.reportReview = (reviewId: string) => {
     const review = this.findReview(reviewId);
 
     if (review) {
@@ -243,7 +243,7 @@ function ItemReviewController(
     }
   };
 
-  vm.translateReviewMode = (review) => {
+  vm.translateReviewMode = (review: D2ItemUserReview) => {
     if (!vm.reviewModeOptions) {
       getDefinitions().then((defs) => { vm.reviewModeOptions = getReviewModes(defs); });
 

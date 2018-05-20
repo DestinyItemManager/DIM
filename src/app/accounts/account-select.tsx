@@ -40,7 +40,7 @@ interface State {
 export default class AccountSelect extends React.Component<Props, State> {
   private dropdownToggler = React.createRef<HTMLDivElement>();
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       open: false,

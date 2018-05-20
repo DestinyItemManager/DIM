@@ -116,7 +116,7 @@ function getDefinitionsUncached(): IPromise<D2ManifestDefinitions> {
       lazyTables.forEach((tableShort) => {
         const table = `Destiny${tableShort}Definition`;
         defs[tableShort] = {
-          get(name) {
+          get(name: number) {
             if (this.hasOwnProperty(name)) {
               return this[name];
             }

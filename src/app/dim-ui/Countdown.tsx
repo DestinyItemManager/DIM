@@ -12,7 +12,7 @@ interface State {
 export default class Countdown extends React.Component<Props, State> {
   private interval: number;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = { diff: 0 };
   }
@@ -23,7 +23,7 @@ export default class Countdown extends React.Component<Props, State> {
     this.update();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.endTime !== this.props.endTime) {
       clearInterval(this.interval);
       this.interval = window.setInterval(this.update, 60000);
@@ -50,12 +50,12 @@ export default class Countdown extends React.Component<Props, State> {
   }
 }
 
-function pad(n, width) {
-  n = String(n);
-  return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+function pad(n: number, width: number) {
+  const s = String(n);
+  return s.length >= width ? s : new Array(width - s.length + 1).join('0') + s;
 }
 
-function dhms(secs) {
+function dhms(secs: number) {
   secs = Math.max(0, secs);
 
   const days = Math.floor(secs / 86400);
