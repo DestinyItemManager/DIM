@@ -161,7 +161,7 @@ function CompareCtrl(
       const stat = (item.primStat && statHash === item.primStat.statHash)
         ? item.primStat
         : (vm.sortedHash === 'Rating'
-          ? { value: (item.dtrRating.overallScore || "0") }
+          ? { value: (item.dtrRating && item.dtrRating.overallScore) || "0" }
           : (item.stats || []).find((s) => s.statHash === statHash));
       return (stat && stat.value) || -1;
     }).reverse();
@@ -257,7 +257,7 @@ function CompareCtrl(
       if (item.stats && item.primStat) {
         item.stats.forEach(bucketStat);
         bucketStat(item.primStat);
-        bucketStat({ statHash: 0, value: (item.dtrRating.overallScore || 0) });
+        bucketStat({ statHash: 0, value: (item.dtrRating && item.dtrRating.overallScore) || 0 });
       }
     });
 

@@ -352,6 +352,7 @@ export function makeItem(
     talentGrid: null, // filled in later
     stats: null, // filled in later
     objectives: null, // filled in later
+    dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash
   });
 

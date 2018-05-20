@@ -95,7 +95,7 @@ export interface DimItem {
   /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
 
-  dtrRating: DtrRating;
+  dtrRating: DtrRating | null;
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
@@ -129,7 +129,7 @@ export interface D1Item extends DimItem {
   sourceHashes: number[];
   trackable: boolean;
 
-  dtrRating: D1RatingData;
+  dtrRating: D1RatingData | null;
 }
 
 /**
@@ -144,7 +144,7 @@ export interface D2Item extends DimItem {
   masterworkInfo: DimMasterwork | null;
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
-  dtrRating: D2RatingData;
+  dtrRating: D2RatingData | null;
 }
 
 export interface D2PrimStat extends DestinyStat {

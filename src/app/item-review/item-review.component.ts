@@ -22,6 +22,9 @@ export const ItemReviewComponent: IComponentOptions = {
 function ItemReviewController(
   this: IController & {
     item: DimItem;
+    toUserReview(item: DimItem): WorkingD1Rating | WorkingD2Rating;
+    findReview(reviewId: string): D1ItemUserReview | D2ItemUserReview | null;
+    getReviewData(): number[];
   },
   dimDestinyTrackerService: DestinyTrackerServiceType,
   $scope: IScope,
@@ -40,11 +43,11 @@ function ItemReviewController(
     vm.canCreateReview = (vm.canReview && vm.item.owner);
 
     if (vm.item.isDestiny1()) {
-      if (vm.item.dtrRating.userReview) {
+      if (vm.item.dtrRating && vm.item.dtrRating.userReview) {
         vm.expandReview = (vm.item.dtrRating.userReview.rating !== 0 && !vm.item.dtrRating.userReview.treatAsSubmitted);
       }
     } else if (vm.item.isDestiny2()) {
-      if (vm.item.dtrRating.userReview) {
+      if (vm.item.dtrRating && vm.item.dtrRating.userReview) {
         vm.expandReview = (vm.item.dtrRating.userReview.voted !== 0 && !vm.item.dtrRating.userReview.treatAsSubmitted);
 
         if (!vm.item.dtrRating.userReview.mode) {
@@ -75,7 +78,7 @@ function ItemReviewController(
   vm.toggleEdit = () => {
     vm.expandReview = !vm.expandReview;
 
-    if (vm.item.isDestiny2() && vm.item.dtrRating.userReview.voted !== 0) {
+    if (vm.item.isDestiny2() && vm.item.dtrRating && vm.item.dtrRating.userReview.voted !== 0) {
       vm.item.dtrRating.userReview.voted = 0;
       vm.reviewBlur();
     }
@@ -84,9 +87,9 @@ function ItemReviewController(
   vm.clickReview = (reviewId) => {
     const review = this.findReview(reviewId);
 
-    if (review.isReviewer) {
+    if (review && review.isReviewer) {
       vm.editReview();
-    } else if (!review.isHighlighted) {
+    } else if (review && !review.isHighlighted) {
       vm.openFlagContext(reviewId);
     }
   };
@@ -94,7 +97,7 @@ function ItemReviewController(
   vm.openFlagContext = (reviewId) => {
     const review = this.findReview(reviewId);
 
-    if ((review.isReviewer) || (review.isHighlighted)) {
+    if (review && (review.isReviewer || review.isHighlighted)) {
       return;
     }
 
@@ -113,13 +116,13 @@ function ItemReviewController(
 
   vm.findReview = (reviewId: string): D1ItemUserReview | D2ItemUserReview | null => {
     if (vm.item.isDestiny1()) {
-      if (!vm.item.dtrRating.reviewsResponse) {
+      if (!vm.item.dtrRating || !vm.item.dtrRating.reviewsResponse) {
         return null;
       }
 
       return vm.item.dtrRating.reviewsResponse.reviews.find((review) => review.reviewId === reviewId) || null;
     } else if (vm.item.isDestiny2()) {
-      if (!vm.item.dtrRating.reviewsResponse) {
+      if (!vm.item.dtrRating || !vm.item.dtrRating.reviewsResponse) {
         return null;
       }
       return vm.item.dtrRating.reviewsResponse.reviews.find((review) => review.id === reviewId) || null;
@@ -143,7 +146,7 @@ function ItemReviewController(
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
   vm.getReviewData = () => {
-    if (!vm.item.isDestiny1() || !vm.item.dtrRating.reviewsResponse || !vm.item.dtrRating.reviewsResponse.reviews) {
+    if (!vm.item.isDestiny1() || !vm.item.dtrRating || !vm.item.dtrRating.reviewsResponse || !vm.item.dtrRating.reviewsResponse.reviews) {
       return [];
     }
 
@@ -183,7 +186,7 @@ function ItemReviewController(
 
   vm.setRating = (rating: number) => {
     if (rating) {
-      if (!vm.item.isDestiny1()) {
+      if (!vm.item.isDestiny1() || !vm.item.dtrRating) {
         return;
       }
 
@@ -203,13 +206,15 @@ function ItemReviewController(
   vm.reportReview = (reviewId) => {
     const review = this.findReview(reviewId);
 
-    dimDestinyTrackerService.reportReview(review);
+    if (review) {
+      dimDestinyTrackerService.reportReview(review);
+    }
   };
 
   vm.toUserReview = (item: DimItem): WorkingD1Rating | WorkingD2Rating => {
-    if (vm.item.isDestiny1()) {
+    if (vm.item.isDestiny1() && vm.item.dtrRating) {
       return vm.item.dtrRating.userReview;
-    } else if (vm.item.isDestiny2()) {
+    } else if (vm.item.isDestiny2() && vm.item.dtrRating) {
       return vm.item.dtrRating.userReview;
     }
 
@@ -249,7 +254,7 @@ function ItemReviewController(
   };
 
   vm.setUserVote = (userVote: number) => {
-    if (!vm.item.isDestiny2()) {
+    if (!vm.item.isDestiny2() || !vm.item.dtrRating) {
       return;
     }
 

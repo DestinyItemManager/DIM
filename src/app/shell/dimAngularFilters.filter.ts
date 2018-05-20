@@ -17,7 +17,7 @@ export default name;
  * Take an icon path and make a full Bungie.net URL out of it
  */
 mod.filter('bungieIcon', ($sce) => {
-  return function bungieIcon(icon) {
+  return function bungieIcon(icon: string) {
     return $sce.trustAsResourceUrl(bungieNetPath(icon));
   };
 });
@@ -26,7 +26,7 @@ mod.filter('bungieIcon', ($sce) => {
  * Set the background-image of an element to a bungie icon URL.
  */
 mod.filter('bungieBackground', () => {
-  return function backgroundImage(value) {
+  return function backgroundImage(value: string) {
     if (!value) {
       return {};
     }
@@ -51,7 +51,7 @@ mod.filter('bungieBackground', () => {
  * Usage: items | equipped:true
  */
 mod.filter('equipped', () => {
-  return function equipped(items: DimItem[], isEquipped) {
+  return function equipped(items: DimItem[], isEquipped: boolean) {
     return (items || []).filter((item) => item.equipped === isEquipped);
   };
 });
@@ -78,7 +78,7 @@ function rarity(item: DimItem) {
  */
 mod.filter('sortStores', () => sortStores);
 
-export function sortStores(stores: DimStore[], order) {
+export function sortStores(stores: DimStore[], order: string) {
   if (order === 'mostRecent') {
     return _.sortBy(stores, 'lastPlayed').reverse();
   } else if (order === 'mostRecentReverse') {
@@ -178,7 +178,12 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   rarity: compareBy(rarity),
   primStat: reverseComparator(compareBy((item: DimItem) => item.primStat && item.primStat.value)),
   basePower: reverseComparator(compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))),
-  rating: reverseComparator(compareBy((item: DimItem & { quality: { min: number }}) => (item.quality && item.quality.min) ? item.quality.min : item.dtrRating.overallScore)),
+  rating: reverseComparator(compareBy((item: DimItem & { quality: { min: number }}) =>
+    (item.quality && item.quality.min)
+      ? item.quality.min
+      : item.dtrRating
+        ? item.dtrRating.overallScore
+        : undefined)),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
@@ -307,7 +312,7 @@ mod.filter('dtrRatingColor', () => dtrRatingColor);
  * Reduce a string to its first letter.
  */
 mod.filter('firstLetter', () => {
-  return (str) => {
+  return (str: string) => {
     return str.substring(0, 1);
   };
 });
@@ -317,7 +322,7 @@ mod.filter('firstLetter', () => {
  * over a number to loop N times.
  */
 mod.filter('range', () => {
-  return (n) => {
+  return (n: number) => {
     return new Array(n);
   };
 });
