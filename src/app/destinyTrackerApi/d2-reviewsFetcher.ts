@@ -1,5 +1,4 @@
 import * as _ from 'underscore';
-import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2PerkRater } from './d2-perkRater';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
@@ -9,6 +8,7 @@ import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { getRollAndPerks } from './d2-itemTransformer';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -17,13 +17,13 @@ class D2ReviewsFetcher {
   _perkRater = new D2PerkRater();
   _userFilter = new UserFilter();
   _reviewDataCache: D2ReviewDataCache;
-  _itemTransformer = new D2ItemTransformer();
+
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
   _getItemReviewsPromise(item, platformSelection: number, mode: number): Promise<D2ItemReviewResponse> {
-    const dtrItem = this._itemTransformer.getRollAndPerks(item);
+    const dtrItem = getRollAndPerks(item);
 
     const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
     const promise = dtrFetch(

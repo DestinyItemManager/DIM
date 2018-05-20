@@ -1,23 +1,17 @@
-import { ItemTransformer } from './itemTransformer';
 import * as _ from 'underscore';
 import { D1Item } from '../inventory/item-types';
 import { D1RatingData, D1ItemFetchResponse, WorkingD1Rating, D1ItemReviewResponse } from '../item-review/d1-dtr-api-types';
+import { translateToDtrWeapon } from './itemTransformer';
 
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
  */
 export class ReviewDataCache {
-  _itemStores: D1RatingData[];
-  _itemTransformer: ItemTransformer;
-
-  constructor() {
-    this._itemTransformer = new ItemTransformer();
-    this._itemStores = [];
-  }
+  _itemStores: D1RatingData[] = [];
 
   _getMatchingItem(item: D1Item): D1RatingData | undefined {
-    const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
+    const dtrItem = translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
     // and findWhere considers 123 !== "123".
@@ -53,7 +47,7 @@ export class ReviewDataCache {
   }
 
   _createBlankCacheItem(item: D1Item): D1RatingData {
-    const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
+    const dtrItem = translateToDtrWeapon(item);
 
     return {
       referenceId : dtrItem.referenceId,

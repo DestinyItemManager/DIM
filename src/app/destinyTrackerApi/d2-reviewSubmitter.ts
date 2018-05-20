@@ -1,4 +1,3 @@
-import { D2ItemTransformer } from './d2-itemTransformer';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { loadingTracker } from '../ngimport-more';
@@ -8,6 +7,7 @@ import { dtrFetch } from './dtr-service-helper';
 import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
 import { $q } from 'ngimport';
+import { getRollAndPerks } from './d2-itemTransformer';
 
 /** Request to add a new rating (and optional review) for an item. */
 interface D2ReviewSubmitRequest {
@@ -33,7 +33,6 @@ interface D2ReviewSubmitRequest {
  */
 class D2ReviewSubmitter {
   _reviewDataCache: D2ReviewDataCache;
-  _itemTransformer = new D2ItemTransformer();
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
@@ -62,7 +61,7 @@ class D2ReviewSubmitter {
       return Promise.resolve<DtrSubmitResponse>({});
     }
 
-    const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
+    const rollAndPerks = getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
 
     const review = this.toRatingAndReview(item.dtrRating.userReview);
