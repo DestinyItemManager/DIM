@@ -1,4 +1,3 @@
-import { D2ItemListBuilder } from './d2-itemListBuilder';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { loadingTracker } from '../ngimport-more';
@@ -6,10 +5,10 @@ import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
 import { dtrFetch } from './dtr-service-helper';
 import { D2ItemFetchResponse, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
+import { getVendorItemList, getItemList } from './d2-itemListBuilder';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
-  _itemListBuilder = new D2ItemListBuilder();
 
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
@@ -20,7 +19,7 @@ class D2BulkFetcher {
       return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
-    const itemList = this._itemListBuilder.getItemList(stores, this._reviewDataCache);
+    const itemList = getItemList(stores, this._reviewDataCache);
     return this._getBulkItems(itemList, platformSelection, mode);
   }
 
@@ -32,7 +31,7 @@ class D2BulkFetcher {
       return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
-    const vendorDtrItems = this._itemListBuilder.getVendorItemList(this._reviewDataCache, vendorSaleItems, vendorItems);
+    const vendorDtrItems = getVendorItemList(this._reviewDataCache, vendorSaleItems, vendorItems);
     return this._getBulkItems(vendorDtrItems, platformSelection, mode);
   }
 
