@@ -668,7 +668,7 @@ export function searchFilters(
         return compareByOperand(item.quality.min, predicate);
       },
       hasRating(item: DimItem, predicate: string) {
-        return item.dtrRating && predicate.length !== 0 && item.dtrRating.overallScore;
+        return predicate.length !== 0 && item.dtrRating && item.dtrRating.overallScore;
       },
       rating(item: DimItem, predicate: string) {
         return item.dtrRating && item.dtrRating.overallScore && compareByOperand(item.dtrRating.overallScore, predicate);
