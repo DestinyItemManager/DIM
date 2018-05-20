@@ -673,7 +673,7 @@ function buildObjectives(
 
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
 
-  return objectives.map((objective) => {
+  return objectives.filter((o) => o.visible).map((objective) => {
     const def = objectiveDefs.get(objective.objectiveHash);
 
     let complete = false;
