@@ -298,7 +298,8 @@ export function makeItem(
 
   const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
 
-  const primaryStat = (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) ? null : instanceDef.primaryStat || null;
+  // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
+  const primaryStat = ((itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class') ? null : instanceDef.primaryStat || null;
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
