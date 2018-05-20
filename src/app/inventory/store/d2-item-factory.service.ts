@@ -485,14 +485,6 @@ export function makeItem(
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
 
-  // TODO: this is a temporary fix for https://github.com/Bungie-net/api/issues/469
-  if (createdItem.sockets) {
-    if (createdItem.sockets.sockets.some((s) =>
-      Boolean(s.plug && s.plug.isMasterwork))) {
-      createdItem.masterwork = true;
-    }
-  }
-
   // Masterwork
   if (createdItem.masterwork && createdItem.sockets) {
     try {
