@@ -1,5 +1,4 @@
 import { flatMap } from '../util';
-import * as _ from 'underscore';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1Item } from '../inventory/item-types';
 import { D1ItemFetchRequest } from '../item-review/d1-dtr-api-types';
@@ -24,7 +23,7 @@ function getNewItems(allItems: D1Item[], reviewDataCache: ReviewDataCache): D1It
   const allDtrItems = allItems.map(translateToDtrWeapon);
   const allKnownDtrItems = reviewDataCache.getItemStores();
 
-  const unmatched = _.reject(allDtrItems, (dtrItem) => _.any(allKnownDtrItems, { referenceId: dtrItem.referenceId.toString(), roll: dtrItem.roll }));
+  const unmatched = allDtrItems.filter((dtrItem) => !allKnownDtrItems.some((i) => i.referenceId === dtrItem.referenceId.toString() && i.roll === dtrItem.roll));
 
   return unmatched;
 }
