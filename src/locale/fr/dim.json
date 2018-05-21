@@ -124,6 +124,9 @@
     "VerifyReport": "Êtes-vous sûr de vouloir signaler cette évaluation?",
     "YourReview": "Votre évaluation"
   },
+  "ErrorBoundary": {
+    "Title": "Something went wrong"
+  },
   "Faction": {
     "EngramsAvailable": "1 engramme disponible",
     "EngramsAvailable_plural": "{{count}} engrammes disponibles"
@@ -203,6 +206,7 @@
       "XPComplete": "{{term}} - Affiche les objets qui ne peuvent plus recevoir d'xp (que leurs améliorations aient été débloqués ou non)."
     },
     "LightLevel": "Affiche les objets selon leur niveau de lumière (Attaque pour les Armes; Défense pour les Armures).",
+    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "Affiche les objets selon leur verrouillage.",
     "NamedStat": "Affiche les armures qui ont des points dans la statistique sélectionnée.",
     "NewItems": "Affiche les nouveaux objets.",
@@ -331,7 +335,7 @@
     "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
     "PercentComplete": "({{percent, pct}} Achevé)",
-    "PreviewVendor": "Preview {{type}} contents",
+    "PreviewVendor": "Aperçu du contenu {{type}}",
     "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source!",
     "TwoExotics": "On ne sait pas comment tu as fait pour avoir plus de 2 exotiques équipés!"
   },
@@ -513,6 +517,7 @@
     "Limit": "Limite du Commis Des Postes"
   },
   "Progress": {
+    "CrucibleRank": "Crucible Ranks",
     "Daily": "Quotidient",
     "ExpiresIn": "expire à {{endTime}}",
     "Factions": "Factions",

@@ -124,6 +124,9 @@
     "VerifyReport": "Вы уверены, что хотите пожаловаться на этот отзыв?",
     "YourReview": "Ваш отзыв"
   },
+  "ErrorBoundary": {
+    "Title": "Something went wrong"
+  },
   "Faction": {
     "EngramsAvailable": "Доступна одна энграмма",
     "EngramsAvailable_plural": "{{count}} энграмм доступно"
@@ -203,6 +206,7 @@
       "XPComplete": "{{term}} - показывает вещи, которые не могут принимать опыт (независимо от того, были ли открыты все улучшения)."
     },
     "LightLevel": "Показать предметы по уровню Силы (Атака для оружия, Защита для брони).",
+    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "Показывать предметы по статусу блокировки.",
     "NamedStat": "Показывать броню, у которой есть очки в указной характеристике.",
     "NewItems": "Показать новые предметы.",
@@ -513,6 +517,7 @@
     "Limit": "Предел Потчмейстера"
   },
   "Progress": {
+    "CrucibleRank": "Crucible Ranks",
     "Daily": "Ежедневно",
     "ExpiresIn": "истекает в {{endTime}}",
     "Factions": "Репутация",

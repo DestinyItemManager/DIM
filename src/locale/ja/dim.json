@@ -124,6 +124,9 @@
     "VerifyReport": "レビューを削除してもよろしいですか？",
     "YourReview": "レビュー"
   },
+  "ErrorBoundary": {
+    "Title": "Something went wrong"
+  },
   "Faction": {
     "EngramsAvailable": "1 エングラム利用可能",
     "EngramsAvailable_plural": "{{count}} engrams available"
@@ -203,6 +206,7 @@
       "XPComplete": "{{term}} - 経験値を積むことが出来ないアイテム(アップグレードの完了に関わらず)を表示"
     },
     "LightLevel": "光レベルを基にアイテムを表示(武器の攻撃力、防具の防御力)",
+    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "アイテムの固定有無を基に表示",
     "NamedStat": "ステータスのある防具を表示",
     "NewItems": "新しいアイテムを表示",
@@ -513,6 +517,7 @@
     "Limit": "ポストマスターに空きがありません"
   },
   "Progress": {
+    "CrucibleRank": "Crucible Ranks",
     "Daily": "デイリー",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "ファクション",

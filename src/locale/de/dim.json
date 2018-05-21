@@ -124,6 +124,9 @@
     "VerifyReport": "Bist du dir sicher dass du diesen Bericht melden möchtest?",
     "YourReview": "Dein Bericht"
   },
+  "ErrorBoundary": {
+    "Title": "Something went wrong"
+  },
   "Faction": {
     "EngramsAvailable": "1 Engramm verfügbar",
     "EngramsAvailable_plural": "{{count}} Engramme verfügbar"
@@ -203,6 +206,7 @@
       "XPComplete": "{{term}} - zeigt Items in die keine XP gesteckt werden können (egal ob deren Upgrades freigeschaltet wurden oder nicht)."
     },
     "LightLevel": "Zeigt Items basierend auf dem Licht-Level (Angriff für Waffen; Verteidigung für Rüstung).",
+    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "Zeigt Items basierend auf deren Sperr-Status.",
     "NamedStat": "Zeigt Rüstung, die Punkte in der jeweiligen Kategorie hat.",
     "NewItems": "Zeigt neue Items.",
@@ -513,6 +517,7 @@
     "Limit": "Poststellenlimit"
   },
   "Progress": {
+    "CrucibleRank": "Crucible Ranks",
     "Daily": "Täglich",
     "ExpiresIn": "läuft ab {{endTime}}",
     "Factions": "Fraktionen",

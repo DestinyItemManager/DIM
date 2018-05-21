@@ -124,6 +124,9 @@
     "VerifyReport": "Sei sicuro di voler segnalare questa recensione?",
     "YourReview": "La tua recensione"
   },
+  "ErrorBoundary": {
+    "Title": "Something went wrong"
+  },
   "Faction": {
     "EngramsAvailable": "1 engramma disponibile",
     "EngramsAvailable_plural": "{{count}} engrammi disponibili"
@@ -203,6 +206,7 @@
       "XPComplete": "{{term}} - mostra gli oggetti che non possono ricevere XP (sia che i potenziamenti siano sbloccati o no)."
     },
     "LightLevel": "Mostra gli oggetti basandosi sul loro livello luce (Attacco per le armi; Difesa per le armature).",
+    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "NamedStat": "Mostra armature che hanno punti nella statistica specificata.",
     "NewItems": "Mostra i nuovi oggetti.",
@@ -331,7 +335,7 @@
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
     "PercentComplete": "({{percent, pct}} Completato)",
-    "PreviewVendor": "Preview {{type}} contents",
+    "PreviewVendor": "Anteprima {{type}} contenuto",
     "TooMuch": "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
     "TwoExotics": "Non sappiamo come tu abbia equipaggiati più di 2 esotici!"
   },
@@ -513,6 +517,7 @@
     "Limit": "Limite Amministratore"
   },
   "Progress": {
+    "CrucibleRank": "Crucible Ranks",
     "Daily": "Giornaliera",
     "ExpiresIn": "scade alle {{endTime}}",
     "Factions": "Fazioni",

@@ -124,6 +124,9 @@
     "VerifyReport": "您确定要举报此评论吗?",
     "YourReview": "您的评测"
   },
+  "ErrorBoundary": {
+    "Title": "Something went wrong"
+  },
   "Faction": {
     "EngramsAvailable": "1记忆水晶可兑换",
     "EngramsAvailable_plural": "{{count}}记忆水晶可兑换"
@@ -203,6 +206,7 @@
       "XPComplete": "{{term}}-显示无法获得更多XP的物品 (无论升级是否完成)。"
     },
     "LightLevel": "根据光等来显示物品(武器攻击力; 防具护甲值).",
+    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "根据物品锁定状态显示.",
     "NamedStat": "显示重要防具.",
     "NewItems": "显示新获得的物品.",
@@ -513,6 +517,7 @@
     "Limit": "邮政官处已经没有物品空间了"
   },
   "Progress": {
+    "CrucibleRank": "Crucible Ranks",
     "Daily": "每日",
     "ExpiresIn": "于{{endTime}}过期",
     "Factions": "阵营",

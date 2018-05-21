@@ -124,6 +124,9 @@
     "VerifyReport": "您確定要檢舉此評論嗎?",
     "YourReview": "您的評測"
   },
+  "ErrorBoundary": {
+    "Title": "Something went wrong"
+  },
   "Faction": {
     "EngramsAvailable": "1記憶水晶可用",
     "EngramsAvailable_plural": "{{count}}記憶水晶可用"
@@ -203,6 +206,7 @@
       "XPComplete": "{{term}}-顯示無法將XP放入其中的項目（無論其陞級是否已解鎖）."
     },
     "LightLevel": "根據光等來顯示物品(武器攻擊力; 防具護甲值).",
+    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "根據物品鎖定狀態顯示.",
     "NamedStat": "顯示重要防具.",
     "NewItems": "顯示新獲得的物品.",
@@ -513,6 +517,7 @@
     "Limit": "郵政官處已經沒有物品空間了"
   },
   "Progress": {
+    "CrucibleRank": "Crucible Ranks",
     "Daily": "每日",
     "ExpiresIn": "於{{endTime}}過期",
     "Factions": "陣營",

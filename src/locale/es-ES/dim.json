@@ -124,6 +124,9 @@
     "VerifyReport": "¿Estás seguro de que quieres marcar esta calificación?",
     "YourReview": "Tu calificación"
   },
+  "ErrorBoundary": {
+    "Title": "Algo fue mal"
+  },
   "Faction": {
     "EngramsAvailable": "1 engrama disponible",
     "EngramsAvailable_plural": "{{count}} engramas disponibles"
@@ -203,6 +206,7 @@
       "XPComplete": "{{term}} - muestra objetos que no pueden adquirir mas XP en ellos (sin importar si sus mejoras han sido o no desbloqueadas)."
     },
     "LightLevel": "Muestra objetos basado en su nivel de luz (Ataque para armas; Defensa para armaduras).",
+    "Location": "Muestra objetos basados en su localización dentro de la app. \"Left/middle/right\" son la localización visual del personaje, y mientras \"inleftchar\" siempre funcionará, los otros dos están basados en cuántos personajes tengas. \"Current\" es tu último/actual personaje iniciado (que está marcado con un triángulo amarillo).",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
     "NamedStat": "Muestra armadura que tiene puntos en la estadística nombrada.",
     "NewItems": "Muestra objetos nuevos.",
@@ -513,6 +517,7 @@
     "Limit": "Límite de Administración"
   },
   "Progress": {
+    "CrucibleRank": "Rangos de Crisol",
     "Daily": "Diario",
     "ExpiresIn": "expira en {{endTime}}",
     "Factions": "Facciones",
