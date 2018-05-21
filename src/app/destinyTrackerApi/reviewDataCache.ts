@@ -134,7 +134,7 @@ export class ReviewDataCache {
   /**
    * Fetch the collection of review data that we've stored locally.
    */
-  getItemStores(): any[] {
+  getItemStores(): D1RatingData[] {
     return this._itemStores;
   }
 

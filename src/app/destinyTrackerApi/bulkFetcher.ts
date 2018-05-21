@@ -1,4 +1,3 @@
-import { ItemListBuilder } from './itemListBuilder';
 import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
@@ -6,20 +5,20 @@ import { dtrFetch } from './dtr-service-helper';
 import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
 import { D1Store } from '../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
+import { getWeaponList } from './itemListBuilder';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
-  _itemListBuilder = new ItemListBuilder();
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getBulkFetchPromise(stores): Promise<D1ItemFetchResponse[]> {
+  _getBulkFetchPromise(stores: (D1Store | Vendor)[]): Promise<D1ItemFetchResponse[]> {
     if (!stores.length) {
       return Promise.resolve<D1ItemFetchResponse[]>([]);
     }
 
-    const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
+    const weaponList = getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
       return Promise.resolve<D1ItemFetchResponse[]>([]);
@@ -47,16 +46,18 @@ class BulkFetcher {
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied vendors.
    */
-  bulkFetchVendorItems(vendorContainer) {
-    const vendors: Vendor[] = Object.values(vendorContainer);
+  bulkFetchVendorItems(vendorContainer: { [key: number]: Vendor }) {
+    const vendors = Object.values(vendorContainer);
 
     this._getBulkFetchPromise(vendors)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
                                                         vendors));
   }
 
-  attachRankings(bulkRankings: D1ItemFetchResponse[] | null,
-                 stores: D1Store[]) {
+  attachRankings(
+    bulkRankings: D1ItemFetchResponse[] | null,
+    stores: D1Store[]
+  ) {
     if (!bulkRankings && !stores) {
       return;
     }
@@ -78,8 +79,10 @@ class BulkFetcher {
     });
   }
 
-  attachVendorRankings(bulkRankings: D1ItemFetchResponse[],
-                       vendors: Vendor[]) {
+  attachVendorRankings(
+    bulkRankings: D1ItemFetchResponse[],
+    vendors: Vendor[]
+  ) {
     if (!bulkRankings && !vendors) {
       return;
     }
