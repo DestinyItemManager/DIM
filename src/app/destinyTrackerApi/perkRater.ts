@@ -9,112 +9,115 @@ interface RatingAndReview {
 }
 
 /**
- * Rate perks on an item (based off of its attached user reviews).
+ * Rate the perks on an item based off of its attached user reviews.
  */
-export class PerkRater {
-  /**
-   * Rate the perks on an item based off of its attached user reviews.
-   */
-  ratePerks(item: D1Item) {
-    if ((!item.talentGrid) ||
-        (!item.dtrRating) ||
-        (!item.dtrRating.reviewsResponse) ||
-        (!item.dtrRating.reviewsResponse.reviews.length)) {
-      return;
-    }
-
-    const reviews = item.dtrRating.reviewsResponse.reviews;
-
-    const maxColumn = this._getMaxColumn(item);
-
-    if (!maxColumn) {
-      return;
-    }
-
-    for (let i = 1; i < maxColumn; i++) {
-      const perkNodesInColumn = this._getPerkNodesInColumn(item, i);
-
-      const ratingsAndReviews = perkNodesInColumn.map((perkNode) => this._getPerkRatingsAndReviewCount(perkNode, reviews));
-
-      const maxReview = this._getMaxReview(ratingsAndReviews);
-
-      this._markNodeAsBest(maxReview);
-    }
+export function ratePerks(item: D1Item) {
+  if ((!item.talentGrid) ||
+      (!item.dtrRating) ||
+      (!item.dtrRating.reviewsResponse) ||
+      (!item.dtrRating.reviewsResponse.reviews.length)) {
+    return;
   }
 
-  _markNodeAsBest(maxReview: RatingAndReview | null) {
-    if (!maxReview) {
-      return;
-    }
+  const reviews = item.dtrRating.reviewsResponse.reviews;
 
-    maxReview.perkNode.bestRated = true;
+  const maxColumn = getMaxColumn(item);
+
+  if (!maxColumn) {
+    return;
   }
 
-  _getMaxReview(ratingsAndReviews: RatingAndReview[]) {
-    const orderedRatingsAndReviews = ratingsAndReviews.sort((ratingAndReview) => ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview).reverse();
+  for (let i = 1; i < maxColumn; i++) {
+    const perkNodesInColumn = getPerkNodesInColumn(item, i);
 
-    if ((orderedRatingsAndReviews.length > 0) &&
-        (orderedRatingsAndReviews[0].ratingCount > 1)) {
-      return orderedRatingsAndReviews[0];
-    }
+    const ratingsAndReviews = perkNodesInColumn.map((perkNode) => getPerkRatingsAndReviewCount(perkNode, reviews));
 
-    return null;
+    const maxReview = getMaxReview(ratingsAndReviews);
+
+    markNodeAsBest(maxReview);
+  }
+}
+
+function markNodeAsBest(maxReview: RatingAndReview | null) {
+  if (!maxReview) {
+    return;
   }
 
-  _getMaxColumn(item: D1Item): number | undefined {
-    if (!item.talentGrid) {
-      return undefined;
-    }
+  maxReview.perkNode.bestRated = true;
+}
 
-    return _.max(item.talentGrid.nodes, (node) => node.column).column;
+function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
+  const orderedRatingsAndReviews = ratingsAndReviews.sort((ratingAndReview) => ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview).reverse();
+
+  if ((orderedRatingsAndReviews.length > 0) &&
+      (orderedRatingsAndReviews[0].ratingCount > 1)) {
+    return orderedRatingsAndReviews[0];
   }
 
-  _getPerkNodesInColumn(item: D1Item,
-                        column): D1GridNode[] {
-    if (!item.talentGrid) {
-      return [];
-    }
+  return null;
+}
 
-    return _.where(item.talentGrid.nodes, { column });
+function getMaxColumn(item: D1Item): number | undefined {
+  if (!item.talentGrid) {
+    return undefined;
   }
 
-  _getPerkRatingsAndReviewCount(perkNode: D1GridNode,
-                                reviews: D1ItemUserReview[]): RatingAndReview {
-    const matchingReviews = this._getMatchingReviews(perkNode,
-                                                     reviews);
+  return _.max(item.talentGrid.nodes, (node) => node.column).column;
+}
 
-    const ratingCount = matchingReviews.length;
-    const averageReview = _.pluck(matchingReviews, 'rating').reduce((memo, num) => memo + num, 0) / matchingReviews.length || 1;
-
-    const ratingAndReview = {
-      ratingCount,
-      averageReview,
-      perkNode
-    };
-
-    return ratingAndReview;
+function getPerkNodesInColumn(
+  item: D1Item,
+  column
+): D1GridNode[] {
+  if (!item.talentGrid) {
+    return [];
   }
 
-  _getMatchingReviews(perkNode: D1GridNode,
-                      reviews: D1ItemUserReview[]): D1ItemUserReview[] {
-    const perkRoll = perkNode.dtrRoll.replace('o', '');
-    return reviews.filter((review) => this._selectedPerkNodeApplies(perkRoll, review));
+  return _.where(item.talentGrid.nodes, { column });
+}
+
+function getPerkRatingsAndReviewCount(
+  perkNode: D1GridNode,
+  reviews: D1ItemUserReview[]
+): RatingAndReview {
+  const matchingReviews = getMatchingReviews(perkNode,
+                                                    reviews);
+
+  const ratingCount = matchingReviews.length;
+  const averageReview = _.pluck(matchingReviews, 'rating').reduce((memo, num) => memo + num, 0) / matchingReviews.length || 1;
+
+  const ratingAndReview = {
+    ratingCount,
+    averageReview,
+    perkNode
+  };
+
+  return ratingAndReview;
+}
+
+function getMatchingReviews(
+  perkNode: D1GridNode,
+  reviews: D1ItemUserReview[]
+): D1ItemUserReview[] {
+  const perkRoll = perkNode.dtrRoll.replace('o', '');
+  return reviews.filter((review) => selectedPerkNodeApplies(perkRoll, review));
+}
+
+function selectedPerkNodeApplies(
+  perkRoll: string,
+  review: D1ItemUserReview
+): boolean {
+  const reviewSelectedPerks = getSelectedPerks(review, perkRoll);
+
+  return reviewSelectedPerks.some((reviewSelectedPerk) => perkRoll === reviewSelectedPerk);
+}
+
+function getSelectedPerks(review: D1ItemUserReview, perkRoll: string): string[] {
+  const allSelectedPerks = (review.roll) ? review.roll.split(';').filter((str) => str.indexOf('o') > -1) : perkRoll; // in narrow cases, we can be supplied a D1ItemWorkingUserReview
+
+  if (typeof allSelectedPerks === "string") {
+    return [allSelectedPerks.replace('o', '')];
   }
 
-  _selectedPerkNodeApplies(perkRoll: string,
-                           review: D1ItemUserReview): boolean {
-    const reviewSelectedPerks = this._getSelectedPerks(review, perkRoll);
-
-    return reviewSelectedPerks.some((reviewSelectedPerk) => perkRoll === reviewSelectedPerk);
-  }
-
-  _getSelectedPerks(review: D1ItemUserReview, perkRoll: string): string[] {
-    const allSelectedPerks = (review.roll) ? review.roll.split(';').filter((str) => str.indexOf('o') > -1) : perkRoll; // in narrow cases, we can be supplied a D1ItemWorkingUserReview
-
-    if (typeof allSelectedPerks === "string") {
-      return [allSelectedPerks.replace('o', '')];
-    }
-
-    return allSelectedPerks.map((selectedPerk) => selectedPerk.replace('o', ''));
-  }
+  return allSelectedPerks.map((selectedPerk) => selectedPerk.replace('o', ''));
 }

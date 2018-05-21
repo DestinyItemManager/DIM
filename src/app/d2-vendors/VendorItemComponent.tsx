@@ -10,7 +10,7 @@ import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from "../destiny2/d2-buckets.service";
 import { DestinyTrackerServiceType } from "../item-review/destiny-tracker.service";
 import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
-import { D2PerkRater } from "../destinyTrackerApi/d2-perkRater";
+import { ratePerks } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
 import { D2Item } from "../inventory/item-types";
 import { D2RatingData } from "../item-review/d2-dtr-api-types";
@@ -126,7 +126,7 @@ export default class VendorItemComponent extends React.Component<Props> {
             cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
             // TODO: it'd be nice to push this into tracker service
             Object.assign(dimItem, item.toDimItem(buckets, cachedItem));
-            new D2PerkRater().ratePerks(dimItem!);
+            ratePerks(dimItem!);
           });
         }
       }
