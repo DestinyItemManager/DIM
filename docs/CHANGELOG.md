@@ -1,5 +1,7 @@
 # Next
 
+Fix the display of crucible rank points.
+
 # 4.53.0 (2018-05-20)
 
 * Add previews for engrams and other preview-able items.

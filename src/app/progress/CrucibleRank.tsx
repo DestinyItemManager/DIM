@@ -28,7 +28,7 @@ export function CrucibleRank(props: CrucibleRankProps) {
         <div className="faction-level">{progressionDef.displayProperties.name}</div>
         <div className="faction-name">{step.stepName}</div>
         <div className="faction-level">
-          {progress.currentProgress} / {progress.nextLevelAt}
+          {progress.progressToNextLevel} / {progress.nextLevelAt}
         </div>
       </div>
     </div>
