@@ -127,7 +127,7 @@ function findD2Characters(account: DestinyAccount): IPromise<DestinyAccount | nu
     });
 }
 
-function findD1Characters(account): IPromise<any | null> {
+function findD1Characters(account: DestinyAccount): IPromise<any | null> {
   return getCharacters(account)
     .then((response) => {
       if (response && response.length) {
