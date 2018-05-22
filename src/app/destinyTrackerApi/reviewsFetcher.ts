@@ -1,4 +1,4 @@
-import { PerkRater } from './perkRater';
+import { ratePerks } from './perkRater';
 import { UserFilter } from './userFilter';
 import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
@@ -73,7 +73,6 @@ interface ActualD1ItemReviewResponse {
  * This was tailored to work for weapons.  Items (armor, etc.) may or may not work.
  */
 export class ReviewsFetcher {
-  _perkRater = new PerkRater();
   _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
   constructor(reviewDataCache: ReviewDataCache) {
@@ -119,7 +118,7 @@ export class ReviewsFetcher {
 
     this._reviewDataCache.addReviewsData(item, reviewData);
 
-    this._perkRater.ratePerks(item);
+    ratePerks(item);
   }
 
   _sortReviews(a: D1ItemUserReview, b: D1ItemUserReview) {
