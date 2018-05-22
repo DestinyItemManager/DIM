@@ -1,6 +1,8 @@
 # Next
 
-Fix the display of crucible rank points.
+* Fix the display of crucible rank points.
+* Fix faction rank progress bars on D1.
+
 
 # 4.53.0 (2018-05-20)
 
