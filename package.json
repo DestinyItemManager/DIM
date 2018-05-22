@@ -29,7 +29,7 @@
     "last 2 ChromeAndroid versions",
     "last 2 Firefox versions",
     "last 2 Safari versions",
-    "iOS >= 10",
+    "iOS >= 10.3",
     "last 2 Edge versions",
     "last 2 Opera versions",
     "unreleased versions"
