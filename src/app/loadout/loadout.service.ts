@@ -290,6 +290,10 @@ export function LoadoutService(
     }
     const storeService = getStoreService(store.destinyVersion);
 
+    if ($featureFlags.debugMoves) {
+      console.log("LoadoutService: Apply loadout", loadout.name, "to", store.name);
+    }
+
     return queueAction(() => {
       if (allowUndo) {
         if (!_previousLoadouts[store.id]) {
@@ -380,7 +384,7 @@ export function LoadoutService(
       }
 
       promise = promise
-        .then(() => applyLoadoutItems(store, items, loadout, loadoutItemIds, scope))
+        .then(() => applyLoadoutItems(store, items, loadoutItemIds, scope))
         .then(() => {
           if (itemsToEquip.length > 1) {
             // Use the bulk equipAll API to equip all at once.
@@ -437,7 +441,6 @@ export function LoadoutService(
   function applyLoadoutItems(
     store: DimStore,
     items: DimItem[],
-    loadout: Loadout,
     loadoutItemIds: { id: string; hash: number }[],
     scope: {
       failed: number;
@@ -511,7 +514,7 @@ export function LoadoutService(
         toaster.pop(e.level || 'error', item ? item.name : 'Unknown', e.message);
       })
       // Keep going
-      .finally(() => applyLoadoutItems(store, items, loadout, loadoutItemIds, scope));
+      .finally(() => applyLoadoutItems(store, items, loadoutItemIds, scope));
 
     return promise;
   }
