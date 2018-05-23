@@ -13,7 +13,6 @@ import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { IPromise } from 'angular';
 import { $q } from 'ngimport';
-import { UserFilter } from '../destinyTrackerApi/userFilter';
 import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { D2ItemReviewResponse, WorkingD2Rating, D2ItemUserReview } from './d2-dtr-api-types';
@@ -31,7 +30,6 @@ export interface DestinyTrackerServiceType {
   submitReview(item: DimItem);
   fetchReviews(stores: DimStore[]);
   reportReview(review: DimUserReview);
-  clearIgnoredUsers();
   clearCache();
   getD2ReviewDataCache(): D2ReviewDataCache;
 }
@@ -195,10 +193,6 @@ export function DestinyTrackerService(): DestinyTrackerServiceType {
           _d2reviewReporter.reportReview(review as D2ItemUserReview, membershipInfo);
         }
       }
-    },
-    clearIgnoredUsers() {
-      const userFilter = new UserFilter();
-      userFilter.clearIgnoredUsers();
     },
     clearCache() {
       if (_isDestinyTwo()) {

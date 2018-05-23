@@ -1,17 +1,16 @@
 import { ReviewDataCache } from './reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { UserFilter } from './userFilter';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
 import { dtrFetch } from './dtr-service-helper';
 import { DtrReviewer } from '../item-review/dtr-api-types';
 import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
+import { ignoreUser } from './userFilter';
 
 /**
  * Class to support reporting bad takes.
  */
 export class ReviewReporter {
-  _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
@@ -25,7 +24,7 @@ export class ReviewReporter {
     };
   }
 
-  _generateReviewReport(reviewId, membershipInfo: DestinyAccount) {
+  _generateReviewReport(reviewId: string, membershipInfo: DestinyAccount) {
     const reporter = this._getReporter(membershipInfo);
 
     return {
@@ -35,7 +34,7 @@ export class ReviewReporter {
     };
   }
 
-  _submitReportReviewPromise(reviewId, membershipInfo) {
+  _submitReportReviewPromise(reviewId: string, membershipInfo: DestinyAccount) {
     const reviewReport = this._generateReviewReport(reviewId, membershipInfo);
 
     const promise = dtrFetch(
@@ -48,9 +47,9 @@ export class ReviewReporter {
     return promise;
   }
 
-  _ignoreReportedUser(review) {
+  _ignoreReportedUser(review: D1ItemUserReview) {
     const reportedMembershipId = review.reviewer.membershipId;
-    this._userFilter.ignoreUser(reportedMembershipId);
+    return ignoreUser(reportedMembershipId);
   }
 
   /**
@@ -62,7 +61,7 @@ export class ReviewReporter {
       return;
     }
 
-    this._submitReportReviewPromise(review.reviewId, membershipInfo)
+    return this._submitReportReviewPromise(review.reviewId, membershipInfo)
       .then(() => this._reviewDataCache.markReviewAsIgnored(review))
       .then(() => this._ignoreReportedUser(review));
   }

@@ -1,7 +1,6 @@
 import * as _ from 'underscore';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
-import { UserFilter } from './userFilter';
 import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
@@ -9,12 +8,12 @@ import { dtrFetch } from './dtr-service-helper';
 import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { getRollAndPerks } from './d2-itemTransformer';
 import { ratePerks } from './d2-perkRater';
+import { conditionallyIgnoreReviews } from './userFilter';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
  */
 class D2ReviewsFetcher {
-  _userFilter = new UserFilter();
   _reviewDataCache: D2ReviewDataCache;
 
   constructor(reviewDataCache) {
@@ -44,9 +43,7 @@ class D2ReviewsFetcher {
     if (reviewResponse.reviews) {
       reviewResponse.reviews.sort(this._sortReviews);
 
-      reviewResponse.reviews.forEach((writtenReview) => {
-        this._userFilter.conditionallyIgnoreReview(writtenReview);
-      });
+      conditionallyIgnoreReviews(reviewResponse.reviews);
     }
   }
 
