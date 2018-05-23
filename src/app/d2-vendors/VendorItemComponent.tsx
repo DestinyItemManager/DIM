@@ -117,6 +117,7 @@ export default class VendorItemComponent extends React.Component<Props> {
     } else {
       let dimItem: D2Item | null = null;
       let cachedItem: D2RatingData | null = null;
+      const buckets = await getBuckets();
 
       if (trackerService) {
         cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
@@ -130,8 +131,6 @@ export default class VendorItemComponent extends React.Component<Props> {
           });
         }
       }
-
-      const buckets = await getBuckets();
       dimItem = item.toDimItem(buckets, cachedItem);
 
       this.dialogResult = ngDialog.open({
