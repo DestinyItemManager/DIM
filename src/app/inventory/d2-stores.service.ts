@@ -212,7 +212,7 @@ export function D2StoresService(
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId] ? profileInfo.characterEquipment.data[characterId].items : [],
           profileInfo.itemComponents,
-          profileInfo.characterProgressions.data ? profileInfo.characterProgressions.data[characterId].progressions : [],
+          profileInfo.characterProgressions.data && profileInfo.characterProgressions.data[characterId] ? profileInfo.characterProgressions.data[characterId].progressions : [],
           buckets,
           previousItems,
           newItems,
