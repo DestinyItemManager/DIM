@@ -23,7 +23,8 @@ export async function fetchWithBungieOAuth(request: Request | string, options?: 
     throw e;
   }
 
-  const response = await fetch(request, options);
+  // clone is us trying to work around "Body has already been consumed." in retry.
+  const response = await fetch(request.clone(), options);
   if (await responseIndicatesBadToken(response)) {
     if (triedRefresh) {
       // Give up
@@ -35,7 +36,7 @@ export async function fetchWithBungieOAuth(request: Request | string, options?: 
     // invalid. Refresh it and try again.
     console.log(`Access token expired, removing access token and trying again`);
     removeAccessToken();
-    return fetchWithBungieOAuth(request.clone(), options, true);
+    return fetchWithBungieOAuth(request, options, true);
   }
 
   return response;
