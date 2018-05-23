@@ -2,8 +2,6 @@ import { bootstrap } from 'angular';
 import 'babel-polyfill';
 // Promise.finally isn't in the base polyfill
 import 'core-js/fn/promise/finally';
-// Polyfill fetch for iOS < 10.3
-import 'whatwg-fetch';
 
 import './app/google';
 import './app/exceptions';
