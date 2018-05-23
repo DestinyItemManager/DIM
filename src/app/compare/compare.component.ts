@@ -6,6 +6,7 @@ import { sum } from '../util';
 import { DimItem } from '../inventory/item-types';
 import { StoreServiceType } from '../inventory/store-types';
 import { CompareService } from './compare.service';
+import { TransitionService } from '@uirouter/angularjs';
 
 export function StatRangeFilter() {
   // Turns a stat and a list of ranges into a 0-100 scale
@@ -41,11 +42,23 @@ function CompareCtrl(
   toaster,
   dimStoreService: StoreServiceType,
   D2StoresService: StoreServiceType,
-  $i18next
+  $i18next,
+  $transitions: TransitionService
 ) {
   'ngInject';
 
   const vm = this;
+
+  vm.$onInit = () => {
+    this.listener = $transitions.onExit({}, () => {
+      CompareService.dialogOpen = false;
+      vm.show = false;
+    });
+  };
+
+  vm.$onDestroy = () => {
+    this.listener();
+  };
 
   function getStoreService(item: DimItem) {
     return item.destinyVersion === 2 ? D2StoresService : dimStoreService;

@@ -10,9 +10,10 @@ import { settings } from '../settings/settings';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { Loadout } from './loadout.service';
+import { Loadout, LoadoutServiceType } from './loadout.service';
 import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
+import { TransitionService } from '@uirouter/angularjs';
 
 export const LoadoutDrawerComponent: IComponentOptions = {
   controller: LoadoutDrawerCtrl,
@@ -31,12 +32,24 @@ function LoadoutDrawerCtrl(
     loadout?: Loadout & { warnitems?: DimItem[] };
   },
   $scope: IScope,
-  dimLoadoutService,
+  dimLoadoutService: LoadoutServiceType,
   toaster,
-  $i18next
+  $i18next,
+  $transitions: TransitionService
 ) {
   'ngInject';
   const vm = this;
+
+  vm.$onInit = () => {
+    this.listener = $transitions.onExit({}, () => {
+      dimLoadoutService.dialogOpen = false;
+      vm.show = false;
+    });
+  };
+
+  vm.$onDestroy = () => {
+    this.listener();
+  };
 
   this.$onChanges = (changes) => {
     if (changes.stores) {
