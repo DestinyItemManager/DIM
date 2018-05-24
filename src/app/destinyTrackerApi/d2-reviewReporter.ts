@@ -1,11 +1,11 @@
 import { D2ReviewDataCache } from "./d2-reviewDataCache";
 import { DestinyAccount } from "../accounts/destiny-account.service";
-import { UserFilter } from "./userFilter";
 import { loadingTracker } from "../ngimport-more";
 import { handleD2SubmitErrors } from "./d2-trackerErrorHandler";
 import { dtrFetch } from "./dtr-service-helper";
 import { DtrReviewer } from "../item-review/dtr-api-types";
 import { D2ItemUserReview } from "../item-review/d2-dtr-api-types";
+import { ignoreUser } from "./userFilter";
 
 export interface DimReviewReport {
   reviewId: string;
@@ -17,7 +17,6 @@ export interface DimReviewReport {
  * Class to support reporting bad takes.
  */
 class D2ReviewReporter {
-  _userFilter = new UserFilter();
   _reviewDataCache: D2ReviewDataCache;
   constructor(reviewDataCache) {
     this._reviewDataCache = reviewDataCache;
@@ -55,7 +54,7 @@ class D2ReviewReporter {
 
   _ignoreReportedUser(review: D2ItemUserReview) {
     const reportedMembershipId = review.reviewer.membershipId;
-    this._userFilter.ignoreUser(reportedMembershipId);
+    return ignoreUser(reportedMembershipId);
   }
 
   /**
@@ -67,7 +66,7 @@ class D2ReviewReporter {
       return;
     }
 
-    this._submitReportReviewPromise(review.id, membershipInfo)
+    return this._submitReportReviewPromise(review.id, membershipInfo)
         .then(() => {
           this._reviewDataCache.markReviewAsIgnored(review);
           this._ignoreReportedUser(review);

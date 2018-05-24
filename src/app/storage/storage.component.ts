@@ -15,6 +15,7 @@ import { sum, count } from '../util';
 import template from './storage.html';
 import './storage.scss';
 import { StorageAdapter, SyncService } from './sync.service';
+import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 
 declare global {
   interface Window {
@@ -51,7 +52,6 @@ export const StorageComponent: IComponentOptions = {
 function StorageController(
   this: IController,
   $scope: IScope,
-  dimDestinyTrackerService,
   $timeout: ITimeoutService,
   $window: IWindowService,
   $q: IQService,
@@ -180,6 +180,6 @@ function StorageController(
       return;
     }
 
-    dimDestinyTrackerService.clearIgnoredUsers();
+    clearIgnoredUsers();
   };
 }

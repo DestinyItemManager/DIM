@@ -1,5 +1,4 @@
 import { ratePerks } from './perkRater';
-import { UserFilter } from './userFilter';
 import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../ngimport-more';
@@ -8,6 +7,7 @@ import { dtrFetch } from './dtr-service-helper';
 import { D1ItemReviewResponse, D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
 import { getRollAndPerks } from './itemTransformer';
+import { conditionallyIgnoreReviews } from './userFilter';
 
 /** A single user's review for a D1 weapon. */
 interface ActualD1ItemUserReview {
@@ -73,7 +73,6 @@ interface ActualD1ItemReviewResponse {
  * This was tailored to work for weapons.  Items (armor, etc.) may or may not work.
  */
 export class ReviewsFetcher {
-  _userFilter = new UserFilter();
   _reviewDataCache: ReviewDataCache;
   constructor(reviewDataCache: ReviewDataCache) {
     this._reviewDataCache = reviewDataCache;
@@ -105,9 +104,7 @@ export class ReviewsFetcher {
     if (reviewData.reviews) {
       reviewData.reviews.sort(this._sortReviews);
 
-      reviewData.reviews.forEach((writtenReview) => {
-        this._userFilter.conditionallyIgnoreReview(writtenReview);
-      });
+      conditionallyIgnoreReviews(reviewData.reviews);
     }
   }
 
