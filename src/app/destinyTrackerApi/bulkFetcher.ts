@@ -95,10 +95,10 @@ class BulkFetcher {
 
     vendors.forEach((vendor) => {
       vendor.allItems.forEach((vendorItem) => {
-        const matchingItem = this._reviewDataCache.getRatingData(vendorItem);
+        const matchingItem = this._reviewDataCache.getRatingData(vendorItem.item);
 
         if (matchingItem) {
-          vendorItem.dtrRating = matchingItem;
+          vendorItem.item.dtrRating = matchingItem;
         }
       });
     });

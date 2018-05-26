@@ -18,7 +18,11 @@ export default module('VendorsModule', [])
   .component('xur', Xur)
   .filter('vendorTab', () => vendorTab)
   .filter('vendorTabItems', () => vendorTabItems)
-  .filter('values', () => Object.values)
+  .filter('values', () => {
+    return (i) => {
+      return i ? Object.values(i) : i;
+    };
+  })
   .config(($stateProvider: StateProvider) => {
     'ngInject';
 

@@ -69,6 +69,24 @@ const categoryBlacklist = [
 
 const xur = 2796397637;
 
+export interface VendorCost {
+  currency: {
+    icon: string;
+    itemHash: number;
+    itemName: string;
+  };
+  value: number;
+}
+
+export interface VendorSaleItem {
+  costs: VendorCost[];
+  failureStrings: string;
+  index: number;
+  item: D1Item;
+  unlocked: boolean;
+  unlockedByCharacter: string[];
+}
+
 export interface Vendor {
   failed: boolean;
   nextRefreshDate: string;
@@ -84,11 +102,11 @@ export interface Vendor {
   factionLevel: number;
   factionAligned: boolean;
 
-  allItems: D1Item[];
+  allItems: VendorSaleItem[];
   categories: {
     index: number;
     title: string;
-    saleItems: D1Item[];
+    saleItems: VendorSaleItem[];
     hasArmorWeaps: boolean;
     hasVehicles: boolean;
     hasShadersEmbs: boolean;
@@ -265,7 +283,7 @@ export function VendorService(
     return reloadPromise;
   }
 
-  function mergeVendors([firstVendor, ...otherVendors]) {
+  function mergeVendors([firstVendor, ...otherVendors]: Vendor[]) {
     const mergedVendor = copy(firstVendor);
 
     otherVendors.forEach((vendor) => {
@@ -563,7 +581,6 @@ export function VendorService(
           item.vendorIcon = createdVendor.icon;
         });
 
-        createdVendor.allItems = items;
         createdVendor.categories = categories;
 
         createdVendor.hasArmorWeaps = _.any(categories, (c) => c.hasArmorWeaps);
