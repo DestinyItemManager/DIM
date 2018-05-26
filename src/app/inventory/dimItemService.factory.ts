@@ -30,7 +30,7 @@ export interface ItemServiceType {
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  moveTo(item: DimItem, target: DimStore, equip: boolean, amount: number, excludes?: { id: string; hash: number }[], reservations?: MoveReservations): IPromise<DimItem>;
+  moveTo(item: DimItem, target: DimStore, equip?: boolean, amount?: number, excludes?: { id: string; hash: number }[], reservations?: MoveReservations): IPromise<DimItem>;
   /**
    * Bulk equip items. Only use for multiple equips at once.
    */

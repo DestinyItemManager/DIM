@@ -75,7 +75,7 @@ export function pullablePostmasterItems(store: DimStore) {
 }
 
 // D2 only
-export async function pullFromPostmaster(store: DimStore, dimItemService, toaster): Promise<void> {
+export async function pullFromPostmaster(store: DimStore, dimItemService: ItemServiceType, toaster): Promise<void> {
   const items = pullablePostmasterItems(store);
 
   try {
