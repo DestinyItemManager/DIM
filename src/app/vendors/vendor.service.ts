@@ -9,9 +9,9 @@ import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definition
 import { processItems } from '../inventory/store/d1-item-factory.service';
 import { IRootScopeService, IPromise, copy, IQService } from 'angular';
 import { D1StoreServiceType, D1Store } from '../inventory/store-types';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
+import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 
 /*
 const allVendors = [
@@ -132,7 +132,6 @@ export interface VendorServiceType {
 export function VendorService(
   $rootScope: IRootScopeService,
   dimStoreService: D1StoreServiceType,
-  dimDestinyTrackerService: DestinyTrackerServiceType,
   loadingTracker,
   $q: IQService
 ): VendorServiceType {

@@ -5,6 +5,7 @@ import { IController, IRootScopeService, IScope, IComponentOptions, IAngularEven
 import template from './dimMoveItemProperties.html';
 import { DimItem } from '../inventory/item-types';
 import { StoreServiceType } from '../inventory/store-types';
+import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -27,8 +28,7 @@ function MoveItemPropertiesCtrl(
   D2StoresService: StoreServiceType,
   ngDialog,
   $scope: IScope,
-  $rootScope: IRootScopeService,
-  dimDestinyTrackerService
+  $rootScope: IRootScopeService
 ) {
   'ngInject';
   const vm = this;

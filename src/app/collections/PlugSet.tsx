@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from '../d2-vendors/vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import VendorItemComponent from '../d2-vendors/VendorItemComponent';
@@ -22,7 +22,7 @@ export default function PlugSet({
   defs: D2ManifestDefinitions;
   plugSetHash: number;
   items: DestinyItemPlug[];
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
 }) {
   const plugSetDef = defs.PlugSet.get(plugSetHash);

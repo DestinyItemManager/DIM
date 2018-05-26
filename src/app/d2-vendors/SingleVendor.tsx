@@ -12,7 +12,7 @@ import FactionIcon from '../progress/FactionIcon';
 import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { Subscription } from 'rxjs/Subscription';
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
@@ -22,7 +22,6 @@ interface Props {
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: D2StoreServiceType;
-  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
@@ -32,7 +31,7 @@ interface State {
   defs?: D2ManifestDefinitions;
   vendorDef?: DestinyVendorDefinition;
   vendorResponse?: DestinyVendorResponse;
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
 }
 
 /**
@@ -77,10 +76,10 @@ export default class SingleVendor extends React.Component<Props, State> {
 
       this.setState({ defs, vendorResponse });
 
-      const trackerService = await fetchRatingsForVendor(defs, this.props.dimDestinyTrackerService, vendorResponse);
+      const trackerService = await fetchRatingsForVendor(defs, vendorResponse);
       this.setState({ trackerService });
     } else {
-      const trackerService = await fetchRatingsForVendorDef(defs, this.props.dimDestinyTrackerService, vendorDef);
+      const trackerService = await fetchRatingsForVendorDef(defs, vendorDef);
       this.setState({ trackerService });
     }
   }

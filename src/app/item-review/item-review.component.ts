@@ -6,10 +6,10 @@ import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
-import { DestinyTrackerServiceType } from './destiny-tracker.service';
 import { DimItem } from '../inventory/item-types';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
 import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
+import { dimDestinyTrackerService } from './destiny-tracker.service';
 
 export const ItemReviewComponent: IComponentOptions = {
   bindings: {
@@ -26,7 +26,6 @@ function ItemReviewController(
     findReview(reviewId: string): D1ItemUserReview | D2ItemUserReview | null;
     getReviewData(): number[];
   },
-  dimDestinyTrackerService: DestinyTrackerServiceType,
   $scope: IScope,
   $rootScope: IRootScopeService
 ) {

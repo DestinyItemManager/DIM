@@ -27,7 +27,6 @@ import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { $rootScope, $q } from 'ngimport';
 import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
 import { t } from 'i18next';
@@ -35,14 +34,13 @@ import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimError } from '../bungie-api/bungie-service-helper';
+import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
  * consolidate them, or at least organize them better.
  */
-export function D2StoresService(
-  dimDestinyTrackerService: DestinyTrackerServiceType
-): D2StoreServiceType {
+export function D2StoresService(): D2StoreServiceType {
   'ngInject';
 
   let _stores: D2Store[] = [];

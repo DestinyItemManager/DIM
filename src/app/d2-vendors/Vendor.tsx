@@ -13,7 +13,7 @@ import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
 import { $state } from '../ngimport-more';
 import './vendor.scss';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 
@@ -36,7 +36,7 @@ export default function Vendor({
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   };
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   currencyLookups: {
     [itemHash: number]: number;
@@ -81,7 +81,7 @@ export function getVendorItems(
   account: DestinyAccount,
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition,
-  trackerService?: DestinyTrackerServiceType,
+  trackerService?: DestinyTrackerService,
   itemComponents?: DestinyItemComponentSetOfint32,
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;

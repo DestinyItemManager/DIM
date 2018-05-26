@@ -8,7 +8,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';
 import VendorItems from '../d2-vendors/VendorItems';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from '../d2-vendors/vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 
@@ -26,7 +26,7 @@ export default function Kiosk({
   defs: D2ManifestDefinitions;
   vendorHash: number;
   items: DestinyKioskItem[];
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
 }) {

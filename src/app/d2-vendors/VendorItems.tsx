@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { $state } from '../ngimport-more';
 import { compact } from '../util';
 import VendorItemComponent from './VendorItemComponent';
@@ -24,7 +24,7 @@ export default function VendorItems({
   vendorDef: DestinyVendorDefinition;
   defs: D2ManifestDefinitions;
   vendorItems: VendorItem[];
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   currencyLookups?: {
     [itemHash: number]: number;

@@ -8,7 +8,7 @@ import { ngDialog, $state } from "../ngimport-more";
 import { IDialogOpenResult } from "ng-dialog";
 import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from "../destiny2/d2-buckets.service";
-import { DestinyTrackerServiceType } from "../item-review/destiny-tracker.service";
+import { DestinyTrackerService } from "../item-review/destiny-tracker.service";
 import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { ratePerks } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
@@ -18,7 +18,7 @@ import { D2RatingData } from "../item-review/d2-dtr-api-types";
 interface Props {
   defs: D2ManifestDefinitions;
   item: VendorItem;
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
   owned: boolean;
 }
 

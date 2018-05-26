@@ -11,7 +11,7 @@ import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definition
 import { D2ManifestService } from '../manifest/manifest-service';
 import { loadingTracker } from '../ngimport-more';
 import './vendor.scss';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForVendors } from './vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
@@ -22,13 +22,12 @@ interface Props {
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: D2StoreServiceType;
-  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
   defs?: D2ManifestDefinitions;
   vendorsResponse?: DestinyVendorsResponse;
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
 }
@@ -65,7 +64,7 @@ export default class Vendors extends React.Component<Props, State> {
 
     this.setState({ defs, vendorsResponse });
 
-    const trackerService = await fetchRatingsForVendors(defs, this.props.dimDestinyTrackerService, vendorsResponse);
+    const trackerService = await fetchRatingsForVendors(defs, vendorsResponse);
     this.setState({ trackerService });
   }
 
@@ -134,7 +133,7 @@ function VendorGroup({
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
 }) {
