@@ -125,7 +125,7 @@
     "YourReview": "Votre évaluation"
   },
   "ErrorBoundary": {
-    "Title": "Something went wrong"
+    "Title": "Une erreur s'est produite"
   },
   "Faction": {
     "EngramsAvailable": "1 engramme disponible",
@@ -206,7 +206,7 @@
       "XPComplete": "{{term}} - Affiche les objets qui ne peuvent plus recevoir d'xp (que leurs améliorations aient été débloqués ou non)."
     },
     "LightLevel": "Affiche les objets selon leur niveau de lumière (Attaque pour les Armes; Défense pour les Armures).",
-    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
+    "Location": "Montrer les objets en fonction de leur position dans l'app. gauche/milieu/droite sont les emplacements visuels des personnages, et tandis que le personnage de gauche fonctionnera toujours, les deux autres sont basés sur le nombre de personnages que vous avez. actuellement c'est votre dernier personnage sur lequel vous vous êtes connecté (marqué avec un triangle jaune).",
     "Locked": "Affiche les objets selon leur verrouillage.",
     "NamedStat": "Affiche les armures qui ont des points dans la statistique sélectionnée.",
     "NewItems": "Affiche les nouveaux objets.",
@@ -517,7 +517,7 @@
     "Limit": "Limite du Commis Des Postes"
   },
   "Progress": {
-    "CrucibleRank": "Crucible Ranks",
+    "CrucibleRank": "Rangs de l'épreuve",
     "Daily": "Quotidient",
     "ExpiresIn": "expire à {{endTime}}",
     "Factions": "Factions",

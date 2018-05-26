@@ -125,7 +125,7 @@
     "YourReview": "Sua avaliação"
   },
   "ErrorBoundary": {
-    "Title": "Something went wrong"
+    "Title": "Algo deu errado"
   },
   "Faction": {
     "EngramsAvailable": "1 engrama disponível",
@@ -206,7 +206,7 @@
       "XPComplete": "{{term}} - mostra itens que não podem mais ganhar XP (estando com seus todos os seus aprimoramentos destravados ou não)."
     },
     "LightLevel": "Mostra itens baseado em seus níveis de Luz (Ataque para Armas; Defesa para Armaduras).",
-    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
+    "Location": "Mostra itens baseado na sua localização dentro do app. left/middle/right (esquerda/meio/direita) são a localização visual do personagem, e enquanto inleftchar funciona sempre, os outros funcionam baseado em quantos personagens você tem. current é o seu personagem atualmente logado ou logado pela última vez (é aquele marcado com um triângulo amarelo).",
     "Locked": "Mostra itens baseado em seu estado de travamento.",
     "NamedStat": "Mostra armaduras que tem pontos no atributo nomeado.",
     "NewItems": "Mostra novos itens.",
@@ -335,7 +335,7 @@
     "OnlyEquippedClassLevel": "Este item só pode ser equipado em um {{class}} igual ou acima do nível {{level}}.",
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
     "PercentComplete": "({{percent, pct}} Completo)",
-    "PreviewVendor": "Preview {{type}} contents",
+    "PreviewVendor": "Visualizar conteúdo de {{type}}",
     "TooMuch": "Parece que você quis mover mais deste item do que existe na fonte!",
     "TwoExotics": "Nós não sabemos como você conseguiu equipar mais de 2 equipamentos exóticos!"
   },
@@ -517,7 +517,7 @@
     "Limit": "Limite do Chefe de Correio"
   },
   "Progress": {
-    "CrucibleRank": "Crucible Ranks",
+    "CrucibleRank": "Ranque do Crisol",
     "Daily": "Diário",
     "ExpiresIn": "expira em {{endTime}}",
     "Factions": "Facções",

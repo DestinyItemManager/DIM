@@ -125,7 +125,7 @@
     "YourReview": "La tua recensione"
   },
   "ErrorBoundary": {
-    "Title": "Something went wrong"
+    "Title": "Qualcosa è andato storto"
   },
   "Faction": {
     "EngramsAvailable": "1 engramma disponibile",
@@ -206,7 +206,7 @@
       "XPComplete": "{{term}} - mostra gli oggetti che non possono ricevere XP (sia che i potenziamenti siano sbloccati o no)."
     },
     "LightLevel": "Mostra gli oggetti basandosi sul loro livello luce (Attacco per le armi; Difesa per le armature).",
-    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
+    "Location": "Mostra gli oggetti basandosi sulla loro posizione all'interno dell'app. left/middle/right è una indicazione visiva del personaggio, e mentre inleftchar funzionerà sempre, le altre due dipendono da quanti personaggi hai. current è il tuo ultimo/attuale personaggio connesso (segnato con un triangolo giallo).",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "NamedStat": "Mostra armature che hanno punti nella statistica specificata.",
     "NewItems": "Mostra i nuovi oggetti.",
@@ -335,7 +335,7 @@
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
     "PercentComplete": "({{percent, pct}} Completato)",
-    "PreviewVendor": "Anteprima {{type}} contenuto",
+    "PreviewVendor": "Anteprima contenuto {{type}}",
     "TooMuch": "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
     "TwoExotics": "Non sappiamo come tu abbia equipaggiati più di 2 esotici!"
   },
@@ -493,7 +493,7 @@
     "LockUnlock_Lock": "Blocca {{itemType}}",
     "LockUnlock_Unlock": "Sblocca {{itemType}}",
     "OverviewTab": "Panoramica",
-    "ReadLore": "Leggi la storia su Ishtar Collective",
+    "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReviewsTab": "Recensioni",
     "Split": "Dividi",
     "Store": "Muovi",
@@ -517,7 +517,7 @@
     "Limit": "Limite Amministratore"
   },
   "Progress": {
-    "CrucibleRank": "Crucible Ranks",
+    "CrucibleRank": "Classifiche Crogiolo",
     "Daily": "Giornaliera",
     "ExpiresIn": "scade alle {{endTime}}",
     "Factions": "Fazioni",

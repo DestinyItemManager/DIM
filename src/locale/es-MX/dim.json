@@ -52,7 +52,7 @@
     "Twitter": "Obtén actualizaciones de estado en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
     "VendorNotFound": "La información de los vendedores no está disponible.",
-    "WarmindLoginNeeded": "No podemos cargar tu intentario debido a un fallo en la API de Destiny. Para arreglarlo, carga cada uno de tus personajes y configura los multigestos."
+    "WarmindLoginNeeded": "No podemos cargar tu inventario debido a un fallo en la API de Destiny. Para arreglarlo, carga cada uno de tus personajes y configura los gestos."
   },
   "Compare": {
     "All": "Comparaciones de {{type}} ({{quantity}})",
@@ -125,7 +125,7 @@
     "YourReview": "Tu Reseña"
   },
   "ErrorBoundary": {
-    "Title": "Algo fue mal"
+    "Title": "Algo salió mal"
   },
   "Faction": {
     "EngramsAvailable": "1 engrama disponible",
@@ -270,7 +270,7 @@
     "Shop": "Tienda",
     "SupportDIM": "Patrocinadores",
     "UpgradeDIM": "Actualizar DIM",
-    "WhatsNew": "¿Qué hay de nuevo?"
+    "WhatsNew": "Novedades"
   },
   "Help": {
     "CannotMove": "No se puede mover ese objeto de este personaje.",
@@ -677,7 +677,7 @@
     "Collections": "Colecciones",
     "Compare": "Comparado con lo que ya tienes:",
     "Consumables": "Consumibles",
-    "DestinySets": "Navega más lotes de objetos en Destiny Sets",
+    "DestinySets": "Ve más sets de objetos en Destiny Sets",
     "Emotes": "Gestos",
     "Engram": "Engrama de Recompensa",
     "Load": "Cargando Vendedores",
