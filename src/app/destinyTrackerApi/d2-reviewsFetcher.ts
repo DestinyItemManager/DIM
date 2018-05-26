@@ -108,24 +108,24 @@ class D2ReviewsFetcher {
    * them to the item.
    * Attempts to fetch data from the cache first.
    */
-  getItemReviews(item: D2Item, platformSelection: number, mode: number) {
+  async getItemReviews(item: D2Item, platformSelection: number, mode: number) {
     if (!item.reviewable) {
-      return Promise.resolve();
+      return;
     }
 
     const cachedData = this._reviewDataCache.getRatingData(item);
 
-    if (cachedData && cachedData.reviewsResponse) {
+    if (cachedData) {
       item.dtrRating = cachedData;
-
-      return Promise.resolve();
+    }
+    if (cachedData && cachedData.reviewsResponse) {
+      return;
     }
 
     return this._getItemReviewsPromise(item, platformSelection, mode)
       .then((reviewData) => {
         this._markUserReview(reviewData);
-        this._attachReviews(item,
-                            reviewData);
+        this._attachReviews(item, reviewData);
       });
   }
 

@@ -56,7 +56,7 @@ function MoveItemPropertiesCtrl(
     vm.showDetailsByDefault = (!item.equipment && item.notransfer);
     vm.itemDetails = vm.showDetailsByDefault;
 
-    dimDestinyTrackerService.getItemReviews(vm.item);
+    dimDestinyTrackerService.getItemReviews(vm.item).then(() => $scope.$apply());
 
     // DTR 404s on the new D2 languages for D1 items
     let language = vm.settings.language;

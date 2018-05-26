@@ -28,12 +28,7 @@
       <div ng-if="vm.item.objectives && !vm.item.hidePercentage" ng-i18next="[i18next]({ percent: vm.item.percentComplete })ItemService.PercentComplete"></div>
       <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
     </div>
-    <div ng-if="vm.item.destinyVersion === 1 && vm.item.reviewable && vm.item.dtrRating.overallScore" class="item-review-average">
-      <star-rating rating="vm.item.dtrRating.overallScore" read-only></star-rating>
-      <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating.overallScore, numRatings: vm.item.dtrRating.ratingCount || 0 })DtrReview.AverageRating"></span>
-    </div>
-    <!-- we were displaying the number of reviews rather than the total # of ratings before, which seems... wrong? -->
-    <div ng-if="vm.item.destinyVersion === 2 && vm.item.reviewable && vm.item.dtrRating.overallScore" class="item-review-average">
+    <div ng-if="vm.item.reviewable && vm.item.dtrRating.overallScore" class="item-review-average">
       <star-rating rating="vm.item.dtrRating.overallScore" read-only></star-rating>
       <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating.overallScore, numRatings: vm.item.dtrRating.ratingCount || 0 })DtrReview.AverageRating"></span>
     </div>
@@ -44,7 +39,7 @@
       <span class="move-popup-tab" ng-class="{ selected: vm.tab==='default' }" ng-click="vm.tab='default'" ng-i18next="MovePopup.OverviewTab"></span>
       <span class="move-popup-tab" ng-class="{ selected: vm.tab==='reviews' }" ng-click="vm.tab='reviews'" ng-i18next="MovePopup.ReviewsTab"></span>
     </div>
-    <dim-item-review item="vm.item" ng-if="vm.item.lockable || vm.item.reviews" ng-show="vm.tab === 'reviews'"></dim-item-review>
+    <dim-item-review item="vm.item" ng-if="vm.item.reviewable" ng-show="vm.tab === 'reviews'"></dim-item-review>
     <div ng-show="vm.tab === 'default'">
       <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ updateOn: 'blur' }" ng-change="vm.updateNote()"></textarea></form>
       <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
