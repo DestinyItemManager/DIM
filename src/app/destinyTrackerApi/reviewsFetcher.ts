@@ -187,7 +187,7 @@ export class ReviewsFetcher {
    * them to the item.
    * Attempts to fetch data from the cache first.
    */
-  getItemReviews(item: D1Item) {
+  async getItemReviews(item: D1Item) {
     if (!item.reviewable) {
       return;
     }
@@ -197,9 +197,8 @@ export class ReviewsFetcher {
       return;
     }
 
-    this._getItemReviewsPromise(item)
+    return this._getItemReviewsPromise(item)
       .then((data) => this._translateReviewResponse(data))
-      .then((translatedData) => this._attachReviews(item,
-                                                    translatedData));
+      .then((translatedData) => this._attachReviews(item, translatedData));
   }
 }

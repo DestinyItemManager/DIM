@@ -11,8 +11,6 @@ import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
-import { IPromise } from 'angular';
-import { $q } from 'ngimport';
 import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { D2ItemReviewResponse, WorkingD2Rating, D2ItemUserReview } from './d2-dtr-api-types';
@@ -72,7 +70,7 @@ export class DestinyTrackerService {
       return this;
     }
 
-    return $q.when(this);
+    return this;
   }
 
   async bulkFetchKioskItems(
@@ -85,44 +83,44 @@ export class DestinyTrackerService {
       return this;
     }
 
-    return $q.when(this);
+    return this;
   }
 
   getD2ReviewDataCache(): D2ReviewDataCache {
     return this._d2bulkFetcher.getCache();
   }
 
-  updateVendorRankings(vendors: { [key: number]: Vendor }) {
+  async updateVendorRankings(vendors: { [key: number]: Vendor }) {
     if (settings.showReviews) {
       this._bulkFetcher.bulkFetchVendorItems(vendors);
     }
   }
 
-  getItemReviews(item: DimItem) {
+  async getItemReviews(item: DimItem) {
     if (settings.allowIdPostToDtr) {
       if (item.isDestiny1()) {
-        this._reviewsFetcher.getItemReviews(item);
+        return this._reviewsFetcher.getItemReviews(item);
       } else if (item.isDestiny2()) {
         const platformSelection = settings.reviewsPlatformSelection;
         const mode = settings.reviewsModeSelection;
-        this._d2reviewsFetcher.getItemReviews(item, platformSelection, mode);
+        return this._d2reviewsFetcher.getItemReviews(item, platformSelection, mode);
       }
     }
   }
 
-  submitReview(item: DimItem) {
+  async submitReview(item: DimItem) {
     if (settings.allowIdPostToDtr) {
       const membershipInfo = getActivePlatform();
 
       if (item.isDestiny1()) {
-        this._reviewSubmitter.submitReview(item, membershipInfo);
+        return this._reviewSubmitter.submitReview(item, membershipInfo);
       } else if (item.isDestiny2()) {
-        this._d2reviewSubmitter.submitReview(item, membershipInfo);
+        return this._d2reviewSubmitter.submitReview(item, membershipInfo);
       }
     }
   }
 
-  fetchReviews(stores: DimStore[]) {
+  async fetchReviews(stores: DimStore[]) {
     if (!settings.showReviews ||
         !stores ||
         !stores[0]) {
@@ -130,32 +128,32 @@ export class DestinyTrackerService {
     }
 
     if (stores[0].isDestiny1()) {
-      this._bulkFetcher.bulkFetch(stores as D1Store[]);
+      return this._bulkFetcher.bulkFetch(stores as D1Store[]);
     } else if (stores[0].isDestiny2()) {
       const platformSelection = settings.reviewsPlatformSelection;
       const mode = settings.reviewsModeSelection;
-      this._d2bulkFetcher.bulkFetch(stores as D2Store[], platformSelection, mode);
+      return this._d2bulkFetcher.bulkFetch(stores as D2Store[], platformSelection, mode);
     }
   }
 
-  getItemReviewAsync(itemHash: number): IPromise<D2ItemReviewResponse | undefined> {
+  async getItemReviewAsync(itemHash: number): Promise<D2ItemReviewResponse | undefined> {
     if (settings.allowIdPostToDtr) {
       const platformSelection = settings.reviewsPlatformSelection;
       const mode = settings.reviewsModeSelection;
       return this._d2reviewsFetcher.fetchItemReviews(itemHash, platformSelection, mode);
     }
-    return $q.when(undefined);
+    return undefined;
   }
 
-  reportReview(review: DimUserReview) {
+  async reportReview(review: DimUserReview) {
     if (settings.allowIdPostToDtr) {
       const membershipInfo = getActivePlatform();
 
       if (membershipInfo) {
         if (membershipInfo.destinyVersion === 1) {
-          this._reviewReporter.reportReview(review as D1ItemUserReview, membershipInfo);
+          return this._reviewReporter.reportReview(review as D1ItemUserReview, membershipInfo);
         } else if (membershipInfo.destinyVersion === 2) {
-          this._d2reviewReporter.reportReview(review as D2ItemUserReview, membershipInfo);
+          return this._d2reviewReporter.reportReview(review as D2ItemUserReview, membershipInfo);
         }
       }
     }
