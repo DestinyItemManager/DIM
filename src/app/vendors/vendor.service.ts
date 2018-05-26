@@ -601,14 +601,14 @@ export function VendorService(
   // TODO: do this with another observable!
   function requestRatings() {
     _ratingsRequested = true;
-    fulfillRatingsRequest();
+    return fulfillRatingsRequest();
   }
 
-  function fulfillRatingsRequest() {
+  async function fulfillRatingsRequest(): Promise<void> {
     if (service.vendorsLoaded && _ratingsRequested) {
       // TODO: Throttle this. Right now we reload this on every page
       // view and refresh of the vendors page.
-      dimDestinyTrackerService.updateVendorRankings(service.vendors);
+      return dimDestinyTrackerService.updateVendorRankings(service.vendors);
     }
   }
 
