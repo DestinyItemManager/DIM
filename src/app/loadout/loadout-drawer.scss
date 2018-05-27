@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 #loadout-drawer {
   left: 0;
   right: 0;
@@ -10,6 +12,8 @@
   box-shadow: 0 -1px 6px 0px #222;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
+  // 10px below the character header
+  max-height: calc(100% - #{$header-height} - 82px - 10px);
 
   dim-stats {
     display: block;

@@ -30,6 +30,7 @@
         <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
       </div>
       <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
+      <sockets ng-if="item.sockets" item="item"></sockets>
     </div>
   </div>
 </div>

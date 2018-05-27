@@ -2,7 +2,7 @@
 
 * Fix the display of crucible rank points.
 * Fix faction rank progress bars on D1.
-
+* Compare view includes perks and mods for D2 items.
 
 # 4.53.0 (2018-05-20)
 
