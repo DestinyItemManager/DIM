@@ -131,14 +131,13 @@ export default class SingleVendor extends React.Component<Props, State> {
 
     const vendorItems = getVendorItems(account, defs, vendorDef, trackerService, vendorResponse && vendorResponse.itemComponents, vendorResponse && vendorResponse.sales.data);
 
-    // TODO: localize
     return (
       <div className="vendor dim-page">
         <ErrorBoundary name="SingleVendor">
           <div className="vendor-featured">
             <div className="vendor-featured-header">
               {factionProgress && faction
-                ? <FactionIcon factionProgress={factionProgress} factionDef={faction}/>
+                ? <FactionIcon factionProgress={factionProgress} factionDef={faction} vendor={vendor}/>
                 : <BungieImage src={vendorDef.displayProperties.icon}/>
               }
               <div className="vendor-header-info">

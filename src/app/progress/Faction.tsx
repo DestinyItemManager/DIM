@@ -36,6 +36,8 @@ export function Faction(props: FactionProps) {
 
   const rewardClick = () => $state.go('destiny2.vendor', { id: factionDef.rewardVendorHash, characterId: character.characterId });
 
+  // TODO: load vendors to show their vendor rank
+
   return (
     <div
       className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}

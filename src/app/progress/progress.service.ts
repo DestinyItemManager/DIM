@@ -1,10 +1,5 @@
 import {
   DestinyCharacterComponent,
-  DestinyCharacterProgressionComponent,
-  DestinyInventoryComponent,
-  DestinyItemComponentSetOfint64,
-  DictionaryComponentResponse,
-  SingleComponentResponse,
   DestinyProfileResponse
   } from 'bungie-api-ts/destiny2';
 import { $q } from 'ngimport';
@@ -26,25 +21,13 @@ export interface ProgressService {
   reloadProgress(): void;
 }
 
-/**
- * A slimmed down version of IDestinyProfileResponse for just what we get
- * TODO: Move all this into bungie-api.
- */
-interface ProgressProfileResponse {
-  characters: DictionaryComponentResponse<DestinyCharacterComponent>;
-  characterProgressions: DictionaryComponentResponse<DestinyCharacterProgressionComponent>;
-  profileInventory: SingleComponentResponse<DestinyInventoryComponent>;
-  characterInventories: DictionaryComponentResponse<DestinyInventoryComponent>;
-  itemComponents: DestinyItemComponentSetOfint64;
-}
-
 // TODO: generate all the API structures from the Swagger docs
 // This is a kind of radical approach - the result is not modified or interpreted until we get to components!
 // Should allow for better understanding of updates, but prevents us from "correcting" and interpreting the data,
 // and means we may have to block on defs lookup in the UI rendering :-/
 export interface ProgressProfile {
   readonly defs: D2ManifestDefinitions;
-  readonly profileInfo: ProgressProfileResponse;
+  readonly profileInfo: DestinyProfileResponse;
   /**
    * The date the most recently played character was last played.
    */
