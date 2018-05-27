@@ -9,9 +9,9 @@ import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definition
 import { processItems } from '../inventory/store/d1-item-factory.service';
 import { IRootScopeService, IPromise, copy, IQService } from 'angular';
 import { D1StoreServiceType, D1Store } from '../inventory/store-types';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
+import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 
 /*
 const allVendors = [
@@ -69,6 +69,24 @@ const categoryBlacklist = [
 
 const xur = 2796397637;
 
+export interface VendorCost {
+  currency: {
+    icon: string;
+    itemHash: number;
+    itemName: string;
+  };
+  value: number;
+}
+
+export interface VendorSaleItem {
+  costs: VendorCost[];
+  failureStrings: string;
+  index: number;
+  item: D1Item;
+  unlocked: boolean;
+  unlockedByCharacter: string[];
+}
+
 export interface Vendor {
   failed: boolean;
   nextRefreshDate: string;
@@ -84,11 +102,11 @@ export interface Vendor {
   factionLevel: number;
   factionAligned: boolean;
 
-  allItems: D1Item[];
+  allItems: VendorSaleItem[];
   categories: {
     index: number;
     title: string;
-    saleItems: D1Item[];
+    saleItems: VendorSaleItem[];
     hasArmorWeaps: boolean;
     hasVehicles: boolean;
     hasShadersEmbs: boolean;
@@ -132,7 +150,6 @@ export interface VendorServiceType {
 export function VendorService(
   $rootScope: IRootScopeService,
   dimStoreService: D1StoreServiceType,
-  dimDestinyTrackerService: DestinyTrackerServiceType,
   loadingTracker,
   $q: IQService
 ): VendorServiceType {
@@ -266,7 +283,7 @@ export function VendorService(
     return reloadPromise;
   }
 
-  function mergeVendors([firstVendor, ...otherVendors]) {
+  function mergeVendors([firstVendor, ...otherVendors]: Vendor[]) {
     const mergedVendor = copy(firstVendor);
 
     otherVendors.forEach((vendor) => {
@@ -564,7 +581,6 @@ export function VendorService(
           item.vendorIcon = createdVendor.icon;
         });
 
-        createdVendor.allItems = items;
         createdVendor.categories = categories;
 
         createdVendor.hasArmorWeaps = _.any(categories, (c) => c.hasArmorWeaps);
@@ -585,14 +601,14 @@ export function VendorService(
   // TODO: do this with another observable!
   function requestRatings() {
     _ratingsRequested = true;
-    fulfillRatingsRequest();
+    return fulfillRatingsRequest();
   }
 
-  function fulfillRatingsRequest() {
+  async function fulfillRatingsRequest(): Promise<void> {
     if (service.vendorsLoaded && _ratingsRequested) {
       // TODO: Throttle this. Right now we reload this on every page
       // view and refresh of the vendors page.
-      dimDestinyTrackerService.updateVendorRankings(service.vendors);
+      return dimDestinyTrackerService.updateVendorRankings(service.vendors);
     }
   }
 

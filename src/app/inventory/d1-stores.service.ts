@@ -13,7 +13,6 @@ import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definition
 import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';
 import { $rootScope, $q } from 'ngimport';
 import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
@@ -22,10 +21,9 @@ import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
+import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 
-export function StoreService(
-  dimDestinyTrackerService: DestinyTrackerServiceType
-): D1StoreServiceType {
+export function StoreService(): D1StoreServiceType {
   'ngInject';
 
   let _stores: D1Store[] = [];

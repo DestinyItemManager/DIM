@@ -6,7 +6,6 @@ import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
-import { $q } from 'ngimport';
 import { getRollAndPerks } from './d2-itemTransformer';
 
 /** Request to add a new rating (and optional review) for an item. */
@@ -92,13 +91,13 @@ class D2ReviewSubmitter {
     this._reviewDataCache.markItemAsReviewedAndSubmitted(item);
   }
 
-  submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
+  async submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
     if (!item.dtrRating ||
         !item.dtrRating.userReview) {
-      return $q.resolve();
+      return Promise.resolve();
     }
 
-    this._submitReviewPromise(item, membershipInfo)
+    return this._submitReviewPromise(item, membershipInfo)
       .then(() => {
         this._markItemAsReviewedAndSubmitted(item);
         this._eventuallyPurgeCachedData(item);

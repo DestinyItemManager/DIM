@@ -29,7 +29,7 @@ function getNewItems(allItems: D1Item[], reviewDataCache: ReviewDataCache): D1It
 }
 
 function getAllItems(stores: (D1Store | Vendor)[]): D1Item[] {
-  return flatMap(stores, (store) => isVendor(store) ? store.allItems : store.items);
+  return flatMap(stores, (store) => isVendor(store) ? store.allItems.map((i) => i.item) : store.items);
 }
 
 function isVendor(store: D1Store | Vendor): store is Vendor {

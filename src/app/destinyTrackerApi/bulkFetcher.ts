@@ -49,7 +49,7 @@ class BulkFetcher {
   bulkFetchVendorItems(vendorContainer: { [key: number]: Vendor }) {
     const vendors = Object.values(vendorContainer);
 
-    this._getBulkFetchPromise(vendors)
+    return this._getBulkFetchPromise(vendors)
       .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
                                                         vendors));
   }
@@ -95,10 +95,10 @@ class BulkFetcher {
 
     vendors.forEach((vendor) => {
       vendor.allItems.forEach((vendorItem) => {
-        const matchingItem = this._reviewDataCache.getRatingData(vendorItem);
+        const matchingItem = this._reviewDataCache.getRatingData(vendorItem.item);
 
         if (matchingItem) {
-          vendorItem.dtrRating = matchingItem;
+          vendorItem.item.dtrRating = matchingItem;
         }
       });
     });

@@ -10,7 +10,6 @@ import { getKiosks } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
-import { DestinyTrackerServiceType } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
@@ -18,19 +17,19 @@ import Kiosk from './Kiosk';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
   D2StoresService: StoreServiceType;
-  dimDestinyTrackerService: DestinyTrackerServiceType;
 }
 
 interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
-  trackerService?: DestinyTrackerServiceType;
+  trackerService?: DestinyTrackerService;
   stores?: DimStore[];
   ownedItemHashes?: Set<number>;
 }
@@ -58,7 +57,7 @@ export default class Collections extends React.Component<Props, State> {
     const profileResponse = await getKiosks(this.props.account);
     this.setState({ profileResponse, defs });
 
-    const trackerService = await fetchRatingsForKiosks(defs, this.props.dimDestinyTrackerService, profileResponse);
+    const trackerService = await fetchRatingsForKiosks(defs, profileResponse);
     this.setState({ trackerService });
   }
 

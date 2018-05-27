@@ -81,8 +81,8 @@ export class ReviewSubmitter {
     this._reviewDataCache.markItemAsReviewedAndSubmitted(item);
   }
 
-  submitReview(item, membershipInfo) {
-    this._submitReviewPromise(item, membershipInfo)
+  async submitReview(item, membershipInfo) {
+    return this._submitReviewPromise(item, membershipInfo)
       .then(() => {
         this._markItemAsReviewedAndSubmitted(item);
         this._eventuallyPurgeCachedData(item);

@@ -39,7 +39,7 @@ function VendorsController(
       vm.stores = stores;
       vm.vendors = vendors;
       vm.totalCoins = dimVendorService.countCurrencies(stores, vendors);
-      dimVendorService.requestRatings();
+      dimVendorService.requestRatings().then(() => $scope.$apply());
     });
   };
 
