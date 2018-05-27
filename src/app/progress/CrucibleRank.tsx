@@ -19,8 +19,6 @@ export function CrucibleRank(props: CrucibleRankProps) {
 
   const step = progressionDef.steps[progress.level];
 
-  console.log(progress);
-
   return (
     <div className="faction" title={progressionDef.displayProperties.description}>
       <div><CrucibleRankIcon progress={progress} defs={defs}/></div>
