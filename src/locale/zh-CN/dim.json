@@ -125,7 +125,7 @@
     "YourReview": "您的评测"
   },
   "ErrorBoundary": {
-    "Title": "Something went wrong"
+    "Title": "发生了一些错误"
   },
   "Faction": {
     "EngramsAvailable": "1记忆水晶可兑换",
@@ -266,11 +266,11 @@
     "Filters": "过滤器",
     "Inventory": "背包",
     "Refresh": "刷新命运数据",
-    "ReportBug": "Bug Report",
+    "ReportBug": "Bug报告",
     "Shop": "商店",
     "SupportDIM": "支持者",
-    "UpgradeDIM": "Upgrade DIM",
-    "WhatsNew": "What's New"
+    "UpgradeDIM": "更新至新版DIM",
+    "WhatsNew": "最新特性"
   },
   "Help": {
     "CannotMove": "无法从该角色中移出物品.",
@@ -517,7 +517,7 @@
     "Limit": "邮政官处已经没有物品空间了"
   },
   "Progress": {
-    "CrucibleRank": "Crucible Ranks",
+    "CrucibleRank": "PVP等级",
     "Daily": "每日",
     "ExpiresIn": "于{{endTime}}过期",
     "Factions": "阵营",
