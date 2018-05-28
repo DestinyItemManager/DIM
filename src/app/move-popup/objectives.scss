@@ -55,6 +55,11 @@ dim-objectives {
   flex-direction: row;
   align-items: center;
   color: white;
+  img {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
 }
 
 .objective-progress-bar {
@@ -67,6 +72,9 @@ dim-objectives {
 
 .objective-description {
   position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   padding: 0 4px;
   flex: 1;
 }
