@@ -77,12 +77,14 @@ dim-objectives {
   align-items: center;
   padding: 0 4px;
   flex: 1;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, .25);
 }
 
 .objective-text {
   z-index: 2;
   margin-right: 4px;
   backface-visibility: hidden;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, .25);
 }
 
 .objective-boolean {
