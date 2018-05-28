@@ -1,5 +1,7 @@
 # Next
 
+* Correctly display masterwork plug objectives - check the "Upgrade Masterwork" plug for catalyst updates.
+
 # 4.54.0 (2018-05-27)
 
 * Fix the display of crucible rank points.
