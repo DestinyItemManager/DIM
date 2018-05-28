@@ -1,4 +1,5 @@
 # Next
+* Displaying available rating data in spreadsheet export.
 
 # 4.54.0 (2018-05-27)
 
