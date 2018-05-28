@@ -884,6 +884,28 @@ function buildDefinedSockets(
   };
 }
 
+/**
+ * Plugs to hide from plug options (if not socketed)
+ * removes the "Default Ornament" plug, "Default Shader" and "Rework Masterwork"
+ * TODO: with AWA we may want to put some of these back
+ */
+const EXCLUDED_PLUGS = new Set([
+  // Default ornament
+  2931483505,
+  1959648454,
+  702981643,
+  // Rework Masterwork
+  39869035,
+  1961001474,
+  3612467353,
+  // Default Shader
+  4248210736
+]);
+function filterReusablePlug(reusablePlug: DimPlug) {
+  return !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
+    !reusablePlug.plugItem.itemCategoryHashes.includes(141186804);
+}
+
 function buildDefinedSocket(
   defs: D2ManifestDefinitions,
   socket: DestinyItemSocketEntryDefinition,
@@ -895,16 +917,9 @@ function buildDefinedSocket(
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
-      if (// TODO: with AWA we may want to put some of these back
-          // removes the reusablePlugs from masterwork
-          !reusablePlug.plugItem.itemCategoryHashes.includes(141186804) &&
-          // removes the "Remove Shader" plug
-          reusablePlug.plugItem.action &&
-          // removes the "Default Ornament" plug
-          ![2931483505, 1959648454, 702981643].includes(reusablePlug.plugItem.hash)
-        ) {
-          plugOptions.push(reusablePlug);
-        }
+      if (filterReusablePlug(reusablePlug)) {
+        plugOptions.push(reusablePlug);
+      }
       });
   }
 
@@ -977,15 +992,7 @@ function buildSocket(
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
-      if (
-        // TODO: with AWA we may want to put some of these back
-        // removes the reusablePlugs from masterwork
-        !reusablePlug.plugItem.itemCategoryHashes.includes(141186804) &&
-        // removes the "Remove Shader" plug
-        reusablePlug.plugItem.action &&
-        // removes the "Default Ornament" plug
-        ![2931483505, 1959648454, 702981643].includes(reusablePlug.plugItem.hash)
-      ) {
+      if (filterReusablePlug(reusablePlug)) {
           if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
             plugOptions.push(plug);
             plugOptions.shift();
