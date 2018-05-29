@@ -96,6 +96,9 @@ export default class VendorItemComponent extends React.Component<Props> {
               </div>}
               {item.primaryStat && <div className="item-stat item-equipment">{item.primaryStat}</div>}
             </div>}
+          {progress !== null && !item.canPurchase &&
+            <div className="item-stat item-equipment">{percent(progress)}</div>
+          }
         </div>
         <div className="vendor-costs">
           {item.costs.map((cost) =>
