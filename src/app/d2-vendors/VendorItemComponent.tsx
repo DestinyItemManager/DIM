@@ -14,6 +14,7 @@ import { ratePerks } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
 import { D2Item } from "../inventory/item-types";
 import { D2RatingData } from "../item-review/d2-dtr-api-types";
+import { percent } from "../inventory/dimPercentWidth.directive";
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -68,12 +69,20 @@ export default class VendorItemComponent extends React.Component<Props> {
       title = `${title}\n${item.failureStrings.join("\n")}`;
     }
 
+    const progress = item.objectiveProgress;
+
     return (
       <div className={classNames("vendor-item", { owned })}>
         {(!item.canPurchase || !item.canBeSold) &&
           <div className="locked-overlay"/>
         }
         <div className="item" title={item.displayProperties.name} ref={this.itemElement} onClick={this.openDetailsPopup}>
+          {progress !== null && !item.canPurchase &&
+            <div
+              className="item-xp-bar-small"
+              style={{ width: percent(progress) }}
+            />
+          }
           <div
             className={classNames("item-img", { transparent: item.borderless })}
             style={bungieBackgroundStyle(item.displayProperties.icon)}

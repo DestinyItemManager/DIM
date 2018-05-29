@@ -1,4 +1,4 @@
-import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition, ItemBindStatus, ItemLocation, TransferStatuses, ItemState, DestinyItemSocketEntryPlugItemDefinition } from "bungie-api-ts/destiny2";
+import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition, ItemBindStatus, ItemLocation, TransferStatuses, ItemState, DestinyItemSocketEntryPlugItemDefinition, DestinyObjectiveProgress } from "bungie-api-ts/destiny2";
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { equals } from 'angular';
 import { makeItem } from "../inventory/store/d2-item-factory.service";
@@ -6,6 +6,7 @@ import { D2ReviewDataCache } from "../destinyTrackerApi/d2-reviewDataCache";
 import { D2Item } from "../inventory/item-types";
 import { InventoryBuckets } from "../inventory/inventory-buckets";
 import { D2RatingData } from "../item-review/d2-dtr-api-types";
+import { sum } from "../util";
 
 /**
  * A displayable vendor item. The only state it holds is raw responses/definitions - all
@@ -93,6 +94,49 @@ export class VendorItem {
       vendorDef,
       vendorItemDef,
       reviewCache ? reviewCache.getRatingData(undefined, vendorItemDef.itemHash) : null
+    );
+  }
+
+  // TODO: This is getting silly. Rethink this whole thing.
+  static forOrnament(
+    defs: D2ManifestDefinitions,
+    itemHash: number,
+    objectives: DestinyObjectiveProgress[],
+    canInsert: boolean
+  ): VendorItem {
+    const fakeInstance = {
+
+    } as any as DestinyItemInstanceComponent;
+
+    return new VendorItem(
+      defs,
+      defs.InventoryItem.get(itemHash),
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      {
+        objectives: {
+          data: {
+            [itemHash]: {
+              objectives,
+              flavorObjective: undefined as any as DestinyObjectiveProgress,
+            }
+          },
+          privacy: 2
+        },
+        perks: { data: {}, privacy: 2 },
+        renderData: { data: {}, privacy: 2 },
+        stats: { data: {}, privacy: 2 },
+        sockets: { data: {}, privacy: 2 },
+        talentGrids: { data: {}, privacy: 2 },
+        plugStates: { data: {}, privacy: 2 },
+        instances: { data: {
+          [itemHash]: fakeInstance
+        }, privacy: 2 }
+      },
+      undefined,
+      canInsert
     );
   }
 
@@ -200,6 +244,21 @@ export class VendorItem {
     return null;
   }
 
+  get objectiveProgress(): number | null {
+    if (this.itemComponents && this.itemComponents.objectives && this.itemComponents.objectives.data[this.inventoryItem.hash]) {
+      const objectives = this.itemComponents.objectives.data[this.inventoryItem.hash].objectives;
+      return sum(objectives, (objective) => {
+        const objectiveDef = this.defs.Objective.get(objective.objectiveHash);
+        if (objectiveDef.completionValue) {
+          return Math.min(1, (objective.progress || 0) / objectiveDef.completionValue) / objectives.length;
+        } else {
+          return 0;
+        }
+      });
+    }
+    return null;
+  }
+
   equals(other: VendorItem) {
     // Defs can be ref-compared
     return this.vendorItemDef === other.vendorItemDef &&
@@ -225,7 +284,7 @@ export class VendorItem {
       this.itemComponents,
       {
         itemHash: this.itemHash,
-        itemInstanceId: this.saleItem ? this.saleItem.vendorItemIndex.toString() : undefined,
+        itemInstanceId: this.saleItem ? this.saleItem.vendorItemIndex.toString() : this.itemHash.toString(),
         quantity: this.vendorItemDef ? this.vendorItemDef.quantity : 1,
         bindStatus: ItemBindStatus.NotBound,
         location: ItemLocation.Vendor,

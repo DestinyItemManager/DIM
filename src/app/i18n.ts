@@ -42,7 +42,7 @@ export function initi18n(): Promise<never> {
         escapeValue: false,
         format(val, format) {
           if (format === 'pct') {
-            return percent(parseInt(val, 10));
+            return percent(parseFloat(val));
           } else if (format === 'humanBytes') {
             return humanBytes(parseInt(val, 10));
           }
