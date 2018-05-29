@@ -4,6 +4,7 @@ import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from "bungie-api-
 import classNames from 'classnames';
 import { t } from 'i18next';
 import { percent } from '../inventory/dimPercentWidth.directive';
+import BungieImage from '../dim-ui/BungieImage';
 
 export default function Objective({
   defs,
@@ -14,8 +15,28 @@ export default function Objective({
 }) {
   const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
+  const progress = objective.progress || 0;
+
+  if (objectiveDef.minimumVisibilityThreshold > 0 && progress < objectiveDef.minimumVisibilityThreshold) {
+    return null;
+  }
+
   const displayName = objectiveDef.progressDescription ||
       t(objective.complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
+
+  if (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Integer) {
+    return (
+      <div className="objective-row">
+        <div className="objective-integer">
+          <div className="objective-description">
+            {objectiveDef.displayProperties.hasIcon && <BungieImage src={objectiveDef.displayProperties.icon}/>}
+            {displayName}
+          </div>
+          <div className="objective-text">{progress}</div>
+        </div>
+      </div>
+    );
+  }
 
   const classes = classNames('objective-row', {
     'objective-complete': objective.complete,
@@ -23,7 +44,7 @@ export default function Objective({
   });
 
   const progressBarStyle = {
-    width: percent((objective.progress || 0) / objectiveDef.completionValue)
+    width: percent(progress / objectiveDef.completionValue)
   };
 
   return (
@@ -33,8 +54,8 @@ export default function Objective({
         <div className="objective-progress-bar" style={progressBarStyle}/>
         <div className="objective-description">{displayName}</div>
         {objectiveDef.allowOvercompletion && objectiveDef.completionValue === 1
-          ? <div className="objective-text">{objective.progress || 0}</div>
-          : <div className="objective-text">{objective.progress || 0}/{objectiveDef.completionValue}</div>
+          ? <div className="objective-text">{progress}</div>
+          : <div className="objective-text">{progress}/{objectiveDef.completionValue}</div>
         }
       </div>
     </div>
