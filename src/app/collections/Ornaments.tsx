@@ -8,6 +8,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';
 import VendorItemComponent from '../d2-vendors/VendorItemComponent';
 import { VendorItem } from '../d2-vendors/vendor-item';
+import { t } from 'i18next';
 
 /**
  * A single plug set.
@@ -26,7 +27,7 @@ export default function Ornaments({
       <div className="vendor-row">
         <h3 className="category-title">
           {defs.Vendor.get(2107783226).displayProperties.name}
-          <div className="ornaments-disclaimer">DIM can only show ornaments that could be unlocked on items you have in your inventory.</div>
+          <div className="ornaments-disclaimer">{t("Vendors.OrnamentsDisclaimer")}</div>
         </h3>
         <div className="vendor-items">
         {ornaments.map((ornament) =>
