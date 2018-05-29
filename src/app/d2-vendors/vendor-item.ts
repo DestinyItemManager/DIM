@@ -244,7 +244,7 @@ export class VendorItem {
     return null;
   }
 
-  get objectiveProgress(): number | null {
+  get objectiveProgress(): number {
     if (this.itemComponents && this.itemComponents.objectives && this.itemComponents.objectives.data[this.inventoryItem.hash]) {
       const objectives = this.itemComponents.objectives.data[this.inventoryItem.hash].objectives;
       return sum(objectives, (objective) => {
@@ -256,7 +256,7 @@ export class VendorItem {
         }
       });
     }
-    return null;
+    return 0;
   }
 
   equals(other: VendorItem) {

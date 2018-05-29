@@ -77,7 +77,7 @@ export default class VendorItemComponent extends React.Component<Props> {
           <div className="locked-overlay"/>
         }
         <div className="item" title={item.displayProperties.name} ref={this.itemElement} onClick={this.openDetailsPopup}>
-          {progress !== null && !item.canPurchase &&
+          {progress > 0 && !item.canPurchase &&
             <div
               className="item-xp-bar-small"
               style={{ width: percent(progress) }}
@@ -88,15 +88,15 @@ export default class VendorItemComponent extends React.Component<Props> {
             style={bungieBackgroundStyle(item.displayProperties.icon)}
           />
           {owned && <img className="owned-icon" src={checkMark}/>}
-          {(item.primaryStat || item.rating) &&
+          {Boolean(item.primaryStat || item.rating) &&
             <div>
-              {item.rating && <div className="item-stat item-review">
+              {item.rating && item.rating > 0 && <div className="item-stat item-review">
                 {item.rating}
                 <i className="fa fa-star" style={dtrRatingColor(item.rating)}/>
               </div>}
-              {item.primaryStat && <div className="item-stat item-equipment">{item.primaryStat}</div>}
+              {Boolean(item.primaryStat) && <div className="item-stat item-equipment">{item.primaryStat}</div>}
             </div>}
-          {progress !== null && !item.canPurchase &&
+          {progress > 0 && !item.canPurchase &&
             <div className="item-stat item-equipment">{percent(progress)}</div>
           }
         </div>
