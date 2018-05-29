@@ -1,4 +1,5 @@
 # Next
+* Displaying available rating data in spreadsheet export.
 
 * Correctly display masterwork plug objectives - check the "Upgrade Masterwork" plug for catalyst updates.
 
