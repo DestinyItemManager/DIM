@@ -644,7 +644,7 @@
     "TagNotesD1": "{{value}} 个带标签或备注的命运1物品",
     "TagNotesD2": "{{value}} 个带标签或备注的命运2物品",
     "Title": "DIM存储",
-    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
+    "Usage": "DIM使用了此设备{{usage, humanBytes}} 储存空间中的{{quota, humanBytes}}"
   },
   "StoreBucket": {
     "FillStack": "最大堆叠 ({{amount}})",
