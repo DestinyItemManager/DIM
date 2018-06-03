@@ -109,6 +109,12 @@ export default class Collections extends React.Component<Props, State> {
 
     return (
       <div className="vendor d2-vendors dim-page">
+        <ErrorBoundary name="Ornaments">
+          <Ornaments
+            defs={defs}
+            profileResponse={profileResponse}
+          />
+        </ErrorBoundary>
         <ErrorBoundary name="Kiosks">
           {Array.from(kioskVendors).map((vendorHash) =>
             <Kiosk
@@ -132,12 +138,6 @@ export default class Collections extends React.Component<Props, State> {
               trackerService={trackerService}
             />
           )}
-        </ErrorBoundary>
-        <ErrorBoundary name="Ornaments">
-          <Ornaments
-            defs={defs}
-            profileResponse={profileResponse}
-          />
         </ErrorBoundary>
         <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://destinysets.com">
           {t('Vendors.DestinySets')}
