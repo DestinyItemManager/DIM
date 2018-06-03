@@ -85,8 +85,10 @@ export function getProgression(platform: DestinyAccount): Promise<DestinyProfile
  */
 export function getKiosks(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(platform,
+    DestinyComponentType.ProfileInventories,
+    DestinyComponentType.CharacterInventories,
+    DestinyComponentType.CharacterEquipment,
     DestinyComponentType.Characters,
-    DestinyComponentType.ItemObjectives,
     DestinyComponentType.Kiosks,
     DestinyComponentType.ItemInstances,
     DestinyComponentType.ItemObjectives,

@@ -158,7 +158,6 @@ function PlugTooltip({
   defs?: D2ManifestDefinitions;
 }) {
 
-  // TODO: Show objectives too, by processing plugObjectives like any other objectives
   // TODO: show insertion costs
 
   return (

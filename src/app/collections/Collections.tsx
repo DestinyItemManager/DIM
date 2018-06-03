@@ -18,6 +18,7 @@ import { t } from 'i18next';
 import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
+import Ornaments from './Ornaments';
 
 interface Props {
   $scope: IScope;
@@ -89,6 +90,8 @@ export default class Collections extends React.Component<Props, State> {
       return <div className="vendor d2-vendors dim-page"><i className="fa fa-spinner fa-spin"/></div>;
     }
 
+    // TODO: a lot of this processing should happen at setState, not render?
+
     // Note that today, there is only one kiosk vendor
     const kioskVendors = new Set(Object.keys(profileResponse.profileKiosks.data.kioskItems));
     _.each(profileResponse.characterKiosks.data, (kiosk) => {
@@ -106,6 +109,12 @@ export default class Collections extends React.Component<Props, State> {
 
     return (
       <div className="vendor d2-vendors dim-page">
+        <ErrorBoundary name="Ornaments">
+          <Ornaments
+            defs={defs}
+            profileResponse={profileResponse}
+          />
+        </ErrorBoundary>
         <ErrorBoundary name="Kiosks">
           {Array.from(kioskVendors).map((vendorHash) =>
             <Kiosk
