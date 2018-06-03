@@ -28,27 +28,27 @@ import { settings, CharacterOrder } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 
-/* Label isn't used, but it helps us understand what each one is */
-const progressionMeta = {
-  611314723: { label: "Vanguard", order: 1 },
-  3231773039: { label: "Vanguard Research", order: 2 },
-  697030790: { label: "Crucible", order: 3 },
-  1021210278: { label: "Gunsmith", order: 4 },
+const factionOrder = [
+  611314723, // Vanguard,
+  3231773039, // Vanguard Research,
+  697030790, // Crucible,
+  1021210278, // Gunsmith,
 
-  4235119312: { label: "EDZ Deadzone Scout", order: 5 },
-  4196149087: { label: "Titan Field Commander", order: 6 },
-  1660497607: { label: "Nessus AI", order: 7 },
-  828982195: { label: "Io Researcher", order: 8 },
-  2677528157: { label: "Follower of Osiris", order: 9 },
-  24856709: { label: "Leviathan", order: 10 },
+  4235119312, // EDZ Deadzone Scout,
+  4196149087, // Titan Field Commander,
+  1660497607, // Nessus AI,
+  828982195, // Io Researcher,
+  3859807381, // Voice of Rasputin,
+  2677528157, // Follower of Osiris,
+  24856709, // Leviathan,
 
-  3468066401: { label: "The Nine", order: 11 },
-  1761642340: { label: "Iron Banner", order: 12 },
+  469305170, // The Nine,
+  1761642340, // Iron Banner,
 
-  2105209711: { label: "New Monarchy", order: 13 },
-  1714509342: { label: "Future War Cult", order: 14 },
-  3398051042: { label: "Dead Orbit", order: 15 }
-};
+  2105209711, // New Monarchy,
+  1714509342, // Future War Cult,
+  3398051042 // Dead Orbit
+];
 
 interface Props {
   $scope: IScope;
@@ -337,7 +337,10 @@ export class Progress extends React.Component<Props, State> {
     const { profileInfo } = this.state.progress!;
 
     const allFactions: DestinyFactionProgression[] = Object.values(profileInfo.characterProgressions.data[character.characterId].factions);
-    return _.sortBy(allFactions, (f) => (progressionMeta[f.factionHash] ? progressionMeta[f.factionHash].order : 999) + (f.factionVendorIndex === -1 ? 1000 : 0));
+    return _.sortBy(allFactions, (f) => {
+      const order = factionOrder.indexOf(f.factionHash);
+      return (order >= 0 ? order : 999) + (f.factionVendorIndex === -1 ? 1000 : 0);
+    });
   }
 
   /**
