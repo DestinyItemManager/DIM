@@ -70,6 +70,7 @@ module.exports = (env) => {
           uglifyOptions: {
             ecma: 8,
             compress: { warnings: false, inline: 1 },
+            mangle: { safari10: true },
             output: { comments: false }
           },
           sourceMap: true
