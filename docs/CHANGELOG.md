@@ -1,5 +1,7 @@
 # Next
 
+# 4.55.0 (2018-06-03)
+
 * Displaying available rating data in spreadsheet export.
 * Correctly display masterwork plug objectives - check the "Upgrade Masterwork" plug for catalyst updates.
 * The Collections page now shows progress towards unlocking ornaments. Due to restrictions in the API, it can only show ornaments that go with items you already have.
