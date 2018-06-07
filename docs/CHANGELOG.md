@@ -1,5 +1,7 @@
 # Next
 
+* Add "is:hasshader" search filter to select all items with shaders applied.
+
 # 4.55.0 (2018-06-03)
 
 * Displaying available rating data in spreadsheet export.
