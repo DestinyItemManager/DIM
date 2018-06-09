@@ -211,7 +211,7 @@
     "NamedStat": "Mostra armature che hanno punti nella statistica specificata.",
     "NewItems": "Mostra i nuovi oggetti.",
     "Notes": "Cerca oggetti che hai segnato con note",
-    "Ornament": "Mostra gli oggetti con ornamenti e li filtra in base allo stato.",
+    "Ornament": "Mostra gli oggetti con decori e li filtra in base allo stato.",
     "PartialMatch": "Mostra gli oggetti che hanno nel loro nome e perks una corrispondenza parziale con il testo del filtro.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerLevel": "Mostra gli oggetti basandosi sul loro livello di Potere (Attacco per le armi; Difesa per le armature).",
@@ -681,6 +681,7 @@
     "Emotes": "Emotes",
     "Engram": "Engramma Ricompensa",
     "Load": "Caricamento Mercanti",
+    "OrnamentsDisclaimer": "DIM può solo mostrare decori che possono essere sbloccati sugli oggetti che hai nel tuo inventario.",
     "ShadersAndEmblems": "Shader & Emblemi",
     "ShipsAndVehicles": "Navi & Veicoli",
     "Vendors": "Mercanti"
