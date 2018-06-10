@@ -27,6 +27,7 @@ import Quest from './Quest';
 import { settings, CharacterOrder } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
+import ErrorBoundary from '../dim-ui/ErrorBoundary';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -144,9 +145,11 @@ export class Progress extends React.Component<Props, State> {
             <div className="title">{t('Progress.ProfileMilestones')}</div>
             <div className="progress-row">
               <div className="progress-for-character">
-                {profileMilestones.map((milestone) =>
-                  <Milestone milestone={milestone} character={characters[0]} defs={defs} key={milestone.milestoneHash} />
-                )}
+                <ErrorBoundary name="AccountMilestones">
+                  {profileMilestones.map((milestone) =>
+                    <Milestone milestone={milestone} character={characters[0]} defs={defs} key={milestone.milestoneHash} />
+                  )}
+                </ErrorBoundary>
               </div>
             </div>
           </div>}
@@ -155,9 +158,11 @@ export class Progress extends React.Component<Props, State> {
             <div className="title">{t('Progress.ProfileQuests')}</div>
             <div className="progress-row">
                 <div className="progress-for-character">
-                  {profileQuests.map((item) =>
-                    <Quest defs={defs} item={item} objectives={this.objectivesForItem(characters[0], item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
-                  )}
+                  <ErrorBoundary name="AccountQuests">
+                    {profileQuests.map((item) =>
+                      <Quest defs={defs} item={item} objectives={this.objectivesForItem(characters[0], item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
+                    )}
+                  </ErrorBoundary>
                 </div>
             </div>
           </div>}
@@ -166,13 +171,15 @@ export class Progress extends React.Component<Props, State> {
             <div className="title">{t('Progress.CrucibleRank')}</div>
             <div className="progress-row">
               <div className="progress-for-character">
-                {crucibleRanks.map((progression) =>
-                  <CrucibleRank
-                    key={progression.progressionHash}
-                    defs={defs}
-                    progress={progression}
-                  />
-                )}
+                <ErrorBoundary name="CrucibleRanks">
+                  {crucibleRanks.map((progression) =>
+                    <CrucibleRank
+                      key={progression.progressionHash}
+                      defs={defs}
+                      progress={progression}
+                    />
+                  )}
+                </ErrorBoundary>
               </div>
             </div>
           </div>
@@ -234,40 +241,46 @@ export class Progress extends React.Component<Props, State> {
         <div className="section">
           <div className="title">{t('Progress.Milestones')}</div>
           <div className="progress-row">
-            {characters.map((character) =>
-              <div className="progress-for-character" key={character.characterId}>
-                <WellRestedPerkIcon defs={defs} progressions={profileInfo.characterProgressions.data[character.characterId]} />
-                {this.milestonesForCharacter(character).map((milestone) =>
-                  <Milestone milestone={milestone} character={character} defs={defs} key={milestone.milestoneHash} />
-                )}
-              </div>
-            )}
+            <ErrorBoundary name="Milestones">
+              {characters.map((character) =>
+                <div className="progress-for-character" key={character.characterId}>
+                  <WellRestedPerkIcon defs={defs} progressions={profileInfo.characterProgressions.data[character.characterId]} />
+                  {this.milestonesForCharacter(character).map((milestone) =>
+                    <Milestone milestone={milestone} character={character} defs={defs} key={milestone.milestoneHash} />
+                  )}
+                </div>
+              )}
+            </ErrorBoundary>
           </div>
         </div>
 
         <div className="section">
           <div className="title">{t('Progress.Quests')}</div>
           <div className="progress-row">
-            {characters.map((character) =>
-              <div className="progress-for-character" key={character.characterId}>
-                {this.questItems(profileInfo.characterInventories.data[character.characterId].items).map((item) =>
-                  <Quest defs={defs} item={item} objectives={this.objectivesForItem(character, item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
-                )}
-              </div>
-            )}
+            <ErrorBoundary name="Quests">
+              {characters.map((character) =>
+                <div className="progress-for-character" key={character.characterId}>
+                  {this.questItems(profileInfo.characterInventories.data[character.characterId].items).map((item) =>
+                    <Quest defs={defs} item={item} objectives={this.objectivesForItem(character, item)} key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}/>
+                  )}
+                </div>
+              )}
+            </ErrorBoundary>
           </div>
         </div>
 
         <div className="section">
           <div className="title">{t('Progress.Factions')}</div>
           <div className="progress-row">
-            {characters.map((character) =>
-              <div className="progress-for-character" key={character.characterId}>
-                {this.factionsForCharacter(character).map((faction) =>
-                  <Faction factionProgress={faction} defs={defs} character={character} profileInventory={profileInfo.profileInventory.data} key={faction.factionHash} />
-                )}
-              </div>
-            )}
+            <ErrorBoundary name="Factions">
+              {characters.map((character) =>
+                <div className="progress-for-character" key={character.characterId}>
+                  {this.factionsForCharacter(character).map((faction) =>
+                    <Faction factionProgress={faction} defs={defs} character={character} profileInventory={profileInfo.profileInventory.data} key={faction.factionHash} />
+                  )}
+                </div>
+              )}
+            </ErrorBoundary>
           </div>
         </div>
       </>
