@@ -486,6 +486,13 @@
           <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.AoT })Filter.Activity"></span>
         </td>
       </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="is:shaded"></dim-filter-link>
+          <dim-filter-link filter="is:hasshader"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.HasShader"></td>
+      </tr>
     </table>
   </div>
 </div>

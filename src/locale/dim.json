@@ -195,6 +195,7 @@
       "Glimmer": "Shows items that are consumables that are related to gaining glimmer:",
       "Item": "Items that are exchangable with Rahool for 200 glimmer."
     },
+    "HasShader": "Shows items that have a shader applied.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
     "Leveling": {

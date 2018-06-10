@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { TagInfo, settings } from '../settings/settings';
-import { DimItem, D1Item } from '../inventory/item-types';
+import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { sortStores } from '../shell/dimAngularFilters.filter';
 
@@ -119,7 +119,8 @@ export function buildSearchConfig(
       hasLight: ['light', 'haslight', 'haspower'],
       powermod: ['powermod', 'haspowermod'],
       complete: ['goldborder', 'yellowborder', 'complete'],
-      masterwork: ['masterwork', 'masterworks']
+      masterwork: ['masterwork', 'masterworks'],
+      hasShader: ['shaded', 'hasshader']
     });
   }
 
@@ -862,6 +863,11 @@ export function searchFilters(
       },
       powermod(item: DimItem) {
         return item.primStat && (item.primStat.value !== item.basePower);
+      },
+      hasShader(item: D2Item) {
+        return item.sockets && _.any(item.sockets.sockets, (socket) => {
+          return (socket.plug || false) && socket.plug.plugItem.plug.plugCategoryHash === 2973005342 && socket.plug.plugItem.hash !== 4248210736;
+        });
       },
       rpm: filterByStats('rpm'),
       charge: filterByStats('charge'),

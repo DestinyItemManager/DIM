@@ -1,5 +1,6 @@
 # Next
 
+* Add "is:hasshader" search filter to select all items with shaders applied.
 * Fixed some bugs in older Safari versions.
 * Errors on Progress, Collections, and Vendors pages won't take out the whole page anymore, just the section with the error.
 * Fix bugs where a stray "0" would show up in odd places.
