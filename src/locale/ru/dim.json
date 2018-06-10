@@ -125,7 +125,7 @@
     "YourReview": "Ваш отзыв"
   },
   "ErrorBoundary": {
-    "Title": "Something went wrong"
+    "Title": "Что-то пошло не так"
   },
   "Faction": {
     "EngramsAvailable": "Доступна одна энграмма",
@@ -206,7 +206,7 @@
       "XPComplete": "{{term}} - показывает вещи, которые не могут принимать опыт (независимо от того, были ли открыты все улучшения)."
     },
     "LightLevel": "Показать предметы по уровню Силы (Атака для оружия, Защита для брони).",
-    "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
+    "Location": "Показывает предметы по расположению в DIM. left/middle/right - положение колонки персонажа. inleftchar работает всегда, остальные два варианта - в зависимости от того, сколько персонажей есть на аккаунте. current - последний/текущий активный персонаж (тот, что отмечен желтым треугольником).",
     "Locked": "Показывать предметы по статусу блокировки.",
     "NamedStat": "Показывать броню, у которой есть очки в указной характеристике.",
     "NewItems": "Показать новые предметы.",
@@ -335,7 +335,7 @@
     "OnlyEquippedClassLevel": "Это может быть надето только на персонаже класса {{class}} с уровнем {{level}} или выше.",
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
     "PercentComplete": "({{percent, pct}} Выполнено)",
-    "PreviewVendor": "Preview {{type}} contents",
+    "PreviewVendor": "Предпросмотр {{type}}",
     "TooMuch": "Похоже Вы хотите переместить больше предметов чем доступно!",
     "TwoExotics": "Мы не понимаем как Вы надели более двух Экзотических предметов!"
   },
@@ -517,7 +517,7 @@
     "Limit": "Предел Потчмейстера"
   },
   "Progress": {
-    "CrucibleRank": "Crucible Ranks",
+    "CrucibleRank": "Ранги Горнила",
     "Daily": "Ежедневно",
     "ExpiresIn": "истекает в {{endTime}}",
     "Factions": "Репутация",
@@ -681,6 +681,7 @@
     "Emotes": "Эмоции",
     "Engram": "Наградные энграммы",
     "Load": "Загрузка Вендоров",
+    "OrnamentsDisclaimer": "DIM показывает только те украшения, которые доступны (применение/разблокирование) для предметов в Ваших инвентарях. ",
     "ShadersAndEmblems": "Шейдеры & Эмблемы",
     "ShipsAndVehicles": "Корабли & Машины",
     "Vendors": "Вендоры"

@@ -682,10 +682,10 @@
     "Emotes": "Emotes",
     "Engram": "Reward Engram",
     "Load": "Loading Vendors",
+    "OrnamentsDisclaimer": "DIM can only show ornaments that could be unlocked on items you have in your inventory.",
     "ShadersAndEmblems": "Shaders & Emblems",
     "ShipsAndVehicles": "Ships & Vehicles",
-    "Vendors": "Vendors",
-    "OrnamentsDisclaimer": "DIM can only show ornaments that could be unlocked on items you have in your inventory."
+    "Vendors": "Vendors"
   },
   "Views": {
     "About": {

@@ -28,6 +28,12 @@ export default class VendorItemComponent extends React.Component<Props> {
   private dialogResult: IDialogOpenResult | null = null;
   private itemElement = React.createRef<HTMLDivElement>();
 
+  constructor(props: Props) {
+    super(props);
+    // There's a Safari bug that makes "private openDetailsPopup = async() => {}" throw "Can't find private variable: @derivedConstructor". It's fixed in the latest iOS but not all of them. So instead we bind the old fashioned way.
+    this.openDetailsPopup = this.openDetailsPopup.bind(this);
+  }
+
   shouldComponentUpdate(
     nextProps: Readonly<Props>) {
     return !nextProps.item.equals(this.props.item);
@@ -90,9 +96,9 @@ export default class VendorItemComponent extends React.Component<Props> {
           {owned && <img className="owned-icon" src={checkMark}/>}
           {Boolean(item.primaryStat || item.rating) &&
             <div>
-              {item.rating && item.rating > 0 && <div className="item-stat item-review">
+              {Boolean(item.rating && item.rating > 0) && <div className="item-stat item-review">
                 {item.rating}
-                <i className="fa fa-star" style={dtrRatingColor(item.rating)}/>
+                <i className="fa fa-star" style={dtrRatingColor(item.rating!)}/>
               </div>}
               {Boolean(item.primaryStat) && <div className="item-stat item-equipment">{item.primaryStat}</div>}
             </div>}
@@ -100,16 +106,16 @@ export default class VendorItemComponent extends React.Component<Props> {
             <div className="item-stat item-equipment">{percent(progress)}</div>
           }
         </div>
-        <div className="vendor-costs">
+        {item.costs.length > 0 && <div className="vendor-costs">
           {item.costs.map((cost) =>
             <VendorItemCost key={cost.itemHash} defs={defs} cost={cost} />
           )}
-        </div>
+        </div>}
       </div>
     );
   }
 
-  private openDetailsPopup = async(e) => {
+  private async openDetailsPopup(e) {
     const { item, trackerService } = this.props;
 
     e.stopPropagation();

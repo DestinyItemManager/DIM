@@ -16,6 +16,7 @@ import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { Subscription } from 'rxjs/Subscription';
 import { D2StoreServiceType, D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
+import ErrorBoundary from '../dim-ui/ErrorBoundary';
 
 interface Props {
   $scope: IScope;
@@ -135,29 +136,31 @@ export default class SingleVendor extends React.Component<Props, State> {
     // TODO: localize
     return (
       <div className="vendor dim-page">
-        <div className="vendor-featured">
-          <div className="vendor-featured-header">
-            {factionProgress && faction
-              ? <FactionIcon factionProgress={factionProgress} factionDef={faction}/>
-              : <BungieImage src={vendorDef.displayProperties.icon}/>
-            }
-            <div className="vendor-header-info">
-              <h1>{vendorDef.displayProperties.name} <span className="vendor-location">{placeString}</span></h1>
-              <div>{vendorDef.displayProperties.description}</div>
-              {vendorResponse &&
-                <div>Inventory updates in <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)}/></div>
+        <ErrorBoundary name="SingleVendor">
+          <div className="vendor-featured">
+            <div className="vendor-featured-header">
+              {factionProgress && faction
+                ? <FactionIcon factionProgress={factionProgress} factionDef={faction}/>
+                : <BungieImage src={vendorDef.displayProperties.icon}/>
               }
+              <div className="vendor-header-info">
+                <h1>{vendorDef.displayProperties.name} <span className="vendor-location">{placeString}</span></h1>
+                <div>{vendorDef.displayProperties.description}</div>
+                {vendorResponse &&
+                  <div>Inventory updates in <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)}/></div>
+                }
+              </div>
             </div>
           </div>
-        </div>
-        <VendorItems
-          defs={defs}
-          vendorDef={vendorDef}
-          vendorItems={vendorItems}
-          trackerService={trackerService}
-          ownedItemHashes={ownedItemHashes}
-          currencyLookups={vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}}
-        />
+          <VendorItems
+            defs={defs}
+            vendorDef={vendorDef}
+            vendorItems={vendorItems}
+            trackerService={trackerService}
+            ownedItemHashes={ownedItemHashes}
+            currencyLookups={vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}}
+          />
+        </ErrorBoundary>
       </div>
     );
   }

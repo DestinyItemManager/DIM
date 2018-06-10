@@ -269,7 +269,7 @@
     "ReportBug": "Fehler melden",
     "Shop": "Shop",
     "SupportDIM": "Unterstützer",
-    "UpgradeDIM": "DIM Upgrade",
+    "UpgradeDIM": "DIM aktualisieren",
     "WhatsNew": "Was ist neu"
   },
   "Help": {
@@ -681,6 +681,7 @@
     "Emotes": "Gesten",
     "Engram": "Belohnungs-Engramm",
     "Load": "Lade Händler",
+    "OrnamentsDisclaimer": "DIM kann nur Ornamente anzeigen, die für Items aus deinem Inventar freigeschaltet werden können.",
     "ShadersAndEmblems": "Shader & Abzeichen",
     "ShipsAndVehicles": "Schiffe & Fahrzeuge",
     "Vendors": "Händler"

@@ -269,7 +269,7 @@
     "ReportBug": "Bug Report",
     "Shop": "商店",
     "SupportDIM": "支持者",
-    "UpgradeDIM": "Upgrade DIM",
+    "UpgradeDIM": "Update DIM",
     "WhatsNew": "What's New"
   },
   "Help": {
@@ -681,6 +681,7 @@
     "Emotes": "表情動作",
     "Engram": "獎勵記憶水晶",
     "Load": "載入商販",
+    "OrnamentsDisclaimer": "DIM can only show ornaments that could be unlocked on items you have in your inventory.",
     "ShadersAndEmblems": "造型和徽章",
     "ShipsAndVehicles": "飛船和交通工具",
     "Vendors": "商販"
