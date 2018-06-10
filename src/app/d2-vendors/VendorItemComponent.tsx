@@ -90,9 +90,9 @@ export default class VendorItemComponent extends React.Component<Props> {
           {owned && <img className="owned-icon" src={checkMark}/>}
           {Boolean(item.primaryStat || item.rating) &&
             <div>
-              {item.rating && item.rating > 0 && <div className="item-stat item-review">
+              {Boolean(item.rating && item.rating > 0) && <div className="item-stat item-review">
                 {item.rating}
-                <i className="fa fa-star" style={dtrRatingColor(item.rating)}/>
+                <i className="fa fa-star" style={dtrRatingColor(item.rating!)}/>
               </div>}
               {Boolean(item.primaryStat) && <div className="item-stat item-equipment">{item.primaryStat}</div>}
             </div>}
@@ -100,11 +100,11 @@ export default class VendorItemComponent extends React.Component<Props> {
             <div className="item-stat item-equipment">{percent(progress)}</div>
           }
         </div>
-        <div className="vendor-costs">
+        {item.costs.length > 0 && <div className="vendor-costs">
           {item.costs.map((cost) =>
             <VendorItemCost key={cost.itemHash} defs={defs} cost={cost} />
           )}
-        </div>
+        </div>}
       </div>
     );
   }
