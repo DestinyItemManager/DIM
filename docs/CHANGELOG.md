@@ -1,5 +1,10 @@
 # Next
 
+* Fixed some bugs in older Safari versions.
+* Errors on Progress, Collections, and Vendors pages won't take out the whole page anymore, just the section with the error.
+* Fix bugs where a stray "0" would show up in odd places.
+* Align Progress columns better for accounts with fewer than 3 characters.
+
 # 4.55.0 (2018-06-03)
 
 * Displaying available rating data in spreadsheet export.
