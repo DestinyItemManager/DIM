@@ -52,7 +52,7 @@ export function ItemMoveService(
       .then((item) => item.updateManualMoveTimestamp())
       .catch((e) => {
         toaster.pop("error", item.name, e.message);
-        console.error("error moving item", item, "to", store, e);
+        console.error("error moving item", item.name, "to", store.name, e);
         // Some errors aren't worth reporting
         if (
           e.code !== "wrong-level" &&

@@ -444,9 +444,20 @@ export function ItemService(
     const otherStores = stores.filter((s) => s.id !== store.id);
 
     // Start with candidates of the same type (or vault bucket if it's vault)
-    const allItems = store.isVault
-      ? store.items.filter((i) => i.bucket.vaultBucket!.id === item.bucket.vaultBucket!.id)
-      : store.buckets[item.bucket.id];
+    // TODO: This try/catch is to help debug https://sentry.io/destiny-item-manager/dim/issues/484361056/
+    let allItems;
+    try {
+      allItems = store.isVault
+        ? store.items.filter((i) => i.bucket.vaultBucket && item.bucket.vaultBucket && i.bucket.vaultBucket.id === item.bucket.vaultBucket.id)
+        : store.buckets[item.bucket.id];
+    } catch (e) {
+      if (store.isVault && !item.bucket.vaultBucket) {
+        console.error("Item", item.name, "has no vault bucket, but we're trying to move aside room in the vault for it");
+      } else if (store.items.some((i) => !i.bucket.vaultBucket)) {
+        console.error("The vault has items with no vault bucket: ", store.items.filter((i) => !i.bucket.vaultBucket).map((i) => i.name));
+      }
+      throw e;
+    }
     const moveAsideCandidates = allItems.filter(movable);
 
     // if there are no candidates at all, fail
