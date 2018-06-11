@@ -36,9 +36,9 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
-"@types/angular-hotkeys@^1.7.0":
+"@types/angular-hotkeys@1.7.0":
   version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@types/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#28f240ffcebdf33c3de9d4c4668f8e6aeac8c0b4"
+  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/@types/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#28f240ffcebdf33c3de9d4c4668f8e6aeac8c0b4"
   dependencies:
     "@types/angular" "*"
 
@@ -303,9 +303,9 @@ angular-duration-format@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/angular-duration-format/-/angular-duration-format-1.0.1.tgz#b1c6eee6eeffde58eb42644cf1653e5574cfdf1c"
 
-angular-hotkeys@^1.7.0:
+angular-hotkeys@1.7.0:
   version "1.7.0"
-  resolved "https://registry.yarnpkg.com/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#052e6b6f44dfcd824427798b7f10e1917e8700a1"
+  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#052e6b6f44dfcd824427798b7f10e1917e8700a1"
 
 angular-messages@1.7.0:
   version "1.7.0"
