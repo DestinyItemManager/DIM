@@ -28,6 +28,12 @@ export default class VendorItemComponent extends React.Component<Props> {
   private dialogResult: IDialogOpenResult | null = null;
   private itemElement = React.createRef<HTMLDivElement>();
 
+  constructor(props: Props) {
+    super(props);
+    // There's a Safari bug that makes "private openDetailsPopup = async() => {}" throw "Can't find private variable: @derivedConstructor". It's fixed in the latest iOS but not all of them. So instead we bind the old fashioned way.
+    this.openDetailsPopup = this.openDetailsPopup.bind(this);
+  }
+
   shouldComponentUpdate(
     nextProps: Readonly<Props>) {
     return !nextProps.item.equals(this.props.item);
@@ -109,7 +115,7 @@ export default class VendorItemComponent extends React.Component<Props> {
     );
   }
 
-  private openDetailsPopup = async(e) => {
+  private async openDetailsPopup(e) {
     const { item, trackerService } = this.props;
 
     e.stopPropagation();
