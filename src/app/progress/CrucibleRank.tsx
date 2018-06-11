@@ -17,7 +17,7 @@ export function CrucibleRank(props: CrucibleRankProps) {
 
   const progressionDef = defs.Progression.get(progress.progressionHash);
 
-  const step = progressionDef.steps[progress.level];
+  const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
   return (
     <div className="faction" title={progressionDef.displayProperties.description}>
