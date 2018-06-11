@@ -181,6 +181,13 @@ export function StoreItemCtrl(
     } else if (CompareService.dialogOpen) {
       CompareService.addItemToCompare(item, e);
     } else {
+      // This is separate to hopefully work around an issue where Angular can't instantiate the controller with ES6 object shorthands
+      function dialogController() {
+        "ngInject";
+        this.item = vm.item;
+        this.store = getStoreService(item).getStore(this.item.owner);
+      }
+
       dialogResult = ngDialog.open({
         template: dialogTemplate,
         plain: true,
@@ -189,12 +196,7 @@ export function StoreItemCtrl(
         showClose: false,
         data: $element[0],
         controllerAs: "vm",
-        controller() {
-          "ngInject";
-          this.item = vm.item;
-          this.store = getStoreService(item).getStore(this.item.owner);
-        },
-
+        controller: dialogController,
         // Setting these focus options prevents the page from
         // jumping as dialogs are shown/hidden
         trapFocus: false,
