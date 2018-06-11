@@ -43,7 +43,6 @@ function MovePopupController(
   }
 
   vm.$onInit = () => {
-    console.log("Move popup", this.item, this.store);
     vm.moveAmount = vm.item.amount;
     if (vm.item.maxStackSize > 1) {
       const store = getStoreService().getStore(vm.item.owner)!;
