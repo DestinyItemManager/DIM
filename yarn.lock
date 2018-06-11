@@ -36,9 +36,9 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
-"@types/angular-hotkeys@1.7.0":
+"@types/angular-hotkeys@^1.7.0":
   version "1.7.0"
-  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/@types/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#28f240ffcebdf33c3de9d4c4668f8e6aeac8c0b4"
+  resolved "https://registry.yarnpkg.com/@types/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#28f240ffcebdf33c3de9d4c4668f8e6aeac8c0b4"
   dependencies:
     "@types/angular" "*"
 
@@ -295,21 +295,21 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-angular-aria@1.7.0:
+angular-aria@^1.6.9:
   version "1.7.0"
-  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/angular-aria/-/angular-aria-1.7.0.tgz#fb96f5650959a86f30695ea814a071387e6e71b2"
+  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.0.tgz#fb96f5650959a86f30695ea814a071387e6e71b2"
 
 angular-duration-format@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/angular-duration-format/-/angular-duration-format-1.0.1.tgz#b1c6eee6eeffde58eb42644cf1653e5574cfdf1c"
 
-angular-hotkeys@1.7.0:
+angular-hotkeys@^1.7.0:
   version "1.7.0"
-  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#052e6b6f44dfcd824427798b7f10e1917e8700a1"
+  resolved "https://registry.yarnpkg.com/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#052e6b6f44dfcd824427798b7f10e1917e8700a1"
 
-angular-messages@1.7.0:
+angular-messages@^1.6.9:
   version "1.7.0"
-  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/angular-messages/-/angular-messages-1.7.0.tgz#ae0ec5fec710898dbbe9f0146ca87e0649f6c3d6"
+  resolved "https://registry.yarnpkg.com/angular-messages/-/angular-messages-1.7.0.tgz#ae0ec5fec710898dbbe9f0146ca87e0649f6c3d6"
 
 "angular-native-dragdrop@github:DestinyItemManager/angular-dragdrop":
   version "1.2.2"
@@ -321,13 +321,13 @@ angular-promise-tracker@^2.2.2:
   dependencies:
     angular ">=1.3.0"
 
-angular-sanitize@1.7.0:
+angular-sanitize@^1.6.9:
   version "1.7.0"
-  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/angular-sanitize/-/angular-sanitize-1.7.0.tgz#8ff2870fa3f6d4d0e0647900dbc01258ebeee1c1"
+  resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.7.0.tgz#8ff2870fa3f6d4d0e0647900dbc01258ebeee1c1"
 
-angular-touch@1.7.0:
+angular-touch@^1.6.9:
   version "1.7.0"
-  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/angular-touch/-/angular-touch-1.7.0.tgz#9e58a1257566a2b35d48e10d17b68e5599ee99c1"
+  resolved "https://registry.yarnpkg.com/angular-touch/-/angular-touch-1.7.0.tgz#9e58a1257566a2b35d48e10d17b68e5599ee99c1"
 
 angular2react@^3.0.2:
   version "3.0.2"
@@ -336,9 +336,9 @@ angular2react@^3.0.2:
     lodash.kebabcase "^4.1.1"
     ngimport "^1.0.0"
 
-angular@1.7.0, angular@>=1.3.0, angular@>=1.5, angular@>=1.5.0:
+angular@>=1.3.0, angular@>=1.5, angular@>=1.5.0, angular@^1.6.9:
   version "1.7.0"
-  resolved "https://repo.devcloud.sungard.com/artifactory/api/npm/npm-cto/angular/-/angular-1.7.0.tgz#e45d679fc8d81040a4894c7ccc16a4e1ad0a9ca6"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.0.tgz#e45d679fc8d81040a4894c7ccc16a4e1ad0a9ca6"
 
 angularjs-slider@^6.5.1:
   version "6.5.1"
