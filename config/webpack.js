@@ -254,7 +254,7 @@ module.exports = (env) => {
         // Debug Service Worker
         '$featureFlags.debugSW': JSON.stringify(env !== 'release'),
         // Send exception reports to Sentry.io on beta only
-        '$featureFlags.sentry': JSON.stringify(env === 'beta' || env === 'release'),
+        '$featureFlags.sentry': JSON.stringify(env === 'beta'),
         // D2 Vendors
         '$featureFlags.vendors': JSON.stringify(true),
       }),
