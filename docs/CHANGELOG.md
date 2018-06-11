@@ -1,5 +1,7 @@
 # Next
 
+# 4.56.0 (2018-06-10)
+
 * Add "is:hasshader" search filter to select all items with shaders applied.
 * Fixed some bugs in older Safari versions.
 * Errors on Progress, Collections, and Vendors pages won't take out the whole page anymore, just the section with the error.
