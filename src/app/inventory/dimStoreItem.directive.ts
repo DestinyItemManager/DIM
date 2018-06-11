@@ -186,6 +186,11 @@ export function StoreItemCtrl(
         "ngInject";
         this.item = vm.item;
         this.store = getStoreService(item).getStore(this.item.owner);
+        this.instance = {
+          item: vm.item,
+          store: getStoreService(item).getStore(vm.item.owner)
+        };
+        console.log("Dialog controller", this.item, this.store);
       }
 
       dialogResult = ngDialog.open({
@@ -196,6 +201,7 @@ export function StoreItemCtrl(
         showClose: false,
         data: $element[0],
         controllerAs: "vm",
+        bindToContoller: true,
         controller: dialogController,
         // Setting these focus options prevents the page from
         // jumping as dialogs are shown/hidden
