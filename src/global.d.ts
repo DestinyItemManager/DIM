@@ -35,7 +35,7 @@ declare function ga(...params: string[]);
 
 interface Window {
   CSS: {
-    supports(propertyName: string, value: string, something: number);
+    supports(propertyName: string);
   }
   BroadcastChannel?: BroadcastChannel;
 }
