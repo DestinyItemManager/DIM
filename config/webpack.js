@@ -11,6 +11,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const csp = require('./content-security-policy');
 
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -206,13 +207,23 @@ module.exports = (env) => {
         chunks: ['gdriveReturn']
       }),
 
+      // Generate the .htaccess file (kind of an abuse of HtmlWebpack plugin just for templating)
+      new HtmlWebpackPlugin({
+        filename: '.htaccess',
+        template: 'src/htaccess',
+        inject: false,
+        templateParameters: {
+          csp: csp(env)
+        }
+      }),
+
+
       // Generate a version info JSON file we can poll. We could theoretically add more info here too.
       new GenerateJsonPlugin('./version.json', {
         version
       }),
 
       new CopyWebpackPlugin([
-        { from: './src/.htaccess' },
         { from: './extension', to: '../extension-dist' },
         { from: `./icons/${env}-extension/`, to: '../extension-dist' },
         { from: './src/manifest-webapp.json' },
