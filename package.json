@@ -48,6 +48,7 @@
     "babel-preset-env": "^1.6.1",
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
     "clean-webpack-plugin": "^0.1.19",
+    "content-security-policy-builder": "^2.0.0",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
     "exports-loader": "^0.7.0",
