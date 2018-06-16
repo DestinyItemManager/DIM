@@ -195,6 +195,7 @@
       "Glimmer": "Muestra objetos que son consumibles y que están relacionados a la obtención de lúmen:",
       "Item": "Objetos que son intercambiables con Rahool por 200 de lúmen."
     },
+    "HasShader": "Mostrar objetos que tengan shader aplicado.",
     "InLoadout": "Muestra objetos que están incluidos en cualquier equipamiento.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
     "Leveling": {
@@ -411,11 +412,11 @@
     "ApplySearch": "Búsqueda de la transferencia \"{{query}}\"",
     "Before": "Antes '{{name}}'",
     "Cancel": "Cancelar",
-    "Classified": "Algunos de tus ítems son clasificados y no pueden ser incluidos en el cálculo de Poder máximo.",
+    "Classified": "Algunos de tus objetos son clasificados y no pueden ser incluidos en el cálculo de Poder máximo.",
     "ConfirmDelete": "¿Estás seguro de que quieres borrar '{{name}}'?",
     "CouldNotEquip": "No se pudo equipar {{itemname}}",
-    "Create": "Crear equipo",
-    "Delete": "Borrar equipo",
+    "Create": "Crear equipación",
+    "Delete": "Borrar equipación",
     "DeleteErrorDescription": "Imposible borrar equipo {{loadoutName}}: {{error}}.",
     "DeleteErrorTitle": "Error al borrar equipo",
     "DoesNotExist": "{{itemname}} no existe en tu cuenta.",
@@ -681,7 +682,7 @@
     "Emotes": "Gestos",
     "Engram": "Engrama de Recompensa",
     "Load": "Cargando Vendedores",
-    "OrnamentsDisclaimer": "DIM solo puede mostrar diseños que puedan ser desbloqueados en objetos que tengas en tu inventario.",
+    "OrnamentsDisclaimer": "DIM solo puede mostrar adornos que puedan ser desbloqueados en objetos que tengas en tu inventario.",
     "ShadersAndEmblems": "Colores & Emblemas",
     "ShipsAndVehicles": "Naves & Vehículos",
     "Vendors": "Vendedores"

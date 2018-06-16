@@ -195,6 +195,7 @@
       "Glimmer": "Affiche les objets consommables qui font gagner des lumens:",
       "Item": "Objets échangeable avec Rahol contre 200 lumens."
     },
+    "HasShader": "Montrer les objets qui ont un revêtement appliqué.",
     "InLoadout": "Affiche les objets qui sont dans un pré set.",
     "Infusable": "Affiche les objets qui peuvent être infusés.",
     "Leveling": {

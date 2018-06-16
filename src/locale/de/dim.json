@@ -195,6 +195,7 @@
       "Glimmer": "Zeigt verzehrbare Items die mit dem Verdienst von Glimmer in Verbindung stehen:",
       "Item": "Items die bei Rahool für 200 Glimmer abgegeben werden können."
     },
+    "HasShader": "Shows items that have a shader applied.",
     "InLoadout": "Zeigt Items die in einem Loadout verwendet werden.",
     "Infusable": "Zeigt Items die infundiert werden können.",
     "Leveling": {

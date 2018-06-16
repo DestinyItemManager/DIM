@@ -195,6 +195,7 @@
       "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de lúmem:",
       "Item": "Items que podem ser trocados no Rahool por 200 lúmem."
     },
+    "HasShader": "Mostra itens que tem um tonalizador aplicado.",
     "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de set pré-configurado.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "Leveling": {

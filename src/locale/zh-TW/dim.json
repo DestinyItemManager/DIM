@@ -195,6 +195,7 @@
       "Glimmer": "顯示與增加微光幣獲取有關的消耗品.",
       "Item": "能與拉乎爾大師交換200微光幣的物品."
     },
+    "HasShader": "Shows items that have a shader applied.",
     "InLoadout": "顯示已被用於配裝的物品.",
     "Infusable": "顯示可以灌注的物品.",
     "Leveling": {

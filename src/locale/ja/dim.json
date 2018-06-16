@@ -195,6 +195,7 @@
       "Glimmer": "グリマー入手に関係するアイテムを表示",
       "Item": "ラフールから200グリマーと交換可能なアイテム"
     },
+    "HasShader": "Shows items that have a shader applied.",
     "InLoadout": "装備品に含まれるアイテムを表示",
     "Infusable": "融合可能なアイテムを表示",
     "Leveling": {

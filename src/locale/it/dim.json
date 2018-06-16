@@ -195,6 +195,7 @@
       "Glimmer": "Mostra gli oggetti consumabili che sono relativi al guadagno di Lumen:",
       "Item": "Oggetti che sono scambiabili con Rahool per 200 Lumen."
     },
+    "HasShader": "Mostra oggetti che hanno uno shader applicato.",
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
     "Leveling": {
