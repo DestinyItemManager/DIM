@@ -123,7 +123,7 @@ export function SettingsController(
   vm.initialLanguage = vm.settings.language;
 
   // Edge doesn't support these
-  vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
+  vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)');
 
   vm.downloadWeaponCsv = () => {
     downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : dimStoreService.getStores(), "Weapons");
