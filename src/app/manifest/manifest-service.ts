@@ -93,7 +93,7 @@ class ManifestService {
         let message = e.message || e;
         this.statusText = t('Manifest.Error', { error: message });
 
-        if (e.status === -1) {
+        if (e instanceof TypeError || e.status === -1) {
           message = navigator.onLine
             ? t('BungieService.NotConnectedOrBlocked')
             : t('BungieService.NotConnected');

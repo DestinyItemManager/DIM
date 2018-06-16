@@ -47,6 +47,12 @@ export function error(message: string, errorCode: PlatformErrorCodes): DimError 
 }
 
 export async function handleErrors<T>(response: Response): Promise<ServerResponse<T>> {
+  if (response instanceof TypeError) {
+    throw new Error(navigator.onLine
+      ? t('BungieService.NotConnectedOrBlocked')
+      : t('BungieService.NotConnected'));
+  }
+
   if (response instanceof Error) {
     throw response;
   }
