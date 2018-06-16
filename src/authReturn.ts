@@ -35,7 +35,7 @@ function handleAuthReturn() {
       window.location.href = "/index.html";
     })
     .catch((error) => {
-      if (error.status === -1) {
+      if (error instanceof TypeError || error.status === -1) {
         setError('A content blocker is interfering with either DIM or Bungie.net, or you are not connected to the internet.');
         return;
       }
