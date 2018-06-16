@@ -42,7 +42,7 @@
     "awesome-typescript-loader": "^5.0.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
-    "babel-plugin-angularjs-annotate": "^0.8.2",
+    "babel-plugin-angularjs-annotate": "^0.9.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
@@ -83,7 +83,7 @@
     "url-loader": "^1.0.1",
     "webpack": "^4.5.0",
     "webpack-bundle-analyzer": "^2.11.1",
-    "webpack-cli": "^2.0.14",
+    "webpack-cli": "^3.0.0",
     "webpack-notifier": "^1.6.0",
     "workbox-webpack-plugin": "^2.1.3"
   },
