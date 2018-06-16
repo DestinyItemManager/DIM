@@ -6,6 +6,7 @@ import template from './dimMoveItemProperties.html';
 import { DimItem } from '../inventory/item-types';
 import { StoreServiceType } from '../inventory/store-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { $q } from 'ngimport';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -164,7 +165,7 @@ function MoveItemPropertiesCtrl(
     }
 
     if (item.isDestiny2()) {
-      d2SetLockState(store, item, state)
+      $q.when(d2SetLockState(store, item, state))
         .then(() => {
           item.locked = state;
           $rootScope.$broadcast('dim-filter-invalidate');
@@ -173,7 +174,7 @@ function MoveItemPropertiesCtrl(
           vm.locking = false;
         });
     } else if (item.isDestiny1()) {
-      d1SetItemState(item, store, state, type)
+      $q.when(d1SetItemState(item, store, state, type))
         .then(() => {
           if (type === 'lock') {
             item.locked = state;
