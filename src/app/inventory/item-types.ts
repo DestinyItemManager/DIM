@@ -145,6 +145,7 @@ export interface D2Item extends DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
   dtrRating: D2RatingData | null;
+  isTransmat: boolean;
 }
 
 export interface D2PrimStat extends DestinyStat {

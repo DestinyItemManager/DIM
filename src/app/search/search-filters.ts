@@ -120,7 +120,8 @@ export function buildSearchConfig(
       powermod: ['powermod', 'haspowermod'],
       complete: ['goldborder', 'yellowborder', 'complete'],
       masterwork: ['masterwork', 'masterworks'],
-      hasShader: ['shaded', 'hasshader']
+      hasShader: ['shaded', 'hasshader'],
+      transmat: ['transmat']
     });
   }
 
@@ -868,6 +869,9 @@ export function searchFilters(
         return item.sockets && _.any(item.sockets.sockets, (socket) => {
           return (socket.plug || false) && socket.plug.plugItem.plug.plugCategoryHash === 2973005342 && socket.plug.plugItem.hash !== 4248210736;
         });
+      },
+      transmat(item: D2Item) {
+        return item.isTransmat;
       },
       rpm: filterByStats('rpm'),
       charge: filterByStats('charge'),
