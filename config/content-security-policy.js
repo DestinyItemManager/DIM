@@ -94,5 +94,7 @@ module.exports = function csp(env) {
     baseCSP.imgSrc.push("https://beta.destinyitemmanager.com");
   }
 
-  return builder(baseCSP);
+  return builder({
+    directives: baseCSP
+  });
 }
