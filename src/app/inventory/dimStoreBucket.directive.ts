@@ -8,7 +8,7 @@ import { showInfoPopup } from '../shell/info-popup';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 import template from './dimStoreBucket.directive.html';
 import './dimStoreBucket.scss';
-import { ItemServiceType } from './dimItemService.factory';
+import { dimItemService } from './dimItemService.factory';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
@@ -33,7 +33,6 @@ function StoreBucketCtrl(
   },
   $scope: IScope,
   loadingTracker,
-  dimItemService: ItemServiceType,
   $q: IQService,
   $timeout: ITimeoutService,
   toaster,

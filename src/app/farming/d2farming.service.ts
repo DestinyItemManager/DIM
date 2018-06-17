@@ -4,7 +4,7 @@ import { getBuckets } from '../destiny2/d2-buckets.service';
 import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
-import { ItemServiceType, MoveReservations } from '../inventory/dimItemService.factory';
+import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
 import { D2Store } from '../inventory/store-types';
 import { D2Item } from '../inventory/item-types';
 import { InventoryBucket } from '../inventory/inventory-buckets';
@@ -18,7 +18,6 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 export function D2FarmingService(
   $rootScope: IRootScopeService,
   $q: IQService,
-  dimItemService: ItemServiceType,
   $interval: IIntervalService,
   toaster,
   $i18next

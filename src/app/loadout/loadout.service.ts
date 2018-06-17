@@ -2,12 +2,12 @@ import { copy, IPromise, IQService } from 'angular';
 import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { queueAction } from '../inventory/action-queue';
-import { ItemServiceType } from '../inventory/dimItemService.factory';
 import { SyncService } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import { dimItemService } from '../inventory/dimItemService.factory';
 
 export const enum LoadoutClass {
   any = -1,
@@ -55,7 +55,6 @@ export function LoadoutService(
   $q: IQService,
   $rootScope: angular.IRootScopeService,
   $i18next,
-  dimItemService: ItemServiceType,
   toaster,
   loadingTracker
 ): LoadoutServiceType {

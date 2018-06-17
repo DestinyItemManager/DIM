@@ -3,7 +3,7 @@ import { settings as dimSettings } from '../settings/settings';
 import * as _ from 'underscore';
 import { sum } from '../util';
 import { getBuckets } from '../destiny1/d1-buckets.service';
-import { ItemServiceType, MoveReservations } from '../inventory/dimItemService.factory';
+import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
 import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
 
@@ -14,7 +14,6 @@ import { D1StoresService } from '../inventory/d1-stores.service';
 export function FarmingService(
   $rootScope: IRootScopeService,
   $q: IQService,
-  dimItemService: ItemServiceType,
   $interval: IIntervalService,
   toaster,
   $i18next

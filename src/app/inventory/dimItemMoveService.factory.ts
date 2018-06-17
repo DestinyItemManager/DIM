@@ -3,15 +3,14 @@ import { reportException } from '../exceptions';
 import { queuedAction } from '../inventory/action-queue';
 import { showInfoPopup } from '../shell/info-popup';
 import { IQService, IPromise } from 'angular';
-import { ItemServiceType } from './dimItemService.factory';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
+import { dimItemService } from './dimItemService.factory';
 
 export function ItemMoveService(
   $q: IQService,
   loadingTracker,
   toaster,
-  dimItemService: ItemServiceType,
   $i18next
 ) {
   "ngInject";

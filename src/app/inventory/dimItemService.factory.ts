@@ -10,6 +10,8 @@ import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
+import { t } from 'i18next';
+import { $q } from 'ngimport';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -39,15 +41,12 @@ export interface ItemServiceType {
   equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]>;
 }
 
+export const dimItemService = ItemService();
+
 /**
  * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
  */
-export function ItemService(
-  $q,
-  $i18next
-): ItemServiceType {
-  'ngInject';
-
+function ItemService(): ItemServiceType {
   // We'll reload the stores to check if things have been
   // thrown away or moved and we just don't have up to date info. But let's
   // throttle these calls so we don't just keep refreshing over and over.
@@ -130,7 +129,7 @@ export function ItemService(
       while (removeAmount > 0) {
         let sourceItem = sourceItems.shift();
         if (!sourceItem) {
-          throw new Error($i18next.t('ItemService.TooMuch'));
+          throw new Error(t('ItemService.TooMuch'));
         }
 
         const amountToRemove = Math.min(removeAmount, sourceItem.amount);
@@ -293,12 +292,12 @@ export function ItemService(
         if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
           const similarItem = getSimilarItem(otherExotic);
           if (!similarItem) {
-            return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: otherExotic.name })));
+            return $q.reject(new Error(t('ItemService.Deequip', { itemname: otherExotic.name })));
           }
           const target = similarItem.getStoresService().getStore(similarItem.owner)!;
 
           if (store.id === target.id) {
-            return similarItem;
+            return $q.when(similarItem);
           } else {
             // If we need to get the similar item from elsewhere, do that first
             return moveTo(similarItem, store, true).then(() => similarItem);
@@ -315,7 +314,7 @@ export function ItemService(
         return $q.when([]);
       }
       if (items.length === 1) {
-        return equipItem(items[0]);
+        return equipItem(items[0]).then((item) => [item]);
       }
       return equipItemsApi(items[0])(store, items)
         .then((equippedItems) => equippedItems.map((i) => updateItemModel(i, store, store, true)));
@@ -338,12 +337,12 @@ export function ItemService(
     const storeService = item.getStoresService();
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
-      return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: item.name })));
+      return $q.reject(new Error(t('ItemService.Deequip', { itemname: item.name })));
     }
     const source = storeService.getStore(item.owner)!;
     const target = storeService.getStore(similarItem.owner)!;
 
-    let p: IPromise<DimItem> = $q.when();
+    let p = $q.when(item);
     if (source.id !== target.id) {
       p = moveTo(similarItem, source, true);
     }
@@ -385,7 +384,7 @@ export function ItemService(
       return dequipItem(otherExotic, true)
         .then(() => true)
         .catch((e) => {
-          throw new Error($i18next.t('ItemService.ExoticError', { itemname: item.name, slot: otherExotic.type, error: e.message }));
+          throw new Error(t('ItemService.ExoticError', { itemname: item.name, slot: otherExotic.type, error: e.message }));
         });
     } else {
       return $q.resolve(true);
@@ -458,7 +457,7 @@ export function ItemService(
 
     // if there are no candidates at all, fail
     if (moveAsideCandidates.length === 0) {
-      const e: DimError = new Error($i18next.t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
+      const e: DimError = new Error(t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
       e.code = 'no-space';
       throw e;
     }
@@ -599,7 +598,7 @@ export function ItemService(
     });
 
     if (!moveAsideCandidate) {
-      const e: DimError = new Error($i18next.t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
+      const e: DimError = new Error(t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
       e.code = 'no-space';
       throw e;
     }
@@ -624,7 +623,7 @@ export function ItemService(
     excludes?: DimItem[];
     reservations?: MoveReservations;
     numRetries?: number;
-  } = {}): IPromise<void> {
+  } = {}): IPromise<boolean> {
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
     const storeService = item.getStoresService();
 
@@ -693,7 +692,7 @@ export function ItemService(
             ? moveAsideItem.bucket.sort
             : '')
           : moveAsideItem.type);
-        const error: DimError = new Error($i18next.t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`,
+        const error: DimError = new Error(t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`,
           { itemtype, store: moveAsideTarget.name, context: moveAsideTarget.gender }));
         error.code = 'no-space';
         return $q.reject(error);
@@ -741,11 +740,11 @@ export function ItemService(
     if (item.canBeEquippedBy(store)) {
       return;
     } else if (item.classified) {
-      throw new Error($i18next.t('ItemService.Classified'));
+      throw new Error(t('ItemService.Classified'));
     } else {
       const message = (item.classTypeName === 'unknown')
-          ? $i18next.t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
-          : $i18next.t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
+          ? t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
+          : t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
 
       const error: DimError = new Error(message);
       error.code = 'wrong-level';
@@ -758,7 +757,7 @@ export function ItemService(
    * in order to make the primary transfer possible, such as making room or dequipping exotics.
    */
   function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, amount: number, excludes?: DimItem[], reservations?: MoveReservations): IPromise<any> {
-    let promise = $q.when();
+    let promise: IPromise<any> = $q.when();
 
     if (equip) {
       promise = promise.then(() => canEquip(item, store));

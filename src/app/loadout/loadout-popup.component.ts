@@ -16,7 +16,7 @@ import { getActivePlatform } from '../accounts/platform.service';
 import { IDialogService } from 'ng-dialog';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets.service';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
-import { ItemServiceType } from '../inventory/dimItemService.factory';
+import { dimItemService } from '../inventory/dimItemService.factory';
 import { DimStore } from '../inventory/store-types';
 import { SearchService } from '../search/search-filter.component';
 
@@ -61,7 +61,6 @@ function LoadoutPopupCtrl(
   $scope,
   ngDialog: IDialogService,
   dimLoadoutService: LoadoutServiceType,
-  dimItemService: ItemServiceType,
   toaster,
   dimFarmingService,
   D2FarmingService,
@@ -240,7 +239,7 @@ function LoadoutPopupCtrl(
   vm.makeRoomForPostmaster = () => {
     ngDialog.closeAll();
     const bucketsService = vm.store.destinyVersion === 1 ? d1GetBuckets : d2GetBuckets;
-    return queueAction(() => makeRoomForPostmaster(vm.store.getStoresService(), vm.store, dimItemService, toaster, bucketsService));
+    return queueAction(() => makeRoomForPostmaster(vm.store, toaster, bucketsService));
   };
 
   vm.pullFromPostmaster = () => {

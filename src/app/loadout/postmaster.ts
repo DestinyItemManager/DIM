@@ -2,15 +2,13 @@ import { t } from 'i18next';
 import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { IPromise } from 'angular';
-import { ItemServiceType } from '../inventory/dimItemService.factory';
+import { ItemServiceType, dimItemService } from '../inventory/dimItemService.factory';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 
 export function makeRoomForPostmaster(
-  storeService: StoreServiceType,
   store: DimStore,
-  dimItemService: ItemServiceType,
   toaster,
   bucketsService: () => IPromise<InventoryBuckets>
 ): IPromise<void> {
@@ -49,7 +47,7 @@ export function makeRoomForPostmaster(
     });
 
     // TODO: it'd be nice if this were a loadout option
-    return moveItemsToVault(storeService, store, itemsToMove, dimItemService)
+    return moveItemsToVault(store.getStoresService(), store, itemsToMove, dimItemService)
       .then(() => {
         toaster.pop('success',
                     t('Loadouts.MakeRoom'),
