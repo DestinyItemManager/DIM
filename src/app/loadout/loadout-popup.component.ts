@@ -17,7 +17,7 @@ import { IDialogService } from 'ng-dialog';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets.service';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
 import { ItemServiceType } from '../inventory/dimItemService.factory';
-import { DimStore, StoreServiceType } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { SearchService } from '../search/search-filter.component';
 
 export const LoadoutPopupComponent: IComponentOptions = {
@@ -67,16 +67,10 @@ function LoadoutPopupCtrl(
   D2FarmingService,
   $window,
   $i18next,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   $stateParams
 ) {
   'ngInject';
   const vm = this;
-
-  function getStoreService() {
-    return vm.store.destinyVersion === 1 ? dimStoreService : D2StoresService;
-  }
 
   vm.$onInit = () => {
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
@@ -94,13 +88,13 @@ function LoadoutPopupCtrl(
 
     initLoadouts();
 
-    vm.hasClassified = getStoreService().getAllItems().some((i) => {
+    vm.hasClassified = vm.store.getStoresService().getAllItems().some((i) => {
       return i.classified &&
         (i.location.sort === 'Weapons' ||
         i.location.sort === 'Armor' ||
         i.type === 'Ghost');
     });
-    vm.maxLightValue = dimLoadoutService.getLight(vm.store, maxLightLoadout(getStoreService(), vm.store)) + (vm.hasClassified ? '*' : '');
+    vm.maxLightValue = dimLoadoutService.getLight(vm.store, maxLightLoadout(vm.store.getStoresService(), vm.store)) + (vm.hasClassified ? '*' : '');
   };
 
   vm.search = SearchService;
@@ -204,13 +198,13 @@ function LoadoutPopupCtrl(
 
   // A dynamic loadout set up to level weapons and armor
   vm.itemLevelingLoadout = ($event: IAngularEvent) => {
-    const loadout = itemLevelingLoadout(getStoreService(), vm.store);
+    const loadout = itemLevelingLoadout(vm.store.getStoresService(), vm.store);
     vm.applyLoadout(loadout, $event);
   };
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   vm.maxLightLoadout = ($event: IAngularEvent) => {
-    const loadout = maxLightLoadout(getStoreService(), vm.store);
+    const loadout = maxLightLoadout(vm.store.getStoresService(), vm.store);
     vm.applyLoadout(loadout, $event);
   };
 
@@ -218,7 +212,7 @@ function LoadoutPopupCtrl(
   vm.gatherEngramsLoadout = ($event: IAngularEvent, options: { exotics: boolean } = { exotics: false }) => {
     let loadout;
     try {
-      loadout = gatherEngramsLoadout(getStoreService(), options);
+      loadout = gatherEngramsLoadout(vm.store.getStoresService(), options);
     } catch (e) {
       toaster.pop('warning', $i18next.t('Loadouts.GatherEngrams'), e.message);
       return;
@@ -229,7 +223,7 @@ function LoadoutPopupCtrl(
   vm.gatherTokensLoadout = ($event: IAngularEvent) => {
     let loadout;
     try {
-      loadout = gatherTokensLoadout(getStoreService());
+      loadout = gatherTokensLoadout(vm.store.getStoresService());
     } catch (e) {
       toaster.pop('warning', $i18next.t('Loadouts.GatherTokens'), e.message);
       return;
@@ -239,14 +233,14 @@ function LoadoutPopupCtrl(
 
   // Move items matching the current search. Max 9 per type.
   vm.searchLoadout = ($event: IAngularEvent) => {
-    const loadout = searchLoadout(getStoreService(), vm.store);
+    const loadout = searchLoadout(vm.store.getStoresService(), vm.store);
     vm.applyLoadout(loadout, $event);
   };
 
   vm.makeRoomForPostmaster = () => {
     ngDialog.closeAll();
     const bucketsService = vm.store.destinyVersion === 1 ? d1GetBuckets : d2GetBuckets;
-    return queueAction(() => makeRoomForPostmaster(getStoreService(), vm.store, dimItemService, toaster, bucketsService));
+    return queueAction(() => makeRoomForPostmaster(vm.store.getStoresService(), vm.store, dimItemService, toaster, bucketsService));
   };
 
   vm.pullFromPostmaster = () => {

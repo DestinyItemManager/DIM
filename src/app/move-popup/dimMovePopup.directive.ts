@@ -2,7 +2,7 @@ import { settings } from '../settings/settings';
 import template from './dimMovePopup.directive.html';
 import './move-popup.scss';
 import { IController } from 'angular';
-import { DimStore, StoreServiceType } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 
 export const MovePopupComponent = {
@@ -29,8 +29,6 @@ interface MovePopupControllerType {
 function MovePopupController(
   this: IController & MovePopupControllerType,
   $scope,
-  D2StoresService: StoreServiceType,
-  dimStoreService: StoreServiceType,
   ngDialog,
   dimItemMoveService
 ) {
@@ -38,14 +36,10 @@ function MovePopupController(
   const vm = this;
   vm.settings = settings;
 
-  function getStoreService() {
-    return vm.item.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
-
   vm.$onInit = () => {
     vm.moveAmount = vm.item.amount;
     if (vm.item.maxStackSize > 1) {
-      const store = getStoreService().getStore(vm.item.owner)!;
+      const store = vm.item.getStoresService().getStore(vm.item.owner)!;
       vm.maximum = store.amountOfItem(vm.item);
     }
   };

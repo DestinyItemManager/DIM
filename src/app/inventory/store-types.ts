@@ -110,6 +110,8 @@ export interface DimStore {
    * Check if this store is from D2. Inside an if statement, this item will be narrowed to type D2Store.
    */
   isDestiny2(): this is D2Store;
+
+  getStoresService(): StoreServiceType;
 }
 
 interface VaultCounts {
@@ -190,6 +192,7 @@ export interface D1Store extends DimStore {
   ): IPromise<D1Store[]>;
   updateCharacterInfoFromEquip(characterInfo);
   factionAlignment();
+  getStoresService(): D1StoreServiceType;
 }
 
 /**
@@ -207,4 +210,5 @@ export interface D2Store extends DimStore {
     defs: D2ManifestDefinitions,
     bStore: DestinyCharacterComponent
   ): IPromise<D2Store[]>;
+  getStoresService(): D1StoreServiceType;
 }

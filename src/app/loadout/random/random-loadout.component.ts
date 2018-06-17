@@ -2,7 +2,7 @@ import { optimalLoadout } from '../loadout-utils';
 import template from './random-loadout.html';
 import './random-loadout.scss';
 import { IComponentOptions, IController, IWindowService } from 'angular';
-import { DimStore, StoreServiceType } from '../../inventory/store-types';
+import { DimStore } from '../../inventory/store-types';
 
 export const RandomLoadoutComponent: IComponentOptions = {
   template,
@@ -17,8 +17,6 @@ function RandomLoadoutCtrl(
     stores: DimStore[];
   },
   $window: IWindowService,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   dimLoadoutService,
   $i18next
 ) {
@@ -61,7 +59,7 @@ function RandomLoadoutCtrl(
       'Artifact',
       'Ghost'
     ]);
-    const storeService = (store.destinyVersion === 2 ? D2StoresService : dimStoreService);
+    const storeService = store.getStoresService();
 
     // Any item equippable by this character in the given types
     const applicableItems = storeService.getAllItems().filter((i) => types.has(i.type) && i.canBeEquippedBy(store));

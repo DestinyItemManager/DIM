@@ -5,7 +5,7 @@ import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
 import './infuse.scss';
 import { LoadoutServiceType, Loadout } from '../loadout/loadout.service';
-import { StoreServiceType } from '../inventory/store-types';
+import { DimItem } from '../inventory/item-types';
 
 export const InfuseComponent: IComponentOptions = {
   template,
@@ -17,10 +17,10 @@ export const InfuseComponent: IComponentOptions = {
 };
 
 function InfuseCtrl(
-  this: IController,
+  this: IController & {
+    query: DimItem;
+  },
   $scope,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   dimLoadoutService: LoadoutServiceType,
   toaster,
   $q: IQService,
@@ -68,12 +68,15 @@ function InfuseCtrl(
       if (e) {
         e.stopPropagation();
       }
+      if (!source || !target) {
+        return;
+      }
       vm.source = source;
       vm.target = target;
 
       vm.infused = vm.target.primStat.value;
 
-      if (vm.source.destinyVersion === 2) {
+      if (vm.source!.destinyVersion === 2) {
         /*
         // Rules taken from https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
         const sourceBasePower = vm.source.basePower;
@@ -106,7 +109,7 @@ function InfuseCtrl(
 
     // get Items for infusion
     getItems() {
-      let stores = vm.query.destinyVersion === 1 ? dimStoreService.getStores() : D2StoresService.getStores();
+      let stores = vm.query.getStoresService().getStores();
 
       // If we want ALL our weapons, including vault's one
       if (!vm.getAllItems) {
@@ -181,7 +184,7 @@ function InfuseCtrl(
         return $q.resolve();
       }
 
-      const store = (vm.source.destinyVersion === 1 ? dimStoreService : D2StoresService).getStore(vm.query.owner)!;
+      const store = vm.source.getStoresService().getStore(vm.query.owner)!;
       const items: { [key: string]: any[] } = {};
       const targetKey = vm.target.type.toLowerCase();
       items[targetKey] = items[targetKey] || [];

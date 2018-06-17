@@ -22,7 +22,6 @@ import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
-import { StoreServiceType } from '../inventory/store-types';
 
 const destiny1Links = [
   {
@@ -77,7 +76,6 @@ interface State {
 
 interface Props {
   $scope: IScope;
-  D2StoresService: StoreServiceType;
 }
 
 export default class Header extends React.PureComponent<Props, State> {
@@ -240,7 +238,7 @@ export default class Header extends React.PureComponent<Props, State> {
         <span className="header-right">
           {!showSearch && <Refresh/>}
           {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews) &&
-            <RatingMode D2StoresService={this.props.D2StoresService} />}
+            <RatingMode />}
           {!showSearch &&
             <a
               className="link fa fa-cog"

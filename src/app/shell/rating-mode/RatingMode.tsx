@@ -6,11 +6,7 @@ import { settings } from '../../settings/settings';
 import { $rootScope } from 'ngimport';
 import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
 import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
-import { StoreServiceType } from '../../inventory/store-types';
-
-interface Props {
-  D2StoresService: StoreServiceType;
-}
+import { D2StoresService } from '../../inventory/d2-stores.service';
 
 interface State {
   open: boolean;
@@ -19,11 +15,11 @@ interface State {
 }
 
 // TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.
-export default class RatingMode extends React.Component<Props, State> {
+export default class RatingMode extends React.Component<{}, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
   private _reviewModeOptions?: D2ReviewMode[];
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props);
     this.state = { open: false, reviewsModeSelection: settings.reviewsModeSelection };
   }
@@ -81,7 +77,7 @@ export default class RatingMode extends React.Component<Props, State> {
 
     const newModeSelection = e.target.value;
     settings.reviewsModeSelection = newModeSelection;
-    this.props.D2StoresService.refreshRatingsData();
+    D2StoresService.refreshRatingsData();
     this.setState({ reviewsModeSelection: newModeSelection });
     $rootScope.$broadcast('dim-refresh');
   }

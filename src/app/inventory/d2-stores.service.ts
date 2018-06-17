@@ -36,11 +36,13 @@ import { InventoryBuckets } from './inventory-buckets';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 
+export const D2StoresService = makeD2StoresService();
+
 /**
  * TODO: For now this is a copy of StoreService customized for D2. Over time we should either
  * consolidate them, or at least organize them better.
  */
-export function D2StoresService(): D2StoreServiceType {
+function makeD2StoresService(): D2StoreServiceType {
   'ngInject';
 
   let _stores: D2Store[] = [];

@@ -4,7 +4,8 @@ import template from './dimClearNewItems.directive.html';
 import './dimClearNewItems.scss';
 import { IComponentOptions, IController, IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { StoreServiceType } from './store-types';
+import { D2StoresService } from './d2-stores.service';
+import { D1StoresService } from './d1-stores.service';
 
 /**
  * A button that marks all new items as "seen".
@@ -20,10 +21,8 @@ export const ClearNewItemsComponent: IComponentOptions = {
 function ClearNewItemsCtrl(
   this: IController & { account: DestinyAccount },
   $scope: IScope,
-  D2StoresService: StoreServiceType,
   hotkeys,
-  $i18next,
-  dimStoreService: StoreServiceType
+  $i18next
 ) {
   "ngInject";
 
@@ -45,7 +44,7 @@ function ClearNewItemsCtrl(
   this.clearNewItems = () => {
     const stores = (this.account.destinyVersion === 2
       ? D2StoresService
-      : dimStoreService
+      : D1StoresService
     ).getStores();
     NewItemsService.clearNewItems(stores, this.account);
   };

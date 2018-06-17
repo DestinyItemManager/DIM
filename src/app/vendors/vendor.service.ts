@@ -149,7 +149,7 @@ export interface VendorServiceType {
 
 export function VendorService(
   $rootScope: IRootScopeService,
-  dimStoreService: D1StoreServiceType,
+  D1StoresService: D1StoreServiceType,
   loadingTracker,
   $q: IQService
 ): VendorServiceType {
@@ -187,7 +187,7 @@ export function VendorService(
       service.vendors = {};
       service.vendorsLoaded = false;
     })
-    .switchMap((account) => dimStoreService.getStoresStream(account!), (account, stores) => [account!, stores!])
+    .switchMap((account) => D1StoresService.getStoresStream(account!), (account, stores) => [account!, stores!])
     .switchMap(([account, stores]: [DestinyAccount, D1Store[]]) => loadVendors(account, stores))
     // Keep track of the last value for new subscribers
     .publishReplay(1);
@@ -228,7 +228,7 @@ export function VendorService(
   }
 
   function reloadVendors() {
-    dimStoreService.reloadStores();
+    D1StoresService.reloadStores();
   }
 
   /**
@@ -632,13 +632,13 @@ export function VendorService(
       // Legendary marks and glimmer are special cases
       switch (currencyHash) {
       case 2534352370:
-        totalCoins[currencyHash] = dimStoreService.getVault()!.legendaryMarks;
+        totalCoins[currencyHash] = D1StoresService.getVault()!.legendaryMarks;
         break;
       case 3159615086:
-        totalCoins[currencyHash] = dimStoreService.getVault()!.glimmer;
+        totalCoins[currencyHash] = D1StoresService.getVault()!.glimmer;
         break;
       case 2749350776:
-        totalCoins[currencyHash] = dimStoreService.getVault()!.silver;
+        totalCoins[currencyHash] = D1StoresService.getVault()!.silver;
         break;
       default:
         totalCoins[currencyHash] = sum(stores, (store) => {

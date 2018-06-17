@@ -17,6 +17,7 @@ import { t } from 'i18next';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
 import { InventoryBuckets } from '../inventory-buckets';
+import { D1StoresService } from '../d1-stores.service';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -102,6 +103,9 @@ const ItemProto = {
   },
   isDestiny2(this: D1Item) {
     return false;
+  },
+  getStoresService() {
+    return D1StoresService;
   }
 };
 

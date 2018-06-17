@@ -4,22 +4,17 @@ import { queuedAction } from '../inventory/action-queue';
 import { showInfoPopup } from '../shell/info-popup';
 import { IQService, IPromise } from 'angular';
 import { ItemServiceType } from './dimItemService.factory';
-import { StoreServiceType, DimStore } from './store-types';
+import { DimStore } from './store-types';
+import { DimItem } from './item-types';
 
 export function ItemMoveService(
   $q: IQService,
   loadingTracker,
   toaster,
-  D2StoresService: StoreServiceType,
-  dimStoreService: StoreServiceType,
   dimItemService: ItemServiceType,
   $i18next
 ) {
   "ngInject";
-
-  function getStoreService(item) {
-    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
 
   const didYouKnowTemplate = `<p>${$i18next.t("DidYouKnow.DragAndDrop")}</p>
                               <p>${$i18next.t("DidYouKnow.TryNext")}</p>`;
@@ -42,7 +37,7 @@ export function ItemMoveService(
     if (reload) {
       // Refresh light levels and such
       promise = promise.then((item) => {
-        return getStoreService(item)
+        return item.getStoresService()
           .updateCharacters()
           .then(() => item);
       });
@@ -69,11 +64,11 @@ export function ItemMoveService(
     return promise;
   });
 
-  const consolidate = queuedAction((actionableItem, store) => {
-    const stores = _.filter(getStoreService(actionableItem).getStores(), (s) => {
+  const consolidate = queuedAction((actionableItem: DimItem, store: DimStore) => {
+    const stores = _.filter(actionableItem.getStoresService().getStores(), (s) => {
       return !s.isVault;
     });
-    const vault = getStoreService(actionableItem).getVault()!;
+    const vault = actionableItem.getStoresService().getVault()!;
 
     let promise: IPromise<any> = $q.all(
       stores.map((s) => {
@@ -134,9 +129,9 @@ export function ItemMoveService(
     return promise;
   });
 
-  const distribute = queuedAction((actionableItem) => {
+  const distribute = queuedAction((actionableItem: DimItem) => {
     // Sort vault to the end
-    const stores = _.sortBy(getStoreService(actionableItem).getStores(), (s) => {
+    const stores = _.sortBy(actionableItem.getStoresService().getStores(), (s) => {
       return s.id === "vault" ? 2 : 1;
     });
 

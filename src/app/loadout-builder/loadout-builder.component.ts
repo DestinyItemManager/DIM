@@ -124,7 +124,7 @@ function LoadoutBuilderController(
   $state: StateService,
   $timeout: ITimeoutService,
   $i18next,
-  dimStoreService: D1StoreServiceType,
+  D1StoresService: D1StoreServiceType,
   ngDialog,
   dimLoadoutService: LoadoutServiceType,
   dimVendorService
@@ -134,7 +134,7 @@ function LoadoutBuilderController(
   const vm = this;
   vm.reviewsEnabled = $featureFlags.reviewsEnabled;
 
-  if (dimStoreService.getStores().length === 0) {
+  if (D1StoresService.getStores().length === 0) {
     $state.go('destiny1.inventory');
     return;
   }
@@ -452,8 +452,8 @@ function LoadoutBuilderController(
       },
       onCharacterChange() {
         vm.ranked = getActiveBuckets(buckets[vm.active], vendorBuckets[vm.active], vm.includeVendors);
-        vm.activeCharacters = dimStoreService.getStores().filter((s) => !s.isVault);
-        const activeStore = dimStoreService.getActiveStore()!;
+        vm.activeCharacters = D1StoresService.getStores().filter((s) => !s.isVault);
+        const activeStore = D1StoresService.getActiveStore()!;
         vm.selectedCharacter = _.findIndex(vm.activeCharacters, (char) => char.id === activeStore.id);
         vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
@@ -786,9 +786,9 @@ function LoadoutBuilderController(
         return setMap;
       },
       getBonus,
-      getStore: dimStoreService.getStore,
+      getStore: D1StoresService.getStore,
       getItems() {
-        const stores = dimStoreService.getStores();
+        const stores = D1StoresService.getStores();
         vm.stores = stores;
 
         if (stores.length === 0) {
@@ -815,9 +815,9 @@ function LoadoutBuilderController(
           });
         }
 
-        vm.selectedCharacter = dimStoreService.getActiveStore();
+        vm.selectedCharacter = D1StoresService.getActiveStore();
         vm.active = vm.selectedCharacter.class.toLowerCase() || 'warlock';
-        vm.activeCharacters = _.reject(dimStoreService.getStores(), (s) => s.isVault);
+        vm.activeCharacters = _.reject(D1StoresService.getStores(), (s) => s.isVault);
         vm.selectedCharacter = _.findIndex(vm.activeCharacters, (char) => char.id === vm.selectedCharacter.id);
 
         let allItems: D1Item[] = [];

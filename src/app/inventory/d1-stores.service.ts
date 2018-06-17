@@ -23,7 +23,9 @@ import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 
-export function StoreService(): D1StoreServiceType {
+export const D1StoresService = StoreService();
+
+function StoreService(): D1StoreServiceType {
   'ngInject';
 
   let _stores: D1Store[] = [];
@@ -210,7 +212,7 @@ export function StoreService(): D1StoreServiceType {
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);
-        reportException('dimStoreService', e);
+        reportException('D1StoresService', e);
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work
         // around that with some rxjs operators, but it's easier to

@@ -3,7 +3,7 @@ import { subscribeOnScope } from "../rx-utils";
 import { getBuckets } from "../destiny1/d1-buckets.service";
 import { IComponentOptions, IController, IScope } from "angular";
 import { DestinyAccount } from "../accounts/destiny-account.service";
-import { StoreServiceType } from "./store-types";
+import { D1StoresService } from "./d1-stores.service";
 
 export const InventoryComponent: IComponentOptions = {
   template,
@@ -15,8 +15,7 @@ export const InventoryComponent: IComponentOptions = {
 
 function InventoryController(
   this: IController & { account: DestinyAccount },
-  $scope: IScope,
-  dimStoreService: StoreServiceType
+  $scope: IScope
 ) {
   "ngInject";
 
@@ -25,7 +24,7 @@ function InventoryController(
   this.$onInit = () => {
     getBuckets().then((buckets) => {
       vm.buckets = buckets;
-      subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), (stores) => {
+      subscribeOnScope($scope, D1StoresService.getStoresStream(vm.account), (stores) => {
         if (stores) {
           vm.stores = stores;
         }
@@ -34,6 +33,6 @@ function InventoryController(
   };
 
   $scope.$on("dim-refresh", () => {
-    dimStoreService.reloadStores();
+    D1StoresService.reloadStores();
   });
 }

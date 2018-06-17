@@ -3,7 +3,7 @@ import { subscribeOnScope } from '../rx-utils';
 import { getBuckets } from './d2-buckets.service';
 import { IComponentOptions, IScope, IController } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { StoreServiceType } from '../inventory/store-types';
+import { D2StoresService } from '../inventory/d2-stores.service';
 
 export const D2InventoryComponent: IComponentOptions = {
   template,
@@ -17,8 +17,7 @@ function D2InventoryController(
   this: IController & {
     account: DestinyAccount;
   },
-  $scope: IScope,
-  D2StoresService: StoreServiceType
+  $scope: IScope
 ) {
   'ngInject';
 

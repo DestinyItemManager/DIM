@@ -10,7 +10,7 @@ import template from './dimStoreBucket.directive.html';
 import './dimStoreBucket.scss';
 import { ItemServiceType } from './dimItemService.factory';
 import { DimError } from '../bungie-api/bungie-service-helper';
-import { DimStore, StoreServiceType } from './store-types';
+import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { InventoryBucket } from './inventory-buckets';
 
@@ -33,8 +33,6 @@ function StoreBucketCtrl(
   },
   $scope: IScope,
   loadingTracker,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   dimItemService: ItemServiceType,
   $q: IQService,
   $timeout: ITimeoutService,
@@ -45,10 +43,6 @@ function StoreBucketCtrl(
 ) {
   "ngInject";
   const vm = this;
-
-  function getStoreService(item: DimItem) {
-    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
 
   vm.settings = settings;
 
@@ -142,7 +136,7 @@ function StoreBucketCtrl(
           const vm = this;
           vm.item = $scope.ngDialogData;
           vm.moveAmount = vm.item.amount;
-          vm.maximum = getStoreService(vm.item)
+          vm.maximum = vm.item.getStoresService()
             .getStore(vm.item.owner)!
             .amountOfItem(item);
           vm.stacksWorth = Math.min(
@@ -187,7 +181,7 @@ function StoreBucketCtrl(
             "to",
             target.name,
             "from",
-            getStoreService(item).getStore(item.owner)!.name
+            item.getStoresService().getStore(item.owner)!.name
           );
         }
         let movePromise = dimItemService.moveTo(
@@ -200,7 +194,7 @@ function StoreBucketCtrl(
         const reload = item.equipped || equip;
         if (reload) {
           movePromise = movePromise.then((item) => {
-            return getStoreService(item)
+            return item.getStoresService()
               .updateCharacters()
               .then(() => item);
           });

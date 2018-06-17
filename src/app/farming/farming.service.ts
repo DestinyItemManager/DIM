@@ -3,9 +3,9 @@ import { settings as dimSettings } from '../settings/settings';
 import * as _ from 'underscore';
 import { sum } from '../util';
 import { getBuckets } from '../destiny1/d1-buckets.service';
-import { StoreServiceType } from '../inventory/store-types';
 import { ItemServiceType, MoveReservations } from '../inventory/dimItemService.factory';
 import { D1Item, DimItem } from '../inventory/item-types';
+import { D1StoresService } from '../inventory/d1-stores.service';
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -15,7 +15,6 @@ export function FarmingService(
   $rootScope: IRootScopeService,
   $q: IQService,
   dimItemService: ItemServiceType,
-  dimStoreService: StoreServiceType,
   $interval: IIntervalService,
   toaster,
   $i18next
@@ -77,22 +76,22 @@ export function FarmingService(
           // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
           return promise
             .then(() => {
-              const vault = dimStoreService.getVault()!;
+              const vault = D1StoresService.getVault()!;
               const vaultSpaceLeft = vault.spaceLeftForItem(item);
               if (vaultSpaceLeft <= 1) {
                 // If we're down to one space, try putting it on other characters
-                const otherStores = dimStoreService.getStores().filter((store) => !store.isVault && store.id !== this.store.id);
+                const otherStores = D1StoresService.getStores().filter((store) => !store.isVault && store.id !== this.store.id);
                 const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
                 if (otherStoresWithSpace.length) {
                   if ($featureFlags.debugMoves) {
-                    console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner)!.name);
+                    console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', D1StoresService.getStore(item.owner)!.name);
                   }
                   return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
                 }
               }
               if ($featureFlags.debugMoves) {
-                console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner)!.name);
+                console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', D1StoresService.getStore(item.owner)!.name);
               }
               return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
             })
@@ -113,7 +112,7 @@ export function FarmingService(
       });
     },
     farmItems() {
-      const store = dimStoreService.getStore(this.store.id)!;
+      const store = D1StoresService.getStore(this.store.id)!;
       const toMove = _.select(store.items, (i) => {
         return !i.notransfer && (
           i.isEngram ||
@@ -134,7 +133,7 @@ export function FarmingService(
     // Ensure that there's one open space in each category that could
     // hold an item, so they don't go to the postmaster.
     makeRoomForItems() {
-      const store = dimStoreService.getStore(this.store.id)!;
+      const store = D1StoresService.getStore(this.store.id)!;
 
       // If any category is full, we'll move one aside
       const itemsToMove: DimItem[] = [];
@@ -182,11 +181,11 @@ export function FarmingService(
         ];
 
         this.consolidate = _.compact(consolidateHashes.map((hash) => {
-          const ret = copy(dimStoreService.getItemAcrossStores({
+          const ret = copy(D1StoresService.getItemAcrossStores({
             hash
           }));
           if (ret) {
-            ret.amount = sum(dimStoreService.getStores(), (s) => s.amountOfItem(ret));
+            ret.amount = sum(D1StoresService.getStores(), (s) => s.amountOfItem(ret));
           }
           return ret;
         }));
@@ -206,7 +205,7 @@ export function FarmingService(
 
         // Whenever the store is reloaded, run the farming algo
         // That way folks can reload manually too
-        subscription = dimStoreService.getStoresStream(account).subscribe((stores) => {
+        subscription = D1StoresService.getStoresStream(account).subscribe((stores) => {
           // prevent some recursion...
           if (this.active && !this.movingItems && !this.makingRoom && stores) {
             const store = stores.find((s) => s.id === storeId);

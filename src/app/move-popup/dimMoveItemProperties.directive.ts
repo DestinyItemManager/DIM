@@ -4,7 +4,6 @@ import { settings } from '../settings/settings';
 import { IController, IRootScopeService, IScope, IComponentOptions, IAngularEvent } from 'angular';
 import template from './dimMoveItemProperties.html';
 import { DimItem } from '../inventory/item-types';
-import { StoreServiceType } from '../inventory/store-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { $q } from 'ngimport';
 
@@ -25,18 +24,12 @@ function MoveItemPropertiesCtrl(
     compareItem?: DimItem;
     infuse(item: DimItem, $event: IAngularEvent): void;
   },
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   ngDialog,
   $scope: IScope,
   $rootScope: IRootScopeService
 ) {
   'ngInject';
   const vm = this;
-
-  function getStoreService(item: DimItem) {
-    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
 
   vm.tab = 'default';
   vm.locking = false;
@@ -152,8 +145,8 @@ function MoveItemPropertiesCtrl(
     }
 
     const store = item.owner === 'vault'
-      ? getStoreService(item).getActiveStore()!
-      : getStoreService(item).getStore(item.owner)!;
+      ? item.getStoresService().getActiveStore()!
+      : item.getStoresService().getStore(item.owner)!;
 
     vm.locking = true;
 

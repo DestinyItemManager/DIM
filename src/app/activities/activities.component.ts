@@ -7,7 +7,8 @@ import template from './activities.html';
 import './activities.scss';
 import { IComponentOptions, IController, IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { D1StoreServiceType, D1Store } from '../inventory/store-types';
+import { D1Store } from '../inventory/store-types';
+import { D1StoresService } from '../inventory/d1-stores.service';
 
 export const ActivitiesComponent: IComponentOptions = {
   controller: ActivitiesController,
@@ -23,7 +24,6 @@ function ActivitiesController(
     settings: typeof settings;
   },
   $scope: IScope,
-  dimStoreService: D1StoreServiceType,
   $i18next
 ) {
   'ngInject';
@@ -43,12 +43,12 @@ function ActivitiesController(
   };
 
   this.$onInit = () => {
-    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
+    subscribeOnScope($scope, D1StoresService.getStoresStream(vm.account), init);
   };
 
   $scope.$on('dim-refresh', () => {
     // TODO: refresh just advisors
-    dimStoreService.reloadStores();
+    D1StoresService.reloadStores();
   });
 
   // TODO: Ideally there would be an Advisors service that would

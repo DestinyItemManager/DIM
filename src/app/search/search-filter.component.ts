@@ -11,8 +11,9 @@ import { getItemInfoSource } from '../inventory/dim-item-info';
 import './search-filter.scss';
 import { IComponentOptions, IController, IScope, IRootElementService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { StoreServiceType } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
+import { D2StoresService } from '../inventory/d2-stores.service';
+import { D1StoresService } from '../inventory/d1-stores.service';
 
 /**
  * A simple holder to share the search query among components
@@ -34,8 +35,6 @@ function SearchFilterCtrl(
     account: DestinyAccount;
   },
   $scope: IScope,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   hotkeys,
   $i18next,
   $element: IRootElementService,
@@ -50,8 +49,8 @@ function SearchFilterCtrl(
   vm.bulkItemTags = _.clone(itemTags);
   vm.bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
-  function getStoreService() {
-    return vm.account.destinyVersion === 2 ? D2StoresService : dimStoreService;
+  function getStoresService() {
+    return vm.account.destinyVersion === 2 ? D2StoresService : D1StoresService;
   }
 
   // This hacks around the fact that dimVendorService isn't defined until the destiny1 modules are lazy-loaded
@@ -76,7 +75,7 @@ function SearchFilterCtrl(
         vm.account.destinyVersion,
         itemTags,
         vm.account.destinyVersion === 1 ? D1Categories : D2Categories);
-      filters = searchFilters(searchConfig, getStoreService(), toaster, $i18next);
+      filters = searchFilters(searchConfig, getStoresService(), toaster, $i18next);
       setupTextcomplete();
     }
   };
@@ -244,7 +243,7 @@ function SearchFilterCtrl(
 
     const filterFn = filters.filterFunction(filterValue);
 
-    for (const item of getStoreService().getAllItems()) {
+    for (const item of getStoresService().getAllItems()) {
       item.visible = filterFn(item);
       if (item.visible) {
         filteredItems.push(item);

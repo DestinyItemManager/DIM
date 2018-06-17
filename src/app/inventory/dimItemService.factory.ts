@@ -7,7 +7,9 @@ import { chainComparator, compareBy, reverseComparator } from '../comparators';
 import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory.service';
 import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory.service';
 import { DimItem } from './item-types';
-import { DimStore, D1StoreServiceType, D2StoreServiceType, StoreServiceType } from './store-types';
+import { DimStore } from './store-types';
+import { D1StoresService } from './d1-stores.service';
+import { D2StoresService } from './d2-stores.service';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -41,8 +43,6 @@ export interface ItemServiceType {
  * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
  */
 export function ItemService(
-  dimStoreService: D1StoreServiceType,
-  D2StoresService: D2StoreServiceType,
   $q,
   $i18next
 ): ItemServiceType {
@@ -53,7 +53,7 @@ export function ItemService(
   // throttle these calls so we don't just keep refreshing over and over.
   // This needs to be up here because of how we return the service object.
   const throttledReloadStores = _.throttle(() => {
-    return dimStoreService.reloadStores();
+    return D1StoresService.reloadStores();
   }, 10000, { trailing: false });
 
   const throttledD2ReloadStores = _.throttle(() => {
@@ -88,17 +88,13 @@ export function ItemService(
     }
   }
 
-  function getStoreService(item: DimItem): StoreServiceType {
-    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
-
   /**
    * Update our item and store models after an item has been moved (or equipped/dequipped).
    * @return the new or updated item (it may create a new item!)
    */
   function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = item.amount) {
     // Refresh all the items - they may have been reloaded!
-    const storeService = getStoreService(item);
+    const storeService = item.getStoresService();
     source = storeService.getStore(source.id)!;
     target = storeService.getStore(target.id)!;
     item = storeService.getItemAcrossStores(item)!;
@@ -204,7 +200,7 @@ export function ItemService(
   }
 
   function getSimilarItem(item: DimItem, exclusions?: DimItem[], excludeExotic = false): DimItem | null {
-    const storeService = getStoreService(item);
+    const storeService = item.getStoresService();
     const target = storeService.getStore(item.owner)!;
     const sortedStores = _.sortBy(storeService.getStores(), (store) => {
       if (target.id === store.id) {
@@ -299,7 +295,7 @@ export function ItemService(
           if (!similarItem) {
             return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: otherExotic.name })));
           }
-          const target = getStoreService(similarItem).getStore(similarItem.owner)!;
+          const target = similarItem.getStoresService().getStore(similarItem.owner)!;
 
           if (store.id === target.id) {
             return similarItem;
@@ -327,7 +323,7 @@ export function ItemService(
   }
 
   function equipItem(item: DimItem) {
-    const storeService = getStoreService(item);
+    const storeService = item.getStoresService();
     if ($featureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', storeService.getStore(item.owner)!.name);
     }
@@ -339,7 +335,7 @@ export function ItemService(
   }
 
   function dequipItem(item: DimItem, excludeExotic = false): IPromise<DimItem> {
-    const storeService = getStoreService(item);
+    const storeService = item.getStoresService();
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
       return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: item.name })));
@@ -358,16 +354,16 @@ export function ItemService(
   }
 
   function moveToVault(item: DimItem, amount: number = item.amount) {
-    return moveToStore(item, getStoreService(item).getVault()!, false, amount);
+    return moveToStore(item, item.getStoresService().getVault()!, false, amount);
   }
 
   function moveToStore(item: DimItem, store: DimStore, equip: boolean = false, amount: number = item.amount) {
     if ($featureFlags.debugMoves) {
-      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', getStoreService(item).getStore(item.owner)!.name);
+      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', item.getStoresService().getStore(item.owner)!.name);
     }
     return transferApi(item)(item, store, amount)
       .then(() => {
-        const source = getStoreService(item).getStore(item.owner)!;
+        const source = item.getStoresService().getStore(item.owner)!;
         const newItem = updateItemModel(item, source, store, false, amount);
         if ((newItem.owner !== 'vault') && equip) {
           return equipItem(newItem);
@@ -440,7 +436,7 @@ export function ItemService(
         !moveContext.excludes.some((i) => i.id === otherItem.id && i.hash === otherItem.hash);
     }
 
-    const stores = getStoreService(item).getStores();
+    const stores = item.getStoresService().getStores();
     const otherStores = stores.filter((s) => s.id !== store.id);
 
     // Start with candidates of the same type (or vault bucket if it's vault)
@@ -555,7 +551,7 @@ export function ItemService(
       target: DimStore;
     } | undefined;
 
-    const storeService = getStoreService(item);
+    const storeService = item.getStoresService();
     const vault = storeService.getVault()!;
     moveAsideCandidates.find((candidate) => {
       // Other, non-vault stores, with the item's current
@@ -630,7 +626,7 @@ export function ItemService(
     numRetries?: number;
   } = {}): IPromise<void> {
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
-    const storeService = getStoreService(item);
+    const storeService = item.getStoresService();
 
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = s.spaceLeftForItem(i);
@@ -787,12 +783,12 @@ export function ItemService(
   function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: MoveReservations): IPromise<DimItem> {
     // Reassign the target store to the active store if we're moving the item to an account-wide bucket
     if (!target.isVault && item.bucket.accountWide) {
-      target = getStoreService(item).getActiveStore()!;
+      target = item.getStoresService().getActiveStore()!;
     }
 
     return isValidTransfer(equip, target, item, amount, excludes, reservations)
       .then(() => {
-        const storeService = getStoreService(item);
+        const storeService = item.getStoresService();
         // Replace the target store - isValidTransfer may have reloaded it
         target = storeService.getStore(target.id)!;
         const source = storeService.getStore(item.owner)!;

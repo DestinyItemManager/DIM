@@ -7,7 +7,6 @@ import './dimStoreItem.scss';
 import { IComponentOptions, IController, IScope, IRootElementService, IRootScopeService } from 'angular';
 import { LoadoutServiceType } from '../loadout/loadout.service';
 import { DimItem } from './item-types';
-import { StoreServiceType } from './store-types';
 import { CompareService } from '../compare/compare.service';
 
 export function tagIconFilter() {
@@ -51,17 +50,11 @@ export function StoreItemCtrl(
   $scope: IScope,
   $element: IRootElementService,
   dimItemMoveService,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   ngDialog,
   dimLoadoutService: LoadoutServiceType,
   $rootScope: IRootScopeService & { dragItem: DimItem }
 ) {
   "ngInject";
-
-  function getStoreService(item: DimItem) {
-    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
 
   if (!firstItemTimed) {
     firstItemTimed = true;
@@ -140,7 +133,7 @@ export function StoreItemCtrl(
   vm.doubleClicked = queuedAction((item, e) => {
     if (!dimLoadoutService.dialogOpen && !CompareService.dialogOpen) {
       e.stopPropagation();
-      const active = getStoreService(item).getActiveStore()!;
+      const active = item.getStoresService().getActiveStore()!;
 
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;
@@ -185,7 +178,7 @@ export function StoreItemCtrl(
       function dialogController() {
         "ngInject";
         this.item = vm.item;
-        this.store = getStoreService(item).getStore(this.item.owner);
+        this.store = item.getStoresService().getStore(this.item.owner);
       }
 
       dialogResult = ngDialog.open({

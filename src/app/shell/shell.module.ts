@@ -28,7 +28,7 @@ export const ShellModule = module('dimShell', [
   .factory('loadingTracker', loadingTracker)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
-  .component('header', react2angular(Header, [], ['$scope', 'D2StoresService']))
+  .component('header', react2angular(Header, [], ['$scope']))
   .component('dimManifestProgress', ManifestProgressComponent)
   .directive('scrollClass', ScrollClass)
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere)

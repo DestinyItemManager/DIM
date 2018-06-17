@@ -4,7 +4,6 @@ import './compare.scss';
 import { element as angularElement, IController, IComponentOptions, IScope } from 'angular';
 import { sum } from '../util';
 import { DimItem } from '../inventory/item-types';
-import { StoreServiceType } from '../inventory/store-types';
 import { CompareService } from './compare.service';
 import { TransitionService } from '@uirouter/angularjs';
 
@@ -40,8 +39,6 @@ function CompareCtrl(
   },
   $scope: IScope,
   toaster,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   $i18next,
   $transitions: TransitionService
 ) {
@@ -59,10 +56,6 @@ function CompareCtrl(
   vm.$onDestroy = () => {
     this.listener();
   };
-
-  function getStoreService(item: DimItem) {
-    return item.destinyVersion === 2 ? D2StoresService : dimStoreService;
-  }
 
   function addMissingStats(item: DimItem): DimItem {
     if (!item.stats) {
@@ -196,7 +189,7 @@ function CompareCtrl(
 
     if (args.dupes) {
       vm.compare = args.item;
-      const allItems = getStoreService(args.item).getAllItems();
+      const allItems = args.item.getStoresService().getAllItems();
       vm.similarTypes = allItems.filter((i) => i.typeName === vm.compare.typeName);
       let armorSplit;
       if (!vm.compare.location.inWeapons) {
