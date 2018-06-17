@@ -1,4 +1,4 @@
-const csp = require('content-security-policy-builder');
+const builder = require('content-security-policy-builder');
 
 const SELF = "'self'";
 
@@ -94,5 +94,5 @@ module.exports = function csp(env) {
     baseCSP.imgSrc.push("https://beta.destinyitemmanager.com");
   }
 
-  return csp(baseCSP);
+  return builder(baseCSP);
 }
