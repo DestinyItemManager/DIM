@@ -1,5 +1,7 @@
 # Next
 
+* Add "is:transmat" search filter to select transmat effects.
+
 # 4.56.5 (2018-06-11)
 
 # 4.56.4 (2018-06-11)

@@ -241,6 +241,7 @@
     },
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
+    "Transmat": "Shows mods that are Transmat Effects.",
     "Vendor": "Item is available from vendor <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "Item is available from vendor <i>{{vendor}}</i>",
     "Vendors": {

@@ -493,6 +493,12 @@
         </td>
         <td ng-i18next="Filter.HasShader"></td>
       </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="is:transmat"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.Transmat"></td>
+      </tr>
     </table>
   </div>
 </div>
