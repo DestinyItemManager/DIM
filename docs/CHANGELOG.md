@@ -1,14 +1,11 @@
 # Next
 
+* Item sizing setting works in Edge.
+* Lock and unlock won't get "stuck" anymore.
+
 # 4.56.5 (2018-06-11)
 
-# 4.56.4 (2018-06-11)
-
-# 4.56.3 (2018-06-11)
-
-# 4.56.2 (2018-06-11)
-
-# 4.56.1 (2018-06-11)
+* Fix for item popups not working
 
 # 4.56.0 (2018-06-10)
 
