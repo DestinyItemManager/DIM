@@ -1,5 +1,7 @@
 # Next
 
+# 4.57.0 (2018-06-17)
+
 * Item sizing setting works in Edge.
 * Lock and unlock won't get "stuck" anymore.
 
