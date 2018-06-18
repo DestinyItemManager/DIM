@@ -39,9 +39,9 @@ function CrucibleRankIcon(props: {
 }) {
   const { progress, defs } = props;
 
-  const progessionDef = defs.Progression.get(progress.progressionHash);
+  const progressionDef = defs.Progression.get(progress.progressionHash);
 
-  const step = progessionDef.steps[progress.level];
+  const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
   const circumference = 2 * 22 * Math.PI;
 
