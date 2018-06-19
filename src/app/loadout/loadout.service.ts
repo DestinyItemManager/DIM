@@ -1,4 +1,4 @@
-import { copy, IPromise, IQService } from 'angular';
+import { copy, IPromise } from 'angular';
 import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { queueAction } from '../inventory/action-queue';
@@ -8,6 +8,9 @@ import { DimStore } from '../inventory/store-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimItemService } from '../inventory/dimItemService.factory';
+import { $rootScope, $q } from 'ngimport';
+import { t } from 'i18next';
+import { toaster, loadingTracker } from '../ngimport-more';
 
 export const enum LoadoutClass {
   any = -1,
@@ -48,18 +51,11 @@ export interface LoadoutServiceType {
   saveLoadout(loadout: Loadout): IPromise<Loadout[]>;
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): IPromise<void>;
-  getLight(store: DimStore, loadout: Loadout): string;
 }
 
-export function LoadoutService(
-  $q: IQService,
-  $rootScope: angular.IRootScopeService,
-  $i18next,
-  toaster,
-  loadingTracker
-): LoadoutServiceType {
-  'ngInject';
+export const dimLoadoutService = LoadoutService();
 
+function LoadoutService(): LoadoutServiceType {
   function getStoresService(destinyVersion) {
     // TODO: this needs to use account, store, or item version
     return destinyVersion === 2 ? D2StoresService : D1StoresService;
@@ -75,7 +71,6 @@ export function LoadoutService(
     saveLoadout,
     addItemToLoadout,
     applyLoadout,
-    getLight,
     previousLoadouts: _previousLoadouts
   };
 
@@ -84,16 +79,6 @@ export function LoadoutService(
       item,
       clickEvent: $event
     });
-  }
-
-  function isGuid(stringToTest: string) {
-    if (stringToTest[0] === "{") {
-      stringToTest = stringToTest.substring(1, stringToTest.length - 1);
-    }
-
-    const regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(\}){0,1}$/gi;
-
-    return regexGuid.test(stringToTest);
   }
 
   function processLoadout(data, version): Loadout[] {
@@ -247,36 +232,6 @@ export function LoadoutService(
     return item;
   }
 
-  // Pass in full loadout and store objects. loadout should have all types of weapon and armor
-  // or it won't be accurate. function properly supports guardians w/o artifacts
-  // returns to tenth decimal place.
-  function getLight(store: DimStore, loadout: Loadout): string {
-    // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
-    const itemWeight = {
-      Weapons: 6,
-      Armor: 5,
-      General: 4
-    };
-    // 3 Weapons, 4 Armor, 2 General
-    let itemWeightDenominator = 46;
-    if (store.destinyVersion === 2) {
-      // 3 Weapons, 4 Armor, 1 General
-      itemWeightDenominator = 42;
-    } else if (store.level === 40) {
-      // 3 Weapons, 4 Armor, 3 General
-      itemWeightDenominator = 50;
-    }
-
-    const items = _.flatten(Object.values(loadout.items)).filter((i) => i.equipped);
-
-    const exactLight = _.reduce(items, (memo, item) => {
-      return memo + (item.primStat.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }, 0) / itemWeightDenominator;
-
-    // Floor-truncate to one significant digit since the game doesn't round
-    return (Math.floor(exactLight * 10) / 10).toFixed(1);
-  }
-
   /**
    * Apply a loadout - a collection of items to be moved and possibly equipped all at once.
    * @param allowUndo whether to include this loadout in the "undo loadout" menu stack.
@@ -303,7 +258,7 @@ export function LoadoutService(
           if (lastPreviousLoadout && loadout.id === lastPreviousLoadout.id) {
             _previousLoadouts[store.id].pop();
           } else {
-            const previousLoadout = store.loadoutFromCurrentlyEquipped($i18next.t('Loadouts.Before', { name: loadout.name }));
+            const previousLoadout = store.loadoutFromCurrentlyEquipped(t('Loadouts.Before', { name: loadout.name }));
             _previousLoadouts[store.id].push(previousLoadout);
           }
         }
@@ -400,7 +355,7 @@ export function LoadoutService(
             });
             failedItems.forEach((item) => {
               scope.failed++;
-              toaster.pop('error', loadout.name, $i18next.t('Loadouts.CouldNotEquip', { itemname: item.name }));
+              toaster.pop('error', loadout.name, t('Loadouts.CouldNotEquip', { itemname: item.name }));
             });
           }
         })
@@ -415,15 +370,15 @@ export function LoadoutService(
         .then(() => {
           let value = 'success';
 
-          let message = $i18next.t('Loadouts.Applied', { count: scope.total, store: store.name, gender: store.gender });
+          let message = t('Loadouts.Applied', { count: scope.total, store: store.name, gender: store.gender });
 
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
               value = 'error';
-              message = $i18next.t('Loadouts.AppliedError');
+              message = t('Loadouts.AppliedError');
             } else {
               value = 'warning';
-              message = $i18next.t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total });
+              message = t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total });
             }
           }
 
@@ -478,7 +433,7 @@ export function LoadoutService(
 
             if (amountToMove === 0 || !sourceItem) {
               promise = promise.then(() => {
-                const error: Error & { level?: string } = new Error($i18next.t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
+                const error: Error & { level?: string } = new Error(t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
                 error.level = 'warn';
                 return $q.reject(error);
               });
@@ -580,4 +535,44 @@ export function LoadoutService(
       items
     };
   }
+}
+
+// Pass in full loadout and store objects. loadout should have all types of weapon and armor
+// or it won't be accurate. function properly supports guardians w/o artifacts
+// returns to tenth decimal place.
+export function getLight(store: DimStore, loadout: Loadout): string {
+  // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
+  const itemWeight = {
+    Weapons: 6,
+    Armor: 5,
+    General: 4
+  };
+  // 3 Weapons, 4 Armor, 2 General
+  let itemWeightDenominator = 46;
+  if (store.destinyVersion === 2) {
+    // 3 Weapons, 4 Armor, 1 General
+    itemWeightDenominator = 42;
+  } else if (store.level === 40) {
+    // 3 Weapons, 4 Armor, 3 General
+    itemWeightDenominator = 50;
+  }
+
+  const items = _.flatten(Object.values(loadout.items)).filter((i) => i.equipped);
+
+  const exactLight = _.reduce(items, (memo, item) => {
+    return memo + (item.primStat.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
+  }, 0) / itemWeightDenominator;
+
+  // Floor-truncate to one significant digit since the game doesn't round
+  return (Math.floor(exactLight * 10) / 10).toFixed(1);
+}
+
+function isGuid(stringToTest: string) {
+  if (stringToTest[0] === "{") {
+    stringToTest = stringToTest.substring(1, stringToTest.length - 1);
+  }
+
+  const regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(\}){0,1}$/gi;
+
+  return regexGuid.test(stringToTest);
 }

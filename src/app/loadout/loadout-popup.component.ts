@@ -10,7 +10,7 @@ import {
   } from './auto-loadouts';
 import template from './loadout-popup.html';
 import './loadout-popup.scss';
-import { Loadout, LoadoutClass, LoadoutServiceType } from './loadout.service';
+import { Loadout, LoadoutClass, dimLoadoutService, getLight } from './loadout.service';
 import { makeRoomForPostmaster, pullablePostmasterItems, pullFromPostmaster } from './postmaster';
 import { getActivePlatform, getPlatformMatching } from '../accounts/platform.service';
 import { IDialogService } from 'ng-dialog';
@@ -62,7 +62,6 @@ function LoadoutPopupCtrl(
   $rootScope,
   $scope,
   ngDialog: IDialogService,
-  dimLoadoutService: LoadoutServiceType,
   toaster,
   $window,
   $i18next,
@@ -93,7 +92,7 @@ function LoadoutPopupCtrl(
         i.location.sort === 'Armor' ||
         i.type === 'Ghost');
     });
-    vm.maxLightValue = dimLoadoutService.getLight(vm.store, maxLightLoadout(vm.store.getStoresService(), vm.store)) + (vm.hasClassified ? '*' : '');
+    vm.maxLightValue = getLight(vm.store, maxLightLoadout(vm.store.getStoresService(), vm.store)) + (vm.hasClassified ? '*' : '');
   };
 
   vm.search = SearchService;

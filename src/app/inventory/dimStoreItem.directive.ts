@@ -5,7 +5,7 @@ import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import template from './dimStoreItem.directive.html';
 import './dimStoreItem.scss';
 import { IComponentOptions, IController, IScope, IRootElementService, IRootScopeService } from 'angular';
-import { LoadoutServiceType } from '../loadout/loadout.service';
+import { dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from './item-types';
 import { CompareService } from '../compare/compare.service';
 
@@ -51,7 +51,6 @@ export function StoreItemCtrl(
   $element: IRootElementService,
   dimItemMoveService,
   ngDialog,
-  dimLoadoutService: LoadoutServiceType,
   $rootScope: IRootScopeService & { dragItem: DimItem }
 ) {
   "ngInject";

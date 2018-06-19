@@ -10,7 +10,7 @@ import { settings } from '../settings/settings';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { Loadout, LoadoutServiceType } from './loadout.service';
+import { Loadout, dimLoadoutService } from './loadout.service';
 import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { TransitionService } from '@uirouter/angularjs';
@@ -32,7 +32,6 @@ function LoadoutDrawerCtrl(
     loadout?: Loadout & { warnitems?: DimItem[] };
   },
   $scope: IScope,
-  dimLoadoutService: LoadoutServiceType,
   toaster,
   $i18next,
   $transitions: TransitionService
