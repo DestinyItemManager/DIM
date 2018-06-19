@@ -6,8 +6,8 @@ import Vendors from './Vendors';
 
 // This is the Destiny 2 "Vendors" pages
 export const d2VendorsModule = module('d2VendorsModule', [])
-  .component('d2Vendors', react2angular(Vendors, ['account'], ['$scope', '$stateParams', 'D2StoresService']))
-  .component('d2SingleVendor', react2angular(SingleVendor, ['account'], ['$scope', '$stateParams', 'D2StoresService']))
+  .component('d2Vendors', react2angular(Vendors, ['account'], ['$scope', '$stateParams']))
+  .component('d2SingleVendor', react2angular(SingleVendor, ['account'], ['$scope', '$stateParams']))
   .config(($stateProvider: StateProvider) => {
     'ngInject';
 

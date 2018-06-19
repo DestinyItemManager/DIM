@@ -38,6 +38,7 @@ import { D2Item, DimPerk, DimStat, DimObjective, DimFlavorObjective, DimTalentGr
 import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D2RatingData } from '../../item-review/d2-dtr-api-types';
+import { D2StoresService } from '../d2-stores.service';
 
 // Maps tierType to tierTypeName in English
 const tiers = [
@@ -143,6 +144,9 @@ const ItemProto = {
   },
   isDestiny2(this: D2Item) {
     return true;
+  },
+  getStoresService() {
+    return D2StoresService;
   }
 };
 

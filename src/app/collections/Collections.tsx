@@ -12,19 +12,19 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
-import { DimStore, StoreServiceType } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import Kiosk from './Kiosk';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import Ornaments from './Ornaments';
+import { D2StoresService } from '../inventory/d2-stores.service';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
-  D2StoresService: StoreServiceType;
 }
 
 interface State {
@@ -64,7 +64,7 @@ export default class Collections extends React.Component<Props, State> {
 
   componentDidMount() {
     this.loadCollections();
-    this.storesSubscription = this.props.D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
+    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
       if (stores) {
         const ownedItemHashes = new Set<number>();
         for (const store of stores) {

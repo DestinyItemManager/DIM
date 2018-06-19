@@ -4,7 +4,7 @@ import template from './loadout-builder-item.html';
 import dialogTemplate from './loadout-builder-item-dialog.html';
 import { extend, IController } from 'angular';
 import { DimItem } from '../inventory/item-types';
-import { StoreServiceType } from '../inventory/store-types';
+import { D1StoresService } from '../inventory/d1-stores.service';
 
 export const LoadoutBuilderItem = {
   controller: LoadoutBuilderItemCtrl,
@@ -22,8 +22,7 @@ function LoadoutBuilderItemCtrl(
   },
   $scope,
   $element,
-  ngDialog,
-  dimStoreService: StoreServiceType
+  ngDialog
 ) {
   'ngInject';
 
@@ -42,7 +41,7 @@ function LoadoutBuilderItemCtrl(
       } else if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(vm.itemData);
       } else {
-        const compareItems = flatMap(dimStoreService.getStores(), (store) => {
+        const compareItems = flatMap(D1StoresService.getStores(), (store) => {
           return store.items.filter((i) => i.hash === item.hash);
         });
 

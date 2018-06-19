@@ -19,6 +19,7 @@ import { showInfoPopup } from '../../shell/info-popup';
 import { t } from 'i18next';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
+import { D2StoresService } from '../d2-stores.service';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -142,6 +143,10 @@ const StoreProto = {
 
   isDestiny2(this: D2Store) {
     return true;
+  },
+
+  getStoresService() {
+    return D2StoresService;
   }
 };
 

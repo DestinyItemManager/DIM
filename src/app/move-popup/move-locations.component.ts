@@ -3,7 +3,7 @@ import template from './move-locations.html';
 import './move-locations.scss';
 import { IComponentOptions, IController } from 'angular';
 import { DimItem } from '../inventory/item-types';
-import { DimStore, StoreServiceType } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 
 export const MoveLocationsComponent: IComponentOptions = {
   template,
@@ -21,9 +21,7 @@ function controller(
     store: DimStore;
     stores: DimStore[];
   },
-  dimItemMoveService,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType
+  dimItemMoveService
 ) {
   'ngInject';
   const vm = this;
@@ -31,7 +29,7 @@ function controller(
   vm.settings = settings;
 
   vm.$onInit = () => {
-    const storeService = vm.item.destinyVersion === 2 ? D2StoresService : dimStoreService;
+    const storeService = vm.item.getStoresService();
 
     vm.store = storeService.getStore(vm.item.owner)!;
     vm.stores = storeService.getStores();

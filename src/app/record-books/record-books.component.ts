@@ -8,7 +8,7 @@ import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definition
 import template from './record-books.html';
 import './record-books.scss';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { StoreServiceType } from '../inventory/store-types';
+import { D1StoresService } from '../inventory/d1-stores.service';
 
 export const RecordBooksComponent: IComponentOptions = {
   controller: RecordBooksController,
@@ -23,7 +23,6 @@ function RecordBooksController(
     account: DestinyAccount;
   },
   $scope: IScope,
-  dimStoreService: StoreServiceType,
   $filter
 ) {
   'ngInject';
@@ -43,12 +42,12 @@ function RecordBooksController(
   };
 
   this.$onInit = () => {
-    subscribeOnScope($scope, dimStoreService.getStoresStream(vm.account), init);
+    subscribeOnScope($scope, D1StoresService.getStoresStream(vm.account), init);
   };
 
   $scope.$on('dim-refresh', () => {
     // TODO: refresh just advisors
-    dimStoreService.reloadStores();
+    D1StoresService.reloadStores();
   });
 
   // TODO: Ideally there would be an Advisors service that would

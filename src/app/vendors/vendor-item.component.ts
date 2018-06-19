@@ -3,7 +3,7 @@ import * as _ from 'underscore';
 import { sum, flatMap } from '../util';
 import template from './vendor-item.html';
 import dialogTemplate from './vendor-item-dialog.html';
-import { StoreServiceType } from '../inventory/store-types';
+import { D1StoresService } from '../inventory/d1-stores.service';
 
 export const VendorItem: IComponentOptions = {
   bindings: {
@@ -20,8 +20,7 @@ function VendorItemCtrl(
   this: IController,
   $scope,
   $element,
-  ngDialog,
-  dimStoreService: StoreServiceType
+  ngDialog
 ) {
   'ngInject';
 
@@ -47,7 +46,7 @@ function VendorItemCtrl(
     } else {
       const item = vm.saleItem.item;
 
-      const compareItems = flatMap(dimStoreService.getStores(), (store) => {
+      const compareItems = flatMap(D1StoresService.getStores(), (store) => {
         return store.items.filter((i) => i.hash === item.hash);
       });
 
@@ -69,7 +68,7 @@ function VendorItemCtrl(
             settings: this.settings,
             item,
             saleItem: vm.saleItem,
-            unlockStores: vm.saleItem.unlockedByCharacter.map((id) => _.find(dimStoreService.getStores(), { id })),
+            unlockStores: vm.saleItem.unlockedByCharacter.map((id) => _.find(D1StoresService.getStores(), { id })),
             compareItems,
             compareItem: _.first(compareItems),
             compareItemCount,

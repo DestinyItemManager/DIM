@@ -10,7 +10,7 @@ import {
   DestinyItemQualityBlockDefinition
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
-import { DimStore } from './store-types';
+import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
 import { D1RatingData } from '../item-review/d1-dtr-api-types';
@@ -102,6 +102,7 @@ export interface DimItem {
   inCategory(categoryName: string): boolean;
   canBeInLoadout(): boolean;
   updateManualMoveTimestamp(): void;
+  getStoresService(): StoreServiceType;
 
   /**
    * Check if this item is from D1. Inside an if statement, this item will be narrowed to type D1Item.
@@ -130,6 +131,7 @@ export interface D1Item extends DimItem {
   trackable: boolean;
 
   dtrRating: D1RatingData | null;
+  getStoresService(): D1StoreServiceType;
 }
 
 /**
@@ -145,6 +147,7 @@ export interface D2Item extends DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
   dtrRating: D2RatingData | null;
+  getStoresService(): D2StoreServiceType;
 }
 
 export interface D2PrimStat extends DestinyStat {

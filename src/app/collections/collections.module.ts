@@ -5,7 +5,7 @@ import Collections from './Collections';
 
 // This is the Destiny 2 "collections" pages
 export const collectionsModule = module('d2collectionsModule', [])
-  .component('collections', react2angular(Collections, ['account'], ['$scope', '$stateParams', 'D2StoresService']))
+  .component('collections', react2angular(Collections, ['account'], ['$scope', '$stateParams']))
   .config(($stateProvider: StateProvider) => {
     'ngInject';
 

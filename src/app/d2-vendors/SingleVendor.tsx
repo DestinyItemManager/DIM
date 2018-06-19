@@ -14,15 +14,15 @@ import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { Subscription } from 'rxjs/Subscription';
-import { D2StoreServiceType, D2Store } from '../inventory/store-types';
+import { D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { D2StoresService } from '../inventory/d2-stores.service';
 
 interface Props {
   $scope: IScope;
   $stateParams: StateParams;
   account: DestinyAccount;
-  D2StoresService: D2StoreServiceType;
 }
 
 interface State {
@@ -68,7 +68,7 @@ export default class SingleVendor extends React.Component<Props, State> {
       // we at least need to display that character!
       let characterId: string = this.props.$stateParams.characterId;
       if (!characterId) {
-        const stores = this.state.stores || await this.props.D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
+        const stores = this.state.stores || await D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
         if (stores) {
           characterId = stores.find((s) => s.current)!.id;
         }
@@ -86,7 +86,7 @@ export default class SingleVendor extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.storesSubscription = this.props.D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
+    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
       if (stores) {
         const ownedItemHashes = new Set<number>();
         for (const store of stores) {

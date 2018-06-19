@@ -1,8 +1,6 @@
 import { module } from 'angular';
 
 import { InventoryComponent } from './inventory.component';
-import { StoreService } from './d1-stores.service';
-import { D2StoresService } from './d2-stores.service';
 import { StoresComponent } from './dimStores.directive';
 import { StoreReputation } from './dimStoreReputation.directive';
 import { tagIconFilter, StoreItemComponent } from './dimStoreItem.directive';
@@ -11,16 +9,12 @@ import { StoreBucketComponent } from './dimStoreBucket.directive';
 import { StatsComponent } from './dimStats.directive';
 import { SimpleItemComponent } from './dimSimpleItem.directive';
 import { PercentWidth, percent } from './dimPercentWidth.directive';
-import { ItemService } from './dimItemService.factory';
 import { ItemMoveService } from './dimItemMoveService.factory';
 import { ClearNewItemsComponent } from './dimClearNewItems.directive';
 import { StorePagerComponent } from './store-pager.component';
 import { StateProvider } from '@uirouter/angularjs';
 
 export default module('inventoryModule', [])
-  .factory('dimStoreService', StoreService)
-  .factory('D2StoresService', D2StoresService)
-  .factory('dimItemService', ItemService)
   .factory('dimItemMoveService', ItemMoveService)
   .component('inventory', InventoryComponent)
   .component('dimStores', StoresComponent)

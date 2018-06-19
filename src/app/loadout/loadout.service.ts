@@ -2,11 +2,12 @@ import { copy, IPromise, IQService } from 'angular';
 import * as _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { queueAction } from '../inventory/action-queue';
-import { ItemServiceType } from '../inventory/dimItemService.factory';
-import { settings } from '../settings/settings';
 import { SyncService } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
-import { DimStore, StoreServiceType } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
+import { D2StoresService } from '../inventory/d2-stores.service';
+import { D1StoresService } from '../inventory/d1-stores.service';
+import { dimItemService } from '../inventory/dimItemService.factory';
 
 export const enum LoadoutClass {
   any = -1,
@@ -54,17 +55,14 @@ export function LoadoutService(
   $q: IQService,
   $rootScope: angular.IRootScopeService,
   $i18next,
-  dimItemService: ItemServiceType,
-  dimStoreService: StoreServiceType,
-  D2StoresService: StoreServiceType,
   toaster,
   loadingTracker
 ): LoadoutServiceType {
   'ngInject';
 
-  function getStoreService(destinyVersion = settings.destinyVersion) {
+  function getStoresService(destinyVersion) {
     // TODO: this needs to use account, store, or item version
-    return destinyVersion === 2 ? D2StoresService : dimStoreService;
+    return destinyVersion === 2 ? D2StoresService : D1StoresService;
   }
 
   let _loadouts: Loadout[] = [];
@@ -108,8 +106,8 @@ export function LoadoutService(
       const ids = data['loadouts-v3.0'];
       loadouts = ids.map((id) => {
         // Mark all the items as being in loadouts
-        data[id].items.forEach((item) => {
-          const itemFromStore = getStoreService().getItemAcrossStores({
+        data[id].items.forEach((item: LoadoutItem) => {
+          const itemFromStore = getStoresService(item.destinyVersion).getItemAcrossStores({
             id: item.id,
             hash: item.hash
           });
@@ -237,7 +235,7 @@ export function LoadoutService(
   // A special getItem that takes into account the fact that
   // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
   function getLoadoutItem(pseudoItem: DimItem, store: DimStore): DimItem | null {
-    let item = getStoreService(store.destinyVersion).getItemAcrossStores(pseudoItem);
+    let item = store.getStoresService().getItemAcrossStores(pseudoItem);
     if (!item) {
       return null;
     }
@@ -288,7 +286,7 @@ export function LoadoutService(
     if (!store) {
       throw new Error("You need a store!");
     }
-    const storeService = getStoreService(store.destinyVersion);
+    const storeService = store.getStoresService();
 
     if ($featureFlags.debugMoves) {
       console.log("LoadoutService: Apply loadout", loadout.name, "to", store.name);
@@ -463,7 +461,7 @@ export function LoadoutService(
         const amountAlreadyHave = store.amountOfItem(pseudoItem);
         let amountNeeded = pseudoItem.amount - amountAlreadyHave;
         if (amountNeeded > 0) {
-          const otherStores = getStoreService(store.destinyVersion).getStores()
+          const otherStores = store.getStoresService().getStores()
             .filter((otherStore) => store.id !== otherStore.id);
           const storesByAmount = _.sortBy(otherStores.map((store) => {
             return {
@@ -532,7 +530,7 @@ export function LoadoutService(
     };
 
     for (const itemPrimitive of loadoutPrimitive.items) {
-      const item = copy(getStoreService().getItemAcrossStores({
+      const item = copy(getStoresService(result.destinyVersion).getItemAcrossStores({
         id: itemPrimitive.id,
         hash: itemPrimitive.hash
       }));
