@@ -19,6 +19,7 @@ import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
 import { dimItemService } from '../inventory/dimItemService.factory';
 import { DimStore } from '../inventory/store-types';
 import { SearchService } from '../search/search-filter.component';
+import { D2FarmingService } from '../farming/d2farming.service';
 
 export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,
@@ -63,7 +64,6 @@ function LoadoutPopupCtrl(
   dimLoadoutService: LoadoutServiceType,
   toaster,
   dimFarmingService,
-  D2FarmingService,
   $window,
   $i18next,
   $stateParams
