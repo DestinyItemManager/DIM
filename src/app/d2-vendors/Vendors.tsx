@@ -48,9 +48,7 @@ export default class Vendors extends React.Component<Props, State> {
   async loadVendors() {
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
-    this.props.$scope.$apply(() => {
-      D2ManifestService.isLoaded = true;
-    });
+    D2ManifestService.loaded = true;
 
     // TODO: get for all characters, or let people select a character? This is a hack
     // we at least need to display that character!

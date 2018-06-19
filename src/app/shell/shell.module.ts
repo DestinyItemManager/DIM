@@ -7,7 +7,7 @@ import { CountdownComponent } from './countdown.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { ScrollClass } from './scroll-class.directive';
 import Header from './Header';
-import { ManifestProgressComponent } from './manifest-progress.component';
+import ManifestProgress from './ManifestProgress';
 import { defaultAccountRoute } from './default-account.route';
 import { destinyAccountRoute } from './destiny-account.route';
 // tslint:disable-next-line:no-implicit-dependencies
@@ -29,7 +29,7 @@ export const ShellModule = module('dimShell', [
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
   .component('header', react2angular(Header, [], ['$scope']))
-  .component('dimManifestProgress', ManifestProgressComponent)
+  .component('manifestProgress', react2angular(ManifestProgress, ['destinyVersion'], ['$scope']))
   .directive('scrollClass', ScrollClass)
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere)
   .config(defaultAccountRoute)

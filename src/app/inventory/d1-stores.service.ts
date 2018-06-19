@@ -220,7 +220,7 @@ function StoreService(): D1StoreServiceType {
         return undefined;
       })
       .finally(() => {
-        D1ManifestService.isLoaded = true;
+        D1ManifestService.loaded = true;
         $rootScope.$broadcast('dim-filter-invalidate');
       });
 

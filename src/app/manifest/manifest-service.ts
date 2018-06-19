@@ -18,6 +18,8 @@ import { $rootScope } from 'ngimport';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
+import '../rx-operators';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 declare const zip: any;
 
@@ -32,11 +34,18 @@ interface ManifestDB {
 // Testing flags
 const alwaysLoadRemote = false;
 
+export interface ManifestServiceState {
+  loaded: boolean;
+  error?: Error;
+  statusText?: string;
+}
+
 class ManifestService {
-  isLoaded = false;
-  isError = false;
-  statusText: string | null = null;
   version: string | null = null;
+  state: ManifestServiceState = {
+    loaded: false
+  };
+  state$ = new BehaviorSubject<ManifestServiceState>(this.state);
 
   /**
    * This tells users to reload the extension. It fires no more
@@ -69,13 +78,21 @@ class ManifestService {
     readonly getManifestApi: () => Promise<DestinyManifest>
   ) {}
 
+  set loaded(loaded: boolean) {
+    this.setState({ loaded, error: undefined });
+  }
+
+  set statusText(statusText: string) {
+    this.setState({ statusText });
+  }
+
   // TODO: redo all this with rxjs
   getManifest(): Promise<ManifestDB> {
     if (this.manifestPromise) {
       return this.manifestPromise;
     }
 
-    this.isLoaded = false;
+    this.loaded = false;
 
     this.manifestPromise = Promise
       .all([
@@ -91,7 +108,7 @@ class ManifestService {
       })
       .catch((e) => {
         let message = e.message || e;
-        this.statusText = t('Manifest.Error', { error: message });
+        const statusText = t('Manifest.Error', { error: message });
 
         if (e instanceof TypeError || e.status === -1) {
           message = navigator.onLine
@@ -111,7 +128,7 @@ class ManifestService {
         }
 
         this.manifestPromise = null;
-        this.isError = true;
+        this.setState({ error: e, statusText });
         console.error("Manifest loading error", { error: e }, e);
         reportException('manifest load', e);
         throw new Error(message);
@@ -225,6 +242,11 @@ class ManifestService {
       ga('send', 'event', 'Manifest', 'Need New Manifest');
       return Promise.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }
+  }
+
+  private setState(newState: Partial<ManifestServiceState>) {
+    this.state = { ...this.state, ...newState };
+    this.state$.next(this.state);
   }
 }
 
