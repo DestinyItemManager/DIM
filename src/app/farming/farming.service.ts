@@ -1,4 +1,4 @@
-import { copy, IRootScopeService, IIntervalService, IQService } from 'angular';
+import { copy } from 'angular';
 import { settings as dimSettings } from '../settings/settings';
 import * as _ from 'underscore';
 import { sum } from '../util';
@@ -6,20 +6,18 @@ import { getBuckets } from '../destiny1/d1-buckets.service';
 import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
 import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import { t } from 'i18next';
+import { toaster } from '../ngimport-more';
+import { $q, $interval, $rootScope } from 'ngimport';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+
+export const D1FarmingService = FarmingService();
 
 /**
  * A service for "farming" items by moving them continuously off a character,
  * so that they don't go to the Postmaster.
  */
-export function FarmingService(
-  $rootScope: IRootScopeService,
-  $q: IQService,
-  $interval: IIntervalService,
-  toaster,
-  $i18next
-) {
-  'ngInject';
-
+function FarmingService() {
   let intervalId;
   let subscription;
   const glimmerHashes = new Set([
@@ -49,8 +47,8 @@ export function FarmingService(
 
   const outOfSpaceWarning = _.throttle((store) => {
     toaster.pop('info',
-                $i18next.t('FarmingMode.OutOfRoomTitle'),
-                $i18next.t('FarmingMode.OutOfRoom', { character: store.name }));
+                t('FarmingMode.OutOfRoomTitle'),
+                t('FarmingMode.OutOfRoom', { character: store.name }));
   }, 60000);
 
   return {
@@ -170,7 +168,7 @@ export function FarmingService(
           this.makingRoom = false;
         });
     },
-    start(account, storeId) {
+    start(account: DestinyAccount, storeId: string) {
       const farm = () => {
         const consolidateHashes = [
           417308266, // three of coins

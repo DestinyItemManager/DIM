@@ -108,7 +108,7 @@ export async function pullFromPostmaster(store: DimStore, dimItemService: ItemSe
   }
 }
 
-// cribbed from dimFarmingService, but modified
+// cribbed from D1FarmingService, but modified
 async function moveItemsToVault(
   storeService: StoreServiceType,
   store: DimStore,
