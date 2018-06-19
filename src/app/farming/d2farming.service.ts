@@ -1,7 +1,6 @@
 import * as _ from 'underscore';
 import { REP_TOKENS } from './rep-tokens';
 import { getBuckets } from '../destiny2/d2-buckets.service';
-import { IIntervalService, IQService, IRootScopeService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
 import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
@@ -10,27 +9,24 @@ import { D2Item } from '../inventory/item-types';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { D2StoresService } from '../inventory/d2-stores.service';
+import { toaster } from '../ngimport-more';
+import { t } from 'i18next';
+import { $q, $interval, $rootScope } from 'ngimport';
+
+export const D2FarmingService = makeD2FarmingService();
 
 /**
  * A service for "farming" items by moving them continuously off a character,
  * so that they don't go to the Postmaster.
  */
-export function D2FarmingService(
-  $rootScope: IRootScopeService,
-  $q: IQService,
-  $interval: IIntervalService,
-  toaster,
-  $i18next
-) {
-  'ngInject';
-
+function makeD2FarmingService() {
   let intervalId;
   let subscription;
 
   const outOfSpaceWarning = _.throttle((store) => {
     toaster.pop('info',
-                $i18next.t('FarmingMode.OutOfRoomTitle'),
-                $i18next.t('FarmingMode.OutOfRoom', { character: store.name }));
+                t('FarmingMode.OutOfRoomTitle'),
+                t('FarmingMode.OutOfRoom', { character: store.name }));
   }, 60000);
 
   function getMakeRoomBuckets() {

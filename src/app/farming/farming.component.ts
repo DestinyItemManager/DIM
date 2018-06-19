@@ -2,6 +2,8 @@ import { settings } from '../settings/settings';
 import template from './farming.html';
 import './farming.scss';
 import { IComponentOptions } from 'angular';
+import { D1FarmingService } from './farming.service';
+import { consolidate } from '../inventory/dimItemMoveService.factory';
 
 export const FarmingComponent: IComponentOptions = {
   controller: FarmingCtrl,
@@ -9,18 +11,18 @@ export const FarmingComponent: IComponentOptions = {
   template
 };
 
-function FarmingCtrl(dimFarmingService, dimItemMoveService) {
+function FarmingCtrl() {
   'ngInject';
 
   const vm = this;
 
   Object.assign(vm, {
-    service: dimFarmingService,
+    service: D1FarmingService,
     settings,
-    consolidate: dimItemMoveService.consolidate,
+    consolidate,
     stop($event) {
       $event.preventDefault();
-      dimFarmingService.stop();
+      D1FarmingService.stop();
     }
   });
 }

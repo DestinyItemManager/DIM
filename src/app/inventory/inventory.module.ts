@@ -9,13 +9,11 @@ import { StoreBucketComponent } from './dimStoreBucket.directive';
 import { StatsComponent } from './dimStats.directive';
 import { SimpleItemComponent } from './dimSimpleItem.directive';
 import { PercentWidth, percent } from './dimPercentWidth.directive';
-import { ItemMoveService } from './dimItemMoveService.factory';
 import { ClearNewItemsComponent } from './dimClearNewItems.directive';
 import { StorePagerComponent } from './store-pager.component';
 import { StateProvider } from '@uirouter/angularjs';
 
 export default module('inventoryModule', [])
-  .factory('dimItemMoveService', ItemMoveService)
   .component('inventory', InventoryComponent)
   .component('dimStores', StoresComponent)
   .component('storePager', StorePagerComponent)

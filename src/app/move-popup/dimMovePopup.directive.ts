@@ -4,6 +4,7 @@ import './move-popup.scss';
 import { IController } from 'angular';
 import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
+import { consolidate, distribute } from '../inventory/dimItemMoveService.factory';
 
 export const MovePopupComponent = {
   controller: MovePopupController,
@@ -29,8 +30,7 @@ interface MovePopupControllerType {
 function MovePopupController(
   this: IController & MovePopupControllerType,
   $scope,
-  ngDialog,
-  dimItemMoveService
+  ngDialog
 ) {
   'ngInject';
   const vm = this;
@@ -72,11 +72,11 @@ function MovePopupController(
 
   vm.consolidate = () => {
     closeThisDialog();
-    dimItemMoveService.consolidate(vm.item, vm.store);
+    consolidate(vm.item, vm.store);
   };
 
   vm.distribute = () => {
     closeThisDialog();
-    dimItemMoveService.distribute(vm.item);
+    distribute(vm.item);
   };
 }

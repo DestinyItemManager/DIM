@@ -3,6 +3,7 @@ import template from './random-loadout.html';
 import './random-loadout.scss';
 import { IComponentOptions, IController, IWindowService } from 'angular';
 import { DimStore } from '../../inventory/store-types';
+import { dimLoadoutService } from '../loadout.service';
 
 export const RandomLoadoutComponent: IComponentOptions = {
   template,
@@ -17,7 +18,6 @@ function RandomLoadoutCtrl(
     stores: DimStore[];
   },
   $window: IWindowService,
-  dimLoadoutService,
   $i18next
 ) {
   'ngInject';

@@ -10,15 +10,17 @@ import {
   } from './auto-loadouts';
 import template from './loadout-popup.html';
 import './loadout-popup.scss';
-import { Loadout, LoadoutClass, LoadoutServiceType } from './loadout.service';
+import { Loadout, LoadoutClass, dimLoadoutService, getLight } from './loadout.service';
 import { makeRoomForPostmaster, pullablePostmasterItems, pullFromPostmaster } from './postmaster';
-import { getActivePlatform } from '../accounts/platform.service';
+import { getActivePlatform, getPlatformMatching } from '../accounts/platform.service';
 import { IDialogService } from 'ng-dialog';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets.service';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
 import { dimItemService } from '../inventory/dimItemService.factory';
 import { DimStore } from '../inventory/store-types';
 import { SearchService } from '../search/search-filter.component';
+import { D2FarmingService } from '../farming/d2farming.service';
+import { D1FarmingService } from '../farming/farming.service';
 
 export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,
@@ -60,10 +62,7 @@ function LoadoutPopupCtrl(
   $rootScope,
   $scope,
   ngDialog: IDialogService,
-  dimLoadoutService: LoadoutServiceType,
   toaster,
-  dimFarmingService,
-  D2FarmingService,
   $window,
   $i18next,
   $stateParams
@@ -93,7 +92,7 @@ function LoadoutPopupCtrl(
         i.location.sort === 'Armor' ||
         i.type === 'Ghost');
     });
-    vm.maxLightValue = dimLoadoutService.getLight(vm.store, maxLightLoadout(vm.store.getStoresService(), vm.store)) + (vm.hasClassified ? '*' : '');
+    vm.maxLightValue = getLight(vm.store, maxLightLoadout(vm.store.getStoresService(), vm.store)) + (vm.hasClassified ? '*' : '');
   };
 
   vm.search = SearchService;
@@ -177,7 +176,7 @@ function LoadoutPopupCtrl(
   vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
     $event.preventDefault();
     ngDialog.closeAll();
-    dimFarmingService.stop();
+    D1FarmingService.stop();
     D2FarmingService.stop();
 
     if (filterToEquipped) {
@@ -249,9 +248,9 @@ function LoadoutPopupCtrl(
 
   vm.startFarming = function startFarming() {
     ngDialog.closeAll();
-    (vm.store.destinyVersion === 2 ? D2FarmingService : dimFarmingService).start({
+    (vm.store.destinyVersion === 2 ? D2FarmingService : D1FarmingService).start(getPlatformMatching({
       membershipId: $stateParams.membershipId,
       platformType: $stateParams.platformType
-    }, vm.store.id);
+    })!, vm.store.id);
   };
 }

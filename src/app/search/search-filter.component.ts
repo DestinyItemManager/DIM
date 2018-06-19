@@ -14,6 +14,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimItem } from '../inventory/item-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import { dimVendorService } from '../vendors/vendor.service';
 
 /**
  * A simple holder to share the search query among components
@@ -39,9 +40,7 @@ function SearchFilterCtrl(
   $i18next,
   $element: IRootElementService,
   toaster,
-  ngDialog,
-  $injector,
-  $transitions
+  ngDialog
 ) {
   'ngInject';
   const vm = this;
@@ -52,18 +51,6 @@ function SearchFilterCtrl(
   function getStoresService() {
     return vm.account.destinyVersion === 2 ? D2StoresService : D1StoresService;
   }
-
-  // This hacks around the fact that dimVendorService isn't defined until the destiny1 modules are lazy-loaded
-  let dimVendorService;
-  const unregisterTransitionHook = $transitions.onSuccess({ to: 'destiny1.*' }, () => {
-    if (!dimVendorService) {
-      dimVendorService = $injector.get('dimVendorService');
-    }
-  });
-
-  vm.$onDestroy = () => {
-    unregisterTransitionHook();
-  };
 
   let filters;
   let searchConfig;
@@ -250,7 +237,7 @@ function SearchFilterCtrl(
       }
     }
 
-    if (vm.account.destinyVersion === 1 && dimVendorService) {
+    if (vm.account.destinyVersion === 1) {
       // Filter vendor items
       _.each(dimVendorService.vendors, (vendor: any) => {
         for (const saleItem of vendor.allItems) {

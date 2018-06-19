@@ -7,11 +7,14 @@ import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.ser
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { processItems } from '../inventory/store/d1-item-factory.service';
-import { IRootScopeService, IPromise, copy, IQService } from 'angular';
-import { D1StoreServiceType, D1Store } from '../inventory/store-types';
+import { IPromise, copy } from 'angular';
+import { D1Store } from '../inventory/store-types';
 import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { D1StoresService } from '../inventory/d1-stores.service';
+import { $rootScope, $q } from 'ngimport';
+import { loadingTracker } from '../ngimport-more';
 
 /*
 const allVendors = [
@@ -139,22 +142,17 @@ export interface VendorServiceType {
   totalVendors: number;
   loadedVendors: number;
   getVendorsStream(account: DestinyAccount): Observable<[D1Store[], this['vendors']]>;
-  reloadVendors(account: DestinyAccount): void;
+  reloadVendors(): void;
   getVendors(): this['vendors'];
-  requestRatings(): void;
+  requestRatings(): Promise<void>;
   countCurrencies(stores: D1Store[], vendors: this['vendors']): {
     [currencyHash: number]: number;
   };
 }
 
-export function VendorService(
-  $rootScope: IRootScopeService,
-  D1StoresService: D1StoreServiceType,
-  loadingTracker,
-  $q: IQService
-): VendorServiceType {
-  'ngInject';
+export const dimVendorService = VendorService();
 
+function VendorService(): VendorServiceType {
   let _ratingsRequested = false;
 
   const service: VendorServiceType = {
@@ -192,10 +190,12 @@ export function VendorService(
     // Keep track of the last value for new subscribers
     .publishReplay(1);
 
-  $rootScope.$on('dim-new-manifest', () => {
-    service.vendors = {};
-    service.vendorsLoaded = false;
-    deleteCachedVendors();
+  const clearVendors = _.once(() => {
+    $rootScope.$on('dim-new-manifest', () => {
+      service.vendors = {};
+      service.vendorsLoaded = false;
+      deleteCachedVendors();
+    });
   });
 
   return service;
@@ -224,6 +224,7 @@ export function VendorService(
     // Start the stream the first time it's asked for. Repeated calls
     // won't do anything.
     vendorsStream.connect();
+    clearVendors(); // Install listener to clear vendors
     return vendorsStream;
   }
 

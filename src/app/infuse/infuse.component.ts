@@ -4,7 +4,7 @@ import { flatMap } from '../util';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
 import './infuse.scss';
-import { LoadoutServiceType, Loadout } from '../loadout/loadout.service';
+import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from '../inventory/item-types';
 
 export const InfuseComponent: IComponentOptions = {
@@ -21,7 +21,6 @@ function InfuseCtrl(
     query: DimItem;
   },
   $scope,
-  dimLoadoutService: LoadoutServiceType,
   toaster,
   $q: IQService,
   $i18next

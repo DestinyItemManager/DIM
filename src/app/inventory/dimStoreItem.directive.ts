@@ -5,9 +5,10 @@ import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import template from './dimStoreItem.directive.html';
 import './dimStoreItem.scss';
 import { IComponentOptions, IController, IScope, IRootElementService, IRootScopeService } from 'angular';
-import { LoadoutServiceType } from '../loadout/loadout.service';
+import { dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from './item-types';
 import { CompareService } from '../compare/compare.service';
+import { moveItemTo } from './dimItemMoveService.factory';
 
 export function tagIconFilter() {
   'ngInject';
@@ -49,9 +50,7 @@ export function StoreItemCtrl(
   },
   $scope: IScope,
   $element: IRootElementService,
-  dimItemMoveService,
   ngDialog,
-  dimLoadoutService: LoadoutServiceType,
   $rootScope: IRootScopeService & { dragItem: DimItem }
 ) {
   "ngInject";
@@ -138,7 +137,7 @@ export function StoreItemCtrl(
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;
 
-      dimItemMoveService.moveItemTo(
+      moveItemTo(
         item,
         active,
         item.canBeEquippedBy(active) ? equip : false,

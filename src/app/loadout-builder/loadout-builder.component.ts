@@ -10,12 +10,13 @@ import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import { IComponentOptions, IController, IScope, ITimeoutService, extend, copy } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { LoadoutServiceType, Loadout } from '../loadout/loadout.service';
+import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
 import { StateService } from '@uirouter/angularjs';
 import { sum } from '../util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D1Item, D1GridNode } from '../inventory/item-types';
 import { D1StoreServiceType, D1Store } from '../inventory/store-types';
+import { dimVendorService } from '../vendors/vendor.service';
 
 export const LoadoutBuilderComponent: IComponentOptions = {
   controller: LoadoutBuilderController,
@@ -125,9 +126,7 @@ function LoadoutBuilderController(
   $timeout: ITimeoutService,
   $i18next,
   D1StoresService: D1StoreServiceType,
-  ngDialog,
-  dimLoadoutService: LoadoutServiceType,
-  dimVendorService
+  ngDialog
 ) {
   'ngInject';
 

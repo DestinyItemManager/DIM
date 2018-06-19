@@ -2,6 +2,7 @@ import { settings } from '../settings/settings';
 import template from './d2farming.html';
 import './farming.scss';
 import { IComponentOptions, IController } from 'angular';
+import { D2FarmingService } from './d2farming.service';
 
 export const D2FarmingComponent: IComponentOptions = {
   controller: FarmingCtrl,
@@ -9,7 +10,7 @@ export const D2FarmingComponent: IComponentOptions = {
   template
 };
 
-function FarmingCtrl(this: IController, D2FarmingService) {
+function FarmingCtrl(this: IController) {
   'ngInject';
 
   const vm = this;

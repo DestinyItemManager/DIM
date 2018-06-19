@@ -5,6 +5,7 @@ import template from './vendors.html';
 import './vendors.scss';
 import { IComponentOptions, IController, IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { dimVendorService } from './vendor.service';
 
 export const VendorsComponent: IComponentOptions = {
   controller: VendorsController,
@@ -17,8 +18,7 @@ export const VendorsComponent: IComponentOptions = {
 
 function VendorsController(
   this: IController & { account: DestinyAccount },
-  $scope: IScope,
-  dimVendorService
+  $scope: IScope
 ) {
   'ngInject';
 
