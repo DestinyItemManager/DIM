@@ -4,6 +4,7 @@ import './move-locations.scss';
 import { IComponentOptions, IController } from 'angular';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
+import { moveItemTo } from '../inventory/dimItemMoveService.factory';
 
 export const MoveLocationsComponent: IComponentOptions = {
   template,
@@ -20,8 +21,7 @@ function controller(
     amount: number;
     store: DimStore;
     stores: DimStore[];
-  },
-  dimItemMoveService
+  }
 ) {
   'ngInject';
   const vm = this;
@@ -91,6 +91,6 @@ function controller(
   };
 
   vm.moveItemTo = (store: DimStore, equip: boolean) => {
-    dimItemMoveService.moveItemTo(vm.item, store, equip, vm.amount);
+    moveItemTo(vm.item, store, equip, vm.amount);
   };
 }

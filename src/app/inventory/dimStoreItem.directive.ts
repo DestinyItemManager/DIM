@@ -8,6 +8,7 @@ import { IComponentOptions, IController, IScope, IRootElementService, IRootScope
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from './item-types';
 import { CompareService } from '../compare/compare.service';
+import { moveItemTo } from './dimItemMoveService.factory';
 
 export function tagIconFilter() {
   'ngInject';
@@ -49,7 +50,6 @@ export function StoreItemCtrl(
   },
   $scope: IScope,
   $element: IRootElementService,
-  dimItemMoveService,
   ngDialog,
   $rootScope: IRootScopeService & { dragItem: DimItem }
 ) {
@@ -137,7 +137,7 @@ export function StoreItemCtrl(
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;
 
-      dimItemMoveService.moveItemTo(
+      moveItemTo(
         item,
         active,
         item.canBeEquippedBy(active) ? equip : false,
