@@ -129,7 +129,9 @@ function makeD2StoresService(): D2StoreServiceType {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
           const bStore = profileInfo.characters.data[dStore.id];
-          dStore.updateCharacterInfo(defs, bStore);
+          if (bStore) {
+            dStore.updateCharacterInfo(defs, bStore);
+          }
         }
       });
       return _stores;
