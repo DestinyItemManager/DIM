@@ -22,6 +22,7 @@ import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
+import { dimVendorService } from '../vendors/vendor.service';
 
 const destiny1Links = [
   {
@@ -282,8 +283,6 @@ export default class Header extends React.PureComponent<Props, State> {
 
   private updateXur() {
     if (this.state.account && this.state.account.destinyVersion === 1 && !this.vendorsSubscription) {
-      const dimVendorService: any = $injector.get('dimVendorService'); // hack for code splitting
-
       this.vendorsSubscription = dimVendorService.getVendorsStream(this.state.account).subscribe(([_stores, vendors]) => {
         const xur = 2796397637;
         this.setState({ xurAvailable: Boolean(vendors[xur]) });

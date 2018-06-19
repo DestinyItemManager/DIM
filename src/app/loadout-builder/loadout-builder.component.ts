@@ -16,6 +16,7 @@ import { sum } from '../util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D1Item, D1GridNode } from '../inventory/item-types';
 import { D1StoreServiceType, D1Store } from '../inventory/store-types';
+import { dimVendorService } from '../vendors/vendor.service';
 
 export const LoadoutBuilderComponent: IComponentOptions = {
   controller: LoadoutBuilderController,
@@ -125,8 +126,7 @@ function LoadoutBuilderController(
   $timeout: ITimeoutService,
   $i18next,
   D1StoresService: D1StoreServiceType,
-  ngDialog,
-  dimVendorService
+  ngDialog
 ) {
   'ngInject';
 

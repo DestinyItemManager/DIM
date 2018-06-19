@@ -1,6 +1,5 @@
 import { module } from 'angular';
 
-import { VendorService } from './vendor.service';
 import { VendorsComponent } from './vendors.component';
 import { VendorItems } from './vendor-items.component';
 import { VendorItem } from './vendor-item.component';
@@ -10,7 +9,6 @@ import { Xur } from './xur.component';
 import { StateProvider } from '@uirouter/angularjs';
 
 export default module('VendorsModule', [])
-  .factory('dimVendorService', VendorService)
   .component('vendors', VendorsComponent)
   .component('vendorItems', VendorItems)
   .component('vendorItem', VendorItem)
