@@ -51,9 +51,7 @@ export default class SingleVendor extends React.Component<Props, State> {
   async loadVendor() {
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
-    this.props.$scope.$apply(() => {
-      D2ManifestService.isLoaded = true;
-    });
+    D2ManifestService.loaded = true;
 
     const vendorDef = defs.Vendor.get(this.state.vendorHash);
     if (!vendorDef) {

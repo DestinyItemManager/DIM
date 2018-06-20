@@ -211,7 +211,7 @@ export default class Header extends React.PureComponent<Props, State> {
           {dropdownOpen &&
             <CSSTransition
               classNames="dropdown"
-              timeout={{ enter: 500, exit: 3000 }}
+              timeout={{ enter: 500, exit: 500 }}
             >
               <ClickOutside key="dropdown" className="dropdown" onClickOutside={this.hideDropdown}>
                 {destinyLinks}

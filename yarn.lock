@@ -1423,6 +1423,10 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
 
+ceaser-easing@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ceaser-easing/-/ceaser-easing-1.0.1.tgz#07cdb85588c6ea76895b07e64ad696ed1e59c802"
+
 chainsaw@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/chainsaw/-/chainsaw-0.1.0.tgz#5eab50b28afe58074d0d58291388828b5e5fbc98"

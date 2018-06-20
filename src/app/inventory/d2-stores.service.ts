@@ -272,7 +272,7 @@ function makeD2StoresService(): D2StoreServiceType {
       })
       .finally(() => {
         $rootScope.$broadcast('dim-filter-invalidate');
-        D2ManifestService.isLoaded = true;
+        D2ManifestService.loaded = true;
       });
 
     loadingTracker.addPromise(reloadPromise);

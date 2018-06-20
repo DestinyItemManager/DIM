@@ -51,9 +51,7 @@ export default class Collections extends React.Component<Props, State> {
 
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
-    this.props.$scope.$apply(() => {
-      D2ManifestService.isLoaded = true;
-    });
+    D2ManifestService.loaded = true;
 
     const profileResponse = await getKiosks(this.props.account);
     this.setState({ profileResponse, defs });

@@ -1,4 +1,5 @@
 @import '../../scss/variables.scss';
+@import 'ceaser-easing';
 
 .logo {
   height: 24px;
@@ -125,7 +126,7 @@
 
   .dropdown-enter.dropdown-enter-active {
     transform: translateX(0);
-    transition: transform 200ms ease-out;
+    transition: transform 200ms $easeOutCubic;
   }
 
   .dropdown-exit {
@@ -134,7 +135,7 @@
 
   .dropdown-exit.dropdown-exit-active {
     transform: translateX(-250px);
-    transition: transform 200ms ease-out;
+    transition: transform 200ms $easeInCubic;
   }
 
   .header-links {

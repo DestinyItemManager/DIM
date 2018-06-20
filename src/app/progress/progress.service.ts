@@ -121,7 +121,7 @@ function loadProgress(account: DestinyAccount): IPromise<ProgressProfile | undef
       return undefined;
     })
     .finally(() => {
-      D2ManifestService.isLoaded = true;
+      D2ManifestService.loaded = true;
     });
 
   loadingTracker.addPromise(reloadPromise);
