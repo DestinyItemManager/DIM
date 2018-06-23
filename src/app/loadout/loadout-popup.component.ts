@@ -157,7 +157,7 @@ function LoadoutPopupCtrl(
         .catch((e) => {
           toaster.pop('error',
                       $i18next.t('Loadouts.DeleteErrorTitle'),
-                      $i18next.t('Loadouts.DeleteErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
+                      $i18next.t('Loadouts.DeleteErrorDescription', { loadoutName: loadout.name, error: e.message }));
           console.error(e);
         });
     }
