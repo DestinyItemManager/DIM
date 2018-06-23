@@ -1,1 +1,147 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1000" height="1000" viewBox="0 0 1000 1000"><defs><linearGradient id="a"><stop offset="0" stop-color="#fefdff"/><stop offset="1" stop-color="#9cb7ca"/></linearGradient><radialGradient xlink:href="#a" id="d" cx="500" cy="500" fx="500" fy="500" r="500" gradientTransform="translate(-.75 -.75) scale(1.0015)" gradientUnits="userSpaceOnUse"/><linearGradient gradientTransform="translate(-114.424 556.882)" y2="7.824" x2="45.798" y1="93.375" x1="45.798" gradientUnits="userSpaceOnUse" id="c"><stop stop-color="#29aac5" offset="0"/><stop stop-color="#4b96d6" offset=".995"/></linearGradient><linearGradient x2="45.834" y1="47.707" x1="45.834" gradientUnits="userSpaceOnUse" id="b"><stop stop-color="#c84e12" offset="0"/><stop stop-color="#5196dc" offset=".995"/></linearGradient><linearGradient xlink:href="#c" id="f" x1="768.063" y1="688.714" x2="301.185" y2="235.649" gradientUnits="userSpaceOnUse"/></defs><linearGradient id="e" gradientUnits="userSpaceOnUse" x1="602.758" y1="580.046" x2="448.774" y2="459.06"><stop offset="0" stop-color="#6d6e71"/><stop offset="1" stop-color="#414042"/></linearGradient><path fill="url(#d)" d="M0 0h1000v1000H0z"/><path fill="url(#e)" d="M407.644 499.113l92.108 92.104 92.101-92.104-92.101-92.101z"/><path fill="url(#f)" d="M882.942 421.796l-7.941-7.942-6.843-6.842-92.104-92.101-92.104-92.108v.004L582.285 121.139l-82.544-82.541-92.104 92.105 74.749 74.752 109.464 109.46 92.1 92.093-.004.004 92.108 92.104v.004l-92.108 92.101.004.004-74.856 74.852-109.353 109.349-92.1-92.101-92.105-92.104v.004l-85.018-85.019-7.09-7.09 103.394-103.394 80.815-80.818-92.101-92.101-92.108 92.101v.004l-92.104 92.104v.004l-92.104 92.1 92.108 92.101v.004l92.108 92.104-.004.003 92.104 92.102 92.105 92.103h-.004l92.108 92.101 92.101-92.101 92.107-92.107v.004l92.101-92.105 92.104-92.104 92.105-92.101z"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1000"
+   height="1000"
+   viewBox="0 0 1000 1000"
+   id="svg5319"
+   version="1.1"
+   inkscape:version="0.91+devel+osxmenu r12897"
+   sodipodi:docname="apple-touch-icon-beta.svg">
+  <metadata
+     id="metadata5353">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1395"
+     id="namedview5351"
+     showgrid="false"
+     inkscape:zoom="0.75968982"
+     inkscape:cx="358.84453"
+     inkscape:cy="500"
+     inkscape:window-x="0"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg5319" />
+  <defs
+     id="defs5321">
+    <linearGradient
+       id="a">
+      <stop
+         offset="0"
+         stop-color="#fefdff"
+         id="stop5324" />
+      <stop
+         offset="1"
+         stop-color="#9cb7ca"
+         id="stop5326" />
+    </linearGradient>
+    <radialGradient
+       xlink:href="#a"
+       id="d"
+       cx="500"
+       cy="500"
+       fx="500"
+       fy="500"
+       r="500"
+       gradientTransform="translate(-.75 -.75) scale(1.0015)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       gradientTransform="translate(-114.424 556.882)"
+       y2="7.824"
+       x2="45.798"
+       y1="93.375"
+       x1="45.798"
+       gradientUnits="userSpaceOnUse"
+       id="c">
+      <stop
+         stop-color="#29aac5"
+         offset="0"
+         id="stop5330" />
+      <stop
+         stop-color="#4b96d6"
+         offset=".995"
+         id="stop5332" />
+    </linearGradient>
+    <linearGradient
+       x2="45.834"
+       y1="47.707"
+       x1="45.834"
+       gradientUnits="userSpaceOnUse"
+       id="b">
+      <stop
+         stop-color="#c84e12"
+         offset="0"
+         id="stop5335" />
+      <stop
+         stop-color="#5196dc"
+         offset=".995"
+         id="stop5337" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#c"
+       id="f"
+       x1="768.063"
+       y1="688.714"
+       x2="301.185"
+       y2="235.649"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <linearGradient
+     id="e"
+     gradientUnits="userSpaceOnUse"
+     x1="602.758"
+     y1="580.046"
+     x2="448.774"
+     y2="459.06">
+    <stop
+       offset="0"
+       stop-color="#6d6e71"
+       id="stop5341" />
+    <stop
+       offset="1"
+       stop-color="#414042"
+       id="stop5343" />
+  </linearGradient>
+  <path
+     fill="url(#d)"
+     d="M0 0h1000v1000H0z"
+     id="path5345" />
+  <g
+     id="g5900"
+     transform="matrix(0.77303666,0,0,0.77303666,113.6815,114.16503)">
+    <path
+       id="path5347"
+       d="m 407.644,499.113 92.108,92.104 92.101,-92.104 -92.101,-92.101 z"
+       style="fill:url(#e)"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path5349"
+       d="m 882.942,421.796 -7.941,-7.942 -6.843,-6.842 -92.104,-92.101 -92.104,-92.108 0,0.004 -101.665,-101.668 -82.544,-82.541 -92.104,92.105 74.749,74.752 109.464,109.46 92.1,92.093 -0.004,0.004 92.108,92.104 0,0.004 -92.108,92.101 0.004,0.004 -74.856,74.852 -109.353,109.349 -92.1,-92.101 -92.105,-92.104 0,0.004 -85.018,-85.019 -7.09,-7.09 103.394,-103.394 80.815,-80.818 -92.101,-92.101 -92.108,92.101 0,0.004 -92.104,92.104 0,0.004 -92.104,92.1 92.108,92.101 0,0.004 92.108,92.104 -0.004,0.003 92.104,92.102 92.105,92.103 -0.004,0 92.108,92.101 92.101,-92.101 92.107,-92.107 0,0.004 92.101,-92.105 92.104,-92.104 92.105,-92.101 z"
+       style="fill:url(#f)"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
