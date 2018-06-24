@@ -11,21 +11,21 @@ import { getDefinitions } from '../destiny1/d1-definitions.service';
 import { IComponentOptions, IController, IScope, ITimeoutService, extend, copy } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
-import { StateService } from '@uirouter/angularjs';
 import { sum } from '../util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D1Item, D1GridNode } from '../inventory/item-types';
 import { D1Store } from '../inventory/store-types';
 import { dimVendorService } from '../vendors/vendor.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { router } from '../../router.config';
+import { Transition } from '@uirouter/react';
 
 export const LoadoutBuilderComponent: IComponentOptions = {
   controller: LoadoutBuilderController,
   template,
   controllerAs: 'vm',
   bindings: {
-    account: '<'
+    account: '<',
+    transition: '<'
   }
 };
 
@@ -96,6 +96,7 @@ interface SetType {
 function LoadoutBuilderController(
   this: IController & {
     account: DestinyAccount;
+    transition: Transition;
     excludeditems: D1Item[];
     activeCharacters: D1Store[];
     lockedperks: { [armorType in ArmorTypes]: LockedPerkHash };
@@ -132,11 +133,6 @@ function LoadoutBuilderController(
 
   const vm = this;
   vm.reviewsEnabled = $featureFlags.reviewsEnabled;
-
-  if (D1StoresService.getStores().length === 0) {
-    router.stateService.go('destiny1.inventory');
-    return;
-  }
 
   let buckets: { [classType in ClassTypes]: ItemBucket } = {
     warlock: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
@@ -726,7 +722,7 @@ function LoadoutBuilderController(
                               vm.lockedchanged ||
                               vm.excludedchanged ||
                               vm.perkschanged ||
-                              !router.stateService.is('destiny1.loadout-builder')) {
+                              !vm.transition.router.stateService.is('destiny1.loadout-builder')) {
                             // If active guardian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;
@@ -791,7 +787,7 @@ function LoadoutBuilderController(
         vm.stores = stores;
 
         if (stores.length === 0) {
-          router.stateService.go('destiny1.inventory');
+          vm.transition.router.stateService.go('destiny1.inventory');
           return;
         }
 
@@ -943,6 +939,13 @@ function LoadoutBuilderController(
     // Entry point of builder this get stores and starts processing
     vm.getItems();
   });
+
+  this.$onInit = () => {
+    if (D1StoresService.getStores().length === 0) {
+      this.transition.router.stateService.go('destiny1.inventory');
+      return;
+    }
+  };
 
   this.$onChanges = () => {
     vm.activePerks = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Artifact: [], Ghost: [] };
