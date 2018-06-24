@@ -18,6 +18,7 @@ import { D1Item, D1GridNode } from '../inventory/item-types';
 import { D1Store } from '../inventory/store-types';
 import { dimVendorService } from '../vendors/vendor.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import { router } from '../../router.config';
 
 export const LoadoutBuilderComponent: IComponentOptions = {
   controller: LoadoutBuilderController,
@@ -123,7 +124,6 @@ function LoadoutBuilderController(
     lockedchanged: boolean;
   },
   $scope: IScope,
-  $state: StateService,
   $timeout: ITimeoutService,
   $i18next,
   ngDialog
@@ -134,7 +134,7 @@ function LoadoutBuilderController(
   vm.reviewsEnabled = $featureFlags.reviewsEnabled;
 
   if (D1StoresService.getStores().length === 0) {
-    $state.go('destiny1.inventory');
+    router.stateService.go('destiny1.inventory');
     return;
   }
 
@@ -726,7 +726,7 @@ function LoadoutBuilderController(
                               vm.lockedchanged ||
                               vm.excludedchanged ||
                               vm.perkschanged ||
-                              !$state.is('destiny1.loadout-builder')) {
+                              !router.stateService.is('destiny1.loadout-builder')) {
                             // If active guardian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;
@@ -791,7 +791,7 @@ function LoadoutBuilderController(
         vm.stores = stores;
 
         if (stores.length === 0) {
-          $state.go('destiny1.inventory');
+          router.stateService.go('destiny1.inventory');
           return;
         }
 

@@ -5,10 +5,10 @@ import {
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
-import { $state } from '../ngimport-more';
 import './milestone.scss';
 import RewardActivity from './RewardActivity';
 import AvailableQuest from './AvailableQuest';
+import { UISref } from '@uirouter/react';
 
 /**
  * A Milestone is an activity or event that a player can complete to earn rewards.
@@ -41,8 +41,6 @@ export function Milestone({
     );
   } else if (milestone.vendors) {
     // A vendor milestone (Xur)
-    const click = () => $state.go('destiny2.vendor', { id: milestone.vendors[0].vendorHash, characterId: character.characterId });
-
     return (
       <div className="milestone-quest">
         <div className="milestone-icon">
@@ -52,7 +50,9 @@ export function Milestone({
           <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
           <div className="milestone-description">
             {$featureFlags.vendors
-              ? <a onClick={click}>{milestoneDef.displayProperties.description}</a>
+              ? <UISref to='destiny2.vendor' params={{ id: milestone.vendors[0].vendorHash, characterId: character.characterId }}>
+                  {milestoneDef.displayProperties.description}
+                </UISref>
               : milestoneDef.displayProperties.description
             }
           </div>

@@ -11,11 +11,11 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
-import { $state } from '../ngimport-more';
 import './vendor.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { UISref } from '@uirouter/react';
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
@@ -53,14 +53,12 @@ export default function Vendor({
 
   const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
 
-  const click = () => $state.go('destiny2.vendor', { id: vendor.vendorHash });
-
   return (
     <div className="vendor-char-items">
       <div className="title">
         <div className="collapse-handle">
           <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
-          <span onClick={click}>{vendorDef.displayProperties.name}</span>
+          <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
           <span className="vendor-location">{placeString}</span>
         </div>
         <Countdown endTime={new Date(vendor.nextRefreshDate)}/>

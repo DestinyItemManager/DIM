@@ -10,10 +10,11 @@ import { getCharacters } from '../bungie-api/destiny1-api';
 import { getBasicProfile } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
-import { $state, toaster } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import { removeToken } from '../oauth/oauth-token.service';
 import { flatMap } from '../util';
 import { DimError } from '../bungie-api/bungie-service-helper';
+import { router } from '../../router.config';
 
 /**
  * Platform types (membership types) in the Bungie API.
@@ -61,7 +62,7 @@ export function getDestinyAccountsForBungieAccount(bungieMembershipId: string): 
       if (platforms.length === 0) {
         toaster.pop('warning', t('Accounts.NoCharacters'));
         removeToken();
-        $state.go('login', { reauth: true });
+        router.stateService.go('login', { reauth: true });
       }
       return platforms;
     })

@@ -28,13 +28,14 @@ import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { $rootScope, $q } from 'ngimport';
-import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
+import { loadingTracker, toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { router } from '../../router.config';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -107,12 +108,12 @@ function makeD2StoresService(): D2StoreServiceType {
    * items in the stores - to do that, call reloadStores.
    */
   function updateCharacters(account: DestinyAccount): IPromise<D2Store[]> {
-    // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
+    // TODO: the router.globals.params defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
-      if ($stateParams.membershipId && $stateParams.platformType) {
+      if (router.globals.params.membershipId && router.globals.params.platformType) {
         account = {
-          membershipId: $stateParams.membershipId,
-          platformType: $stateParams.platformType,
+          membershipId: router.globals.params.membershipId,
+          platformType: router.globals.params.platformType,
           displayName: 'Unknown',
           platformLabel: 'Unknown',
           destinyVersion: 2

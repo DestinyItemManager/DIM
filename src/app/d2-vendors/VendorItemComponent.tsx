@@ -4,7 +4,7 @@ import BungieImage, { bungieBackgroundStyle } from "../dim-ui/BungieImage";
 import classNames from 'classnames';
 import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
 import { DestinyItemQuantity } from "bungie-api-ts/destiny2";
-import { ngDialog, $state } from "../ngimport-more";
+import { ngDialog } from "../ngimport-more";
 import { IDialogOpenResult } from "ng-dialog";
 import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from "../destiny2/d2-buckets.service";
@@ -15,6 +15,7 @@ import checkMark from '../../images/check.svg';
 import { D2Item } from "../inventory/item-types";
 import { D2RatingData } from "../item-review/d2-dtr-api-types";
 import { percent } from "../inventory/dimPercentWidth.directive";
+import { UISref } from "@uirouter/react";
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -45,26 +46,19 @@ export default class VendorItemComponent extends React.Component<Props> {
     }
   }
 
-  previewVendor = () => {
-    if (this.props.item.previewVendorHash) {
-      $state.go('destiny2.vendor', { id: this.props.item.previewVendorHash });
-    }
-    return false;
-  }
-
   render() {
     const { item, defs, owned } = this.props;
 
     if (item.displayTile) {
       return (
         <div className="vendor-item">
-          <a onClick={this.previewVendor}>
+          <UISref to='destiny2.vendor' params={{ id: item.previewVendorHash }}>
             <BungieImage
               className="vendor-tile"
               title={item.displayProperties.name}
               src={item.displayProperties.icon}
             />
-          </a>
+          </UISref>
           {item.displayProperties.name}
         </div>
       );
