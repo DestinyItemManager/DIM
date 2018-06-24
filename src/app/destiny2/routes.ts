@@ -1,9 +1,9 @@
 import { destinyAccountResolver } from "../shell/destiny-account.route";
-import { Destiny2Component } from "./destiny2.component";
 import { ReactStateDeclaration } from "@uirouter/react";
 import { D2InventoryComponent } from "./d2-inventory.component";
 import { angular2react } from "angular2react";
 import { lazyInjector } from "../../lazyInjector";
+import Destiny2 from "./Destiny2";
 
 // Root state for Destiny 2 views
 export const destiny2State: ReactStateDeclaration = {
@@ -11,7 +11,7 @@ export const destiny2State: ReactStateDeclaration = {
   parent: 'destiny-account',
   redirectTo: 'destiny2.inventory',
   url: '/d2',
-  component: angular2react('destiny2', Destiny2Component, lazyInjector.$injector as angular.auto.IInjectorService),
+  component: Destiny2,
   resolve: {
     account: destinyAccountResolver(2)
   }

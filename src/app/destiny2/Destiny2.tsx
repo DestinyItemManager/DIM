@@ -3,7 +3,6 @@ import { UIView } from "@uirouter/react";
 import ManifestProgress from '../shell/ManifestProgress';
 
 export default function Destiny2() {
-  console.log("DESTINY 2")
   return (
     <>
       <div id="content">

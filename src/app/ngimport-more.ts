@@ -1,4 +1,4 @@
-import { module } from 'angular';
+import { module, ILocationProvider } from 'angular';
 import { StateService, TransitionService, StateParams } from '@uirouter/angularjs';
 import { IDialogService } from 'ng-dialog';
 import { HotkeysProvider } from 'angular-hotkeys';
@@ -17,6 +17,7 @@ export let $transitions: TransitionService;
 export let ngDialog: IDialogService;
 export let hotkeys: HotkeysProvider;
 export let $stateParams: StateParams;
+export let $locationProvider: ILocationProvider;
 export let loadingTracker: {
   active: boolean;
   addPromise(PromiseLike): void;
@@ -33,5 +34,8 @@ export default module('dim/ngimport', [])
     loadingTracker = $i.get('loadingTracker');
     ngDialog = $i.get('ngDialog');
     hotkeys = $i.get('hotkeys');
+  }])
+  .config(['$locationProvider', ($lp) => {
+    $locationProvider = $lp;
   }])
   .name;
