@@ -6,6 +6,7 @@ import { ReactStateDeclaration } from "@uirouter/react";
 import { states as loginStates } from "../login/routes";
 import { states as progressStates } from "../progress/routes";
 import { states as vendorsStates } from "../d2-vendors/routes";
+import { states as collectionsStates } from "../collections/routes";
 
 const routes: ReactStateDeclaration[] = [
   destinyAccountState,
@@ -15,7 +16,8 @@ const routes: ReactStateDeclaration[] = [
   whatsNewState,
   ...loginStates,
   ...progressStates,
-  ...vendorsStates
+  ...vendorsStates,
+  ...collectionsStates
 ];
 
 export default routes;

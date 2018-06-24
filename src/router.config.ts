@@ -4,13 +4,16 @@ import routes from './app/shell/routes';
 import { $locationProvider } from './app/ngimport-more';
 import { $rootScope, $location, $injector } from 'ngimport';
 
+export let router: UIRouterReact;
 
 export default function makeRouter() {
   // Create a new instance of the Router
-  const router = new UIRouterReact();
+  router = new UIRouterReact();
   console.log("ROUTER", router);
   router.plugin(servicesPlugin);
   router.plugin(hashLocationPlugin);
+
+
 
   // Real ugly hacks to make AngularJS play nice with hashchange outside AngularJS.
   router.locationService = new Ng1LocationServices($locationProvider);
@@ -36,5 +39,6 @@ export default function makeRouter() {
 
   //import googleAnalyticsHook from './util/ga';
   //googleAnalyticsHook(router.transitionService);
+
   return router;
 }
