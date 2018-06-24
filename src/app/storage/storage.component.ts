@@ -15,7 +15,7 @@ import template from './storage.html';
 import './storage.scss';
 import { StorageAdapter, SyncService } from './sync.service';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 declare global {
   interface Window {

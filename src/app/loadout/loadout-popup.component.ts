@@ -21,7 +21,7 @@ import { DimStore } from '../inventory/store-types';
 import { SearchService } from '../search/search-filter.component';
 import { D2FarmingService } from '../farming/d2farming.service';
 import { D1FarmingService } from '../farming/farming.service';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,

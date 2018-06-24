@@ -7,7 +7,7 @@ import { getActivePlatform } from '../accounts/platform.service';
 import { fetchWithBungieOAuth } from '../oauth/http-refresh-token.service';
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;

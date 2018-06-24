@@ -1,5 +1,5 @@
 import { module } from 'angular';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 export default module('dim-oauth', [])
   .run(($rootScope) => {

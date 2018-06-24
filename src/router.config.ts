@@ -4,11 +4,8 @@ import { states } from './app/routes';
 import { $locationProvider } from './app/ngimport-more';
 import { $rootScope, $location, $injector } from 'ngimport';
 
-/** The global router for the app, accessible to other parts of the app once initialized. */
-export let router: UIRouterReact;
-
 export default function makeRouter() {
-  router = new UIRouterReact();
+  const router = new UIRouterReact();
   router.plugin(servicesPlugin);
   router.plugin(hashLocationPlugin);
 

@@ -5,7 +5,7 @@ import { element as angularElement, IController, IComponentOptions, IScope } fro
 import { sum } from '../util';
 import { DimItem } from '../inventory/item-types';
 import { CompareService } from './compare.service';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 export function StatRangeFilter() {
   // Turns a stat and a list of ranges into a 0-100 scale

@@ -1,6 +1,5 @@
 import { module } from 'angular';
 
-import { InventoryComponent } from '../destiny1/d1-inventory.component';
 import { StoresComponent } from './dimStores.directive';
 import { StoreReputation } from './dimStoreReputation.directive';
 import { tagIconFilter, StoreItemComponent } from './dimStoreItem.directive';

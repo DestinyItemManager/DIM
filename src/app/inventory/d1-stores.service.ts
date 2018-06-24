@@ -22,7 +22,7 @@ import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 export const D1StoresService = StoreService();
 

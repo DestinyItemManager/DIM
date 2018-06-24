@@ -10,7 +10,7 @@ import { SearchFilterComponent } from '../search/search-filter.component';
 import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
-import { router } from '../../router.config';
+import { router } from '../../router';
 import './header.scss';
 
 // tslint:disable-next-line:no-implicit-dependencies

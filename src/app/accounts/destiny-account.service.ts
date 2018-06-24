@@ -14,7 +14,7 @@ import { toaster } from '../ngimport-more';
 import { removeToken } from '../oauth/oauth-token.service';
 import { flatMap } from '../util';
 import { DimError } from '../bungie-api/bungie-service-helper';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 /**
  * Platform types (membership types) in the Bungie API.

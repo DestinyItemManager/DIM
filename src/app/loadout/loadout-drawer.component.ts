@@ -13,7 +13,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout, dimLoadoutService } from './loadout.service';
 import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 export const LoadoutDrawerComponent: IComponentOptions = {
   controller: LoadoutDrawerCtrl,

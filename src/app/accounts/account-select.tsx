@@ -8,7 +8,7 @@ import { compareAccounts, DestinyAccount } from './destiny-account.service';
 import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 const Account = React.forwardRef((
   {

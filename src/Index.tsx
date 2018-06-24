@@ -24,6 +24,7 @@ import 'mobile-drag-drop/default.css';
 
 import registerServiceWorker from './register-service-worker';
 import { lazyInjector } from './lazyInjector';
+import { setRouter } from './router';
 
 polyfill({
   holdToDrag: 300
@@ -41,8 +42,10 @@ initi18n().then(() => {
     .run(($injector) => {
       'ngInject';
       lazyInjector.$injector = $injector;
+      const router = makeRouter();
+      setRouter(router);
       ReactDOM.render(
-        <UIRouter router={makeRouter()}>
+        <UIRouter router={router}>
           <App/>
         </UIRouter>,
         document.getElementById('app')

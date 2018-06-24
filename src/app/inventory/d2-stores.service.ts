@@ -35,7 +35,7 @@ import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
-import { router } from '../../router.config';
+import { router } from '../../router';
 
 export const D2StoresService = makeD2StoresService();
 
