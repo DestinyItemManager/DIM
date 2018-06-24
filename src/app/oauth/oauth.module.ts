@@ -1,14 +1,15 @@
 import { module } from 'angular';
+import { router } from '../../router.config';
 
 export default module('dim-oauth', [])
-  .run(($rootScope, $state) => {
+  .run(($rootScope) => {
     'ngInject';
     $rootScope.$on('dim-no-token-found', () => {
       if ($DIM_FLAVOR === 'dev' &&
           (!localStorage.apiKey || !localStorage.oauthClientId || !localStorage.oauthClientSecret)) {
-        $state.go('developer');
+        router.stateService.go('developer');
       } else {
-        $state.go('login');
+        router.stateService.go('login');
       }
     });
   }).name;
