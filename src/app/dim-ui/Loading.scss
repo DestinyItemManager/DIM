@@ -1,0 +1,98 @@
+.dim-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+
+  $initialDelay: 1s;
+  $logoDuration: 3s;
+  $logoDelay: 1s;
+  $outlineDuration: 2.5s;
+  $outlineDelay: 1.5s;
+
+  & > div {
+    height: 300px;
+    width: 300px;
+    position: relative;
+  }
+
+  svg {
+    height: 250px;
+    width: 250px;
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    z-index: 1;
+  }
+  .outer {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dim-loading-dash $logoDuration ease-in-out ($initialDelay + $logoDelay) alternate infinite;
+  }
+  .inner {
+    animation: dim-loading-pop $logoDuration ease-in ($initialDelay + $logoDelay) forwards;
+    opacity: 0;
+  }
+  .outlines {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: dim-loading-rotateGrow $outlineDuration linear ($initialDelay + $outlineDelay) alternate infinite;
+    opacity: 0;
+  }
+  .outlines2 {
+    width: 200px;
+    height: 200px;
+    top: 50px;
+    left: 50px;
+    position: absolute;
+    opacity: 0;
+    animation: dim-loading-rotateGrow $outlineDuration linear $initialDelay alternate infinite;
+  }
+  .outline {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border: 1px solid #999;
+  }
+  .outlines, .outlines2 {
+    .outline:nth-child(2) {
+      transform: rotate(45deg);
+    }
+  }
+  @keyframes dim-loading-dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes dim-loading-pop {
+    95% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes dim-loading-rotateGrow {
+    0% {
+      transform: rotate(0deg) scale(4);
+      opacity: 0;
+    }
+    50% {
+      transform: rotate(180deg) scale(1);
+      opacity: 0.5;
+    }
+    100% {
+      transform: rotate(360deg) scale(0);
+      opacity: 0;
+    }
+  }
+}

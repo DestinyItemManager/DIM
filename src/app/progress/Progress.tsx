@@ -28,6 +28,7 @@ import { settings, CharacterOrder } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { Loading } from '../dim-ui/Loading';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -120,7 +121,7 @@ export class Progress extends React.Component<Props, State> {
 
   render() {
     if (!this.state.progress) {
-      return <div className="progress-page dim-page"><i className="fa fa-spinner fa-spin"/></div>;
+      return <div className="progress-page dim-page"><Loading/></div>;
     }
 
     const { defs, profileInfo } = this.state.progress;
