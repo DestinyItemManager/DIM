@@ -1,5 +1,9 @@
 # Next
 
+* Factions now show seasonal rank instead of lifetime rank.
+* Vendors show their faction rank next to their reward engrams.
+* Factions in the progress page also link to their vendor.
+
 # 4.57.0 (2018-06-17)
 
 * Item sizing setting works in Edge.
@@ -28,7 +32,6 @@
 * Fix the display of crucible rank points.
 * Fix faction rank progress bars on D1.
 * Compare view includes perks and mods for D2 items.
-* Factions now show seasonal rank instead of lifetime rank.
 
 # 4.53.0 (2018-05-20)
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './faction.scss';
+import '../progress/faction.scss';
 
 interface Props {
   /** 0-1 progress for the outer ring */
