@@ -19,6 +19,7 @@ import { ClickAnywhereButHere } from './click-anywhere-but-here.directive';
 import loadingTracker from './dimLoadingTracker.factory';
 import dimAngularFiltersModule from './dimAngularFilters.filter';
 import { react2angular } from 'react2angular';
+import { Loading } from '../dim-ui/Loading';
 
 export const ShellModule = module('dimShell', [
     UIRouterModule,
@@ -29,6 +30,7 @@ export const ShellModule = module('dimShell', [
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
   .component('header', react2angular(Header, [], ['$scope']))
+  .component('loading', react2angular(Loading, [], []))
   .component('manifestProgress', react2angular(ManifestProgress, ['destinyVersion'], ['$scope']))
   .directive('scrollClass', ScrollClass)
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere)
