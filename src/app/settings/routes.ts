@@ -6,7 +6,7 @@ import { settings } from "./settings";
 
 export const states: ReactStateDeclaration[] = [{
   name: 'settings',
-  component: angular2react('settings', SettingsComponent, lazyInjector.$injector as angular.auto.IInjectorService),
+  component: angular2react('dimSettings', SettingsComponent, lazyInjector.$injector as angular.auto.IInjectorService),
   url: '/settings?gdrive',
   resolve: {
     settings: () => settings.ready
