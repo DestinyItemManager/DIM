@@ -1,5 +1,4 @@
 import { module, ILocationProvider } from 'angular';
-import { StateService, TransitionService, StateParams } from '@uirouter/angularjs';
 import { IDialogService } from 'ng-dialog';
 import { HotkeysProvider } from 'angular-hotkeys';
 
@@ -12,11 +11,8 @@ import { HotkeysProvider } from 'angular-hotkeys';
 
  // ngToaster
 export let toaster: any;
-export let $state: StateService;
-export let $transitions: TransitionService;
 export let ngDialog: IDialogService;
 export let hotkeys: HotkeysProvider;
-export let $stateParams: StateParams;
 export let $locationProvider: ILocationProvider;
 export let loadingTracker: {
   active: boolean;
@@ -28,9 +24,6 @@ export let loadingTracker: {
 export default module('dim/ngimport', [])
   .run(['$injector', ($i: angular.auto.IInjectorService) => {
     toaster = $i.get('toaster');
-    $state = $i.get('$state');
-    $transitions = $i.get('$transitions');
-    $stateParams = $i.get('$stateParams');
     loadingTracker = $i.get('loadingTracker');
     ngDialog = $i.get('ngDialog');
     hotkeys = $i.get('hotkeys');
