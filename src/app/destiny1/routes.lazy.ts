@@ -1,5 +1,4 @@
 import { ReactStateDeclaration } from "@uirouter/react";
-import { states as realStates } from './routes';
 import { $injector } from "ngimport";
 
 export const states: ReactStateDeclaration[] = [{
@@ -9,7 +8,8 @@ export const states: ReactStateDeclaration[] = [{
     const $ocLazyLoad = $injector.get('$ocLazyLoad') as any;
     // tslint:disable-next-line:space-in-parens
     const mod = await import(/* webpackChunkName: "destiny1" */ '../destiny1/destiny1.module');
-    $ocLazyLoad.load(mod.default);
-    return { states: realStates };
+    console.log("MOD", mod);
+    $ocLazyLoad.load(mod.angularModule);
+    return { states: mod.states };
   }
 }];

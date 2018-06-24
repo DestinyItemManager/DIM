@@ -41,6 +41,8 @@ interface State {
 
 export default class AccountSelect extends React.Component<Props, State> {
   private dropdownToggler = React.createRef<HTMLDivElement>();
+  // tslint:disable-next-line:ban-types
+  private unregisterTransitionHooks: Function[] = [];
 
   constructor(props: Props) {
     super(props);
@@ -53,6 +55,16 @@ export default class AccountSelect extends React.Component<Props, State> {
   componentDidMount() {
     const loadAccountsPromise = getPlatforms().then((accounts) => this.setState({ accounts }));
     loadingTracker.addPromise(loadAccountsPromise);
+
+    this.unregisterTransitionHooks = [
+      router.transitionService.onBefore({}, () => {
+        this.closeDropdown();
+      })
+    ];
+  }
+
+  componentWillUnmount() {
+    this.unregisterTransitionHooks.forEach((f) => f());
   }
 
   render() {
@@ -77,7 +89,7 @@ export default class AccountSelect extends React.Component<Props, State> {
                 params={account}
                 onClick={this.closeDropdown}
               >
-                <Account account={account}/>
+                <Account account={account} onClick={this.closeDropdown}/>
               </UISref>
             )}
             <div className="log-out" onClick={this.logOut}><i className="fa fa-sign-out"/> {t('Settings.LogOut')}</div>
