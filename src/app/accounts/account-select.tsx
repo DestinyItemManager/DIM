@@ -1,12 +1,14 @@
 import { t } from 'i18next';
 import * as React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
-import { $state, loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../ngimport-more';
 import { removeToken } from '../oauth/oauth-token.service';
 import './account-select.scss';
 import { compareAccounts, DestinyAccount } from './destiny-account.service';
 import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
+import { UISref } from '@uirouter/react';
+import { router } from '../../router.config';
 
 const Account = React.forwardRef((
   {
@@ -69,8 +71,14 @@ export default class AccountSelect extends React.Component<Props, State> {
         {open &&
           <ClickOutside onClickOutside={this.closeDropdown} className="accounts-popup">
             {otherAccounts.map((account) =>
-              // tslint:disable-next-line:jsx-no-lambda
-              <Account key={`${account.membershipId}-${account.destinyVersion}`} account={account} onClick={() => this.selectAccount(account)}/>
+              <UISref
+                key={`${account.membershipId}-${account.destinyVersion}`}
+                to={account.destinyVersion === 1 ? 'destiny1' : 'destiny2'}
+                params={account}
+                onClick={this.closeDropdown}
+              >
+                <Account account={account}/>
+              </UISref>
             )}
             <div className="log-out" onClick={this.logOut}><i className="fa fa-sign-out"/> {t('Settings.LogOut')}</div>
           </ClickOutside>
@@ -89,14 +97,9 @@ export default class AccountSelect extends React.Component<Props, State> {
     this.setState({ open: !this.state.open });
   }
 
-  private selectAccount = (account: DestinyAccount) => {
-    this.closeDropdown();
-    $state.go(account.destinyVersion === 1 ? 'destiny1' : 'destiny2', account);
-  }
-
   private logOut = () => {
     this.closeDropdown();
     removeToken();
-    $state.go('login', { reauth: true });
+    router.stateService.go('login', { reauth: true });
   }
 }

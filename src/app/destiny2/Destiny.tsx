@@ -5,9 +5,16 @@ import { $rootScope } from 'ngimport';
 import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
 import { itemTags } from '../settings/settings';
-import './destiny2.scss';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
-export default class Destiny2 extends React.Component {
+interface Props {
+  account: DestinyAccount;
+}
+
+/**
+ * Base view for pages that show Destiny content.
+ */
+export default class Destiny extends React.Component<Props> {
   private $scope = $rootScope.$new(true);
 
   componentDidMount() {
@@ -46,7 +53,7 @@ export default class Destiny2 extends React.Component {
           <UIView/>
         </div>
         <div className="store-bounds"/>
-        <ManifestProgress destinyVersion={2} />
+        <ManifestProgress destinyVersion={this.props.account.destinyVersion} />
       </>
     );
   }

@@ -12,6 +12,7 @@ import ToasterModule from 'angularjs-toaster';
 import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
+import ocLazyLoadModule from 'oclazyload';
 import 'ngimport';
 import ngimportMoreModule from './ngimport-more';
 import ngSanitize from 'angular-sanitize';
@@ -40,6 +41,7 @@ const dependencies = [
   TouchModule,
   ngI18Next,
   ngSanitize,
+  ocLazyLoadModule,
   ShellModule,
   'rzModule',
   ToasterModule,

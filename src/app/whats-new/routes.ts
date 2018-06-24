@@ -4,7 +4,8 @@ export const whatsNewState: ReactStateDeclaration = {
   name: 'whats-new.**',
   url: '/whats-new',
   lazyLoad: async() => {
-    const module = await import('./WhatsNew');
+    // tslint:disable-next-line:space-in-parens
+    const module = await import(/* webpackChunkName: "whatsNew" */ './WhatsNew');
     return {
       states: [{
         name: 'whats-new',
