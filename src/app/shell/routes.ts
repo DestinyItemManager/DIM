@@ -8,6 +8,7 @@ import { states as progressStates } from "../progress/routes";
 import { states as vendorsStates } from "../d2-vendors/routes";
 import { states as collectionsStates } from "../collections/routes";
 import { states as storageStates } from "../storage/routes";
+import { states as settingsStates } from "../settings/routes";
 
 const routes: ReactStateDeclaration[] = [
   destinyAccountState,
@@ -19,7 +20,8 @@ const routes: ReactStateDeclaration[] = [
   ...progressStates,
   ...vendorsStates,
   ...collectionsStates,
-  ...storageStates
+  ...storageStates,
+  ...settingsStates
 ];
 
 export default routes;
