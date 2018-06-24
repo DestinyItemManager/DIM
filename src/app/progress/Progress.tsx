@@ -28,6 +28,7 @@ import { settings, CharacterOrder } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { $rootScope } from 'ngimport';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -101,11 +102,12 @@ export class Progress extends React.Component<Props, State> {
       }
     });
 
-    this.props.$scope.$on('dim-refresh', () => {
+    // TODO: stop using $rootScope!
+    $rootScope.$on('dim-refresh', () => {
       reloadProgress();
     });
 
-    this.props.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
+    $rootScope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
       if (newValue !== this.state.characterOrder) {
         this.setState({ characterOrder: newValue });
       }
