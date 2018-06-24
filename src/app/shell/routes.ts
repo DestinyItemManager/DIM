@@ -1,30 +1,26 @@
-import { destinyAccountState } from "./destiny-account.route";
-import { destiny2State, destiny2InventoryState } from "../destiny2/routes";
-import { defaultAccountRoute } from "./default-account.route";
-import { whatsNewState } from "../whats-new/routes";
 import { ReactStateDeclaration } from "@uirouter/react";
-import { states as loginStates } from "../login/routes";
-import { states as progressStates } from "../progress/routes";
-import { states as vendorsStates } from "../d2-vendors/routes";
-import { states as collectionsStates } from "../collections/routes";
-import { states as storageStates } from "../storage/routes";
-import { states as settingsStates } from "../settings/routes";
+import { PageComponent } from "./page.component";
+import { lazyInjector } from "../../lazyInjector";
+import { angular2react } from "angular2react";
+// tslint:disable-next-line:no-implicit-dependencies
+import aboutTemplate from 'app/views/about.html';
+// tslint:disable-next-line:no-implicit-dependencies
+import supportTemplate from 'app/views/support.html';
 
-const routes: ReactStateDeclaration[] = [
-  destinyAccountState,
-  destiny2State,
-  destiny2InventoryState,
-  defaultAccountRoute,
-  whatsNewState,
-  ...loginStates,
-  ...progressStates,
-  ...vendorsStates,
-  ...collectionsStates,
-  ...storageStates,
-  ...settingsStates,
-  // Only include developer stuff in the bundle in dev
-  // tslint:disable-next-line:no-require-imports
-  ...($DIM_FLAVOR === 'dev' ? require('../developer/routes').states : [])
-];
+const Page = angular2react('dimPage', PageComponent, lazyInjector.$injector as angular.auto.IInjectorService);
 
-export default routes;
+export const states: ReactStateDeclaration[] = [{
+  name: 'about',
+  resolve: {
+    src: () => aboutTemplate
+  },
+  component: Page,
+  url: '/about'
+}, {
+  name: 'support',
+  resolve: {
+    src: () => supportTemplate
+  },
+  component: Page,
+  url: '/backers'
+}];

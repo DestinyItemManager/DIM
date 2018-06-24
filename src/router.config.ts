@@ -1,6 +1,6 @@
 import { UIRouterReact, servicesPlugin, hashLocationPlugin } from '@uirouter/react';
 import { Ng1LocationServices } from '@uirouter/angularjs/lib-esm/locationServices';
-import routes from './app/shell/routes';
+import { states } from './app/routes';
 import { $locationProvider } from './app/ngimport-more';
 import { $rootScope, $location, $injector } from 'ngimport';
 
@@ -24,7 +24,7 @@ export default function makeRouter() {
   }
 
   // Register the initial (eagerly loaded) states
-  routes.forEach((state) => router.stateRegistry.register(state));
+  states.forEach((state) => router.stateRegistry.register(state));
 
   // Global config for router
   router.urlService.rules.initial({ state: 'default-account' });
