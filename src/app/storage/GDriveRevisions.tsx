@@ -5,7 +5,7 @@ import './GDriveRevisions.scss';
 import { GDriveRevision } from './google-drive-storage';
 import { dataStats } from './storage.component';
 import { SyncService } from './sync.service';
-import { $state } from '../ngimport-more';
+import { router } from '../../router.config';
 
 interface State {
   revisions?: any;
@@ -130,7 +130,7 @@ class GDriveRevisionComponent extends React.Component<{
     if (content && confirm(t('Storage.ImportConfirm'))) {
       await SyncService.set(content!, true);
       alert(t('Storage.ImportSuccess'));
-      $state.go('settings');
+      router.stateService.go('settings');
     }
   }
 }
