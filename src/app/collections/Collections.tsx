@@ -1,5 +1,3 @@
-import { StateParams } from '@uirouter/angularjs';
-import { IScope } from 'angular';
 import {
   DestinyProfileResponse
 } from 'bungie-api-ts/destiny2';
@@ -20,10 +18,11 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
+import { UIViewInjectedProps } from '@uirouter/react';
+import { loadingTracker } from '../ngimport-more';
+import { $rootScope } from 'ngimport';
 
 interface Props {
-  $scope: IScope;
-  $stateParams: StateParams;
   account: DestinyAccount;
 }
 
@@ -38,8 +37,9 @@ interface State {
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-export default class Collections extends React.Component<Props, State> {
+export default class Collections extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
+  private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
@@ -61,7 +61,13 @@ export default class Collections extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.loadCollections();
+    loadingTracker.addPromise(this.loadCollections());
+
+    // We need to make a scope
+    this.$scope.$on('dim-refresh', () => {
+      loadingTracker.addPromise(this.loadCollections());
+    });
+
     this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
       if (stores) {
         const ownedItemHashes = new Set<number>();
@@ -77,6 +83,7 @@ export default class Collections extends React.Component<Props, State> {
 
   componentWillUnmount() {
     this.storesSubscription.unsubscribe();
+    this.$scope.$destroy();
   }
 
   render() {

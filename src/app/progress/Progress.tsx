@@ -67,6 +67,7 @@ interface State {
 export class Progress extends React.Component<Props, State> {
   subscription: Subscription;
   mediaQuerySubscription: Subscription;
+  private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
@@ -103,11 +104,11 @@ export class Progress extends React.Component<Props, State> {
     });
 
     // TODO: stop using $rootScope!
-    $rootScope.$on('dim-refresh', () => {
+    this.$scope.$on('dim-refresh', () => {
       reloadProgress();
     });
 
-    $rootScope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
+    this.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
       if (newValue !== this.state.characterOrder) {
         this.setState({ characterOrder: newValue });
       }
@@ -118,6 +119,7 @@ export class Progress extends React.Component<Props, State> {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    this.$scope.$destroy();
   }
 
   render() {

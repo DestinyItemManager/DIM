@@ -36,6 +36,7 @@ interface State {
  */
 export default class Vendors extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
+  private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
@@ -69,7 +70,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     const promise = this.loadVendors();
     loadingTracker.addPromise(promise);
 
-    $rootScope.$on('dim-refresh', () => {
+    this.$scope.$on('dim-refresh', () => {
       const promise = this.loadVendors();
       loadingTracker.addPromise(promise);
     });
@@ -89,6 +90,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
   componentWillUnmount() {
     this.storesSubscription.unsubscribe();
+    this.$scope.$destroy();
   }
 
   render() {

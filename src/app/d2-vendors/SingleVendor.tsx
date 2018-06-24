@@ -18,6 +18,8 @@ import { D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
+import { loadingTracker } from '../ngimport-more';
+import { $rootScope } from 'ngimport';
 
 interface Props {
   $scope: IScope;
@@ -40,6 +42,7 @@ interface State {
  */
 export default class SingleVendor extends React.Component<Props, State> {
   private storesSubscription: Subscription;
+  private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
@@ -95,11 +98,16 @@ export default class SingleVendor extends React.Component<Props, State> {
         this.setState({ stores, ownedItemHashes });
       }
     });
-    this.loadVendor();
+    loadingTracker.addPromise(this.loadVendor());
+
+    this.$scope.$on('dim-refresh', () => {
+      loadingTracker.addPromise(this.loadVendor());
+    });
   }
 
   componentWillUnmount() {
     this.storesSubscription.unsubscribe();
+    this.$scope.$destroy();
   }
 
   render() {
