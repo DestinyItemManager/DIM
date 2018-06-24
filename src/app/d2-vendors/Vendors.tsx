@@ -18,6 +18,7 @@ import { D2Store } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
+import { Loading } from '../dim-ui/Loading';
 
 interface Props {
   $scope: IScope;
@@ -98,8 +99,7 @@ export default class Vendors extends React.Component<Props, State> {
     const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
-      // TODO: loading component!
-      return <div className="vendor dim-page"><i className="fa fa-spinner fa-spin"/></div>;
+      return <div className="vendor dim-page"><Loading/></div>;
     }
 
     return (
