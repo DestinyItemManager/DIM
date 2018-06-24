@@ -21,7 +21,6 @@ import ngSanitize from 'angular-sanitize';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './inventory/inventory.module';
 import itemReviewModule from './item-review/item-review.module';
-import loginModule from './login/login.module';
 import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
@@ -51,7 +50,6 @@ const dependencies = [
   UIRouterModule,
   inventoryModule,
   itemReviewModule,
-  loginModule,
   compareModule,
   infuseModule,
   farmingModule,
