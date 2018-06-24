@@ -99,6 +99,7 @@
     "@types/react-dom": "^16.0.5",
     "@types/underscore": "^1.8.8",
     "@uirouter/angularjs": "^1.0.15",
+    "@uirouter/react": "^0.8.2",
     "@uirouter/visualizer": "^6.0.0",
     "angular": "^1.6.9",
     "angular-aria": "^1.6.9",

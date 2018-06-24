@@ -92,6 +92,14 @@
   version "5.0.19"
   resolved "https://registry.yarnpkg.com/@uirouter/core/-/core-5.0.19.tgz#fe2888190393a8c92584c354e65ab8322c1b0db4"
 
+"@uirouter/react@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@uirouter/react/-/react-0.8.2.tgz#e942d4360e274e224ec73624dfa5694abca72b66"
+  dependencies:
+    "@uirouter/core" "5.0.19"
+    classnames "^2.2.5"
+    prop-types "^15.6.1"
+
 "@uirouter/visualizer@^6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@uirouter/visualizer/-/visualizer-6.0.0.tgz#8812198ab5c89d7dd252665573bc027f2dd2ff98"

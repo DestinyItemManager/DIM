@@ -32,7 +32,7 @@ module.exports = (env) => {
     mode: isDev ? 'development' : 'production',
 
     entry: {
-      main: './src/index.ts',
+      main: './src/Index.tsx',
       browsercheck: './src/browsercheck.js',
       authReturn: './src/authReturn.ts',
       gdriveReturn: './src/gdriveReturn.ts'
