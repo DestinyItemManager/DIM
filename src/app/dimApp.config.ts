@@ -1,9 +1,11 @@
 import { RateLimiterConfig, RateLimiterQueue } from "./bungie-api/rate-limiter";
+import { ICompileProvider } from "angular";
 
 export default function config(
-  $compileProvider,
+  $compileProvider: ICompileProvider,
   hotkeysProvider,
-  ngDialogProvider) {
+  ngDialogProvider
+) {
   'ngInject';
 
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?:|data:image\/)/);

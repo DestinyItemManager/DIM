@@ -9,11 +9,9 @@ import TouchModule from 'angular-touch';
 
 import 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
-import UIRouterModule from '@uirouter/angularjs';
 import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
-import ocLazyLoadModule from 'oclazyload';
 import 'ngimport';
 import ngimportMoreModule from './ngimport-more';
 import ngSanitize from 'angular-sanitize';
@@ -33,7 +31,6 @@ import searchModule from './search/search.module';
 import destiny2Module from './destiny2/destiny2.module';
 
 import config from './dimApp.config';
-import routes from './dimApp.routes';
 import run from './dimApp.run';
 
 const dependencies = [
@@ -43,11 +40,9 @@ const dependencies = [
   TouchModule,
   ngI18Next,
   ngSanitize,
-  ocLazyLoadModule,
   ShellModule,
   'rzModule',
   ToasterModule,
-  UIRouterModule,
   inventoryModule,
   itemReviewModule,
   compareModule,
@@ -79,6 +74,5 @@ if ($featureFlags.sentry) {
 
 export const DimAppModule = module('dimApp', dependencies)
   .config(config)
-  .config(routes)
   .run(run)
   .name;

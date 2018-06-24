@@ -1,7 +1,5 @@
 import { module } from 'angular';
 
-import UIRouterModule from '@uirouter/angularjs';
-
 import { ActivityTrackerDirective } from './activity-tracker';
 import { CountdownComponent } from './countdown.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
@@ -19,9 +17,9 @@ import { ClickAnywhereButHere } from './click-anywhere-but-here.directive';
 import loadingTracker from './dimLoadingTracker.factory';
 import dimAngularFiltersModule from './dimAngularFilters.filter';
 import { react2angular } from 'react2angular';
+import { ToasterContainerComponent } from './toaster-container.component';
 
 export const ShellModule = module('dimShell', [
-    UIRouterModule,
     dimAngularFiltersModule
   ])
   .directive('dimActivityTracker', ActivityTrackerDirective)
@@ -30,6 +28,7 @@ export const ShellModule = module('dimShell', [
   .component('starRating', StarRatingComponent)
   .component('header', react2angular(Header, [], ['$scope']))
   .component('manifestProgress', react2angular(ManifestProgress, ['destinyVersion'], ['$scope']))
+  .component('dimToasterContainer', ToasterContainerComponent)
   .directive('scrollClass', ScrollClass)
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere)
   .config(defaultAccountRoute)

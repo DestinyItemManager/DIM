@@ -4,25 +4,24 @@ import routes from './app/shell/routes';
 import { $locationProvider } from './app/ngimport-more';
 import { $rootScope, $location, $injector } from 'ngimport';
 
+/** The global router for the app, accessible to other parts of the app once initialized. */
 export let router: UIRouterReact;
 
 export default function makeRouter() {
-  // Create a new instance of the Router
   router = new UIRouterReact();
-  console.log("ROUTER", router);
   router.plugin(servicesPlugin);
   router.plugin(hashLocationPlugin);
-
-
 
   // Real ugly hacks to make AngularJS play nice with hashchange outside AngularJS.
   router.locationService = new Ng1LocationServices($locationProvider);
   (router.locationService as any)._runtimeServices($rootScope, $location, $injector.get('$sniffer'), $injector.get('$browser'));
 
-  // Lazy load visualizer
-  //if ($featureFlags.debugRouter) {
-  import('@uirouter/visualizer').then((module) => router.plugin(module.Visualizer));
-  //}
+  // Debug visualizer
+  if (true || $featureFlags.debugRouter) {
+    // tslint:disable-next-line:no-require-imports
+    router.plugin(require('@uirouter/visualizer').Visualizer);
+    router.trace.enable('TRANSITION');
+  }
 
   // Register the initial (eagerly loaded) states
   routes.forEach((state) => router.stateRegistry.register(state));
@@ -31,14 +30,11 @@ export default function makeRouter() {
   router.urlService.rules.initial({ state: 'default-account' });
   router.urlService.rules.otherwise({ state: 'default-account' });
 
-  router.trace.enable('TRANSITION', 'UIVIEW', 'VIEWCONFIG');
-
-  // Register the "requires auth" hook with the TransitionsService
-  //import reqAuthHook from './global/requiresAuth.hook';
-  //router.transitionService.onBefore(reqAuthHook.criteria, reqAuthHook.callback, {priority: 10});
-
-  //import googleAnalyticsHook from './util/ga';
-  //googleAnalyticsHook(router.transitionService);
+  if ($featureFlags.googleAnalyticsForRouter) {
+    router.transitionService.onSuccess({ }, (transition) => {
+      ga('send', 'pageview', transition.$to().name);
+    });
+  }
 
   return router;
 }
