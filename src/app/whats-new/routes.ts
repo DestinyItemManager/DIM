@@ -1,4 +1,6 @@
-export const whatsNewState = {
+import { ReactStateDeclaration } from '@uirouter/react';
+
+export const whatsNewState: ReactStateDeclaration = {
   name: 'whats-new.**',
   url: '/whats-new',
   lazyLoad: async() => {
