@@ -8,7 +8,7 @@ import { vendorTab, vendorTabItems } from './vendors.filters';
 import { Xur } from './xur.component';
 
 export default module('VendorsModule', [])
-  .component('vendors', VendorsComponent)
+  .component('dimVendors', VendorsComponent)
   .component('vendorItems', VendorItems)
   .component('vendorItem', VendorItem)
   .component('vendorCurrencies', VendorCurrencies)

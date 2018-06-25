@@ -4,6 +4,7 @@ import { $rootScope } from 'ngimport';
 import * as _ from 'underscore';
 import { defaultLanguage } from '../i18n';
 import { SyncService } from '../storage/sync.service';
+import { Subject } from 'rxjs/Subject';
 
 const itemSortPresets = {
   primaryStat: ['primStat', 'name'],
@@ -97,13 +98,16 @@ class Settings {
 
   colorA11y = '-';
 
-  // TODO: announce settings updated via an observable, meaning it can't be directly observable
+  $updates = new Subject();
+
   save = _.throttle(() => {
     if (!_loaded) {
       throw new Error("Settings haven't loaded - they can't be saved.");
     }
     SyncService.set({
-      'settings-v1.0': _.omit(this, 'save', 'itemSortOrder', 'ready')
+      'settings-v1.0': _.omit(this, 'save', 'itemSortOrder', 'ready', '$updates')
+    }).then(() => {
+      this.$updates.next();
     });
   }, 1000);
 

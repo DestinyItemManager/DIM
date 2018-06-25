@@ -1,6 +1,5 @@
 import { module } from 'angular';
 
-import { ActivityTrackerDirective } from './activity-tracker';
 import { CountdownComponent } from './countdown.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { ScrollClass } from './scroll-class.directive';
@@ -16,7 +15,6 @@ import { ToasterContainerComponent } from './toaster-container.component';
 export const ShellModule = module('dimShell', [
     dimAngularFiltersModule
   ])
-  .directive('dimActivityTracker', ActivityTrackerDirective)
   .factory('loadingTracker', loadingTracker)
   .component('dimPage', PageComponent)
   .component('countdown', CountdownComponent)

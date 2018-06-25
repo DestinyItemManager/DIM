@@ -15,7 +15,7 @@ export let ngDialog: IDialogService;
 export let hotkeys: HotkeysProvider;
 export let $locationProvider: ILocationProvider;
 export let loadingTracker: {
-  active: boolean;
+  active(): boolean;
   addPromise(PromiseLike): void;
 };
 

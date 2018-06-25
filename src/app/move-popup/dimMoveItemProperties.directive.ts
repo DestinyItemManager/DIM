@@ -6,6 +6,7 @@ import template from './dimMoveItemProperties.html';
 import { DimItem } from '../inventory/item-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { $q } from 'ngimport';
+import { router } from '../../router';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -179,6 +180,13 @@ function MoveItemPropertiesCtrl(
         .finally(() => {
           vm.locking = false;
         });
+    }
+  };
+
+  vm.previewVendor = () => {
+    const item = vm.item;
+    if (item.isDestiny2()) {
+      router.stateService.go("destiny2.vendor", { id: item.previewVendor });
     }
   };
 

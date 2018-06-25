@@ -103,7 +103,6 @@ export class Progress extends React.Component<Props, State> {
       }
     });
 
-    // TODO: stop using $rootScope!
     this.$scope.$on('dim-refresh', () => {
       reloadProgress();
     });

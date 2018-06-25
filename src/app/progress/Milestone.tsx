@@ -51,7 +51,7 @@ export function Milestone({
           <div className="milestone-description">
             {$featureFlags.vendors
               ? <UISref to='destiny2.vendor' params={{ id: milestone.vendors[0].vendorHash, characterId: character.characterId }}>
-                  {milestoneDef.displayProperties.description}
+                  <a>{milestoneDef.displayProperties.description}</a>
                 </UISref>
               : milestoneDef.displayProperties.description
             }

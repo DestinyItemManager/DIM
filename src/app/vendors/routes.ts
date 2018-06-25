@@ -5,6 +5,6 @@ import { VendorsComponent } from "./vendors.component";
 
 export const states: ReactStateDeclaration[] = [{
   name: 'destiny1.vendors',
-  component: angular2react('vendors', VendorsComponent, lazyInjector.$injector as angular.auto.IInjectorService),
+  component: angular2react('dimVendors', VendorsComponent, lazyInjector.$injector as angular.auto.IInjectorService),
   url: '/vendors'
 }];
