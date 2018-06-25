@@ -31,7 +31,8 @@ export const D2Categories = {
   Inventory: [
     'Consumables',
     'Modifications',
-    'Shaders'
+    'Shaders',
+    'Pursuits'
   ],
   Postmaster: [
     'LostItems',

@@ -67,6 +67,7 @@ export default function Vendor({
       </div>
       <VendorItems
         defs={defs}
+        vendor={vendor}
         vendorDef={vendorDef}
         vendorItems={getVendorItems(account, defs, vendorDef, trackerService, itemComponents, sales)}
         trackerService={trackerService}

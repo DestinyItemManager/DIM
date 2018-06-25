@@ -1,4 +1,4 @@
-import { DestinyVendorDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyVendorDefinition, DestinyVendorComponent } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
 import * as _ from 'underscore';
@@ -9,6 +9,8 @@ import { $state } from '../ngimport-more';
 import { compact } from '../util';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';
+import FactionIcon from '../progress/FactionIcon';
+import PressTip from '../dim-ui/PressTip';
 
 /**
  * Display the items for a single vendor, organized by category.
@@ -17,6 +19,7 @@ export default function VendorItems({
   vendorDef,
   defs,
   vendorItems,
+  vendor,
   trackerService,
   ownedItemHashes,
   currencyLookups
@@ -24,6 +27,7 @@ export default function VendorItems({
   vendorDef: DestinyVendorDefinition;
   defs: D2ManifestDefinitions;
   vendorItems: VendorItem[];
+  vendor?: DestinyVendorComponent;
   trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   currencyLookups?: {
@@ -37,6 +41,7 @@ export default function VendorItems({
   const rewardVendorHash = faction && faction.rewardVendorHash || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
   const goToRewardVendor = rewardVendorHash && (() => $state.go('destiny2.vendor', { id: rewardVendorHash }));
+  const factionProgress = vendor && vendor.progression;
 
   const vendorCurrencyHashes = new Set<number>();
   for (const item of vendorItems) {
@@ -59,11 +64,18 @@ export default function VendorItems({
       {rewardVendorHash && rewardItem && goToRewardVendor &&
         <div className="vendor-row">
           <h3 className="category-title">{t('Vendors.Engram')}</h3>
-          <div className="item" title={rewardItem.displayProperties.name} onClick={goToRewardVendor}>
-            <div
-              className="item-img transparent"
-              style={bungieBackgroundStyle(rewardItem.displayProperties.icon)}
-            />
+          <div className="vendor-items">
+            {factionProgress && faction &&
+              <PressTip tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}>
+                <div><FactionIcon factionProgress={factionProgress} factionDef={faction} vendor={vendor}/></div>
+              </PressTip>
+            }
+            <div className="item" title={rewardItem.displayProperties.name} onClick={goToRewardVendor}>
+              <div
+                className="item-img transparent"
+                style={bungieBackgroundStyle(rewardItem.displayProperties.icon)}
+              />
+            </div>
           </div>
         </div>}
       {_.map(itemsByCategory, (items, categoryIndex) =>

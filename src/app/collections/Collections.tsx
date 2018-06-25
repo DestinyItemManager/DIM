@@ -21,6 +21,7 @@ import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import Catalysts from './Catalysts';
+import { Loading } from '../dim-ui/Loading';
 
 interface Props {
   $scope: IScope;
@@ -85,8 +86,7 @@ export default class Collections extends React.Component<Props, State> {
     const { account } = this.props;
 
     if (!profileResponse || !defs) {
-      // TODO: loading component!
-      return <div className="vendor d2-vendors dim-page"><i className="fa fa-spinner fa-spin"/></div>;
+      return <div className="vendor d2-vendors dim-page"><Loading/></div>;
     }
 
     // TODO: a lot of this processing should happen at setState, not render?

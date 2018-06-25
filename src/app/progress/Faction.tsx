@@ -3,7 +3,8 @@ import {
   DestinyFactionProgression,
   DestinyInventoryComponent,
   DestinyItemComponent,
-  DestinyCharacterComponent
+  DestinyCharacterComponent,
+  DestinyVendorComponent
 } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
@@ -17,13 +18,14 @@ import FactionIcon from './FactionIcon';
 
 interface FactionProps {
   factionProgress: DestinyFactionProgression;
+  vendor?: DestinyVendorComponent;
   profileInventory: DestinyInventoryComponent;
   defs: D2ManifestDefinitions;
   character: DestinyCharacterComponent;
 }
 
 export function Faction(props: FactionProps) {
-  const { defs, factionProgress, profileInventory, character } = props;
+  const { defs, factionProgress, profileInventory, character, vendor } = props;
 
   const factionDef = defs.Faction[factionProgress.factionHash];
 
@@ -35,16 +37,19 @@ export function Faction(props: FactionProps) {
   const vendorDef = defs.Vendor.get(vendorHash);
 
   const rewardClick = () => $state.go('destiny2.vendor', { id: factionDef.rewardVendorHash, characterId: character.characterId });
+  const vendorClick = () => $state.go('destiny2.vendor', { id: vendorHash, characterId: character.characterId });
 
   return (
     <div
       className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}
     >
       <PressTip tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}>
-        <div><FactionIcon factionDef={factionDef} factionProgress={factionProgress}/></div>
+        <div><FactionIcon factionDef={factionDef} factionProgress={factionProgress} vendor={vendor}/></div>
       </PressTip>
       <div className="faction-info">
-        <div className="faction-name" title={vendorDef.displayProperties.description}>{vendorDef.displayProperties.name}</div>
+        <div className="faction-name" title={vendorDef.displayProperties.description}>
+          <a onClick={vendorClick}>{vendorDef.displayProperties.name}</a>
+        </div>
         <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
         <div className="faction-rewards">
           {factionDef.rewardVendorHash && $featureFlags.vendors
