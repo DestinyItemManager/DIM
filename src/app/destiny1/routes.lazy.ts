@@ -3,7 +3,7 @@ import { $injector } from "ngimport";
 
 export const states: ReactStateDeclaration[] = [{
   name: 'destiny1.**',
-  parent: 'destiny-account',
+  url: '/:membershipId-{platformType:int}/d1',
   async lazyLoad() {
     const $ocLazyLoad = $injector.get('$ocLazyLoad') as any;
     // tslint:disable-next-line:space-in-parens

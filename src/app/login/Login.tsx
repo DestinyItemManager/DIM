@@ -12,10 +12,7 @@ export default function Login({
 }) {
   localStorage.authorizationState = uuidv4();
   const clientId = oauthClientId();
-
-  // TODO: dunno if this actually works
   const reauth = transition.params().reauth;
-
   const authorizationURL = `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${localStorage.authorizationState}${reauth ? '&reauth=true' : ''}`;
 
   return (

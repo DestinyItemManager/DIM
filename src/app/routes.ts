@@ -1,9 +1,8 @@
 import { ReactStateDeclaration } from "@uirouter/react";
-import { destinyAccountState } from "./shell/destiny-account.route";
 import { states as destiny1States } from "./destiny1/routes.lazy";
 import { states as destiny2States } from "./destiny2/routes";
 import { defaultAccountRoute } from "./shell/default-account.route";
-import { whatsNewState } from "./whats-new/routes";
+import { states as whatsNewStates } from "./whats-new/routes";
 import { states as loginStates } from "./login/routes";
 import { states as progressStates } from "./progress/routes";
 import { states as vendorsStates } from "./d2-vendors/routes";
@@ -13,11 +12,10 @@ import { states as settingsStates } from "./settings/routes";
 import { states as shellStates } from "./shell/routes";
 
 export const states: ReactStateDeclaration[] = [
-  destinyAccountState,
+  defaultAccountRoute,
   ...destiny1States,
   ...destiny2States,
-  defaultAccountRoute,
-  whatsNewState,
+  ...whatsNewStates,
   ...loginStates,
   ...progressStates,
   ...vendorsStates,

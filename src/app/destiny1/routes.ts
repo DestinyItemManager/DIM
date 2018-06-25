@@ -1,4 +1,4 @@
-import { destinyAccountResolver } from "../shell/destiny-account.route";
+import { destinyAccountResolver } from "../accounts/destiny-account-resolver";
 import { ReactStateDeclaration } from "@uirouter/react";
 import Destiny from "../destiny2/Destiny";
 import { angular2react } from "angular2react";
@@ -13,9 +13,8 @@ import { states as vendorsStates } from '../vendors/routes';
 export const states: ReactStateDeclaration[] = [
   {
     name: 'destiny1',
-    parent: 'destiny-account',
     redirectTo: 'destiny1.inventory',
-    url: '/d1',
+    url: '/:membershipId-{platformType:int}/d1',
     component: Destiny,
     resolve: {
       account: destinyAccountResolver(1)
