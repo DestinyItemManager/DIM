@@ -1,6 +1,7 @@
 # Next
 
 * Add Pursuits to the main inventory screen. Quest items are still shown on the Progress screen as well.
+* New iOS app icons when you add to home screen.
 
 # 4.57.0 (2018-06-17)
 
