@@ -9,7 +9,7 @@ export const states: ReactStateDeclaration[] = [{
     return {
       states: [{
         name: 'whats-new',
-        url: whatsNewState.url,
+        url: '/whats-new',
         component: module.default
       }]
     };

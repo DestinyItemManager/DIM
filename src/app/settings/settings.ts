@@ -136,6 +136,7 @@ export function initSettings() {
     $rootScope.$evalAsync(() => {
       const languageChanged = savedSettings.language !== i18next.language;
       merge(settings, savedSettings);
+      settings.$updates.next();
       localStorage.dimLanguage = settings.language;
       if (languageChanged) {
         i18next.changeLanguage(settings.language, () => {
@@ -144,7 +145,6 @@ export function initSettings() {
           });
         });
       }
-      $rootScope.$emit('dim-settings-loaded', {});
     });
   });
 }
