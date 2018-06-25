@@ -14,7 +14,7 @@ export default function makeRouter() {
   (router.locationService as any)._runtimeServices($rootScope, $location, $injector.get('$sniffer'), $injector.get('$browser'));
 
   // Debug visualizer
-  if (true || $featureFlags.debugRouter) {
+  if ($featureFlags.debugRouter) {
     // tslint:disable-next-line:no-require-imports
     router.plugin(require('@uirouter/visualizer').Visualizer);
     router.trace.enable('TRANSITION');
