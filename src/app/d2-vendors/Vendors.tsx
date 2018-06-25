@@ -18,6 +18,7 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { $rootScope } from 'ngimport';
+import { Loading } from '../dim-ui/Loading';
 
 interface Props {
   account: DestinyAccount;
@@ -98,8 +99,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
-      // TODO: loading component!
-      return <div className="vendor dim-page"><i className="fa fa-spinner fa-spin"/></div>;
+      return <div className="vendor dim-page"><Loading/></div>;
     }
 
     return (

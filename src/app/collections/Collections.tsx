@@ -21,6 +21,8 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../ngimport-more';
 import { $rootScope } from 'ngimport';
+import Catalysts from './Catalysts';
+import { Loading } from '../dim-ui/Loading';
 
 interface Props {
   account: DestinyAccount;
@@ -91,8 +93,7 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     const { account } = this.props;
 
     if (!profileResponse || !defs) {
-      // TODO: loading component!
-      return <div className="vendor d2-vendors dim-page"><i className="fa fa-spinner fa-spin"/></div>;
+      return <div className="vendor d2-vendors dim-page"><Loading/></div>;
     }
 
     // TODO: a lot of this processing should happen at setState, not render?
@@ -116,6 +117,12 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Ornaments">
           <Ornaments
+            defs={defs}
+            profileResponse={profileResponse}
+          />
+        </ErrorBoundary>
+        <ErrorBoundary name="Catalysts">
+          <Catalysts
             defs={defs}
             profileResponse={profileResponse}
           />

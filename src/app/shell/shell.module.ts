@@ -11,6 +11,7 @@ import loadingTracker from './dimLoadingTracker.factory';
 import dimAngularFiltersModule from './dimAngularFilters.filter';
 import { react2angular } from 'react2angular';
 import { ToasterContainerComponent } from './toaster-container.component';
+import { Loading } from '../dim-ui/Loading';
 
 export const ShellModule = module('dimShell', [
     dimAngularFiltersModule
@@ -20,6 +21,7 @@ export const ShellModule = module('dimShell', [
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
   .component('header', react2angular(Header, [], ['$scope']))
+  .component('loading', react2angular(Loading, [], []))
   .component('manifestProgress', react2angular(ManifestProgress, ['destinyVersion'], ['$scope']))
   .component('dimToasterContainer', ToasterContainerComponent)
   .directive('scrollClass', ScrollClass)

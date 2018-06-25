@@ -183,6 +183,19 @@ export function getVendors(account: DestinyAccount, characterId: string): Promis
   .then((response) => response.Response);
 }
 
+/** Just get the vendors, for seasonal rank */
+export function getVendorsMinimal(account: DestinyAccount, characterId: string): Promise<DestinyVendorsResponse> {
+  return getVendorsApi(httpAdapter, {
+    characterId,
+    destinyMembershipId: account.membershipId,
+    membershipType: account.platformType,
+    components: [
+      DestinyComponentType.Vendors
+    ]
+  })
+  .then((response) => response.Response);
+}
+
 /**
  * Transfer an item to another store.
  */

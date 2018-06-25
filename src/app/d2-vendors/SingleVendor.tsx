@@ -4,10 +4,8 @@ import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendor as getVendorApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
-import BungieImage from '../dim-ui/BungieImage';
 import Countdown from '../dim-ui/Countdown';
 import { D2ManifestService } from '../manifest/manifest-service';
-import FactionIcon from '../progress/FactionIcon';
 import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
@@ -20,6 +18,7 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { loadingTracker } from '../ngimport-more';
 import { $rootScope } from 'ngimport';
 import { UIViewInjectedProps } from '@uirouter/react';
+import { Loading } from '../dim-ui/Loading';
 
 interface Props {
   $scope: IScope;
@@ -114,21 +113,14 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
     const { account } = this.props;
 
     if (!vendorDef || !defs) {
-      // TODO: loading component!
-      return <div className="vendor dim-page"><i className="fa fa-spinner fa-spin"/></div>;
+      return <div className="vendor dim-page"><Loading/></div>;
     }
 
     // TODO:
-    // * countdown
     // * featured item
     // * enabled
-    // * ratings
-    // * show which items you have
     // * filter by character class
     const vendor = vendorResponse && vendorResponse.vendor.data;
-
-    const faction = vendorDef.factionHash ? defs.Faction[vendorDef.factionHash] : undefined;
-    const factionProgress = vendorResponse && vendorResponse.vendor.data.progression;
 
     const destinationDef = vendor && defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
     const placeDef = destinationDef && defs.Place.get(destinationDef.placeHash);
@@ -138,16 +130,11 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
 
     const vendorItems = getVendorItems(account, defs, vendorDef, trackerService, vendorResponse && vendorResponse.itemComponents, vendorResponse && vendorResponse.sales.data);
 
-    // TODO: localize
     return (
       <div className="vendor dim-page">
         <ErrorBoundary name="SingleVendor">
           <div className="vendor-featured">
             <div className="vendor-featured-header">
-              {factionProgress && faction
-                ? <FactionIcon factionProgress={factionProgress} factionDef={faction}/>
-                : <BungieImage src={vendorDef.displayProperties.icon}/>
-              }
               <div className="vendor-header-info">
                 <h1>{vendorDef.displayProperties.name} <span className="vendor-location">{placeString}</span></h1>
                 <div>{vendorDef.displayProperties.description}</div>
@@ -159,6 +146,7 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
           </div>
           <VendorItems
             defs={defs}
+            vendor={vendor}
             vendorDef={vendorDef}
             vendorItems={vendorItems}
             trackerService={trackerService}

@@ -6,6 +6,7 @@ import {
   DestinyItemComponent,
   DestinyMilestone,
   DestinyObjectiveProgress,
+  DestinyVendorComponent,
 } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
@@ -29,6 +30,7 @@ import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { $rootScope } from 'ngimport';
+import { Loading } from '../dim-ui/Loading';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -123,7 +125,7 @@ export class Progress extends React.Component<Props, State> {
 
   render() {
     if (!this.state.progress) {
-      return <div className="progress-page dim-page"><i className="fa fa-spinner fa-spin"/></div>;
+      return <div className="progress-page dim-page"><Loading/></div>;
     }
 
     const { defs, profileInfo } = this.state.progress;
@@ -279,7 +281,14 @@ export class Progress extends React.Component<Props, State> {
               {characters.map((character) =>
                 <div className="progress-for-character" key={character.characterId}>
                   {this.factionsForCharacter(character).map((faction) =>
-                    <Faction factionProgress={faction} defs={defs} character={character} profileInventory={profileInfo.profileInventory.data} key={faction.factionHash} />
+                    <Faction
+                      factionProgress={faction}
+                      defs={defs}
+                      character={character}
+                      profileInventory={profileInfo.profileInventory.data}
+                      key={faction.factionHash}
+                      vendor={this.vendorForFaction(character, faction)}
+                    />
                   )}
                 </div>
               )}
@@ -295,6 +304,17 @@ export class Progress extends React.Component<Props, State> {
    */
   private sortedCharacters(progress: ProgressProfile = this.state.progress!, characterOrder: CharacterOrder = this.state.characterOrder): DestinyCharacterComponent[] {
     return sortCharacters(Object.values(progress.profileInfo.characters.data), characterOrder);
+  }
+
+  private vendorForFaction(character: DestinyCharacterComponent, faction: DestinyFactionProgression): DestinyVendorComponent | undefined {
+    if (faction.factionVendorIndex < 0) {
+      return undefined;
+    }
+
+    const { vendors, defs } = this.state.progress!;
+    const factionDef = defs.Faction[faction.factionHash];
+    const vendorHash = factionDef.vendors[faction.factionVendorIndex].vendorHash;
+    return vendors[character.characterId].vendors.data[vendorHash];
   }
 
   /**

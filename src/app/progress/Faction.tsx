@@ -3,7 +3,8 @@ import {
   DestinyFactionProgression,
   DestinyInventoryComponent,
   DestinyItemComponent,
-  DestinyCharacterComponent
+  DestinyCharacterComponent,
+  DestinyVendorComponent
 } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
@@ -17,13 +18,14 @@ import { UISref } from '@uirouter/react';
 
 interface FactionProps {
   factionProgress: DestinyFactionProgression;
+  vendor?: DestinyVendorComponent;
   profileInventory: DestinyInventoryComponent;
   defs: D2ManifestDefinitions;
   character: DestinyCharacterComponent;
 }
 
 export function Faction(props: FactionProps) {
-  const { defs, factionProgress, profileInventory, character } = props;
+  const { defs, factionProgress, profileInventory, character, vendor } = props;
 
   const factionDef = defs.Faction[factionProgress.factionHash];
 
@@ -39,10 +41,14 @@ export function Faction(props: FactionProps) {
       className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}
     >
       <PressTip tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}>
-        <div><FactionIcon factionDef={factionDef} factionProgress={factionProgress}/></div>
+        <div><FactionIcon factionDef={factionDef} factionProgress={factionProgress} vendor={vendor}/></div>
       </PressTip>
       <div className="faction-info">
-        <div className="faction-name" title={vendorDef.displayProperties.description}>{vendorDef.displayProperties.name}</div>
+        <div className="faction-name" title={vendorDef.displayProperties.description}>
+          <UISref to='destiny2.vendor' params={{ id: vendorHash, characterId: character.characterId }}>
+            <a>{vendorDef.displayProperties.name}</a>
+          </UISref>
+        </div>
         <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
         <div className="faction-rewards">
           {factionDef.rewardVendorHash && $featureFlags.vendors
