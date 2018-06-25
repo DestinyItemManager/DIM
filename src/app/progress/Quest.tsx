@@ -32,6 +32,8 @@ export default function Quest(props: QuestProps) {
         <BungieImage src={itemDef.displayProperties.icon} />
         {percentComplete > 0 &&
           <span>{Math.floor(percentComplete * 100)}%</span>}
+        {itemDef.inventory.maxStackSize > 1 &&
+          <span>{item.quantity}</span>}
       </div>
       <div className="milestone-info">
         <span className="milestone-name">{itemDef.displayProperties.name}</span>
