@@ -1,5 +1,7 @@
 # Next
 
+# 4.58.0 (2018-06-24)
+
 * Factions now show seasonal rank instead of lifetime rank.
 * Vendors show their faction rank next to their reward engrams.
 * Factions in the progress page also link to their vendor.
