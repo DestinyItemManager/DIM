@@ -3,6 +3,8 @@ import { getActivePlatform } from '../../accounts/platform.service';
 import { DestinyAccount } from '../../accounts/destiny-account.service';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
+import { Subject } from 'rxjs/Subject';
+import { $rootScope } from 'ngimport';
 
 const _removedNewItems = new Set<string>();
 
@@ -13,7 +15,17 @@ const _removedNewItems = new Set<string>();
  * They are tracked whether or not the option to display them is on.
  */
 export const NewItemsService = {
-  hasNewItems: false,
+  _hasNewItems: false,
+  get hasNewItems() {
+    return this._hasNewItems;
+  },
+  set hasNewItems(hasNew) {
+    if (hasNew !== this._hasNewItems) {
+      this.$hasNewItems.next(hasNew);
+    }
+    this._hasNewItems = hasNew;
+  },
+  $hasNewItems: new Subject<boolean>(),
 
   /**
    * Should this item display as new? Note the check for previousItems size, so that
@@ -53,16 +65,18 @@ export const NewItemsService = {
     if (!stores || !account) {
       return;
     }
-    stores.forEach((store) => {
-      store.items.forEach((item) => {
-        if (item.isNew) {
-          _removedNewItems.add(item.id);
-          item.isNew = false;
-        }
+    $rootScope.$apply(() => {
+      stores.forEach((store) => {
+        store.items.forEach((item) => {
+          if (item.isNew) {
+            _removedNewItems.add(item.id);
+            item.isNew = false;
+          }
+        });
       });
+      this.hasNewItems = false;
+      this.saveNewItems(new Set(), account);
     });
-    this.hasNewItems = false;
-    this.saveNewItems(new Set(), account);
   },
 
   loadNewItems(account: DestinyAccount): Promise<Set<string>> {
