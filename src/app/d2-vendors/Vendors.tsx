@@ -1,5 +1,3 @@
-import { StateParams } from '@uirouter/angularjs';
-import { IScope } from 'angular';
 import {
   DestinyVendorsResponse,
   DestinyVendorGroup
@@ -18,11 +16,11 @@ import { D2Store } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
+import { UIViewInjectedProps } from '@uirouter/react';
+import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
 
 interface Props {
-  $scope: IScope;
-  $stateParams: StateParams;
   account: DestinyAccount;
 }
 
@@ -37,8 +35,9 @@ interface State {
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
-export default class Vendors extends React.Component<Props, State> {
+export default class Vendors extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
+  private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
@@ -53,7 +52,7 @@ export default class Vendors extends React.Component<Props, State> {
 
     // TODO: get for all characters, or let people select a character? This is a hack
     // we at least need to display that character!
-    let characterId: string = this.props.$stateParams.characterId;
+    let characterId: string = this.props.transition!.params().characterId;
     if (!characterId) {
       const stores = this.state.stores || await D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
       if (stores) {
@@ -72,7 +71,7 @@ export default class Vendors extends React.Component<Props, State> {
     const promise = this.loadVendors();
     loadingTracker.addPromise(promise);
 
-    this.props.$scope.$on('dim-refresh', () => {
+    this.$scope.$on('dim-refresh', () => {
       const promise = this.loadVendors();
       loadingTracker.addPromise(promise);
     });
@@ -92,6 +91,7 @@ export default class Vendors extends React.Component<Props, State> {
 
   componentWillUnmount() {
     this.storesSubscription.unsubscribe();
+    this.$scope.$destroy();
   }
 
   render() {

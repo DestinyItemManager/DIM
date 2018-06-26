@@ -1,4 +1,3 @@
-import { StateParams } from '@uirouter/angularjs';
 import { IScope } from 'angular';
 import { DestinyVendorDefinition, DestinyVendorResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
@@ -16,11 +15,13 @@ import { D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
+import { loadingTracker } from '../ngimport-more';
+import { $rootScope } from 'ngimport';
+import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 
 interface Props {
   $scope: IScope;
-  $stateParams: StateParams;
   account: DestinyAccount;
 }
 
@@ -37,13 +38,14 @@ interface State {
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
  */
-export default class SingleVendor extends React.Component<Props, State> {
+export default class SingleVendor extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
+  private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      vendorHash: this.props.$stateParams.id
+      vendorHash: this.props.transition!.params().id
     };
   }
 
@@ -63,7 +65,7 @@ export default class SingleVendor extends React.Component<Props, State> {
     if (vendorDef.returnWithVendorRequest) {
       // TODO: get for all characters, or let people select a character? This is a hack
       // we at least need to display that character!
-      let characterId: string = this.props.$stateParams.characterId;
+      let characterId: string = this.props.transition!.params().characterId;
       if (!characterId) {
         const stores = this.state.stores || await D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
         if (stores) {
@@ -94,11 +96,16 @@ export default class SingleVendor extends React.Component<Props, State> {
         this.setState({ stores, ownedItemHashes });
       }
     });
-    this.loadVendor();
+    loadingTracker.addPromise(this.loadVendor());
+
+    this.$scope.$on('dim-refresh', () => {
+      loadingTracker.addPromise(this.loadVendor());
+    });
   }
 
   componentWillUnmount() {
     this.storesSubscription.unsubscribe();
+    this.$scope.$destroy();
   }
 
   render() {

@@ -15,13 +15,14 @@ import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';
 import { $rootScope, $q } from 'ngimport';
-import { $stateParams, loadingTracker, toaster } from '../ngimport-more';
+import { loadingTracker, toaster } from '../ngimport-more';
 import { IPromise } from 'angular';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { router } from '../../router';
 
 export const D1StoresService = StoreService();
 
@@ -94,12 +95,12 @@ function StoreService(): D1StoreServiceType {
    * items in the stores - to do that, call reloadStores.
    */
   function updateCharacters(account: DestinyAccount) {
-    // TODO: the $stateParam defaults are just for now, to bridge callsites that don't know platform
+    // TODO: the router.globals.params defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
-      if ($stateParams.membershipId && $stateParams.platformType) {
+      if (router.globals.params.membershipId && router.globals.params.platformType) {
         account = {
-          membershipId: $stateParams.membershipId,
-          platformType: $stateParams.platformType,
+          membershipId: router.globals.params.membershipId,
+          platformType: router.globals.params.platformType,
           displayName: 'Unknown',
           platformLabel: 'Unknown',
           destinyVersion: 1

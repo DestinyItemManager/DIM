@@ -203,6 +203,8 @@ export interface D2Item extends DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
+  /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
+  previewVendor?: number;
   dtrRating: D2RatingData | null;
   getStoresService(): D2StoreServiceType;
 }

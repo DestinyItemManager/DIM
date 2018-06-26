@@ -1,28 +1,29 @@
 import { angular2react } from 'angular2react';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import { $injector } from 'ngimport';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
-import { $state, $transitions, ngDialog } from '../ngimport-more';
+import { ngDialog } from '../ngimport-more';
 import { SearchFilterComponent } from '../search/search-filter.component';
 import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
+import { router } from '../../router';
 import './header.scss';
 
 // tslint:disable-next-line:no-implicit-dependencies
 import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
-import { IScope } from 'angular';
+import { IRootScopeService } from 'angular';
 import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { dimVendorService } from '../vendors/vendor.service';
+import { UISref } from '@uirouter/react';
 
 const destiny1Links = [
   {
@@ -76,14 +77,14 @@ interface State {
 }
 
 interface Props {
-  $scope: IScope;
+  $rootScope: IRootScopeService;
 }
 
 export default class Header extends React.PureComponent<Props, State> {
   private vendorsSubscription: Subscription;
   private accountSubscription: Subscription;
   // tslint:disable-next-line:ban-types
-  private unregisterTransitionHooks: Function[];
+  private unregisterTransitionHooks: Function[] = [];
   private showXur = showPopupFunction('xur', '<xur></xur>');
   private dropdownToggler = React.createRef<HTMLElement>();
 
@@ -92,7 +93,7 @@ export default class Header extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
 
-    this.SearchFilter = angular2react<{ account: DestinyAccount }>('dimSearchFilter', SearchFilterComponent, $injector);
+    this.SearchFilter = angular2react<{ account: DestinyAccount }>('dimSearchFilter', SearchFilterComponent);
 
     this.state = {
       xurAvailable: false,
@@ -107,16 +108,16 @@ export default class Header extends React.PureComponent<Props, State> {
     });
 
     this.unregisterTransitionHooks = [
-      $transitions.onBefore({}, () => {
+      router.transitionService.onBefore({}, () => {
         this.setState({ dropdownOpen: false });
       }),
-      $transitions.onSuccess({ to: 'destiny1.*' }, () => {
+      router.transitionService.onSuccess({ to: 'destiny1.*' }, () => {
         this.updateXur();
       })
     ];
 
     // Gonna have to figure out a better solution for this in React
-    this.props.$scope.$on('i18nextLanguageChange', () => {
+    this.props.$rootScope.$on('i18nextLanguageChange', () => {
       this.setState({}); // gross, force re-render
     });
   }
@@ -223,13 +224,14 @@ export default class Header extends React.PureComponent<Props, State> {
             </CSSTransition>}
         </TransitionGroup>
 
-        <img
-          className={classNames('logo', 'link', $DIM_FLAVOR)}
-          onClick={this.goToDefaultAccount}
-          title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
-          src={logo}
-          alt="DIM"
-        />
+        <UISref to='default-account'>
+          <img
+            className={classNames('logo', 'link', $DIM_FLAVOR)}
+            title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
+            src={logo}
+            alt="DIM"
+          />
+        </UISref>
 
         <div className="header-links">
           {reverseDestinyLinks}
@@ -241,11 +243,12 @@ export default class Header extends React.PureComponent<Props, State> {
           {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews) &&
             <RatingMode />}
           {!showSearch &&
-            <a
-              className="link fa fa-cog"
-              onClick={this.goToSettings}
-              title={t('Settings.Settings')}
-            />}
+            <UISref to='settings'>
+              <a
+                className="link fa fa-cog"
+                title={t('Settings.Settings')}
+              />
+            </UISref>}
           {account &&
             <span className={classNames("link", "search-link", { show: showSearch })}>
               <SearchFilter account={account}/>
@@ -257,10 +260,6 @@ export default class Header extends React.PureComponent<Props, State> {
         </span>
       </div>
     );
-  }
-
-  private goToDefaultAccount = () => {
-    $state.go('default-account');
   }
 
   private toggleDropdown = () => {
@@ -275,10 +274,6 @@ export default class Header extends React.PureComponent<Props, State> {
 
   private toggleSearch = () => {
     this.setState({ showSearch: !this.state.showSearch });
-  }
-
-  private goToSettings = () => {
-    $state.go('settings');
   }
 
   private updateXur() {

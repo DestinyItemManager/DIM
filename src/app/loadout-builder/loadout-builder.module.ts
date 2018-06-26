@@ -7,7 +7,6 @@ import { LoadoutBuilderCharacterSelect } from './loadout-builder-character-selec
 import { LoadoutBuilderCharacterPopup } from './loadout-builder-character-popup.component';
 
 import './loadout-builder.scss';
-import { StateProvider } from '@uirouter/angularjs';
 
 export default module('loadoutBuilderModule', [])
   .component('loadoutBuilder', LoadoutBuilderComponent)
@@ -15,13 +14,4 @@ export default module('loadoutBuilderModule', [])
   .component('loadoutBuilderLocks', LoadoutBuilderLocks)
   .component('loadoutBuilderCharacterSelect', LoadoutBuilderCharacterSelect)
   .component('loadoutBuilderCharacterPopup', LoadoutBuilderCharacterPopup)
-  .config(($stateProvider: StateProvider) => {
-    'ngInject';
-
-    $stateProvider.state({
-      name: 'destiny1.loadout-builder',
-      component: 'loadoutBuilder',
-      url: '/loadout-builder'
-    });
-  })
   .name;

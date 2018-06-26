@@ -46,7 +46,7 @@
             <i class="fa fa-sign-out"></i>
             <span ng-i18next="Storage.DriveLogout"></span>
           </button>
-          <button ng-if="adapter.enabled" class="dim-button" ui-sref="gdrive-revisions">
+          <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.goToRevisions()">
               <i class="fa fa-upload"></i>
               <span ng-i18next="Storage.GDriveRevisions"></span>
             </button>

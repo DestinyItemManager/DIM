@@ -5,10 +5,10 @@ import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
-import { $state } from '../ngimport-more';
 import { compact } from '../util';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';
+import { UISref } from '@uirouter/react';
 import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
 
@@ -40,7 +40,6 @@ export default function VendorItems({
   const faction = vendorDef.factionHash ? defs.Faction[vendorDef.factionHash] : undefined;
   const rewardVendorHash = faction && faction.rewardVendorHash || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
-  const goToRewardVendor = rewardVendorHash && (() => $state.go('destiny2.vendor', { id: rewardVendorHash }));
   const factionProgress = vendor && vendor.progression;
 
   const vendorCurrencyHashes = new Set<number>();
@@ -61,7 +60,7 @@ export default function VendorItems({
           </div>
         )}
       </div>}
-      {rewardVendorHash && rewardItem && goToRewardVendor &&
+      {rewardVendorHash && rewardItem &&
         <div className="vendor-row">
           <h3 className="category-title">{t('Vendors.Engram')}</h3>
           <div className="vendor-items">
@@ -70,12 +69,14 @@ export default function VendorItems({
                 <div><FactionIcon factionProgress={factionProgress} factionDef={faction} vendor={vendor}/></div>
               </PressTip>
             }
-            <div className="item" title={rewardItem.displayProperties.name} onClick={goToRewardVendor}>
-              <div
-                className="item-img transparent"
-                style={bungieBackgroundStyle(rewardItem.displayProperties.icon)}
-              />
-            </div>
+            <UISref to='destiny2.vendor' params={{ id: rewardVendorHash }}>
+              <div className="item" title={rewardItem.displayProperties.name}>
+                <div
+                  className="item-img transparent"
+                  style={bungieBackgroundStyle(rewardItem.displayProperties.icon)}
+                />
+              </div>
+            </UISref>
           </div>
         </div>}
       {_.map(itemsByCategory, (items, categoryIndex) =>

@@ -5,7 +5,7 @@ import { element as angularElement, IController, IComponentOptions, IScope } fro
 import { sum } from '../util';
 import { DimItem } from '../inventory/item-types';
 import { CompareService } from './compare.service';
-import { TransitionService } from '@uirouter/angularjs';
+import { router } from '../../router';
 
 export function StatRangeFilter() {
   // Turns a stat and a list of ranges into a 0-100 scale
@@ -39,15 +39,14 @@ function CompareCtrl(
   },
   $scope: IScope,
   toaster,
-  $i18next,
-  $transitions: TransitionService
+  $i18next
 ) {
   'ngInject';
 
   const vm = this;
 
   vm.$onInit = () => {
-    this.listener = $transitions.onExit({}, () => {
+    this.listener = router.transitionService.onExit({}, () => {
       CompareService.dialogOpen = false;
       vm.show = false;
     });

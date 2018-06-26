@@ -29,6 +29,7 @@ import { settings, CharacterOrder } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
 
 const factionOrder = [
@@ -68,6 +69,7 @@ interface State {
 export class Progress extends React.Component<Props, State> {
   subscription: Subscription;
   mediaQuerySubscription: Subscription;
+  private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
@@ -103,11 +105,11 @@ export class Progress extends React.Component<Props, State> {
       }
     });
 
-    this.props.$scope.$on('dim-refresh', () => {
+    this.$scope.$on('dim-refresh', () => {
       reloadProgress();
     });
 
-    this.props.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
+    this.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
       if (newValue !== this.state.characterOrder) {
         this.setState({ characterOrder: newValue });
       }
@@ -118,6 +120,7 @@ export class Progress extends React.Component<Props, State> {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    this.$scope.$destroy();
   }
 
   render() {

@@ -12,7 +12,9 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
   constructor(props) {
     super(props);
     this.state = { active: false };
+  }
 
+  componentDidMount() {
     hotkeys.add({
       combo: ['r'],
       description: t('Hotkey.RefreshInventory'),
@@ -20,9 +22,7 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
         this.refresh();
       }
     });
-  }
 
-  componentDidMount() {
     this.subscription = loadingTrackerStream.subscribe((active) => {
       this.setState({ active });
     });

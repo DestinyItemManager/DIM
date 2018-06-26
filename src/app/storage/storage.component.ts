@@ -1,4 +1,3 @@
-import { StateParams, StateService } from '@uirouter/angularjs';
 import {
   element,
   IQService,
@@ -7,7 +6,7 @@ import {
   IWindowService,
   IComponentOptions,
   IController
-  } from 'angular';
+} from 'angular';
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
 import { settings } from '../settings/settings';
@@ -16,6 +15,7 @@ import template from './storage.html';
 import './storage.scss';
 import { StorageAdapter, SyncService } from './sync.service';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
+import { router } from '../../router';
 
 declare global {
   interface Window {
@@ -55,9 +55,7 @@ function StorageController(
   $timeout: ITimeoutService,
   $window: IWindowService,
   $q: IQService,
-  $i18next,
-  $stateParams: StateParams,
-  $state: StateService
+  $i18next
 ) {
   'ngInject';
 
@@ -137,6 +135,10 @@ function StorageController(
     });
   };
 
+  vm.goToRevisions = () => {
+    router.stateService.go('gdrive-revisions');
+  };
+
   vm.importData = () => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -154,8 +156,8 @@ function StorageController(
   };
 
   $scope.$on('gdrive-sign-in', () => {
-    if ($stateParams.gdrive === 'true') {
-      vm.forceSync().then(() => $state.go('settings', { gdrive: undefined }, { location: 'replace' }));
+    if (router.globals.params.gdrive === 'true') {
+      vm.forceSync().then(() => router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' }));
     }
   });
 

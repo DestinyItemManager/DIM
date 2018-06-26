@@ -5,13 +5,13 @@ import './GDriveRevisions.scss';
 import { GDriveRevision } from './google-drive-storage';
 import { dataStats } from './storage.component';
 import { SyncService } from './sync.service';
-import { $state } from '../ngimport-more';
+import { UIViewInjectedProps } from '@uirouter/react';
 
 interface State {
   revisions?: any;
 }
 
-export default class GDriveRevisions extends React.Component<{}, State> {
+export default class GDriveRevisions extends React.Component<UIViewInjectedProps, State> {
   constructor(props) {
     super(props);
     this.state = {};
@@ -49,7 +49,7 @@ export default class GDriveRevisions extends React.Component<{}, State> {
           </thead>
           <tbody>
             {revisions.slice(0).reverse().map((revision) =>
-              <GDriveRevisionComponent key={revision.id} revision={revision}/>
+              <GDriveRevisionComponent key={revision.id} revision={revision} onRestoreSuccess={this.onRestoreSuccess}/>
             )}
           </tbody>
         </table>
@@ -61,10 +61,15 @@ export default class GDriveRevisions extends React.Component<{}, State> {
     const revisions = await SyncService.GoogleDriveStorage.getRevisions();
     this.setState({ revisions });
   }
+
+  private onRestoreSuccess = () => {
+    this.props.transition!.router.stateService.go('settings');
+  }
 }
 
 class GDriveRevisionComponent extends React.Component<{
   revision: GDriveRevision;
+  onRestoreSuccess(): void;
 }, {
   content?: object;
   loading: boolean;
@@ -130,7 +135,7 @@ class GDriveRevisionComponent extends React.Component<{
     if (content && confirm(t('Storage.ImportConfirm'))) {
       await SyncService.set(content!, true);
       alert(t('Storage.ImportSuccess'));
-      $state.go('settings');
+      this.props.onRestoreSuccess();
     }
   }
 }

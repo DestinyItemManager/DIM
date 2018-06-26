@@ -7,6 +7,7 @@ import { getActivePlatform } from '../accounts/platform.service';
 import { fetchWithBungieOAuth } from '../oauth/http-refresh-token.service';
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
+import { router } from '../../router';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -127,7 +128,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
   case PlatformErrorCodes.ApiKeyMissingFromRequest:
   case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
     if ($DIM_FLAVOR === 'dev') {
-      // TODO: $state.go('developer');
+      router.stateService.go('developer');
       throw error(t('BungieService.DevVersion'), errorCode);
     } else {
       throw error(t('BungieService.Difficulties'), errorCode);

@@ -11,10 +11,10 @@ import { t } from 'i18next';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { sum } from '../util';
-import { $state } from '../ngimport-more';
 import './faction.scss';
 import PressTip from '../dim-ui/PressTip';
 import FactionIcon from './FactionIcon';
+import { UISref } from '@uirouter/react';
 
 interface FactionProps {
   factionProgress: DestinyFactionProgression;
@@ -36,9 +36,6 @@ export function Faction(props: FactionProps) {
 
   const vendorDef = defs.Vendor.get(vendorHash);
 
-  const rewardClick = () => $state.go('destiny2.vendor', { id: factionDef.rewardVendorHash, characterId: character.characterId });
-  const vendorClick = () => $state.go('destiny2.vendor', { id: vendorHash, characterId: character.characterId });
-
   return (
     <div
       className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}
@@ -48,12 +45,16 @@ export function Faction(props: FactionProps) {
       </PressTip>
       <div className="faction-info">
         <div className="faction-name" title={vendorDef.displayProperties.description}>
-          <a onClick={vendorClick}>{vendorDef.displayProperties.name}</a>
+          <UISref to='destiny2.vendor' params={{ id: vendorHash, characterId: character.characterId }}>
+            <a>{vendorDef.displayProperties.name}</a>
+          </UISref>
         </div>
         <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
         <div className="faction-rewards">
           {factionDef.rewardVendorHash && $featureFlags.vendors
-            ? <a onClick={rewardClick}>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</a>
+            ? <UISref to='destiny2.vendor' params={{ id: factionDef.rewardVendorHash, characterId: character.characterId }}>
+                <a>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</a>
+              </UISref>
             : <>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</>
           }
         </div>

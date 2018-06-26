@@ -1,4 +1,4 @@
-import { copy as angularCopy, IAngularEvent, IComponentOptions, IController } from 'angular';
+import { copy as angularCopy, IAngularEvent, IComponentOptions, IController, IRootScopeService, IScope, IWindowService } from 'angular';
 import * as _ from 'underscore';
 import { queueAction } from '../inventory/action-queue';
 import {
@@ -21,6 +21,7 @@ import { DimStore } from '../inventory/store-types';
 import { SearchService } from '../search/search-filter.component';
 import { D2FarmingService } from '../farming/d2farming.service';
 import { D1FarmingService } from '../farming/farming.service';
+import { router } from '../../router';
 
 export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,
@@ -59,13 +60,12 @@ interface LoadoutPopupCtrlVM extends IController {
 
 function LoadoutPopupCtrl(
   this: LoadoutPopupCtrlVM,
-  $rootScope,
-  $scope,
+  $rootScope: IRootScopeService,
+  $scope: IScope,
   ngDialog: IDialogService,
   toaster,
-  $window,
-  $i18next,
-  $stateParams
+  $window: IWindowService,
+  $i18next
 ) {
   'ngInject';
   const vm = this;
@@ -249,8 +249,8 @@ function LoadoutPopupCtrl(
   vm.startFarming = function startFarming() {
     ngDialog.closeAll();
     (vm.store.destinyVersion === 2 ? D2FarmingService : D1FarmingService).start(getPlatformMatching({
-      membershipId: $stateParams.membershipId,
-      platformType: $stateParams.platformType
+      membershipId: router.globals.params.membershipId,
+      platformType: router.globals.params.platformType
     })!, vm.store.id);
   };
 }

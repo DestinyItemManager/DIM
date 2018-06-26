@@ -13,7 +13,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout, dimLoadoutService } from './loadout.service';
 import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
-import { TransitionService } from '@uirouter/angularjs';
+import { router } from '../../router';
 
 export const LoadoutDrawerComponent: IComponentOptions = {
   controller: LoadoutDrawerCtrl,
@@ -33,14 +33,13 @@ function LoadoutDrawerCtrl(
   },
   $scope: IScope,
   toaster,
-  $i18next,
-  $transitions: TransitionService
+  $i18next
 ) {
   'ngInject';
   const vm = this;
 
   vm.$onInit = () => {
-    this.listener = $transitions.onExit({}, () => {
+    this.listener = router.transitionService.onExit({}, () => {
       dimLoadoutService.dialogOpen = false;
       vm.show = false;
     });
