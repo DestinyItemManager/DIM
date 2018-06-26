@@ -1,5 +1,7 @@
 # Next
 
+* New iOS app icons when you add to home screen.
+
 # 4.58.0 (2018-06-24)
 
 * Factions now show seasonal rank instead of lifetime rank.
