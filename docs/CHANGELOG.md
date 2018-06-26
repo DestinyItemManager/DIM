@@ -1,7 +1,13 @@
 # Next
 
-* Add Pursuits to the main inventory screen. Quest items are still shown on the Progress screen as well.
 * New iOS app icons when you add to home screen.
+
+# 4.58.0 (2018-06-24)
+
+* Factions now show seasonal rank instead of lifetime rank.
+* Vendors show their faction rank next to their reward engrams.
+* Factions in the progress page also link to their vendor.
+* Quest keys in your Pursuits now show their quantity. They're still on the Progress page.
 
 # 4.57.0 (2018-06-17)
 

@@ -15,7 +15,7 @@ import { sum } from "../util";
  *
  * This is the pattern I want to follow for our main items!
  */
-// TODO: Replace with DimItem
+// TODO: Replace with DimItem + vendory stuff
 export class VendorItem {
   static forPlugSetItem(
     defs: D2ManifestDefinitions,
@@ -111,6 +111,62 @@ export class VendorItem {
     return new VendorItem(
       defs,
       defs.InventoryItem.get(itemHash),
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      {
+        objectives: {
+          data: {
+            [itemHash]: {
+              objectives,
+              flavorObjective: undefined as any as DestinyObjectiveProgress,
+            }
+          },
+          privacy: 2
+        },
+        perks: { data: {}, privacy: 2 },
+        renderData: { data: {}, privacy: 2 },
+        stats: { data: {}, privacy: 2 },
+        sockets: { data: {}, privacy: 2 },
+        talentGrids: { data: {}, privacy: 2 },
+        plugStates: { data: {}, privacy: 2 },
+        instances: { data: {
+          [itemHash]: fakeInstance
+        }, privacy: 2 }
+      },
+      undefined,
+      canInsert
+    );
+  }
+
+  // TODO: This is getting silly. Rethink this whole thing.
+  static forCatalyst(
+    defs: D2ManifestDefinitions,
+    attachedItemHash: number,
+    itemHash: number,
+    objectives: DestinyObjectiveProgress[],
+    canInsert: boolean
+  ): VendorItem {
+    const fakeInstance = {
+
+    } as any as DestinyItemInstanceComponent;
+
+    const modDef = defs.InventoryItem.get(itemHash);
+    const itemDef = defs.InventoryItem.get(attachedItemHash);
+
+    const fakedDef = {
+      ...modDef,
+      displayProperties: {
+        ...modDef.displayProperties,
+        name: itemDef.displayProperties.name,
+        icon: itemDef.displayProperties.icon
+      }
+    };
+
+    return new VendorItem(
+      defs,
+      fakedDef,
       undefined,
       undefined,
       undefined,

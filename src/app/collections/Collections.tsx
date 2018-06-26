@@ -20,6 +20,7 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
+import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
 
 interface Props {
@@ -109,6 +110,12 @@ export default class Collections extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Ornaments">
           <Ornaments
+            defs={defs}
+            profileResponse={profileResponse}
+          />
+        </ErrorBoundary>
+        <ErrorBoundary name="Catalysts">
+          <Catalysts
             defs={defs}
             profileResponse={profileResponse}
           />

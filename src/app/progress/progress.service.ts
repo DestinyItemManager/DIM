@@ -1,18 +1,15 @@
 import {
   DestinyCharacterComponent,
-  DestinyCharacterProgressionComponent,
-  DestinyInventoryComponent,
-  DestinyItemComponentSetOfint64,
-  DictionaryComponentResponse,
-  SingleComponentResponse,
-  DestinyProfileResponse
+  DestinyProfileResponse,
+  DestinyVendorsResponse
   } from 'bungie-api-ts/destiny2';
+import * as _ from 'underscore';
 import { $q } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
-import { getProgression } from '../bungie-api/destiny2-api';
+import { getProgression, getVendors } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
@@ -26,25 +23,14 @@ export interface ProgressService {
   reloadProgress(): void;
 }
 
-/**
- * A slimmed down version of IDestinyProfileResponse for just what we get
- * TODO: Move all this into bungie-api.
- */
-interface ProgressProfileResponse {
-  characters: DictionaryComponentResponse<DestinyCharacterComponent>;
-  characterProgressions: DictionaryComponentResponse<DestinyCharacterProgressionComponent>;
-  profileInventory: SingleComponentResponse<DestinyInventoryComponent>;
-  characterInventories: DictionaryComponentResponse<DestinyInventoryComponent>;
-  itemComponents: DestinyItemComponentSetOfint64;
-}
-
 // TODO: generate all the API structures from the Swagger docs
 // This is a kind of radical approach - the result is not modified or interpreted until we get to components!
 // Should allow for better understanding of updates, but prevents us from "correcting" and interpreting the data,
 // and means we may have to block on defs lookup in the UI rendering :-/
 export interface ProgressProfile {
   readonly defs: D2ManifestDefinitions;
-  readonly profileInfo: ProgressProfileResponse;
+  readonly profileInfo: DestinyProfileResponse;
+  readonly vendors: { [characterId: string]: DestinyVendorsResponse };
   /**
    * The date the most recently played character was last played.
    */
@@ -98,17 +84,21 @@ export function reloadProgress() {
 function loadProgress(account: DestinyAccount): IPromise<ProgressProfile | undefined> {
   // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
   const reloadPromise = $q.all([getProgression(account), getDefinitions()])
-    .then(([profileInfo, defs]): ProgressProfile => {
-      return {
-        defs,
-        profileInfo,
-        get lastPlayedDate() {
-          return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce((memo, character: DestinyCharacterComponent) => {
-            const d1 = new Date(character.dateLastPlayed);
-            return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
-          }, new Date(0));
-        }
-      };
+    .then(([profileInfo, defs]) => {
+      const characterIds = Object.keys(profileInfo.characters.data);
+      return $q.all(characterIds.map((characterId) => getVendors(account, characterId))).then((vendors) => {
+        return {
+          defs,
+          profileInfo,
+          vendors: _.object(_.zip(characterIds, vendors)) as ProgressProfile['vendors'],
+          get lastPlayedDate() {
+            return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce((memo, character: DestinyCharacterComponent) => {
+              const d1 = new Date(character.dateLastPlayed);
+              return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
+            }, new Date(0));
+          }
+        };
+      });
     })
     .catch((e) => {
       toaster.pop(bungieErrorToaster(e));
