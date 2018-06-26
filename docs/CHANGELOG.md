@@ -5,7 +5,6 @@
 * Factions now show seasonal rank instead of lifetime rank.
 * Vendors show their faction rank next to their reward engrams.
 * Factions in the progress page also link to their vendor.
-* Add Pursuits to the main inventory screen. Quest items are still shown on the Progress screen as well.
 * Quest keys in your Pursuits now show their quantity. They're still on the Progress page.
 
 # 4.57.0 (2018-06-17)
