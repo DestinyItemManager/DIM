@@ -31,6 +31,7 @@ import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
+import { Checklist } from './Checklist';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -143,9 +144,7 @@ export class Progress extends React.Component<Props, State> {
       firstCharacterProgression[2679551909]
     ];
 
-    if (profileInfo.profileProgression) {
-      this.checklists(profileInfo.profileProgression.data.checklists);
-    }
+    const profileProgressionHashes = Object.keys(profileInfo.profileProgression.data.checklists).map(Number);
 
     const profileMilestonesContent = (profileMilestones.length > 0 || profileQuests.length > 0) && (
       <>
@@ -194,6 +193,19 @@ export class Progress extends React.Component<Props, State> {
           </div>
         </div>
         <hr/>
+
+        {profileProgressionHashes && (<>
+          <div className="section checklists">
+            <ErrorBoundary name="checklists">
+              {profileProgressionHashes.map((pph) => <Checklist
+                key={pph}
+                checklistDefinitionHash={pph}
+                profileChecklist={profileInfo.profileProgression.data.checklists}
+                defs={defs} />)}
+            </ErrorBoundary>
+          </div>
+          <hr />
+        </>)}
       </>
     );
 
@@ -428,33 +440,6 @@ export class Progress extends React.Component<Props, State> {
       return objectives.objectives;
     }
     return profileInfo.characterProgressions.data[character.characterId].uninstancedItemObjectives[item.itemHash] || [];
-  }
-
-  private checklists(profileChecklist: { [key: number]: { [key: number]: boolean } }) {
-    console.log(profileChecklist);
-    const { defs } = this.state.progress!;
-
-    const allChecklistHashes = Object.keys(profileChecklist);
-    // const discoveredChecklistHashes = new Set<number>();
-
-    allChecklistHashes.forEach((clh) => {
-      const checklistHash = Number(clh);
-
-      const checklistDef = defs.Checklist.get(checklistHash);
-      const nestedChecklistHashes = Object.keys(profileChecklist[checklistHash]);
-
-      console.log(`${checklistDef.displayProperties.name}`);
-
-      nestedChecklistHashes.forEach((nclh) => {
-        const nestedChecklistHash = Number(nclh);
-
-        const matchingChecklistEntry = checklistDef.entries.find((cld) => cld.hash === nestedChecklistHash);
-
-        if (matchingChecklistEntry) {
-          console.log(`${matchingChecklistEntry.displayProperties.name} - ${profileChecklist[checklistHash][nestedChecklistHash]}`);
-        }
-      });
-    });
   }
 }
 
