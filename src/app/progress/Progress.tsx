@@ -143,6 +143,8 @@ export class Progress extends React.Component<Props, State> {
       firstCharacterProgression[2679551909]
     ];
 
+    this.checklists(Object.values(profileInfo.characterProgressions.data)[0].checklists);
+
     const profileMilestonesContent = (profileMilestones.length > 0 || profileQuests.length > 0) && (
       <>
         <div className="profile-content">
@@ -424,6 +426,33 @@ export class Progress extends React.Component<Props, State> {
       return objectives.objectives;
     }
     return profileInfo.characterProgressions.data[character.characterId].uninstancedItemObjectives[item.itemHash] || [];
+  }
+
+  private checklists(profileChecklist: { [key: number]: { [key: number]: boolean } }) {
+    console.log(profileChecklist);
+    const { defs } = this.state.progress!;
+
+    const allChecklistHashes = Object.keys(profileChecklist);
+    // const discoveredChecklistHashes = new Set<number>();
+
+    allChecklistHashes.forEach((clh) => {
+      const checklistHash = Number(clh);
+
+      const checklistDef = defs.Checklist.get(checklistHash);
+      const nestedChecklistHashes = Object.keys(profileChecklist[checklistHash]);
+
+      console.log(`${checklistDef.displayProperties.name}`);
+
+      nestedChecklistHashes.forEach((nclh) => {
+        const nestedChecklistHash = Number(nclh);
+
+        const matchingChecklistEntry = checklistDef.entries.find((cld) => cld.hash === nestedChecklistHash);
+
+        if (matchingChecklistEntry) {
+          console.log(`${matchingChecklistEntry.displayProperties.name} - ${profileChecklist[checklistHash][nestedChecklistHash]}`);
+        }
+      });
+    });
   }
 }
 
