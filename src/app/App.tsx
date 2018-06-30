@@ -12,6 +12,8 @@ import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
 import { showInfoPopup } from './shell/info-popup';
 import { t } from 'i18next';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
+import { hot } from 'react-hot-loader';
+import { connect } from 'react-redux';
 
 const ToasterContainer = angular2react('dimToasterContainer', ToasterContainerComponent, lazyInjector.$injector as angular.auto.IInjectorService);
 
@@ -19,7 +21,7 @@ function setCSSVariable(property: string, value: any) {
   document.querySelector('html')!.style.setProperty(property, value.toString());
 }
 
-export class App extends React.Component {
+class App extends React.Component {
   private settingsSubscription?: Subscription;
   private isPhonePortraitSubscription?: Subscription;
   private $scope = $rootScope.$new(true);
@@ -149,3 +151,5 @@ function ColorA11y() {
   }
   return null;
 }
+
+export default hot(module)(connect()(App));

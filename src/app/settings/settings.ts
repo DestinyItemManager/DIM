@@ -49,7 +49,7 @@ let readyResolve;
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed';
 
-class Settings {
+export class Settings {
   // Show full details in item popup
   itemDetails = true;
   // Show item quality percentages
