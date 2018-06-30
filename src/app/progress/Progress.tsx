@@ -31,7 +31,7 @@ import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
-import { Checklist } from './Checklist';
+import Link from '../shell/Link';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -195,21 +195,12 @@ export class Progress extends React.Component<Props, State> {
         <hr/>
 
         {profileProgressionHashes && (<>
-          <div className="section checklists">
-            <div className="title">{t('Progress.Checklists')}</div>
-            <div className="checklist-row">
-              <ErrorBoundary name="checklists">
-                {profileProgressionHashes.map((pph) =>
-                  <Checklist
-                    key={pph}
-                    checklistDefinitionHash={pph}
-                    profileChecklist={profileInfo.profileProgression.data.checklists}
-                    defs={defs}
-                  />)}
-              </ErrorBoundary>
-            </div>
-          </div>
-          <hr />
+          <Link
+            key='destiny2.checklist'
+            account={this.props.account}
+            state='destiny2.checklist'
+            text='Progress.Checklists'
+          />
         </>)}
       </>
     );

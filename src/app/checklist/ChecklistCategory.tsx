@@ -8,7 +8,7 @@ import { ChecklistItem } from './ChecklistItem';
  * This is meant to track profile-wide checklist progression.
  * It can probably also be used to track character-level checklist progression.
  */
-export function Checklist({
+export function ChecklistCategory({
   checklistDefinitionHash,
   profileChecklist,
   defs
