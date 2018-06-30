@@ -1,6 +1,7 @@
 # Next
 
 * New iOS app icons when you add to home screen.
+* Fix a bug where the item popup could hang iOS Safari in landscape view.
 
 # 4.58.0 (2018-06-24)
 
