@@ -1,21 +1,4 @@
 import { DestinyAccount } from "./destiny-account.service";
+import { action } from "typesafe-actions";
 
-export enum AccountsActions {
-  SET = 'SET',
-  OTHER = '__any_other_action_type__'
-}
-
-export interface SetAccountsAction {
-  type: AccountsActions.SET;
-  accounts: DestinyAccount[];
-}
-
-export function setAccounts(accounts: DestinyAccount[]): SetAccountsAction {
-  return {
-    type: AccountsActions.SET,
-    accounts
-  };
-}
-
-export type AccountsAction =
-  | SetAccountsAction;
+export const set = (accounts: DestinyAccount[]) => action('accounts/SET', accounts);

@@ -151,6 +151,7 @@
     "sql.js": "github:DestinyItemManager/sql.js",
     "textcomplete": "^0.17.1",
     "tooltip.js": "^1.2.0",
+    "typesafe-actions": "^2.0.4",
     "ua-parser-js": "^0.7.17",
     "underscore": "^1.8.3",
     "uuid": "^3.2.1"
