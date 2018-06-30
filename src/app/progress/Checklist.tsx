@@ -7,6 +7,7 @@ import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import './milestone.scss';
+import { ChecklistItem } from './ChecklistItem';
 // import RewardActivity from './RewardActivity';
 // import AvailableQuest from './AvailableQuest';
 // import { UISref } from '@uirouter/react';
@@ -26,7 +27,7 @@ export function Checklist({
 }) {
   const checklistDef = defs.Checklist.get(checklistDefinitionHash);
 
-  const nestedChecklistHashes = Object.keys(profileChecklist[checklistDefinitionHash]);
+  const nestedChecklistHashes = Object.keys(profileChecklist[checklistDefinitionHash]).map(Number);
 
   console.log(nestedChecklistHashes);
 
@@ -41,25 +42,19 @@ export function Checklist({
     }
     <div class-name="milestone-info">
       <span className="milestone-name">{checklistDef.displayProperties.name}</span>
-        <div className="milestone-description">
-          {checklistDef.displayProperties.description}
-        </div>
+      <div className="milestone-description">
+        {checklistDef.displayProperties.description}
+      </div>
+      {nestedChecklistHashes.map((checklistItemHash) =>
+        <ChecklistItem
+          key={checklistItemHash}
+          checklistDefinitionHash={checklistDefinitionHash}
+          checklistItemHash={checklistItemHash}
+          profileChecklist={profileChecklist}
+          defs={defs}
+        />
+      )}
     </div>
   </div>
   );
-
-  //   console.log(`${checklistDef.displayProperties.name}`);
-
-  //   nestedChecklistHashes.forEach((nclh) => {
-  //     const nestedChecklistHash = Number(nclh);
-
-  //     const matchingChecklistEntry = checklistDef.entries.find((cld) => cld.hash === nestedChecklistHash);
-
-  //     if (matchingChecklistEntry) {
-  //       console.log(`${matchingChecklistEntry.displayProperties.name} - ${profileChecklist[checklistHash][nestedChecklistHash]}`);
-  //     }
-  //   });
-  // });
-
-  // return null;
 }
