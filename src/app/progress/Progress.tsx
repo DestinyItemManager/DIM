@@ -143,7 +143,9 @@ export class Progress extends React.Component<Props, State> {
       firstCharacterProgression[2679551909]
     ];
 
-    this.checklists(Object.values(profileInfo.characterProgressions.data)[0].checklists);
+    if (profileInfo.profileProgression) {
+      this.checklists(profileInfo.profileProgression.data.checklists);
+    }
 
     const profileMilestonesContent = (profileMilestones.length > 0 || profileQuests.length > 0) && (
       <>
