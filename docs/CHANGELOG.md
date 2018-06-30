@@ -1,6 +1,7 @@
 # Next
 
 * New iOS app icons when you add to home screen.
+* Added profile progression checklist.
 
 # 4.58.0 (2018-06-24)
 
