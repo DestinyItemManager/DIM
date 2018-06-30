@@ -24,15 +24,19 @@ export function ChecklistItem({
   const checkClass = (checklistItemCompleted ? 'fa-check-circle-o' : 'fa-circle-o');
 
   if (checklistItemDef) {
+    const longDescription = checklistItemDef.displayProperties.description.length > 100;
+    const nameContainsDescription = checklistItemDef.displayProperties.name.indexOf(checklistItemDef.displayProperties.description) > 0;
+
     return(
       <div className={classNames('checklist-item', { complete: checklistItemCompleted })}>
-        <div className="checklist-item-name">
+        <div className={classNames('checklist-item-name', { long: longDescription })}>
           <i className={classNames('fa', checkClass)}/>
           {checklistItemDef.displayProperties.name}
         </div>
-        <div className="checklist-item-description">
-          {checklistItemDef.displayProperties.description}
-        </div>
+        {!nameContainsDescription &&
+          <div className="checklist-item-description">
+            {checklistItemDef.displayProperties.description}
+          </div>}
       </div>
     );
   }

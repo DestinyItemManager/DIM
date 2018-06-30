@@ -64,15 +64,17 @@ export function ChecklistCategory({
       <div className="checklist-category-description">
         {checklistDef.displayProperties.description}
       </div>
-      {orderedNestedChecklistHashes.map((checklistItemHash) =>
-        <ChecklistItem
-          key={checklistItemHash}
-          checklistDefinitionHash={checklistDefinitionHash}
-          checklistItemHash={checklistItemHash}
-          profileChecklist={profileChecklist}
-          defs={defs}
-        />
-      )}
+      <div className="checklist-items">
+        {orderedNestedChecklistHashes.map((checklistItemHash) =>
+          <ChecklistItem
+            key={checklistItemHash}
+            checklistDefinitionHash={checklistDefinitionHash}
+            checklistItemHash={checklistItemHash}
+            profileChecklist={profileChecklist}
+            defs={defs}
+          />
+        )}
+      </div>
     </div>
   </div>
   );

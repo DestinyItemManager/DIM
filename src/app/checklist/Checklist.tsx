@@ -1,6 +1,5 @@
 import { Subscription } from 'rxjs/Subscription';
 import { IScope } from 'angular';
-import { t } from 'i18next';
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { isPhonePortrait, isPhonePortraitStream } from '../mediaQueries';
