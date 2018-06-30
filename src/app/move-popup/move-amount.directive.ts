@@ -2,7 +2,7 @@ import template from './move-amount.html';
 import './move-amount.scss';
 import { IDirective, IController } from 'angular';
 
-export function MoveAmount($timeout): IDirective {
+export function MoveAmount(): IDirective {
   'ngInject';
   return {
     controller: MoveAmountController,
@@ -15,15 +15,7 @@ export function MoveAmount($timeout): IDirective {
       maxStackSize: '=maxStackSize'
     },
     replace: true,
-    template,
-    link(scope, element) {
-      $timeout(() => {
-        scope.$broadcast('rzSliderForceRender');
-        const input = element[0].getElementsByTagName('input')[0];
-        input.focus();
-        input.setSelectionRange(0, input.value.length);
-      });
-    }
+    template
   };
 }
 
