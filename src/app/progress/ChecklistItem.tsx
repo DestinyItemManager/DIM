@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import './checklist.scss';
 
 /**
- * A Milestone is an activity or event that a player can complete to earn rewards.
- * There are several forms of Milestone.
+ * The profile checklist points to a checklist category, which points to a checklist item,
+ * which has a boolean entry.
  */
 export function ChecklistItem({
   checklistDefinitionHash,

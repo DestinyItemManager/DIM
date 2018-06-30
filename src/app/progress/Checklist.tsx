@@ -5,8 +5,8 @@ import './checklist.scss';
 import { ChecklistItem } from './ChecklistItem';
 
 /**
- * A Milestone is an activity or event that a player can complete to earn rewards.
- * There are several forms of Milestone.
+ * This is meant to track profile-wide checklist progression.
+ * It can probably also be used to track character-level checklist progression.
  */
 export function Checklist({
   checklistDefinitionHash,
