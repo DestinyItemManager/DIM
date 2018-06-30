@@ -34,7 +34,7 @@ export default function PlugSet({
   return (
     <div className="vendor-char-items">
       <div className="vendor-row">
-        <h3 className="category-title">{defs.InventoryItem.get(plugSetDef.reusablePlugItems[0].plugItemHash).itemTypeDisplayName}</h3>
+        <h3 className="category-title">{plugSetDef.displayProperties.name}</h3>
         <div className="vendor-items">
         {_.sortBy(vendorItems, (i) => i.displayProperties.name).map((item) =>
           <VendorItemComponent
