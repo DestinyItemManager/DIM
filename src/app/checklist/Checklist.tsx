@@ -84,7 +84,6 @@ export class Checklist extends React.Component<Props, State> {
 
     return (
       <div className="section checklists">
-        <div className="title">{t('Progress.Checklists')}</div>
         <div className="checklist-row">
           <ErrorBoundary name="checklists">
             {profileProgressionHashes.map((pph) =>

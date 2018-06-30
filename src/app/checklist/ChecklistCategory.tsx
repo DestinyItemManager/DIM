@@ -59,8 +59,8 @@ export function ChecklistCategory({
       </div>
     </>
     }
-    <div class-name="checklist-category-info">
-      <div className="checklist-category-name">{checklistDef.displayProperties.name}</div>
+    <div className="checklist-category-info">
+      <div className="title checklist-title">{checklistDef.displayProperties.name}</div>
       <div className="checklist-category-description">
         {checklistDef.displayProperties.description}
       </div>
