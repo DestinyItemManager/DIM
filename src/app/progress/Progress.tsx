@@ -157,6 +157,16 @@ export class Progress extends React.Component<Props, State> {
                   {profileMilestones.map((milestone) =>
                     <Milestone milestone={milestone} character={characters[0]} defs={defs} key={milestone.milestoneHash} />
                   )}
+                  {profileProgressionHashes && (<>
+                    <div className="milestone-quest">
+                      <Link
+                        key='destiny2.checklist'
+                        account={this.props.account}
+                        state='destiny2.checklist'
+                        text='Progress.Checklists'
+                      />
+                    </div>
+                  </>)}
                 </ErrorBoundary>
               </div>
             </div>
@@ -193,15 +203,6 @@ export class Progress extends React.Component<Props, State> {
           </div>
         </div>
         <hr/>
-
-        {profileProgressionHashes && (<>
-          <Link
-            key='destiny2.checklist'
-            account={this.props.account}
-            state='destiny2.checklist'
-            text='Progress.Checklists'
-          />
-        </>)}
       </>
     );
 
