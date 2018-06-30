@@ -1,16 +1,7 @@
-// import {
-//   DestinyMilestone,
-//   DestinyCharacterComponent,
-//   DestinyProgressionDefinition
-// } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import classNames from 'classnames';
-// import BungieImage from '../dim-ui/BungieImage';
 import './milestone.scss';
-// import RewardActivity from './RewardActivity';
-// import AvailableQuest from './AvailableQuest';
-// import { UISref } from '@uirouter/react';
 
 /**
  * A Milestone is an activity or event that a player can complete to earn rewards.
@@ -37,6 +28,9 @@ export function ChecklistItem({
       <div className={classNames('milestone-reward-activity', { complete: checklistItemCompleted })}>
         <i className={classNames('fa', checkClass)}/>
         <span>{checklistItemDef.displayProperties.name}</span>
+        <div className="milestone-description">
+          {checklistItemDef.displayProperties.description}
+        </div>
       </div>
     );
   }

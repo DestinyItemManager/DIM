@@ -1,16 +1,8 @@
-// import {
-//   DestinyMilestone,
-//   DestinyCharacterComponent,
-//   DestinyProgressionDefinition
-// } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import './milestone.scss';
 import { ChecklistItem } from './ChecklistItem';
-// import RewardActivity from './RewardActivity';
-// import AvailableQuest from './AvailableQuest';
-// import { UISref } from '@uirouter/react';
 
 /**
  * A Milestone is an activity or event that a player can complete to earn rewards.
@@ -29,7 +21,34 @@ export function Checklist({
 
   const nestedChecklistHashes = Object.keys(profileChecklist[checklistDefinitionHash]).map(Number);
 
-  console.log(nestedChecklistHashes);
+  const orderedNestedChecklistHashes = nestedChecklistHashes.sort((a, b) => {
+    const firstEntry = checklistDef.entries.find((cld) => cld.hash === a);
+    const secondEntry = checklistDef.entries.find((cld) => cld.hash === b);
+
+    if (!firstEntry || !secondEntry) {
+      return 0;
+    }
+
+    const firstEntryNumbers = firstEntry.displayProperties.name.match(/\d+/g);
+    const secondEntryNumbers = secondEntry.displayProperties.name.match(/\d+/g);
+
+    if (!firstEntryNumbers || !secondEntryNumbers) {
+      return 0;
+    }
+
+    const firstEntryNumber = Number(firstEntryNumbers[0]);
+    const secondEntryNumber = Number(secondEntryNumbers[0]);
+
+    if (firstEntryNumber < secondEntryNumber) {
+      return -1;
+    }
+
+    if (firstEntryNumber > secondEntryNumber) {
+      return 1;
+    }
+
+    return 0;
+  });
 
   return (
   <div className="milestone-quest">
@@ -45,7 +64,7 @@ export function Checklist({
       <div className="milestone-description">
         {checklistDef.displayProperties.description}
       </div>
-      {nestedChecklistHashes.map((checklistItemHash) =>
+      {orderedNestedChecklistHashes.map((checklistItemHash) =>
         <ChecklistItem
           key={checklistItemHash}
           checklistDefinitionHash={checklistDefinitionHash}
