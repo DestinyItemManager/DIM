@@ -196,13 +196,18 @@ export class Progress extends React.Component<Props, State> {
 
         {profileProgressionHashes && (<>
           <div className="section checklists">
-            <ErrorBoundary name="checklists">
-              {profileProgressionHashes.map((pph) => <Checklist
-                key={pph}
-                checklistDefinitionHash={pph}
-                profileChecklist={profileInfo.profileProgression.data.checklists}
-                defs={defs} />)}
-            </ErrorBoundary>
+            <div className="title">{t('Progress.Checklists')}</div>
+            <div className="checklist-row">
+              <ErrorBoundary name="checklists">
+                {profileProgressionHashes.map((pph) =>
+                  <Checklist
+                    key={pph}
+                    checklistDefinitionHash={pph}
+                    profileChecklist={profileInfo.profileProgression.data.checklists}
+                    defs={defs}
+                  />)}
+              </ErrorBoundary>
+            </div>
           </div>
           <hr />
         </>)}

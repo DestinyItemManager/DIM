@@ -5,7 +5,7 @@
 // } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-// import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../dim-ui/BungieImage';
 import './milestone.scss';
 // import RewardActivity from './RewardActivity';
 // import AvailableQuest from './AvailableQuest';
@@ -30,7 +30,23 @@ export function Checklist({
 
   console.log(nestedChecklistHashes);
 
-  return (<div className="checklist-header">{checklistDef.displayProperties.name}</div>);
+  return (
+  <div className="milestone-quest">
+    {checklistDef.displayProperties.hasIcon &&
+    <>
+      <div className="milestone-icon">
+        <BungieImage src={checklistDef.displayProperties.icon} />
+      </div>
+    </>
+    }
+    <div class-name="milestone-info">
+      <span className="milestone-name">{checklistDef.displayProperties.name}</span>
+        <div className="milestone-description">
+          {checklistDef.displayProperties.description}
+        </div>
+    </div>
+  </div>
+  );
 
   //   console.log(`${checklistDef.displayProperties.name}`);
 

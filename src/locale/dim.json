@@ -518,6 +518,7 @@
     "Limit": "Postmaster Limit"
   },
   "Progress": {
+    "Checklists": "Checklists",
     "CrucibleRank": "Crucible Ranks",
     "Daily": "Daily",
     "ExpiresIn": "expires at {{endTime}}",
