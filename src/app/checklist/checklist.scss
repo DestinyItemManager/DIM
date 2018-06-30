@@ -41,11 +41,18 @@
   }
 }
 
+.checklist-items {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+}
+
 .checklist-item {
   display: flex;
   flex-direction: column;
   margin: 4px 0 0 0;
   padding-left: 10px;
+  flex-basis: 25em;
 
   img {
     width: 20px;
