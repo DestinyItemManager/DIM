@@ -1,6 +1,7 @@
 # Next
 
 * New iOS app icons when you add to home screen.
+* Ornaments now show additional reasons why you can't equip them.
 
 # 4.58.0 (2018-06-24)
 

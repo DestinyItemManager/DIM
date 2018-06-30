@@ -26,7 +26,7 @@ export class VendorItem {
     return new VendorItem(
       defs,
       defs.InventoryItem.get(plugItemDef.plugItemHash),
-      undefined,
+      [],
       undefined,
       reviewCache ? reviewCache.getRatingData(undefined, plugItemDef.plugItemHash) : null,
       undefined,
@@ -43,10 +43,14 @@ export class VendorItem {
     canPurchase: boolean,
     reviewCache?: D2ReviewDataCache
   ): VendorItem {
+    const failureStrings = (vendorItemDef && vendorDef)
+      ? (vendorItemDef.failureIndexes || []).map((i) => vendorDef!.failureStrings[i])
+      : [];
+
     return new VendorItem(
       defs,
       defs.InventoryItem.get(vendorItemDef.itemHash),
-      vendorDef,
+      failureStrings,
       vendorItemDef,
       reviewCache ? reviewCache.getRatingData(undefined, vendorItemDef.itemHash) : null,
       undefined,
@@ -69,11 +73,14 @@ export class VendorItem {
       instance = itemComponents.instances.data[saleItem.vendorItemIndex];
     }
     const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
+    const failureStrings = (saleItem && vendorDef)
+      ? (saleItem.failureIndexes || []).map((i) => vendorDef!.failureStrings[i])
+      : [];
 
     return new VendorItem(
       defs,
       defs.InventoryItem.get(vendorItemDef.itemHash),
-      vendorDef,
+      failureStrings,
       vendorItemDef,
       reviewCache ? reviewCache.getRatingData(saleItem) : null,
       saleItem,
@@ -84,14 +91,13 @@ export class VendorItem {
 
   static forVendorDefinitionItem(
     defs: D2ManifestDefinitions,
-    vendorDef: DestinyVendorDefinition,
     vendorItemDef: DestinyVendorItemDefinition,
     reviewCache?: D2ReviewDataCache
   ): VendorItem {
     return new VendorItem(
       defs,
       defs.InventoryItem.get(vendorItemDef.itemHash),
-      vendorDef,
+      [],
       vendorItemDef,
       reviewCache ? reviewCache.getRatingData(undefined, vendorItemDef.itemHash) : null
     );
@@ -102,16 +108,16 @@ export class VendorItem {
     defs: D2ManifestDefinitions,
     itemHash: number,
     objectives: DestinyObjectiveProgress[],
-    canInsert: boolean
+    canInsert: boolean,
+    enableFailReasons: string[]
   ): VendorItem {
     const fakeInstance = {
 
     } as any as DestinyItemInstanceComponent;
-
     return new VendorItem(
       defs,
       defs.InventoryItem.get(itemHash),
-      undefined,
+      enableFailReasons,
       undefined,
       undefined,
       undefined,
@@ -146,7 +152,8 @@ export class VendorItem {
     attachedItemHash: number,
     itemHash: number,
     objectives: DestinyObjectiveProgress[],
-    canInsert: boolean
+    canInsert: boolean,
+    enableFailReasons: string[]
   ): VendorItem {
     const fakeInstance = {
 
@@ -167,7 +174,7 @@ export class VendorItem {
     return new VendorItem(
       defs,
       fakedDef,
-      undefined,
+      enableFailReasons,
       undefined,
       undefined,
       undefined,
@@ -196,11 +203,12 @@ export class VendorItem {
     );
   }
 
-  canPurchase: boolean;
+  readonly canPurchase: boolean;
+  readonly failureStrings: string[];
+
   private itemComponents?: DestinyItemComponentSetOfint32;
   private vendorItemDef?: DestinyVendorItemDefinition;
   private saleItem?: DestinyVendorSaleItemComponent;
-  private vendorDef?: DestinyVendorDefinition;
   private inventoryItem: DestinyInventoryItemDefinition;
   private instance?: DestinyItemInstanceComponent;
   private defs: D2ManifestDefinitions;
@@ -209,7 +217,7 @@ export class VendorItem {
   constructor(
     defs: D2ManifestDefinitions,
     inventoryItem: DestinyInventoryItemDefinition,
-    vendorDef?: DestinyVendorDefinition,
+    failureStrings: string[],
     vendorItemDef?: DestinyVendorItemDefinition,
     reviewData?: D2RatingData | null,
     saleItem?: DestinyVendorSaleItemComponent,
@@ -219,7 +227,6 @@ export class VendorItem {
     canPurchase = true,
   ) {
     this.defs = defs;
-    this.vendorDef = vendorDef;
     this.vendorItemDef = vendorItemDef;
     this.saleItem = saleItem;
     this.inventoryItem = inventoryItem;
@@ -227,6 +234,7 @@ export class VendorItem {
     this.itemComponents = itemComponents;
     this.reviewData = reviewData || null;
     this.instance = instance;
+    this.failureStrings = failureStrings;
   }
 
   get key() {
@@ -262,12 +270,6 @@ export class VendorItem {
    */
   get canBeSold() {
     return (!this.saleItem || this.saleItem.failureIndexes.length === 0);
-  }
-
-  get failureStrings(): string[] {
-    return this.saleItem && this.vendorDef
-      ? (this.saleItem.failureIndexes || []).map((i) => this.vendorDef!.failureStrings[i])
-      : [];
   }
 
   /**

@@ -105,6 +105,6 @@ export function getVendorItems(
       !i.exclusivity ||
       i.exclusivity === BungieMembershipType.All ||
       i.exclusivity === account.platformType
-    ).map((i) => VendorItem.forVendorDefinitionItem(defs, vendorDef, i, reviewCache));
+    ).map((i) => VendorItem.forVendorDefinitionItem(defs, i, reviewCache));
   }
 }
