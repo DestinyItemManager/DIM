@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
-import './milestone.scss';
+import './checklist.scss';
 import { ChecklistItem } from './ChecklistItem';
 
 /**
@@ -51,17 +51,17 @@ export function Checklist({
   });
 
   return (
-  <div className="milestone-quest">
+  <div className="checklist-category">
     {checklistDef.displayProperties.hasIcon &&
     <>
-      <div className="milestone-icon">
+      <div className="checklist-category-icon">
         <BungieImage src={checklistDef.displayProperties.icon} />
       </div>
     </>
     }
-    <div class-name="milestone-info">
-      <span className="milestone-name">{checklistDef.displayProperties.name}</span>
-      <div className="milestone-description">
+    <div class-name="checklist-category-info">
+      <div className="checklist-category-name">{checklistDef.displayProperties.name}</div>
+      <div className="checklist-category-description">
         {checklistDef.displayProperties.description}
       </div>
       {orderedNestedChecklistHashes.map((checklistItemHash) =>

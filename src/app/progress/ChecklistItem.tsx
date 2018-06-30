@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import classNames from 'classnames';
-import './milestone.scss';
+import './checklist.scss';
 
 /**
  * A Milestone is an activity or event that a player can complete to earn rewards.
@@ -25,10 +25,12 @@ export function ChecklistItem({
 
   if (checklistItemDef) {
     return(
-      <div className={classNames('milestone-reward-activity', { complete: checklistItemCompleted })}>
-        <i className={classNames('fa', checkClass)}/>
-        <span>{checklistItemDef.displayProperties.name}</span>
-        <div className="milestone-description">
+      <div className={classNames('checklist-item', { complete: checklistItemCompleted })}>
+        <div className="checklist-item-name">
+          <i className={classNames('fa', checkClass)}/>
+          {checklistItemDef.displayProperties.name}
+        </div>
+        <div className="checklist-item-description">
           {checklistItemDef.displayProperties.description}
         </div>
       </div>
