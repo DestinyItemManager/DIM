@@ -676,6 +676,7 @@
     "ArmorAndWeapons": "Armor & Weapons",
     "Available": "Available on:",
     "Bounties": "Bounties",
+    "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
     "Collections": "Collections",
     "Compare": "Compare with what you already have:",
     "Consumables": "Consumables",
@@ -684,7 +685,6 @@
     "Engram": "Reward Engram",
     "Load": "Loading Vendors",
     "OrnamentsDisclaimer": "DIM can only show ornaments that could be unlocked on items you have in your inventory.",
-    "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
     "ShadersAndEmblems": "Shaders & Emblems",
     "ShipsAndVehicles": "Ships & Vehicles",
     "Vendors": "Vendors"
