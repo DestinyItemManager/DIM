@@ -102,8 +102,6 @@ export interface DimItem {
   masterwork: boolean;
   /** Is this classified? Some items are classified in the manifest. */
   classified: boolean;
-  /** Is this in any loadout? */
-  isInLoadout: boolean;
   /** What percent complete is this item (considers XP and objectives). */
   percentComplete: number;
   /** Should we hide the percentage display? */

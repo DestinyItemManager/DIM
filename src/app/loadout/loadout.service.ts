@@ -51,6 +51,7 @@ export interface LoadoutServiceType {
   saveLoadout(loadout: Loadout): IPromise<Loadout[]>;
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): IPromise<void>;
+  getLoadoutItemIds(destinyVersion: number): Promise<Set<string>>;
 }
 
 export const dimLoadoutService = LoadoutService();
@@ -71,7 +72,8 @@ function LoadoutService(): LoadoutServiceType {
     saveLoadout,
     addItemToLoadout,
     applyLoadout,
-    previousLoadouts: _previousLoadouts
+    previousLoadouts: _previousLoadouts,
+    getLoadoutItemIds
   };
 
   function addItemToLoadout(item: DimItem, $event) {
@@ -89,19 +91,7 @@ function LoadoutService(): LoadoutServiceType {
     let loadouts: Loadout[] = [];
     if (version === 'v3.0') {
       const ids = data['loadouts-v3.0'];
-      loadouts = ids.map((id) => {
-        // Mark all the items as being in loadouts
-        data[id].items.forEach((item: LoadoutItem) => {
-          const itemFromStore = getStoresService(item.destinyVersion).getItemAcrossStores({
-            id: item.id,
-            hash: item.hash
-          });
-          if (itemFromStore) {
-            itemFromStore.isInLoadout = true;
-          }
-        });
-        return hydrate(data[id]);
-      });
+      loadouts = ids.map((id) => hydrate(data[id]));
     }
 
     const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
@@ -200,7 +190,7 @@ function LoadoutService(): LoadoutServiceType {
         return saveLoadouts(loadouts);
       })
       .then((loadouts) => {
-        $rootScope.$broadcast('dim-filter-invalidate');
+        $rootScope.$broadcast('dim-filter-invalidate-loadouts');
         $rootScope.$broadcast('dim-save-loadout', {
           loadout
         });
@@ -534,6 +524,25 @@ function LoadoutService(): LoadoutServiceType {
       destinyVersion: loadout.destinyVersion,
       items
     };
+  }
+
+  /**
+   * Get all item ids across all loadouts. Note that this is not restricted by platform,
+   * and thus assumes all item ids are unique.
+   */
+  async function getLoadoutItemIds(destinyVersion: number) {
+    const loadoutItemIds = new Set<string>();
+    const loadouts = await getLoadouts(true);
+    for (const loadout of loadouts) {
+      if (loadout.destinyVersion === destinyVersion) {
+        _.each(loadout.items, (items) => {
+          for (const item of items) {
+            loadoutItemIds.add(item.id);
+          }
+        });
+      }
+    }
+    return loadoutItemIds;
   }
 }
 

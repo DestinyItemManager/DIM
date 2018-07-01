@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import template from './search-filter.html';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
-import { searchFilters, buildSearchConfig } from './search-filters';
+import { searchFilters, buildSearchConfig, SearchFilters } from './search-filters';
 import filtersTemplate from '../search/filters.html';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
@@ -52,7 +52,7 @@ function SearchFilterCtrl(
     return vm.account.destinyVersion === 2 ? D2StoresService : D1StoresService;
   }
 
-  let filters;
+  let filters: SearchFilters;
   let searchConfig;
   let filteredItems: DimItem[] = [];
 
@@ -127,6 +127,15 @@ function SearchFilterCtrl(
 
   $scope.$on('dim-filter-invalidate', () => {
     filters.reset();
+    vm.filter();
+  });
+
+  $scope.$on('dim-filter-requery-loadouts', () => {
+    vm.filter();
+  });
+
+  $scope.$on('dim-filter-invalidate-loadouts', () => {
+    filters.resetLoadouts();
     vm.filter();
   });
 
