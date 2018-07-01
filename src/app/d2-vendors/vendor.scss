@@ -1,0 +1,48 @@
+// This inherits a lot of styles from ../vendors/vendors.scss
+@import '../../scss/variables.scss';
+@import '../vendors/vendors.scss';
+
+.d2-vendors {
+  padding: 0 1em;
+  .vendor-icon {
+    margin: 5px 5px 5px 0;
+  }
+}
+
+.vendor-featured {
+  .vendor-featured-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    h1 {
+      margin: 0;
+    }
+
+    img, .faction-icon {
+      position: relative;
+      height: 48px;
+      margin-right: 8px;
+    }
+    .faction-icon {
+      width: 48px;
+    }
+  }
+}
+
+.vendor-item {
+  .owned-icon {
+    z-index: 10;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    pointer-events: none;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.vendor-tile {
+  height: 54px;
+  width: 123px;
+}

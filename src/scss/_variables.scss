@@ -1,0 +1,31 @@
+$lightgray: rgba(245, 245, 245, 0.25);
+$orange: #E8A534;
+$blue: #68a0b7;
+
+// Elemental damage types
+$arc: #85c5ec;
+$solar: #f2721b;
+$void: #b184c5;
+
+// The color of XP bars
+$xp: #5EA16A;
+// Border for completed items/quests/bounties
+$gold: #f5dc56;
+
+$character-box-height: 46px;
+
+@mixin phone-portrait {
+  // This seems like a good breakpoint for portrait based on https://material.io/devices/
+  // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720
+  @media (max-width: 540px) {
+    @content;
+  }
+}
+
+$header-height: 44px;
+
+@mixin below-header {
+  top: $header-height;
+  top: calc(#{$header-height} + constant(safe-area-inset-top));
+  top: calc(#{$header-height} + env(safe-area-inset-top));
+}

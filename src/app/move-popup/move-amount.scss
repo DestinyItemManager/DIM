@@ -1,0 +1,143 @@
+
+
+.move-amount {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 10px 0;
+}
+
+.move-amount-slider {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.move-amount input {
+  margin-left: 10px;
+  width: 3em;
+}
+
+.move-amount-arrow {
+  font-size: 16px;
+  cursor: pointer;
+  color: gray;
+  margin: 0 4px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+  &:hover {
+    color: white;
+  }
+}
+
+.move-amount-popup {
+  .ngdialog-content {
+    width: 40em;
+    background-color: #222;
+    height: fit-content !important;
+  }
+  .ngdialog-inner-content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  h1 {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 14px;
+    padding-left: 10px !important;
+    font-size: 1.65em;
+  }
+  .item {
+    margin-right: .5em;
+  }
+  .buttons {
+    text-align: center;
+    margin-top: 1em;
+  }
+  button {
+    border: 1px solid #3e3e3e;
+    color: #e0e0e0;
+    background-color: #101010;
+    padding: 8px 16px;
+    font-size: 1.4em;
+    &:hover {
+      background-color: #444;
+      border-color: black;
+    }
+  }
+}
+
+/* rzslider */
+
+rzslider, .rzslider {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 4px;
+  top: -2px;
+  vertical-align: middle;
+  user-select: none;
+  span {
+    position: absolute;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .rz-base {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+  .rz-bar-wrapper {
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 32px;
+    padding-top: 16px;
+    margin-top: -16px;
+    box-sizing: border-box;
+    &.rz-draggable {
+      cursor: move;
+    }
+  }
+  .rz-bar {
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 4px;
+    background: gray;
+    border-radius: 2px;
+    &.rz-selection {
+      z-index: 2;
+      background: white;
+      border-radius: 2px;
+    }
+  }
+  .rz-pointer {
+    top: -7px;
+    z-index: 3;
+    width: 8px;
+    height: 8px;
+    cursor: pointer;
+    border: 5px solid white;
+    background-color: white;
+    border-radius: 50%;
+    &:focus {
+      outline: none;
+      background-color: #0db9f0;
+    }
+  }
+  .rz-bubble {
+    display: none;
+    &.rz-selection {
+      top: 8px;
+    }
+    &.rz-limit {
+      color: #55637d;
+    }
+  }
+}

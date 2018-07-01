@@ -1,0 +1,25 @@
+@import '../../scss/variables.scss';
+
+.menu {
+  position: relative;
+  .badge-new {
+    display: none;
+    margin: 0 !important;
+    position: absolute;
+    bottom: 0px;
+    right: -5px;
+  }
+  .upgrade {
+    display: none;
+    margin: 0 !important;
+    position: absolute;
+    bottom: -8px;
+    right: -10px;
+  }
+  .badge-new, .upgrade {
+    // TODO: bring this back for storage alerts? or badge the gear...
+    @include phone-portrait {
+      display: inline-block;
+    }
+  }
+}

@@ -1,0 +1,20 @@
+@import '../../../scss/variables.scss';
+
+.mode-popup {
+  @include below-header;
+  position: absolute;
+  display: block;
+  overflow: auto;
+  margin: 0;
+  padding: 15px;
+  min-width: 150px;
+  height: fit-content;
+  background-color: #222;
+  @include phone-portrait {
+    right: 0px;
+  }
+}
+
+.mode-label {
+  padding-right: 10px;
+}

@@ -1,0 +1,87 @@
+@import '../../scss/variables.scss';
+
+.account-select {
+  display: block;
+  color: white;
+  height: 100%;
+}
+
+.account {
+  display: block;
+  cursor: pointer;
+  line-height: 15px;
+  text-align: left;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+  padding-top: 6px;
+  padding-bottom: 4px;
+
+  .account-details {
+    font-size: 10px !important;
+    color: #AAA;
+  }
+
+  .account-name span {
+    margin: 0 !important;
+  }
+
+  &:focus, &:active {
+    outline: none;
+  }
+
+  &.selected-account {
+    margin: 0 0 0 2px;
+    padding-right: 22px;
+    border-bottom: 2px solid $orange;
+    height: 100%;
+    box-sizing: border-box;
+
+    &::after {
+      content: "▼";
+      position: absolute;
+      right: 7px;
+      top: 13px;
+      font-size: 9px;
+      color: #ccc;
+    }
+
+    &:hover, &:focus {
+      background-color: #3f3f3f;
+
+      &::after {
+        color: white;
+      }
+    }
+  }
+}
+
+.accounts-popup {
+  position: absolute;
+  display: block;
+  overflow: auto;
+  top: $header-height;
+  top: calc(#{$header-height} + constant(safe-area-inset-top));
+  top: calc(#{$header-height} + env(safe-area-inset-top));
+  right: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 150px;
+  height: fit-content;
+  background-color: #222;
+
+  .account, .log-out {
+    &:hover, &:focus {
+      background-color: #151515;
+    }
+  }
+
+  .log-out {
+    text-align: left;
+    padding-left: 8px;
+    vertical-align: middle;
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+}

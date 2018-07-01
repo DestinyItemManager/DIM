@@ -1,0 +1,86 @@
+@import "../../scss/pop-in.scss";
+
+#item-farming {
+  position: fixed;
+  backface-visibility: hidden;
+  bottom: 0;
+  background-color: rgba(34, 34, 34, 0.9);
+  @supports(backdrop-filter: blur(10px)) {
+    background-color: rgba(34, 34, 34, 0.6);
+    backdrop-filter: blur(10px);
+  }
+  width: 43rem;
+  padding: .5rem 1rem;
+  color: #e0e0e0;
+  align-items: center;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+
+  button {
+    color: white;
+    background-color: rgba(128, 128, 128, .4);
+    border: none;
+    padding: .5rem 1rem;
+    text-align: center;
+    font-size: 1.5em;
+    margin-left: 1rem;
+    transition: .3s background-color;
+    &:hover, &:active {
+      background-color: rgba(232, 165, 52, .8);
+    }
+  }
+
+  .item-details {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    span {
+      flex: 1;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
+
+  .item {
+    float: left;
+  }
+
+  .engram-icon {
+    position: relative;
+    margin-right: 1em;
+  }
+
+  .item-count {
+    font-size: 16px;
+    position: absolute;
+    width: 100%;
+    height: 94%;
+    font-weight: bold;
+    color: rgb(232, 165, 52);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+
+  h1 {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  p {
+    margin: .25em 0;
+  }
+
+  @include pop-in;
+}

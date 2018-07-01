@@ -1,0 +1,33 @@
+<div class="move-popup"
+     item-popup
+     item-popup-boundary-class="store-bounds"
+     dim-click-anywhere-but-here="closeThisDialog()">
+  <dim-move-item-properties item="vm.item"
+       compare-item="vm.compareItem"></dim-move-item-properties>
+  <div class="item-details more-item-details"
+       ng-if="vm.item.equipment && vm.compareItems.length">
+    <div ng-i18next="Vendors.Compare"></div>
+    <div class="compare-items">
+      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index"
+                       item-data="ownedItem"
+                       ng-click="vm.setCompareItem(ownedItem)"
+                       ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>
+    </div>
+  </div>
+  <div class="item-description"
+       ng-if="!vm.item.equipment && vm.compareItemCount"
+       ng-i18next="[i18next]({ num: vm.compareItemCount })Compare.ItemCount"></div>
+  <div class="item-details"
+       ng-if="vm.saleItem.failureStrings">{{ vm.saleItem.failureStrings }}</div>
+  <div class="item-details"
+       ng-if="vm.unlockStores.length">
+    <div ng-i18next="Vendors.Available"></div>
+    <div class="unlocked-character"
+         ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">
+      <div class="emblem"
+           ng-style="{ 'background-image': 'url(' + store.icon + ')' }"></div>
+      {{ store.name }}
+    </div>
+  </div>
+  <div class="arrow" ng-class="'is-{{vm.item.dmg}}'"></div>
+</div>

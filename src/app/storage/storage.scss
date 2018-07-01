@@ -1,0 +1,53 @@
+@import "../../scss/variables.scss";
+
+.storage {
+  h2 {
+    margin: 0 0 12px 0;
+  }
+
+  .storage-status {
+    font-size: 12px;
+    color: #DDD;
+
+    &.enabled {
+      color: #20ea42;
+    }
+  }
+
+  p {
+    margin: 8px 0;
+  }
+
+  .storage-adapter {
+    background: #353535;
+    margin: 10px 0 0 0;
+    padding: 8px;
+  }
+
+  .dim-button {
+    //font-size: 14px;
+  }
+
+  ul {
+    margin: 8px 0;
+    padding-left: 2em;
+  }
+
+  .storage-guage {
+    flex: 1;
+    background-color: rgba(0, 0, 0, .6);
+    position: relative;
+    min-height: 17px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: white;
+    div {
+      background-color: #6dcc66;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+    }
+  }
+}

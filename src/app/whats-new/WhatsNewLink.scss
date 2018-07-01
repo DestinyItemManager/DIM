@@ -1,0 +1,17 @@
+@import '../../scss/variables.scss';
+
+.upgrade {
+  color: $orange !important;
+  font-size: 18px !important;
+  margin-right: 4px;
+}
+
+.badge-new {
+  display: inline-block;
+  background-color: $orange;
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+  margin: 0 4px 0 0 !important;
+  vertical-align: middle;
+}

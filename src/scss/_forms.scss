@@ -1,0 +1,62 @@
+
+textarea {
+  width: 100%;
+  height: 30px;
+  background-color: #333;
+  padding: 4px 8px;
+  border: none;
+  outline: none;
+  color: white;
+  box-sizing: border-box;
+}
+textarea.textarea-error {
+  margin: 5px 10px;
+  white-space: pre-wrap;
+  color: #cc6666;
+  width: 100%;
+  text-align: right;
+}
+
+select {
+  background: gray;
+  border: none;
+  color: white;
+}
+
+.dim-button {
+  cursor: pointer;
+  background-color: gray;
+  padding: 4px 10px;
+  display: inline-block;
+  border: none;
+  color: white;
+  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, .25);
+  border-radius: 2px;
+  &:hover {
+    background-color: $orange;
+  }
+  &:active, &.selected {
+    box-shadow: none;
+    background-color: $orange;
+  }
+  input {
+    display: none;
+  }
+}
+
+.dim-input {
+  padding-left: 5px;
+  height: 22px;
+  background: rgb(46, 46, 46);
+  border: none;
+  border-bottom: 1px solid gray;
+  color: white;
+
+  &:hover, &:focus {
+    background: transparent;
+    outline: none;
+    border-bottom: 1px solid $orange;
+  }
+}

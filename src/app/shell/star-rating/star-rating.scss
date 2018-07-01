@@ -1,0 +1,22 @@
+star-rating {
+  .fa-star {
+    padding: 1px;
+    color: #ddd;
+    display: inline-block;
+    cursor: pointer;
+
+    &.filled {
+      color: gold;
+    }
+    &.hovered {
+      color: orange;
+    }
+    &.read-only {
+      cursor: default;
+      color: #ddd;
+    }
+    &.read-only.filled {
+      color: gold;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+<div>
+  <h1>
+    <dim-simple-item item-data="vm.item"></dim-simple-item>
+    <span ng-i18next="[i18next]({ itemname: vm.item.name })StoreBucket.HowMuch"></span>
+  </h1>
+  <div class="ngdialog-inner-content">
+    <form ng-submit="vm.finish()">
+      <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>
+    </form>
+    <div class="buttons">
+      <button ng-click="vm.finish()"><span ng-i18next="StoreBucket.Move"></span></button>
+      <button ng-click="vm.stacksWorthClick()" ng-show="vm.stacksWorth > 0"><span ng-i18next="[i18next]({ amount : vm.stacksWorth })StoreBucket.FillStack"></span></button>
+    </div>
+  </div>
+</div>

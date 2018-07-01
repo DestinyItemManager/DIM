@@ -1,0 +1,379 @@
+/* Local Variables:     */
+/* css-indent-offset: 2 */
+/* End:                 */
+
+@import "variables.scss";
+
+:root {
+  --item-size: 44px;
+  --num-characters: 3;
+  --character-columns: 3;
+  --vault-max-columns: 999;
+  --color-filter: '';
+}
+
+// iPad - use smaller items to fit them on screen.
+@media (max-width: 1025px) {
+  :root {
+    --item-size: 38px;
+  }
+}
+
+@include phone-portrait {
+  :root {
+    --item-size: calc((100vw - 80px - 8px * var(--character-columns)) / (var(--character-columns) + 1)) !important;
+    --vault-max-columns: 999 !important;
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.notloaded {
+  opacity: 0;
+  margin: 2em;
+  animation: 1s linear 3s forwards fade-in;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: normal;
+}
+
+div:focus, span:focus {
+  outline-width: 0;
+}
+
+#DTRTooltip {
+  display: none;
+}
+
+@keyframes browser-warning {
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
+#browser-warning {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #990000;
+  padding: 8px;
+  text-align: center;
+  &.hidden {
+    display: none;
+  }
+  animation: 1s linear 10s forwards browser-warning;
+}
+
+/**
+  Misc DIM page
+ **/
+.dim-page { // non-inventory page settings
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.currency img {
+  vertical-align: text-bottom;
+  height: 17px;
+  width: 17px;
+}
+
+dt {
+  font-style: italic;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+dd {
+  margin: 3px 20px;
+}
+
+a {
+  color: white;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+h2, h3 {
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+
+body {
+  overflow-y: auto;
+  margin: 0 auto;
+  padding-top: 44px;
+  padding-top: calc(44px + constant(safe-area-inset-top));
+  padding-top: calc(44px + env(safe-area-inset-top));
+  background-color: #434444;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  font-size:12px;
+  filter: var(--color-filter);
+  > div:first-child {
+    padding-top: 10px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+
+  &:horizontal{
+    height:10px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(228, 228, 228, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E4E4E4;
+  border-radius: 3px;
+}
+
+#system {
+  outline: none;
+  background-color: #fafafa;
+  float: right;
+  cursor: pointer;
+  option {
+    cursor: pointer;
+  }
+}
+
+input, select, option {
+  font-family: 'Open Sans', sans-serif;
+}
+
+input[type="search"] {
+  -webkit-appearance: textfield;
+}
+
+img {
+  &.elemental {
+    width: 16px !important;
+    vertical-align: middle;
+    margin-right: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  &.kinetic {
+    background-color: black;
+  }
+  &.arc {
+    background-color: $arc;
+  }
+  &.solar {
+    background-color: $solar;
+  }
+  &.void {
+    background-color: $void;
+  }
+}
+
+.title {
+  flex: 1;
+  padding: 0 16px;
+  background-color: #353535;
+  color: white;
+  min-height: 34px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    background-color: #2f2f2f;
+  }
+
+  span[role="button"] {
+    cursor: pointer;
+    outline: none;
+  }
+  .bucket-count {
+    float: right;
+  }
+  .icon {
+    width: 30px;
+  }
+  .collapse {
+    margin-left: -7px;
+  }
+}
+
+
+.drag-help {
+  font-size: 1.5em;
+  position: fixed;
+  backface-visibility: hidden;
+  bottom: 2em;
+  transition: transform .5s, opacity .5s, background-color .1s;
+  background-color: rgba(0, 0, 0, 0.8);
+  left: calc(50% - 15em);
+  width: 30em;
+  right: 0;
+  border-radius: .5em;
+  text-align: center;
+  padding: .5em .5em;
+  color: #e0e0e0;
+}
+
+.drag-help-hidden {
+  transform: translateY(5em);
+  opacity: 0;
+}
+
+.drag-help {
+  &.drag-shift-activated, &.drag-dwell-activated {
+    background-color: rgba(0, 60, 0, 0.8);
+  }
+}
+
+#content {
+  margin: 8px auto;
+  user-select: none;
+  padding-left: constant(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.bucket-padding {
+  padding: 0 8px;
+}
+
+.store-bounds {
+  position: fixed;
+  backface-visibility: hidden;
+  pointer-events: none;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  top: 124px;
+}
+
+.collapse {
+  cursor: pointer;
+  font-size: 14px;
+  color: $lightgray;
+  &:hover, .collapse-handle:hover & {
+    color: $orange;
+  }
+}
+
+.collapse-handle {
+  cursor: pointer;
+}
+
+.ng-hide {
+  display: none;
+}
+
+h2, h3, h4 {
+  font-weight: 400;
+}
+
+.drag-enter {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.drag-hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.on-dragging .ngdialog {
+  display: none;
+}
+
+.ng-hide {
+  display: none !important;
+}
+
+.close {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-image: url('../images/close.png');
+  background-size: 16px 16px;
+  background-color: rgba(100, 100, 100, 0.6);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.sticky-header-background {
+  left: 0;
+  right: 0;
+  top: $header-height;
+  background-color: #434444;
+  height: 82px;
+  position: fixed;
+  backface-visibility: hidden;
+  z-index: 4;
+
+  &.something-is-sticky {
+    box-shadow: 0 1px 6px 0px #222;
+  }
+}
+
+.fa.fa-circle.trials {
+  font-size: 18px;
+  margin-right: 3px;
+  color: #b12e21;
+  opacity: 1;
+  &.wins {
+    color: #cfd92b;
+  }
+  &.incomplete {
+    opacity: .35;
+  }
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.support h2 {
+  margin-top: 1em;
+  margin-bottom: .25em;
+}
+
+.backers {
+  a {
+    margin-right: 1em;
+  }
+  img {
+    border-radius: 50%;
+  }
+}
+
+.fineprint {
+  font-size: .85em;
+  color: #aaa;
+}
+
+.stylizedAnchor {
+  text-decoration: none;
+}
+
+.warning-block {
+  color: white;
+  background: #bd362f;
+  padding: .5em 1em;
+  display: inline-block;
+}

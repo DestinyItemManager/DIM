@@ -1,0 +1,307 @@
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Move Popup
+//
+// The popup displaying info and actions for an single item.
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@import '../../scss/variables.scss';
+
+.move-popup-dialog {
+  bottom: initial !important;
+
+  .arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    border-color: #222;
+  }
+
+  &[x-placement^="top"] .arrow {
+    border-width: 5px 5px 0 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  &[x-placement^="bottom"] .arrow {
+    border-width: 0 5px 5px 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    top: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+
+    border-bottom-color: white;
+
+    &.is-arc {
+      border-bottom-color: $arc;
+    }
+    &.is-solar {
+      border-bottom-color: $solar;
+    }
+    &.is-void {
+      border-bottom-color: $void;
+    }
+  }
+  &[x-placement^="right"] .arrow {
+    border-width: 5px 5px 5px 0;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    left: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+  }
+  &[x-placement^="left"] .arrow {
+    border-width: 5px 0 5px 5px;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    right: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+  }
+  textarea {
+    resize: vertical;
+  }
+}
+
+.move-popup-tabs {
+  display: flex;
+  justify-content: space-around;
+}
+.move-popup-tab {
+  opacity: .8;
+  padding: 5px 0 3px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid transparent;
+  &.selected {
+    opacity: 1;
+    border-bottom: 2px solid $orange;
+  }
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.move-popup {
+  background-color: #222;
+  cursor: default;
+  min-height: 77px;
+  width: 320px;
+  height: fit-content;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
+
+  .interaction {
+    display: flex;
+    flex-direction: row;
+  }
+  .bounty-description {
+    padding: 5px;
+    display: inline-block;
+  }
+  .infuse-perk {
+    border-radius: 50%;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #4887ba;
+    &.Weapons {
+      background-image: url('../../images/Weapons.png');
+    }
+    &.Armor {
+      background-image: url('../../images/Armor.png');
+    }
+    &.destiny2 {
+      background-size: 100%;
+      border-radius: 0;
+      background-color: transparent;
+      background-image: url('../../images/d2infuse.png');
+    }
+  }
+  .interaction {
+    margin: 0 6px;
+  }
+}
+
+.move-button {
+  &.move-vault {
+    background-image: url('../../images/vault.png');
+  }
+  &.move-distribute {
+    background-image: url('../../images/arrows-out.png');
+  }
+  &.move-consolidate {
+    background-image: url('../../images/arrows-in.png');
+  }
+}
+
+$item-header-spacing: 5px;
+
+.item-header {
+  background-color: #fff;
+  color: #000;
+  overflow: hidden;
+  padding: $item-header-spacing;
+
+  star-rating {
+    .read-only {
+      color: #777;
+    }
+    .read-only.filled {
+      color: #000;
+    }
+  }
+
+  .item-title-link {
+    color: #000;
+    letter-spacing: 1px;
+  }
+
+  .item-review-average {
+    margin-left: 1rem;
+  }
+
+  .item-subtitle, .item-title-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .item-type-info, .item-title-link {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .fa {
+    cursor: pointer;
+  }
+
+  &.is-arc {
+    background-color: $arc;
+  }
+  &.is-solar {
+    background-color: $solar;
+  }
+  &.is-void {
+    background-color: $void;
+  }
+
+  .item-title {
+    color: #000;
+    font-size: 1rem;
+  }
+  .icon {
+    display: inline-block;
+    text-align: center;
+    width: 1rem;
+    margin-right: 2px;
+  }
+  .lock {
+    vertical-align: baseline;
+    font-size: 1rem;
+
+    &.is-locking {
+      opacity: .5;
+    }
+  }
+  .element {
+    display: inline-block;
+    filter: brightness(0%);
+    height: 1rem;
+    vertical-align: top;
+    width: 1rem;
+    background-size: contain;
+    &.void {
+      background-image: url('../../images/void.png');
+    }
+    &.arc {
+      background-image: url('../../images/arc.png');
+    }
+    &.solar {
+      background-image: url('../../images/solar.png');
+    }
+  }
+  .info {
+    font-size: 1.5em;
+  }
+  .compare-button {
+    margin: 0 6px;
+  }
+}
+
+/**
+ * Move Popup - Details
+ */
+
+.item-details {
+  margin: 10px;
+}
+
+.item-description {
+  margin: 5px 10px;
+  white-space: pre-wrap;
+}
+
+.item-lore {
+  margin: 5px 10px;
+  img {
+    vertical-align: text-bottom;
+  }
+}
+
+.masterwork-progress {
+  margin: 4px 0px;
+  padding: 3px 10px 5px;
+  background: #333;
+
+  strong {
+    color: orange;
+  }
+
+  img {
+    width: 16px;
+    height: 16px;
+    margin-bottom: -4px;
+  }
+}
+
+.item-perks {
+  margin: 5px 10px;
+}
+
+.item-perk {
+  display: flex;
+  flex-direction: row;
+
+  img {
+    height: 48px;
+    width: 48px;
+  }
+}
+
+.item-perk-info {
+  flex: 1;
+  margin-left: 8px;
+}
+.item-perk-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+.item-perk-description {
+
+}

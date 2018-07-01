@@ -1,0 +1,12 @@
+<div class="loadout-builder-select-box dropdown-option"
+     ng-repeat="(idx, char) in vm.activeCharacters"
+     ng-show="idx !== vm.selectedCharacter"
+     ng-click="vm.onSelected({idx: idx})"
+     ng-style="{ 'background-image': 'url(' + char.background + ')' }">
+  <div class="emblem"
+       ng-style="{ 'background-image': 'url(' + char.icon + ')' }"></div>
+  <div class="class">{{ char.className }}</div>
+  <div class="race-gender">{{:: char.genderRace }}</div>
+  <div class="level"><span ng-i18next="Level"></span> {{ char.level }}</div>
+  <div class="level powerLevel">{{ char.powerLevel }}</div>
+</div>

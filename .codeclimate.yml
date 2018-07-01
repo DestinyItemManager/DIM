@@ -1,0 +1,15 @@
+engines:
+  duplication:
+    config:
+      languages:
+        javascript:
+          mass_threshold: 170
+        php: ~
+    enabled: true
+  fixme:
+    enabled: true
+exclude_paths:
+  - "**/dist"
+ratings:
+  paths:
+    - "**.js"

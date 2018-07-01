@@ -1,0 +1,3 @@
+--ignore-directory=is:api-manifest
+--ignore-directory=is:build
+--ignore-directory=is:dist

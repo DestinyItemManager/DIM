@@ -1,0 +1,9 @@
+scss:
+  enabled: false
+javascript:
+  enabled: false
+ruby:
+  enabled: false
+tslint:
+  config_file: tslint.json
+fail_on_violations: true

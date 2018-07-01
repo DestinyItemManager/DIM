@@ -1,0 +1,72 @@
+@import '../../scss/variables.scss';
+
+.progress-page {
+  margin: 0 auto;
+
+  .progress-characters {
+    display: flex;
+    margin-top: 12px;
+
+    .character {
+      height: auto;
+      width: auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .character-box {
+      flex: 1;
+      cursor: default;
+      border-bottom: none;
+    }
+
+    &:last-child .character-box {
+      margin-right: 0;
+    }
+  }
+
+  .small-icon {
+    height: 26px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .progress-for-character {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 12px;
+    max-width: 276px;
+
+    @include phone-portrait {
+      max-width: none;
+    }
+  }
+
+  .profile-content {
+    display: flex;
+    flex-direction: row;
+
+    .section {
+      flex: 1;
+    }
+
+    @include phone-portrait {
+      flex-direction: column;
+    }
+  }
+
+  .progress-row {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  hr {
+    border: none;
+    border-bottom: 1px solid #666;
+    margin: 0 0 24px 0;
+  }
+}

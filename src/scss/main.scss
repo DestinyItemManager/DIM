@@ -1,0 +1,17 @@
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DIM Main stylesheet
+//
+// The main stylesheet for all of the styles!
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@import 'variables';
+@import 'forms';
+
+@import 'style';
+@import 'ngdialog';
+@import 'debug';
+@import 'item-discussion';
+@import 'toast';
+
+// Load stylesheets from external dependencies from node_modules
+@import '~components-font-awesome/css/font-awesome.css';
+@import '~angular-hotkeys/build/hotkeys.css'

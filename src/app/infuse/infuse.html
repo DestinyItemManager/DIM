@@ -1,0 +1,80 @@
+<div class="infuseDialog" dim-click-anywhere-but-here="vm.closeDialog()">
+  <h1 ng-i18next="Infusion.Infusion"></h1>
+  <div class="ngdialog-inner-content">
+    <div class="infuseHeader">
+
+      <div class="infuseSourceItemInfo">
+        <dim-simple-item item-data="vm.query"></dim-simple-item>
+
+        <div class="infuseSourceDetailsRow">
+          <div><strong>{{ vm.query.name }}</strong></div>
+          <div>{{ vm.query.destinyVersion === 1 ? vm.query.type : vm.query.typeName }}</div>
+        </div>
+
+        <div class="infuseSourceDetailsRow">
+          <div>{{ vm.stat.statName }}</div>
+          <div class="bigValue">{{ vm.query.primStat.value }}</div>
+        </div>
+      </div>
+
+      <div class="infuseControls">
+        <label><input class="controls" type="checkbox" id="infuse-all" ng-model="vm.getAllItems" ng-change="vm.getItems()"><span ng-i18next="Infusion.ShowItems"></span></label>
+        <label><input class="controls" type="checkbox" id="infuse-locked" ng-model="vm.showLockedItems" ng-change="vm.getItems()"><span ng-i18next="Infusion.LockedItems"></span></label>
+      </div>
+
+    </div>
+
+    <div class="gearsContainer grey infuseSelector">
+      <div class="infuseTargets">
+        <span ng-if="!vm.query.infusable"><strong ng-i18next="Infusion.Uninfusable"></strong></span>
+        <span ng-if="vm.query.infusable && !vm.targetItems.length"><strong ng-i18next="Infusion.NoItems"></strong></span>
+        <span ng-if="vm.targetItems.length" ng-i18next="[i18next]({name: vm.query.name})Infusion.InfuseTarget"></span>
+        <div class="itemGrid">
+          <div ng-repeat="value in vm.targetItems track by value.index">
+            <dim-simple-item ng-class="{ 'infuse-selected': (value.id == vm.target.id) }" item-data="value" ng-click="vm.setSourceAndTarget(vm.query, value, $event)"></dim-simple-item>
+          </div>
+        </div>
+      </div>
+      <div class="infuseSeparator">
+      </div>
+      <div class="infuseSources">
+        <span ng-if="!vm.sourceItems.length"><strong ng-i18next="Infusion.NoItems"></strong></span>
+        <span ng-if="vm.sourceItems.length" ng-i18next="[i18next]({name: vm.query.name})Infusion.InfuseSource"></span>
+        <div class="itemGrid">
+          <div ng-repeat="value in vm.sourceItems track by value.index">
+            <dim-simple-item ng-class="{ 'infuse-selected': (value.id == vm.source.id) }" item-data="value" ng-click="vm.setSourceAndTarget(value, vm.query, $event)"></dim-simple-item>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gearsContainer black">
+      <div ng-if="vm.infused != 0">
+        <div class="infusionPlan">
+          <div class="infusionEquation">
+            <dim-simple-item class="infusedItem" item-data="vm.source"></dim-simple-item>
+            <div class="icon"><i class="fa fa-plus" aria-hidden="true"></i></div>
+            <dim-simple-item class="infusedItem" item-data="vm.target"></dim-simple-item>
+            <div class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+            <dim-simple-item class="infusedItem" item-data="vm.result"></dim-simple-item>
+          </div>
+          <div class="result">
+            <div>
+              <div ng-i18next="[i18next]({name: vm.source.name})Infusion.BringGear"></div>
+              <span class="bigValue">{{ vm.infused }}</span>
+              <span class="green">(+ {{ vm.infused - vm.source.primStat.value }})</span>
+            </div>
+            <div ng-if="vm.query.destinyVersion === 1">
+              <span> 3 <span class="currency"><img alt="{{ ::vm.items[2534352370].itemName }}" title="{{ ::vm.items[2534352370].itemName }}" ng-src="{{ vm.items[2534352370].icon | bungieIcon }}"></span></span>
+              <span ng-if="vm.source.isExotic"> + 1 <span class="currency"><img alt="{{ ::vm.items[452597397].itemName }}" title="{{ ::vm.items[452597397].itemName }}" ng-src="{{ vm.items[452597397].icon | bungieIcon }}"></span></span>
+              <span> + 250 <span class="currency"><img alt="{{ ::vm.items[3159615086].itemName }}" title="{{ ::vm.items[3159615086].itemName }}" ng-src="{{ vm.items[3159615086].icon | bungieIcon }}"></span></span>
+              <span> + {{ vm.wildcardMaterialCost | number }} <span class="currency"><img alt="{{ ::vm.items[vm.wildcardMaterialHash].itemName }}" title="{{::vm.items[vm.wildcardMaterialHash].itemName }}" ng-src="{{ vm.items[vm.wildcardMaterialHash].icon | bungieIcon }}"></span></span>
+            </div>
+          </div>
+        </div>
+        <button class="dim-button infuse-btn" ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()" ng-i18next="Infusion.TransferItems"></button>
+      </div>
+    </div>
+
+  </div>
+</div>

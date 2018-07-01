@@ -1,0 +1,47 @@
+{
+   "itemHash":{
+      "1458765388":{
+         "bucketHash":"1469714392",
+         "icon":"~/data/img/celery.png",
+         "classType":3,
+         "tierType":3,
+         "i18n":{
+            "en":{
+               "itemName":"Piece of Celery",
+               "itemDescription":"It's slightly wilted.",
+               "itemTypeName":"Sweets"
+            },
+            "de":{
+               "itemName":"Stück Sellerie",
+               "itemDescription":"Es ist leicht verwelkt.",
+               "itemTypeName":"Süßigkeiten"
+            },
+            "fr":{
+               "itemName":"Branche de Céleri",
+               "itemDescription":"Elle est flétrie",
+               "itemTypeName":"Bonbons"
+            },
+            "es":{
+               "itemName":"Tronco de Apio",
+               "itemDescription":"Se ha marchitado un poco.",
+               "itemTypeName":"Golosinas"
+            },
+            "it":{
+               "itemName":"Gambo di Sedano",
+               "itemDescription":"É un po' appassito",
+               "itemTypeName":"Dolci"
+            },
+            "ja":{
+               "itemName":"Piece of Celery",
+               "itemDescription":"It's slightly wilted.",
+               "itemTypeName":"Sweets"
+            },
+            "pt-br":{
+               "itemName":"Talo de Salsão",
+               "itemDescription":"Está um pouco murcho",
+               "itemTypeName":"Doces"
+            }
+         }
+      }
+   }
+}

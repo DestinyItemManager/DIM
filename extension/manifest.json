@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Destiny Item Manager Shortcut",
+  "version": "10.0.2",
+  "description": "A link to the DIM website which provides a robust interface to manage items in Destiny.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "short_name": "DIM",
+  "background": {
+    "scripts": [
+      "main.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": {
+      "19": "icon19.png",
+      "38": "icon38.png"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+dist/
+extension-dist/
+.settings/
+.idea/
+node_modules/
+typings/
+*.DS_Store
+config/dim_travis.rsa
+.awcache
+cert.pem
+key.pem
+.brackets.json
+.npmrc
+npm-debug.log
+.nvmrc

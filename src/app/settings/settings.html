@@ -1,0 +1,174 @@
+<div class="dim-page dim-static-page settings">
+  <h1 ng-i18next="Settings.Settings"></h1>
+  <form>
+
+    <h2 ng-i18next="Settings.General"></h2>
+
+    <section>
+      <div class="setting">
+        <div class="horizontal">
+          <label for="language" ng-i18next="Settings.Language"></label>
+          <select id="language" ng-model="vm.settings.language" ng-change="vm.changeLanguage()" ng-options="code as name for (code, name) in vm.languageOptions" required></select>
+        </div>
+        <div ng-if="vm.initialLanguage != vm.settings.language">
+          <button class="dim-button" ng-click="vm.reloadDim()"><i class="fa fa-refresh"></i> <span ng-i18next="Settings.ReloadDIM"></span></button>
+        </div>
+      </div>
+
+      <div class="setting horizontal" ng-if="vm.featureFlags.colorA11y">
+        <label for="color" ng-i18next="Settings.ColorA11y"></label>
+        <select id="color" ng-model="vm.settings.colorA11y" ng-options="name as name for name in vm.colorA11yOptions" required></select>
+      </div>
+
+      <div class="setting">
+          <button class="dim-button" ng-click="vm.resetHiddenInfos()" ng-i18next="Settings.DIMPopupsReset"></button>
+      </div>
+    </section>
+
+    <h2 ng-i18next="Settings.Items"></h2>
+
+    <section>
+      <div class="examples">
+          <dim-store-item item-data="vm.fakeWeapon"></dim-store-item>
+      </div>
+
+      <div class="setting horizontal itemSize" ng-if="vm.supportsCssVar && !vm.isPhonePortrait">
+        <label for="itemSize" ng-i18next="Settings.SizeItem"></label>
+        <input ng-model="vm.settings.itemSize" type="range" min="38" max="66" />
+        <button class="dim-button" ng-click="vm.resetItemSize()" ng-i18next="Settings.ResetToDefault" />
+      </div>
+
+      <div class="setting horizontal">
+        <label for="details" ng-i18next="Settings.AlwaysShowDetails"></label>
+        <input type="checkbox" id="details" ng-model="vm.settings.itemDetails"/>
+      </div>
+
+      <div class="setting horizontal">
+        <label for="showNewItems" ng-i18next="Settings.ShowOverlay"></label>
+        <input type="checkbox" id="showNewItems" ng-model="vm.settings.showNewItems"/>
+      </div>
+
+      <div class="setting horizontal" ng-if="vm.settings.showNewItems">
+        <label for="showNewAnimation" ng-i18next="[title]Settings.ShowAnimationsHelp;Settings.ShowAnimations"></label>
+        <input type="checkbox" id="showNewAnimation" ng-model="vm.settings.showNewAnimation"/>
+      </div>
+
+      <div class="setting horizontal">
+        <label for="showElements" ng-i18next="Settings.ShowElemental"></label>
+        <input type="checkbox" id="showElements" ng-model="vm.settings.showElements"/>
+      </div>
+
+      <div class="setting">
+        <label for="itemSort" ng-i18next="Settings.SetSort"></label>
+
+        <div class="radioOptions">
+          <label ng-repeat="(value, i18nkey) in vm.itemSortPresets track by value">
+            <input type="radio" ng-model="vm.settings.itemSort" value="{{value}}">
+            <span ng-i18next="{{i18nkey}}"></span>
+          </label>
+        </div>
+        <sort-order-editor ng-if="vm.settings.itemSort == 'custom'" order="vm.itemSortCustom" on-sort-order-changed="vm.itemSortOrderChanged"></sort-order-editor>
+        <div class="fineprint" ng-i18next="Settings.DontForgetDupes"></div>
+      </div>
+    </section>
+
+    <h2 ng-i18next="Settings.Ratings"></h2>
+
+    <section>
+      <div class="examples">
+        <dim-store-item item-data="vm.fakeWeapon"></dim-store-item>
+        <dim-store-item item-data="vm.fakeArmor"></dim-store-item>
+      </div>
+
+      <div class="setting horizontal">
+        <label for="itemQuality" ng-i18next="Settings.EnableAdvancedStats"></label>
+        <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality"/>
+      </div>
+
+      <div class="setting horizontal" ng-if="::vm.featureFlags.reviewsEnabled">
+        <label for="showReviews" ng-i18next="Settings.ShowReviews"></label>
+        <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md" target="_blank" rel="noopener noreferrer"></a>
+        <input type="checkbox" id="showReviews" ng-model="vm.settings.showReviews"/>
+      </div>
+
+      <div class="setting" ng-if="::vm.featureFlags.reviewsEnabled">
+        <div class="horizontal">
+          <label for="allowIdPostToDtr" ng-i18next="Settings.AllowIdPostToDtr"></label>
+          <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md" target="_blank" rel="noopener noreferrer"></a>
+          <input type="checkbox" id="allowIdPostToDtr" ng-model="vm.settings.allowIdPostToDtr"/>
+        </div>
+        <div class="fineprint" ng-i18next="Settings.AllowIdPostToDtrLine2"></div>
+      </div>
+
+      <div class="setting horizontal" ng-if="::vm.featureFlags.reviewsEnabled || vm.settings.allowIdPostToDtr">
+        <label for="reviewsPlatformSelection" ng-i18next="Settings.ReviewsPlatformSelection"></label>
+        <select id="reviewsPlatformSelection"
+          ng-model="vm.settings.reviewsPlatformSelection"
+          ng-options="::code as name for (code, name) in vm.reviewsPlatformOptions"
+          ng-change="vm.saveAndReloadReviews()">
+        </select>
+      </div>
+
+      <div class="setting horizontal" ng-if="::vm.featureFlags.reviewsEnabled || vm.settings.allowIdPostToDtr">
+        <label for="reviewsModeSelection" ng-i18next="Settings.ReviewsModeSelection"></label>
+        <select id="reviewsModeSelection"
+          ng-model="vm.settings.reviewsModeSelection"
+          ng-options="::reviewModeOption.mode.toString() as reviewModeOption.description for reviewModeOption in vm.reviewModeOptions"
+          ng-change="vm.saveAndReloadReviews()">
+        </select>
+      </div>
+    </section>
+
+    <h2 ng-i18next="Settings.Inventory"></h2>
+
+    <section>
+      <div class="setting">
+        <label ng-i18next="Settings.CharacterOrder"></label>
+        <div class="radioOptions">
+          <label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecent">
+            <span ng-i18next="Settings.CharacterOrderRecent"></span>
+          </label>
+          <label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecentReverse">
+            <span ng-i18next="Settings.CharacterOrderReversed"></span>
+          </label>
+          <label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="fixed">
+            <span ng-i18next="Settings.CharacterOrderFixed"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting horizontal" ng-if="vm.supportsCssVar && !vm.isPhonePortrait">
+        <label for="charCol" ng-i18next="Settings.InventoryColumns"></label>
+        <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required></select>
+      </div>
+
+      <div class="setting" ng-if="vm.supportsCssVar && vm.isPhonePortrait">
+        <div class="horizontal">
+          <label for="charColMobile" ng-i18next="Settings.InventoryColumnsMobile"></label>
+          <select id="charColMobile" ng-model="vm.settings.charColMobile" ng-options="option.id as option.name for option in vm.charColOptions" required></select>
+        </div>
+        <div class="fineprint" ng-i18next="Settings.InventoryColumnsMobileLine2"></div>
+      </div>
+
+      <div class="setting horizontal" ng-if="vm.supportsCssVar && !vm.isPhonePortrait">
+          <label for="vaultCol" ng-i18next="Settings.VaultColumns"></label>
+          <select id="vaultCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
+        </div>
+    </section>
+
+    <storage></storage>
+
+    <h2 ng-i18next="Settings.Data"></h2>
+
+    <section>
+        <div class="setting horizontal">
+          <label for="spreadsheetLinks" ng-i18next="[title]Settings.ExportSSHelp;Settings.ExportSS"></label>
+          <button class="dim-button" ng-click="vm.downloadWeaponCsv()" ng-disabled="vm.loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span ng-i18next="Bucket.Weapons"></span></button>
+          <button class="dim-button" ng-click="vm.downloadArmorCsv()" ng-disabled="vm.loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span ng-i18next="Bucket.Armor"></span></button>
+        </div>
+    </section>
+  </form>
+</div>
