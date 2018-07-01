@@ -34,7 +34,7 @@ export default function Catalysts({
           <VendorItemComponent
             key={catalyst.itemHash}
             defs={defs}
-            item={VendorItem.forCatalyst(defs, catalyst.attachedItemHash, catalyst.itemHash, catalyst.objectives, catalyst.canInsert)}
+            item={VendorItem.forCatalyst(defs, catalyst.attachedItemHash, catalyst.itemHash, catalyst.objectives, catalyst.canInsert, catalyst.enableFailReasons)}
             owned={false}
           />
         )}
@@ -49,13 +49,14 @@ interface CatalystInfo {
   itemHash: number;
   objectives: DestinyObjectiveProgress[];
   canInsert: boolean;
+  enableFailReasons: string[];
 }
 
 function getCatalysts(
   defs: D2ManifestDefinitions,
   profileResponse: DestinyProfileResponse
 ): CatalystInfo[] {
-  const plugsWithObjectives = {};
+  const plugsWithObjectives: { [id: number]: CatalystInfo } = {};
   _.each(profileResponse.itemComponents.sockets.data, (sockets, instanceHash) => {
     for (const socket of sockets.sockets) {
       if (socket.reusablePlugs) {
@@ -75,7 +76,8 @@ function getCatalysts(
                 attachedItemHash: itemHash,
                 itemHash: reusablePlug.plugItemHash,
                 objectives: reusablePlug.plugObjectives,
-                canInsert: reusablePlug.canInsert
+                canInsert: reusablePlug.canInsert,
+                enableFailReasons: (reusablePlug.insertFailIndexes || []).map((i) => item.plug.insertionRules[i].failureMessage)
               };
             }
           }
