@@ -5,8 +5,11 @@ import { TagInfo, settings } from '../settings/settings';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { sortStores } from '../shell/dimAngularFilters.filter';
+import { dimLoadoutService } from '../loadout/loadout.service';
+import { $rootScope } from 'ngimport';
 
 interface SearchConfig {
+  destinyVersion: 1 | 2;
   keywords: string[];
   categoryFilters: { [key: string]: string[] };
   keywordToFilter: { [key: string]: string };
@@ -182,7 +185,8 @@ export function buildSearchConfig(
   return {
     keywordToFilter,
     keywords,
-    categoryFilters
+    categoryFilters,
+    destinyVersion
   };
 }
 
@@ -200,6 +204,13 @@ const dupeComparator = reverseComparator(chainComparator(
   compareBy((i: DimItem) => i.id) // tiebreak by ID
 ));
 
+export interface SearchFilters {
+  filters: { [predicate: string]: (item: DimItem, predicate?: string) => boolean | "" | null | undefined | false | number };
+  filterFunction(query: string): (item: DimItem) => boolean;
+  resetLoadouts(): void;
+  reset(): void;
+}
+
 /**
  * This builds an object that can be used to generate filter functions from search queried.
  *
@@ -209,15 +220,13 @@ export function searchFilters(
   storeService: StoreServiceType,
   toaster,
   $i18next
-): {
-  filters: { [predicate: string]: (item: DimItem, predicate?: string) => boolean | "" | null | undefined | false | number };
-  filterFunction(query: string): (item: DimItem) => boolean;
-  reset();
-} {
+): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   let _lowerDupes = {};
   let _dupeInPost = false;
   let _sortedStores: DimStore[] | null = null;
+  let _loadoutItemIds: Set<string> | undefined;
+  let _loadoutItemIdsPromise: Promise<void> | undefined;
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
@@ -291,6 +300,11 @@ export function searchFilters(
       _lowerDupes = {};
       _dupeInPost = false;
       _sortedStores = null;
+    },
+
+    resetLoadouts() {
+      _loadoutItemIds = undefined;
+      _loadoutItemIdsPromise = undefined;
     },
 
     /**
@@ -801,7 +815,22 @@ export function searchFilters(
         }
       },
       inloadout(item: DimItem) {
-        return item.isInLoadout;
+        // Lazy load loadouts and re-trigger
+        if (!_loadoutItemIds && !_loadoutItemIdsPromise) {
+          const promise = _loadoutItemIdsPromise = dimLoadoutService.getLoadoutItemIds(searchConfig.destinyVersion)
+            .then((loadoutItemIds) => {
+              if (_loadoutItemIdsPromise === promise) {
+                _loadoutItemIds = loadoutItemIds;
+                _loadoutItemIdsPromise = undefined;
+                $rootScope.$apply(() => {
+                  $rootScope.$broadcast('dim-filter-requery-loadouts');
+                });
+              }
+            });
+          return false;
+        }
+
+        return _loadoutItemIds && _loadoutItemIds.has(item.id);
       },
       new(item: DimItem) {
         return item.isNew;

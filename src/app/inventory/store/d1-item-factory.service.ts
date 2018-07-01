@@ -327,7 +327,6 @@ function makeItem(
     classified: Boolean(itemDef.classified),
     loreHash: null,
     lastManuallyMoved: item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
-    isInLoadout: false,
     percentComplete: null, // filled in later
     talentGrid: null, // filled in later
     stats: null, // filled in later
