@@ -159,6 +159,9 @@ export class Progress extends React.Component<Props, State> {
                   )}
                   {profileProgressionHashes && (<>
                     <div className="milestone-quest">
+                      <div className="milestone-icon">
+                        <i className="fa fa-calendar-check-o fa-3x" aria-hidden="true"/>
+                      </div>
                       <Link
                         key='destiny2.checklist'
                         account={this.props.account}
