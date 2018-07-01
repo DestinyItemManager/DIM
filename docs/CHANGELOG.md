@@ -3,6 +3,7 @@
 * New iOS app icons when you add to home screen.
 * The is:inloadout search works once again.
 * Fix a bug where the item popup could hang iOS Safari in landscape view.
+* Add a link to lowlines' Destiny map for collecting ghost scannables, latent memories, and sleeper nodes.
 
 # 4.58.0 (2018-06-24)
 
