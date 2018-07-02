@@ -1,10 +1,8 @@
 import {
   applyMiddleware,
-  createStore as reduxCreateStore,
+  createStore,
   compose
 } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import promiseMiddleware from 'redux-promise';
 import allReducers, { initialState } from './reducers';
 
 declare global {
@@ -13,20 +11,14 @@ declare global {
   }
 }
 
-function createStore() {
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  return reduxCreateStore(
-    allReducers,
-    initialState,
-    composeEnhancers(
-      applyMiddleware(
-        thunkMiddleware,
-        promiseMiddleware
-      )
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  allReducers,
+  initialState,
+  composeEnhancers(
+    applyMiddleware(
     )
-  );
-}
-
-const store = createStore();
+  )
+);
 
 export default store;

@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { Reducer } from 'redux';
 import { DestinyAccount } from './destiny-account.service';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
@@ -15,21 +15,19 @@ export const initialAccountsState: AccountsState = {
   accounts: []
 };
 
-export const accounts = combineReducers<AccountsState>({
-  accounts: (
-    state: AccountsState['accounts'] = [],
-    action: AccountsAction
-  ) => {
-    switch (action.type) {
-      case getType(actions.set):
-        return {
-          ...state,
-          accounts: action.payload
-        };
-        break;
+export const accounts: Reducer<AccountsState, AccountsAction> = (
+  state: AccountsState = initialAccountsState,
+  action: AccountsAction
+) => {
+  switch (action.type) {
+    case getType(actions.set):
+      return {
+        ...state,
+        accounts: action.payload
+      };
+      break;
 
-      default:
-        return state;
-    }
+    default:
+      return state;
   }
-});
+};
