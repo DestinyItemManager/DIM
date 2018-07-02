@@ -1,5 +1,7 @@
 # Next
 
+# 4.59.0 (2018-07-01)
+
 * New iOS app icons when you add to home screen.
 * Ornaments now show additional reasons why you can't equip them.
 * The is:inloadout search works once again.
