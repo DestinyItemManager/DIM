@@ -6,13 +6,14 @@ import { ActionType, getType } from 'typesafe-actions';
 export interface AccountsState {
   readonly accounts: ReadonlyArray<DestinyAccount>;
   // TODO: just the ID?
-  readonly currentAccount?: DestinyAccount;
+  readonly currentAccount: number;
 }
 
 export type AccountsAction = ActionType<typeof actions>;
 
 export const initialAccountsState: AccountsState = {
-  accounts: []
+  accounts: [],
+  currentAccount: -1
 };
 
 export const accounts: Reducer<AccountsState, AccountsAction> = (
@@ -20,13 +21,16 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
   action: AccountsAction
 ) => {
   switch (action.type) {
-    case getType(actions.set):
+    case getType(actions.accountsLoaded):
       return {
         ...state,
         accounts: action.payload
       };
-      break;
-
+    case getType(actions.setCurrentAccount):
+      return {
+        ...state,
+        currentAccount: state.accounts.indexOf(action.payload)
+      };
     default:
       return state;
   }

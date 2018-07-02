@@ -5,6 +5,8 @@ import * as _ from 'underscore';
 import { defaultLanguage } from '../i18n';
 import { SyncService } from '../storage/sync.service';
 import { Subject } from 'rxjs/Subject';
+import store from '../store/store';
+import { loaded } from './actions';
 
 const itemSortPresets = {
   primaryStat: ['primStat', 'name'],
@@ -108,6 +110,8 @@ export class Settings {
       'settings-v1.0': _.omit(this, 'save', 'itemSortOrder', 'ready', '$updates')
     }).then(() => {
       this.$updates.next();
+      // TODO: this is actually really late
+      store.dispatch(loaded(this));
     });
   }, 1000);
 
@@ -136,6 +140,7 @@ export function initSettings() {
     $rootScope.$evalAsync(() => {
       const languageChanged = savedSettings.language !== i18next.language;
       merge(settings, savedSettings);
+      store.dispatch(loaded(settings));
       settings.$updates.next();
       localStorage.dimLanguage = settings.language;
       if (languageChanged) {

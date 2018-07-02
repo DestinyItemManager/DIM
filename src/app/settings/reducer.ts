@@ -1,14 +1,14 @@
 import { Reducer } from 'redux';
-import { Settings, settings as realSettings } from './settings';
+import { Settings } from './settings';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 
 export interface SettingsState {
-  readonly settings: Readonly<Settings>;
+  readonly settings: Readonly<Settings> | {};
 }
 
 export const initialSettingsState: SettingsState = {
-  settings: realSettings
+  settings: {}
 };
 
 export type SettingsAction = ActionType<typeof actions>;
