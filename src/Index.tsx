@@ -23,6 +23,7 @@ import registerServiceWorker from './register-service-worker';
 import { lazyInjector } from './lazyInjector';
 import { safariTouchFix } from './safari-touch-fix';
 import Root from './Root';
+import updateCSSVariables from './app/css-variables';
 
 polyfill({
   holdToDrag: 300,
@@ -39,6 +40,7 @@ initi18n().then(() => {
   angularModule('Bootstrap', [AppModule]).run(($injector) => {
     'ngInject';
     lazyInjector.$injector = $injector;
+    updateCSSVariables();
 
     ReactDOM.render(<Root />, document.getElementById('app'));
   });
