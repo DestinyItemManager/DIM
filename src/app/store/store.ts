@@ -3,7 +3,7 @@ import {
   createStore,
   compose
 } from 'redux';
-import allReducers, { initialState } from './reducers';
+import allReducers from './reducers';
 
 declare global {
   interface Window {
@@ -14,7 +14,6 @@ declare global {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   allReducers,
-  initialState,
   composeEnhancers(
     applyMiddleware(
     )

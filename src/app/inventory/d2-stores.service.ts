@@ -36,6 +36,8 @@ import { InventoryBuckets } from './inventory-buckets';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
+import store from '../store/store';
+import { update } from './actions';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -248,6 +250,8 @@ function makeD2StoresService(): D2StoreServiceType {
         document.querySelector('html')!.style.setProperty("--num-characters", String(_stores.length - 1));
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
+
+        store.dispatch(update(stores));
 
         return stores;
       })

@@ -8,7 +8,6 @@ export const states: ReactStateDeclaration[] = [{
     const $ocLazyLoad = $injector.get('$ocLazyLoad') as any;
     // tslint:disable-next-line:space-in-parens
     const mod = await import(/* webpackChunkName: "destiny1" */ '../destiny1/destiny1.module');
-    console.log("MOD", mod);
     $ocLazyLoad.load(mod.angularModule);
     return { states: mod.states };
   }
