@@ -1,4 +1,4 @@
-import { Progress } from "./Progress";
+import Progress from "./Progress";
 import { ReactStateDeclaration } from "@uirouter/react";
 
 export const states: ReactStateDeclaration[] = [{
