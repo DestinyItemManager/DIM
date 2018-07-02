@@ -1,8 +1,10 @@
 import { Settings } from "./settings";
-import { action } from 'typesafe-actions';
+import { createStandardAction, createAction } from 'typesafe-actions';
 
 /** Bulk update settings after they've been loaded. */
-export const loaded = (settings: Settings) => action('settings/LOADED', settings);
+export const loaded = createStandardAction('settings/LOADED')<Settings>();
 
 /** This one seems a bit like cheating, but it lets us set a specific property. */
-export const set = (property: keyof Settings, value: any) => action('settings/SET', { property, value });
+export const set = createAction('settings/SET', (resolve) => {
+  return (property: keyof Settings, value: any) => resolve({ property, value });
+});

@@ -5,13 +5,11 @@ import { initialAccountsState, AccountsState, accounts } from '../accounts/reduc
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 
 export interface RootState {
-  readonly dummy: string;
   readonly settings: SettingsState;
   readonly accounts: AccountsState;
 }
 
 export const initialState: RootState = {
-  dummy: "hello",
   settings: initialSettingsState,
   accounts: initialAccountsState
 };

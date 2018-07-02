@@ -1,4 +1,4 @@
 import { DestinyAccount } from "./destiny-account.service";
-import { action } from "typesafe-actions";
+import { createStandardAction } from "typesafe-actions";
 
-export const set = (accounts: DestinyAccount[]) => action('accounts/SET', accounts);
+export const set = createStandardAction('accounts/SET')<DestinyAccount[]>();
