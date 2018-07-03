@@ -1,5 +1,7 @@
 # Next
 
+* Farming mode won't try to move unmoveable reputation tokens.
+
 # 4.59.0 (2018-07-01)
 
 * New iOS app icons when you add to home screen.
