@@ -24,6 +24,8 @@ import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { dimVendorService } from '../vendors/vendor.service';
 import { UISref } from '@uirouter/react';
+import { VendorEngramsXyzService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { VendorDropType } from '../vendorEngramsXyzApi/vendorDrops';
 
 const destiny1Links = [
   {
@@ -74,6 +76,7 @@ interface State {
   account?: DestinyAccount;
   dropdownOpen: boolean;
   showSearch: boolean;
+  vendorEngramDropActive: boolean;
 }
 
 interface Props {
@@ -87,24 +90,29 @@ export default class Header extends React.PureComponent<Props, State> {
   private unregisterTransitionHooks: Function[] = [];
   private showXur = showPopupFunction('xur', '<xur></xur>');
   private dropdownToggler = React.createRef<HTMLElement>();
+  private vendorEngramsService: VendorEngramsXyzService;
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
 
   constructor(props) {
     super(props);
 
+    this.vendorEngramsService = new VendorEngramsXyzService();
+
     this.SearchFilter = angular2react<{ account: DestinyAccount }>('dimSearchFilter', SearchFilterComponent);
 
     this.state = {
       xurAvailable: false,
       dropdownOpen: false,
-      showSearch: false
+      showSearch: false,
+      vendorEngramDropActive: false
     };
   }
 
   componentDidMount() {
     this.accountSubscription = getActiveAccountStream().subscribe((account) => {
       this.setState({ account: account || undefined });
+      this.updateVendorEngrams();
     });
 
     this.unregisterTransitionHooks = [
@@ -260,6 +268,22 @@ export default class Header extends React.PureComponent<Props, State> {
         </span>
       </div>
     );
+  }
+
+  private updateVendorEngrams = () => {
+    if (!this.state.account || this.state.account.destinyVersion !== 2) {
+      return;
+    }
+
+    this.vendorEngramsService.getVendorDrops()
+      .then((vds) => {
+        const anyActive = vds.some((vd) => vd.type === VendorDropType.Likely380);
+
+        this.setState({ vendorEngramDropActive: anyActive });
+      });
+
+    setTimeout(this.updateVendorEngrams,
+      1000 * 60 * 15);
   }
 
   private toggleDropdown = () => {

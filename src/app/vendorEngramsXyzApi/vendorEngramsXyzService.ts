@@ -1,12 +1,11 @@
 import { VendorDrop, VendorEngramVendor } from "./vendorDrops";
-import { dtrFetch } from "../destinyTrackerApi/dtr-service-helper";
 import { loadingTracker } from "../ngimport-more";
 import { t } from 'i18next';
-import { Vendor } from "../vendors/vendor.service";
 
 export class VendorEngramsXyzService {
   vendorMap: {};
-  cachedResponse: Promise<VendorDrop[]>;
+  cachedResponse: Promise<VendorDrop[]> | null;
+  lastUpdated: Date | null;
 
   constructor() {
     this.vendorMap = {};
@@ -40,13 +39,42 @@ export class VendorEngramsXyzService {
     return response.json();
   }
 
+  lastUpdatedInPastFifteenMinutes(): boolean {
+    if (!this.lastUpdated) {
+      return false;
+    }
+
+    const now = new Date();
+    const lastToNow = Math.abs(now.getTime() - this.lastUpdated.getTime());
+
+    const difference = Math.floor((lastToNow / 1000) / 60);
+
+    return (difference > 15);
+  }
+
+  vendorEngramsFetch(url: string) {
+    const request = new Request(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+
+    return Promise.resolve(fetch(request));
+  }
+
   async getVendorDrops(): Promise<VendorDrop[]> {
-    const promise = dtrFetch('https://api.vendorengrams.xyz/getVendorDrops', {})
-    .then(this.handleVendorEngramsErrors, this.handleVendorEngramsErrors);
+    if (this.cachedResponse && this.lastUpdatedInPastFifteenMinutes()) {
+      return this.cachedResponse;
+    }
+
+    const promise = this.vendorEngramsFetch('https://api.vendorengrams.xyz/getVendorDrops')
+      .then(this.handleVendorEngramsErrors, this.handleVendorEngramsErrors);
 
     loadingTracker.addPromise(promise);
 
     this.cachedResponse = promise;
+    this.lastUpdated = new Date();
 
     return promise;
   }
@@ -54,6 +82,10 @@ export class VendorEngramsXyzService {
   async getVendorDrop(vendorHash: number): Promise<VendorDrop | undefined> {
     if (!this.cachedResponse) {
       await this.getVendorDrops();
+    }
+
+    if (!this.cachedResponse) {
+      return undefined;
     }
 
     const matchedValue = Number(Object.keys(this.vendorMap).find((o) => this.vendorMap[o] === vendorHash));

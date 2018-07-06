@@ -43,7 +43,7 @@ module.exports = function csp(env) {
       "https://reviews-api.destinytracker.net",
       "https://db-api.destinytracker.com",
       // VendorEngrams.XYZ API
-      "https://api.vendorengrams.xyz/"
+      "https://api.vendorengrams.xyz"
     ],
     imgSrc: [
       SELF,
