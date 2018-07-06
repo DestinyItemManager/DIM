@@ -41,7 +41,9 @@ module.exports = function csp(env) {
       "https://www.bungie.net",
       // DTR Reviews API
       "https://reviews-api.destinytracker.net",
-      "https://db-api.destinytracker.com"
+      "https://db-api.destinytracker.com",
+      // VendorEngrams.XYZ API
+      "https://api.vendorengrams.xyz/"
     ],
     imgSrc: [
       SELF,
