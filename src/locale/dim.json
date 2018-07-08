@@ -670,6 +670,9 @@
     "Flawless": "Flawless",
     "SevenWins": "7 Win Reward (Weapon)"
   },
+  "VendorEngramsXyz": {
+    "ServiceCallFailed": "VendorEngrams.xyz service call failed."
+  },
   "Vendors": {
     "All": "All",
     "ArmorAndWeapons": "Armor & Weapons",
