@@ -21,6 +21,9 @@ export function ChecklistCategory({
 
   const nestedChecklistHashes = Object.keys(profileChecklist[checklistDefinitionHash]).map(Number);
 
+  const totalHashes = nestedChecklistHashes.length;
+  const completedHashes = nestedChecklistHashes.filter((nch) => profileChecklist[checklistDefinitionHash][nch] === true).length;
+
   const orderedNestedChecklistHashes = nestedChecklistHashes.sort((a, b) => {
     const firstEntry = checklistDef.entries.find((cld) => cld.hash === a);
     const secondEntry = checklistDef.entries.find((cld) => cld.hash === b);
@@ -60,7 +63,10 @@ export function ChecklistCategory({
     </>
     }
     <div className="checklist-category-info">
-      <div className="title checklist-title">{checklistDef.displayProperties.name}</div>
+      <div className="title">
+        <div className="checklist-title">{checklistDef.displayProperties.name}</div>
+        <div className="checklist-count">({completedHashes} / {totalHashes})</div>
+      </div>
       <div className="checklist-category-description">
         {checklistDef.displayProperties.description}
       </div>
