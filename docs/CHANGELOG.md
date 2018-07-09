@@ -1,5 +1,7 @@
 # Next
 
+# 4.60.0 (2018-07-08)
+
 * Farming mode won't try to move unmoveable reputation tokens.
 * Filters like stat:recovery:=0 now work (they couldn't match stat values of zero before).
 
