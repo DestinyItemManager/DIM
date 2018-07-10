@@ -78,8 +78,9 @@ function StoreService(): D1StoreServiceType {
     id?: string;
     hash?: number;
     notransfer?: boolean;
+    amount?: number;
   }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer')) as (DimItem) => boolean;
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (DimItem) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
       if (result) {

@@ -96,7 +96,8 @@ function ItemService(): ItemServiceType {
     const storeService = item.getStoresService();
     source = storeService.getStore(source.id)!;
     target = storeService.getStore(target.id)!;
-    item = storeService.getItemAcrossStores(item)!;
+    // We really shouldn't do this!
+    item = storeService.getItemAcrossStores(item) || item;
 
     // If we've moved to a new place
     if (source.id !== target.id || item.location.inPostmaster) {

@@ -21,7 +21,8 @@ function controller(
     amount: number;
     store: DimStore;
     stores: DimStore[];
-  }
+  },
+  $scope
 ) {
   'ngInject';
   const vm = this;
@@ -92,5 +93,6 @@ function controller(
 
   vm.moveItemTo = (store: DimStore, equip: boolean) => {
     moveItemTo(vm.item, store, equip, vm.amount);
+    $scope.$parent.$parent.closeThisDialog();
   };
 }
