@@ -151,9 +151,14 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
             />
           )}
         </ErrorBoundary>
-        <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://destinysets.com">
-          {t('Vendors.DestinySets')}
-        </a>
+        <div className="collections-partners">
+          <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://destinysets.com">
+            {t('Vendors.DestinySets')}
+          </a>
+          <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://lowlidev.com.au/destiny/maps">
+            {t('Vendors.DestinyMap')}
+          </a>
+        </div>
       </div>
     );
   }
