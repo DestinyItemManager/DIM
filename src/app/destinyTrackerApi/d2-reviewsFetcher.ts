@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
-import { loadingTracker, toaster } from '../ngimport-more';
+import { loadingTracker } from '../ngimport-more';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
@@ -126,8 +126,7 @@ class D2ReviewsFetcher {
       .then((reviewData) => {
         this._markUserReview(reviewData);
         this._attachReviews(item, reviewData);
-      })
-      .catch((e) => toaster.pop('error', e));
+      });
   }
 
   fetchItemReviews(itemHash: number, platformSelection: number, mode: number): Promise<D2ItemReviewResponse> {

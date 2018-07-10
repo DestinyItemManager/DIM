@@ -101,8 +101,7 @@ class D2ReviewSubmitter {
       .then(() => {
         this._markItemAsReviewedAndSubmitted(item);
         this._eventuallyPurgeCachedData(item);
-      })
-      .catch((e) => toaster.pop('error', e));
+      });
   }
 }
 
