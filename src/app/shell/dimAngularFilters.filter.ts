@@ -195,7 +195,7 @@ mod.filter('sortItems', () => sortItems);
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-export function sortItems(items: DimItem[]) {
+export function sortItems(items: DimItem[], settingsInstance = settings) {
   if (!items.length) {
     return items;
   }
@@ -216,7 +216,7 @@ export function sortItems(items: DimItem[]) {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
-  const sortOrder: string[] = settings.itemSortOrder();
+  const sortOrder: string[] = settingsInstance.itemSortOrder();
 
   if (specificSortOrder.length > 0 && !sortOrder.includes('rarity')) {
     items = _.sortBy(items, (item) => {
@@ -260,8 +260,7 @@ mod.filter('qualityColor', () => getColor);
 /**
  * A filter that will heatmap-color a background according to a percentage.
  */
-export function getColor(value: number, property: string) {
-  property = property || 'background-color';
+export function getColor(value: number, property = 'background-color') {
   let color = 0;
   if (value < 0) {
     return { [property]: 'white' };
@@ -281,12 +280,11 @@ export function getColor(value: number, property: string) {
   return result;
 }
 
-export function dtrRatingColor(value: number, property?: string) {
+export function dtrRatingColor(value: number, property: string = 'color') {
   if (!value) {
     return {};
   }
 
-  property = property || 'color';
   let color;
   if (value < 2) {
     color = 'hsl(0,45%,45%)';
