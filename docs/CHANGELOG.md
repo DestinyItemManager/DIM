@@ -1,5 +1,7 @@
 # Next
 
+* Fix a bug that would leave behind stackable items when moving certain loadouts like "Gather Reputation Items".
+
 # 4.60.0 (2018-07-08)
 
 * Farming mode won't try to move unmoveable reputation tokens.
