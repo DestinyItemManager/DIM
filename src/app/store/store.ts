@@ -7,11 +7,13 @@ import allReducers from './reducers';
 
 declare global {
   interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: typeof compose;
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__(options: any): typeof compose;
   }
 }
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ serialize: false })
+  : compose;
 const store = createStore(
   allReducers,
   composeEnhancers(
