@@ -1,9 +1,17 @@
 # Next
 
+# 4.60.0 (2018-07-08)
+
+* Farming mode won't try to move unmoveable reputation tokens.
+* Filters like stat:recovery:=0 now work (they couldn't match stat values of zero before).
+
+# 4.59.0 (2018-07-01)
+
 * New iOS app icons when you add to home screen.
 * Ornaments now show additional reasons why you can't equip them.
 * The is:inloadout search works once again.
 * Fix a bug where the item popup could hang iOS Safari in landscape view.
+* Add a link to lowlines' Destiny map for collecting ghost scannables, latent memories, and sleeper nodes.
 
 # 4.58.0 (2018-06-24)
 

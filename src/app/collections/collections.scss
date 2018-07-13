@@ -1,10 +1,17 @@
-.collections-partner.dim-button {
-  text-decoration: none;
-  padding: 1em 2em;
-  font-size: 12px;
-  margin: 0 auto;
-  display: block;
-  width: fit-content;
+.collections-partners {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .dim-button {
+    text-decoration: none;
+    padding: 1em 2em;
+    font-size: 12px;
+    margin: 4px;
+    display: block;
+    width: fit-content;
+  }
 }
 
 .ornaments-disclaimer {

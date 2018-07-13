@@ -16,7 +16,6 @@ export const REP_TOKENS = new Set([
   2270228604, // New Monarchy Token
   2640973641, // EDZ Token
   2949414982, // Quantized Datalattice
-  2959556799, // Dead Orbit Token
   3201839676, // Nessus Token
   3487922223, // Microphasic Datalattice
   3756389242, // Phaseglass Spire

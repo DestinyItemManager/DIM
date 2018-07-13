@@ -249,7 +249,7 @@ export function searchFilters(
 
     return (item: DimItem, predicate: string) => {
       const foundStatHash = item.stats && item.stats.find((s) => s.statHash === statHash);
-      return foundStatHash && foundStatHash.value && compareByOperand(foundStatHash.value, predicate);
+      return foundStatHash && compareByOperand(foundStatHash.value, predicate);
     };
   };
 
@@ -275,7 +275,6 @@ export function searchFilters(
 
     switch (operand) {
     case 'none':
-      return compare === predicate;
     case '=':
       return compare === predicate;
     case '<':
