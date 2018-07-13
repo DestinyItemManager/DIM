@@ -43,6 +43,9 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
   reloadStores(): Promise<StoreType[] | undefined>;
   /** Reload DTR rating data. */
   refreshRatingsData(): void;
+
+  /** Tell Redux things have changed. Temporary bridge for Redux. */
+  touch(): void;
 }
 
 /**

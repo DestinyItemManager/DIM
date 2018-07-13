@@ -85,7 +85,10 @@ function makeD2StoresService(): D2StoreServiceType {
     getItemAcrossStores,
     updateCharacters,
     reloadStores,
-    refreshRatingsData
+    refreshRatingsData,
+    touch() {
+      store.dispatch(update(_stores));
+    }
   };
 
   return service;

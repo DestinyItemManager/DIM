@@ -23,6 +23,8 @@ import { D1Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
+import store from '../store/store';
+import { update } from './actions';
 
 export const D1StoresService = StoreService();
 
@@ -66,7 +68,10 @@ function StoreService(): D1StoreServiceType {
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,
-    reloadStores
+    reloadStores,
+    touch() {
+      store.dispatch(update(_stores));
+    }
   };
 
   return service;
@@ -208,6 +213,8 @@ function StoreService(): D1StoreServiceType {
         document.querySelector('html')!.style.setProperty("--num-characters", String(realStores.length - 1));
 
         dimDestinyTrackerService.reattachScoresFromCache(realStores);
+
+        store.dispatch(update(realStores));
 
         return realStores;
       })

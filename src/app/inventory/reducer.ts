@@ -37,7 +37,7 @@ export const inventory: Reducer<InventoryState, InventoryAction> = (
       // TODO: we really want to decompose these, drive out all deep mutation
       // TODO: mark DimItem, DimStore properties as Readonly
       return {
-        stores: action.payload
+        stores: [...action.payload]
       };
     default:
       return state;
