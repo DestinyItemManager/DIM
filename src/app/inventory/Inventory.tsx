@@ -7,6 +7,9 @@ import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
+import RandomLoadoutButton from '../loadout/random/RandomLoadoutButton';
+import { t } from 'i18next';
+import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
 
 interface Props {
   account: DestinyAccount;
@@ -41,7 +44,7 @@ class Inventory extends React.Component<Props> {
   }
 
   render() {
-    const { storesLoaded } = this.props;
+    const { storesLoaded, account } = this.props;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -53,15 +56,16 @@ class Inventory extends React.Component<Props> {
       <loadout-drawer stores="$ctrl.stores" account="$ctrl.account"></loadout-drawer>
       <dim-compare></dim-compare>
       <dim-item-discuss></dim-item-discuss>
-      <div id="drag-help" className="drag-help drag-help-hidden" ng-i18next="Help.Drag"></div>
       <d2-farming></d2-farming>
       <dim-clear-new-items account="$ctrl.account"></dim-clear-new-items>
       <random-loadout stores="$ctrl.stores"></random-loadout>
     */
     return (
       <>
-        <div className="sticky-header-background" />
+        <ScrollClassDiv className="sticky-header-background" scrollClass="something-is-sticky"/>
         <Stores />
+        <div id="drag-help" className="drag-help drag-help-hidden">{t('Help.Drag')}</div>
+        <RandomLoadoutButton destinyVersion={account.destinyVersion}/>
       </>
     );
   }
