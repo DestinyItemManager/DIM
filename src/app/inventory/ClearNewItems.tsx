@@ -23,8 +23,6 @@ export default class ClearNewItems extends React.Component<Props, State> {
   private $scope = $rootScope.$new(true);
   private subscriptions: Subscription[] = [];
 
-  // TODO: need two observables, settings and item service
-
   constructor(props) {
     super(props);
     this.state = {

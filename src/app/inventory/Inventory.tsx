@@ -17,6 +17,7 @@ import { lazyInjector } from '../../lazyInjector';
 import { LoadoutDrawerComponent } from '../loadout/loadout-drawer.component';
 import { CompareComponent } from '../compare/compare.component';
 import { DimStore } from './store-types';
+import ClearNewItems from './ClearNewItems';
 
 const D1Farming = angular2react('dimFarming', FarmingComponent, lazyInjector.$injector as angular.auto.IInjectorService);
 const D2Farming = angular2react('d2Farming', D2FarmingComponent, lazyInjector.$injector as angular.auto.IInjectorService);
@@ -33,7 +34,6 @@ interface Props {
 }
 
 function mapStateToProps(state: RootState): Partial<Props> {
-  console.log('mapStateToProps!!!', state);
   return {
     storesLoaded: state.inventory.stores.length > 0,
     stores: state.inventory.stores
@@ -67,16 +67,6 @@ class Inventory extends React.Component<Props> {
       return <Loading />;
     }
 
-    // TODO: scroll-class
-    /*
-      <div className="sticky-header-background" scroll-className="something-is-sticky"/>
-      <loadout-drawer stores="$ctrl.stores" account="$ctrl.account"></loadout-drawer>
-      <dim-compare></dim-compare>
-      <dim-item-discuss></dim-item-discuss>
-      <d2-farming></d2-farming>
-      <dim-clear-new-items account="$ctrl.account"></dim-clear-new-items>
-      <random-loadout stores="$ctrl.stores"></random-loadout>
-    */
     return (
       <>
         <ScrollClassDiv className="sticky-header-background" scrollClass="something-is-sticky"/>
@@ -85,6 +75,7 @@ class Inventory extends React.Component<Props> {
         <Compare/>
         <div id="drag-help" className="drag-help drag-help-hidden">{t('Help.Drag')}</div>
         {account.destinyVersion === 1 ? <D1Farming/> : <D2Farming/>}
+        <ClearNewItems account={account}/>
         <RandomLoadoutButton destinyVersion={account.destinyVersion}/>
       </>
     );

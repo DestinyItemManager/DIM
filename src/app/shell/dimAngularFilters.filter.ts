@@ -190,7 +190,8 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   default: (_a, _b) => 0
 };
 
-mod.filter('sortItems', () => sortItems);
+// tslint:disable-next-line:no-unnecessary-callback-wrapper
+mod.filter('sortItems', () => (items) => sortItems(items));
 
 /**
  * Sort items according to the user's preferences (via the sort parameter).
