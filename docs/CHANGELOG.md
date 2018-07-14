@@ -1,5 +1,6 @@
 # Next
 
+* Fix a bug that would leave behind stackable items when moving certain loadouts like "Gather Reputation Items".
 * The is:haspower search works once again.
 * The is:cosmetic search will now work for Destiny 2.
 

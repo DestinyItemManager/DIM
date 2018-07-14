@@ -19,7 +19,7 @@ import { loadingTracker, toaster } from '../ngimport-more';
 import { IPromise } from 'angular';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
-import { D1Item } from './item-types';
+import { D1Item, DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
@@ -80,7 +80,7 @@ function StoreService(): D1StoreServiceType {
     notransfer?: boolean;
     amount?: number;
   }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (DimItem) => boolean;
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (i: DimItem) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
       if (result) {

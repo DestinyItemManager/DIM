@@ -210,14 +210,16 @@ function LoadoutService(): LoadoutServiceType {
   // A special getItem that takes into account the fact that
   // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
   function getLoadoutItem(pseudoItem: DimItem, store: DimStore): DimItem | null {
-    let item = store.getStoresService().getItemAcrossStores(pseudoItem);
+    let item = store.getStoresService().getItemAcrossStores(_.omit(pseudoItem, 'amount'));
     if (!item) {
       return null;
     }
-    if (_.contains(['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'], item.type)) {
-      item = _.find(store.items, {
-        hash: pseudoItem.hash
-      }) || item;
+    if (['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'].includes(item.type)) {
+      // Same character first
+      item = store.items.find((i) => i.hash === pseudoItem.hash) ||
+        // Then other characters
+        store.getStoresService().getItemAcrossStores({ hash: item.hash }) ||
+        item;
     }
     return item;
   }
@@ -277,7 +279,8 @@ function LoadoutService(): LoadoutServiceType {
               item.location.inPostmaster ||
               // Needs to be equipped. Stuff not marked "equip" doesn't
               // necessarily mean to de-equip it.
-              (pseudoItem.equipped && !item.equipped);
+              (pseudoItem.equipped && !item.equipped) ||
+              pseudoItem.amount > 1;
 
         return notAlreadyThere;
       });
