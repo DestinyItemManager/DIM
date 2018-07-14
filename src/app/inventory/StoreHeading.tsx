@@ -35,31 +35,33 @@ export default class StoreHeading extends React.Component<Props> {
 
     if (isVault(store)) {
       return (
-        <div className="character-box vault" onClick={this.openLoadoutPopup}>
-          <div
-            className="background"
-            style={{ backgroundImage: `url(${store.background})` }}
-          />
-          <div className="details">
+        <div className="character">
+          <div className="character-box vault" onClick={this.openLoadoutPopup}>
             <div
-              className="emblem"
-              style={{ backgroundImage: `url(${store.icon})` }}
+              className="background"
+              style={{ backgroundImage: `url(${store.background})` }}
             />
-            <div className="character-text">
-              <div className="top">
-                <div className="class">{store.className}</div>
+            <div className="details">
+              <div
+                className="emblem"
+                style={{ backgroundImage: `url(${store.icon})` }}
+              />
+              <div className="character-text">
+                <div className="top">
+                  <div className="class">{store.className}</div>
+                </div>
+                <div className="bottom" />
               </div>
-              <div className="bottom" />
-            </div>
-            <div className="currencies">
-              <div className="currency">
-                {store.glimmer} <img src={glimmer} />
-              </div>
-              <div className="currency legendaryMarks">
-                {store.legendaryMarks}
-                <img
-                  src={store.isDestiny1() ? legendaryMarks : legendaryShards}
-                />
+              <div className="currencies">
+                <div className="currency">
+                  {store.glimmer} <img src={glimmer} />
+                </div>
+                <div className="currency legendaryMarks">
+                  {store.legendaryMarks}
+                  <img
+                    src={store.isDestiny1() ? legendaryMarks : legendaryShards}
+                  />
+                </div>
               </div>
               <i
                 className="loadout-button fa fa-chevron-circle-down"
@@ -73,6 +75,7 @@ export default class StoreHeading extends React.Component<Props> {
           <div className="vault-capacity">
             {Object.keys(store.vaultCounts).map((bucketId) => (
               <PressTip
+                key={bucketId}
                 tooltip={<VaultToolTip counts={store.vaultCounts[bucketId]} />}
               >
                 <div
@@ -100,40 +103,40 @@ export default class StoreHeading extends React.Component<Props> {
     const { levelBar, xpTillMote } = getLevelBar(store);
 
     return (
-      <div
-        className={classNames('character-box', {
-          destiny2: store.isDestiny2()
-        })}
-        onClick={this.openLoadoutPopup}
-      >
+      <div className={classNames('character', { current: store.current })}>
         <div
-          className="background"
-          style={{ backgroundImage: `url(${store.background})` }}
-        />
-        <div className="details">
+          className={classNames('character-box', {
+            destiny2: store.isDestiny2()
+          })}
+          onClick={this.openLoadoutPopup}
+        >
           <div
-            className="emblem"
-            style={{ backgroundImage: `url(${store.icon})` }}
+            className="background"
+            style={{ backgroundImage: `url(${store.background})` }}
           />
-          <div className="character-text">
-            <div className="top">
-              <div className="class">{store.className}</div>
-              <div className="powerLevel">{store.powerLevel}</div>
+          <div className="details">
+            <div
+              className="emblem"
+              style={{ backgroundImage: `url(${store.icon})` }}
+            />
+            <div className="character-text">
+              <div className="top">
+                <div className="class">{store.className}</div>
+                <div className="powerLevel">{store.powerLevel}</div>
+              </div>
+              <div className="bottom">
+                <div className="race-gender">{store.genderRace}</div>
+                <div className="level">{store.level}</div>
+              </div>
+              <PressTip tooltip={xpTillMote}>
+                <div
+                  className={classNames('levelBar', {
+                    moteProgress: !store.percentToNextLevel
+                  })}
+                  style={{ width: percent(levelBar) }}
+                />
+              </PressTip>
             </div>
-            <div className="bottom">
-              <div className="race-gender">{store.genderRace}</div>
-              <div className="level">{store.level}</div>
-            </div>
-            <PressTip tooltip={xpTillMote}>
-              <div
-                className={classNames('levelBar', {
-                  moteProgress: !store.percentToNextLevel
-                })}
-                style={{ width: percent(levelBar) }}
-              />
-            </PressTip>
-          </div>
-          <div className="currencies">
             <i
               className="loadout-button fa fa-chevron-circle-down"
               ng-i18next="[title]Loadouts.Loadouts"
@@ -143,7 +146,10 @@ export default class StoreHeading extends React.Component<Props> {
         {internalLoadoutMenu && (
           <div className="loadout-menu" loadout-id={store.id} />
         )}
-        <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+        <CharacterStats
+          destinyVersion={store.destinyVersion}
+          stats={store.stats}
+        />
       </div>
     );
   }
@@ -187,9 +193,7 @@ function VaultToolTip({
   return (
     <div>
       <h2>{counts.bucket.name}</h2>
-      <p>
-        {counts.count}/{counts.bucket.capacity}
-      </p>
+      {counts.count}/{counts.bucket.capacity}
     </div>
   );
 }

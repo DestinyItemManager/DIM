@@ -1,4 +1,4 @@
-import { queuedAction } from '../inventory/action-queue';
+import { queuedAction } from './action-queue';
 import { itemTags } from '../settings/settings';
 import { NewItemsService } from './store/new-items.service';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';

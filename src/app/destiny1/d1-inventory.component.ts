@@ -1,6 +1,6 @@
 import template from "./d1-inventory.html";
 import { subscribeOnScope } from "../rx-utils";
-import { getBuckets } from "../destiny1/d1-buckets.service";
+import { getBuckets } from "./d1-buckets.service";
 import { IComponentOptions, IController, IScope } from "angular";
 import { DestinyAccount } from "../accounts/destiny-account.service";
 import { D1StoresService } from "../inventory/d1-stores.service";

@@ -1,8 +1,10 @@
 import * as _ from 'underscore';
-import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { getDefinitions } from './d1-definitions.service';
 import { IPromise } from 'angular';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
+import store from '../store/store';
+import { setBuckets } from '../inventory/actions';
 
 export const D1Categories = {
   Weapons: [
@@ -168,6 +170,8 @@ export const getBuckets = _.memoize(() => {
         return buckets.byType[type];
       }));
     });
+
+    store.dispatch(setBuckets(buckets));
 
     return buckets;
   });

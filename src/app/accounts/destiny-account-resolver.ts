@@ -1,4 +1,4 @@
-import { getPlatforms, setActivePlatform, getPlatformMatching } from '../accounts/platform.service';
+import { getPlatforms, setActivePlatform, getPlatformMatching } from './platform.service';
 import { Transition } from '@uirouter/react';
 
 /**

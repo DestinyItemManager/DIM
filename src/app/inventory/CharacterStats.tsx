@@ -57,7 +57,7 @@ export default class CharacterStats extends React.Component<Props> {
       return (
         <div className="stat-bars">
           {statList.map((stat, index) => (
-            <PressTip tooltip={tooltips[index]}>
+            <PressTip key={stat.id} tooltip={tooltips[index]}>
               <div className="stat">
                 <img src={stat.icon} />
                 {stat.tiers &&
@@ -97,7 +97,7 @@ export default class CharacterStats extends React.Component<Props> {
       return (
         <div className="stat-bars destiny2">
           {statList.map((stat, index) => (
-            <PressTip tooltip={tooltips[index]}>
+            <PressTip key={stat.id} tooltip={tooltips[index]}>
               <div className="stat">
                 <img src={stat.icon} />
                 {stat.tiers && <div>{stat.value}</div>}

@@ -3,6 +3,8 @@ import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/
 import * as _ from 'underscore';
 import { getDefinitions } from './d2-definitions.service';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
+import store from '../store/store';
+import { setBuckets } from '../inventory/actions';
 
 // TODO: These have to change
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
@@ -165,6 +167,8 @@ function getBucketsUncached() {
         return buckets.byType[type];
       }));
     });
+
+    store.dispatch(setBuckets(buckets));
 
     return buckets;
   });

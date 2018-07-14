@@ -2,7 +2,7 @@ import { destinyAccountResolver } from "../accounts/destiny-account-resolver";
 import { ReactStateDeclaration } from "@uirouter/react";
 import Destiny from "../destiny2/Destiny";
 import { angular2react } from "angular2react";
-import { D1InventoryComponent } from "../destiny1/d1-inventory.component";
+import { D1InventoryComponent } from "./d1-inventory.component";
 import { lazyInjector } from "../../lazyInjector";
 import { states as recordBookStates } from '../record-books/routes';
 import { states as activitiesStates } from '../activities/routes';

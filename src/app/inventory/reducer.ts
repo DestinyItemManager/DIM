@@ -2,13 +2,17 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { DimStore } from './store-types';
+import { InventoryBuckets } from './inventory-buckets';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
   // The same stores as before - these are regenerated anew
   // when stores reload or change, so they're safe for now.
   // Updates to items need to deeply modify their store though.
-  readonly stores: ReadonlyArray<Readonly<DimStore>>;
+  // TODO: ReadonlyArray<Readonly<DimStore>>
+  readonly stores: DimStore[];
+
+  readonly buckets?: InventoryBuckets;
   /*
   readonly items: Readonly<{
     [id: string]: Readonly<DimItem>;
@@ -37,7 +41,13 @@ export const inventory: Reducer<InventoryState, InventoryAction> = (
       // TODO: we really want to decompose these, drive out all deep mutation
       // TODO: mark DimItem, DimStore properties as Readonly
       return {
+        ...state,
         stores: [...action.payload]
+      };
+    case getType(actions.setBuckets):
+      return {
+        ...state,
+        buckets: action.payload
       };
     default:
       return state;

@@ -8,6 +8,9 @@ import classNames from 'classnames';
 import { t } from 'i18next';
 import './dimStores.scss';
 import StoreHeading from './StoreHeading';
+import { RootState } from '../store/reducers';
+import { connect } from 'react-redux';
+import { isPhonePortrait } from '../mediaQueries';
 
 interface Props {
   stores: DimStore[];
@@ -16,7 +19,17 @@ interface Props {
   buckets: InventoryBuckets;
 }
 
-export default class Stores extends React.Component<Props> {
+function mapStateToProps(state: RootState): Partial<Props> {
+  return {
+    stores: state.inventory.stores,
+    // TODO: throw this into state
+    isPhonePortrait: isPhonePortrait(),
+    settings: state.settings.settings as Settings,
+    buckets: state.inventory.buckets
+  };
+}
+
+export class Stores extends React.Component<Props> {
   render() {
     const { stores, isPhonePortrait, settings, buckets } = this.props;
 
@@ -82,26 +95,29 @@ export default class Stores extends React.Component<Props> {
                           : 'fa-minus-square-o'
                       )}
                     />
-                    {bucket.accountWide &&
-                      !settings.collapsedSections[bucket.id] && (
-                        <>
-                          <div className="store-cell account-wide">
-                            <StoreBucket
-                              items={currentStore.buckets[bucket.id]}
-                              settings={settings}
-                            />
-                          </div>
-                          <div className="store-cell vault">
-                            <StoreBucket
-                              items={vault.buckets[bucket.id]}
-                              settings={settings}
-                            />
-                          </div>
-                        </>
-                      )}
-
-                    {!bucket.accountWide &&
-                      !settings.collapsedSections[bucket.id] &&
+                    {settings.collapsedSections[bucket.id] ? (
+                      <div
+                        onClick={() => this.toggleSection(bucket.id)}
+                        className="store-text collapse"
+                      >
+                        <span>{t('Bucket.Show', { bucket: bucket.name })}</span>
+                      </div>
+                    ) : bucket.accountWide ? (
+                      <>
+                        <div className="store-cell account-wide">
+                          <StoreBucket
+                            items={currentStore.buckets[bucket.id]}
+                            settings={settings}
+                          />
+                        </div>
+                        <div className="store-cell vault">
+                          <StoreBucket
+                            items={vault.buckets[bucket.id]}
+                            settings={settings}
+                          />
+                        </div>
+                      </>
+                    ) : (
                       sortedStores.map((store) => (
                         <div
                           key={store.id}
@@ -116,14 +132,7 @@ export default class Stores extends React.Component<Props> {
                             />
                           )}
                         </div>
-                      ))}
-                    {settings.collapsedSections[bucket.id] && (
-                      <div
-                        onClick={() => this.toggleSection(bucket.id)}
-                        className="store-text collapse"
-                      >
-                        <span>{t('Bucket.Show', { bucket: bucket.name })}</span>
-                      </div>
+                      ))
                     )}
                   </div>
                 ))}
@@ -140,3 +149,5 @@ export default class Stores extends React.Component<Props> {
     settings.save();
   }
 }
+
+export default connect(mapStateToProps)(Stores);
