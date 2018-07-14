@@ -14,7 +14,7 @@ interface Props {
 }
 
 function mapStateToProps(state: RootState): Partial<Props> {
-  console.log('mapStateToProps', state);
+  console.log('mapStateToProps!!!', state);
   return {
     storesLoaded: state.inventory.stores.length > 0
   };
@@ -25,7 +25,9 @@ export class Inventory extends React.Component<Props> {
 
   componentDidMount() {
     // TODO: Dispatch an action to load stores
-    D2StoresService.getStoresStream(this.props.account);
+    this.props.account.destinyVersion === 1
+      ? D1StoresService.getStoresStream(this.props.account)
+      : D2StoresService.getStoresStream(this.props.account);
 
     this.$scope.$on('dim-refresh', () => {
       this.props.account.destinyVersion === 1

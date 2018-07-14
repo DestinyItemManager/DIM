@@ -115,7 +115,7 @@ export class Settings {
     });
   }, 1000);
 
-  itemSortOrder() {
+  itemSortOrder(): string[] {
     return (this.itemSort === 'custom'
       ? this.itemSortOrderCustom
       : itemSortPresets[this.itemSort]) || itemSortPresets.primaryStat;

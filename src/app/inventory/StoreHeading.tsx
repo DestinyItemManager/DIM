@@ -166,14 +166,14 @@ export default class StoreHeading extends React.Component<Props> {
 
     if (this.dialogResult === null) {
       ngDialog.closeAll();
-
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,
         plain: true,
         appendTo: `div[loadout-id="${store.id}"]`,
         overlay: false,
         className: 'loadout-popup',
-        showClose: false
+        showClose: false,
+        data: store
       });
 
       this.dialogResult.closePromise.then(() => {

@@ -24,7 +24,7 @@ import { InventoryBuckets } from './inventory-buckets';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
-import { update } from './actions';
+import { update, setBuckets } from './actions';
 
 export const D1StoresService = StoreService();
 
@@ -192,6 +192,7 @@ function StoreService(): D1StoreServiceType {
 
         const processStorePromises = _.compact((rawStores as any[]).map((raw) => processStore(raw, defs, buckets, previousItems, newItems, itemInfoService, currencies, lastPlayedDate)));
 
+        store.dispatch(setBuckets(buckets));
         return $q.all([newItems, itemInfoService, ...processStorePromises]);
       })
       .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, D1Store[]]) => {

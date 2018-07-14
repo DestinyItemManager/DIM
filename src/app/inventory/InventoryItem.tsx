@@ -85,7 +85,7 @@ export default class InventoryItem extends React.Component<Props> {
           item.quality && (
             <div
               className="item-stat item-quality"
-              style={getColor(item.quality.min)}
+              style={getColor(item.quality.min, 'backgroundColor')}
             >
               {item.quality.min}%
             </div>

@@ -61,8 +61,8 @@ export default class CharacterStats extends React.Component<Props> {
               <div className="stat">
                 <img src={stat.icon} />
                 {stat.tiers &&
-                  stat.tiers.map((n) => (
-                    <div key={n} className="bar">
+                  stat.tiers.map((n, index) => (
+                    <div key={index} className="bar">
                       <div
                         className={classNames('progress', {
                           complete:

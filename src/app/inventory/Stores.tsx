@@ -15,6 +15,7 @@ import { isPhonePortrait } from '../mediaQueries';
 interface Props {
   stores: DimStore[];
   isPhonePortrait: boolean;
+  // TODO: bind just the settings we care about
   settings: Readonly<Settings>;
   buckets: InventoryBuckets;
 }
@@ -75,10 +76,10 @@ export class Stores extends React.Component<Props> {
                   <span>{t(`Bucket.${category}`)}</span>
                 </span>
                 {stores[0].destinyVersion !== 2 &&
-                  buckets[0].vaultBucket && (
+                  buckets.byCategory[category][0].vaultBucket && (
                     <span className="bucket-count">
-                      {vault.vaultCounts[buckets[0].vaultBucket.id].count}/{
-                        buckets[0].vaultBucket.capacity
+                      {vault.vaultCounts[buckets.byCategory[category][0].vaultBucket!.id].count}/{
+                        buckets.byCategory[category][0].vaultBucket!.capacity
                       }
                     </span>
                   )}
@@ -145,6 +146,7 @@ export class Stores extends React.Component<Props> {
 
   toggleSection(id: string) {
     const settings = this.props.settings;
+    // TODO: make an action!
     settings.collapsedSections[id] = !settings.collapsedSections[id];
     settings.save();
   }

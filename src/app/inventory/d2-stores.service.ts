@@ -37,7 +37,7 @@ import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
-import { update } from './actions';
+import { update, setBuckets } from './actions';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -226,6 +226,8 @@ function makeD2StoresService(): D2StoreServiceType {
           newItems,
           itemInfoService,
           lastPlayedDate));
+
+        store.dispatch(setBuckets(buckets));
 
         return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })

@@ -18,7 +18,7 @@ export default class StoreBucket extends React.Component<Props> {
 
     const empty = !items.length;
     const equippedItem = items.find((i) => i.equipped);
-    const unequippedItems = sortItems(items.filter((i) => !i.equipped), settings);
+    const unequippedItems = sortItems(items.filter((i) => !i.equipped), settings.itemSortOrder());
 
     return (
       <div
