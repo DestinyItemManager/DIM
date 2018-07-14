@@ -128,13 +128,6 @@ function MoveItemPropertiesCtrl(
     });
   };
 
-  vm.openDiscuss = () => {
-    ngDialog.closeAll();
-    $rootScope.$broadcast('dim-store-item-discuss', {
-      item: vm.item
-    });
-  };
-
   vm.updateNote = () => {
     if (vm.item.dimInfo.notes === '') {
       delete vm.item.dimInfo.notes;

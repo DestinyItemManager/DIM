@@ -31,6 +31,21 @@
   background-color: transparent;
 }
 
+.item-review {
+  left: 0;
+  text-align: left;
+  display: none;
+  .show-reviews & {
+    display: block;
+  }
+  .fa-star {
+    font-size: .8em;
+    bottom: 1px;
+    padding-left: 1px;
+    position: relative;
+  }
+}
+
 .item-quality {
   left: 0;
   text-align: left;
