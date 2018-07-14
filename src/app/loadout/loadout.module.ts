@@ -2,7 +2,7 @@ import { module } from 'angular';
 
 import { LoadoutDrawerComponent } from './loadout-drawer.component';
 import { LoadoutPopupComponent } from './loadout-popup.component';
-import { react2angular } from '../../../node_modules/react2angular';
+import { react2angular } from 'react2angular';
 import RandomLoadoutButton from './random/RandomLoadoutButton';
 
 export default module('loadoutModule', [])

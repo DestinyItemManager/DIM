@@ -10,7 +10,7 @@ import { RootState } from '../store/reducers';
 import RandomLoadoutButton from '../loadout/random/RandomLoadoutButton';
 import { t } from 'i18next';
 import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
-import { angular2react } from '../../../node_modules/angular2react';
+import { angular2react } from 'angular2react';
 import { FarmingComponent } from '../farming/farming.component';
 import { D2FarmingComponent } from '../farming/d2farming.component';
 import { lazyInjector } from '../../lazyInjector';

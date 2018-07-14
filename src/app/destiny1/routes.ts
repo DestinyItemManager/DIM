@@ -1,6 +1,6 @@
 import { destinyAccountResolver } from "../accounts/destiny-account-resolver";
 import { ReactStateDeclaration } from "@uirouter/react";
-import Destiny from "../destiny2/Destiny";
+import Destiny from "../shell/Destiny";
 import { states as recordBookStates } from '../record-books/routes';
 import { states as activitiesStates } from '../activities/routes';
 import { states as loadoutBuilderStates } from '../loadout-builder/routes';

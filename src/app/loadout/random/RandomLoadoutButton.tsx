@@ -16,6 +16,11 @@ interface State {
 }
 
 export default class RandomLoadoutButton extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = { working: false };
+  }
+
   render() {
     return (
       <div className="random-loadout">

@@ -1,6 +1,6 @@
 import { destinyAccountResolver } from "../accounts/destiny-account-resolver";
 import { ReactStateDeclaration } from "@uirouter/react";
-import Destiny from "./Destiny";
+import Destiny from "../shell/Destiny";
 import Inventory from "../inventory/Inventory";
 
 // Root state for Destiny 2 views
