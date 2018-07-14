@@ -5,7 +5,7 @@ import { states as recordBookStates } from '../record-books/routes';
 import { states as activitiesStates } from '../activities/routes';
 import { states as loadoutBuilderStates } from '../loadout-builder/routes';
 import { states as vendorsStates } from '../vendors/routes';
-import { Inventory } from "../inventory/Inventory";
+import Inventory from "../inventory/Inventory";
 
 // Root state for Destiny 1 views
 export const states: ReactStateDeclaration[] = [

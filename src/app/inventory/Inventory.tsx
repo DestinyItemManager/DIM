@@ -20,7 +20,7 @@ function mapStateToProps(state: RootState): Partial<Props> {
   };
 }
 
-export class Inventory extends React.Component<Props> {
+class Inventory extends React.Component<Props> {
   private $scope = $rootScope.$new(true);
 
   componentDidMount() {

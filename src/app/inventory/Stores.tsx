@@ -30,7 +30,7 @@ function mapStateToProps(state: RootState): Partial<Props> {
   };
 }
 
-export class Stores extends React.Component<Props> {
+class Stores extends React.Component<Props> {
   render() {
     const { stores, isPhonePortrait, settings, buckets } = this.props;
 
