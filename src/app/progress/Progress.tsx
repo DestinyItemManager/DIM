@@ -18,7 +18,6 @@ import {
   } from 'react-view-pager';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { isPhonePortrait, isPhonePortraitStream } from '../mediaQueries';
 import CharacterTile, { characterIsCurrent } from './CharacterTile';
 import { Faction } from './Faction';
 import { Milestone } from './Milestone';
@@ -60,30 +59,29 @@ interface Props {
   $scope: IScope;
   account: DestinyAccount;
   characterOrder: CharacterOrder;
+  isPhonePortrait: boolean;
 }
 
 interface State {
   progress?: ProgressProfile;
-  isPhonePortrait: boolean;
   currentCharacterId: string;
 }
 
 function mapStateToProps(state: RootState): Partial<Props> {
   const settings = state.settings.settings as Settings;
   return {
+    isPhonePortrait: state.shell.isPhonePortrait,
     characterOrder: settings.characterOrder
   };
 }
 
 class Progress extends React.Component<Props, State> {
   subscription: Subscription;
-  mediaQuerySubscription: Subscription;
   private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      isPhonePortrait: isPhonePortrait(),
       currentCharacterId: ""
     };
   }
@@ -105,12 +103,6 @@ class Progress extends React.Component<Props, State> {
 
         return updatedState;
       });
-    });
-
-    this.mediaQuerySubscription = isPhonePortraitStream().subscribe((phonePortrait: boolean) => {
-      if (phonePortrait !== this.state.isPhonePortrait) {
-        this.setState({ isPhonePortrait: phonePortrait });
-      }
     });
 
     this.$scope.$on('dim-refresh', () => {
@@ -195,7 +187,7 @@ class Progress extends React.Component<Props, State> {
       </>
     );
 
-    if (this.state.isPhonePortrait) {
+    if (this.props.isPhonePortrait) {
       return (
         <div className="progress-page dim-page">
           {profileMilestonesContent}

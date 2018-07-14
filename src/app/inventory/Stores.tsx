@@ -10,7 +10,6 @@ import './dimStores.scss';
 import StoreHeading from './StoreHeading';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
-import { isPhonePortrait } from '../mediaQueries';
 
 interface Props {
   stores: DimStore[];
@@ -23,8 +22,7 @@ interface Props {
 function mapStateToProps(state: RootState): Partial<Props> {
   return {
     stores: state.inventory.stores,
-    // TODO: throw this into state
-    isPhonePortrait: isPhonePortrait(),
+    isPhonePortrait: state.shell.isPhonePortrait,
     settings: state.settings.settings as Settings,
     buckets: state.inventory.buckets
   };
