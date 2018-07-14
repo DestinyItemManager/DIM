@@ -102,18 +102,16 @@ export class Settings {
 
   $updates = new Subject();
 
-  save = _.throttle(() => {
+  save() {
     if (!_loaded) {
       throw new Error("Settings haven't loaded - they can't be saved.");
     }
-    SyncService.set({
-      'settings-v1.0': _.omit(this, 'save', 'itemSortOrder', 'ready', '$updates')
-    }).then(() => {
-      this.$updates.next();
-      // TODO: this is actually really late
-      store.dispatch(loaded(this));
-    });
-  }, 1000);
+
+    this.$updates.next();
+    store.dispatch(loaded(this));
+
+    return saveSettings(this);
+  }
 
   itemSortOrder(): string[] {
     return (this.itemSort === 'custom'
@@ -121,6 +119,12 @@ export class Settings {
       : itemSortPresets[this.itemSort]) || itemSortPresets.primaryStat;
   }
 }
+
+const saveSettings = _.throttle((settings) => {
+  return SyncService.set({
+    'settings-v1.0': _.omit(settings, 'save', 'itemSortOrder', 'ready', '$updates')
+  });
+}, 1000);
 
 // Settings instance
 export const settings = new Settings();

@@ -15,22 +15,26 @@ interface Props {
   stores: DimStore[];
   isPhonePortrait: boolean;
   // TODO: bind just the settings we care about
-  settings: Readonly<Settings>;
+  settings: Settings;
   buckets: InventoryBuckets;
+  collapsedSections: Settings['collapsedSections'];
 }
 
 function mapStateToProps(state: RootState): Partial<Props> {
+  const settings = state.settings.settings as Settings;
   return {
     stores: state.inventory.stores,
     isPhonePortrait: state.shell.isPhonePortrait,
-    settings: state.settings.settings as Settings,
-    buckets: state.inventory.buckets
+    settings,
+    buckets: state.inventory.buckets,
+    // Pulling this out lets us do ref-equality
+    collapsedSections: settings.collapsedSections
   };
 }
 
 class Stores extends React.Component<Props> {
   render() {
-    const { stores, isPhonePortrait, settings, buckets } = this.props;
+    const { stores, isPhonePortrait, settings, buckets, collapsedSections } = this.props;
 
     if (!stores.length) {
       return null;
@@ -66,7 +70,7 @@ class Stores extends React.Component<Props> {
                   <i
                     className={classNames(
                       'fa collapse',
-                      settings.collapsedSections[category]
+                      collapsedSections[category]
                         ? 'fa-plus-square-o'
                         : 'fa-minus-square-o'
                     )}
@@ -82,19 +86,19 @@ class Stores extends React.Component<Props> {
                     </span>
                   )}
               </div>
-              {!settings.collapsedSections[category] &&
+              {!collapsedSections[category] &&
                 buckets.byCategory[category].map((bucket) => (
                   <div key={bucket.id} className="store-row items">
                     <i
                       onClick={() => this.toggleSection(bucket.id)}
                       className={classNames(
                         'fa collapse',
-                        settings.collapsedSections[bucket.id]
+                        collapsedSections[bucket.id]
                           ? 'fa-plus-square-o'
                           : 'fa-minus-square-o'
                       )}
                     />
-                    {settings.collapsedSections[bucket.id] ? (
+                    {collapsedSections[bucket.id] ? (
                       <div
                         onClick={() => this.toggleSection(bucket.id)}
                         className="store-text collapse"
@@ -145,7 +149,7 @@ class Stores extends React.Component<Props> {
   toggleSection(id: string) {
     const settings = this.props.settings;
     // TODO: make an action!
-    settings.collapsedSections[id] = !settings.collapsedSections[id];
+    settings.collapsedSections = { ...settings.collapsedSections, [id]: !settings.collapsedSections[id] };
     settings.save();
   }
 }

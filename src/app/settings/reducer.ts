@@ -4,7 +4,7 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 
 export interface SettingsState {
-  readonly settings: Readonly<Settings> | {};
+  readonly settings: Settings | {};
 }
 
 export const initialSettingsState: SettingsState = {
