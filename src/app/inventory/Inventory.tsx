@@ -10,16 +10,33 @@ import { RootState } from '../store/reducers';
 import RandomLoadoutButton from '../loadout/random/RandomLoadoutButton';
 import { t } from 'i18next';
 import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
+import { angular2react } from '../../../node_modules/angular2react';
+import { FarmingComponent } from '../farming/farming.component';
+import { D2FarmingComponent } from '../farming/d2farming.component';
+import { lazyInjector } from '../../lazyInjector';
+import { LoadoutDrawerComponent } from '../loadout/loadout-drawer.component';
+import { CompareComponent } from '../compare/compare.component';
+import { DimStore } from './store-types';
+
+const D1Farming = angular2react('dimFarming', FarmingComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+const D2Farming = angular2react('d2Farming', D2FarmingComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+const LoadoutDrawer = angular2react<{
+  stores: DimStore[];
+  account: DestinyAccount;
+}>('loadoutDrawer', LoadoutDrawerComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+const Compare = angular2react('dimCompare', CompareComponent, lazyInjector.$injector as angular.auto.IInjectorService);
 
 interface Props {
   account: DestinyAccount;
   storesLoaded: boolean;
+  stores: DimStore[];
 }
 
 function mapStateToProps(state: RootState): Partial<Props> {
   console.log('mapStateToProps!!!', state);
   return {
-    storesLoaded: state.inventory.stores.length > 0
+    storesLoaded: state.inventory.stores.length > 0,
+    stores: state.inventory.stores
   };
 }
 
@@ -44,7 +61,7 @@ class Inventory extends React.Component<Props> {
   }
 
   render() {
-    const { storesLoaded, account } = this.props;
+    const { storesLoaded, account, stores } = this.props;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -64,7 +81,10 @@ class Inventory extends React.Component<Props> {
       <>
         <ScrollClassDiv className="sticky-header-background" scrollClass="something-is-sticky"/>
         <Stores />
+        <LoadoutDrawer stores={stores} account={account}/>
+        <Compare/>
         <div id="drag-help" className="drag-help drag-help-hidden">{t('Help.Drag')}</div>
+        {account.destinyVersion === 1 ? <D1Farming/> : <D2Farming/>}
         <RandomLoadoutButton destinyVersion={account.destinyVersion}/>
       </>
     );
