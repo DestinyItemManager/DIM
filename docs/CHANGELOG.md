@@ -3,6 +3,7 @@
 * Fix a bug that would leave behind stackable items when moving certain loadouts like "Gather Reputation Items".
 * The is:haspower search works once again.
 * The is:cosmetic search will now work for Destiny 2.
+* Xur has been removed from the header in D1. Find him in the Vendors page.
 
 # 4.60.0 (2018-07-08)
 
