@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import RandomLoadoutButton from '../loadout/random/RandomLoadoutButton';
 import { t } from 'i18next';
-import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
 import { angular2react } from 'angular2react';
 import { FarmingComponent } from '../farming/farming.component';
 import { D2FarmingComponent } from '../farming/d2farming.component';
@@ -69,7 +68,6 @@ class Inventory extends React.Component<Props> {
 
     return (
       <>
-        <ScrollClassDiv className="sticky-header-background" scrollClass="something-is-sticky"/>
         <Stores />
         <LoadoutDrawer stores={stores} account={account}/>
         <Compare/>

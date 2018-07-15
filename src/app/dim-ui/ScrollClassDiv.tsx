@@ -1,41 +1,65 @@
 import * as React from 'react';
 
-interface Props {
-  className: string;
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   scrollClass: string;
 }
 
-interface State {
-  scrolled: boolean;
-}
+export default class ScrollClassDiv extends React.PureComponent<Props> {
+  private rafTimer: number;
+  private ref = React.createRef<HTMLDivElement>();
+  private scrollParent: HTMLElement | Document;
 
-export default class ScrollClassDiv extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      scrolled: document.body.scrollTop > 0 || document.documentElement.scrollTop > 0
+      scrolled:
+        document.body.scrollTop > 0 || document.documentElement.scrollTop > 0
     };
   }
   componentDidMount() {
-      document.addEventListener('scroll', this.scrollHandler, false);
+    this.scrollParent = scrollParent(this.ref.current);
+    this.scrollParent.addEventListener('scroll', this.scrollHandler, false);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('scroll', this.scrollHandler);
+    this.scrollParent.removeEventListener('scroll', this.scrollHandler);
   }
 
   render() {
-    const { className, scrollClass } = this.props;
-    const { scrolled } = this.state;
+    const { scrollClass, ...props } = this.props;
 
     return (
-      <div className={`${className} ${scrolled ? scrollClass : ''}`}>
+      <div ref={this.ref} {...props}>
         {this.props.children}
       </div>
     );
   }
 
   scrollHandler = () => {
-    this.setState({ scrolled: document.body.scrollTop > 0 || document.documentElement.scrollTop > 0 });
+    cancelAnimationFrame(this.rafTimer);
+    this.rafTimer = requestAnimationFrame(this.stickyHeader);
   }
+
+  stickyHeader = () => {
+    const scrolled =
+      this.scrollParent instanceof Document
+        ? document.body.scrollTop > 0 || document.documentElement.scrollTop > 0
+        : this.scrollParent.scrollTop > 0;
+    this.ref.current!.classList.toggle(this.props.scrollClass, scrolled);
+  }
+}
+
+function scrollParent(node) {
+  while (node && node instanceof HTMLElement) {
+    const style = getComputedStyle(node, null);
+    if (
+      style.getPropertyValue('overflow').match(/(auto|scroll)/) ||
+      style.getPropertyValue('overflow-y').match(/(auto|scroll)/)
+    ) {
+      return node;
+    }
+    node = node.parentNode;
+  }
+
+  return document;
 }

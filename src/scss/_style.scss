@@ -107,7 +107,6 @@ h2, h3 {
 
 
 body {
-  overflow-y: auto;
   margin: 0 auto;
   padding-top: 44px;
   padding-top: calc(44px + constant(safe-area-inset-top));
@@ -117,9 +116,6 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size:12px;
   filter: var(--color-filter);
-  > div:first-child {
-    padding-top: 10px;
-  }
 }
 
 ::-webkit-scrollbar {
@@ -242,16 +238,12 @@ img {
 }
 
 #content {
-  margin: 8px auto;
+  margin: 0 auto;
   user-select: none;
   padding-left: constant(safe-area-inset-left);
   padding-right: constant(safe-area-inset-right);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
-}
-
-.bucket-padding {
-  padding: 0 8px;
 }
 
 .store-bounds {
@@ -313,21 +305,6 @@ h2, h3, h4 {
   background-color: rgba(100, 100, 100, 0.6);
   &:hover {
     background-color: rgba(0, 0, 0, 0.6);
-  }
-}
-
-.sticky-header-background {
-  left: 0;
-  right: 0;
-  top: $header-height;
-  background-color: #434444;
-  height: 82px;
-  position: fixed;
-  backface-visibility: hidden;
-  z-index: 4;
-
-  &.something-is-sticky {
-    box-shadow: 0 1px 6px 0px #222;
   }
 }
 

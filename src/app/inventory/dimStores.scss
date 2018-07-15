@@ -1,4 +1,4 @@
-
+@import '../../scss/variables.scss';
 
 .inventory-content {
   // This assumes 3 characters
@@ -11,6 +11,16 @@
   &.phone-portrait {
     min-width: auto;
     max-width: auto;
+  }
+
+  .title {
+    position: sticky;
+    top: 124px;
+    z-index: 1;
+
+    .phone-portrait & {
+      top: 79px;
+    }
   }
 }
 
@@ -61,16 +71,34 @@
 .store-header {
   position: fixed;
   backface-visibility: hidden;
-  top: 55px;
+  top: 44px;
   left: 0;
   width: auto;
   z-index: 10;
-  margin-left: 28px;
-  height: 82px;
+  padding: 8px 0 4px 28px;
+  background-color: #434444;
 
   @supports (position: sticky) {
     position: sticky;
   }
+
+  &.sticky {
+    box-shadow: 0 1px 6px 0px #222;
+  }
+
+  .phone-portrait & {
+    top: 0px;
+
+    .store-cell {
+      margin: 0;
+      width: 100%;
+    }
+  }
+}
+
+.frame {
+  height: calc(100vh - #{$header-height} - 16px) !important;
+  overflow-y: auto !important;
 }
 
 .stores {
