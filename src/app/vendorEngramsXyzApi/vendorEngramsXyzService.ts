@@ -54,9 +54,9 @@ export class VendorEngramsXyzService {
 
   vendorEngramsFetch(url: string) {
     const request = new Request(url, {
-        method: 'GET',
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          Accept: 'application/json'
         },
       });
 
