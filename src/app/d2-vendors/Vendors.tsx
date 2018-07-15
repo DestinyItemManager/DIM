@@ -19,6 +19,7 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
+import { VendorEngramsXyzService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 
 interface Props {
   account: DestinyAccount;
@@ -30,6 +31,7 @@ interface State {
   trackerService?: DestinyTrackerService;
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
+  vendorEngramsService?: VendorEngramsXyzService;
 }
 
 /**
@@ -65,6 +67,8 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
     const trackerService = await fetchRatingsForVendors(defs, vendorsResponse);
     this.setState({ trackerService });
+
+    // wire in engram service function
   }
 
   componentDidMount() {
@@ -95,7 +99,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const { defs, vendorsResponse, trackerService, ownedItemHashes } = this.state;
+    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramsService } = this.state;
     const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
@@ -113,6 +117,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             account={account}
+            vendorEngramsService={vendorEngramsService}
           />
         )}
 
@@ -127,7 +132,8 @@ function VendorGroup({
   vendorsResponse,
   trackerService,
   ownedItemHashes,
-  account
+  account,
+  vendorEngramsService
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
@@ -135,6 +141,7 @@ function VendorGroup({
   trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
+  vendorEngramsService?: VendorEngramsXyzService;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -151,6 +158,7 @@ function VendorGroup({
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
+            vendorEngramsService={vendorEngramsService}
           />
         </ErrorBoundary>
       )}

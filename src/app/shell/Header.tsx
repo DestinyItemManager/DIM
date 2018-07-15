@@ -139,7 +139,7 @@ export default class Header extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { account, showSearch, dropdownOpen, xurAvailable } = this.state;
+    const { account, showSearch, dropdownOpen, xurAvailable, vendorEngramDropActive } = this.state;
     const { SearchFilter } = this;
 
     // TODO: new fontawesome
@@ -164,6 +164,8 @@ export default class Header extends React.PureComponent<Props, State> {
       ? account.destinyVersion === 1 ? destiny1Links : destiny2Links
       : [];
 
+    console.log(links);
+
     // Links about the current Destiny version
     const destinyLinks = (
       <>
@@ -173,6 +175,9 @@ export default class Header extends React.PureComponent<Props, State> {
             account={account}
             state={link.state}
             text={link.text}
+            extraClass={(link.state === 'destiny2.vendors' && vendorEngramDropActive) ?
+              'badge-new' :
+              undefined}
           />
         )}
         {account && account.destinyVersion === 1 && xurAvailable &&
@@ -278,6 +283,9 @@ export default class Header extends React.PureComponent<Props, State> {
     this.vendorEngramsService.getVendorDrops()
       .then((vds) => {
         const anyActive = vds.some((vd) => vd.type === VendorDropType.Likely380);
+
+        console.log('Header');
+        console.log(anyActive);
 
         this.setState({ vendorEngramDropActive: anyActive });
       });
