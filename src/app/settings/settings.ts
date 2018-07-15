@@ -80,7 +80,7 @@ export class Settings {
   // How big in pixels to draw items - start smaller for iPad
   itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
   // Which categories or buckets should be collapsed?
-  collapsedSections = {};
+  collapsedSections: { [key: string]: boolean } = {};
   // What settings for farming mode
   farming = {
     // Whether to keep one slot per item type open

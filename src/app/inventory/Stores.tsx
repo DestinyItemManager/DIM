@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DimStore, DimVault } from './store-types';
+import { DimStore, DimVault, D1Store } from './store-types';
 import StoreBucket from './StoreBucket';
 import { sortStores } from '../shell/dimAngularFilters.filter';
 import { Settings } from '../settings/settings';
@@ -13,6 +13,7 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
+import D1Reputation from './D1Reputation';
 
 interface Props {
   stores: DimStore[];
@@ -208,6 +209,40 @@ class Stores extends React.Component<Props, State> {
               ))}
           </div>
         ))}
+        {stores[0].isDestiny1() && (
+          <div className="section">
+            <div
+              className="title"
+              onClick={() => this.toggleSection('Reputation')}
+            >
+              <span>
+                <i
+                  className={classNames(
+                    'fa collapse',
+                    collapsedSections.Reputation
+                      ? 'fa-plus-square-o'
+                      : 'fa-minus-square-o'
+                  )}
+                />{' '}
+                {t('Bucket.Reputation')}
+              </span>
+            </div>
+            {!collapsedSections.Reputation && (
+              <div className="store-row items reputation">
+                {stores.map((store: D1Store) => (
+                  <div
+                    key={store.id}
+                    className={classNames('store-cell', {
+                      vault: store.isVault
+                    })}
+                  >
+                    <D1Reputation store={store} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }

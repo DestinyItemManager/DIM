@@ -222,7 +222,11 @@ export interface D1CharacterStat {
 
 export interface D1Progression extends DestinyProgression {
   /** The faction definition associated with this progress. */
-  faction: DestinyFactionDefinition;
+  faction: DestinyFactionDefinition & {
+    factionName: string;
+    factionIcon: string;
+  };
+  order: number;
 }
 
 /**
