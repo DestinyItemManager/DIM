@@ -124,7 +124,8 @@ export function buildSearchConfig(
       complete: ['goldborder', 'yellowborder', 'complete'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
-      prophecy: ['prophecy']
+      prophecy: ['prophecy'],
+      ikelos: ['ikelos']
     });
   }
 
@@ -264,6 +265,13 @@ export function searchFilters(
     1490571337,
     2248667690, // perfect paradox
     573576346   // sagira shell
+  ]);
+
+  const ikelosHash = new Set([
+    847450546,
+    1723472487,
+    1887808042,
+    3866356643
   ]);
 
   // This refactored method filters items by stats
@@ -886,6 +894,9 @@ export function searchFilters(
       },
       prophecy(item: D2Item) {
         return prophecyHash.has(item.hash);
+      },
+      ikelos(item: D2Item) {
+        return ikelosHash.has(item.hash);
       },
       cosmetic(item: DimItem) {
         return cosmeticTypes.has(item.type);
