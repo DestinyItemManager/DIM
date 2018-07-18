@@ -63,9 +63,9 @@ export class VendorEngramsXyzService {
     return Promise.resolve(fetch(request));
   }
 
-  async getVendorDrops(): Promise<VendorDrop[]> {
+  async fetchVendorDrops(): Promise<this> {
     if (this.cachedResponse && this.lastUpdatedInPastFifteenMinutes()) {
-      return this.cachedResponse;
+      return this;
     }
 
     const promise = this.vendorEngramsFetch('https://api.vendorengrams.xyz/getVendorDrops')
@@ -73,15 +73,21 @@ export class VendorEngramsXyzService {
 
     loadingTracker.addPromise(promise);
 
-    this.cachedResponse = promise;
+    this.cachedResponse = await promise;
     this.lastUpdated = new Date();
 
-    return promise;
+    return this;
+  }
+
+  async getAllVendorDrops(): Promise<VendorDrop[] | null> {
+    await this.fetchVendorDrops();
+
+    return this.cachedResponse;
   }
 
   async getVendorDrop(vendorHash: number): Promise<VendorDrop | undefined> {
     if (!this.cachedResponse) {
-      await this.getVendorDrops();
+      await this.fetchVendorDrops();
     }
 
     if (!this.cachedResponse) {
