@@ -19,7 +19,7 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
-import { VendorEngramsXyzService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { VendorEngramsXyzService, dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 
 interface Props {
   account: DestinyAccount;
@@ -69,6 +69,8 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     this.setState({ trackerService });
 
     // wire in engram service function
+    const vendorEngramsService = await dimVendorEngramsService.fetchVendorDrops();
+    this.setState({ vendorEngramsService });
   }
 
   componentDidMount() {

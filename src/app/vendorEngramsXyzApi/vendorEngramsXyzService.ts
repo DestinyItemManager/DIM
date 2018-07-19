@@ -105,3 +105,5 @@ export class VendorEngramsXyzService {
     return this.vendorMap[vendorDrop.vendor];
   }
 }
+
+export const dimVendorEngramsService = new VendorEngramsXyzService();

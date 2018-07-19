@@ -24,7 +24,7 @@ import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { dimVendorService } from '../vendors/vendor.service';
 import { UISref } from '@uirouter/react';
-import { VendorEngramsXyzService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import { VendorDropType } from '../vendorEngramsXyzApi/vendorDrops';
 
 const destiny1Links = [
@@ -90,14 +90,11 @@ export default class Header extends React.PureComponent<Props, State> {
   private unregisterTransitionHooks: Function[] = [];
   private showXur = showPopupFunction('xur', '<xur></xur>');
   private dropdownToggler = React.createRef<HTMLElement>();
-  private vendorEngramsService: VendorEngramsXyzService;
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
 
   constructor(props) {
     super(props);
-
-    this.vendorEngramsService = new VendorEngramsXyzService();
 
     this.SearchFilter = angular2react<{ account: DestinyAccount }>('dimSearchFilter', SearchFilterComponent);
 
@@ -164,8 +161,6 @@ export default class Header extends React.PureComponent<Props, State> {
       ? account.destinyVersion === 1 ? destiny1Links : destiny2Links
       : [];
 
-    console.log(links);
-
     // Links about the current Destiny version
     const destinyLinks = (
       <>
@@ -175,7 +170,6 @@ export default class Header extends React.PureComponent<Props, State> {
             account={account}
             state={link.state}
             text={link.text}
-            showWhatsNew={link.state === 'destiny2.vendors' && vendorEngramDropActive}
           />
         )}
         {account && account.destinyVersion === 1 && xurAvailable &&
@@ -279,7 +273,7 @@ export default class Header extends React.PureComponent<Props, State> {
       return;
     }
 
-    this.vendorEngramsService.getAllVendorDrops()
+    dimVendorEngramsService.getAllVendorDrops()
       .then((vds) => {
         if (!vds) {
           return;
@@ -287,11 +281,8 @@ export default class Header extends React.PureComponent<Props, State> {
 
         const anyActive = vds.some((vd) => vd.type === VendorDropType.Likely380);
 
-        console.log('Header');
-        console.log(anyActive);
-
         // bugbug: should be anyActive
-        this.setState({ vendorEngramDropActive: true });
+        this.setState({ vendorEngramDropActive: anyActive });
       });
 
     setTimeout(this.updateVendorEngrams,
