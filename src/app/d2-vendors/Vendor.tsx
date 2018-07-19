@@ -69,7 +69,7 @@ export default function Vendor({
   console.log(dropActive);
 
   const titleWithDrops = classNames('title',
-    { 'xyz-drop-active': dropActive });
+    { 'xyz-drop-active': dropActive && dropActive.then((da) => da) });
 
   return (
     <div className="vendor-char-items">

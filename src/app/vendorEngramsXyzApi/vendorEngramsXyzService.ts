@@ -4,7 +4,7 @@ import { t } from 'i18next';
 
 export class VendorEngramsXyzService {
   vendorMap: {};
-  cachedResponse: Promise<VendorDrop[]> | null;
+  cachedResponse: VendorDrop[] | null;
   lastUpdated: Date | null;
 
   constructor() {
@@ -98,7 +98,7 @@ export class VendorEngramsXyzService {
 
     return this
       .cachedResponse
-      .then((vds) => vds.find((vd) => vd.vendor === matchedValue));
+      .find((vd) => vd.vendor === matchedValue);
   }
 
   getVendorHash(vendorDrop: VendorDrop): number {
