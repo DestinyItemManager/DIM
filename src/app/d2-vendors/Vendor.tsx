@@ -51,16 +51,18 @@ export default class Vendor extends React.Component<Props, State> {
     };
   }
 
-  componentWillReceiveProps() {
-    this.checkVendorDrop();
+  componentWillUpdate(nextProps: Props) {
+    if (nextProps.vendorEngramsService !== this.props.vendorEngramsService) {
+      this.checkVendorDrop(nextProps.vendorEngramsService);
+    }
   }
 
-  async checkVendorDrop() {
-    if (!this.props.vendorEngramsService) {
+  async checkVendorDrop(vendorEngramsService: VendorEngramsXyzService | undefined) {
+    if (!vendorEngramsService) {
       return;
     }
 
-    this.props.vendorEngramsService
+    vendorEngramsService
       .getVendorDrop(this.props.vendor.vendorHash)
       .then((vd) => {
           this.setState({ dropActive: (vd && vd.type === VendorDropType.Likely380) || false });
@@ -68,7 +70,7 @@ export default class Vendor extends React.Component<Props, State> {
   }
 
   render() {
-    const { vendor, defs, account, trackerService, sales, ownedItemHashes, itemComponents, currencyLookups, vendorEngramsService } = this.props;
+    const { vendor, defs, account, trackerService, sales, ownedItemHashes, itemComponents, currencyLookups } = this.props;
     const { dropActive } = this.state;
 
     const vendorDef = defs.Vendor.get(vendor.vendorHash);
