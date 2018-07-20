@@ -68,7 +68,6 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     const trackerService = await fetchRatingsForVendors(defs, vendorsResponse);
     this.setState({ trackerService });
 
-    // wire in engram service function
     const vendorEngramsService = await dimVendorEngramsService.fetchVendorDrops();
     this.setState({ vendorEngramsService });
   }
@@ -103,6 +102,8 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   render() {
     const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramsService } = this.state;
     const { account } = this.props;
+
+    console.log(vendorEngramsService);
 
     if (!vendorsResponse || !defs) {
       return <div className="vendor dim-page"><Loading/></div>;

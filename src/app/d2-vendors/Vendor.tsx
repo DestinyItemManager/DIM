@@ -20,20 +20,7 @@ import { VendorEngramsXyzService } from '../vendorEngramsXyzApi/vendorEngramsXyz
 import { VendorDropType } from '../vendorEngramsXyzApi/vendorDrops';
 import classNames from 'classnames';
 
-/**
- * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
- */
-export default function Vendor({
-  defs,
-  vendor,
-  itemComponents,
-  sales,
-  trackerService,
-  ownedItemHashes,
-  currencyLookups,
-  account,
-  vendorEngramsService
-}: {
+interface Props {
   defs: D2ManifestDefinitions;
   vendor: DestinyVendorComponent;
   itemComponents?: DestinyItemComponentSetOfint32;
@@ -47,51 +34,79 @@ export default function Vendor({
   };
   account: DestinyAccount;
   vendorEngramsService?: VendorEngramsXyzService;
-}) {
-  const vendorDef = defs.Vendor.get(vendor.vendorHash);
-  if (!vendorDef) {
-    return null;
+}
+
+interface State {
+  dropActive: boolean;
+}
+
+/**
+ * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
+ */
+export default class Vendor extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      dropActive: false
+    };
   }
 
-  const destinationDef = defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
-  const placeDef = defs.Place.get(destinationDef.placeHash);
-
-  const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
-
-  const dropActive = (vendorEngramsService && vendorEngramsService
-    .getVendorDrop(vendor.vendorHash)
-    .then((vd) => vd && vd.type === VendorDropType.Likely380));
-
-  console.log(vendor.vendorHash);
-  if (vendorEngramsService) {
-    console.log(vendorEngramsService.getVendorDrop(vendor.vendorHash));
+  componentWillReceiveProps() {
+    this.checkVendorDrop();
   }
-  console.log(dropActive);
 
-  const titleWithDrops = classNames('title',
-    { 'xyz-drop-active': dropActive && dropActive.then((da) => da) });
+  async checkVendorDrop() {
+    if (!this.props.vendorEngramsService) {
+      return;
+    }
 
-  return (
-    <div className="vendor-char-items">
-      <div className={titleWithDrops}>
-        <div className="collapse-handle">
-          <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
-          <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
-          <span className="vendor-location">{placeString}</span>
+    this.props.vendorEngramsService
+      .getVendorDrop(this.props.vendor.vendorHash)
+      .then((vd) => {
+          this.setState({ dropActive: (vd && vd.type === VendorDropType.Likely380) || false });
+      });
+  }
+
+  render() {
+    const { vendor, defs, account, trackerService, sales, ownedItemHashes, itemComponents, currencyLookups, vendorEngramsService } = this.props;
+    const { dropActive } = this.state;
+
+    const vendorDef = defs.Vendor.get(vendor.vendorHash);
+
+    if (!vendorDef) {
+      return null;
+    }
+
+    const titleWithDrops = classNames('title',
+      { 'xyz-drop-active': dropActive });
+
+    const destinationDef = defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
+    const placeDef = defs.Place.get(destinationDef.placeHash);
+
+    const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
+
+    return (
+      <div className="vendor-char-items">
+        <div className={titleWithDrops}>
+          <div className="collapse-handle">
+            <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
+            <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
+            <span className="vendor-location">{placeString}</span>
+          </div>
+          <Countdown endTime={new Date(vendor.nextRefreshDate)}/>
         </div>
-        <Countdown endTime={new Date(vendor.nextRefreshDate)}/>
+        <VendorItems
+          defs={defs}
+          vendor={vendor}
+          vendorDef={vendorDef}
+          vendorItems={getVendorItems(account, defs, vendorDef, trackerService, itemComponents, sales)}
+          trackerService={trackerService}
+          ownedItemHashes={ownedItemHashes}
+          currencyLookups={currencyLookups}
+        />
       </div>
-      <VendorItems
-        defs={defs}
-        vendor={vendor}
-        vendorDef={vendorDef}
-        vendorItems={getVendorItems(account, defs, vendorDef, trackerService, itemComponents, sales)}
-        trackerService={trackerService}
-        ownedItemHashes={ownedItemHashes}
-        currencyLookups={currencyLookups}
-      />
-    </div>
-  );
+    );
+  }
 }
 
 export function getVendorItems(
