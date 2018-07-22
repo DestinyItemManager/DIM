@@ -35,7 +35,7 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
     id?: string;
     hash?: number;
     notransfer?: boolean;
-    account?: number;
+    amount?: number;
   }): ItemType | undefined;
   /** Refresh just character info (current light/stats, etc.) */
   updateCharacters(account?: DestinyAccount): IPromise<StoreType[]>;

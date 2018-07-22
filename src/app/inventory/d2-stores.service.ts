@@ -96,7 +96,12 @@ function makeD2StoresService(): D2StoreServiceType {
   /**
    * Find an item among all stores that matches the params provided.
    */
-  function getItemAcrossStores(params: { id?: string; hash?: number; notransfer?: boolean; amount?: number }) {
+  function getItemAcrossStores(params: {
+    id?: string;
+    hash?: number;
+    notransfer?: boolean;
+    amount?: number;
+  }) {
     const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (i: DimItem) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
