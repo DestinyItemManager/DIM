@@ -64,7 +64,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
         const maxBasePower = stores.find((s) => s.current)!.stats.maxBasePower;
 
         if (maxBasePower) {
-          const basePowerLevel = maxBasePower.tierMax;
+          const basePowerLevel = +maxBasePower.value;
           this.setState({ basePowerLevel });
         }
       }
