@@ -1,7 +1,5 @@
 import { module } from 'angular';
 
-import { StoresComponent } from './dimStores.directive';
-import { StoreReputation } from './dimStoreReputation.directive';
 import { tagIconFilter, StoreItemComponent } from './dimStoreItem.directive';
 import { StoreHeadingComponent } from './dimStoreHeading.directive';
 import { StoreBucketComponent } from './dimStoreBucket.directive';
@@ -13,9 +11,7 @@ import { react2angular } from 'react2angular';
 import ClearNewItems from './ClearNewItems';
 
 export default module('inventoryModule', [])
-  .component('dimStores', StoresComponent)
   .component('storePager', StorePagerComponent)
-  .component('dimStoreReputation', StoreReputation)
   .component('dimStoreHeading', StoreHeadingComponent)
   .component('dimStoreBucket', StoreBucketComponent)
   .component('dimStats', StatsComponent)
