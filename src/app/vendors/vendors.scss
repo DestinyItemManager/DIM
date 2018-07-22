@@ -48,10 +48,10 @@
 
   @keyframes glow {
     from {
-      box-shadow: 0 0 10px -10px #aef4af;
+      box-shadow: 0 0 10px -10px rgba(174, 244, 175, 0.6);
     }
     to {
-      box-shadow: 0 0 10px 10px #aef4af;
+      box-shadow: 0 0 10px 10px rgba(174, 244, 175, 0.6);
     }
   }
 
