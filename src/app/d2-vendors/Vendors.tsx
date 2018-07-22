@@ -32,6 +32,7 @@ interface State {
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
   vendorEngramsService?: VendorEngramsXyzService;
+  powerLevel?: number;
 }
 
 /**
@@ -59,6 +60,10 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       const stores = this.state.stores || await D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
       if (stores) {
         characterId = stores.find((s) => s.current)!.id;
+
+        const powerLevel = stores.find((s) => s.current)!.powerLevel;
+
+        this.setState({ powerLevel });
       }
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
@@ -100,7 +105,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramsService } = this.state;
+    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramsService, powerLevel } = this.state;
     const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
@@ -119,6 +124,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
             ownedItemHashes={ownedItemHashes}
             account={account}
             vendorEngramsService={vendorEngramsService}
+            powerLevel={powerLevel}
           />
         )}
 
@@ -134,7 +140,8 @@ function VendorGroup({
   trackerService,
   ownedItemHashes,
   account,
-  vendorEngramsService
+  vendorEngramsService,
+  powerLevel
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
@@ -143,6 +150,7 @@ function VendorGroup({
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
   vendorEngramsService?: VendorEngramsXyzService;
+  powerLevel?: number;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -160,6 +168,7 @@ function VendorGroup({
             ownedItemHashes={ownedItemHashes}
             currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
             vendorEngramsService={vendorEngramsService}
+            powerLevel={powerLevel}
           />
         </ErrorBoundary>
       )}

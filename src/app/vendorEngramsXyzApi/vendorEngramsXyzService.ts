@@ -106,6 +106,10 @@ export class VendorEngramsXyzService {
   }
 }
 
+export function powerLevelMatters(powerLevel?: number): boolean {
+  return (powerLevel && powerLevel > 384) || false;
+}
+
 export function isVerified380(vendorDrop: VendorDrop): boolean {
   return vendorDrop.type === VendorDropType.Likely380 &&
     vendorDrop.verified;

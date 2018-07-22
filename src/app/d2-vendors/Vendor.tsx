@@ -16,9 +16,10 @@ import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { UISref } from '@uirouter/react';
-import { VendorEngramsXyzService, isVerified380 } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { VendorEngramsXyzService, isVerified380, powerLevelMatters } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import vendorEngramSvg from '../../images/engram.svg';
 import { t } from 'i18next';
+import classNames from 'classnames';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -34,10 +35,12 @@ interface Props {
   };
   account: DestinyAccount;
   vendorEngramsService?: VendorEngramsXyzService;
+  powerLevel?: number;
 }
 
 interface State {
   dropActive: boolean;
+  dropLinkRelevant: boolean;
 }
 
 /**
@@ -47,7 +50,8 @@ export default class Vendor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      dropActive: false
+      dropActive: false,
+      dropLinkRelevant: false
     };
   }
 
@@ -58,7 +62,13 @@ export default class Vendor extends React.Component<Props, State> {
   }
 
   async checkVendorDrop(vendorEngramsService: VendorEngramsXyzService | undefined) {
-    if (!vendorEngramsService) {
+    const dropLinkRelevant = powerLevelMatters(this.props.powerLevel);
+
+    if (dropLinkRelevant !== this.state.dropLinkRelevant) {
+      this.setState({ dropLinkRelevant });
+    }
+
+    if ((!vendorEngramsService)) {
       return;
     }
 
@@ -71,7 +81,7 @@ export default class Vendor extends React.Component<Props, State> {
 
   render() {
     const { vendor, defs, account, trackerService, sales, ownedItemHashes, itemComponents, currencyLookups } = this.props;
-    const { dropActive } = this.state;
+    const { dropActive, dropLinkRelevant } = this.state;
 
     const vendorDef = defs.Vendor.get(vendor.vendorHash);
 
@@ -84,11 +94,19 @@ export default class Vendor extends React.Component<Props, State> {
 
     const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
 
+    const vendorEngramClass = classNames('fa',
+      { 'xyz-active-throb': dropActive },
+      { 'xyz-inactive': !dropActive });
+
+    const vendorLinkTitle = dropActive ?
+      'VendorEngramsXyz.Likely380' :
+      'VendorEngramsXyz.Vote';
+
     return (
       <div className='vendor-char-items'>
         <div className='title'>
           <div className="collapse-handle">
-            {dropActive && <img className="fa xyz-active-throb" src={vendorEngramSvg} title={t('VendorEngramsXyz.Likely380')} />}
+            {dropLinkRelevant && <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/"><img className={vendorEngramClass} src={vendorEngramSvg} title={t(vendorLinkTitle)} /></a>}
             <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
             <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
             <span className="vendor-location">{placeString}</span>
