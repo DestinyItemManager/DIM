@@ -37,9 +37,24 @@
   .vendor-char-items {
     position: relative;
   }
-  .xyz-drop-active {
-    background-color: #f00;
+
+  .xyz-active-throb {
+    width: 30px;
+    height: 30px;
+    border-radius: 100px;
+    margin-right: 20px;
+    animation: glow 1s infinite alternate;
   }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px -10px #aef4af;
+    }
+    to {
+      box-shadow: 0 0 10px 10px #aef4af;
+    }
+  }
+
   .vendor-col {
     margin-right: 20px;
   }

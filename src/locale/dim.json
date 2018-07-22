@@ -671,6 +671,7 @@
     "SevenWins": "7 Win Reward (Weapon)"
   },
   "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
     "ServiceCallFailed": "VendorEngrams.xyz service call failed."
   },
   "Vendors": {

@@ -279,12 +279,12 @@ export default class Header extends React.PureComponent<Props, State> {
           return;
         }
 
-        const anyActive = vds.some((vd) => vd.type === VendorDropType.Likely380);
+        const anyActive = vds.some((vd) => vd.type === VendorDropType.Likely380 && vd.verified);
 
-        // bugbug: should be anyActive
         this.setState({ vendorEngramDropActive: anyActive });
       });
 
+    // poll every 15 minutes
     setTimeout(this.updateVendorEngrams,
       1000 * 60 * 15);
   }

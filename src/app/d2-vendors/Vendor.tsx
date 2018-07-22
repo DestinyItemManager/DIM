@@ -18,7 +18,8 @@ import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { UISref } from '@uirouter/react';
 import { VendorEngramsXyzService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import { VendorDropType } from '../vendorEngramsXyzApi/vendorDrops';
-import classNames from 'classnames';
+import vendorEngramSvg from '../../images/engram.svg';
+import { t } from 'i18next';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -65,7 +66,7 @@ export default class Vendor extends React.Component<Props, State> {
     vendorEngramsService
       .getVendorDrop(this.props.vendor.vendorHash)
       .then((vd) => {
-          this.setState({ dropActive: (vd && vd.type === VendorDropType.Likely380) || false });
+          this.setState({ dropActive: (vd && vd.type === VendorDropType.Likely380 && vd.verified) || false });
       });
   }
 
@@ -79,18 +80,16 @@ export default class Vendor extends React.Component<Props, State> {
       return null;
     }
 
-    const titleWithDrops = classNames('title',
-      { 'xyz-drop-active': dropActive });
-
     const destinationDef = defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
     const placeDef = defs.Place.get(destinationDef.placeHash);
 
     const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
 
     return (
-      <div className="vendor-char-items">
-        <div className={titleWithDrops}>
+      <div className='vendor-char-items'>
+        <div className='title'>
           <div className="collapse-handle">
+            {dropActive && <img className="fa xyz-active-throb" src={vendorEngramSvg} title={t('VendorEngramsXyz.Likely380')} />}
             <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
             <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
             <span className="vendor-location">{placeString}</span>
