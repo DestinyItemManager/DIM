@@ -1,4 +1,4 @@
-import { VendorDrop, VendorEngramVendor } from "./vendorDrops";
+import { VendorDrop, VendorEngramVendor, VendorDropType } from "./vendorDrops";
 import { loadingTracker } from "../ngimport-more";
 import { t } from 'i18next';
 
@@ -104,6 +104,11 @@ export class VendorEngramsXyzService {
   getVendorHash(vendorDrop: VendorDrop): number {
     return this.vendorMap[vendorDrop.vendor];
   }
+}
+
+export function isVerified380(vendorDrop: VendorDrop): boolean {
+  return vendorDrop.type === VendorDropType.Likely380 &&
+    vendorDrop.verified;
 }
 
 export const dimVendorEngramsService = new VendorEngramsXyzService();

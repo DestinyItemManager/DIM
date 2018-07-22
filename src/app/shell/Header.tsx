@@ -24,8 +24,7 @@ import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { dimVendorService } from '../vendors/vendor.service';
 import { UISref } from '@uirouter/react';
-import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
-import { VendorDropType } from '../vendorEngramsXyzApi/vendorDrops';
+import { dimVendorEngramsService, isVerified380 } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 
 const destiny1Links = [
   {
@@ -279,7 +278,7 @@ export default class Header extends React.PureComponent<Props, State> {
           return;
         }
 
-        const anyActive = vds.some((vd) => vd.type === VendorDropType.Likely380 && vd.verified);
+        const anyActive = vds.some(isVerified380);
 
         this.setState({ vendorEngramDropActive: anyActive });
       });

@@ -16,8 +16,7 @@ import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { UISref } from '@uirouter/react';
-import { VendorEngramsXyzService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
-import { VendorDropType } from '../vendorEngramsXyzApi/vendorDrops';
+import { VendorEngramsXyzService, isVerified380 } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import vendorEngramSvg from '../../images/engram.svg';
 import { t } from 'i18next';
 
@@ -66,7 +65,7 @@ export default class Vendor extends React.Component<Props, State> {
     vendorEngramsService
       .getVendorDrop(this.props.vendor.vendorHash)
       .then((vd) => {
-          this.setState({ dropActive: (vd && vd.type === VendorDropType.Likely380 && vd.verified) || false });
+          this.setState({ dropActive: (vd && isVerified380(vd)) || false });
       });
   }
 

@@ -101,7 +101,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
   render() {
     const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramsService } = this.state;
-    const { account } = this.props;
+  const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
       return <div className="vendor dim-page"><Loading/></div>;
