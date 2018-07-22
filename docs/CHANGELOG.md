@@ -1,5 +1,7 @@
 # Next
 
+* Xur has been removed from the header in D1. Find him in the Vendors page.
+
 # 4.61.0 (2018-07-15)
 
 * Fix a bug that would leave behind stackable items when moving certain loadouts like "Gather Reputation Items".
