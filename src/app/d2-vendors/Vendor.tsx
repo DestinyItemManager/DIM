@@ -35,7 +35,7 @@ interface Props {
   };
   account: DestinyAccount;
   vendorEngramsService?: VendorEngramsXyzService;
-  powerLevel?: number;
+  basePowerLevel?: number;
 }
 
 interface State {
@@ -62,7 +62,7 @@ export default class Vendor extends React.Component<Props, State> {
   }
 
   async checkVendorDrop(vendorEngramsService: VendorEngramsXyzService | undefined) {
-    const dropLinkRelevant = powerLevelMatters(this.props.powerLevel);
+    const dropLinkRelevant = powerLevelMatters(this.props.basePowerLevel);
 
     if (dropLinkRelevant !== this.state.dropLinkRelevant) {
       this.setState({ dropLinkRelevant });

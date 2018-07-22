@@ -32,7 +32,7 @@ interface State {
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
   vendorEngramsService?: VendorEngramsXyzService;
-  powerLevel?: number;
+  basePowerLevel?: number;
 }
 
 /**
@@ -61,9 +61,12 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       if (stores) {
         characterId = stores.find((s) => s.current)!.id;
 
-        const powerLevel = stores.find((s) => s.current)!.powerLevel;
+        const maxBasePower = stores.find((s) => s.current)!.stats.maxBasePower;
 
-        this.setState({ powerLevel });
+        if (maxBasePower) {
+          const basePowerLevel = maxBasePower.tierMax;
+          this.setState({ basePowerLevel });
+        }
       }
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
@@ -105,7 +108,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramsService, powerLevel } = this.state;
+    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramsService, basePowerLevel } = this.state;
     const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
@@ -124,7 +127,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
             ownedItemHashes={ownedItemHashes}
             account={account}
             vendorEngramsService={vendorEngramsService}
-            powerLevel={powerLevel}
+            basePowerLevel={basePowerLevel}
           />
         )}
 
@@ -141,7 +144,7 @@ function VendorGroup({
   ownedItemHashes,
   account,
   vendorEngramsService,
-  powerLevel
+  basePowerLevel
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
@@ -150,7 +153,7 @@ function VendorGroup({
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
   vendorEngramsService?: VendorEngramsXyzService;
-  powerLevel?: number;
+  basePowerLevel?: number;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
   return (
@@ -168,7 +171,7 @@ function VendorGroup({
             ownedItemHashes={ownedItemHashes}
             currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
             vendorEngramsService={vendorEngramsService}
-            powerLevel={powerLevel}
+            basePowerLevel={basePowerLevel}
           />
         </ErrorBoundary>
       )}

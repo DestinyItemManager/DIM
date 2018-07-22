@@ -107,7 +107,8 @@ export class VendorEngramsXyzService {
 }
 
 export function powerLevelMatters(powerLevel?: number): boolean {
-  return (powerLevel && powerLevel > 384) || false;
+  console.log(powerLevel);
+  return (powerLevel && powerLevel >= 380) || false;
 }
 
 export function isVerified380(vendorDrop: VendorDrop): boolean {
