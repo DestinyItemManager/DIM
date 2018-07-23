@@ -13,7 +13,7 @@ import legendaryShards from 'app/images/legendaryShards.png';
 import { InventoryBucket } from './inventory-buckets';
 import { ngDialog } from '../ngimport-more';
 import dialogTemplate from './dimStoreHeading.directive.dialog.html';
-import './dimStoreHeading.scss';
+import './StoreHeading.scss';
 import CharacterStats from './CharacterStats';
 
 interface Props {

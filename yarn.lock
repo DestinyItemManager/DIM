@@ -2101,12 +2101,6 @@ domutils@1.5, domutils@1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
-"dragend@github:Stereobit/dragend":
-  version "0.2.0"
-  resolved "https://codeload.github.com/Stereobit/dragend/tar.gz/a4fa57392b4995f5b3cac7f7d1c34cca317dba64"
-  dependencies:
-    hammerjs "~1.0.5"
-
 duplexer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
@@ -2964,10 +2958,6 @@ gzip-size@^4.1.0:
   dependencies:
     duplexer "^0.1.1"
     pify "^3.0.0"
-
-hammerjs@~1.0.5:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-1.0.11.tgz#85bb661a083a9d2fe86f10e12e51840c1cdc6bc1"
 
 har-schema@^1.0.5:
   version "1.0.5"
