@@ -285,8 +285,7 @@
     "UpdateAvailable": "DIM Updated",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "Version_beta": "Beta has been updated to v{{version}}",
-    "Version_release": "DIM v{{version}} Released",
-    "Xur": "Xûr is Here"
+    "Version_release": "DIM v{{version}} Released"
   },
   "Hotkey": {
     "ClearNewItems": "Clear new items",
@@ -684,6 +683,7 @@
     "Collections": "Collections",
     "Compare": "Compare with what you already have:",
     "Consumables": "Consumables",
+    "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Emotes": "Emotes",
     "Engram": "Reward Engram",

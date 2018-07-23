@@ -91,7 +91,8 @@ export function buildSearchConfig(
     transferable: ['transferable', 'movable'],
     infusable: ['infusable', 'infuse'],
     owner: ['invault', 'incurrentchar'],
-    location: ['inleftchar', 'inmiddlechar', 'inrightchar']
+    location: ['inleftchar', 'inmiddlechar', 'inrightchar'],
+    cosmetic: ['cosmetic']
   };
 
   if (destinyVersion === 1) {
@@ -114,8 +115,7 @@ export function buildSearchConfig(
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
       year: ['year1', 'year2', 'year3'],
       vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
-      activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
-      cosmetic: ['cosmetic']
+      activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot']
     });
   } else {
     Object.assign(filterTrans, {
@@ -123,7 +123,9 @@ export function buildSearchConfig(
       powermod: ['powermod', 'haspowermod'],
       complete: ['goldborder', 'yellowborder', 'complete'],
       masterwork: ['masterwork', 'masterworks'],
-      hasShader: ['shaded', 'hasshader']
+      hasShader: ['shaded', 'hasshader'],
+      prophecy: ['prophecy'],
+      ikelos: ['ikelos']
     });
   }
 
@@ -227,6 +229,50 @@ export function searchFilters(
   let _sortedStores: DimStore[] | null = null;
   let _loadoutItemIds: Set<string> | undefined;
   let _loadoutItemIdsPromise: Promise<void> | undefined;
+
+  const statHashes = new Set([
+    1480404414, // D2 Attack
+    3897883278, // D1 & D2 Defense
+    368428387 // D1 Attack
+  ]);
+
+  const cosmeticTypes = new Set([
+    "Shader",
+    "Shaders",
+    "Ornaments",
+    "Modifications",
+    "Emote",
+    "Emotes",
+    "Emblem",
+    "Emblems",
+    "Vehicle",
+    "Horn",
+    "Ship",
+    "Ships",
+    "ClanBanners"
+  ]);
+
+  const prophecyHash = new Set([
+    472169727,
+    3991544423,
+    3285365666,
+    161537636,
+    2091737595,
+    3991544422,
+    3285365667,
+    161537637,
+    3188460622,
+    1490571337,
+    2248667690, // perfect paradox
+    573576346   // sagira shell
+  ]);
+
+  const ikelosHash = new Set([
+    847450546,
+    1723472487,
+    1887808042,
+    3866356643
+  ]);
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
@@ -838,26 +884,7 @@ export function searchFilters(
         return item.dimInfo.tag !== undefined;
       },
       hasLight(item: DimItem) {
-        const lightBuckets = ["BUCKET_CHEST",
-          "BUCKET_LEGS",
-          "BUCKET_ARTIFACT",
-          "BUCKET_HEAVY_WEAPON",
-          "BUCKET_PRIMARY_WEAPON",
-          "BUCKET_CLASS_ITEMS",
-          "BUCKET_SPECIAL_WEAPON",
-          "BUCKET_HEAD",
-          "BUCKET_ARMS",
-          "BUCKET_GHOST",
-          3448274439,
-          3551918588,
-          14239492,
-          20886954,
-          1585787867,
-          1498876634,
-          2465295065,
-          953998645
-        ];
-        return item.primStat && item.bucket && _.contains(lightBuckets, item.bucket.id);
+        return item.primStat && statHashes.has(item.primStat.statHash);
       },
       weapon(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Weapons';
@@ -865,17 +892,14 @@ export function searchFilters(
       armor(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Armor';
       },
+      prophecy(item: D2Item) {
+        return prophecyHash.has(item.hash);
+      },
+      ikelos(item: D2Item) {
+        return ikelosHash.has(item.hash);
+      },
       cosmetic(item: DimItem) {
-        const cosmeticBuckets = [
-          "BUCKET_SHADER",
-          "BUCKET_MODS",
-          "BUCKET_EMOTES",
-          "BUCKET_EMBLEM",
-          "BUCKET_VEHICLE",
-          "BUCKET_SHIP",
-          "BUCKET_HORN"
-        ];
-        return item.bucket && cosmeticBuckets.includes(item.bucket.id.toString());
+        return cosmeticTypes.has(item.type);
       },
       equipment(item: DimItem) {
         return item.equipment;
