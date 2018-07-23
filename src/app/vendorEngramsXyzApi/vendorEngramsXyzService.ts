@@ -3,36 +3,36 @@ import { loadingTracker } from "../ngimport-more";
 import { t } from 'i18next';
 
 export class VendorEngramsXyzService {
-  vendorMap: {};
+  vendorMap: { [k: number]: VendorEngramVendor[] };
   cachedResponse: VendorDrop[] | null;
   lastUpdated: Date | null;
 
   constructor() {
     this.vendorMap = {};
-    this.vendorMap[ManifestVendor.AnaBray] = VendorEngramVendor.AnaBray;
-    this.vendorMap[ManifestVendor.ArachJalaal] = VendorEngramVendor.ArachJalaal;
-    this.vendorMap[ManifestVendor.AsherMir] = VendorEngramVendor.AsherMir;
-    this.vendorMap[ManifestVendor.Banshee44] = VendorEngramVendor.Banshee44;
-    this.vendorMap[ManifestVendor.Benedict9940] = VendorEngramVendor.Benedict9940;
-    this.vendorMap[ManifestVendor.AnaBray] = VendorEngramVendor.BraytechRWPMk_II;
-    this.vendorMap[ManifestVendor.CommanderZavala] = VendorEngramVendor.CommanderZavala;
-    this.vendorMap[ManifestVendor.DevrimKay] = VendorEngramVendor.DevrimKay;
-    this.vendorMap[ManifestVendor.TyraKarn] = VendorEngramVendor.Drang;
-    this.vendorMap[ManifestVendor.ExecutorHideo] = VendorEngramVendor.ExecutorHideo;
-    this.vendorMap[ManifestVendor.Failsafe] = VendorEngramVendor.Failsafe;
-    this.vendorMap[ManifestVendor.AnaBray] = VendorEngramVendor.IKELOS_HC_V1_0_1;
-    this.vendorMap[ManifestVendor.IkoraRey] = VendorEngramVendor.IkoraRey;
-    this.vendorMap[ManifestVendor.Lakshmi2] = VendorEngramVendor.Lakshmi2;
-    this.vendorMap[ManifestVendor.LordSaladin] = VendorEngramVendor.LordSaladin;
-    this.vendorMap[ManifestVendor.LordShaxx] = VendorEngramVendor.LordShaxx;
-    this.vendorMap[ManifestVendor.AsherMir] = VendorEngramVendor.ManOWar;
-    this.vendorMap[VendorEngramVendor.MidaMiniTool] = VendorEngramVendor.DevrimKay;
-    this.vendorMap[ManifestVendor.Sloane] = VendorEngramVendor.Sloane;
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS0] = VendorEngramVendor.TheEmissary;
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS1] = VendorEngramVendor.TheEmissary;
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS2] = VendorEngramVendor.TheEmissary;
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS3] = VendorEngramVendor.TheEmissary;
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS4] = VendorEngramVendor.TheEmissary;
+    this.vendorMap[ManifestVendor.AnaBray] = [VendorEngramVendor.AnaBray,
+      VendorEngramVendor.BraytechRWPMk_II,
+      VendorEngramVendor.IKELOS_HC_V1_0_1];
+    this.vendorMap[ManifestVendor.ArachJalaal] = [VendorEngramVendor.ArachJalaal];
+    this.vendorMap[ManifestVendor.AsherMir] = [VendorEngramVendor.AsherMir,
+      VendorEngramVendor.ManOWar];
+    this.vendorMap[ManifestVendor.Banshee44] = [VendorEngramVendor.Banshee44];
+    this.vendorMap[ManifestVendor.Benedict9940] = [VendorEngramVendor.Benedict9940];
+    this.vendorMap[ManifestVendor.CommanderZavala] = [VendorEngramVendor.CommanderZavala];
+    this.vendorMap[ManifestVendor.DevrimKay] = [VendorEngramVendor.DevrimKay,
+      VendorEngramVendor.MidaMiniTool];
+    this.vendorMap[ManifestVendor.TyraKarn] = [VendorEngramVendor.Drang];
+    this.vendorMap[ManifestVendor.ExecutorHideo] = [VendorEngramVendor.ExecutorHideo];
+    this.vendorMap[ManifestVendor.Failsafe] = [VendorEngramVendor.Failsafe];
+    this.vendorMap[ManifestVendor.IkoraRey] = [VendorEngramVendor.IkoraRey];
+    this.vendorMap[ManifestVendor.Lakshmi2] = [VendorEngramVendor.Lakshmi2];
+    this.vendorMap[ManifestVendor.LordSaladin] = [VendorEngramVendor.LordSaladin];
+    this.vendorMap[ManifestVendor.LordShaxx] = [VendorEngramVendor.LordShaxx];
+    this.vendorMap[ManifestVendor.Sloane] = [VendorEngramVendor.Sloane];
+    this.vendorMap[ManifestVendor.TheEmissary_TRIALS0] = [VendorEngramVendor.TheEmissary];
+    this.vendorMap[ManifestVendor.TheEmissary_TRIALS1] = [VendorEngramVendor.TheEmissary];
+    this.vendorMap[ManifestVendor.TheEmissary_TRIALS2] = [VendorEngramVendor.TheEmissary];
+    this.vendorMap[ManifestVendor.TheEmissary_TRIALS3] = [VendorEngramVendor.TheEmissary];
+    this.vendorMap[ManifestVendor.TheEmissary_TRIALS4] = [VendorEngramVendor.TheEmissary];
   }
 
   handleVendorEngramsErrors(response: Response) {
@@ -100,18 +100,17 @@ export class VendorEngramsXyzService {
 
     const matchedValues = this.vendorMap[vendorHash];
 
-    if (vendorHash === 3982706173) {
-      console.log(matchedValues);
+    if (!matchedValues) {
+      return undefined;
     }
 
     return this
       .cachedResponse
-      .filter((vd) => vd.vendor === matchedValues);
+      .filter((vd) => matchedValues.some((vev) => vev === vd.vendor));
   }
 }
 
 export function powerLevelMatters(powerLevel?: number): boolean {
-  console.log(powerLevel);
   return (powerLevel && powerLevel >= 380) || false;
 }
 
