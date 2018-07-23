@@ -36,3 +36,26 @@ export enum VendorEngramVendor {
   IKELOS_HC_V1_0_1 = 20,
   BraytechRWPMk_II = 21
 }
+
+export enum ManifestVendor {
+  AnaBray = 1735426333,
+  ArachJalaal = 3354631265,
+  AsherMir = 3982706173,
+  Banshee44 = 672118013,
+  Benedict9940 = 1265988377,
+  CommanderZavala = 69482069,
+  DevrimKay = 396892126,
+  ExecutorHideo = 3819664660,
+  Failsafe = 1576276905,
+  IkoraRey = 1976548992,
+  Lakshmi2 = 2260557667,
+  LordSaladin = 895295461,
+  LordShaxx = 3603221665,
+  Sloane = 1062861569,
+  TheEmissary_TRIALS0 = 3190557730,
+  TheEmissary_TRIALS1 = 3190557731,
+  TheEmissary_TRIALS2 = 3190557728,
+  TheEmissary_TRIALS3 = 3190557729,
+  TheEmissary_TRIALS4 = 3190557734,
+  TyraKarn = 1748437699
+}

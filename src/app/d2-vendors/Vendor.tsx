@@ -73,9 +73,10 @@ export default class Vendor extends React.Component<Props, State> {
     }
 
     vendorEngramsService
-      .getVendorDrop(this.props.vendor.vendorHash)
-      .then((vd) => {
-          this.setState({ dropActive: (vd && isVerified380(vd)) || false });
+      .getVendorDrops(this.props.vendor.vendorHash)
+      .then((vds) => {
+        console.log(vds);
+        this.setState({ dropActive: (vds && vds.some(isVerified380)) || false });
       });
   }
 
