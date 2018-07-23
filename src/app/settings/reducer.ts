@@ -13,6 +13,7 @@ export const initialSettingsState: SettingsState = {
 
 export type SettingsAction = ActionType<typeof actions>;
 
+// TODO: Figure out how to drive saving settings from this state
 export const settings: Reducer<SettingsState, SettingsAction> = (
   state: SettingsState = initialSettingsState,
   action: SettingsAction

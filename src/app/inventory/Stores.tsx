@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DimStore, DimVault, D1Store } from './store-types';
-import StoreBucket from './StoreBucket';
 import { sortStores } from '../shell/dimAngularFilters.filter';
 import { Settings } from '../settings/settings';
 import { InventoryBuckets } from './inventory-buckets';
@@ -13,7 +12,9 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import D1Reputation from './D1Reputation';
+import { StoreBuckets } from './StoreBuckets';
 
 interface Props {
   stores: DimStore[];
@@ -40,6 +41,9 @@ function mapStateToProps(state: RootState): Partial<Props> {
   };
 }
 
+/**
+ * Display inventory and character headers for all characters and the vault.
+ */
 class Stores extends React.Component<Props, State> {
   constructor(props) {
     super(props);
@@ -122,22 +126,12 @@ class Stores extends React.Component<Props, State> {
         </ScrollClassDiv>
         {Object.keys(buckets.byCategory).map((category) => (
           <div key={category} className="section">
-            <div className="title">
-              <span
-                className="collapse-handle"
-                onClick={() => this.toggleSection(category)}
-              >
-                <i
-                  className={classNames(
-                    'fa collapse',
-                    collapsedSections[category]
-                      ? 'fa-plus-square-o'
-                      : 'fa-minus-square-o'
-                  )}
-                />{' '}
-                <span>{t(`Bucket.${category}`)}</span>
-              </span>
-              {stores[0].destinyVersion !== 2 &&
+            <CollapsibleTitle
+              title={t(`Bucket.${category}`)}
+              sectionId={category}
+              collapsedSections={collapsedSections}
+            >
+              {stores[0].isDestiny1() &&
                 buckets.byCategory[category][0].vaultBucket && (
                   <span className="bucket-count">
                     {
@@ -147,105 +141,63 @@ class Stores extends React.Component<Props, State> {
                     }/{buckets.byCategory[category][0].vaultBucket!.capacity}
                   </span>
                 )}
-            </div>
+            </CollapsibleTitle>
             {!collapsedSections[category] &&
               buckets.byCategory[category].map((bucket) => (
-                <div key={bucket.id} className="store-row items">
-                  <i
-                    onClick={() => this.toggleSection(bucket.id)}
-                    className={classNames(
-                      'fa collapse',
-                      collapsedSections[bucket.id]
-                        ? 'fa-plus-square-o'
-                        : 'fa-minus-square-o'
-                    )}
-                  />
-                  {collapsedSections[bucket.id] ? (
-                    <div
-                      onClick={() => this.toggleSection(bucket.id)}
-                      className="store-text collapse"
-                    >
-                      <span>{t('Bucket.Show', { bucket: bucket.name })}</span>
-                    </div>
-                  ) : bucket.accountWide ? (
-                    <>
-                      {stores.length > 1 ||
-                        (stores[0] !== vault && (
-                          <div className="store-cell account-wide">
-                            <StoreBucket
-                              items={currentStore.buckets[bucket.id]}
-                              settings={settings}
-                            />
-                          </div>
-                        ))}
-                      {stores.length > 1 ||
-                        (stores[0] === vault && (
-                          <div className="store-cell vault">
-                            <StoreBucket
-                              items={vault.buckets[bucket.id]}
-                              settings={settings}
-                            />
-                          </div>
-                        ))}
-                    </>
-                  ) : (
-                    stores.map((store) => (
-                      <div
-                        key={store.id}
-                        className={classNames('store-cell', {
-                          vault: store.isVault
-                        })}
-                      >
-                        {(!store.isVault || bucket.vaultBucket) && (
-                          <StoreBucket
-                            items={store.buckets[bucket.id]}
-                            settings={settings}
-                          />
-                        )}
-                      </div>
-                    ))
-                  )}
-                </div>
+                <StoreBuckets
+                  key={bucket.id}
+                  bucket={bucket}
+                  stores={stores}
+                  collapsedSections={collapsedSections}
+                  vault={vault}
+                  currentStore={currentStore}
+                  settings={settings}
+                  toggleSection={this.toggleSection}
+                />
               ))}
           </div>
         ))}
         {stores[0].isDestiny1() && (
-          <div className="section">
-            <div
-              className="title"
-              onClick={() => this.toggleSection('Reputation')}
-            >
-              <span>
-                <i
-                  className={classNames(
-                    'fa collapse',
-                    collapsedSections.Reputation
-                      ? 'fa-plus-square-o'
-                      : 'fa-minus-square-o'
-                  )}
-                />{' '}
-                {t('Bucket.Reputation')}
-              </span>
-            </div>
-            {!collapsedSections.Reputation && (
-              <div className="store-row items reputation">
-                {stores.map((store: D1Store) => (
-                  <div
-                    key={store.id}
-                    className={classNames('store-cell', {
-                      vault: store.isVault
-                    })}
-                  >
-                    <D1Reputation store={store} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <D1ReputationSection
+            stores={stores}
+            collapsedSections={collapsedSections}
+          />
         )}
       </div>
     );
   }
+}
+
+function D1ReputationSection({
+  stores,
+  collapsedSections
+}: {
+  stores: DimStore[];
+  collapsedSections: Settings['collapsedSections'];
+}) {
+  return (
+    <div className="section">
+      <CollapsibleTitle
+        title={t('Bucket.Reputation')}
+        sectionId="Reputation"
+        collapsedSections={collapsedSections}
+      />
+      {!collapsedSections.Reputation && (
+        <div className="store-row items reputation">
+          {stores.map((store: D1Store) => (
+            <div
+              key={store.id}
+              className={classNames('store-cell', {
+                vault: store.isVault
+              })}
+            >
+              <D1Reputation store={store} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default connect(mapStateToProps)(Stores);
