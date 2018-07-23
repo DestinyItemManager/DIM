@@ -63,8 +63,9 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
         const maxBasePower = stores.find((s) => s.current)!.stats.maxBasePower;
 
-        if (maxBasePower) {
-          const basePowerLevel = +maxBasePower.value;
+        // maxBasePower.value gets an asterisk when classified items are present; could regex it
+        if (maxBasePower && maxBasePower.tiers) {
+          const basePowerLevel = +maxBasePower.tiers[0];
           this.setState({ basePowerLevel });
         }
       }
@@ -156,6 +157,9 @@ function VendorGroup({
   basePowerLevel?: number;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
+
+  console.log(basePowerLevel);
+
   return (
     <>
       <h2>{groupDef.categoryName}</h2>
