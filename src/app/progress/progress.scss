@@ -1,11 +1,12 @@
 @import '../../scss/variables.scss';
 
 .progress-page {
-  margin: 0 auto;
+  margin: 16px auto !important;
 
   .progress-characters {
     display: flex;
     margin-top: 12px;
+    margin-bottom: 12px;
 
     .character {
       height: auto;
@@ -67,6 +68,6 @@
   hr {
     border: none;
     border-bottom: 1px solid #666;
-    margin: 0 0 24px 0;
+    margin: 0 0 16px 0;
   }
 }
