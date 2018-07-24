@@ -3,7 +3,7 @@ import { $q, $rootScope } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
-import { compareAccounts, DestinyAccount, getDestinyAccountsForBungieAccount } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount, getDestinyAccountsForBungieAccount } from './destiny-account.service';
 import '../rx-operators';
 import { settings } from '../settings/settings';
 import { SyncService } from '../storage/sync.service';

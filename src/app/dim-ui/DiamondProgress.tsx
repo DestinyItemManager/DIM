@@ -8,7 +8,7 @@ interface Props {
   level?: number;
   /** The icon to use */
   icon: string;
-  className: string;
+  className?: string;
 }
 
 /**

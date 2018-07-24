@@ -3,7 +3,7 @@ import { ReactStateDeclaration } from "@uirouter/react";
 import { D2InventoryComponent } from "./d2-inventory.component";
 import { angular2react } from "angular2react";
 import { lazyInjector } from "../../lazyInjector";
-import Destiny from "./Destiny";
+import Destiny from "../shell/Destiny";
 
 // Root state for Destiny 2 views
 export const states: ReactStateDeclaration[] = [{
