@@ -113,7 +113,7 @@
 
     @supports (position: sticky) {
       position: sticky;
-      top: 55px;
+      top: 64px;
     }
   }
   .vendor-headers {
@@ -208,10 +208,6 @@
 
 .ngdialog.vendor-move-popup {
   position: absolute;
-  // TODO: this is here so popups will show over the Xur popup, but it
-  // makes vendor item popups go over the header. Remove this when Xur
-  // is its own page instead of a popup.
-  z-index: 1000;
   height: fit-content;
   .compare-items {
     margin-top: 0;
@@ -251,34 +247,5 @@ vendor-currencies, .vendor-currencies {
       height: 16px;
       width: 16px;
     }
-  }
-}
-
-.xurDialog {
-  .title {
-    display: none;
-  }
-
-  .vendors, .vendor-row {
-    margin: 0;
-  }
-
-  .vendor-items {
-    flex-wrap: none;
-  }
-
-  vendor-currencies {
-    margin-top: 0;
-  }
-}
-
-.ngdialog.vendor-move-popup.xur-move-popup {
-  position: fixed;
-}
-
-.ngdialog.modal-dialog.xur {
-  align-items: flex-start;
-  .ngdialog-content {
-    margin-top: 2em;
   }
 }

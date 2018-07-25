@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
-import { ngDialog } from '../ngimport-more';
 import { SearchFilterComponent } from '../search/search-filter.component';
 import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -22,7 +21,6 @@ import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
-import { dimVendorService } from '../vendors/vendor.service';
 import { UISref } from '@uirouter/react';
 import { dimVendorEngramsService, isVerified380 } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 
@@ -71,7 +69,6 @@ if ($featureFlags.vendors) {
 }
 
 interface State {
-  xurAvailable: boolean;
   account?: DestinyAccount;
   dropdownOpen: boolean;
   showSearch: boolean;
@@ -83,11 +80,9 @@ interface Props {
 }
 
 export default class Header extends React.PureComponent<Props, State> {
-  private vendorsSubscription: Subscription;
   private accountSubscription: Subscription;
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
-  private showXur = showPopupFunction('xur', '<xur></xur>');
   private dropdownToggler = React.createRef<HTMLElement>();
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
@@ -99,7 +94,6 @@ export default class Header extends React.PureComponent<Props, State> {
     this.SearchFilter = angular2react<{ account: DestinyAccount }>('dimSearchFilter', SearchFilterComponent);
 
     this.state = {
-      xurAvailable: false,
       dropdownOpen: false,
       showSearch: false,
       vendorEngramDropActive: false
@@ -115,9 +109,6 @@ export default class Header extends React.PureComponent<Props, State> {
     this.unregisterTransitionHooks = [
       router.transitionService.onBefore({}, () => {
         this.setState({ dropdownOpen: false });
-      }),
-      router.transitionService.onSuccess({ to: 'destiny1.*' }, () => {
-        this.updateXur();
       })
     ];
 
@@ -130,16 +121,13 @@ export default class Header extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     this.unregisterTransitionHooks.forEach((f) => f());
     this.accountSubscription.unsubscribe();
-    if (this.vendorsSubscription) {
-      this.vendorsSubscription.unsubscribe();
-    }
     if (this.engramRefreshTimeout) {
       clearTimeout(this.engramRefreshTimeout);
     }
   }
 
   render() {
-    const { account, showSearch, dropdownOpen, xurAvailable, vendorEngramDropActive } = this.state;
+    const { account, showSearch, dropdownOpen, vendorEngramDropActive } = this.state;
     const { SearchFilter } = this;
 
     // TODO: new fontawesome
@@ -175,15 +163,11 @@ export default class Header extends React.PureComponent<Props, State> {
             text={link.text}
           />
         )}
-        {account && account.destinyVersion === 1 && xurAvailable &&
-          <a className="link" onClick={this.showXur}>Xûr</a>}
       </>
     );
 
     const reverseDestinyLinks = (
       <>
-        {account && account.destinyVersion === 1 && xurAvailable &&
-          <a className="link" onClick={this.showXur}>Xûr</a>}
         {links.slice().reverse().map((link) =>
           <Link
             key={link.state}
@@ -304,41 +288,6 @@ export default class Header extends React.PureComponent<Props, State> {
   private toggleSearch = () => {
     this.setState({ showSearch: !this.state.showSearch });
   }
-
-  private updateXur() {
-    if (this.state.account && this.state.account.destinyVersion === 1 && !this.vendorsSubscription) {
-      this.vendorsSubscription = dimVendorService.getVendorsStream(this.state.account).subscribe(([_stores, vendors]) => {
-        const xur = 2796397637;
-        this.setState({ xurAvailable: Boolean(vendors[xur]) });
-      });
-    }
-  }
-}
-
-/**
- * Show a popup dialog containing the given template. Its class
- * will be based on the name.
- */
-function showPopupFunction(name, template) {
-  let result;
-  return (e) => {
-    e.stopPropagation();
-
-    if (result) {
-      result.close();
-    } else {
-      ngDialog.closeAll();
-      result = ngDialog.open({
-        template,
-        className: name,
-        appendClassName: 'modal-dialog'
-      });
-
-      result.closePromise.then(() => {
-        result = null;
-      });
-    }
-  };
 }
 
 function ExternalLink({
