@@ -91,6 +91,7 @@ export default class Header extends React.PureComponent<Props, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
+  private engramRefreshTimeout: number;
 
   constructor(props) {
     super(props);
@@ -131,6 +132,9 @@ export default class Header extends React.PureComponent<Props, State> {
     this.accountSubscription.unsubscribe();
     if (this.vendorsSubscription) {
       this.vendorsSubscription.unsubscribe();
+    }
+    if (this.engramRefreshTimeout) {
+      clearTimeout(this.engramRefreshTimeout);
     }
   }
 
@@ -283,9 +287,8 @@ export default class Header extends React.PureComponent<Props, State> {
         this.setState({ vendorEngramDropActive: anyActive });
       });
 
-    // poll every 15 minutes
-    setTimeout(this.updateVendorEngrams,
-      1000 * 60 * 15);
+    this.engramRefreshTimeout = window.setInterval(this.updateVendorEngrams,
+      dimVendorEngramsService.refreshInterval);
   }
 
   private toggleDropdown = () => {

@@ -95,8 +95,8 @@ export default class Vendor extends React.Component<Props, State> {
     const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
 
     const vendorEngramClass = classNames('fa',
-      { 'xyz-active-throb': dropActive },
-      { 'xyz-inactive': !dropActive });
+      { 'xyz-active-throb': dropActive,
+      'xyz-inactive': !dropActive });
 
     const vendorLinkTitle = dropActive ?
       'VendorEngramsXyz.Likely380' :

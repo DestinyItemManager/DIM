@@ -8,10 +8,10 @@ export interface VendorDrop {
 
 export enum VendorDropType {
   Dropping375 = 0,
-  Dropping376To379 = 1,
-  Possibly380 = 2,
-  Likely380 = 3,
-  NeedMoreData = 4
+  Dropping376To379,
+  Possibly380,
+  Likely380,
+  NeedMoreData
 }
 
 export enum VendorEngramVendor {

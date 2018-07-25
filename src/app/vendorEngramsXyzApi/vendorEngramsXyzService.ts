@@ -3,36 +3,35 @@ import { loadingTracker } from "../ngimport-more";
 import { t } from 'i18next';
 
 export class VendorEngramsXyzService {
-  vendorMap: { [k: number]: VendorEngramVendor[] };
+  readonly vendorMap: { [k: number]: VendorEngramVendor[] } = {
+    [ManifestVendor.AsherMir]: [VendorEngramVendor.AsherMir,
+      VendorEngramVendor.ManOWar],
+    [ManifestVendor.Banshee44]: [VendorEngramVendor.Banshee44],
+    [ManifestVendor.Benedict9940]: [VendorEngramVendor.Benedict9940],
+    [ManifestVendor.CommanderZavala]: [VendorEngramVendor.CommanderZavala],
+    [ManifestVendor.DevrimKay]: [VendorEngramVendor.DevrimKay,
+      VendorEngramVendor.MidaMiniTool],
+    [ManifestVendor.TyraKarn]: [VendorEngramVendor.Drang],
+    [ManifestVendor.ExecutorHideo]: [VendorEngramVendor.ExecutorHideo],
+    [ManifestVendor.Failsafe]: [VendorEngramVendor.Failsafe],
+    [ManifestVendor.IkoraRey]: [VendorEngramVendor.IkoraRey],
+    [ManifestVendor.Lakshmi2]: [VendorEngramVendor.Lakshmi2],
+    [ManifestVendor.LordSaladin]: [VendorEngramVendor.LordSaladin],
+    [ManifestVendor.LordShaxx]: [VendorEngramVendor.LordShaxx],
+    [ManifestVendor.Sloane]: [VendorEngramVendor.Sloane],
+    [ManifestVendor.TheEmissary_TRIALS0]: [VendorEngramVendor.TheEmissary],
+    [ManifestVendor.TheEmissary_TRIALS1]: [VendorEngramVendor.TheEmissary],
+    [ManifestVendor.TheEmissary_TRIALS2]: [VendorEngramVendor.TheEmissary],
+    [ManifestVendor.TheEmissary_TRIALS3]: [VendorEngramVendor.TheEmissary],
+    [ManifestVendor.TheEmissary_TRIALS4]: [VendorEngramVendor.TheEmissary]
+  };
+
+  refreshInterval: number;
   cachedResponse: VendorDrop[] | null;
   lastUpdated: Date | null;
 
   constructor() {
-    this.vendorMap = {};
-    this.vendorMap[ManifestVendor.AnaBray] = [VendorEngramVendor.AnaBray,
-      VendorEngramVendor.BraytechRWPMk_II,
-      VendorEngramVendor.IKELOS_HC_V1_0_1];
-    this.vendorMap[ManifestVendor.ArachJalaal] = [VendorEngramVendor.ArachJalaal];
-    this.vendorMap[ManifestVendor.AsherMir] = [VendorEngramVendor.AsherMir,
-      VendorEngramVendor.ManOWar];
-    this.vendorMap[ManifestVendor.Banshee44] = [VendorEngramVendor.Banshee44];
-    this.vendorMap[ManifestVendor.Benedict9940] = [VendorEngramVendor.Benedict9940];
-    this.vendorMap[ManifestVendor.CommanderZavala] = [VendorEngramVendor.CommanderZavala];
-    this.vendorMap[ManifestVendor.DevrimKay] = [VendorEngramVendor.DevrimKay,
-      VendorEngramVendor.MidaMiniTool];
-    this.vendorMap[ManifestVendor.TyraKarn] = [VendorEngramVendor.Drang];
-    this.vendorMap[ManifestVendor.ExecutorHideo] = [VendorEngramVendor.ExecutorHideo];
-    this.vendorMap[ManifestVendor.Failsafe] = [VendorEngramVendor.Failsafe];
-    this.vendorMap[ManifestVendor.IkoraRey] = [VendorEngramVendor.IkoraRey];
-    this.vendorMap[ManifestVendor.Lakshmi2] = [VendorEngramVendor.Lakshmi2];
-    this.vendorMap[ManifestVendor.LordSaladin] = [VendorEngramVendor.LordSaladin];
-    this.vendorMap[ManifestVendor.LordShaxx] = [VendorEngramVendor.LordShaxx];
-    this.vendorMap[ManifestVendor.Sloane] = [VendorEngramVendor.Sloane];
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS0] = [VendorEngramVendor.TheEmissary];
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS1] = [VendorEngramVendor.TheEmissary];
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS2] = [VendorEngramVendor.TheEmissary];
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS3] = [VendorEngramVendor.TheEmissary];
-    this.vendorMap[ManifestVendor.TheEmissary_TRIALS4] = [VendorEngramVendor.TheEmissary];
+    this.refreshInterval = 1000 * 60 * 15;
   }
 
   handleVendorEngramsErrors(response: Response) {
