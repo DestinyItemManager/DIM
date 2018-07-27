@@ -2,7 +2,7 @@ import { IComponentOptions, IController, IScope, IQService, ITimeoutService, IRo
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
 import { isPhonePortrait } from '../mediaQueries';
-import { queuedAction } from '../inventory/action-queue';
+import { queuedAction } from './action-queue';
 import { settings } from '../settings/settings';
 import { showInfoPopup } from '../shell/info-popup';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';

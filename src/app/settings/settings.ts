@@ -78,7 +78,7 @@ class Settings {
   // How big in pixels to draw items - start smaller for iPad
   itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
   // Which categories or buckets should be collapsed?
-  collapsedSections = {};
+  collapsedSections: { [key: string]: boolean } = {};
   // What settings for farming mode
   farming = {
     // Whether to keep one slot per item type open
@@ -100,23 +100,28 @@ class Settings {
 
   $updates = new Subject();
 
-  save = _.throttle(() => {
+  save() {
     if (!_loaded) {
       throw new Error("Settings haven't loaded - they can't be saved.");
     }
-    SyncService.set({
-      'settings-v1.0': _.omit(this, 'save', 'itemSortOrder', 'ready', '$updates')
-    }).then(() => {
-      this.$updates.next();
-    });
-  }, 1000);
 
-  itemSortOrder() {
+    this.$updates.next();
+
+    return saveSettings(this);
+  }
+
+  itemSortOrder(): string[] {
     return (this.itemSort === 'custom'
       ? this.itemSortOrderCustom
       : itemSortPresets[this.itemSort]) || itemSortPresets.primaryStat;
   }
 }
+
+const saveSettings = _.throttle((settings) => {
+  return SyncService.set({
+    'settings-v1.0': _.omit(settings, 'save', 'itemSortOrder', 'ready', '$updates')
+  });
+}, 1000);
 
 // Settings instance
 export const settings = new Settings();

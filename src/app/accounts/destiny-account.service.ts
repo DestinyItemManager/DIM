@@ -30,17 +30,17 @@ export const PLATFORM_LABELS = {
 /** A specific Destiny account (one per platform and Destiny version) */
 export interface DestinyAccount {
   /** Platform account name (gamertag or PSN ID) */
-  displayName: string;
+  readonly displayName: string;
   /** platform ID */
-  platformType: BungieMembershipType;
+  readonly platformType: BungieMembershipType;
   /** readable platform name */
-  platformLabel: string;
+  readonly platformLabel: string;
   /** Destiny membership ID */
-  membershipId: string;
+  readonly membershipId: string;
   /** Which version of Destiny is this account for? */
-  destinyVersion: 1 | 2;
+  readonly destinyVersion: 1 | 2;
   /** Which version of Destiny 2 / DLC do they own? */
-  versionsOwned?: DestinyGameVersions;
+  readonly versionsOwned?: DestinyGameVersions;
 }
 
 /**

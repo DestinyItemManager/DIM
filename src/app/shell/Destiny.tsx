@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UIView } from "@uirouter/react";
-import ManifestProgress from '../shell/ManifestProgress';
+import ManifestProgress from './ManifestProgress';
 import { $rootScope } from 'ngimport';
 import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
