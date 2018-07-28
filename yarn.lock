@@ -78,8 +78,8 @@
     "@types/react" "*"
 
 "@types/react-redux@^6.0.4":
-  version "6.0.4"
-  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-6.0.4.tgz#c1cfce0a0bd88983c75dbf393576f8dc59181586"
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-6.0.5.tgz#bb44679588554f3b686666c0484a960aa7a47b86"
   dependencies:
     "@types/react" "*"
     redux "^4.0.0"
@@ -5061,8 +5061,8 @@ react-dom@^16.3.1:
     prop-types "^15.6.0"
 
 react-hot-loader@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.3.tgz#37409a3341c7787563d0972007ba02521f82f5d5"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.4.tgz#4f9bdd55bb20d77a6ae8931fa1c187e5f0ce6279"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
