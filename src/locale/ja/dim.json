@@ -285,8 +285,7 @@
     "UpdateAvailable": "DIM 更新",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
-    "Version_release": "DIM v{{version}} がリリースされました",
-    "Xur": "Xûrはここです"
+    "Version_release": "DIM v{{version}} がリリースされました"
   },
   "Hotkey": {
     "ClearNewItems": "新しいアイテムをクリアする",

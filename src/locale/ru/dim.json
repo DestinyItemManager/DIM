@@ -285,8 +285,7 @@
     "UpdateAvailable": "Обновление DIM",
     "UpdateAvailableMessage": "Доступно обновление DIM. Перезагрузите страницу для обновления.",
     "Version_beta": "Бета-версия была обновлена до v{{version}}",
-    "Version_release": "Выпущена версия {{version}} DIM",
-    "Xur": "Зур прибыл"
+    "Version_release": "Выпущена версия {{version}} DIM"
   },
   "Hotkey": {
     "ClearNewItems": "Сбросить \"новые предметы\"",

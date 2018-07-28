@@ -285,8 +285,7 @@
     "UpdateAvailable": "DIM已更新",
     "UpdateAvailableMessage": "DIM有一个可适用更新。请刷新该页面以应用更新。",
     "Version_beta": "Beta版已经更新至 v{{version}}",
-    "Version_release": "DIM v{{version}} 版现已推出！",
-    "Xur": "稣尔(Xûr) 在这里"
+    "Version_release": "DIM v{{version}} 版现已推出！"
   },
   "Hotkey": {
     "ClearNewItems": "清除新物品提示",
