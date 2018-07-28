@@ -79,7 +79,7 @@ class Progress extends React.Component<Props, State> {
   subscription: Subscription;
   private $scope = $rootScope.$new(true);
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props);
     this.state = {
       currentCharacterId: ""

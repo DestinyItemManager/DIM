@@ -42,6 +42,10 @@ function mapStateToProps(state: RootState): Partial<Props> {
 class Inventory extends React.Component<Props> {
   private $scope = $rootScope.$new(true);
 
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
     // TODO: Dispatch an action to load stores
     this.props.account.destinyVersion === 1
