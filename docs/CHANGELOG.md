@@ -1,5 +1,7 @@
 # Next
 
+* Fixed a bug that could cause iOS Safari to hang.
+
 # 4.62.0 (2018-07-22)
 
 * Xur has been removed from the header in D1. Find him in the Vendors page.
