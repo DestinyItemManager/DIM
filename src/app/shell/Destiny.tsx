@@ -49,10 +49,10 @@ export default class Destiny extends React.Component<Props> {
   render() {
     return (
       <>
+        <div className="store-bounds"/>
         <div id="content">
           <UIView/>
         </div>
-        <div className="store-bounds"/>
         <ManifestProgress destinyVersion={this.props.account.destinyVersion} />
       </>
     );
