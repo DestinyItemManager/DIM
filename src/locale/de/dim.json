@@ -195,7 +195,7 @@
       "Glimmer": "Zeigt verzehrbare Items die mit dem Verdienst von Glimmer in Verbindung stehen:",
       "Item": "Items die bei Rahool für 200 Glimmer abgegeben werden können."
     },
-    "HasShader": "Shows items that have a shader applied.",
+    "HasShader": "Zeigt Items die einen Shader angewendet haben.",
     "InLoadout": "Zeigt Items die in einem Loadout verwendet werden.",
     "Infusable": "Zeigt Items die infundiert werden können.",
     "Leveling": {
@@ -285,8 +285,7 @@
     "UpdateAvailable": "DIM aktualisiert",
     "UpdateAvailableMessage": "Es ist eine Aktualisierung für DIM verfügbar. Aktualisiere die Seite um die Aktualisierung durchzuführen.",
     "Version_beta": "Beta wurde auf v{{version}} aktualisiert",
-    "Version_release": "DIM v{{version}} veröffentlicht",
-    "Xur": "Xûr ist da"
+    "Version_release": "DIM v{{version}} veröffentlicht"
   },
   "Hotkey": {
     "ClearNewItems": "Markierung von neuen Items entfernen",
@@ -675,11 +674,11 @@
     "ArmorAndWeapons": "Rüstungen & Waffen",
     "Available": "Verfügbar auf:",
     "Bounties": "Beutezüge",
-    "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
+    "CatalystsDisclaimer": "DIM kann nur Meisterwerk Katalysatoren zu Items zeigen, die sich in deinem Inventar befinden.",
     "Collections": "Sammlungen",
     "Compare": "Vergleiche mit dem was du bereits hast:",
     "Consumables": "Verbrauchs-Items",
-    "DestinyMap": "Find collectibles on lowlines' Destiny map",
+    "DestinyMap": "Finde Sammelobjekte auf lowlines' Destiny Karte",
     "DestinySets": "Siehe dir mehr Item-Sets auf Destiny Sets an",
     "Emotes": "Gesten",
     "Engram": "Belohnungs-Engramm",

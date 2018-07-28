@@ -36,10 +36,10 @@
   ],
   "devDependencies": {
     "@sentry/cli": "^1.30.4",
-    "@types/node": "9.6.7",
+    "@types/node": "10.5.4",
     "@types/react-beautiful-dnd": "^7.1.0",
     "@types/react-transition-group": "^2.0.8",
-    "autoprefixer": "^8.2.0",
+    "autoprefixer": "^9.0.1",
     "awesome-typescript-loader": "^5.0.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",

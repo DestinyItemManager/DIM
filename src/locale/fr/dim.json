@@ -285,8 +285,7 @@
     "UpdateAvailable": "DIM mis à jour",
     "UpdateAvailableMessage": "Une mise à jour est disponible pour DIM. Actualisez la page pour mettre à jour.",
     "Version_beta": "Beta a été mis à jour à v{{version}}",
-    "Version_release": "DIM v{{version}} Publiée",
-    "Xur": "Xûr est Là"
+    "Version_release": "DIM v{{version}} Publiée"
   },
   "Hotkey": {
     "ClearNewItems": "Effacer les nouveaux objets",
