@@ -226,10 +226,6 @@ function ItemReviewController(
 
   vm.settings = settings;
 
-  $scope.$watchCollection('vm.settings', () => {
-    settings.save();
-  });
-
   $rootScope.$on('dim-item-reviews-fetched', () => {
     vm.reviewData = vm.getReviewData();
   });
@@ -240,6 +236,8 @@ function ItemReviewController(
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);
     }
+
+    settings.save();
   };
 
   vm.translateReviewMode = (review: D2ItemUserReview) => {
