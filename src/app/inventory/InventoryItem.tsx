@@ -11,12 +11,14 @@ import './dimStoreItem.scss';
 
 interface Props {
   item: DimItem;
+  onClick?(e);
+  onDoubleClick?(e);
 }
 
 // TODO: Separate high and low levels, separate click-to-show-popup
 export default class InventoryItem extends React.Component<Props> {
   render() {
-    const { item } = this.props;
+    const { item, onClick, onDoubleClick } = this.props;
 
     const itemImageStyles = {
       complete: item.complete,
@@ -35,6 +37,8 @@ export default class InventoryItem extends React.Component<Props> {
     return (
       <div
         id={item.index}
+        onClick={onClick}
+        onDoubleClick={onDoubleClick}
         title={`${item.name}\n${item.typeName}`}
         className={classNames('item', { 'search-hidden': !item.visible })}
       >

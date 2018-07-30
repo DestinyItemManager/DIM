@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { DimItem } from './item-types';
-import { queuedAction } from './action-queue';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
-import { moveItemTo } from './dimItemMoveService.factory';
 import { ngDialog } from '../ngimport-more';
 import { NewItemsService } from './store/new-items.service';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
@@ -16,39 +14,19 @@ interface Props {
   children?: React.ReactNode;
 }
 
-// TODO: Separate high and low levels, separate click-to-show-popup
+/**
+ * This wraps its children in a div which, when clicked, will show the move popup for the provided item.
+ */
 export default class ItemPopupTrigger extends React.Component<Props> {
   private dialogResult: any;
   private ref = React.createRef<HTMLDivElement>();
-
-  private doubleClicked = queuedAction((e) => {
-    const item = this.props.item;
-    if (!dimLoadoutService.dialogOpen && !CompareService.dialogOpen) {
-      e.stopPropagation();
-      const active = item.getStoresService().getActiveStore()!;
-
-      // Equip if it's not equipped or it's on another character
-      const equip = !item.equipped || item.owner !== active.id;
-
-      moveItemTo(
-        item,
-        active,
-        item.canBeEquippedBy(active) ? equip : false,
-        item.amount
-      );
-    }
-  });
 
   render() {
     const { children } = this.props;
 
     return (
-      <div
-        ref={this.ref}
-        onClick={this.clicked}
-        onDoubleClick={this.doubleClicked}
-      >
-      {children}
+      <div ref={this.ref} onClick={this.clicked}>
+        {children}
       </div>
     );
   }
@@ -87,7 +65,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     } else {
       // This is separate to hopefully work around an issue where Angular can't instantiate the controller with ES6 object shorthands
       function dialogController() {
-        "ngInject";
+        'ngInject';
         this.item = item;
         this.store = item.getStoresService().getStore(this.item.owner);
       }
@@ -96,10 +74,10 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         template: dialogTemplate,
         plain: true,
         overlay: false,
-        className: "move-popup-dialog",
+        className: 'move-popup-dialog',
         showClose: false,
         data: this.ref.current as {},
-        controllerAs: "vm",
+        controllerAs: 'vm',
         controller: dialogController,
         // Setting these focus options prevents the page from
         // jumping as dialogs are shown/hidden

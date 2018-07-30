@@ -45,9 +45,7 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
   }
 };
 
-function collect(
-  connect: DragSourceConnector
-): InternalProps {
+function collect(connect: DragSourceConnector): InternalProps {
   return {
     // Call this function inside render()
     // to let React DnD handle the drag events:
@@ -65,7 +63,7 @@ class DraggableInventoryItem extends React.Component<Props> {
 
 /**
  * DraggableInventoryItem is a wrapper component that makes its children draggable,
- * according to the rules for the given item. When dropped, it passes the full item
+ * according to the rules for the given inventory item. When dropped, it passes the full item
  * as the drop result.
  */
 export default DragSource(dragType, dragSpec, collect)(DraggableInventoryItem);

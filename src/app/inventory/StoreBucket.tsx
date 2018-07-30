@@ -4,12 +4,10 @@ import { Settings } from '../settings/settings';
 import classNames from 'classnames';
 import { sortItems } from '../shell/dimAngularFilters.filter';
 import './dimStoreBucket.scss';
-import InventoryItem from './InventoryItem';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
-import DraggableInventoryItem from './DraggableInventoryItem';
-import ItemPopupTrigger from './ItemPopupTrigger';
+import StoreInventoryItem from './StoreInventoryItem';
 
 interface Props {
   items: DimItem[];
@@ -44,11 +42,7 @@ export default class StoreBucket extends React.Component<Props> {
             bucket={bucket}
             store={store}
           >
-            <DraggableInventoryItem item={equippedItem}>
-              <ItemPopupTrigger item={equippedItem}>
-                <InventoryItem item={equippedItem} />
-              </ItemPopupTrigger>
-            </DraggableInventoryItem>
+            <StoreInventoryItem item={equippedItem} />
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget
@@ -57,11 +51,7 @@ export default class StoreBucket extends React.Component<Props> {
           store={store}
         >
           {unequippedItems.map((item) => (
-            <DraggableInventoryItem key={item.index} item={item}>
-              <ItemPopupTrigger item={item}>
-                <InventoryItem item={item} />
-              </ItemPopupTrigger>
-            </DraggableInventoryItem>
+            <StoreInventoryItem key={item.index} item={item} />
           ))}
         </StoreBucketDropTarget>
       </div>
