@@ -9,6 +9,7 @@ import StoreBucketDropTarget from './StoreBucketDropTarget';
 import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import DraggableInventoryItem from './DraggableInventoryItem';
+import ItemPopupTrigger from './ItemPopupTrigger';
 
 interface Props {
   items: DimItem[];
@@ -21,6 +22,9 @@ interface Props {
   // TODO: pass drag/drop stuff all the way up?
 }
 
+/**
+ * A single bucket of items (for a single store).
+ */
 export default class StoreBucket extends React.Component<Props> {
   render() {
     const { items, settings, bucket, store } = this.props;
@@ -41,7 +45,9 @@ export default class StoreBucket extends React.Component<Props> {
             store={store}
           >
             <DraggableInventoryItem item={equippedItem}>
-              <InventoryItem item={equippedItem} />
+              <ItemPopupTrigger item={equippedItem}>
+                <InventoryItem item={equippedItem} />
+              </ItemPopupTrigger>
             </DraggableInventoryItem>
           </StoreBucketDropTarget>
         )}
@@ -52,7 +58,9 @@ export default class StoreBucket extends React.Component<Props> {
         >
           {unequippedItems.map((item) => (
             <DraggableInventoryItem key={item.index} item={item}>
-              <InventoryItem item={item} />
+              <ItemPopupTrigger item={item}>
+                <InventoryItem item={item} />
+              </ItemPopupTrigger>
             </DraggableInventoryItem>
           ))}
         </StoreBucketDropTarget>

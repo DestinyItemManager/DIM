@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   DragSourceSpec,
   DragSourceConnector,
-  DragSourceMonitor,
   ConnectDragSource,
   DragSource
 } from 'react-dnd';
@@ -47,14 +46,13 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
 };
 
 function collect(
-  connect: DragSourceConnector,
-  monitor: DragSourceMonitor
+  connect: DragSourceConnector
 ): InternalProps {
   return {
     // Call this function inside render()
     // to let React DnD handle the drag events:
     connectDragSource: connect.dragSource()
-    // TODO: The monitor has interesting things for doing animation
+    // TODO: The monitor param has interesting things for doing animation
   };
 }
 
