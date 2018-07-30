@@ -1,5 +1,7 @@
 # Next
 
+# 4.63.0 (2018-07-29)
+
 * Fixed a bug that could cause iOS Safari to hang.
 
 # 4.62.0 (2018-07-22)
