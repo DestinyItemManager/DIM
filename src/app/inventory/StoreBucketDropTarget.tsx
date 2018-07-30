@@ -35,11 +35,8 @@ function dragType(props: ExternalProps) {
 
 // This determines the behavior of dropping on this target
 const dropSpec: DropTargetSpec<Props> = {
-  drop(props, monitor, component) {
-    // TODO: Call a prop or handle the drop?
-    // TODO: could just return item + bucket
+  drop(props, monitor) {
     // TODO: ooh, monitor has interesting offset info
-    console.log('drop!', props, monitor, component);
     // TODO: Do this all through a Redux action
     const hovering = false; // TODO: Figure out hover stuff
     const shiftPressed = false; // TODO: Figure out shift key

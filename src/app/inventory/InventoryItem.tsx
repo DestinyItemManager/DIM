@@ -15,7 +15,7 @@ interface Props {
   onDoubleClick?(e);
 }
 
-// TODO: Separate high and low levels, separate click-to-show-popup
+// TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
   render() {
     const { item, onClick, onDoubleClick } = this.props;
