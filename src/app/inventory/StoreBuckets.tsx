@@ -43,6 +43,8 @@ export function StoreBuckets({
         {(allStoresView || stores[0] !== vault) && (
           <div className="store-cell account-wide">
             <StoreBucket
+              bucket={bucket}
+              store={stores[0]}
               items={currentStore.buckets[bucket.id]}
               settings={settings}
             />
@@ -51,6 +53,8 @@ export function StoreBuckets({
         {(allStoresView || stores[0] === vault) && (
           <div className="store-cell vault">
             <StoreBucket
+              bucket={bucket}
+              store={stores[0]}
               items={vault.buckets[bucket.id]}
               settings={settings}
             />
@@ -69,6 +73,8 @@ export function StoreBuckets({
         >
           {(!store.isVault || bucket.vaultBucket) && (
             <StoreBucket
+              bucket={bucket}
+              store={store}
               items={store.buckets[bucket.id]}
               settings={settings}
             />

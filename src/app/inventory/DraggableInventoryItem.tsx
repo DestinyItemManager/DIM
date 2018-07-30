@@ -1,0 +1,73 @@
+import * as React from 'react';
+import {
+  DragSourceSpec,
+  DragSourceConnector,
+  DragSourceMonitor,
+  ConnectDragSource,
+  DragSource
+} from 'react-dnd';
+import { DimItem } from './item-types';
+
+interface ExternalProps {
+  item: DimItem;
+  children?: React.ReactNode;
+}
+
+interface InternalProps {
+  connectDragSource: ConnectDragSource;
+}
+
+type Props = InternalProps & ExternalProps;
+
+function dragType(props: ExternalProps): string {
+  const item = props.item;
+  // TODO: let postmaster stuff be dragged anywhere?
+  return item.notransfer ||
+    (item.location.inPostmaster && item.destinyVersion === 2)
+    ? `${item.owner}-${item.bucket.type}`
+    : item.bucket.type!;
+}
+
+export interface DragObject {
+  item: DimItem;
+}
+
+const dragSpec: DragSourceSpec<Props, DragObject> = {
+  beginDrag(props) {
+    return { item: props.item };
+  },
+
+  canDrag(props): boolean {
+    const item = props.item;
+    return (!item.location.inPostmaster || item.destinyVersion === 2) &&
+      item.notransfer
+      ? item.equipment
+      : item.equipment || item.bucket.hasTransferDestination;
+  }
+};
+
+function collect(
+  connect: DragSourceConnector,
+  monitor: DragSourceMonitor
+): InternalProps {
+  return {
+    // Call this function inside render()
+    // to let React DnD handle the drag events:
+    connectDragSource: connect.dragSource()
+    // TODO: The monitor has interesting things for doing animation
+  };
+}
+
+class DraggableInventoryItem extends React.Component<Props> {
+  render() {
+    const { connectDragSource, children } = this.props;
+    return connectDragSource(<div>{children}</div>);
+  }
+}
+
+/**
+ * DraggableInventoryItem is a wrapper component that makes its children draggable,
+ * according to the rules for the given item. When dropped, it passes the full item
+ * as the drop result.
+ */
+export default DragSource(dragType, dragSpec, collect)(DraggableInventoryItem);

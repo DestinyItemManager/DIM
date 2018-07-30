@@ -22,6 +22,7 @@ interface Props {
   item: DimItem;
 }
 
+// TODO: Separate high and low levels, separate click-to-show-popup
 export default class InventoryItem extends React.Component<Props> {
   private dialogResult: any;
   private ref = React.createRef<HTMLDivElement>();
