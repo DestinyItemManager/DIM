@@ -62,6 +62,10 @@ export default class Vendor extends React.Component<Props, State> {
   }
 
   async checkVendorDrop(vendorEngramsService: VendorEngramsXyzService | undefined) {
+    if (!$featureFlags.vendorEngrams) {
+      return;
+    }
+
     const dropLinkRelevant = powerLevelMatters(this.props.basePowerLevel);
 
     if (dropLinkRelevant !== this.state.dropLinkRelevant) {

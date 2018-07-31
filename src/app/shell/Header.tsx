@@ -256,7 +256,7 @@ export default class Header extends React.PureComponent<Props, State> {
   }
 
   private updateVendorEngrams = () => {
-    if (!this.state.account || this.state.account.destinyVersion !== 2) {
+    if (!$featureFlags.vendorEngrams || !this.state.account || this.state.account.destinyVersion !== 2) {
       return;
     }
 
