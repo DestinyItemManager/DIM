@@ -162,12 +162,12 @@ export class Progress extends React.Component<Props, State> {
                       <div className="milestone-icon">
                         <i className="fa fa-calendar-check-o fa-3x" aria-hidden="true"/>
                       </div>
-                      <Link
+                      {$featureFlags.profileProgressions && <Link
                         key='destiny2.checklist'
                         account={this.props.account}
                         state='destiny2.checklist'
                         text='Progress.Checklists'
-                      />
+                      />}
                     </div>
                   </>)}
                 </ErrorBoundary>

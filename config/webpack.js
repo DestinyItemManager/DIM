@@ -280,6 +280,8 @@ module.exports = (env) => {
         '$featureFlags.sentry': JSON.stringify(env === 'beta'),
         // D2 Vendors
         '$featureFlags.vendors': JSON.stringify(true),
+        // D2 profile progression checklist
+        '$featureFlags.profileProgressions': JSON.stringify(true)
       }),
 
       // Enable if you want to debug the size of the chunks

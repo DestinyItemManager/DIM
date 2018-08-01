@@ -29,6 +29,8 @@ declare const $featureFlags: {
   sentry: boolean;
   /** D2 Vendors */
   vendors: boolean;
+  /** D2 Profile progression checklists */
+  profileProgressions: boolean;
 }
 
 declare function ga(...params: string[]);
