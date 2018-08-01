@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
-import { queuedAction } from '../inventory/action-queue';
+import { queuedAction } from './action-queue';
 import { showInfoPopup } from '../shell/info-popup';
 import { IPromise } from 'angular';
 import { DimStore } from './store-types';

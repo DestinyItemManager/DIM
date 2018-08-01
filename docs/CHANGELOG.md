@@ -1,8 +1,34 @@
 # Next
+* Added profile progression checklist.
+
+# 4.63.0 (2018-07-29)
+
+* Fixed a bug that could cause iOS Safari to hang.
+
+# 4.62.0 (2018-07-22)
+
+* Xur has been removed from the header in D1. Find him in the Vendors page.
+
+# 4.61.0 (2018-07-15)
+
+* Fix a bug that would leave behind stackable items when moving certain loadouts like "Gather Reputation Items".
+* The is:haspower search works once again.
+* The is:cosmetic search will now work for Destiny 2.
+* Added is:prophecy search which will return all prophecy weapons from CoO.
+* Added is:ikelos search which will return all ikelos weapons from Warmind.
+
+# 4.60.0 (2018-07-08)
+
+* Farming mode won't try to move unmoveable reputation tokens.
+* Filters like stat:recovery:=0 now work (they couldn't match stat values of zero before).
+
+# 4.59.0 (2018-07-01)
 
 * New iOS app icons when you add to home screen.
+* Ornaments now show additional reasons why you can't equip them.
+* The is:inloadout search works once again.
 * Fix a bug where the item popup could hang iOS Safari in landscape view.
-* Added profile progression checklist.
+* Add a link to lowlines' Destiny map for collecting ghost scannables, latent memories, and sleeper nodes.
 
 # 4.58.0 (2018-06-24)
 

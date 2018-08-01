@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { getDefinitions } from '../destiny1/d1-definitions.service';
+import { getDefinitions } from './d1-definitions.service';
 import { IPromise } from 'angular';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';

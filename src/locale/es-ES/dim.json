@@ -285,8 +285,7 @@
     "UpdateAvailable": "DIM actualizado",
     "UpdateAvailableMessage": "Hay una actualización lista para DIM. Recarga la página para aplicarla.",
     "Version_beta": "La Beta ha sido actualizada a la v{{version}}",
-    "Version_release": "DIM v{{version}} ha sido publicada",
-    "Xur": "Xûr esta aquí"
+    "Version_release": "DIM v{{version}} ha sido publicada"
   },
   "Hotkey": {
     "ClearNewItems": "Despejar objetos nuevos",
@@ -679,6 +678,7 @@
     "Collections": "Colecciones",
     "Compare": "Comparar con lo que ya tienes:",
     "Consumables": "Consumibles",
+    "DestinyMap": "Busca coleccionables en el mapa de Destiny de \"lowlines\"",
     "DestinySets": "Navega más lotes de objetos en Destiny Sets",
     "Emotes": "Gestos",
     "Engram": "Engrama de Recompensa",

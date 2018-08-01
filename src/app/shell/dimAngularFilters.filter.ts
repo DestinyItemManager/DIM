@@ -190,12 +190,13 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   default: (_a, _b) => 0
 };
 
-mod.filter('sortItems', () => sortItems);
+// tslint:disable-next-line:no-unnecessary-callback-wrapper
+mod.filter('sortItems', () => (items) => sortItems(items));
 
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-export function sortItems(items: DimItem[]) {
+export function sortItems(items: DimItem[], itemSortOrder = settings.itemSortOrder()) {
   if (!items.length) {
     return items;
   }
@@ -216,9 +217,7 @@ export function sortItems(items: DimItem[]) {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
-  const sortOrder: string[] = settings.itemSortOrder();
-
-  if (specificSortOrder.length > 0 && !sortOrder.includes('rarity')) {
+  if (specificSortOrder.length > 0 && !itemSortOrder.includes('rarity')) {
     items = _.sortBy(items, (item) => {
       const ix = specificSortOrder.indexOf(item.hash);
       return (ix === -1) ? 999 : ix;
@@ -229,7 +228,7 @@ export function sortItems(items: DimItem[]) {
   // Re-sort mods
   if (itemLocationId === '3313201758') {
     const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
-    if (sortOrder.includes('rarity')) {
+    if (itemSortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
     }
     return items.sort(chainComparator(...comparators));
@@ -251,7 +250,7 @@ export function sortItems(items: DimItem[]) {
     return items.sort(ITEM_COMPARATORS.name);
   }
 
-  const comparator = chainComparator(...sortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default));
+  const comparator = chainComparator(...itemSortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default));
   return items.sort(comparator);
 }
 
@@ -260,8 +259,7 @@ mod.filter('qualityColor', () => getColor);
 /**
  * A filter that will heatmap-color a background according to a percentage.
  */
-export function getColor(value: number, property: string) {
-  property = property || 'background-color';
+export function getColor(value: number, property = 'background-color') {
   let color = 0;
   if (value < 0) {
     return { [property]: 'white' };
@@ -281,12 +279,11 @@ export function getColor(value: number, property: string) {
   return result;
 }
 
-export function dtrRatingColor(value: number, property?: string) {
+export function dtrRatingColor(value: number, property: string = 'color') {
   if (!value) {
     return {};
   }
 
-  property = property || 'color';
   let color;
   if (value < 2) {
     color = 'hsl(0,45%,45%)';

@@ -51,6 +51,7 @@ export interface LoadoutServiceType {
   saveLoadout(loadout: Loadout): IPromise<Loadout[]>;
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): IPromise<void>;
+  getLoadoutItemIds(destinyVersion: number): Promise<Set<string>>;
 }
 
 export const dimLoadoutService = LoadoutService();
@@ -71,7 +72,8 @@ function LoadoutService(): LoadoutServiceType {
     saveLoadout,
     addItemToLoadout,
     applyLoadout,
-    previousLoadouts: _previousLoadouts
+    previousLoadouts: _previousLoadouts,
+    getLoadoutItemIds
   };
 
   function addItemToLoadout(item: DimItem, $event) {
@@ -89,19 +91,7 @@ function LoadoutService(): LoadoutServiceType {
     let loadouts: Loadout[] = [];
     if (version === 'v3.0') {
       const ids = data['loadouts-v3.0'];
-      loadouts = ids.map((id) => {
-        // Mark all the items as being in loadouts
-        data[id].items.forEach((item: LoadoutItem) => {
-          const itemFromStore = getStoresService(item.destinyVersion).getItemAcrossStores({
-            id: item.id,
-            hash: item.hash
-          });
-          if (itemFromStore) {
-            itemFromStore.isInLoadout = true;
-          }
-        });
-        return hydrate(data[id]);
-      });
+      loadouts = ids.map((id) => hydrate(data[id]));
     }
 
     const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
@@ -200,7 +190,7 @@ function LoadoutService(): LoadoutServiceType {
         return saveLoadouts(loadouts);
       })
       .then((loadouts) => {
-        $rootScope.$broadcast('dim-filter-invalidate');
+        $rootScope.$broadcast('dim-filter-invalidate-loadouts');
         $rootScope.$broadcast('dim-save-loadout', {
           loadout
         });
@@ -220,14 +210,16 @@ function LoadoutService(): LoadoutServiceType {
   // A special getItem that takes into account the fact that
   // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
   function getLoadoutItem(pseudoItem: DimItem, store: DimStore): DimItem | null {
-    let item = store.getStoresService().getItemAcrossStores(pseudoItem);
+    let item = store.getStoresService().getItemAcrossStores(_.omit(pseudoItem, 'amount'));
     if (!item) {
       return null;
     }
-    if (_.contains(['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'], item.type)) {
-      item = _.find(store.items, {
-        hash: pseudoItem.hash
-      }) || item;
+    if (['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'].includes(item.type)) {
+      // Same character first
+      item = store.items.find((i) => i.hash === pseudoItem.hash) ||
+        // Then other characters
+        store.getStoresService().getItemAcrossStores({ hash: item.hash }) ||
+        item;
     }
     return item;
   }
@@ -287,7 +279,8 @@ function LoadoutService(): LoadoutServiceType {
               item.location.inPostmaster ||
               // Needs to be equipped. Stuff not marked "equip" doesn't
               // necessarily mean to de-equip it.
-              (pseudoItem.equipped && !item.equipped);
+              (pseudoItem.equipped && !item.equipped) ||
+              pseudoItem.amount > 1;
 
         return notAlreadyThere;
       });
@@ -534,6 +527,25 @@ function LoadoutService(): LoadoutServiceType {
       destinyVersion: loadout.destinyVersion,
       items
     };
+  }
+
+  /**
+   * Get all item ids across all loadouts. Note that this is not restricted by platform,
+   * and thus assumes all item ids are unique.
+   */
+  async function getLoadoutItemIds(destinyVersion: number) {
+    const loadoutItemIds = new Set<string>();
+    const loadouts = await getLoadouts(true);
+    for (const loadout of loadouts) {
+      if (loadout.destinyVersion === destinyVersion) {
+        _.each(loadout.items, (items) => {
+          for (const item of items) {
+            loadoutItemIds.add(item.id);
+          }
+        });
+      }
+    }
+    return loadoutItemIds;
   }
 }
 

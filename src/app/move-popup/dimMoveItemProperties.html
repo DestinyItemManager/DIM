@@ -33,6 +33,7 @@
       <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating.overallScore, numRatings: vm.item.dtrRating.ratingCount || 0 })DtrReview.AverageRating"></span>
     </div>
   </div>
+  <div class="item-details failure-reason" ng-if="failureString.length" ng-repeat="failureString in vm.failureStrings">{{ failureString }}</div>
   <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>
   <div ng-if="vm.itemDetails" class="move-popup-details">
     <div ng-if="vm.item.reviewable" class="move-popup-tabs">

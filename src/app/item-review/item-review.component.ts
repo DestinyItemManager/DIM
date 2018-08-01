@@ -5,7 +5,7 @@ import './item-review.scss';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
-import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
+import { IComponentOptions, IController, IRootScopeService } from 'angular';
 import { DimItem } from '../inventory/item-types';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
 import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
@@ -26,7 +26,6 @@ function ItemReviewController(
     findReview(reviewId: string): D1ItemUserReview | D2ItemUserReview | null;
     getReviewData(): number[];
   },
-  $scope: IScope,
   $rootScope: IRootScopeService
 ) {
   'ngInject';
@@ -226,10 +225,6 @@ function ItemReviewController(
 
   vm.settings = settings;
 
-  $scope.$watchCollection('vm.settings', () => {
-    settings.save();
-  });
-
   $rootScope.$on('dim-item-reviews-fetched', () => {
     vm.reviewData = vm.getReviewData();
   });
@@ -240,6 +235,8 @@ function ItemReviewController(
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);
     }
+
+    settings.save();
   };
 
   vm.translateReviewMode = (review: D2ItemUserReview) => {

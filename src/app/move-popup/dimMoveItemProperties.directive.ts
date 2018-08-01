@@ -14,7 +14,8 @@ export const MoveItemPropertiesComponent: IComponentOptions = {
   bindings: {
     item: '<',
     compareItem: '<',
-    infuse: '&'
+    infuse: '&',
+    failureStrings: '<'
   },
   template
 };
@@ -23,6 +24,7 @@ function MoveItemPropertiesCtrl(
   this: IController & {
     item: DimItem;
     compareItem?: DimItem;
+    failureStrings?: string[];
     infuse(item: DimItem, $event: IAngularEvent): void;
   },
   ngDialog,
@@ -123,13 +125,6 @@ function MoveItemPropertiesCtrl(
     $rootScope.$broadcast('dim-store-item-compare', {
       item: vm.item,
       dupes: true
-    });
-  };
-
-  vm.openDiscuss = () => {
-    ngDialog.closeAll();
-    $rootScope.$broadcast('dim-store-item-discuss', {
-      item: vm.item
     });
   };
 

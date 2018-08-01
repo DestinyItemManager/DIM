@@ -285,8 +285,7 @@
     "UpdateAvailable": "Обновление DIM",
     "UpdateAvailableMessage": "Доступно обновление DIM. Перезагрузите страницу для обновления.",
     "Version_beta": "Бета-версия была обновлена до v{{version}}",
-    "Version_release": "Выпущена версия {{version}} DIM",
-    "Xur": "Зур прибыл"
+    "Version_release": "Выпущена версия {{version}} DIM"
   },
   "Hotkey": {
     "ClearNewItems": "Сбросить \"новые предметы\"",
@@ -679,6 +678,7 @@
     "Collections": "Коллекции",
     "Compare": "Сравнить с тем, что у вас уже есть:",
     "Consumables": "Расходники",
+    "DestinyMap": "Найти коллекционные предметы на интерактивных картах Destiny (https://lowlidev.com.au/destiny/maps) разработки @lowlines",
     "DestinySets": "Увидеть больше наборов на Destiny Sets",
     "Emotes": "Эмоции",
     "Engram": "Наградные энграммы",

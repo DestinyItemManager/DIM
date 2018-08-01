@@ -67,7 +67,7 @@ interface State {
   currentCharacterId: string;
 }
 
-export class Progress extends React.Component<Props, State> {
+export default class Progress extends React.Component<Props, State> {
   subscription: Subscription;
   mediaQuerySubscription: Subscription;
   private $scope = $rootScope.$new(true);

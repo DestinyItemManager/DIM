@@ -73,7 +73,7 @@ function makeD2FarmingService() {
       });
 
       if (settings.farming.moveTokens) {
-        itemsToMove = itemsToMove.concat(store.items.filter((i) => REP_TOKENS.has(i.hash)));
+        itemsToMove = itemsToMove.concat(store.items.filter((i) => REP_TOKENS.has(i.hash) && !i.notransfer));
       }
 
       if (itemsToMove.length === 0) {

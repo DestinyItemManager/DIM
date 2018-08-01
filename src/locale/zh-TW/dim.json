@@ -285,8 +285,7 @@
     "UpdateAvailable": "DIM已更新",
     "UpdateAvailableMessage": "DIM有一個可適用更新. 請重新載入該頁面以應用更新.",
     "Version_beta": "Beta版已經更新至 v{{version}}",
-    "Version_release": "DIM v{{version}} 版現已推出!",
-    "Xur": "穌爾(Xûr) 在這裡"
+    "Version_release": "DIM v{{version}} 版現已推出!"
   },
   "Hotkey": {
     "ClearNewItems": "清除新物品提示",
@@ -679,6 +678,7 @@
     "Collections": "收藏品",
     "Compare": "與您現有物品比較：",
     "Consumables": "消耗品",
+    "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Emotes": "表情動作",
     "Engram": "獎勵記憶水晶",

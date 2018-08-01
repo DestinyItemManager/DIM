@@ -285,8 +285,7 @@
     "UpdateAvailable": "DIM 更新",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
-    "Version_release": "DIM v{{version}} がリリースされました",
-    "Xur": "Xûrはここです"
+    "Version_release": "DIM v{{version}} がリリースされました"
   },
   "Hotkey": {
     "ClearNewItems": "新しいアイテムをクリアする",
@@ -679,6 +678,7 @@
     "Collections": "コレクション",
     "Compare": "装備中のものと比較:",
     "Consumables": "消費アイテム",
+    "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Emotes": "感情表現",
     "Engram": "Reward Engram",

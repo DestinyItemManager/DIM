@@ -27,6 +27,11 @@ export default function makeRouter() {
   router.urlService.rules.initial({ state: 'default-account' });
   router.urlService.rules.otherwise({ state: 'default-account' });
 
+  // Scroll to the top of the page when we switch pages
+  router.transitionService.onSuccess({}, () => {
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
+  });
+
   if ($featureFlags.googleAnalyticsForRouter) {
     router.transitionService.onSuccess({ }, (transition) => {
       ga('send', 'pageview', transition.$to().name);

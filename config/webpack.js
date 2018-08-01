@@ -238,8 +238,8 @@ module.exports = (env) => {
       new CopyWebpackPlugin([
         { from: './extension', to: '../extension-dist' },
         { from: `./icons/${env}-extension/`, to: '../extension-dist' },
-        { from: './src/manifest-webapp.json' },
-        { from: './src/manifest-webapp-ios.json' },
+        { from: './src/manifest-webapp-6-2018.json' },
+        { from: './src/manifest-webapp-6-2018-ios.json' },
         { from: './src/data', to: 'data/' },
         { from: `./icons/${env}/` },
         { from: './src/safari-pinned-tab.svg' },

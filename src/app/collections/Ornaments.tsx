@@ -34,7 +34,7 @@ export default function Ornaments({
           <VendorItemComponent
             key={ornament.itemHash}
             defs={defs}
-            item={VendorItem.forOrnament(defs, ornament.itemHash, ornament.objectives, ornament.canInsert)}
+            item={VendorItem.forOrnament(defs, ornament.itemHash, ornament.objectives, ornament.canInsert, ornament.enableFailReasons)}
             owned={false}
           />
         )}
@@ -48,13 +48,14 @@ interface OrnamentInfo {
   itemHash: number;
   objectives: DestinyObjectiveProgress[];
   canInsert: boolean;
+  enableFailReasons: string[];
 }
 
 function getOrnaments(
   defs: D2ManifestDefinitions,
   profileResponse: DestinyProfileResponse
 ): OrnamentInfo[] {
-  const plugsWithObjectives = {};
+  const plugsWithObjectives: { [id: number]: OrnamentInfo } = {};
   _.each(profileResponse.itemComponents.sockets.data, (sockets) => {
     for (const socket of sockets.sockets) {
       if (socket.reusablePlugs) {
@@ -65,7 +66,8 @@ function getOrnaments(
               plugsWithObjectives[reusablePlug.plugItemHash] = {
                 itemHash: reusablePlug.plugItemHash,
                 objectives: reusablePlug.plugObjectives,
-                canInsert: reusablePlug.canInsert
+                canInsert: reusablePlug.canInsert,
+                enableFailReasons: (reusablePlug.insertFailIndexes || []).map((i) => item.plug.insertionRules[i].failureMessage)
               };
             }
           }

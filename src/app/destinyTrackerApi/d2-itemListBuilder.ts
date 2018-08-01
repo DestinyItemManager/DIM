@@ -1,5 +1,5 @@
 import { flatMap } from '../util';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2Store } from '../inventory/store-types';
