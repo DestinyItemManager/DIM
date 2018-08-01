@@ -2,6 +2,7 @@ import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import classNames from 'classnames';
 import './checklist.scss';
+import BungieImage from '../dim-ui/BungieImage';
 
 /**
  * The profile checklist points to a checklist category, which points to a checklist item,
@@ -30,6 +31,11 @@ export function ChecklistItem({
     return(
       <div className={classNames('checklist-item', { complete: checklistItemCompleted })}>
         <div className={classNames('checklist-item-name', { long: longDescription })}>
+          {checklistItemDef.displayProperties.icon && <BungieImage
+            className="checklist-item-image"
+            title={checklistItemDef.displayProperties.name}
+            src={checklistItemDef.displayProperties.icon}
+          />}
           <i className={classNames('fa', checkClass)}/>
           {checklistItemDef.displayProperties.name}
         </div>

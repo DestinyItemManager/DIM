@@ -66,6 +66,12 @@
 
   .checklist-item-name {
     font-size: 12px;
+    flex-direction: column;
+  }
+
+  .checklist-item-image {
+    height: 48px;
+    width: 48px;
   }
 
   .checklist-item-description {
