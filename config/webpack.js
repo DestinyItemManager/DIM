@@ -280,6 +280,8 @@ module.exports = (env) => {
         '$featureFlags.sentry': JSON.stringify(env === 'beta'),
         // D2 Vendors
         '$featureFlags.vendors': JSON.stringify(true),
+        // Enable vendorengrams.xyz integration
+        '$featureFlags.vendorEngrams': JSON.stringify(true)
       }),
 
       // Enable if you want to debug the size of the chunks

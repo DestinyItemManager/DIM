@@ -16,20 +16,12 @@ import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { UISref } from '@uirouter/react';
+import { VendorEngramsXyzService, isVerified380, powerLevelMatters } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import vendorEngramSvg from '../../images/engram.svg';
+import { t } from 'i18next';
+import classNames from 'classnames';
 
-/**
- * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
- */
-export default function Vendor({
-  defs,
-  vendor,
-  itemComponents,
-  sales,
-  trackerService,
-  ownedItemHashes,
-  currencyLookups,
-  account
-}: {
+interface Props {
   defs: D2ManifestDefinitions;
   vendor: DestinyVendorComponent;
   itemComponents?: DestinyItemComponentSetOfint32;
@@ -42,38 +34,101 @@ export default function Vendor({
     [itemHash: number]: number;
   };
   account: DestinyAccount;
-}) {
-  const vendorDef = defs.Vendor.get(vendor.vendorHash);
-  if (!vendorDef) {
-    return null;
+  vendorEngramsService?: VendorEngramsXyzService;
+  basePowerLevel?: number;
+}
+
+interface State {
+  dropActive: boolean;
+  dropLinkRelevant: boolean;
+}
+
+/**
+ * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
+ */
+export default class Vendor extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      dropActive: false,
+      dropLinkRelevant: false
+    };
   }
 
-  const destinationDef = defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
-  const placeDef = defs.Place.get(destinationDef.placeHash);
+  componentWillUpdate(nextProps: Props) {
+    if (nextProps.vendorEngramsService !== this.props.vendorEngramsService) {
+      this.checkVendorDrop(nextProps.vendorEngramsService);
+    }
+  }
 
-  const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
+  async checkVendorDrop(vendorEngramsService: VendorEngramsXyzService | undefined) {
+    if (!$featureFlags.vendorEngrams) {
+      return;
+    }
 
-  return (
-    <div className="vendor-char-items">
-      <div className="title">
-        <div className="collapse-handle">
-          <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
-          <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
-          <span className="vendor-location">{placeString}</span>
+    const dropLinkRelevant = powerLevelMatters(this.props.basePowerLevel);
+
+    if (dropLinkRelevant !== this.state.dropLinkRelevant) {
+      this.setState({ dropLinkRelevant });
+    }
+
+    if ((!vendorEngramsService)) {
+      return;
+    }
+
+    vendorEngramsService
+      .getVendorDrops(this.props.vendor.vendorHash)
+      .then((vds) => {
+        this.setState({ dropActive: (vds && vds.some(isVerified380)) || false });
+      });
+  }
+
+  render() {
+    const { vendor, defs, account, trackerService, sales, ownedItemHashes, itemComponents, currencyLookups } = this.props;
+    const { dropActive, dropLinkRelevant } = this.state;
+
+    const vendorDef = defs.Vendor.get(vendor.vendorHash);
+
+    if (!vendorDef) {
+      return null;
+    }
+
+    const destinationDef = defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
+    const placeDef = defs.Place.get(destinationDef.placeHash);
+
+    const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
+
+    const vendorEngramClass = classNames('fa',
+      { 'xyz-active-throb': dropActive,
+      'xyz-inactive': !dropActive });
+
+    const vendorLinkTitle = dropActive ?
+      'VendorEngramsXyz.Likely380' :
+      'VendorEngramsXyz.Vote';
+
+    return (
+      <div className='vendor-char-items'>
+        <div className='title'>
+          <div className="collapse-handle">
+            {dropLinkRelevant && <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/"><img className={vendorEngramClass} src={vendorEngramSvg} title={t(vendorLinkTitle)} /></a>}
+            <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
+            <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
+            <span className="vendor-location">{placeString}</span>
+          </div>
+          <Countdown endTime={new Date(vendor.nextRefreshDate)}/>
         </div>
-        <Countdown endTime={new Date(vendor.nextRefreshDate)}/>
+        <VendorItems
+          defs={defs}
+          vendor={vendor}
+          vendorDef={vendorDef}
+          vendorItems={getVendorItems(account, defs, vendorDef, trackerService, itemComponents, sales)}
+          trackerService={trackerService}
+          ownedItemHashes={ownedItemHashes}
+          currencyLookups={currencyLookups}
+        />
       </div>
-      <VendorItems
-        defs={defs}
-        vendor={vendor}
-        vendorDef={vendorDef}
-        vendorItems={getVendorItems(account, defs, vendorDef, trackerService, itemComponents, sales)}
-        trackerService={trackerService}
-        ownedItemHashes={ownedItemHashes}
-        currencyLookups={currencyLookups}
-      />
-    </div>
-  );
+    );
+  }
 }
 
 export function getVendorItems(
