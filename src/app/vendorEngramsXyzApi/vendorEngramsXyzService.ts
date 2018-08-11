@@ -52,7 +52,7 @@ export class VendorEngramsXyzService {
 
     const difference = Math.floor((lastToNow / 1000) / 60);
 
-    return (difference > 15);
+    return (difference <= 15);
   }
 
   vendorEngramsFetch(url: string) {
@@ -77,6 +77,7 @@ export class VendorEngramsXyzService {
     loadingTracker.addPromise(promise);
 
     this.cachedResponse = await promise;
+    console.log(this.cachedResponse);
     this.lastUpdated = new Date();
 
     return this;
