@@ -77,7 +77,6 @@ export class VendorEngramsXyzService {
     loadingTracker.addPromise(promise);
 
     this.cachedResponse = await promise;
-    console.log(this.cachedResponse);
     this.lastUpdated = new Date();
 
     return this;
