@@ -52,7 +52,7 @@ export class VendorEngramsXyzService {
 
     const difference = Math.floor((lastToNow / 1000) / 60);
 
-    return (difference > 15);
+    return (difference <= 15);
   }
 
   vendorEngramsFetch(url: string) {
