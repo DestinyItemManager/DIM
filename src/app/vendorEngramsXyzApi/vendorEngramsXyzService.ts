@@ -71,7 +71,7 @@ export class VendorEngramsXyzService {
       return this;
     }
 
-    const promise = this.vendorEngramsFetch('https://api.vendorengrams.xyz/getVendorDrops')
+    const promise = this.vendorEngramsFetch('https://api.vendorengrams.xyz/getVendorDrops?source=DIM')
       .then(this.handleVendorEngramsErrors, this.handleVendorEngramsErrors);
 
     loadingTracker.addPromise(promise);

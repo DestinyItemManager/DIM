@@ -281,7 +281,7 @@ module.exports = (env) => {
         // D2 Vendors
         '$featureFlags.vendors': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(true)
+        '$featureFlags.vendorEngrams': JSON.stringify(env !== 'release')
       }),
 
       // Enable if you want to debug the size of the chunks
