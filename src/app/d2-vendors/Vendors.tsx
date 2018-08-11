@@ -158,8 +158,6 @@ function VendorGroup({
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
 
-  console.log(basePowerLevel);
-
   return (
     <>
       <h2>{groupDef.categoryName}</h2>
