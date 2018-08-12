@@ -73,6 +73,7 @@ interface State {
   dropdownOpen: boolean;
   showSearch: boolean;
   vendorEngramDropActive: boolean;
+  engramRefreshTimeout: number;
 }
 
 interface Props {
@@ -86,7 +87,6 @@ export default class Header extends React.PureComponent<Props, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
-  private engramRefreshTimeout: number;
 
   constructor(props) {
     super(props);
@@ -96,7 +96,8 @@ export default class Header extends React.PureComponent<Props, State> {
     this.state = {
       dropdownOpen: false,
       showSearch: false,
-      vendorEngramDropActive: false
+      vendorEngramDropActive: false,
+      engramRefreshTimeout: 0
     };
   }
 
@@ -121,8 +122,8 @@ export default class Header extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     this.unregisterTransitionHooks.forEach((f) => f());
     this.accountSubscription.unsubscribe();
-    if (this.engramRefreshTimeout) {
-      clearTimeout(this.engramRefreshTimeout);
+    if (this.state.engramRefreshTimeout) {
+      clearTimeout(this.state.engramRefreshTimeout);
     }
   }
 
@@ -271,8 +272,12 @@ export default class Header extends React.PureComponent<Props, State> {
         this.setState({ vendorEngramDropActive: anyActive });
       });
 
-    this.engramRefreshTimeout = window.setInterval(this.updateVendorEngrams,
-      dimVendorEngramsService.refreshInterval);
+    if (!this.state.engramRefreshTimeout) {
+      const engramRefreshTimeout = window.setInterval(this.updateVendorEngrams,
+        dimVendorEngramsService.refreshInterval);
+
+      this.setState({ engramRefreshTimeout });
+    }
   }
 
   private toggleDropdown = () => {
