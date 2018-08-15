@@ -189,7 +189,7 @@ function StoreService(): D1StoreServiceType {
 
         return $q.all([newItems, itemInfoService, ...processStorePromises]);
       })
-      .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, D1Store[]]) => {
+      .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, ...D1Store[]]) => {
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -197,19 +197,18 @@ function StoreService(): D1StoreServiceType {
           NewItemsService.saveNewItems(newItems, account);
         }
 
-        const realStores: D1Store[] = stores;
-        _stores = realStores;
+        _stores = stores;
 
-        dimDestinyTrackerService.fetchReviews(realStores);
+        dimDestinyTrackerService.fetchReviews(stores);
 
-        itemInfoService.cleanInfos(realStores);
+        itemInfoService.cleanInfos(stores);
 
         // Let our styling know how many characters there are
-        document.querySelector('html')!.style.setProperty("--num-characters", String(realStores.length - 1));
+        document.querySelector('html')!.style.setProperty("--num-characters", String(stores.length - 1));
 
-        dimDestinyTrackerService.reattachScoresFromCache(realStores);
+        dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        return realStores;
+        return stores;
       })
       .catch((e) => {
         toaster.pop(bungieErrorToaster(e));

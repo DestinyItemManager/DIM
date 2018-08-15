@@ -6,7 +6,7 @@ export default module('dim-oauth', [])
     'ngInject';
     $rootScope.$on('dim-no-token-found', () => {
       if ($DIM_FLAVOR === 'dev' &&
-          (!localStorage.apiKey || !localStorage.oauthClientId || !localStorage.oauthClientSecret)) {
+          (!localStorage.getItem('apiKey') || !localStorage.getItem('oauthClientId') || !localStorage.getItem('oauthClientSecret'))) {
         router.stateService.go('developer');
       } else {
         router.stateService.go('login');
