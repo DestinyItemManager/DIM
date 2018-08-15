@@ -261,12 +261,7 @@ export default class Header extends React.PureComponent<Props, State> {
 
     dimVendorEngramsService.getAllVendorDrops()
       .then((vds) => {
-        if (!vds) {
-          return;
-        }
-
         const anyActive = vds.some(isVerified380);
-
         this.setState({ vendorEngramDropActive: anyActive });
       });
 

@@ -16,10 +16,11 @@ import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { UISref } from '@uirouter/react';
-import { VendorEngramsXyzService, isVerified380, powerLevelMatters } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { isVerified380, powerLevelMatters, getVendorDropsForVendor } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import vendorEngramSvg from '../../images/engram.svg';
 import { t } from 'i18next';
 import classNames from 'classnames';
+import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -34,58 +35,16 @@ interface Props {
     [itemHash: number]: number;
   };
   account: DestinyAccount;
-  vendorEngramsService?: VendorEngramsXyzService;
+  allVendorEngramDrops?: VendorDrop[];
   basePowerLevel?: number;
-}
-
-interface State {
-  dropActive: boolean;
-  dropLinkRelevant: boolean;
 }
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
  */
-export default class Vendor extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      dropActive: false,
-      dropLinkRelevant: false
-    };
-  }
-
-  componentWillUpdate(nextProps: Props) {
-    if (nextProps.vendorEngramsService !== this.props.vendorEngramsService) {
-      this.checkVendorDrop(nextProps.vendorEngramsService);
-    }
-  }
-
-  async checkVendorDrop(vendorEngramsService: VendorEngramsXyzService | undefined) {
-    if (!$featureFlags.vendorEngrams) {
-      return;
-    }
-
-    const dropLinkRelevant = powerLevelMatters(this.props.basePowerLevel);
-
-    if (dropLinkRelevant !== this.state.dropLinkRelevant) {
-      this.setState({ dropLinkRelevant });
-    }
-
-    if ((!vendorEngramsService)) {
-      return;
-    }
-
-    vendorEngramsService
-      .getVendorDrops(this.props.vendor.vendorHash)
-      .then((vds) => {
-        this.setState({ dropActive: (vds && vds.some(isVerified380)) || false });
-      });
-  }
-
+export default class Vendor extends React.Component<Props> {
   render() {
-    const { vendor, defs, account, trackerService, sales, ownedItemHashes, itemComponents, currencyLookups } = this.props;
-    const { dropActive, dropLinkRelevant } = this.state;
+    const { vendor, defs, account, trackerService, sales, ownedItemHashes, itemComponents, currencyLookups, basePowerLevel, allVendorEngramDrops } = this.props;
 
     const vendorDef = defs.Vendor.get(vendor.vendorHash);
 
@@ -98,9 +57,11 @@ export default class Vendor extends React.Component<Props, State> {
 
     const placeString = [destinationDef.displayProperties.name, placeDef.displayProperties.name].filter((n) => n.length).join(', ');
 
-    const vendorEngramClass = classNames('fa',
-      { 'xyz-active-throb': dropActive,
-      'xyz-inactive': !dropActive });
+    const vendorEngramDrops = getVendorDropsForVendor(vendor.vendorHash, allVendorEngramDrops);
+    const dropActive = vendorEngramDrops.some(isVerified380);
+
+    const vendorEngramClass = classNames('fa', 'xyz-engram',
+      { 'xyz-active-throb': dropActive });
 
     const vendorLinkTitle = dropActive ?
       'VendorEngramsXyz.Likely380' :
@@ -110,7 +71,7 @@ export default class Vendor extends React.Component<Props, State> {
       <div className='vendor-char-items'>
         <div className='title'>
           <div className="collapse-handle">
-            {dropLinkRelevant && <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/"><img className={vendorEngramClass} src={vendorEngramSvg} title={t(vendorLinkTitle)} /></a>}
+            {vendorEngramDrops.length > 0 && powerLevelMatters(basePowerLevel) && <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/"><img className={vendorEngramClass} src={vendorEngramSvg} title={t(vendorLinkTitle)} /></a>}
             <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
             <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
             <span className="vendor-location">{placeString}</span>

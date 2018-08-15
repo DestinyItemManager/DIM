@@ -2,8 +2,8 @@ export interface VendorDrop {
   id: number;
   vendor: VendorEngramVendor;
   type: VendorDropType;
-  verified: boolean;
-  enabled: boolean;
+  verified: number;
+  enabled: number;
 }
 
 export enum VendorDropType {
@@ -32,6 +32,7 @@ export enum VendorEngramVendor {
   ArachJalaal =	15,
   TheEmissary =	16,
   LordSaladin =	17,
+  BrotherVance = 18,
   AnaBray =	19,
   IKELOS_HC_V1_0_1 = 20,
   BraytechRWPMk_II = 21
@@ -43,6 +44,7 @@ export enum ManifestVendor {
   AsherMir = 3982706173,
   Banshee44 = 672118013,
   Benedict9940 = 1265988377,
+  BrotherVance = 2398407866,
   CommanderZavala = 69482069,
   DevrimKay = 396892126,
   ExecutorHideo = 3819664660,
@@ -59,3 +61,28 @@ export enum ManifestVendor {
   TheEmissary_TRIALS4 = 3190557734,
   TyraKarn = 1748437699
 }
+
+export const vendorHashToVendorEngramVendor: { [k: number]: VendorEngramVendor[] | undefined } = {
+  [ManifestVendor.AsherMir]: [VendorEngramVendor.AsherMir,
+    VendorEngramVendor.ManOWar],
+  [ManifestVendor.AnaBray]: [VendorEngramVendor.AnaBray, VendorEngramVendor.BraytechRWPMk_II, VendorEngramVendor.IKELOS_HC_V1_0_1],
+  [ManifestVendor.Banshee44]: [VendorEngramVendor.Banshee44],
+  [ManifestVendor.Benedict9940]: [VendorEngramVendor.Benedict9940],
+  [ManifestVendor.BrotherVance]: [VendorEngramVendor.BrotherVance],
+  [ManifestVendor.CommanderZavala]: [VendorEngramVendor.CommanderZavala],
+  [ManifestVendor.DevrimKay]: [VendorEngramVendor.DevrimKay,
+    VendorEngramVendor.MidaMiniTool],
+  [ManifestVendor.TyraKarn]: [VendorEngramVendor.Drang],
+  [ManifestVendor.ExecutorHideo]: [VendorEngramVendor.ExecutorHideo],
+  [ManifestVendor.Failsafe]: [VendorEngramVendor.Failsafe],
+  [ManifestVendor.IkoraRey]: [VendorEngramVendor.IkoraRey],
+  [ManifestVendor.Lakshmi2]: [VendorEngramVendor.Lakshmi2],
+  [ManifestVendor.LordSaladin]: [VendorEngramVendor.LordSaladin],
+  [ManifestVendor.LordShaxx]: [VendorEngramVendor.LordShaxx],
+  [ManifestVendor.Sloane]: [VendorEngramVendor.Sloane],
+  [ManifestVendor.TheEmissary_TRIALS0]: [VendorEngramVendor.TheEmissary],
+  [ManifestVendor.TheEmissary_TRIALS1]: [VendorEngramVendor.TheEmissary],
+  [ManifestVendor.TheEmissary_TRIALS2]: [VendorEngramVendor.TheEmissary],
+  [ManifestVendor.TheEmissary_TRIALS3]: [VendorEngramVendor.TheEmissary],
+  [ManifestVendor.TheEmissary_TRIALS4]: [VendorEngramVendor.TheEmissary]
+};

@@ -39,14 +39,11 @@
   }
 
   .xyz-active-throb {
-    width: 30px;
-    height: 30px;
     border-radius: 100px;
-    margin-right: 20px;
     animation: glow 1s infinite alternate;
   }
 
-  .xyz-inactive {
+  .xyz-engram {
     width: 30px;
     height: 30px;
     margin-right: 20px;
