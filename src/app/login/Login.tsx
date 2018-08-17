@@ -10,10 +10,11 @@ export default function Login({
 }: {
   transition: Transition;
 }) {
-  localStorage.authorizationState = uuidv4();
+  const authorizationState = uuidv4();
+  localStorage.setItem('authorizationState', authorizationState);
   const clientId = oauthClientId();
   const reauth = transition.params().reauth;
-  const authorizationURL = `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${localStorage.authorizationState}${reauth ? '&reauth=true' : ''}`;
+  const authorizationURL = `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${authorizationState}${reauth ? '&reauth=true' : ''}`;
 
   return (
     <div className="billboard">

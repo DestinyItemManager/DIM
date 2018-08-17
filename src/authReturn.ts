@@ -1,8 +1,6 @@
 import 'babel-polyfill';
 // Promise.finally isn't in the base polyfill
 import 'core-js/fn/promise/finally';
-// Polyfill fetch for iOS < 10.3
-import 'whatwg-fetch';
 
 import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/oauth/oauth.service';
@@ -20,9 +18,10 @@ function handleAuthReturn() {
     return;
   }
 
-  if (state !== localStorage.authorizationState) {
+  const authorizationState = localStorage.getItem('authorizationState');
+  if (state !== authorizationState) {
     let error = "We expected the state parameter to match what we stored, but it didn't.";
-    if (!localStorage.authorizationState) {
+    if (!authorizationState) {
       error += " There was no stored state at all - your browser may not support (or may be blocking) localStorage.";
     }
     setError(error);

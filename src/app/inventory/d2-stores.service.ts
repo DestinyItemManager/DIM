@@ -229,7 +229,7 @@ function makeD2StoresService(): D2StoreServiceType {
 
         return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
-      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, InventoryBuckets, Set<string>, any, D2Vault, D2Store[]]) => {
+      .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, InventoryBuckets, Set<string>, any, D2Vault, ...D2Store[]]) => {
         // Save and notify about new items (but only if this wasn't the first load)
         if (!firstLoad) {
           // Save the list of new item IDs
@@ -241,7 +241,7 @@ function makeD2StoresService(): D2StoreServiceType {
         _stores = stores;
 
         // TODO: update vault counts for character account-wide
-        updateVaultCounts(buckets, characters.find((c) => c.current), vault);
+        updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
 
         dimDestinyTrackerService.fetchReviews(stores);
 
