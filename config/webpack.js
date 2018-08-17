@@ -324,8 +324,6 @@ module.exports = (env) => {
       globPatterns: ['**/*.{html,js,css,woff2,json}', 'static/*.{png,jpg}'],
       globIgnores: [
         'data/**',
-        'manifest-*.js',
-        'extension-scripts/*',
         'service-worker.js'
       ],
       swSrc: './dist/service-worker.js',

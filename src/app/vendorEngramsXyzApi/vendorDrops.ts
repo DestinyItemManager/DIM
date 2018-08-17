@@ -2,8 +2,8 @@ export interface VendorDrop {
   id: number;
   vendor: VendorEngramVendor;
   type: VendorDropType;
-  verified: number;
-  enabled: number;
+  verified: 0 | 1;
+  enabled: 0 | 1;
 }
 
 export enum VendorDropType {

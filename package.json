@@ -82,7 +82,7 @@
     "typescript": "^3.0.0",
     "uglify-js": "^3.3.21",
     "uglifyjs-webpack-plugin": "^1.2.3",
-    "url-loader": "^1.0.1",
+    "url-loader": "<1.1.0",
     "webpack": "^4.5.0",
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^3.0.0",
