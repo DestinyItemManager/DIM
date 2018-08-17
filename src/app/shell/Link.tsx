@@ -50,7 +50,7 @@ export default class Link extends React.Component<Props, State> {
     return (
       <UISrefActive key={this.state.generation} class='active'>
         <UISref to={state} params={account}>
-          <a className='link'>{showWhatsNew && <span className='badge-new'></span>}{children}{text && t(text)}</a>
+          <a className='link'>{showWhatsNew && <span className='badge-new'/>}{children}{text && t(text)}</a>
         </UISref>
       </UISrefActive>
     );

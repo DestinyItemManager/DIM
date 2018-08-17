@@ -19,7 +19,8 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
-import { VendorEngramsXyzService, dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
 
 interface Props {
   account: DestinyAccount;
@@ -31,7 +32,7 @@ interface State {
   trackerService?: DestinyTrackerService;
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
-  vendorEngramsService?: VendorEngramsXyzService;
+  vendorEngramDrops?: VendorDrop[];
   basePowerLevel?: number;
 }
 
@@ -49,6 +50,8 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
   // TODO: pull this into a service?
   async loadVendors() {
+    dimVendorEngramsService.getAllVendorDrops().then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
+
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
@@ -76,9 +79,6 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
     const trackerService = await fetchRatingsForVendors(defs, vendorsResponse);
     this.setState({ trackerService });
-
-    const vendorEngramsService = await dimVendorEngramsService.fetchVendorDrops();
-    this.setState({ vendorEngramsService });
   }
 
   componentDidMount() {
@@ -109,7 +109,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramsService, basePowerLevel } = this.state;
+    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramDrops, basePowerLevel } = this.state;
     const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
@@ -127,7 +127,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             account={account}
-            vendorEngramsService={vendorEngramsService}
+            vendorEngramDrops={vendorEngramDrops}
             basePowerLevel={basePowerLevel}
           />
         )}
@@ -144,7 +144,7 @@ function VendorGroup({
   trackerService,
   ownedItemHashes,
   account,
-  vendorEngramsService,
+  vendorEngramDrops,
   basePowerLevel
 }: {
   defs: D2ManifestDefinitions;
@@ -153,7 +153,7 @@ function VendorGroup({
   trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
-  vendorEngramsService?: VendorEngramsXyzService;
+  vendorEngramDrops?: VendorDrop[];
   basePowerLevel?: number;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
@@ -172,7 +172,7 @@ function VendorGroup({
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
-            vendorEngramsService={vendorEngramsService}
+            allVendorEngramDrops={vendorEngramDrops}
             basePowerLevel={basePowerLevel}
           />
         </ErrorBoundary>

@@ -73,7 +73,6 @@ interface State {
   dropdownOpen: boolean;
   showSearch: boolean;
   vendorEngramDropActive: boolean;
-  engramRefreshTimeout: number;
 }
 
 interface Props {
@@ -85,6 +84,7 @@ export default class Header extends React.PureComponent<Props, State> {
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLElement>();
+  private engramRefreshTimer: number;
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
 
@@ -96,15 +96,14 @@ export default class Header extends React.PureComponent<Props, State> {
     this.state = {
       dropdownOpen: false,
       showSearch: false,
-      vendorEngramDropActive: false,
-      engramRefreshTimeout: 0
+      vendorEngramDropActive: false
     };
   }
 
   componentDidMount() {
     this.accountSubscription = getActiveAccountStream().subscribe((account) => {
       this.setState({ account: account || undefined });
-      this.updateVendorEngrams();
+      this.updateVendorEngrams(account || undefined);
     });
 
     this.unregisterTransitionHooks = [
@@ -122,9 +121,7 @@ export default class Header extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     this.unregisterTransitionHooks.forEach((f) => f());
     this.accountSubscription.unsubscribe();
-    if (this.state.engramRefreshTimeout) {
-      clearTimeout(this.state.engramRefreshTimeout);
-    }
+    this.stopPollingVendorEngrams();
   }
 
   render() {
@@ -256,27 +253,28 @@ export default class Header extends React.PureComponent<Props, State> {
     );
   }
 
-  private updateVendorEngrams = () => {
-    if (!$featureFlags.vendorEngrams || !this.state.account || this.state.account.destinyVersion !== 2) {
+  private updateVendorEngrams = (account = this.state.account) => {
+    if (!$featureFlags.vendorEngrams || !account || account.destinyVersion !== 2) {
+      this.stopPollingVendorEngrams();
       return;
     }
 
     dimVendorEngramsService.getAllVendorDrops()
       .then((vds) => {
-        if (!vds) {
-          return;
-        }
-
         const anyActive = vds.some(isVerified380);
-
         this.setState({ vendorEngramDropActive: anyActive });
       });
 
-    if (!this.state.engramRefreshTimeout) {
-      const engramRefreshTimeout = window.setInterval(this.updateVendorEngrams,
+    if (!this.engramRefreshTimer) {
+      this.engramRefreshTimer = window.setInterval(this.updateVendorEngrams,
         dimVendorEngramsService.refreshInterval);
+    }
+  }
 
-      this.setState({ engramRefreshTimeout });
+  private stopPollingVendorEngrams = () => {
+    if (this.engramRefreshTimer) {
+      clearInterval(this.engramRefreshTimer);
+      this.engramRefreshTimer = 0;
     }
   }
 
