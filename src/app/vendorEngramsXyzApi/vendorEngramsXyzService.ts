@@ -10,7 +10,7 @@ export class VendorEngramsXyzService {
 
   handleVendorEngramsErrors(response: Response): Promise<VendorDrop[]> {
     if (response.status !== 200) {
-      throw new Error(t('VendorEngramsXyz.ServiceCallError'));
+      throw new Error(t('VendorEngramsXyz.ServiceCallFailed'));
     }
 
     return response.json() || [];
