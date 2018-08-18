@@ -1,5 +1,13 @@
 # Next
 
+* DIM now refreshes your inventory automatically every 30 seconds, rather than every 5 minutes.
+
+# 4.65.0 (2018-08-12)
+
+# 4.64.0 (2018-08-05)
+
+# 4.63.0 (2018-07-29)
+
 * Fixed a bug that could cause iOS Safari to hang.
 
 # 4.62.0 (2018-07-22)
@@ -18,6 +26,7 @@
 
 * Farming mode won't try to move unmoveable reputation tokens.
 * Filters like stat:recovery:=0 now work (they couldn't match stat values of zero before).
+* Checking with VendorEngrams.xyz to see if 380 drops may be right for you.
 
 # 4.59.0 (2018-07-01)
 

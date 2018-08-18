@@ -280,6 +280,8 @@ module.exports = (env) => {
         '$featureFlags.sentry': JSON.stringify(env === 'beta'),
         // D2 Vendors
         '$featureFlags.vendors': JSON.stringify(true),
+        // Enable vendorengrams.xyz integration
+        '$featureFlags.vendorEngrams': JSON.stringify(env !== 'release')
       }),
 
       // Enable if you want to debug the size of the chunks
@@ -322,8 +324,6 @@ module.exports = (env) => {
       globPatterns: ['**/*.{html,js,css,woff2,json}', 'static/*.{png,jpg}'],
       globIgnores: [
         'data/**',
-        'manifest-*.js',
-        'extension-scripts/*',
         'service-worker.js'
       ],
       swSrc: './dist/service-worker.js',

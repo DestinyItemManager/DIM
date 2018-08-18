@@ -143,9 +143,11 @@ function StorageController(
     const reader = new FileReader();
     reader.onload = () => {
       // TODO: we're kinda trusting that this is the right data here, no validation!
-      SyncService.set(JSON.parse(reader.result), true)
-        .then(() => $q.all(SyncService.adapters.map(refreshAdapter)));
-      $window.alert($i18next.t('Storage.ImportSuccess'));
+      if (reader.result && typeof reader.result === 'string') {
+        SyncService.set(JSON.parse(reader.result), true)
+          .then(() => $q.all(SyncService.adapters.map(refreshAdapter)));
+        $window.alert($i18next.t('Storage.ImportSuccess'));
+      }
     };
     const file = (element(document.getElementById('importFile')!)[0] as HTMLInputElement).files![0];
     if (file) {

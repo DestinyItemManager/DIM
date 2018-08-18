@@ -669,6 +669,11 @@
     "Flawless": "Sans Défaite",
     "SevenWins": "Récompense à 7 Victoires (Arme)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz signale que ce vendeur vend des objets à 380 de puissance.",
+    "ServiceCallFailed": "Appel au service de VendorEngrams.xyz échoué.",
+    "Vote": "Vous voyez un marchand qui vend des objets a 380 de puissance? Allez sur VendorEngrams.xyz pour voter et faire savoir à la communauté!"
+  },
   "Vendors": {
     "All": "Tous",
     "ArmorAndWeapons": "Armure & Armes",

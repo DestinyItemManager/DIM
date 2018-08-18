@@ -146,7 +146,7 @@ export function initSettings() {
       merge(settings, savedSettings);
       store.dispatch(loaded(settings));
       settings.$updates.next();
-      localStorage.dimLanguage = settings.language;
+      localStorage.setItem('dimLanguage', settings.language);
       if (languageChanged) {
         i18next.changeLanguage(settings.language, () => {
           $rootScope.$applyAsync(() => {

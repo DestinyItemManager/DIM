@@ -10,9 +10,9 @@ export const DeveloperComponent: IComponentOptions = {
 function DeveloperCtrl(this: IController) {
   const vm = this;
 
-  vm.apiKey = localStorage.apiKey;
-  vm.clientId = localStorage.oauthClientId;
-  vm.clientSecret = localStorage.oauthClientSecret;
+  vm.apiKey = localStorage.getItem('apiKey');
+  vm.clientId = localStorage.getItem('oauthClientId');
+  vm.clientSecret = localStorage.getItem('oauthClientSecret');
   vm.URL = window.location.origin;
   vm.URLRet = `${vm.URL}/return.html`;
 
@@ -21,9 +21,9 @@ function DeveloperCtrl(this: IController) {
   }
 
   vm.save = () => {
-    localStorage.apiKey = vm.apiKey;
-    localStorage.oauthClientId = vm.clientId;
-    localStorage.oauthClientSecret = vm.clientSecret;
+    localStorage.setItem('apiKey', vm.apiKey);
+    localStorage.setItem('oauthClientId', vm.clientId);
+    localStorage.setItem('oauthClientSecret', vm.clientSecret);
     window.location.href = `${window.location.origin}/index.html`;
   };
 }
