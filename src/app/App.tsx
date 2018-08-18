@@ -19,7 +19,7 @@ function setCSSVariable(property: string, value: any) {
   document.querySelector('html')!.style.setProperty(property, value.toString());
 }
 
-export class App extends React.Component {
+export default class App extends React.Component {
   private settingsSubscription?: Subscription;
   private isPhonePortraitSubscription?: Subscription;
   private $scope = $rootScope.$new(true);
