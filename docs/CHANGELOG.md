@@ -1,6 +1,7 @@
 # Next
 
 * DIM now refreshes your inventory automatically every 30 seconds, rather than every 5 minutes.
+* Clicking "transfer items" in the Infusion tool will now always move them to the active character.
 
 # 4.65.0 (2018-08-12)
 

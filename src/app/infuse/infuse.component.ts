@@ -19,6 +19,8 @@ export const InfuseComponent: IComponentOptions = {
 function InfuseCtrl(
   this: IController & {
     query: DimItem;
+    source: DimItem | null;
+    target: DimItem | null;
   },
   $scope,
   toaster,
@@ -73,7 +75,7 @@ function InfuseCtrl(
       vm.source = source;
       vm.target = target;
 
-      vm.infused = vm.target.primStat.value;
+      vm.infused = target.primStat.value;
 
       if (vm.source!.destinyVersion === 2) {
         /*
@@ -90,11 +92,11 @@ function InfuseCtrl(
         // Folks report that that formula isn't really what's used,
         // and that you just always get the full value.
         // https://github.com/DestinyItemManager/DIM/issues/2215
-        vm.infused = vm.target.basePower + (vm.source.primStat.value - vm.source.basePower);
-      } else if (vm.source.bucket.sort === 'General') {
+        vm.infused = target.basePower + (source.primStat.value - source.basePower);
+      } else if (source.bucket.sort === 'General') {
         vm.wildcardMaterialCost = 2;
         vm.wildcardMaterialHash = 937555249;
-      } else if (vm.source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
+      } else if (source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
         vm.wildcardMaterialCost = 10;
         vm.wildcardMaterialHash = 1898539128;
       } else {
@@ -176,27 +178,29 @@ function InfuseCtrl(
     },
 
     transferItems() {
-      if (vm.target.notransfer || vm.source.notransfer) {
-        const name = vm.source.notransfer ? vm.source.name : vm.target.name;
+      const target = vm.target!;
+      const source = vm.source!;
+      if (target.notransfer || source.notransfer) {
+        const name = source.notransfer ? source.name : target.name;
 
         toaster.pop('error', $i18next.t('Infusion.NoTransfer', { target: name }));
         return $q.resolve();
       }
 
-      const store = vm.source.getStoresService().getStore(vm.query.owner)!;
+      const store = source.getStoresService().getActiveStore()!;
       const items: { [key: string]: any[] } = {};
-      const targetKey = vm.target.type.toLowerCase();
+      const targetKey = target.type.toLowerCase();
       items[targetKey] = items[targetKey] || [];
-      const itemCopy = copy(vm.target);
+      const itemCopy = copy(target);
       itemCopy.equipped = false;
       items[targetKey].push(itemCopy);
       // Include the source, since we wouldn't want it to get moved out of the way
-      const sourceKey = vm.source.type.toLowerCase();
+      const sourceKey = source.type.toLowerCase();
       items[sourceKey] = items[sourceKey] || [];
-      items[sourceKey].push(vm.source);
+      items[sourceKey].push(source);
 
       items.material = [];
-      if (vm.target.bucket.sort === 'General') {
+      if (target.bucket.sort === 'General') {
         // Mote of Light
         items.material.push({
           id: '0',
@@ -204,7 +208,7 @@ function InfuseCtrl(
           amount: 2,
           equipped: false
         });
-      } else if (vm.source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
+      } else if (source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
         // Weapon Parts
         items.material.push({
           id: '0',
@@ -221,7 +225,7 @@ function InfuseCtrl(
           equipped: false
         });
       }
-      if (vm.source.isExotic) {
+      if (source.isExotic) {
         // Exotic shard
         items.material.push({
           id: '0',
