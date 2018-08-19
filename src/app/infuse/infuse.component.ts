@@ -78,20 +78,6 @@ function InfuseCtrl(
       vm.infused = target.primStat.value;
 
       if (vm.source!.destinyVersion === 2) {
-        /*
-        // Rules taken from https://bungie-net.github.io/multi/schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock.html#schema_Destiny-Definitions-Items-DestinyItemTierTypeInfusionBlock
-        const sourceBasePower = vm.source.basePower;
-        const targetBasePower = vm.target.basePower;
-        const powerDiff = Math.max(0, targetBasePower - sourceBasePower);
-        const quality = vm.target.infusionProcess;
-        const transferAmount = powerDiff * quality.baseQualityTransferRatio;
-        const increase = Math.min(powerDiff, Math.max(transferAmount, quality.minimumQualityIncrement));
-        vm.infused = vm.source.primStat.value + increase;
-        */
-
-        // Folks report that that formula isn't really what's used,
-        // and that you just always get the full value.
-        // https://github.com/DestinyItemManager/DIM/issues/2215
         vm.infused = target.basePower + (source.primStat.value - source.basePower);
       } else if (source.bucket.sort === 'General') {
         vm.wildcardMaterialCost = 2;
@@ -121,7 +107,7 @@ function InfuseCtrl(
 
       if (vm.query.infusable) {
         let targetItems = flatMap(stores, (store) => {
-          return _.filter(store.items, (item) => {
+          return store.items.filter((item) => {
             return (!item.locked || vm.showLockedItems) && vm.isInfusable(vm.query, item);
           });
         });
@@ -131,21 +117,26 @@ function InfuseCtrl(
         vm.targetItems = targetItems;
       }
 
-      let sourceItems = flatMap(stores, (store) => {
-        return _.filter(store.items, (item) => {
-          return (!item.locked || vm.showLockedItems) && vm.isInfusable(item, vm.query);
+      if (vm.query.infusionFuel) {
+        let sourceItems = flatMap(stores, (store) => {
+          return store.items.filter((item) => {
+            return vm.isInfusable(item, vm.query);
+          });
         });
-      });
 
-      sourceItems = _.sortBy(sourceItems, vm.itemToSortKey);
+        sourceItems = _.sortBy(sourceItems, vm.itemToSortKey);
 
-      vm.sourceItems = sourceItems;
+        vm.sourceItems = sourceItems;
+      }
 
       vm.target = null;
       vm.infused = 0;
     },
 
-    isInfusable(source, target) {
+    /**
+     * Can source be infused into target?
+     */
+    isInfusable(source: DimItem, target: DimItem) {
       if (!source.infusable || !target.infusionFuel) {
         return false;
       }
@@ -154,13 +145,11 @@ function InfuseCtrl(
         return false;
       }
 
-      if (source.destinyVersion === 1) {
-        return (source.type === target.type) && (source.primStat.value < target.primStat.value);
-      }
-
-      if (source.destinyVersion === 2) {
+      if (source.isDestiny1()) {
+        return (source.type === target.type) && (source.primStat!.value < target.primStat!.value);
+      } else if (source.isDestiny2() && target.isDestiny2()) {
         return source.infusionQuality && target.infusionQuality &&
-               (source.infusionQuality.infusionCategoryHashes.some((h) => target.infusionQuality.infusionCategoryHashes.includes(h))) &&
+               (source.infusionQuality.infusionCategoryHashes.some((h) => target.infusionQuality!.infusionCategoryHashes.includes(h))) &&
                (source.basePower < target.basePower);
       }
 
@@ -208,7 +197,7 @@ function InfuseCtrl(
           amount: 2,
           equipped: false
         });
-      } else if (source.primStat.stat.statIdentifier === 'STAT_DAMAGE') {
+      } else if (source.isDestiny1() && source.primStat!.stat.statIdentifier === 'STAT_DAMAGE') {
         // Weapon Parts
         items.material.push({
           id: '0',
