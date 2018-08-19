@@ -1,6 +1,7 @@
 # Next
 
 * DIM now refreshes your inventory automatically every 30 seconds, rather than every 5 minutes.
+* If you are at maximum light, DIM now alerts you when vendors are selling maximum light gear and engrams, courtesy of VendorEngrams.xyz.
 
 # 4.65.0 (2018-08-12)
 
