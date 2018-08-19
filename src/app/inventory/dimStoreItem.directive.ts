@@ -129,7 +129,7 @@ export function StoreItemCtrl(
         : vm.item.equipment || vm.item.bucket.hasTransferDestination;
   };
 
-  vm.doubleClicked = queuedAction((item, e) => {
+  vm.doubleClicked = queuedAction((item: DimItem, e: Event) => {
     if (!dimLoadoutService.dialogOpen && !CompareService.dialogOpen) {
       e.stopPropagation();
       const active = item.getStoresService().getActiveStore()!;

@@ -24,14 +24,14 @@ const didYouKnow = _.once(() => {
 /**
  * Move the item to the specified store. Equip it if equip is true.
  */
-export const moveItemTo = queuedAction((item, store, equip, amount) => {
+export const moveItemTo = queuedAction((item: DimItem, store: DimStore, equip: boolean, amount: number) => {
   didYouKnow();
   const reload = item.equipped || equip;
   let promise: IPromise<any> = dimItemService.moveTo(item, store, equip, amount);
 
   if (reload) {
     // Refresh light levels and such
-    promise = promise.then((item) => {
+    promise = promise.then((item: DimItem) => {
       return item.getStoresService()
         .updateCharacters()
         .then(() => item);
@@ -39,7 +39,7 @@ export const moveItemTo = queuedAction((item, store, equip, amount) => {
   }
 
   promise = promise
-    .then((item) => item.updateManualMoveTimestamp())
+    .then((item: DimItem) => item.updateManualMoveTimestamp())
     .catch((e) => {
       toaster.pop("error", item.name, e.message);
       console.error("error moving item", item.name, "to", store.name, e);
