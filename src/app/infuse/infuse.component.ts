@@ -6,6 +6,7 @@ import template from './infuse.html';
 import './infuse.scss';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from '../inventory/item-types';
+import { chainComparator, compareBy, reverseComparator } from '../comparators';
 
 export const InfuseComponent: IComponentOptions = {
   template,
@@ -112,7 +113,7 @@ function InfuseCtrl(
           });
         });
 
-        targetItems = _.sortBy(targetItems, vm.itemToSortKey);
+        targetItems = targetItems.sort(this.itemComparator);
 
         vm.targetItems = targetItems;
       }
@@ -124,7 +125,7 @@ function InfuseCtrl(
           });
         });
 
-        sourceItems = _.sortBy(sourceItems, vm.itemToSortKey);
+        sourceItems = sourceItems.sort(this.itemComparator);
 
         vm.sourceItems = sourceItems;
       }
@@ -157,10 +158,11 @@ function InfuseCtrl(
       return false;
     },
 
-    itemToSortKey(item) {
-      return -((item.basePower || item.primStat.value) +
-      (item.talentGrid ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0));
-    },
+    itemComparator: chainComparator(
+      reverseComparator(compareBy((item: DimItem) => item.basePower)),
+      reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
+      compareBy((item: DimItem) => (item.isDestiny1() && item.talentGrid) ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0)
+    ),
 
     closeDialog() {
       $scope.$parent.closeThisDialog();
