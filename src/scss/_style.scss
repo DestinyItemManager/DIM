@@ -107,7 +107,6 @@ h2, h3 {
 
 
 body {
-  overflow-y: auto;
   margin: 0 auto;
   padding-top: 44px;
   padding-top: calc(44px + constant(safe-area-inset-top));
@@ -117,9 +116,6 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size:12px;
   filter: var(--color-filter);
-  > div:first-child {
-    padding-top: 10px;
-  }
 }
 
 ::-webkit-scrollbar {
@@ -250,10 +246,6 @@ img {
   padding-right: env(safe-area-inset-right);
 }
 
-.bucket-padding {
-  padding: 0 8px;
-}
-
 .store-bounds {
   position: fixed;
   backface-visibility: hidden;
@@ -326,7 +318,7 @@ h2, h3, h4 {
   backface-visibility: hidden;
   z-index: 4;
 
-  &.something-is-sticky {
+  &.sticky {
     box-shadow: 0 1px 6px 0px #222;
   }
 }
