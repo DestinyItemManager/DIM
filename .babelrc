@@ -19,6 +19,7 @@
   "plugins": [
     "angularjs-annotate",
     "syntax-dynamic-import",
-    ["transform-object-rest-spread", { "useBuiltIns": true }]
+    ["transform-object-rest-spread", { "useBuiltIns": true }],
+    "react-hot-loader/babel"
   ]
 }
