@@ -1,0 +1,18 @@
+store-pager {
+  display: block;
+  height: 72px;
+  max-width: 250px;
+  overflow: visible !important;
+  margin: 0 auto;
+
+  > div {
+    overflow: visible !important;
+  }
+}
+
+.phone-portrait {
+  .store-header {
+    max-width: 100%;
+    overflow: hidden;
+  }
+}

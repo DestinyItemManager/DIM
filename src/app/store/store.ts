@@ -18,6 +18,7 @@ const store = createStore(
   allReducers,
   composeEnhancers(
     applyMiddleware(
+      // TODO: No middleware yet, but we'll probably use redux-saga and maybe redux-thunk here
     )
   )
 );

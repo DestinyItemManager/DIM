@@ -1,0 +1,9 @@
+<div class="sticky-header-background" scroll-class="sticky"></div>
+<loading ng-if="!$ctrl.stores"></loading>
+<dim-stores class="stores" stores="$ctrl.stores" buckets="$ctrl.buckets"></dim-stores>
+<loadout-drawer stores="$ctrl.stores" account="$ctrl.account"></loadout-drawer>
+<dim-compare></dim-compare>
+<div id="drag-help" class="drag-help drag-help-hidden" ng-i18next="Help.Drag"></div>
+<d2-farming></d2-farming>
+<dim-clear-new-items account="$ctrl.account"></dim-clear-new-items>
+<random-loadout stores="$ctrl.stores"></random-loadout>
