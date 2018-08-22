@@ -25,8 +25,8 @@ export function queueAction(fn: () => Promise<void> | IPromise<void>) {
 }
 
 // Wrap a function to produce a function that will be queued when invoked
-export function queuedAction(fn, context?) {
-  return (...args) => {
+export function queuedAction<T extends any[], K>(fn: (...args: T) => K, context?): (...args: T) => Promise<void> {
+  return (...args: T) => {
     return queueAction(() => {
       return fn.apply(context, args);
     });

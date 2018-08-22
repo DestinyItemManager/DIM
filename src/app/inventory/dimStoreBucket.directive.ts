@@ -100,7 +100,7 @@ function StoreBucketCtrl(
     });
   });
 
-  vm.moveDroppedItem = queuedAction((item: DimItem, equip: boolean, $event, hovering: boolean) => {
+  vm.moveDroppedItem = queuedAction((item: DimItem, equip: boolean, $event: MouseEvent, hovering: boolean) => {
     const target = vm.store;
 
     if (target.current && equip && !isPhonePortrait()) {
