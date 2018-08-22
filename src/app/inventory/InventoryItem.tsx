@@ -130,7 +130,7 @@ function processBounty(item: DimItem) {
 function processStackable(item: DimItem) {
   return {
     showBadge: true,
-    badgeClassNames: { 'item-stat': true, 'item-stackable': true },
+    badgeClassNames: { 'item-stat': true, 'item-stackable-max': item.amount === item.maxStackSize },
     badgeCount: item.amount.toString()
   };
 }
