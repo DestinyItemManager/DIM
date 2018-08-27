@@ -1,5 +1,7 @@
 # Next
 
+# 4.67.0 (2018-08-26)
+
 # 4.66.0 (2018-08-19)
 
 * DIM now refreshes your inventory automatically every 30 seconds, rather than every 5 minutes.
