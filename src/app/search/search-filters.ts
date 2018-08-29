@@ -7,6 +7,7 @@ import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { sortStores } from '../shell/dimAngularFilters.filter';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { $rootScope } from 'ngimport';
+import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 
 interface SearchConfig {
   destinyVersion: 1 | 2;
@@ -125,7 +126,8 @@ export function buildSearchConfig(
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
       prophecy: ['prophecy'],
-      ikelos: ['ikelos']
+      ikelos: ['ikelos'],
+      ammoType: ['special', 'primary', 'heavy']
     });
   }
 
@@ -920,6 +922,13 @@ export function searchFilters(
         return item.sockets && _.any(item.sockets.sockets, (socket) => {
           return (socket.plug || false) && socket.plug.plugItem.plug.plugCategoryHash === 2973005342 && socket.plug.plugItem.hash !== 4248210736;
         });
+      },
+      ammoType(item: D2Item, predicate: string) {
+        return item.ammoType === {
+          primary: DestinyAmmunitionType.Primary,
+          special: DestinyAmmunitionType.Special,
+          heavy: DestinyAmmunitionType.Heavy
+        }[predicate];
       },
       rpm: filterByStats('rpm'),
       charge: filterByStats('charge'),

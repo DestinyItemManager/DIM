@@ -1,5 +1,8 @@
 # Next
 
+* Item popup shows the ammo type of D2 weapons.
+* New is:primary, is:special, and is:heavy search terms for ammo types.
+
 # 4.67.0 (2018-08-26)
 
 # 4.66.0 (2018-08-19)

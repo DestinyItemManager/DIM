@@ -21,7 +21,8 @@ import {
   DestinyItemSocketState,
   DestinyItemPlug,
   DestinyItemSocketEntryDefinition,
-  DestinyItemSocketEntryPlugItemDefinition
+  DestinyItemSocketEntryPlugItemDefinition,
+  DestinyAmmunitionType
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -356,7 +357,8 @@ export function makeItem(
     stats: null, // filled in later
     objectives: null, // filled in later
     dtrRating: null,
-    previewVendor: itemDef.preview && itemDef.preview.previewVendorHash
+    previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
+    ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None
   });
 
   // *able
