@@ -669,6 +669,11 @@
     "Flawless": "Makellos",
     "SevenWins": "7 Siege Belohnung (Waffe)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
+    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
+    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
+  },
   "Vendors": {
     "All": "Alle",
     "ArmorAndWeapons": "Rüstungen & Waffen",

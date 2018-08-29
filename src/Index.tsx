@@ -5,6 +5,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { module, bootstrap } from 'angular';
 import { UIRouter } from '@uirouter/react';
+import { Provider } from 'react-redux';
 import makeRouter from './router.config';
 
 import './app/google';
@@ -12,7 +13,7 @@ import './app/exceptions';
 
 // Initialize the main DIM app
 import { AppModule } from './app/app.module';
-import { App } from './app/App';
+import App from './app/App';
 
 import './scss/main.scss';
 
@@ -25,6 +26,17 @@ import 'mobile-drag-drop/default.css';
 import registerServiceWorker from './register-service-worker';
 import { lazyInjector } from './lazyInjector';
 import { setRouter } from './router';
+import store from './app/store/store';
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  console.log('prompt login');
+  if (window.confirm('Save to desktop?')) {
+
+    console.log('save to desktop');
+    (e as any).prompt();
+  }
+});
 
 polyfill({
   holdToDrag: 300
@@ -45,9 +57,11 @@ initi18n().then(() => {
       const router = makeRouter();
       setRouter(router);
       ReactDOM.render(
-        <UIRouter router={router}>
-          <App/>
-        </UIRouter>,
+        <Provider store={store}>
+          <UIRouter router={router}>
+            <App/>
+          </UIRouter>
+        </Provider>,
         document.getElementById('app')
       );
     });

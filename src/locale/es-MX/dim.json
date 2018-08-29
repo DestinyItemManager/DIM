@@ -669,6 +669,11 @@
     "Flawless": "Invicto",
     "SevenWins": "Recompensa de 7 victorias (Arma)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz informa que este vendedor está verificado y vendiendo objetos a nivel de Poder 380.",
+    "ServiceCallFailed": "El servicio de VendorEngrams.xyz ha fallado.",
+    "Vote": "¿Ves a un proveedor vendiendo objetos a nivel de poder 380? ¡Ve a VendorEngrams.xyz para votar y hacerlo saber a la comunidad!"
+  },
   "Vendors": {
     "All": "Todos",
     "ArmorAndWeapons": "Armadura y armas",

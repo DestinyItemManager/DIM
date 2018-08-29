@@ -22,6 +22,7 @@ import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { UISref } from '@uirouter/react';
+import { dimVendorEngramsService, isVerified380 } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 
 const destiny1Links = [
   {
@@ -71,6 +72,7 @@ interface State {
   account?: DestinyAccount;
   dropdownOpen: boolean;
   showSearch: boolean;
+  vendorEngramDropActive: boolean;
 }
 
 interface Props {
@@ -82,6 +84,7 @@ export default class Header extends React.PureComponent<Props, State> {
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLElement>();
+  private engramRefreshTimer: number;
 
   private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
 
@@ -92,13 +95,15 @@ export default class Header extends React.PureComponent<Props, State> {
 
     this.state = {
       dropdownOpen: false,
-      showSearch: false
+      showSearch: false,
+      vendorEngramDropActive: false
     };
   }
 
   componentDidMount() {
     this.accountSubscription = getActiveAccountStream().subscribe((account) => {
       this.setState({ account: account || undefined });
+      this.updateVendorEngrams(account || undefined);
     });
 
     this.unregisterTransitionHooks = [
@@ -116,10 +121,11 @@ export default class Header extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     this.unregisterTransitionHooks.forEach((f) => f());
     this.accountSubscription.unsubscribe();
+    this.stopPollingVendorEngrams();
   }
 
   render() {
-    const { account, showSearch, dropdownOpen } = this.state;
+    const { account, showSearch, dropdownOpen, vendorEngramDropActive } = this.state;
     const { SearchFilter } = this;
 
     // TODO: new fontawesome
@@ -166,6 +172,7 @@ export default class Header extends React.PureComponent<Props, State> {
             account={account}
             state={link.state}
             text={link.text}
+            showWhatsNew={link.state === 'destiny2.vendors' && vendorEngramDropActive}
           />
         )}
       </>
@@ -244,6 +251,31 @@ export default class Header extends React.PureComponent<Props, State> {
         </span>
       </div>
     );
+  }
+
+  private updateVendorEngrams = (account = this.state.account) => {
+    if (!$featureFlags.vendorEngrams || !account || account.destinyVersion !== 2) {
+      this.stopPollingVendorEngrams();
+      return;
+    }
+
+    dimVendorEngramsService.getAllVendorDrops()
+      .then((vds) => {
+        const anyActive = vds.some(isVerified380);
+        this.setState({ vendorEngramDropActive: anyActive });
+      });
+
+    if (!this.engramRefreshTimer) {
+      this.engramRefreshTimer = window.setInterval(this.updateVendorEngrams,
+        dimVendorEngramsService.refreshInterval);
+    }
+  }
+
+  private stopPollingVendorEngrams = () => {
+    if (this.engramRefreshTimer) {
+      clearInterval(this.engramRefreshTimer);
+      this.engramRefreshTimer = 0;
+    }
   }
 
   private toggleDropdown = () => {

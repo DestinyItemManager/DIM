@@ -1,6 +1,20 @@
 # Next
 
+
 * Add initial Korean (ko) language support.
+
+# 4.67.0 (2018-08-26)
+
+# 4.66.0 (2018-08-19)
+
+* DIM now refreshes your inventory automatically every 30 seconds, rather than every 5 minutes.
+* Clicking "transfer items" in the Infusion tool will now always move them to the active character.
+* The infusion tool will now include locked items as potential infusion targets even if the checkbox isn't checked (it still affects what can be a source item).
+* If you are at maximum light, DIM now alerts you when vendors are selling maximum light gear and engrams, courtesy of VendorEngrams.xyz.
+
+# 4.65.0 (2018-08-12)
+
+# 4.64.0 (2018-08-05)
 
 # 4.63.0 (2018-07-29)
 
@@ -22,6 +36,7 @@
 
 * Farming mode won't try to move unmoveable reputation tokens.
 * Filters like stat:recovery:=0 now work (they couldn't match stat values of zero before).
+* Checking with VendorEngrams.xyz to see if 380 drops may be right for you.
 
 # 4.59.0 (2018-07-01)
 

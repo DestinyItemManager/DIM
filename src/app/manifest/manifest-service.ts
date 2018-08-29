@@ -268,7 +268,9 @@ function unzipManifest(blob: Blob): Promise<ArrayBuffer> {
             blobReader.addEventListener("error", (e) => { reject(e); });
             blobReader.addEventListener("load", () => {
               zipReader.close(() => {
-                resolve(blobReader.result);
+                if (blobReader.result instanceof ArrayBuffer) {
+                  resolve(blobReader.result);
+                }
               });
             });
             blobReader.readAsArrayBuffer(blob);

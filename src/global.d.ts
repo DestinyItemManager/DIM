@@ -29,6 +29,8 @@ declare const $featureFlags: {
   sentry: boolean;
   /** D2 Vendors */
   vendors: boolean;
+  /** Enable vendorengrams.xyz integration */
+  vendorEngrams: boolean;
 }
 
 declare function ga(...params: string[]);

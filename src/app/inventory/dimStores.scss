@@ -61,12 +61,12 @@
 .store-header {
   position: fixed;
   backface-visibility: hidden;
-  top: 55px;
+  top: 44px;
   left: 0;
   width: auto;
   z-index: 10;
-  margin-left: 28px;
-  height: 82px;
+  padding: 8px 0 4px 8px;
+  background-color: #434444;
 
   @supports (position: sticky) {
     position: sticky;
