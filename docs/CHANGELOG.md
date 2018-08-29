@@ -1,5 +1,7 @@
 # Next
 
+* We have a new Shop selling enamel pins and T-shirts.
+
 # 4.67.0 (2018-08-26)
 
 # 4.66.0 (2018-08-19)
