@@ -12,6 +12,7 @@ import Sockets from './Sockets';
 import { ItemPopup } from './item-popup.directive';
 import { PressTip } from './press-tip.directive';
 import { react2angular } from 'react2angular';
+import { ammoTypeClass } from './ammo-type';
 
 export default module('movePopupModule', [])
   .component('dimItemStats', ItemStatsComponent)
@@ -25,6 +26,7 @@ export default module('movePopupModule', [])
   .component('dimTalentGrid', TalentGridComponent)
   .component('sockets', react2angular(Sockets, ['item'], ['$scope']))
   .filter('talentGridNodes', () => talentGridNodesFilter)
+  .filter('ammoTypeClass', () => ammoTypeClass)
   .directive('itemPopup', ItemPopup)
   .directive('pressTip', PressTip)
   .name;

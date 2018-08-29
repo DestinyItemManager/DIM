@@ -1,5 +1,7 @@
 # Next
 
+* Item popup shows the ammo type of D2 weapons.
+* New is:primary, is:special, and is:heavy search terms for ammo types.
 * Added Korean as a language option.
 
 # 4.67.0 (2018-08-26)

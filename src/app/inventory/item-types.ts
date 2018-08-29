@@ -7,7 +7,8 @@ import {
   DestinySocketCategoryDefinition,
   DestinyClass,
   DestinyItemTierTypeInfusionBlock,
-  DestinyItemQualityBlockDefinition
+  DestinyItemQualityBlockDefinition,
+  DestinyAmmunitionType
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -204,6 +205,7 @@ export interface D2Item extends DimItem {
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   dtrRating: D2RatingData | null;
+  ammoType: DestinyAmmunitionType;
   getStoresService(): D2StoreServiceType;
 }
 
