@@ -1,5 +1,6 @@
 // tslint:disable:no-implicit-dependencies
 import en from '../locale/dim.json';
+import ko from '../locale/ko/dim.json';
 import it from '../locale/it/dim.json';
 import de from '../locale/de/dim.json';
 import fr from '../locale/fr/dim.json';
@@ -16,7 +17,7 @@ import XHR from 'i18next-xhr-backend';
 import { humanBytes } from './storage/human-bytes';
 import { percent } from './inventory/dimPercentWidth.directive';
 
-export const DIM_LANGS = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'pl', 'pt-br', 'ru', 'zh-cht'];
+export const DIM_LANGS = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'pl', 'pt-br', 'ru', 'ko', 'zh-cht'];
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
@@ -63,6 +64,7 @@ export function initi18n(): Promise<never> {
             'pt-br': ptBR,
             pl,
             ru,
+            ko,
             'zh-cht': zhCHT
           }[lng];
           if (!path) {

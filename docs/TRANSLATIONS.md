@@ -5,6 +5,7 @@ Due to what information is provided by Bungie about item names and descriptions 
   - German
   - Italian
   - Japanese
+  - Korean
   - Portuguese (BR)
   - Spanish
   - Spanish (Latin America)
