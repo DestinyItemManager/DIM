@@ -64,7 +64,7 @@ export default class PressTip extends React.Component<Props, State> {
       this.tooltip.show();
 
       // Ugh this is a real hack
-      this.tooltipContent = this.tooltip._tooltipNode.querySelector(this.tooltip.innerSelector);
+      this.tooltipContent = (this.tooltip as any)._tooltipNode.querySelector((this.tooltip as any).innerSelector);
       this.tooltipContent.innerHTML = '';
     }
     this.setState({ isOpen: true });
@@ -74,7 +74,7 @@ export default class PressTip extends React.Component<Props, State> {
     e.preventDefault();
     if (this.tooltip) {
       this.tooltip.dispose();
-      this.tooltip = null;
+      this.tooltip = undefined;
     }
     this.setState({ isOpen: false });
     clearTimeout(this.timer);
@@ -134,7 +134,7 @@ export default class PressTip extends React.Component<Props, State> {
   private destroy() {
     if (this.tooltip) {
       this.tooltip.dispose();
-      this.tooltip = null;
+      this.tooltip = undefined;
     }
     if (this.ref) {
       this.ref.removeEventListener('mouseenter', this.hover);
