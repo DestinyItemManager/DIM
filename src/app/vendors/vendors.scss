@@ -37,6 +37,27 @@
   .vendor-char-items {
     position: relative;
   }
+
+  .xyz-active-throb {
+    border-radius: 100px;
+    animation: glow 1s infinite alternate;
+  }
+
+  .xyz-engram {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px -10px rgba(174, 244, 175, 0.6);
+    }
+    to {
+      box-shadow: 0 0 10px 10px rgba(174, 244, 175, 0.6);
+    }
+  }
+
   .vendor-col {
     margin-right: 20px;
   }

@@ -19,6 +19,8 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
+import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
 
 interface Props {
   account: DestinyAccount;
@@ -30,6 +32,8 @@ interface State {
   trackerService?: DestinyTrackerService;
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
+  vendorEngramDrops?: VendorDrop[];
+  basePowerLevel?: number;
 }
 
 /**
@@ -46,6 +50,8 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
   // TODO: pull this into a service?
   async loadVendors() {
+    dimVendorEngramsService.getAllVendorDrops().then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
+
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
@@ -57,6 +63,14 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       const stores = this.state.stores || await D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
       if (stores) {
         characterId = stores.find((s) => s.current)!.id;
+
+        const maxBasePower = stores.find((s) => s.current)!.stats.maxBasePower;
+
+        // maxBasePower.value gets an asterisk when classified items are present; could regex it
+        if (maxBasePower && maxBasePower.tiers) {
+          const basePowerLevel = +maxBasePower.tiers[0];
+          this.setState({ basePowerLevel });
+        }
       }
     }
     const vendorsResponse = await getVendorsApi(this.props.account, characterId);
@@ -95,7 +109,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const { defs, vendorsResponse, trackerService, ownedItemHashes } = this.state;
+    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramDrops, basePowerLevel } = this.state;
     const { account } = this.props;
 
     if (!vendorsResponse || !defs) {
@@ -113,6 +127,8 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             account={account}
+            vendorEngramDrops={vendorEngramDrops}
+            basePowerLevel={basePowerLevel}
           />
         )}
 
@@ -127,7 +143,9 @@ function VendorGroup({
   vendorsResponse,
   trackerService,
   ownedItemHashes,
-  account
+  account,
+  vendorEngramDrops,
+  basePowerLevel
 }: {
   defs: D2ManifestDefinitions;
   group: DestinyVendorGroup;
@@ -135,8 +153,11 @@ function VendorGroup({
   trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
+  vendorEngramDrops?: VendorDrop[];
+  basePowerLevel?: number;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
+
   return (
     <>
       <h2>{groupDef.categoryName}</h2>
@@ -151,6 +172,8 @@ function VendorGroup({
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
+            allVendorEngramDrops={vendorEngramDrops}
+            basePowerLevel={basePowerLevel}
           />
         </ErrorBoundary>
       )}

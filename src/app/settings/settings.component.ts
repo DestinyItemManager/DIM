@@ -147,7 +147,7 @@ export function SettingsController(
   };
 
   vm.changeLanguage = () => {
-    localStorage.dimLanguage = vm.settings.language;
+    localStorage.setItem('dimLanguage', vm.settings.language);
     changeLanguage(vm.settings.language, () => {
       $rootScope.$applyAsync(() => {
         $rootScope.$broadcast('i18nextLanguageChange');

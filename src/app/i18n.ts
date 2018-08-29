@@ -21,8 +21,9 @@ export const DIM_LANGS = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'ko', 'pl
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
-  if (localStorage.dimLanguage && DIM_LANGS.includes(localStorage.dimLanguage)) {
-    return localStorage.dimLanguage;
+  const storedLanguage = localStorage.getItem('dimLanguage');
+  if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
+    return storedLanguage;
   }
   const browserLang = (window.navigator.language || 'en').toLowerCase();
   return DIM_LANGS.find((lang) => browserLang.startsWith(lang)) || 'en';

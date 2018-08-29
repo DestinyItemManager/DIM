@@ -669,6 +669,11 @@
     "Flawless": "Vitória perfeita",
     "SevenWins": "Recompensa de 7 vitórias (arma)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz relata que este vendedor foi verificado vendendo itens de nível 380 de poder.",
+    "ServiceCallFailed": "Chamada ao serviço do VendorEngrams.xyz falhou.",
+    "Vote": "Achou um vendedor com itens de nível 380 de poder? Acesse VendorEngrams.xyz para votar e avise a Comunidade!"
+  },
   "Vendors": {
     "All": "Todos",
     "ArmorAndWeapons": "Armaduras & Armas",
