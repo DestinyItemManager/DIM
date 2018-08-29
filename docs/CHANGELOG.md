@@ -1,6 +1,5 @@
 # Next
 
-
 * Add initial Korean (ko) language support.
 
 # 4.67.0 (2018-08-26)
