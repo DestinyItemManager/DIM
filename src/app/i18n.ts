@@ -6,6 +6,7 @@ import fr from '../locale/fr/dim.json';
 import es from '../locale/es-ES/dim.json';
 import esMX from '../locale/es-MX/dim.json';
 import ja from '../locale/ja/dim.json';
+import ko from '../locale/ko/dim.json';
 import pl from '../locale/pl/dim.json';
 import ptBR from '../locale/pt-BR/dim.json';
 import ru from '../locale/ru/dim.json';
@@ -16,7 +17,7 @@ import XHR from 'i18next-xhr-backend';
 import { humanBytes } from './storage/human-bytes';
 import { percent } from './inventory/dimPercentWidth.directive';
 
-export const DIM_LANGS = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'pl', 'pt-br', 'ru', 'zh-cht'];
+export const DIM_LANGS = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-br', 'ru', 'zh-cht'];
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
@@ -59,6 +60,7 @@ export function initi18n(): Promise<never> {
             es,
             'es-mx': esMX,
             ja,
+            ko,
             'pt-br': ptBR,
             pl,
             ru,
