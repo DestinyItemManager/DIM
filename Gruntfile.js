@@ -131,6 +131,7 @@ module.exports = function(grunt) {
         'src/locale/fr/dim.json',
         'src/locale/it/dim.json',
         'src/locale/ja/dim.json',
+        'src/locale/ko/dim.json',
         'src/locale/pt-BR/dim.json',
         'src/locale/es-MX/dim.json',
         'src/locale/pl/dim.json',

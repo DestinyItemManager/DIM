@@ -63,6 +63,7 @@ export function SettingsController(
     'pt-br': 'Português (Brasil)',
     ru: 'Русский',
     ja: '日本語',
+    ko: '한국어',
     'zh-cht': '繁體中文' // Chinese (Traditional)
   };
 
