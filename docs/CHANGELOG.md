@@ -2,6 +2,7 @@
 
 * Item popup shows the ammo type of D2 weapons.
 * New is:primary, is:special, and is:heavy search terms for ammo types.
+* Add is:tracerifle and is:linearfusionrifle searches.
 * Added Korean as a language option.
 
 # 4.67.0 (2018-08-26)
@@ -198,7 +199,6 @@
 * Pulling an item from the postmaster updates the list of items quickly now.
 * Navigation from "About" or "Backers" back to your inventory works.
 * is:dupelower breaks ties more intelligently.
-* Add is:tracerifle and is:linearfusionrifle searches.
 
 # 4.40.0 (2018-02-12)
 
