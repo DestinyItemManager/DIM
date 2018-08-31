@@ -36,7 +36,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
 
     const item = this.props.item;
 
-    // TODO: What was this?
+    // TODO: This was used in the D1 loadout builder. It shouldn't be part of this.
     /*
     if (shiftClickCallback && e.shiftKey) {
       shiftClickCallback(item);
