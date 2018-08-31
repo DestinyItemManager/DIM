@@ -27,14 +27,16 @@
 
     &.show {
       position: absolute;
-      left: 29px;
+      left: 32px;
       top: 4px;
+      right: 170px;
       display: block;
 
       #filter-input {
-        height: 28px;
+        height: 34px;
         margin-top: 0;
-        width: 150px;
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .filter-help {
@@ -68,6 +70,13 @@
   .fa {
     font-size: 16px !important;
     color: #999 !important;
+    // Increase touch target size
+    padding: 4px;
+    margin: -4px;
+    margin-left: 4px;
+    &:first-child {
+      margin-left: -4px;
+    }
     &:hover {
       color: #E8A534 !important;
     }
