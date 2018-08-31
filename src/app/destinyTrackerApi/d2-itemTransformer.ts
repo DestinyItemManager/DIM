@@ -23,6 +23,7 @@ export function translateToDtrItem(item: D2Item | DestinyVendorSaleItemComponent
  */
 export function getRollAndPerks(item: D2Item): DtrD2BasicItem {
   const powerModHashes = getPowerMods(item).map((m) => m.hash);
+
   return {
     selectedPerks: getSelectedPlugs(item, powerModHashes),
     attachedMods: powerModHashes,
@@ -50,19 +51,17 @@ function isD2Item(item: D2Item | DestinyVendorSaleItemComponent): item is D2Item
  * If the item has a random roll, we supply the random plug hashes it has in
  * a value named `availablePerks` to the DTR API.
  */
-function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): number[] {
+function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): number[] | undefined {
   if (isD2Item(item)) {
     if (!item.sockets) {
-      return [];
+      return undefined;
     }
 
-    if (item.hash === 2681395357) {
-      console.log('Trackless Waste');
-    }
-
-    return flatMap(item
+    const randomPlugOptions = flatMap(item
       .sockets
       .sockets, (s) => s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : []);
+
+    return (randomPlugOptions && randomPlugOptions.length > 0) ? randomPlugOptions : undefined;
   }
 
   // TODO: look up vendor rolls
