@@ -21,6 +21,7 @@ import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
 import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
+import { t } from 'i18next';
 
 interface Props {
   account: DestinyAccount;
@@ -34,6 +35,7 @@ interface State {
   ownedItemHashes?: Set<number>;
   vendorEngramDrops?: VendorDrop[];
   basePowerLevel?: number;
+  error?: Error;
 }
 
 /**
@@ -73,12 +75,19 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
         }
       }
     }
-    const vendorsResponse = await getVendorsApi(this.props.account, characterId);
 
-    this.setState({ defs, vendorsResponse });
+    let vendorsResponse;
+    try {
+      vendorsResponse = await getVendorsApi(this.props.account, characterId);
+      this.setState({ defs, vendorsResponse });
+    } catch (error) {
+      this.setState({ error });
+    }
 
-    const trackerService = await fetchRatingsForVendors(defs, vendorsResponse);
-    this.setState({ trackerService });
+    if (vendorsResponse) {
+      const trackerService = await fetchRatingsForVendors(defs, vendorsResponse);
+      this.setState({ trackerService });
+    }
   }
 
   componentDidMount() {
@@ -109,8 +118,16 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramDrops, basePowerLevel } = this.state;
+    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramDrops, basePowerLevel, error } = this.state;
     const { account } = this.props;
+
+    if (error) {
+      return (
+        <div className="vendor dim-page">
+          <h2>{t('Forsaken.Vendors')}</h2>
+        </div>
+      );
+    }
 
     if (!vendorsResponse || !defs) {
       return <div className="vendor dim-page"><Loading/></div>;

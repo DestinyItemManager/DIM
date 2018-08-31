@@ -259,6 +259,10 @@
     "WeaponType": "Shows weapons based on their weapon type.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
+  },
   "Header": {
     "About": "About",
     "Back": "Go Back",

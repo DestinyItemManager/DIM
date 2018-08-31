@@ -88,7 +88,12 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
     const defsPromise = getDefinitions();
     const profileInfo = await getProgression(account);
     const characterIds = Object.keys(profileInfo.characters.data);
-    const vendors = await Promise.all(characterIds.map((characterId) => getVendors(account, characterId)));
+    let vendors: DestinyVendorsResponse[] = [];
+    try {
+      vendors = await Promise.all(characterIds.map((characterId) => getVendors(account, characterId)));
+    } catch (e) {
+      console.error('Failed to load vendors', e);
+    }
     const defs = await defsPromise;
     return {
       defs,
