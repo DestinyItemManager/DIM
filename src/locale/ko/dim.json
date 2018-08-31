@@ -171,7 +171,6 @@
       "WotM": "Wrath of the Machine"
     },
     "Activity": "Available from activity <i>{{activity}}</i>",
-    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Shows armors based on their category.",
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",

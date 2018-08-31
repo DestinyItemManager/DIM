@@ -59,6 +59,7 @@ export function SettingsController(
     'es-mx': 'Español (México)',
     fr: 'Français',
     it: 'Italiano',
+    ko: '한국어',
     pl: 'Polski',
     'pt-br': 'Português (Brasil)',
     ru: 'Русский',

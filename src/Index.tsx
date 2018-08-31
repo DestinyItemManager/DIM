@@ -30,6 +30,16 @@ import { lazyInjector } from './lazyInjector';
 import { setRouter } from './router';
 import store from './app/store/store';
 
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  console.log('prompt login');
+  if (window.confirm('Save to desktop?')) {
+
+    console.log('save to desktop');
+    (e as any).prompt();
+  }
+});
+
 polyfill({
   holdToDrag: 300
 });

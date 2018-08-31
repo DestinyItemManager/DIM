@@ -42,7 +42,7 @@ export default class RandomLoadoutButton extends React.Component<Props, State> {
       return null;
     }
 
-    const storeService: StoreServiceType = this.props.destinyVersion
+    const storeService: StoreServiceType = this.props.destinyVersion === 1
       ? D1StoresService
       : D2StoresService;
 
