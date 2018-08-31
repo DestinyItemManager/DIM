@@ -193,9 +193,14 @@ export default class Progress extends React.Component<Props, State> {
       </>
     );
 
+    const forsaken = (
+      <p>{t('Forsaken.Progress')}</p>
+    );
+
     if (this.state.isPhonePortrait) {
       return (
         <div className="progress-page dim-page">
+         {forsaken}
           {profileMilestonesContent}
           <ViewPager>
             <Frame className="frame" autoSize={true}>
@@ -217,6 +222,7 @@ export default class Progress extends React.Component<Props, State> {
     } else {
       return (
         <div className="progress-page dim-page">
+          {forsaken}
           {profileMilestonesContent}
           {this.renderCharacters(characters)}
         </div>
@@ -314,7 +320,7 @@ export default class Progress extends React.Component<Props, State> {
     const { vendors, defs } = this.state.progress!;
     const factionDef = defs.Faction[faction.factionHash];
     const vendorHash = factionDef.vendors[faction.factionVendorIndex].vendorHash;
-    return vendors[character.characterId].vendors.data[vendorHash];
+    return vendors[character.characterId] ? vendors[character.characterId].vendors.data[vendorHash] : undefined;
   }
 
   /**
