@@ -185,6 +185,8 @@ $item-header-spacing: 5px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
   }
 
   .fa {
@@ -307,4 +309,27 @@ $item-header-spacing: 5px;
   background-color: #923c3c;
   margin: 0;
   padding: 2px 8px;
+}
+
+.ammo-type {
+  $ammo-height: 10px;
+  background-size: (1.4 * $ammo-height) $ammo-height;
+  height: $ammo-height + 4px;
+  width: (1.4 * $ammo-height) + 4px;
+  margin-right: 4px;
+  background-color: rgba(0,0,0,.7);
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 5px;
+  margin-top: 1px;
+
+  &.ammo-primary {
+    background-image: url('../../images/primary.png');
+  }
+  &.ammo-special {
+    background-image: url('../../images/special.png');
+  }
+  &.ammo-heavy {
+    background-image: url('../../images/heavy.png');
+  }
 }

@@ -21,7 +21,8 @@ import {
   DestinyItemSocketState,
   DestinyItemPlug,
   DestinyItemSocketEntryDefinition,
-  DestinyItemSocketEntryPlugItemDefinition
+  DestinyItemSocketEntryPlugItemDefinition,
+  DestinyAmmunitionType
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -83,10 +84,10 @@ const statWhiteList = [
 
 // Mapping from itemCategoryHash to our category strings for filtering.
 const categoryFromHash = {
-  // These three types are missing.
-  // ???: 'CATEGORY_GRENADE_LAUNCHER',
-  // ???: 'CATEGORY_SUBMACHINEGUN',
-  // ???: 'CATEGORY_TRACE_RIFLE',
+  153950757: 'CATEGORY_GRENADE_LAUNCHER',
+  3954685534: 'CATEGORY_SUBMACHINEGUN',
+  2489664120: 'CATEGORY_TRACE_RIFLE',
+  1504945536: 'CATEGORY_LINEAR_FUSION_RIFLE',
   5: 'CATEGORY_AUTO_RIFLE',
   6: 'CATEGORY_HAND_CANNON',
   7: 'CATEGORY_PULSE_RIFLE',
@@ -97,15 +98,6 @@ const categoryFromHash = {
   13: 'CATEGORY_ROCKET_LAUNCHER',
   14: 'CATEGORY_SIDEARM',
   54: 'CATEGORY_SWORD',
-};
-
-// Mapping from infusionCategoryHash to our category strings for
-// cases where the itemCategory is missing.
-// TODO: Remove this once the bug in the API is fixed.
-const categoryFromInfusionHash = {
-  3879234379: 'CATEGORY_GRENADE_LAUNCHER',
-  3499784695: 'CATEGORY_SUBMACHINEGUN',
-  522776512: 'CATEGORY_AUTO_RIFLE', // Trace Rifle
 };
 
 // Prototype for Item objects - add methods to this to add them to all
@@ -233,12 +225,6 @@ function findCategories(itemDef): string[] {
       if (c) { categories.push(c); }
     }
   }
-  // TODO: Some of our categories are not yet available as
-  // ItemCategories. This is a hack.
-  if (categories.length === 0 && itemDef.quality) {
-    const c = categoryFromInfusionHash[itemDef.quality.infusionCategoryHash];
-    if (c) { categories.push(c); }
-  }
   return categories;
 }
 
@@ -356,7 +342,8 @@ export function makeItem(
     stats: null, // filled in later
     objectives: null, // filled in later
     dtrRating: null,
-    previewVendor: itemDef.preview && itemDef.preview.previewVendorHash
+    previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
+    ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None
   });
 
   // *able
