@@ -4,6 +4,7 @@
 * New is:primary, is:special, and is:heavy search terms for ammo types.
 * Add is:tracerifle and is:linearfusionrifle searches.
 * Added Korean as a language option.
+* We have a new Shop selling enamel pins and T-shirts.
 * Ratings system understands random rolls in D2.
 
 # 4.67.0 (2018-08-26)
