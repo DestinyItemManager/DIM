@@ -834,6 +834,10 @@ function buildSockets(
     return null;
   }
 
+  if (item.itemHash === 2681395357) {
+    console.log('building - Trackless Waste');
+  }
+
   const realSockets = sockets.map((socket, i) => buildSocket(defs, socket, i));
 
   const categories = itemDef.sockets.socketCategories.map((category): DimSocketCategory => {
@@ -916,12 +920,27 @@ function buildDefinedSocket(
   return {
     socketIndex: index,
     plug: null,
-    plugOptions
+    plugOptions,
+    hasRandomizedPlugItems: socket.randomizedPlugItems && socket.randomizedPlugItems.length > 0
   };
 }
 
 function isDestinyItemPlug(plug: DestinyItemPlug | DestinyItemSocketState): plug is DestinyItemPlug {
   return Boolean((plug as DestinyItemPlug).plugItemHash);
+}
+
+function getHasRandomizedPlugItems(
+  defs: D2ManifestDefinitions,
+  plug: DestinyItemPlug | DestinyItemSocketState
+): boolean {
+  const plugHash = isDestinyItemPlug(plug) ? plug.plugItemHash : plug.plugHash;
+
+  const plugItem = plugHash && defs.InventoryItem.get(plugHash);
+  if (!plugItem || !plugItem.sockets) {
+    return false;
+  }
+
+  return plugItem.sockets.socketEntries.some((se) => se.randomizedPlugItems && se.randomizedPlugItems.length > 0);
 }
 
 function buildPlug(
@@ -979,6 +998,7 @@ function buildSocket(
   const plug = buildPlug(defs, socket);
   const reusablePlugs = compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)));
   const plugOptions = plug ? [plug] : [];
+  const hasRandomizedPlugItems = getHasRandomizedPlugItems(defs, socket);
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
@@ -996,7 +1016,8 @@ function buildSocket(
   return {
     socketIndex: index,
     plug,
-    plugOptions
+    plugOptions,
+    hasRandomizedPlugItems
   };
 }
 

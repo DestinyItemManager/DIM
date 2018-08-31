@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { compact } from '../util';
+import { compact, flatMap } from '../util';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { getPowerMods } from '../inventory/store/d2-item-factory.service';
@@ -12,7 +12,8 @@ import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-ty
  */
 export function translateToDtrItem(item: D2Item | DestinyVendorSaleItemComponent): D2ItemFetchRequest {
   return {
-    referenceId: isVendorSaleItem(item) ? item.itemHash : item.hash
+    referenceId: isVendorSaleItem(item) ? item.itemHash : item.hash,
+    availablePerks: getAvailablePerks(item)
   };
 }
 
@@ -27,6 +28,7 @@ export function getRollAndPerks(item: D2Item): DtrD2BasicItem {
     attachedMods: powerModHashes,
     referenceId: item.hash,
     instanceId: item.id,
+    availablePerks: getAvailablePerks(item)
   };
 }
 
@@ -38,6 +40,33 @@ function getSelectedPlugs(item: D2Item, powerModHashes: number[]): number[] {
   const allPlugs = compact(item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash));
 
   return _.difference(allPlugs, powerModHashes);
+}
+
+function isD2Item(item: D2Item | DestinyVendorSaleItemComponent): item is D2Item {
+  return (item as D2Item).sockets !== undefined;
+}
+
+/**
+ * If the item has a random roll, we supply the random plug hashes it has in
+ * a value named `availablePerks` to the DTR API.
+ */
+function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): number[] {
+  if (isD2Item(item)) {
+    if (!item.sockets) {
+      return [];
+    }
+
+    if (item.hash === 2681395357) {
+      console.log('Trackless Waste');
+    }
+
+    return flatMap(item
+      .sockets
+      .sockets, (s) => s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : []);
+  }
+
+  // TODO: look up vendor rolls
+  return [];
 }
 
 function isVendorSaleItem(item: D2Item | DestinyVendorSaleItemComponent): item is DestinyVendorSaleItemComponent {
