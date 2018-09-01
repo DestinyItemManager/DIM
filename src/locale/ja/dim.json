@@ -171,6 +171,7 @@
       "WotM": "機械の天罰"
     },
     "Activity": "<i>{{activity}}</i>から入手可能",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "カテゴリー別に防具を表示",
     "Ascended": "ノードの開放完了の有無に関わらず、アップグレード可能なアイテムを表示",
     "Categories": "高レベル・アイテムカテゴリー",
@@ -257,6 +258,10 @@
     "WeaponClass": "武器のクラスを基に表示",
     "WeaponType": "武器の種類を基に表示",
     "Year": "Destinyの何年目にでてきたかを表示"
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "情報",

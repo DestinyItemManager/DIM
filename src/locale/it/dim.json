@@ -171,6 +171,7 @@
       "WotM": "Furia meccanica"
     },
     "Activity": "Disponibile dall'attività <i>{{activity}}</i>",
+    "AmmoType": "Mostra gli oggetti basandosi sul tipo di munizioni.",
     "ArmorCategory": "Mostra le armature ordinate per categoria.",
     "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" e se sono stati ascesi o no.",
     "Categories": "Categorie di oggetti di alto livello.",
@@ -257,6 +258,10 @@
     "WeaponClass": "Mostra gli oggetti basandosi sulla loro classe arma.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",
     "Year": "Mostra gli oggetti divisi per anno di Destiny in cui sono apparsi."
+  },
+  "Forsaken": {
+    "Progress": "Nota: I dati sul progresso possono essere incompleti o errati fino al lancio de \"I Rinnegati\".",
+    "Vendors": "I mercanti torneranno disponibili poco tempo dopo il lancio de \"I Rinnegati\"."
   },
   "Header": {
     "About": "Chi siamo",

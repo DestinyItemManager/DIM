@@ -171,6 +171,7 @@
       "WotM": "Fureur mécanique"
     },
     "Activity": "Disponible dans l'activité <i>{{activity}}</i>",
+    "AmmoType": "Afficher les objets en fonction de leur type de munition.",
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
     "Ascended": "Affiche les item qui ont une bulle ascension et si l'ascension a été faite ou non.",
     "Categories": "Grand catégories d'arme.",
@@ -257,6 +258,10 @@
     "WeaponClass": "Affiche les objets selon leur classe d'arme.",
     "WeaponType": "Affiche les armes selon leur type d'arme.",
     "Year": "Affiche les objets selon l'année à laquelle ils sont apparus."
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "À propos",

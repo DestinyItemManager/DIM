@@ -171,6 +171,7 @@
       "WotM": "La Furia de las Máquinas"
     },
     "Activity": "Disponible en la actividad <i>{{activity}}</i>",
+    "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
     "Ascended": "Muestra objetos que tienen un nodo ascendente y si han sido ascendidos o no.",
     "Categories": "Categorías de objetos de nivel alto.",
@@ -257,6 +258,10 @@
     "WeaponClass": "Muestra objetos basado en las clases de arma.",
     "WeaponType": "Muestra armas basado en su tipo de daño.",
     "Year": "Muestra los objetos con su respectivo año de aparición en Destiny."
+  },
+  "Forsaken": {
+    "Progress": "Nota: La información del progreso puede ser incompleta o incorrecta durante un tiempo después del lanzamiento de Los Renegados.",
+    "Vendors": "Los vendedores no estarán disponibles durante un tiempo después del lanzamiento de Los Renegados."
   },
   "Header": {
     "About": "Acerca de",

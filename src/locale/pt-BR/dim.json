@@ -171,6 +171,7 @@
       "WotM": "A Ira da Máquina"
     },
     "Activity": "Disponível através da atividade <i>{{activity}}</i>",
+    "AmmoType": "Mostrar itens baseados no seu tipo de munição.",
     "ArmorCategory": "Mostrar armaduras baseadas na sua categoria.",
     "Ascended": "Mostra itens que tenham um nódulo de ascensão e se eles foram ascendidos ou não.",
     "Categories": "Categoria de items de Alto Nível.",
@@ -257,6 +258,10 @@
     "WeaponClass": "Exibir itens baseado na sua classe de arma.",
     "WeaponType": "Exibir armas baseado no seu tipo de arma.",
     "Year": "Exibir itens a partir de qual ano foi inserido em Destiny."
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "Sobre",

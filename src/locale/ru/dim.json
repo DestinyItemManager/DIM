@@ -171,6 +171,7 @@
       "WotM": "Гнев Машины"
     },
     "Activity": "Доступно в активности <i>{{activity}}</i>",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Предметы Брони по слотам. Шлемы, перчатки, тело, ноги, классовые предметы.",
     "Ascended": "Показать предметы, имеющие возможность поднять уровень их Света и был ли он поднят или нет.",
     "Categories": "Максимального уровня по категориям.",
@@ -257,6 +258,10 @@
     "WeaponClass": "Оружие по слотам.",
     "WeaponType": "Оружие по типам.",
     "Year": "Показать предметы по году появления в Destiny."
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "О проекте",

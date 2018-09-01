@@ -171,6 +171,7 @@
       "WotM": "Zorn der Maschine"
     },
     "Activity": "Verfügbar durch Aktivität <i>{{activity}}</i>",
+    "AmmoType": "Zeigt Items basierend auf deren Munitionstyp.",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
     "Ascended": "Zeigt Items, die einen Aufstiegsknoten haben und ob sie aufgestiegen sind oder nicht.",
     "Categories": "Item Hauptkategorien.",
@@ -257,6 +258,10 @@
     "WeaponClass": "Zeigt Items basierend auf ihrer Waffen Klasse an.",
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "Über",
@@ -525,7 +530,7 @@
     "ProfileMilestones": "Konto-Meilensteine",
     "ProfileQuests": "Konto-Quests",
     "Progress": "Fortschritt",
-    "Quests": "Pursuits & Quests",
+    "Quests": "Beschäftigungen & Quests",
     "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
     "RewardNotEarned": "Belohnung nicht erhalten",
     "RewardRedeemed": "Belohnung eingelöst",
@@ -670,9 +675,9 @@
     "SevenWins": "7 Siege Belohnung (Waffe)"
   },
   "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
+    "Likely380": "VendorEngrams.xyz berichtet, dass dieser Händler 380er Power Items verkauft.",
+    "ServiceCallFailed": "VendorEngrams.xyz Service-Aufruf ist fehlgeschlagen.",
+    "Vote": "Siehst du einen Händler, der 380er Power Items verkauft? Gehe zu VendorEngrams.xyz zum voten und lass es die Community wissen!"
   },
   "Vendors": {
     "All": "Alle",

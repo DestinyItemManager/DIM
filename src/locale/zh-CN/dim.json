@@ -171,6 +171,7 @@
       "WotM": "机械之怒"
     },
     "Activity": "可以从<i>{{activity}}</i>活动中获得",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "按照类别显示防具.",
     "Ascended": "显示可以提高光等的物品.",
     "Categories": "高级别物品类别.",
@@ -257,6 +258,10 @@
     "WeaponClass": "按照武器类别显示.",
     "WeaponType": "按照武器类型显示.",
     "Year": "按照物品推出年份显示."
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "关于",
