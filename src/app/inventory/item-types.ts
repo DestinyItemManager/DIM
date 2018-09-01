@@ -397,6 +397,8 @@ export interface DimSocket {
   plug: DimPlug | null;
   /** Potential plugs for this socket. */
   plugOptions: DimPlug[];
+  /** Does the socket contain randomized plug items? */
+  hasRandomizedPlugItems: boolean;
 }
 
 export interface DimSocketCategory {

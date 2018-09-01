@@ -18,6 +18,8 @@ interface D2ReviewSubmitRequest {
   attachedMods?: number[];
   /** What perks does the user have selected? */
   selectedPerks?: number[];
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
 
   reviewer: DtrReviewer;
   voted: number;

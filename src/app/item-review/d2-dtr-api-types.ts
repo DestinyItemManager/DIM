@@ -15,6 +15,8 @@ export interface DtrD2BasicItem {
   attachedMods?: number[];
   /** What perks does the user have selected? */
   selectedPerks?: number[];
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
 }
 
 /** The form that votes come back to us in for items in D2. */
@@ -38,6 +40,8 @@ export interface DtrD2Vote {
 export interface D2ItemFetchRequest {
   /** Reference ID (hash ID). */
   referenceId: number;
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
 }
 
 /** The fetch response for a single item. */
@@ -83,6 +87,8 @@ export interface D2ItemUserReview extends DimUserReview {
   text: string;
   /** What perks did the user have selected on this item? */
   selectedPerks: number[];
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
   /** What power mods did the user have attached to this item? */
   attachedMods: number[];
   /** What play mode is this for? */

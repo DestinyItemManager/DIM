@@ -834,7 +834,7 @@ function buildSockets(
     return null;
   }
 
-  const realSockets = sockets.map((socket, i) => buildSocket(defs, socket, i));
+  const realSockets = sockets.map((socket, i) => buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i));
 
   const categories = itemDef.sockets.socketCategories.map((category): DimSocketCategory => {
     return {
@@ -916,7 +916,8 @@ function buildDefinedSocket(
   return {
     socketIndex: index,
     plug: null,
-    plugOptions
+    plugOptions,
+    hasRandomizedPlugItems: socket.randomizedPlugItems && socket.randomizedPlugItems.length > 0
   };
 }
 
@@ -973,12 +974,14 @@ function buildDefinedPlug(
 function buildSocket(
   defs: D2ManifestDefinitions,
   socket: DestinyItemSocketState,
+  socketEntry: DestinyItemSocketEntryDefinition,
   index: number
 ): DimSocket {
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
   const reusablePlugs = compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)));
   const plugOptions = plug ? [plug] : [];
+  const hasRandomizedPlugItems = socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0;
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
@@ -996,7 +999,8 @@ function buildSocket(
   return {
     socketIndex: index,
     plug,
-    plugOptions
+    plugOptions,
+    hasRandomizedPlugItems
   };
 }
 
