@@ -3,7 +3,7 @@
 .mode-popup {
   @include below-header;
   position: absolute;
-  display: block;
+  display: table;
   overflow: auto;
   margin: 0;
   padding: 15px;

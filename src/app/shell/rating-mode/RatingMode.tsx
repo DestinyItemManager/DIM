@@ -7,10 +7,12 @@ import { $rootScope } from 'ngimport';
 import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
 import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../../inventory/d2-stores.service';
+import { DtrPlatformOption, getPlatformOptions } from '../../destinyTrackerApi/platformOptionsFetcher';
 
 interface State {
   open: boolean;
   reviewsModeSelection: number;
+  platformSelection: number;
   defs?: D2ManifestDefinitions;
 }
 
@@ -18,10 +20,13 @@ interface State {
 export default class RatingMode extends React.Component<{}, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
   private _reviewModeOptions?: D2ReviewMode[];
+  private _platformOptions?: DtrPlatformOption[];
 
   constructor(props) {
     super(props);
-    this.state = { open: false, reviewsModeSelection: settings.reviewsModeSelection };
+    this.state = { open: false,
+      reviewsModeSelection: settings.reviewsModeSelection,
+      platformSelection: settings.reviewsPlatformSelection };
   }
 
   componentDidMount() {
@@ -29,7 +34,7 @@ export default class RatingMode extends React.Component<{}, State> {
   }
 
   render() {
-    const { open, reviewsModeSelection, defs } = this.state;
+    const { open, reviewsModeSelection, defs, platformSelection } = this.state;
 
     if (!defs) {
       return null;
@@ -42,12 +47,31 @@ export default class RatingMode extends React.Component<{}, State> {
           </span>
           {open &&
           <ClickOutside onClickOutside={this.closeDropdown}>
-            <div className="mode-popup">
-              <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>
-              <select name="reviewMode" value={reviewsModeSelection} onChange={this.modeChange}>
-                {this.reviewModeOptions.map((r) => <option key={r.mode} value={r.mode}>{r.description}</option>)}
-              </select>
-            </div>
+          <div className="mode-popup">
+            <table>
+              <tr>
+                <td>
+                  <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>
+                </td>
+                <td>
+                  <select name="reviewMode" value={reviewsModeSelection} onChange={this.modeChange}>
+                    {this.reviewModeOptions.map((r) => <option key={r.mode} value={r.mode}>{r.description}</option>)}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForPlatform')}</label>
+                </td>
+                <td>
+                  <select name="platformSelection" value={platformSelection} onChange={this.platformChange}>
+                    {this.platformOptions.map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
+                  </select>
+                </td>
+              </tr>
+            </table>
+          </div>
+
           </ClickOutside>}
       </div>
     );
@@ -58,6 +82,14 @@ export default class RatingMode extends React.Component<{}, State> {
       this._reviewModeOptions = getReviewModes(this.state.defs);
     }
     return this._reviewModeOptions;
+  }
+
+  private get platformOptions() {
+    if (!this._platformOptions) {
+      this._platformOptions = getPlatformOptions();
+    }
+
+    return this._platformOptions;
   }
 
   private toggleDropdown = () => {
@@ -79,6 +111,18 @@ export default class RatingMode extends React.Component<{}, State> {
     settings.reviewsModeSelection = newModeSelection;
     D2StoresService.refreshRatingsData();
     this.setState({ reviewsModeSelection: newModeSelection });
+    $rootScope.$broadcast('dim-refresh');
+  }
+
+  private platformChange = (e?) => {
+    if (!e || !e.target) {
+      return;
+    }
+
+    const newPlatformSelection = e.target.value;
+    settings.reviewsPlatformSelection = newPlatformSelection;
+    D2StoresService.refreshRatingsData();
+    this.setState({ platformSelection: newPlatformSelection });
     $rootScope.$broadcast('dim-refresh');
   }
 }
