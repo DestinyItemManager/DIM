@@ -42,39 +42,34 @@ export default class RatingMode extends React.Component<{}, State> {
 
     return (
       <div>
-          <span className="link" onClick={this.toggleDropdown} ref={this.dropdownToggler} title={t('DtrReview.RatingsOptions')}>
-            <i className='fa fa fa-thumbs-up'/>
-          </span>
-          {open &&
-          <ClickOutside onClickOutside={this.closeDropdown}>
-          <div className="mode-popup">
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>
-                  </td>
-                  <td>
-                    <select name="reviewMode" value={reviewsModeSelection} onChange={this.modeChange}>
-                      {this.reviewModeOptions.map((r) => <option key={r.mode} value={r.mode}>{r.description}</option>)}
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForPlatform')}</label>
-                  </td>
-                  <td>
-                    <select name="platformSelection" value={platformSelection} onChange={this.platformChange}>
-                      {this.platformOptions.map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
-                    </select>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <span className="link" onClick={this.toggleDropdown} ref={this.dropdownToggler} title={t('DtrReview.RatingsOptions')}>
+          <i className='fa fa fa-thumbs-up'/>
+        </span>
+        {open &&
+        <ClickOutside onClickOutside={this.closeDropdown}>
+        <div className="mode-popup">
+          <div className="mode-row">
+            <div className="mode-column">
+              <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>
+            </div>
+            <div className="mode-column">
+              <select name="reviewMode" value={reviewsModeSelection} onChange={this.modeChange}>
+                {this.reviewModeOptions.map((r) => <option key={r.mode} value={r.mode}>{r.description}</option>)}
+              </select>
+            </div>
           </div>
-
-          </ClickOutside>}
+          <div className="mode-row">
+            <div className="mode-column">
+              <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForPlatform')}</label>
+            </div>
+            <div className="mode-column">
+              <select name="platformSelection" value={platformSelection} onChange={this.platformChange}>
+                {this.platformOptions.map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
+        </ClickOutside>}
       </div>
     );
   }

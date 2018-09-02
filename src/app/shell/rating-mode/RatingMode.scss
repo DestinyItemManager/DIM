@@ -3,7 +3,8 @@
 .mode-popup {
   @include below-header;
   position: absolute;
-  display: table;
+  flex-wrap: wrap;
+  flex-direction: row;
   overflow: auto;
   margin: 0;
   padding: 15px;
@@ -17,4 +18,13 @@
 
 .mode-label {
   padding-right: 10px;
+}
+
+.mode-row {
+  display: flex;
+  padding: 5px;
+}
+
+.mode-column {
+  width: 50%;
 }
