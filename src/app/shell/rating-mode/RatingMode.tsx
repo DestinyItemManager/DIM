@@ -42,7 +42,7 @@ export default class RatingMode extends React.Component<{}, State> {
 
     return (
       <div>
-          <span className="link" onClick={this.toggleDropdown} ref={this.dropdownToggler} title={t('DtrReview.ForGameMode')}>
+          <span className="link" onClick={this.toggleDropdown} ref={this.dropdownToggler} title={t('DtrReview.RatingsOptions')}>
             <i className='fa fa fa-thumbs-up'/>
           </span>
           {open &&
