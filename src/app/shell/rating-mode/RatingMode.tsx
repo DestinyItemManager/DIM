@@ -49,26 +49,28 @@ export default class RatingMode extends React.Component<{}, State> {
           <ClickOutside onClickOutside={this.closeDropdown}>
           <div className="mode-popup">
             <table>
-              <tr>
-                <td>
-                  <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>
-                </td>
-                <td>
-                  <select name="reviewMode" value={reviewsModeSelection} onChange={this.modeChange}>
-                    {this.reviewModeOptions.map((r) => <option key={r.mode} value={r.mode}>{r.description}</option>)}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForPlatform')}</label>
-                </td>
-                <td>
-                  <select name="platformSelection" value={platformSelection} onChange={this.platformChange}>
-                    {this.platformOptions.map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
-                  </select>
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>
+                    <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>
+                  </td>
+                  <td>
+                    <select name="reviewMode" value={reviewsModeSelection} onChange={this.modeChange}>
+                      {this.reviewModeOptions.map((r) => <option key={r.mode} value={r.mode}>{r.description}</option>)}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label className="mode-label" htmlFor="reviewMode">{t('DtrReview.ForPlatform')}</label>
+                  </td>
+                  <td>
+                    <select name="platformSelection" value={platformSelection} onChange={this.platformChange}>
+                      {this.platformOptions.map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
 
