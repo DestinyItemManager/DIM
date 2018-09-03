@@ -186,7 +186,7 @@ export default class Header extends React.PureComponent<Props, State> {
           text="Header.ReportBug"
         />}
         <WhatsNewLink />
-        <ExternalLink href='https://teespring.com/stores/dim' text='Header.Shop'/>
+        <ExternalLink href='https://shop.destinyitemmanager.com/' text='Header.Shop'/>
         <Link state='support' text='Header.SupportDIM'/>
         <Link state='about' text='Header.About'/>
       </>
