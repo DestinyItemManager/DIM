@@ -1,5 +1,7 @@
 # Next
 
+# 4.68.0 (2018-09-02)
+
 * Fixed: Destiny 2 - Sort by character age.
 * Item popup shows the ammo type of D2 weapons.
 * New is:primary, is:special, and is:heavy search terms for ammo types.
