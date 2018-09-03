@@ -82,19 +82,19 @@
   },
   "Destiny2": {
     "Banner": "DIM은 데스티니 2를 지원할 것입니다.",
-    "ComingSoon": "저희는 저희의 능력이 되든 말든 콘솔에 데스티니 2가 출시하고 짧은 기간 안에 당신의 데스티니 2 캐릭터를 지원할 것입니다. 저희가 게임에 대해 배울 몇주의 시간을 주세요. (플레이 할 시간도요!)"
+    "ComingSoon": "저희는 저희의 능력이 되든 말든 콘솔에 데스티니 2가 출시하고 짧은 기간 안에 당신의 데스티니 2 캐릭터를 지원할 것입니다. 저희가 게임에 대해 배울 몇 주의 시간을 주세요. (플레이 할 시간도요!)"
   },
   "DidYouKnow": {
     "Collapse": "방금 DIM의 한 섹션을 없애셨습니다! 이것은 당신이 평소에 사용하지 않는 DIM의 섹션들을 없앨 때 유용할 것입니다.",
     "DidYouKnow": "알고 계셨나요?",
-    "DontShowAgain": "이 팁을 다시 표시 하지 않음",
+    "DontShowAgain": "이 팁을 다시 표시하지 않음",
     "DoubleClick": "현재 접속하고 있는 (마지막으로 접속한) 캐릭터로 아이템을 옮기려고 하신다면, 해당 아이템을 더블 클릭하여 바로 착용할 수 있습니다.",
     "DragAndDrop": "아이템은 서로 다른 캐릭터/금고 사이에서 끌어서 옮길 수 있습니다.",
     "Expand": "다시 확장하려면 접은 항목의 맨 왼쪽의 더하기 아이콘을 누르세요.",
     "TryNext": "다음에 다시 시도해 보세요!"
   },
   "DtrReview": {
-    "AverageRating": " ({{itemRating}}) {{numRatings}} 개의 평가에 근거함",
+    "AverageRating": "({{itemRating}}) {{numRatings}} 개의 평가에 근거함",
     "BestRatedKey": " = 추천 특성",
     "BestRatedTip": "이 특성은 커뮤니티에서 높은 평가를 받고 있습니다.",
     "Cancel": "취소",
@@ -109,7 +109,7 @@
     "NoReviews": "이 아이템에 대한 평가가 없습니다. 첫 번째 평가를 남겨보세요!",
     "Platforms": {
       "All": "모두 보기",
-      "AllConsoles": "모든 플랫폼",
+      "AllConsoles": "모든 콘솔",
       "Pc": "PC 한정",
       "Playstation": "플레이스테이션 한정",
       "Xbox": "엑스박스 한정"
@@ -170,14 +170,14 @@
       "VoG": "유리궁륭",
       "WotM": "기계의 분노"
     },
-    "Activity": "<i>{{activity}}</i>에서 입수가능",
-    "AmmoType": "탄의 종류 기준으로 아이템 표시",
-    "ArmorCategory": "카테고리를 기준으로 방어구 표시",
+    "Activity": "<i>{{activity}}</i> 에서 획득 가능",
+    "AmmoType": "사용하는 총탄의 종류 기준으로 아이템 표시",
+    "ArmorCategory": "카테고리를 기준으로 방어구 보여주기",
     "Ascended": "상향 노드가 있는 아이템을 보여주고, 상향 여부 표시",
-    "Categories": "높은 레벨의 아이템 항목.",
-    "Class": "클래스 선호도를 기준으로 아이템 표시",
+    "Categories": "높은 레벨의 아이템 항목",
+    "Class": "직업 선호도를 기준으로 아이템 표시",
     "ClickFilters": "밑의 필터를 클릭해서 적용하거나 검색창에 쳐보세요.",
-    "Combine": "필터는 모두 '그리고' 로 검색됩니다. 예를 들어 '{{example}}'은 모든 전기속성 '그리고' 300이상 인 아이템만 보여집니다. '{{not}}' 을 사용하여 제외될 항목을 선택 할 수 있습니다. 예를 들어 '{{notexample}}'은 인그램이 아닌 아이템을 보여줍니다.",
+    "Combine": "필터는 모두 '그리고' 로 검색됩니다. 예를 들어 '{{example}}'은 모든 전기 속성 '그리고' 300이상 인 아이템만 보여집니다. '{{not}}' 을 사용하여 제외될 항목을 선택 할 수 있습니다. 예를 들어 '{{notexample}}'은 엔그램이 아닌 아이템을 보여줍니다.",
     "ContributeLight": "라이트 레벨 높일 수 있는 아이템을 보여주기",
     "ContributePower": "전투력을 높일 수 있는 수치를 가진 아이템을 보여주기",
     "DamageType": "대미지 유형에 따른 아이템 표시",
@@ -237,7 +237,7 @@
       "Dismantle": "분해하고 싶은 아이템 표시",
       "Favorite": "즐겨찾기한 아이템을 표시",
       "Infuse": "주입 하고싶은 아이템들 표시",
-      "Keep": "유지할 아이템 표시",
+      "Keep": "보관할 아이템 표시",
       "NoTag": "태그가 없는 아이템 표시"
     },
     "Tracked": "추적된 상태에 따른 퀘스트/현상금 표시",
@@ -261,7 +261,7 @@
   },
   "Forsaken": {
     "Progress": "주의: 포세이큰 확장팩이 출시하고 시간이 좀 지날 때 까지는 진척도 데이터가 완벽하지 않거나 틀릴 수 있습니다.",
-    "Vendors": "포세이큰 확장팩 출시 후 일정 시간 동안 상인 이용이 불가능할 것입니다."
+    "Vendors": "포세이큰 확장팩 출시 후 일정 시간이 지날 때까지 상인 이용이 불가능합니다."
   },
   "Header": {
     "About": "정보",
@@ -382,7 +382,7 @@
       "HelpScaled": "모든 장비가 350 방어라는 가정 하에 로드아웃 계산",
       "LightMode": "밝은 모드"
     },
-    "Loading": "최고의 장비셋 불러오는중",
+    "Loading": "가장 좋은 장비 세트 불러오는 중",
     "LockEquipped": "장착된 장비 잠금",
     "LockPerk": "특성 잠그기",
     "Locked": "잠긴 아이템들",
@@ -391,7 +391,7 @@
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경의 등급의 장비가 부족합니다!",
     "ProcessingMode": {
       "Fast": "빠름",
-      "Full": "모두",
+      "Full": "최대",
       "HelpFast": "당신의 최고의 장비만 보여줌",
       "HelpFull": "더 많은 장비들을 보지만, 더 오래걸림.",
       "ProcessingMode": "처리 모드"
@@ -449,7 +449,7 @@
     "NoEngrams": "이동할 수 있는 전설 엔그램이 없습니다.",
     "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
     "NoTokens": "이동할 수 있는 평판 아이템이 없습니다.",
-    "OnlyItems": "오직 장착이 가능한 아이템, 재료, 소비품들만이 로드아웃에 추가될 수 있습니다.",
+    "OnlyItems": "오직 장착이 가능한 아이템, 재료, 소모품들만이 로드아웃에 추가될 수 있습니다.",
     "PullFromPostmaster": "우편 담당자에게서 수령",
     "PullFromPostmasterDone": "1 개의 아이템을 우편 담당자에게서 {{store}} 로 이동하였습니다.",
     "PullFromPostmasterDone_female": "1 개의 아이템을 우편 담당자에게서 {{store}} 로 이동하였습니다.",
@@ -533,7 +533,7 @@
     "Quests": "퀘스트와 목표",
     "RewardEarned": "제공되었지만 받지는 못한 보상",
     "RewardNotEarned": "보상을 받지 않음",
-    "RewardRedeemed": "보상 받음",
+    "RewardRedeemed": "보상을 받음",
     "Weekly": "주간"
   },
   "RecordBooks": {
@@ -582,15 +582,15 @@
     "SizeItem": "아이템 크기",
     "SortByBasePower": "기초 파워(데스티니 2만)",
     "SortByClassType": "필요한 직업",
-    "SortByPrimary": "주스텟 (공격/방어)",
+    "SortByPrimary": "주 능력치 (공격/방어)",
     "SortByRarity": "희귀도",
-    "SortByRating": "방어구 품질에 대한 커뮤니티 평가",
+    "SortByRating": "커뮤니티 평가나 방어구 품질",
     "SortByType": "유형",
     "SortCustom": "사용자 지정 정렬",
     "SortName": "이름",
-    "SortPrimary": "주스텟 (공격 혹은 방어)",
-    "SortRarity": "희귀도, 그 다음 첫 번째 스택",
-    "SortRoll": "커뮤니티 평가나 빙어구 품질",
+    "SortPrimary": "주 능력치 (공격 혹은 방어)",
+    "SortRarity": "희귀도, 그 다음 주 능력치",
+    "SortRoll": "커뮤니티 평가나 방어구 품질",
     "VaultColumns": "금고의 최대 인벤토리 넓이"
   },
   "Stats": {
@@ -622,12 +622,12 @@
     "DriveLogout": "구글 드라이브 로그아웃",
     "DriveSync": "구글 드라이브 로그인",
     "Enabled": "활성화됨",
-    "Explain": "DIM은 그것의 데이터를 (bungie.net에 의해 유지되는) 데스티니 데이터와 별개로 저징합니다.",
+    "Explain": "DIM은 데스티니 데이터(Bungie.net에서 관리되는)와는 별개로 고유한 데이터를 저장합니다.",
     "Export": "DIM 데이터 백업",
-    "ForceSync": "강제로 데이터 싱크 맞추기",
+    "ForceSync": "강제 데이터 동기화",
     "GDriveLogout": "당신의 데이터는 여전히 구글 드라이브에 있습니다 - 다시 로그인 하신다면 DIM은 다시 데이터를 사용할 것입니다",
     "GDriveRevisions": "구버전 복원",
-    "GDriveSignInError": "구글 드라이브 로그인중에 에러가 발생했습니다:",
+    "GDriveSignInError": "구글 드라이브 로그인 중 문제 발생:",
     "GDriveSignInWarning": "만약 DIM의 데이터를 이미 구글 드라이브에 저장하셨디면, 로컬로 저장한 모든것을 덮어쓸 것입니다. 로그인 전의 데이터를 백업하세요.\n\n구글 드라이브에 로그인 하시겠습니까?",
     "GoogleApiBlocked": "콘텐츠 블락커가 구글 드라이브의 자바 스크립트를 막아서 구글 드라이브 사용이 불가합니다. 콘텐츠 블락커에서 DIM을 제외하고 다시 시도해 주세요.",
     "GoogleDriveStorage": "구글 드라이브",
@@ -645,7 +645,7 @@
     "RestoreRevision": "복구하기",
     "RevisionsDescription": "구글 드라이브는 당신의 최근 100가지의 설정을 저장합니다. 이 페이지를 이용해 오래된 버전을 복구하고 불러오는데 사용하세요",
     "Settings": "DIM 환경 설정",
-    "StatLabel": "현재 이것을을 포함하고 있습니다:",
+    "StatLabel": "다음 항목을 포함하고 있습니다:",
     "TagNotesD1": "태그나 메모가 있는 데스티니 1 아이템 {{value}} 개",
     "TagNotesD2": "태그나 메모가 있는 데스티니 2 아이템 {{value}} 개",
     "Title": "DIM 저장소",
@@ -666,7 +666,7 @@
     "Favorite": "즐겨찾기",
     "Infuse": "주입",
     "Junk": "쓰레기",
-    "Keep": "유지",
+    "Keep": "보관",
     "TagItem": "태그 추가"
   },
   "TrialsCard": {
@@ -704,7 +704,7 @@
       "ContactUs": "문의하기",
       "Discord": "Discord",
       "DiscordHelp": "저희의 디스코드 채널에서 질문하고, 피드백 주고, 도움을 받으세요",
-      "FAQ": "자주 하는 질문",
+      "FAQ": "자주 묻는 질문",
       "FAQAccess": "DIM이 어떻게 제 데스티니 데이터에 접근하나요?",
       "FAQAccessAnswer": "우리는 Bungie의 앱 인증을 사용하여 DIM이 당신의 아이템을 보고 이동할 권한을 얻습니다. DIM은 사용자 이름이나 비밀번호를 알지 못합니다. 이 방법은 데스티니 컴패니언 앱의 작동 원리와 같습니다.",
       "FAQD2": "DIM이 데스티니 2를 지원하나요?",
