@@ -286,10 +286,10 @@ export function makeItem(
 
   const categories = findCategories(itemDef);
 
-  const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
+  const dmgName = instanceDef ? [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0] : null;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
-  const primaryStat = ((itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class') ? null : instanceDef.primaryStat || null;
+  const primaryStat = ((itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class') ? null : (instanceDef && instanceDef.primaryStat) || null;
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
@@ -313,14 +313,14 @@ export function makeItem(
       item.transferStatus === TransferStatuses.NotTransferrable),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    equipped: Boolean(instanceDef.isEquipped),
+    equipped: Boolean(instanceDef && instanceDef.isEquipped),
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
     complete: false,
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
-    equipRequiredLevel: instanceDef.equipRequiredLevel || 0,
+    equipRequiredLevel: (instanceDef && instanceDef.equipRequiredLevel) || 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,

@@ -127,7 +127,7 @@ export default class VendorItemComponent extends React.Component<Props> {
         this.dialogResult = null;
       }
     } else {
-      let dimItem: D2Item | null = null;
+      const dimItem = item.toDimItem(buckets, cachedItem);
       let cachedItem: D2RatingData | null = null;
       const buckets = await getBuckets();
 
@@ -143,7 +143,6 @@ export default class VendorItemComponent extends React.Component<Props> {
           });
         }
       }
-      dimItem = item.toDimItem(buckets, cachedItem);
 
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,
