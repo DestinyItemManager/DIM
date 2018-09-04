@@ -43,9 +43,10 @@ export function Milestone({
     // A vendor milestone (Xur)
     return (
       <div className="milestone-quest">
-        <div className="milestone-icon">
-          <BungieImage src={milestoneDef.displayProperties.icon} />
-        </div>
+        {milestoneDef.displayProperties.icon &&
+          <div className="milestone-icon">
+            <BungieImage src={milestoneDef.displayProperties.icon} />
+          </div>}
         <div className="milestone-info">
           <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
           <div className="milestone-description">
@@ -66,9 +67,9 @@ export function Milestone({
 
     return (
       <div className="milestone-quest">
-        <div className="milestone-icon">
+        {milestoneDef.displayProperties.icon && <div className="milestone-icon">
           <BungieImage src={milestoneDef.displayProperties.icon} />
-        </div>
+        </div>}
         <div className="milestone-info">
           <span className="milestone-name">{milestoneDef.displayProperties.name}</span>
           <div className="milestone-description">{milestoneDef.displayProperties.description}</div>
