@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  webpack:
+    container_name: dim-webpack
+    build:
+      context: ./docker-compose/webpack
+    command: bash -c "yarn install && yarn start"
+    restart: always
+    volumes:
+      - .:/usr/src/app
+  http-server:
+    container_name: dim-http-server
+    build:
+      context: ./docker-compose/http-server
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - .:/usr/src/app
