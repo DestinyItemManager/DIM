@@ -15,6 +15,7 @@
 * Added Korean as a language option.
 * We have a new Shop selling enamel pins and T-shirts.
 * Ratings system understands random rolls in D2.
+* Search help added for searching by # of ratings.
 
 # 4.67.0 (2018-08-26)
 

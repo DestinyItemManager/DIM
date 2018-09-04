@@ -391,6 +391,15 @@
           </td>
           <td ng-i18next="Filter.Rating"></td>
         </tr>
+        <tr>
+          <td>
+            <dim-filter-link filter="ratingcount:&gt;=value"></dim-filter-link>
+            <dim-filter-link filter="ratingcount:&gt;value"></dim-filter-link>
+            <dim-filter-link filter="ratingcount:&lt;value"></dim-filter-link>
+            <dim-filter-link filter="ratingcount:&lt;=value"></dim-filter-link>
+          </td>
+          <td ng-i18next="Filter.RatingCount"></td>
+        </tr>
       </span>
       <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
