@@ -117,6 +117,16 @@ Run your own local web server
 * If it complains about missing certificates, run `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'` in the dist directory (thanks to [Stack Overflow](https://stackoverflow.com/questions/12871565/how-to-create-pem-files-for-https-web-server) and again to [Stack Overflow](https://stackoverflow.com/questions/8075274/is-it-possible-making-openssl-skipping-the-country-common-name-prompts) for the quiet recipe) and generate your own local certs
 * After the one-time setup, `yarn start` and `http-server -S` and you're off to the races.
 
+Install Dependencies, start webpack, and start local web server, with Docker
+* Install Docker https://www.docker.com/get-started
+* Open terminal/cmd/powershell window and change to the cloned folder
+* `docker-compose up` to build the dist and start yarn watcher and http environment
+* It will take a while for the dist files to build on the first startup while yarn installs dependencies
+* `ctrl+c` to stop
+* `docker-compose up -d` to start in detached mode
+* `docker-compose stop` to stop detached mode
+* `docker-compose build` to re-build if the compose files change
+
 Get your own API key:
 
 * Goto [Bungie](https://www.bungie.net/en/Application)
