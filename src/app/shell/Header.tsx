@@ -68,6 +68,9 @@ if ($featureFlags.vendors) {
   });
 }
 
+const shopLink = 'https://shop.destinyitemmanager.com/';
+const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
+
 interface State {
   account?: DestinyAccount;
   dropdownOpen: boolean;
@@ -136,11 +139,11 @@ export default class Header extends React.PureComponent<Props, State> {
       <>
         <Link state='about' text='Header.About'/>
         <Link state='support' text='Header.SupportDIM'/>
-        <ExternalLink href='https://shop.destinyitemmanager.com/' text='Header.Shop'/>
+        <ExternalLink href={shopLink} text='Header.Shop'/>
         <WhatsNewLink />
         {bugReportLink &&
           <ExternalLink
-            href="https://github.com/DestinyItemManager/DIM/issues"
+            href={bugReport}
             text="Header.ReportBug"
           />}
       </>
@@ -182,11 +185,11 @@ export default class Header extends React.PureComponent<Props, State> {
       {links.length > 0 && <span className="header-separator"/>}
       {bugReportLink &&
         <ExternalLink
-          href="https://github.com/DestinyItemManager/DIM/issues"
+          href={bugReport}
           text="Header.ReportBug"
         />}
         <WhatsNewLink />
-        <ExternalLink href='https://shop.destinyitemmanager.com/' text='Header.Shop'/>
+        <ExternalLink href={shopLink} text='Header.Shop'/>
         <Link state='support' text='Header.SupportDIM'/>
         <Link state='about' text='Header.About'/>
       </>

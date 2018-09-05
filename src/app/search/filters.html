@@ -59,11 +59,6 @@
           <dim-filter-link filter="power:&gt;value"></dim-filter-link>
           <dim-filter-link filter="power:&lt;value"></dim-filter-link>
           <dim-filter-link filter="power:&lt;=value"></dim-filter-link>
-          <dim-filter-link filter="basepower:value"></dim-filter-link>
-          <dim-filter-link filter="basepower:&gt;=value"></dim-filter-link>
-          <dim-filter-link filter="basepower:&gt;value"></dim-filter-link>
-          <dim-filter-link filter="basepower:&lt;value"></dim-filter-link>
-          <dim-filter-link filter="basepower:&lt;=value"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.PowerLevel"></td>
       </tr>
@@ -212,12 +207,6 @@
         <td ng-i18next="Filter.RarityTier"></td>
       </tr>
 
-      <tr ng-if="vm.settings.destinyVersion === 2">
-        <td>
-          <dim-filter-link filter="is:powermod"></dim-filter-link>
-        </td>
-        <td ng-i18next="Filter.PowerMod"></td>
-      </tr>
       <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:intellect"></dim-filter-link>

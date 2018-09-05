@@ -286,10 +286,10 @@ export function makeItem(
 
   const categories = findCategories(itemDef);
 
-  const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
+  const dmgName = instanceDef ? [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0] : null;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
-  const primaryStat = ((itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class') ? null : instanceDef.primaryStat || null;
+  const primaryStat = ((itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class') ? null : (instanceDef && instanceDef.primaryStat) || null;
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
@@ -313,14 +313,14 @@ export function makeItem(
       item.transferStatus === TransferStatuses.NotTransferrable),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    equipped: Boolean(instanceDef.isEquipped),
+    equipped: Boolean(instanceDef && instanceDef.isEquipped),
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
     complete: false,
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
-    equipRequiredLevel: instanceDef.equipRequiredLevel || 0,
+    equipRequiredLevel: (instanceDef && instanceDef.equipRequiredLevel) || 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
@@ -485,12 +485,14 @@ export function makeItem(
     }
   }
 
-  // Mark items with power mods
+  // TODO: Phase out "base power"
   if (createdItem.primStat) {
     createdItem.basePower = getBasePowerLevel(createdItem);
-    if (createdItem.basePower !== createdItem.primStat.value) {
-      createdItem.complete = true;
-    }
+  }
+
+  // Mark masterworks with a gold border
+  if (createdItem.masterwork) {
+    createdItem.complete = true;
   }
 
   // Mark upgradeable stacks of rare modifications
@@ -669,7 +671,7 @@ function buildObjectives(
 
     let complete = false;
     let booleanValue = false;
-    let display = `${objective.progress || 0}/${def.completionValue}`;
+    let display = `${objective.progress || 0}/${objective.completionValue}`;
     let displayStyle: string | null;
     switch (def.valueStyle) {
       case DestinyUnlockValueUIStyle.Integer:
@@ -677,7 +679,7 @@ function buildObjectives(
         displayStyle = 'integer';
         break;
       case DestinyUnlockValueUIStyle.Multiplier:
-        display = `${(objective.progress || 0) / def.completionValue}x`;
+        display = `${(objective.progress || 0) / objective.completionValue}x`;
         displayStyle = 'integer';
         break;
       case DestinyUnlockValueUIStyle.DateTime:
@@ -689,7 +691,7 @@ function buildObjectives(
       case DestinyUnlockValueUIStyle.Checkbox:
       case DestinyUnlockValueUIStyle.Automatic:
         displayStyle = null;
-        booleanValue = def.completionValue === 1;
+        booleanValue = objective.completionValue === 1;
         complete = objective.complete;
         break;
       default:
@@ -704,7 +706,7 @@ function buildObjectives(
           : t('Objectives.Incomplete')),
       description: def.displayProperties.description,
       progress: objective.progress || 0,
-      completionValue: def.completionValue,
+      completionValue: objective.completionValue,
       complete,
       boolean: booleanValue,
       displayStyle,
@@ -738,7 +740,7 @@ function buildFlavorObjective(
   return {
     description: def.progressDescription,
     icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
-    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
+    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / flavorObjective.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
   };
 }
 
@@ -1043,10 +1045,7 @@ const MOD_CATEGORY = 59;
 const POWER_STAT_HASH = 1935470627;
 
 function getBasePowerLevel(item: D2Item): number {
-  const powerMods = getPowerMods(item);
-  const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH)!.value);
-
-  return item.primStat ? (item.primStat.value - modPower) : 0;
+  return item.primStat ? (item.primStat.value) : 0;
 }
 
 export function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {

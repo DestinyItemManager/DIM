@@ -413,15 +413,22 @@ function makeD2StoresService(): D2StoreServiceType {
   }
 
   function getCurrentMaxBasePower(account: DestinyAccount) {
-    switch (account.versionsOwned) {
-      case DestinyGameVersions.Destiny2:
-        return 300;
-      case DestinyGameVersions.DLC1:
-        return 330;
-      case 3: // DLC2 doesn't have an enum value yet
-      default: // If they don't own Destiny, or it's an unknown version
-        return 380;
+    if (!account.versionsOwned) {
+      return 600;
     }
+    if (8 & account.versionsOwned) {
+      return 600;
+    }
+    if (DestinyGameVersions.DLC2 & account.versionsOwned) {
+      return 380;
+    }
+    if (DestinyGameVersions.DLC1 & account.versionsOwned) {
+      return 330;
+    }
+    if (DestinyGameVersions.Destiny2 & account.versionsOwned) {
+      return 300;
+    }
+    return 600;
   }
 
   function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {

@@ -18,9 +18,8 @@ export default function Quest(props: QuestProps) {
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
   const percentComplete = sum(objectives, (objective) => {
-    const objectiveDef = defs.Objective.get(objective.objectiveHash);
-    if (objectiveDef.completionValue) {
-      return Math.min(1, (objective.progress || 0) / objectiveDef.completionValue) / objectives.length;
+    if (objective.completionValue) {
+      return Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length;
     } else {
       return 0;
     }
