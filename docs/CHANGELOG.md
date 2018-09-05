@@ -4,6 +4,7 @@
 * Bugfixes post-Forsaken launch.
 * Add Infamy rank to progress page.
 * Remove "is:powermod" search.
+* Remove "basepower:" search.
 * Masterworks now have a gold border. Previously items with a power mod had a gold border, but there are no more power mods.
 
 # 4.68.3 (2018-09-03)
