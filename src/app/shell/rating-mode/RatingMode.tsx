@@ -7,7 +7,7 @@ import { $rootScope } from 'ngimport';
 import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
 import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../../inventory/d2-stores.service';
-import { DtrPlatformOption, getPlatformOptions } from '../../destinyTrackerApi/platformOptionsFetcher';
+import { getPlatformOptions } from '../../destinyTrackerApi/platformOptionsFetcher';
 
 interface State {
   open: boolean;
@@ -20,7 +20,7 @@ interface State {
 export default class RatingMode extends React.Component<{}, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
   private _reviewModeOptions?: D2ReviewMode[];
-  private _platformOptions?: DtrPlatformOption[];
+  private _platformOptions = getPlatformOptions();
 
   constructor(props) {
     super(props);
@@ -64,7 +64,7 @@ export default class RatingMode extends React.Component<{}, State> {
             </div>
             <div className="mode-column">
               <select name="platformSelection" value={platformSelection} onChange={this.platformChange}>
-                {this.platformOptions.map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
+                {this._platformOptions.map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
               </select>
             </div>
           </div>
@@ -79,14 +79,6 @@ export default class RatingMode extends React.Component<{}, State> {
       this._reviewModeOptions = getReviewModes(this.state.defs);
     }
     return this._reviewModeOptions;
-  }
-
-  private get platformOptions() {
-    if (!this._platformOptions) {
-      this._platformOptions = getPlatformOptions();
-    }
-
-    return this._platformOptions;
   }
 
   private toggleDropdown = () => {
