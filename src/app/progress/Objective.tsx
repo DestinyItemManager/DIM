@@ -40,11 +40,11 @@ export default function Objective({
 
   const classes = classNames('objective-row', {
     'objective-complete': objective.complete,
-    'objective-boolean': objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox || (objectiveDef.completionValue === 1 && !objectiveDef.allowOvercompletion)
+    'objective-boolean': objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox || (objective.completionValue === 1 && !objectiveDef.allowOvercompletion)
   });
 
   const progressBarStyle = {
-    width: percent(progress / objectiveDef.completionValue)
+    width: percent(progress / objective.completionValue)
   };
 
   return (
@@ -53,9 +53,9 @@ export default function Objective({
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle}/>
         <div className="objective-description">{displayName}</div>
-        {objectiveDef.allowOvercompletion && objectiveDef.completionValue === 1
+        {objectiveDef.allowOvercompletion && objective.completionValue === 1
           ? <div className="objective-text">{progress}</div>
-          : <div className="objective-text">{progress}/{objectiveDef.completionValue}</div>
+          : <div className="objective-text">{progress}/{objective.completionValue}</div>
         }
       </div>
     </div>

@@ -669,7 +669,7 @@ function buildObjectives(
 
     let complete = false;
     let booleanValue = false;
-    let display = `${objective.progress || 0}/${def.completionValue}`;
+    let display = `${objective.progress || 0}/${objective.completionValue}`;
     let displayStyle: string | null;
     switch (def.valueStyle) {
       case DestinyUnlockValueUIStyle.Integer:
@@ -677,7 +677,7 @@ function buildObjectives(
         displayStyle = 'integer';
         break;
       case DestinyUnlockValueUIStyle.Multiplier:
-        display = `${(objective.progress || 0) / def.completionValue}x`;
+        display = `${(objective.progress || 0) / objective.completionValue}x`;
         displayStyle = 'integer';
         break;
       case DestinyUnlockValueUIStyle.DateTime:
@@ -689,7 +689,7 @@ function buildObjectives(
       case DestinyUnlockValueUIStyle.Checkbox:
       case DestinyUnlockValueUIStyle.Automatic:
         displayStyle = null;
-        booleanValue = def.completionValue === 1;
+        booleanValue = objective.completionValue === 1;
         complete = objective.complete;
         break;
       default:
@@ -704,7 +704,7 @@ function buildObjectives(
           : t('Objectives.Incomplete')),
       description: def.displayProperties.description,
       progress: objective.progress || 0,
-      completionValue: def.completionValue,
+      completionValue: objective.completionValue,
       complete,
       boolean: booleanValue,
       displayStyle,
@@ -738,7 +738,7 @@ function buildFlavorObjective(
   return {
     description: def.progressDescription,
     icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
-    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
+    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / flavorObjective.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
   };
 }
 
