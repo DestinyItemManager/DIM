@@ -1,5 +1,9 @@
 # Next
 
+* Max power updated to 600 for Forsaken owners.
+* Bugfixes post-Forsaken launch.
+* Add Infamy rank to progress page.
+
 # 4.68.3 (2018-09-03)
 
 # 4.68.2 (2018-09-03)
