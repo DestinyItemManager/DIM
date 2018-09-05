@@ -89,7 +89,7 @@ export function sortStores(stores: DimStore[], order: string) {
         return store.lastPlayed;
       }
     });
-  } else if (stores.length && stores[0].destinyVersion === 1) {
+  } else if (stores.length) {
     return _.sortBy(stores, 'id');
   } else {
     return stores;

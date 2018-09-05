@@ -140,7 +140,9 @@ export default class Progress extends React.Component<Props, State> {
       // Valor
       firstCharacterProgression[3882308435],
       // Glory
-      firstCharacterProgression[2679551909]
+      firstCharacterProgression[2679551909],
+      // Infamy
+      firstCharacterProgression[2772425241]
     ];
 
     const profileMilestonesContent = (profileMilestones.length > 0 || profileQuests.length > 0) && (

@@ -123,7 +123,6 @@ export function buildSearchConfig(
   } else {
     Object.assign(filterTrans, {
       hasLight: ['light', 'haslight', 'haspower'],
-      powermod: ['powermod', 'haspowermod'],
       complete: ['goldborder', 'yellowborder', 'complete'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
@@ -162,8 +161,6 @@ export function buildSearchConfig(
   const ranges = ['light', 'power', 'level', 'stack'];
   if (destinyVersion === 1) {
     ranges.push('quality', 'percentage');
-  } else {
-    ranges.push('basepower');
   }
 
   if ($featureFlags.reviewsEnabled) {
@@ -198,13 +195,9 @@ export function buildSearchConfig(
 
 // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
 const dupeComparator = reverseComparator(chainComparator(
-  // basePower
-  compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value)),
   // primary stat
   compareBy((item: DimItem) => item.primStat && item.primStat.value),
   compareBy((item: DimItem) => item.masterwork),
-  // has a power mod
-  compareBy((item: DimItem) => item.primStat && item.basePower && (item.primStat.value !== item.basePower)),
   compareBy((item: DimItem) => item.locked),
   compareBy((item: DimItem) => item.dimInfo && item.dimInfo.tag && ['favorite', 'keep'].includes(item.dimInfo.tag)),
   compareBy((i: DimItem) => i.id) // tiebreak by ID
@@ -916,9 +909,6 @@ export function searchFilters(
       },
       transferable(item: DimItem) {
         return !item.notransfer;
-      },
-      powermod(item: DimItem) {
-        return item.primStat && (item.primStat.value !== item.basePower);
       },
       hasShader(item: D2Item) {
         return item.sockets && _.any(item.sockets.sockets, (socket) => {

@@ -26,7 +26,7 @@ export default function RewardActivity({
   return (
     <div className={classNames('milestone-reward-activity', { complete: rewardEntry.earned })} title={t(tooltip)}>
       <i className={classNames('fa', checkClass)}/>
-      <BungieImage src={rewardDef.displayProperties.icon} />
+      {rewardDef.displayProperties.icon && <BungieImage src={rewardDef.displayProperties.icon} />}
       <span>{rewardDef.displayProperties.name}</span>
     </div>
   );
