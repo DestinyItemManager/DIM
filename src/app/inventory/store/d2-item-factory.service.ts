@@ -485,12 +485,14 @@ export function makeItem(
     }
   }
 
-  // Mark items with power mods
+  // TODO: Phase out "base power"
   if (createdItem.primStat) {
     createdItem.basePower = getBasePowerLevel(createdItem);
-    if (createdItem.basePower !== createdItem.primStat.value) {
-      createdItem.complete = true;
-    }
+  }
+
+  // Mark masterworks with a gold border
+  if (createdItem.masterwork) {
+    createdItem.complete = true;
   }
 
   // Mark upgradeable stacks of rare modifications

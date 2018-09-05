@@ -597,7 +597,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",
-    "MaxBasePower": "Max Base Power (w/o mods)",
+    "MaxBasePower": "Max Power",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
