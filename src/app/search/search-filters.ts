@@ -123,7 +123,6 @@ export function buildSearchConfig(
   } else {
     Object.assign(filterTrans, {
       hasLight: ['light', 'haslight', 'haspower'],
-      powermod: ['powermod', 'haspowermod'],
       complete: ['goldborder', 'yellowborder', 'complete'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
@@ -916,9 +915,6 @@ export function searchFilters(
       },
       transferable(item: DimItem) {
         return !item.notransfer;
-      },
-      powermod(item: DimItem) {
-        return item.primStat && (item.primStat.value !== item.basePower);
       },
       hasShader(item: D2Item) {
         return item.sockets && _.any(item.sockets.sockets, (socket) => {
