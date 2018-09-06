@@ -20,7 +20,6 @@ interface State {
 export default class RatingMode extends React.Component<{}, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
   private _reviewModeOptions?: D2ReviewMode[];
-  private _platformOptions = getPlatformOptions();
 
   constructor(props) {
     super(props);
@@ -64,7 +63,7 @@ export default class RatingMode extends React.Component<{}, State> {
             </div>
             <div className="mode-column">
               <select name="platformSelection" value={platformSelection} onChange={this.platformChange}>
-                {this._platformOptions.map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
+                {getPlatformOptions().map((r) => <option key={r.description} value={r.platform}>{r.description}</option>)}
               </select>
             </div>
           </div>
