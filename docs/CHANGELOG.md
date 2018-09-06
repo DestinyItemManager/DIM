@@ -1,12 +1,29 @@
 # Next
 
+* Max power updated to 600 for Forsaken owners.
+* Bugfixes post-Forsaken launch.
+* Add Infamy rank to progress page.
+* Remove "is:powermod" search.
+* Remove "basepower:" search.
+* Masterworks now have a gold border. Previously items with a power mod had a gold border, but there are no more power mods.
+* Ratings platform selection changes made easier.
+
+# 4.68.3 (2018-09-03)
+
+# 4.68.2 (2018-09-03)
+
+# 4.68.1 (2018-09-03)
+
+# 4.68.0 (2018-09-02)
+
+* Fixed: Destiny 2 - Sort by character age.
 * Item popup shows the ammo type of D2 weapons.
 * New is:primary, is:special, and is:heavy search terms for ammo types.
 * Add is:tracerifle and is:linearfusionrifle searches.
 * Added Korean as a language option.
 * We have a new Shop selling enamel pins and T-shirts.
 * Ratings system understands random rolls in D2.
-* Ratings platform selection changes made easier.
+* Search help added for searching by # of ratings.
 
 # 4.67.0 (2018-08-26)
 

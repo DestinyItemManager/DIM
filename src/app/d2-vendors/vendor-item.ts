@@ -306,9 +306,8 @@ export class VendorItem {
     if (this.itemComponents && this.itemComponents.objectives && this.itemComponents.objectives.data[this.inventoryItem.hash]) {
       const objectives = this.itemComponents.objectives.data[this.inventoryItem.hash].objectives;
       return sum(objectives, (objective) => {
-        const objectiveDef = this.defs.Objective.get(objective.objectiveHash);
-        if (objectiveDef.completionValue) {
-          return Math.min(1, (objective.progress || 0) / objectiveDef.completionValue) / objectives.length;
+        if (objective.completionValue) {
+          return Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length;
         } else {
           return 0;
         }

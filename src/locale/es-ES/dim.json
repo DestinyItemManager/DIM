@@ -256,7 +256,7 @@
     },
     "VideoExample": "Para un mejor ejemplo de cómo usar los filtros, échale un vistazo a este video en {{link}}",
     "WeaponClass": "Muestra objetos basado en las clases de arma.",
-    "WeaponType": "Muestra armas basado en su tipo de daño.",
+    "WeaponType": "Muestra las armas basadas en su tipo de arma.",
     "Year": "Muestra los objetos con su respectivo año de aparición en Destiny."
   },
   "Forsaken": {

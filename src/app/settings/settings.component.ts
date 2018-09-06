@@ -158,7 +158,6 @@ export function SettingsController(
     typeName: $i18next.t('Settings.SortByType'),
     rarity: $i18next.t('Settings.SortByRarity'),
     primStat: $i18next.t('Settings.SortByPrimary'),
-    basePower: $i18next.t('Settings.SortByBasePower'),
     rating: $i18next.t('Settings.SortByRating'),
     classType: $i18next.t('Settings.SortByClassType'),
     name: $i18next.t('Settings.SortName')

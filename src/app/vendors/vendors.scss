@@ -234,10 +234,14 @@ vendor-currencies, .vendor-currencies {
   float: right;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 50%;
+  justify-content: flex-end;
   .vendor-currency {
-    margin-right: 10px;
-    &:last-child {
-      margin-right: 0;
+    margin-left: 10px;
+    margin-bottom: 8px;
+    &:first-child {
+      margin-left: 0;
     }
     img {
       vertical-align: bottom;

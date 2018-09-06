@@ -27,8 +27,8 @@ export default function Challenge({
       <div className="milestone-challenge-info">
         <div className="milestone-header">
           <span className="milestone-challenge-name">{objectiveDef.displayProperties.name}</span>
-          {objectiveDef.completionValue > 1 &&
-            <span className="milestone-challenge-progress">{challenge.objective.progress || 0}/{objectiveDef.completionValue}</span>
+          {challenge.objective.completionValue > 1 &&
+            <span className="milestone-challenge-progress">{challenge.objective.progress || 0}/{challenge.objective.completionValue}</span>
           }
         </div>
         <div className="milestone-challenge-description">{objectiveDef.displayProperties.description}</div>
