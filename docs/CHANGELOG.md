@@ -6,6 +6,7 @@
 * Remove "is:powermod" search.
 * Remove "basepower:" search.
 * Masterworks now have a gold border. Previously items with a power mod had a gold border, but there are no more power mods.
+* Disabled vendorengrams.xyz integration until they are back online.
 
 # 4.68.3 (2018-09-03)
 
