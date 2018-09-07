@@ -393,9 +393,6 @@ export function searchFilters(
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate("light", filter);
-        } else if (term.startsWith('basepower:')) {
-          const filter = term.replace('basepower:', '');
-          addPredicate("basepower", filter);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
           addPredicate("stack", filter);
@@ -708,12 +705,6 @@ export function searchFilters(
           return false;
         }
         return compareByOperand(item.primStat.value, predicate);
-      },
-      basepower(item: DimItem, predicate: string) {
-        if (!item.basePower) {
-          return false;
-        }
-        return compareByOperand(item.basePower, predicate);
       },
       level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);
