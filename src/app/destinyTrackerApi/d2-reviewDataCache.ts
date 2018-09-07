@@ -105,7 +105,12 @@ class D2ReviewDataCache {
   _getScore(dtrRating: D2ItemFetchResponse): number {
     const downvoteMultipler = this._getDownvoteMultiplier(dtrRating);
 
-    const rating = ((dtrRating.votes.total - (dtrRating.votes.downvotes * downvoteMultipler)) / dtrRating.votes.total) * 5;
+    const reviewMultiplier = 10;
+
+    const totalVotes = dtrRating.votes.total + (dtrRating.reviewVotes.total * reviewMultiplier);
+    const totalDownVotes = dtrRating.votes.downvotes + (dtrRating.reviewVotes.downvotes * reviewMultiplier);
+
+    const rating = ((totalVotes - (totalDownVotes * downvoteMultipler)) / totalVotes) * 5;
 
     if ((rating < 1) &&
         (dtrRating.votes.total > 0)) {

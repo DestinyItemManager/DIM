@@ -48,8 +48,10 @@ export interface D2ItemFetchRequest {
 export interface D2ItemFetchResponse {
   /** Reference ID (hash ID). */
   referenceId: number;
-  /** The votes for a single item. */
+  /** The votes for a single item. Includes ratings with and without review text. */
   votes: DtrD2Vote;
+  /** The votes that have review text along with them. */
+  reviewVotes: DtrD2Vote;
 }
 
 /** If the user chooses to make any review moves on an item, they're stored here. */
