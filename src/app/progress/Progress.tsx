@@ -416,7 +416,11 @@ export default class Progress extends React.Component<Props, State> {
     });
     return _.sortBy(filteredItems, (item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
-      return itemDef.displayProperties.name;
+
+      return [
+        itemDef.inventory && itemDef.inventory.stackUniqueLabel,
+        itemDef.displayProperties.name,
+      ];
     });
   }
 
