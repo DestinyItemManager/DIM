@@ -222,6 +222,12 @@
         </td>
         <td ng-i18next="Filter.Infusable"></td>
       </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="is:randomroll"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.RandomRoll"></td>
+      </tr>
       <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:ascended"></dim-filter-link>
