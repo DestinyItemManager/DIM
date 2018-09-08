@@ -51,8 +51,7 @@
     "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
-    "VendorNotFound": "Vendor data is unavailable.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "Vendor data is unavailable."
   },
   "Compare": {
     "All": "{{type}} comparisons ({{quantity}})",
@@ -261,8 +260,7 @@
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches."
   },
   "Header": {
     "About": "About",
@@ -501,6 +499,7 @@
     "OverviewTab": "Overview",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
+    "Rewards": "Rewards:",
     "Split": "Split",
     "Store": "Store",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",

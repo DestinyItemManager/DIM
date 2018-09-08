@@ -1,10 +1,11 @@
-import { DestinyItemComponent, DestinyObjectiveProgress, DestinyItemQuantity } from 'bungie-api-ts/destiny2';
+import { DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import { sum } from '../util';
 import './quest.scss';
 import Objective from './Objective';
+import { Reward } from './Reward';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;
@@ -48,21 +49,6 @@ export default function Quest(props: QuestProps) {
           <Reward key={reward.itemHash} reward={reward} defs={defs}/>
         )}
       </div>
-    </div>
-  );
-}
-
-export function Reward({
-  reward,
-  defs
-}: {
-  reward: DestinyItemQuantity;
-  defs: D2ManifestDefinitions;
-}) {
-  return (
-    <div className="milestone-reward">
-      <BungieImage src={defs.InventoryItem.get(reward.itemHash).displayProperties.icon} />
-      <span>{defs.InventoryItem.get(reward.itemHash).displayProperties.name}{reward.quantity > 1 && ` +${reward.quantity}`}</span>
     </div>
   );
 }

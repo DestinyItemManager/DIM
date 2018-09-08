@@ -147,6 +147,14 @@ export default class VendorItemComponent extends React.Component<Props> {
         });
       }
 
+      const itemDef = this.props.defs.InventoryItem.get(item.itemHash);
+      const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.quantity && v.itemHash) : []).map((iq) => (
+        {
+          quantity: iq.quantity,
+          item: this.props.defs.InventoryItem.get(iq.itemHash)
+        }
+      ));
+
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,
         overlay: false,
@@ -157,6 +165,7 @@ export default class VendorItemComponent extends React.Component<Props> {
         controller() {
           this.item = dimItem;
           this.vendorItem = item;
+          this.rewards = rewards;
         },
         // Setting these focus options prevents the page from
         // jumping as dialogs are shown/hidden

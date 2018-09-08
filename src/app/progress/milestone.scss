@@ -44,20 +44,6 @@
     flex-direction: column;
   }
 
-  .milestone-reward {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 8px 0 0 0;
-
-    img {
-      width: 17px;
-      height: 17px;
-      margin-right: 4px;
-    }
-
-  }
-
   .milestone-reward-activity {
     display: flex;
     flex-direction: row;
@@ -140,4 +126,18 @@
       color: #A1A2A2;
     }
   }
+}
+
+.milestone-reward {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 8px 0 0 0;
+
+  img {
+    width: 17px;
+    height: 17px;
+    margin-right: 4px;
+  }
+
 }
