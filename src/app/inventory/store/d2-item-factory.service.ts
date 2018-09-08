@@ -302,6 +302,7 @@ export function makeItem(
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
     categories, // see defs.ItemCategories
+    itemCategoryHashes: itemDef.itemCategoryHashes || [],
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
     isVendorItem: (!owner || owner.id === null),
@@ -948,7 +949,7 @@ function buildPlug(
     plugObjectives: plug.plugObjectives || [],
     perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),
     // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
-    isMasterwork: plugItem.hash !== 236077174 && plugItem.hash !== 1176735155 && plugItem.itemCategoryHashes.includes(141186804)
+    isMasterwork: plugItem.hash !== 236077174 && plugItem.hash !== 1176735155 && (plugItem.itemCategoryHashes || []).includes(141186804)
   };
 }
 
