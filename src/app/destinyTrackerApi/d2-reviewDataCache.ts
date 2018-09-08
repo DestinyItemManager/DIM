@@ -1,4 +1,3 @@
-import * as _ from 'underscore';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2RatingData, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
@@ -121,7 +120,7 @@ class D2ReviewDataCache {
   }
 
   _setMaximumTotalVotes(bulkRankings: D2ItemFetchResponse[]) {
-    this._maxTotalVotes = _.max(_.pluck(_.pluck(bulkRankings, 'votes'), 'total'));
+    this._maxTotalVotes = Math.max(...bulkRankings.map((fr) => fr.votes).map((v) => v.total));
   }
 
   /**
