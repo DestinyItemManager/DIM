@@ -2,6 +2,7 @@ import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2RatingData, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
 import { translateToDtrItem } from './d2-itemTransformer';
+import { dtrTextReviewMultiplier } from './dtr-service-helper';
 
 /**
  * Cache of review data.
@@ -104,10 +105,8 @@ class D2ReviewDataCache {
   _getScore(dtrRating: D2ItemFetchResponse): number {
     const downvoteMultipler = this._getDownvoteMultiplier(dtrRating);
 
-    const reviewMultiplier = 10;
-
-    const totalVotes = dtrRating.votes.total + (dtrRating.reviewVotes.total * reviewMultiplier);
-    const totalDownVotes = dtrRating.votes.downvotes + (dtrRating.reviewVotes.downvotes * reviewMultiplier);
+    const totalVotes = dtrRating.votes.total + (dtrRating.reviewVotes.total * dtrTextReviewMultiplier);
+    const totalDownVotes = dtrRating.votes.downvotes + (dtrRating.reviewVotes.downvotes * dtrTextReviewMultiplier);
 
     const rating = ((totalVotes - (totalDownVotes * downvoteMultipler)) / totalVotes) * 5;
 
