@@ -12,6 +12,7 @@
 * Review modes - say hello to Gambit (and goodbye to Trials, at least for a little while).
 * Added Etheric Spiral and Etheric Helix to the list of reputation items.
 * Added "is:bow" search.
+* Bounties now show their rewards on the Progress and Vendors pages.
 
 # 4.68.3 (2018-09-03)
 
