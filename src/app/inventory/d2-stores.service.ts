@@ -195,14 +195,14 @@ function makeD2StoresService(): D2StoreServiceType {
       .then(([defs, buckets, newItems, itemInfoService, profileInfo]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
-        const lastPlayedDate = findLastPlayedDate(profileInfo);
-
         // TODO: components may be hidden (privacy)
 
         if (!profileInfo.profileInventory.data || !profileInfo.characterInventories.data) {
           console.error("Vault or character inventory was missing - bailing in order to avoid corruption");
           throw new Error(t('BungieService.Difficulties'));
         }
+
+        const lastPlayedDate = findLastPlayedDate(profileInfo);
 
         const processVaultPromise = processVault(
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
@@ -257,17 +257,7 @@ function makeD2StoresService(): D2StoreServiceType {
         return stores;
       })
       .catch((e: DimError) => {
-        // Special messaging for the Warmind error
-        if (e.code && e.code === PlatformErrorCodes.DestinyUnexpectedError) {
-          toaster.pop({
-            type: 'error',
-            title: t('BungieService.ErrorTitle'),
-            body: t('BungieService.WarmindLoginNeeded'),
-            showCloseButton: false
-          });
-        } else {
-          toaster.pop(bungieErrorToaster(e));
-        }
+        toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);
         reportException('d2stores', e);
         // It's important that we swallow all errors here - otherwise
