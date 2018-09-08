@@ -31,6 +31,7 @@ import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
+import { chainComparator, compareBy } from '../comparators';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -414,10 +415,27 @@ export default class Progress extends React.Component<Props, State> {
         (itemDef.inventory && itemDef.inventory.tierTypeHash === 0 &&
           itemDef.backgroundColor && itemDef.backgroundColor.alpha > 0);
     });
-    return _.sortBy(filteredItems, (item) => {
-      const itemDef = defs.InventoryItem.get(item.itemHash);
-      return itemDef.displayProperties.name;
-    });
+
+    filteredItems.sort(chainComparator(
+      compareBy((item) => {
+        const itemDef = defs.InventoryItem.get(item.itemHash);
+        return itemDef.itemType;
+      }),
+      compareBy((item) => {
+        // Sort by icon image, but only for bounties...
+        const itemDef = defs.InventoryItem.get(item.itemHash);
+        if (itemDef.itemCategoryHashes.includes(1784235469)) {
+          return itemDef.displayProperties.icon;
+        } else {
+          return undefined;
+        }
+      }),
+      compareBy((item) => {
+        const itemDef = defs.InventoryItem.get(item.itemHash);
+        return itemDef.displayProperties.name;
+      })
+    ));
+    return filteredItems;
   }
 
   /**

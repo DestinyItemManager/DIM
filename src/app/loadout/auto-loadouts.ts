@@ -1,7 +1,6 @@
 import { copy } from 'angular';
 import { t } from 'i18next';
 import * as _ from 'underscore';
-import { REP_TOKENS } from '../farming/rep-tokens';
 import { optimalLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
 import { sum, flatMap } from '../util';
@@ -158,7 +157,7 @@ export function gatherEngramsLoadout(
 
 export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
   let tokens = storeService.getAllItems().filter((i) => {
-    return REP_TOKENS.has(i.hash) && !i.notransfer;
+    return i.isDestiny2() && i.itemCategoryHashes.includes(2088636411) && !i.notransfer;
   });
 
   if (tokens.length === 0) {

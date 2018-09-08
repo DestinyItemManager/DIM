@@ -3,11 +3,14 @@
 * Max power updated to 600 for Forsaken owners.
 * Bugfixes post-Forsaken launch.
 * Add Infamy rank to progress page.
+* Add "is:randomroll" search for items that have random rolls.
 * Remove "is:powermod" search.
 * Remove "basepower:" search.
 * Masterworks now have a gold border. Previously items with a power mod had a gold border, but there are no more power mods.
+* Pursuits are sorted such that bounties are displayed together.
 * Disabled vendorengrams.xyz integration until they are back online.
 * Review modes - say hello to Gambit (and goodbye to Trials, at least for a little while).
+* Added Etheric Spiral and Etheric Helix to the list of reputation items.
 * Giving more weight to ratings with reviews than ratings alone. Also, hiding lone ratings.
 
 # 4.68.3 (2018-09-03)
