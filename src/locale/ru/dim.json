@@ -171,7 +171,7 @@
       "WotM": "Гнев Машины"
     },
     "Activity": "Доступно в активности <i>{{activity}}</i>",
-    "AmmoType": "Shows items based on their ammo type.",
+    "AmmoType": "По типу используемых боеприпасов.",
     "ArmorCategory": "Предметы Брони по слотам. Шлемы, перчатки, тело, ноги, классовые предметы.",
     "Ascended": "Показать предметы, имеющие возможность поднять уровень их Света и был ли он поднят или нет.",
     "Categories": "Максимального уровня по категориям.",
@@ -217,11 +217,12 @@
     "PartialMatch": "Предметы содержащие введенный текст в названии или среди перков.",
     "Postmaster": "У Почтмейстера.",
     "PowerLevel": "По Силе.",
-    "PowerMod": "С легендарным Модификатором.",
     "Quality": "Показывает предметы на основе их общей суммы процентов характеристик. '{{percentage}}' означает '{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "По редкости.",
     "Rated": "Оружие с рейтингом Destiny Tracker.",
     "Rating": "Оружие по рейтингу Destiny Tracker.",
+    "RatingCount": "Оружие по рейтингам на DestinyTracker.com за время текущей меты.",
     "Reforgeable": "Показывает предметы, которые можно перековать у Оружейника.",
     "Release": "Доступно начиная с <i>{{release}}</i>",
     "Releases": {
@@ -260,8 +261,8 @@
     "Year": "Показать предметы по году появления в Destiny."
   },
   "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
+    "Progress": "Кстати: Данные чек-листа могут быть некорректны или неполны некоторое время после релиза Отвергнутых.",
+    "Vendors": "Вендоры будут недоступны некоторое время после релиза Отвергнутых."
   },
   "Header": {
     "About": "О проекте",
@@ -597,7 +598,7 @@
     "Discipline": "Дисциплина",
     "Intellect": "Интеллект",
     "Level": "Уровень",
-    "MaxBasePower": "Максимальная Базовая Мощь (без модификаторов)",
+    "MaxBasePower": "Максимум Силы",
     "NoBonus": "Без бонуса",
     "NotApplicable": "Н/Д",
     "OfMaxRoll": "{{range}} от максимального",
