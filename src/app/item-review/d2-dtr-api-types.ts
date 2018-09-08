@@ -122,7 +122,8 @@ export enum DtrD2ActivityModes {
   playerVersusEnemy = DestinyActivityModeType.AllPvE,
   playerVersusPlayer = DestinyActivityModeType.AllPvP,
   raid = DestinyActivityModeType.Raid,
-  trials = DestinyActivityModeType.TrialsOfTheNine
+  // trials = DestinyActivityModeType.TrialsOfTheNine
+  gambit = DestinyActivityModeType.Gambit
 }
 
 /**
