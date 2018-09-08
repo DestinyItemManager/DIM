@@ -3,6 +3,7 @@
 * Max power updated to 600 for Forsaken owners.
 * Bugfixes post-Forsaken launch.
 * Add Infamy rank to progress page.
+* Add "is:randomroll" search for items that have random rolls.
 * Remove "is:powermod" search.
 * Remove "basepower:" search.
 * Masterworks now have a gold border. Previously items with a power mod had a gold border, but there are no more power mods.
