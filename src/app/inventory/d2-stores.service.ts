@@ -459,13 +459,14 @@ function makeD2StoresService(): D2StoreServiceType {
 
   function getBasePower(loadout: Loadout) {
     // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
+    // They are equally weighted as of Forsaken.
     const itemWeight = {
-      Weapons: 6,
-      Armor: 5,
-      General: 4
+      Weapons: 1,
+      Armor: 1,
+      General: 1
     };
     // 3 Weapons, 4 Armor, 1 General
-    const itemWeightDenominator = 42;
+    const itemWeightDenominator = 8;
     const items = _.flatten(Object.values(loadout.items)).filter((i: DimItem) => i.equipped);
 
     const exactBasePower = sum(items, (item) => {
