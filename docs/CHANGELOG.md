@@ -14,6 +14,7 @@
 * Fixed Year 1 weapons not having an elemental damage type.
 * Added "is:bow" search.
 * Added "is:machinegun" search.
+* Added Bow stats "Draw Time" and "Inventory Size".
 
 # 4.68.3 (2018-09-03)
 
