@@ -148,7 +148,7 @@ export default class VendorItemComponent extends React.Component<Props> {
       }
 
       const itemDef = this.props.defs.InventoryItem.get(item.itemHash);
-      const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.quantity && v.itemHash) : []).map((iq) => (
+      const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : []).map((iq) => (
         {
           quantity: iq.quantity,
           item: this.props.defs.InventoryItem.get(iq.itemHash)
