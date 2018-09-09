@@ -5,13 +5,16 @@ import classNames from 'classnames';
 import { t } from 'i18next';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import BungieImage from '../dim-ui/BungieImage';
+import { settings } from '../settings/settings';
 
 export default function Objective({
   defs,
-  objective
+  objective,
+  suppressObjectiveDescription
 }: {
   defs: D2ManifestDefinitions;
   objective: DestinyObjectiveProgress;
+  suppressObjectiveDescription?: boolean;
 }) {
   const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
@@ -21,8 +24,10 @@ export default function Objective({
     return null;
   }
 
-  const displayName = objectiveDef.progressDescription ||
+  const displayName = (!suppressObjectiveDescription && objectiveDef.progressDescription) ||
       t(objective.complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
+
+  const formatter = new Intl.NumberFormat(settings.language);
 
   if (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (
@@ -32,7 +37,7 @@ export default function Objective({
             {objectiveDef.displayProperties.hasIcon && <BungieImage src={objectiveDef.displayProperties.icon}/>}
             {displayName}
           </div>
-          <div className="objective-text">{progress}</div>
+          <div className="objective-text">{formatter.format(progress)}</div>
         </div>
       </div>
     );
@@ -54,8 +59,8 @@ export default function Objective({
         <div className="objective-progress-bar" style={progressBarStyle}/>
         <div className="objective-description">{displayName}</div>
         {objectiveDef.allowOvercompletion && objective.completionValue === 1
-          ? <div className="objective-text">{progress}</div>
-          : <div className="objective-text">{progress}/{objective.completionValue}</div>
+          ? <div className="objective-text">{formatter.format(progress)}</div>
+          : <div className="objective-text">{formatter.format(progress)}/{formatter.format(objective.completionValue)}</div>
         }
       </div>
     </div>

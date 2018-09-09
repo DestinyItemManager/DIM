@@ -12,6 +12,7 @@ import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import MilestoneObjectiveStatus from './MilestoneObjectiveStatus';
+import Objective from './Objective';
 
 /**
  * Most milestones are represented as a quest, with some objectives and a reward associated with them.
@@ -47,6 +48,7 @@ export default function AvailableQuest({
   const objectiveDef = objective ? defs.Objective.get(objective.objectiveHash) : null;
 
   const tooltip = availableQuest.status.completed ? 'Progress.RewardEarned' : 'Progress.RewardNotEarned';
+  const suppressObjectiveDescription = Boolean(objectiveDef && objectiveDef.progressDescription === displayProperties.description);
 
   return (
     <div className="milestone-quest">
@@ -58,10 +60,14 @@ export default function AvailableQuest({
         <span className="milestone-name">{displayProperties.name}</span>
         {activityDef && activityDef.displayProperties.name !== displayProperties.name &&
           <div className="milestone-location">{activityDef.displayProperties.name}</div>}
-        <div className="milestone-description">{objectiveDef ? objectiveDef.progressDescription : displayProperties.description}</div>
+        <div className="milestone-description">{displayProperties.description}</div>
         {modifiers.map((modifier) =>
           <ActivityModifier key={modifier.hash} modifier={modifier}/>
         )}
+        {objective &&
+          <div className="quest-objectives">
+            <Objective defs={defs} objective={objective} key={objective.objectiveHash} suppressObjectiveDescription={suppressObjectiveDescription}/>
+          </div>}
         {questRewards.map((questReward) =>
           <div className="milestone-reward" key={questReward.hash}>
             <BungieImage src={questReward.displayProperties.icon} />

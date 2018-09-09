@@ -3,7 +3,6 @@ import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import { sum } from '../util';
-import './quest.scss';
 import Objective from './Objective';
 import { Reward } from './Reward';
 
@@ -33,7 +32,7 @@ export default function Quest(props: QuestProps) {
       <div className="milestone-icon">
         <BungieImage src={itemDef.displayProperties.icon} />
         {percentComplete > 0 &&
-          <span>{Math.floor(percentComplete * 100)}%</span>}
+          <span>{Math.round(percentComplete * 100)}%</span>}
         {itemDef.inventory.maxStackSize > 1 &&
           <span>{item.quantity}</span>}
       </div>
