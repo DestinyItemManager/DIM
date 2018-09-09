@@ -5,31 +5,52 @@
 }
 
 #filter-input {
-  width: 250px;
-  margin-left: -3px;
-  margin-top: 4px;
-  padding-right: 20px;
   border-radius: 0;
   -webkit-appearance: none;
+  height: 25px;
+
+}
+
+dim-search-filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: rgb(46, 46, 46);
+  border-bottom: 1px solid gray;
+  padding-left: 5px;
+  margin-left: -3px;
+  height: 25px;
+  width: 275px;
 
   @media (max-width: 1100px) {
-    width: 175px;
+    width: 200px;
+  }
+  @include phone-portrait {
+    width: auto;
+    height: 34px;
+  }
+
+  &:hover, &:focus {
+    background: transparent;
+    outline: none;
+    border-bottom: 1px solid $orange;
+  }
+
+  input[type="text"] {
+    border: none;
+    color: white;
+    background: transparent;
+    outline: none;
+    flex: 1;
   }
 }
 
 .search-link {
-  position: relative;
-  top: -2px;
-
   // Yikes this is a hack
   @include phone-portrait {
     display: none;
 
     &.show {
-      position: absolute;
-      left: 32px;
-      top: 4px;
-      right: 170px;
       display: block;
 
       #filter-input {
@@ -40,7 +61,7 @@
       }
 
       .filter-help {
-        top: 8px;
+        top: 0;
       }
 
       .dim-input {
@@ -63,10 +84,11 @@
 }
 
 .filter-help {
-  position: absolute;
-  right: -2px;
-  top: 8px;
   cursor: pointer;
+  @include phone-portrait {
+    margin-right: 8px !important;
+  }
+
   .fa {
     font-size: 16px !important;
     color: #999 !important;
