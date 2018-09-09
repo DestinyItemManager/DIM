@@ -52,6 +52,7 @@ dim-search-filter {
 
     &.show {
       display: block;
+      flex: 1;
 
       #filter-input {
         height: 34px;
