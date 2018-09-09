@@ -3,7 +3,8 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyMilestoneDefinition,
   DestinyMilestoneQuest,
-  DestinyActivityModifierDefinition
+  DestinyActivityModifierDefinition,
+  DestinyClass
 } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
@@ -18,11 +19,13 @@ import MilestoneObjectiveStatus from './MilestoneObjectiveStatus';
 export default function AvailableQuest({
   defs,
   milestoneDef,
-  availableQuest
+  availableQuest,
+  characterClass
 }: {
   defs: D2ManifestDefinitions;
   milestoneDef: DestinyMilestoneDefinition;
   availableQuest: DestinyMilestoneQuest;
+  characterClass: DestinyClass;
 }) {
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const displayProperties: DestinyDisplayPropertiesDefinition = questDef.displayProperties || milestoneDef.displayProperties;
@@ -37,7 +40,7 @@ export default function AvailableQuest({
   }
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
-  const questRewards = questDef.questRewards ? _.take(questDef.questRewards.items, 1).map((r) => defs.InventoryItem.get(r.itemHash)) : [];
+  const questRewards = questDef.questRewards ? _.take(questDef.questRewards.items.map((r) => defs.InventoryItem.get(r.itemHash)).filter((i) => i.classType === characterClass || i.classType === DestinyClass.Unknown), 1) : [];
 
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;
