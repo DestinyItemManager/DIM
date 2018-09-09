@@ -22,7 +22,8 @@ import {
   DestinyItemPlug,
   DestinyItemSocketEntryDefinition,
   DestinyItemSocketEntryPlugItemDefinition,
-  DestinyAmmunitionType
+  DestinyAmmunitionType,
+  DamageType
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -99,6 +100,15 @@ const categoryFromHash = {
   13: 'CATEGORY_ROCKET_LAUNCHER',
   14: 'CATEGORY_SIDEARM',
   54: 'CATEGORY_SWORD',
+};
+
+const damageMods = {
+  1837294881: DamageType.Void,
+  3728733956: DamageType.Void,
+  3994397859: DamageType.Arc,
+  4126105782: DamageType.Arc,
+  344032858: DamageType.Thermal,
+  2273483223: DamageType.Thermal
 };
 
 // Prototype for Item objects - add methods to this to add them to all
@@ -468,6 +478,15 @@ export function makeItem(
 
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
+    }
+
+    // Fix damage type for Y1 weapons. Should be fixed 9/18/2018
+    // https://github.com/Bungie-net/api/issues/662
+    for (const socket of createdItem.sockets.sockets) {
+      if (socket.plug && damageMods[socket.plug.plugItem.hash]) {
+        createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][damageMods[socket.plug.plugItem.hash]] as typeof createdItem.dmg;
+        break;
+      }
     }
   }
 
