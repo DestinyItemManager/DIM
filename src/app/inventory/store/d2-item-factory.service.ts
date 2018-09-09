@@ -89,6 +89,7 @@ const categoryFromHash = {
   3954685534: 'CATEGORY_SUBMACHINEGUN',
   2489664120: 'CATEGORY_TRACE_RIFLE',
   1504945536: 'CATEGORY_LINEAR_FUSION_RIFLE',
+  3317538576: 'CATEGORY_BOW',
   5: 'CATEGORY_AUTO_RIFLE',
   6: 'CATEGORY_HAND_CANNON',
   7: 'CATEGORY_PULSE_RIFLE',
@@ -968,7 +969,7 @@ function buildPlug(
     plugObjectives: plug.plugObjectives || [],
     perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),
     // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
-    isMasterwork: plugItem.hash !== 236077174 && plugItem.hash !== 1176735155 && plugItem.itemCategoryHashes.includes(141186804)
+    isMasterwork: plugItem.hash !== 236077174 && plugItem.hash !== 1176735155 && (plugItem.itemCategoryHashes || []).includes(141186804)
   };
 }
 

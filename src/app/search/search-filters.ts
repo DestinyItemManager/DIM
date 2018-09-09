@@ -37,6 +37,7 @@ export function buildSearchConfig(
     rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
     fusionrifle: ['CATEGORY_FUSION_RIFLE'],
     sword: ['CATEGORY_SWORD'],
+    bow: ['CATEGORY_BOW'],
   };
 
   const itemTypes: string[] = [];
@@ -128,6 +129,7 @@ export function buildSearchConfig(
       hasShader: ['shaded', 'hasshader'],
       prophecy: ['prophecy'],
       ikelos: ['ikelos'],
+      randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy']
     });
   }
@@ -717,6 +719,9 @@ export function searchFilters(
       },
       hasRating(item: DimItem, predicate: string) {
         return predicate.length !== 0 && item.dtrRating && item.dtrRating.overallScore;
+      },
+      randomroll(item: D2Item) {
+        return item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems);
       },
       rating(item: DimItem, predicate: string) {
         return item.dtrRating && item.dtrRating.overallScore && compareByOperand(item.dtrRating.overallScore, predicate);
