@@ -77,11 +77,14 @@ const statWhiteList = [
   3871231066, // Magazine
   2996146975, // Mobility
   392767087, // Resilience
-  1943323491 // Recovery
+  1943323491, // Recovery
+  447667954, // Draw Time
+  1931675084 // Inventory Size
   //    1935470627, // Power
-  //    1931675084, //  Inventory Size
   // there are a few others (even an `undefined` stat)
 ];
+
+const statsNoBar = [4284893193, 3871231066, 2961396640, 447667954, 1931675084];
 
 // Mapping from itemCategoryHash to our category strings for filtering.
 const categoryFromHash = {
@@ -601,9 +604,7 @@ function buildDefaultStats(itemDef: DestinyInventoryItemDefinition, statDefs: La
       value: stat.value,
       // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
       maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
-      bar: stat.statHash !== 4284893193 &&
-        stat.statHash !== 3871231066 &&
-        stat.statHash !== 2961396640
+      bar: !statsNoBar.includes(stat.statHash)
     };
   }));
 }
@@ -636,9 +637,7 @@ function buildStats(
       sort: statWhiteList.indexOf(stat.statHash),
       value: val,
       maximumValue: itemStat.maximumValue,
-      bar: stat.statHash !== 4284893193 &&
-      stat.statHash !== 3871231066 &&
-      stat.statHash !== 2961396640
+      bar: !statsNoBar.includes(stat.statHash)
     };
   }));
 }
@@ -663,9 +662,7 @@ function buildInvestmentStats(
       sort: statWhiteList.indexOf(itemStat.statTypeHash),
       value: itemStat.value,
       maximumValue: 0,
-      bar: def.hash !== 4284893193 &&
-        def.hash !== 3871231066 &&
-        def.hash !== 2961396640
+      bar: !statsNoBar.includes(itemStat.statTypeHash)
     };
   }));
 }
