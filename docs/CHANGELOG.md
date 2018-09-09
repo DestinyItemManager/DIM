@@ -1,14 +1,21 @@
 # Next
 
 * Max power updated to 600 for Forsaken owners.
-* Bugfixes post-Forsaken launch.
+* Fixed Year 1 weapons not having an elemental damage type.
+* Many bugfixes post-Forsaken launch.
 * Add Infamy rank to progress page.
-* Remove "is:powermod" search.
-* Remove "basepower:" search.
+* Bounties now show their rewards on the Progress and Vendors pages.
+* The Progress page has been cleaned up to better reflect the state of the game since Forsaken.
+* Pursuits are sorted such that bounties are displayed together.
+* Add "is:randomroll" search for items that have random rolls.
+* Added "is:bow" and "is:machinegun" searches.
+* Remove "is:powermod" and "basepower:" searches.
 * Masterworks now have a gold border. Previously items with a power mod had a gold border, but there are no more power mods.
-* Ratings platform selection changes made easier.
+* Added Bow stats "Draw Time" and "Inventory Size".
 * Disabled vendorengrams.xyz integration until they are back online.
 * Review modes - say hello to Gambit (and goodbye to Trials, at least for a little while).
+* Ratings platform selection changes made easier.
+* Added Etheric Spiral and Etheric Helix to the list of reputation items.
 
 # 4.68.3 (2018-09-03)
 

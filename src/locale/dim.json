@@ -51,8 +51,7 @@
     "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
-    "VendorNotFound": "Vendor data is unavailable.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "Vendor data is unavailable."
   },
   "Compare": {
     "All": "{{type}} comparisons ({{quantity}})",
@@ -220,6 +219,7 @@
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
     "Rating": "Shows weapons based on their rating from Destiny Tracker.",
@@ -260,10 +260,6 @@
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "Year": "Shows items from which year of Destiny they appeared in."
-  },
-  "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "About",
@@ -502,6 +498,7 @@
     "OverviewTab": "Overview",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
+    "Rewards": "Rewards:",
     "Split": "Split",
     "Store": "Store",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -528,11 +525,10 @@
     "Daily": "Daily",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",
-    "Milestones": "Milestones",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
-    "Quests": "Pursuits & Quests",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",
