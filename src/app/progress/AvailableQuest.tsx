@@ -11,7 +11,6 @@ import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import MilestoneObjectiveStatus from './MilestoneObjectiveStatus';
-import Challenges from './Challenges';
 
 /**
  * Most milestones are represented as a quest, with some objectives and a reward associated with them.
@@ -66,7 +65,6 @@ export default function AvailableQuest({
             <span>{questReward.displayProperties.name}</span>
           </div>
         )}
-        <Challenges defs={defs} availableQuest={availableQuest} />
       </div>
     </div>
   );
