@@ -145,6 +145,9 @@ export interface DimStore {
 
   /** The stores service associated with this store. */
   getStoresService(): StoreServiceType;
+
+  /** A temporary way of telling Redux that something about the stores has changed. */
+  touch(): void;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */

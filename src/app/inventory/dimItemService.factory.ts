@@ -196,6 +196,8 @@ function ItemService(): ItemServiceType {
       });
     }
 
+    item.getStoresService().touch();
+
     return item;
   }
 

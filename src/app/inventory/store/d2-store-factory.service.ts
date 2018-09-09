@@ -106,8 +106,6 @@ const StoreProto = {
         this.vault.vaultCounts[item.location.id].count--;
       }
 
-      this.getStoresService().touch();
-
       return true;
     }
     return false;
@@ -129,8 +127,6 @@ const StoreProto = {
     if (this.current && item.location.accountWide && this.vault) {
       this.vault.vaultCounts[item.location.id].count++;
     }
-
-    this.getStoresService().touch();
   },
 
   // Create a loadout from this store's equipped items
