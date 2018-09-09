@@ -180,7 +180,7 @@ export default class Progress extends React.Component<Props, State> {
             <div className="progress-row">
               <div className="progress-for-character">
                 <ErrorBoundary name="CrucibleRanks">
-                  {crucibleRanks.map((progression) =>
+                  {crucibleRanks.map((progression) => progression &&
                     <CrucibleRank
                       key={progression.progressionHash}
                       defs={defs}
@@ -239,6 +239,8 @@ export default class Progress extends React.Component<Props, State> {
   private renderCharacters(characters: DestinyCharacterComponent[]) {
     const { defs, profileInfo, lastPlayedDate } = this.state.progress!;
 
+    const pursuitsLabel = defs.InventoryBucket[1345459588].displayProperties.name;
+
     return (
       <>
         <div className="progress-characters">
@@ -269,7 +271,7 @@ export default class Progress extends React.Component<Props, State> {
         </div>
 
         <div className="section">
-          <div className="title">{t('Progress.Quests')}</div>
+          <div className="title">{pursuitsLabel}</div>
           <div className="progress-row">
             <ErrorBoundary name="Quests">
               {characters.map((character) =>
