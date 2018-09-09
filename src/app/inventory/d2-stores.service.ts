@@ -5,7 +5,7 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
   DestinyProgression,
-  PlatformErrorCodes,
+  // PlatformErrorCodes,
   DestinyGameVersions
   } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';

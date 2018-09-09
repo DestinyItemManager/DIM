@@ -37,6 +37,7 @@ export function buildSearchConfig(
     rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
     fusionrifle: ['CATEGORY_FUSION_RIFLE'],
     sword: ['CATEGORY_SWORD'],
+    bow: ['CATEGORY_BOW'],
   };
 
   const itemTypes: string[] = [];
