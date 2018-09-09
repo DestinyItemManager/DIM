@@ -8,8 +8,6 @@ import '../rx-operators';
 import { settings } from '../settings/settings';
 import { SyncService } from '../storage/sync.service';
 import { getBungieAccounts } from './bungie-account.service';
-import * as actions from './actions';
-import store from '../store/store';
 
 let _platforms: DestinyAccount[] = [];
 let _active: DestinyAccount | null = null;
@@ -47,7 +45,6 @@ export function getPlatforms(): IPromise<DestinyAccount[]> {
     })
     .then((destinyAccounts: DestinyAccount[]) => {
       _platforms = destinyAccounts;
-      store.dispatch(actions.accountsLoaded(destinyAccounts));
       return loadActivePlatform();
     })
     .then(setActivePlatform)
@@ -60,7 +57,6 @@ export function getActivePlatform(): DestinyAccount | null {
 
 export function setActivePlatform(platform: DestinyAccount) {
   activePlatform$.next(platform);
-  store.dispatch(actions.setCurrentAccount(platform));
   return current$.take(1).toPromise();
 }
 
