@@ -38,6 +38,7 @@ export function buildSearchConfig(
     fusionrifle: ['CATEGORY_FUSION_RIFLE'],
     sword: ['CATEGORY_SWORD'],
     bow: ['CATEGORY_BOW'],
+    machinegun: ['CATEGORY_MACHINE_GUN'],
   };
 
   const itemTypes: string[] = [];

@@ -399,7 +399,7 @@ export default class Progress extends React.Component<Props, State> {
       compareBy((item) => {
         // Sort by icon image, but only for bounties...
         const itemDef = defs.InventoryItem.get(item.itemHash);
-        if (itemDef.itemCategoryHashes.includes(1784235469)) {
+        if (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(1784235469)) {
           return itemDef.displayProperties.icon;
         } else {
           return undefined;
