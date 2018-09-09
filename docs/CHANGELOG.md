@@ -11,6 +11,7 @@
 * Disabled vendorengrams.xyz integration until they are back online.
 * Review modes - say hello to Gambit (and goodbye to Trials, at least for a little while).
 * Added Etheric Spiral and Etheric Helix to the list of reputation items.
+* Added "is:bow" search.
 
 # 4.68.3 (2018-09-03)
 
