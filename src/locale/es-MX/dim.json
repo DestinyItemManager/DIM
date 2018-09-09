@@ -171,6 +171,7 @@
       "WotM": "La Furia de las Máquinas"
     },
     "Activity": "Disponible en la actividad <i>{{activity}}</i>",
+    "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
     "Ascended": "Muestra objetos que tienen un nodo ascendente y si han sido ascendidos o no.",
     "Categories": "Categorías de objetos de nivel alto.",
@@ -216,11 +217,12 @@
     "PartialMatch": "Muestra objetos que en su nombre/ventaja coinciden parcialmente al filtro de texto.",
     "Postmaster": "Objetos que están actualmente en la administración.",
     "PowerLevel": "Muestra objetos basado en su nivel de poder (Ataque para Armas; Defensa para Armaduras).",
-    "PowerMod": "Elementos que tienen un modificador para aumentar su poder.",
     "Quality": "Muestra objetos basado en el porcentaje de calidad de su estadística total. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
+    "RandomRoll": "Muestra objetos que suelten tiradas aleatorias.",
     "RarityTier": "Muestra objetos basado en su nivel de rareza.",
     "Rated": "Muestra todas las armas que tienen calificación en Destiny Tracker.",
     "Rating": "Muestra armas basado en su calificación en Destiny Tracker.",
+    "RatingCount": "Muestra armas basadas en el número de calificaciones que tengan para el \"sandbox\" actual en Destiny Tracker.",
     "Reforgeable": "Muestra objetos que pueden ser reforjados con el Armero.",
     "Release": "Disponible desde el lanzamiento <i>{{release}}</i>",
     "Releases": {
@@ -257,6 +259,10 @@
     "WeaponClass": "Muestra objetos basados en sus clases de arma.",
     "WeaponType": "Muestra armas basadas en su tipo de arma.",
     "Year": "Muestra los objetos según el año de aparición en Destiny."
+  },
+  "Forsaken": {
+    "Progress": "Nota: La información del progreso puede estar incompleta o incorrecta por un tiempo después del lanzamiento de Los Renegados.",
+    "Vendors": "Los vendedores no estarán disponibles por un tiempo hasta después del lanzamiento de Los Renegados."
   },
   "Header": {
     "About": "Acerca de",
@@ -592,7 +598,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "Level": "Nivel",
-    "MaxBasePower": "Máximo Poder Base (sin mods)",
+    "MaxBasePower": "Poder máximo",
     "NoBonus": "Sin bono",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",

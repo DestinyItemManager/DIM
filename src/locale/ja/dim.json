@@ -171,6 +171,7 @@
       "WotM": "機械の天罰"
     },
     "Activity": "<i>{{activity}}</i>から入手可能",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "カテゴリー別に防具を表示",
     "Ascended": "ノードの開放完了の有無に関わらず、アップグレード可能なアイテムを表示",
     "Categories": "高レベル・アイテムカテゴリー",
@@ -216,11 +217,12 @@
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
-    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "希少性を基に表示",
     "Rated": "Destiny トラッカーから評価をされた武器を全て表示",
     "Rating": "ユーザーからの評価を基に武器を表示",
+    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reforgeable": "銃器技師で融合可能なアイテムを表示",
     "Release": "<i>{{release}}</i>から入手可能",
     "Releases": {
@@ -257,6 +259,10 @@
     "WeaponClass": "武器のクラスを基に表示",
     "WeaponType": "武器の種類を基に表示",
     "Year": "Destinyの何年目にでてきたかを表示"
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "情報",
@@ -592,7 +598,7 @@
     "Discipline": "鍛錬",
     "Intellect": "知性",
     "Level": "レベル",
-    "MaxBasePower": "最大ベースパワー（変更なし）",
+    "MaxBasePower": "Max Power",
     "NoBonus": "ボーナスなし。",
     "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",

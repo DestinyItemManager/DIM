@@ -37,6 +37,8 @@ export function buildSearchConfig(
     rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
     fusionrifle: ['CATEGORY_FUSION_RIFLE'],
     sword: ['CATEGORY_SWORD'],
+    bow: ['CATEGORY_BOW'],
+    machinegun: ['CATEGORY_MACHINE_GUN'],
   };
 
   const itemTypes: string[] = [];
@@ -123,12 +125,12 @@ export function buildSearchConfig(
   } else {
     Object.assign(filterTrans, {
       hasLight: ['light', 'haslight', 'haspower'],
-      powermod: ['powermod', 'haspowermod'],
       complete: ['goldborder', 'yellowborder', 'complete'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
       prophecy: ['prophecy'],
       ikelos: ['ikelos'],
+      randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy']
     });
   }
@@ -162,8 +164,6 @@ export function buildSearchConfig(
   const ranges = ['light', 'power', 'level', 'stack'];
   if (destinyVersion === 1) {
     ranges.push('quality', 'percentage');
-  } else {
-    ranges.push('basepower');
   }
 
   if ($featureFlags.reviewsEnabled) {
@@ -198,13 +198,9 @@ export function buildSearchConfig(
 
 // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
 const dupeComparator = reverseComparator(chainComparator(
-  // basePower
-  compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value)),
   // primary stat
   compareBy((item: DimItem) => item.primStat && item.primStat.value),
   compareBy((item: DimItem) => item.masterwork),
-  // has a power mod
-  compareBy((item: DimItem) => item.primStat && item.basePower && (item.primStat.value !== item.basePower)),
   compareBy((item: DimItem) => item.locked),
   compareBy((item: DimItem) => item.dimInfo && item.dimInfo.tag && ['favorite', 'keep'].includes(item.dimInfo.tag)),
   compareBy((i: DimItem) => i.id) // tiebreak by ID
@@ -400,9 +396,6 @@ export function searchFilters(
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate("light", filter);
-        } else if (term.startsWith('basepower:')) {
-          const filter = term.replace('basepower:', '');
-          addPredicate("basepower", filter);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
           addPredicate("stack", filter);
@@ -716,12 +709,6 @@ export function searchFilters(
         }
         return compareByOperand(item.primStat.value, predicate);
       },
-      basepower(item: DimItem, predicate: string) {
-        if (!item.basePower) {
-          return false;
-        }
-        return compareByOperand(item.basePower, predicate);
-      },
       level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);
       },
@@ -733,6 +720,9 @@ export function searchFilters(
       },
       hasRating(item: DimItem, predicate: string) {
         return predicate.length !== 0 && item.dtrRating && item.dtrRating.overallScore;
+      },
+      randomroll(item: D2Item) {
+        return item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems);
       },
       rating(item: DimItem, predicate: string) {
         return item.dtrRating && item.dtrRating.overallScore && compareByOperand(item.dtrRating.overallScore, predicate);
@@ -916,9 +906,6 @@ export function searchFilters(
       },
       transferable(item: DimItem) {
         return !item.notransfer;
-      },
-      powermod(item: DimItem) {
-        return item.primStat && (item.primStat.value !== item.basePower);
       },
       hasShader(item: D2Item) {
         return item.sockets && _.any(item.sockets.sockets, (socket) => {

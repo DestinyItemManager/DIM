@@ -59,7 +59,7 @@ function buildNodeString(nodes) {
 
 function downloadArmor(items, nameMap) {
   const header =
-    "Name,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,PowerMod,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n";
+    "Name,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n";
   let data = "";
   items.forEach((item) => {
     data += `"${item.name}",`;
@@ -76,7 +76,6 @@ function downloadArmor(items, nameMap) {
     data += `${(item.percentComplete * 100).toFixed(0)},`;
     data += `${item.locked},`;
     data += `${item.equipped},`;
-    data += `${item.primStat && item.primStat.value !== item.basePower},`;
     data += `${item.year},`;
     if (item.dtrRating && item.dtrRating.overallScore) {
       data += `${item.dtrRating.overallScore},${item.dtrRating.ratingCount},`;
@@ -117,7 +116,7 @@ function downloadArmor(items, nameMap) {
 
 function downloadWeapons(guns, nameMap) {
   const header =
-    "Name,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,PowerMod,Year,DTR Rating,# of Reviews," +
+    "Name,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews," +
     "AA,Impact,Range,Stability,ROF,Reload,Mag,Equip," +
     "Notes,Nodes\n";
   let data = "";
@@ -136,7 +135,6 @@ function downloadWeapons(guns, nameMap) {
     data += `${(gun.percentComplete * 100).toFixed(0)},`;
     data += `${gun.locked},`;
     data += `${gun.equipped},`;
-    data += `${gun.primStat && gun.primStat.value !== gun.basePower},`;
     data += `${gun.year},`;
     if (gun.dtrRating && gun.dtrRating.overallScore) {
       data += `${gun.dtrRating.overallScore},${gun.dtrRating.ratingCount},`;

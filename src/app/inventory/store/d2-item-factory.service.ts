@@ -22,7 +22,8 @@ import {
   DestinyItemPlug,
   DestinyItemSocketEntryDefinition,
   DestinyItemSocketEntryPlugItemDefinition,
-  DestinyAmmunitionType
+  DestinyAmmunitionType,
+  DamageType
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -76,11 +77,14 @@ const statWhiteList = [
   3871231066, // Magazine
   2996146975, // Mobility
   392767087, // Resilience
-  1943323491 // Recovery
+  1943323491, // Recovery
+  447667954, // Draw Time
+  1931675084 // Inventory Size
   //    1935470627, // Power
-  //    1931675084, //  Inventory Size
   // there are a few others (even an `undefined` stat)
 ];
+
+const statsNoBar = [4284893193, 3871231066, 2961396640, 447667954, 1931675084];
 
 // Mapping from itemCategoryHash to our category strings for filtering.
 const categoryFromHash = {
@@ -88,6 +92,7 @@ const categoryFromHash = {
   3954685534: 'CATEGORY_SUBMACHINEGUN',
   2489664120: 'CATEGORY_TRACE_RIFLE',
   1504945536: 'CATEGORY_LINEAR_FUSION_RIFLE',
+  3317538576: 'CATEGORY_BOW',
   5: 'CATEGORY_AUTO_RIFLE',
   6: 'CATEGORY_HAND_CANNON',
   7: 'CATEGORY_PULSE_RIFLE',
@@ -95,9 +100,19 @@ const categoryFromHash = {
   9: 'CATEGORY_FUSION_RIFLE',
   10: 'CATEGORY_SNIPER_RIFLE',
   11: 'CATEGORY_SHOTGUN',
+  12: 'CATEGORY_MACHINE_GUN',
   13: 'CATEGORY_ROCKET_LAUNCHER',
   14: 'CATEGORY_SIDEARM',
   54: 'CATEGORY_SWORD',
+};
+
+const damageMods = {
+  1837294881: DamageType.Void,
+  3728733956: DamageType.Void,
+  3994397859: DamageType.Arc,
+  4126105782: DamageType.Arc,
+  344032858: DamageType.Thermal,
+  2273483223: DamageType.Thermal
 };
 
 // Prototype for Item objects - add methods to this to add them to all
@@ -286,10 +301,10 @@ export function makeItem(
 
   const categories = findCategories(itemDef);
 
-  const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0];
+  const dmgName = instanceDef ? [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0] : null;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
-  const primaryStat = ((itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class') ? null : instanceDef.primaryStat || null;
+  const primaryStat = ((itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class') ? null : (instanceDef && instanceDef.primaryStat) || null;
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
@@ -302,6 +317,7 @@ export function makeItem(
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
     categories, // see defs.ItemCategories
+    itemCategoryHashes: itemDef.itemCategoryHashes || [],
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
     isVendorItem: (!owner || owner.id === null),
@@ -313,14 +329,14 @@ export function makeItem(
       item.transferStatus === TransferStatuses.NotTransferrable),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    equipped: Boolean(instanceDef.isEquipped),
+    equipped: Boolean(instanceDef && instanceDef.isEquipped),
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
     complete: false,
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
-    equipRequiredLevel: instanceDef.equipRequiredLevel || 0,
+    equipRequiredLevel: (instanceDef && instanceDef.equipRequiredLevel) || 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
@@ -467,6 +483,15 @@ export function makeItem(
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
     }
+
+    // Fix damage type for Y1 weapons. Should be fixed 9/18/2018
+    // https://github.com/Bungie-net/api/issues/662
+    for (const socket of createdItem.sockets.sockets) {
+      if (socket.plug && damageMods[socket.plug.plugItem.hash]) {
+        createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][damageMods[socket.plug.plugItem.hash]] as typeof createdItem.dmg;
+        break;
+      }
+    }
   }
 
   // Infusion
@@ -485,12 +510,14 @@ export function makeItem(
     }
   }
 
-  // Mark items with power mods
+  // TODO: Phase out "base power"
   if (createdItem.primStat) {
     createdItem.basePower = getBasePowerLevel(createdItem);
-    if (createdItem.basePower !== createdItem.primStat.value) {
-      createdItem.complete = true;
-    }
+  }
+
+  // Mark masterworks with a gold border
+  if (createdItem.masterwork) {
+    createdItem.complete = true;
   }
 
   // Mark upgradeable stacks of rare modifications
@@ -578,9 +605,7 @@ function buildDefaultStats(itemDef: DestinyInventoryItemDefinition, statDefs: La
       value: stat.value,
       // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
       maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
-      bar: stat.statHash !== 4284893193 &&
-        stat.statHash !== 3871231066 &&
-        stat.statHash !== 2961396640
+      bar: !statsNoBar.includes(stat.statHash)
     };
   }));
 }
@@ -613,9 +638,7 @@ function buildStats(
       sort: statWhiteList.indexOf(stat.statHash),
       value: val,
       maximumValue: itemStat.maximumValue,
-      bar: stat.statHash !== 4284893193 &&
-      stat.statHash !== 3871231066 &&
-      stat.statHash !== 2961396640
+      bar: !statsNoBar.includes(stat.statHash)
     };
   }));
 }
@@ -640,9 +663,7 @@ function buildInvestmentStats(
       sort: statWhiteList.indexOf(itemStat.statTypeHash),
       value: itemStat.value,
       maximumValue: 0,
-      bar: def.hash !== 4284893193 &&
-        def.hash !== 3871231066 &&
-        def.hash !== 2961396640
+      bar: !statsNoBar.includes(itemStat.statTypeHash)
     };
   }));
 }
@@ -669,7 +690,7 @@ function buildObjectives(
 
     let complete = false;
     let booleanValue = false;
-    let display = `${objective.progress || 0}/${def.completionValue}`;
+    let display = `${objective.progress || 0}/${objective.completionValue}`;
     let displayStyle: string | null;
     switch (def.valueStyle) {
       case DestinyUnlockValueUIStyle.Integer:
@@ -677,7 +698,7 @@ function buildObjectives(
         displayStyle = 'integer';
         break;
       case DestinyUnlockValueUIStyle.Multiplier:
-        display = `${(objective.progress || 0) / def.completionValue}x`;
+        display = `${(objective.progress || 0) / objective.completionValue}x`;
         displayStyle = 'integer';
         break;
       case DestinyUnlockValueUIStyle.DateTime:
@@ -689,7 +710,7 @@ function buildObjectives(
       case DestinyUnlockValueUIStyle.Checkbox:
       case DestinyUnlockValueUIStyle.Automatic:
         displayStyle = null;
-        booleanValue = def.completionValue === 1;
+        booleanValue = objective.completionValue === 1;
         complete = objective.complete;
         break;
       default:
@@ -704,7 +725,7 @@ function buildObjectives(
           : t('Objectives.Incomplete')),
       description: def.displayProperties.description,
       progress: objective.progress || 0,
-      completionValue: def.completionValue,
+      completionValue: objective.completionValue,
       complete,
       boolean: booleanValue,
       displayStyle,
@@ -738,7 +759,7 @@ function buildFlavorObjective(
   return {
     description: def.progressDescription,
     icon: def.displayProperties.hasIcon ? def.displayProperties.icon : "",
-    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / def.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
+    progress: def.valueStyle === 5 ? (flavorObjective.progress || 0) / flavorObjective.completionValue : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
   };
 }
 
@@ -834,7 +855,7 @@ function buildSockets(
     return null;
   }
 
-  const realSockets = sockets.map((socket, i) => buildSocket(defs, socket, i));
+  const realSockets = sockets.map((socket, i) => buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i));
 
   const categories = itemDef.sockets.socketCategories.map((category): DimSocketCategory => {
     return {
@@ -916,7 +937,8 @@ function buildDefinedSocket(
   return {
     socketIndex: index,
     plug: null,
-    plugOptions
+    plugOptions,
+    hasRandomizedPlugItems: socket.randomizedPlugItems && socket.randomizedPlugItems.length > 0
   };
 }
 
@@ -945,7 +967,7 @@ function buildPlug(
     plugObjectives: plug.plugObjectives || [],
     perks: (plugItem.perks || []).map((perk) => perk.perkHash).map((perkHash) => defs.SandboxPerk.get(perkHash)),
     // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
-    isMasterwork: plugItem.hash !== 236077174 && plugItem.hash !== 1176735155 && plugItem.itemCategoryHashes.includes(141186804)
+    isMasterwork: plugItem.hash !== 236077174 && plugItem.hash !== 1176735155 && (plugItem.itemCategoryHashes || []).includes(141186804)
   };
 }
 
@@ -973,12 +995,14 @@ function buildDefinedPlug(
 function buildSocket(
   defs: D2ManifestDefinitions,
   socket: DestinyItemSocketState,
+  socketEntry: DestinyItemSocketEntryDefinition,
   index: number
 ): DimSocket {
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
   const reusablePlugs = compact((socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug)));
   const plugOptions = plug ? [plug] : [];
+  const hasRandomizedPlugItems = socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0;
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
@@ -996,7 +1020,8 @@ function buildSocket(
   return {
     socketIndex: index,
     plug,
-    plugOptions
+    plugOptions,
+    hasRandomizedPlugItems
   };
 }
 
@@ -1039,10 +1064,7 @@ const MOD_CATEGORY = 59;
 const POWER_STAT_HASH = 1935470627;
 
 function getBasePowerLevel(item: D2Item): number {
-  const powerMods = getPowerMods(item);
-  const modPower = sum(powerMods, (mod) => mod.investmentStats.find((s) => s.statTypeHash === POWER_STAT_HASH)!.value);
-
-  return item.primStat ? (item.primStat.value - modPower) : 0;
+  return item.primStat ? (item.primStat.value) : 0;
 }
 
 export function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {

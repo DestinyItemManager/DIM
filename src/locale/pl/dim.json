@@ -171,6 +171,7 @@
       "WotM": "Wrath of the Machine"
     },
     "Activity": "Available from activity <i>{{activity}}</i>",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Shows armors based on their category.",
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",
@@ -216,11 +217,12 @@
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
-    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
     "Rating": "Shows weapons based on their rating from Destiny Tracker.",
+    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "Releases": {
@@ -257,6 +259,10 @@
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "Year": "Shows items from which year of Destiny they appeared in."
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "About",
@@ -592,7 +598,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",
-    "MaxBasePower": "Max Base Power (w/o mods)",
+    "MaxBasePower": "Max Power",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",

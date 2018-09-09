@@ -202,6 +202,8 @@ export interface D2Item extends DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
+  /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
+  itemCategoryHashes: number[];
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   dtrRating: D2RatingData | null;
@@ -397,6 +399,8 @@ export interface DimSocket {
   plug: DimPlug | null;
   /** Potential plugs for this socket. */
   plugOptions: DimPlug[];
+  /** Does the socket contain randomized plug items? */
+  hasRandomizedPlugItems: boolean;
 }
 
 export interface DimSocketCategory {

@@ -171,6 +171,7 @@
       "WotM": "Zorn der Maschine"
     },
     "Activity": "Verfügbar durch Aktivität <i>{{activity}}</i>",
+    "AmmoType": "Zeigt Items basierend auf deren Munitionstyp.",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
     "Ascended": "Zeigt Items, die einen Aufstiegsknoten haben und ob sie aufgestiegen sind oder nicht.",
     "Categories": "Item Hauptkategorien.",
@@ -216,11 +217,12 @@
     "PartialMatch": "Zeigt Items, deren Name/Perk eine partielle Übereinstimmung mit dem Filtertext hat.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
     "PowerLevel": "Zeigt Items basierend auf dem Powerlevel (Angriff für Waffen; Verteidigung für Rüstung).",
-    "PowerMod": "Items, die ein Mod haben, um das Powerlevel zu erhöhen.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
     "Rated": "Zeigt alle Waffen, die eine Bewertung auf Destiny Tracker haben.",
     "Rating": "Zeigt alle Waffen basierend auf ihrer Bewertung bei Destiny Tracker an.",
+    "RatingCount": "Zeigt Waffen basierend auf der der Anzahl der Bewertungen an, die sie für die derzeitige Sandbox auf Destiny Tracker haben.",
     "Reforgeable": "Zeigt Items, die beim Waffenmeister umgeschmiedet werden können.",
     "Release": "Verfügbar seit Veröffentlichung <i>{{release}}</i>",
     "Releases": {
@@ -257,6 +259,10 @@
     "WeaponClass": "Zeigt Items basierend auf ihrer Waffen Klasse an.",
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
+  },
+  "Forsaken": {
+    "Progress": "Hinweis: Statusdaten können eine Zeit lang unvollständig oder unkorrekt sein nach dem Start von Forsaken.",
+    "Vendors": "Händler werden erst einige Zeit nach dem Start von Forsaken verfügbar sein."
   },
   "Header": {
     "About": "Über",
@@ -525,7 +531,7 @@
     "ProfileMilestones": "Konto-Meilensteine",
     "ProfileQuests": "Konto-Quests",
     "Progress": "Fortschritt",
-    "Quests": "Pursuits & Quests",
+    "Quests": "Beschäftigungen & Quests",
     "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
     "RewardNotEarned": "Belohnung nicht erhalten",
     "RewardRedeemed": "Belohnung eingelöst",
@@ -592,7 +598,7 @@
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
     "Level": "Level",
-    "MaxBasePower": "Max Basis Power (ohne Mods)",
+    "MaxBasePower": "Max Power",
     "NoBonus": "Kein Bonus",
     "NotApplicable": "N/V",
     "OfMaxRoll": "{{range}} des max. Rolls",
@@ -670,9 +676,9 @@
     "SevenWins": "7 Siege Belohnung (Waffe)"
   },
   "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
+    "Likely380": "VendorEngrams.xyz berichtet, dass dieser Händler 380er Power Items verkauft.",
+    "ServiceCallFailed": "VendorEngrams.xyz Service-Aufruf ist fehlgeschlagen.",
+    "Vote": "Siehst du einen Händler, der 380er Power Items verkauft? Gehe zu VendorEngrams.xyz zum voten und lass es die Community wissen!"
   },
   "Vendors": {
     "All": "Alle",

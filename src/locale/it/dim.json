@@ -171,6 +171,7 @@
       "WotM": "Furia meccanica"
     },
     "Activity": "Disponibile dall'attività <i>{{activity}}</i>",
+    "AmmoType": "Mostra gli oggetti basandosi sul tipo di munizioni.",
     "ArmorCategory": "Mostra le armature ordinate per categoria.",
     "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" e se sono stati ascesi o no.",
     "Categories": "Categorie di oggetti di alto livello.",
@@ -216,11 +217,12 @@
     "PartialMatch": "Mostra gli oggetti che hanno nel loro nome e perks una corrispondenza parziale con il testo del filtro.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerLevel": "Mostra gli oggetti basandosi sul loro livello di Potere (Attacco per le armi; Difesa per le armature).",
-    "PowerMod": "Oggetti che hanno una modifica per aumentare il loro Potere.",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Mostra gli oggetti basandosi sulla loro rarità.",
     "Rated": "Mostra tutte le armi che hanno un giudizio su Destiny Tracker.",
     "Rating": "Mostra le armi basandosi sul loro giudizio di Destiny Tracker.",
+    "RatingCount": "Mostra le armi basandosi sul numero di voti che hanno per il sandbox attuale su Destiny Tracker.",
     "Reforgeable": "Mostra gli oggetti che possono essere riforgiati dall'Armaiolo.",
     "Release": "Disponibile dalla release <i>{{release}}</i>",
     "Releases": {
@@ -257,6 +259,10 @@
     "WeaponClass": "Mostra gli oggetti basandosi sulla loro classe arma.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",
     "Year": "Mostra gli oggetti divisi per anno di Destiny in cui sono apparsi."
+  },
+  "Forsaken": {
+    "Progress": "Nota: I dati sul progresso possono essere incompleti o errati fino al lancio de \"I Rinnegati\".",
+    "Vendors": "I mercanti torneranno disponibili poco tempo dopo il lancio de \"I Rinnegati\"."
   },
   "Header": {
     "About": "Chi siamo",
@@ -592,7 +598,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelletto",
     "Level": "Livello",
-    "MaxBasePower": "Massimo Potere di base (senza mods)",
+    "MaxBasePower": "Potere Massimo",
     "NoBonus": "Nessun Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del roll massimo",

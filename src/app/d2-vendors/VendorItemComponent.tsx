@@ -12,7 +12,6 @@ import { DestinyTrackerService } from "../item-review/destiny-tracker.service";
 import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
 import { ratePerks } from "../destinyTrackerApi/d2-perkRater";
 import checkMark from '../../images/check.svg';
-import { D2Item } from "../inventory/item-types";
 import { D2RatingData } from "../item-review/d2-dtr-api-types";
 import { percent } from "../inventory/dimPercentWidth.directive";
 import { UISref } from "@uirouter/react";
@@ -127,23 +126,34 @@ export default class VendorItemComponent extends React.Component<Props> {
         this.dialogResult = null;
       }
     } else {
-      let dimItem: D2Item | null = null;
-      let cachedItem: D2RatingData | null = null;
       const buckets = await getBuckets();
 
+      let cachedItem: D2RatingData | null = null;
       if (trackerService) {
         cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+      }
+      const dimItem = item.toDimItem(buckets, cachedItem);
 
-        if (cachedItem && (!cachedItem.reviewsResponse || !cachedItem.reviewsResponse.reviews)) {
-          trackerService.getItemReviewAsync(item.itemHash).then(() => {
-            cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
-            // TODO: it'd be nice to push this into tracker service
+      if (cachedItem && (!cachedItem.reviewsResponse || !cachedItem.reviewsResponse.reviews) && trackerService) {
+        trackerService.getItemReviewAsync(item.itemHash).then(() => {
+          cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+          // TODO: it'd be nice to push this into tracker service
+          if (dimItem) {
             Object.assign(dimItem, item.toDimItem(buckets, cachedItem));
             ratePerks(dimItem!);
-          });
-        }
+          } else {
+            console.error(item);
+          }
+        });
       }
-      dimItem = item.toDimItem(buckets, cachedItem);
+
+      const itemDef = this.props.defs.InventoryItem.get(item.itemHash);
+      const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : []).map((iq) => (
+        {
+          quantity: iq.quantity,
+          item: this.props.defs.InventoryItem.get(iq.itemHash)
+        }
+      ));
 
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,
@@ -155,6 +165,7 @@ export default class VendorItemComponent extends React.Component<Props> {
         controller() {
           this.item = dimItem;
           this.vendorItem = item;
+          this.rewards = rewards;
         },
         // Setting these focus options prevents the page from
         // jumping as dialogs are shown/hidden

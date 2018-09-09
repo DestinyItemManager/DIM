@@ -7,6 +7,7 @@ import { DimItem } from '../inventory/item-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { $q } from 'ngimport';
 import { router } from '../../router';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -15,7 +16,8 @@ export const MoveItemPropertiesComponent: IComponentOptions = {
     item: '<',
     compareItem: '<',
     infuse: '&',
-    failureStrings: '<'
+    failureStrings: '<',
+    rewards: '<'
   },
   template
 };
@@ -25,6 +27,10 @@ function MoveItemPropertiesCtrl(
     item: DimItem;
     compareItem?: DimItem;
     failureStrings?: string[];
+    rewards?: {
+      quantity: number;
+      item: DestinyInventoryItemDefinition;
+    }[];
     infuse(item: DimItem, $event: IAngularEvent): void;
   },
   ngDialog,

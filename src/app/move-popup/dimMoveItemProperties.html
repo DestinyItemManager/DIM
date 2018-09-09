@@ -75,6 +75,13 @@
       <div class="item-description" ng-if="vm.item.previewVendor">
         <a ng-click="vm.previewVendor()" ng-i18next="[i18next]({ type: vm.item.typeName })ItemService.PreviewVendor"></a>
       </div>
+      <div ng-if="vm.rewards.length" class="item-details">
+        <div ng-i18next="MovePopup.Rewards"></div>
+        <div class="milestone-reward" ng-repeat="reward in vm.rewards">
+          <img ng-src="{{reward.item.displayProperties.icon | bungieIcon }}"/>
+          <span>{{reward.item.displayProperties.name}}<span ng-if="reward.quantity > 1"> +{{reward.quantity}}</span></span>
+        </div>
+      </div>
       <div ng-if="vm.featureFlags.debugMode" class="item-details">
         <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump" />
       </div>

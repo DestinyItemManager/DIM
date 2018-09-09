@@ -1,5 +1,4 @@
 import * as _ from 'underscore';
-import { REP_TOKENS } from './rep-tokens';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
@@ -73,7 +72,7 @@ function makeD2FarmingService() {
       });
 
       if (settings.farming.moveTokens) {
-        itemsToMove = itemsToMove.concat(store.items.filter((i) => REP_TOKENS.has(i.hash) && !i.notransfer));
+        itemsToMove = itemsToMove.concat(store.items.filter((i) => i.isDestiny2() && i.itemCategoryHashes.includes(2088636411) && !i.notransfer));
       }
 
       if (itemsToMove.length === 0) {

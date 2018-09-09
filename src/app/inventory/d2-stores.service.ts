@@ -5,7 +5,6 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
   DestinyProgression,
-  PlatformErrorCodes,
   DestinyGameVersions
   } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -200,14 +199,14 @@ function makeD2StoresService(): D2StoreServiceType {
       .then(([defs, buckets, newItems, itemInfoService, profileInfo]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
-        const lastPlayedDate = findLastPlayedDate(profileInfo);
-
         // TODO: components may be hidden (privacy)
 
         if (!profileInfo.profileInventory.data || !profileInfo.characterInventories.data) {
           console.error("Vault or character inventory was missing - bailing in order to avoid corruption");
           throw new Error(t('BungieService.Difficulties'));
         }
+
+        const lastPlayedDate = findLastPlayedDate(profileInfo);
 
         const processVaultPromise = processVault(
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
@@ -266,17 +265,7 @@ function makeD2StoresService(): D2StoreServiceType {
         return stores;
       })
       .catch((e: DimError) => {
-        // Special messaging for the Warmind error
-        if (e.code && e.code === PlatformErrorCodes.DestinyUnexpectedError) {
-          toaster.pop({
-            type: 'error',
-            title: t('BungieService.ErrorTitle'),
-            body: t('BungieService.WarmindLoginNeeded'),
-            showCloseButton: false
-          });
-        } else {
-          toaster.pop(bungieErrorToaster(e));
-        }
+        toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);
         reportException('d2stores', e);
         // It's important that we swallow all errors here - otherwise
@@ -422,15 +411,22 @@ function makeD2StoresService(): D2StoreServiceType {
   }
 
   function getCurrentMaxBasePower(account: DestinyAccount) {
-    switch (account.versionsOwned) {
-      case DestinyGameVersions.Destiny2:
-        return 300;
-      case DestinyGameVersions.DLC1:
-        return 330;
-      case 3: // DLC2 doesn't have an enum value yet
-      default: // If they don't own Destiny, or it's an unknown version
-        return 380;
+    if (!account.versionsOwned) {
+      return 600;
     }
+    if (8 & account.versionsOwned) {
+      return 600;
+    }
+    if (DestinyGameVersions.DLC2 & account.versionsOwned) {
+      return 380;
+    }
+    if (DestinyGameVersions.DLC1 & account.versionsOwned) {
+      return 330;
+    }
+    if (DestinyGameVersions.Destiny2 & account.versionsOwned) {
+      return 300;
+    }
+    return 600;
   }
 
   function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {
@@ -471,13 +467,14 @@ function makeD2StoresService(): D2StoreServiceType {
 
   function getBasePower(loadout: Loadout) {
     // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
+    // They are equally weighted as of Forsaken.
     const itemWeight = {
-      Weapons: 6,
-      Armor: 5,
-      General: 4
+      Weapons: 1,
+      Armor: 1,
+      General: 1
     };
     // 3 Weapons, 4 Armor, 1 General
-    const itemWeightDenominator = 42;
+    const itemWeightDenominator = 8;
     const items = _.flatten(Object.values(loadout.items)).filter((i: DimItem) => i.equipped);
 
     const exactBasePower = sum(items, (item) => {

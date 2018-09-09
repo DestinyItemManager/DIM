@@ -171,6 +171,7 @@
       "WotM": "機械之怒"
     },
     "Activity": "可以從<i>{{activity}}</i>活動中獲得",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "按照類別顯示防具.",
     "Ascended": "顯示可以提高光等的物品.",
     "Categories": "高級別物品類別.",
@@ -216,11 +217,12 @@
     "PartialMatch": "顯示名稱/特性與篩選器搜尋內容部分匹配的物品.",
     "Postmaster": "目前在郵政官處的物品.",
     "PowerLevel": "根據光等來顯示物品(武器攻擊力; 防具護甲值).",
-    "PowerMod": "顯示所有裝備了增強模組的物品.",
     "Quality": "根據其統計品質百分比來顯示物品'{{percentage}}'別名'{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "按照稀有度顯示.",
     "Rated": "顯示具有Destiny Tracker評級的物品.",
     "Rating": "以Destiny Tracker的評分來顯示武器.",
+    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reforgeable": "顯示可以在槍匠那裡重新鍛造的物品.",
     "Release": "可從<i>{{release}}</i>發行版本獲得",
     "Releases": {
@@ -257,6 +259,10 @@
     "WeaponClass": "按照武器類別顯示.",
     "WeaponType": "按照武器類型顯示.",
     "Year": "按照物品推出年份顯示."
+  },
+  "Forsaken": {
+    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
+    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
   },
   "Header": {
     "About": "關於",
@@ -592,7 +598,7 @@
     "Discipline": "訓練",
     "Intellect": "智力",
     "Level": "等級",
-    "MaxBasePower": "最高基本光等（無模組）",
+    "MaxBasePower": "Max Power",
     "NoBonus": "無加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉範圍{{range}}",

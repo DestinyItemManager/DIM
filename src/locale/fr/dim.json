@@ -171,6 +171,7 @@
       "WotM": "Fureur mécanique"
     },
     "Activity": "Disponible dans l'activité <i>{{activity}}</i>",
+    "AmmoType": "Afficher les objets en fonction de leur type de munition.",
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
     "Ascended": "Affiche les item qui ont une bulle ascension et si l'ascension a été faite ou non.",
     "Categories": "Grand catégories d'arme.",
@@ -216,11 +217,12 @@
     "PartialMatch": "Affiche les objets quand leur nom/capacité correspond au filtre de texte.",
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerLevel": "Affiche les objets en fonction de leur niveau de puissance (Attaque pour les armes; Défense pour les armures).",
-    "PowerMod": "Objets ayant un mod qui augmente leur niveau de puissance.",
     "Quality": "Affiche les objets selon leur pourcentage de statistiques total. '{{percentage}}' est un alias pour '{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Affiche les objets selon leur rareté.",
     "Rated": "Affiche toutes les armes qui ont une note de Destiny Tracker.",
     "Rating": "Affiche toutes les armures qui ont une note de Destiny Tracker.",
+    "RatingCount": "Afficher les armes en fonction du nombre d'évaluations qu'elles ont pour le sandbox actuel sur Destiny Tracker.",
     "Reforgeable": "Affiche les objets qui peuvent être reforgés à l'armurier.",
     "Release": "Disponible depuis la sortie de <i>{{release}}</i>",
     "Releases": {
@@ -257,6 +259,10 @@
     "WeaponClass": "Affiche les objets selon leur classe d'arme.",
     "WeaponType": "Affiche les armes selon leur type d'arme.",
     "Year": "Affiche les objets selon l'année à laquelle ils sont apparus."
+  },
+  "Forsaken": {
+    "Progress": "Note: Les données de progression peuvent être incomplètes ou incorrectes pendant quelque temps après la sortie de Renégats.",
+    "Vendors": "Les marchands vont être indisponible pendant quelque temps après la sortie de Renégats."
   },
   "Header": {
     "About": "À propos",
@@ -408,7 +414,7 @@
     "Applied_plural": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
     "Applied_plural_female": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
     "Applied_plural_male": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
-    "ApplySearch": "Recherche de transfert \"{{query}}\"",
+    "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "Before": "Avant '{{name}}'",
     "Cancel": "Annuler",
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
@@ -592,7 +598,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intelligence",
     "Level": "Niveau",
-    "MaxBasePower": "Puissance maximale de base (sans mods)",
+    "MaxBasePower": "Puissance Max",
     "NoBonus": "Pas de Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} des stats parfaites",
