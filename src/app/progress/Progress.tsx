@@ -180,7 +180,7 @@ export default class Progress extends React.Component<Props, State> {
             <div className="progress-row">
               <div className="progress-for-character">
                 <ErrorBoundary name="CrucibleRanks">
-                  {crucibleRanks.map((progression) =>
+                  {crucibleRanks.map((progression) => progression &&
                     <CrucibleRank
                       key={progression.progressionHash}
                       defs={defs}
@@ -196,14 +196,9 @@ export default class Progress extends React.Component<Props, State> {
       </>
     );
 
-    const forsaken = (
-      <p>{t('Forsaken.Progress')}</p>
-    );
-
     if (this.state.isPhonePortrait) {
       return (
         <div className="progress-page dim-page">
-         {forsaken}
           {profileMilestonesContent}
           <ViewPager>
             <Frame className="frame" autoSize={true}>
@@ -225,7 +220,6 @@ export default class Progress extends React.Component<Props, State> {
     } else {
       return (
         <div className="progress-page dim-page">
-          {forsaken}
           {profileMilestonesContent}
           {this.renderCharacters(characters)}
         </div>
@@ -238,6 +232,8 @@ export default class Progress extends React.Component<Props, State> {
    */
   private renderCharacters(characters: DestinyCharacterComponent[]) {
     const { defs, profileInfo, lastPlayedDate } = this.state.progress!;
+
+    const pursuitsLabel = defs.InventoryBucket[1345459588].displayProperties.name;
 
     return (
       <>
@@ -269,7 +265,7 @@ export default class Progress extends React.Component<Props, State> {
         </div>
 
         <div className="section">
-          <div className="title">{t('Progress.Quests')}</div>
+          <div className="title">{pursuitsLabel}</div>
           <div className="progress-row">
             <ErrorBoundary name="Quests">
               {characters.map((character) =>
@@ -336,43 +332,30 @@ export default class Progress extends React.Component<Props, State> {
     const allMilestones: DestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
 
     const filteredMilestones = allMilestones.filter((milestone) => {
-      return !milestone.availableQuests &&
+      return !milestone.availableQuests && !milestone.activities &&
         (milestone.vendors || milestone.rewards) &&
         defs.Milestone.get(milestone.milestoneHash);
     });
 
-    // Sort them alphabetically by name
-    return _.sortBy(filteredMilestones, (milestone) => {
-      const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
-      return milestoneDef.displayProperties.name;
-    });
+    return _.sortBy(filteredMilestones, (milestone) => milestone.order);
   }
 
   /**
    * Get all the milestones to show for a particular character, filtered to active milestones and sorted.
    */
   private milestonesForCharacter(character: DestinyCharacterComponent): DestinyMilestone[] {
-    const { defs, profileInfo } = this.state.progress!;
+    const { profileInfo } = this.state.progress!;
 
     const allMilestones: DestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
 
-    const filteredMilestones = allMilestones.filter((milestone) => {
-      return milestone.availableQuests && milestone.availableQuests.every((q) =>
+    const filteredMilestones = allMilestones.filter((milestone) =>
+      milestone.activities || (milestone.availableQuests && milestone.availableQuests.every((q) =>
             q.status.stepObjectives.length > 0 &&
             q.status.started &&
-            (!q.status.completed || !q.status.redeemed));
-    });
+            (!q.status.completed || !q.status.redeemed)))
+    );
 
-    // Sort them alphabetically by name
-    return _.sortBy(filteredMilestones, (milestone) => {
-      const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
-      if (milestoneDef && milestoneDef.displayProperties) {
-        return milestoneDef.displayProperties.name;
-      } else if (milestone.availableQuests) {
-        const questDef = milestoneDef.quests[milestone.availableQuests[0].questItemHash];
-        return questDef.displayProperties.name;
-      }
-    });
+    return _.sortBy(filteredMilestones, (milestone) => milestone.order);
   }
 
   /**
@@ -396,7 +379,6 @@ export default class Progress extends React.Component<Props, State> {
   private questItems(allItems: DestinyItemComponent[]): DestinyItemComponent[] {
     const { defs } = this.state.progress!;
 
-    // const allItems: DestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items.concat(profileInfo.profileInventory.data.items);
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
 
@@ -405,15 +387,8 @@ export default class Progress extends React.Component<Props, State> {
         return true;
       }
 
-      // This required a lot of trial and error.
-      return (itemDef.itemCategoryHashes &&
-          (
-            itemDef.itemCategoryHashes.includes(16) ||
-            itemDef.itemCategoryHashes.includes(2250046497)
-          )
-        ) ||
-        (itemDef.inventory && itemDef.inventory.tierTypeHash === 0 &&
-          itemDef.backgroundColor && itemDef.backgroundColor.alpha > 0);
+      // Also include prophecy tablets
+      return (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(2250046497));
     });
 
     filteredItems.sort(chainComparator(

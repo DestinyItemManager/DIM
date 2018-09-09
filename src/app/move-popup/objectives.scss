@@ -19,6 +19,7 @@ dim-objectives {
   border: 1px solid #999;
   margin-right: 4px;
   box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .objective-complete {
@@ -39,7 +40,7 @@ dim-objectives {
 
 .objective-progress {
   flex: 1;
-  background-color: rgba(0, 0, 0, .6);
+  background-color: rgba(0, 0, 0, .3);
   position: relative;
   min-height: 17px;
   display: flex;
