@@ -15,6 +15,9 @@ import { DimItem } from '../inventory/item-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimVendorService } from '../vendors/vendor.service';
+import { subscribeOnScope } from '../rx-utils';
+import { isPhonePortraitStream } from '../mediaQueries';
+import { t } from 'i18next';
 
 /**
  * A simple holder to share the search query among components
@@ -55,6 +58,15 @@ function SearchFilterCtrl(
   let filters: SearchFilters;
   let searchConfig;
   let filteredItems: DimItem[] = [];
+
+  //vm.placeholder = t("Header.FilterHelp", { example: 'is:dupe' });
+
+  subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
+    $scope.$apply(() => {
+      console.log('isPhonePortrait', isPhonePortrait);
+      vm.placeholder = isPhonePortrait ? t("Header.FilterHelpBrief") : t("Header.FilterHelp", { example: 'is:dupe' });
+    });
+  });
 
   vm.$onChanges = (changes) => {
     if (changes.account && changes.account) {
