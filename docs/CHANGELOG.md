@@ -13,6 +13,7 @@
 * Added Etheric Spiral and Etheric Helix to the list of reputation items.
 * Added "is:bow" search.
 * Bounties now show their rewards on the Progress and Vendors pages.
+* The Progress page has been cleaned up to better reflect the state of the game since Forsaken.
 
 # 4.68.3 (2018-09-03)
 
