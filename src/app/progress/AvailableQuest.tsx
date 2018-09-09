@@ -41,7 +41,15 @@ export default function AvailableQuest({
   }
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
-  const questRewards = questDef.questRewards ? _.take(questDef.questRewards.items.map((r) => defs.InventoryItem.get(r.itemHash)).filter((i) => i.classType === characterClass || i.classType === DestinyClass.Unknown), 1) : [];
+  const questRewards = questDef.questRewards
+    ? _.take(questDef.questRewards.items
+        .map((r) => defs.InventoryItem.get(r.itemHash))
+        // Filter out rewards that are for other characters
+        .filter((i) => (i.classType === characterClass || i.classType === DestinyClass.Unknown) &&
+          // And quest steps, they're not interesting
+          !i.itemCategoryHashes.includes(16))
+      , 1)
+    : [];
 
   const objectives = availableQuest.status.stepObjectives;
   const objective = objectives.length ? objectives[0] : null;
@@ -49,6 +57,7 @@ export default function AvailableQuest({
 
   const tooltip = availableQuest.status.completed ? 'Progress.RewardEarned' : 'Progress.RewardNotEarned';
   const suppressObjectiveDescription = Boolean(objectiveDef && objectiveDef.progressDescription === displayProperties.description);
+  const hideObjective = (suppressObjectiveDescription && objective && objective.completionValue === 1);
 
   return (
     <div className="milestone-quest">
@@ -64,7 +73,7 @@ export default function AvailableQuest({
         {modifiers.map((modifier) =>
           <ActivityModifier key={modifier.hash} modifier={modifier}/>
         )}
-        {objective &&
+        {objective && !hideObjective &&
           <div className="quest-objectives">
             <Objective defs={defs} objective={objective} key={objective.objectiveHash} suppressObjectiveDescription={suppressObjectiveDescription}/>
           </div>}

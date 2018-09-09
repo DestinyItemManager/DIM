@@ -196,14 +196,9 @@ export default class Progress extends React.Component<Props, State> {
       </>
     );
 
-    const forsaken = (
-      <p>{t('Forsaken.Progress')}</p>
-    );
-
     if (this.state.isPhonePortrait) {
       return (
         <div className="progress-page dim-page">
-         {forsaken}
           {profileMilestonesContent}
           <ViewPager>
             <Frame className="frame" autoSize={true}>
@@ -225,7 +220,6 @@ export default class Progress extends React.Component<Props, State> {
     } else {
       return (
         <div className="progress-page dim-page">
-          {forsaken}
           {profileMilestonesContent}
           {this.renderCharacters(characters)}
         </div>
