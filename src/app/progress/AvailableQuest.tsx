@@ -13,6 +13,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import MilestoneObjectiveStatus from './MilestoneObjectiveStatus';
 import Objective from './Objective';
+import { ActivityModifier } from './ActivityModifier';
 
 /**
  * Most milestones are represented as a quest, with some objectives and a reward associated with them.
@@ -83,22 +84,6 @@ export default function AvailableQuest({
             <span>{questReward.displayProperties.name}</span>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function ActivityModifier(props: {
-  modifier: DestinyActivityModifierDefinition;
-}) {
-  const { modifier } = props;
-
-  return (
-    <div className="milestone-modifier">
-      <BungieImage src={modifier.displayProperties.icon}/>
-      <div className="milestone-modifier-info">
-        <div className="milestone-modifier-name">{modifier.displayProperties.name}</div>
-        <div className="milestone-modifier-description">{modifier.displayProperties.description}</div>
       </div>
     </div>
   );

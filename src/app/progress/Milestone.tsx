@@ -11,6 +11,7 @@ import { UISref } from '@uirouter/react';
 import Objective from './Objective';
 import { Reward } from './Reward';
 import MilestoneDisplay from './MilestoneDisplay';
+import { ActivityModifier } from './ActivityModifier';
 
 /**
  * A Milestone is an activity or event that a player can complete to earn rewards.
@@ -63,16 +64,20 @@ export function Milestone({
       return null;
     }
 
+    const modifiers = (milestone.activities[0].modifierHashes || []).map((h) => defs.ActivityModifier.get(h));
+
     return (
       <MilestoneDisplay
         displayProperties={milestoneDef.displayProperties}
       >
-        {milestone.activities.length > 0 &&
-            <div className="quest-objectives">
-              {milestone.activities[0].challenges.map((challenge) =>
-                <Objective defs={defs} objective={challenge.objective} key={challenge.objective.objectiveHash}/>
-              )}
-            </div>}
+        {modifiers.map((modifier) =>
+          <ActivityModifier key={modifier.hash} modifier={modifier}/>
+        )}
+        <div className="quest-objectives">
+          {milestone.activities[0].challenges.map((challenge) =>
+            <Objective defs={defs} objective={challenge.objective} key={challenge.objective.objectiveHash}/>
+          )}
+        </div>
         {milestone.rewards.map((reward) =>
           Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).map((entry) =>
             entry.items.map((reward) =>
