@@ -13,6 +13,7 @@
 * Added Etheric Spiral and Etheric Helix to the list of reputation items.
 * Fixed Year 1 weapons not having an elemental damage type.
 * Added "is:bow" search.
+* Added "is:machinegun" search.
 
 # 4.68.3 (2018-09-03)
 
