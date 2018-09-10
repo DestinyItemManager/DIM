@@ -63,7 +63,7 @@ dim-simple-item {
   outline: none;
 }
 
-dim-store-item {
+dim-store-item, .item-drag-container {
   width: 52px;
   height: 52px;
   width: calc(var(--item-size) + 8px);

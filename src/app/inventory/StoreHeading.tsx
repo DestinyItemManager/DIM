@@ -57,7 +57,7 @@ export default class StoreHeading extends React.Component<Props> {
                   {store.glimmer} <img src={glimmer} />
                 </div>
                 <div className="currency legendaryMarks">
-                  {store.legendaryMarks}
+                  {store.legendaryMarks}{' '}
                   <img
                     src={store.isDestiny1() ? legendaryMarks : legendaryShards}
                   />
