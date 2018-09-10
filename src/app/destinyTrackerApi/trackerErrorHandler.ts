@@ -1,8 +1,11 @@
 import { t } from 'i18next';
+import { toaster } from '../ngimport-more';
 
 export function handleErrors(response: Response) {
   if (response.status !== 200) {
-    throw new Error(t('DtrReview.ServiceCallError'));
+    const errorObject = new Error(t('DtrReview.ServiceCallError'));
+    toaster.pop('error', errorObject);
+    throw errorObject;
   }
 
   return response.text().then((text) => {
@@ -17,7 +20,9 @@ export function handleErrors(response: Response) {
  */
 export function handleSubmitErrors(response: Response) {
   if (response.status !== 204) {
-    throw new Error(t('DtrReview.ServiceSubmitError'));
+    const errorObject = new Error(t('DtrReview.ServiceSubmitError'));
+    toaster.pop('error', errorObject);
+    throw errorObject;
   }
 
   // https://github.com/github/fetch/issues/268
