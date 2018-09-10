@@ -8,6 +8,8 @@ import { sortStores } from '../shell/dimAngularFilters.filter';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { $rootScope } from 'ngimport';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
+import { t } from 'i18next';
+import { toaster } from '../ngimport-more';
 
 interface SearchConfig {
   destinyVersion: 1 | 2;
@@ -219,9 +221,7 @@ export interface SearchFilters {
  */
 export function searchFilters(
   searchConfig: SearchConfig,
-  storeService: StoreServiceType,
-  toaster,
-  $i18next
+  storeService: StoreServiceType
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   let _lowerDupes = {};
@@ -555,7 +555,7 @@ export function searchFilters(
 
               if (!_dupeInPost) {
                 if (dupes.some((dupe) => Boolean(dupe.location.inPostmaster))) {
-                  toaster.pop('warning', $i18next.t('Filter.DupeInPostmaster'));
+                  toaster.pop('warning', t('Filter.DupeInPostmaster'));
                   _dupeInPost = true;
                 }
               }

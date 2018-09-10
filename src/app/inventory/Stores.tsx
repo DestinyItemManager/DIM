@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DimStore, DimVault } from './store-types';
 import { sortStores } from '../shell/dimAngularFilters.filter';
-import { Settings } from '../settings/settings';
+import { Settings, itemTags } from '../settings/settings';
 import { InventoryBuckets } from './inventory-buckets';
 import { t } from 'i18next';
 import './Stores.scss';
@@ -16,6 +16,12 @@ import D1ReputationSection from './D1ReputationSection';
 import { InventoryState } from './reducer';
 import { ReviewsState } from '../item-review/reducer';
 import { DimItem } from './item-types';
+import { createSelector } from 'reselect';
+import { buildSearchConfig, searchFilters } from '../search/search-filters';
+import { D1Categories } from '../destiny1/d1-buckets.service';
+import { D2Categories } from '../destiny2/d2-buckets.service';
+import { D1StoresService } from './d1-stores.service';
+import { D2StoresService } from './d2-stores.service';
 
 interface Props {
   stores: DimStore[];
@@ -36,9 +42,42 @@ interface State {
 
 const EMPTY_SET = new Set<string>();
 
-function createSearchFilter(query: string) {
-  return (item: DimItem) => item.name.toLowerCase().includes(query);
-}
+// TODO: move selectors elsewhere?
+const querySelector = (state: RootState) => state.shell.searchQuery;
+const destinyVersionSelector = (state: RootState) => state.accounts.currentAccount && state.accounts.accounts[state.accounts.currentAccount].destinyVersion || 2;
+
+/**
+ * A selector for the search config for a particular destiny version.
+ */
+const searchConfigSelector = createSelector(
+  destinyVersionSelector,
+  (destinyVersion) => {
+    // From search filter component
+    const searchConfig = buildSearchConfig(
+      destinyVersion,
+      itemTags,
+      destinyVersion === 1 ? D1Categories : D2Categories);
+    return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
+  }
+);
+
+/**
+ * A selector for a predicate function for searching items, given the current search query.
+ */
+// TODO: this also needs to depend on:
+// * settings
+// * loadouts
+// * current character
+// * all items (for dupes)
+// * itemInfo
+// * ratings
+// * newItems
+// * and maybe some other stuff?
+const searchFilterSelector = createSelector(
+  querySelector,
+  searchConfigSelector,
+  (query, filters) => filters.filterFunction(query)
+);
 
 function mapStateToProps(state: RootState): Partial<Props> {
   const settings = state.settings.settings as Settings;
@@ -53,9 +92,7 @@ function mapStateToProps(state: RootState): Partial<Props> {
     settings,
     // Pulling this out lets us do ref-equality
     collapsedSections: settings.collapsedSections,
-    // TODO: this is where we need reselect
-    // This depends on account, loadouts, etc
-    searchFilter: createSearchFilter(state.shell.searchQuery)
+    searchFilter: searchFilterSelector(state)
   };
 }
 

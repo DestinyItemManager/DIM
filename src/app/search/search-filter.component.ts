@@ -41,7 +41,6 @@ function SearchFilterCtrl(
   hotkeys,
   $i18next,
   $element: IRootElementService,
-  toaster,
   ngDialog
 ) {
   'ngInject';
@@ -64,7 +63,7 @@ function SearchFilterCtrl(
         vm.account.destinyVersion,
         itemTags,
         vm.account.destinyVersion === 1 ? D1Categories : D2Categories);
-      filters = searchFilters(searchConfig, getStoresService(), toaster, $i18next);
+      filters = searchFilters(searchConfig, getStoresService());
       setupTextcomplete();
     }
   };
