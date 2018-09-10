@@ -1,0 +1,35 @@
+<div class="character-box" ng-click="vm.openLoadoutPopup($event)" ng-class="::{ destiny2: vm.store.destinyVersion == 2 && !vm.store.isVault, vault: vm.store.isVault }">
+  <div class="background" ng-style="{ 'background-image': 'url(' + vm.store.background + ')' }"></div>
+  <div class="details">
+    <div class="emblem" ng-style="{ 'background-image': 'url(' + vm.store.icon + ')' }"></div>
+    <div class="character-text">
+      <div class="top">
+        <div class="class">{{ ::vm.store.className }}</div>
+        <div class="powerLevel" ng-if="::!vm.store.isVault">{{ vm.store.powerLevel }}</div>
+      </div>
+      <div class="bottom">
+        <div class="race-gender" ng-if="::!vm.store.isVault">{{ ::vm.store.genderRace }}</div>
+        <div class="level" ng-if="::!vm.store.isVault">{{ vm.store.level }}</div>
+      </div>
+      <div class="levelBar" ng-class="{ moteProgress: !vm.store.percentToNextLevel }" ng-if="::!vm.store.isVault" press-tip="{{ vm.xpTillMote }}" dim-percent-width="vm.levelBar"></div>
+    </div>
+    <div class="currencies">
+      <div class="currency" ng-if="::!!vm.store.isVault"> {{ vm.store.glimmer }} <img src="~app/images/glimmer.png"></div>
+      <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img ng-if="vm.store.destinyVersion == 1" src="~app/images/legendaryMarks.png"><img ng-if="vm.store.destinyVersion == 2" src="~app/images/legendaryShards.png"></div>
+    </div>
+    <i class="loadout-button fa fa-chevron-circle-down" ng-i18next="[title]Loadouts.Loadouts"></i>
+  </div>
+</div>
+<div ng-if="::vm.internalLoadoutMenu" class="loadout-menu" loadout-id="{{ ::vm.store.id }}"></div>
+<dim-stats destiny-version="vm.store.destinyVersion" stats="vm.store.stats" ng-if="::!vm.store.isVault"></dim-stats>
+<div ng-if="::vm.store.isVault" class="vault-capacity">
+  <div class="vault-bucket"
+       ng-repeat="(bucketId, vaultCount) in vm.store.vaultCounts"
+       ng-class="{ 'vault-bucket-full': vaultCount.count == capacity }"
+       ng-init="capacity = vaultCount.bucket.capacity"
+       press-tip="{{ vaultCount.count }}/{{ ::capacity }}"
+       press-tip-title="{{ ::vaultCount.bucket.name }}">
+    <div class="vault-bucket-tag">{{ ::vaultCount.bucket.name | firstLetter }}</div>
+    {{ vaultCount.count }}/{{ ::capacity }}
+  </div>
+</div>

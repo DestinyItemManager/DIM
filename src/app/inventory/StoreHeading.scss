@@ -1,5 +1,9 @@
 @import '../../scss/variables.scss';
 
+dim-store-heading {
+  display: block;
+}
+
 .character {
   flex: 1;
   width: 100%;
@@ -12,7 +16,7 @@
   max-width: 230px;
   cursor: pointer;
 
-  .phone-portrait & {
+  store-pager &, .phone-portrait & {
     margin: 0 auto;
   }
 
@@ -143,7 +147,7 @@
   opacity: 0.8;
   max-width: 230px;
 
-  .phone-portrait & {
+  store-pager &, .phone-portrait & {
     margin-left: auto;
     margin-right: auto;
   }

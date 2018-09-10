@@ -123,6 +123,7 @@
     "classnames": "^2.2.5",
     "components-font-awesome": "^4.7.0",
     "core-js": "^2.5.5",
+    "dragend": "github:Stereobit/dragend",
     "i18next": "^11.2.3",
     "i18next-xhr-backend": "^1.5.1",
     "idb-keyval": "^2.3.0",

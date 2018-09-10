@@ -1,5 +1,8 @@
 import { destinyAccountResolver } from "../accounts/destiny-account-resolver";
 import { ReactStateDeclaration } from "@uirouter/react";
+import { D2InventoryComponent } from "./d2-inventory.component";
+import { angular2react } from "angular2react";
+import { lazyInjector } from "../../lazyInjector";
 import Destiny from "../shell/Destiny";
 import Inventory from "../inventory/Inventory";
 
@@ -15,5 +18,5 @@ export const states: ReactStateDeclaration[] = [{
 }, {
   name: 'destiny2.inventory',
   url: '/inventory',
-  component: Inventory
+  component: $featureFlags.reactInventory ? Inventory : angular2react('inventory2', D2InventoryComponent, lazyInjector.$injector as angular.auto.IInjectorService)
 }];

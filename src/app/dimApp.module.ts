@@ -29,6 +29,7 @@ import storageModule from './storage/storage.module';
 import loadoutModule from './loadout/loadout.module';
 import movePopupModule from './move-popup/move-popup.module';
 import searchModule from './search/search.module';
+import destiny2Module from './destiny2/destiny2.module';
 
 import config from './dimApp.config';
 import run from './dimApp.run';
@@ -55,6 +56,7 @@ const dependencies = [
   loadoutModule,
   movePopupModule,
   searchModule,
+  destiny2Module,
   'ajoslin.promise-tracker',
   'cfp.hotkeys',
   'bcherny/ngimport',

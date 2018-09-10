@@ -308,6 +308,21 @@ h2, h3, h4 {
   }
 }
 
+.sticky-header-background {
+  left: 0;
+  right: 0;
+  top: $header-height;
+  background-color: #434444;
+  height: 82px;
+  position: fixed;
+  backface-visibility: hidden;
+  z-index: 4;
+
+  &.sticky {
+    box-shadow: 0 1px 6px 0px #222;
+  }
+}
+
 .fa.fa-circle.trials {
   font-size: 18px;
   margin-right: 3px;
