@@ -14,6 +14,7 @@ export function StoreBuckets({
   vault,
   currentStore,
   settings,
+  newItems,
   toggleSection
 }: {
   bucket: InventoryBucket;
@@ -22,6 +23,7 @@ export function StoreBuckets({
   vault: DimVault;
   currentStore: DimStore;
   settings: Settings;
+  newItems: Set<string>;
   toggleSection(id: string): void;
 }) {
 
@@ -47,6 +49,7 @@ export function StoreBuckets({
               store={stores[0]}
               items={currentStore.buckets[bucket.id]}
               settings={settings}
+              newItems={newItems}
             />
           </div>
         )}
@@ -57,6 +60,7 @@ export function StoreBuckets({
               store={stores[0]}
               items={vault.buckets[bucket.id]}
               settings={settings}
+              newItems={newItems}
             />
           </div>
         )}
@@ -77,6 +81,7 @@ export function StoreBuckets({
               store={store}
               items={store.buckets[bucket.id]}
               settings={settings}
+              newItems={newItems}
             />
           )}
         </div>

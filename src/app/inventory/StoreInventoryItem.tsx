@@ -10,6 +10,7 @@ import { moveItemTo } from './dimItemMoveService.factory';
 
 interface Props {
   item: DimItem;
+  isNew: boolean;
 }
 
 /**
@@ -35,12 +36,12 @@ export default class StoreInventoryItem extends React.Component<Props> {
   });
 
   render() {
-    const { item } = this.props;
+    const { item, isNew } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
         <ItemPopupTrigger item={item}>
-          <InventoryItem item={item} onDoubleClick={this.doubleClicked}/>
+          <InventoryItem item={item} onDoubleClick={this.doubleClicked} isNew={isNew} />
         </ItemPopupTrigger>
       </DraggableInventoryItem>
     );

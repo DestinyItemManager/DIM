@@ -167,7 +167,6 @@ function StoreService(): D1StoreServiceType {
   function loadStores(account: DestinyAccount): IPromise<D1Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
-    const firstLoad = (previousItems.size === 0);
 
     resetIdTracker();
 
@@ -196,12 +195,9 @@ function StoreService(): D1StoreServiceType {
         return $q.all([newItems, itemInfoService, ...processStorePromises]);
       })
       .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, ...D1Store[]]) => {
-        // Save and notify about new items (but only if this wasn't the first load)
-        if (!firstLoad) {
-          // Save the list of new item IDs
-          NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account);
-        }
+        // Save and notify about new items
+        NewItemsService.applyRemovedNewItems(newItems);
+        NewItemsService.saveNewItems(newItems, account);
 
         _stores = stores;
 

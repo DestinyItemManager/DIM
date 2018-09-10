@@ -13,6 +13,12 @@ export interface InventoryState {
   readonly stores: DimStore[];
 
   readonly buckets?: InventoryBuckets;
+
+  /**
+   * The inventoryItemIds of all items that are "new".
+   */
+  readonly newItems: Set<string>;
+
   /*
   readonly items: Readonly<{
     [id: string]: Readonly<DimItem>;
@@ -29,7 +35,8 @@ export interface InventoryState {
 export type InventoryAction = ActionType<typeof actions>;
 
 export const initialInventoryState: InventoryState = {
-  stores: []
+  stores: [],
+  newItems: new Set()
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction> = (
@@ -44,10 +51,17 @@ export const inventory: Reducer<InventoryState, InventoryAction> = (
         ...state,
         stores: [...action.payload]
       };
+    // TODO: only need to do this once, on loading a new platform
     case getType(actions.setBuckets):
       return {
         ...state,
         buckets: action.payload
+      };
+    case getType(actions.setNewItems):
+    console.log(state.newItems, action.payload)
+      return {
+        ...state,
+        newItems: action.payload
       };
     default:
       return state;

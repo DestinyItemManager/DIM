@@ -185,7 +185,6 @@ function makeD2StoresService(): D2StoreServiceType {
   function loadStores(account: DestinyAccount): IPromise<D2Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
-    const firstLoad = (previousItems.size === 0);
 
     resetIdTracker();
 
@@ -236,12 +235,9 @@ function makeD2StoresService(): D2StoreServiceType {
         return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
       .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, InventoryBuckets, Set<string>, any, D2Vault, ...D2Store[]]) => {
-        // Save and notify about new items (but only if this wasn't the first load)
-        if (!firstLoad) {
-          // Save the list of new item IDs
-          NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account);
-        }
+        // Save the list of new item IDs
+        NewItemsService.applyRemovedNewItems(newItems);
+        NewItemsService.saveNewItems(newItems, account);
 
         const stores: D2Store[] = [...characters, vault];
         _stores = stores;

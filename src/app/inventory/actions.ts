@@ -30,4 +30,7 @@ export const setTag = createStandardAction('inventory/SET_TAG')<{
   tag: string;
 }>();
 
+/** Update the set of new items. */
+export const setNewItems = createStandardAction('new_items/SET')<Set<string>>();
+
 // TODO: Ratings!

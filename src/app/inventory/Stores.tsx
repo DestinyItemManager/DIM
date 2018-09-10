@@ -20,6 +20,7 @@ interface Props {
   // TODO: bind just the settings we care about
   settings: Settings;
   buckets: InventoryBuckets;
+  newItems: Set<string>;
   collapsedSections: Settings['collapsedSections'];
 }
 
@@ -27,13 +28,17 @@ interface State {
   selectedStoreId?: string;
 }
 
+const EMPTY_SET = new Set<string>();
+
 function mapStateToProps(state: RootState): Partial<Props> {
   const settings = state.settings.settings as Settings;
   return {
     stores: state.inventory.stores,
+    buckets: state.inventory.buckets,
+    // If "show new items" is off, don't pay the cost of propagating new item updates
+    newItems: settings.showNewItems ? state.inventory.newItems : EMPTY_SET,
     isPhonePortrait: state.shell.isPhonePortrait,
     settings,
-    buckets: state.inventory.buckets,
     // Pulling this out lets us do ref-equality
     collapsedSections: settings.collapsedSections
   };
@@ -111,7 +116,7 @@ class Stores extends React.Component<Props, State> {
     vault: DimVault,
     currentStore: DimStore
   ) {
-    const { settings, buckets, collapsedSections } = this.props;
+    const { settings, buckets, newItems, collapsedSections } = this.props;
 
     return (
       <div>
@@ -151,6 +156,7 @@ class Stores extends React.Component<Props, State> {
                   currentStore={currentStore}
                   settings={settings}
                   toggleSection={this.toggleSection}
+                  newItems={newItems}
                 />
               ))}
           </div>

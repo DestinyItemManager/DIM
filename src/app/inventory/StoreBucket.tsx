@@ -16,6 +16,7 @@ interface Props {
   // TODO: probably don't need all of this
   bucket: InventoryBucket;
   store: DimStore;
+  newItems: Set<string>;
 
   // TODO: pass drag/drop stuff all the way up?
 }
@@ -25,7 +26,7 @@ interface Props {
  */
 export default class StoreBucket extends React.Component<Props> {
   render() {
-    const { items, settings, bucket, store } = this.props;
+    const { items, newItems, settings, bucket, store } = this.props;
 
     const empty = !items.length;
     const equippedItem = items.find((i) => i.equipped);
@@ -42,7 +43,7 @@ export default class StoreBucket extends React.Component<Props> {
             bucket={bucket}
             store={store}
           >
-            <StoreInventoryItem item={equippedItem} />
+            <StoreInventoryItem item={equippedItem} isNew={newItems.has(equippedItem.id)} />
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget
@@ -51,7 +52,7 @@ export default class StoreBucket extends React.Component<Props> {
           store={store}
         >
           {unequippedItems.map((item) => (
-            <StoreInventoryItem key={item.index} item={item} />
+            <StoreInventoryItem key={item.index} item={item} isNew={newItems.has(item.id)}/>
           ))}
         </StoreBucketDropTarget>
       </div>
