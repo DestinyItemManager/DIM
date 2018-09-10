@@ -17,6 +17,9 @@ import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimVendorService } from '../vendors/vendor.service';
 import { setSearchQuery } from '../shell/actions';
 import store from '../store/store';
+import { subscribeOnScope } from '../rx-utils';
+import { isPhonePortraitStream } from '../mediaQueries';
+import { t } from 'i18next';
 
 /**
  * A simple holder to share the search query among components
@@ -56,6 +59,13 @@ function SearchFilterCtrl(
   let filters: SearchFilters;
   let searchConfig;
   let filteredItems: DimItem[] = [];
+
+  subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
+    $scope.$apply(() => {
+      console.log('isPhonePortrait', isPhonePortrait);
+      vm.placeholder = isPhonePortrait ? t("Header.FilterHelpBrief") : t("Header.FilterHelp", { example: 'is:dupe' });
+    });
+  });
 
   vm.$onChanges = (changes) => {
     if (changes.account && changes.account) {

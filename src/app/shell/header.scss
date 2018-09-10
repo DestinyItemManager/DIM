@@ -76,6 +76,13 @@
     flex-direction: row;
     height: 100%;
   }
+
+  &.search-expanded .header-right {
+    @include phone-portrait {
+      flex: 1;
+    }
+  }
+
   .header-separator {
       display: block !important;
       width: 0;

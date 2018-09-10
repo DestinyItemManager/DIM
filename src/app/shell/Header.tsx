@@ -196,7 +196,7 @@ export default class Header extends React.PureComponent<Props, State> {
     );
 
     return (
-      <div id="header">
+      <div id="header" className={showSearch ? 'search-expanded' : ''}>
         <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>
           <i className="fa fa-bars" />
           <MenuBadge />
@@ -218,19 +218,19 @@ export default class Header extends React.PureComponent<Props, State> {
             </CSSTransition>}
         </TransitionGroup>
 
-        <UISref to='default-account'>
+        {!showSearch && <UISref to='default-account'>
           <img
             className={classNames('logo', 'link', $DIM_FLAVOR)}
             title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
             src={logo}
             alt="DIM"
           />
-        </UISref>
+        </UISref>}
 
-        <div className="header-links">
+        {!showSearch && <div className="header-links">
           {reverseDestinyLinks}
           {reverseDimLinks}
-        </div>
+        </div>}
 
         <span className="header-right">
           {!showSearch && <Refresh/>}
