@@ -69,7 +69,7 @@ export function StoreBuckets({
           <div className="store-cell vault">
             <StoreBucket
               bucket={bucket}
-              store={stores[0]}
+              store={vault}
               items={vault.buckets[bucket.id]}
               settings={settings}
               newItems={newItems}
