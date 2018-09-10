@@ -14,6 +14,7 @@ interface Props {
   isNew: boolean;
   tag?: TagValue;
   rating?: number;
+  searchHidden: boolean;
 }
 
 /**
@@ -39,12 +40,19 @@ export default class StoreInventoryItem extends React.Component<Props> {
   });
 
   render() {
-    const { item, isNew, tag, rating } = this.props;
+    const { item, isNew, tag, rating, searchHidden } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
         <ItemPopupTrigger item={item}>
-          <InventoryItem item={item} onDoubleClick={this.doubleClicked} isNew={isNew} tag={tag} rating={rating} />
+          <InventoryItem
+            item={item}
+            onDoubleClick={this.doubleClicked}
+            isNew={isNew}
+            tag={tag}
+            rating={rating}
+            searchHidden={searchHidden}
+          />
         </ItemPopupTrigger>
       </DraggableInventoryItem>
     );

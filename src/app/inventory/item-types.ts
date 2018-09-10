@@ -91,7 +91,11 @@ export interface DimItem {
   classTypeNameLocalized: string;
   /** The readable name of the damage type associated with this item. */
   dmg: 'kinetic' | 'arc' | 'solar' | 'void';
-  /** Whether this item should be shown. */
+  /**
+   * Whether this item should be shown.
+   *
+   * @deprecated this must not be used when rendering items in React.
+   */
   visible: boolean;
   /** Whether this item can be locked. */
   lockable: boolean;

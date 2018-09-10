@@ -22,6 +22,7 @@ interface Props {
   newItems: Set<string>;
   itemInfos: InventoryState['itemInfos'];
   ratings: ReviewsState['ratings'];
+  searchFilter(item: DimItem): boolean;
   // TODO: pass drag/drop stuff all the way up?
 }
 
@@ -30,7 +31,7 @@ interface Props {
  */
 export default class StoreBucket extends React.Component<Props> {
   render() {
-    const { items, newItems, itemInfos, ratings, settings, bucket, store } = this.props;
+    const { items, settings, bucket, store } = this.props;
 
     const empty = !items.length;
     const equippedItem = items.find((i) => i.equipped);
@@ -47,7 +48,7 @@ export default class StoreBucket extends React.Component<Props> {
             bucket={bucket}
             store={store}
           >
-            <StoreInventoryItem item={equippedItem} isNew={newItems.has(equippedItem.id)} tag={getTag(equippedItem, itemInfos)} rating={getRating(equippedItem, ratings)} />
+            {this.renderItem(equippedItem)}
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget
@@ -55,11 +56,24 @@ export default class StoreBucket extends React.Component<Props> {
           bucket={bucket}
           store={store}
         >
-          {unequippedItems.map((item) => (
-            <StoreInventoryItem key={item.index} item={item} isNew={newItems.has(item.id)} tag={getTag(item, itemInfos)} rating={getRating(item, ratings)}/>
-          ))}
+          {unequippedItems.map((item) => this.renderItem(item))}
         </StoreBucketDropTarget>
       </div>
+    );
+  }
+
+  renderItem = (item: DimItem) => {
+    const { newItems, itemInfos, ratings, searchFilter } = this.props;
+
+    return (
+      <StoreInventoryItem
+        key={item.index}
+        item={item}
+        isNew={newItems.has(item.id)}
+        tag={getTag(item, itemInfos)}
+        rating={getRating(item, ratings)}
+        searchHidden={!searchFilter(item)}
+      />
     );
   }
 }

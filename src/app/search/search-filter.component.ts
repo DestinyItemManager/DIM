@@ -15,6 +15,8 @@ import { DimItem } from '../inventory/item-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimVendorService } from '../vendors/vendor.service';
+import { setSearchQuery } from '../shell/actions';
+import store from '../store/store';
 
 /**
  * A simple holder to share the search query among components
@@ -236,6 +238,8 @@ function SearchFilterCtrl(
     filteredItems = [];
     let filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
+
+    store.dispatch(setSearchQuery(filterValue));
 
     const filterFn = filters.filterFunction(filterValue);
 

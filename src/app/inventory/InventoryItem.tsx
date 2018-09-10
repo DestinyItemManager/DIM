@@ -18,6 +18,8 @@ interface Props {
   tag?: TagValue;
   /** Rating value */
   rating?: number;
+  /** Has this been hidden by a search? */
+  searchHidden?: boolean;
   onClick?(e);
   onDoubleClick?(e);
 }
@@ -27,7 +29,7 @@ const tagClasses = tagIconFilter();
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, tag, rating, onClick, onDoubleClick } = this.props;
+    const { item, isNew, tag, rating, searchHidden, onClick, onDoubleClick } = this.props;
 
     const itemImageStyles = {
       complete: item.complete,
@@ -49,7 +51,7 @@ export default class InventoryItem extends React.Component<Props> {
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         title={`${item.name}\n${item.typeName}`}
-        className={classNames('item', { 'search-hidden': !item.visible })}
+        className={classNames('item', { 'search-hidden': searchHidden })}
       >
         {item.percentComplete > 0 &&
           !item.complete && (

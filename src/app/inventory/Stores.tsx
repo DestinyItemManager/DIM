@@ -15,6 +15,7 @@ import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import { InventoryState } from './reducer';
 import { ReviewsState } from '../item-review/reducer';
+import { DimItem } from './item-types';
 
 interface Props {
   stores: DimStore[];
@@ -26,6 +27,7 @@ interface Props {
   itemInfos: InventoryState['itemInfos'];
   ratings: ReviewsState['ratings'];
   collapsedSections: Settings['collapsedSections'];
+  searchFilter(item: DimItem): boolean;
 }
 
 interface State {
@@ -33,6 +35,10 @@ interface State {
 }
 
 const EMPTY_SET = new Set<string>();
+
+function createSearchFilter(query: string) {
+  return (item: DimItem) => item.name.toLowerCase().includes(query);
+}
 
 function mapStateToProps(state: RootState): Partial<Props> {
   const settings = state.settings.settings as Settings;
@@ -46,7 +52,10 @@ function mapStateToProps(state: RootState): Partial<Props> {
     isPhonePortrait: state.shell.isPhonePortrait,
     settings,
     // Pulling this out lets us do ref-equality
-    collapsedSections: settings.collapsedSections
+    collapsedSections: settings.collapsedSections,
+    // TODO: this is where we need reselect
+    // This depends on account, loadouts, etc
+    searchFilter: createSearchFilter(state.shell.searchQuery)
   };
 }
 
@@ -122,7 +131,7 @@ class Stores extends React.Component<Props, State> {
     vault: DimVault,
     currentStore: DimStore
   ) {
-    const { settings, buckets, newItems, itemInfos, ratings, collapsedSections } = this.props;
+    const { settings, buckets, newItems, itemInfos, ratings, searchFilter, collapsedSections } = this.props;
 
     return (
       <div>
@@ -165,6 +174,7 @@ class Stores extends React.Component<Props, State> {
                   newItems={newItems}
                   itemInfos={itemInfos}
                   ratings={ratings}
+                  searchFilter={searchFilter}
                 />
               ))}
           </div>
