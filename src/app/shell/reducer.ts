@@ -1,6 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
+import { isPhonePortrait } from '../mediaQueries';
 
 export interface ShellState {
   readonly isPhonePortrait: boolean;
@@ -9,7 +10,7 @@ export interface ShellState {
 export type ShellAction = ActionType<typeof actions>;
 
 export const initialAccountsState: ShellState = {
-  isPhonePortrait: false
+  isPhonePortrait: isPhonePortrait()
 };
 
 export const shell: Reducer<ShellState, ShellAction> = (

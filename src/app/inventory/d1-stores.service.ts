@@ -23,6 +23,8 @@ import { D1Item, DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
+import store from '../store/store';
+import { update, setBuckets } from './actions';
 
 export const D1StoresService = StoreService();
 
@@ -66,7 +68,10 @@ function StoreService(): D1StoreServiceType {
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,
-    reloadStores
+    reloadStores,
+    touch() {
+      store.dispatch(update(_stores));
+    }
   };
 
   return service;
@@ -187,6 +192,7 @@ function StoreService(): D1StoreServiceType {
 
         const processStorePromises = _.compact((rawStores as any[]).map((raw) => processStore(raw, defs, buckets, previousItems, newItems, itemInfoService, currencies, lastPlayedDate)));
 
+        store.dispatch(setBuckets(buckets));
         return $q.all([newItems, itemInfoService, ...processStorePromises]);
       })
       .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, ...D1Store[]]) => {
@@ -207,6 +213,8 @@ function StoreService(): D1StoreServiceType {
         document.querySelector('html')!.style.setProperty("--num-characters", String(stores.length - 1));
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
+
+        store.dispatch(update(stores));
 
         return stores;
       })

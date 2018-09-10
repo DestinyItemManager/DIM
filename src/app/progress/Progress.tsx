@@ -18,19 +18,20 @@ import {
   } from 'react-view-pager';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { isPhonePortrait, isPhonePortraitStream } from '../mediaQueries';
 import CharacterTile, { characterIsCurrent } from './CharacterTile';
 import { Faction } from './Faction';
 import { Milestone } from './Milestone';
 import './progress.scss';
 import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
 import Quest from './Quest';
-import { settings, CharacterOrder } from '../settings/settings';
+import { CharacterOrder, Settings } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
+import { connect } from 'react-redux';
+import { RootState } from '../store/reducers';
 import { chainComparator, compareBy } from '../comparators';
 
 const factionOrder = [
@@ -58,25 +59,30 @@ const factionOrder = [
 interface Props {
   $scope: IScope;
   account: DestinyAccount;
+  characterOrder: CharacterOrder;
+  isPhonePortrait: boolean;
 }
 
 interface State {
   progress?: ProgressProfile;
-  characterOrder: CharacterOrder;
-  isPhonePortrait: boolean;
   currentCharacterId: string;
 }
 
-export default class Progress extends React.Component<Props, State> {
+function mapStateToProps(state: RootState): Partial<Props> {
+  const settings = state.settings.settings as Settings;
+  return {
+    isPhonePortrait: state.shell.isPhonePortrait,
+    characterOrder: settings.characterOrder
+  };
+}
+
+class Progress extends React.Component<Props, State> {
   subscription: Subscription;
-  mediaQuerySubscription: Subscription;
   private $scope = $rootScope.$new(true);
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props);
     this.state = {
-      characterOrder: settings.characterOrder,
-      isPhonePortrait: isPhonePortrait(),
       currentCharacterId: ""
     };
   }
@@ -89,7 +95,7 @@ export default class Progress extends React.Component<Props, State> {
           currentCharacterId: prevState.currentCharacterId
         };
         if (prevState.currentCharacterId === "") {
-          const characters = this.sortedCharacters(progress, prevState.characterOrder);
+          const characters = this.sortedCharacters(progress, this.props.characterOrder);
           if (characters.length) {
             const lastPlayedDate = progress.lastPlayedDate;
             updatedState.currentCharacterId = characters.find((c) => characterIsCurrent(c, lastPlayedDate))!.characterId;
@@ -100,20 +106,8 @@ export default class Progress extends React.Component<Props, State> {
       });
     });
 
-    this.mediaQuerySubscription = isPhonePortraitStream().subscribe((phonePortrait: boolean) => {
-      if (phonePortrait !== this.state.isPhonePortrait) {
-        this.setState({ isPhonePortrait: phonePortrait });
-      }
-    });
-
     this.$scope.$on('dim-refresh', () => {
       reloadProgress();
-    });
-
-    this.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
-      if (newValue !== this.state.characterOrder) {
-        this.setState({ characterOrder: newValue });
-      }
     });
   }
 
@@ -196,7 +190,7 @@ export default class Progress extends React.Component<Props, State> {
       </>
     );
 
-    if (this.state.isPhonePortrait) {
+    if (this.props.isPhonePortrait) {
       return (
         <div className="progress-page dim-page">
           {profileMilestonesContent}
@@ -307,7 +301,7 @@ export default class Progress extends React.Component<Props, State> {
   /**
    * The list of characters in the current (or provided) state, ordered in the preferred way.
    */
-  private sortedCharacters(progress: ProgressProfile = this.state.progress!, characterOrder: CharacterOrder = this.state.characterOrder): DestinyCharacterComponent[] {
+  private sortedCharacters(progress: ProgressProfile = this.state.progress!, characterOrder: CharacterOrder = this.props.characterOrder): DestinyCharacterComponent[] {
     return sortCharacters(Object.values(progress.profileInfo.characters.data), characterOrder);
   }
 
@@ -444,3 +438,5 @@ export function sortCharacters(characters: DestinyCharacterComponent[], order: C
     return characters;
   }
 }
+
+export default connect(mapStateToProps)(Progress);

@@ -1,4 +1,4 @@
-
+@import '../../scss/variables.scss';
 
 .inventory-content {
   // This assumes 3 characters
@@ -11,6 +11,16 @@
   &.phone-portrait {
     min-width: auto;
     max-width: auto;
+  }
+
+  .title {
+    //position: sticky;
+    top: 124px;
+    z-index: 1;
+
+    .phone-portrait & {
+      top: 79px;
+    }
   }
 }
 
@@ -71,6 +81,24 @@
   @supports (position: sticky) {
     position: sticky;
   }
+
+  &.sticky {
+    box-shadow: 0 1px 6px 0px #222;
+  }
+
+  .phone-portrait & {
+    top: 0px;
+
+    .store-cell {
+      margin: 0;
+      width: 100%;
+    }
+  }
+}
+
+.frame {
+  height: calc(100vh - #{$header-height} - 16px) !important;
+  overflow-y: auto !important;
 }
 
 .stores {
