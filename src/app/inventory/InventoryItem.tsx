@@ -1,13 +1,15 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { DimItem } from './item-types';
+import { DimItem, D2Item } from './item-types';
 import { percent } from './dimPercentWidth.directive';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { getColor, dtrRatingColor } from '../shell/dimAngularFilters.filter';
 import { tagIconFilter } from './dimStoreItem.directive';
+import ItemRender from './ItemRender';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
+import './InventoryItem.scss';
 
 interface Props {
   item: DimItem;
@@ -40,53 +42,58 @@ export default class InventoryItem extends React.Component<Props> {
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         title={`${item.name}\n${item.typeName}`}
-        className={classNames('item', { 'search-hidden': !item.visible })}
+        className={classNames('item', { 'search-hidden': !item.visible, 'd2-item': item.destinyVersion === 2 })}
       >
-        {item.percentComplete > 0 &&
-          !item.complete && (
-            <div
-              className="item-xp-bar-small"
-              style={{ width: percent(item.percentComplete) }}
-            />
-          )}
-        <div
-          className={classNames('item-img', itemImageStyles)}
-          style={bungieBackgroundStyle(item.icon)}
-        />
-        {item.isDestiny1() &&
-          item.quality && (
-            <div
-              className="item-stat item-quality"
-              style={getColor(item.quality.min, 'backgroundColor')}
-            >
-              {item.quality.min}%
-            </div>
-          )}
-        {item.dtrRating &&
-          showRating && (
-            <div className="item-stat item-review">
-              {item.dtrRating.overallScore}
-              <i
-                className="fa fa-star"
-                style={dtrRatingColor(item.dtrRating.overallScore)}
+        {(item.destinyVersion === 2) ? (
+          <ItemRender item={item as D2Item} />
+        ) : (
+          <div>
+            { item.percentComplete > 0 &&
+            !item.complete && (
+              <div
+                className="item-xp-bar-small"
+                style={{ width: percent(item.percentComplete) }}
               />
-            </div>
-          )}
-        <div className={classNames('item-element', item.dmg)} />
-        <div className={tagIconFilter()(item.dimInfo.tag)} />
-        {item.isNew && (
-          <div className="new_overlay_overflow">
-            <img
-              className="new_overlay"
-              src={newOverlay}
-              height="44"
-              width="44"
-            />
-          </div>
-        )}
-        {badgeInfo.showBadge && (
-          <div className={classNames(badgeInfo.badgeClassNames)}>
-            {badgeInfo.badgeCount}
+            )}
+            <div
+              className={classNames('item-img', itemImageStyles)}
+              style={bungieBackgroundStyle(item.icon)}
+            />{item.isDestiny1() &&
+              item.quality && (
+                <div
+                  className="item-stat item-quality"
+                  style={getColor(item.quality.min, 'backgroundColor')}
+                >
+                  {item.quality.min}%
+                </div>
+              )}
+            {item.dtrRating &&
+              showRating && (
+                <div className="item-stat item-review">
+                  {item.dtrRating.overallScore}
+                  <i
+                    className="fa fa-star"
+                    style={dtrRatingColor(item.dtrRating.overallScore)}
+                  />
+                </div>
+              )}
+            <div className={classNames('item-element', item.dmg)} />
+            <div className={tagIconFilter()(item.dimInfo.tag)} />
+            {item.isNew && (
+              <div className="new_overlay_overflow">
+                <img
+                  className="new_overlay"
+                  src={newOverlay}
+                  height="44"
+                  width="44"
+                />
+              </div>
+            )}
+            {badgeInfo.showBadge && (
+              <div className={classNames(badgeInfo.badgeClassNames)}>
+                {badgeInfo.badgeCount}
+              </div>
+            )}
           </div>
         )}
       </div>
