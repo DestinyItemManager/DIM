@@ -1,5 +1,7 @@
 # Next
 
+# 4.69.0 (2018-09-09)
+
 * Max power updated to 600 for Forsaken owners.
 * Fixed Year 1 weapons not having an elemental damage type.
 * Many bugfixes post-Forsaken launch.
