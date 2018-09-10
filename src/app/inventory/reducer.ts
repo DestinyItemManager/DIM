@@ -3,6 +3,7 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
+import { DimItemInfo } from './dim-item-info';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
@@ -19,6 +20,10 @@ export interface InventoryState {
    */
   readonly newItems: Set<string>;
 
+  /**
+   * Tags and notes for items.
+   */
+  readonly itemInfos: { [key: string]: DimItemInfo };
   /*
   readonly items: Readonly<{
     [id: string]: Readonly<DimItem>;
@@ -36,7 +41,8 @@ export type InventoryAction = ActionType<typeof actions>;
 
 export const initialInventoryState: InventoryState = {
   stores: [],
-  newItems: new Set()
+  newItems: new Set(),
+  itemInfos: {}
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction> = (
@@ -57,12 +63,37 @@ export const inventory: Reducer<InventoryState, InventoryAction> = (
         ...state,
         buckets: action.payload
       };
+
     case getType(actions.setNewItems):
-    console.log(state.newItems, action.payload)
       return {
         ...state,
         newItems: action.payload
       };
+
+    case getType(actions.setTagsAndNotes):
+      return {
+        ...state,
+        itemInfos: action.payload
+      };
+
+    case getType(actions.setTagsAndNotesForItem):
+      if (action.payload.info) {
+        return {
+          ...state,
+          itemInfos: {
+            ...state.itemInfos,
+            [action.payload.key]: action.payload.info
+          }
+        };
+      } else {
+        // Remove the note via destructuring
+        const { [action.payload.key]: removedKey, ...itemInfos } = state.itemInfos;
+
+        return {
+          ...state,
+          itemInfos
+        };
+      }
     default:
       return state;
   }

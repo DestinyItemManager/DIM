@@ -5,6 +5,7 @@ import { Settings } from '../settings/settings';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { t } from 'i18next';
+import { InventoryState } from './reducer';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -15,6 +16,7 @@ export function StoreBuckets({
   currentStore,
   settings,
   newItems,
+  itemInfos,
   toggleSection
 }: {
   bucket: InventoryBucket;
@@ -24,6 +26,7 @@ export function StoreBuckets({
   currentStore: DimStore;
   settings: Settings;
   newItems: Set<string>;
+  itemInfos: InventoryState['itemInfos'];
   toggleSection(id: string): void;
 }) {
 
@@ -50,6 +53,7 @@ export function StoreBuckets({
               items={currentStore.buckets[bucket.id]}
               settings={settings}
               newItems={newItems}
+              itemInfos={itemInfos}
             />
           </div>
         )}
@@ -61,6 +65,7 @@ export function StoreBuckets({
               items={vault.buckets[bucket.id]}
               settings={settings}
               newItems={newItems}
+              itemInfos={itemInfos}
             />
           </div>
         )}
@@ -82,6 +87,7 @@ export function StoreBuckets({
               items={store.buckets[bucket.id]}
               settings={settings}
               newItems={newItems}
+              itemInfos={itemInfos}
             />
           )}
         </div>

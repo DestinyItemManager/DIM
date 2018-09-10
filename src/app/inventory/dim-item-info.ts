@@ -7,6 +7,8 @@ import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
+import store from '../store/store';
+import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 
@@ -39,6 +41,7 @@ export class ItemInfoSource {
           if (_.isEmpty(infos[itemKey])) {
             delete infos[itemKey];
           }
+          store.dispatch(setTagsAndNotesForItem({ key: itemKey, info: infos[itemKey] }));
           setInfos(accountKey, infos)
             .catch((e) => {
               toaster.pop('error',
@@ -95,7 +98,10 @@ export function getItemInfoSource(account): Promise<ItemInfoSource> {
   const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${account.destinyVersion}`;
 
   return getInfos(key)
-    .then((infos) => new ItemInfoSource(key, infos));
+    .then((infos) => {
+      store.dispatch(setTagsAndNotes(infos));
+      return new ItemInfoSource(key, infos);
+    });
 }
 
 function getInfos(key: string): Promise<{ [itemInstanceId: string]: DimItemInfo }> {

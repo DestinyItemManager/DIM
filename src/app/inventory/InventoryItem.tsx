@@ -12,14 +12,17 @@ import './dimStoreItem.scss';
 interface Props {
   item: DimItem;
   isNew?: boolean;
+  tag?: string;
   onClick?(e);
   onDoubleClick?(e);
 }
 
+const tagClasses = tagIconFilter();
+
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, onClick, onDoubleClick } = this.props;
+    const { item, isNew, tag, onClick, onDoubleClick } = this.props;
 
     const itemImageStyles = {
       complete: item.complete,
@@ -74,7 +77,7 @@ export default class InventoryItem extends React.Component<Props> {
             </div>
           )}
         <div className={classNames('item-element', item.dmg)} />
-        <div className={tagIconFilter()(item.dimInfo.tag)} />
+        <div className={tagClasses(tag)} />
         {isNew && (
           <div className="new_overlay_overflow">
             <img
