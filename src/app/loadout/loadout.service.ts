@@ -554,7 +554,7 @@ function LoadoutService(): LoadoutServiceType {
 // returns to tenth decimal place.
 export function getLight(store: DimStore, loadout: Loadout): string {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
-  const itemWeight = {
+  let itemWeight = {
     Weapons: 6,
     Armor: 5,
     General: 4
@@ -563,7 +563,13 @@ export function getLight(store: DimStore, loadout: Loadout): string {
   let itemWeightDenominator = 46;
   if (store.destinyVersion === 2) {
     // 3 Weapons, 4 Armor, 1 General
-    itemWeightDenominator = 42;
+    itemWeight = {
+      Weapons: 1,
+      Armor: 1,
+      General: 1
+    };
+    itemWeightDenominator = 8;
+    
   } else if (store.level === 40) {
     // 3 Weapons, 4 Armor, 3 General
     itemWeightDenominator = 50;
