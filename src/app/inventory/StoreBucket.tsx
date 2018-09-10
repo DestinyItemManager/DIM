@@ -9,6 +9,8 @@ import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import StoreInventoryItem from './StoreInventoryItem';
 import { InventoryState } from './reducer';
+import { ReviewsState } from '../item-review/reducer';
+import { TagValue } from './dim-item-info';
 
 interface Props {
   items: DimItem[];
@@ -19,7 +21,7 @@ interface Props {
   store: DimStore;
   newItems: Set<string>;
   itemInfos: InventoryState['itemInfos'];
-
+  ratings: ReviewsState['ratings'];
   // TODO: pass drag/drop stuff all the way up?
 }
 
@@ -28,7 +30,7 @@ interface Props {
  */
 export default class StoreBucket extends React.Component<Props> {
   render() {
-    const { items, newItems, itemInfos, settings, bucket, store } = this.props;
+    const { items, newItems, itemInfos, ratings, settings, bucket, store } = this.props;
 
     const empty = !items.length;
     const equippedItem = items.find((i) => i.equipped);
@@ -45,7 +47,7 @@ export default class StoreBucket extends React.Component<Props> {
             bucket={bucket}
             store={store}
           >
-            <StoreInventoryItem item={equippedItem} isNew={newItems.has(equippedItem.id)} tag={getTag(equippedItem, itemInfos)} />
+            <StoreInventoryItem item={equippedItem} isNew={newItems.has(equippedItem.id)} tag={getTag(equippedItem, itemInfos)} rating={getRating(equippedItem, ratings)} />
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget
@@ -54,7 +56,7 @@ export default class StoreBucket extends React.Component<Props> {
           store={store}
         >
           {unequippedItems.map((item) => (
-            <StoreInventoryItem key={item.index} item={item} isNew={newItems.has(item.id)} tag={getTag(item, itemInfos)}/>
+            <StoreInventoryItem key={item.index} item={item} isNew={newItems.has(item.id)} tag={getTag(item, itemInfos)} rating={getRating(item, ratings)}/>
           ))}
         </StoreBucketDropTarget>
       </div>
@@ -62,7 +64,15 @@ export default class StoreBucket extends React.Component<Props> {
   }
 }
 
-function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): string | undefined {
+function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue | undefined {
   const itemKey = `${item.hash}-${item.id}`;
   return itemInfos[itemKey] && itemInfos[itemKey].tag;
+}
+
+function getRating(item: DimItem, ratings: ReviewsState['ratings']): number | undefined {
+  const roll = item.isDestiny1()
+    ? (item.talentGrid ? item.talentGrid.dtrRoll : null)
+    : 'fixed'; // TODO: implement random rolls
+  const itemKey = `${item.hash}-${roll}`;
+  return ratings[itemKey] && ratings[itemKey].overallScore;
 }

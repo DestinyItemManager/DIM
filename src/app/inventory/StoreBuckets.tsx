@@ -6,6 +6,7 @@ import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { t } from 'i18next';
 import { InventoryState } from './reducer';
+import { ReviewsState } from '../item-review/reducer';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -17,6 +18,7 @@ export function StoreBuckets({
   settings,
   newItems,
   itemInfos,
+  ratings,
   toggleSection
 }: {
   bucket: InventoryBucket;
@@ -27,6 +29,7 @@ export function StoreBuckets({
   settings: Settings;
   newItems: Set<string>;
   itemInfos: InventoryState['itemInfos'];
+  ratings: ReviewsState['ratings'];
   toggleSection(id: string): void;
 }) {
 
@@ -54,6 +57,7 @@ export function StoreBuckets({
               settings={settings}
               newItems={newItems}
               itemInfos={itemInfos}
+              ratings={ratings}
             />
           </div>
         )}
@@ -66,6 +70,7 @@ export function StoreBuckets({
               settings={settings}
               newItems={newItems}
               itemInfos={itemInfos}
+              ratings={ratings}
             />
           </div>
         )}
@@ -88,6 +93,7 @@ export function StoreBuckets({
               settings={settings}
               newItems={newItems}
               itemInfos={itemInfos}
+              ratings={ratings}
             />
           )}
         </div>

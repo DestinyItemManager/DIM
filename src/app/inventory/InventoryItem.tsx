@@ -8,11 +8,16 @@ import { tagIconFilter } from './dimStoreItem.directive';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
+import { TagValue } from './dim-item-info';
 
 interface Props {
   item: DimItem;
+  /** Show this item as new? */
   isNew?: boolean;
-  tag?: string;
+  /** User defined tag */
+  tag?: TagValue;
+  /** Rating value */
+  rating?: number;
   onClick?(e);
   onDoubleClick?(e);
 }
@@ -22,11 +27,11 @@ const tagClasses = tagIconFilter();
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, tag, onClick, onDoubleClick } = this.props;
+    const { item, isNew, tag, rating, onClick, onDoubleClick } = this.props;
 
     const itemImageStyles = {
       complete: item.complete,
-      diamond: item.destinyVersion === 2 && item.bucket.hash === 3284755031,
+      diamond: item.isDestiny2() && item.bucket.hash === 3284755031,
       masterwork: item.masterwork
     };
 
@@ -66,13 +71,13 @@ export default class InventoryItem extends React.Component<Props> {
               {item.quality.min}%
             </div>
           )}
-        {item.dtrRating &&
+        {rating &&
           showRating && (
             <div className="item-stat item-review">
-              {item.dtrRating.overallScore}
+              {rating}
               <i
                 className="fa fa-star"
-                style={dtrRatingColor(item.dtrRating.overallScore)}
+                style={dtrRatingColor(rating)}
               />
             </div>
           )}

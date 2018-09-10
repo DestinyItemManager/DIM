@@ -14,6 +14,7 @@ import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import { InventoryState } from './reducer';
+import { ReviewsState } from '../item-review/reducer';
 
 interface Props {
   stores: DimStore[];
@@ -23,6 +24,7 @@ interface Props {
   buckets: InventoryBuckets;
   newItems: Set<string>;
   itemInfos: InventoryState['itemInfos'];
+  ratings: ReviewsState['ratings'];
   collapsedSections: Settings['collapsedSections'];
 }
 
@@ -40,6 +42,7 @@ function mapStateToProps(state: RootState): Partial<Props> {
     // If "show new items" is off, don't pay the cost of propagating new item updates
     newItems: settings.showNewItems ? state.inventory.newItems : EMPTY_SET,
     itemInfos: state.inventory.itemInfos,
+    ratings: state.reviews.ratings,
     isPhonePortrait: state.shell.isPhonePortrait,
     settings,
     // Pulling this out lets us do ref-equality
@@ -119,7 +122,7 @@ class Stores extends React.Component<Props, State> {
     vault: DimVault,
     currentStore: DimStore
   ) {
-    const { settings, buckets, newItems, itemInfos, collapsedSections } = this.props;
+    const { settings, buckets, newItems, itemInfos, ratings, collapsedSections } = this.props;
 
     return (
       <div>
@@ -161,6 +164,7 @@ class Stores extends React.Component<Props, State> {
                   toggleSection={this.toggleSection}
                   newItems={newItems}
                   itemInfos={itemInfos}
+                  ratings={ratings}
                 />
               ))}
           </div>

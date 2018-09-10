@@ -7,11 +7,13 @@ import { queuedAction } from './action-queue';
 import { CompareService } from '../compare/compare.service';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { moveItemTo } from './dimItemMoveService.factory';
+import { TagValue } from './dim-item-info';
 
 interface Props {
   item: DimItem;
   isNew: boolean;
-  tag?: string;
+  tag?: TagValue;
+  rating?: number;
 }
 
 /**
@@ -37,12 +39,12 @@ export default class StoreInventoryItem extends React.Component<Props> {
   });
 
   render() {
-    const { item, isNew, tag } = this.props;
+    const { item, isNew, tag, rating } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
         <ItemPopupTrigger item={item}>
-          <InventoryItem item={item} onDoubleClick={this.doubleClicked} isNew={isNew} tag={tag} />
+          <InventoryItem item={item} onDoubleClick={this.doubleClicked} isNew={isNew} tag={tag} rating={rating} />
         </ItemPopupTrigger>
       </DraggableInventoryItem>
     );

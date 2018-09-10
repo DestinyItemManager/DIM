@@ -24,17 +24,6 @@ export interface InventoryState {
    * Tags and notes for items.
    */
   readonly itemInfos: { [key: string]: DimItemInfo };
-  /*
-  readonly items: Readonly<{
-    [id: string]: Readonly<DimItem>;
-  }>;
-  readonly characters: Readonly<{
-    [id: string]: Readonly<DimStore>;
-  }>;
-  // TODO: break out characters from stores
-  */
-  // Buckets?
-  // New-items
 }
 
 export type InventoryAction = ActionType<typeof actions>;
