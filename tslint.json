@@ -6,11 +6,7 @@
       "src/app/bungie-api/interfaces.d.ts"
     ]
   },
-  "extends": [
-    "tslint:recommended",
-    "tslint-eslint-rules",
-    "tslint-react"
-  ],
+  "extends": ["tslint:recommended", "tslint-eslint-rules", "tslint-react"],
   "jsRules": {},
   "rules": {
     "brace-style": [true, "1tbs", { "allowSingleLine": true }],
@@ -24,14 +20,20 @@
     "no-console": false,
     "array-bracket-spacing": [true, "never"],
     "block-spacing": true,
-    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ],
     "indent": [true, "spaces", 2],
     "ter-func-call-spacing": [true, "never"],
     "no-trailing-whitespace": true,
     "object-curly-spacing": [true, "always"],
     "object-literal-key-quotes": [true, "as-needed"],
     "quotemark": false,
-    "semicolon": true,
+    "semicolon": false,
     "sort-imports": false,
     "space-in-parens": [true, "never"],
     "comment-format": [true, "check-space"],
@@ -44,7 +46,11 @@
     "ban-comma-operator": true,
     "no-unnecessary-type-assertion": true,
     "no-var-requires": true,
-    "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
+    "only-arrow-functions": [
+      true,
+      "allow-declarations",
+      "allow-named-functions"
+    ],
     "member-access": [true, "no-public"],
     "no-shadowed-variable": false,
     "prefer-for-of": true,
@@ -80,16 +86,16 @@
     "no-sparse-arrays": true,
     "no-string-literal": true,
     "no-string-throw": true,
-    "no-this-assignment": [true, {"allowed-names": ["vm"], "allow-destructuring": true}],
+    "no-this-assignment": [
+      true,
+      { "allowed-names": ["vm"], "allow-destructuring": true }
+    ],
     "no-unbound-method": true,
     "no-unnecessary-class": true,
     "no-unused-expression": [true, "allow-fast-null-checks"],
-    "no-unused-variable": [true, {
-      "ignore-pattern": "(^e$|^_)"
-    }],
     "no-use-before-declare": false,
     "no-var-keyword": true,
-    "no-void-expression": [true, "ignore-arrow-function-shorthand"],
+    "no-void-expression": false,
     "prefer-conditional-expression": [true, "check-else-if"],
     "prefer-object-spread": true,
     "radix": true,
@@ -122,17 +128,42 @@
     "no-unnecessary-qualifier": true,
     "number-literal-format": true,
     "object-literal-shorthand": true,
-    "one-line": [true, "check-catch", "check-finally", "check-else", "check-open-brace", "check-whitespace"],
+    "one-line": [
+      true,
+      "check-catch",
+      "check-finally",
+      "check-else",
+      "check-open-brace",
+      "check-whitespace"
+    ],
     "one-variable-per-declaration": true,
     "prefer-function-over-method": [true, "allow-public"],
     "prefer-method-signature": true,
     "prefer-switch": true,
     "prefer-template": [true, "allow-single-concat"],
-    "return-undefined": true,
-    "space-before-function-paren": [true, "never"],
+    "space-before-function-paren": [
+      true,
+      {
+        "anonymous": "never",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
     "space-within-parens": [true, 0],
     "type-literal-delimiter": true,
-    "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-rest-spread", "check-type", "check-typecast", "check-type-operator", "check-preblock"],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-module",
+      "check-separator",
+      "check-rest-spread",
+      "check-type",
+      "check-typecast",
+      "check-type-operator",
+      "check-preblock"
+    ],
     "interface-name": false,
     "jsx-no-multiline-js": false,
     "max-classes-per-file": false,
