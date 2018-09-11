@@ -1,6 +1,6 @@
 import template from './dimStoreHeading.directive.html';
 import dialogTemplate from './dimStoreHeading.directive.dialog.html';
-import './dimStoreHeading.scss';
+import './StoreHeading.scss';
 import { IComponentOptions, IController, IScope } from 'angular';
 import { DimStore } from './store-types';
 

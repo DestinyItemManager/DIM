@@ -3,6 +3,8 @@ import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2RatingData, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
 import { translateToDtrItem } from './d2-itemTransformer';
+import { updateRatings } from '../item-review/actions';
+import store from '../store/store';
 
 /**
  * Cache of review data.
@@ -48,6 +50,7 @@ class D2ReviewDataCache {
     const referenceId = this._getReferenceId(item, itemHash);
     const blankItem: D2RatingData = {
       referenceId,
+      roll: 'fixed', // TODO: implement random rolls
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
       overallScore: 0,
@@ -138,6 +141,8 @@ class D2ReviewDataCache {
           this._addScore(bulkRanking);
         }
       });
+
+      store.dispatch(updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores }));
     }
   }
 
@@ -149,6 +154,7 @@ class D2ReviewDataCache {
 
     const cachedItem: D2RatingData = {
       referenceId: dtrRating.referenceId,
+      roll: 'fixed', // TODO: implement random rolls
       overallScore : dimScore,
       fetchResponse: dtrRating,
       lastUpdated: new Date(),

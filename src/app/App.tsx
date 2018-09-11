@@ -96,6 +96,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div
+        key={`lang-${settings.language}`}
         className={classNames("app", `lang-${settings.language}`, {
           'show-reviews': $featureFlags.reviewsEnabled && settings.showReviews,
           'show-elements': settings.showElements,

@@ -35,6 +35,8 @@ import { InventoryBuckets } from './inventory-buckets';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
+import store from '../store/store';
+import { update, setBuckets } from './actions';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -82,7 +84,10 @@ function makeD2StoresService(): D2StoreServiceType {
     getItemAcrossStores,
     updateCharacters,
     reloadStores,
-    refreshRatingsData
+    refreshRatingsData,
+    touch() {
+      store.dispatch(update(_stores));
+    }
   };
 
   return service;
@@ -180,7 +185,6 @@ function makeD2StoresService(): D2StoreServiceType {
   function loadStores(account: DestinyAccount): IPromise<D2Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
-    const firstLoad = (previousItems.size === 0);
 
     resetIdTracker();
 
@@ -226,15 +230,14 @@ function makeD2StoresService(): D2StoreServiceType {
           itemInfoService,
           lastPlayedDate));
 
+        store.dispatch(setBuckets(buckets));
+
         return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
       .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, InventoryBuckets, Set<string>, any, D2Vault, ...D2Store[]]) => {
-        // Save and notify about new items (but only if this wasn't the first load)
-        if (!firstLoad) {
-          // Save the list of new item IDs
-          NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account);
-        }
+        // Save the list of new item IDs
+        NewItemsService.applyRemovedNewItems(newItems);
+        NewItemsService.saveNewItems(newItems, account);
 
         const stores: D2Store[] = [...characters, vault];
         _stores = stores;
@@ -252,6 +255,8 @@ function makeD2StoresService(): D2StoreServiceType {
         document.querySelector('html')!.style.setProperty("--num-characters", String(_stores.length - 1));
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
+
+        store.dispatch(update(stores));
 
         return stores;
       })

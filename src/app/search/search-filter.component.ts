@@ -15,6 +15,8 @@ import { DimItem } from '../inventory/item-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimVendorService } from '../vendors/vendor.service';
+import { setSearchQuery } from '../shell/actions';
+import store from '../store/store';
 import { subscribeOnScope } from '../rx-utils';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { t } from 'i18next';
@@ -42,7 +44,6 @@ function SearchFilterCtrl(
   hotkeys,
   $i18next,
   $element: IRootElementService,
-  toaster,
   ngDialog
 ) {
   'ngInject';
@@ -59,8 +60,6 @@ function SearchFilterCtrl(
   let searchConfig;
   let filteredItems: DimItem[] = [];
 
-  //vm.placeholder = t("Header.FilterHelp", { example: 'is:dupe' });
-
   subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
     $scope.$apply(() => {
       console.log('isPhonePortrait', isPhonePortrait);
@@ -74,7 +73,7 @@ function SearchFilterCtrl(
         vm.account.destinyVersion,
         itemTags,
         vm.account.destinyVersion === 1 ? D1Categories : D2Categories);
-      filters = searchFilters(searchConfig, getStoresService(), toaster, $i18next);
+      filters = searchFilters(searchConfig, getStoresService());
       setupTextcomplete();
     }
   };
@@ -248,6 +247,8 @@ function SearchFilterCtrl(
     filteredItems = [];
     let filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
+
+    store.dispatch(setSearchQuery(filterValue));
 
     const filterFn = filters.filterFunction(filterValue);
 

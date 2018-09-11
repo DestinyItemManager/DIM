@@ -133,6 +133,8 @@ export enum DtrD2ActivityModes {
 export interface D2RatingData extends DtrRating {
   /** Reference ID (hash ID). This is all we need to look up an item for D2 (currently). */
   referenceId: number;
+  /** The roll (perk hashes in the form that DTR expects). */
+  roll: string | null;
   /** The bulk rating fetch response (if there was one). */
   fetchResponse?: D2ItemFetchResponse;
   /** The item reviews response (if there was one). */
