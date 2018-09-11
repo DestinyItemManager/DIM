@@ -24,6 +24,7 @@
 * Review modes - say hello to Gambit (and goodbye to Trials, at least for a little while).
 * Ratings platform selection changes made easier.
 * Added Etheric Spiral and Etheric Helix to the list of reputation items.
+* Giving more weight to ratings with reviews than ratings alone. Also, hiding lone ratings.
 
 # 4.68.3 (2018-09-03)
 

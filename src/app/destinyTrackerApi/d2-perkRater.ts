@@ -1,7 +1,8 @@
 import * as _ from 'underscore';
-import { sum } from '../util';
+import { sum, count } from '../util';
 import { D2Item, DimSocket } from '../inventory/item-types';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { dtrTextReviewMultiplier } from './dtr-service-helper';
 
 export interface RatingAndReview {
   ratingCount: number;
@@ -69,11 +70,11 @@ function getPlugRatingsAndReviewCount(
   plugOptionHash: number,
   reviews: D2ItemUserReview[]
 ): RatingAndReview {
-  const matchingReviews = getMatchingReviews(plugOptionHash,
-                                                    reviews);
+  const matchingReviews = getMatchingReviews(plugOptionHash, reviews);
+  const matchingReviewsWithTextCount = count(matchingReviews, (mr) => mr.text);
 
-  const ratingCount = matchingReviews.length;
-  const averageReview = sum(matchingReviews, (r) => r.voted) / matchingReviews.length || 1;
+  const ratingCount = matchingReviews.length + (matchingReviewsWithTextCount * dtrTextReviewMultiplier);
+  const averageReview = sum(matchingReviews, (r) => (r.text) ? r.voted * (dtrTextReviewMultiplier + 1) : r.voted) / ratingCount || 1;
 
   const ratingAndReview = {
     ratingCount,

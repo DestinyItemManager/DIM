@@ -1,8 +1,8 @@
-import * as _ from 'underscore';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2RatingData, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
 import { translateToDtrItem } from './d2-itemTransformer';
+import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings } from '../item-review/actions';
 import store from '../store/store';
 
@@ -108,7 +108,10 @@ class D2ReviewDataCache {
   _getScore(dtrRating: D2ItemFetchResponse): number {
     const downvoteMultipler = this._getDownvoteMultiplier(dtrRating);
 
-    const rating = ((dtrRating.votes.total - (dtrRating.votes.downvotes * downvoteMultipler)) / dtrRating.votes.total) * 5;
+    const totalVotes = dtrRating.votes.total + (dtrRating.reviewVotes.total * dtrTextReviewMultiplier);
+    const totalDownVotes = dtrRating.votes.downvotes + (dtrRating.reviewVotes.downvotes * dtrTextReviewMultiplier);
+
+    const rating = ((totalVotes - (totalDownVotes * downvoteMultipler)) / totalVotes) * 5;
 
     if ((rating < 1) &&
         (dtrRating.votes.total > 0)) {
@@ -119,7 +122,7 @@ class D2ReviewDataCache {
   }
 
   _setMaximumTotalVotes(bulkRankings: D2ItemFetchResponse[]) {
-    this._maxTotalVotes = _.max(_.pluck(_.pluck(bulkRankings, 'votes'), 'total'));
+    this._maxTotalVotes = Math.max(...bulkRankings.map((fr) => fr.votes).map((v) => v.total));
   }
 
   /**
