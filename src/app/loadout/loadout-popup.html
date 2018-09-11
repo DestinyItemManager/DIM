@@ -9,18 +9,6 @@
       <span ng-click="vm.newLoadoutFromEquipped($event)" ng-i18next="Loadouts.FromEquipped"></span>
     </li>
 
-    <li ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">
-      <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">
-        {{ loadout.name }}
-      </span>
-      <span class="delete" ng-i18next="[title]Loadouts.Delete" ng-click="vm.deleteLoadout(loadout, $event)">
-        <i class="fa fa-trash-o"></i>
-      </span>
-      <span ng-i18next="[title]Loadouts.Edit" ng-click="vm.editLoadout(loadout, $event)">
-        <i class="fa fa-pencil"></i>
-      </span>
-    </li>
-
     <li class="loadout-set" ng-if="vm.search.query">
       <span ng-click="vm.searchLoadout($event)">
         <i class="fa fa-search"></i>
@@ -91,6 +79,18 @@
       </span>
       <span ng-click="vm.applyLoadout(vm.previousLoadout, $event)">
         <span ng-i18next="Loadouts.RestoreAllItems"></span>
+      </span>
+    </li>
+
+    <li ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">
+      <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">
+        {{ loadout.name }}
+      </span>
+      <span class="delete" ng-i18next="[title]Loadouts.Delete" ng-click="vm.deleteLoadout(loadout, $event)">
+        <i class="fa fa-trash-o"></i>
+      </span>
+      <span ng-i18next="[title]Loadouts.Edit" ng-click="vm.editLoadout(loadout, $event)">
+        <i class="fa fa-pencil"></i>
       </span>
     </li>
 
