@@ -1,5 +1,7 @@
 # Next
 
+* Added `is:exactdupe` and `is:exactdupelower`
+
 # 4.69.0 (2018-09-09)
 
 * Max power updated to 600 for Forsaken owners.

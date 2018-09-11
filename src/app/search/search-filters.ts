@@ -79,7 +79,7 @@ export function buildSearchConfig(
     type: itemTypes,
     tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
     classType: ['titan', 'hunter', 'warlock'],
-    dupe: ['dupe', 'duplicate', 'dupelower'],
+    dupe: ['dupe', 'duplicate', 'dupelower', 'exactdupe', 'exactdupelower'],
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
@@ -224,7 +224,6 @@ export function searchFilters(
   $i18next
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
-  let _lowerDupes = {};
   let _dupeInPost = false;
   let _sortedStores: DimStore[] | null = null;
   let _loadoutItemIds: Set<string> | undefined;
@@ -342,7 +341,6 @@ export function searchFilters(
      */
     reset() {
       _duplicates = null;
-      _lowerDupes = {};
       _dupeInPost = false;
       _sortedStores = null;
     },
@@ -542,33 +540,74 @@ export function searchFilters(
       },
       dupe(item: DimItem, predicate: string) {
         if (_duplicates === null) {
-          _duplicates = _.groupBy(storeService.getAllItems(), (i) => i.hash);
-          _.each(_duplicates, (dupes: DimItem[]) => {
-            if (dupes.length > 1) {
-              dupes.sort(dupeComparator);
-              const bestDupe = dupes[0];
-              for (const dupe of dupes) {
-                if (dupe.bucket && (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') && !dupe.notransfer) {
-                  _lowerDupes[dupe.id] = dupe !== bestDupe;
-                }
-              }
+          const groupedDuplicates = _.groupBy(storeService.getAllItems(), (i) => i.hash);
+
+          // reduce the duplicates
+          _duplicates = {};
+          for(let itemHash in groupedDuplicates) {
+            if (groupedDuplicates[itemHash].length > 1) {
+              _duplicates[itemHash] = groupedDuplicates[itemHash];
 
               if (!_dupeInPost) {
-                if (dupes.some((dupe) => Boolean(dupe.location.inPostmaster))) {
+                if (_duplicates[itemHash].some((dupe) => Boolean(dupe.location.inPostmaster))) {
                   toaster.pop('warning', $i18next.t('Filter.DupeInPostmaster'));
                   _dupeInPost = true;
                 }
               }
             }
-          });
+          }
         }
 
-        if (predicate === 'dupelower') {
-          return _lowerDupes[item.id];
+        function getPerkList(item) {
+          return item.sockets && item.sockets.sockets.map((socket) => {
+            if (socket.plugOptions.length > 1) {
+                return socket.plugOptions.map((i) => i.plugItem.hash).sort();
+            }
+          }).sort().flat().filter(v=>v);
         }
 
-        // We filter out the "Default Shader" because everybody has one per character
-        return item.hash !== 4248210736 && _duplicates[item.hash] && _duplicates[item.hash].length > 1;
+        function getExactDupes(itemDupes: DimItem[], item: DimItem) {
+          if (item.isDestiny2()) {
+            if (!item.sockets) {
+              return [];
+            }
+
+            // Map each of the duplicates perks to an array
+            const exactDupes: DimItem[] = [];
+            const itemPerkList = getPerkList(item).join();
+            _.each(itemDupes, (dupe: DimItem) => {
+              if (getPerkList(dupe).join() === itemPerkList) {
+                exactDupes.push(dupe);
+              }
+            });
+            return exactDupes;
+          }
+          return [];
+        }
+
+        if (predicate.includes('dupelower')) {
+          let dupes = predicate.includes('exact') ? getExactDupes(_duplicates[item.hash], item) : _duplicates[item.hash];
+          if (!dupes) {
+            return false;
+          }
+          dupes.sort(dupeComparator);
+
+          const bestDupe = dupes[0];
+          let retDupes = {};
+          for (const dupe of dupes) {
+            if (dupe.bucket && (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') && !dupe.notransfer) {
+              retDupes[dupe.id] = dupe !== bestDupe ? dupe : undefined;
+            }
+          }
+
+          return retDupes[item.id];
+        }
+
+        if (_duplicates[item.hash]) {
+          return predicate.includes('exact') ? getExactDupes(_duplicates[item.hash], item).length > 1 : _duplicates[item.hash];
+        }
+
+        return false;
       },
       owner(item: DimItem, predicate: string) {
         let desiredStore = "";
