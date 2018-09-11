@@ -11,6 +11,8 @@ import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import moveDroppedItem from './move-dropped-item';
+import { stackableHover } from './actions';
+import store from '../store/store';
 
 interface ExternalProps {
   bucket: InventoryBucket;
@@ -37,9 +39,9 @@ function dragType(props: ExternalProps) {
 const dropSpec: DropTargetSpec<Props> = {
   drop(props, monitor, component) {
     // TODO: ooh, monitor has interesting offset info
-    // TODO: Do this all through a Redux action
-    const hovering = component.state.hovering;
-    const shiftPressed = false; // TODO: Figure out shift key
+    const hovering = (component as StoreBucketDropTarget).hovering;
+    // https://github.com/react-dnd/react-dnd-html5-backend/issues/23
+    const shiftPressed = (component as StoreBucketDropTarget).shiftKeyDown;
     const item = monitor.getItem().item as DimItem;
     moveDroppedItem(props.store, item, Boolean(props.equip), shiftPressed, hovering);
   },
@@ -69,14 +71,12 @@ function collect(
   };
 }
 
-interface State {
-  hovering: boolean;
-}
-
 // TODO: enter/leave dwell indicator stuff (with redux??)
-class StoreBucketDropTarget extends React.Component<Props, State> {
+class StoreBucketDropTarget extends React.Component<Props> {
   dragTimer?: number;
-  state = { hovering: false };
+  shiftKeyDown = false;
+  hovering = false;
+  private element?: HTMLDivElement;
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.isOver && nextProps.isOver) {
@@ -84,13 +84,15 @@ class StoreBucketDropTarget extends React.Component<Props, State> {
       this.dragTimer = window.setTimeout(() => {
         // TODO: publish this up to the parent and then consume it via props??
         // TODO: only do this if the store isn't the origin store
-        this.setState({ hovering: true });
+        this.hovering = true;
+        store.dispatch(stackableHover(true));
       }, 1000);
     }
 
     if (this.props.isOver && !nextProps.isOver) {
       // You can use this as leave handler
-      this.setState({ hovering: false });
+      this.hovering = false;
+      store.dispatch(stackableHover(false));
       if (this.dragTimer) {
         window.clearTimeout(this.dragTimer);
         this.dragTimer = undefined;
@@ -103,10 +105,9 @@ class StoreBucketDropTarget extends React.Component<Props, State> {
 
     // TODO: I don't like that we're managing the classes for sub-bucket here
 
-    // TODO: if hovering and the item is stackable, show the dwell thing thru a portal
-
     return connectDropTarget(
       <div
+        ref={this.captureRef}
         className={classNames('sub-bucket', equip ? 'equipped' : 'unequipped', {
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop
@@ -115,6 +116,19 @@ class StoreBucketDropTarget extends React.Component<Props, State> {
         {children}
       </div>
     );
+  }
+
+  private captureRef = (ref: HTMLDivElement) => {
+    if (ref) {
+      ref.addEventListener('dragover', this.onDrag);
+    } else {
+      this.element && this.element.removeEventListener('dragover', this.onDrag);
+    }
+    this.element = ref;
+  }
+
+  private onDrag = (e: DragEvent) => {
+    this.shiftKeyDown = e.shiftKey;
   }
 }
 

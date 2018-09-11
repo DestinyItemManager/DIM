@@ -26,6 +26,11 @@ export interface InventoryState {
    * Tags and notes for items.
    */
   readonly itemInfos: { [key: string]: DimItemInfo };
+
+  /** Are we currently dragging a stack? */
+  readonly isDraggingStack;
+  /** Are we hovering a stack over a drop target, with some dwell time? */
+  readonly isHoveringStack;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -33,7 +38,9 @@ export type InventoryAction = ActionType<typeof actions>;
 export const initialInventoryState: InventoryState = {
   stores: [],
   newItems: new Set(),
-  itemInfos: {}
+  itemInfos: {},
+  isDraggingStack: false,
+  isHoveringStack: false
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -53,19 +60,23 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         ...state,
         stores: [...action.payload]
       };
-    // TODO: only need to do this once, on loading a new platform
+
+    // Buckets
+    // TODO: only need to do this once, on loading a new platform.
     case getType(actions.setBuckets):
       return {
         ...state,
         buckets: action.payload
       };
 
+    // New items
     case getType(actions.setNewItems):
       return {
         ...state,
         newItems: action.payload
       };
 
+    // Tags and notes
     case getType(actions.setTagsAndNotes):
       return {
         ...state,
@@ -90,6 +101,19 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
           itemInfos
         };
       }
+
+    // Stack dragging
+    case getType(actions.stackableDrag):
+      return {
+        ...state,
+        isDraggingStack: action.payload
+      };
+    case getType(actions.stackableHover):
+      return {
+        ...state,
+        isHoveringStack: action.payload
+      };
+
     default:
       return state;
   }

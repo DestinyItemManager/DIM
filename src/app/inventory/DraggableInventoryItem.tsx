@@ -6,6 +6,8 @@ import {
   DragSource
 } from 'react-dnd';
 import { DimItem } from './item-types';
+import { stackableDrag } from './actions';
+import store from '../store/store';
 
 interface ExternalProps {
   item: DimItem;
@@ -33,7 +35,16 @@ export interface DragObject {
 
 const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
+    if (props.item.maxStackSize > 1 && props.item.amount > 1) {
+      store.dispatch(stackableDrag(true));
+    }
     return { item: props.item };
+  },
+
+  endDrag(props) {
+    if (props.item.maxStackSize > 1 && props.item.amount > 1) {
+      store.dispatch(stackableDrag(false));
+    }
   },
 
   canDrag(props): boolean {
