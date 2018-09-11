@@ -379,7 +379,7 @@ function makeD2StoresService(): D2StoreServiceType {
   function updateBasePower(account: DestinyAccount, stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
-      const maxBasePower = getLight(stores, maxBasePowerLoadout(stores, store));
+      const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
       const hasClassified = flatMap(_stores, (s) => s.items).some((i) => {
         return i.classified &&
