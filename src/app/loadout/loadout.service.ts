@@ -569,7 +569,6 @@ export function getLight(store: DimStore, loadout: Loadout): string {
       General: 1
     };
     itemWeightDenominator = 8;
-    
   } else if (store.level === 40) {
     // 3 Weapons, 4 Armor, 3 General
     itemWeightDenominator = 50;

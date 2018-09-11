@@ -18,10 +18,10 @@ import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definition
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
-import { Loadout } from '../loadout/loadout.service';
+import { getLight } from '../loadout/loadout.service';
 import '../rx-operators';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { flatMap, sum } from '../util';
+import { flatMap } from '../util';
 import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
@@ -379,7 +379,7 @@ function makeD2StoresService(): D2StoreServiceType {
   function updateBasePower(account: DestinyAccount, stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
-      const maxBasePower = getBasePower(maxBasePowerLoadout(stores, store));
+      const maxBasePower = getLight(stores, maxBasePowerLoadout(stores, store));
 
       const hasClassified = flatMap(_stores, (s) => s.items).some((i) => {
         return i.classified &&
@@ -454,26 +454,6 @@ function makeD2StoresService(): D2StoreServiceType {
     };
 
     return optimalLoadout(applicableItems, bestItemFn, '');
-  }
-
-  function getBasePower(loadout: Loadout) {
-    // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
-    // They are equally weighted as of Forsaken.
-    const itemWeight = {
-      Weapons: 1,
-      Armor: 1,
-      General: 1
-    };
-    // 3 Weapons, 4 Armor, 1 General
-    const itemWeightDenominator = 8;
-    const items = _.flatten(Object.values(loadout.items)).filter((i: DimItem) => i.equipped);
-
-    const exactBasePower = sum(items, (item) => {
-      return (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }) / itemWeightDenominator;
-
-    // Floor-truncate to one significant digit since the game doesn't round
-    return (Math.floor(exactBasePower * 10) / 10).toFixed(1);
   }
 
   // TODO: vault counts are silly and convoluted. We really need an
