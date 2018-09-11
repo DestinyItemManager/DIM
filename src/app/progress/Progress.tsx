@@ -18,19 +18,20 @@ import {
   } from 'react-view-pager';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { isPhonePortrait, isPhonePortraitStream } from '../mediaQueries';
 import CharacterTile, { characterIsCurrent } from './CharacterTile';
 import { Faction } from './Faction';
 import { Milestone } from './Milestone';
 import './progress.scss';
 import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
 import Quest from './Quest';
-import { settings, CharacterOrder } from '../settings/settings';
+import { CharacterOrder, Settings } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
+import { connect } from 'react-redux';
+import { RootState } from '../store/reducers';
 import { chainComparator, compareBy } from '../comparators';
 
 const factionOrder = [
@@ -58,25 +59,30 @@ const factionOrder = [
 interface Props {
   $scope: IScope;
   account: DestinyAccount;
+  characterOrder: CharacterOrder;
+  isPhonePortrait: boolean;
 }
 
 interface State {
   progress?: ProgressProfile;
-  characterOrder: CharacterOrder;
-  isPhonePortrait: boolean;
   currentCharacterId: string;
 }
 
-export default class Progress extends React.Component<Props, State> {
+function mapStateToProps(state: RootState): Partial<Props> {
+  const settings = state.settings.settings as Settings;
+  return {
+    isPhonePortrait: state.shell.isPhonePortrait,
+    characterOrder: settings.characterOrder
+  };
+}
+
+class Progress extends React.Component<Props, State> {
   subscription: Subscription;
-  mediaQuerySubscription: Subscription;
   private $scope = $rootScope.$new(true);
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props);
     this.state = {
-      characterOrder: settings.characterOrder,
-      isPhonePortrait: isPhonePortrait(),
       currentCharacterId: ""
     };
   }
@@ -89,7 +95,7 @@ export default class Progress extends React.Component<Props, State> {
           currentCharacterId: prevState.currentCharacterId
         };
         if (prevState.currentCharacterId === "") {
-          const characters = this.sortedCharacters(progress, prevState.characterOrder);
+          const characters = this.sortedCharacters(progress, this.props.characterOrder);
           if (characters.length) {
             const lastPlayedDate = progress.lastPlayedDate;
             updatedState.currentCharacterId = characters.find((c) => characterIsCurrent(c, lastPlayedDate))!.characterId;
@@ -100,20 +106,8 @@ export default class Progress extends React.Component<Props, State> {
       });
     });
 
-    this.mediaQuerySubscription = isPhonePortraitStream().subscribe((phonePortrait: boolean) => {
-      if (phonePortrait !== this.state.isPhonePortrait) {
-        this.setState({ isPhonePortrait: phonePortrait });
-      }
-    });
-
     this.$scope.$on('dim-refresh', () => {
       reloadProgress();
-    });
-
-    this.$scope.$watch(() => settings.characterOrder, (newValue: CharacterOrder) => {
-      if (newValue !== this.state.characterOrder) {
-        this.setState({ characterOrder: newValue });
-      }
     });
   }
 
@@ -180,7 +174,7 @@ export default class Progress extends React.Component<Props, State> {
             <div className="progress-row">
               <div className="progress-for-character">
                 <ErrorBoundary name="CrucibleRanks">
-                  {crucibleRanks.map((progression) =>
+                  {crucibleRanks.map((progression) => progression &&
                     <CrucibleRank
                       key={progression.progressionHash}
                       defs={defs}
@@ -196,14 +190,9 @@ export default class Progress extends React.Component<Props, State> {
       </>
     );
 
-    const forsaken = (
-      <p>{t('Forsaken.Progress')}</p>
-    );
-
-    if (this.state.isPhonePortrait) {
+    if (this.props.isPhonePortrait) {
       return (
         <div className="progress-page dim-page">
-         {forsaken}
           {profileMilestonesContent}
           <ViewPager>
             <Frame className="frame" autoSize={true}>
@@ -225,7 +214,6 @@ export default class Progress extends React.Component<Props, State> {
     } else {
       return (
         <div className="progress-page dim-page">
-          {forsaken}
           {profileMilestonesContent}
           {this.renderCharacters(characters)}
         </div>
@@ -238,6 +226,8 @@ export default class Progress extends React.Component<Props, State> {
    */
   private renderCharacters(characters: DestinyCharacterComponent[]) {
     const { defs, profileInfo, lastPlayedDate } = this.state.progress!;
+
+    const pursuitsLabel = defs.InventoryBucket[1345459588].displayProperties.name;
 
     return (
       <>
@@ -269,7 +259,7 @@ export default class Progress extends React.Component<Props, State> {
         </div>
 
         <div className="section">
-          <div className="title">{t('Progress.Quests')}</div>
+          <div className="title">{pursuitsLabel}</div>
           <div className="progress-row">
             <ErrorBoundary name="Quests">
               {characters.map((character) =>
@@ -311,7 +301,7 @@ export default class Progress extends React.Component<Props, State> {
   /**
    * The list of characters in the current (or provided) state, ordered in the preferred way.
    */
-  private sortedCharacters(progress: ProgressProfile = this.state.progress!, characterOrder: CharacterOrder = this.state.characterOrder): DestinyCharacterComponent[] {
+  private sortedCharacters(progress: ProgressProfile = this.state.progress!, characterOrder: CharacterOrder = this.props.characterOrder): DestinyCharacterComponent[] {
     return sortCharacters(Object.values(progress.profileInfo.characters.data), characterOrder);
   }
 
@@ -336,43 +326,30 @@ export default class Progress extends React.Component<Props, State> {
     const allMilestones: DestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
 
     const filteredMilestones = allMilestones.filter((milestone) => {
-      return !milestone.availableQuests &&
+      return !milestone.availableQuests && !milestone.activities &&
         (milestone.vendors || milestone.rewards) &&
         defs.Milestone.get(milestone.milestoneHash);
     });
 
-    // Sort them alphabetically by name
-    return _.sortBy(filteredMilestones, (milestone) => {
-      const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
-      return milestoneDef.displayProperties.name;
-    });
+    return _.sortBy(filteredMilestones, (milestone) => milestone.order);
   }
 
   /**
    * Get all the milestones to show for a particular character, filtered to active milestones and sorted.
    */
   private milestonesForCharacter(character: DestinyCharacterComponent): DestinyMilestone[] {
-    const { defs, profileInfo } = this.state.progress!;
+    const { profileInfo } = this.state.progress!;
 
     const allMilestones: DestinyMilestone[] = Object.values(profileInfo.characterProgressions.data[character.characterId].milestones);
 
-    const filteredMilestones = allMilestones.filter((milestone) => {
-      return milestone.availableQuests && milestone.availableQuests.every((q) =>
+    const filteredMilestones = allMilestones.filter((milestone) =>
+      milestone.activities || (milestone.availableQuests && milestone.availableQuests.every((q) =>
             q.status.stepObjectives.length > 0 &&
             q.status.started &&
-            (!q.status.completed || !q.status.redeemed));
-    });
+            (!q.status.completed || !q.status.redeemed)))
+    );
 
-    // Sort them alphabetically by name
-    return _.sortBy(filteredMilestones, (milestone) => {
-      const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
-      if (milestoneDef && milestoneDef.displayProperties) {
-        return milestoneDef.displayProperties.name;
-      } else if (milestone.availableQuests) {
-        const questDef = milestoneDef.quests[milestone.availableQuests[0].questItemHash];
-        return questDef.displayProperties.name;
-      }
-    });
+    return _.sortBy(filteredMilestones, (milestone) => milestone.order);
   }
 
   /**
@@ -396,7 +373,6 @@ export default class Progress extends React.Component<Props, State> {
   private questItems(allItems: DestinyItemComponent[]): DestinyItemComponent[] {
     const { defs } = this.state.progress!;
 
-    // const allItems: DestinyItemComponent[] = profileInfo.characterInventories.data[character.characterId].items.concat(profileInfo.profileInventory.data.items);
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
 
@@ -405,15 +381,8 @@ export default class Progress extends React.Component<Props, State> {
         return true;
       }
 
-      // This required a lot of trial and error.
-      return (itemDef.itemCategoryHashes &&
-          (
-            itemDef.itemCategoryHashes.includes(16) ||
-            itemDef.itemCategoryHashes.includes(2250046497)
-          )
-        ) ||
-        (itemDef.inventory && itemDef.inventory.tierTypeHash === 0 &&
-          itemDef.backgroundColor && itemDef.backgroundColor.alpha > 0);
+      // Also include prophecy tablets
+      return (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(2250046497));
     });
 
     filteredItems.sort(chainComparator(
@@ -424,7 +393,7 @@ export default class Progress extends React.Component<Props, State> {
       compareBy((item) => {
         // Sort by icon image, but only for bounties...
         const itemDef = defs.InventoryItem.get(item.itemHash);
-        if (itemDef.itemCategoryHashes.includes(1784235469)) {
+        if (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(1784235469)) {
           return itemDef.displayProperties.icon;
         } else {
           return undefined;
@@ -469,3 +438,5 @@ export function sortCharacters(characters: DestinyCharacterComponent[], order: C
     return characters;
   }
 }
+
+export default connect(mapStateToProps)(Progress);

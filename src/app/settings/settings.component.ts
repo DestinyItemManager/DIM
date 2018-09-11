@@ -16,6 +16,7 @@ import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import { getPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 
 export const SettingsComponent: IComponentOptions = {
   template,
@@ -67,13 +68,7 @@ export function SettingsController(
     'zh-cht': '繁體中文' // Chinese (Traditional)
   };
 
-  vm.reviewsPlatformOptions = {
-    0: $i18next.t('DtrReview.Platforms.All'),
-    1: $i18next.t('DtrReview.Platforms.Xbox'),
-    2: $i18next.t('DtrReview.Platforms.Playstation'),
-    3: $i18next.t('DtrReview.Platforms.AllConsoles'),
-    4: $i18next.t('DtrReview.Platforms.Pc')
-  };
+  vm.reviewsPlatformOptions = getPlatformOptions();
 
   getDefinitions().then((defs) => {
     vm.reviewModeOptions = getReviewModes(defs);

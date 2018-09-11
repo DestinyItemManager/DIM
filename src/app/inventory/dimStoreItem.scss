@@ -31,6 +31,10 @@
   background-color: transparent;
 }
 
+.item-stackable-max {
+  color: $orange;
+}
+
 .item-review {
   left: 0;
   text-align: left;
@@ -59,7 +63,7 @@ dim-simple-item {
   outline: none;
 }
 
-dim-store-item {
+dim-store-item, .item-drag-container {
   width: 52px;
   height: 52px;
   width: calc(var(--item-size) + 8px);

@@ -89,11 +89,18 @@ const StoreProto = {
     const match = (i: D2Item) => item.index === i.index;
     const sourceIndex = this.items.findIndex(match);
     if (sourceIndex >= 0) {
-      this.items.splice(sourceIndex, 1);
+      this.items = [
+        ...this.items.slice(0, sourceIndex),
+        ...this.items.slice(sourceIndex + 1)
+      ];
 
-      const bucketItems = this.buckets[item.location.id];
+      let bucketItems = this.buckets[item.location.id];
       const bucketIndex = bucketItems.findIndex(match);
-      bucketItems.splice(bucketIndex, 1);
+      bucketItems = [
+        ...bucketItems.slice(0, bucketIndex),
+        ...bucketItems.slice(bucketIndex + 1)
+      ];
+      this.buckets[item.location.id] = bucketItems;
 
       if (this.current && item.location.accountWide && this.vault) {
         this.vault.vaultCounts[item.location.id].count--;
@@ -105,10 +112,9 @@ const StoreProto = {
   },
 
   addItem(this: D2Store, item: D2Item) {
-    this.items.push(item);
-    const bucketItems = this.buckets[item.location.id];
-    bucketItems.push(item);
-    if (item.location.type === 'LostItems' && bucketItems.length >= item.location.capacity) {
+    this.items = [...this.items, item];
+    this.buckets[item.location.id] = [...this.buckets[item.location.id], item];
+    if (item.location.type === 'LostItems' && this.buckets[item.location.id].length >= item.location.capacity) {
       showInfoPopup('lostitems', {
         type: 'warning',
         title: t('Postmaster.Limit'),

@@ -217,11 +217,12 @@
     "PartialMatch": "Zeigt Items, deren Name/Perk eine partielle Übereinstimmung mit dem Filtertext hat.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
     "PowerLevel": "Zeigt Items basierend auf dem Powerlevel (Angriff für Waffen; Verteidigung für Rüstung).",
-    "PowerMod": "Items, die ein Mod haben, um das Powerlevel zu erhöhen.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
     "Rated": "Zeigt alle Waffen, die eine Bewertung auf Destiny Tracker haben.",
     "Rating": "Zeigt alle Waffen basierend auf ihrer Bewertung bei Destiny Tracker an.",
+    "RatingCount": "Zeigt Waffen basierend auf der der Anzahl der Bewertungen an, die sie für die derzeitige Sandbox auf Destiny Tracker haben.",
     "Reforgeable": "Zeigt Items, die beim Waffenmeister umgeschmiedet werden können.",
     "Release": "Verfügbar seit Veröffentlichung <i>{{release}}</i>",
     "Releases": {
@@ -260,8 +261,8 @@
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
   },
   "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
+    "Progress": "Hinweis: Statusdaten können eine Zeit lang unvollständig oder unkorrekt sein nach dem Start von Forsaken.",
+    "Vendors": "Händler werden erst einige Zeit nach dem Start von Forsaken verfügbar sein."
   },
   "Header": {
     "About": "Über",
@@ -597,7 +598,7 @@
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
     "Level": "Level",
-    "MaxBasePower": "Max Basis Power (ohne Mods)",
+    "MaxBasePower": "Max Power",
     "NoBonus": "Kein Bonus",
     "NotApplicable": "N/V",
     "OfMaxRoll": "{{range}} des max. Rolls",

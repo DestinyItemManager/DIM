@@ -5,6 +5,8 @@ import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { Subject } from 'rxjs/Subject';
 import { $rootScope } from 'ngimport';
+import store from '../../store/store';
+import { setNewItems } from '../actions';
 
 const _removedNewItems = new Set<string>();
 
@@ -88,6 +90,7 @@ export const NewItemsService = {
   },
 
   saveNewItems(newItems: Set<string>, account: DestinyAccount) {
+    store.dispatch(setNewItems(newItems));
     return Promise.resolve(idbKeyval.set(newItemsKey(account), newItems));
   },
 

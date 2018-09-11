@@ -31,6 +31,8 @@ declare const $featureFlags: {
   vendors: boolean;
   /** Enable vendorengrams.xyz integration */
   vendorEngrams: boolean;
+  /** Use the new React inventory screen. */
+  reactInventory: boolean;
 }
 
 declare function ga(...params: string[]);

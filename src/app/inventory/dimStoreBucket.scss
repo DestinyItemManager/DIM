@@ -14,7 +14,7 @@
   }
 }
 
-.on-drag-enter > div, .on-drag-hover > div {
+.on-drag-enter, .on-drag-hover {
   background-color: rgba(200, 200, 200, 0.2);
 }
 

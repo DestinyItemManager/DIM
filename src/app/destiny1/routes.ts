@@ -8,6 +8,7 @@ import { states as recordBookStates } from '../record-books/routes';
 import { states as activitiesStates } from '../activities/routes';
 import { states as loadoutBuilderStates } from '../loadout-builder/routes';
 import { states as vendorsStates } from '../vendors/routes';
+import Inventory from "../inventory/Inventory";
 
 // Root state for Destiny 1 views
 export const states: ReactStateDeclaration[] = [
@@ -22,7 +23,7 @@ export const states: ReactStateDeclaration[] = [
   }, {
     name: 'destiny1.inventory',
     url: '/inventory',
-    component: angular2react('inventory1', D1InventoryComponent, lazyInjector.$injector as angular.auto.IInjectorService)
+    component: $featureFlags.reactInventory ? Inventory : angular2react('inventory1', D1InventoryComponent, lazyInjector.$injector as angular.auto.IInjectorService)
   },
   ...recordBookStates,
   ...activitiesStates,

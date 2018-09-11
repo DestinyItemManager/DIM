@@ -5,7 +5,6 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
   DestinyProgression,
-  PlatformErrorCodes,
   DestinyGameVersions
   } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -19,10 +18,10 @@ import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definition
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
-import { Loadout } from '../loadout/loadout.service';
+import { getLight } from '../loadout/loadout.service';
 import '../rx-operators';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { flatMap, sum } from '../util';
+import { flatMap } from '../util';
 import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
@@ -36,6 +35,8 @@ import { InventoryBuckets } from './inventory-buckets';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
+import store from '../store/store';
+import { update, setBuckets } from './actions';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -83,7 +84,10 @@ function makeD2StoresService(): D2StoreServiceType {
     getItemAcrossStores,
     updateCharacters,
     reloadStores,
-    refreshRatingsData
+    refreshRatingsData,
+    touch() {
+      store.dispatch(update(_stores));
+    }
   };
 
   return service;
@@ -181,7 +185,6 @@ function makeD2StoresService(): D2StoreServiceType {
   function loadStores(account: DestinyAccount): IPromise<D2Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
-    const firstLoad = (previousItems.size === 0);
 
     resetIdTracker();
 
@@ -195,14 +198,14 @@ function makeD2StoresService(): D2StoreServiceType {
       .then(([defs, buckets, newItems, itemInfoService, profileInfo]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
-        const lastPlayedDate = findLastPlayedDate(profileInfo);
-
         // TODO: components may be hidden (privacy)
 
         if (!profileInfo.profileInventory.data || !profileInfo.characterInventories.data) {
           console.error("Vault or character inventory was missing - bailing in order to avoid corruption");
           throw new Error(t('BungieService.Difficulties'));
         }
+
+        const lastPlayedDate = findLastPlayedDate(profileInfo);
 
         const processVaultPromise = processVault(
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
@@ -227,15 +230,14 @@ function makeD2StoresService(): D2StoreServiceType {
           itemInfoService,
           lastPlayedDate));
 
+        store.dispatch(setBuckets(buckets));
+
         return $q.all([defs, buckets, newItems, itemInfoService, processVaultPromise, ...processStorePromises]);
       })
       .then(([defs, buckets, newItems, itemInfoService, vault, ...characters]: [D2ManifestDefinitions, InventoryBuckets, Set<string>, any, D2Vault, ...D2Store[]]) => {
-        // Save and notify about new items (but only if this wasn't the first load)
-        if (!firstLoad) {
-          // Save the list of new item IDs
-          NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account);
-        }
+        // Save the list of new item IDs
+        NewItemsService.applyRemovedNewItems(newItems);
+        NewItemsService.saveNewItems(newItems, account);
 
         const stores: D2Store[] = [...characters, vault];
         _stores = stores;
@@ -254,20 +256,12 @@ function makeD2StoresService(): D2StoreServiceType {
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
+        store.dispatch(update(stores));
+
         return stores;
       })
       .catch((e: DimError) => {
-        // Special messaging for the Warmind error
-        if (e.code && e.code === PlatformErrorCodes.DestinyUnexpectedError) {
-          toaster.pop({
-            type: 'error',
-            title: t('BungieService.ErrorTitle'),
-            body: t('BungieService.WarmindLoginNeeded'),
-            showCloseButton: false
-          });
-        } else {
-          toaster.pop(bungieErrorToaster(e));
-        }
+        toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);
         reportException('d2stores', e);
         // It's important that we swallow all errors here - otherwise
@@ -390,7 +384,7 @@ function makeD2StoresService(): D2StoreServiceType {
   function updateBasePower(account: DestinyAccount, stores: D2Store[], store: D2Store, defs: D2ManifestDefinitions) {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
-      const maxBasePower = getBasePower(maxBasePowerLoadout(stores, store));
+      const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
       const hasClassified = flatMap(_stores, (s) => s.items).some((i) => {
         return i.classified &&
@@ -465,25 +459,6 @@ function makeD2StoresService(): D2StoreServiceType {
     };
 
     return optimalLoadout(applicableItems, bestItemFn, '');
-  }
-
-  function getBasePower(loadout: Loadout) {
-    // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
-    const itemWeight = {
-      Weapons: 6,
-      Armor: 5,
-      General: 4
-    };
-    // 3 Weapons, 4 Armor, 1 General
-    const itemWeightDenominator = 42;
-    const items = _.flatten(Object.values(loadout.items)).filter((i: DimItem) => i.equipped);
-
-    const exactBasePower = sum(items, (item) => {
-      return (item.basePower * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-    }) / itemWeightDenominator;
-
-    // Floor-truncate to one significant digit since the game doesn't round
-    return (Math.floor(exactBasePower * 10) / 10).toFixed(1);
   }
 
   // TODO: vault counts are silly and convoluted. We really need an

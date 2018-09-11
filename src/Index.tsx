@@ -4,6 +4,8 @@ import 'core-js/fn/promise/finally';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { module, bootstrap } from 'angular';
+import { DragDropContextProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import { UIRouter } from '@uirouter/react';
 import { Provider } from 'react-redux';
 import makeRouter from './router.config';
@@ -28,16 +30,6 @@ import { lazyInjector } from './lazyInjector';
 import { setRouter } from './router';
 import store from './app/store/store';
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  console.log('prompt login');
-  if (window.confirm('Save to desktop?')) {
-
-    console.log('save to desktop');
-    (e as any).prompt();
-  }
-});
-
 polyfill({
   holdToDrag: 300
 });
@@ -59,7 +51,9 @@ initi18n().then(() => {
       ReactDOM.render(
         <Provider store={store}>
           <UIRouter router={router}>
-            <App/>
+            <DragDropContextProvider backend={HTML5Backend}>
+              <App/>
+            </DragDropContextProvider>
           </UIRouter>
         </Provider>,
         document.getElementById('app')
