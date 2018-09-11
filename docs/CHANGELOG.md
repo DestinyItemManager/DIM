@@ -2,6 +2,8 @@
 
 # 4.69.1 (2018-09-10)
 
+# 4.69.1 (2018-09-10)
+
 * Max power value in 'Maximum Power' loadout is now calculated correctly.
 
 # 4.69.0 (2018-09-09)
