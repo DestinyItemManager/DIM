@@ -168,17 +168,18 @@ class Stores extends React.Component<Props, State> {
     vault: DimVault,
     currentStore: DimStore
   ) {
-    const { settings, buckets, newItems, itemInfos, ratings, searchFilter, collapsedSections } = this.props;
+    const { settings, buckets, newItems, itemInfos, ratings, searchFilter, collapsedSections, isPhonePortrait } = this.props;
 
     return (
       <div>
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
           {stores.map((store) => (
             <div className="store-cell" key={store.id}>
-              <StoreHeading internalLoadoutMenu={true} store={store} />
+              <StoreHeading internalLoadoutMenu={!isPhonePortrait} store={store} />
             </div>
           ))}
         </ScrollClassDiv>
+        {isPhonePortrait && <div className="detached" loadout-id={stores[0].id}/>}
         {Object.keys(buckets.byCategory).map((category) => (
           <div key={category} className="section">
             <CollapsibleTitle
