@@ -22,7 +22,8 @@ import {
   DestinyItemPlug,
   DestinyItemSocketEntryDefinition,
   DestinyItemSocketEntryPlugItemDefinition,
-  DestinyAmmunitionType
+  DestinyAmmunitionType,
+  DamageType
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -76,11 +77,14 @@ const statWhiteList = [
   3871231066, // Magazine
   2996146975, // Mobility
   392767087, // Resilience
-  1943323491 // Recovery
+  1943323491, // Recovery
+  447667954, // Draw Time
+  1931675084 // Inventory Size
   //    1935470627, // Power
-  //    1931675084, //  Inventory Size
   // there are a few others (even an `undefined` stat)
 ];
+
+const statsNoBar = [4284893193, 3871231066, 2961396640, 447667954, 1931675084];
 
 // Mapping from itemCategoryHash to our category strings for filtering.
 const categoryFromHash = {
@@ -88,6 +92,7 @@ const categoryFromHash = {
   3954685534: 'CATEGORY_SUBMACHINEGUN',
   2489664120: 'CATEGORY_TRACE_RIFLE',
   1504945536: 'CATEGORY_LINEAR_FUSION_RIFLE',
+  3317538576: 'CATEGORY_BOW',
   5: 'CATEGORY_AUTO_RIFLE',
   6: 'CATEGORY_HAND_CANNON',
   7: 'CATEGORY_PULSE_RIFLE',
@@ -95,9 +100,19 @@ const categoryFromHash = {
   9: 'CATEGORY_FUSION_RIFLE',
   10: 'CATEGORY_SNIPER_RIFLE',
   11: 'CATEGORY_SHOTGUN',
+  12: 'CATEGORY_MACHINE_GUN',
   13: 'CATEGORY_ROCKET_LAUNCHER',
   14: 'CATEGORY_SIDEARM',
   54: 'CATEGORY_SWORD',
+};
+
+const damageMods = {
+  1837294881: DamageType.Void,
+  3728733956: DamageType.Void,
+  3994397859: DamageType.Arc,
+  4126105782: DamageType.Arc,
+  344032858: DamageType.Thermal,
+  2273483223: DamageType.Thermal
 };
 
 // Prototype for Item objects - add methods to this to add them to all
@@ -468,6 +483,15 @@ export function makeItem(
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
     }
+
+    // Fix damage type for Y1 weapons. Should be fixed 9/18/2018
+    // https://github.com/Bungie-net/api/issues/662
+    for (const socket of createdItem.sockets.sockets) {
+      if (socket.plug && damageMods[socket.plug.plugItem.hash]) {
+        createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][damageMods[socket.plug.plugItem.hash]] as typeof createdItem.dmg;
+        break;
+      }
+    }
   }
 
   // Infusion
@@ -581,9 +605,7 @@ function buildDefaultStats(itemDef: DestinyInventoryItemDefinition, statDefs: La
       value: stat.value,
       // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
       maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
-      bar: stat.statHash !== 4284893193 &&
-        stat.statHash !== 3871231066 &&
-        stat.statHash !== 2961396640
+      bar: !statsNoBar.includes(stat.statHash)
     };
   }));
 }
@@ -616,9 +638,7 @@ function buildStats(
       sort: statWhiteList.indexOf(stat.statHash),
       value: val,
       maximumValue: itemStat.maximumValue,
-      bar: stat.statHash !== 4284893193 &&
-      stat.statHash !== 3871231066 &&
-      stat.statHash !== 2961396640
+      bar: !statsNoBar.includes(stat.statHash)
     };
   }));
 }
@@ -643,9 +663,7 @@ function buildInvestmentStats(
       sort: statWhiteList.indexOf(itemStat.statTypeHash),
       value: itemStat.value,
       maximumValue: 0,
-      bar: def.hash !== 4284893193 &&
-        def.hash !== 3871231066 &&
-        def.hash !== 2961396640
+      bar: !statsNoBar.includes(itemStat.statTypeHash)
     };
   }));
 }

@@ -4,6 +4,7 @@ import { D2InventoryComponent } from "./d2-inventory.component";
 import { angular2react } from "angular2react";
 import { lazyInjector } from "../../lazyInjector";
 import Destiny from "../shell/Destiny";
+import Inventory from "../inventory/Inventory";
 
 // Root state for Destiny 2 views
 export const states: ReactStateDeclaration[] = [{
@@ -17,5 +18,5 @@ export const states: ReactStateDeclaration[] = [{
 }, {
   name: 'destiny2.inventory',
   url: '/inventory',
-  component: angular2react('inventory2', D2InventoryComponent, lazyInjector.$injector as angular.auto.IInjectorService)
+  component: $featureFlags.reactInventory ? Inventory : angular2react('inventory2', D2InventoryComponent, lazyInjector.$injector as angular.auto.IInjectorService)
 }];

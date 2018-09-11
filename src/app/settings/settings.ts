@@ -5,6 +5,8 @@ import * as _ from 'underscore';
 import { defaultLanguage } from '../i18n';
 import { SyncService } from '../storage/sync.service';
 import { Subject } from 'rxjs/Subject';
+import store from '../store/store';
+import { loaded } from './actions';
 
 const itemSortPresets = {
   primaryStat: ['primStat', 'name'],
@@ -49,7 +51,7 @@ let readyResolve;
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed';
 
-class Settings {
+export class Settings {
   // Show full details in item popup
   itemDetails = true;
   // Show item quality percentages
@@ -106,6 +108,7 @@ class Settings {
     }
 
     this.$updates.next();
+    store.dispatch(loaded(this));
 
     return saveSettings(this);
   }
@@ -141,6 +144,7 @@ export function initSettings() {
     $rootScope.$evalAsync(() => {
       const languageChanged = savedSettings.language !== i18next.language;
       merge(settings, savedSettings);
+      store.dispatch(loaded(settings));
       settings.$updates.next();
       localStorage.setItem('dimLanguage', settings.language);
       if (languageChanged) {

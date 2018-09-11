@@ -52,6 +52,10 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
   // TODO: pull this into a service?
   async loadVendors() {
+    if (this.state.error) {
+      this.setState({ error: undefined });
+    }
+
     dimVendorEngramsService.getAllVendorDrops().then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
 
     // TODO: defs as a property, not state
@@ -74,6 +78,11 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
           this.setState({ basePowerLevel });
         }
       }
+    }
+
+    if (!characterId) {
+      this.setState({ error: new Error("Couldn't load any characters.") });
+      return;
     }
 
     let vendorsResponse;
@@ -124,7 +133,10 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     if (error) {
       return (
         <div className="vendor dim-page">
-          <h2>{t('Forsaken.Vendors')}</h2>
+          <div className="dim-error">
+            <h2>{t('ErrorBoundary.Title')}</h2>
+            <div>{error.message}</div>
+          </div>
         </div>
       );
     }

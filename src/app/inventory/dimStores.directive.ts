@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import template from './dimStores.directive.html';
-import './dimStores.scss';
+import './Stores.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';

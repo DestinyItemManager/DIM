@@ -71,7 +71,7 @@ export default class Vendor extends React.Component<Props> {
       <div className='vendor-char-items'>
         <div className='title'>
           <div className="collapse-handle">
-            {vendorEngramDrops.length > 0 && powerLevelMatters(basePowerLevel) && <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/"><img className={vendorEngramClass} src={vendorEngramSvg} title={t(vendorLinkTitle)} /></a>}
+            {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && powerLevelMatters(basePowerLevel) && <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/"><img className={vendorEngramClass} src={vendorEngramSvg} title={t(vendorLinkTitle)} /></a>}
             <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon"/>
             <UISref to='destiny2.vendor' params={{ id: vendor.vendorHash }}><span>{vendorDef.displayProperties.name}</span></UISref>
             <span className="vendor-location">{placeString}</span>
