@@ -14,11 +14,13 @@
   }
 }
 
-.on-drag-enter > div, .on-drag-hover > div {
+.on-drag-enter,
+.on-drag-hover {
   background-color: rgba(200, 200, 200, 0.2);
 }
 
 .sub-section {
+  width: 100%;
   margin-top: 6px;
   margin-bottom: 6px;
   position: relative;
@@ -49,5 +51,8 @@ dim-store-bucket {
   align-content: flex-start;
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
+  }
+  &.unequipped {
+    width: 100%;
   }
 }

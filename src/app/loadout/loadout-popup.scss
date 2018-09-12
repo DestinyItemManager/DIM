@@ -14,7 +14,7 @@
   background-color: #222;
 
   &:last-of-type {
-      border: 0;
+    border: 0;
   }
 
   &:hover {
@@ -59,7 +59,7 @@
     color: $gold;
     float: right;
     &:before {
-      content: "\2726";
+      content: '\2726';
       display: inline-block;
       vertical-align: 7%;
       font-size: 50%;
@@ -78,8 +78,8 @@
 
 .loadout-popup-content {
   line-height: 35px;
-  background-color: #3A4150;
-  color: #E4E4E4;
+  background-color: #3a4150;
+  color: #e4e4e4;
 }
 
 .ngdialog.loadout-popup {

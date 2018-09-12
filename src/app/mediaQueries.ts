@@ -24,10 +24,12 @@ export function isPhonePortraitStream(): Observable<boolean> {
       (h: MediaQueryListListener) => phoneWidthQuery.addListener(h),
       (h: MediaQueryListListener) => phoneWidthQuery.removeListener(h)
     )
-    .map((e: MediaQueryList) => e.matches)
-    .startWith(phoneWidthQuery.matches)
-    .subscribeOn(asap);
+      .map((e: MediaQueryList) => e.matches)
+      .startWith(phoneWidthQuery.matches)
+      .subscribeOn(asap);
   });
 }
 
-isPhonePortraitStream().subscribe((isPhonePortrait) => store.dispatch(setPhonePortrait(isPhonePortrait)));
+isPhonePortraitStream().subscribe((isPhonePortrait) =>
+  store.dispatch(setPhonePortrait(isPhonePortrait))
+);

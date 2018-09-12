@@ -76,5 +76,4 @@ if ($featureFlags.sentry) {
 
 export const DimAppModule = module('dimApp', dependencies)
   .config(config)
-  .run(run)
-  .name;
+  .run(run).name;

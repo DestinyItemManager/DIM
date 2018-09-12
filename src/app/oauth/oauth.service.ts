@@ -8,37 +8,41 @@ const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
 export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tokens> {
   // https://github.com/zloirock/core-js/issues/178#issuecomment-192081350
-  return Promise.resolve(fetch(TOKEN_URL, {
-    method: 'POST',
-    body: stringify({
-      grant_type: 'refresh_token',
-      refresh_token: refreshToken.value,
-      client_id: oauthClientId(),
-      client_secret: oauthClientSecret()
-    }),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  })
-    .then((response) => response.ok ? response.json() : Promise.reject(response))
-    .then(handleAccessToken));
+  return Promise.resolve(
+    fetch(TOKEN_URL, {
+      method: 'POST',
+      body: stringify({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken.value,
+        client_id: oauthClientId(),
+        client_secret: oauthClientSecret()
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+      .then((response) => (response.ok ? response.json() : Promise.reject(response)))
+      .then(handleAccessToken)
+  );
 }
 
 export function getAccessTokenFromCode(code: number): Promise<Tokens> {
-  return Promise.resolve(fetch(TOKEN_URL, {
-    method: 'POST',
-    body: stringify({
-      grant_type: 'authorization_code',
-      code,
-      client_id: oauthClientId(),
-      client_secret: oauthClientSecret()
-    }),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  })
-    .then((response) => response.ok ? response.json() : Promise.reject(response))
-    .then(handleAccessToken));
+  return Promise.resolve(
+    fetch(TOKEN_URL, {
+      method: 'POST',
+      body: stringify({
+        grant_type: 'authorization_code',
+        code,
+        client_id: oauthClientId(),
+        client_secret: oauthClientSecret()
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+      .then((response) => (response.ok ? response.json() : Promise.reject(response)))
+      .then(handleAccessToken)
+  );
 }
 
 function handleAccessToken(response): Tokens {
@@ -68,6 +72,6 @@ function handleAccessToken(response): Tokens {
 
     return tokens;
   } else {
-    throw new Error("No data or access token in response: " + JSON.stringify(response));
+    throw new Error('No data or access token in response: ' + JSON.stringify(response));
   }
 }

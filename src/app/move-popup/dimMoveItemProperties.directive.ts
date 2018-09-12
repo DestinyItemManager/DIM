@@ -52,11 +52,15 @@ function MoveItemPropertiesCtrl(
 
   vm.$onInit = () => {
     const item = vm.item;
-    vm.hasDetails = Boolean((item.stats && item.stats.length) ||
-                            item.talentGrid || item.objectives ||
-                            (item.isDestiny2() && item.flavorObjective) || item.secondaryIcon);
+    vm.hasDetails = Boolean(
+      (item.stats && item.stats.length) ||
+        item.talentGrid ||
+        item.objectives ||
+        (item.isDestiny2() && item.flavorObjective) ||
+        item.secondaryIcon
+    );
     vm.showDescription = Boolean(item.description && item.description.length);
-    vm.showDetailsByDefault = (!item.equipment && item.notransfer);
+    vm.showDetailsByDefault = !item.equipment && item.notransfer;
     vm.itemDetails = vm.showDetailsByDefault;
 
     dimDestinyTrackerService.getItemReviews(vm.item).then(() => $scope.$apply());
@@ -65,24 +69,26 @@ function MoveItemPropertiesCtrl(
     let language = vm.settings.language;
     if (vm.item.destinyVersion === 1) {
       switch (language) {
-      case 'es-mx':
-        language = 'es';
-        break;
-      case 'pl':
-      case 'ru':
-      case 'zh-cht':
-        language = 'en';
-        break;
+        case 'es-mx':
+          language = 'es';
+          break;
+        case 'pl':
+        case 'ru':
+        case 'zh-cht':
+          language = 'en';
+          break;
       }
     } else {
       // For D2, DTR uses English for es-mx
       switch (language) {
-      case 'es-mx':
-        language = 'es';
-        break;
+        case 'es-mx':
+          language = 'es';
+          break;
       }
     }
-    vm.destinyDBLink = `http://db.destinytracker.com/d${vm.item.destinyVersion}/${vm.settings.language}/items/${vm.item.hash}`;
+    vm.destinyDBLink = `http://db.destinytracker.com/d${vm.item.destinyVersion}/${
+      vm.settings.language
+    }/items/${vm.item.hash}`;
 
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();
@@ -91,12 +97,15 @@ function MoveItemPropertiesCtrl(
       vm.classes[`is-${vm.item.dmg}`] = true;
     }
 
-    if (vm.item.classTypeName !== 'unknown' &&
-        // These already include the class name
-        vm.item.type !== 'ClassItem' &&
-        vm.item.type !== 'Artifact' &&
-        vm.item.type !== 'Class') {
-      vm.classType = vm.item.classTypeNameLocalized[0].toUpperCase() + vm.item.classTypeNameLocalized.slice(1);
+    if (
+      vm.item.classTypeName !== 'unknown' &&
+      // These already include the class name
+      vm.item.type !== 'ClassItem' &&
+      vm.item.type !== 'Artifact' &&
+      vm.item.type !== 'Class'
+    ) {
+      vm.classType =
+        vm.item.classTypeNameLocalized[0].toUpperCase() + vm.item.classTypeNameLocalized.slice(1);
     }
 
     /*
@@ -146,9 +155,10 @@ function MoveItemPropertiesCtrl(
       return;
     }
 
-    const store = item.owner === 'vault'
-      ? item.getStoresService().getActiveStore()!
-      : item.getStoresService().getStore(item.owner)!;
+    const store =
+      item.owner === 'vault'
+        ? item.getStoresService().getActiveStore()!
+        : item.getStoresService().getStore(item.owner)!;
 
     vm.locking = true;
 
@@ -187,7 +197,7 @@ function MoveItemPropertiesCtrl(
   vm.previewVendor = () => {
     const item = vm.item;
     if (item.isDestiny2()) {
-      router.stateService.go("destiny2.vendor", { id: item.previewVendor });
+      router.stateService.go('destiny2.vendor', { id: item.previewVendor });
     }
   };
 
@@ -204,7 +214,8 @@ function MoveItemPropertiesCtrl(
           if (vmItemStats) {
             vmItemStats.equippedStatsValue = itemStats.value;
             vmItemStats.equippedStatsName = itemStats.name;
-            vmItemStats.comparable = vmItemStats.equippedStatsName === vmItemStats.name ||
+            vmItemStats.comparable =
+              vmItemStats.equippedStatsName === vmItemStats.name ||
               (vmItemStats.name === 'Magazine' && vmItemStats.equippedStatsName === 'Energy') ||
               (vmItemStats.name === 'Energy' && vmItemStats.equippedStatsName === 'Magazine');
           }

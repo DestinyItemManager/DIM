@@ -31,32 +31,46 @@ export function Faction(props: FactionProps) {
 
   const engramsAvailable = calculateEngramsAvailable(profileInventory, factionDef, factionProgress);
 
-  const vendorIndex = factionProgress.factionVendorIndex === -1 ? 0 : factionProgress.factionVendorIndex;
+  const vendorIndex =
+    factionProgress.factionVendorIndex === -1 ? 0 : factionProgress.factionVendorIndex;
   const vendorHash = factionDef.vendors[vendorIndex].vendorHash;
 
   const vendorDef = defs.Vendor.get(vendorHash);
 
   return (
     <div
-      className={classNames("faction", { 'faction-unavailable': factionProgress.factionVendorIndex === -1 })}
+      className={classNames('faction', {
+        'faction-unavailable': factionProgress.factionVendorIndex === -1
+      })}
     >
       <PressTip tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}>
-        <div><FactionIcon factionDef={factionDef} factionProgress={factionProgress} vendor={vendor}/></div>
+        <div>
+          <FactionIcon factionDef={factionDef} factionProgress={factionProgress} vendor={vendor} />
+        </div>
       </PressTip>
       <div className="faction-info">
         <div className="faction-name" title={vendorDef.displayProperties.description}>
-          <UISref to='destiny2.vendor' params={{ id: vendorHash, characterId: character.characterId }}>
+          <UISref
+            to="destiny2.vendor"
+            params={{ id: vendorHash, characterId: character.characterId }}
+          >
             <a>{vendorDef.displayProperties.name}</a>
           </UISref>
         </div>
-        <div className="faction-level" title={factionDef.displayProperties.description}>{factionDef.displayProperties.name}</div>
+        <div className="faction-level" title={factionDef.displayProperties.description}>
+          {factionDef.displayProperties.name}
+        </div>
         <div className="faction-rewards">
-          {factionDef.rewardVendorHash && $featureFlags.vendors
-            ? <UISref to='destiny2.vendor' params={{ id: factionDef.rewardVendorHash, characterId: character.characterId }}>
-                <a>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</a>
-              </UISref>
-            : <>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</>
-          }
+          {factionDef.rewardVendorHash && $featureFlags.vendors ? (
+            <UISref
+              to="destiny2.vendor"
+              params={{ id: factionDef.rewardVendorHash, characterId: character.characterId }}
+            >
+              <a>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</a>
+            </UISref>
+          ) : (
+            <>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</>
+          )}
         </div>
       </div>
     </div>
@@ -66,10 +80,16 @@ export function Faction(props: FactionProps) {
 /**
  * Calculate how many engrams you could get if you turned in all your rep items for this faction.
  */
-function calculateEngramsAvailable(profileInventory: DestinyInventoryComponent, factionDef: DestinyFactionDefinition, factionProgress: DestinyFactionProgression): number {
+function calculateEngramsAvailable(
+  profileInventory: DestinyInventoryComponent,
+  factionDef: DestinyFactionDefinition,
+  factionProgress: DestinyFactionProgression
+): number {
   const totalXPAvailable: number = sum(profileInventory.items, (item: DestinyItemComponent) => {
     return ((factionDef.tokenValues && factionDef.tokenValues[item.itemHash]) || 0) * item.quantity;
   });
 
-  return Math.floor((factionProgress.progressToNextLevel + totalXPAvailable) / factionProgress.nextLevelAt);
+  return Math.floor(
+    (factionProgress.progressToNextLevel + totalXPAvailable) / factionProgress.nextLevelAt
+  );
 }

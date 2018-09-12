@@ -1,4 +1,3 @@
-
 export class RateLimiterQueue {
   pattern: RegExp;
   requestLimit: number;
@@ -49,7 +48,10 @@ export class RateLimiterQueue {
   // Schedule processing the queue at the next soonest time.
   scheduleProcessing() {
     if (!this.timer) {
-      const nextTryIn = Math.max(0, this.timeLimit - (window.performance.now() - this.lastRequestTime));
+      const nextTryIn = Math.max(
+        0,
+        this.timeLimit - (window.performance.now() - this.lastRequestTime)
+      );
       this.timer = window.setTimeout(() => {
         this.timer = undefined;
         this.processQueue();
@@ -101,7 +103,7 @@ export const RateLimiterConfig = {
  */
 export function rateLimitedFetch(fetcher: typeof fetch): typeof fetch {
   return (request: Request | string, options?: RequestInit) => {
-    const url = typeof request === "string" ? request : request.url;
+    const url = typeof request === 'string' ? request : request.url;
     let limiter;
     for (const possibleLimiter of RateLimiterConfig.limiters) {
       if (possibleLimiter.matches(url)) {

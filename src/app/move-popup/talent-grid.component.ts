@@ -65,7 +65,7 @@ function TalentGridCtrl(
     if (vm.talentGrid) {
       const visibleNodes = vm.talentGrid.nodes.filter((n) => !n.hidden);
       vm.numColumns = _.max(visibleNodes, (n) => n.column).column + 1 - vm.hiddenColumns;
-      vm.numRows = vm.perksOnly ? 2 : (_.max(visibleNodes, (n) => n.row).row + 1);
+      vm.numRows = vm.perksOnly ? 2 : _.max(visibleNodes, (n) => n.row).row + 1;
     }
   };
 }

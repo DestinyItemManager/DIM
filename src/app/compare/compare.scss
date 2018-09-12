@@ -51,7 +51,7 @@ dim-compare {
     padding-left: 4px;
   }
   .highlight {
-    background-color: rgba(128, 128, 128, .25);
+    background-color: rgba(128, 128, 128, 0.25);
     cursor: pointer;
   }
   .item-name {
@@ -76,7 +76,7 @@ dim-compare {
     padding-left: 0px;
   }
   .range {
-    font-size: .9em;
+    font-size: 0.9em;
   }
   dim-item-tag {
     height: 20px;
@@ -106,7 +106,6 @@ dim-compare {
 
   .item-socket {
     margin-right: 2px;
-
   }
   .item-socket-category-Reusable .item-socket {
     border: none;
@@ -119,10 +118,12 @@ dim-compare {
 }
 
 @keyframes pop {
-  to { transform: scale(1.5) }
+  to {
+    transform: scale(1.5);
+  }
 }
 
 .item-pop {
-  animation: .25s linear 2 alternate pop;
+  animation: 0.25s linear 2 alternate pop;
   z-index: 1;
 }

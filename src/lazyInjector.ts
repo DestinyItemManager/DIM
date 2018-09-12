@@ -1,4 +1,3 @@
-
 /**
  * Angular2react needs an $injector, but it doesn't actually invoke $injector.get
  * until we invoke ReactDOM.render. We can take advantage of this to provide the

@@ -99,11 +99,11 @@ function LoadoutService(): LoadoutServiceType {
     const loadoutGuids = new Set(loadouts.map((i) => i.id));
     const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
 
-    const orphanIds = Object.values(data).filter((item) => {
-      return objectTest(item) &&
-        hasGuid(item) &&
-        !containsLoadoutGuids(item);
-    }).map((i: any) => i.id);
+    const orphanIds = Object.values(data)
+      .filter((item) => {
+        return objectTest(item) && hasGuid(item) && !containsLoadoutGuids(item);
+      })
+      .map((i: any) => i.id);
 
     if (orphanIds.length > 0) {
       SyncService.remove(orphanIds);
@@ -115,41 +115,42 @@ function LoadoutService(): LoadoutServiceType {
   function getLoadouts(getLatest = false): IPromise<Loadout[]> {
     // Avoids the hit going to data store if we have data already.
     if (getLatest || !_loadouts.length) {
-      return $q.when(SyncService.get()
-        .then((data) => {
-          if (_.has(data, 'loadouts-v3.0')) {
-            return processLoadout(data, 'v3.0');
-          } else {
-            return [];
-          }
-        })
-        .then((newLoadouts) => {
-          _loadouts = newLoadouts;
-          return _loadouts;
-        }));
+      return $q.when(
+        SyncService.get()
+          .then((data) => {
+            if (_.has(data, 'loadouts-v3.0')) {
+              return processLoadout(data, 'v3.0');
+            } else {
+              return [];
+            }
+          })
+          .then((newLoadouts) => {
+            _loadouts = newLoadouts;
+            return _loadouts;
+          })
+      );
     } else {
       return $q.when(_loadouts);
     }
   }
 
   function saveLoadouts(loadouts: Loadout[]): IPromise<Loadout[]> {
-    return $q.when(loadouts || getLoadouts())
-      .then((loadouts) => {
-        _loadouts = loadouts;
+    return $q.when(loadouts || getLoadouts()).then((loadouts) => {
+      _loadouts = loadouts;
 
-        const loadoutPrimitives = _.map(loadouts, dehydrate);
+      const loadoutPrimitives = _.map(loadouts, dehydrate);
 
-        const data = {
-          'loadouts-v3.0': [] as string[]
-        };
+      const data = {
+        'loadouts-v3.0': [] as string[]
+      };
 
-        _.each(loadoutPrimitives, (l) => {
-          data['loadouts-v3.0'].push(l.id!);
-          data[l.id!] = l;
-        });
-
-        return SyncService.set(data).then(() => loadouts) as IPromise<Loadout[]>;
+      _.each(loadoutPrimitives, (l) => {
+        data['loadouts-v3.0'].push(l.id!);
+        data[l.id!] = l;
       });
+
+      return SyncService.set(data).then(() => loadouts) as IPromise<Loadout[]>;
+    });
   }
 
   function deleteLoadout(loadout: Loadout): IPromise<Loadout[]> {
@@ -160,7 +161,9 @@ function LoadoutService(): LoadoutServiceType {
           loadouts.splice(index, 1);
         }
 
-        return SyncService.remove(loadout.id!.toString()).then(() => loadouts) as IPromise<Loadout[]>;
+        return SyncService.remove(loadout.id!.toString()).then(() => loadouts) as IPromise<
+          Loadout[]
+        >;
       })
       .then(saveLoadouts)
       .then((loadouts) => {
@@ -204,7 +207,7 @@ function LoadoutService(): LoadoutServiceType {
       'v3.0': hydratev3d0
     };
 
-    return (hydration[(loadoutData.version)])(loadoutData);
+    return hydration[loadoutData.version](loadoutData);
   }
 
   // A special getItem that takes into account the fact that
@@ -216,7 +219,8 @@ function LoadoutService(): LoadoutServiceType {
     }
     if (['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'].includes(item.type)) {
       // Same character first
-      item = store.items.find((i) => i.hash === pseudoItem.hash) ||
+      item =
+        store.items.find((i) => i.hash === pseudoItem.hash) ||
         // Then other characters
         store.getStoresService().getItemAcrossStores({ hash: item.hash }) ||
         item;
@@ -231,12 +235,12 @@ function LoadoutService(): LoadoutServiceType {
    */
   function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): IPromise<void> {
     if (!store) {
-      throw new Error("You need a store!");
+      throw new Error('You need a store!');
     }
     const storeService = store.getStoresService();
 
     if ($featureFlags.debugMoves) {
-      console.log("LoadoutService: Apply loadout", loadout.name, "to", store.name);
+      console.log('LoadoutService: Apply loadout', loadout.name, 'to', store.name);
     }
 
     return queueAction(() => {
@@ -250,7 +254,9 @@ function LoadoutService(): LoadoutServiceType {
           if (lastPreviousLoadout && loadout.id === lastPreviousLoadout.id) {
             _previousLoadouts[store.id].pop();
           } else {
-            const previousLoadout = store.loadoutFromCurrentlyEquipped(t('Loadouts.Before', { name: loadout.name }));
+            const previousLoadout = store.loadoutFromCurrentlyEquipped(
+              t('Loadouts.Before', { name: loadout.name })
+            );
             _previousLoadouts[store.id].push(previousLoadout);
           }
         }
@@ -275,12 +281,13 @@ function LoadoutService(): LoadoutServiceType {
           return true;
         }
 
-        const notAlreadyThere = item.owner !== store.id ||
-              item.location.inPostmaster ||
-              // Needs to be equipped. Stuff not marked "equip" doesn't
-              // necessarily mean to de-equip it.
-              (pseudoItem.equipped && !item.equipped) ||
-              pseudoItem.amount > 1;
+        const notAlreadyThere =
+          item.owner !== store.id ||
+          item.location.inPostmaster ||
+          // Needs to be equipped. Stuff not marked "equip" doesn't
+          // necessarily mean to de-equip it.
+          (pseudoItem.equipped && !item.equipped) ||
+          pseudoItem.amount > 1;
 
         return notAlreadyThere;
       });
@@ -296,14 +303,18 @@ function LoadoutService(): LoadoutServiceType {
 
       // vault can't equip
       if (store.isVault) {
-        items.forEach((i) => { i.equipped = false; });
+        items.forEach((i) => {
+          i.equipped = false;
+        });
       }
 
       // We'll equip these all in one go!
       let itemsToEquip = items.filter((i) => i.equipped);
       if (itemsToEquip.length > 1) {
         // we'll use the equipItems function
-        itemsToEquip.forEach((i) => { i.equipped = false; });
+        itemsToEquip.forEach((i) => {
+          i.equipped = false;
+        });
       }
 
       // Stuff that's equipped on another character. We can bulk-dequip these
@@ -321,9 +332,13 @@ function LoadoutService(): LoadoutServiceType {
       let promise: IPromise<any> = $q.when();
 
       if (itemsToDequip.length > 1) {
-        const realItemsToDequip = _.compact(itemsToDequip.map((i) => storeService.getItemAcrossStores(i)));
+        const realItemsToDequip = _.compact(
+          itemsToDequip.map((i) => storeService.getItemAcrossStores(i))
+        );
         const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
-          const equipItems = _.compact(dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds)));
+          const equipItems = _.compact(
+            dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))
+          );
           return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
         });
         promise = $q.all(dequips);
@@ -334,7 +349,9 @@ function LoadoutService(): LoadoutServiceType {
         .then(() => {
           if (itemsToEquip.length > 1) {
             // Use the bulk equipAll API to equip all at once.
-            itemsToEquip = itemsToEquip.filter((i) => scope.successfulItems.find((si) => si.id === i.id));
+            itemsToEquip = itemsToEquip.filter((i) =>
+              scope.successfulItems.find((si) => si.id === i.id)
+            );
             const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
             return dimItemService.equipItems(store, realItemsToEquip);
           } else {
@@ -348,7 +365,11 @@ function LoadoutService(): LoadoutServiceType {
             });
             failedItems.forEach((item) => {
               scope.failed++;
-              toaster.pop('error', loadout.name, t('Loadouts.CouldNotEquip', { itemname: item.name }));
+              toaster.pop(
+                'error',
+                loadout.name,
+                t('Loadouts.CouldNotEquip', { itemname: item.name })
+              );
             });
           }
         })
@@ -363,7 +384,11 @@ function LoadoutService(): LoadoutServiceType {
         .then(() => {
           let value = 'success';
 
-          let message = t('Loadouts.Applied', { count: scope.total, store: store.name, gender: store.gender });
+          let message = t('Loadouts.Applied', {
+            count: scope.total,
+            store: store.name,
+            gender: store.gender
+          });
 
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
@@ -393,7 +418,7 @@ function LoadoutService(): LoadoutServiceType {
       total: number;
       successfulItems: DimItem[];
     }
-) {
+  ) {
     if (items.length === 0) {
       // We're done!
       return $q.when();
@@ -409,14 +434,19 @@ function LoadoutService(): LoadoutServiceType {
         const amountAlreadyHave = store.amountOfItem(pseudoItem);
         let amountNeeded = pseudoItem.amount - amountAlreadyHave;
         if (amountNeeded > 0) {
-          const otherStores = store.getStoresService().getStores()
+          const otherStores = store
+            .getStoresService()
+            .getStores()
             .filter((otherStore) => store.id !== otherStore.id);
-          const storesByAmount = _.sortBy(otherStores.map((store) => {
-            return {
-              store,
-              amount: store.amountOfItem(pseudoItem)
-            };
-          }), 'amount').reverse();
+          const storesByAmount = _.sortBy(
+            otherStores.map((store) => {
+              return {
+                store,
+                amount: store.amountOfItem(pseudoItem)
+              };
+            }),
+            'amount'
+          ).reverse();
 
           let totalAmount = amountAlreadyHave;
           while (amountNeeded > 0) {
@@ -426,7 +456,13 @@ function LoadoutService(): LoadoutServiceType {
 
             if (amountToMove === 0 || !sourceItem) {
               promise = promise.then(() => {
-                const error: Error & { level?: string } = new Error(t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
+                const error: Error & { level?: string } = new Error(
+                  t('Loadouts.TooManyRequested', {
+                    total: totalAmount,
+                    itemname: item.name,
+                    requested: pseudoItem.amount
+                  })
+                );
                 error.level = 'warn';
                 return $q.reject(error);
               });
@@ -437,12 +473,20 @@ function LoadoutService(): LoadoutServiceType {
             amountNeeded -= amountToMove;
             totalAmount += amountToMove;
 
-            promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove, loadoutItemIds));
+            promise = promise.then(() =>
+              dimItemService.moveTo(sourceItem, store, false, amountToMove, loadoutItemIds)
+            );
           }
         }
       } else {
         // Pass in the list of items that shouldn't be moved away
-        promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
+        promise = dimItemService.moveTo(
+          item,
+          store,
+          pseudoItem.equipped,
+          item.amount,
+          loadoutItemIds
+        );
       }
     }
 
@@ -471,17 +515,19 @@ function LoadoutService(): LoadoutServiceType {
       name: loadoutPrimitive.name,
       platform: loadoutPrimitive.platform,
       destinyVersion: loadoutPrimitive.destinyVersion,
-      classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
+      classType: _.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType,
       items: {
         unknown: []
       }
     };
 
     for (const itemPrimitive of loadoutPrimitive.items) {
-      const item = copy(getStoresService(result.destinyVersion).getItemAcrossStores({
-        id: itemPrimitive.id,
-        hash: itemPrimitive.hash
-      }));
+      const item = copy(
+        getStoresService(result.destinyVersion).getItemAcrossStores({
+          id: itemPrimitive.id,
+          hash: itemPrimitive.hash
+        })
+      );
 
       if (item) {
         const discriminator = item.type.toLowerCase();
@@ -490,7 +536,7 @@ function LoadoutService(): LoadoutServiceType {
 
         item.amount = itemPrimitive.amount;
 
-        result.items[discriminator] = (result.items[discriminator] || []);
+        result.items[discriminator] = result.items[discriminator] || [];
         result.items[discriminator].push(item);
       } else {
         const loadoutItem = {
@@ -569,7 +615,6 @@ export function getLight(store: DimStore, loadout: Loadout): string {
       General: 1
     };
     itemWeightDenominator = 8;
-    
   } else if (store.level === 40) {
     // 3 Weapons, 4 Armor, 3 General
     itemWeightDenominator = 50;
@@ -577,16 +622,25 @@ export function getLight(store: DimStore, loadout: Loadout): string {
 
   const items = _.flatten(Object.values(loadout.items)).filter((i) => i.equipped);
 
-  const exactLight = _.reduce(items, (memo, item) => {
-    return memo + (item.primStat.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]);
-  }, 0) / itemWeightDenominator;
+  const exactLight =
+    _.reduce(
+      items,
+      (memo, item) => {
+        return (
+          memo +
+          item.primStat.value *
+            itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]
+        );
+      },
+      0
+    ) / itemWeightDenominator;
 
   // Floor-truncate to one significant digit since the game doesn't round
   return (Math.floor(exactLight * 10) / 10).toFixed(1);
 }
 
 function isGuid(stringToTest: string) {
-  if (stringToTest[0] === "{") {
+  if (stringToTest[0] === '{') {
     stringToTest = stringToTest.substring(1, stringToTest.length - 1);
   }
 

@@ -38,7 +38,7 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
 
     return (
       <span className="link" onClick={this.refresh} title={t('Header.Refresh')}>
-        <i className={classNames('fa', 'fa-refresh', { 'fa-spin': active })}/>
+        <i className={classNames('fa', 'fa-refresh', { 'fa-spin': active })} />
       </span>
     );
   }
@@ -48,5 +48,5 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
     // and their services should decide how to cache/dedup refreshes.
     // This event should *NOT* be listened to by services!
     $rootScope.$broadcast('dim-refresh');
-  }
+  };
 }

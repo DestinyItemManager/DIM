@@ -12,21 +12,20 @@ export function destinyAccountResolver(destinyVersion: 1 | 2) {
     const { membershipId, platformType } = $transition$.params();
 
     // TODO: shouldn't need to load all platforms for this. How can we avoid that?
-    return getPlatforms()
-      .then(() => {
-        // TODO: getPlatformMatching should be able to load an account that we don't know
-        // TODO: make sure it's a "real" account
-        const account = getPlatformMatching({
-          membershipId,
-          platformType,
-          destinyVersion
-        });
-        if (!account) {
-          // If we didn't load an account, kick out and re-resolve
-          $transition$.router.stateService.go('default-account');
-          return undefined;
-        }
-        return setActivePlatform(account);
+    return getPlatforms().then(() => {
+      // TODO: getPlatformMatching should be able to load an account that we don't know
+      // TODO: make sure it's a "real" account
+      const account = getPlatformMatching({
+        membershipId,
+        platformType,
+        destinyVersion
       });
+      if (!account) {
+        // If we didn't load an account, kick out and re-resolve
+        $transition$.router.stateService.go('default-account');
+        return undefined;
+      }
+      return setActivePlatform(account);
+    });
   };
 }

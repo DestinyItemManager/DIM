@@ -1,20 +1,20 @@
-import { VendorItem } from "./vendor-item";
-import * as React from "react";
-import BungieImage, { bungieBackgroundStyle } from "../dim-ui/BungieImage";
+import { VendorItem } from './vendor-item';
+import * as React from 'react';
+import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import classNames from 'classnames';
-import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
-import { DestinyItemQuantity } from "bungie-api-ts/destiny2";
-import { ngDialog } from "../ngimport-more";
-import { IDialogOpenResult } from "ng-dialog";
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
+import { ngDialog } from '../ngimport-more';
+import { IDialogOpenResult } from 'ng-dialog';
 import dialogTemplate from './vendor-item-dialog.html';
-import { getBuckets } from "../destiny2/d2-buckets.service";
-import { DestinyTrackerService } from "../item-review/destiny-tracker.service";
-import { dtrRatingColor } from "../shell/dimAngularFilters.filter";
-import { ratePerks } from "../destinyTrackerApi/d2-perkRater";
+import { getBuckets } from '../destiny2/d2-buckets.service';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { dtrRatingColor } from '../shell/dimAngularFilters.filter';
+import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
 import checkMark from '../../images/check.svg';
-import { D2RatingData } from "../item-review/d2-dtr-api-types";
-import { percent } from "../inventory/dimPercentWidth.directive";
-import { UISref } from "@uirouter/react";
+import { D2RatingData } from '../item-review/d2-dtr-api-types';
+import { percent } from '../inventory/dimPercentWidth.directive';
+import { UISref } from '@uirouter/react';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -34,8 +34,7 @@ export default class VendorItemComponent extends React.Component<Props> {
     this.openDetailsPopup = this.openDetailsPopup.bind(this);
   }
 
-  shouldComponentUpdate(
-    nextProps: Readonly<Props>) {
+  shouldComponentUpdate(nextProps: Readonly<Props>) {
     return !nextProps.item.equals(this.props.item);
   }
 
@@ -51,7 +50,7 @@ export default class VendorItemComponent extends React.Component<Props> {
     if (item.displayTile) {
       return (
         <div className="vendor-item">
-          <UISref to='destiny2.vendor' params={{ id: item.previewVendorHash }}>
+          <UISref to="destiny2.vendor" params={{ id: item.previewVendorHash }}>
             <BungieImage
               className="vendor-tile"
               title={item.displayProperties.name}
@@ -65,45 +64,54 @@ export default class VendorItemComponent extends React.Component<Props> {
 
     let title = item.displayProperties.name;
     if (!item.canBeSold) {
-      title = `${title}\n${item.failureStrings.join("\n")}`;
+      title = `${title}\n${item.failureStrings.join('\n')}`;
     }
 
     const progress = item.objectiveProgress;
 
     return (
-      <div className={classNames("vendor-item", { owned })}>
-        {(!item.canPurchase || !item.canBeSold) &&
-          <div className="locked-overlay"/>
-        }
-        <div className="item" title={item.displayProperties.name} ref={this.itemElement} onClick={this.openDetailsPopup}>
-          {progress > 0 && !item.canPurchase &&
-            <div
-              className="item-xp-bar-small"
-              style={{ width: percent(progress) }}
-            />
-          }
+      <div className={classNames('vendor-item', { owned })}>
+        {(!item.canPurchase || !item.canBeSold) && <div className="locked-overlay" />}
+        <div
+          className="item"
+          title={item.displayProperties.name}
+          ref={this.itemElement}
+          onClick={this.openDetailsPopup}
+        >
+          {progress > 0 &&
+            !item.canPurchase && (
+              <div className="item-xp-bar-small" style={{ width: percent(progress) }} />
+            )}
           <div
-            className={classNames("item-img", { transparent: item.borderless })}
+            className={classNames('item-img', { transparent: item.borderless })}
             style={bungieBackgroundStyle(item.displayProperties.icon)}
           />
-          {owned && <img className="owned-icon" src={checkMark}/>}
-          {Boolean(item.primaryStat || item.rating) &&
+          {owned && <img className="owned-icon" src={checkMark} />}
+          {Boolean(item.primaryStat || item.rating) && (
             <div>
-              {Boolean(item.rating && item.rating > 0) && <div className="item-stat item-review">
-                {item.rating}
-                <i className="fa fa-star" style={dtrRatingColor(item.rating!)}/>
-              </div>}
-              {Boolean(item.primaryStat) && <div className="item-stat item-equipment">{item.primaryStat}</div>}
-            </div>}
-          {progress > 0 && !item.canPurchase &&
-            <div className="item-stat item-equipment">{percent(progress)}</div>
-          }
-        </div>
-        {item.costs.length > 0 && <div className="vendor-costs">
-          {item.costs.map((cost) =>
-            <VendorItemCost key={cost.itemHash} defs={defs} cost={cost} />
+              {Boolean(item.rating && item.rating > 0) && (
+                <div className="item-stat item-review">
+                  {item.rating}
+                  <i className="fa fa-star" style={dtrRatingColor(item.rating!)} />
+                </div>
+              )}
+              {Boolean(item.primaryStat) && (
+                <div className="item-stat item-equipment">{item.primaryStat}</div>
+              )}
+            </div>
           )}
-        </div>}
+          {progress > 0 &&
+            !item.canPurchase && (
+              <div className="item-stat item-equipment">{percent(progress)}</div>
+            )}
+        </div>
+        {item.costs.length > 0 && (
+          <div className="vendor-costs">
+            {item.costs.map((cost) => (
+              <VendorItemCost key={cost.itemHash} defs={defs} cost={cost} />
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -134,9 +142,15 @@ export default class VendorItemComponent extends React.Component<Props> {
       }
       const dimItem = item.toDimItem(buckets, cachedItem);
 
-      if (cachedItem && (!cachedItem.reviewsResponse || !cachedItem.reviewsResponse.reviews) && trackerService) {
+      if (
+        cachedItem &&
+        (!cachedItem.reviewsResponse || !cachedItem.reviewsResponse.reviews) &&
+        trackerService
+      ) {
         trackerService.getItemReviewAsync(item.itemHash).then(() => {
-          cachedItem = trackerService.getD2ReviewDataCache().getRatingData(undefined, item.itemHash);
+          cachedItem = trackerService
+            .getD2ReviewDataCache()
+            .getRatingData(undefined, item.itemHash);
           // TODO: it'd be nice to push this into tracker service
           if (dimItem) {
             Object.assign(dimItem, item.toDimItem(buckets, cachedItem));
@@ -148,12 +162,12 @@ export default class VendorItemComponent extends React.Component<Props> {
       }
 
       const itemDef = this.props.defs.InventoryItem.get(item.itemHash);
-      const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : []).map((iq) => (
-        {
+      const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : []).map(
+        (iq) => ({
           quantity: iq.quantity,
           item: this.props.defs.InventoryItem.get(iq.itemHash)
-        }
-      ));
+        })
+      );
 
       this.dialogResult = ngDialog.open({
         template: dialogTemplate,

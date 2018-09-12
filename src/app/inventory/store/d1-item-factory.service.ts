@@ -27,15 +27,7 @@ const yearHashes = {
 };
 
 // Maps tierType to tierTypeName in English
-const tiers = [
-  'Unused 0',
-  'Unused 1',
-  'Common',
-  'Uncommon',
-  'Rare',
-  'Legendary',
-  'Exotic'
-];
+const tiers = ['Unused 0', 'Unused 1', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
 
 let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
@@ -75,7 +67,8 @@ const ItemProto = {
       return false;
     }
 
-    return this.equipment &&
+    return (
+      this.equipment &&
       // For the right class
       (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
       // nothing we are too low-level to equip
@@ -83,7 +76,8 @@ const ItemProto = {
       // can be moved or is already here
       (!this.notransfer || this.owner === store.id) &&
       !this.location.inPostmaster &&
-      factionItemAligns(store, this);
+      factionItemAligns(store, this)
+    );
   },
   inCategory(this: D1Item, categoryName: string) {
     return _.contains(this.categories, categoryName);
@@ -129,22 +123,33 @@ export function processItems(
   newItems = new Set<string>(),
   itemInfoService?: ItemInfoSource
 ): IPromise<D1Item[]> {
-  return $q.all([
-    getDefinitions(),
-    getBuckets(),
-    previousItems,
-    newItems,
-    itemInfoService,
-    getClassifiedData()])
+  return $q
+    .all([
+      getDefinitions(),
+      getBuckets(),
+      previousItems,
+      newItems,
+      itemInfoService,
+      getClassifiedData()
+    ])
     .then(([defs, buckets, previousItems, newItems, itemInfoService, classifiedData]) => {
       const result: D1Item[] = [];
       D1ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
       _.each(items, (item) => {
         let createdItem: D1Item | null = null;
         try {
-          createdItem = makeItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner);
+          createdItem = makeItem(
+            defs,
+            buckets,
+            previousItems,
+            newItems,
+            itemInfoService,
+            classifiedData,
+            item,
+            owner
+          );
         } catch (e) {
-          console.error("Error processing item", item, e);
+          console.error('Error processing item', item, e);
           reportException('Processing D1 item', e);
         }
         if (createdItem !== null) {
@@ -182,7 +187,7 @@ function makeItem(
   if (!itemDef) {
     // maybe it is redacted...
     itemDef = {
-      itemName: "Missing Item",
+      itemName: 'Missing Item',
       redacted: true
     };
     D1ManifestService.warnMissingDefinition();
@@ -202,7 +207,11 @@ function makeItem(
   }
 
   if (itemDef.redacted) {
-    console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
+    console.warn(
+      'Missing Item Definition:\n\n',
+      item,
+      '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.'
+    );
   }
 
   if (itemDef.classified) {
@@ -218,8 +227,15 @@ function makeItem(
   }
 
   // fix itemDef for defense items with missing nodes
-  if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
-    const defaultMinMax = _.find(itemDef.stats, (stat: any) => [144602215, 1735777505, 4244567218].includes(stat.statHash));
+  if (
+    item.primaryStat &&
+    item.primaryStat.statHash === 3897883278 &&
+    _.size(itemDef.stats) > 0 &&
+    _.size(itemDef.stats) !== 5
+  ) {
+    const defaultMinMax = _.find(itemDef.stats, (stat: any) =>
+      [144602215, 1735777505, 4244567218].includes(stat.statHash)
+    );
 
     if (defaultMinMax) {
       [144602215, 1735777505, 4244567218].forEach((val) => {
@@ -265,10 +281,14 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
-    const category = defs.ItemCategory.get(c);
-    return category ? category.identifier : null;
-  })) : [];
+  const categories = itemDef.itemCategoryHashes
+    ? _.compact(
+        itemDef.itemCategoryHashes.map((c) => {
+          const category = defs.ItemCategory.get(c);
+          return category ? category.identifier : null;
+        })
+      )
+    : [];
 
   const dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
@@ -292,16 +312,22 @@ function makeItem(
     categories, // see defs.ItemCategory
     tier: tiers[itemDef.tierType] || 'Common',
     isExotic: tiers[itemDef.tierType] === 'Exotic',
-    isVendorItem: (!owner || owner.id === null),
+    isVendorItem: !owner || owner.id === null,
     name: itemDef.itemName,
     description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
     icon: itemDef.icon,
     secondaryIcon: itemDef.secondaryIcon,
-    notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
+    notransfer: Boolean(
+      currentBucket.inPostmaster ||
+        itemDef.nonTransferrable ||
+        !itemDef.allowActions ||
+        itemDef.classified
+    ),
     id: item.itemInstanceId,
     equipped: item.isEquipped,
     equipment: item.isEquipment,
-    equippingLabel: item.isEquipment && tiers[itemDef.tierType] === 'Exotic' ? normalBucket.sort : undefined,
+    equippingLabel:
+      item.isEquipment && tiers[itemDef.tierType] === 'Exotic' ? normalBucket.sort : undefined,
     complete: item.isGridComplete,
     amount: item.stackSize,
     primStat: item.primaryStat || null,
@@ -311,7 +337,7 @@ function makeItem(
     // item in its popup in the game. We don't currently use these.
     // perks: item.perks,
     equipRequiredLevel: item.equipRequiredLevel,
-    maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
+    maxStackSize: itemDef.maxStackSize > 0 ? itemDef.maxStackSize : 1,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeName: getClass(itemDef.classType),
@@ -319,14 +345,22 @@ function makeItem(
     dmg: dmgName,
     visible: true,
     sourceHashes: itemDef.sourceHashes,
-    lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-    trackable: Boolean(currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)),
+    lockable:
+      normalBucket.type !== 'Class' &&
+      ((currentBucket.inPostmaster && item.isEquipment) ||
+        currentBucket.inWeapons ||
+        item.lockable),
+    trackable: Boolean(
+      currentBucket.inProgress &&
+        (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)
+    ),
     tracked: item.state === 2,
     locked: item.locked,
     redacted: Boolean(itemDef.redacted),
     classified: Boolean(itemDef.classified),
     loreHash: null,
-    lastManuallyMoved: item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
+    lastManuallyMoved:
+      item.itemInstanceId === '0' ? 0 : _moveTouchTimestamps.get(item.itemInstanceId) || 0,
     percentComplete: null, // filled in later
     talentGrid: null, // filled in later
     stats: null, // filled in later
@@ -336,9 +370,15 @@ function makeItem(
   });
 
   // *able
-  createdItem.taggable = Boolean(createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
+  createdItem.taggable = Boolean(
+    createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM')
+  );
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
+  createdItem.reviewable = Boolean(
+    $featureFlags.reviewsEnabled &&
+      createdItem.primStat &&
+      createdItem.primStat.statHash === 368428387
+  );
 
   // Moving rare masks destroys them
   if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
@@ -374,7 +414,9 @@ function makeItem(
   createdItem.infusable = Boolean(createdItem.talentGrid && createdItem.talentGrid.infusable);
 
   // An item can be used as infusion fuel if it is equipment, and has a primary stat that isn't Speed
-  createdItem.infusionFuel = Boolean(createdItem.equipment && createdItem.primStat && createdItem.primStat.statHash !== 1501155019);
+  createdItem.infusionFuel = Boolean(
+    createdItem.equipment && createdItem.primStat && createdItem.primStat.statHash !== 1501155019
+  );
 
   try {
     createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
@@ -403,7 +445,9 @@ function makeItem(
   // More objectives properties
   if (createdItem.objectives) {
     const objectives = createdItem.objectives;
-    createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && createdItem.objectives.every((o) => o.complete);
+    createdItem.complete =
+      (!createdItem.talentGrid || createdItem.complete) &&
+      createdItem.objectives.every((o) => o.complete);
     createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
       if (objective.completionValue) {
         return Math.min(1, objective.progress / objective.completionValue) / objectives.length;
@@ -412,21 +456,38 @@ function makeItem(
       }
     });
   } else if (createdItem.talentGrid) {
-    createdItem.percentComplete = Math.min(1, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
-    createdItem.complete = createdItem.year === 1 ? createdItem.talentGrid.totalXP === createdItem.talentGrid.totalXPRequired : createdItem.talentGrid.complete;
+    createdItem.percentComplete = Math.min(
+      1,
+      createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired
+    );
+    createdItem.complete =
+      createdItem.year === 1
+        ? createdItem.talentGrid.totalXP === createdItem.talentGrid.totalXPRequired
+        : createdItem.talentGrid.complete;
   }
 
   // "The Life Exotic" perk means you can equip other exotics, so clear out the equipping label
-  if (createdItem.isExotic && createdItem.talentGrid && createdItem.talentGrid.nodes.some((n) => n.hash === 4044819214)) {
+  if (
+    createdItem.isExotic &&
+    createdItem.talentGrid &&
+    createdItem.talentGrid.nodes.some((n) => n.hash === 4044819214)
+  ) {
     createdItem.equippingLabel = undefined;
   }
 
   // do specific things for specific items
-  if (createdItem.hash === 491180618) { // Trials Cards
+  if (createdItem.hash === 491180618) {
+    // Trials Cards
     createdItem.objectives = buildTrials(owner.advisors.activities.trials);
     const best = owner.advisors.activities.trials.extended.highestWinRank;
     createdItem.complete = owner.advisors.activities.trials.completion.success;
-    createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? 0.66 : (best >= 5 ? 0.33 : 0));
+    createdItem.percentComplete = createdItem.complete
+      ? 1
+      : best >= 7
+        ? 0.66
+        : best >= 5
+          ? 0.33
+          : 0;
   }
 
   createdItem.index = createItemIndex(createdItem);
@@ -467,7 +528,13 @@ export function createItemIndex(item: D1Item) {
 
 function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   const talentGridDef = talentDefs.get(item.talentGridHash);
-  if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length || !progressDefs.get(item.progression.progressionHash)) {
+  if (
+    !item.progression ||
+    !talentGridDef ||
+    !item.nodes ||
+    !item.nodes.length ||
+    !progressDefs.get(item.progression.progressionHash)
+  ) {
     return null;
   }
 
@@ -497,139 +564,143 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   //   return perkDef ? perkDef.displayName : 'Unknown';
   // });
 
-  let gridNodes = (item.nodes as any[]).map((node): D1GridNode | undefined => {
-    const talentNodeGroup = possibleNodes[node.nodeHash];
-    const talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
+  let gridNodes = (item.nodes as any[]).map(
+    (node): D1GridNode | undefined => {
+      const talentNodeGroup = possibleNodes[node.nodeHash];
+      const talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
-    if (!talentNodeSelected) {
-      return undefined;
-    }
-
-    const nodeName = talentNodeSelected.nodeStepName;
-
-    // Filter out some weird bogus nodes
-    if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
-      return undefined;
-    }
-
-    // Only one node in this column can be selected (scopes, etc)
-    const exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodes &&
-                              talentNodeGroup.exlusiveWithNodes.length > 0);
-
-    // Unlocked is whether or not the material cost has been paid
-    // for the node
-    const unlocked = node.isActivated ||
-          talentNodeGroup.autoUnlocks ||
-          // If only one can be activated, the cost only needs to be
-          // paid once per row.
-          (exclusiveInColumn &&
-            _.any(talentNodeGroup.exlusiveWithNodes, (nodeIndex: number) => {
-              return item.nodes[nodeIndex].isActivated;
-            }));
-
-    // Calculate relative XP for just this node
-    const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
-    const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
-    const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
-    const xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
-
-    // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
-    let dtrHash: string | null = null;
-    if (node.isActivated || talentNodeGroup.isRandom) {
-      dtrHash = (node.nodeHash as number).toString(16);
-      if (dtrHash.length > 1) {
-        dtrHash += ".";
+      if (!talentNodeSelected) {
+        return undefined;
       }
 
-      if (talentNodeGroup.isRandom) {
-        dtrHash += node.stepIndex.toString(16);
-        if (node.isActivated) {
-          dtrHash += "o";
+      const nodeName = talentNodeSelected.nodeStepName;
+
+      // Filter out some weird bogus nodes
+      if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
+        return undefined;
+      }
+
+      // Only one node in this column can be selected (scopes, etc)
+      const exclusiveInColumn = Boolean(
+        talentNodeGroup.exlusiveWithNodes && talentNodeGroup.exlusiveWithNodes.length > 0
+      );
+
+      // Unlocked is whether or not the material cost has been paid
+      // for the node
+      const unlocked =
+        node.isActivated ||
+        talentNodeGroup.autoUnlocks ||
+        // If only one can be activated, the cost only needs to be
+        // paid once per row.
+        (exclusiveInColumn &&
+          _.any(talentNodeGroup.exlusiveWithNodes, (nodeIndex: number) => {
+            return item.nodes[nodeIndex].isActivated;
+          }));
+
+      // Calculate relative XP for just this node
+      const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
+      const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+      const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
+      const xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
+
+      // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
+      let dtrHash: string | null = null;
+      if (node.isActivated || talentNodeGroup.isRandom) {
+        dtrHash = (node.nodeHash as number).toString(16);
+        if (dtrHash.length > 1) {
+          dtrHash += '.';
+        }
+
+        if (talentNodeGroup.isRandom) {
+          dtrHash += node.stepIndex.toString(16);
+          if (node.isActivated) {
+            dtrHash += 'o';
+          }
         }
       }
+
+      // Generate a hash that identifies the weapons permutation and selected perks.
+      // This is used by the Weapon Reviewing system.
+      const generateNodeDtrRoll = (node, talentNodeSelected): string => {
+        let dtrRoll = node.nodeHash.toString(16);
+
+        if (dtrRoll.length > 1) {
+          dtrRoll += '.';
+        }
+
+        dtrRoll += node.stepIndex.toString(16);
+
+        if (node.isActivated) {
+          dtrRoll += 'o';
+        }
+
+        if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
+          dtrRoll += `,${talentNodeSelected.perkHashes.join(',')}`;
+        }
+
+        return dtrRoll;
+      };
+
+      const dtrRoll = generateNodeDtrRoll(node, talentNodeSelected);
+
+      // hacky way to determine if the node is a weapon ornament
+      let ornamentComplete = false;
+      if (talentNodeGroup.column > 1 && !xpRequired && !exclusiveInColumn && item.primaryStat) {
+        ornamentComplete = node.isActivated;
+      }
+
+      // There's a lot more here, but we're taking just what we need
+      return {
+        name: nodeName,
+        ornament: ornamentComplete,
+        hash: talentNodeSelected.nodeStepHash,
+        description: talentNodeSelected.nodeStepDescription,
+        icon: talentNodeSelected.icon,
+        // XP put into this node
+        xp,
+        // XP needed for this node to unlock
+        xpRequired,
+        // Position in the grid
+        column: talentNodeGroup.column,
+        row: talentNodeGroup.row,
+        // Is the node selected (lit up in the grid)
+        activated: node.isActivated,
+        // The item level at which this node can be unlocked
+        activatedAtGridLevel,
+        // Only one node in this column can be selected (scopes, etc)
+        exclusiveInColumn,
+        // Whether there's enough XP in the item to buy the node
+        xpRequirementMet: activatedAtGridLevel <= totalLevel,
+        // Whether or not the material cost has been paid for the node
+        unlocked,
+        // Some nodes don't show up in the grid, like purchased ascend nodes
+        hidden: node.hidden,
+
+        dtrHash,
+        dtrRoll
+
+        // Whether (and in which order) this perk should be
+        // "featured" on an abbreviated info panel, as in the
+        // game. 0 = not featured, positive numbers signify the
+        // order of the featured perks.
+        // featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
+
+        // This list of material requirements to unlock the
+        // item are a mystery. These hashes don't exist anywhere in
+        // the manifest database. Also, the activationRequirement
+        // object doesn't say how much of the material is
+        // needed. There's got to be some missing DB somewhere with
+        // this info.
+        // materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
+
+        // These are useful for debugging or searching for new properties,
+        // but they don't need to be included in the result.
+        // talentNodeGroup: talentNodeGroup,
+        // talentNodeSelected: talentNodeSelected,
+        // itemNode: node
+      };
     }
-
-    // Generate a hash that identifies the weapons permutation and selected perks.
-    // This is used by the Weapon Reviewing system.
-    const generateNodeDtrRoll = (node, talentNodeSelected): string => {
-      let dtrRoll = node.nodeHash.toString(16);
-
-      if (dtrRoll.length > 1) {
-        dtrRoll += ".";
-      }
-
-      dtrRoll += node.stepIndex.toString(16);
-
-      if (node.isActivated) {
-        dtrRoll += "o";
-      }
-
-      if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
-        dtrRoll += `,${talentNodeSelected.perkHashes.join(',')}`;
-      }
-
-      return dtrRoll;
-    };
-
-    const dtrRoll = generateNodeDtrRoll(node, talentNodeSelected);
-
-    // hacky way to determine if the node is a weapon ornament
-    let ornamentComplete = false;
-    if (talentNodeGroup.column > 1 && !xpRequired && !exclusiveInColumn && item.primaryStat) {
-      ornamentComplete = node.isActivated;
-    }
-
-    // There's a lot more here, but we're taking just what we need
-    return {
-      name: nodeName,
-      ornament: ornamentComplete,
-      hash: talentNodeSelected.nodeStepHash,
-      description: talentNodeSelected.nodeStepDescription,
-      icon: talentNodeSelected.icon,
-      // XP put into this node
-      xp,
-      // XP needed for this node to unlock
-      xpRequired,
-      // Position in the grid
-      column: talentNodeGroup.column,
-      row: talentNodeGroup.row,
-      // Is the node selected (lit up in the grid)
-      activated: node.isActivated,
-      // The item level at which this node can be unlocked
-      activatedAtGridLevel,
-      // Only one node in this column can be selected (scopes, etc)
-      exclusiveInColumn,
-      // Whether there's enough XP in the item to buy the node
-      xpRequirementMet: activatedAtGridLevel <= totalLevel,
-      // Whether or not the material cost has been paid for the node
-      unlocked,
-      // Some nodes don't show up in the grid, like purchased ascend nodes
-      hidden: node.hidden,
-
-      dtrHash,
-      dtrRoll
-
-      // Whether (and in which order) this perk should be
-      // "featured" on an abbreviated info panel, as in the
-      // game. 0 = not featured, positive numbers signify the
-      // order of the featured perks.
-      // featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
-
-      // This list of material requirements to unlock the
-      // item are a mystery. These hashes don't exist anywhere in
-      // the manifest database. Also, the activationRequirement
-      // object doesn't say how much of the material is
-      // needed. There's got to be some missing DB somewhere with
-      // this info.
-      // materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
-
-      // These are useful for debugging or searching for new properties,
-      // but they don't need to be included in the result.
-      // talentNodeGroup: talentNodeGroup,
-      // talentNodeSelected: talentNodeSelected,
-      // itemNode: node
-    };
-  }) as D1GridNode[];
+  ) as D1GridNode[];
 
   // We need to unique-ify because Ornament nodes show up twice!
   gridNodes = _.uniq(_.compact(gridNodes), false, (n) => n.hash);
@@ -641,7 +712,8 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   // This can be handy for visualization/debugging
   // var columns = _.groupBy(gridNodes, 'column');
 
-  const maxLevelRequired = _.max(gridNodes, (n: any) => n.activatedAtGridLevel).activatedAtGridLevel;
+  const maxLevelRequired = _.max(gridNodes, (n: any) => n.activatedAtGridLevel)
+    .activatedAtGridLevel;
   const totalXPRequired = xpToReachLevel(maxLevelRequired);
 
   const ascendNode: any = _.find(gridNodes, { hash: 1920788875 });
@@ -649,12 +721,14 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   // Fix for stuff that has nothing in early columns
   const minColumn = _.min(_.reject(gridNodes, (n: any) => n.hidden), (n: any) => n.column).column;
   if (minColumn > 0) {
-    gridNodes.forEach((node) => { node.column -= minColumn; });
+    gridNodes.forEach((node) => {
+      node.column -= minColumn;
+    });
   }
   const maxColumn = _.max(gridNodes, (n: any) => n.column).column;
 
   return {
-    nodes: _.sortBy(gridNodes, (node: any) => node.column + (0.1 * node.row)),
+    nodes: _.sortBy(gridNodes, (node: any) => node.column + 0.1 * node.row),
     xpComplete: totalXPRequired <= totalXP,
     totalXPRequired,
     totalXP: Math.min(totalXPRequired, totalXP),
@@ -663,14 +737,22 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
     infusable: gridNodes.some((n) => n.hash === 1270552711),
     dtrPerks: _.compact(gridNodes.map((i) => i.dtrHash)).join(';'),
     dtrRoll: _.compact(gridNodes.map((i) => i.dtrRoll)).join(';'),
-    complete: totalXPRequired <= totalXP && _.all(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
+    complete:
+      totalXPRequired <= totalXP &&
+      _.all(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
   };
 }
 
 function buildTrials(trials): DimObjective[] {
   const flawless = trials.completion.success;
   trials = trials.extended;
-  function buildObjective(name: string, current: number, max: number, bool: boolean, style?: string): DimObjective {
+  function buildObjective(
+    name: string,
+    current: number,
+    max: number,
+    bool: boolean,
+    style?: string
+  ): DimObjective {
     return {
       displayStyle: style || null,
       displayName: name !== 'Wins' && name !== 'Losses' ? t(`TrialsCard.${name}`) : '',
@@ -686,7 +768,7 @@ function buildTrials(trials): DimObjective[] {
     buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses, false, 'trials'),
     buildObjective('FiveWins', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
     buildObjective('SevenWins', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
-    buildObjective('Flawless', flawless, 1, true),
+    buildObjective('Flawless', flawless, 1, true)
   ];
 }
 
@@ -699,10 +781,9 @@ function buildObjectives(objectives, objectiveDefs): DimObjective[] | null {
     const def = objectiveDefs.get(objective.objectiveHash);
 
     return {
-      displayName: def.displayDescription ||
-        (objective.isComplete
-          ? t('Objectives.Complete')
-          : t('Objectives.Incomplete')),
+      displayName:
+        def.displayDescription ||
+        (objective.isComplete ? t('Objectives.Complete') : t('Objectives.Incomplete')),
       progress: objective.progress,
       completionValue: def.completionValue,
       complete: objective.isComplete,
@@ -740,7 +821,10 @@ function getItemYear(item) {
   if (ttk || item.infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
     year = 2;
   }
-  if (!ttk && (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)) {
+  if (
+    !ttk &&
+    (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)
+  ) {
     year = 3;
   }
 
@@ -763,70 +847,82 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
     }
   }
 
-  return _.sortBy(_.compact(_.map(itemDef.stats, (stat: any) => {
-    const def = statDefs.get(stat.statHash);
-    if (!def) {
-      return undefined;
-    }
-
-    const identifier = def.statIdentifier;
-
-    // Only include these hidden stats, in this order
-    const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
-    let secondaryIndex = -1;
-
-    let sort = _.findIndex(item.stats, { statHash: stat.statHash });
-    let itemStat;
-    if (sort < 0) {
-      secondaryIndex = secondarySort.indexOf(identifier);
-      sort = 50 + secondaryIndex;
-    } else {
-      itemStat = item.stats[sort];
-      // Always at the end
-      if (identifier === 'STAT_MAGAZINE_SIZE' || identifier === 'STAT_ATTACK_ENERGY') {
-        sort = 100;
-      }
-    }
-
-    if (!itemStat && secondaryIndex < 0) {
-      return undefined;
-    }
-
-    let maximumValue = 100;
-    if (itemStat && itemStat.maximumValue) {
-      maximumValue = itemStat.maximumValue;
-    }
-
-    const val: number = itemStat ? itemStat.value : stat.value;
-    let base = val;
-    let bonus = 0;
-
-    if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
-      if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
-          (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
-          (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
-        bonus = getBonus(item.primaryStat.value, type);
-
-        if (activeArmorNode &&
-            ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
-              (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
-              (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))) {
-          base = Math.max(0, val - bonus);
+  return _.sortBy(
+    _.compact(
+      _.map(itemDef.stats, (stat: any) => {
+        const def = statDefs.get(stat.statHash);
+        if (!def) {
+          return undefined;
         }
-      }
-    }
 
-    const dimStat: D1Stat = {
-      base,
-      bonus,
-      statHash: stat.statHash,
-      name: def.statName,
-      id: def.statIdentifier,
-      sort,
-      value: val,
-      maximumValue,
-      bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY' // energy == magazine for swords
-    };
-    return dimStat;
-  })), 'sort');
+        const identifier = def.statIdentifier;
+
+        // Only include these hidden stats, in this order
+        const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
+        let secondaryIndex = -1;
+
+        let sort = _.findIndex(item.stats, { statHash: stat.statHash });
+        let itemStat;
+        if (sort < 0) {
+          secondaryIndex = secondarySort.indexOf(identifier);
+          sort = 50 + secondaryIndex;
+        } else {
+          itemStat = item.stats[sort];
+          // Always at the end
+          if (identifier === 'STAT_MAGAZINE_SIZE' || identifier === 'STAT_ATTACK_ENERGY') {
+            sort = 100;
+          }
+        }
+
+        if (!itemStat && secondaryIndex < 0) {
+          return undefined;
+        }
+
+        let maximumValue = 100;
+        if (itemStat && itemStat.maximumValue) {
+          maximumValue = itemStat.maximumValue;
+        }
+
+        const val: number = itemStat ? itemStat.value : stat.value;
+        let base = val;
+        let bonus = 0;
+
+        if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
+          if (
+            (identifier === 'STAT_INTELLECT' &&
+              _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
+            (identifier === 'STAT_DISCIPLINE' &&
+              _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
+            (identifier === 'STAT_STRENGTH' &&
+              _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))
+          ) {
+            bonus = getBonus(item.primaryStat.value, type);
+
+            if (
+              activeArmorNode &&
+              ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
+                (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
+                (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))
+            ) {
+              base = Math.max(0, val - bonus);
+            }
+          }
+        }
+
+        const dimStat: D1Stat = {
+          base,
+          bonus,
+          statHash: stat.statHash,
+          name: def.statName,
+          id: def.statIdentifier,
+          sort,
+          value: val,
+          maximumValue,
+          bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY' // energy == magazine for swords
+        };
+        return dimStat;
+      })
+    ),
+    'sort'
+  );
 }

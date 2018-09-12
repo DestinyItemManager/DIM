@@ -6,7 +6,8 @@ import { t } from 'i18next';
  * Use this for when you suspect Bungie.net is down.
  */
 export function bungieErrorToaster(e: Error) {
-  const twitterLink = '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
+  const twitterLink =
+    '<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
   const twitter = `<div> ${t('BungieService.Twitter')} ${twitterLink}</div>`;
 
   return {

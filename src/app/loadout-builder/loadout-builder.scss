@@ -41,7 +41,7 @@
   }
 
   .perk-select-hidden .perk-select-box {
-    display:none;
+    display: none;
   }
 
   .perk-addition-text-container {
@@ -195,7 +195,7 @@
       color: $gold;
     }
     .powerLevel:before {
-      content: "\2726";
+      content: '\2726';
       display: inline-block;
       vertical-align: 25%;
       font-size: 50%;
@@ -237,7 +237,7 @@
   }
 
   .item-stats {
-    display:inline-block;
+    display: inline-block;
   }
 
   .locked-button {
@@ -245,8 +245,8 @@
   }
 
   .locked-item {
-    margin-right:20px;
-    position:relative;
+    margin-right: 20px;
+    position: relative;
     text-align: center;
     width: calc(var(--item-size) + 15px);
     display: flex;
@@ -254,10 +254,10 @@
     align-items: center;
 
     .empty-item {
-      background-color:#656565;
+      background-color: #656565;
       width: var(--item-size);
       height: var(--item-size);
-      border:2px solid #DDD;
+      border: 2px solid #ddd;
       margin-bottom: 4px;
     }
   }
@@ -324,11 +324,11 @@
   }
 
   .excluded-items {
-    border: 2px solid #DDD;
+    border: 2px solid #ddd;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    width: calc((var(--item-size) + 14px)*7);
+    width: calc((var(--item-size) + 14px) * 7);
     min-height: var(--item-size);
   }
 
@@ -357,7 +357,7 @@
     min-height: calc((var(--item-size) * 5) + 10px);
     overflow-y: auto;
     background-color: #656565;
-    border: 2px solid #DDD;
+    border: 2px solid #ddd;
     z-index: 3;
     & .perk {
       width: calc(var(--item-size) + 20px);
@@ -366,11 +366,13 @@
       cursor: pointer;
     }
 
-    & .perk:hover, & .active-perk-or {
+    & .perk:hover,
+    & .active-perk-or {
       background-color: $orange;
     }
 
-    &.shift-held .perk:hover, & .active-perk-and {
+    &.shift-held .perk:hover,
+    & .active-perk-and {
       background-color: $void;
     }
 

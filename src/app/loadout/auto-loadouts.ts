@@ -12,13 +12,15 @@ import { DimItem } from '../inventory/item-types';
  */
 export function itemLevelingLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
   const applicableItems = storeService.getAllItems().filter((i) => {
-    return i.canBeEquippedBy(store) &&
+    return (
+      i.canBeEquippedBy(store) &&
       i.talentGrid &&
       !(i.talentGrid as any).xpComplete && // Still need XP
       (i.hash !== 2168530918 && // Husk of the pit has a weirdo one-off xp mechanic
-      i.hash !== 3783480580 &&
-      i.hash !== 2576945954 &&
-      i.hash !== 1425539750);
+        i.hash !== 3783480580 &&
+        i.hash !== 2576945954 &&
+        i.hash !== 1425539750)
+    );
   });
 
   const bestItemFn = (item) => {
@@ -41,22 +43,10 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
     // and apply different rules to them.
     if (item.locked) {
       value += 500;
-      value += [
-        'Common',
-        'Uncommon',
-        'Rare',
-        'Legendary',
-        'Exotic'
-      ].indexOf(item.tier) * 10;
+      value += ['Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'].indexOf(item.tier) * 10;
     } else {
       // For unlocked, prefer blue items so when you destroy them you get more mats.
-      value += [
-        'Common',
-        'Uncommon',
-        'Exotic',
-        'Legendary',
-        'Rare'
-      ].indexOf(item.tier) * 10;
+      value += ['Common', 'Uncommon', 'Exotic', 'Legendary', 'Rare'].indexOf(item.tier) * 10;
     }
 
     // Choose the item w/ the highest XP
@@ -81,9 +71,11 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
   ]);
 
   const applicableItems = storeService.getAllItems().filter((i) => {
-    return i.canBeEquippedBy(store) &&
+    return (
+      i.canBeEquippedBy(store) &&
       i.primStat && // has a primary stat (sanity check)
-      statHashes.has(i.primStat.statHash); // one of our selected stats
+      statHashes.has(i.primStat.statHash)
+    ); // one of our selected stats
   });
 
   const bestItemFn = (item) => {
@@ -188,14 +180,14 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
  */
 export function searchLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
   let items = storeService.getAllItems().filter((i) => {
-    return i.visible &&
-      !i.location.inPostmaster &&
-      !i.notransfer;
+    return i.visible && !i.location.inPostmaster && !i.notransfer;
   });
 
   items = addUpStackables(items);
 
-  const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) => limitToBucketSize(items, store.isVault));
+  const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) =>
+    limitToBucketSize(items, store.isVault)
+  );
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
   const finalItems = {};

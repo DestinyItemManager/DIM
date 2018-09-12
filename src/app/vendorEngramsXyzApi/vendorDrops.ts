@@ -15,25 +15,25 @@ export enum VendorDropType {
 }
 
 export enum VendorEngramVendor {
-  DevrimKay =	0,
+  DevrimKay = 0,
   MidaMiniTool = 1,
   Sloane = 2,
   Failsafe = 3,
   AsherMir = 4,
-  ManOWar =	5,
-  Drang =	7,
-  CommanderZavala =	8,
-  LordShaxx =	9,
-  Banshee44 =	10,
+  ManOWar = 5,
+  Drang = 7,
+  CommanderZavala = 8,
+  LordShaxx = 9,
+  Banshee44 = 10,
   IkoraRey = 11,
   Benedict9940 = 12,
   Lakshmi2 = 13,
-  ExecutorHideo =	14,
-  ArachJalaal =	15,
-  TheEmissary =	16,
-  LordSaladin =	17,
+  ExecutorHideo = 14,
+  ArachJalaal = 15,
+  TheEmissary = 16,
+  LordSaladin = 17,
   BrotherVance = 18,
-  AnaBray =	19,
+  AnaBray = 19,
   IKELOS_HC_V1_0_1 = 20,
   BraytechRWPMk_II = 21
 }
@@ -63,15 +63,17 @@ export enum ManifestVendor {
 }
 
 export const vendorHashToVendorEngramVendor: { [k: number]: VendorEngramVendor[] | undefined } = {
-  [ManifestVendor.AsherMir]: [VendorEngramVendor.AsherMir,
-    VendorEngramVendor.ManOWar],
-  [ManifestVendor.AnaBray]: [VendorEngramVendor.AnaBray, VendorEngramVendor.BraytechRWPMk_II, VendorEngramVendor.IKELOS_HC_V1_0_1],
+  [ManifestVendor.AsherMir]: [VendorEngramVendor.AsherMir, VendorEngramVendor.ManOWar],
+  [ManifestVendor.AnaBray]: [
+    VendorEngramVendor.AnaBray,
+    VendorEngramVendor.BraytechRWPMk_II,
+    VendorEngramVendor.IKELOS_HC_V1_0_1
+  ],
   [ManifestVendor.Banshee44]: [VendorEngramVendor.Banshee44],
   [ManifestVendor.Benedict9940]: [VendorEngramVendor.Benedict9940],
   [ManifestVendor.BrotherVance]: [VendorEngramVendor.BrotherVance],
   [ManifestVendor.CommanderZavala]: [VendorEngramVendor.CommanderZavala],
-  [ManifestVendor.DevrimKay]: [VendorEngramVendor.DevrimKay,
-    VendorEngramVendor.MidaMiniTool],
+  [ManifestVendor.DevrimKay]: [VendorEngramVendor.DevrimKay, VendorEngramVendor.MidaMiniTool],
   [ManifestVendor.TyraKarn]: [VendorEngramVendor.Drang],
   [ManifestVendor.ExecutorHideo]: [VendorEngramVendor.ExecutorHideo],
   [ManifestVendor.Failsafe]: [VendorEngramVendor.Failsafe],

@@ -16,13 +16,17 @@ export class ActivityTracker extends React.Component {
   private lastActivityTimestamp: number;
 
   // Broadcast the refresh signal no more than once per minute
-  private refresh = _.throttle(() => {
-    // Individual pages should listen to this event and decide what to refresh,
-    // and their services should decide how to cache/dedup refreshes.
-    // This event should *NOT* be listened to by services!
-    // TODO: replace this with an observable?
-    $rootScope.$broadcast('dim-refresh');
-  }, MIN_REFRESH_INTERVAL, { trailing: false });
+  private refresh = _.throttle(
+    () => {
+      // Individual pages should listen to this event and decide what to refresh,
+      // and their services should decide how to cache/dedup refreshes.
+      // This event should *NOT* be listened to by services!
+      // TODO: replace this with an observable?
+      $rootScope.$broadcast('dim-refresh');
+    },
+    MIN_REFRESH_INTERVAL,
+    { trailing: false }
+  );
 
   componentDidMount() {
     this.track();
@@ -55,11 +59,14 @@ export class ActivityTracker extends React.Component {
   }
 
   private activeWithinTimespan(timespan) {
-    return (Date.now() - this.lastActivityTimestamp) <= timespan;
+    return Date.now() - this.lastActivityTimestamp <= timespan;
   }
 
   private startTimer() {
-    this.refreshAccountDataInterval = window.setTimeout(this.refreshAccountData, AUTO_REFRESH_INTERVAL);
+    this.refreshAccountDataInterval = window.setTimeout(
+      this.refreshAccountData,
+      AUTO_REFRESH_INTERVAL
+    );
   }
 
   private clearTimer() {
@@ -68,14 +75,14 @@ export class ActivityTracker extends React.Component {
 
   private clickHandler = () => {
     this.track();
-  }
+  };
 
   private visibilityHandler = () => {
     if (document.hidden === false) {
       this.track();
       this.refreshAccountData();
     }
-  }
+  };
 
   // Decide whether to refresh. If the page isn't visible or the user isn't online, or the page has been forgotten, don't fire.
   private refreshAccountData = () => {
@@ -87,5 +94,5 @@ export class ActivityTracker extends React.Component {
     if (dimHasNoActivePromises && userWasActiveInTheLastHour && isDimVisible && isOnline) {
       this.refresh();
     }
-  }
+  };
 }

@@ -10,7 +10,10 @@ import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
-import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyVendorSaleItemComponent,
+  DestinyVendorItemDefinition
+} from 'bungie-api-ts/destiny2';
 import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { D2ItemReviewResponse, WorkingD2Rating, D2ItemUserReview } from './d2-dtr-api-types';
@@ -42,27 +45,21 @@ export class DestinyTrackerService {
     }
 
     if (stores[0].isDestiny1()) {
-      this._bulkFetcher.attachRankings(null,
-                                  stores as D1Store[]);
+      this._bulkFetcher.attachRankings(null, stores as D1Store[]);
     } else if (stores[0].isDestiny2()) {
-      this._d2bulkFetcher.attachRankings(null,
-                                    stores as D2Store[]);
+      this._d2bulkFetcher.attachRankings(null, stores as D2Store[]);
     }
   }
 
   updateCachedUserRankings(item: DimItem, userReview: WorkingD1Rating | WorkingD2Rating) {
     if (item.isDestiny1()) {
-      this._reviewDataCache.addUserReviewData(item,
-                                          userReview as WorkingD1Rating);
+      this._reviewDataCache.addUserReviewData(item, userReview as WorkingD1Rating);
     } else if (item.isDestiny2()) {
-      this._d2reviewDataCache.addUserReviewData(item,
-                                            userReview as WorkingD2Rating);
+      this._d2reviewDataCache.addUserReviewData(item, userReview as WorkingD2Rating);
     }
   }
 
-  async bulkFetchVendorItems(
-    vendorSaleItems: DestinyVendorSaleItemComponent[]
-  ): Promise<this> {
+  async bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<this> {
     if (settings.showReviews) {
       const platformSelection = settings.reviewsPlatformSelection;
       const mode = settings.reviewsModeSelection;
@@ -73,13 +70,16 @@ export class DestinyTrackerService {
     return this;
   }
 
-  async bulkFetchKioskItems(
-    vendorItems: DestinyVendorItemDefinition[]
-  ): Promise<this> {
+  async bulkFetchKioskItems(vendorItems: DestinyVendorItemDefinition[]): Promise<this> {
     if (settings.showReviews) {
       const platformSelection = settings.reviewsPlatformSelection;
       const mode = settings.reviewsModeSelection;
-      await this._d2bulkFetcher.bulkFetchVendorItems(platformSelection, mode, undefined, vendorItems);
+      await this._d2bulkFetcher.bulkFetchVendorItems(
+        platformSelection,
+        mode,
+        undefined,
+        vendorItems
+      );
       return this;
     }
 
@@ -121,9 +121,7 @@ export class DestinyTrackerService {
   }
 
   async fetchReviews(stores: DimStore[]) {
-    if (!settings.showReviews ||
-        !stores ||
-        !stores[0]) {
+    if (!settings.showReviews || !stores || !stores[0]) {
       return;
     }
 

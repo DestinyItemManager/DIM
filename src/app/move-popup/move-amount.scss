@@ -1,5 +1,3 @@
-
-
 .move-amount {
   display: flex;
   flex-direction: row;
@@ -53,7 +51,7 @@
     font-size: 1.65em;
   }
   .item {
-    margin-right: .5em;
+    margin-right: 0.5em;
   }
   .buttons {
     text-align: center;
@@ -74,7 +72,8 @@
 
 /* rzslider */
 
-rzslider, .rzslider {
+rzslider,
+.rzslider {
   position: relative;
   display: inline-block;
   width: 100%;

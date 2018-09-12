@@ -4,6 +4,8 @@ import 'core-js/fn/promise/finally';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { module, bootstrap } from 'angular';
+import { DragDropContextProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import { UIRouter } from '@uirouter/react';
 import { Provider } from 'react-redux';
 import makeRouter from './router.config';
@@ -20,7 +22,7 @@ import './scss/main.scss';
 import { initi18n } from './app/i18n';
 
 // Drag and drop
-import { polyfill } from "mobile-drag-drop";
+import { polyfill } from 'mobile-drag-drop';
 import 'mobile-drag-drop/default.css';
 
 import registerServiceWorker from './register-service-worker';
@@ -33,27 +35,30 @@ polyfill({
 });
 
 // https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
-window.addEventListener('touchmove', () => { return; });
+window.addEventListener('touchmove', () => {
+  return;
+});
 
 if ($DIM_FLAVOR !== 'dev') {
   registerServiceWorker();
 }
 
 initi18n().then(() => {
-  module('Bootstrap', [AppModule])
-    .run(($injector) => {
-      'ngInject';
-      lazyInjector.$injector = $injector;
-      const router = makeRouter();
-      setRouter(router);
-      ReactDOM.render(
-        <Provider store={store}>
-          <UIRouter router={router}>
-            <App/>
-          </UIRouter>
-        </Provider>,
-        document.getElementById('app')
-      );
-    });
+  module('Bootstrap', [AppModule]).run(($injector) => {
+    'ngInject';
+    lazyInjector.$injector = $injector;
+    const router = makeRouter();
+    setRouter(router);
+    ReactDOM.render(
+      <Provider store={store}>
+        <UIRouter router={router}>
+          <DragDropContextProvider backend={HTML5Backend}>
+            <App />
+          </DragDropContextProvider>
+        </UIRouter>
+      </Provider>,
+      document.getElementById('app')
+    );
+  });
   bootstrap(document.createElement('div'), ['Bootstrap'], { strictDi: true });
 });

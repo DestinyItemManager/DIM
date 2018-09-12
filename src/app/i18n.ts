@@ -17,7 +17,20 @@ import XHR from 'i18next-xhr-backend';
 import { humanBytes } from './storage/human-bytes';
 import { percent } from './inventory/dimPercentWidth.directive';
 
-export const DIM_LANGS = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'ja', 'pl', 'pt-br', 'ru', 'ko', 'zh-cht'];
+export const DIM_LANGS = [
+  'de',
+  'en',
+  'es',
+  'es-mx',
+  'fr',
+  'it',
+  'ja',
+  'pl',
+  'pt-br',
+  'ru',
+  'ko',
+  'zh-cht'
+];
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
@@ -33,53 +46,56 @@ export function initi18n(): Promise<never> {
   return new Promise((resolve, reject) => {
     // See https://github.com/i18next/ng-i18next
     i18use(XHR);
-    i18init({
-      initImmediate: true,
-      debug: $DIM_FLAVOR === 'dev',
-      lng: defaultLanguage(),
-      fallbackLng: 'en',
-      lowerCaseLng: true,
-      load: 'currentOnly',
-      interpolation: {
-        escapeValue: false,
-        format(val, format) {
-          if (format === 'pct') {
-            return percent(parseFloat(val));
-          } else if (format === 'humanBytes') {
-            return humanBytes(parseInt(val, 10));
+    i18init(
+      {
+        initImmediate: true,
+        debug: $DIM_FLAVOR === 'dev',
+        lng: defaultLanguage(),
+        fallbackLng: 'en',
+        lowerCaseLng: true,
+        load: 'currentOnly',
+        interpolation: {
+          escapeValue: false,
+          format(val, format) {
+            if (format === 'pct') {
+              return percent(parseFloat(val));
+            } else if (format === 'humanBytes') {
+              return humanBytes(parseInt(val, 10));
+            }
+            return val;
           }
-          return val;
-        }
-      },
-      backend: {
-        loadPath(lng) {
-          const path = {
-            en,
-            it,
-            de,
-            fr,
-            es,
-            'es-mx': esMX,
-            ja,
-            'pt-br': ptBR,
-            pl,
-            ru,
-            ko,
-            'zh-cht': zhCHT
-          }[lng];
-          if (!path) {
-            throw new Error(`unsupported language ${lng}`);
+        },
+        backend: {
+          loadPath(lng) {
+            const path = {
+              en,
+              it,
+              de,
+              fr,
+              es,
+              'es-mx': esMX,
+              ja,
+              'pt-br': ptBR,
+              pl,
+              ru,
+              ko,
+              'zh-cht': zhCHT
+            }[lng];
+            if (!path) {
+              throw new Error(`unsupported language ${lng}`);
+            }
+            return path;
           }
-          return path;
-        }
+        },
+        returnObjects: true
       },
-      returnObjects: true
-    }, (error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
+      (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
       }
-    });
+    );
   });
 }

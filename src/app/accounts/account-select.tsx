@@ -10,25 +10,29 @@ import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
 import { router } from '../../router';
 
-const Account = React.forwardRef((
-  {
-    account,
-    className,
-    ...other
-  }: {
-    account: DestinyAccount;
-    className?: string;
-  } & React.HTMLAttributes<HTMLDivElement>,
-  ref?: React.Ref<HTMLDivElement>
-) => {
-  return (
-    <div ref={ref} className={classNames("account", className)} {...other}>
-      <div className="account-name">Destiny {account.destinyVersion === 1 ? '1' : '2'} • <span>{t(`Accounts.${account.platformLabel}`)}</span>
+const Account = React.forwardRef(
+  (
+    {
+      account,
+      className,
+      ...other
+    }: {
+      account: DestinyAccount;
+      className?: string;
+    } & React.HTMLAttributes<HTMLDivElement>,
+    ref?: React.Ref<HTMLDivElement>
+  ) => {
+    return (
+      <div ref={ref} className={classNames('account', className)} {...other}>
+        <div className="account-name">
+          Destiny {account.destinyVersion === 1 ? '1' : '2'} •{' '}
+          <span>{t(`Accounts.${account.platformLabel}`)}</span>
+        </div>
+        <div className="account-details">{account.displayName}</div>
       </div>
-      <div className="account-details">{account.displayName}</div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 interface Props {
   currentAccount?: DestinyAccount;
@@ -79,22 +83,29 @@ export default class AccountSelect extends React.Component<Props, State> {
 
     return (
       <div className="account-select">
-        <Account className="selected-account" ref={this.dropdownToggler} account={currentAccount} onClick={this.toggleDropdown}/>
-        {open &&
+        <Account
+          className="selected-account"
+          ref={this.dropdownToggler}
+          account={currentAccount}
+          onClick={this.toggleDropdown}
+        />
+        {open && (
           <ClickOutside onClickOutside={this.closeDropdown} className="accounts-popup">
-            {otherAccounts.map((account) =>
+            {otherAccounts.map((account) => (
               <UISref
                 key={`${account.membershipId}-${account.destinyVersion}`}
                 to={account.destinyVersion === 1 ? 'destiny1' : 'destiny2'}
                 params={account}
                 onClick={this.closeDropdown}
               >
-                <Account account={account} onClick={this.closeDropdown}/>
+                <Account account={account} onClick={this.closeDropdown} />
               </UISref>
-            )}
-            <div className="log-out" onClick={this.logOut}><i className="fa fa-sign-out"/> {t('Settings.LogOut')}</div>
+            ))}
+            <div className="log-out" onClick={this.logOut}>
+              <i className="fa fa-sign-out" /> {t('Settings.LogOut')}
+            </div>
           </ClickOutside>
-        }
+        )}
       </div>
     );
   }
@@ -103,15 +114,15 @@ export default class AccountSelect extends React.Component<Props, State> {
     if (!e || !this.dropdownToggler.current || !this.dropdownToggler.current.contains(e.target)) {
       this.setState({ open: false });
     }
-  }
+  };
 
   private toggleDropdown = () => {
     this.setState({ open: !this.state.open });
-  }
+  };
 
   private logOut = () => {
     this.closeDropdown();
     removeToken();
     router.stateService.go('login', { reauth: true });
-  }
+  };
 }

@@ -1,4 +1,4 @@
-import { IComponentOptions, IController, IIntervalService } from "angular";
+import { IComponentOptions, IController, IIntervalService } from 'angular';
 
 export const CountdownComponent: IComponentOptions = {
   bindings: {

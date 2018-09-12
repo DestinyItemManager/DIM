@@ -8,7 +8,6 @@
   border-radius: 0;
   -webkit-appearance: none;
   height: 25px;
-
 }
 
 dim-search-filter {
@@ -30,13 +29,14 @@ dim-search-filter {
     height: 34px;
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background: transparent;
     outline: none;
     border-bottom: 1px solid $orange;
   }
 
-  input[type="text"] {
+  input[type='text'] {
     border: none;
     color: white;
     background: transparent;
@@ -66,12 +66,14 @@ dim-search-filter {
       }
 
       .dim-input {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: #222;
         }
       }
 
-      input, select:focus {
+      input,
+      select:focus {
         font-size: 16px; // so iOS doesn't zoom
       }
     }
@@ -101,7 +103,7 @@ dim-search-filter {
       margin-left: -4px;
     }
     &:hover {
-      color: #E8A534 !important;
+      color: #e8a534 !important;
     }
   }
   .bulk-tag-select {
@@ -141,7 +143,8 @@ dim-search-filter {
   border: 1px solid #ddd;
   background-color: white;
   transform: translate(0, -1px);
-  .textcomplete-header, .textcomplete-footer {
+  .textcomplete-header,
+  .textcomplete-footer {
     display: none;
   }
   li {
@@ -157,7 +160,8 @@ dim-search-filter {
   .active {
     background-color: #555;
   }
-  li:hover a, .active a {
+  li:hover a,
+  .active a {
     color: white;
   }
   a {

@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import template from './dimStores.directive.html';
-import './dimStores.scss';
+import './Stores.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
@@ -56,7 +56,7 @@ function StoresCtrl(
     const sortedStores = sortStores(vm.stores, settings.characterOrder);
     const currentIndex = sortedStores.indexOf(vm.selectedStore);
 
-    if (currentIndex < (sortedStores.length - 1)) {
+    if (currentIndex < sortedStores.length - 1) {
       vm.selectedStore = sortedStores[currentIndex + 1];
     }
   };
@@ -90,18 +90,21 @@ function StoresCtrl(
   });
 
   vm.$onChanges = () => {
-    vm.vault = vm.stores && vm.stores.find((s) => s.isVault) || null;
+    vm.vault = (vm.stores && vm.stores.find((s) => s.isVault)) || null;
 
     if (vm.stores && vm.stores.length) {
       // This is the character that was last played
       vm.currentStore = vm.stores.find((s) => s.current) || null;
 
       // This is the character selected to display in mobile view
-      vm.selectedStore = (!vm.selectedStore || !vm.stores.find((s) => s.id === vm.selectedStore!.id))
-        ? vm.currentStore
-        : vm.stores.find((s) => s.id === vm.selectedStore!.id) || null;
+      vm.selectedStore =
+        !vm.selectedStore || !vm.stores.find((s) => s.id === vm.selectedStore!.id)
+          ? vm.currentStore
+          : vm.stores.find((s) => s.id === vm.selectedStore!.id) || null;
       if (vm.selectedStore) {
-        vm.selectedStoreIndex = sortStores(vm.stores, settings.characterOrder).indexOf(vm.selectedStore);
+        vm.selectedStoreIndex = sortStores(vm.stores, settings.characterOrder).indexOf(
+          vm.selectedStore
+        );
       }
     } else {
       vm.selectedStore = null;

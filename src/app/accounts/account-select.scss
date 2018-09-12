@@ -19,14 +19,15 @@
 
   .account-details {
     font-size: 10px !important;
-    color: #AAA;
+    color: #aaa;
   }
 
   .account-name span {
     margin: 0 !important;
   }
 
-  &:focus, &:active {
+  &:focus,
+  &:active {
     outline: none;
   }
 
@@ -38,7 +39,7 @@
     box-sizing: border-box;
 
     &::after {
-      content: "▼";
+      content: '▼';
       position: absolute;
       right: 7px;
       top: 13px;
@@ -46,7 +47,8 @@
       color: #ccc;
     }
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: #3f3f3f;
 
       &::after {
@@ -70,8 +72,10 @@
   height: fit-content;
   background-color: #222;
 
-  .account, .log-out {
-    &:hover, &:focus {
+  .account,
+  .log-out {
+    &:hover,
+    &:focus {
       background-color: #151515;
     }
   }

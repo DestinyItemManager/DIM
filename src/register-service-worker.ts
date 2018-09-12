@@ -1,6 +1,6 @@
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import './app/rx-operators';
-import { reportException } from "./app/exceptions";
+import { reportException } from './app/exceptions';
 import { Observable } from 'rxjs/Observable';
 
 /**
@@ -22,13 +22,18 @@ const contentChanged$ = new BehaviorSubject(false);
  */
 const serverVersionChanged$ = Observable.timer(10 * 1000, 15 * 60 * 1000)
   // Fetch but swallow errors
-  .switchMap(() => Observable.fromPromise(getServerVersion()).catch(() => Observable.empty<string>()))
+  .switchMap(() =>
+    Observable.fromPromise(getServerVersion()).catch(() => Observable.empty<string>())
+  )
   .map((version) => version !== $DIM_VERSION)
   .distinctUntilChanged()
   // At this point the value of the observable will flip to true once and only once
-  .switchMap((needsUpdate) => needsUpdate
-    ? Observable.fromPromise(updateServiceWorker().then(() => true))
-    : Observable.of(false))
+  .switchMap(
+    (needsUpdate) =>
+      needsUpdate
+        ? Observable.fromPromise(updateServiceWorker().then(() => true))
+        : Observable.of(false)
+  )
   .shareReplay();
 
 /**
@@ -41,8 +46,7 @@ export const dimNeedsUpdate$ = Observable.combineLatest(
   serviceWorkerUpdated$,
   contentChanged$,
   (serverVersionChanged, updated, changed) => serverVersionChanged || (updated && changed)
-)
-  .distinctUntilChanged();
+).distinctUntilChanged();
 
 /**
  * If Service Workers are supported, install our Service Worker and listen for updates.
@@ -106,13 +110,16 @@ export default function registerServiceWorker() {
       };
 
       updateServiceWorker = () => {
-        return registration.update().catch((err) => {
-          if ($featureFlags.debugSW) {
-            console.error('SW: Unable to update service worker.', err);
-          }
-        }).then(() => {
-          console.log('SW: New content is available; please refresh.');
-        });
+        return registration
+          .update()
+          .catch((err) => {
+            if ($featureFlags.debugSW) {
+              console.error('SW: Unable to update service worker.', err);
+            }
+          })
+          .then(() => {
+            console.log('SW: New content is available; please refresh.');
+          });
       };
     })
     .catch((err) => {
@@ -129,7 +136,7 @@ async function getServerVersion() {
   if (response.ok) {
     const data = await response.json();
     if (!data.version) {
-      throw new Error("No version property");
+      throw new Error('No version property');
     }
     return data.version as string;
   } else {

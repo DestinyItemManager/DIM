@@ -28,5 +28,4 @@ export default module('movePopupModule', [])
   .filter('talentGridNodes', () => talentGridNodesFilter)
   .filter('ammoTypeClass', () => ammoTypeClass)
   .directive('itemPopup', ItemPopup)
-  .directive('pressTip', PressTip)
-  .name;
+  .directive('pressTip', PressTip).name;

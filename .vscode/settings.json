@@ -1,12 +1,15 @@
 {
   "editor.tabSize": 2,
   "editor.trimAutoWhitespace": true,
-  "files.trimTrailingWhitespace": true,"typescript.extension.sortImports.sortMethod": "path",
-  "typescript.extension.sortImports.pathSortOrder": [
-      "package",
-      "relativeUpLevel",
-      "relativeDownLevel"
-  ],
-  "typescript.extension.sortImports.enableJavascript": true,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "files.trimTrailingWhitespace": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "[scss]": {
+    "editor.formatOnSave": true
+  }
 }
