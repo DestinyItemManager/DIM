@@ -1,6 +1,7 @@
 # Next
 
 - Added `is:exactdupe` and `is:exactdupelower`
+* Added `is:exactdupe` and `is:exactdupelower`
 
 # 4.69.1 (2018-09-10)
 
