@@ -3,13 +3,5 @@
   "editor.trimAutoWhitespace": true,
   "files.trimTrailingWhitespace": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "[javascript]": {
-    "editor.formatOnSave": true
-  },
-  "[typescript]": {
-    "editor.formatOnSave": true
-  },
-  "[scss]": {
-    "editor.formatOnSave": true
-  }
+  "editor.formatOnSave": true
 }
