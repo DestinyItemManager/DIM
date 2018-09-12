@@ -1030,7 +1030,7 @@ function LoadoutBuilderController(
 
           vm.allSetTiers = [];
           const tierKeys = Object.keys(tiers);
-          for (let t = tierKeys.length; t-- > tierKeys.length - 3; ) {
+          for (let t = tierKeys.length; t > tierKeys.length - 3; t--) {
             if (tierKeys[t]) {
               vm.allSetTiers.push(`- Tier ${tierKeys[t]} -`);
               _.each(tiers[tierKeys[t]], (set) => {

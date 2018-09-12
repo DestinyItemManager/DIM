@@ -230,11 +230,8 @@ export function downloadCsvFiles(stores, type) {
   let allItems: DimItem[] = [];
   stores.forEach((store) => {
     allItems = allItems.concat(store.items);
-    if (store.id === 'vault') {
-      nameMap[store.id] = 'Vault';
-    } else {
-      nameMap[store.id] = `${capitalizeFirstLetter(store.class)}(${store.powerLevel})`;
-    }
+    nameMap[store.id] =
+      store.id === 'vault' ? 'Vault' : `${capitalizeFirstLetter(store.class)}(${store.powerLevel})`;
   });
   const items: DimItem[] = [];
   allItems.forEach((item) => {
