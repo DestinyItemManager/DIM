@@ -756,11 +756,11 @@ export function searchFilters(
         return categories.every((c) => item.inCategory(c));
       },
       keyword(item: DimItem, predicate: string) {
-        let inverse = predicate.startsWith('-');
+        const inverse = predicate.startsWith('-');
         if (inverse) {
           predicate = predicate.substring(1);
         }
-        let found =
+        const found =
           item.name.toLowerCase().includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
           // Search for typeName (itemTypeDisplayName of modifications)
