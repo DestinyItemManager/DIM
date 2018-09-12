@@ -117,7 +117,7 @@ class Stores extends React.Component<Props, State> {
     const vault = stores.find((s) => s.isVault) as DimVault;
     const currentStore = stores.find((s) => s.current)!;
     let selectedStore = currentStore;
-    if (selectedStoreId) {
+    if (!selectedStoreId) {
       selectedStore =
         stores.find((s) => s.id === selectedStoreId) || selectedStore;
     }
