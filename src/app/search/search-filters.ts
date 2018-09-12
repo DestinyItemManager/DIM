@@ -756,7 +756,11 @@ export function searchFilters(
         return categories.every((c) => item.inCategory(c));
       },
       keyword(item: DimItem, predicate: string) {
-        return (
+        let inverse = predicate.startsWith('-');
+        if (inverse) {
+          predicate = predicate.substring(1);
+        }
+        let found =
           item.name.toLowerCase().includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
           // Search for typeName (itemTypeDisplayName of modifications)
@@ -786,8 +790,8 @@ export function searchFilters(
                     )
                   )
               )
-            ))
-        );
+            ));
+        return inverse ? !found : found;
       },
       light(item: DimItem, predicate: string) {
         if (!item.primStat) {
