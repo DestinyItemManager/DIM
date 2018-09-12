@@ -199,7 +199,8 @@ class Stores extends React.Component<Props, State> {
       itemInfos,
       ratings,
       searchFilter,
-      collapsedSections
+      collapsedSections,
+      isPhonePortrait
     } = this.props;
 
     return (
@@ -234,6 +235,7 @@ class Stores extends React.Component<Props, State> {
                   itemInfos={itemInfos}
                   ratings={ratings}
                   searchFilter={searchFilter}
+                  draggable={!isPhonePortrait}
                 />
               ))}
           </div>
