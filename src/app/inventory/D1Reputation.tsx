@@ -19,7 +19,12 @@ export default function D1Reputation({ store }: { store: D1Store }) {
             rep.order >= 0 && (
               <PressTip
                 key={rep.faction.hash}
-                tooltip={<><h2>{rep.faction.factionName}</h2>{rep.progressToNextLevel}/{rep.nextLevelAt}</>}
+                tooltip={
+                  <>
+                    <h2>{rep.faction.factionName}</h2>
+                    {rep.progressToNextLevel}/{rep.nextLevelAt}
+                  </>
+                }
               >
                 <div className="factionrep">
                   <DiamondProgress

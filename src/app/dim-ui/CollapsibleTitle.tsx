@@ -28,9 +28,7 @@ export default class CollapsibleTitle extends React.Component<Props> {
           <i
             className={classNames(
               'fa collapse',
-              collapsedSections[sectionId]
-                ? 'fa-plus-square-o'
-                : 'fa-minus-square-o'
+              collapsedSections[sectionId] ? 'fa-plus-square-o' : 'fa-minus-square-o'
             )}
           />{' '}
           <span>{title}</span>
@@ -48,5 +46,5 @@ export default class CollapsibleTitle extends React.Component<Props> {
       [id]: !settings.collapsedSections[id]
     };
     settings.save();
-  }
+  };
 }

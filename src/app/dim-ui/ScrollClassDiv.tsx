@@ -12,8 +12,7 @@ export default class ScrollClassDiv extends React.PureComponent<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      scrolled:
-        document.body.scrollTop > 0 || document.documentElement.scrollTop > 0
+      scrolled: document.body.scrollTop > 0 || document.documentElement.scrollTop > 0
     };
   }
   componentDidMount() {
@@ -38,7 +37,7 @@ export default class ScrollClassDiv extends React.PureComponent<Props> {
   scrollHandler = () => {
     cancelAnimationFrame(this.rafTimer);
     this.rafTimer = requestAnimationFrame(this.stickyHeader);
-  }
+  };
 
   stickyHeader = () => {
     const scrolled =
@@ -46,7 +45,7 @@ export default class ScrollClassDiv extends React.PureComponent<Props> {
         ? document.body.scrollTop > 0 || document.documentElement.scrollTop > 0
         : this.scrollParent.scrollTop > 0;
     this.ref.current!.classList.toggle(this.props.scrollClass, scrolled);
-  }
+  };
 }
 
 function scrollParent(node) {

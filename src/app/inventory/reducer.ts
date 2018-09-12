@@ -51,7 +51,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     // When the account changes, clear the inventory state
     case getType(setCurrentAccount):
       return {
-        ...initialInventoryState,
+        ...initialInventoryState
       };
     case getType(actions.update):
       // TODO: we really want to decompose these, drive out all deep mutation

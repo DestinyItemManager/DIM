@@ -5,7 +5,11 @@ import { Loadout } from './loadout.service';
 import { DimItem } from '../inventory/item-types';
 
 // Generate an optimized loadout based on a filtered set of items and a value function
-export function optimalLoadout(applicableItems: DimItem[], bestItemFn: (item: DimItem) => number, name: string): Loadout {
+export function optimalLoadout(
+  applicableItems: DimItem[],
+  bestItemFn: (item: DimItem) => number,
+  name: string
+): Loadout {
   const itemsByType = _.groupBy(applicableItems, 'type');
 
   // Pick the best item
@@ -14,7 +18,10 @@ export function optimalLoadout(applicableItems: DimItem[], bestItemFn: (item: Di
   // Solve for the case where our optimizer decided to equip two exotics
   const getLabel = (i) => i.equippingLabel;
   // All items that share an equipping label, grouped by label
-  const overlaps: _.Dictionary<DimItem[]> = _.groupBy(Object.values(items).filter(getLabel), getLabel);
+  const overlaps: _.Dictionary<DimItem[]> = _.groupBy(
+    Object.values(items).filter(getLabel),
+    getLabel
+  );
   _.each(overlaps, (overlappingItems) => {
     if (overlappingItems.length <= 1) {
       return;

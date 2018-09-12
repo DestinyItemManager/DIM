@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -60,8 +60,8 @@ module.exports = (env) => {
       // Extract the runtime into a separate chunk
       runtimeChunk: 'single',
       splitChunks: {
-        chunks: "all",
-        automaticNameDelimiter: "-"
+        chunks: 'all',
+        automaticNameDelimiter: '-'
       },
       minimizer: [
         new UglifyJSPlugin({
@@ -90,7 +90,8 @@ module.exports = (env) => {
           options: {
             cacheDirectory: true
           }
-        }, {
+        },
+        {
           test: /\.html$/,
           exclude: /src\/views\/(about|support)\.html/,
           loader: 'html-loader',
@@ -98,32 +99,27 @@ module.exports = (env) => {
             exportAsEs6Default: true,
             minimize: true
           }
-        }, {
+        },
+        {
           test: /\.(jpg|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
             name: ASSET_NAME_PATTERN
           }
-        }, {
+        },
+        {
           test: /\.scss$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            'postcss-loader',
-            'sass-loader'
-          ]
-        }, {
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+        },
+        {
           test: /\.css$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader'
-          ]
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
         {
           test: /\.tsx?$/,
-          loader: "awesome-typescript-loader",
+          loader: 'awesome-typescript-loader',
           options: {
             useBabel: true,
             useCache: true
@@ -131,29 +127,31 @@ module.exports = (env) => {
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
-          enforce: "pre",
+          enforce: 'pre',
           test: /\.js$/,
-          loader: "source-map-loader"
+          loader: 'source-map-loader'
         },
         {
           type: 'javascript/auto',
           test: /\.json/,
           include: /src(\/|\\)locale/,
-          use: [{
-            loader: 'file-loader',
-            options: { name: '[name]-[hash:6].[ext]' },
-          }],
+          use: [
+            {
+              loader: 'file-loader',
+              options: { name: '[name]-[hash:6].[ext]' }
+            }
+          ]
         },
         {
           test: /src\/views\/(about|support)\.html$/,
           use: [
             {
               loader: 'file-loader',
-              options: { name: '[name]-[hash:6].[ext]' },
+              options: { name: '[name]-[hash:6].[ext]' }
             },
             'extract-loader',
             'html-loader'
-          ],
+          ]
         },
         {
           type: 'javascript/auto',
@@ -191,8 +189,8 @@ module.exports = (env) => {
       new NotifyPlugin('DIM', !isDev),
 
       new MiniCssExtractPlugin({
-        filename: "[name]-[contenthash:6].css",
-        chunkFilename: "[id]-[contenthash:6].css"
+        filename: '[name]-[contenthash:6].css',
+        chunkFilename: '[id]-[contenthash:6].css'
       }),
 
       // Fix some chunks not showing up in Webpack 4
@@ -229,7 +227,6 @@ module.exports = (env) => {
         }
       }),
 
-
       // Generate a version info JSON file we can poll. We could theoretically add more info here too.
       new GenerateJsonPlugin('./version.json', {
         version
@@ -242,7 +239,7 @@ module.exports = (env) => {
         { from: './src/manifest-webapp-6-2018-ios.json' },
         { from: './src/data', to: 'data/' },
         { from: `./icons/${env}/` },
-        { from: './src/safari-pinned-tab.svg' },
+        { from: './src/safari-pinned-tab.svg' }
       ]),
 
       new webpack.DefinePlugin({
@@ -254,7 +251,9 @@ module.exports = (env) => {
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
 
-        $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify('22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'),
+        $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify(
+          '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'
+        ),
 
         $BROWSERS: JSON.stringify(packageJson.browserslist),
 
@@ -284,7 +283,7 @@ module.exports = (env) => {
         '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Enable vendorengrams.xyz integration
         '$featureFlags.reactInventory': JSON.stringify(env !== 'release')
-      }),
+      })
 
       // Enable if you want to debug the size of the chunks
       // new Visualizer(),
@@ -298,7 +297,13 @@ module.exports = (env) => {
   };
 
   if (isDev) {
-    config.plugins.push(new WebpackNotifierPlugin({ title: 'DIM', alwaysNotify: true, contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png') }));
+    config.plugins.push(
+      new WebpackNotifierPlugin({
+        title: 'DIM',
+        alwaysNotify: true,
+        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
+      })
+    );
 
     return config;
   } else {
@@ -306,31 +311,30 @@ module.exports = (env) => {
     config.bail = true;
     config.stats = 'normal';
 
-    config.plugins.push(new CleanWebpackPlugin([
-      'dist',
-      '.awcache',
-      'node_modules/.cache'
-    ], {
-      root: path.resolve('./')
-    }));
+    config.plugins.push(
+      new CleanWebpackPlugin(['dist', '.awcache', 'node_modules/.cache'], {
+        root: path.resolve('./')
+      })
+    );
 
     // Tell React we're in Production mode
-    config.plugins.push(new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env': JSON.stringify({ NODE_ENV: 'production' })
-    }));
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+        'process.env': JSON.stringify({ NODE_ENV: 'production' })
+      })
+    );
 
     // Generate a service worker
-    config.plugins.push(new WorkboxPlugin({
-      maximumFileSizeToCacheInBytes: 5000000,
-      globPatterns: ['**/*.{html,js,css,woff2,json}', 'static/*.{png,jpg}'],
-      globIgnores: [
-        'data/**',
-        'service-worker.js'
-      ],
-      swSrc: './dist/service-worker.js',
-      swDest: './dist/service-worker.js'
-    }));
+    config.plugins.push(
+      new WorkboxPlugin({
+        maximumFileSizeToCacheInBytes: 5000000,
+        globPatterns: ['**/*.{html,js,css,woff2,json}', 'static/*.{png,jpg}'],
+        globIgnores: ['data/**', 'service-worker.js'],
+        swSrc: './dist/service-worker.js',
+        swDest: './dist/service-worker.js'
+      })
+    );
   }
 
   // Build the service worker in an entirely separate configuration so

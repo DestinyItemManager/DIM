@@ -55,7 +55,9 @@ export interface DestinyAccount {
  *
  * @param bungieMembershipId Bungie.net membership ID
  */
-export function getDestinyAccountsForBungieAccount(bungieMembershipId: string): IPromise<DestinyAccount[]> {
+export function getDestinyAccountsForBungieAccount(
+  bungieMembershipId: string
+): IPromise<DestinyAccount[]> {
   return getAccounts(bungieMembershipId)
     .then(generatePlatforms)
     .then((platforms) => {
@@ -99,10 +101,12 @@ function generatePlatforms(accounts: UserMembershipData): IPromise<DestinyAccoun
 function findD2Characters(account: DestinyAccount): IPromise<DestinyAccount | null> {
   return getBasicProfile(account)
     .then((response) => {
-      if (response.profile &&
+      if (
+        response.profile &&
         response.profile.data &&
         response.profile.data.characterIds &&
-        response.profile.data.characterIds.length) {
+        response.profile.data.characterIds.length
+      ) {
         const result: DestinyAccount = {
           ...account,
           destinyVersion: 2,
@@ -116,7 +120,7 @@ function findD2Characters(account: DestinyAccount): IPromise<DestinyAccount | nu
       if (e.code && e.code === PlatformErrorCodes.DestinyAccountNotFound) {
         return null;
       }
-      console.error("Error getting D2 characters for", account, e);
+      console.error('Error getting D2 characters for', account, e);
       reportException('findD2Characters', e);
 
       // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
@@ -141,12 +145,14 @@ function findD1Characters(account: DestinyAccount): IPromise<any | null> {
       return null;
     })
     .catch((e: DimError) => {
-      if (e.code &&
+      if (
+        e.code &&
         (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
-          e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)) {
+          e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)
+      ) {
         return null;
       }
-      console.error("Error getting D1 characters for", account, e);
+      console.error('Error getting D1 characters for', account, e);
       reportException('findD1Characters', e);
 
       // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
@@ -162,7 +168,9 @@ function findD1Characters(account: DestinyAccount): IPromise<any | null> {
  * @return whether the accounts represent the same account
  */
 export function compareAccounts(account1: DestinyAccount, account2: DestinyAccount): boolean {
-  return account1.platformType === account2.platformType &&
-         account1.membershipId === account2.membershipId &&
-         account1.destinyVersion === account2.destinyVersion;
+  return (
+    account1.platformType === account2.platformType &&
+    account1.membershipId === account2.membershipId &&
+    account1.destinyVersion === account2.destinyVersion
+  );
 }

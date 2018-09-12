@@ -4,5 +4,4 @@ import { CompareComponent, StatRangeFilter } from './compare.component';
 
 export default module('compareModule', [])
   .component('dimCompare', CompareComponent)
-  .filter('statRange', StatRangeFilter)
-  .name;
+  .filter('statRange', StatRangeFilter).name;

@@ -44,22 +44,23 @@ const EMPTY_SET = new Set<string>();
 
 // TODO: move selectors elsewhere?
 const querySelector = (state: RootState) => state.shell.searchQuery;
-const destinyVersionSelector = (state: RootState) => state.accounts.currentAccount && state.accounts.accounts[state.accounts.currentAccount].destinyVersion || 2;
+const destinyVersionSelector = (state: RootState) =>
+  (state.accounts.currentAccount &&
+    state.accounts.accounts[state.accounts.currentAccount].destinyVersion) ||
+  2;
 
 /**
  * A selector for the search config for a particular destiny version.
  */
-const searchConfigSelector = createSelector(
-  destinyVersionSelector,
-  (destinyVersion) => {
-    // From search filter component
-    const searchConfig = buildSearchConfig(
-      destinyVersion,
-      itemTags,
-      destinyVersion === 1 ? D1Categories : D2Categories);
-    return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
-  }
-);
+const searchConfigSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
+  // From search filter component
+  const searchConfig = buildSearchConfig(
+    destinyVersion,
+    itemTags,
+    destinyVersion === 1 ? D1Categories : D2Categories
+  );
+  return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
+});
 
 /**
  * A selector for a predicate function for searching items, given the current search query.
@@ -73,10 +74,8 @@ const searchConfigSelector = createSelector(
 // * ratings
 // * newItems
 // * and maybe some other stuff?
-const searchFilterSelector = createSelector(
-  querySelector,
-  searchConfigSelector,
-  (query, filters) => filters.filterFunction(query)
+const searchFilterSelector = createSelector(querySelector, searchConfigSelector, (query, filters) =>
+  filters.filterFunction(query)
 );
 
 function mapStateToProps(state: RootState): Partial<Props> {
@@ -118,8 +117,7 @@ class Stores extends React.Component<Props, State> {
     const currentStore = stores.find((s) => s.current)!;
     let selectedStore = currentStore;
     if (!selectedStoreId) {
-      selectedStore =
-        stores.find((s) => s.id === selectedStoreId) || selectedStore;
+      selectedStore = stores.find((s) => s.id === selectedStoreId) || selectedStore;
     }
 
     if (isPhonePortrait) {
@@ -163,12 +161,17 @@ class Stores extends React.Component<Props, State> {
     settings.save();
   }
 
-  private renderStores(
-    stores: DimStore[],
-    vault: DimVault,
-    currentStore: DimStore
-  ) {
-    const { settings, buckets, newItems, itemInfos, ratings, searchFilter, collapsedSections, isPhonePortrait } = this.props;
+  private renderStores(stores: DimStore[], vault: DimVault, currentStore: DimStore) {
+    const {
+      settings,
+      buckets,
+      newItems,
+      itemInfos,
+      ratings,
+      searchFilter,
+      collapsedSections,
+      isPhonePortrait
+    } = this.props;
 
     return (
       <div>
@@ -179,7 +182,7 @@ class Stores extends React.Component<Props, State> {
             </div>
           ))}
         </ScrollClassDiv>
-        {isPhonePortrait && <div className="detached" loadout-id={stores[0].id}/>}
+        {isPhonePortrait && <div className="detached" loadout-id={stores[0].id} />}
         {Object.keys(buckets.byCategory).map((category) => (
           <div key={category} className="section">
             <CollapsibleTitle
@@ -190,11 +193,8 @@ class Stores extends React.Component<Props, State> {
               {stores[0].isDestiny1() &&
                 buckets.byCategory[category][0].vaultBucket && (
                   <span className="bucket-count">
-                    {
-                      vault.vaultCounts[
-                        buckets.byCategory[category][0].vaultBucket!.id
-                      ].count
-                    }/{buckets.byCategory[category][0].vaultBucket!.capacity}
+                    {vault.vaultCounts[buckets.byCategory[category][0].vaultBucket!.id].count}/
+                    {buckets.byCategory[category][0].vaultBucket!.capacity}
                   </span>
                 )}
             </CollapsibleTitle>
@@ -218,10 +218,7 @@ class Stores extends React.Component<Props, State> {
           </div>
         ))}
         {stores[0].isDestiny1() && (
-          <D1ReputationSection
-            stores={stores}
-            collapsedSections={collapsedSections}
-          />
+          <D1ReputationSection stores={stores} collapsedSections={collapsedSections} />
         )}
       </div>
     );

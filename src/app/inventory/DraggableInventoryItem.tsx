@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  DragSourceSpec,
-  DragSourceConnector,
-  ConnectDragSource,
-  DragSource
-} from 'react-dnd';
+import { DragSourceSpec, DragSourceConnector, ConnectDragSource, DragSource } from 'react-dnd';
 import { DimItem } from './item-types';
 import { stackableDrag } from './actions';
 import store from '../store/store';
@@ -23,8 +18,7 @@ type Props = InternalProps & ExternalProps;
 function dragType(props: ExternalProps): string {
   const item = props.item;
   // TODO: let postmaster stuff be dragged anywhere?
-  return item.notransfer ||
-    (item.location.inPostmaster && item.destinyVersion === 2)
+  return item.notransfer || (item.location.inPostmaster && item.destinyVersion === 2)
     ? `${item.owner}-${item.bucket.type}`
     : item.bucket.type!;
 }
@@ -49,8 +43,7 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
 
   canDrag(props): boolean {
     const item = props.item;
-    return (!item.location.inPostmaster || item.destinyVersion === 2) &&
-      item.notransfer
+    return (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
       ? item.equipment
       : item.equipment || item.bucket.hasTransferDestination;
   }

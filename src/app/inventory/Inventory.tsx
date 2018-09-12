@@ -18,13 +18,29 @@ import { DimStore } from './store-types';
 import ClearNewItems from './ClearNewItems';
 import StackableDragHelp from './StackableDragHelp';
 
-const D1Farming = angular2react('dimFarming', FarmingComponent, lazyInjector.$injector as angular.auto.IInjectorService);
-const D2Farming = angular2react('d2Farming', D2FarmingComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+const D1Farming = angular2react(
+  'dimFarming',
+  FarmingComponent,
+  lazyInjector.$injector as angular.auto.IInjectorService
+);
+const D2Farming = angular2react(
+  'd2Farming',
+  D2FarmingComponent,
+  lazyInjector.$injector as angular.auto.IInjectorService
+);
 const LoadoutDrawer = angular2react<{
   stores: DimStore[];
   account: DestinyAccount;
-}>('loadoutDrawer', LoadoutDrawerComponent, lazyInjector.$injector as angular.auto.IInjectorService);
-const Compare = angular2react('dimCompare', CompareComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+}>(
+  'loadoutDrawer',
+  LoadoutDrawerComponent,
+  lazyInjector.$injector as angular.auto.IInjectorService
+);
+const Compare = angular2react(
+  'dimCompare',
+  CompareComponent,
+  lazyInjector.$injector as angular.auto.IInjectorService
+);
 
 interface Props {
   account: DestinyAccount;
@@ -73,12 +89,12 @@ class Inventory extends React.Component<Props> {
     return (
       <>
         <Stores />
-        <LoadoutDrawer stores={stores} account={account}/>
-        <Compare/>
+        <LoadoutDrawer stores={stores} account={account} />
+        <Compare />
         <StackableDragHelp />
-        {account.destinyVersion === 1 ? <D1Farming/> : <D2Farming/>}
-        <ClearNewItems account={account}/>
-        <RandomLoadoutButton destinyVersion={account.destinyVersion}/>
+        {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
+        <ClearNewItems account={account} />
+        <RandomLoadoutButton destinyVersion={account.destinyVersion} />
       </>
     );
   }

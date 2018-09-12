@@ -1,13 +1,14 @@
 .gdrive-revisions {
   width: 100%;
   border-spacing: 0 4px;
-  border-collapse:separate;
+  border-collapse: separate;
 
   th {
     text-align: left;
   }
 
-  tr, td {
+  tr,
+  td {
     padding: 0 8px;
   }
 
@@ -23,7 +24,8 @@
     padding-left: 3em;
   }
 
-  .revision-date, .revision-controls {
+  .revision-date,
+  .revision-controls {
     width: 1px;
     white-space: nowrap;
   }

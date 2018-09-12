@@ -93,7 +93,7 @@ function RecordBooksController(
       expirationDate: rawRecordBook.expirationDate,
       pages: [] as RecordBookPage[],
       complete: false,
-      percentComplete: undefined as (number | undefined)
+      percentComplete: undefined as number | undefined
     };
 
     const records = Object.values(rawRecordBook.records).map((r) => processRecord(defs, r));
@@ -123,9 +123,14 @@ function RecordBooksController(
     // TODO: show rewards
 
     if (rawRecordBook.progression) {
-      rawRecordBook.progression = extend(rawRecordBook.progression, defs.Progression.get(rawRecordBook.progression.progressionHash));
+      rawRecordBook.progression = extend(
+        rawRecordBook.progression,
+        defs.Progression.get(rawRecordBook.progression.progressionHash)
+      );
       rawRecordBook.progress = rawRecordBook.progression;
-      rawRecordBook.percentComplete = rawRecordBook.progress.currentProgress / sum(rawRecordBook.progress.steps, (s: any) => s.progressTotal);
+      rawRecordBook.percentComplete =
+        rawRecordBook.progress.currentProgress /
+        sum(rawRecordBook.progress.steps, (s: any) => s.progressTotal);
     } else {
       // TODO: not accurate for multi-objectives
       recordBook.percentComplete = count(records, (r) => r.complete) / records.length;
@@ -144,7 +149,9 @@ function RecordBooksController(
 
       let progress = objective.progress;
       let display = `${objective.progress}/${objectiveDef.completionValue}`;
-      if (recordDef.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
+      if (
+        recordDef.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds'
+      ) {
         display = objective.isComplete
           ? objective.displayValue
           : $filter('duration')(objectiveDef.completionValue, 'mm:ss.sss');

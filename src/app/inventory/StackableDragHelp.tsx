@@ -43,7 +43,9 @@ class StackableDragHelp extends React.Component<Props, State> {
 
     // TODO: CSS Transition group? would have to handle attach/detach
     return (
-      <div id="drag-help" className={classNames("drag-help", classes)}>{t('Help.Drag')}</div>
+      <div id="drag-help" className={classNames('drag-help', classes)}>
+        {t('Help.Drag')}
+      </div>
     );
   }
 
@@ -51,7 +53,7 @@ class StackableDragHelp extends React.Component<Props, State> {
     if (e.shiftKey !== this.state.shiftKeyDown) {
       this.setState({ shiftKeyDown: e.shiftKey });
     }
-  }
+  };
 }
 
 export default connect<Props>(mapStateToProps)(StackableDragHelp);

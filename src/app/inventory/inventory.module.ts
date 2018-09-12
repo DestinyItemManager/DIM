@@ -21,7 +21,8 @@ const mod = module('inventoryModule', [])
   .filter('percent', () => percent);
 
 if (!$featureFlags.reactInventory) {
-  mod.component('dimStores', StoresComponent)
+  mod
+    .component('dimStores', StoresComponent)
     .component('storePager', StorePagerComponent)
     .component('dimStoreReputation', StoreReputation)
     .component('dimStoreHeading', StoreHeadingComponent)

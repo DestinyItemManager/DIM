@@ -22,7 +22,7 @@ export function StatRangeFilter() {
       return -1;
     }
 
-    return 100 * (stat.value - statRange.min) / (statRange.max - statRange.min);
+    return (100 * (stat.value - statRange.min)) / (statRange.max - statRange.min);
   };
 }
 
@@ -97,7 +97,9 @@ function CompareCtrl(
       });
       vm.statsMap[statId] = itemStatsMap[statId];
 
-      const missingStatItemIdx = vm.comparisons.findIndex((compItem: DimItem) => !(compItem.stats || []).some((stat) => stat.id === Number(statId)));
+      const missingStatItemIdx = vm.comparisons.findIndex(
+        (compItem: DimItem) => !(compItem.stats || []).some((stat) => stat.id === Number(statId))
+      );
       if (missingStatItemIdx >= 0) {
         vm.comparisons[missingStatItemIdx].stats!.splice(vm.statsMap[statId].index, 0, {
           value: undefined,
@@ -162,14 +164,18 @@ function CompareCtrl(
 
   vm.sort = (statHash) => {
     vm.sortedHash = statHash;
-    vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), (item: DimItem) => {
-      const stat = (item.primStat && statHash === item.primStat.statHash)
-        ? item.primStat
-        : (vm.sortedHash === 'Rating'
-          ? { value: (item.dtrRating && item.dtrRating.overallScore) || "0" }
-          : (item.stats || []).find((s) => s.statHash === statHash));
-      return (stat && stat.value) || -1;
-    }).reverse();
+    vm.comparisons = _.sortBy(
+      _.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(),
+      (item: DimItem) => {
+        const stat =
+          item.primStat && statHash === item.primStat.statHash
+            ? item.primStat
+            : vm.sortedHash === 'Rating'
+              ? { value: (item.dtrRating && item.dtrRating.overallScore) || '0' }
+              : (item.stats || []).find((s) => s.statHash === statHash);
+        return (stat && stat.value) || -1;
+      }
+    ).reverse();
   };
 
   vm.add = function add(args: { item: DimItem; dupes: boolean }) {
@@ -177,12 +183,24 @@ function CompareCtrl(
       return;
     }
 
-    if (vm.comparisons.length && vm.comparisons[0].typeName && args.item.typeName !== vm.comparisons[0].typeName) {
+    if (
+      vm.comparisons.length &&
+      vm.comparisons[0].typeName &&
+      args.item.typeName !== vm.comparisons[0].typeName
+    ) {
       if (vm.comparisons[0].classType && args.item.classType !== vm.comparisons[0].classType) {
-        toaster.pop('warning', args.item.name, $i18next.t('Compare.Error.Class', { class: vm.comparisons[0].classTypeNameLocalized }));
+        toaster.pop(
+          'warning',
+          args.item.name,
+          $i18next.t('Compare.Error.Class', { class: vm.comparisons[0].classTypeNameLocalized })
+        );
         return;
       }
-      toaster.pop('warning', args.item.name, $i18next.t('Compare.Error.Archetype', { type: vm.comparisons[0].typeName }));
+      toaster.pop(
+        'warning',
+        args.item.name,
+        $i18next.t('Compare.Error.Archetype', { type: vm.comparisons[0].typeName })
+      );
       return;
     }
 
@@ -193,29 +211,27 @@ function CompareCtrl(
       let armorSplit;
       if (!vm.compare.location.inWeapons) {
         vm.similarTypes = vm.similarTypes.filter((i) => i.classType === vm.compare.classType);
-        armorSplit = sum(vm.compare.stats!, (stat) => stat.base === 0 ? 0 : stat.statHash);
+        armorSplit = sum(vm.compare.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash));
       }
 
       // 4284893193 is RPM in D2
       const archetypeStat = _.find(vm.compare.stats!, {
-        statHash: (vm.compare.destinyVersion === 1
-          ? vm.compare.stats![0].statHash
-          : 4284893193)
+        statHash: vm.compare.destinyVersion === 1 ? vm.compare.stats![0].statHash : 4284893193
       });
       if (archetypeStat) {
         vm.archeTypes = vm.similarTypes.filter((item: DimItem) => {
           if (item.location.inWeapons) {
-            const archetypeMatch = item.stats!.find((s) =>
-              s.statHash === (vm.compare.destinyVersion === 1
-                ? vm.compare.stats![0].statHash
-                : 4284893193)
+            const archetypeMatch = item.stats!.find(
+              (s) =>
+                s.statHash ===
+                (vm.compare.destinyVersion === 1 ? vm.compare.stats![0].statHash : 4284893193)
             );
             if (!archetypeMatch) {
               return false;
             }
             return archetypeMatch.base === archetypeStat.base;
           }
-          return sum(item.stats!, (stat) => stat.base === 0 ? 0 : stat.statHash) === armorSplit;
+          return sum(item.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
         });
       }
       vm.comparisons = allItems.filter((i) => i.hash === vm.compare.hash).map(addMissingStats);

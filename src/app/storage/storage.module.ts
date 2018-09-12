@@ -5,5 +5,4 @@ import { humanBytes } from './human-bytes';
 
 export default module('storageModule', [])
   .component('storage', StorageComponent)
-  .filter('humanBytes', () => humanBytes)
-  .name;
+  .filter('humanBytes', () => humanBytes).name;

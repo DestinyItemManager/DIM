@@ -27,9 +27,9 @@
     margin: 5px 0;
   }
   dl {
-    background-color: #2F2F2F;
+    background-color: #2f2f2f;
     padding: 5px 15px;
-    margin: .5em 0;
+    margin: 0.5em 0;
   }
   dt {
     font-style: normal;
@@ -46,8 +46,8 @@
     border-collapse: collapse;
     border-spacing: 0;
     background-color: #222;
-    tr:nth-child(2n+1) {
-      background-color: #1B1B1B;
+    tr:nth-child(2n + 1) {
+      background-color: #1b1b1b;
     }
   }
   tr td:first-child {

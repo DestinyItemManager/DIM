@@ -1,6 +1,12 @@
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
-import { D2RatingData, D2ItemFetchResponse, WorkingD2Rating, D2ItemUserReview, D2ItemReviewResponse } from '../item-review/d2-dtr-api-types';
+import {
+  D2RatingData,
+  D2ItemFetchResponse,
+  WorkingD2Rating,
+  D2ItemUserReview,
+  D2ItemReviewResponse
+} from '../item-review/d2-dtr-api-types';
 import { translateToDtrItem } from './d2-itemTransformer';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings } from '../item-review/actions';
@@ -15,14 +21,15 @@ class D2ReviewDataCache {
   _maxTotalVotes = 0;
   _itemStores: D2RatingData[] = [];
 
-  _getMatchingItem(item?: D2Item | DestinyVendorSaleItemComponent,
-                   itemHash?: number): D2RatingData | undefined {
+  _getMatchingItem(
+    item?: D2Item | DestinyVendorSaleItemComponent,
+    itemHash?: number
+  ): D2RatingData | undefined {
     const referenceId = this._getReferenceId(item, itemHash);
     return this._itemStores.find((s) => s.referenceId === referenceId);
   }
 
-  _getReferenceId(item?: D2Item | DestinyVendorSaleItemComponent,
-                  itemHash?: number): number {
+  _getReferenceId(item?: D2Item | DestinyVendorSaleItemComponent, itemHash?: number): number {
     if (item) {
       const dtrItem = translateToDtrItem(item);
 
@@ -30,23 +37,25 @@ class D2ReviewDataCache {
     } else if (itemHash) {
       return itemHash;
     } else {
-      throw new Error("No data supplied to find a matching item from our stores.");
+      throw new Error('No data supplied to find a matching item from our stores.');
     }
   }
 
   _getBlankWorkingD2Rating(): WorkingD2Rating {
     return {
       voted: 0,
-      pros: "",
-      cons: "",
-      text: "",
+      pros: '',
+      cons: '',
+      text: '',
       mode: 0,
       treatAsSubmitted: false
     };
   }
 
-  _addAndReturnBlankItem(item?: D2Item | DestinyVendorSaleItemComponent,
-                         itemHash?: number): D2RatingData {
+  _addAndReturnBlankItem(
+    item?: D2Item | DestinyVendorSaleItemComponent,
+    itemHash?: number
+  ): D2RatingData {
     const referenceId = this._getReferenceId(item, itemHash);
     const blankItem: D2RatingData = {
       referenceId,
@@ -66,8 +75,7 @@ class D2ReviewDataCache {
    * Get the locally-cached review data for the given item from the DIM store.
    * Creates a blank rating cache item if it doesn't.
    */
-  getRatingData(item?: D2Item | DestinyVendorSaleItemComponent,
-                itemHash?: number): D2RatingData {
+  getRatingData(item?: D2Item | DestinyVendorSaleItemComponent, itemHash?: number): D2RatingData {
     const cachedItem = this._getMatchingItem(item, itemHash);
 
     if (cachedItem) {
@@ -82,7 +90,7 @@ class D2ReviewDataCache {
       return 0;
     }
 
-    if ((rating % 1) === 0) {
+    if (rating % 1 === 0) {
       return rating;
     }
 
@@ -90,15 +98,15 @@ class D2ReviewDataCache {
   }
 
   _getDownvoteMultiplier(dtrRating: D2ItemFetchResponse) {
-    if (dtrRating.votes.total > (this._maxTotalVotes * 0.75)) {
+    if (dtrRating.votes.total > this._maxTotalVotes * 0.75) {
       return 1;
     }
 
-    if (dtrRating.votes.total > (this._maxTotalVotes * 0.5)) {
+    if (dtrRating.votes.total > this._maxTotalVotes * 0.5) {
       return 1.5;
     }
 
-    if (dtrRating.votes.total > (this._maxTotalVotes * 0.25)) {
+    if (dtrRating.votes.total > this._maxTotalVotes * 0.25) {
       return 2;
     }
 
@@ -108,13 +116,14 @@ class D2ReviewDataCache {
   _getScore(dtrRating: D2ItemFetchResponse): number {
     const downvoteMultipler = this._getDownvoteMultiplier(dtrRating);
 
-    const totalVotes = dtrRating.votes.total + (dtrRating.reviewVotes.total * dtrTextReviewMultiplier);
-    const totalDownVotes = dtrRating.votes.downvotes + (dtrRating.reviewVotes.downvotes * dtrTextReviewMultiplier);
+    const totalVotes =
+      dtrRating.votes.total + dtrRating.reviewVotes.total * dtrTextReviewMultiplier;
+    const totalDownVotes =
+      dtrRating.votes.downvotes + dtrRating.reviewVotes.downvotes * dtrTextReviewMultiplier;
 
-    const rating = ((totalVotes - (totalDownVotes * downvoteMultipler)) / totalVotes) * 5;
+    const rating = ((totalVotes - totalDownVotes * downvoteMultipler) / totalVotes) * 5;
 
-    if ((rating < 1) &&
-        (dtrRating.votes.total > 0)) {
+    if (rating < 1 && dtrRating.votes.total > 0) {
       return 1;
     }
 
@@ -133,7 +142,9 @@ class D2ReviewDataCache {
       this._setMaximumTotalVotes(bulkRankings);
 
       bulkRankings.forEach((bulkRanking) => {
-        const matchingStore = this._itemStores.find((ci) => ci.referenceId === bulkRanking.referenceId);
+        const matchingStore = this._itemStores.find(
+          (ci) => ci.referenceId === bulkRanking.referenceId
+        );
 
         if (matchingStore) {
           matchingStore.fetchResponse = bulkRanking;
@@ -145,7 +156,9 @@ class D2ReviewDataCache {
         }
       });
 
-      store.dispatch(updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores }));
+      store.dispatch(
+        updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
+      );
     }
   }
 
@@ -158,7 +171,7 @@ class D2ReviewDataCache {
     const cachedItem: D2RatingData = {
       referenceId: dtrRating.referenceId,
       roll: 'fixed', // TODO: implement random rolls
-      overallScore : dimScore,
+      overallScore: dimScore,
       fetchResponse: dtrRating,
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
@@ -176,8 +189,7 @@ class D2ReviewDataCache {
    * is still feeding back cached data or processing it or whatever.
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
-  addUserReviewData(item: D2Item,
-                    userReview: WorkingD2Rating) {
+  addUserReviewData(item: D2Item, userReview: WorkingD2Rating) {
     const cachedItem = this._getMatchingItem(item);
 
     if (!cachedItem) {
@@ -219,12 +231,10 @@ class D2ReviewDataCache {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(
-    item: D2Item
-  ) {
+  markItemAsReviewedAndSubmitted(item: D2Item) {
     const cachedItem = this._getMatchingItem(item);
 
-    if ((!cachedItem) || (!cachedItem.userReview)) {
+    if (!cachedItem || !cachedItem.userReview) {
       return;
     }
 
@@ -235,9 +245,9 @@ class D2ReviewDataCache {
     }
 
     // remove their old review from the local cache
-    cachedItem.reviewsResponse.reviews = (cachedItem.reviewsResponse.reviews) ?
-       cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer) :
-       [];
+    cachedItem.reviewsResponse.reviews = cachedItem.reviewsResponse.reviews
+      ? cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer)
+      : [];
   }
 
   /**
@@ -265,8 +275,7 @@ class D2ReviewDataCache {
         cachedItem.reviewsResponse = undefined;
         cachedItem.userReview = this._getBlankWorkingD2Rating();
       }
-    },
-      tenMinutes);
+    }, tenMinutes);
   }
 }
 

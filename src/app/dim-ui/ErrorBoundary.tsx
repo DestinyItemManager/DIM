@@ -14,7 +14,7 @@ interface State {
 export default class ErrorBoundary extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = {};
   }
 
   componentDidCatch(error: Error) {

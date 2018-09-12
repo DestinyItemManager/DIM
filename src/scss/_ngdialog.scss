@@ -60,7 +60,6 @@
   color: #e0e0e0;
   border: 0;
 
-
   @media (max-width: 800px) {
     top: 7px;
   }
@@ -100,7 +99,12 @@
       max-height: 100%;
 
       > {
-        h1, h2, h3, p, table, dl {
+        h1,
+        h2,
+        h3,
+        p,
+        table,
+        dl {
           padding-left: 25px;
           padding-right: 25px;
 
@@ -112,8 +116,7 @@
     }
   }
 
-  > div
-  form {
+  > div form {
     padding: 0;
   }
   h1 {
@@ -127,7 +130,6 @@
     @media (max-width: 800px) {
       font-size: 20px;
       padding: 8px 15px;
-
     }
   }
   h2 {
@@ -137,10 +139,10 @@
     margin: 5px 0;
   }
   dl {
-    background-color: #2F2F2F;
+    background-color: #2f2f2f;
     border-radius: 6px;
     padding: 5px 15px;
-    margin: .5em 0;
+    margin: 0.5em 0;
   }
   dt {
     font-style: normal;
@@ -157,8 +159,8 @@
     border-collapse: collapse;
     border-spacing: 0;
     background-color: #222;
-    tr:nth-child(2n+1) {
-      background-color: #1B1B1B;
+    tr:nth-child(2n + 1) {
+      background-color: #1b1b1b;
     }
   }
   tr td:first-child {
@@ -166,7 +168,7 @@
     border-left-width: 1px;
   }
   td {
-    border-color: #1B1B1B;
+    border-color: #1b1b1b;
     border-style: none solid solid none;
     border-top: medium none;
     border-width: medium 1px 1px medium;
@@ -175,7 +177,8 @@
     vertical-align: top;
   }
   input {
-    &[type="checkbox"], &[type="radio"] {
+    &[type='checkbox'],
+    &[type='radio'] {
       display: inline-block;
       width: 15px;
       height: 15px;
