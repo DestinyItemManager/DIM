@@ -120,15 +120,35 @@ class Stores extends React.Component<Props, State> {
 
     if (isPhonePortrait) {
       return (
-        <div className="inventory-content phone-portrait">
+        <div className="inventory-content phone-portrait react">
+          <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
+            <ViewPager>
+              <Frame className="frame" autoSize={false}>
+                <Track
+                  currentView={selectedStoreId === undefined ? currentStore.id : selectedStoreId}
+                  contain={false}
+                  onViewChange={this.onViewChange}
+                  className="track"
+                >
+                  {sortedStores.map((store) => (
+                    <View className="store-cell" key={store.id}>
+                      <StoreHeading internalLoadoutMenu={false} store={store} />
+                    </View>
+                  ))}
+                </Track>
+              </Frame>
+            </ViewPager>
+          </ScrollClassDiv>
+
+          <div className="detached" loadout-id={stores[0].id} />
+
           <ViewPager>
             <Frame className="frame" autoSize={false}>
               <Track
                 currentView={selectedStoreId === undefined ? currentStore.id : selectedStoreId}
-                viewsToShow={1}
                 contain={true}
                 className="track"
-                flickTimeout={100}
+                onViewChange={this.onViewChange}
               >
                 {sortedStores.map((store) => (
                   <View className="view" key={store.id}>
@@ -144,12 +164,24 @@ class Stores extends React.Component<Props, State> {
 
     return (
       <div className="inventory-content">
+        <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
+          {sortedStores.map((store) => (
+            <div className="store-cell" key={store.id}>
+              <StoreHeading internalLoadoutMenu={true} store={store} />
+            </div>
+          ))}
+        </ScrollClassDiv>
         {this.renderStores(sortedStores, vault, currentStore)}
       </div>
     );
   }
 
-  toggleSection = (id: string) => {
+  private onViewChange = (indices) => {
+    console.log('onViewChange', indices);
+    this.setState({ selectedStoreId: indices[0] });
+  };
+
+  private toggleSection = (id: string) => {
     const settings = this.props.settings;
     // TODO: make an action!
     settings.collapsedSections = {
@@ -167,20 +199,11 @@ class Stores extends React.Component<Props, State> {
       itemInfos,
       ratings,
       searchFilter,
-      collapsedSections,
-      isPhonePortrait
+      collapsedSections
     } = this.props;
 
     return (
       <div>
-        <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
-          {stores.map((store) => (
-            <div className="store-cell" key={store.id}>
-              <StoreHeading internalLoadoutMenu={!isPhonePortrait} store={store} />
-            </div>
-          ))}
-        </ScrollClassDiv>
-        {isPhonePortrait && <div className="detached" loadout-id={stores[0].id} />}
         {Object.keys(buckets.byCategory).map((category) => (
           <div key={category} className="section">
             <CollapsibleTitle
