@@ -183,7 +183,7 @@
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
-    "Dupe": "Shows duplicate items",
+    "Dupe": "Shows duplicate items, \"exact dupe\" includes perks as well",
     "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "Shows engrams.",
     "EnterName": "Enter an item name:",
