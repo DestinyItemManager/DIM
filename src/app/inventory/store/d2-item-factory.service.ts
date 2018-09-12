@@ -124,6 +124,12 @@ const damageMods = {
   2273483223: DamageType.Thermal
 };
 
+const resistanceMods = {
+  1546607980: DamageType.Void,
+  1546607978: DamageType.Arc,
+  1546607979: DamageType.Thermal
+};
+
 // Prototype for Item objects - add methods to this to add them to all
 // items.
 const ItemProto = {
@@ -491,6 +497,23 @@ export function makeItem(
     }
   } catch (e) {
     console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
+  }
+
+  // Set damage type if is armor and has a damage type... and that's a big IF
+  if (
+    createdItem.bucket &&
+    createdItem.bucket.sort === 'Armor' &&
+    createdItem.sockets &&
+    createdItem.sockets.categories &&
+    createdItem.sockets.categories[1] &&
+    createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats &&
+    createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats.length
+  ) {
+    const dmgHash = createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats[0]
+      .statTypeHash;
+    createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
+      resistanceMods[dmgHash]
+    ] as typeof createdItem.dmg;
   }
 
   if (itemDef.perks && itemDef.perks.length) {
