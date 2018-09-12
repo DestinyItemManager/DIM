@@ -124,6 +124,8 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   filter: var(--color-filter);
+  // Disable drag and drop so we can use our polyfill
+  -webkit-user-drag: none;
 }
 
 ::-webkit-scrollbar {
