@@ -13,7 +13,7 @@
     "start": "npm run build-dev -s",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
-    "pretty": "prettier --write 'src/**/*.{js,ts,tsx}'",
+    "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss}'",
     "precommit": "pretty-quick --staged"
   },
   "repository": {
