@@ -115,10 +115,8 @@ class Stores extends React.Component<Props, State> {
     const sortedStores = sortStores(stores, settings.characterOrder);
     const vault = stores.find((s) => s.isVault) as DimVault;
     const currentStore = stores.find((s) => s.current)!;
-    let selectedStore = currentStore;
-    if (!selectedStoreId) {
-      selectedStore = stores.find((s) => s.id === selectedStoreId) || selectedStore;
-    }
+
+    // TODO: make a component for the renderStores stuff
 
     if (isPhonePortrait) {
       return (
@@ -126,7 +124,7 @@ class Stores extends React.Component<Props, State> {
           <ViewPager>
             <Frame className="frame" autoSize={false}>
               <Track
-                currentView={selectedStoreId}
+                currentView={selectedStoreId === undefined ? currentStore.id : selectedStoreId}
                 viewsToShow={1}
                 contain={true}
                 className="track"
@@ -151,7 +149,7 @@ class Stores extends React.Component<Props, State> {
     );
   }
 
-  toggleSection(id: string) {
+  toggleSection = (id: string) => {
     const settings = this.props.settings;
     // TODO: make an action!
     settings.collapsedSections = {
@@ -159,7 +157,7 @@ class Stores extends React.Component<Props, State> {
       [id]: !settings.collapsedSections[id]
     };
     settings.save();
-  }
+  };
 
   private renderStores(stores: DimStore[], vault: DimVault, currentStore: DimStore) {
     const {
