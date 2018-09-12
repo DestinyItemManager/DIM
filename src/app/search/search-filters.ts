@@ -483,8 +483,7 @@ export function searchFilters(
             addPredicate(filter, pieces[2]);
           }
         } else if (!/^\s*$/.test(term)) {
-          // TODO: not
-          addPredicate('keyword', term);
+          addPredicate('keyword', term.replace(/^-/, ''), term.startsWith('-'));
         }
       }
 
@@ -756,11 +755,7 @@ export function searchFilters(
         return categories.every((c) => item.inCategory(c));
       },
       keyword(item: DimItem, predicate: string) {
-        const inverse = predicate.startsWith('-');
-        if (inverse) {
-          predicate = predicate.substring(1);
-        }
-        const found =
+        return (
           item.name.toLowerCase().includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
           // Search for typeName (itemTypeDisplayName of modifications)
@@ -790,8 +785,8 @@ export function searchFilters(
                     )
                   )
               )
-            ));
-        return inverse ? !found : found;
+            ))
+        );
       },
       light(item: DimItem, predicate: string) {
         if (!item.primStat) {
