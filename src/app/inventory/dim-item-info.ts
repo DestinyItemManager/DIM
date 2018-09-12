@@ -25,34 +25,35 @@ export interface DimItemInfo {
  * An account-specific source of item info objects, keyed off instanceId.
  */
 export class ItemInfoSource {
-  constructor(
-    readonly key: string,
-    readonly infos: { [itemInstanceId: string]: DimItemInfo }
-  ) {}
+  constructor(readonly key: string, readonly infos: { [itemInstanceId: string]: DimItemInfo }) {}
 
   infoForItem(hash: number, id: string): DimItemInfo {
     const itemKey = `${hash}-${id}`;
     const info = this.infos[itemKey];
     const accountKey = this.key;
-    return extend({
-      save() {
-        return getInfos(accountKey).then((infos) => {
-          infos[itemKey] = _.omit(this, 'save');
-          if (_.isEmpty(infos[itemKey])) {
-            delete infos[itemKey];
-          }
-          store.dispatch(setTagsAndNotesForItem({ key: itemKey, info: infos[itemKey] }));
-          setInfos(accountKey, infos)
-            .catch((e) => {
-              toaster.pop('error',
+    return extend(
+      {
+        save() {
+          return getInfos(accountKey).then((infos) => {
+            infos[itemKey] = _.omit(this, 'save');
+            if (_.isEmpty(infos[itemKey])) {
+              delete infos[itemKey];
+            }
+            store.dispatch(setTagsAndNotesForItem({ key: itemKey, info: infos[itemKey] }));
+            setInfos(accountKey, infos).catch((e) => {
+              toaster.pop(
+                'error',
                 t('ItemInfoService.SaveInfoErrorTitle'),
-                t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
-              console.error("Error saving item info (tags, notes):", e);
+                t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
+              );
+              console.error('Error saving item info (tags, notes):', e);
               reportException('itemInfo', e);
             });
-        });
-      }
-    }, info);
+          });
+        }
+      },
+      info
+    );
   }
 
   // Remove all item info that isn't in stores' items
@@ -95,13 +96,14 @@ export class ItemInfoSource {
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
 export function getItemInfoSource(account): Promise<ItemInfoSource> {
-  const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${account.destinyVersion}`;
+  const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${
+    account.destinyVersion
+  }`;
 
-  return getInfos(key)
-    .then((infos) => {
-      store.dispatch(setTagsAndNotes(infos));
-      return new ItemInfoSource(key, infos);
-    });
+  return getInfos(key).then((infos) => {
+    store.dispatch(setTagsAndNotes(infos));
+    return new ItemInfoSource(key, infos);
+  });
 }
 
 function getInfos(key: string): Promise<{ [itemInstanceId: string]: DimItemInfo }> {

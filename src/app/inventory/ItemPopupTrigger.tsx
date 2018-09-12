@@ -90,5 +90,5 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         this.dialogResult = null;
       });
     }
-  }
+  };
 }

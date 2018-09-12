@@ -1,6 +1,6 @@
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
-import { IPromise, IDeferred } from "angular";
+import { IPromise, IDeferred } from 'angular';
 
 const subject = new BehaviorSubject(false);
 

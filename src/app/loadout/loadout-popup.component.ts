@@ -1,4 +1,12 @@
-import { copy as angularCopy, IAngularEvent, IComponentOptions, IController, IRootScopeService, IScope, IWindowService } from 'angular';
+import {
+  copy as angularCopy,
+  IAngularEvent,
+  IComponentOptions,
+  IController,
+  IRootScopeService,
+  IScope,
+  IWindowService
+} from 'angular';
 import * as _ from 'underscore';
 import { queueAction } from '../inventory/action-queue';
 import {
@@ -7,7 +15,7 @@ import {
   itemLevelingLoadout,
   maxLightLoadout,
   searchLoadout
-  } from './auto-loadouts';
+} from './auto-loadouts';
 import template from './loadout-popup.html';
 import './loadout-popup.scss';
 import { Loadout, LoadoutClass, dimLoadoutService, getLight } from './loadout.service';
@@ -86,37 +94,43 @@ function LoadoutPopupCtrl(
 
     initLoadouts();
 
-    vm.hasClassified = vm.store.getStoresService().getAllItems().some((i) => {
-      return i.classified &&
-        (i.location.sort === 'Weapons' ||
-        i.location.sort === 'Armor' ||
-        i.type === 'Ghost');
-    });
-    vm.maxLightValue = getLight(vm.store, maxLightLoadout(vm.store.getStoresService(), vm.store)) + (vm.hasClassified ? '*' : '');
+    vm.hasClassified = vm.store
+      .getStoresService()
+      .getAllItems()
+      .some((i) => {
+        return (
+          i.classified &&
+          (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+        );
+      });
+    vm.maxLightValue =
+      getLight(vm.store, maxLightLoadout(vm.store.getStoresService(), vm.store)) +
+      (vm.hasClassified ? '*' : '');
   };
 
   vm.search = SearchService;
 
   function initLoadouts() {
-    dimLoadoutService.getLoadouts()
-      .then((loadouts) => {
-        const platform = getActivePlatform();
-        if (!platform) {
-          return;
-        }
+    dimLoadoutService.getLoadouts().then((loadouts) => {
+      const platform = getActivePlatform();
+      if (!platform) {
+        return;
+      }
 
-        vm.loadouts = _.sortBy(loadouts, 'name') || [];
+      vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
-        vm.loadouts = vm.loadouts.filter((loadout: Loadout) => {
-          return (vm.store.destinyVersion === 2
-            ? loadout.destinyVersion === 2 : loadout.destinyVersion !== 2) &&
-            (_.isUndefined(loadout.platform) ||
-                  loadout.platform === platform.platformLabel) &&
-            (vm.classTypeId === -1 ||
-             loadout.classType === -1 ||
-             loadout.classType === vm.classTypeId);
-        });
+      vm.loadouts = vm.loadouts.filter((loadout: Loadout) => {
+        return (
+          (vm.store.destinyVersion === 2
+            ? loadout.destinyVersion === 2
+            : loadout.destinyVersion !== 2) &&
+          (_.isUndefined(loadout.platform) || loadout.platform === platform.platformLabel) &&
+          (vm.classTypeId === -1 ||
+            loadout.classType === -1 ||
+            loadout.classType === vm.classTypeId)
+        );
       });
+    });
   }
   $scope.$on('dim-save-loadout', initLoadouts);
   $scope.$on('dim-delete-loadout', initLoadouts);
@@ -129,37 +143,43 @@ function LoadoutPopupCtrl(
   vm.newLoadoutFromEquipped = function newLoadoutFromEquipped($event: IAngularEvent) {
     ngDialog.closeAll();
 
-    const loadout = filterLoadoutToEquipped(vm.store.loadoutFromCurrentlyEquipped(""));
+    const loadout = filterLoadoutToEquipped(vm.store.loadoutFromCurrentlyEquipped(''));
     // We don't want to prepopulate the loadout with a bunch of cosmetic junk
     // like emblems and ships and horns.
-    loadout.items = _.pick(loadout.items,
-                           'class',
-                           'kinetic',
-                           'energy',
-                           'power',
-                           'primary',
-                           'special',
-                           'heavy',
-                           'helmet',
-                           'gauntlets',
-                           'chest',
-                           'leg',
-                           'classitem',
-                           'artifact',
-                           'ghost');
+    loadout.items = _.pick(
+      loadout.items,
+      'class',
+      'kinetic',
+      'energy',
+      'power',
+      'primary',
+      'special',
+      'heavy',
+      'helmet',
+      'gauntlets',
+      'chest',
+      'leg',
+      'classitem',
+      'artifact',
+      'ghost'
+    );
     loadout.classType = vm.classTypeId;
     vm.editLoadout(loadout, $event);
   };
 
   vm.deleteLoadout = function deleteLoadout(loadout: Loadout) {
     if ($window.confirm($i18next.t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-      dimLoadoutService.deleteLoadout(loadout)
-        .catch((e) => {
-          toaster.pop('error',
-                      $i18next.t('Loadouts.DeleteErrorTitle'),
-                      $i18next.t('Loadouts.DeleteErrorDescription', { loadoutName: loadout.name, error: e.message }));
-          console.error(e);
-        });
+      dimLoadoutService.deleteLoadout(loadout).catch((e) => {
+        toaster.pop(
+          'error',
+          $i18next.t('Loadouts.DeleteErrorTitle'),
+          $i18next.t('Loadouts.DeleteErrorDescription', {
+            loadoutName: loadout.name,
+            error: e.message
+          })
+        );
+        console.error(e);
+      });
     }
   };
 
@@ -190,7 +210,9 @@ function LoadoutPopupCtrl(
 
   function filterLoadoutToEquipped(loadout: Loadout) {
     const filteredLoadout = angularCopy(loadout);
-    filteredLoadout.items = _.mapObject(filteredLoadout.items, (items) => items.filter((i) => i.equipped));
+    filteredLoadout.items = _.mapObject(filteredLoadout.items, (items) =>
+      items.filter((i) => i.equipped)
+    );
     return filteredLoadout;
   }
 
@@ -207,7 +229,10 @@ function LoadoutPopupCtrl(
   };
 
   // A dynamic loadout set up to level weapons and armor
-  vm.gatherEngramsLoadout = ($event: IAngularEvent, options: { exotics: boolean } = { exotics: false }) => {
+  vm.gatherEngramsLoadout = (
+    $event: IAngularEvent,
+    options: { exotics: boolean } = { exotics: false }
+  ) => {
     let loadout;
     try {
       loadout = gatherEngramsLoadout(vm.store.getStoresService(), options);
@@ -248,9 +273,12 @@ function LoadoutPopupCtrl(
 
   vm.startFarming = function startFarming() {
     ngDialog.closeAll();
-    (vm.store.destinyVersion === 2 ? D2FarmingService : D1FarmingService).start(getPlatformMatching({
-      membershipId: router.globals.params.membershipId,
-      platformType: router.globals.params.platformType
-    })!, vm.store.id);
+    (vm.store.destinyVersion === 2 ? D2FarmingService : D1FarmingService).start(
+      getPlatformMatching({
+        membershipId: router.globals.params.membershipId,
+        platformType: router.globals.params.platformType
+      })!,
+      vm.store.id
+    );
   };
 }

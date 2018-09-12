@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  D2Store,
-  D1Store
-} from './store-types';
+import { D2Store, D1Store } from './store-types';
 import classNames from 'classnames';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'i18next';
@@ -31,11 +28,7 @@ export default class CharacterStats extends React.Component<Props> {
     // TODO: Remove tooltip from stats definitions
 
     if (isD1Stats(stats, destinyVersion)) {
-      const statList = [
-        stats.STAT_INTELLECT,
-        stats.STAT_DISCIPLINE,
-        stats.STAT_STRENGTH
-      ];
+      const statList = [stats.STAT_INTELLECT, stats.STAT_DISCIPLINE, stats.STAT_STRENGTH];
       const tooltips = statList.map((stat) => {
         if (stat) {
           const tier = stat.tier || 0;
@@ -65,8 +58,7 @@ export default class CharacterStats extends React.Component<Props> {
                     <div key={index} className="bar">
                       <div
                         className={classNames('progress', {
-                          complete:
-                            destinyVersion === 2 || n / stat.tierMax! === 1
+                          complete: destinyVersion === 2 || n / stat.tierMax! === 1
                         })}
                         style={{ width: percent(n / stat.tierMax!) }}
                       />

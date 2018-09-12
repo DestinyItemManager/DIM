@@ -4,8 +4,14 @@
   // This assumes 3 characters
   min-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 39px + 44px + (3 * (44px + 8px)));
   max-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 20px + (999 * (44px + 8px)));
-  min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 40px + ((1 + var(--character-columns)) * (var(--item-size) + 8px)));
-  max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
+  min-width: calc(
+    (52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
+      var(--num-characters) + 40px + ((1 + var(--character-columns)) * (var(--item-size) + 8px))
+  );
+  max-width: calc(
+    (52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
+      var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px))
+  );
   margin: 0 auto;
   display: flex;
 
@@ -61,7 +67,10 @@
 
   &.account-wide {
     width: 100%;
-    max-width: calc((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + ((var(--num-characters) - 1) * 12px));
+    max-width: calc(
+      (40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
+        var(--num-characters) + ((var(--num-characters) - 1) * 12px)
+    );
   }
 }
 .store-text {

@@ -1,4 +1,4 @@
-import { DimItem } from "../inventory/item-types";
+import { DimItem } from '../inventory/item-types';
 import { $rootScope } from 'ngimport';
 
 export const CompareService = {

@@ -8,8 +8,7 @@ import { D1InventoryComponent } from './d1-inventory.component';
 
 export { states } from './routes';
 
-const mod = module('destiny1Module',
-[
+const mod = module('destiny1Module', [
   recordBooksModule,
   activitiesModule,
   loadoutBuilderModule,

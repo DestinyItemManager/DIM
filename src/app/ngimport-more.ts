@@ -9,7 +9,7 @@ import { HotkeysProvider } from 'angular-hotkeys';
  * these references will be invalid until Angular bootstraps.
  */
 
- // ngToaster
+// ngToaster
 export let toaster: any;
 export let ngDialog: IDialogService;
 export let hotkeys: HotkeysProvider;
@@ -22,13 +22,18 @@ export let loadingTracker: {
 // prevent double-loading, which has the potential
 // to prevent sharing state between services
 export default module('dim/ngimport', [])
-  .run(['$injector', ($i: angular.auto.IInjectorService) => {
-    toaster = $i.get('toaster');
-    loadingTracker = $i.get('loadingTracker');
-    ngDialog = $i.get('ngDialog');
-    hotkeys = $i.get('hotkeys');
-  }])
-  .config(['$locationProvider', ($lp) => {
-    $locationProvider = $lp;
-  }])
-  .name;
+  .run([
+    '$injector',
+    ($i: angular.auto.IInjectorService) => {
+      toaster = $i.get('toaster');
+      loadingTracker = $i.get('loadingTracker');
+      ngDialog = $i.get('ngDialog');
+      hotkeys = $i.get('hotkeys');
+    }
+  ])
+  .config([
+    '$locationProvider',
+    ($lp) => {
+      $locationProvider = $lp;
+    }
+  ]).name;

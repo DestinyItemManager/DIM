@@ -5,19 +5,8 @@ import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-bucket
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 
 export const D1Categories = {
-  Weapons: [
-    'Class',
-    'Primary',
-    'Special',
-    'Heavy'
-  ],
-  Armor: [
-    'Helmet',
-    'Gauntlets',
-    'Chest',
-    'Leg',
-    'ClassItem'
-  ],
+  Weapons: ['Class', 'Primary', 'Special', 'Heavy'],
+  Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
   General: [
     'Artifact',
     'Ghost',
@@ -31,49 +20,41 @@ export const D1Categories = {
     'Vehicle',
     'Horn'
   ],
-  Progress: [
-    'Bounties',
-    'Quests',
-    'Missions'
-  ],
-  Postmaster: [
-    'LostItems',
-    'SpecialOrders',
-    'Messages'
-  ]
+  Progress: ['Bounties', 'Quests', 'Missions'],
+  Postmaster: ['LostItems', 'SpecialOrders', 'Messages']
 };
 
 // A mapping from the bucket names to DIM item types
 // Some buckets like vault and currencies have been ommitted
 const bucketToType = {
-  BUCKET_CHEST: "Chest",
-  BUCKET_LEGS: "Leg",
-  BUCKET_RECOVERY: "LostItems",
-  BUCKET_SHIP: "Ship",
-  BUCKET_MISSION: "Missions",
-  BUCKET_ARTIFACT: "Artifact",
-  BUCKET_HEAVY_WEAPON: "Heavy",
-  BUCKET_COMMERCIALIZATION: "SpecialOrders",
-  BUCKET_CONSUMABLES: "Consumable",
-  BUCKET_PRIMARY_WEAPON: "Primary",
-  BUCKET_CLASS_ITEMS: "ClassItem",
-  BUCKET_BOOK_LARGE: "RecordBook",
-  BUCKET_BOOK_SMALL: "RecordBookLegacy",
-  BUCKET_QUESTS: "Quests",
-  BUCKET_VEHICLE: "Vehicle",
-  BUCKET_BOUNTIES: "Bounties",
-  BUCKET_SPECIAL_WEAPON: "Special",
-  BUCKET_SHADER: "Shader",
-  BUCKET_MODS: "Ornaments",
-  BUCKET_EMOTES: "Emote",
-  BUCKET_MAIL: "Messages",
-  BUCKET_BUILD: "Class",
-  BUCKET_HEAD: "Helmet",
-  BUCKET_ARMS: "Gauntlets",
-  BUCKET_HORN: "Horn",
-  BUCKET_MATERIALS: "Material",
-  BUCKET_GHOST: "Ghost",
-  BUCKET_EMBLEM: "Emblem"
+  BUCKET_CHEST: 'Chest',
+  BUCKET_LEGS: 'Leg',
+  BUCKET_RECOVERY: 'LostItems',
+  BUCKET_SHIP: 'Ship',
+  BUCKET_MISSION: 'Missions',
+  BUCKET_ARTIFACT: 'Artifact',
+  BUCKET_HEAVY_WEAPON: 'Heavy',
+  BUCKET_COMMERCIALIZATION: 'SpecialOrders',
+  BUCKET_CONSUMABLES: 'Consumable',
+  BUCKET_PRIMARY_WEAPON: 'Primary',
+  BUCKET_CLASS_ITEMS: 'ClassItem',
+  BUCKET_BOOK_LARGE: 'RecordBook',
+  BUCKET_BOOK_SMALL: 'RecordBookLegacy',
+  BUCKET_QUESTS: 'Quests',
+  BUCKET_VEHICLE: 'Vehicle',
+  BUCKET_BOUNTIES: 'Bounties',
+  BUCKET_SPECIAL_WEAPON: 'Special',
+  BUCKET_SHADER: 'Shader',
+  BUCKET_MODS: 'Ornaments',
+  BUCKET_EMOTES: 'Emote',
+  BUCKET_MAIL: 'Messages',
+  BUCKET_BUILD: 'Class',
+  BUCKET_HEAD: 'Helmet',
+  BUCKET_ARMS: 'Gauntlets',
+  BUCKET_HORN: 'Horn',
+  BUCKET_MATERIALS: 'Material',
+  BUCKET_GHOST: 'Ghost',
+  BUCKET_EMBLEM: 'Emblem'
 };
 
 const vaultTypes = {
@@ -164,9 +145,11 @@ export const getBuckets = _.memoize(() => {
     });
 
     _.each(D1Categories, (types, category) => {
-      buckets.byCategory[category] = _.compact(types.map((type) => {
-        return buckets.byType[type];
-      }));
+      buckets.byCategory[category] = _.compact(
+        types.map((type) => {
+          return buckets.byType[type];
+        })
+      );
     });
 
     return buckets;

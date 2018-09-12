@@ -27,11 +27,7 @@ interface MovePopupControllerType {
   distribute();
 }
 
-function MovePopupController(
-  this: IController & MovePopupControllerType,
-  $scope,
-  ngDialog
-) {
+function MovePopupController(this: IController & MovePopupControllerType, $scope, ngDialog) {
   'ngInject';
   const vm = this;
   vm.settings = settings;

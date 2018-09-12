@@ -32,7 +32,11 @@ function FilterLinkCtrl(this: IController, $window: IWindowService, $i18next) {
       filter = `notes:"${filter.trim()}"`;
     }
 
-    if (filter.indexOf('light:') === 0 || filter.indexOf('quality:') === 0 || filter.indexOf('stack:') === 0) {
+    if (
+      filter.indexOf('light:') === 0 ||
+      filter.indexOf('quality:') === 0 ||
+      filter.indexOf('stack:') === 0
+    ) {
       const type = filter.split(':');
       const lightFilterType = type[1];
       let light = $window.prompt(`Enter a ${type[0]} value:`);
@@ -43,24 +47,24 @@ function FilterLinkCtrl(this: IController, $window: IWindowService, $i18next) {
       }
       filter = `${type[0]}:`;
       switch (lightFilterType) {
-      case 'value':
-        filter += light;
-        break;
-      case '>value':
-        filter += `>${light}`;
-        break;
-      case '>=value':
-        filter += `>=${light}`;
-        break;
-      case '<value':
-        filter += `<${light}`;
-        break;
-      case '<=value':
-        filter += `<=${light}`;
-        break;
-      default:
-        filter = '';
-        break;
+        case 'value':
+          filter += light;
+          break;
+        case '>value':
+          filter += `>${light}`;
+          break;
+        case '>=value':
+          filter += `>=${light}`;
+          break;
+        case '<value':
+          filter += `<${light}`;
+          break;
+        case '<=value':
+          filter += `<=${light}`;
+          break;
+        default:
+          filter = '';
+          break;
       }
     }
 
@@ -68,8 +72,8 @@ function FilterLinkCtrl(this: IController, $window: IWindowService, $i18next) {
 
     if (itemNameFilter) {
       SearchService.query = filter + (text.length ? ` ${text}` : '');
-    } else if ((`${text} `).indexOf(`${filter} `) < 0) {
-      SearchService.query = (text.length > 0) ? `${text} ${filter}` : filter;
+    } else if (`${text} `.indexOf(`${filter} `) < 0) {
+      SearchService.query = text.length > 0 ? `${text} ${filter}` : filter;
     }
   };
 }

@@ -22,9 +22,11 @@ export function getBungieAccounts(): Promise<BungieAccount[]> {
   const token = getToken();
 
   if (token && token.bungieMembershipId) {
-    return Promise.resolve([{
-      membershipId: token.bungieMembershipId
-    }]);
+    return Promise.resolve([
+      {
+        membershipId: token.bungieMembershipId
+      }
+    ]);
   }
 
   return Promise.resolve([]);

@@ -1,4 +1,4 @@
-import { IDirective } from "angular";
+import { IDirective } from 'angular';
 
 /**
  * A simple directive that will add or remove a class to the body of the document if the document has been scrolled.
@@ -11,7 +11,8 @@ export function ScrollClass(): IDirective {
       const threshold = attrs.scrollClassThreshold || 0;
 
       function stickyHeader() {
-        const scrolled = document.body.scrollTop > threshold || document.documentElement.scrollTop > threshold;
+        const scrolled =
+          document.body.scrollTop > threshold || document.documentElement.scrollTop > threshold;
         elem[0].classList.toggle(attrs.scrollClass, scrolled);
       }
 

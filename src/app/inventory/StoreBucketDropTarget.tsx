@@ -57,10 +57,7 @@ const dropSpec: DropTargetSpec<Props> = {
 };
 
 // This forwards drag and drop state into props on the component
-function collect(
-  connect: DropTargetConnector,
-  monitor: DropTargetMonitor
-): InternalProps {
+function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): InternalProps {
   return {
     // Call this function inside render()
     // to let React DnD handle the drag events:
@@ -125,11 +122,11 @@ class StoreBucketDropTarget extends React.Component<Props> {
       this.element && this.element.removeEventListener('dragover', this.onDrag);
     }
     this.element = ref;
-  }
+  };
 
   private onDrag = (e: DragEvent) => {
     this.shiftKeyDown = e.shiftKey;
-  }
+  };
 }
 
 export default DropTarget(dragType, dropSpec, collect)(StoreBucketDropTarget);

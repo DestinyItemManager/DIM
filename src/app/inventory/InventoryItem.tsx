@@ -55,10 +55,7 @@ export default class InventoryItem extends React.Component<Props> {
       >
         {item.percentComplete > 0 &&
           !item.complete && (
-            <div
-              className="item-xp-bar-small"
-              style={{ width: percent(item.percentComplete) }}
-            />
+            <div className="item-xp-bar-small" style={{ width: percent(item.percentComplete) }} />
           )}
         <div
           className={classNames('item-img', itemImageStyles)}
@@ -77,28 +74,18 @@ export default class InventoryItem extends React.Component<Props> {
           showRating && (
             <div className="item-stat item-review">
               {rating}
-              <i
-                className="fa fa-star"
-                style={dtrRatingColor(rating)}
-              />
+              <i className="fa fa-star" style={dtrRatingColor(rating)} />
             </div>
           )}
         <div className={classNames('item-element', item.dmg)} />
         <div className={tagClasses(tag)} />
         {isNew && (
           <div className="new_overlay_overflow">
-            <img
-              className="new_overlay"
-              src={newOverlay}
-              height="44"
-              width="44"
-            />
+            <img className="new_overlay" src={newOverlay} height="44" width="44" />
           </div>
         )}
         {badgeInfo.showBadge && (
-          <div className={classNames(badgeInfo.badgeClassNames)}>
-            {badgeInfo.badgeCount}
-          </div>
+          <div className={classNames(badgeInfo.badgeClassNames)}>{badgeInfo.badgeCount}</div>
         )}
       </div>
     );

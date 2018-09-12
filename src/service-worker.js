@@ -6,7 +6,8 @@ const workboxSW = new WorkboxSW();
 workboxSW.precache([]);
 
 // Cache our fonts!
-workboxSW.router.registerRoute(new RegExp('https://fonts.(googleapis|gstatic).com/.*'),
+workboxSW.router.registerRoute(
+  new RegExp('https://fonts.(googleapis|gstatic).com/.*'),
   workboxSW.strategies.cacheFirst({
     cacheName: 'googleapis',
     cacheExpiration: {

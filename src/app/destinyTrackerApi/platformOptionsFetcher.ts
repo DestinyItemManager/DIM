@@ -7,8 +7,9 @@ export interface DtrPlatformOption {
 
 export function getPlatformOptions(): DtrPlatformOption[] {
   return [
-    { platform: 0,
-      description: t('DtrReview.Platforms.All'),
+    {
+      platform: 0,
+      description: t('DtrReview.Platforms.All')
     },
     {
       platform: 1,

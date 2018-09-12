@@ -5,5 +5,4 @@ import { D2FarmingComponent } from './d2farming.component';
 
 export default module('farmingModule', [])
   .component('dimFarming', FarmingComponent)
-  .component('d2Farming', D2FarmingComponent)
-  .name;
+  .component('d2Farming', D2FarmingComponent).name;

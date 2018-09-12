@@ -1,8 +1,4 @@
-
-import {
-  DestinyObjectiveProgress,
-  DestinyQuestStatus,
-} from 'bungie-api-ts/destiny2';
+import { DestinyObjectiveProgress, DestinyQuestStatus } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
@@ -33,7 +29,11 @@ export default function MilestoneObjectiveStatus({
     }
 
     if (status.completed) {
-      return <span><i className="fa fa-check-circle-o"/></span>;
+      return (
+        <span>
+          <i className="fa fa-check-circle-o" />
+        </span>
+      );
     } else if (completionValue > 1) {
       return <span>{Math.round((progress / completionValue) * 100)}%</span>;
     }

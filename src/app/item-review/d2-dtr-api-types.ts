@@ -1,5 +1,5 @@
-import { DtrReviewer, DimWorkingUserReview, DtrRating, DimUserReview } from "./dtr-api-types";
-import { DestinyActivityModeType } from "bungie-api-ts/destiny2";
+import { DtrReviewer, DimWorkingUserReview, DtrRating, DimUserReview } from './dtr-api-types';
+import { DestinyActivityModeType } from 'bungie-api-ts/destiny2';
 
 /**
  * A "basic" item.

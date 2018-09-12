@@ -13,10 +13,11 @@ export function makeRoomForPostmaster(
   bucketsService: () => IPromise<InventoryBuckets>
 ): IPromise<void> {
   return bucketsService().then((buckets) => {
-    const postmasterItems: DimItem[] = flatMap(buckets.byCategory.Postmaster,
-                                    (bucket: InventoryBucket) => store.buckets[bucket.id]);
-    const postmasterItemCountsByType = _.countBy(postmasterItems,
-                                                (i) => i.bucket.id);
+    const postmasterItems: DimItem[] = flatMap(
+      buckets.byCategory.Postmaster,
+      (bucket: InventoryBucket) => store.buckets[bucket.id]
+    );
+    const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.id);
 
     // If any category is full, we'll move enough aside
     const itemsToMove: DimItem[] = [];
@@ -49,14 +50,23 @@ export function makeRoomForPostmaster(
     // TODO: it'd be nice if this were a loadout option
     return moveItemsToVault(store.getStoresService(), store, itemsToMove, dimItemService)
       .then(() => {
-        toaster.pop('success',
-                    t('Loadouts.MakeRoom'),
-                    t('Loadouts.MakeRoomDone', { count: postmasterItems.length, movedNum: itemsToMove.length, store: store.name, context: store.gender }));
+        toaster.pop(
+          'success',
+          t('Loadouts.MakeRoom'),
+          t('Loadouts.MakeRoomDone', {
+            count: postmasterItems.length,
+            movedNum: itemsToMove.length,
+            store: store.name,
+            context: store.gender
+          })
+        );
       })
       .catch((e) => {
-        toaster.pop('error',
-                    t('Loadouts.MakeRoom'),
-                    t('Loadouts.MakeRoomError', { error: e.message }));
+        toaster.pop(
+          'error',
+          t('Loadouts.MakeRoom'),
+          t('Loadouts.MakeRoomError', { error: e.message })
+        );
         throw e;
       }) as IPromise<void>;
   });
@@ -66,14 +76,20 @@ export function makeRoomForPostmaster(
 export function pullablePostmasterItems(store: DimStore) {
   return (store.buckets[215593132] || []).filter((i) => {
     // Can be pulled
-    return i.canPullFromPostmaster &&
-    // Either has space, or is going to a bucket we can make room in
-    (i.bucket.vaultBucket || store.spaceLeftForItem(i) > 0);
+    return (
+      i.canPullFromPostmaster &&
+      // Either has space, or is going to a bucket we can make room in
+      (i.bucket.vaultBucket || store.spaceLeftForItem(i) > 0)
+    );
   });
 }
 
 // D2 only
-export async function pullFromPostmaster(store: DimStore, dimItemService: ItemServiceType, toaster): Promise<void> {
+export async function pullFromPostmaster(
+  store: DimStore,
+  dimItemService: ItemServiceType,
+  toaster
+): Promise<void> {
   const items = pullablePostmasterItems(store);
 
   try {
@@ -86,9 +102,11 @@ export async function pullFromPostmaster(store: DimStore, dimItemService: ItemSe
         console.log(e);
         if (e.code === 'no-space') {
           // TODO: This could fire 20 times.
-          toaster.pop('error',
+          toaster.pop(
+            'error',
             t('Loadouts.PullFromPostmasterPopupTitle'),
-            t('Loadouts.PullFromPostmasterError', { error: e.message }));
+            t('Loadouts.PullFromPostmasterError', { error: e.message })
+          );
         } else {
           throw e;
         }
@@ -96,14 +114,22 @@ export async function pullFromPostmaster(store: DimStore, dimItemService: ItemSe
     }
 
     if (succeeded > 0) {
-      toaster.pop('success',
+      toaster.pop(
+        'success',
         t('Loadouts.PullFromPostmasterPopupTitle'),
-        t('Loadouts.PullFromPostmasterDone', { count: succeeded, store: store.name, context: store.gender }));
+        t('Loadouts.PullFromPostmasterDone', {
+          count: succeeded,
+          store: store.name,
+          context: store.gender
+        })
+      );
     }
   } catch (e) {
-    toaster.pop('error',
+    toaster.pop(
+      'error',
       t('Loadouts.PullFromPostmasterPopupTitle'),
-      t('Loadouts.PullFromPostmasterError', { error: e.message }));
+      t('Loadouts.PullFromPostmasterError', { error: e.message })
+    );
     throw e;
   }
 }
@@ -125,11 +151,20 @@ async function moveItemsToVault(
     const vaultSpaceLeft = vault!.spaceLeftForItem(item);
     if (vaultSpaceLeft <= 1) {
       // If we're down to one space, try putting it on other characters
-      const otherStores = storeService.getStores().filter((store) => !store.isVault && store.id !== store.id);
+      const otherStores = storeService
+        .getStores()
+        .filter((store) => !store.isVault && store.id !== store.id);
       const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
       if (otherStoresWithSpace.length) {
-        await dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
+        await dimItemService.moveTo(
+          item,
+          otherStoresWithSpace[0],
+          false,
+          item.amount,
+          items,
+          reservations
+        );
         continue;
       }
     }

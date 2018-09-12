@@ -32,7 +32,9 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
   }
 };
 
-function ratingsFromItemStores(itemStores: (D2RatingData | D1RatingData)[]): { [key: string]: D2RatingData | D1RatingData } {
+function ratingsFromItemStores(
+  itemStores: (D2RatingData | D1RatingData)[]
+): { [key: string]: D2RatingData | D1RatingData } {
   const ratings: { [key: string]: D2RatingData | D1RatingData } = {};
   for (const itemStore of itemStores) {
     ratings[`${itemStore.referenceId}-${itemStore.roll}`] = itemStore;

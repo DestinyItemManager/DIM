@@ -35,27 +35,16 @@ export default class StoreBucket extends React.Component<Props> {
 
     const empty = !items.length;
     const equippedItem = items.find((i) => i.equipped);
-    const unequippedItems = sortItems(
-      items.filter((i) => !i.equipped),
-      settings.itemSortOrder()
-    );
+    const unequippedItems = sortItems(items.filter((i) => !i.equipped), settings.itemSortOrder());
 
     return (
       <div className={classNames('sub-section', { empty })}>
         {equippedItem && (
-          <StoreBucketDropTarget
-            equip={true}
-            bucket={bucket}
-            store={store}
-          >
+          <StoreBucketDropTarget equip={true} bucket={bucket} store={store}>
             {this.renderItem(equippedItem)}
           </StoreBucketDropTarget>
         )}
-        <StoreBucketDropTarget
-          equip={false}
-          bucket={bucket}
-          store={store}
-        >
+        <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
           {unequippedItems.map((item) => this.renderItem(item))}
         </StoreBucketDropTarget>
       </div>
@@ -75,7 +64,7 @@ export default class StoreBucket extends React.Component<Props> {
         searchHidden={!searchFilter(item)}
       />
     );
-  }
+  };
 }
 
 function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue | undefined {
@@ -84,9 +73,7 @@ function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue
 }
 
 function getRating(item: DimItem, ratings: ReviewsState['ratings']): number | undefined {
-  const roll = item.isDestiny1()
-    ? (item.talentGrid ? item.talentGrid.dtrRoll : null)
-    : 'fixed'; // TODO: implement random rolls
+  const roll = item.isDestiny1() ? (item.talentGrid ? item.talentGrid.dtrRoll : null) : 'fixed'; // TODO: implement random rolls
   const itemKey = `${item.hash}-${roll}`;
   return ratings[itemKey] && ratings[itemKey].overallScore;
 }

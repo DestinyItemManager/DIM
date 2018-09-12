@@ -35,14 +35,10 @@ export function StoreBuckets({
   searchFilter(item: DimItem): boolean;
   toggleSection(id: string): void;
 }) {
-
   let content: React.ReactNode;
   if (collapsedSections[bucket.id]) {
     content = (
-      <div
-        onClick={() => toggleSection(bucket.id)}
-        className="store-text collapse"
-      >
+      <div onClick={() => toggleSection(bucket.id)} className="store-text collapse">
         <span>{t('Bucket.Show', { bucket: bucket.name })}</span>
       </div>
     );
@@ -82,29 +78,27 @@ export function StoreBuckets({
       </>
     );
   } else {
-    content = (
-      stores.map((store) => (
-        <div
-          key={store.id}
-          className={classNames('store-cell', {
-            vault: store.isVault
-          })}
-        >
-          {(!store.isVault || bucket.vaultBucket) && (
-            <StoreBucket
-              bucket={bucket}
-              store={store}
-              items={store.buckets[bucket.id]}
-              settings={settings}
-              newItems={newItems}
-              itemInfos={itemInfos}
-              ratings={ratings}
-              searchFilter={searchFilter}
-            />
-          )}
-        </div>
-      ))
-    );
+    content = stores.map((store) => (
+      <div
+        key={store.id}
+        className={classNames('store-cell', {
+          vault: store.isVault
+        })}
+      >
+        {(!store.isVault || bucket.vaultBucket) && (
+          <StoreBucket
+            bucket={bucket}
+            store={store}
+            items={store.buckets[bucket.id]}
+            settings={settings}
+            newItems={newItems}
+            itemInfos={itemInfos}
+            ratings={ratings}
+            searchFilter={searchFilter}
+          />
+        )}
+      </div>
+    ));
   }
 
   return (
@@ -113,9 +107,7 @@ export function StoreBuckets({
         onClick={() => toggleSection(bucket.id)}
         className={classNames(
           'fa collapse',
-          collapsedSections[bucket.id]
-            ? 'fa-plus-square-o'
-            : 'fa-minus-square-o'
+          collapsedSections[bucket.id] ? 'fa-plus-square-o' : 'fa-minus-square-o'
         )}
       />
       {content}

@@ -3,7 +3,11 @@ import { $q, $rootScope } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
-import { compareAccounts, DestinyAccount, getDestinyAccountsForBungieAccount } from './destiny-account.service';
+import {
+  compareAccounts,
+  DestinyAccount,
+  getDestinyAccountsForBungieAccount
+} from './destiny-account.service';
 import '../rx-operators';
 import { settings } from '../settings/settings';
 import { SyncService } from '../storage/sync.service';
@@ -84,7 +88,10 @@ async function loadActivePlatform(): Promise<DestinyAccount | null> {
     return _active;
   } else if (data && data.platformType) {
     let active = _platforms.find((platform) => {
-      return platform.platformType === data.platformType && platform.destinyVersion === data.destinyVersion;
+      return (
+        platform.platformType === data.platformType &&
+        platform.destinyVersion === data.destinyVersion
+      );
     });
     if (active) {
       return active;
@@ -107,6 +114,9 @@ function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
       settings.destinyVersion = account.destinyVersion;
       settings.save();
     }
-    return SyncService.set({ platformType: account.platformType, destinyVersion: account.destinyVersion });
+    return SyncService.set({
+      platformType: account.platformType,
+      destinyVersion: account.destinyVersion
+    });
   }
 }

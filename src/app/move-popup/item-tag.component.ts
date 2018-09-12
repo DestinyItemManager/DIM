@@ -19,7 +19,8 @@ function ItemTagController(
     item: DimItem;
   },
   $scope: IScope,
-  $rootScope: IRootScopeService) {
+  $rootScope: IRootScopeService
+) {
   'ngInject';
   const vm = this;
 

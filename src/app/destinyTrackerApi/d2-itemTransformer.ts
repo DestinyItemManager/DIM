@@ -10,7 +10,9 @@ import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-ty
  * This does not contain personally-identifying information.
  * Meant for fetch calls.
  */
-export function translateToDtrItem(item: D2Item | DestinyVendorSaleItemComponent): D2ItemFetchRequest {
+export function translateToDtrItem(
+  item: D2Item | DestinyVendorSaleItemComponent
+): D2ItemFetchRequest {
   return {
     referenceId: isVendorSaleItem(item) ? item.itemHash : item.hash,
     availablePerks: getAvailablePerks(item)
@@ -38,7 +40,9 @@ function getSelectedPlugs(item: D2Item, powerModHashes: number[]): number[] {
     return [];
   }
 
-  const allPlugs = compact(item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash));
+  const allPlugs = compact(
+    item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash)
+  );
 
   return _.difference(allPlugs, powerModHashes);
 }
@@ -57,17 +61,20 @@ function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): numbe
       return undefined;
     }
 
-    const randomPlugOptions = flatMap(item
-      .sockets
-      .sockets, (s) => s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : []);
+    const randomPlugOptions = flatMap(
+      item.sockets.sockets,
+      (s) => (s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : [])
+    );
 
-    return (randomPlugOptions && randomPlugOptions.length > 0) ? randomPlugOptions : undefined;
+    return randomPlugOptions && randomPlugOptions.length > 0 ? randomPlugOptions : undefined;
   }
 
   // TODO: look up vendor rolls
   return [];
 }
 
-function isVendorSaleItem(item: D2Item | DestinyVendorSaleItemComponent): item is DestinyVendorSaleItemComponent {
+function isVendorSaleItem(
+  item: D2Item | DestinyVendorSaleItemComponent
+): item is DestinyVendorSaleItemComponent {
   return (item as DestinyVendorSaleItemComponent).itemHash !== undefined;
 }

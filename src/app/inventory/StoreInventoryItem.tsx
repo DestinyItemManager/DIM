@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DimItem } from "./item-types";
+import { DimItem } from './item-types';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import ItemPopupTrigger from './ItemPopupTrigger';
 import InventoryItem from './InventoryItem';
@@ -30,12 +30,7 @@ export default class StoreInventoryItem extends React.Component<Props> {
       // Equip if it's not equipped or it's on another character
       const equip = !item.equipped || item.owner !== active.id;
 
-      moveItemTo(
-        item,
-        active,
-        item.canBeEquippedBy(active) ? equip : false,
-        item.amount
-      );
+      moveItemTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount);
     }
   });
 

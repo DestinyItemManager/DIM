@@ -29,26 +29,21 @@ export default function Quest(props: QuestProps) {
 
   const progress = (
     <>
-      {percentComplete > 0 &&
-        <span>{Math.round(percentComplete * 100)}%</span>}
-      {itemDef.inventory.maxStackSize > 1 &&
-        <span>{item.quantity}</span>}
+      {percentComplete > 0 && <span>{Math.round(percentComplete * 100)}%</span>}
+      {itemDef.inventory.maxStackSize > 1 && <span>{item.quantity}</span>}
     </>
   );
 
   return (
-    <MilestoneDisplay
-      displayProperties={itemDef.displayProperties}
-      progress={progress}
-    >
+    <MilestoneDisplay displayProperties={itemDef.displayProperties} progress={progress}>
       <div className="quest-objectives">
-        {objectives.map((objective) =>
-          <Objective defs={defs} objective={objective} key={objective.objectiveHash}/>
-        )}
+        {objectives.map((objective) => (
+          <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
+        ))}
       </div>
-      {rewards.map((reward) =>
-        <Reward key={reward.itemHash} reward={reward} defs={defs}/>
-      )}
+      {rewards.map((reward) => (
+        <Reward key={reward.itemHash} reward={reward} defs={defs} />
+      ))}
     </MilestoneDisplay>
   );
 }

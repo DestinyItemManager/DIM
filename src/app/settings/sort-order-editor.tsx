@@ -54,7 +54,7 @@ export default class SortOrderEditor extends React.Component<Props, State> {
     }
 
     this.moveItem(result.source.index, result.destination.index, true);
-  }
+  };
 
   onClick = (e) => {
     const target: HTMLElement = e.target;
@@ -73,19 +73,15 @@ export default class SortOrderEditor extends React.Component<Props, State> {
       const index = getIndex();
       this.toggleItem(index);
     }
-  }
+  };
 
   render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided) => (
-            <div
-              className="sort-order-editor"
-              ref={provided.innerRef}
-              onClick={this.onClick}
-            >
-              <SortEditorItemList order={this.state.order}/>
+            <div className="sort-order-editor" ref={provided.innerRef} onClick={this.onClick}>
+              <SortEditorItemList order={this.state.order} />
               {provided.placeholder}
             </div>
           )}
@@ -98,7 +94,10 @@ export default class SortOrderEditor extends React.Component<Props, State> {
     newIndex = Math.min(this.state.order.length, Math.max(newIndex, 0));
     const order = reorder(this.state.order, oldIndex, newIndex);
     if (fromDrag) {
-      order[newIndex] = { ...order[newIndex], enabled: (newIndex === 0 || order[newIndex - 1].enabled) };
+      order[newIndex] = {
+        ...order[newIndex],
+        enabled: newIndex === 0 || order[newIndex - 1].enabled
+      };
     }
     this.fireOrderChanged(order);
   }
@@ -133,31 +132,40 @@ class SortEditorItemList extends React.Component<{ order: SortProperty[] }, neve
 
   render() {
     return this.props.order.map((item, index) => (
-      <SortEditorItem key={item.id} item={item} index={index}/>
+      <SortEditorItem key={item.id} item={item} index={index} />
     ));
   }
 }
 
-function SortEditorItem(props: {
-  index: number;
-  item: SortProperty;
-}) {
+function SortEditorItem(props: { index: number; item: SortProperty }) {
   const { index, item } = props;
 
   return (
     <Draggable draggableId={item.id} index={index}>
       {(provided, snapshot) => (
         <div
-          className={classNames('sort-order-editor-item', { 'is-dragging': snapshot.isDragging, disabled: !item.enabled })}
+          className={classNames('sort-order-editor-item', {
+            'is-dragging': snapshot.isDragging,
+            disabled: !item.enabled
+          })}
           data-index={index}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
-          <i className="fa fa-bars" {...provided.dragHandleProps}/>
-          <span className="name" {...provided.dragHandleProps}>{item.displayName}</span>
-          <i className="sort-button sort-up fa fa-chevron-up"/>
-          <i className="sort-button sort-down fa fa-chevron-down"/>
-          <i className={classNames('sort-button', 'sort-toggle', 'fa', item.enabled ? 'fa-check-circle-o' : 'fa-circle-o')} />
+          <i className="fa fa-bars" {...provided.dragHandleProps} />
+          <span className="name" {...provided.dragHandleProps}>
+            {item.displayName}
+          </span>
+          <i className="sort-button sort-up fa fa-chevron-up" />
+          <i className="sort-button sort-down fa fa-chevron-down" />
+          <i
+            className={classNames(
+              'sort-button',
+              'sort-toggle',
+              'fa',
+              item.enabled ? 'fa-check-circle-o' : 'fa-circle-o'
+            )}
+          />
         </div>
       )}
     </Draggable>

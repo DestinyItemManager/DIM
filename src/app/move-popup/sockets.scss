@@ -24,11 +24,11 @@
   flex-direction: column;
 
   .disabled {
-    opacity: .4;
+    opacity: 0.4;
   }
 
   .item-socket-category-Reusable & {
-    border-right: .5px solid #444;
+    border-right: 0.5px solid #444;
     padding-right: 4px;
 
     &:last-child {
@@ -78,10 +78,10 @@
     border: 1px solid #999999;
     border-radius: 50%;
     background-color: #4887ba;
-    transform: scale(.9);
+    transform: scale(0.9);
 
     img {
-      transform: scale(.85);
+      transform: scale(0.85);
     }
 
     &.notChosen {

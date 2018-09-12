@@ -1,4 +1,3 @@
-
 /**
  * An OAuth token, either authorization or refresh.
  */
@@ -68,7 +67,7 @@ export function removeAccessToken() {
 function getTokenExpiration(token?: Token): number {
   if (token && token.hasOwnProperty('inception') && token.hasOwnProperty('expires')) {
     const inception = token.inception;
-    return inception + (token.expires * 1000);
+    return inception + token.expires * 1000;
   }
 
   return 0;
