@@ -40,14 +40,11 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
     }
 
     // Prefer locked items (they're stuff you want to use/keep)
-    // and apply different rules to them.
     if (item.locked) {
       value += 500;
-      value += ['Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'].indexOf(item.tier) * 10;
-    } else {
-      // For unlocked, prefer blue items so when you destroy them you get more mats.
-      value += ['Common', 'Uncommon', 'Exotic', 'Legendary', 'Rare'].indexOf(item.tier) * 10;
     }
+
+    value += ['Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'].indexOf(item.tier) * 10;
 
     // Choose the item w/ the highest XP
     value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
