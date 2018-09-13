@@ -58,29 +58,41 @@
       grid-template-rows: 1fr;
       grid-gap: 0;
       grid-template-areas: "1a 2a";
-      font-size: calc(var(--item-size) / 4.8);
+      font-size: calc(var(--item-size) / 5.8);
       line-height: 100%;
     }
 
-    .attributes > div {
-      text-align: right;
-    }
-
     .attribute-1 {
+      text-align: left;
       grid-area: 1a;
     }
 
     .attribute-2 {
+      text-align: right;
       grid-area: 2a;
     }
 
-    .power {
+    .attributes i {
+      font-size: 0.9em;
+      margin-left: 1px;
+    }
+
+    .power,
+    .review-score {
       position: relative;
-      text-align: right;
       display: inline-block;
-      margin-right: 2px;
-      height: 100%;
+      // height: 100%;
       vertical-align: middle;
+    }
+
+    .power {
+      margin-right: 2px;
+      text-align: right;
+    }
+
+    .review-score {
+      text-align: left;
+      margin-left: 2px;
     }
 
     .power::before {
@@ -88,7 +100,7 @@
       position: absolute;
       width: 1em;
       height: 1em;
-      content: '';
+      content: "";
       background-size: 80%;
       background-repeat: no-repeat;
       background-position: center center;

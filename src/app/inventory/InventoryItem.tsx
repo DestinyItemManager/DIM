@@ -6,6 +6,7 @@ import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { getColor, dtrRatingColor } from '../shell/dimAngularFilters.filter';
 import { tagIconFilter } from './dimStoreItem.directive';
 import ItemRender from './ItemRender';
+import { default as showRatingFn } from './show-ratings';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
@@ -28,12 +29,7 @@ export default class InventoryItem extends React.Component<Props> {
       masterwork: item.masterwork
     };
 
-    const showRating =
-      item.dtrRating &&
-      item.dtrRating.overallScore &&
-      (item.dtrRating.ratingCount > (item.destinyVersion === 2 ? 0 : 1) ||
-        item.dtrRating.highlightedRatingCount > 0);
-
+    const showRating = showRatingFn(item);
     const badgeInfo = getBadgeInfo(item);
 
     return (
