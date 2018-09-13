@@ -483,8 +483,7 @@ export function searchFilters(
             addPredicate(filter, pieces[2]);
           }
         } else if (!/^\s*$/.test(term)) {
-          // TODO: not
-          addPredicate('keyword', term);
+          addPredicate('keyword', term.replace(/^-/, ''), term.startsWith('-'));
         }
       }
 
