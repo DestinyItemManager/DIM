@@ -14,6 +14,8 @@ import { TagValue } from './dim-item-info';
 import { RootState } from '../store/reducers';
 import { searchFilterSelector } from '../search/search-filters';
 import { connect } from 'react-redux';
+import { D1RatingData } from '../item-review/d1-dtr-api-types';
+import { D2RatingData } from '../item-review/d2-dtr-api-types';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -84,13 +86,23 @@ class StoreBucket extends React.Component<Props> {
   renderItem = (item: DimItem) => {
     const { newItems, itemInfos, ratings, searchFilter } = this.props;
 
+    const dtrRating = getRating(item, ratings);
+
+    // TODO: are these mutable?
+    const showRating =
+      dtrRating &&
+      dtrRating.overallScore &&
+      (dtrRating.ratingCount > (item.destinyVersion === 2 ? 0 : 1) ||
+        dtrRating.highlightedRatingCount > 0);
+
     return (
       <StoreInventoryItem
         key={item.index}
         item={item}
         isNew={newItems.has(item.id)}
         tag={getTag(item, itemInfos)}
-        rating={getRating(item, ratings)}
+        rating={dtrRating ? dtrRating.overallScore : undefined}
+        hideRating={!showRating}
         searchHidden={!searchFilter(item)}
       />
     );
@@ -102,10 +114,13 @@ function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue
   return itemInfos[itemKey] && itemInfos[itemKey].tag;
 }
 
-function getRating(item: DimItem, ratings: ReviewsState['ratings']): number | undefined {
+function getRating(
+  item: DimItem,
+  ratings: ReviewsState['ratings']
+): D2RatingData | D1RatingData | undefined {
   const roll = item.isDestiny1() ? (item.talentGrid ? item.talentGrid.dtrRoll : null) : 'fixed'; // TODO: implement random rolls
   const itemKey = `${item.hash}-${roll}`;
-  return ratings[itemKey] && ratings[itemKey].overallScore;
+  return ratings[itemKey] && ratings[itemKey];
 }
 
 export default connect<StoreProps>(mapStateToProps)(StoreBucket);

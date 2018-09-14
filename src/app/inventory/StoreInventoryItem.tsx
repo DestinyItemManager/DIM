@@ -14,6 +14,7 @@ interface Props {
   isNew: boolean;
   tag?: TagValue;
   rating?: number;
+  hideRating?: boolean;
   searchHidden: boolean;
 }
 
@@ -35,7 +36,7 @@ export default class StoreInventoryItem extends React.PureComponent<Props> {
   });
 
   render() {
-    const { item, isNew, tag, rating, searchHidden } = this.props;
+    const { item, isNew, tag, rating, searchHidden, hideRating } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
@@ -46,6 +47,7 @@ export default class StoreInventoryItem extends React.PureComponent<Props> {
             isNew={isNew}
             tag={tag}
             rating={rating}
+            hideRating={hideRating}
             searchHidden={searchHidden}
           />
         </ItemPopupTrigger>
