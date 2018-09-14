@@ -59,5 +59,5 @@ initi18n().then(() => {
       document.getElementById('app')
     );
   });
-  bootstrap(document.createElement('div'), ['Bootstrap'], { strictDi: true });
+  bootstrap(document.getElementById('angular')!, ['Bootstrap'], { strictDi: true });
 });
