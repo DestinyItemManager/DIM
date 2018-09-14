@@ -5,6 +5,7 @@ import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-bucket
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 
 export const D1Categories = {
+  Postmaster: ['LostItems', 'SpecialOrders', 'Messages'],
   Weapons: ['Class', 'Primary', 'Special', 'Heavy'],
   Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
   General: [
@@ -20,8 +21,7 @@ export const D1Categories = {
     'Vehicle',
     'Horn'
   ],
-  Progress: ['Bounties', 'Quests', 'Missions'],
-  Postmaster: ['LostItems', 'SpecialOrders', 'Messages']
+  Progress: ['Bounties', 'Quests', 'Missions']
 };
 
 // A mapping from the bucket names to DIM item types
