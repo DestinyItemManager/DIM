@@ -10,7 +10,8 @@
     "build-release": "npm run bundle -s -- --env=release",
     "build-beta": "npm run bundle -s -- --env=beta",
     "build-dev": "npm run bundle -s -- --env=dev --watch",
-    "start": "npm run build-dev -s",
+    "watch": "npm run build-dev -s",
+    "start": "webpack-serve ./config/webpack.js --no-reload",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss}'",
@@ -92,6 +93,7 @@
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^3.0.0",
     "webpack-notifier": "^1.6.0",
+    "webpack-serve": "^2.0.2",
     "workbox-webpack-plugin": "^2.1.3"
   },
   "dependencies": {

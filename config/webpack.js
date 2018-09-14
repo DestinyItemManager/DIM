@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 
 const path = require('path');
+const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -22,6 +23,9 @@ const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 const packageJson = require('../package.json');
 
 module.exports = (env) => {
+  if (process.env.WEBPACK_SERVE) {
+    env = 'dev';
+  }
   const isDev = env === 'dev';
   let version = packageJson.version.toString();
   if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
@@ -41,11 +45,25 @@ module.exports = (env) => {
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: '[name]-[contenthash:6].js',
-      chunkFilename: '[id]-[contenthash:6].js'
+      filename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
+      chunkFilename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js'
     },
 
-    stats: 'minimal',
+    // Dev server
+    serve: {
+      devMiddleware: {
+        stats: 'errors-only'
+      },
+      https: {
+        key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+        cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
+      }
+    },
+
+    // Bail and fail hard on first error
+    bail: !isDev,
+
+    stats: isDev ? 'minimal' : 'normal',
 
     devtool: 'source-map',
 
@@ -110,11 +128,16 @@ module.exports = (env) => {
         },
         {
           test: /\.scss$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+          use: [
+            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            'postcss-loader',
+            'sass-loader'
+          ]
         },
         {
           test: /\.css$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader']
+          use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
         {
@@ -189,8 +212,8 @@ module.exports = (env) => {
       new NotifyPlugin('DIM', !isDev),
 
       new MiniCssExtractPlugin({
-        filename: '[name]-[contenthash:6].css',
-        chunkFilename: '[id]-[contenthash:6].css'
+        filename: isDev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
+        chunkFilename: isDev ? '[name]-[hash].css' : '[id]-[contenthash:6].css'
       }),
 
       // Fix some chunks not showing up in Webpack 4
@@ -307,10 +330,6 @@ module.exports = (env) => {
 
     return config;
   } else {
-    // Bail and fail hard on first error
-    config.bail = true;
-    config.stats = 'normal';
-
     config.plugins.push(
       new CleanWebpackPlugin(['dist', '.awcache', 'node_modules/.cache'], {
         root: path.resolve('./')
