@@ -224,46 +224,59 @@ class Stores extends React.Component<Props, State> {
 
     return (
       <div>
-        {Object.keys(buckets.byCategory).map((category) => (
-          <div key={category} className="section">
-            <CollapsibleTitle
-              title={t(`Bucket.${category}`)}
-              sectionId={category}
-              collapsedSections={collapsedSections}
-            >
-              {stores[0].isDestiny1() &&
-                buckets.byCategory[category][0].vaultBucket && (
-                  <span className="bucket-count">
-                    {vault.vaultCounts[buckets.byCategory[category][0].vaultBucket!.id].count}/
-                    {buckets.byCategory[category][0].vaultBucket!.capacity}
-                  </span>
-                )}
-            </CollapsibleTitle>
-            {!collapsedSections[category] &&
-              buckets.byCategory[category].map((bucket) => (
-                <StoreBuckets
-                  key={bucket.id}
-                  bucket={bucket}
-                  stores={stores}
+        {Object.keys(buckets.byCategory).map(
+          (category) =>
+            categoryHasItems(buckets, category, stores) && (
+              <div key={category} className="section">
+                <CollapsibleTitle
+                  title={t(`Bucket.${category}`)}
+                  sectionId={category}
                   collapsedSections={collapsedSections}
-                  vault={vault}
-                  currentStore={currentStore}
-                  settings={settings}
-                  toggleSection={this.toggleSection}
-                  newItems={newItems}
-                  itemInfos={itemInfos}
-                  ratings={ratings}
-                  searchFilter={searchFilter}
-                />
-              ))}
-          </div>
-        ))}
+                >
+                  {stores[0].isDestiny1() &&
+                    buckets.byCategory[category][0].vaultBucket && (
+                      <span className="bucket-count">
+                        {vault.vaultCounts[buckets.byCategory[category][0].vaultBucket!.id].count}/
+                        {buckets.byCategory[category][0].vaultBucket!.capacity}
+                      </span>
+                    )}
+                </CollapsibleTitle>
+                {!collapsedSections[category] &&
+                  buckets.byCategory[category].map((bucket) => (
+                    <StoreBuckets
+                      key={bucket.id}
+                      bucket={bucket}
+                      stores={stores}
+                      collapsedSections={collapsedSections}
+                      vault={vault}
+                      currentStore={currentStore}
+                      settings={settings}
+                      toggleSection={this.toggleSection}
+                      newItems={newItems}
+                      itemInfos={itemInfos}
+                      ratings={ratings}
+                      searchFilter={searchFilter}
+                    />
+                  ))}
+              </div>
+            )
+        )}
         {stores[0].isDestiny1() && (
           <D1ReputationSection stores={stores} collapsedSections={collapsedSections} />
         )}
       </div>
     );
   }
+}
+
+/** Is there any store that has an item in any of the buckets in this category? */
+function categoryHasItems(
+  buckets: InventoryBuckets,
+  category: string,
+  stores: DimStore[]
+): boolean {
+  const bucketIds = buckets.byCategory[category].map((b) => b.id);
+  return stores.some((s) => bucketIds.some((bucketId) => s.buckets[bucketId].length > 0));
 }
 
 export default connect(mapStateToProps)(Stores);

@@ -36,6 +36,12 @@ export function StoreBuckets({
   toggleSection(id: string): void;
 }) {
   let content: React.ReactNode;
+
+  // Don't show buckets with no items
+  if (!stores.some((s) => s.buckets[bucket.id].length > 0)) {
+    return null;
+  }
+
   if (collapsedSections[bucket.id]) {
     content = (
       <div onClick={() => toggleSection(bucket.id)} className="store-text collapse">
