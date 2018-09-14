@@ -2,6 +2,7 @@ version: "3.7"
 services:
   webpack:
     container_name: dim-webpack
+    image: node:10.9.0
     build:
       context: ./docker-compose/webpack
     command: bash -c "yarn install && yarn start"
@@ -10,6 +11,7 @@ services:
       - .:/usr/src/app
   http-server:
     container_name: dim-http-server
+    image: node:10.9.0
     build:
       context: ./docker-compose/http-server
     ports:
