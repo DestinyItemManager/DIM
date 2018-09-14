@@ -20,7 +20,7 @@ interface Props {
 /**
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
-export default class StoreInventoryItem extends React.Component<Props> {
+export default class StoreInventoryItem extends React.PureComponent<Props> {
   private doubleClicked = queuedAction((e) => {
     const item = this.props.item;
     if (!dimLoadoutService.dialogOpen && !CompareService.dialogOpen) {
