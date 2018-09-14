@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DimStore, DimVault } from './store-types';
+import { DimStore, DimVault, D2Store } from './store-types';
 import StoreBucket from './StoreBucket';
 import { Settings } from '../settings/settings';
 import { InventoryBucket } from './inventory-buckets';
@@ -8,6 +8,11 @@ import { t } from 'i18next';
 import { InventoryState } from './reducer';
 import { ReviewsState } from '../item-review/reducer';
 import { DimItem } from './item-types';
+import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
+import { queueAction } from './action-queue';
+import { dimItemService } from './dimItemService.factory';
+import { toaster } from '../ngimport-more';
+import { $rootScope } from 'ngimport';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -103,6 +108,9 @@ export function StoreBuckets({
             searchFilter={searchFilter}
           />
         )}
+        {bucket.type === 'LostItems' &&
+          store.isDestiny2() &&
+          store.buckets[bucket.id].length > 0 && <PullFromPostmaster store={store} />}
       </div>
     ));
   }
@@ -117,6 +125,25 @@ export function StoreBuckets({
         )}
       />
       {content}
+    </div>
+  );
+}
+
+function PullFromPostmaster({ store }: { store: D2Store }) {
+  const numPullablePostmasterItems = pullablePostmasterItems(store).length;
+  if (numPullablePostmasterItems === 0) {
+    return null;
+  }
+
+  // We need the Angular apply to drive the toaster, until Angular is gone
+  function onClick() {
+    queueAction(() => $rootScope.$apply(() => pullFromPostmaster(store, dimItemService, toaster)));
+  }
+
+  return (
+    <div className="dim-button bucket-button" onClick={onClick}>
+      <i className="fa fa-envelope" /> <span className="badge">{numPullablePostmasterItems}</span>{' '}
+      {t('Loadouts.PullFromPostmaster')}
     </div>
   );
 }

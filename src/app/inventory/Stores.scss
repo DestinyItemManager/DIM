@@ -52,6 +52,7 @@
   margin-right: 12px;
   width: calc(40px + 44px + (3 * (44px + 8px)));
   width: calc(40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  flex-direction: column;
 
   &.vault {
     max-width: calc(8px + (999 * (44px + 8px)));
@@ -121,5 +122,15 @@
   margin-top: 77px;
   @supports (position: sticky) {
     margin-top: 0;
+  }
+}
+
+.dim-button.bucket-button {
+  align-self: center;
+  margin-top: 8px;
+  background-color: #222;
+
+  &:hover {
+    background-color: #666;
   }
 }
