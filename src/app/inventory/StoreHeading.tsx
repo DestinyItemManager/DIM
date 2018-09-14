@@ -20,7 +20,7 @@ interface Props {
   store: DimStore;
   internalLoadoutMenu: boolean;
   selectedStore?: DimStore;
-  onTapped?(): void;
+  onTapped?(storeId: string): void;
 }
 
 function isVault(store: DimStore): store is DimVault {
@@ -137,7 +137,7 @@ export default class StoreHeading extends React.Component<Props> {
     const { store, internalLoadoutMenu, selectedStore, onTapped } = this.props;
 
     if (store !== selectedStore && !internalLoadoutMenu) {
-      onTapped && onTapped();
+      onTapped && onTapped(store.id);
       return;
     }
 

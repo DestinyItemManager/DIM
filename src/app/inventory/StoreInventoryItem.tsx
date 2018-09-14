@@ -15,7 +15,6 @@ interface Props {
   tag?: TagValue;
   rating?: number;
   searchHidden: boolean;
-  draggable: boolean;
 }
 
 /**
@@ -36,25 +35,21 @@ export default class StoreInventoryItem extends React.Component<Props> {
   });
 
   render() {
-    const { item, isNew, tag, rating, searchHidden, draggable } = this.props;
+    const { item, isNew, tag, rating, searchHidden } = this.props;
 
-    const itemDisplay = (
-      <ItemPopupTrigger item={item}>
-        <InventoryItem
-          item={item}
-          onDoubleClick={this.doubleClicked}
-          isNew={isNew}
-          tag={tag}
-          rating={rating}
-          searchHidden={searchHidden}
-        />
-      </ItemPopupTrigger>
+    return (
+      <DraggableInventoryItem item={item}>
+        <ItemPopupTrigger item={item}>
+          <InventoryItem
+            item={item}
+            onDoubleClick={this.doubleClicked}
+            isNew={isNew}
+            tag={tag}
+            rating={rating}
+            searchHidden={searchHidden}
+          />
+        </ItemPopupTrigger>
+      </DraggableInventoryItem>
     );
-
-    if (draggable) {
-      return <DraggableInventoryItem item={item}>{itemDisplay}</DraggableInventoryItem>;
-    } else {
-      return itemDisplay;
-    }
   }
 }

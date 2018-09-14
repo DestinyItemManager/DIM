@@ -15,7 +15,6 @@ import { TagValue } from './dim-item-info';
 interface Props {
   items: DimItem[];
   settings: Readonly<Settings>;
-  draggable: boolean;
 
   // TODO: probably don't need all of this
   bucket: InventoryBucket;
@@ -53,7 +52,7 @@ export default class StoreBucket extends React.Component<Props> {
   }
 
   renderItem = (item: DimItem) => {
-    const { newItems, itemInfos, ratings, searchFilter, draggable } = this.props;
+    const { newItems, itemInfos, ratings, searchFilter } = this.props;
 
     return (
       <StoreInventoryItem
@@ -63,7 +62,6 @@ export default class StoreBucket extends React.Component<Props> {
         tag={getTag(item, itemInfos)}
         rating={getRating(item, ratings)}
         searchHidden={!searchFilter(item)}
-        draggable={draggable}
       />
     );
   };

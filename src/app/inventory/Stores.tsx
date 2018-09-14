@@ -22,6 +22,7 @@ import { D1Categories } from '../destiny1/d1-buckets.service';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
+import Hammer from 'react-hammerjs';
 
 interface Props {
   stores: DimStore[];
@@ -78,10 +79,15 @@ const searchFilterSelector = createSelector(querySelector, searchConfigSelector,
   filters.filterFunction(query)
 );
 
+const storesSelector = (state: RootState) => state.inventory.stores;
+const characterOrderSelector = (state: RootState) =>
+  (state.settings.settings as Settings).characterOrder;
+const sortedStoresSelector = createSelector(storesSelector, characterOrderSelector, sortStores);
+
 function mapStateToProps(state: RootState): Partial<Props> {
   const settings = state.settings.settings as Settings;
   return {
-    stores: state.inventory.stores,
+    stores: sortedStoresSelector(state),
     buckets: state.inventory.buckets,
     // If "show new items" is off, don't pay the cost of propagating new item updates
     newItems: settings.showNewItems ? state.inventory.newItems : EMPTY_SET,
@@ -105,16 +111,19 @@ class Stores extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, isPhonePortrait, settings } = this.props;
+    const { stores, isPhonePortrait } = this.props;
     const { selectedStoreId } = this.state;
 
     if (!stores.length) {
       return null;
     }
 
-    const sortedStores = sortStores(stores, settings.characterOrder);
     const vault = stores.find((s) => s.isVault) as DimVault;
     const currentStore = stores.find((s) => s.current)!;
+
+    const selectedStore = selectedStoreId
+      ? stores.find((s) => s.id === selectedStoreId)!
+      : currentStore;
 
     // TODO: make a component for the renderStores stuff
 
@@ -130,9 +139,13 @@ class Stores extends React.Component<Props, State> {
                   onViewChange={this.onViewChange}
                   className="track"
                 >
-                  {sortedStores.map((store) => (
+                  {stores.map((store) => (
                     <View className="store-cell" key={store.id}>
-                      <StoreHeading internalLoadoutMenu={false} store={store} />
+                      <StoreHeading
+                        internalLoadoutMenu={false}
+                        store={store}
+                        onTapped={this.selectStore}
+                      />
                     </View>
                   ))}
                 </Track>
@@ -140,24 +153,11 @@ class Stores extends React.Component<Props, State> {
             </ViewPager>
           </ScrollClassDiv>
 
-          <div className="detached" loadout-id={stores[0].id} />
+          <div className="detached" loadout-id={selectedStore.id} />
 
-          <ViewPager>
-            <Frame className="frame" autoSize={false}>
-              <Track
-                currentView={selectedStoreId === undefined ? currentStore.id : selectedStoreId}
-                contain={true}
-                className="track"
-                onViewChange={this.onViewChange}
-              >
-                {sortedStores.map((store) => (
-                  <View className="view" key={store.id}>
-                    {this.renderStores([store], vault, currentStore)}
-                  </View>
-                ))}
-              </Track>
-            </Frame>
-          </ViewPager>
+          <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
+            {this.renderStores([selectedStore], vault, currentStore)}
+          </Hammer>
         </div>
       );
     }
@@ -165,20 +165,39 @@ class Stores extends React.Component<Props, State> {
     return (
       <div className="inventory-content">
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
-          {sortedStores.map((store) => (
+          {stores.map((store) => (
             <div className="store-cell" key={store.id}>
               <StoreHeading internalLoadoutMenu={true} store={store} />
             </div>
           ))}
         </ScrollClassDiv>
-        {this.renderStores(sortedStores, vault, currentStore)}
+        {this.renderStores(stores, vault, currentStore)}
       </div>
     );
   }
 
   private onViewChange = (indices) => {
-    console.log('onViewChange', indices);
-    this.setState({ selectedStoreId: indices[0] });
+    const { stores } = this.props;
+    this.setState({ selectedStoreId: stores[indices[0]].id });
+  };
+
+  private handleSwipe = (e) => {
+    const { stores } = this.props;
+    const { selectedStoreId } = this.state;
+
+    const selectedStoreIndex = selectedStoreId
+      ? stores.findIndex((s) => s.id === selectedStoreId)
+      : stores.findIndex((s) => s.current);
+
+    if (e.direction === 2 && selectedStoreIndex < stores.length - 1) {
+      this.setState({ selectedStoreId: stores[selectedStoreIndex + 1].id });
+    } else if (e.direction === 4 && selectedStoreIndex > 0) {
+      this.setState({ selectedStoreId: stores[selectedStoreIndex - 1].id });
+    }
+  };
+
+  private selectStore = (storeId: string) => {
+    this.setState({ selectedStoreId: storeId });
   };
 
   private toggleSection = (id: string) => {
@@ -199,8 +218,7 @@ class Stores extends React.Component<Props, State> {
       itemInfos,
       ratings,
       searchFilter,
-      collapsedSections,
-      isPhonePortrait
+      collapsedSections
     } = this.props;
 
     return (
@@ -235,7 +253,6 @@ class Stores extends React.Component<Props, State> {
                   itemInfos={itemInfos}
                   ratings={ratings}
                   searchFilter={searchFilter}
-                  draggable={!isPhonePortrait}
                 />
               ))}
           </div>

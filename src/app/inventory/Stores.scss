@@ -66,6 +66,10 @@
 
   &.account-wide {
     width: 100%;
+    @include phone-portrait {
+      width: auto;
+      flex: 1;
+    }
     max-width: calc(
       (40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
         var(--num-characters) + ((var(--num-characters) - 1) * 12px)

@@ -13,7 +13,6 @@ import { DimItem } from './item-types';
 export function StoreBuckets({
   bucket,
   collapsedSections,
-  draggable,
   stores,
   vault,
   currentStore,
@@ -26,7 +25,6 @@ export function StoreBuckets({
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
-  draggable: boolean;
   collapsedSections: Settings['collapsedSections'];
   vault: DimVault;
   currentStore: DimStore;
@@ -60,7 +58,6 @@ export function StoreBuckets({
               itemInfos={itemInfos}
               ratings={ratings}
               searchFilter={searchFilter}
-              draggable={draggable}
             />
           </div>
         )}
@@ -75,7 +72,6 @@ export function StoreBuckets({
               itemInfos={itemInfos}
               ratings={ratings}
               searchFilter={searchFilter}
-              draggable={draggable}
             />
           </div>
         )}
@@ -99,7 +95,6 @@ export function StoreBuckets({
             itemInfos={itemInfos}
             ratings={ratings}
             searchFilter={searchFilter}
-            draggable={draggable}
           />
         )}
       </div>
