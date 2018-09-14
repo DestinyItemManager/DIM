@@ -6,6 +6,8 @@ import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
 import { D1Store } from '../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
 import { getWeaponList } from './itemListBuilder';
+import store from '../store/store';
+import { updateRatings } from '../item-review/actions';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
@@ -74,6 +76,10 @@ class BulkFetcher {
         }
       });
     });
+
+    store.dispatch(
+      updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
+    );
   }
 
   attachVendorRankings(bulkRankings: D1ItemFetchResponse[], vendors: Vendor[]) {
@@ -96,6 +102,10 @@ class BulkFetcher {
         }
       });
     });
+
+    store.dispatch(
+      updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
+    );
   }
 }
 
