@@ -1,6 +1,6 @@
 <div class="move-popup" item-popup item-popup-boundary-class="store-bounds">
-  <dim-move-amount ng-if="vm.maximum > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"
-    max-stack-size="vm.item.maxStackSize"></dim-move-amount>
+  <dim-move-item-properties item="vm.item" infuse="vm.infuse"></dim-move-item-properties>
+  <dim-move-amount ng-if="vm.maximum > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>
   <div class="interaction">
     <dim-move-locations item="vm.item" amount="vm.moveAmount"></dim-move-locations>
     <div class="move-button move-consolidate" ng-i18next="[title]MovePopup.Consolidate;[alt]MovePopup.Consolidate"
@@ -12,12 +12,10 @@
       <span ng-i18next="MovePopup.Split"></span>
     </div>
     <div class="locations" ng-if="vm.item.infusionFuel">
-      <div class="move-button infuse-perk" ng-class="[{ destiny2: vm.item.destinyVersion === 2}, vm.item.bucket.sort]"
-        ng-click="vm.infuse(vm.item, $event)" ng-i18next="[title]Infusion.Infusion;[alt]Infusion.Calc">
+      <div class="move-button infuse-perk" ng-class="[{ destiny2: vm.item.destinyVersion === 2}, vm.item.bucket.sort]" ng-click="vm.infuse(vm.item, $event)" ng-i18next="[title]Infusion.Infusion;[alt]Infusion.Calc">
         <span ng-i18next="MovePopup.Infuse"></span>
       </div>
     </div>
   </div>
-  <dim-move-item-properties item="vm.item" infuse="vm.infuse"></dim-move-item-properties>
   <div class="arrow" ng-class="'is-{{vm.item.dmg}}'"></div>
 </div>
