@@ -2,6 +2,10 @@ import { Reducer } from 'redux';
 import { Settings } from './settings';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
+import { RootState } from '../store/reducers';
+
+export const characterOrderSelector = (state: RootState) =>
+  (state.settings.settings as Settings).characterOrder;
 
 export interface SettingsState {
   readonly settings: Settings | {};

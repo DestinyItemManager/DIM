@@ -5,9 +5,6 @@ import { Settings } from '../settings/settings';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import { InventoryState } from './reducer';
-import { ReviewsState } from '../item-review/reducer';
-import { DimItem } from './item-types';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -15,24 +12,12 @@ export function StoreBuckets({
   collapsedSections,
   stores,
   vault,
-  currentStore,
-  settings,
-  newItems,
-  itemInfos,
-  ratings,
-  searchFilter,
   toggleSection
 }: {
   bucket: InventoryBucket;
-  stores: DimStore[];
   collapsedSections: Settings['collapsedSections'];
+  stores: DimStore[];
   vault: DimVault;
-  currentStore: DimStore;
-  settings: Settings;
-  newItems: Set<string>;
-  itemInfos: InventoryState['itemInfos'];
-  ratings: ReviewsState['ratings'];
-  searchFilter(item: DimItem): boolean;
   toggleSection(id: string): void;
 }) {
   let content: React.ReactNode;
@@ -45,34 +30,17 @@ export function StoreBuckets({
   } else if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
     const allStoresView = stores.length > 1;
+    const currentStore = stores.find((s) => s.current)!;
     content = (
       <>
         {(allStoresView || stores[0] !== vault) && (
           <div className="store-cell account-wide">
-            <StoreBucket
-              bucket={bucket}
-              store={stores[0]}
-              items={currentStore.buckets[bucket.id]}
-              settings={settings}
-              newItems={newItems}
-              itemInfos={itemInfos}
-              ratings={ratings}
-              searchFilter={searchFilter}
-            />
+            <StoreBucket bucketId={bucket.id} storeId={currentStore.id} />
           </div>
         )}
         {(allStoresView || stores[0] === vault) && (
           <div className="store-cell vault">
-            <StoreBucket
-              bucket={bucket}
-              store={vault}
-              items={vault.buckets[bucket.id]}
-              settings={settings}
-              newItems={newItems}
-              itemInfos={itemInfos}
-              ratings={ratings}
-              searchFilter={searchFilter}
-            />
+            <StoreBucket bucketId={bucket.id} storeId={vault.id} />
           </div>
         )}
       </>
@@ -86,16 +54,7 @@ export function StoreBuckets({
         })}
       >
         {(!store.isVault || bucket.vaultBucket) && (
-          <StoreBucket
-            bucket={bucket}
-            store={store}
-            items={store.buckets[bucket.id]}
-            settings={settings}
-            newItems={newItems}
-            itemInfos={itemInfos}
-            ratings={ratings}
-            searchFilter={searchFilter}
-          />
+          <StoreBucket bucketId={bucket.id} storeId={store.id} />
         )}
       </div>
     ));

@@ -2,6 +2,9 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { isPhonePortrait } from '../mediaQueries';
+import { RootState } from '../store/reducers';
+
+export const querySelector = (state: RootState) => state.shell.searchQuery;
 
 export interface ShellState {
   readonly isPhonePortrait: boolean;
