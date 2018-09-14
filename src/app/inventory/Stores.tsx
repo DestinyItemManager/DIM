@@ -22,6 +22,7 @@ import { D1Categories } from '../destiny1/d1-buckets.service';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
+import Hammer from 'react-hammerjs';
 
 interface Props {
   stores: DimStore[];
@@ -78,10 +79,15 @@ const searchFilterSelector = createSelector(querySelector, searchConfigSelector,
   filters.filterFunction(query)
 );
 
+const storesSelector = (state: RootState) => state.inventory.stores;
+const characterOrderSelector = (state: RootState) =>
+  (state.settings.settings as Settings).characterOrder;
+const sortedStoresSelector = createSelector(storesSelector, characterOrderSelector, sortStores);
+
 function mapStateToProps(state: RootState): Partial<Props> {
   const settings = state.settings.settings as Settings;
   return {
-    stores: state.inventory.stores,
+    stores: sortedStoresSelector(state),
     buckets: state.inventory.buckets,
     // If "show new items" is off, don't pay the cost of propagating new item updates
     newItems: settings.showNewItems ? state.inventory.newItems : EMPTY_SET,
@@ -105,51 +111,96 @@ class Stores extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, isPhonePortrait, settings } = this.props;
+    const { stores, isPhonePortrait } = this.props;
     const { selectedStoreId } = this.state;
 
     if (!stores.length) {
       return null;
     }
 
-    const sortedStores = sortStores(stores, settings.characterOrder);
     const vault = stores.find((s) => s.isVault) as DimVault;
     const currentStore = stores.find((s) => s.current)!;
+
+    const selectedStore = selectedStoreId
+      ? stores.find((s) => s.id === selectedStoreId)!
+      : currentStore;
 
     // TODO: make a component for the renderStores stuff
 
     if (isPhonePortrait) {
       return (
-        <div className="inventory-content phone-portrait">
-          <ViewPager>
-            <Frame className="frame" autoSize={false}>
-              <Track
-                currentView={selectedStoreId === undefined ? currentStore.id : selectedStoreId}
-                viewsToShow={1}
-                contain={true}
-                className="track"
-                flickTimeout={100}
-              >
-                {sortedStores.map((store) => (
-                  <View className="view" key={store.id}>
-                    {this.renderStores([store], vault, currentStore)}
-                  </View>
-                ))}
-              </Track>
-            </Frame>
-          </ViewPager>
+        <div className="inventory-content phone-portrait react">
+          <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
+            <ViewPager>
+              <Frame className="frame" autoSize={false}>
+                <Track
+                  currentView={selectedStoreId === undefined ? currentStore.id : selectedStoreId}
+                  contain={false}
+                  onViewChange={this.onViewChange}
+                  className="track"
+                >
+                  {stores.map((store) => (
+                    <View className="store-cell" key={store.id}>
+                      <StoreHeading
+                        internalLoadoutMenu={false}
+                        store={store}
+                        onTapped={this.selectStore}
+                      />
+                    </View>
+                  ))}
+                </Track>
+              </Frame>
+            </ViewPager>
+          </ScrollClassDiv>
+
+          <div className="detached" loadout-id={selectedStore.id} />
+
+          <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
+            {this.renderStores([selectedStore], vault, currentStore)}
+          </Hammer>
         </div>
       );
     }
 
     return (
       <div className="inventory-content">
-        {this.renderStores(sortedStores, vault, currentStore)}
+        <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
+          {stores.map((store) => (
+            <div className="store-cell" key={store.id}>
+              <StoreHeading internalLoadoutMenu={true} store={store} />
+            </div>
+          ))}
+        </ScrollClassDiv>
+        {this.renderStores(stores, vault, currentStore)}
       </div>
     );
   }
 
-  toggleSection = (id: string) => {
+  private onViewChange = (indices) => {
+    const { stores } = this.props;
+    this.setState({ selectedStoreId: stores[indices[0]].id });
+  };
+
+  private handleSwipe = (e) => {
+    const { stores } = this.props;
+    const { selectedStoreId } = this.state;
+
+    const selectedStoreIndex = selectedStoreId
+      ? stores.findIndex((s) => s.id === selectedStoreId)
+      : stores.findIndex((s) => s.current);
+
+    if (e.direction === 2 && selectedStoreIndex < stores.length - 1) {
+      this.setState({ selectedStoreId: stores[selectedStoreIndex + 1].id });
+    } else if (e.direction === 4 && selectedStoreIndex > 0) {
+      this.setState({ selectedStoreId: stores[selectedStoreIndex - 1].id });
+    }
+  };
+
+  private selectStore = (storeId: string) => {
+    this.setState({ selectedStoreId: storeId });
+  };
+
+  private toggleSection = (id: string) => {
     const settings = this.props.settings;
     // TODO: make an action!
     settings.collapsedSections = {
@@ -167,20 +218,11 @@ class Stores extends React.Component<Props, State> {
       itemInfos,
       ratings,
       searchFilter,
-      collapsedSections,
-      isPhonePortrait
+      collapsedSections
     } = this.props;
 
     return (
       <div>
-        <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
-          {stores.map((store) => (
-            <div className="store-cell" key={store.id}>
-              <StoreHeading internalLoadoutMenu={!isPhonePortrait} store={store} />
-            </div>
-          ))}
-        </ScrollClassDiv>
-        {isPhonePortrait && <div className="detached" loadout-id={stores[0].id} />}
         {Object.keys(buckets.byCategory).map((category) => (
           <div key={category} className="section">
             <CollapsibleTitle

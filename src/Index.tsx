@@ -29,15 +29,13 @@ import registerServiceWorker from './register-service-worker';
 import { lazyInjector } from './lazyInjector';
 import { setRouter } from './router';
 import store from './app/store/store';
+import { safariTouchFix } from './safari-touch-fix';
 
 polyfill({
   holdToDrag: 300
 });
 
-// https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
-window.addEventListener('touchmove', () => {
-  return;
-});
+safariTouchFix();
 
 if ($DIM_FLAVOR !== 'dev') {
   registerServiceWorker();
