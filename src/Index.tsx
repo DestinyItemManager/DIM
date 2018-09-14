@@ -32,7 +32,8 @@ import store from './app/store/store';
 import { safariTouchFix } from './safari-touch-fix';
 
 polyfill({
-  holdToDrag: 300
+  holdToDrag: 300,
+  dragImageCenterOnTouch: true
 });
 
 safariTouchFix();

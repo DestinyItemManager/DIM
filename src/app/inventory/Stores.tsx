@@ -144,6 +144,7 @@ class Stores extends React.Component<Props, State> {
                       <StoreHeading
                         internalLoadoutMenu={false}
                         store={store}
+                        selectedStore={selectedStore}
                         onTapped={this.selectStore}
                       />
                     </View>
