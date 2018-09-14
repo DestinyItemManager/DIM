@@ -4,7 +4,6 @@ import StoreBucket from './StoreBucket';
 import { Settings } from '../settings/settings';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
-import { t } from 'i18next';
 import { InventoryState } from './reducer';
 import { ReviewsState } from '../item-review/reducer';
 import { DimItem } from './item-types';
@@ -17,7 +16,6 @@ import { $rootScope } from 'ngimport';
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
   bucket,
-  collapsedSections,
   stores,
   vault,
   currentStore,
@@ -25,12 +23,10 @@ export function StoreBuckets({
   newItems,
   itemInfos,
   ratings,
-  searchFilter,
-  toggleSection
+  searchFilter
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
-  collapsedSections: Settings['collapsedSections'];
   vault: DimVault;
   currentStore: DimStore;
   settings: Settings;
@@ -38,7 +34,6 @@ export function StoreBuckets({
   itemInfos: InventoryState['itemInfos'];
   ratings: ReviewsState['ratings'];
   searchFilter(item: DimItem): boolean;
-  toggleSection(id: string): void;
 }) {
   let content: React.ReactNode;
 
@@ -47,13 +42,7 @@ export function StoreBuckets({
     return null;
   }
 
-  if (collapsedSections[bucket.id]) {
-    content = (
-      <div onClick={() => toggleSection(bucket.id)} className="store-text collapse">
-        <span>{t('Bucket.Show', { bucket: bucket.name })}</span>
-      </div>
-    );
-  } else if (bucket.accountWide) {
+  if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
     const allStoresView = stores.length > 1;
     content = (
@@ -115,18 +104,7 @@ export function StoreBuckets({
     ));
   }
 
-  return (
-    <div className="store-row items">
-      <i
-        onClick={() => toggleSection(bucket.id)}
-        className={classNames(
-          'fa collapse',
-          collapsedSections[bucket.id] ? 'fa-plus-square-o' : 'fa-minus-square-o'
-        )}
-      />
-      {content}
-    </div>
-  );
+  return <div className="store-row items">{content}</div>;
 }
 
 function PullFromPostmaster({ store }: { store: D2Store }) {

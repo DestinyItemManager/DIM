@@ -201,16 +201,6 @@ class Stores extends React.Component<Props, State> {
     this.setState({ selectedStoreId: storeId });
   };
 
-  private toggleSection = (id: string) => {
-    const settings = this.props.settings;
-    // TODO: make an action!
-    settings.collapsedSections = {
-      ...settings.collapsedSections,
-      [id]: !settings.collapsedSections[id]
-    };
-    settings.save();
-  };
-
   private renderStores(stores: DimStore[], vault: DimVault, currentStore: DimStore) {
     const {
       settings,
@@ -247,11 +237,9 @@ class Stores extends React.Component<Props, State> {
                       key={bucket.id}
                       bucket={bucket}
                       stores={stores}
-                      collapsedSections={collapsedSections}
                       vault={vault}
                       currentStore={currentStore}
                       settings={settings}
-                      toggleSection={this.toggleSection}
                       newItems={newItems}
                       itemInfos={itemInfos}
                       ratings={ratings}
