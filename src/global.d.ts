@@ -33,6 +33,8 @@ declare const $featureFlags: {
   vendorEngrams: boolean;
   /** Use the new React inventory screen. */
   reactInventory: boolean;
+  /** Respect the "do not track" header. */
+  respectDNT: boolean;
 };
 
 declare function ga(...params: string[]);
