@@ -50,15 +50,17 @@ module.exports = (env) => {
     },
 
     // Dev server
-    serve: {
-      devMiddleware: {
-        stats: 'errors-only'
-      },
-      https: {
-        key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-        cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
-      }
-    },
+    serve: process.env.WEBPACK_SERVE
+      ? {
+          devMiddleware: {
+            stats: 'errors-only'
+          },
+          https: {
+            key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+            cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
+          }
+        }
+      : {},
 
     // Bail and fail hard on first error
     bail: !isDev,
