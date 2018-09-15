@@ -4,7 +4,9 @@ import { RootState } from './store/reducers';
 import { isPhonePortraitStream, isPhonePortrait } from './mediaQueries';
 
 function setCSSVariable(property: string, value: any) {
-  document.querySelector('html')!.style.setProperty(property, value.toString());
+  if (value) {
+    document.querySelector('html')!.style.setProperty(property, value.toString());
+  }
 }
 
 function observeStore<T>(
@@ -15,10 +17,9 @@ function observeStore<T>(
 
   function handleChange() {
     const nextState = select(store.getState());
-    if (nextState !== currentState) {
-      onChange(currentState, nextState);
-      currentState = nextState;
-    }
+    onChange(currentState, nextState);
+    // tslint:disable-next-line:prefer-object-spread
+    currentState = Object.assign({}, nextState);
   }
 
   const unsubscribe = store.subscribe(handleChange);
@@ -33,6 +34,10 @@ export default function updateCSSVariables() {
   observeStore(
     (state) => state.settings.settings as Settings,
     (currentState, nextState) => {
+      if (!currentState) {
+        return;
+      }
+
       if (currentState.itemSize !== nextState.itemSize) {
         setCSSVariable('--item-size', `${nextState.itemSize}px`);
       }
