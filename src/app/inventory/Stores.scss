@@ -27,6 +27,10 @@
       top: 79px;
     }
   }
+
+  .section {
+    filter: var(--color-filter);
+  }
 }
 
 .store-row {
@@ -85,6 +89,7 @@
   z-index: 10;
   padding: 8px 0 4px 24px;
   background-color: #434444;
+  filter: var(--color-filter);
 
   @supports (position: sticky) {
     position: sticky;

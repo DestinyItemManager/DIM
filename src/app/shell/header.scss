@@ -34,6 +34,7 @@
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   padding-top: env(safe-area-inset-top);
+  filter: var(--color-filter);
 
   #user {
     color: white;

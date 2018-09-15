@@ -84,6 +84,7 @@ span:focus {
   // non-inventory page settings
   max-width: 900px;
   margin: 0 auto;
+  filter: var(--color-filter);
 }
 
 .currency img {
@@ -123,7 +124,6 @@ body {
   color: white;
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
-  filter: var(--color-filter);
   // Disable drag and drop so we can use our polyfill
   -webkit-user-drag: none;
 }
