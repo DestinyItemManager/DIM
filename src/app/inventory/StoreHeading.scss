@@ -1,9 +1,5 @@
 @import '../../scss/variables.scss';
 
-dim-store-heading {
-  display: block;
-}
-
 .character {
   flex: 1;
   width: 100%;
@@ -16,7 +12,6 @@ dim-store-heading {
   max-width: 230px;
   cursor: pointer;
 
-  store-pager &,
   .phone-portrait & {
     margin: 0 auto;
   }
@@ -151,7 +146,6 @@ dim-store-heading {
   opacity: 0.8;
   max-width: 230px;
 
-  store-pager &,
   .phone-portrait & {
     margin-left: auto;
     margin-right: auto;

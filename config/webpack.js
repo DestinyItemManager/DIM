@@ -312,8 +312,6 @@ module.exports = (env) => {
         '$featureFlags.sentry': JSON.stringify(env === 'beta'),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(false),
-        // React inventory implementation
-        '$featureFlags.reactInventory': JSON.stringify(true),
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
         // Forsaken Item Tiles
