@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DimStore, DimVault } from './store-types';
-import { sortStores } from '../shell/dimAngularFilters.filter';
-import { Settings, itemTags } from '../settings/settings';
+import { Settings } from '../settings/settings';
 import { InventoryBuckets } from './inventory-buckets';
 import { t } from 'i18next';
 import './Stores.scss';
@@ -13,16 +12,8 @@ import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
-import { InventoryState } from './reducer';
-import { ReviewsState } from '../item-review/reducer';
-import { DimItem } from './item-types';
-import { createSelector } from 'reselect';
-import { buildSearchConfig, searchFilters } from '../search/search-filters';
-import { D1Categories } from '../destiny1/d1-buckets.service';
-import { D2Categories } from '../destiny2/d2-buckets.service';
-import { D1StoresService } from './d1-stores.service';
-import { D2StoresService } from './d2-stores.service';
 import Hammer from 'react-hammerjs';
+import { sortedStoresSelector } from './reducer';
 
 interface Props {
   stores: DimStore[];
@@ -30,74 +21,22 @@ interface Props {
   // TODO: bind just the settings we care about
   settings: Settings;
   buckets: InventoryBuckets;
-  newItems: Set<string>;
-  itemInfos: InventoryState['itemInfos'];
-  ratings: ReviewsState['ratings'];
   collapsedSections: Settings['collapsedSections'];
-  searchFilter(item: DimItem): boolean;
 }
 
 interface State {
   selectedStoreId?: string;
 }
 
-const EMPTY_SET = new Set<string>();
-
-// TODO: move selectors elsewhere?
-const querySelector = (state: RootState) => state.shell.searchQuery;
-const destinyVersionSelector = (state: RootState) =>
-  (state.accounts.currentAccount &&
-    state.accounts.accounts[state.accounts.currentAccount].destinyVersion) ||
-  2;
-
-/**
- * A selector for the search config for a particular destiny version.
- */
-const searchConfigSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
-  // From search filter component
-  const searchConfig = buildSearchConfig(
-    destinyVersion,
-    itemTags,
-    destinyVersion === 1 ? D1Categories : D2Categories
-  );
-  return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
-});
-
-/**
- * A selector for a predicate function for searching items, given the current search query.
- */
-// TODO: this also needs to depend on:
-// * settings
-// * loadouts
-// * current character
-// * all items (for dupes)
-// * itemInfo
-// * ratings
-// * newItems
-// * and maybe some other stuff?
-const searchFilterSelector = createSelector(querySelector, searchConfigSelector, (query, filters) =>
-  filters.filterFunction(query)
-);
-
-const storesSelector = (state: RootState) => state.inventory.stores;
-const characterOrderSelector = (state: RootState) =>
-  (state.settings.settings as Settings).characterOrder;
-const sortedStoresSelector = createSelector(storesSelector, characterOrderSelector, sortStores);
-
-function mapStateToProps(state: RootState): Partial<Props> {
+function mapStateToProps(state: RootState): Props {
   const settings = state.settings.settings as Settings;
   return {
     stores: sortedStoresSelector(state),
-    buckets: state.inventory.buckets,
-    // If "show new items" is off, don't pay the cost of propagating new item updates
-    newItems: settings.showNewItems ? state.inventory.newItems : EMPTY_SET,
-    itemInfos: state.inventory.itemInfos,
-    ratings: state.reviews.ratings,
+    buckets: state.inventory.buckets!,
     isPhonePortrait: state.shell.isPhonePortrait,
     settings,
     // Pulling this out lets us do ref-equality
-    collapsedSections: settings.collapsedSections,
-    searchFilter: searchFilterSelector(state)
+    collapsedSections: settings.collapsedSections
   };
 }
 
@@ -157,7 +96,7 @@ class Stores extends React.Component<Props, State> {
           <div className="detached" loadout-id={selectedStore.id} />
 
           <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
-            {this.renderStores([selectedStore], vault, currentStore)}
+            {this.renderStores([selectedStore], vault)}
           </Hammer>
         </div>
       );
@@ -172,7 +111,7 @@ class Stores extends React.Component<Props, State> {
             </div>
           ))}
         </ScrollClassDiv>
-        {this.renderStores(stores, vault, currentStore)}
+        {this.renderStores(stores, vault)}
       </div>
     );
   }
@@ -211,16 +150,8 @@ class Stores extends React.Component<Props, State> {
     settings.save();
   };
 
-  private renderStores(stores: DimStore[], vault: DimVault, currentStore: DimStore) {
-    const {
-      settings,
-      buckets,
-      newItems,
-      itemInfos,
-      ratings,
-      searchFilter,
-      collapsedSections
-    } = this.props;
+  private renderStores(stores: DimStore[], vault: DimVault) {
+    const { buckets, collapsedSections } = this.props;
 
     return (
       <div>
@@ -249,13 +180,7 @@ class Stores extends React.Component<Props, State> {
                       stores={stores}
                       collapsedSections={collapsedSections}
                       vault={vault}
-                      currentStore={currentStore}
-                      settings={settings}
                       toggleSection={this.toggleSection}
-                      newItems={newItems}
-                      itemInfos={itemInfos}
-                      ratings={ratings}
-                      searchFilter={searchFilter}
                     />
                   ))}
               </div>
@@ -279,4 +204,4 @@ function categoryHasItems(
   return stores.some((s) => bucketIds.some((bucketId) => s.buckets[bucketId].length > 0));
 }
 
-export default connect(mapStateToProps)(Stores);
+export default connect<Props>(mapStateToProps)(Stores);

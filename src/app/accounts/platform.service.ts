@@ -14,6 +14,7 @@ import { SyncService } from '../storage/sync.service';
 import { getBungieAccounts } from './bungie-account.service';
 import * as actions from './actions';
 import store from '../store/store';
+import { loadingTracker } from '../ngimport-more';
 
 let _platforms: DestinyAccount[] = [];
 let _active: DestinyAccount | null = null;
@@ -37,7 +38,7 @@ export function getPlatforms(): IPromise<DestinyAccount[]> {
   }
 
   // TODO: wire this up with observables?
-  return getBungieAccounts()
+  const promise = getBungieAccounts()
     .then((bungieAccounts) => {
       if (!bungieAccounts.length) {
         // We're not logged in, don't bother
@@ -56,6 +57,9 @@ export function getPlatforms(): IPromise<DestinyAccount[]> {
     })
     .then(setActivePlatform)
     .then(() => _platforms);
+
+  loadingTracker.addPromise(promise);
+  return promise;
 }
 
 export function getActivePlatform(): DestinyAccount | null {

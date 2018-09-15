@@ -236,8 +236,10 @@ function ItemService(): ItemServiceType {
     }
 
     if (equip) {
-      target.buckets[item.bucket.id].forEach((i) => {
+      target.buckets[item.bucket.id] = target.buckets[item.bucket.id].map((i) => {
+        // TODO: this state needs to be moved out
         i.equipped = i.index === item.index;
+        return i;
       });
     }
 
