@@ -12,6 +12,7 @@ import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 /**
  * A single collections kiosk.
  */
+// TODO: no longer used
 export default function Kiosk({
   defs,
   vendorHash,

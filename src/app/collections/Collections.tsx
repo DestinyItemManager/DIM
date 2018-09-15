@@ -9,7 +9,6 @@ import './collections.scss';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { DimStore } from '../inventory/store-types';
-import Kiosk from './Kiosk';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -89,8 +88,7 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
   }
 
   render() {
-    const { defs, profileResponse, trackerService, ownedItemHashes } = this.state;
-    const { account } = this.props;
+    const { defs, profileResponse, trackerService } = this.state;
 
     if (!profileResponse || !defs) {
       return (
@@ -101,14 +99,6 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     }
 
     // TODO: a lot of this processing should happen at setState, not render?
-
-    // Note that today, there is only one kiosk vendor
-    const kioskVendors = new Set(Object.keys(profileResponse.profileKiosks.data.kioskItems));
-    _.each(profileResponse.characterKiosks.data, (kiosk) => {
-      _.each(kiosk.kioskItems, (_, kioskHash) => {
-        kioskVendors.add(kioskHash);
-      });
-    });
 
     const plugSetHashes = new Set(Object.keys(profileResponse.profilePlugSets.data.plugs));
     _.each(profileResponse.characterPlugSets.data, (plugSet) => {
@@ -124,19 +114,6 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
         </ErrorBoundary>
         <ErrorBoundary name="Catalysts">
           <Catalysts defs={defs} profileResponse={profileResponse} />
-        </ErrorBoundary>
-        <ErrorBoundary name="Kiosks">
-          {Array.from(kioskVendors).map((vendorHash) => (
-            <Kiosk
-              key={vendorHash}
-              defs={defs}
-              vendorHash={Number(vendorHash)}
-              items={itemsForKiosk(profileResponse, Number(vendorHash))}
-              trackerService={trackerService}
-              ownedItemHashes={ownedItemHashes}
-              account={account}
-            />
-          ))}
         </ErrorBoundary>
         <ErrorBoundary name="PlugSets">
           {Array.from(plugSetHashes).map((plugSetHash) => (
@@ -170,14 +147,6 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
       </div>
     );
   }
-}
-
-function itemsForKiosk(profileResponse: DestinyProfileResponse, vendorHash: number) {
-  return profileResponse.profileKiosks.data.kioskItems[vendorHash].concat(
-    _.flatten(
-      Object.values(profileResponse.characterKiosks.data).map((d) => d.kioskItems[vendorHash])
-    )
-  );
 }
 
 function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
