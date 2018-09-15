@@ -7,8 +7,6 @@ import {
   D1ItemReviewResponse
 } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
-import store from '../store/store';
-import { updateRatings } from '../item-review/actions';
 
 /**
  * Cache of review data.
@@ -108,8 +106,6 @@ export class ReviewDataCache {
 
       this._itemStores.push(cachedItem);
     }
-
-    store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
   }
 
   /**
