@@ -4,7 +4,6 @@ import Header from './shell/Header';
 import classNames from 'classnames';
 import { angular2react } from 'angular2react';
 import { ToasterContainerComponent } from './shell/toaster-container.component';
-import { $rootScope } from 'ngimport';
 import { settings, Settings } from './settings/settings';
 import { lazyInjector } from '../lazyInjector';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
@@ -58,7 +57,7 @@ class App extends React.Component<Props> {
           'new-item-animated': this.props.showNewAnimation
         })}
       >
-        <Header $rootScope={$rootScope} />
+        <Header />
         <UIView />
         <ToasterContainer />
         <ActivityTracker />
