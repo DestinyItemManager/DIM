@@ -115,8 +115,8 @@
       "Xbox": "XBox Only"
     },
     "Pros": "Pros",
-    "ReallyReport": "Report",
     "RatingsOptions": "Ratings Options",
+    "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",

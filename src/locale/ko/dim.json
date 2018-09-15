@@ -37,9 +37,9 @@
     "Difficulties": "현재 Bungie API에 문제가 있습니다.",
     "ErrorTitle": "Bungie.net 오류",
     "ItemUniqueness": "아이템 희귀도",
-    "ItemUniquenessExplanation": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템 혹은 장비를 소유하고 있으며 이 아이템 혹은 장비는 캐릭터당 하나만 소유 할 수 있습니다.",
-    "ItemUniquenessExplanation_female": "당신은 '{{name}}' {{type}}을 당신의 {{character}}에게 옮기려 하셨지만, 이미 그 캐릭터는 그 아이템을 가지고 있고, 그 아이템은 하나만 허용되어 있습니다.",
-    "ItemUniquenessExplanation_male": "당신의 {{character}}에게 '{{name}}'{{type}}을(를) 옮기려 하였지만, 이미 그 캐릭터는 그 아이템을 가지고 있고, 그 아이템은 단 하나만 허용되어 있습니다.",
+    "ItemUniquenessExplanation": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
+    "ItemUniquenessExplanation_female": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
+    "ItemUniquenessExplanation_male": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "Maintenance": "Bungie.net 서버가 점검 중입니다.",
     "NetworkError": "통신 오류 - {{status}} {{statusText}}",
     "NoAccount": "{{platform}} 에서 데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨습니까?",
@@ -51,8 +51,7 @@
     "Throttled": "번지 API 제한이 초과되었습니다. 잠시 후 다시 시도해 주십시오.",
     "Twitter": "정보를 업데이트 하는 중:",
     "UnknownError": "Bungie.net 메시지: {{message}}",
-    "VendorNotFound": "상인의 정보가 없습니다.",
-    "WarmindLoginNeeded": "데스티니 API내의 버그로 당신의 소지품을 불러올 수 없습니다. 해결하려면 각각의 캐릭터를 불러오고, 감정표현을 설정 하십시오."
+    "VendorNotFound": "상인의 정보가 없습니다."
   },
   "Compare": {
     "All": "{{type}} 비교 ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "삭제",
     "Edit": "수정",
     "ForGameMode": "게임 모드",
+    "ForPlatform": "플랫폼",
     "Help": "평가 작성 (선택 사항)",
     "HelpCons": "이 무기의 단점을 설명하십시오. (선택 사항)",
     "HelpPros": "이 무기의 장점을 설명하십시오. (선택 사항)",
@@ -115,6 +115,7 @@
       "Xbox": "엑스박스 한정"
     },
     "Pros": "장점",
+    "RatingsOptions": "평가 설정",
     "ReallyReport": "신고",
     "ServiceCallError": "데스티니 트래커 서비스 불러오기 실패",
     "ServiceSubmitError": "데스티니 트래커 서비스에 전송 실패",
@@ -128,8 +129,8 @@
     "Title": "문제가 발생했습니다."
   },
   "Faction": {
-    "EngramsAvailable": "한 개의 엔그램 보유 중",
-    "EngramsAvailable_plural": "{{count}} 개의 엔그램들 보유 중"
+    "EngramsAvailable": "엔그램 1 개 보유 중",
+    "EngramsAvailable_plural": "엔그램 {{count}} 개 보유 중"
   },
   "FarmingMode": {
     "Configuration": "설정",
@@ -260,16 +261,13 @@
     "WeaponType": "무기 유형에 따른 아이템 표시",
     "Year": "데스티니 1의 어떤 해에서 나온 아이템인지 표시"
   },
-  "Forsaken": {
-    "Progress": "주의: 포세이큰 확장팩이 출시하고 시간이 좀 지날 때 까지는 진척도 데이터가 완벽하지 않거나 틀릴 수 있습니다.",
-    "Vendors": "포세이큰 확장팩 출시 후 일정 시간이 지날 때까지 상인 이용이 불가능합니다."
-  },
   "Header": {
     "About": "정보",
     "Back": "돌아가기",
     "BulkTag": "아이템 대량으로 태그하기",
     "BungieNetAlert": "Bungie 알림",
     "FilterHelp": "아이템/특성이나 {{example}} 검색하기",
+    "FilterHelpBrief": "아이템 검색",
     "Filters": "필터",
     "Inventory": "소지품",
     "Refresh": "데스티니 데이터 새로고침",
@@ -501,6 +499,7 @@
     "OverviewTab": "개요",
     "ReadLore": "Ishtar Collective에서 지식 읽기",
     "ReviewsTab": "평가",
+    "Rewards": "보상:",
     "Split": "분할",
     "Store": "보관",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -527,11 +526,10 @@
     "Daily": "일간",
     "ExpiresIn": "{{endTime}} 에 끝남",
     "Factions": "세력",
-    "Milestones": "이정표",
+    "Milestones": "이정표 & 도전",
     "ProfileMilestones": "계정 이정표",
     "ProfileQuests": "계정 퀘스트",
     "Progress": "진척도",
-    "Quests": "퀘스트와 목표",
     "RewardEarned": "제공되었지만 받지는 못한 보상",
     "RewardNotEarned": "보상을 받지 않음",
     "RewardRedeemed": "보상을 받음",
@@ -543,7 +541,7 @@
   },
   "Settings": {
     "AllowIdPostToDtr": "자세한 무기 리뷰를 보여주고 무기 평가 허용하기",
-    "AllowIdPostToDtrLine2": "이것은 당신의 계정 이름과 평가한 아이템을 데스티니 트래커와 공유할 것입니다.",
+    "AllowIdPostToDtrLine2": "당신의 계정 이름과 평가한 아이템을 데스티니 트래커와 공유할 것입니다.",
     "AlwaysShowDetails": "항상 넓어진 아이템 팝업으로 표시",
     "CharacterOrder": "캐릭터 정렬 방법",
     "CharacterOrderFixed": "캐릭터 나이",
@@ -581,7 +579,7 @@
     "ShowOverlay": "새로운 아이템에 빛나는 오버레이 표시",
     "ShowReviews": "무기에 대한 커뮤니티 평가 표시",
     "SizeItem": "아이템 크기",
-    "SortByBasePower": "기본 파워(데스티니 2만)",
+    "SortByBasePower": "기본 전투력 (데스티니2 전용)",
     "SortByClassType": "필요한 직업",
     "SortByPrimary": "주 능력치 (공격/방어)",
     "SortByRarity": "희귀도",
@@ -598,7 +596,7 @@
     "Discipline": "규율",
     "Intellect": "지능",
     "Level": "레벨",
-    "MaxBasePower": "최대 파워",
+    "MaxBasePower": "최대 전투력",
     "NoBonus": "보너스 없음",
     "NotApplicable": "해당 없음",
     "OfMaxRoll": "최대로 나올 수 있는 {{range}}",

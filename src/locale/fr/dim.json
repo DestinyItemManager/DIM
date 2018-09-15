@@ -51,8 +51,7 @@
     "Throttled": "La limite de connexions à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
     "Twitter": "Tenez-vous informé sur:",
     "UnknownError": "Message de Bungie.net: {{message}}",
-    "VendorNotFound": "Les données du vendeur sont indisponible.",
-    "WarmindLoginNeeded": "Nous ne pouvons pas charger votre inventaire à cause d'un bug dans l'API Destiny. Pour régler cela, connectez vous sur chacun de vos personnages et équipez vos emplacements d'interaction."
+    "VendorNotFound": "Les données du vendeur sont indisponible."
   },
   "Compare": {
     "All": "Comparaison de {{type}} ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "Supprimer",
     "Edit": "Éditer",
     "ForGameMode": "Pour le mode de jeu",
+    "ForPlatform": "Pour la/les plateforme(s)",
     "Help": "Écrire une évaluation (optionnel)",
     "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
     "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
@@ -115,6 +115,7 @@
       "Xbox": "XBox Uniquement"
     },
     "Pros": "Avantages",
+    "RatingsOptions": "Options d'évaluation",
     "ReallyReport": "Signaler",
     "ServiceCallError": "Appel au service de Destiny tracker échoué.",
     "ServiceSubmitError": "Envoie au service de Destiny tracker échoué.",
@@ -218,7 +219,7 @@
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerLevel": "Affiche les objets en fonction de leur niveau de puissance (Attaque pour les armes; Défense pour les armures).",
     "Quality": "Affiche les objets selon leur pourcentage de statistiques total. '{{percentage}}' est un alias pour '{{quality}}'.",
-    "RandomRoll": "Shows items that drop with random rolls.",
+    "RandomRoll": "Afficher les objets qui s'obtiennent avec des compétences aléatoires.",
     "RarityTier": "Affiche les objets selon leur rareté.",
     "Rated": "Affiche toutes les armes qui ont une note de Destiny Tracker.",
     "Rating": "Affiche toutes les armures qui ont une note de Destiny Tracker.",
@@ -260,16 +261,13 @@
     "WeaponType": "Affiche les armes selon leur type d'arme.",
     "Year": "Affiche les objets selon l'année à laquelle ils sont apparus."
   },
-  "Forsaken": {
-    "Progress": "Note: Les données de progression peuvent être incomplètes ou incorrectes pendant quelque temps après la sortie de Renégats.",
-    "Vendors": "Les marchands vont être indisponible pendant quelque temps après la sortie de Renégats."
-  },
   "Header": {
     "About": "À propos",
     "Back": "Retour",
     "BulkTag": "Tag de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
+    "FilterHelpBrief": "Éléments de recherche",
     "Filters": "Filtres",
     "Inventory": "Inventaire",
     "Refresh": "Rafraîchir les données Destiny",
@@ -501,6 +499,7 @@
     "OverviewTab": "Vue d'ensemble",
     "ReadLore": "Lire le lore de Ishtar Collective",
     "ReviewsTab": "Évaluations",
+    "Rewards": "Récompenses:",
     "Split": "Couper",
     "Store": "Dépôt",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -527,11 +526,10 @@
     "Daily": "Quotidient",
     "ExpiresIn": "expire à {{endTime}}",
     "Factions": "Factions",
-    "Milestones": "Jalons",
+    "Milestones": "Jalons & Défis",
     "ProfileMilestones": "Jalons de compte",
     "ProfileQuests": "Quêtes de compte",
     "Progress": "Progression",
-    "Quests": "Activités & Quêtes",
     "RewardEarned": "Récompense obtenue mais non récupérée",
     "RewardNotEarned": "Récompense non obtenue",
     "RewardRedeemed": "Récompense récupérée",
