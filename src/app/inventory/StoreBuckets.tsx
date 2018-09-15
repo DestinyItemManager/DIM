@@ -9,7 +9,7 @@ import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmast
 import { queueAction } from './action-queue';
 import { dimItemService } from './dimItemService.factory';
 import { toaster } from '../ngimport-more';
-import { $rootScope } from 'ngimport';
+import { $q } from 'ngimport';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -96,7 +96,7 @@ function PullFromPostmaster({ store }: { store: D2Store }) {
 
   // We need the Angular apply to drive the toaster, until Angular is gone
   function onClick() {
-    queueAction(() => $rootScope.$apply(() => pullFromPostmaster(store, dimItemService, toaster)));
+    queueAction(() => $q.when(pullFromPostmaster(store, dimItemService, toaster)));
   }
 
   return (
