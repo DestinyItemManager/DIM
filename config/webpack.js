@@ -309,12 +309,10 @@ module.exports = (env) => {
         '$featureFlags.debugSW': JSON.stringify(env !== 'release'),
         // Send exception reports to Sentry.io on beta only
         '$featureFlags.sentry': JSON.stringify(env === 'beta'),
-        // D2 Vendors
-        '$featureFlags.vendors': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(false),
-        // Enable vendorengrams.xyz integration
-        '$featureFlags.reactInventory': JSON.stringify(env !== 'release'),
+        // React inventory implementation
+        '$featureFlags.reactInventory': JSON.stringify(true),
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release')
       })

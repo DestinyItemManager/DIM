@@ -61,7 +61,7 @@ export function Faction(props: FactionProps) {
           {factionDef.displayProperties.name}
         </div>
         <div className="faction-rewards">
-          {factionDef.rewardVendorHash && $featureFlags.vendors ? (
+          {factionDef.rewardVendorHash ? (
             <UISref
               to="destiny2.vendor"
               params={{ id: factionDef.rewardVendorHash, characterId: character.characterId }}

@@ -57,21 +57,16 @@ const destiny2Links = [
   {
     state: 'destiny2.progress',
     text: 'Progress.Progress'
+  },
+  {
+    state: 'destiny2.vendors',
+    text: 'Vendors.Vendors'
+  },
+  {
+    state: 'destiny2.collections',
+    text: 'Vendors.Collections'
   }
 ];
-
-if ($featureFlags.vendors) {
-  destiny2Links.push(
-    {
-      state: 'destiny2.vendors',
-      text: 'Vendors.Vendors'
-    },
-    {
-      state: 'destiny2.collections',
-      text: 'Vendors.Collections'
-    }
-  );
-}
 
 const shopLink = 'https://shop.destinyitemmanager.com/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
