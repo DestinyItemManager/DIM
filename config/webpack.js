@@ -2,6 +2,7 @@ const webpack = require('webpack');
 
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -25,6 +26,12 @@ const packageJson = require('../package.json');
 module.exports = (env) => {
   if (process.env.WEBPACK_SERVE) {
     env = 'dev';
+    if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pm')) {
+      console.log('Generating certificate');
+      execSync(
+        "openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'"
+      );
+    }
   }
   const isDev = env === 'dev';
   let version = packageJson.version.toString();
