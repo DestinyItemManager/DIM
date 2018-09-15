@@ -7,7 +7,6 @@ import { ToasterContainerComponent } from './shell/toaster-container.component';
 import { settings, Settings } from './settings/settings';
 import { lazyInjector } from '../lazyInjector';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
-import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
 import { testFeatureCompatibility } from './compatibility';
@@ -127,4 +126,4 @@ function ColorA11y() {
   return null;
 }
 
-export default hot(module)(connect<Props>(mapStateToProps)(App));
+export default connect<Props>(mapStateToProps)(App);
