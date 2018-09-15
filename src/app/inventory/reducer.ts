@@ -6,6 +6,17 @@ import { InventoryBuckets } from './inventory-buckets';
 import { DimItemInfo } from './dim-item-info';
 import { setCurrentAccount } from '../accounts/actions';
 import { AccountsAction } from '../accounts/reducer';
+import { RootState } from '../store/reducers';
+import { createSelector } from 'reselect';
+import { characterOrderSelector } from '../settings/reducer';
+import { sortStores } from '../shell/dimAngularFilters.filter';
+
+const storesSelector = (state: RootState) => state.inventory.stores;
+export const sortedStoresSelector = createSelector(
+  storesSelector,
+  characterOrderSelector,
+  sortStores
+);
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {

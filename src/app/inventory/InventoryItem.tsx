@@ -18,6 +18,7 @@ interface Props {
   tag?: TagValue;
   /** Rating value */
   rating?: number;
+  hideRating?: boolean;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   onClick?(e);
@@ -29,19 +30,22 @@ const tagClasses = tagIconFilter();
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, tag, rating, searchHidden, onClick, onDoubleClick } = this.props;
+    const {
+      item,
+      isNew,
+      tag,
+      rating,
+      searchHidden,
+      hideRating,
+      onClick,
+      onDoubleClick
+    } = this.props;
 
     const itemImageStyles = {
       complete: item.complete,
       diamond: item.isDestiny2() && item.bucket.hash === 3284755031,
       masterwork: item.masterwork
     };
-
-    const showRating =
-      item.dtrRating &&
-      item.dtrRating.overallScore &&
-      (item.dtrRating.ratingCount > (item.destinyVersion === 2 ? 0 : 1) ||
-        item.dtrRating.highlightedRatingCount > 0);
 
     const badgeInfo = getBadgeInfo(item);
 
@@ -70,8 +74,8 @@ export default class InventoryItem extends React.Component<Props> {
               {item.quality.min}%
             </div>
           )}
-        {rating &&
-          showRating && (
+        {rating !== undefined &&
+          !hideRating && (
             <div className="item-stat item-review">
               {rating}
               <i className="fa fa-star" style={dtrRatingColor(rating)} />

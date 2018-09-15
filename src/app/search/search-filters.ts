@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
-import { TagInfo, settings } from '../settings/settings';
+import { TagInfo, settings, itemTags } from '../settings/settings';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { sortStores } from '../shell/dimAngularFilters.filter';
@@ -10,6 +10,44 @@ import { $rootScope } from 'ngimport';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import { toaster } from '../ngimport-more';
+import { createSelector } from 'reselect';
+import { destinyVersionSelector } from '../accounts/reducer';
+import { D1Categories } from '../destiny1/d1-buckets.service';
+import { D2Categories } from '../destiny2/d2-buckets.service';
+import { D1StoresService } from '../inventory/d1-stores.service';
+import { D2StoresService } from '../inventory/d2-stores.service';
+import { querySelector } from '../shell/reducer';
+
+/**
+ * A selector for the search config for a particular destiny version.
+ */
+const searchConfigSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
+  // From search filter component
+  const searchConfig = buildSearchConfig(
+    destinyVersion,
+    itemTags,
+    destinyVersion === 1 ? D1Categories : D2Categories
+  );
+  return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
+});
+
+/**
+ * A selector for a predicate function for searching items, given the current search query.
+ */
+// TODO: this also needs to depend on:
+// * settings
+// * loadouts
+// * current character
+// * all items (for dupes)
+// * itemInfo
+// * ratings
+// * newItems
+// * and maybe some other stuff?
+export const searchFilterSelector = createSelector(
+  querySelector,
+  searchConfigSelector,
+  (query, filters) => filters.filterFunction(query)
+);
 
 interface SearchConfig {
   destinyVersion: 1 | 2;

@@ -137,6 +137,7 @@ function makeD2StoresService(): D2StoreServiceType {
     return $q
       .all([getDefinitions(), getCharacters(account)])
       .then(([defs, profileInfo]: [D2ManifestDefinitions, DestinyProfileResponse]) => {
+        // TODO: create a new store
         _stores.forEach((dStore) => {
           if (!dStore.isVault) {
             const bStore = profileInfo.characters.data[dStore.id];

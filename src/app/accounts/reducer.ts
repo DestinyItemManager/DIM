@@ -2,6 +2,12 @@ import { Reducer } from 'redux';
 import { DestinyAccount } from './destiny-account.service';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
+import { RootState } from '../store/reducers';
+
+export const destinyVersionSelector = (state: RootState) =>
+  (state.accounts.currentAccount &&
+    state.accounts.accounts[state.accounts.currentAccount].destinyVersion) ||
+  2;
 
 export interface AccountsState {
   readonly accounts: ReadonlyArray<DestinyAccount>;

@@ -14,13 +14,14 @@ interface Props {
   isNew: boolean;
   tag?: TagValue;
   rating?: number;
+  hideRating?: boolean;
   searchHidden: boolean;
 }
 
 /**
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
-export default class StoreInventoryItem extends React.Component<Props> {
+export default class StoreInventoryItem extends React.PureComponent<Props> {
   private doubleClicked = queuedAction((e) => {
     const item = this.props.item;
     if (!dimLoadoutService.dialogOpen && !CompareService.dialogOpen) {
@@ -35,7 +36,7 @@ export default class StoreInventoryItem extends React.Component<Props> {
   });
 
   render() {
-    const { item, isNew, tag, rating, searchHidden } = this.props;
+    const { item, isNew, tag, rating, searchHidden, hideRating } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
@@ -46,6 +47,7 @@ export default class StoreInventoryItem extends React.Component<Props> {
             isNew={isNew}
             tag={tag}
             rating={rating}
+            hideRating={hideRating}
             searchHidden={searchHidden}
           />
         </ItemPopupTrigger>
