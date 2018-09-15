@@ -307,7 +307,9 @@ module.exports = (env) => {
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Enable vendorengrams.xyz integration
-        '$featureFlags.reactInventory': JSON.stringify(env !== 'release')
+        '$featureFlags.reactInventory': JSON.stringify(env !== 'release'),
+        // Respect the "do not track" header
+        '$featureFlags.respectDNT': JSON.stringify(env !== 'release')
       })
 
       // Enable if you want to debug the size of the chunks

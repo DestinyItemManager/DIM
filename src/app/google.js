@@ -1,7 +1,7 @@
 // Respect "do not track"
 // https://www.paulfurley.com/google-analytics-do-not-track/
 let dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-if (dnt != '1' && dnt != 'yes') {
+if (!$featureFlags.respectDNT || (dnt != '1' && dnt != 'yes')) {
   (function(i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r;
     (i[r] =
