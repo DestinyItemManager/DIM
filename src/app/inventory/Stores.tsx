@@ -140,16 +140,6 @@ class Stores extends React.Component<Props, State> {
     this.setState({ selectedStoreId: storeId });
   };
 
-  private toggleSection = (id: string) => {
-    const settings = this.props.settings;
-    // TODO: make an action!
-    settings.collapsedSections = {
-      ...settings.collapsedSections,
-      [id]: !settings.collapsedSections[id]
-    };
-    settings.save();
-  };
-
   private renderStores(stores: DimStore[], vault: DimVault) {
     const { buckets, collapsedSections } = this.props;
 
@@ -174,14 +164,7 @@ class Stores extends React.Component<Props, State> {
                 </CollapsibleTitle>
                 {!collapsedSections[category] &&
                   buckets.byCategory[category].map((bucket) => (
-                    <StoreBuckets
-                      key={bucket.id}
-                      bucket={bucket}
-                      stores={stores}
-                      collapsedSections={collapsedSections}
-                      vault={vault}
-                      toggleSection={this.toggleSection}
-                    />
+                    <StoreBuckets key={bucket.id} bucket={bucket} stores={stores} vault={vault} />
                   ))}
               </div>
             )

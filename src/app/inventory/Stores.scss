@@ -33,16 +33,11 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  padding-left: 28px;
 
   // Bit of a hack to make things line up
   &.items:last-child .store-cell {
     padding-bottom: 14px;
-  }
-
-  i.collapse {
-    outline: none;
-    padding: 8px 7px 8px 10px;
-    align-self: flex-start;
   }
 }
 
@@ -88,7 +83,7 @@
   left: 0;
   width: auto;
   z-index: 10;
-  padding: 8px 0 4px 8px;
+  padding: 8px 0 4px 24px;
   background-color: #434444;
 
   @supports (position: sticky) {
@@ -109,6 +104,8 @@
   }
 
   .phone-portrait & {
+    padding-left: 0;
+
     .store-cell {
       margin: 0;
       width: 100%;
