@@ -153,15 +153,7 @@ class Stores extends React.Component<Props, State> {
                   title={t(`Bucket.${category}`)}
                   sectionId={category}
                   collapsedSections={collapsedSections}
-                >
-                  {stores[0].isDestiny1() &&
-                    buckets.byCategory[category][0].vaultBucket && (
-                      <span className="bucket-count">
-                        {vault.vaultCounts[buckets.byCategory[category][0].vaultBucket!.id].count}/
-                        {buckets.byCategory[category][0].vaultBucket!.capacity}
-                      </span>
-                    )}
-                </CollapsibleTitle>
+                />
                 {!collapsedSections[category] &&
                   buckets.byCategory[category].map((bucket) => (
                     <StoreBuckets key={bucket.id} bucket={bucket} stores={stores} vault={vault} />
