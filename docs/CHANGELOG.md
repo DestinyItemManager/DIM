@@ -4,6 +4,12 @@
 * Giving more weight to ratings with reviews than ratings alone. Also, hiding lone ratings.
 * Custom loadouts now display below our special auto loadouts.
 * Added inverse string search for items and perks (prefix with minus sign)
+* Postmaster is now on top of the screen (but disappears when empty).
+* Individual inventory buckets are no longer collapsible, but disappear when empty.
+* D1 vault counts are removed from their section headers.
+* Fixed an issue where the display would be messed up when colorblind mode is on.
+* Restored the keyboard shortcut cheat sheet (press ?).
+* The max light loadout prefers legendaries over rares.
 
 # 4.69.1 (2018-09-10)
 
