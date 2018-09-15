@@ -4,14 +4,12 @@ import Header from './shell/Header';
 import classNames from 'classnames';
 import { angular2react } from 'angular2react';
 import { ToasterContainerComponent } from './shell/toaster-container.component';
-import { $rootScope } from 'ngimport';
-import { settings } from './settings/settings';
+import { settings, Settings } from './settings/settings';
 import { lazyInjector } from '../lazyInjector';
-import { Subscription } from 'rxjs/Subscription';
-import { isPhonePortrait, isPhonePortraitStream } from './mediaQueries';
-import { showInfoPopup } from './shell/info-popup';
-import { t } from 'i18next';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
+import { connect } from 'react-redux';
+import { RootState } from './store/reducers';
+import { testFeatureCompatibility } from './compatibility';
 
 const ToasterContainer = angular2react(
   'dimToasterContainer',
@@ -19,104 +17,31 @@ const ToasterContainer = angular2react(
   lazyInjector.$injector as angular.auto.IInjectorService
 );
 
-function setCSSVariable(property: string, value: any) {
-  document.querySelector('html')!.style.setProperty(property, value.toString());
+interface Props {
+  language: string;
+  showReviews: boolean;
+  showElements: boolean;
+  itemQuality: boolean;
+  showNewItems: boolean;
+  showNewAnimation: boolean;
 }
 
-export default class App extends React.Component {
-  private settingsSubscription?: Subscription;
-  private isPhonePortraitSubscription?: Subscription;
-  private $scope = $rootScope.$new(true);
+function mapStateToProps(state: RootState): Props {
+  // TODO: this is a bit brute force
+  const settings = state.settings.settings as Settings;
+  return {
+    language: settings.language,
+    showReviews: settings.showReviews,
+    showElements: settings.showElements,
+    itemQuality: settings.itemQuality,
+    showNewItems: settings.showNewItems,
+    showNewAnimation: settings.showNewAnimation
+  };
+}
 
+class App extends React.Component<Props> {
   componentDidMount() {
-    this.settingsSubscription = settings.$updates.subscribe(() => {
-      // TODO: Move away from this gross way of forcing updates
-      this.setState({});
-    });
-
-    // TODO: move away from scope watchers
-    this.$scope.$watch(
-      () => settings.itemSize,
-      (size) => {
-        setCSSVariable('--item-size', `${size}px`);
-      }
-    );
-    this.$scope.$watch(
-      () => settings.charCol,
-      (cols) => {
-        if (!isPhonePortrait()) {
-          setCSSVariable('--character-columns', cols);
-        }
-      }
-    );
-    this.$scope.$watch(
-      () => settings.vaultMaxCol,
-      (cols) => {
-        setCSSVariable('--vault-max-columns', cols);
-      }
-    );
-
-    this.$scope.$watch(
-      () => settings.charColMobile,
-      (cols) => {
-        // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
-        if (isPhonePortrait()) {
-          setCSSVariable('--character-columns', cols);
-        }
-      }
-    );
-    // a subscribe on isPhonePortraitStream is needed when the user on mobile changes from portrait to landscape
-    // or a user on desktop shrinks the browser window below isphoneportrait treshold value
-    this.isPhonePortraitSubscription = isPhonePortraitStream().subscribe((isPhonePortrait) => {
-      setCSSVariable(
-        '--character-columns',
-        isPhonePortrait ? settings.charColMobile : settings.charCol
-      );
-    });
-
-    if ($featureFlags.colorA11y) {
-      this.$scope.$watch(
-        () => settings.colorA11y,
-        (color) => {
-          if (color && color !== '-') {
-            setCSSVariable('--color-filter', `url(#${color.toLowerCase()})`);
-          } else {
-            document.querySelector('html')!.style.removeProperty('--color-filter');
-          }
-        }
-      );
-    }
-
-    try {
-      localStorage.setItem('test', 'true');
-      if (!window.indexedDB) {
-        throw new Error('IndexedDB not available');
-      }
-    } catch (e) {
-      console.log('storage test', e);
-      setTimeout(() => {
-        showInfoPopup(
-          'no-storage',
-          {
-            title: t('Help.NoStorage'),
-            body: t('Help.NoStorageMessage'),
-            type: 'error',
-            hideable: false
-          },
-          0
-        );
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.settingsSubscription) {
-      this.settingsSubscription.unsubscribe();
-    }
-    if (this.isPhonePortraitSubscription) {
-      this.isPhonePortraitSubscription.unsubscribe();
-    }
-    this.$scope.$destroy();
+    testFeatureCompatibility();
   }
 
   render() {
@@ -124,14 +49,14 @@ export default class App extends React.Component {
       <div
         key={`lang-${settings.language}`}
         className={classNames('app', `lang-${settings.language}`, {
-          'show-reviews': $featureFlags.reviewsEnabled && settings.showReviews,
-          'show-elements': settings.showElements,
-          itemQuality: settings.itemQuality,
-          'show-new-items': settings.showNewItems,
-          'new-item-animated': settings.showNewAnimation
+          'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
+          'show-elements': this.props.showElements,
+          itemQuality: this.props.itemQuality,
+          'show-new-items': this.props.showNewItems,
+          'new-item-animated': this.props.showNewAnimation
         })}
       >
-        <Header $rootScope={$rootScope} />
+        <Header />
         <UIView />
         <ToasterContainer />
         <ActivityTracker />
@@ -200,3 +125,5 @@ function ColorA11y() {
   }
   return null;
 }
+
+export default connect<Props>(mapStateToProps)(App);

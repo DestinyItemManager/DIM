@@ -16,7 +16,6 @@ import './header.scss';
 import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
-import { IRootScopeService } from 'angular';
 import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
@@ -84,11 +83,7 @@ interface State {
   vendorEngramDropActive: boolean;
 }
 
-interface Props {
-  $rootScope: IRootScopeService;
-}
-
-export default class Header extends React.PureComponent<Props, State> {
+export default class Header extends React.PureComponent<{}, State> {
   private accountSubscription: Subscription;
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
@@ -123,11 +118,6 @@ export default class Header extends React.PureComponent<Props, State> {
         this.setState({ dropdownOpen: false });
       })
     ];
-
-    // Gonna have to figure out a better solution for this in React
-    this.props.$rootScope.$on('i18nextLanguageChange', () => {
-      this.setState({}); // gross, force re-render
-    });
   }
 
   componentWillUnmount() {
