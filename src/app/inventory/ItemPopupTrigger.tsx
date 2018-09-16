@@ -21,6 +21,13 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private dialogResult: any;
   private ref = React.createRef<HTMLDivElement>();
 
+  componentWillUnmount() {
+    if (this.dialogResult) {
+      this.dialogResult.close();
+      this.dialogResult = null;
+    }
+  }
+
   render() {
     const { children } = this.props;
 
