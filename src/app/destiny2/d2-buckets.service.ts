@@ -7,10 +7,10 @@ import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-bucket
 // TODO: These have to change
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
-  Postmaster: ['LostItems', 'Messages', 'SpecialOrders'],
+  Postmaster: ['LostItems', 'Messages', 'SpecialOrders', 'Engrams'],
   Weapons: ['Class', 'Kinetic', 'Energy', 'Power'],
   Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
-  General: ['Ghost', 'ClanBanners', 'Vehicle', 'Ships', 'Emblems', 'Engrams'],
+  General: ['Ghost', 'ClanBanners', 'Vehicle', 'Ships', 'Emblems'],
   Inventory: ['Consumables', 'Modifications', 'Shaders']
 };
 
