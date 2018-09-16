@@ -10,6 +10,7 @@
 * Fixed an issue where the display would be messed up when colorblind mode is on.
 * Restored the keyboard shortcut cheat sheet (press ?).
 * The max light loadout prefers legendaries over rares.
+* Unclaimed engrams are shown up in the Postmaster section.
 
 # 4.69.1 (2018-09-10)
 
