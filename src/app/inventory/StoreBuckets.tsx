@@ -1,14 +1,9 @@
 import * as React from 'react';
-import { DimStore, DimVault, D2Store } from './store-types';
+import { DimStore, DimVault } from './store-types';
 import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
-import { t } from 'i18next';
-import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
-import { queueAction } from './action-queue';
-import { dimItemService } from './dimItemService.factory';
-import { toaster } from '../ngimport-more';
-import { $q } from 'ngimport';
+import { PullFromPostmaster } from './PullFromPostmaster';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -64,23 +59,4 @@ export function StoreBuckets({
   }
 
   return <div className="store-row items">{content}</div>;
-}
-
-function PullFromPostmaster({ store }: { store: D2Store }) {
-  const numPullablePostmasterItems = pullablePostmasterItems(store).length;
-  if (numPullablePostmasterItems === 0) {
-    return null;
-  }
-
-  // We need the Angular apply to drive the toaster, until Angular is gone
-  function onClick() {
-    queueAction(() => $q.when(pullFromPostmaster(store, dimItemService, toaster)));
-  }
-
-  return (
-    <div className="dim-button bucket-button" onClick={onClick}>
-      <i className="fa fa-envelope" /> <span className="badge">{numPullablePostmasterItems}</span>{' '}
-      {t('Loadouts.PullFromPostmaster')}
-    </div>
-  );
 }
