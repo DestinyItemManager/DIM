@@ -1,5 +1,7 @@
 # Next
 
+# 4.70.0 (2018-09-16)
+
 * Display armor resistance type on item icon and include in search filters.
 * Giving more weight to ratings with reviews than ratings alone. Also, hiding lone ratings.
 * Custom loadouts now display below our special auto loadouts.
