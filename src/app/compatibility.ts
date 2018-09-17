@@ -1,6 +1,6 @@
-import { showInfoPopup } from './shell/info-popup';
 import { t } from 'i18next';
 import { $rootScope } from 'ngimport';
+import { toaster } from './ngimport-more';
 
 /**
  * Test and alert if crucial functionality is missing.
@@ -15,16 +15,11 @@ export function testFeatureCompatibility() {
     console.log('storage test', e);
     setTimeout(() => {
       $rootScope.$apply(() =>
-        showInfoPopup(
-          'no-storage',
-          {
-            title: t('Help.NoStorage'),
-            body: t('Help.NoStorageMessage'),
-            type: 'error',
-            hideable: false
-          },
-          0
-        )
+        toaster.pop({
+          type: 'error',
+          title: t('Help.NoStorage'),
+          body: `<p>${t('Help.NoStorageMessage')}</p>`
+        })
       );
     });
   }

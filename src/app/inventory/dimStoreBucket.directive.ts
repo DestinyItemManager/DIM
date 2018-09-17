@@ -10,10 +10,8 @@ import {
 } from 'angular';
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
-import { isPhonePortrait } from '../mediaQueries';
 import { queuedAction } from './action-queue';
 import { settings } from '../settings/settings';
-import { showInfoPopup } from '../shell/info-popup';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 import template from './dimStoreBucket.directive.html';
 import './dimStoreBucket.scss';
@@ -98,24 +96,10 @@ function StoreBucketCtrl(
     dragHelp.classList.remove('drag-dwell-activated');
     $timeout.cancel(dragTimer);
   };
-  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.DoubleClick')}</p>
-                              <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
-  // Only show this once per session
-  const didYouKnow = _.once(() => {
-    showInfoPopup('doubleclick', {
-      title: $i18next.t('DidYouKnow.DidYouKnow'),
-      body: didYouKnowTemplate,
-      hide: $i18next.t('DidYouKnow.DontShowAgain')
-    });
-  });
 
   vm.moveDroppedItem = queuedAction(
     (item: DimItem, equip: boolean, $event: MouseEvent, hovering: boolean) => {
       const target = vm.store;
-
-      if (target.current && equip && !isPhonePortrait()) {
-        didYouKnow();
-      }
 
       if (item.notransfer && item.owner !== target.id) {
         return $q.reject(new Error($i18next.t('Help.CannotMove')));

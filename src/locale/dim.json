@@ -83,15 +83,6 @@
     "Banner": "DIM will support Destiny 2",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
-  "DidYouKnow": {
-    "Collapse": "You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don't need to normally use.",
-    "DidYouKnow": "Did you know?",
-    "DontShowAgain": "Don't show this tip again",
-    "DoubleClick": "If you're moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.",
-    "DragAndDrop": "Items can be dragged and dropped between different characters/vault columns.",
-    "Expand": "To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.",
-    "TryNext": "Try it out next time!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
@@ -279,11 +270,8 @@
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
-    "ChangingPerks": "Changing Perks Not Supported",
-    "ChangingPerksInfo": "Sorry, there's no way to change perks outside the game. We wish we could!",
     "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
     "HidePopup": "Hide This Popup",
-    "NeverShow": "Never show me this again.",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
     "UpdateAvailable": "DIM Updated",
@@ -517,10 +505,6 @@
     "Complete": "Complete",
     "Incomplete": "Incomplete"
   },
-  "Postmaster": {
-    "Desc": "There are 20 lost items at the Postmaster on your {{store}}. Any new items will overwrite the existing.",
-    "Limit": "Postmaster Limit"
-  },
   "Progress": {
     "CrucibleRank": "Crucible Ranks",
     "Daily": "Daily",
@@ -550,7 +534,6 @@
     "ColorA11y": "Color blindness configuration",
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",
-    "DIMPopupsReset": "Reset previously hidden info tips",
     "Data": "Spreadsheets",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
