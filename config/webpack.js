@@ -8,7 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
@@ -91,11 +91,11 @@ module.exports = (env) => {
         automaticNameDelimiter: '-'
       },
       minimizer: [
-        new UglifyJSPlugin({
+        new TerserPlugin({
           cache: true,
           parallel: true,
           exclude: [/sqlLib/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
-          uglifyOptions: {
+          terserOptions: {
             ecma: 8,
             compress: { warnings: false, inline: 1 },
             mangle: { safari10: true },
