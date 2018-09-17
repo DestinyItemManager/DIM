@@ -314,7 +314,9 @@ module.exports = (env) => {
         // React inventory implementation
         '$featureFlags.reactInventory': JSON.stringify(true),
         // Respect the "do not track" header
-        '$featureFlags.respectDNT': JSON.stringify(env !== 'release')
+        '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
+        // Forsaken Item Tiles
+        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release')
       })
 
       // Enable if you want to debug the size of the chunks

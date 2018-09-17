@@ -35,6 +35,8 @@ declare const $featureFlags: {
   reactInventory: boolean;
   /** Respect the "do not track" header. */
   respectDNT: boolean;
+  /** Forsaken Item Tiles */
+  forsakenTiles: boolean;
 };
 
 declare function ga(...params: string[]);

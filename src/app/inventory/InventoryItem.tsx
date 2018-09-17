@@ -28,8 +28,6 @@ interface Props {
   onDoubleClick?(e);
 }
 
-const tagClasses = tagIconFilter();
-
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
   render() {
@@ -53,29 +51,46 @@ export default class InventoryItem extends React.Component<Props> {
     const showRating = showRatingFn(item);
     const badgeInfo = getBadgeInfo(item);
 
-    return (
-      <div
-        id={item.index}
-        onClick={onClick}
-        onDoubleClick={onDoubleClick}
-        title={`${item.name}\n${item.typeName}`}
-        className={classNames('item', { 'search-hidden': !item.visible, 'd2-item': item.destinyVersion === 2 })}
-      >
-        {(item.destinyVersion === 2) ? (
+    if ($featureFlags.forsakenTiles && item.destinyVersion === 2) {
+      return (
+        <div
+          id={item.index}
+          onClick={onClick}
+          onDoubleClick={onDoubleClick}
+          title={`${item.name}\n${item.typeName}`}
+          className={classNames('item', {
+            'search-hidden': !item.visible,
+            'd2-item': item.destinyVersion === 2
+          })}
+        >
           <ItemRender item={item as D2Item} />
-        ) : (
+        </div>
+      );
+    } else {
+      return (
+        <div
+          id={item.index}
+          onClick={onClick}
+          onDoubleClick={onDoubleClick}
+          title={`${item.name}\n${item.typeName}`}
+          className={classNames('item', {
+            'search-hidden': !item.visible,
+            'd2-item': item.destinyVersion === 2
+          })}
+        >
           <div>
-            { item.percentComplete > 0 &&
-            !item.complete && (
-              <div
-                className="item-xp-bar-small"
-                style={{ width: percent(item.percentComplete) }}
-              />
-            )}
+            {item.percentComplete > 0 &&
+              !item.complete && (
+                <div
+                  className="item-xp-bar-small"
+                  style={{ width: percent(item.percentComplete) }}
+                />
+              )}
             <div
               className={classNames('item-img', itemImageStyles)}
               style={bungieBackgroundStyle(item.icon)}
-            />{item.isDestiny1() &&
+            />
+            {item.isDestiny1() &&
               item.quality && (
                 <div
                   className="item-stat item-quality"
@@ -88,33 +103,23 @@ export default class InventoryItem extends React.Component<Props> {
               showRating && (
                 <div className="item-stat item-review">
                   {item.dtrRating.overallScore}
-                  <i
-                    className="fa fa-star"
-                    style={dtrRatingColor(item.dtrRating.overallScore)}
-                  />
+                  <i className="fa fa-star" style={dtrRatingColor(item.dtrRating.overallScore)} />
                 </div>
               )}
             <div className={classNames('item-element', item.dmg)} />
             <div className={tagIconFilter()(item.dimInfo.tag)} />
             {item.isNew && (
               <div className="new_overlay_overflow">
-                <img
-                  className="new_overlay"
-                  src={newOverlay}
-                  height="44"
-                  width="44"
-                />
+                <img className="new_overlay" src={newOverlay} height="44" width="44" />
               </div>
             )}
             {badgeInfo.showBadge && (
-              <div className={classNames(badgeInfo.badgeClassNames)}>
-                {badgeInfo.badgeCount}
-              </div>
+              <div className={classNames(badgeInfo.badgeClassNames)}>{badgeInfo.badgeCount}</div>
             )}
           </div>
-        )}
-      </div>
-    );
+        </div>
+      );
+    }
   }
 }
 
