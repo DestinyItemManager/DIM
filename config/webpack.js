@@ -181,7 +181,6 @@ module.exports = (env) => {
               loader: 'file-loader',
               options: { name: '[name]-[hash:6].[ext]' }
             },
-            'extract-loader',
             'html-loader'
           ]
         },
