@@ -15,6 +15,8 @@
 * Restored the keyboard shortcut cheat sheet (press ?).
 * The max light loadout prefers legendaries over rares.
 * Unclaimed engrams are shown up in the Postmaster section.
+* Infusion transfer button is now visible on mobile devices.
+* Item tiles have been redesigned for Forsaken.
 
 # 4.69.1 (2018-09-10)
 

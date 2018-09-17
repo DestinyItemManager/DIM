@@ -78,7 +78,7 @@ export class Settings {
   // How many columns to display vault buckets
   vaultMaxCol = 999;
   // How big in pixels to draw items - start smaller for iPad
-  itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
+  itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
   // Which categories or buckets should be collapsed?
   collapsedSections: { [key: string]: boolean } = {};
   // What settings for farming mode
