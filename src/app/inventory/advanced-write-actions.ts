@@ -1,11 +1,17 @@
-import { DestinyAccount } from "../accounts/destiny-account.service";
-import { AwaType, AwaAuthorizationResult, AwaUserSelection, insertSocketPlug, DestinySocketArrayType } from "bungie-api-ts/destiny2";
-import { requestAdvancedWriteActionToken } from "../bungie-api/destiny2-api";
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import {
+  AwaType,
+  AwaAuthorizationResult,
+  AwaUserSelection,
+  insertSocketPlug,
+  DestinySocketArrayType
+} from 'bungie-api-ts/destiny2';
+import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import * as idbKeyval from 'idb-keyval';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
-import { DimSocket, D2Item } from "./item-types";
-import { httpAdapter } from "../bungie-api/bungie-service-helper";
+import { DimSocket, D2Item } from './item-types';
+import { httpAdapter } from '../bungie-api/bungie-service-helper';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
@@ -13,7 +19,12 @@ let awaCache: {
 
 // TODO: we need an interface for presenting non-reusable plugs like mods and shaders
 // TODO: owner can't be "vault" I bet
-export async function insertPlug(account: DestinyAccount, item: D2Item, socket: DimSocket, plugItemHash: number) {
+export async function insertPlug(
+  account: DestinyAccount,
+  item: D2Item,
+  socket: DimSocket,
+  plugItemHash: number
+) {
   const actionToken = await getAwaToken(account, AwaType.InsertPlugs, item);
 
   // TODO: if the plug costs resources to insert, add a confirmation
@@ -41,10 +52,14 @@ export async function insertPlug(account: DestinyAccount, item: D2Item, socket: 
  *
  * @param item The item is optional unless the type is DismantleGroupA, but it's best to pass it when possible.
  */
-export async function getAwaToken(account: DestinyAccount, action: AwaType, item?: D2Item): Promise<string> {
+export async function getAwaToken(
+  account: DestinyAccount,
+  action: AwaType,
+  item?: D2Item
+): Promise<string> {
   if (!awaCache) {
     // load from cache first time
-    awaCache = (await idbKeyval.get('awa-tokens') || {}) as {
+    awaCache = ((await idbKeyval.get('awa-tokens')) || {}) as {
       [key: number]: AwaAuthorizationResult & { used: number };
     };
   }
@@ -56,7 +71,7 @@ export async function getAwaToken(account: DestinyAccount, action: AwaType, item
       toaster.pop('info', t('AWA.ConfirmTitle'), t('AWA.ConfirmDescription'));
 
       info = awaCache[action] = {
-        ...await requestAdvancedWriteActionToken(account, action, item),
+        ...(await requestAdvancedWriteActionToken(account, action, item)),
         used: 0
       };
 
@@ -68,11 +83,11 @@ export async function getAwaToken(account: DestinyAccount, action: AwaType, item
       }
       */
     } catch (e) {
-      throw new Error("Unable to get a token: " + e.message);
+      throw new Error('Unable to get a token: ' + e.message);
     }
 
     if (!info || !tokenValid(info)) {
-      throw new Error("Unable to get a token: " + info ? info.developerNote : "no response");
+      throw new Error('Unable to get a token: ' + info ? info.developerNote : 'no response');
     }
   }
 
@@ -85,7 +100,9 @@ export async function getAwaToken(account: DestinyAccount, action: AwaType, item
 }
 
 function tokenValid(info: AwaAuthorizationResult & { used: number }) {
-  return (!info.validUntil || new Date(info.validUntil) > new Date()) &&
+  return (
+    (!info.validUntil || new Date(info.validUntil) > new Date()) &&
     (info.maximumNumberOfUses === 0 || info.used <= info.maximumNumberOfUses) &&
-    info.userSelection === AwaUserSelection.Approved;
+    info.userSelection === AwaUserSelection.Approved
+  );
 }

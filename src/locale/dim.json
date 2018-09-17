@@ -115,8 +115,8 @@
       "Xbox": "XBox Only"
     },
     "Pros": "Pros",
-    "ReallyReport": "Report",
     "RatingsOptions": "Ratings Options",
+    "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",
@@ -267,6 +267,7 @@
     "BulkTag": "Bulk tag items",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "Search item/perk or {{example}}",
+    "FilterHelpBrief": "Search items",
     "Filters": "Filters",
     "Inventory": "Inventory",
     "Refresh": "Refresh Destiny Data",

@@ -4,8 +4,14 @@
   // This assumes 3 characters
   min-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 39px + 44px + (3 * (44px + 8px)));
   max-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 20px + (999 * (44px + 8px)));
-  min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 40px + ((1 + var(--character-columns)) * (var(--item-size) + 8px)));
-  max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
+  min-width: calc(
+    (52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
+      var(--num-characters) + 40px + ((1 + var(--character-columns)) * (var(--item-size) + 8px))
+  );
+  max-width: calc(
+    (52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
+      var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px))
+  );
   margin: 0 auto;
 
   &.phone-portrait {
@@ -14,7 +20,6 @@
   }
 
   .title {
-    //position: sticky;
     top: 124px;
     z-index: 1;
 
@@ -22,22 +27,22 @@
       top: 79px;
     }
   }
+
+  .section {
+    filter: var(--color-filter);
+  }
 }
 
 .store-row {
   width: 100%;
   display: flex;
   flex-direction: row;
+  padding-left: 28px;
+  box-sizing: border-box;
 
   // Bit of a hack to make things line up
   &.items:last-child .store-cell {
     padding-bottom: 14px;
-  }
-
-  i.collapse {
-    outline: none;
-    padding: 8px 7px 8px 10px;
-    align-self: flex-start;
   }
 }
 
@@ -47,6 +52,7 @@
   margin-right: 12px;
   width: calc(40px + 44px + (3 * (44px + 8px)));
   width: calc(40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  flex-direction: column;
 
   &.vault {
     max-width: calc(8px + (999 * (44px + 8px)));
@@ -61,7 +67,14 @@
 
   &.account-wide {
     width: 100%;
-    max-width: calc((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + ((var(--num-characters) - 1) * 12px));
+    @include phone-portrait {
+      width: auto;
+      flex: 1;
+    }
+    max-width: calc(
+      (40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
+        var(--num-characters) + ((var(--num-characters) - 1) * 12px)
+    );
   }
 }
 .store-text {
@@ -75,8 +88,9 @@
   left: 0;
   width: auto;
   z-index: 10;
-  padding: 8px 0 4px 8px;
+  padding: 8px 0 4px 24px;
   background-color: #434444;
+  filter: var(--color-filter);
 
   @supports (position: sticky) {
     position: sticky;
@@ -86,8 +100,17 @@
     box-shadow: 0 1px 6px 0px #222;
   }
 
+  .react.phone-portrait & > div {
+    max-width: 250px;
+    margin: 0 auto;
+    overflow: visible !important;
+    .frame {
+      overflow: visible !important;
+    }
+  }
+
   .phone-portrait & {
-    top: 0px;
+    padding-left: 0;
 
     .store-cell {
       margin: 0;
@@ -96,16 +119,21 @@
   }
 }
 
-.frame {
-  height: calc(100vh - #{$header-height} - 16px) !important;
-  overflow-y: auto !important;
-}
-
 .stores {
   display: block;
   // 77px margin to make room for the fixed header
   margin-top: 77px;
   @supports (position: sticky) {
     margin-top: 0;
+  }
+}
+
+.dim-button.bucket-button {
+  align-self: center;
+  margin-top: 8px;
+  background-color: #222;
+
+  &:hover {
+    background-color: #666;
   }
 }

@@ -1,5 +1,9 @@
 @import '../../scss/variables.scss';
 
+dim-store-heading {
+  display: block;
+}
+
 .character {
   flex: 1;
   width: 100%;
@@ -12,6 +16,7 @@
   max-width: 230px;
   cursor: pointer;
 
+  store-pager &,
   .phone-portrait & {
     margin: 0 auto;
   }
@@ -42,11 +47,12 @@
     height: 100%;
     top: 0;
     left: 0;
-    opacity: .1;
+    opacity: 0.1;
     background-color: white;
   }
 
-  &:hover, &:active {
+  &:hover,
+  &:active {
     .background {
       filter: brightness(85%);
     }
@@ -55,11 +61,12 @@
   .character-text {
     font-family: Roboto, 'Open Sans', sans-serif;
     flex: 1;
-    text-shadow: 1px 1px 1px rgba(0,0,0,.5), 0px 0px 10px rgba(0,0,0,.5);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0px 0px 10px rgba(0, 0, 0, 0.5);
     min-width: 0;
   }
 
-  .top, .bottom {
+  .top,
+  .bottom {
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
@@ -75,7 +82,7 @@
   .bottom {
     font-size: 12px;
     color: #bbb;
-    letter-spacing: .125px;
+    letter-spacing: 0.125px;
     height: 14px;
   }
   .emblem {
@@ -85,7 +92,8 @@
     background-color: rgba(0, 0, 0, 0.2);
     background-size: cover;
   }
-  .class, .race-gender {
+  .class,
+  .race-gender {
     text-transform: capitalize;
     flex: 1;
     text-overflow: ellipsis;
@@ -97,7 +105,7 @@
   .powerLevel {
     color: $gold;
     &:before {
-      content: "\2726";
+      content: '\2726';
       display: inline-block;
       vertical-align: 25%;
       font-size: 50%;
@@ -131,7 +139,7 @@
 
   &.moteProgress {
     background-color: #069;
-    opacity: .6;
+    opacity: 0.6;
   }
 }
 
@@ -143,6 +151,7 @@
   opacity: 0.8;
   max-width: 230px;
 
+  store-pager &,
   .phone-portrait & {
     margin-left: auto;
     margin-right: auto;
@@ -161,7 +170,7 @@
     &:last-child {
       margin-right: 0;
     }
-    color: #AAA;
+    color: #aaa;
   }
 
   .vault-bucket-tag {
@@ -174,7 +183,7 @@
   .vault-bucket-full {
     color: #e12929;
     font-weight: bold;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3)
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -192,13 +201,14 @@
 .loadout-menu {
   position: relative;
   max-width: 230px;
-  [role="button"] {
+  [role='button'] {
     outline: none;
   }
 }
 
 .current {
-  &.character, &.character-swipe {
+  &.character,
+  &.character-swipe {
     .character-box:before {
       content: '';
       position: absolute;

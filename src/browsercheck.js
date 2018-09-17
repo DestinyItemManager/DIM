@@ -1,4 +1,3 @@
-
 import browserslist from 'browserslist';
 import parser from 'ua-parser-js';
 
@@ -10,7 +9,10 @@ function getBrowserName(agent) {
     return 'and_chr';
   } else if (agent.browser.name === 'Firefox' && agent.os.name === 'Android') {
     return 'and_ff';
-  } else if (agent.browser.name === 'Mobile Safari' || (agent.browser.name === 'Safari' && agent.os.name === 'iOS')) {
+  } else if (
+    agent.browser.name === 'Mobile Safari' ||
+    (agent.browser.name === 'Safari' && agent.os.name === 'iOS')
+  ) {
     return 'ios_saf';
   } else if (agent.browser.name === 'Chromium') {
     return 'chrome';
@@ -22,7 +24,10 @@ function getBrowserName(agent) {
 
 function getBrowserVersionFromUserAgent(agent) {
   var browserName = getBrowserName(agent);
-  var version = (browserName === 'ios_saf' ? agent.os.version : (agent.browser.version || agent.os.version || '')).split('.');
+  var version = (browserName === 'ios_saf'
+    ? agent.os.version
+    : agent.browser.version || agent.os.version || ''
+  ).split('.');
   while (version.length > 0) {
     try {
       return browserslist(browserName + ' ' + version.join('.'))[0];
@@ -35,13 +40,17 @@ function getBrowserVersionFromUserAgent(agent) {
 }
 
 var agent = parser(navigator.userAgent);
-if (agent !== 'Vivaldi') { // Vivaldi users can just live on the edge
+if (agent !== 'Vivaldi') {
+  // Vivaldi users can just live on the edge
   var browsersSupported = browserslist($BROWSERS);
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = browsersSupported.indexOf(browser) >= 0;
 
   if (!supported) {
-    console.warn('Browser ' + browser + ' is not supported by DIM. Supported browsers:', browsersSupported);
+    console.warn(
+      'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
+      browsersSupported
+    );
     document.getElementById('browser-warning').className = '';
   }
 }

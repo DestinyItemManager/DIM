@@ -2,12 +2,13 @@
 .stat-bars {
   width: 100%;
   max-width: 230px;
-  opacity: .8;
+  opacity: 0.8;
   display: flex;
   flex-direction: row;
   margin-top: 3px;
   justify-content: space-around;
 
+  store-pager &,
   .phone-portrait & {
     margin-left: auto;
     margin-right: auto;
@@ -33,7 +34,7 @@
         height: 100%;
         background-color: white;
         &.complete {
-          background-color: #FB9F28;
+          background-color: #fb9f28;
         }
       }
     }
@@ -47,11 +48,11 @@
   &.destiny2 {
     .stat {
       font-size: 11px;
-      color: #AAA;
+      color: #aaa;
       flex: 0;
 
       &:first-child img {
-        opacity: .6;
+        opacity: 0.6;
       }
     }
   }

@@ -51,8 +51,7 @@
     "Throttled": "Превышен лимит частоты запросов к Bungie API. Пожалуйста, подождите немного и повторите попытку.",
     "Twitter": "Получить обновления статуса сервиса:",
     "UnknownError": "Сообщение от Bungie.net: {{message}}",
-    "VendorNotFound": "Данные вендоров недоступны.",
-    "WarmindLoginNeeded": "Баг в Bungie. Net API не позволяет загрузить Ваш инвентарь. Для исправления - загрузитесь на орбиту каждым из персонажей аккаунта и настройте Жесты."
+    "VendorNotFound": "Данные вендоров недоступны."
   },
   "Compare": {
     "All": "Сравнить каждый {{type}} ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "Удалить",
     "Edit": "Изменить",
     "ForGameMode": "Для режима:",
+    "ForPlatform": "For platform(s)",
     "Help": "Написать отзыв (опционально)",
     "HelpCons": "Опиши недостатки этого оружия (опционально)",
     "HelpPros": "Опиши преимущества этого оружия (опционально)",
@@ -115,6 +115,7 @@
       "Xbox": "Только Xbox"
     },
     "Pros": "Преимущества",
+    "RatingsOptions": "Ratings Options",
     "ReallyReport": "Пожаловаться",
     "ServiceCallError": "Ошибка вызова Destiny Tracker Service.",
     "ServiceSubmitError": "Ошибка отправки на Destiny Tracker Service.",
@@ -218,7 +219,7 @@
     "Postmaster": "У Почтмейстера.",
     "PowerLevel": "По Силе.",
     "Quality": "Показывает предметы на основе их общей суммы процентов характеристик. '{{percentage}}' означает '{{quality}}'.",
-    "RandomRoll": "Shows items that drop with random rolls.",
+    "RandomRoll": "Предметы со случайными перками.",
     "RarityTier": "По редкости.",
     "Rated": "Оружие с рейтингом Destiny Tracker.",
     "Rating": "Оружие по рейтингу Destiny Tracker.",
@@ -260,16 +261,13 @@
     "WeaponType": "Оружие по типам.",
     "Year": "Показать предметы по году появления в Destiny."
   },
-  "Forsaken": {
-    "Progress": "Кстати: Данные чек-листа могут быть некорректны или неполны некоторое время после релиза Отвергнутых.",
-    "Vendors": "Вендоры будут недоступны некоторое время после релиза Отвергнутых."
-  },
   "Header": {
     "About": "О проекте",
     "Back": "Вернуться",
     "BulkTag": "Массовая маркировка предметов",
     "BungieNetAlert": "Оповещение Bungie",
     "FilterHelp": "Поиск предмета/перка или {{example}}",
+    "FilterHelpBrief": "Search items",
     "Filters": "Фильтры",
     "Inventory": "Инвентарь",
     "Refresh": "Обновить данные Destiny",
@@ -501,6 +499,7 @@
     "OverviewTab": "Обзор",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
+    "Rewards": "Rewards:",
     "Split": "Делить",
     "Store": "Дать",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -527,11 +526,10 @@
     "Daily": "Ежедневно",
     "ExpiresIn": "истекает в {{endTime}}",
     "Factions": "Репутация",
-    "Milestones": "Рубежи",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "Рубежи Аккаунта",
     "ProfileQuests": "Задания учетной записи",
     "Progress": "Чек-Лист",
-    "Quests": "Контракты и Задания",
     "RewardEarned": "Награда доступна",
     "RewardNotEarned": "Награда не доступна",
     "RewardRedeemed": "Награда получена",

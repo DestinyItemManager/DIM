@@ -67,12 +67,20 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
       // we at least need to display that character!
       let characterId: string = this.props.transition!.params().characterId;
       if (!characterId) {
-        const stores = this.state.stores || await D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
+        const stores =
+          this.state.stores ||
+          (await D2StoresService.getStoresStream(this.props.account)
+            .take(1)
+            .toPromise());
         if (stores) {
           characterId = stores.find((s) => s.current)!.id;
         }
       }
-      const vendorResponse = await getVendorApi(this.props.account, characterId, this.state.vendorHash);
+      const vendorResponse = await getVendorApi(
+        this.props.account,
+        characterId,
+        this.state.vendorHash
+      );
 
       this.setState({ defs, vendorResponse });
 
@@ -85,17 +93,19 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
   }
 
   componentDidMount() {
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
-      if (stores) {
-        const ownedItemHashes = new Set<number>();
-        for (const store of stores) {
-          for (const item of store.items) {
-            ownedItemHashes.add(item.hash);
+    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
+      (stores) => {
+        if (stores) {
+          const ownedItemHashes = new Set<number>();
+          for (const store of stores) {
+            for (const item of store.items) {
+              ownedItemHashes.add(item.hash);
+            }
           }
+          this.setState({ stores, ownedItemHashes });
         }
-        this.setState({ stores, ownedItemHashes });
       }
-    });
+    );
     loadingTracker.addPromise(this.loadVendor());
 
     this.$scope.$on('dim-refresh', () => {
@@ -113,7 +123,11 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
     const { account } = this.props;
 
     if (!vendorDef || !defs) {
-      return <div className="vendor dim-page"><Loading/></div>;
+      return (
+        <div className="vendor dim-page">
+          <Loading />
+        </div>
+      );
     }
 
     // TODO:
@@ -122,13 +136,27 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
     // * filter by character class
     const vendor = vendorResponse && vendorResponse.vendor.data;
 
-    const destinationDef = vendor && defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
+    const destinationDef =
+      vendor &&
+      defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
     const placeDef = destinationDef && defs.Place.get(destinationDef.placeHash);
 
-    const placeString = [(destinationDef && destinationDef.displayProperties.name), (placeDef && placeDef.displayProperties.name)].filter((n) => n && n.length).join(', ');
+    const placeString = [
+      destinationDef && destinationDef.displayProperties.name,
+      placeDef && placeDef.displayProperties.name
+    ]
+      .filter((n) => n && n.length)
+      .join(', ');
     // TODO: there's a cool background image but I'm not sure how to use it
 
-    const vendorItems = getVendorItems(account, defs, vendorDef, trackerService, vendorResponse && vendorResponse.itemComponents, vendorResponse && vendorResponse.sales.data);
+    const vendorItems = getVendorItems(
+      account,
+      defs,
+      vendorDef,
+      trackerService,
+      vendorResponse && vendorResponse.itemComponents,
+      vendorResponse && vendorResponse.sales.data
+    );
 
     return (
       <div className="vendor dim-page">
@@ -136,11 +164,17 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
           <div className="vendor-featured">
             <div className="vendor-featured-header">
               <div className="vendor-header-info">
-                <h1>{vendorDef.displayProperties.name} <span className="vendor-location">{placeString}</span></h1>
+                <h1>
+                  {vendorDef.displayProperties.name}{' '}
+                  <span className="vendor-location">{placeString}</span>
+                </h1>
                 <div>{vendorDef.displayProperties.description}</div>
-                {vendorResponse &&
-                  <div>Inventory updates in <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)}/></div>
-                }
+                {vendorResponse && (
+                  <div>
+                    Inventory updates in{' '}
+                    <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)} />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -151,7 +185,9 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
             vendorItems={vendorItems}
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
-            currencyLookups={vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}}
+            currencyLookups={
+              vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}
+            }
           />
         </ErrorBoundary>
       </div>

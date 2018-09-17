@@ -5,7 +5,10 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 
 // TODO: this should probably move to a library of character functions
-export function characterIsCurrent(character: DestinyCharacterComponent, lastPlayedDate: Date): boolean {
+export function characterIsCurrent(
+  character: DestinyCharacterComponent,
+  lastPlayedDate: Date
+): boolean {
   return lastPlayedDate.getTime() === new Date(character.dateLastPlayed).getTime();
 }
 
@@ -29,9 +32,9 @@ export default function CharacterTile({
   return (
     <div className={classNames('character', { current })}>
       <div className="character-box destiny2">
-        <div className="background" style={bungieBackgroundStyle(character.emblemBackgroundPath)}/>
+        <div className="background" style={bungieBackgroundStyle(character.emblemBackgroundPath)} />
         <div className="details">
-          <div className="emblem"/>
+          <div className="emblem" />
           <div className="character-text">
             <div className="top">
               <div className="class">{className}</div>

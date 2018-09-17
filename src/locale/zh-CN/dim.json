@@ -51,8 +51,7 @@
     "Throttled": "Bungie API流量限制已超出。请稍后重试。",
     "Twitter": "查看服务器更新状态:",
     "UnknownError": "来自Bungie.net的消息：{{message}}",
-    "VendorNotFound": "商贩数据不可用.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "商贩数据不可用."
   },
   "Compare": {
     "All": "{{type}}对比 ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "删除",
     "Edit": "编辑",
     "ForGameMode": "游戏模式：",
+    "ForPlatform": "For platform(s)",
     "Help": "撰写评测 (可选)",
     "HelpCons": "描述此武器的缺点（可选）",
     "HelpPros": "描述此武器的优点（可选）",
@@ -115,6 +115,7 @@
       "Xbox": "仅XBox"
     },
     "Pros": "优点",
+    "RatingsOptions": "Ratings Options",
     "ReallyReport": "举报",
     "ServiceCallError": "无法连接到Destiny tracker服务器.",
     "ServiceSubmitError": "无法访问Destiny tracker服务器.",
@@ -260,16 +261,13 @@
     "WeaponType": "按照武器类型显示.",
     "Year": "按照物品推出年份显示."
   },
-  "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
-  },
   "Header": {
     "About": "关于",
     "Back": "返回",
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
+    "FilterHelpBrief": "Search items",
     "Filters": "过滤器",
     "Inventory": "背包",
     "Refresh": "刷新命运数据",
@@ -501,6 +499,7 @@
     "OverviewTab": "概述",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "评测",
+    "Rewards": "Rewards:",
     "Split": "拆分",
     "Store": "寄存",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -527,11 +526,10 @@
     "Daily": "每日",
     "ExpiresIn": "于{{endTime}}过期",
     "Factions": "阵营",
-    "Milestones": "里程碑",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "帐户里程碑",
     "ProfileQuests": "帐户任务",
     "Progress": "进度",
-    "Quests": "Pursuits & Quests",
     "RewardEarned": "奖励已解锁但尚未兑换",
     "RewardNotEarned": "奖励不可用",
     "RewardRedeemed": "获取奖励",

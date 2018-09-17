@@ -1,4 +1,4 @@
-import { Settings } from "./settings";
+import { Settings } from './settings';
 import { createStandardAction, createAction } from 'typesafe-actions';
 
 /** Bulk update settings after they've been loaded. */

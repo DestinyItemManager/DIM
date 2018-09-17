@@ -1,4 +1,3 @@
-
 dim-objectives {
   display: block;
 }
@@ -40,7 +39,7 @@ dim-objectives {
 
 .objective-progress {
   flex: 1;
-  background-color: rgba(0, 0, 0, .3);
+  background-color: rgba(0, 0, 0, 0.3);
   position: relative;
   min-height: 17px;
   display: flex;
@@ -78,18 +77,19 @@ dim-objectives {
   align-items: center;
   padding: 0 4px;
   flex: 1;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, .25);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 .objective-text {
   z-index: 2;
   margin-right: 4px;
   backface-visibility: hidden;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, .25);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 .objective-boolean {
-  .objective-progress-bar, .objective-text {
+  .objective-progress-bar,
+  .objective-text {
     display: none;
   }
   .objective-progress {

@@ -1,6 +1,4 @@
-import {
-  DestinyItemPlug
-} from 'bungie-api-ts/destiny2';
+import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
@@ -27,24 +25,33 @@ export default function PlugSet({
 }) {
   const plugSetDef = defs.PlugSet.get(plugSetHash);
 
-  const reviewCache: D2ReviewDataCache | undefined = trackerService ? trackerService.getD2ReviewDataCache() : undefined;
+  const reviewCache: D2ReviewDataCache | undefined = trackerService
+    ? trackerService.getD2ReviewDataCache()
+    : undefined;
 
-  const vendorItems = plugSetDef.reusablePlugItems.map((i) => VendorItem.forPlugSetItem(defs, i, reviewCache, items.some((k) => k.plugItemHash === i.plugItemHash && k.enabled)));
+  const vendorItems = plugSetDef.reusablePlugItems.map((i) =>
+    VendorItem.forPlugSetItem(
+      defs,
+      i,
+      reviewCache,
+      items.some((k) => k.plugItemHash === i.plugItemHash && k.enabled)
+    )
+  );
 
   return (
     <div className="vendor-char-items">
       <div className="vendor-row">
         <h3 className="category-title">{plugSetDef.displayProperties.name}</h3>
         <div className="vendor-items">
-        {_.sortBy(vendorItems, (i) => i.displayProperties.name).map((item) =>
-          <VendorItemComponent
-            key={item.key}
-            defs={defs}
-            item={item}
-            trackerService={trackerService}
-            owned={false}
-          />
-        )}
+          {_.sortBy(vendorItems, (i) => i.displayProperties.name).map((item) => (
+            <VendorItemComponent
+              key={item.key}
+              defs={defs}
+              item={item}
+              trackerService={trackerService}
+              owned={false}
+            />
+          ))}
         </div>
       </div>
     </div>

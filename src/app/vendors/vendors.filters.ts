@@ -17,12 +17,20 @@ export function vendorTabItems(items, prop) {
   if (!prop || !prop.length) {
     return items;
   }
-  return items.filter({
-    hasArmorWeaps: (saleItem) => (saleItem.item.bucket.sort === 'Weapons' || saleItem.item.bucket.sort === 'Armor' || saleItem.item.type === 'Artifact' || saleItem.item.type === 'Ghost'),
-    hasVehicles: (saleItem) => (saleItem.item.type === 'Ship' || saleItem.item.type === 'Vehicle'),
-    hasShadersEmbs: (saleItem) => (saleItem.item.type === "Emblem" || saleItem.item.type === "Shader"),
-    hasEmotes: (saleItem) => (saleItem.item.type === "Emote"),
-    hasConsumables: (saleItem) => (saleItem.item.type === "Material" || saleItem.item.type === "Consumable"),
-    hasBounties: (saleItem) => (saleItem.item.type === 'Bounties')
-  }[prop]);
+  return items.filter(
+    {
+      hasArmorWeaps: (saleItem) =>
+        saleItem.item.bucket.sort === 'Weapons' ||
+        saleItem.item.bucket.sort === 'Armor' ||
+        saleItem.item.type === 'Artifact' ||
+        saleItem.item.type === 'Ghost',
+      hasVehicles: (saleItem) => saleItem.item.type === 'Ship' || saleItem.item.type === 'Vehicle',
+      hasShadersEmbs: (saleItem) =>
+        saleItem.item.type === 'Emblem' || saleItem.item.type === 'Shader',
+      hasEmotes: (saleItem) => saleItem.item.type === 'Emote',
+      hasConsumables: (saleItem) =>
+        saleItem.item.type === 'Material' || saleItem.item.type === 'Consumable',
+      hasBounties: (saleItem) => saleItem.item.type === 'Bounties'
+    }[prop]
+  );
 }

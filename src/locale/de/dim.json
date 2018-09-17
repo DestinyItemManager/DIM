@@ -51,8 +51,7 @@
     "Throttled": "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.",
     "Twitter": "Hol dir Status-Updates auf:",
     "UnknownError": "Bungie.net Nachricht: {{message}}",
-    "VendorNotFound": "Händler Daten nicht verfügbar.",
-    "WarmindLoginNeeded": "Wir können dein Inventar aufgrund eines Bugs der Destiny API nicht laden. Lade jeden deiner Charaktere und erstelle ein Emote-Rad um das Problem zu lösen."
+    "VendorNotFound": "Händler Daten nicht verfügbar."
   },
   "Compare": {
     "All": "{{type}} Vergleich ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "Löschen",
     "Edit": "Ändern",
     "ForGameMode": "Für Spielmodus",
+    "ForPlatform": "Für Plattform(en)",
     "Help": "Schreibe einen Bericht (Optional)",
     "HelpCons": "Beschreibe die negativen Eigenschaften dieser Waffe (Optional)",
     "HelpPros": "Beschreibe die positiven Eigenschaften dieser Waffe (Optional)",
@@ -115,6 +115,7 @@
       "Xbox": "Nur XBox"
     },
     "Pros": "Vorteile",
+    "RatingsOptions": "Bewertungsoptionen",
     "ReallyReport": "Melden",
     "ServiceCallError": "Destiny-Tracker-Service-Aufruf fehlgeschlagen.",
     "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen.",
@@ -218,7 +219,7 @@
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
     "PowerLevel": "Zeigt Items basierend auf dem Powerlevel (Angriff für Waffen; Verteidigung für Rüstung).",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
-    "RandomRoll": "Shows items that drop with random rolls.",
+    "RandomRoll": "Zeige Items die mit Zufalls-Rolls droppen.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
     "Rated": "Zeigt alle Waffen, die eine Bewertung auf Destiny Tracker haben.",
     "Rating": "Zeigt alle Waffen basierend auf ihrer Bewertung bei Destiny Tracker an.",
@@ -260,16 +261,13 @@
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
   },
-  "Forsaken": {
-    "Progress": "Hinweis: Statusdaten können eine Zeit lang unvollständig oder unkorrekt sein nach dem Start von Forsaken.",
-    "Vendors": "Händler werden erst einige Zeit nach dem Start von Forsaken verfügbar sein."
-  },
   "Header": {
     "About": "Über",
     "Back": "Zurück",
     "BulkTag": "Massenbeschriftung Items",
     "BungieNetAlert": "Bungie-Warnung",
     "FilterHelp": "Suche nach Item/Perk oder {{example}}",
+    "FilterHelpBrief": "Suche Items",
     "Filters": "Filter",
     "Inventory": "Inventar",
     "Refresh": "Aktualisiere Destiny Daten",
@@ -501,6 +499,7 @@
     "OverviewTab": "Übersicht",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReviewsTab": "Berichte",
+    "Rewards": "Belohnungen:",
     "Split": "Teilen",
     "Store": "Lagern",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -527,11 +526,10 @@
     "Daily": "Täglich",
     "ExpiresIn": "läuft ab {{endTime}}",
     "Factions": "Fraktionen",
-    "Milestones": "Meilensteine",
+    "Milestones": "Meilensteine & Herausforderungen",
     "ProfileMilestones": "Konto-Meilensteine",
     "ProfileQuests": "Konto-Quests",
     "Progress": "Fortschritt",
-    "Quests": "Beschäftigungen & Quests",
     "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
     "RewardNotEarned": "Belohnung nicht erhalten",
     "RewardRedeemed": "Belohnung eingelöst",

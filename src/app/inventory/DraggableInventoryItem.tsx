@@ -1,11 +1,8 @@
 import * as React from 'react';
-import {
-  DragSourceSpec,
-  DragSourceConnector,
-  ConnectDragSource,
-  DragSource
-} from 'react-dnd';
+import { DragSourceSpec, DragSourceConnector, ConnectDragSource, DragSource } from 'react-dnd';
 import { DimItem } from './item-types';
+import { stackableDrag } from './actions';
+import store from '../store/store';
 
 interface ExternalProps {
   item: DimItem;
@@ -21,8 +18,7 @@ type Props = InternalProps & ExternalProps;
 function dragType(props: ExternalProps): string {
   const item = props.item;
   // TODO: let postmaster stuff be dragged anywhere?
-  return item.notransfer ||
-    (item.location.inPostmaster && item.destinyVersion === 2)
+  return item.notransfer || (item.location.inPostmaster && item.destinyVersion === 2)
     ? `${item.owner}-${item.bucket.type}`
     : item.bucket.type!;
 }
@@ -33,13 +29,21 @@ export interface DragObject {
 
 const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
+    if (props.item.maxStackSize > 1 && props.item.amount > 1) {
+      store.dispatch(stackableDrag(true));
+    }
     return { item: props.item };
+  },
+
+  endDrag(props) {
+    if (props.item.maxStackSize > 1 && props.item.amount > 1) {
+      store.dispatch(stackableDrag(false));
+    }
   },
 
   canDrag(props): boolean {
     const item = props.item;
-    return (!item.location.inPostmaster || item.destinyVersion === 2) &&
-      item.notransfer
+    return (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
       ? item.equipment
       : item.equipment || item.bucket.hasTransferDestination;
   }
@@ -57,7 +61,7 @@ function collect(connect: DragSourceConnector): InternalProps {
 class DraggableInventoryItem extends React.Component<Props> {
   render() {
     const { connectDragSource, children } = this.props;
-    return connectDragSource(<div>{children}</div>);
+    return connectDragSource(<div className="item-drag-container">{children}</div>);
   }
 }
 

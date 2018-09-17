@@ -21,12 +21,15 @@ function VendorCurrenciesCtrl(this: IController, $scope: IScope, $filter) {
   $scope.$watchGroup(['vm.vendorCategories', 'vm.propertyFilter'], () => {
     const allCurrencies = {};
     const vendorTabItems = $filter('vendorTabItems');
-    const allItems = vendorTabItems(flatMap(vm.vendorCategories, (category: any) => {
-      if (!vm.propertyFilter || !vm.propertyFilter.length || category[vm.propertyFilter]) {
-        return category.saleItems;
-      }
-      return undefined;
-    }), vm.propertyFilter);
+    const allItems = vendorTabItems(
+      flatMap(vm.vendorCategories, (category: any) => {
+        if (!vm.propertyFilter || !vm.propertyFilter.length || category[vm.propertyFilter]) {
+          return category.saleItems;
+        }
+        return undefined;
+      }),
+      vm.propertyFilter
+    );
 
     allItems.forEach((saleItem) => {
       saleItem.costs.forEach((cost) => {

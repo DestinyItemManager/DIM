@@ -3,6 +3,7 @@ import { D2Item } from "./item-types";
 import classNames from "classnames";
 import { DestinySocketCategoryStyle } from "bungie-api-ts/destiny2";
 import ItemRating from './ItemRating';
+import ItemMod from './ItemMod';
 import "./ItemRender.scss";
 
 interface Props {
@@ -54,22 +55,12 @@ export default class ItemRender extends React.Component<Props> {
               }
 
               return (
-                <div
-                  key={socketInfo.socketIndex}
-                  className={`plug-${index + 1}`}
-                >
-                  {socketInfo.plug &&
-                    category.category.categoryStyle !==
-                      DestinySocketCategoryStyle.Reusable && (
-                      <div
-                        className="item-mod"
-                        style={{
-                          backgroundImage: `url('https://www.bungie.net${
-                            socketInfo.plug.plugItem.displayProperties.icon
-                          }')`
-                        }}
-                      />
-                    )}
+                <div key={socketInfo.socketIndex} className={`plug-${index + 1}`}>
+                  {socketInfo.plug && category.category.categoryStyle !== DestinySocketCategoryStyle.Reusable && (
+                    <ItemMod
+                      mod={socketInfo.plug.plugItem}
+                    />
+                  )}
                 </div>
               );
             })}

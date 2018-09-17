@@ -1,4 +1,4 @@
-import { UIRouterReact } from "@uirouter/react";
+import { UIRouterReact } from '@uirouter/react';
 
 /** The global router for the app, accessible to other parts of the app once initialized. */
 export let router: UIRouterReact;

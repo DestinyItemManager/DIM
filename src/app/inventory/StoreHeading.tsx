@@ -20,7 +20,7 @@ interface Props {
   store: DimStore;
   internalLoadoutMenu: boolean;
   selectedStore?: DimStore;
-  onTapped?(): void;
+  onTapped?(storeId: string): void;
 }
 
 function isVault(store: DimStore): store is DimVault {
@@ -37,15 +37,9 @@ export default class StoreHeading extends React.Component<Props> {
       return (
         <div className="character">
           <div className="character-box vault" onClick={this.openLoadoutPopup}>
-            <div
-              className="background"
-              style={{ backgroundImage: `url(${store.background})` }}
-            />
+            <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
             <div className="details">
-              <div
-                className="emblem"
-                style={{ backgroundImage: `url(${store.icon})` }}
-              />
+              <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />
               <div className="character-text">
                 <div className="top">
                   <div className="class">{store.className}</div>
@@ -57,10 +51,8 @@ export default class StoreHeading extends React.Component<Props> {
                   {store.glimmer} <img src={glimmer} />
                 </div>
                 <div className="currency legendaryMarks">
-                  {store.legendaryMarks}
-                  <img
-                    src={store.isDestiny1() ? legendaryMarks : legendaryShards}
-                  />
+                  {store.legendaryMarks}{' '}
+                  <img src={store.isDestiny1() ? legendaryMarks : legendaryShards} />
                 </div>
               </div>
               <i
@@ -69,9 +61,7 @@ export default class StoreHeading extends React.Component<Props> {
               />
             </div>
           </div>
-          {internalLoadoutMenu && (
-            <div className="loadout-menu" loadout-id={store.id} />
-          )}
+          {internalLoadoutMenu && <div className="loadout-menu" loadout-id={store.id} />}
           <div className="vault-capacity">
             {Object.keys(store.vaultCounts).map((bucketId) => (
               <PressTip
@@ -89,9 +79,7 @@ export default class StoreHeading extends React.Component<Props> {
                   <div className="vault-bucket-tag">
                     {store.vaultCounts[bucketId].bucket.name.substring(0, 1)}
                   </div>
-                  {store.vaultCounts[bucketId].count}/{
-                    store.vaultCounts[bucketId].bucket.capacity
-                  }
+                  {store.vaultCounts[bucketId].count}/{store.vaultCounts[bucketId].bucket.capacity}
                 </div>
               </PressTip>
             ))}
@@ -110,15 +98,9 @@ export default class StoreHeading extends React.Component<Props> {
           })}
           onClick={this.openLoadoutPopup}
         >
-          <div
-            className="background"
-            style={{ backgroundImage: `url(${store.background})` }}
-          />
+          <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
           <div className="details">
-            <div
-              className="emblem"
-              style={{ backgroundImage: `url(${store.icon})` }}
-            />
+            <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />
             <div className="character-text">
               <div className="top">
                 <div className="class">{store.className}</div>
@@ -143,13 +125,8 @@ export default class StoreHeading extends React.Component<Props> {
             />
           </div>
         </div>
-        {internalLoadoutMenu && (
-          <div className="loadout-menu" loadout-id={store.id} />
-        )}
-        <CharacterStats
-          destinyVersion={store.destinyVersion}
-          stats={store.stats}
-        />
+        {internalLoadoutMenu && <div className="loadout-menu" loadout-id={store.id} />}
+        <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
       </div>
     );
   }
@@ -160,7 +137,7 @@ export default class StoreHeading extends React.Component<Props> {
     const { store, internalLoadoutMenu, selectedStore, onTapped } = this.props;
 
     if (store !== selectedStore && !internalLoadoutMenu) {
-      onTapped && onTapped();
+      onTapped && onTapped(store.id);
       return;
     }
 
@@ -182,14 +159,10 @@ export default class StoreHeading extends React.Component<Props> {
     } else {
       this.dialogResult.close();
     }
-  }
+  };
 }
 
-function VaultToolTip({
-  counts
-}: {
-  counts: { bucket: InventoryBucket; count: number };
-}) {
+function VaultToolTip({ counts }: { counts: { bucket: InventoryBucket; count: number } }) {
   return (
     <div>
       <h2>{counts.bucket.name}</h2>
@@ -206,18 +179,13 @@ function getLevelBar(store: DimStore) {
     };
   }
   if (store.progression && store.progression.progressions) {
-    const prestige = store.progression.progressions.find(
-      (p) => p.progressionHash === 2030054750
-    );
+    const prestige = store.progression.progressions.find((p) => p.progressionHash === 2030054750);
     if (prestige) {
       return {
-        xpTillMote: t(
-          store.destinyVersion === 1 ? 'Stats.Prestige' : 'Stats.PrestigeD2',
-          {
-            level: prestige.level,
-            exp: prestige.nextLevelAt - prestige.progressToNextLevel
-          }
-        ),
+        xpTillMote: t(store.destinyVersion === 1 ? 'Stats.Prestige' : 'Stats.PrestigeD2', {
+          level: prestige.level,
+          exp: prestige.nextLevelAt - prestige.progressToNextLevel
+        }),
         levelBar: prestige.progressToNextLevel / prestige.nextLevelAt
       };
     }

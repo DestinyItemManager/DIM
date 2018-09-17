@@ -35,8 +35,8 @@ export default class ClearNewItems extends React.Component<Props, State> {
     const scopedHotkeys = hotkeys.bindTo(this.$scope);
 
     scopedHotkeys.add({
-      combo: ["x"],
-      description: t("Hotkey.ClearNewItems"),
+      combo: ['x'],
+      description: t('Hotkey.ClearNewItems'),
       callback: () => {
         this.clearNewItems();
       }
@@ -69,8 +69,8 @@ export default class ClearNewItems extends React.Component<Props, State> {
 
     return (
       <div className="clear-new-items">
-        <button onClick={this.clearNewItems} title={t("Hotkey.ClearNewItemsTitle")}>
-          <i className="fa fa-thumbs-up"/> <span>{t("Hotkey.ClearNewItems")}</span>
+        <button onClick={this.clearNewItems} title={t('Hotkey.ClearNewItemsTitle')}>
+          <i className="fa fa-thumbs-up" /> <span>{t('Hotkey.ClearNewItems')}</span>
         </button>
       </div>
     );
@@ -82,5 +82,5 @@ export default class ClearNewItems extends React.Component<Props, State> {
       : D1StoresService
     ).getStores();
     NewItemsService.clearNewItems(stores, this.props.account);
-  }
+  };
 }

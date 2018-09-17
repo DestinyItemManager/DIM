@@ -6,6 +6,7 @@
 		"eg2.tslint",
 		"Angular.ng-template",
 		"mkaufman.htmlhint",
-		"gamunu.vscode-yarn"
+		"gamunu.vscode-yarn",
+		"esbenp.prettier-vscode"
 	]
 }

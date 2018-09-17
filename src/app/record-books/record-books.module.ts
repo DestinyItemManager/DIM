@@ -3,6 +3,7 @@ import 'angular-duration-format';
 
 import { RecordBooksComponent } from './record-books.component';
 
-export default module('recordBooksModule', ['angular-duration-format'])
-  .component('recordBooks', RecordBooksComponent)
-  .name;
+export default module('recordBooksModule', ['angular-duration-format']).component(
+  'recordBooks',
+  RecordBooksComponent
+).name;

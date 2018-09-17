@@ -4,12 +4,14 @@
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
   }
 
-  &.ng-enter, &.ng-leave.ng-leave-active {
+  &.ng-enter,
+  &.ng-leave.ng-leave-active {
     opacity: 0;
     transform: translateY(5rem);
   }
 
-  &.ng-leave, &.ng-enter.ng-enter-active {
+  &.ng-leave,
+  &.ng-enter.ng-enter-active {
     opacity: 1;
     transform: translateY(0rem);
   }

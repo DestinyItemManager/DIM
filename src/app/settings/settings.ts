@@ -94,7 +94,7 @@ export class Settings {
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
   reviewsModeSelection = 0;
 
-  ready = new Promise((resolve) => readyResolve = resolve);
+  ready = new Promise((resolve) => (readyResolve = resolve));
 
   language = defaultLanguage();
 
@@ -114,9 +114,10 @@ export class Settings {
   }
 
   itemSortOrder(): string[] {
-    return (this.itemSort === 'custom'
-      ? this.itemSortOrderCustom
-      : itemSortPresets[this.itemSort]) || itemSortPresets.primaryStat;
+    return (
+      (this.itemSort === 'custom' ? this.itemSortOrderCustom : itemSortPresets[this.itemSort]) ||
+      itemSortPresets.primaryStat
+    );
   }
 }
 

@@ -11,13 +11,7 @@ import { PlatformErrorCodes } from '../../../node_modules/bungie-api-ts/user';
 
 // TODO: A lot going on here. Clean it up and reactify it
 const moveDroppedItem = queuedAction(
-  (
-    target: DimStore,
-    item: DimItem,
-    equip: boolean,
-    $event,
-    hovering: boolean
-  ) => {
+  (target: DimStore, item: DimItem, equip: boolean, $event, hovering: boolean) => {
     const promise = doMoveDroppedItem(target, item, equip, $event, hovering);
     loadingTracker.addPromise(promise);
     return promise;

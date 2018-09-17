@@ -12,7 +12,11 @@ export function showInfoPopup(id, content?, timeout?) {
   content.title = content.title || '';
   content.body = content.body || '';
   content.hide = content.hide || t('Help.HidePopup');
-  content.func = content.func || (() => { return; });
+  content.func =
+    content.func ||
+    (() => {
+      return;
+    });
   content.hideable = content.hideable === undefined ? true : content.hideable;
 
   function showToaster(body, timeout) {

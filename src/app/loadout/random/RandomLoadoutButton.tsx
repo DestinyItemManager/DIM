@@ -24,11 +24,7 @@ export default class RandomLoadoutButton extends React.Component<Props, State> {
   render() {
     return (
       <div className="random-loadout">
-        <a
-          className="loadout random"
-          href="#"
-          onClick={this.applyRandomLoadout}
-        >
+        <a className="loadout random" href="#" onClick={this.applyRandomLoadout}>
           &Pi;
         </a>
       </div>
@@ -42,9 +38,8 @@ export default class RandomLoadoutButton extends React.Component<Props, State> {
       return null;
     }
 
-    const storeService: StoreServiceType = this.props.destinyVersion === 1
-      ? D1StoresService
-      : D2StoresService;
+    const storeService: StoreServiceType =
+      this.props.destinyVersion === 1 ? D1StoresService : D2StoresService;
 
     const store = storeService.getActiveStore();
     if (!store) {
@@ -74,15 +69,11 @@ export default class RandomLoadoutButton extends React.Component<Props, State> {
       .filter((i) => types.has(i.type) && i.canBeEquippedBy(store));
 
     // Use "random" as the value function
-    const loadout = optimalLoadout(
-      applicableItems,
-      () => Math.random(),
-      t('Loadouts.Random')
-    );
+    const loadout = optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
 
     this.setState({ working: true });
     return dimLoadoutService.applyLoadout(store, loadout, true).finally(() => {
       this.setState({ working: false });
     });
-  }
+  };
 }

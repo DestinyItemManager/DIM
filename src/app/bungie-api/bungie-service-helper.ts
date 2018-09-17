@@ -17,8 +17,7 @@ export interface DimError extends Error {
 const ourFetch = rateLimitedFetch(fetchWithBungieOAuth);
 
 export function httpAdapter(config: HttpClientConfig): Promise<ServerResponse<any>> {
-  return Promise.resolve(ourFetch(buildOptions(config)))
-      .then(handleErrors, handleErrors);
+  return Promise.resolve(ourFetch(buildOptions(config))).then(handleErrors, handleErrors);
 }
 
 function buildOptions(config: HttpClientConfig): Request {
@@ -27,17 +26,15 @@ function buildOptions(config: HttpClientConfig): Request {
     url = `${url}?${stringify(config.params)}`;
   }
 
-  return new Request(
-    url,
-    {
-      method: config.method,
-      body: JSON.stringify(config.body),
-      headers: {
-        'X-API-Key': API_KEY,
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
+  return new Request(url, {
+    method: config.method,
+    body: JSON.stringify(config.body),
+    headers: {
+      'X-API-Key': API_KEY,
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  });
 }
 
 /** Generate an error with a bit more info */
@@ -49,9 +46,9 @@ export function error(message: string, errorCode: PlatformErrorCodes): DimError 
 
 export async function handleErrors<T>(response: Response): Promise<ServerResponse<T>> {
   if (response instanceof TypeError) {
-    throw new Error(navigator.onLine
-      ? t('BungieService.NotConnectedOrBlocked')
-      : t('BungieService.NotConnected'));
+    throw new Error(
+      navigator.onLine ? t('BungieService.NotConnectedOrBlocked') : t('BungieService.NotConnected')
+    );
   }
 
   if (response instanceof Error) {
@@ -59,9 +56,9 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
   }
 
   if (response.status === -1) {
-    throw new Error(navigator.onLine
-      ? t('BungieService.NotConnectedOrBlocked')
-      : t('BungieService.NotConnected'));
+    throw new Error(
+      navigator.onLine ? t('BungieService.NotConnectedOrBlocked') : t('BungieService.NotConnected')
+    );
   }
   // Token expired and other auth maladies
   if (response.status === 401 || response.status === 403) {
@@ -73,10 +70,12 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     throw new Error(t('BungieService.Difficulties'));
   }
   if (response.status < 200 || response.status >= 400) {
-    throw new Error(t('BungieService.NetworkError', {
-      status: response.status,
-      statusText: response.statusText
-    }));
+    throw new Error(
+      t('BungieService.NetworkError', {
+        status: response.status,
+        statusText: response.statusText
+      })
+    );
   }
 
   const data: ServerResponse<any> = await response.json();
@@ -85,54 +84,56 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
 
   // See https://github.com/DestinyDevs/BungieNetPlatform/wiki/Enums#platformerrorcodes
   switch (errorCode) {
-  case PlatformErrorCodes.Success:
-    return data;
+    case PlatformErrorCodes.Success:
+      return data;
 
-  case PlatformErrorCodes.DestinyVendorNotFound:
-    throw error(t('BungieService.VendorNotFound'), errorCode);
+    case PlatformErrorCodes.DestinyVendorNotFound:
+      throw error(t('BungieService.VendorNotFound'), errorCode);
 
-  case PlatformErrorCodes.AuthorizationCodeInvalid:
-  case PlatformErrorCodes.AccessNotPermittedByApplicationScope:
-    $rootScope.$broadcast('dim-no-token-found');
-    throw error("DIM does not have permission to perform this action.", errorCode);
+    case PlatformErrorCodes.AuthorizationCodeInvalid:
+    case PlatformErrorCodes.AccessNotPermittedByApplicationScope:
+      $rootScope.$broadcast('dim-no-token-found');
+      throw error('DIM does not have permission to perform this action.', errorCode);
 
-  case PlatformErrorCodes.SystemDisabled:
-    throw error(t('BungieService.Maintenance'), errorCode);
+    case PlatformErrorCodes.SystemDisabled:
+      throw error(t('BungieService.Maintenance'), errorCode);
 
-  case PlatformErrorCodes.ThrottleLimitExceededMinutes:
-  case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
-  case PlatformErrorCodes.ThrottleLimitExceededSeconds:
-    throw error(t('BungieService.Throttled'), errorCode);
+    case PlatformErrorCodes.ThrottleLimitExceededMinutes:
+    case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
+    case PlatformErrorCodes.ThrottleLimitExceededSeconds:
+      throw error(t('BungieService.Throttled'), errorCode);
 
-  case PlatformErrorCodes.AccessTokenHasExpired:
-  case PlatformErrorCodes.WebAuthRequired:
-  case PlatformErrorCodes.WebAuthModuleAsyncFailed: // means the access token has expired
-    $rootScope.$broadcast('dim-no-token-found');
-    throw error(t('BungieService.NotLoggedIn'), errorCode);
+    case PlatformErrorCodes.AccessTokenHasExpired:
+    case PlatformErrorCodes.WebAuthRequired:
+    case PlatformErrorCodes.WebAuthModuleAsyncFailed: // means the access token has expired
+      $rootScope.$broadcast('dim-no-token-found');
+      throw error(t('BungieService.NotLoggedIn'), errorCode);
 
-  case PlatformErrorCodes.DestinyAccountNotFound:
-  case PlatformErrorCodes.DestinyUnexpectedError:
-    if (response.url.indexOf('/Account/') >= 0 &&
-        response.url.indexOf('/Character/') < 0) {
-      const account = getActivePlatform();
-      throw error(t('BungieService.NoAccount', {
-        platform: account ? account.platformLabel : 'Unknown'
-      }), errorCode);
-    }
-    break;
+    case PlatformErrorCodes.DestinyAccountNotFound:
+    case PlatformErrorCodes.DestinyUnexpectedError:
+      if (response.url.indexOf('/Account/') >= 0 && response.url.indexOf('/Character/') < 0) {
+        const account = getActivePlatform();
+        throw error(
+          t('BungieService.NoAccount', {
+            platform: account ? account.platformLabel : 'Unknown'
+          }),
+          errorCode
+        );
+      }
+      break;
 
-  case PlatformErrorCodes.DestinyLegacyPlatformInaccessible:
-    throw error(t('BungieService.DestinyLegacyPlatform'), errorCode);
+    case PlatformErrorCodes.DestinyLegacyPlatformInaccessible:
+      throw error(t('BungieService.DestinyLegacyPlatform'), errorCode);
 
-  case PlatformErrorCodes.ApiInvalidOrExpiredKey:
-  case PlatformErrorCodes.ApiKeyMissingFromRequest:
-  case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
-    if ($DIM_FLAVOR === 'dev') {
-      router.stateService.go('developer');
-      throw error(t('BungieService.DevVersion'), errorCode);
-    } else {
-      throw error(t('BungieService.Difficulties'), errorCode);
-    }
+    case PlatformErrorCodes.ApiInvalidOrExpiredKey:
+    case PlatformErrorCodes.ApiKeyMissingFromRequest:
+    case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
+      if ($DIM_FLAVOR === 'dev') {
+        router.stateService.go('developer');
+        throw error(t('BungieService.DevVersion'), errorCode);
+      } else {
+        throw error(t('BungieService.Difficulties'), errorCode);
+      }
   }
 
   // Any other error

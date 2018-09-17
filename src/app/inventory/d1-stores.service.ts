@@ -44,15 +44,15 @@ function StoreService(): D1StoreServiceType {
   // A stream of stores that switches on account changes and supports reloading.
   // This is a ConnectableObservable that must be connected to start.
   const storesStream = accountStream
-        // Only emit when the account changes
-        .distinctUntilChanged(compareAccounts)
-        // But also re-emit the current value of the account stream
-        // whenever the force reload triggers
-        .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
-        // Whenever either trigger happens, load stores
-        .switchMap(loadStores)
-        // Keep track of the last value for new subscribers
-        .publishReplay(1);
+    // Only emit when the account changes
+    .distinctUntilChanged(compareAccounts)
+    // But also re-emit the current value of the account stream
+    // whenever the force reload triggers
+    .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
+    // Whenever either trigger happens, load stores
+    .switchMap(loadStores)
+    // Keep track of the last value for new subscribers
+    .publishReplay(1);
 
   // TODO: If we can make the store structures immutable, we could use
   //       distinctUntilChanged to avoid emitting store updates when
@@ -64,7 +64,9 @@ function StoreService(): D1StoreServiceType {
     getStore: (id) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
     getAllItems: () => flatMap(_stores, (s) => s.items),
-    refreshRatingsData() { return; },
+    refreshRatingsData() {
+      return;
+    },
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,
@@ -85,7 +87,9 @@ function StoreService(): D1StoreServiceType {
     notransfer?: boolean;
     amount?: number;
   }) {
-    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (i: DimItem) => boolean;
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer', 'amount')) as (
+      i: DimItem
+    ) => boolean;
     for (const store of _stores) {
       const result = store.items.find(predicate);
       if (result) {
@@ -116,10 +120,7 @@ function StoreService(): D1StoreServiceType {
       }
     }
 
-    return $q.all([
-      getDefinitions(),
-      getCharacters(account)
-    ]).then(([defs, bungieStores]) => {
+    return $q.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
           const bStore: any = _.find(bungieStores, { id: dStore.id });
@@ -167,17 +168,17 @@ function StoreService(): D1StoreServiceType {
   function loadStores(account: DestinyAccount): IPromise<D1Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
-    const firstLoad = (previousItems.size === 0);
 
     resetIdTracker();
 
-    const reloadPromise = $q.all([
-      getDefinitions(),
-      getBuckets(),
-      NewItemsService.loadNewItems(account),
-      getItemInfoSource(account),
-      getStores(account)
-    ])
+    const reloadPromise = $q
+      .all([
+        getDefinitions(),
+        getBuckets(),
+        NewItemsService.loadNewItems(account),
+        getItemInfoSource(account),
+        getStores(account)
+      ])
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
@@ -190,18 +191,28 @@ function StoreService(): D1StoreServiceType {
           silver: 0
         };
 
-        const processStorePromises = _.compact((rawStores as any[]).map((raw) => processStore(raw, defs, buckets, previousItems, newItems, itemInfoService, currencies, lastPlayedDate)));
+        const processStorePromises = _.compact(
+          (rawStores as any[]).map((raw) =>
+            processStore(
+              raw,
+              defs,
+              buckets,
+              previousItems,
+              newItems,
+              itemInfoService,
+              currencies,
+              lastPlayedDate
+            )
+          )
+        );
 
         store.dispatch(setBuckets(buckets));
         return $q.all([newItems, itemInfoService, ...processStorePromises]);
       })
       .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, ...D1Store[]]) => {
-        // Save and notify about new items (but only if this wasn't the first load)
-        if (!firstLoad) {
-          // Save the list of new item IDs
-          NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account);
-        }
+        // Save and notify about new items
+        NewItemsService.applyRemovedNewItems(newItems);
+        NewItemsService.saveNewItems(newItems, account);
 
         _stores = stores;
 
@@ -210,7 +221,9 @@ function StoreService(): D1StoreServiceType {
         itemInfoService.cleanInfos(stores);
 
         // Let our styling know how many characters there are
-        document.querySelector('html')!.style.setProperty("--num-characters", String(stores.length - 1));
+        document
+          .querySelector('html')!
+          .style.setProperty('--num-characters', String(stores.length - 1));
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
@@ -290,9 +303,8 @@ function StoreService(): D1StoreServiceType {
           'BUCKET_VAULT_ITEMS'
         ];
 
-        _.sortBy(
-          Object.values(buckets.byType).filter((b) => b.vaultBucket),
-          (b) => vaultBucketOrder.indexOf(b.vaultBucket!.id)
+        _.sortBy(Object.values(buckets.byType).filter((b) => b.vaultBucket), (b) =>
+          vaultBucketOrder.indexOf(b.vaultBucket!.id)
         ).forEach((bucket) => {
           const vaultBucketId = bucket.vaultBucket!.id;
           vault.vaultCounts[vaultBucketId] = vault.vaultCounts[vaultBucketId] || {
@@ -322,7 +334,7 @@ function StoreService(): D1StoreServiceType {
 
       const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
 
-      return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
+      return memo ? (d1 >= memo ? d1 : memo) : d1;
     }, new Date(0));
   }
 }

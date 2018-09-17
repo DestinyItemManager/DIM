@@ -11,21 +11,42 @@ import { default as showRatingFn } from './show-ratings';
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
 import './InventoryItem.scss';
+import { TagValue } from './dim-item-info';
 
 interface Props {
   item: DimItem;
+  /** Show this item as new? */
+  isNew?: boolean;
+  /** User defined tag */
+  tag?: TagValue;
+  /** Rating value */
+  rating?: number;
+  hideRating?: boolean;
+  /** Has this been hidden by a search? */
+  searchHidden?: boolean;
   onClick?(e);
   onDoubleClick?(e);
 }
 
+const tagClasses = tagIconFilter();
+
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
   render() {
-    const { item, onClick, onDoubleClick } = this.props;
+    const {
+      item,
+      isNew,
+      tag,
+      rating,
+      searchHidden,
+      hideRating,
+      onClick,
+      onDoubleClick
+    } = this.props;
 
     const itemImageStyles = {
       complete: item.complete,
-      diamond: item.destinyVersion === 2 && item.bucket.hash === 3284755031,
+      diamond: (item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram,
       masterwork: item.masterwork
     };
 

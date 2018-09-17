@@ -6,6 +6,8 @@ import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
 import { D1Store } from '../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
 import { getWeaponList } from './itemListBuilder';
+import store from '../store/store';
+import { updateRatings } from '../item-review/actions';
 
 class BulkFetcher {
   _reviewDataCache: ReviewDataCache;
@@ -38,9 +40,9 @@ class BulkFetcher {
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
    */
   bulkFetch(stores: D1Store[]) {
-    this._getBulkFetchPromise(stores)
-      .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                  stores));
+    this._getBulkFetchPromise(stores).then((bulkRankings) =>
+      this.attachRankings(bulkRankings, stores)
+    );
   }
 
   /**
@@ -49,15 +51,12 @@ class BulkFetcher {
   bulkFetchVendorItems(vendorContainer: { [key: number]: Vendor }) {
     const vendors = Object.values(vendorContainer);
 
-    return this._getBulkFetchPromise(vendors)
-      .then((bulkRankings) => this.attachVendorRankings(bulkRankings,
-                                                        vendors));
+    return this._getBulkFetchPromise(vendors).then((bulkRankings) =>
+      this.attachVendorRankings(bulkRankings, vendors)
+    );
   }
 
-  attachRankings(
-    bulkRankings: D1ItemFetchResponse[] | null,
-    stores: D1Store[]
-  ) {
+  attachRankings(bulkRankings: D1ItemFetchResponse[] | null, stores: D1Store[]) {
     if (!bulkRankings && !stores) {
       return;
     }
@@ -77,12 +76,13 @@ class BulkFetcher {
         }
       });
     });
+
+    store.dispatch(
+      updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
+    );
   }
 
-  attachVendorRankings(
-    bulkRankings: D1ItemFetchResponse[],
-    vendors: Vendor[]
-  ) {
+  attachVendorRankings(bulkRankings: D1ItemFetchResponse[], vendors: Vendor[]) {
     if (!bulkRankings && !vendors) {
       return;
     }
@@ -102,6 +102,10 @@ class BulkFetcher {
         }
       });
     });
+
+    store.dispatch(
+      updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
+    );
   }
 }
 

@@ -51,8 +51,7 @@
     "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelve a intentarlo.",
     "Twitter": "Entérate de las actualizaciones de estados en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
-    "VendorNotFound": "Los datos de los comerciantes no están disponibles.",
-    "WarmindLoginNeeded": "No podemos cargar tu intentario debido a un fallo en la API de Destiny. Para arreglarlo, carga cada uno de tus personajes y configura los multigestos."
+    "VendorNotFound": "Los datos de los comerciantes no están disponibles."
   },
   "Compare": {
     "All": "Comparaciones de {{type}} ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "Borrar",
     "Edit": "Editar",
     "ForGameMode": "Para el modo de juego",
+    "ForPlatform": "Para la(s) plataforma(s)",
     "Help": "Escribir una calificación (opcional)",
     "HelpCons": "Describe las cosas negativas de esta arma (opcional)",
     "HelpPros": "Describe las cosas positivas de esta arma (opcional)",
@@ -115,6 +115,7 @@
       "Xbox": "Solo Xbox"
     },
     "Pros": "Pros",
+    "RatingsOptions": "Opciones de calificaciones",
     "ReallyReport": "Reportar",
     "ServiceCallError": "Fallo al llamar al servicio de Destiny Tracker.",
     "ServiceSubmitError": "Fallo al enviar al servicio de Destiny Tracker.",
@@ -260,16 +261,13 @@
     "WeaponType": "Muestra las armas basadas en su tipo de arma.",
     "Year": "Muestra los objetos con su respectivo año de aparición en Destiny."
   },
-  "Forsaken": {
-    "Progress": "Nota: La información del progreso puede ser incompleta o incorrecta durante un tiempo después del lanzamiento de Los Renegados.",
-    "Vendors": "Los vendedores no estarán disponibles durante un tiempo después del lanzamiento de Los Renegados."
-  },
   "Header": {
     "About": "Acerca de",
     "Back": "Volver",
     "BulkTag": "Grupos de etiquetas para objetos",
     "BungieNetAlert": "Alerta de Bungie",
     "FilterHelp": "Buscar objeto/ventaja o {{example}}",
+    "FilterHelpBrief": "Buscar objetos",
     "Filters": "Filtros",
     "Inventory": "Inventario",
     "Refresh": "Actualizar datos de Destiny",
@@ -501,6 +499,7 @@
     "OverviewTab": "Resumen",
     "ReadLore": "Lee historia en Ishtar Collective",
     "ReviewsTab": "Calificaciones",
+    "Rewards": "Recompensas:",
     "Split": "Partir",
     "Store": "Meter",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -527,11 +526,10 @@
     "Daily": "Diario",
     "ExpiresIn": "expira en {{endTime}}",
     "Factions": "Facciones",
-    "Milestones": "Hazañas",
+    "Milestones": "Hazañas & Desafíos",
     "ProfileMilestones": "Hazañas de cuenta",
     "ProfileQuests": "Misiones de cuenta",
     "Progress": "Progreso",
-    "Quests": "Búsquedas y Aventuras",
     "RewardEarned": "Recompensa obtenida pero no reclamada",
     "RewardNotEarned": "Recompensa no obtenida",
     "RewardRedeemed": "Recompensa reclamada",

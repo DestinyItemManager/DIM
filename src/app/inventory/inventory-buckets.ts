@@ -1,4 +1,4 @@
-import { BucketCategory } from "bungie-api-ts/destiny2";
+import { BucketCategory } from 'bungie-api-ts/destiny2';
 
 export interface InventoryBucket {
   /** @deprecated */

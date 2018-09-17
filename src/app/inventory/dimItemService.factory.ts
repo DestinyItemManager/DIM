@@ -1,8 +1,16 @@
 import { copy as angularCopy, IPromise } from 'angular';
 import * as _ from 'underscore';
 import { DimError } from '../bungie-api/bungie-service-helper';
-import { equip as d1equip, equipItems as d1EquipItems, transfer as d1Transfer } from '../bungie-api/destiny1-api';
-import { equip as d2equip, equipItems as d2EquipItems, transfer as d2Transfer } from '../bungie-api/destiny2-api';
+import {
+  equip as d1equip,
+  equipItems as d1EquipItems,
+  transfer as d1Transfer
+} from '../bungie-api/destiny1-api';
+import {
+  equip as d2equip,
+  equipItems as d2EquipItems,
+  transfer as d2Transfer
+} from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../comparators';
 import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory.service';
 import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory.service';
@@ -23,7 +31,11 @@ export interface MoveReservations {
 }
 
 export interface ItemServiceType {
-  getSimilarItem(item: DimItem, exclusions?: Partial<DimItem>[], excludeExotic?: boolean): DimItem | null;
+  getSimilarItem(
+    item: DimItem,
+    exclusions?: Partial<DimItem>[],
+    excludeExotic?: boolean
+  ): DimItem | null;
   /**
    * Move item to target store, optionally equipping it.
    * @param item the item to move.
@@ -34,7 +46,14 @@ export interface ItemServiceType {
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  moveTo(item: DimItem, target: DimStore, equip?: boolean, amount?: number, excludes?: { id: string; hash: number }[], reservations?: MoveReservations): IPromise<DimItem>;
+  moveTo(
+    item: DimItem,
+    target: DimStore,
+    equip?: boolean,
+    amount?: number,
+    excludes?: { id: string; hash: number }[],
+    reservations?: MoveReservations
+  ): IPromise<DimItem>;
   /**
    * Bulk equip items. Only use for multiple equips at once.
    */
@@ -51,13 +70,21 @@ function ItemService(): ItemServiceType {
   // thrown away or moved and we just don't have up to date info. But let's
   // throttle these calls so we don't just keep refreshing over and over.
   // This needs to be up here because of how we return the service object.
-  const throttledReloadStores = _.throttle(() => {
-    return D1StoresService.reloadStores();
-  }, 10000, { trailing: false });
+  const throttledReloadStores = _.throttle(
+    () => {
+      return D1StoresService.reloadStores();
+    },
+    10000,
+    { trailing: false }
+  );
 
-  const throttledD2ReloadStores = _.throttle(() => {
-    return D2StoresService.reloadStores();
-  }, 10000, { trailing: false });
+  const throttledD2ReloadStores = _.throttle(
+    () => {
+      return D2StoresService.reloadStores();
+    },
+    10000,
+    { trailing: false }
+  );
 
   return {
     getSimilarItem,
@@ -69,11 +96,15 @@ function ItemService(): ItemServiceType {
     return item.destinyVersion === 2 ? d2equip : d1equip;
   }
 
-  function equipItemsApi(item: DimItem): (store: DimStore, items: DimItem[]) => IPromise<DimItem[]> {
+  function equipItemsApi(
+    item: DimItem
+  ): (store: DimStore, items: DimItem[]) => IPromise<DimItem[]> {
     return item.destinyVersion === 2 ? d2EquipItems : d1EquipItems;
   }
 
-  function transferApi(item: DimItem): (item: DimItem, store: DimStore, amount: number) => IPromise<any> {
+  function transferApi(
+    item: DimItem
+  ): (item: DimItem, store: DimStore, amount: number) => IPromise<any> {
     return item.destinyVersion === 2 ? d2Transfer : d1Transfer;
   }
 
@@ -83,7 +114,7 @@ function ItemService(): ItemServiceType {
     } else if (item.isDestiny1()) {
       return d1CreateItemIndex(item);
     } else {
-      throw new Error("Destiny 3??");
+      throw new Error('Destiny 3??');
     }
   }
 
@@ -91,7 +122,13 @@ function ItemService(): ItemServiceType {
    * Update our item and store models after an item has been moved (or equipped/dequipped).
    * @return the new or updated item (it may create a new item!)
    */
-  function updateItemModel(item: DimItem, source: DimStore, target: DimStore, equip: boolean, amount: number = item.amount) {
+  function updateItemModel(
+    item: DimItem,
+    source: DimStore,
+    target: DimStore,
+    equip: boolean,
+    amount: number = item.amount
+  ) {
     // Refresh all the items - they may have been reloaded!
     const storeService = item.getStoresService();
     source = storeService.getStore(source.id)!;
@@ -105,21 +142,29 @@ function ItemService(): ItemServiceType {
       const stackable = item.maxStackSize > 1;
       // Items to be decremented
       const sourceItems = stackable
-        ? _.sortBy(source.buckets[item.location.id].filter((i) => {
-          return i.hash === item.hash &&
-                i.id === item.id &&
-                !i.notransfer;
-        }), (i) => i.amount) : [item];
+        ? _.sortBy(
+            source.buckets[item.location.id].filter((i) => {
+              return i.hash === item.hash && i.id === item.id && !i.notransfer;
+            }),
+            (i) => i.amount
+          )
+        : [item];
       // Items to be incremented. There's really only ever at most one of these, but
       // it's easier to deal with as a list.
       const targetItems = stackable
-        ? _.sortBy(target.buckets[item.bucket.id].filter((i) => {
-          return i.hash === item.hash &&
+        ? _.sortBy(
+            target.buckets[item.bucket.id].filter((i) => {
+              return (
+                i.hash === item.hash &&
                 i.id === item.id &&
                 // Don't consider full stacks as targets
                 i.amount !== i.maxStackSize &&
-                !i.notransfer;
-        }), (i) => i.amount) : [];
+                !i.notransfer
+              );
+            }),
+            (i) => i.amount
+          )
+        : [];
       // moveAmount could be more than maxStackSize if there is more than one stack on a character!
       const moveAmount = amount || item.amount;
       let addAmount = moveAmount;
@@ -191,8 +236,10 @@ function ItemService(): ItemServiceType {
     }
 
     if (equip) {
-      target.buckets[item.bucket.id].forEach((i) => {
-        i.equipped = (i.index === item.index);
+      target.buckets[item.bucket.id] = target.buckets[item.bucket.id].map((i) => {
+        // TODO: this state needs to be moved out
+        i.equipped = i.index === item.index;
+        return i;
       });
     }
 
@@ -201,7 +248,11 @@ function ItemService(): ItemServiceType {
     return item;
   }
 
-  function getSimilarItem(item: DimItem, exclusions?: DimItem[], excludeExotic = false): DimItem | null {
+  function getSimilarItem(
+    item: DimItem,
+    exclusions?: DimItem[],
+    excludeExotic = false
+  ): DimItem | null {
     const storeService = item.getStoresService();
     const target = storeService.getStore(item.owner)!;
     const sortedStores = _.sortBy(storeService.getStores(), (store) => {
@@ -229,17 +280,25 @@ function ItemService(): ItemServiceType {
    * @param exclusions a list of {id, hash} objects that won't be considered for equipping.
    * @param excludeExotic exclude any item matching the equippingLabel of item, used when dequipping an exotic so we can equip an exotic in another slot.
    */
-  function searchForSimilarItem(item: DimItem, store: DimStore, exclusions: DimItem[] | undefined, target: DimStore, excludeExotic: boolean): DimItem | null {
+  function searchForSimilarItem(
+    item: DimItem,
+    store: DimStore,
+    exclusions: DimItem[] | undefined,
+    target: DimStore,
+    excludeExotic: boolean
+  ): DimItem | null {
     const exclusionsList = exclusions || [];
 
     let candidates = store.items.filter((i) => {
-      return i.canBeEquippedBy(target) &&
+      return (
+        i.canBeEquippedBy(target) &&
         i.location.id === item.location.id &&
         !i.equipped &&
         // Not the same item
         i.id !== item.id &&
         // Not on the exclusion list
-        !_.any(exclusionsList, { id: i.id, hash: i.hash });
+        !_.any(exclusionsList, { id: i.id, hash: i.hash })
+      );
     });
 
     if (!candidates.length) {
@@ -268,19 +327,21 @@ function ItemService(): ItemServiceType {
       return value;
     }).reverse();
 
-    return sortedCandidates.find((result) => {
-      if (result.equippingLabel) {
-        const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
-        // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
-        if (!otherExotic || otherExotic.id === item.id) {
-          return true;
+    return (
+      sortedCandidates.find((result) => {
+        if (result.equippingLabel) {
+          const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
+          // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
+          if (!otherExotic || otherExotic.id === item.id) {
+            return true;
+          } else {
+            return false;
+          }
         } else {
-          return false;
+          return true;
         }
-      } else {
-        return true;
-      }
-    }) || null;
+      }) || null
+    );
   }
 
   /**
@@ -288,27 +349,29 @@ function ItemService(): ItemServiceType {
    */
   function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]> {
     // Check for (and move aside) exotics
-    const extraItemsToEquip: IPromise<DimItem>[] = _.compact(items.map((i) => {
-      if (i.equippingLabel) {
-        const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
-        // If we aren't already equipping into that slot...
-        if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
-          const similarItem = getSimilarItem(otherExotic);
-          if (!similarItem) {
-            return $q.reject(new Error(t('ItemService.Deequip', { itemname: otherExotic.name })));
-          }
-          const target = similarItem.getStoresService().getStore(similarItem.owner)!;
+    const extraItemsToEquip: IPromise<DimItem>[] = _.compact(
+      items.map((i) => {
+        if (i.equippingLabel) {
+          const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
+          // If we aren't already equipping into that slot...
+          if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
+            const similarItem = getSimilarItem(otherExotic);
+            if (!similarItem) {
+              return $q.reject(new Error(t('ItemService.Deequip', { itemname: otherExotic.name })));
+            }
+            const target = similarItem.getStoresService().getStore(similarItem.owner)!;
 
-          if (store.id === target.id) {
-            return $q.when(similarItem);
-          } else {
-            // If we need to get the similar item from elsewhere, do that first
-            return moveTo(similarItem, store, true).then(() => similarItem);
+            if (store.id === target.id) {
+              return $q.when(similarItem);
+            } else {
+              // If we need to get the similar item from elsewhere, do that first
+              return moveTo(similarItem, store, true).then(() => similarItem);
+            }
           }
         }
-      }
-      return undefined;
-    }));
+        return undefined;
+      })
+    );
 
     return $q.all(extraItemsToEquip).then((extraItems: DimItem[]) => {
       items = items.concat(extraItems);
@@ -319,8 +382,9 @@ function ItemService(): ItemServiceType {
       if (items.length === 1) {
         return equipItem(items[0]).then((item) => [item]);
       }
-      return equipItemsApi(items[0])(store, items)
-        .then((equippedItems) => equippedItems.map((i) => updateItemModel(i, store, store, true)));
+      return equipItemsApi(items[0])(store, items).then((equippedItems) =>
+        equippedItems.map((i) => updateItemModel(i, store, store, true))
+      );
     });
   }
 
@@ -329,11 +393,10 @@ function ItemService(): ItemServiceType {
     if ($featureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', storeService.getStore(item.owner)!.name);
     }
-    return equipApi(item)(item)
-      .then(() => {
-        const store = storeService.getStore(item.owner)!;
-        return updateItemModel(item, store, store, true);
-      });
+    return equipApi(item)(item).then(() => {
+      const store = storeService.getStore(item.owner)!;
+      return updateItemModel(item, store, store, true);
+    });
   }
 
   function dequipItem(item: DimItem, excludeExotic = false): IPromise<DimItem> {
@@ -350,29 +413,40 @@ function ItemService(): ItemServiceType {
       p = moveTo(similarItem, source, true);
     }
 
-    return p
-      .then(() => equipItem(similarItem))
-      .then(() => item);
+    return p.then(() => equipItem(similarItem)).then(() => item);
   }
 
   function moveToVault(item: DimItem, amount: number = item.amount) {
     return moveToStore(item, item.getStoresService().getVault()!, false, amount);
   }
 
-  function moveToStore(item: DimItem, store: DimStore, equip: boolean = false, amount: number = item.amount) {
+  function moveToStore(
+    item: DimItem,
+    store: DimStore,
+    equip: boolean = false,
+    amount: number = item.amount
+  ) {
     if ($featureFlags.debugMoves) {
-      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', item.getStoresService().getStore(item.owner)!.name);
+      console.log(
+        'Move',
+        amount,
+        item.name,
+        item.type,
+        'to',
+        store.name,
+        'from',
+        item.getStoresService().getStore(item.owner)!.name
+      );
     }
-    return transferApi(item)(item, store, amount)
-      .then(() => {
-        const source = item.getStoresService().getStore(item.owner)!;
-        const newItem = updateItemModel(item, source, store, false, amount);
-        if ((newItem.owner !== 'vault') && equip) {
-          return equipItem(newItem);
-        } else {
-          return newItem;
-        }
-      });
+    return transferApi(item)(item, store, amount).then(() => {
+      const source = item.getStoresService().getStore(item.owner)!;
+      const newItem = updateItemModel(item, source, store, false, amount);
+      if (newItem.owner !== 'vault' && equip) {
+        return equipItem(newItem);
+      } else {
+        return newItem;
+      }
+    });
   }
 
   /**
@@ -387,7 +461,13 @@ function ItemService(): ItemServiceType {
       return dequipItem(otherExotic, true)
         .then(() => true)
         .catch((e) => {
-          throw new Error(t('ItemService.ExoticError', { itemname: item.name, slot: otherExotic.type, error: e.message }));
+          throw new Error(
+            t('ItemService.ExoticError', {
+              itemname: item.name,
+              slot: otherExotic.type,
+              error: e.message
+            })
+          );
         });
     } else {
       return $q.resolve(true);
@@ -404,7 +484,10 @@ function ItemService(): ItemServiceType {
     }
 
     // Find an item that's not in the slot we're equipping, but has a matching equipping label
-    return store.items.find((i) => i.equipped && i.equippingLabel === item.equippingLabel && i.bucket.id !== item.bucket.id);
+    return store.items.find(
+      (i) =>
+        i.equipped && i.equippingLabel === item.equippingLabel && i.bucket.id !== item.bucket.id
+    );
   }
 
   interface MoveContext {
@@ -434,8 +517,10 @@ function ItemService(): ItemServiceType {
   } {
     // Check whether an item cannot or should not be moved
     function movable(otherItem: DimItem) {
-      return !otherItem.notransfer &&
-        !moveContext.excludes.some((i) => i.id === otherItem.id && i.hash === otherItem.hash);
+      return (
+        !otherItem.notransfer &&
+        !moveContext.excludes.some((i) => i.id === otherItem.id && i.hash === otherItem.hash)
+      );
     }
 
     const stores = item.getStoresService().getStores();
@@ -446,13 +531,25 @@ function ItemService(): ItemServiceType {
     let allItems;
     try {
       allItems = store.isVault
-        ? store.items.filter((i) => i.bucket.vaultBucket && item.bucket.vaultBucket && i.bucket.vaultBucket.id === item.bucket.vaultBucket.id)
+        ? store.items.filter(
+            (i) =>
+              i.bucket.vaultBucket &&
+              item.bucket.vaultBucket &&
+              i.bucket.vaultBucket.id === item.bucket.vaultBucket.id
+          )
         : store.buckets[item.bucket.id];
     } catch (e) {
       if (store.isVault && !item.bucket.vaultBucket) {
-        console.error("Item", item.name, "has no vault bucket, but we're trying to move aside room in the vault for it");
+        console.error(
+          'Item',
+          item.name,
+          "has no vault bucket, but we're trying to move aside room in the vault for it"
+        );
       } else if (store.items.some((i) => !i.bucket.vaultBucket)) {
-        console.error("The vault has items with no vault bucket: ", store.items.filter((i) => !i.bucket.vaultBucket).map((i) => i.name));
+        console.error(
+          'The vault has items with no vault bucket: ',
+          store.items.filter((i) => !i.bucket.vaultBucket).map((i) => i.name)
+        );
       }
       throw e;
     }
@@ -460,7 +557,9 @@ function ItemService(): ItemServiceType {
 
     // if there are no candidates at all, fail
     if (moveAsideCandidates.length === 0) {
-      const e: DimError = new Error(t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
+      const e: DimError = new Error(
+        t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name })
+      );
       e.code = 'no-space';
       throw e;
     }
@@ -473,12 +572,15 @@ function ItemService(): ItemServiceType {
         if (i.maxStackSize > 1) {
           // Find another store that has an appropriate stackable
           otherStore = otherStores.find((s) =>
-            s.items.some((otherItem) =>
-              // Same basic item
-              otherItem.hash === i.hash &&
-              !otherItem.location.inPostmaster &&
-              // Enough space to absorb this stack
-              (i.maxStackSize - otherItem.amount) >= i.amount));
+            s.items.some(
+              (otherItem) =>
+                // Same basic item
+                otherItem.hash === i.hash &&
+                !otherItem.location.inPostmaster &&
+                // Enough space to absorb this stack
+                i.maxStackSize - otherItem.amount >= i.amount
+            )
+          );
         }
         return Boolean(otherStore);
       });
@@ -522,11 +624,11 @@ function ItemService(): ItemServiceType {
       // Never unequip something
       compareBy((i) => i.equipped),
       // Always prefer keeping something that was manually moved where it is
-      compareBy((i) => store.isVault ? (-1 * i.lastManuallyMoved) : (i.lastManuallyMoved)),
+      compareBy((i) => (store.isVault ? -1 * i.lastManuallyMoved : i.lastManuallyMoved)),
       // Prefer things this character can use
       compareBy((i) => !store.isVault && i.canBeEquippedBy(store)),
       // Tagged items sort by the value of their tags
-      compareBy((i) => (i.dimInfo && i.dimInfo.tag) ? tagValue[i.dimInfo.tag] : 0),
+      compareBy((i) => (i.dimInfo && i.dimInfo.tag ? tagValue[i.dimInfo.tag] : 0)),
       // Prefer moving lower-tier
       compareBy((i) => tierValue[i.tier]),
       // Prefer keeping higher-stat items
@@ -534,24 +636,31 @@ function ItemService(): ItemServiceType {
     );
 
     // Sort all candidates
-    moveAsideCandidates.sort(store.isVault ? reverseComparator(itemValueComparator) : itemValueComparator);
+    moveAsideCandidates.sort(
+      store.isVault ? reverseComparator(itemValueComparator) : itemValueComparator
+    );
 
     // A cached version of the space-left function
-    const cachedSpaceLeft = _.memoize((store: DimStore, item: DimItem) => {
-      return moveContext.spaceLeft(store, item);
-    }, (store, item) => {
-      // cache key
-      if (item.maxStackSize > 1) {
-        return store.id + item.hash;
-      } else {
-        return store.id + item.type;
+    const cachedSpaceLeft = _.memoize(
+      (store: DimStore, item: DimItem) => {
+        return moveContext.spaceLeft(store, item);
+      },
+      (store, item) => {
+        // cache key
+        if (item.maxStackSize > 1) {
+          return store.id + item.hash;
+        } else {
+          return store.id + item.type;
+        }
       }
-    });
+    );
 
-    let moveAsideCandidate: {
-      item: DimItem;
-      target: DimStore;
-    } | undefined;
+    let moveAsideCandidate:
+      | {
+          item: DimItem;
+          target: DimStore;
+        }
+      | undefined;
 
     const storeService = item.getStoresService();
     const vault = storeService.getVault()!;
@@ -561,11 +670,15 @@ function ItemService(): ItemServiceType {
       // available space for the candidate item.
       const otherNonVaultStores = _.sortBy(
         otherStores.filter((s) => !s.isVault && s.id !== item.owner),
-        (s) => cachedSpaceLeft(s, candidate)).reverse();
+        (s) => cachedSpaceLeft(s, candidate)
+      ).reverse();
       otherNonVaultStores.push(storeService.getStore(item.owner)!);
-      const otherCharacterWithSpace = otherNonVaultStores.find((s) => cachedSpaceLeft(s, candidate));
+      const otherCharacterWithSpace = otherNonVaultStores.find((s) =>
+        cachedSpaceLeft(s, candidate)
+      );
 
-      if (store.isVault) { // If we're moving from the vault
+      if (store.isVault) {
+        // If we're moving from the vault
         // If there's somewhere with space, put it there
         if (otherCharacterWithSpace) {
           moveAsideCandidate = {
@@ -574,12 +687,15 @@ function ItemService(): ItemServiceType {
           };
           return true;
         }
-      } else { // If we're moving from a character
+      } else {
+        // If we're moving from a character
         // If there's exactly one *slot* left on the vault, and
         // we're not moving the original item *from* the vault, put
         // the candidate on another character in order to avoid
         // gumming up the vault.
-        const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
+        const openVaultSlots = Math.floor(
+          cachedSpaceLeft(vault, candidate) / candidate.maxStackSize
+        );
         if (openVaultSlots === 1 && otherCharacterWithSpace) {
           moveAsideCandidate = {
             item: candidate,
@@ -601,7 +717,9 @@ function ItemService(): ItemServiceType {
     });
 
     if (!moveAsideCandidate) {
-      const e: DimError = new Error(t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
+      const e: DimError = new Error(
+        t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name })
+      );
       e.code = 'no-space';
       throw e;
     }
@@ -621,12 +739,17 @@ function ItemService(): ItemServiceType {
    * @param options.numRetries A count of how many alternate items we've tried.
    * @return a promise that's either resolved if the move can proceed or rejected with an error.
    */
-  function canMoveToStore(item: DimItem, store: DimStore, amount: number, options: {
-    triedFallback?: boolean;
-    excludes?: DimItem[];
-    reservations?: MoveReservations;
-    numRetries?: number;
-  } = {}): IPromise<boolean> {
+  function canMoveToStore(
+    item: DimItem,
+    store: DimStore,
+    amount: number,
+    options: {
+      triedFallback?: boolean;
+      excludes?: DimItem[];
+      reservations?: MoveReservations;
+      numRetries?: number;
+    } = {}
+  ): IPromise<boolean> {
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
     const storeService = item.getStoresService();
 
@@ -662,7 +785,10 @@ function ItemService(): ItemServiceType {
     const movesNeeded = {};
     stores.forEach((s) => {
       if (storeReservations[s.id]) {
-        movesNeeded[s.id] = Math.max(0, storeReservations[s.id] - spaceLeftWithReservations(s, item));
+        movesNeeded[s.id] = Math.max(
+          0,
+          storeReservations[s.id] - spaceLeftWithReservations(s, item)
+        );
       }
     });
 
@@ -684,19 +810,31 @@ function ItemService(): ItemServiceType {
 
       // Move starting from the vault (which is always last)
       const moves = _.pairs(movesNeeded)
-            .reverse()
-            .find(([_, moveAmount]) => moveAmount > 0)!;
+        .reverse()
+        .find(([_, moveAmount]) => moveAmount > 0)!;
       const moveAsideSource = storeService.getStore(moves[0])!;
-      const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
+      const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(
+        moveAsideSource,
+        item,
+        moveContext
+      );
 
-      if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
-        const itemtype = (moveAsideTarget.isVault
-          ? (moveAsideItem.destinyVersion === 1
+      if (
+        !moveAsideTarget ||
+        (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)
+      ) {
+        const itemtype = moveAsideTarget.isVault
+          ? moveAsideItem.destinyVersion === 1
             ? moveAsideItem.bucket.sort
-            : '')
-          : moveAsideItem.type);
-        const error: DimError = new Error(t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`,
-          { itemtype, store: moveAsideTarget.name, context: moveAsideTarget.gender }));
+            : ''
+          : moveAsideItem.type;
+        const error: DimError = new Error(
+          t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`, {
+            itemtype,
+            store: moveAsideTarget.name,
+            context: moveAsideTarget.gender
+          })
+        );
         error.code = 'no-space';
         return $q.reject(error);
       } else {
@@ -709,7 +847,12 @@ function ItemService(): ItemServiceType {
               excludes.push(moveAsideItem);
               options.excludes = excludes;
               options.numRetries = numRetries + 1;
-              console.error(`Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`, e);
+              console.error(
+                `Unable to move aside ${moveAsideItem.name} to ${
+                  moveAsideTarget.name
+                }. Trying again.`,
+                e
+              );
               return canMoveToStore(item, store, amount, options);
             } else {
               throw e;
@@ -718,8 +861,11 @@ function ItemService(): ItemServiceType {
       }
     } else {
       // Refresh the stores to see if anything has changed
-      const reloadPromise = ((item.destinyVersion === 2 ? throttledD2ReloadStores() : throttledReloadStores()) ||
-            $q.when(storeService.getStores())) as Promise<DimStore[] | undefined>;
+      const reloadPromise = ((item.destinyVersion === 2
+        ? throttledD2ReloadStores()
+        : throttledReloadStores()) || $q.when(storeService.getStores())) as Promise<
+        DimStore[] | undefined
+      >;
       const storeId = store.id;
       return reloadPromise.then((reloadedStores) => {
         options.triedFallback = true;
@@ -745,9 +891,13 @@ function ItemService(): ItemServiceType {
     } else if (item.classified) {
       throw new Error(t('ItemService.Classified'));
     } else {
-      const message = (item.classTypeName === 'unknown')
+      const message =
+        item.classTypeName === 'unknown'
           ? t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
-          : t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
+          : t('ItemService.OnlyEquippedClassLevel', {
+              class: item.classTypeNameLocalized.toLowerCase(),
+              level: item.equipRequiredLevel
+            });
 
       const error: DimError = new Error(message);
       error.code = 'wrong-level';
@@ -759,7 +909,14 @@ function ItemService(): ItemServiceType {
    * Check whether this transfer can happen. If necessary, make secondary inventory moves
    * in order to make the primary transfer possible, such as making room or dequipping exotics.
    */
-  function isValidTransfer(equip: boolean, store: DimStore, item: DimItem, amount: number, excludes?: DimItem[], reservations?: MoveReservations): IPromise<any> {
+  function isValidTransfer(
+    equip: boolean,
+    store: DimStore,
+    item: DimItem,
+    amount: number,
+    excludes?: DimItem[],
+    reservations?: MoveReservations
+  ): IPromise<any> {
     let promise: IPromise<any> = $q.when();
 
     if (equip) {
@@ -782,50 +939,60 @@ function ItemService(): ItemServiceType {
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  function moveTo(item: DimItem, target: DimStore, equip: boolean = false, amount: number = item.amount, excludes?: DimItem[], reservations?: MoveReservations): IPromise<DimItem> {
+  function moveTo(
+    item: DimItem,
+    target: DimStore,
+    equip: boolean = false,
+    amount: number = item.amount,
+    excludes?: DimItem[],
+    reservations?: MoveReservations
+  ): IPromise<DimItem> {
     // Reassign the target store to the active store if we're moving the item to an account-wide bucket
     if (!target.isVault && item.bucket.accountWide) {
       target = item.getStoresService().getActiveStore()!;
     }
 
-    return isValidTransfer(equip, target, item, amount, excludes, reservations)
-      .then(() => {
-        const storeService = item.getStoresService();
-        // Replace the target store - isValidTransfer may have reloaded it
-        target = storeService.getStore(target.id)!;
-        const source = storeService.getStore(item.owner)!;
+    return isValidTransfer(equip, target, item, amount, excludes, reservations).then(() => {
+      const storeService = item.getStoresService();
+      // Replace the target store - isValidTransfer may have reloaded it
+      target = storeService.getStore(target.id)!;
+      const source = storeService.getStore(item.owner)!;
 
-        let promise: IPromise<DimItem> = $q.when(item);
+      let promise: IPromise<DimItem> = $q.when(item);
 
-        if (!source.isVault && !target.isVault) { // Guardian to Guardian
-          if (source.id !== target.id && !item.bucket.accountWide) { // Different Guardian
-            if (item.equipped) {
-              promise = promise.then(dequipItem);
-            }
-
-            promise = promise
-              .then((item) => moveToVault(item, amount))
-              .then((item) => moveToStore(item, target, equip, amount));
-          }
-
-          if (item.location.inPostmaster) {
-            promise = promise.then((item) => moveToStore(item, target));
-          } else if (equip) {
-            promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
-          } else if (!equip) {
-            promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
-          }
-        } else if (source.isVault && target.isVault) { // Vault to Vault
-          // Do Nothing.
-        } else if (source.isVault || target.isVault) { // Guardian to Vault
+      if (!source.isVault && !target.isVault) {
+        // Guardian to Guardian
+        if (source.id !== target.id && !item.bucket.accountWide) {
+          // Different Guardian
           if (item.equipped) {
             promise = promise.then(dequipItem);
           }
 
-          promise = promise.then((item) => moveToStore(item, target, equip, amount));
+          promise = promise
+            .then((item) => moveToVault(item, amount))
+            .then((item) => moveToStore(item, target, equip, amount));
         }
 
-        return promise;
-      });
+        if (item.location.inPostmaster) {
+          promise = promise.then((item) => moveToStore(item, target));
+        } else if (equip) {
+          promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
+        } else if (!equip) {
+          promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
+        }
+      } else if (source.isVault && target.isVault) {
+        // Vault to Vault
+        // Do Nothing.
+      } else if (source.isVault || target.isVault) {
+        // Guardian to Vault
+        if (item.equipped) {
+          promise = promise.then(dequipItem);
+        }
+
+        promise = promise.then((item) => moveToStore(item, target, equip, amount));
+      }
+
+      return promise;
+    });
   }
 }

@@ -16,13 +16,15 @@ import './header.scss';
 import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
-import { IRootScopeService } from 'angular';
 import RatingMode from './rating-mode/RatingMode';
 import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { UISref } from '@uirouter/react';
-import { dimVendorEngramsService, isVerified380 } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import {
+  dimVendorEngramsService,
+  isVerified380
+} from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 
 const destiny1Links = [
   {
@@ -55,18 +57,16 @@ const destiny2Links = [
   {
     state: 'destiny2.progress',
     text: 'Progress.Progress'
-  }
-];
-
-if ($featureFlags.vendors) {
-  destiny2Links.push({
+  },
+  {
     state: 'destiny2.vendors',
     text: 'Vendors.Vendors'
-  }, {
+  },
+  {
     state: 'destiny2.collections',
     text: 'Vendors.Collections'
-  });
-}
+  }
+];
 
 const shopLink = 'https://shop.destinyitemmanager.com/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
@@ -78,11 +78,7 @@ interface State {
   vendorEngramDropActive: boolean;
 }
 
-interface Props {
-  $rootScope: IRootScopeService;
-}
-
-export default class Header extends React.PureComponent<Props, State> {
+export default class Header extends React.PureComponent<{}, State> {
   private accountSubscription: Subscription;
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
@@ -94,7 +90,10 @@ export default class Header extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
 
-    this.SearchFilter = angular2react<{ account: DestinyAccount }>('dimSearchFilter', SearchFilterComponent);
+    this.SearchFilter = angular2react<{ account: DestinyAccount }>(
+      'dimSearchFilter',
+      SearchFilterComponent
+    );
 
     this.state = {
       dropdownOpen: false,
@@ -114,11 +113,6 @@ export default class Header extends React.PureComponent<Props, State> {
         this.setState({ dropdownOpen: false });
       })
     ];
-
-    // Gonna have to figure out a better solution for this in React
-    this.props.$rootScope.$on('i18nextLanguageChange', () => {
-      this.setState({}); // gross, force re-render
-    });
   }
 
   componentWillUnmount() {
@@ -137,118 +131,109 @@ export default class Header extends React.PureComponent<Props, State> {
     // Generic links about DIM
     const dimLinks = (
       <>
-        <Link state='about' text='Header.About'/>
-        <Link state='support' text='Header.SupportDIM'/>
-        <ExternalLink href={shopLink} text='Header.Shop'/>
+        <Link state="about" text="Header.About" />
+        <Link state="support" text="Header.SupportDIM" />
+        <ExternalLink href={shopLink} text="Header.Shop" />
         <WhatsNewLink />
-        {bugReportLink &&
-          <ExternalLink
-            href={bugReport}
-            text="Header.ReportBug"
-          />}
+        {bugReportLink && <ExternalLink href={bugReport} text="Header.ReportBug" />}
       </>
     );
 
-    const links = account
-      ? account.destinyVersion === 1 ? destiny1Links : destiny2Links
-      : [];
+    const links = account ? (account.destinyVersion === 1 ? destiny1Links : destiny2Links) : [];
 
     // Links about the current Destiny version
     const destinyLinks = (
       <>
-        {links.map((link) =>
-          <Link
-            key={link.state}
-            account={account}
-            state={link.state}
-            text={link.text}
-          />
-        )}
+        {links.map((link) => (
+          <Link key={link.state} account={account} state={link.state} text={link.text} />
+        ))}
       </>
     );
 
     const reverseDestinyLinks = (
       <>
-        {links.slice().reverse().map((link) =>
-          <Link
-            key={link.state}
-            account={account}
-            state={link.state}
-            text={link.text}
-            showWhatsNew={link.state === 'destiny2.vendors' && vendorEngramDropActive}
-          />
-        )}
+        {links
+          .slice()
+          .reverse()
+          .map((link) => (
+            <Link
+              key={link.state}
+              account={account}
+              state={link.state}
+              text={link.text}
+              showWhatsNew={link.state === 'destiny2.vendors' && vendorEngramDropActive}
+            />
+          ))}
       </>
     );
     const reverseDimLinks = (
       <>
-      {links.length > 0 && <span className="header-separator"/>}
-      {bugReportLink &&
-        <ExternalLink
-          href={bugReport}
-          text="Header.ReportBug"
-        />}
+        {links.length > 0 && <span className="header-separator" />}
+        {bugReportLink && <ExternalLink href={bugReport} text="Header.ReportBug" />}
         <WhatsNewLink />
-        <ExternalLink href={shopLink} text='Header.Shop'/>
-        <Link state='support' text='Header.SupportDIM'/>
-        <Link state='about' text='Header.About'/>
+        <ExternalLink href={shopLink} text="Header.Shop" />
+        <Link state="support" text="Header.SupportDIM" />
+        <Link state="about" text="Header.About" />
       </>
     );
 
     return (
-      <div id="header">
+      <div id="header" className={showSearch ? 'search-expanded' : ''}>
         <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>
           <i className="fa fa-bars" />
           <MenuBadge />
         </span>
 
         <TransitionGroup>
-          {dropdownOpen &&
-            <CSSTransition
-              classNames="dropdown"
-              timeout={{ enter: 500, exit: 500 }}
-            >
+          {dropdownOpen && (
+            <CSSTransition classNames="dropdown" timeout={{ enter: 500, exit: 500 }}>
               <ClickOutside key="dropdown" className="dropdown" onClickOutside={this.hideDropdown}>
                 {destinyLinks}
-                {links.length > 0 && <hr/>}
-                <Link state='settings' text='Settings.Settings'/>
-                <hr/>
+                {links.length > 0 && <hr />}
+                <Link state="settings" text="Settings.Settings" />
+                <hr />
                 {dimLinks}
               </ClickOutside>
-            </CSSTransition>}
+            </CSSTransition>
+          )}
         </TransitionGroup>
 
-        <UISref to='default-account'>
-          <img
-            className={classNames('logo', 'link', $DIM_FLAVOR)}
-            title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
-            src={logo}
-            alt="DIM"
-          />
-        </UISref>
+        {!showSearch && (
+          <UISref to="default-account">
+            <img
+              className={classNames('logo', 'link', $DIM_FLAVOR)}
+              title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
+              src={logo}
+              alt="DIM"
+            />
+          </UISref>
+        )}
 
-        <div className="header-links">
-          {reverseDestinyLinks}
-          {reverseDimLinks}
-        </div>
+        {!showSearch && (
+          <div className="header-links">
+            {reverseDestinyLinks}
+            {reverseDimLinks}
+          </div>
+        )}
 
         <span className="header-right">
-          {!showSearch && <Refresh/>}
-          {(!showSearch && account && account.destinyVersion === 2 && settings.showReviews) &&
-            <RatingMode />}
+          {!showSearch && <Refresh />}
           {!showSearch &&
-            <UISref to='settings'>
-              <a
-                className="link fa fa-cog"
-                title={t('Settings.Settings')}
-              />
-            </UISref>}
-          {account &&
-            <span className={classNames("link", "search-link", { show: showSearch })}>
-              <SearchFilter account={account}/>
-            </span>}
+            account &&
+            account.destinyVersion === 2 &&
+            settings.showReviews && <RatingMode />}
+          {!showSearch && (
+            <UISref to="settings">
+              <a className="link fa fa-cog" title={t('Settings.Settings')} />
+            </UISref>
+          )}
+          {account && (
+            <span className={classNames('link', 'search-link', { show: showSearch })}>
+              <SearchFilter account={account} />
+            </span>
+          )}
           <span className="link search-button" onClick={this.toggleSearch}>
-            <i className="fa fa-search"/>
+            <i className="fa fa-search" />
           </span>
           {account && <AccountSelect currentAccount={account} />}
         </span>
@@ -262,48 +247,45 @@ export default class Header extends React.PureComponent<Props, State> {
       return;
     }
 
-    dimVendorEngramsService.getAllVendorDrops()
-      .then((vds) => {
-        const anyActive = vds.some(isVerified380);
-        this.setState({ vendorEngramDropActive: anyActive });
-      });
+    dimVendorEngramsService.getAllVendorDrops().then((vds) => {
+      const anyActive = vds.some(isVerified380);
+      this.setState({ vendorEngramDropActive: anyActive });
+    });
 
     if (!this.engramRefreshTimer) {
-      this.engramRefreshTimer = window.setInterval(this.updateVendorEngrams,
-        dimVendorEngramsService.refreshInterval);
+      this.engramRefreshTimer = window.setInterval(
+        this.updateVendorEngrams,
+        dimVendorEngramsService.refreshInterval
+      );
     }
-  }
+  };
 
   private stopPollingVendorEngrams = () => {
     if (this.engramRefreshTimer) {
       clearInterval(this.engramRefreshTimer);
       this.engramRefreshTimer = 0;
     }
-  }
+  };
 
   private toggleDropdown = () => {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
-  }
+  };
 
   private hideDropdown = (event) => {
     if (!this.dropdownToggler.current || !this.dropdownToggler.current.contains(event.target)) {
       this.setState({ dropdownOpen: false });
     }
-  }
+  };
 
   private toggleSearch = () => {
     this.setState({ showSearch: !this.state.showSearch });
-  }
+  };
 }
 
-function ExternalLink({
-  href,
-  text
-}: {
-  href: string;
-  text: string;
-}) {
+function ExternalLink({ href, text }: { href: string; text: string }) {
   return (
-    <a className="link" target="_blank" rel="noopener noreferrer" href={href}>{t(text)}</a>
+    <a className="link" target="_blank" rel="noopener noreferrer" href={href}>
+      {t(text)}
+    </a>
   );
 }

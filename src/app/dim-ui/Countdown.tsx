@@ -37,7 +37,9 @@ export default class Countdown extends React.Component<Props, State> {
 
   render() {
     return (
-      <span className="countdown" title={this.props.endTime.toLocaleString()}>{dhms(this.state.diff / 1000)}</span>
+      <span className="countdown" title={this.props.endTime.toLocaleString()}>
+        {dhms(this.state.diff / 1000)}
+      </span>
     );
   }
 
@@ -47,7 +49,7 @@ export default class Countdown extends React.Component<Props, State> {
     if (diff <= 0) {
       clearInterval(this.interval);
     }
-  }
+  };
 }
 
 function pad(n: number, width: number) {

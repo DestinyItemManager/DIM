@@ -1,5 +1,25 @@
 # Next
 
+* Display armor resistance type on item icon and include in search filters.
+* Giving more weight to ratings with reviews than ratings alone. Also, hiding lone ratings.
+* Custom loadouts now display below our special auto loadouts.
+* Added inverse string search for items and perks (prefix with minus sign)
+* Postmaster is now on top of the screen (but disappears when empty).
+* Individual inventory buckets are no longer collapsible, but disappear when empty.
+* D1 vault counts are removed from their section headers.
+* Fixed an issue where the display would be messed up when colorblind mode is on.
+* Restored the keyboard shortcut cheat sheet (press ?).
+* The max light loadout prefers legendaries over rares.
+* Unclaimed engrams are shown up in the Postmaster section.
+
+# 4.69.1 (2018-09-10)
+
+# 4.69.1 (2018-09-10)
+
+* Max power value in 'Maximum Power' loadout is now calculated correctly.
+
+# 4.69.0 (2018-09-09)
+
 * Max power updated to 600 for Forsaken owners.
 * Fixed Year 1 weapons not having an elemental damage type.
 * Many bugfixes post-Forsaken launch.
@@ -274,7 +294,7 @@
 # 4.34.0 (2018-01-15)
 
 * Sorting characters by age should be correct for D2 on PC.
-* The infusion fuel finder now supports reverse lookups, so you can choose the best thing to infuse a particular item *into*.
+* The infusion fuel finder now supports reverse lookups, so you can choose the best thing to infuse a particular item _into_.
 * Labeled the Infusion Fuel Finder button.
 * Trace Rifles are highlighted again on is:autorifle search.
 * Factions that you can't turn in rewards to are now greyed out. We also show the vendor name, and the raw XP values have moved to a tooltip.
@@ -625,7 +645,7 @@
 * Fixed displaying record objectives that are time-based as time instead of just a number of seconds.
 * When pinned to the iOS home screen, DIM now looks more like a regular browser than an app. The upside is you can now actually authorize it when it's pinned!
 * Loadouts with a complete set of equipped armor now include a stat bar that will tell you the stat tiers of the equipped loadout pieces.
-* Loadouts with non-equipping items now won't *de-equip* those items if they're already equipped. #1567
+* Loadouts with non-equipping items now won't _de-equip_ those items if they're already equipped. #1567
 * The count of items in your loadout is now more accurate.
 * DIM is now better at figuring out which platforms you have Destiny accounts on.
 * DIM is faster!
@@ -648,7 +668,7 @@
 # 3.17.0
 
 * Fixed the perk selection in Loadout Builder. #1453
-* Integrated Trials-centric weapon reviews (and the ability to rate your own gear (and make comments about your gear)).  Done in conjunction with destinytracker.com.
+* Integrated Trials-centric weapon reviews (and the ability to rate your own gear (and make comments about your gear)). Done in conjunction with destinytracker.com.
 * Fixed the logic for artifact bonuses to compute the right number. #1477
 * Restore some missing images from our build system changes.
 * Don't allow engrams to be tagged. #1478
@@ -757,6 +777,7 @@
 # 3.11.0 (2016-10-04)
 
 ##### New
+
 * Added Quick Move items to farming mode.
 * Farming mode now also moves glimmer items to vault.
 * Added `is:inloadout` filter
@@ -768,6 +789,7 @@
 * Support rare (blue) items in loadout builder.
 
 ##### Tweaks
+
 * Consumables and materials are now sorted by category.
 * All other items in the General Bucket are sorted by Rarity.
 * Move ornaments inbetween materials and emblems.
@@ -775,6 +797,7 @@
 * Full item details are shown in the move popup by default (they can still be turned off in settings).
 
 ##### Bugfixes
+
 * Prevent double click to move item if loadout dialog is open.
 * [#889](https://github.com/DestinyItemManager/DIM/issues/889) Fixed stats for Iron Banner and Trials of Osiris items.
 * Fix infusion finder preview item not changing as you choose different fuel items. Also filter out year 1 items.
@@ -811,7 +834,7 @@
 * We handle manifest download/cache errors better, by deleting the cached file and letting you retry.
 * Date armor ratings end is on 9/20/2016 @ 2AM Pacific.
 * Fixed issues with broken images by downloading from Bungie.net with https.
-* Loadouts for multi-platform users will now save selected and equipped items for both platforms.  Previously, when switching platforms, loadouts would remove items from the loadout for the opposite platform.
+* Loadouts for multi-platform users will now save selected and equipped items for both platforms. Previously, when switching platforms, loadouts would remove items from the loadout for the opposite platform.
 
 # 3.10.3
 
@@ -1061,7 +1084,7 @@
 * When you save a loadout, it is now scoped to the platform it's created on, rather than applying across accounts. Loadouts created on one account used to show on both accounts, but wouldn't work on the wrong account.
 * You can now move partial amounts of materials. There's a slider in the move popup, and holding "shift" or hovering over the drop area will pop up a dialog for draggers. You can choose to move more than one stack's worth of an item, up to the total amount on a character.
 * New commands for materials to consolidate (move them all to this character) and distribute (divide evenly between all characters).
-* Loadouts can now contain materials and consumables. Add or remove 5 at a time by holding shift while clicking. When the loadout is applied, we'll make sure your character has *at least* that much of the consumable.
+* Loadouts can now contain materials and consumables. Add or remove 5 at a time by holding shift while clicking. When the loadout is applied, we'll make sure your character has _at least_ that much of the consumable.
 * Loadouts can now contain 10 weapons or armor of a single type, not just 9.
 * When making space for a loadout, we'll prefer putting extra stuff in the vault rather than putting it on other characters. We'll also prefer moving aside non-equipped items of low rarity and light level.
 * The is:engram search filter actually works.
@@ -1118,7 +1141,7 @@
 * Descriptions are now shown for all items.
 * Include hidden stats "Aim Assist" and "Equip Speed" for all weapons. You can still see all hidden stats by visiting DTR via the link at the top of item details.
 * Weapon types are now included in their popup title.
-* Removed Crimson Days theme.  It will return.
+* Removed Crimson Days theme. It will return.
 * Fixed issue at starts up when DIM cannot resolve if the user is logged into Bungie.net.
 
 # 3.2.3

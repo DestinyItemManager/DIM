@@ -51,8 +51,7 @@
     "Throttled": "Bungie APIの制限が超えました。しばらくしてからお待ちください。",
     "Twitter": "最新情報に更新します。:",
     "UnknownError": "Bungie.netからのメッセージ: {{message}}",
-    "VendorNotFound": "ベンダー情報ありません",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "ベンダー情報ありません"
   },
   "Compare": {
     "All": "{{type}} 比較 ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "削除",
     "Edit": "編集",
     "ForGameMode": "For game mode",
+    "ForPlatform": "For platform(s)",
     "Help": "レビューを書く(オプション)",
     "HelpCons": "この武器の悪いところを書いてください(オプション)",
     "HelpPros": "この武器の良いところを書いてください(オプション)",
@@ -115,6 +115,7 @@
       "Xbox": "XBOXのみ"
     },
     "Pros": "長所",
+    "RatingsOptions": "Ratings Options",
     "ReallyReport": "報告",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
@@ -260,16 +261,13 @@
     "WeaponType": "武器の種類を基に表示",
     "Year": "Destinyの何年目にでてきたかを表示"
   },
-  "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
-  },
   "Header": {
     "About": "情報",
     "Back": "戻る",
     "BulkTag": "ロットマークピンは",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "アイテム、効果または{{example}}から検索",
+    "FilterHelpBrief": "Search items",
     "Filters": "フィルター",
     "Inventory": "インベントリー",
     "Refresh": "デスティニーデータを更新",
@@ -501,6 +499,7 @@
     "OverviewTab": "概要",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "レビュー",
+    "Rewards": "Rewards:",
     "Split": "分割",
     "Store": "保管する",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -527,11 +526,10 @@
     "Daily": "デイリー",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "ファクション",
-    "Milestones": "マイルストーン",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "アカウントのマイルス トーン",
     "ProfileQuests": "アカウントクエスト",
     "Progress": "進行状況",
-    "Quests": "Pursuits & Quests",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",

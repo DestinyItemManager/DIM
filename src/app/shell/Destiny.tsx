@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UIView } from "@uirouter/react";
+import { UIView } from '@uirouter/react';
 import ManifestProgress from './ManifestProgress';
 import { $rootScope } from 'ngimport';
 import { hotkeys } from '../ngimport-more';
@@ -49,9 +49,9 @@ export default class Destiny extends React.Component<Props> {
   render() {
     return (
       <>
-        <div className="store-bounds"/>
+        <div className="store-bounds" />
         <div id="content">
-          <UIView/>
+          <UIView />
         </div>
         <ManifestProgress destinyVersion={this.props.account.destinyVersion} />
       </>

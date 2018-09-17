@@ -5,5 +5,4 @@ import { FilterLinkComponent } from './filter-link.component';
 
 export default module('searchModule', [])
   .component('dimSearchFilter', SearchFilterComponent)
-  .component('dimFilterLink', FilterLinkComponent)
-  .name;
+  .component('dimFilterLink', FilterLinkComponent).name;

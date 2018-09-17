@@ -44,5 +44,5 @@ export default class ClickOutside extends React.Component<Props> {
       */
       this.props.onClickOutside(event);
     }
-  }
+  };
 }

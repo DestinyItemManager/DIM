@@ -82,11 +82,11 @@
       margin: 0 0 8px 0;
       color: #e0e0e0;
     }
-
   }
 
   &.hide-complete {
-    .record, .record-book-page {
+    .record,
+    .record-book-page {
       &.complete {
         display: none;
       }
@@ -112,6 +112,6 @@
 
   .complete .record-icon {
     border-color: #ffce1f;
-    background-color: rgba(255,206,31,0.4);
+    background-color: rgba(255, 206, 31, 0.4);
   }
 }

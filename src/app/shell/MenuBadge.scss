@@ -16,7 +16,8 @@
     bottom: -8px;
     right: -10px;
   }
-  .badge-new, .upgrade {
+  .badge-new,
+  .upgrade {
     // TODO: bring this back for storage alerts? or badge the gear...
     @include phone-portrait {
       display: inline-block;

@@ -17,5 +17,4 @@ export default module('VendorsModule', [])
     return (i) => {
       return i ? Object.values(i) : i;
     };
-  })
-  .name;
+  }).name;

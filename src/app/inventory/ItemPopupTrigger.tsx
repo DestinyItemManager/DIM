@@ -21,6 +21,13 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private dialogResult: any;
   private ref = React.createRef<HTMLDivElement>();
 
+  componentWillUnmount() {
+    if (this.dialogResult) {
+      this.dialogResult.close();
+      this.dialogResult = null;
+    }
+  }
+
   render() {
     const { children } = this.props;
 
@@ -35,14 +42,6 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     e.stopPropagation();
 
     const item = this.props.item;
-
-    // TODO: This was used in the D1 loadout builder. It shouldn't be part of this.
-    /*
-    if (shiftClickCallback && e.shiftKey) {
-      shiftClickCallback(item);
-      return;
-    }
-    */
 
     NewItemsService.dropNewItem(item);
 
@@ -90,5 +89,5 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         this.dialogResult = null;
       });
     }
-  }
+  };
 }
