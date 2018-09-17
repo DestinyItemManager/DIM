@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 // Promise.finally isn't in the base polyfill
 import 'core-js/fn/promise/finally';
 

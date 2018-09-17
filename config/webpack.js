@@ -155,13 +155,14 @@ module.exports = (env) => {
           loader: 'awesome-typescript-loader',
           options: {
             useBabel: true,
+            babelCore: '@babel/core',
             useCache: true
           }
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
           enforce: 'pre',
-          test: /\.js$/,
+          test: /\.jsx?$/,
           loader: 'source-map-loader'
         },
         {
@@ -203,7 +204,7 @@ module.exports = (env) => {
     },
 
     resolve: {
-      extensions: ['.js', '.json', '.ts', '.tsx'],
+      extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
 
       alias: {
         app: path.resolve('./src')

@@ -1,26 +1,21 @@
 {
   "presets": [
-    ["env", {
-      "modules": false,
-      "useBuiltIns": true,
-      "targets": {
-        "browsers": [
-          "last 2 Chrome versions",
-          "last 2 ChromeAndroid versions",
-          "last 2 Firefox versions",
-          "last 2 Safari versions",
-          "iOS >= 10.3",
-          "last 2 Edge versions",
-          "last 2 Opera versions"
-        ]
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "useBuiltIns": "usage",
+        "shippedProposals": true
       }
-    }]
+    ],
+    ["@babel/preset-react", { "useBuiltIns": true }]
   ],
   "plugins": [
     "lodash",
     "angularjs-annotate",
-    "syntax-dynamic-import",
-    ["transform-object-rest-spread", { "useBuiltIns": true }],
-    "react-hot-loader/babel"
+    "@babel/plugin-syntax-dynamic-import",
+    ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": true }],
+    "react-hot-loader/babel",
+    "@babel/plugin-transform-react-constant-elements"
   ]
 }
