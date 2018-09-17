@@ -63,7 +63,7 @@ export default class InventoryItem extends React.Component<Props> {
             'd2-item': item.destinyVersion === 2
           })}
         >
-          <ItemRender item={item as D2Item} />
+          <ItemRender item={item as D2Item} badge={badgeInfo} />
         </div>
       );
     } else {
