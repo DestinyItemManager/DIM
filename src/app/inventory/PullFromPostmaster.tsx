@@ -25,7 +25,7 @@ export class PullFromPostmaster extends React.Component<Props, State> {
 
     const numPullablePostmasterItems = pullablePostmasterItems(store).length;
     if (numPullablePostmasterItems === 0) {
-      //return null;
+      return null;
     }
 
     return (
