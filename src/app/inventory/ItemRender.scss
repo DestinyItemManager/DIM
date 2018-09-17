@@ -10,7 +10,7 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-gap: 1px;
-    grid-template-areas: "image image image plugs" "image image image plugs" "image image image plugs" "attributes attributes attributes attributes";
+    grid-template-areas: 'image image image plugs' 'image image image plugs' 'image image image plugs' 'attributes attributes attributes attributes';
 
     .image {
       grid-area: image;
@@ -39,14 +39,14 @@
         border-width: 0px;
         background-size: 100%;
         background-repeat: no-repeat;
-        background-image: url("../../images/masterwork.png");
+        background-image: url('../../images/masterwork.png');
       }
     }
 
     &.exotic {
       &.masterwork {
         .overlay {
-          background-image: url("../../images/exotic-masterwork.png");
+          background-image: url('../../images/exotic-masterwork.png');
         }
       }
     }
@@ -57,7 +57,7 @@
       // grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr;
       grid-gap: 0;
-      grid-template-areas: "1a 2a";
+      grid-template-areas: '1a 2a';
       font-size: calc(var(--item-size) / 5.8);
       line-height: 100%;
     }
@@ -81,7 +81,8 @@
     .review-score {
       position: relative;
       display: inline-block;
-      // height: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       vertical-align: middle;
     }
 
@@ -100,7 +101,7 @@
       position: absolute;
       width: 1em;
       height: 1em;
-      content: "";
+      content: '';
       background-size: 80%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -131,7 +132,7 @@
       grid-template-columns: 1fr;
       grid-template-rows: 1fr 1fr 1fr;
       grid-gap: 1px;
-      grid-template-areas: "1p" "2p" "3p";
+      grid-template-areas: '1p' '2p' '3p';
     }
 
     .plugs > div {
