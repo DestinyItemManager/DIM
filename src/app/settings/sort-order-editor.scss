@@ -9,14 +9,14 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
 
   .fa {
     padding: 4px;
   }
 
   .sort-button {
-    transition: opacity .2s;
+    transition: opacity 0.2s;
   }
 
   &.is-dragging {

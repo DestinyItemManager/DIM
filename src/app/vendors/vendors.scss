@@ -37,6 +37,27 @@
   .vendor-char-items {
     position: relative;
   }
+
+  .xyz-active-throb {
+    border-radius: 100px;
+    animation: glow 1s infinite alternate;
+  }
+
+  .xyz-engram {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px -10px rgba(174, 244, 175, 0.6);
+    }
+    to {
+      box-shadow: 0 0 10px 10px rgba(174, 244, 175, 0.6);
+    }
+  }
+
   .vendor-col {
     margin-right: 20px;
   }
@@ -57,7 +78,7 @@
     margin-left: 2px;
     text-transform: uppercase;
     font-size: 12px;
-    color: #CCC;
+    color: #ccc;
     margin-bottom: 4px;
     &:first-child {
       margin-top: 0px;
@@ -82,14 +103,14 @@
     z-index: 4;
   }
   .vendorHeaderWrapper {
-    position:fixed;
+    position: fixed;
     top: $header-height;
     max-width: 900px;
     width: 100%;
 
     @supports (position: sticky) {
       position: sticky;
-      top: 55px;
+      top: 64px;
     }
   }
   .vendor-headers {
@@ -148,7 +169,7 @@
     height: 18px;
   }
   .notenough {
-    color: #CC5C58;
+    color: #cc5c58;
   }
   .modal-open {
     overflow: visible;
@@ -177,17 +198,13 @@
   left: 2px;
   pointer-events: none;
   z-index: 1;
-  background-color: rgba(40,40,40,0.6);
+  background-color: rgba(40, 40, 40, 0.6);
   margin-top: 2px;
   backface-visibility: hidden;
 }
 
 .ngdialog.vendor-move-popup {
   position: absolute;
-  // TODO: this is here so popups will show over the Xur popup, but it
-  // makes vendor item popups go over the header. Remove this when Xur
-  // is its own page instead of a popup.
-  z-index: 1000;
   height: fit-content;
   .compare-items {
     margin-top: 0;
@@ -201,7 +218,7 @@
     opacity: 0.5;
   }
   .selected {
-    opacity: 1.0;
+    opacity: 1;
   }
   a {
     outline: 0;
@@ -212,49 +229,25 @@
   float: right;
 }
 
-vendor-currencies, .vendor-currencies {
+vendor-currencies,
+.vendor-currencies {
   font-size: 12px;
   float: right;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 50%;
+  justify-content: flex-end;
   .vendor-currency {
-    margin-right: 10px;
-    &:last-child {
-      margin-right: 0;
+    margin-left: 10px;
+    margin-bottom: 8px;
+    &:first-child {
+      margin-left: 0;
     }
     img {
       vertical-align: bottom;
       height: 16px;
       width: 16px;
     }
-  }
-}
-
-.xurDialog {
-  .title {
-    display: none;
-  }
-
-  .vendors, .vendor-row {
-    margin: 0;
-  }
-
-  .vendor-items {
-    flex-wrap: none;
-  }
-
-  vendor-currencies {
-    margin-top: 0;
-  }
-}
-
-.ngdialog.vendor-move-popup.xur-move-popup {
-  position: fixed;
-}
-
-.ngdialog.modal-dialog.xur {
-  align-items: flex-start;
-  .ngdialog-content {
-    margin-top: 2em;
   }
 }

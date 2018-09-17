@@ -1,5 +1,9 @@
 import { IPromise } from 'angular';
-import { BungieMembershipType, getMembershipDataById, UserMembershipData } from 'bungie-api-ts/user';
+import {
+  BungieMembershipType,
+  getMembershipDataById,
+  UserMembershipData
+} from 'bungie-api-ts/user';
 import { httpAdapter } from './bungie-service-helper';
 
 /**
@@ -9,6 +13,5 @@ export function getAccounts(bungieMembershipId: string): IPromise<UserMembership
   return getMembershipDataById(httpAdapter, {
     membershipId: bungieMembershipId,
     membershipType: BungieMembershipType.BungieNext
-  })
-    .then((response) => response.Response) as IPromise<UserMembershipData>;
+  }).then((response) => response.Response) as IPromise<UserMembershipData>;
 }

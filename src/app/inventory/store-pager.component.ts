@@ -43,7 +43,9 @@ function StorePagerCtrl(
 
   this.$onChanges = () => {
     if (this.dragend && this.selectedStore) {
-      const storeIndex = sortStores(this.stores, settings.characterOrder).indexOf(this.selectedStore);
+      const storeIndex = sortStores(this.stores, settings.characterOrder).indexOf(
+        this.selectedStore
+      );
       this.dragend.jumpToPage(storeIndex + 1);
     }
   };

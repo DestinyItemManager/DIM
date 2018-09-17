@@ -1,10 +1,9 @@
-<div class="sticky-header-background" scroll-class="something-is-sticky"></div>
+<div class="sticky-header-background" scroll-class="sticky"></div>
 <loading ng-if="!$ctrl.stores"></loading>
 <dim-stores class="stores" stores="$ctrl.stores" buckets="$ctrl.buckets"></dim-stores>
 <loadout-drawer stores="$ctrl.stores" account="$ctrl.account"></loadout-drawer>
 <dim-compare></dim-compare>
-<dim-item-discuss></dim-item-discuss>
 <div id="drag-help" class="drag-help drag-help-hidden" ng-i18next="Help.Drag"></div>
 <dim-farming></dim-farming>
 <dim-clear-new-items account="$ctrl.account"></dim-clear-new-items>
-<random-loadout stores="$ctrl.stores"></random-loadout>
+<random-loadout stores="$ctrl.stores" destiny-version="1"></random-loadout>

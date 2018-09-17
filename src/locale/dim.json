@@ -51,8 +51,7 @@
     "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
-    "VendorNotFound": "Vendor data is unavailable.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "Vendor data is unavailable."
   },
   "Compare": {
     "All": "{{type}} comparisons ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "Delete",
     "Edit": "Edit",
     "ForGameMode": "For game mode",
+    "ForPlatform": "For platform(s)",
     "Help": "Write a review (optional)",
     "HelpCons": "Describe the negatives of this weapon (optional)",
     "HelpPros": "Describe the positives of this weapon (optional)",
@@ -115,6 +115,7 @@
       "Xbox": "XBox Only"
     },
     "Pros": "Pros",
+    "RatingsOptions": "Ratings Options",
     "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
     "ServiceSubmitError": "Destiny tracker service submit failed.",
@@ -171,6 +172,7 @@
       "WotM": "Wrath of the Machine"
     },
     "Activity": "Available from activity <i>{{activity}}</i>",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Shows armors based on their category.",
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",
@@ -216,11 +218,12 @@
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
-    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
     "Rating": "Shows weapons based on their rating from Destiny Tracker.",
+    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "Releases": {
@@ -264,6 +267,7 @@
     "BulkTag": "Bulk tag items",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "Search item/perk or {{example}}",
+    "FilterHelpBrief": "Search items",
     "Filters": "Filters",
     "Inventory": "Inventory",
     "Refresh": "Refresh Destiny Data",
@@ -285,8 +289,7 @@
     "UpdateAvailable": "DIM Updated",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "Version_beta": "Beta has been updated to v{{version}}",
-    "Version_release": "DIM v{{version}} Released",
-    "Xur": "Xûr is Here"
+    "Version_release": "DIM v{{version}} Released"
   },
   "Hotkey": {
     "ClearNewItems": "Clear new items",
@@ -496,6 +499,7 @@
     "OverviewTab": "Overview",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
+    "Rewards": "Rewards:",
     "Split": "Split",
     "Store": "Store",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -522,11 +526,10 @@
     "Daily": "Daily",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",
-    "Milestones": "Milestones",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
-    "Quests": "Pursuits & Quests",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",
@@ -593,7 +596,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",
-    "MaxBasePower": "Max Base Power (w/o mods)",
+    "MaxBasePower": "Max Power",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
@@ -670,6 +673,11 @@
     "Flawless": "Flawless",
     "SevenWins": "7 Win Reward (Weapon)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
+    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
+    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
+  },
   "Vendors": {
     "All": "All",
     "ArmorAndWeapons": "Armor & Weapons",
@@ -679,6 +687,7 @@
     "Collections": "Collections",
     "Compare": "Compare with what you already have:",
     "Consumables": "Consumables",
+    "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Emotes": "Emotes",
     "Engram": "Reward Engram",

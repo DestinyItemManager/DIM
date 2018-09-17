@@ -33,9 +33,7 @@ mod.filter('bungieBackground', () => {
 
     // Hacky workaround so we can reference local images
     if (value.startsWith('~')) {
-      const baseUrl = ($DIM_FLAVOR === 'dev')
-        ? ''
-        : 'https://beta.destinyitemmanager.com';
+      const baseUrl = $DIM_FLAVOR === 'dev' ? '' : 'https://beta.destinyitemmanager.com';
       return {
         'background-image': `url(${baseUrl}${value.substr(1)})`
       };
@@ -58,18 +56,18 @@ mod.filter('equipped', () => {
 
 function rarity(item: DimItem) {
   switch (item.tier) {
-  case 'Exotic':
-    return 0;
-  case 'Legendary':
-    return 1;
-  case 'Rare':
-    return 2;
-  case 'Uncommon':
-    return 3;
-  case 'Common':
-    return 4;
-  default:
-    return 5;
+    case 'Exotic':
+      return 0;
+    case 'Legendary':
+      return 1;
+    case 'Rare':
+      return 2;
+    case 'Uncommon':
+      return 3;
+    case 'Common':
+      return 4;
+    default:
+      return 5;
   }
 }
 
@@ -89,7 +87,7 @@ export function sortStores(stores: DimStore[], order: string) {
         return store.lastPlayed;
       }
     });
-  } else if (stores.length && stores[0].destinyVersion === 1) {
+  } else if (stores.length) {
     return _.sortBy(stores, 'id');
   } else {
     return stores;
@@ -166,10 +164,10 @@ const D1_MATERIAL_SORT_ORDER = [
 // Don't resort postmaster items - that way people can see
 // what'll get bumped when it's full.
 const ITEM_SORT_BLACKLIST = new Set([
-  "BUCKET_BOUNTIES",
-  "BUCKET_MISSION",
-  "BUCKET_QUESTS",
-  "BUCKET_POSTMASTER",
+  'BUCKET_BOUNTIES',
+  'BUCKET_MISSION',
+  'BUCKET_QUESTS',
+  'BUCKET_POSTMASTER',
   '215593132' // LostItems
 ]);
 
@@ -177,25 +175,32 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
   primStat: reverseComparator(compareBy((item: DimItem) => item.primStat && item.primStat.value)),
-  basePower: reverseComparator(compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))),
-  rating: reverseComparator(compareBy((item: DimItem & { quality: { min: number }}) =>
-    (item.quality && item.quality.min)
-      ? item.quality.min
-      : item.dtrRating
-        ? item.dtrRating.overallScore
-        : undefined)),
+  basePower: reverseComparator(
+    compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
+  ),
+  rating: reverseComparator(
+    compareBy(
+      (item: DimItem & { quality: { min: number } }) =>
+        item.quality && item.quality.min
+          ? item.quality.min
+          : item.dtrRating
+            ? item.dtrRating.overallScore
+            : undefined
+    )
+  ),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   default: (_a, _b) => 0
 };
 
-mod.filter('sortItems', () => sortItems);
+// tslint:disable-next-line:no-unnecessary-callback-wrapper
+mod.filter('sortItems', () => (items) => sortItems(items));
 
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-export function sortItems(items: DimItem[]) {
+export function sortItems(items: DimItem[], itemSortOrder = settings.itemSortOrder()) {
   if (!items.length) {
     return items;
   }
@@ -207,21 +212,19 @@ export function sortItems(items: DimItem[]) {
 
   let specificSortOrder: number[] = [];
   // Group like items in the General Section
-  if (itemLocationId === "BUCKET_CONSUMABLES") {
+  if (itemLocationId === 'BUCKET_CONSUMABLES') {
     specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
   }
 
   // Group like items in the General Section
-  if (itemLocationId === "BUCKET_MATERIALS") {
+  if (itemLocationId === 'BUCKET_MATERIALS') {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
-  const sortOrder: string[] = settings.itemSortOrder();
-
-  if (specificSortOrder.length > 0 && !sortOrder.includes('rarity')) {
+  if (specificSortOrder.length > 0 && !itemSortOrder.includes('rarity')) {
     items = _.sortBy(items, (item) => {
       const ix = specificSortOrder.indexOf(item.hash);
-      return (ix === -1) ? 999 : ix;
+      return ix === -1 ? 999 : ix;
     });
     return items;
   }
@@ -229,7 +232,7 @@ export function sortItems(items: DimItem[]) {
   // Re-sort mods
   if (itemLocationId === '3313201758') {
     const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
-    if (sortOrder.includes('rarity')) {
+    if (itemSortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
     }
     return items.sort(chainComparator(...comparators));
@@ -237,12 +240,14 @@ export function sortItems(items: DimItem[]) {
 
   // Re-sort consumables
   if (itemLocationId === '1469714392') {
-    return items.sort(chainComparator(
-      ITEM_COMPARATORS.typeName,
-      ITEM_COMPARATORS.rarity,
-      ITEM_COMPARATORS.name,
-      ITEM_COMPARATORS.amount
-    ));
+    return items.sort(
+      chainComparator(
+        ITEM_COMPARATORS.typeName,
+        ITEM_COMPARATORS.rarity,
+        ITEM_COMPARATORS.name,
+        ITEM_COMPARATORS.amount
+      )
+    );
   }
 
   // Re-sort shaders
@@ -251,7 +256,9 @@ export function sortItems(items: DimItem[]) {
     return items.sort(ITEM_COMPARATORS.name);
   }
 
-  const comparator = chainComparator(...sortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default));
+  const comparator = chainComparator(
+    ...itemSortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
+  );
   return items.sort(comparator);
 }
 
@@ -260,8 +267,7 @@ mod.filter('qualityColor', () => getColor);
 /**
  * A filter that will heatmap-color a background according to a percentage.
  */
-export function getColor(value: number, property: string) {
-  property = property || 'background-color';
+export function getColor(value: number, property = 'background-color') {
   let color = 0;
   if (value < 0) {
     return { [property]: 'white' };
@@ -281,12 +287,11 @@ export function getColor(value: number, property: string) {
   return result;
 }
 
-export function dtrRatingColor(value: number, property?: string) {
+export function dtrRatingColor(value: number, property: string = 'color') {
   if (!value) {
     return {};
   }
 
-  property = property || 'color';
   let color;
   if (value < 2) {
     color = 'hsl(0,45%,45%)';

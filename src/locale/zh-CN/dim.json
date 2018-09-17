@@ -51,8 +51,7 @@
     "Throttled": "Bungie API流量限制已超出。请稍后重试。",
     "Twitter": "查看服务器更新状态:",
     "UnknownError": "来自Bungie.net的消息：{{message}}",
-    "VendorNotFound": "商贩数据不可用.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "商贩数据不可用."
   },
   "Compare": {
     "All": "{{type}}对比 ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "删除",
     "Edit": "编辑",
     "ForGameMode": "游戏模式：",
+    "ForPlatform": "For platform(s)",
     "Help": "撰写评测 (可选)",
     "HelpCons": "描述此武器的缺点（可选）",
     "HelpPros": "描述此武器的优点（可选）",
@@ -115,6 +115,7 @@
       "Xbox": "仅XBox"
     },
     "Pros": "优点",
+    "RatingsOptions": "Ratings Options",
     "ReallyReport": "举报",
     "ServiceCallError": "无法连接到Destiny tracker服务器.",
     "ServiceSubmitError": "无法访问Destiny tracker服务器.",
@@ -171,6 +172,7 @@
       "WotM": "机械之怒"
     },
     "Activity": "可以从<i>{{activity}}</i>活动中获得",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "按照类别显示防具.",
     "Ascended": "显示可以提高光等的物品.",
     "Categories": "高级别物品类别.",
@@ -216,11 +218,12 @@
     "PartialMatch": "显示名称/特性与过滤器搜索内容部分匹配的物品.",
     "Postmaster": "目前在邮政官处的物品.",
     "PowerLevel": "根据光等来显示物品(武器攻击力; 防具护甲值).",
-    "PowerMod": "显示所有装备了增强模组的物品.",
     "Quality": "根据其统计品质百分比来显示物品'{{percentage}}'别名'{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "按照稀有度显示.",
     "Rated": "显示具有Destiny Tracker评级的物品.",
     "Rating": "以Destiny Tracker的评分来显示武器.",
+    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reforgeable": "显示可以在造枪匠那里重新锻造的物品.",
     "Release": "可从<i>{{release}}</i>发行版获得",
     "Releases": {
@@ -264,6 +267,7 @@
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
+    "FilterHelpBrief": "Search items",
     "Filters": "过滤器",
     "Inventory": "背包",
     "Refresh": "刷新命运数据",
@@ -285,8 +289,7 @@
     "UpdateAvailable": "DIM已更新",
     "UpdateAvailableMessage": "DIM有一个可适用更新。请刷新该页面以应用更新。",
     "Version_beta": "Beta版已经更新至 v{{version}}",
-    "Version_release": "DIM v{{version}} 版现已推出！",
-    "Xur": "稣尔(Xûr) 在这里"
+    "Version_release": "DIM v{{version}} 版现已推出！"
   },
   "Hotkey": {
     "ClearNewItems": "清除新物品提示",
@@ -496,6 +499,7 @@
     "OverviewTab": "概述",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "评测",
+    "Rewards": "Rewards:",
     "Split": "拆分",
     "Store": "寄存",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -522,11 +526,10 @@
     "Daily": "每日",
     "ExpiresIn": "于{{endTime}}过期",
     "Factions": "阵营",
-    "Milestones": "里程碑",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "帐户里程碑",
     "ProfileQuests": "帐户任务",
     "Progress": "进度",
-    "Quests": "Pursuits & Quests",
     "RewardEarned": "奖励已解锁但尚未兑换",
     "RewardNotEarned": "奖励不可用",
     "RewardRedeemed": "获取奖励",
@@ -593,7 +596,7 @@
     "Discipline": "训练",
     "Intellect": "智力",
     "Level": "等级",
-    "MaxBasePower": "最高基本光等（无模组）",
+    "MaxBasePower": "Max Power",
     "NoBonus": "无加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉范围{{range}}",
@@ -670,6 +673,11 @@
     "Flawless": "完美无瑕",
     "SevenWins": "七连胜奖励 (武器)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
+    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
+    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
+  },
   "Vendors": {
     "All": "全部",
     "ArmorAndWeapons": "防具 & 武器",
@@ -679,6 +687,7 @@
     "Collections": "收藏品",
     "Compare": "与您现有的物品对比：",
     "Consumables": "消耗品",
+    "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Emotes": "表情动作",
     "Engram": "奖励记忆水晶",

@@ -16,12 +16,7 @@ export const VendorItem: IComponentOptions = {
 
 let otherDialog: any = null;
 
-function VendorItemCtrl(
-  this: IController,
-  $scope,
-  $element,
-  ngDialog
-) {
+function VendorItemCtrl(this: IController, $scope, $element, ngDialog) {
   'ngInject';
 
   const vm = this;
@@ -59,8 +54,7 @@ function VendorItemCtrl(
         overlay: false,
         className: `move-popup-dialog vendor-move-popup ${vm.extraMovePopupClass || ''}`,
         showClose: false,
-        scope: extend($scope.$new(true), {
-        }),
+        scope: extend($scope.$new(true), {}),
         data: itemElement, // Dialog anchor
         controllerAs: 'vm',
         controller() {
@@ -68,7 +62,9 @@ function VendorItemCtrl(
             settings: this.settings,
             item,
             saleItem: vm.saleItem,
-            unlockStores: vm.saleItem.unlockedByCharacter.map((id) => _.find(D1StoresService.getStores(), { id })),
+            unlockStores: vm.saleItem.unlockedByCharacter.map((id) =>
+              _.find(D1StoresService.getStores(), { id })
+            ),
             compareItems,
             compareItem: _.first(compareItems),
             compareItemCount,

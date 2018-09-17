@@ -1,7 +1,4 @@
-import {
-  DestinyProfileResponse,
-  DestinyObjectiveProgress
-} from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
@@ -27,17 +24,23 @@ export default function Ornaments({
       <div className="vendor-row">
         <h3 className="category-title">
           {defs.Vendor.get(2107783226).displayProperties.name}
-          <div className="ornaments-disclaimer">{t("Vendors.OrnamentsDisclaimer")}</div>
+          <div className="ornaments-disclaimer">{t('Vendors.OrnamentsDisclaimer')}</div>
         </h3>
         <div className="vendor-items">
-        {ornaments.map((ornament) =>
-          <VendorItemComponent
-            key={ornament.itemHash}
-            defs={defs}
-            item={VendorItem.forOrnament(defs, ornament.itemHash, ornament.objectives, ornament.canInsert)}
-            owned={false}
-          />
-        )}
+          {ornaments.map((ornament) => (
+            <VendorItemComponent
+              key={ornament.itemHash}
+              defs={defs}
+              item={VendorItem.forOrnament(
+                defs,
+                ornament.itemHash,
+                ornament.objectives,
+                ornament.canInsert,
+                ornament.enableFailReasons
+              )}
+              owned={false}
+            />
+          ))}
         </div>
       </div>
     </div>
@@ -48,13 +51,14 @@ interface OrnamentInfo {
   itemHash: number;
   objectives: DestinyObjectiveProgress[];
   canInsert: boolean;
+  enableFailReasons: string[];
 }
 
 function getOrnaments(
   defs: D2ManifestDefinitions,
   profileResponse: DestinyProfileResponse
 ): OrnamentInfo[] {
-  const plugsWithObjectives = {};
+  const plugsWithObjectives: { [id: number]: OrnamentInfo } = {};
   _.each(profileResponse.itemComponents.sockets.data, (sockets) => {
     for (const socket of sockets.sockets) {
       if (socket.reusablePlugs) {
@@ -65,7 +69,10 @@ function getOrnaments(
               plugsWithObjectives[reusablePlug.plugItemHash] = {
                 itemHash: reusablePlug.plugItemHash,
                 objectives: reusablePlug.plugObjectives,
-                canInsert: reusablePlug.canInsert
+                canInsert: reusablePlug.canInsert,
+                enableFailReasons: (reusablePlug.insertFailIndexes || []).map(
+                  (i) => item.plug.insertionRules[i].failureMessage
+                )
               };
             }
           }

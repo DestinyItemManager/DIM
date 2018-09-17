@@ -64,32 +64,34 @@ export default class PressTip extends React.Component<Props, State> {
       this.tooltip.show();
 
       // Ugh this is a real hack
-      this.tooltipContent = this.tooltip._tooltipNode.querySelector(this.tooltip.innerSelector);
+      this.tooltipContent = (this.tooltip as any)._tooltipNode.querySelector(
+        (this.tooltip as any).innerSelector
+      );
       this.tooltipContent.innerHTML = '';
     }
     this.setState({ isOpen: true });
-  }
+  };
 
   closeToolTip = (e) => {
     e.preventDefault();
     if (this.tooltip) {
       this.tooltip.dispose();
-      this.tooltip = null;
+      this.tooltip = undefined;
     }
     this.setState({ isOpen: false });
     clearTimeout(this.timer);
-  }
+  };
 
   hover = () => {
     this.timer = window.setTimeout(() => {
       this.showTip();
     }, 100);
-  }
+  };
 
   press = (e) => {
     e.preventDefault();
     this.showTip();
-  }
+  };
 
   captureReference = (ref: HTMLElement) => {
     if (ref === this.ref) {
@@ -108,7 +110,7 @@ export default class PressTip extends React.Component<Props, State> {
       ref.addEventListener('mouseleave', this.closeToolTip);
       ref.addEventListener('touchend', this.closeToolTip);
     }
-  }
+  };
 
   render() {
     const { tooltip, children } = this.props;
@@ -116,7 +118,9 @@ export default class PressTip extends React.Component<Props, State> {
 
     const element = React.Children.only(children);
     if (element.props.ref) {
-      throw new Error("You can't use the ref option with PressTip contents, because we steal it for ergonomics' sake");
+      throw new Error(
+        "You can't use the ref option with PressTip contents, because we steal it for ergonomics' sake"
+      );
     }
 
     const otherProps = {
@@ -125,7 +129,7 @@ export default class PressTip extends React.Component<Props, State> {
 
     return (
       <>
-        <element.type {...element.props} {...otherProps}/>
+        <element.type {...element.props} {...otherProps} />
         {isOpen && ReactDOM.createPortal(tooltip, this.tooltipContent)}
       </>
     );
@@ -134,7 +138,7 @@ export default class PressTip extends React.Component<Props, State> {
   private destroy() {
     if (this.tooltip) {
       this.tooltip.dispose();
-      this.tooltip = null;
+      this.tooltip = undefined;
     }
     if (this.ref) {
       this.ref.removeEventListener('mouseenter', this.hover);

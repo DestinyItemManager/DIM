@@ -91,7 +91,7 @@ Become a sponsor and get your logo here with a link to your site.
 <a href="https://opencollective.com/dim/sponsor/3/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/3/avatar.svg"></a>
 
 ## Translation
-If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, or Portuguese), a great way to help with DIM development is to provide translations. See [translation guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/TRANSLATIONS.md) for more info on how to help.
+If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, Korean, or Portuguese), a great way to help with DIM development is to provide translations. See [translation guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/TRANSLATIONS.md) for more info on how to help.
 
 ## Developer Quick start
 Clone the repo:
@@ -103,18 +103,17 @@ Install dependencies:
 * Install [NodeJS](https://nodejs.org/).
 * Install [Yarn](https://yarnpkg.com/en/docs/install). If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)". If you were already using NPM with DIM, run `yarn` to convert to Yarn. **Note (2018/4/25): Yarn from Homebrew will come with NodeJS 10, which isn't ready for prime time. Either install via `npm install -g yarn` or downgrade Node after installing.**
 * Windows-based developers will need to install `windows-build-tools` (`yarn global add windows-build-tools`) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
+* Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to runninng `yarn install`.
 * Run `yarn install`.
   * Note that on Windows, the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
+* It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests.
 
 Check code Style
 * `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
 Run your own local web server
-* `yarn global add http-server` will install http-server
-* `yarn start` will start webpack building (and rebuilding as file changes are detected)
-* then go in to the `dist` subdirectory and run `http-server -S` to run http-server over SSL. It'll run on port 8080.
-* If it complains about missing certificates, run `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'` in the dist directory (thanks to [Stack Overflow](https://stackoverflow.com/questions/12871565/how-to-create-pem-files-for-https-web-server) and again to [Stack Overflow](https://stackoverflow.com/questions/8075274/is-it-possible-making-openssl-skipping-the-country-common-name-prompts) for the quiet recipe) and generate your own local certs
-* After the one-time setup, `yarn start` and `http-server -S` and you're off to the races.
+* Run `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'` to generate server certificates.
+* After the one-time setup, run `yarn start` and you're off to the races. Changes to CSS or React components should show up automatically without needing to reload the page (watch the console for details).
 
 Get your own API key:
 

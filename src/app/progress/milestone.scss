@@ -5,7 +5,7 @@
   margin-bottom: 20px;
 
   .complete {
-    color: #A1A2A2;
+    color: #a1a2a2;
   }
 
   .milestone-icon {
@@ -34,7 +34,7 @@
   }
 
   .milestone-description {
-    color: #A1A2A2;
+    color: #a1a2a2;
     white-space: pre-wrap;
   }
 
@@ -42,20 +42,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-  }
-
-  .milestone-reward {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 4px 0 0 0;
-
-    img {
-      width: 20px;
-      height: 20px;
-      margin-right: 4px;
-    }
-
   }
 
   .milestone-reward-activity {
@@ -75,69 +61,38 @@
     }
   }
 
-  .milestone-challenges {
-    margin: 8px 32px 0 0;
-
-    .milestone-challenges-activity-name {
-      text-transform: uppercase;
-      font-size: 10px;
-    }
-  }
-
-  .milestone-challenge {
-    margin: 4px 0 0 -14px;
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-
-    .milestone-challenge-info {
-      flex: 1;
-    }
-
-    i.fa {
-      margin-right: 4px;
-    }
-
-    .milestone-challenge-name {
-      flex: 1;
-    }
-
-    .milestone-header {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .milestone-challenge-description {
-      font-size: 10px;
-      color: #A1A2A2;
-    }
-
-    .milestone-challenge-progress {
-      font-size: 10px;
-    }
-  }
-
-
   .milestone-modifier {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    margin-top: 4px;
+    align-items: center;
+    opacity: 0.5;
 
     img {
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       margin: 1px 6px 0 2px;
-    }
-
-    .milestone-modifier-info {
-      flex: 1;
     }
 
     .milestone-modifier-description {
       font-size: 10px;
-      color: #A1A2A2;
+      color: #a1a2a2;
     }
   }
+}
+
+.milestone-reward {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 8px 0 0 0;
+
+  img {
+    width: 17px;
+    height: 17px;
+    margin-right: 4px;
+  }
+}
+
+.quest-objectives {
+  margin: 8px 0 0 0;
 }

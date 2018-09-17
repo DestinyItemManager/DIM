@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { D1ManifestService, D2ManifestService, ManifestServiceState } from '../manifest/manifest-service';
+import {
+  D1ManifestService,
+  D2ManifestService,
+  ManifestServiceState
+} from '../manifest/manifest-service';
 import './ManifestProgress.scss';
 import { Subscription } from 'rxjs/Subscription';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -33,16 +37,15 @@ export default class ManifestProgress extends React.Component<Props, ManifestSer
     const { loaded, error, statusText } = this.state;
     return (
       <TransitionGroup>
-        {(!loaded || error) && statusText &&
-          <CSSTransition
-            classNames="manifest"
-            timeout={{ enter: 300, exit: 300 }}
-          >
-            <div className="manifest-progress">
-              {!error && <i className="fa fa-spin fa-refresh"/>}
-              <div>{statusText}</div>
-            </div>
-          </CSSTransition>}
+        {(!loaded || error) &&
+          statusText && (
+            <CSSTransition classNames="manifest" timeout={{ enter: 300, exit: 300 }}>
+              <div className="manifest-progress">
+                {!error && <i className="fa fa-spin fa-refresh" />}
+                <div>{statusText}</div>
+              </div>
+            </CSSTransition>
+          )}
       </TransitionGroup>
     );
   }

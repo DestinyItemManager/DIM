@@ -20,7 +20,11 @@ class D2ReviewsFetcher {
     this._reviewDataCache = reviewDataCache;
   }
 
-  _getItemReviewsPromise(item, platformSelection: number, mode: number): Promise<D2ItemReviewResponse> {
+  _getItemReviewsPromise(
+    item,
+    platformSelection: number,
+    mode: number
+  ): Promise<D2ItemReviewResponse> {
     const dtrItem = getRollAndPerks(item);
 
     const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
@@ -122,14 +126,17 @@ class D2ReviewsFetcher {
       return;
     }
 
-    return this._getItemReviewsPromise(item, platformSelection, mode)
-      .then((reviewData) => {
-        this._markUserReview(reviewData);
-        this._attachReviews(item, reviewData);
-      });
+    return this._getItemReviewsPromise(item, platformSelection, mode).then((reviewData) => {
+      this._markUserReview(reviewData);
+      this._attachReviews(item, reviewData);
+    });
   }
 
-  fetchItemReviews(itemHash: number, platformSelection: number, mode: number): Promise<D2ItemReviewResponse> {
+  fetchItemReviews(
+    itemHash: number,
+    platformSelection: number,
+    mode: number
+  ): Promise<D2ItemReviewResponse> {
     const cachedData = this._reviewDataCache.getRatingData(undefined, itemHash);
 
     if (cachedData && cachedData.reviewsResponse) {

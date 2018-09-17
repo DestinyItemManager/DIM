@@ -1,6 +1,9 @@
-import { IDirective, IDocumentService, ITimeoutService } from "angular";
+import { IDirective, IDocumentService, ITimeoutService } from 'angular';
 
-export function ClickAnywhereButHere($document: IDocumentService, $timeout: ITimeoutService): IDirective {
+export function ClickAnywhereButHere(
+  $document: IDocumentService,
+  $timeout: ITimeoutService
+): IDirective {
   'ngInject';
 
   return {

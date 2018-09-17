@@ -51,8 +51,7 @@
     "Throttled": "Superato il limite di aggiornamento delle API di Bungie. Riprovare fra poco.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
-    "VendorNotFound": "I dati dei mercanti non sono disponibili.",
-    "WarmindLoginNeeded": "Non possiamo caricare il tuo inventario per colpa di un bug nelle API di Destiny. Per risolverlo, entra in ognuno dei tuoi personaggi e configura la ruota delle emote."
+    "VendorNotFound": "I dati dei mercanti non sono disponibili."
   },
   "Compare": {
     "All": "Confronta ogni {{type}} ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "Elimina",
     "Edit": "Modifica",
     "ForGameMode": "Per modalità",
+    "ForPlatform": "Per piattaforma(e)",
     "Help": "Scrivi una recensione (facoltativo)",
     "HelpCons": "Descrivi gli aspetti negativi di quest'arma (facoltativo)",
     "HelpPros": "Descrivi gli aspetti positivi di quest'arma (facoltativo)",
@@ -115,6 +115,7 @@
       "Xbox": "Solo XBox"
     },
     "Pros": "Pro",
+    "RatingsOptions": "Opzioni Valutazioni",
     "ReallyReport": "Segnala",
     "ServiceCallError": "Richiesta di servizio di Destiny Tracker fallita.",
     "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker.",
@@ -171,6 +172,7 @@
       "WotM": "Furia meccanica"
     },
     "Activity": "Disponibile dall'attività <i>{{activity}}</i>",
+    "AmmoType": "Mostra gli oggetti basandosi sul tipo di munizioni.",
     "ArmorCategory": "Mostra le armature ordinate per categoria.",
     "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" e se sono stati ascesi o no.",
     "Categories": "Categorie di oggetti di alto livello.",
@@ -216,11 +218,12 @@
     "PartialMatch": "Mostra gli oggetti che hanno nel loro nome e perks una corrispondenza parziale con il testo del filtro.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerLevel": "Mostra gli oggetti basandosi sul loro livello di Potere (Attacco per le armi; Difesa per le armature).",
-    "PowerMod": "Oggetti che hanno una modifica per aumentare il loro Potere.",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
+    "RandomRoll": "Mostra gli oggetti che droppano con perk casuali.",
     "RarityTier": "Mostra gli oggetti basandosi sulla loro rarità.",
     "Rated": "Mostra tutte le armi che hanno un giudizio su Destiny Tracker.",
     "Rating": "Mostra le armi basandosi sul loro giudizio di Destiny Tracker.",
+    "RatingCount": "Mostra le armi basandosi sul numero di voti che hanno per il sandbox attuale su Destiny Tracker.",
     "Reforgeable": "Mostra gli oggetti che possono essere riforgiati dall'Armaiolo.",
     "Release": "Disponibile dalla release <i>{{release}}</i>",
     "Releases": {
@@ -264,6 +267,7 @@
     "BulkTag": "Etichetta oggetti in massa",
     "BungieNetAlert": "Avviso da Bungie",
     "FilterHelp": "Cerca oggetti/potenziamenti o {{example}}",
+    "FilterHelpBrief": "Cerca oggetti",
     "Filters": "Filtri",
     "Inventory": "Inventario",
     "Refresh": "Aggiorna i dati di Destiny",
@@ -285,8 +289,7 @@
     "UpdateAvailable": "DIM aggiornato",
     "UpdateAvailableMessage": "E' disponibile un aggiornamento per DIM. Ricarica la pagina per aggiornare.",
     "Version_beta": "La Beta è stata aggiornata alla versione v{{version}}",
-    "Version_release": "Rilasciata la versione v{{version}} di DIM",
-    "Xur": "Xûr è arrivato"
+    "Version_release": "Rilasciata la versione v{{version}} di DIM"
   },
   "Hotkey": {
     "ClearNewItems": "Pulisci nuovi oggetti",
@@ -305,7 +308,7 @@
     "Infusion": "Trova oggetti per infusione",
     "InfusionMaterials": "Materiali da Infusione",
     "LockedItems": "Include oggetti 'bloccati'",
-    "NoItems": "Non è disponibile nessun oggetto per l'infusione.",
+    "NoItems": "Nessun oggetto disponibile per l'infusione.",
     "NoTransfer": "Trasferimento materiale per infusione\n {{target}} non può essere spostato.",
     "ShowItems": "Mostra gli oggetti infondibili di tutti i personaggi e del deposito",
     "TransferItems": "Trasferisci oggetti",
@@ -496,6 +499,7 @@
     "OverviewTab": "Panoramica",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReviewsTab": "Recensioni",
+    "Rewards": "Ricompense:",
     "Split": "Dividi",
     "Store": "Muovi",
     "Subtitle_Consumable": "{{typeName}} {{classType}}",
@@ -522,11 +526,10 @@
     "Daily": "Giornaliera",
     "ExpiresIn": "scade alle {{endTime}}",
     "Factions": "Fazioni",
-    "Milestones": "Pietre miliari",
+    "Milestones": "Pietre miliari & Sfide",
     "ProfileMilestones": "Pietre miliari account",
     "ProfileQuests": "Imprese Account",
     "Progress": "Avanzamento",
-    "Quests": "Incarichi e Missioni",
     "RewardEarned": "Ricompensa sbloccata ma non ancora presa",
     "RewardNotEarned": "Ricompensa non sbloccata",
     "RewardRedeemed": "Ricompensa presa",
@@ -593,7 +596,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelletto",
     "Level": "Livello",
-    "MaxBasePower": "Massimo Potere di base (senza mods)",
+    "MaxBasePower": "Potere Massimo",
     "NoBonus": "Nessun Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del roll massimo",
@@ -670,6 +673,11 @@
     "Flawless": "Vittoria Impeccabile",
     "SevenWins": "Ricompensa 7 Vittorie (Arma)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz segnala che questo mercante sta vendendo oggetti a livello luce 380.",
+    "ServiceCallFailed": "Richiesta al servizio di VendorEngrams.xyz fallita.",
+    "Vote": "Vedi un mercante che sta vendendo oggetti a livello luce 380? Vai su VendorEngrams.xyz per votare e farlo sapere alla comunità! (solo in inglese)"
+  },
   "Vendors": {
     "All": "Tutto",
     "ArmorAndWeapons": "Equipaggiamento & Armi",
@@ -679,6 +687,7 @@
     "Collections": "Collezioni",
     "Compare": "Confronta con quello che hai già:",
     "Consumables": "Consumabili",
+    "DestinyMap": "Trova gli oggetti collezionabili sulla mappa di lowlines",
     "DestinySets": "Sfoglia più oggetti su Destiny Sets",
     "Emotes": "Emotes",
     "Engram": "Engramma Ricompensa",

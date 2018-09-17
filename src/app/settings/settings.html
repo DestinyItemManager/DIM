@@ -104,7 +104,7 @@
         <label for="reviewsPlatformSelection" ng-i18next="Settings.ReviewsPlatformSelection"></label>
         <select id="reviewsPlatformSelection"
           ng-model="vm.settings.reviewsPlatformSelection"
-          ng-options="::code as name for (code, name) in vm.reviewsPlatformOptions"
+          ng-options="::platformOption.platform.toString() as platformOption.description for platformOption in vm.reviewsPlatformOptions"
           ng-change="vm.saveAndReloadReviews()">
         </select>
       </div>

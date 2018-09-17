@@ -51,8 +51,7 @@
     "Throttled": "La limite de connexions à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
     "Twitter": "Tenez-vous informé sur:",
     "UnknownError": "Message de Bungie.net: {{message}}",
-    "VendorNotFound": "Les données du vendeur sont indisponible.",
-    "WarmindLoginNeeded": "Nous ne pouvons pas charger votre inventaire à cause d'un bug dans l'API Destiny. Pour régler cela, connectez vous sur chacun de vos personnages et équipez vos emplacements d'interaction."
+    "VendorNotFound": "Les données du vendeur sont indisponible."
   },
   "Compare": {
     "All": "Comparaison de {{type}} ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "Supprimer",
     "Edit": "Éditer",
     "ForGameMode": "Pour le mode de jeu",
+    "ForPlatform": "Pour la/les plateforme(s)",
     "Help": "Écrire une évaluation (optionnel)",
     "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
     "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
@@ -115,6 +115,7 @@
       "Xbox": "XBox Uniquement"
     },
     "Pros": "Avantages",
+    "RatingsOptions": "Options d'évaluation",
     "ReallyReport": "Signaler",
     "ServiceCallError": "Appel au service de Destiny tracker échoué.",
     "ServiceSubmitError": "Envoie au service de Destiny tracker échoué.",
@@ -171,6 +172,7 @@
       "WotM": "Fureur mécanique"
     },
     "Activity": "Disponible dans l'activité <i>{{activity}}</i>",
+    "AmmoType": "Afficher les objets en fonction de leur type de munition.",
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
     "Ascended": "Affiche les item qui ont une bulle ascension et si l'ascension a été faite ou non.",
     "Categories": "Grand catégories d'arme.",
@@ -216,11 +218,12 @@
     "PartialMatch": "Affiche les objets quand leur nom/capacité correspond au filtre de texte.",
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerLevel": "Affiche les objets en fonction de leur niveau de puissance (Attaque pour les armes; Défense pour les armures).",
-    "PowerMod": "Objets ayant un mod qui augmente leur niveau de puissance.",
     "Quality": "Affiche les objets selon leur pourcentage de statistiques total. '{{percentage}}' est un alias pour '{{quality}}'.",
+    "RandomRoll": "Afficher les objets qui s'obtiennent avec des compétences aléatoires.",
     "RarityTier": "Affiche les objets selon leur rareté.",
     "Rated": "Affiche toutes les armes qui ont une note de Destiny Tracker.",
     "Rating": "Affiche toutes les armures qui ont une note de Destiny Tracker.",
+    "RatingCount": "Afficher les armes en fonction du nombre d'évaluations qu'elles ont pour le sandbox actuel sur Destiny Tracker.",
     "Reforgeable": "Affiche les objets qui peuvent être reforgés à l'armurier.",
     "Release": "Disponible depuis la sortie de <i>{{release}}</i>",
     "Releases": {
@@ -264,6 +267,7 @@
     "BulkTag": "Tag de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
+    "FilterHelpBrief": "Éléments de recherche",
     "Filters": "Filtres",
     "Inventory": "Inventaire",
     "Refresh": "Rafraîchir les données Destiny",
@@ -285,8 +289,7 @@
     "UpdateAvailable": "DIM mis à jour",
     "UpdateAvailableMessage": "Une mise à jour est disponible pour DIM. Actualisez la page pour mettre à jour.",
     "Version_beta": "Beta a été mis à jour à v{{version}}",
-    "Version_release": "DIM v{{version}} Publiée",
-    "Xur": "Xûr est Là"
+    "Version_release": "DIM v{{version}} Publiée"
   },
   "Hotkey": {
     "ClearNewItems": "Effacer les nouveaux objets",
@@ -409,7 +412,7 @@
     "Applied_plural": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
     "Applied_plural_female": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
     "Applied_plural_male": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
-    "ApplySearch": "Recherche de transfert \"{{query}}\"",
+    "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "Before": "Avant '{{name}}'",
     "Cancel": "Annuler",
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
@@ -496,6 +499,7 @@
     "OverviewTab": "Vue d'ensemble",
     "ReadLore": "Lire le lore de Ishtar Collective",
     "ReviewsTab": "Évaluations",
+    "Rewards": "Récompenses:",
     "Split": "Couper",
     "Store": "Dépôt",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -522,11 +526,10 @@
     "Daily": "Quotidient",
     "ExpiresIn": "expire à {{endTime}}",
     "Factions": "Factions",
-    "Milestones": "Jalons",
+    "Milestones": "Jalons & Défis",
     "ProfileMilestones": "Jalons de compte",
     "ProfileQuests": "Quêtes de compte",
     "Progress": "Progression",
-    "Quests": "Activités & Quêtes",
     "RewardEarned": "Récompense obtenue mais non récupérée",
     "RewardNotEarned": "Récompense non obtenue",
     "RewardRedeemed": "Récompense récupérée",
@@ -593,7 +596,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intelligence",
     "Level": "Niveau",
-    "MaxBasePower": "Puissance maximale de base (sans mods)",
+    "MaxBasePower": "Puissance Max",
     "NoBonus": "Pas de Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} des stats parfaites",
@@ -670,6 +673,11 @@
     "Flawless": "Sans Défaite",
     "SevenWins": "Récompense à 7 Victoires (Arme)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz signale que ce vendeur vend des objets à 380 de puissance.",
+    "ServiceCallFailed": "Appel au service de VendorEngrams.xyz échoué.",
+    "Vote": "Vous voyez un marchand qui vend des objets a 380 de puissance? Allez sur VendorEngrams.xyz pour voter et faire savoir à la communauté!"
+  },
   "Vendors": {
     "All": "Tous",
     "ArmorAndWeapons": "Armure & Armes",
@@ -679,6 +687,7 @@
     "Collections": "Collections",
     "Compare": "Comparez avec ce que vous avez déjà:",
     "Consumables": "Consommables",
+    "DestinyMap": "Trouver les objets à collecter sur la carte Destiny de lowlines",
     "DestinySets": "Parcourir plus de set d'objets sur Destiny Sets",
     "Emotes": "Intéractions",
     "Engram": "Engramme de récompense",

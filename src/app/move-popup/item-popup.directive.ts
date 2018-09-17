@@ -71,7 +71,9 @@ function ItemPopupLink($scope, _$element, $attrs) {
           }
         } as any;
 
-        const boundariesElement = $attrs.itemPopupBoundaryClass ? document.getElementsByClassName($attrs.itemPopupBoundaryClass)[0] : undefined;
+        const boundariesElement = $attrs.itemPopupBoundaryClass
+          ? document.getElementsByClassName($attrs.itemPopupBoundaryClass)[0]
+          : undefined;
         if (boundariesElement) {
           popperOptions.modifiers.preventOverflow.boundariesElement = boundariesElement;
           popperOptions.modifiers.flip.boundariesElement = boundariesElement;

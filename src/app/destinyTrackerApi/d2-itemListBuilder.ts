@@ -1,6 +1,9 @@
 import { flatMap } from '../util';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
-import { DestinyVendorSaleItemComponent, DestinyVendorItemDefinition } from 'bungie-api-ts/destiny2';
+import { D2ReviewDataCache } from './d2-reviewDataCache';
+import {
+  DestinyVendorSaleItemComponent,
+  DestinyVendorItemDefinition
+} from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { D2Store } from '../inventory/store-types';
 import { D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
@@ -11,7 +14,10 @@ import { translateToDtrItem } from './d2-itemTransformer';
  * Tailored to work alongside the bulkFetcher.
  * Non-obvious bit: it attempts to optimize away from sending items that already exist in the ReviewDataCache.
  */
-export function getItemList(stores: D2Store[], reviewDataCache: D2ReviewDataCache): D2ItemFetchRequest[] {
+export function getItemList(
+  stores: D2Store[],
+  reviewDataCache: D2ReviewDataCache
+): D2ItemFetchRequest[] {
   const dtrItems = getDtrItems(stores, reviewDataCache);
 
   const list = new Set(dtrItems);
@@ -25,15 +31,19 @@ export function getVendorItemList(
   vendorItems?: DestinyVendorItemDefinition[]
 ): D2ItemFetchRequest[] {
   if (vendorSaleItems) {
-    const allVendorItems = vendorSaleItems.map((vendorItem): D2ItemFetchRequest => ({ referenceId: vendorItem.itemHash }));
+    const allVendorItems = vendorSaleItems.map(
+      (vendorItem): D2ItemFetchRequest => ({ referenceId: vendorItem.itemHash })
+    );
 
     return getNewVendorItems(allVendorItems, reviewDataCache);
   } else if (vendorItems) {
-    const allVendorItems = vendorItems.map((vi) => ({ referenceId: vi.itemHash })) as D2ItemFetchRequest[];
+    const allVendorItems = vendorItems.map((vi) => ({
+      referenceId: vi.itemHash
+    })) as D2ItemFetchRequest[];
 
     return getNewVendorItems(allVendorItems, reviewDataCache);
   } else {
-    throw new Error("Neither sale items nor vendor items were supplied.");
+    throw new Error('Neither sale items nor vendor items were supplied.');
   }
 }
 
@@ -41,7 +51,9 @@ function getNewItems(allItems: D2Item[], reviewDataCache: D2ReviewDataCache) {
   const allDtrItems = allItems.map(translateToDtrItem);
   const allKnownDtrItems = reviewDataCache.getItemStores();
 
-  const unmatched = allDtrItems.filter((di) => allKnownDtrItems.every((kdi) => di.referenceId !== kdi.referenceId));
+  const unmatched = allDtrItems.filter((di) =>
+    allKnownDtrItems.every((kdi) => di.referenceId !== kdi.referenceId)
+  );
 
   return unmatched;
 }
@@ -49,7 +61,9 @@ function getNewItems(allItems: D2Item[], reviewDataCache: D2ReviewDataCache) {
 function getNewVendorItems(vendorItems: D2ItemFetchRequest[], reviewDataCache: D2ReviewDataCache) {
   const allKnownDtrItems = reviewDataCache.getItemStores();
 
-  const unmatched = vendorItems.filter((vi) => allKnownDtrItems.every((di) => di.referenceId !== vi.referenceId));
+  const unmatched = vendorItems.filter((vi) =>
+    allKnownDtrItems.every((di) => di.referenceId !== vi.referenceId)
+  );
 
   return unmatched;
 }

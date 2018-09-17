@@ -34,6 +34,14 @@
         </td>
         <td ng-i18next="Filter.DamageType"></td>
       </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="is:primary"></dim-filter-link>
+          <dim-filter-link filter="is:special"></dim-filter-link>
+          <dim-filter-link filter="is:heavy"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.AmmoType"></td>
+      </tr>
       <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="light:value"></dim-filter-link>
@@ -51,11 +59,6 @@
           <dim-filter-link filter="power:&gt;value"></dim-filter-link>
           <dim-filter-link filter="power:&lt;value"></dim-filter-link>
           <dim-filter-link filter="power:&lt;=value"></dim-filter-link>
-          <dim-filter-link filter="basepower:value"></dim-filter-link>
-          <dim-filter-link filter="basepower:&gt;=value"></dim-filter-link>
-          <dim-filter-link filter="basepower:&gt;value"></dim-filter-link>
-          <dim-filter-link filter="basepower:&lt;value"></dim-filter-link>
-          <dim-filter-link filter="basepower:&lt;=value"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.PowerLevel"></td>
       </tr>
@@ -204,12 +207,6 @@
         <td ng-i18next="Filter.RarityTier"></td>
       </tr>
 
-      <tr ng-if="vm.settings.destinyVersion === 2">
-        <td>
-          <dim-filter-link filter="is:powermod"></dim-filter-link>
-        </td>
-        <td ng-i18next="Filter.PowerMod"></td>
-      </tr>
       <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
           <dim-filter-link filter="is:intellect"></dim-filter-link>
@@ -224,6 +221,12 @@
           <dim-filter-link filter="is:infuse"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.Infusable"></td>
+      </tr>
+      <tr ng-if="vm.settings.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="is:randomroll"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.RandomRoll"></td>
       </tr>
       <tr ng-if="vm.settings.destinyVersion === 1">
         <td>
@@ -382,6 +385,15 @@
             <dim-filter-link filter="rating:&lt;=value"></dim-filter-link>
           </td>
           <td ng-i18next="Filter.Rating"></td>
+        </tr>
+        <tr>
+          <td>
+            <dim-filter-link filter="ratingcount:&gt;=value"></dim-filter-link>
+            <dim-filter-link filter="ratingcount:&gt;value"></dim-filter-link>
+            <dim-filter-link filter="ratingcount:&lt;value"></dim-filter-link>
+            <dim-filter-link filter="ratingcount:&lt;=value"></dim-filter-link>
+          </td>
+          <td ng-i18next="Filter.RatingCount"></td>
         </tr>
       </span>
       <tr ng-if="vm.settings.destinyVersion === 1">

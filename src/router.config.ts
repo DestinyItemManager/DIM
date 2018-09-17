@@ -11,7 +11,12 @@ export default function makeRouter() {
 
   // Real ugly hacks to make AngularJS play nice with hashchange outside AngularJS.
   router.locationService = new Ng1LocationServices($locationProvider);
-  (router.locationService as any)._runtimeServices($rootScope, $location, $injector.get('$sniffer'), $injector.get('$browser'));
+  (router.locationService as any)._runtimeServices(
+    $rootScope,
+    $location,
+    $injector.get('$sniffer'),
+    $injector.get('$browser')
+  );
 
   // Debug visualizer
   if ($featureFlags.debugRouter) {
@@ -27,8 +32,13 @@ export default function makeRouter() {
   router.urlService.rules.initial({ state: 'default-account' });
   router.urlService.rules.otherwise({ state: 'default-account' });
 
+  // Scroll to the top of the page when we switch pages
+  router.transitionService.onSuccess({}, () => {
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
+  });
+
   if ($featureFlags.googleAnalyticsForRouter) {
-    router.transitionService.onSuccess({ }, (transition) => {
+    router.transitionService.onSuccess({}, (transition) => {
       ga('send', 'pageview', transition.$to().name);
     });
   }

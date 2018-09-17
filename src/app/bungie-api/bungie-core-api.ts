@@ -21,8 +21,8 @@ const GlobalAlertLevelsToToastLevels = [
  * Get global alerts (like maintenance warnings) from Bungie.
  */
 export function getGlobalAlerts(): Promise<GlobalAlert[]> {
-  return httpAdapter(bungieApiQuery(`/Platform/GlobalAlerts/`))
-    .then((response: ServerResponse<any>) => {
+  return httpAdapter(bungieApiQuery(`/Platform/GlobalAlerts/`)).then(
+    (response: ServerResponse<any>) => {
       if (response && response.Response) {
         return response.Response.map((alert) => {
           return {
@@ -34,5 +34,6 @@ export function getGlobalAlerts(): Promise<GlobalAlert[]> {
         });
       }
       return [];
-    });
+    }
+  );
 }

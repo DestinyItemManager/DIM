@@ -1,7 +1,8 @@
 import * as _ from 'underscore';
-import { sum } from '../util';
+import { sum, count } from '../util';
 import { D2Item, DimSocket } from '../inventory/item-types';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { dtrTextReviewMultiplier } from './dtr-service-helper';
 
 export interface RatingAndReview {
   ratingCount: number;
@@ -13,23 +14,25 @@ export interface RatingAndReview {
  * Rate the perks on a Destiny 2 item based off of its attached user reviews.
  */
 export function ratePerks(item: D2Item) {
-  if (!item.dtrRating ||
-      !item.dtrRating.reviewsResponse ||
-      !item.dtrRating.reviewsResponse.reviews.length ||
-      !item.sockets ||
-      !item.sockets.sockets) {
+  if (
+    !item.dtrRating ||
+    !item.dtrRating.reviewsResponse ||
+    !item.dtrRating.reviewsResponse.reviews.length ||
+    !item.sockets ||
+    !item.sockets.sockets
+  ) {
     return;
   }
 
   const itemReviews = item.dtrRating.reviewsResponse.reviews;
 
   item.sockets.sockets.forEach((socket) => {
-    if ((socket.plugOptions.length) &&
-        (socket.plugOptions.length > 1)) {
+    if (socket.plugOptions.length && socket.plugOptions.length > 1) {
       const plugOptionHashes = socket.plugOptions.map((i) => i.plugItem.hash);
 
       const ratingsAndReviews = plugOptionHashes.map((plugOptionHash) =>
-        getPlugRatingsAndReviewCount(plugOptionHash, itemReviews));
+        getPlugRatingsAndReviewCount(plugOptionHash, itemReviews)
+      );
 
       const maxReview = getMaxReview(ratingsAndReviews);
 
@@ -38,15 +41,14 @@ export function ratePerks(item: D2Item) {
   });
 }
 
-function markPlugAsBest(
-  maxReview: RatingAndReview | null,
-  socket: DimSocket
-) {
+function markPlugAsBest(maxReview: RatingAndReview | null, socket: DimSocket) {
   if (!maxReview) {
     return;
   }
 
-  const matchingPlugOption = socket.plugOptions.find((plugOption) => plugOption.plugItem.hash === maxReview.plugOptionHash);
+  const matchingPlugOption = socket.plugOptions.find(
+    (plugOption) => plugOption.plugItem.hash === maxReview.plugOptionHash
+  );
 
   if (matchingPlugOption) {
     matchingPlugOption.bestRated = true;
@@ -54,11 +56,12 @@ function markPlugAsBest(
 }
 
 function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
-  const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) => (ratingAndReview.ratingCount < 2 ? 0
-    : ratingAndReview.averageReview)).reverse();
+  const orderedRatingsAndReviews = _.sortBy(
+    ratingsAndReviews,
+    (ratingAndReview) => (ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview)
+  ).reverse();
 
-  if ((orderedRatingsAndReviews.length > 0) &&
-      (orderedRatingsAndReviews[0].ratingCount > 1)) {
+  if (orderedRatingsAndReviews.length > 0 && orderedRatingsAndReviews[0].ratingCount > 1) {
     return orderedRatingsAndReviews[0];
   }
 
@@ -69,11 +72,14 @@ function getPlugRatingsAndReviewCount(
   plugOptionHash: number,
   reviews: D2ItemUserReview[]
 ): RatingAndReview {
-  const matchingReviews = getMatchingReviews(plugOptionHash,
-                                                    reviews);
+  const matchingReviews = getMatchingReviews(plugOptionHash, reviews);
+  const matchingReviewsWithTextCount = count(matchingReviews, (mr) => mr.text);
 
-  const ratingCount = matchingReviews.length;
-  const averageReview = sum(matchingReviews, (r) => r.voted) / matchingReviews.length || 1;
+  const ratingCount =
+    matchingReviews.length + matchingReviewsWithTextCount * dtrTextReviewMultiplier;
+  const averageReview =
+    sum(matchingReviews, (r) => (r.text ? r.voted * (dtrTextReviewMultiplier + 1) : r.voted)) /
+      ratingCount || 1;
 
   const ratingAndReview = {
     ratingCount,
@@ -84,12 +90,11 @@ function getPlugRatingsAndReviewCount(
   return ratingAndReview;
 }
 
-function getMatchingReviews(
-  plugOptionHash: number,
-  reviews: D2ItemUserReview[]
-) {
+function getMatchingReviews(plugOptionHash: number, reviews: D2ItemUserReview[]) {
   return reviews.filter((review) => {
-    return (review.selectedPerks && review.selectedPerks.includes(plugOptionHash)) ||
-            (review.attachedMods && review.attachedMods.includes(plugOptionHash));
+    return (
+      (review.selectedPerks && review.selectedPerks.includes(plugOptionHash)) ||
+      (review.attachedMods && review.attachedMods.includes(plugOptionHash))
+    );
   });
 }

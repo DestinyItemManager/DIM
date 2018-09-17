@@ -5,7 +5,7 @@ import './item-review.scss';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
-import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
+import { IComponentOptions, IController, IRootScopeService } from 'angular';
 import { DimItem } from '../inventory/item-types';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
 import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
@@ -26,7 +26,6 @@ function ItemReviewController(
     findReview(reviewId: string): D1ItemUserReview | D2ItemUserReview | null;
     getReviewData(): number[];
   },
-  $scope: IScope,
   $rootScope: IRootScopeService
 ) {
   'ngInject';
@@ -39,15 +38,19 @@ function ItemReviewController(
   vm.expandReview = false;
 
   vm.$onInit = () => {
-    vm.canCreateReview = (vm.canReview && vm.item.owner);
+    vm.canCreateReview = vm.canReview && vm.item.owner;
 
     if (vm.item.isDestiny1()) {
       if (vm.item.dtrRating && vm.item.dtrRating.userReview) {
-        vm.expandReview = (vm.item.dtrRating.userReview.rating !== 0 && !vm.item.dtrRating.userReview.treatAsSubmitted);
+        vm.expandReview =
+          vm.item.dtrRating.userReview.rating !== 0 &&
+          !vm.item.dtrRating.userReview.treatAsSubmitted;
       }
     } else if (vm.item.isDestiny2()) {
       if (vm.item.dtrRating && vm.item.dtrRating.userReview) {
-        vm.expandReview = (vm.item.dtrRating.userReview.voted !== 0 && !vm.item.dtrRating.userReview.treatAsSubmitted);
+        vm.expandReview =
+          vm.item.dtrRating.userReview.voted !== 0 &&
+          !vm.item.dtrRating.userReview.treatAsSubmitted;
 
         if (!vm.item.dtrRating.userReview.mode) {
           vm.item.dtrRating.userReview.mode = settings.reviewsModeSelection;
@@ -119,12 +122,17 @@ function ItemReviewController(
         return null;
       }
 
-      return vm.item.dtrRating.reviewsResponse.reviews.find((review) => review.reviewId === reviewId) || null;
+      return (
+        vm.item.dtrRating.reviewsResponse.reviews.find((review) => review.reviewId === reviewId) ||
+        null
+      );
     } else if (vm.item.isDestiny2()) {
       if (!vm.item.dtrRating || !vm.item.dtrRating.reviewsResponse) {
         return null;
       }
-      return vm.item.dtrRating.reviewsResponse.reviews.find((review) => review.id === reviewId) || null;
+      return (
+        vm.item.dtrRating.reviewsResponse.reviews.find((review) => review.id === reviewId) || null
+      );
     }
 
     return null;
@@ -145,7 +153,12 @@ function ItemReviewController(
   vm.reviewLabels = [5, 4, 3, 2, 1];
 
   vm.getReviewData = () => {
-    if (!vm.item.isDestiny1() || !vm.item.dtrRating || !vm.item.dtrRating.reviewsResponse || !vm.item.dtrRating.reviewsResponse.reviews) {
+    if (
+      !vm.item.isDestiny1() ||
+      !vm.item.dtrRating ||
+      !vm.item.dtrRating.reviewsResponse ||
+      !vm.item.dtrRating.reviewsResponse.reviews
+    ) {
       return [];
     }
 
@@ -158,10 +171,10 @@ function ItemReviewController(
         const matchingReviews = _.where(itemReviews, { rating: label });
         const highlightedReviews = _.where(matchingReviews, { isHighlighted: true });
 
-        return matchingReviews.length + (highlightedReviews.length * 4);
+        return matchingReviews.length + highlightedReviews.length * 4;
       } else {
         const highlightedReviews = itemReviews.filter((review) => review.isHighlighted);
-        return itemReviews.length + (highlightedReviews.length * 4);
+        return itemReviews.length + highlightedReviews.length * 4;
       }
     });
 
@@ -173,8 +186,7 @@ function ItemReviewController(
   vm.shouldDrawChart = () => {
     vm.reviewData = vm.getReviewData();
 
-    return ((vm.reviewData.length > 0) &&
-            (_.some(vm.reviewData, (item) => item > 0)));
+    return vm.reviewData.length > 0 && _.some(vm.reviewData, (item) => item > 0);
   };
 
   vm.submitReview = () => {
@@ -198,8 +210,7 @@ function ItemReviewController(
     const item = vm.item;
     const userReview = vm.toUserReview(item);
 
-    dimDestinyTrackerService.updateCachedUserRankings(item,
-                                                      userReview);
+    dimDestinyTrackerService.updateCachedUserRankings(item, userReview);
   };
 
   vm.reportReview = (reviewId: string) => {
@@ -226,10 +237,6 @@ function ItemReviewController(
 
   vm.settings = settings;
 
-  $scope.$watchCollection('vm.settings', () => {
-    settings.save();
-  });
-
   $rootScope.$on('dim-item-reviews-fetched', () => {
     vm.reviewData = vm.getReviewData();
   });
@@ -240,11 +247,15 @@ function ItemReviewController(
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);
     }
+
+    settings.save();
   };
 
   vm.translateReviewMode = (review: D2ItemUserReview) => {
     if (!vm.reviewModeOptions) {
-      getDefinitions().then((defs) => { vm.reviewModeOptions = getReviewModes(defs); });
+      getDefinitions().then((defs) => {
+        vm.reviewModeOptions = getReviewModes(defs);
+      });
 
       return translateReviewMode(vm.reviewModeOptions, review);
     }
@@ -257,9 +268,10 @@ function ItemReviewController(
       return;
     }
 
-    vm.item.dtrRating.userReview.voted = (vm.item.dtrRating.userReview.voted === userVote) ? 0 : userVote;
+    vm.item.dtrRating.userReview.voted =
+      vm.item.dtrRating.userReview.voted === userVote ? 0 : userVote;
 
-    const treatAsTouched = (vm.item.dtrRating.userReview.voted !== 0);
+    const treatAsTouched = vm.item.dtrRating.userReview.voted !== 0;
 
     vm.expandReview = treatAsTouched;
     vm.item.dtrRating.userReview.treatAsSubmitted = !treatAsTouched;

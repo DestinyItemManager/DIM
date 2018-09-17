@@ -1,4 +1,3 @@
-
 import template from './star-rating.html';
 import './star-rating.scss';
 import { IComponentOptions, IController, IRootElementService } from 'angular';

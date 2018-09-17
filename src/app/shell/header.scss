@@ -34,6 +34,7 @@
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   padding-top: env(safe-area-inset-top);
+  filter: var(--color-filter);
 
   #user {
     color: white;
@@ -47,7 +48,9 @@
     }
   }
 
-  span, a, img {
+  span,
+  a,
+  img {
     margin: 0 6px;
     text-decoration: none;
     font-size: 13px;
@@ -61,9 +64,10 @@
     color: white;
     cursor: pointer;
 
-    &:hover, &.active {
+    &:hover,
+    &.active {
       color: $orange;
-      transition: color .2s linear;
+      transition: color 0.2s linear;
     }
   }
 
@@ -76,11 +80,18 @@
     flex-direction: row;
     height: 100%;
   }
+
+  &.search-expanded .header-right {
+    @include phone-portrait {
+      flex: 1;
+    }
+  }
+
   .header-separator {
-      display: block !important;
-      width: 0;
-      height: 16px !important;
-      border-right: 1px solid #6f7070;
+    display: block !important;
+    width: 0;
+    height: 16px !important;
+    border-right: 1px solid #6f7070;
   }
   .dropdown {
     @include below-header;
@@ -114,7 +125,8 @@
         padding: 6px 2em;
       }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         background-color: #151515;
         transition: none;
       }

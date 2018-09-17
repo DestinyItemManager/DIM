@@ -59,26 +59,29 @@ function LoadoutDrawerCtrl(
       These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
       */
 
-      _.each(_.uniq(stores.filter((s) => !s.isVault), false, (store) => store.classType), (store) => {
-        let classType = 0;
+      _.each(
+        _.uniq(stores.filter((s) => !s.isVault), false, (store) => store.classType),
+        (store) => {
+          let classType = 0;
 
-        switch (parseInt(store.classType.toString(), 10)) {
-        case 0: {
-          classType = 1;
-          break;
-        }
-        case 1: {
-          classType = 2;
-          break;
-        }
-        case 2: {
-          classType = 0;
-          break;
-        }
-        }
+          switch (parseInt(store.classType.toString(), 10)) {
+            case 0: {
+              classType = 1;
+              break;
+            }
+            case 1: {
+              classType = 2;
+              break;
+            }
+            case 2: {
+              classType = 0;
+              break;
+            }
+          }
 
-        vm.classTypeValues.push({ label: store.className, value: classType });
-      });
+          vm.classTypeValues.push({ label: store.className, value: classType });
+        }
+      );
     }
 
     if (changes.account) {
@@ -94,29 +97,34 @@ function LoadoutDrawerCtrl(
     vm.loadout = copy(vm.defaults);
   });
 
-  $scope.$on('dim-edit-loadout', (_event, args: { loadout?: Loadout; showClass: boolean; equipAll: boolean }) => {
-    vm.showClass = args.showClass;
-    if (args.loadout) {
-      vm.loadout = copy(args.loadout);
-      vm.show = true;
-      dimLoadoutService.dialogOpen = true;
-      if (vm.loadout.classType === undefined) {
-        vm.loadout.classType = -1;
-      }
-      vm.loadout.items = vm.loadout.items || {};
-
-      // Filter out any vendor items and equip all if requested
-      vm.loadout.warnitems = flatMap(Object.values(vm.loadout.items), (items) => items.filter((item) => !item.owner));
-      fillInDefinitionsForWarnItems(vm.loadout);
-
-      _.each(vm.loadout.items, (items, type) => {
-        vm.loadout!.items[type] = items.filter((item) => item.owner);
-        if (args.equipAll && vm.loadout!.items[type][0]) {
-          vm.loadout!.items[type][0].equipped = true;
+  $scope.$on(
+    'dim-edit-loadout',
+    (_event, args: { loadout?: Loadout; showClass: boolean; equipAll: boolean }) => {
+      vm.showClass = args.showClass;
+      if (args.loadout) {
+        vm.loadout = copy(args.loadout);
+        vm.show = true;
+        dimLoadoutService.dialogOpen = true;
+        if (vm.loadout.classType === undefined) {
+          vm.loadout.classType = -1;
         }
-      });
+        vm.loadout.items = vm.loadout.items || {};
+
+        // Filter out any vendor items and equip all if requested
+        vm.loadout.warnitems = flatMap(Object.values(vm.loadout.items), (items) =>
+          items.filter((item) => !item.owner)
+        );
+        fillInDefinitionsForWarnItems(vm.loadout);
+
+        _.each(vm.loadout.items, (items, type) => {
+          vm.loadout!.items[type] = items.filter((item) => item.owner);
+          if (args.equipAll && vm.loadout!.items[type][0]) {
+            vm.loadout!.items[type][0].equipped = true;
+          }
+        });
+      }
     }
-  });
+  );
 
   $scope.$on('dim-store-item-clicked', (_event, args) => {
     vm.add(args.item, args.clickEvent);
@@ -144,14 +152,14 @@ function LoadoutDrawerCtrl(
     const loadout = vm.loadout;
     loadout.platform = vm.account.platformLabel; // Playstation or Xbox
     loadout.destinyVersion = vm.account.destinyVersion; // D1 or D2
-    dimLoadoutService
-      .saveLoadout(loadout)
-      .catch((e) => {
-        toaster.pop('error',
-                    $i18next.t('Loadouts.SaveErrorTitle'),
-                    $i18next.t('Loadouts.SaveErrorDescription', { loadoutName: loadout.name, error: e.message }));
-        console.error(e);
-      });
+    dimLoadoutService.saveLoadout(loadout).catch((e) => {
+      toaster.pop(
+        'error',
+        $i18next.t('Loadouts.SaveErrorTitle'),
+        $i18next.t('Loadouts.SaveErrorDescription', { loadoutName: loadout.name, error: e.message })
+      );
+      console.error(e);
+    });
     vm.cancel($event);
   };
 
@@ -179,7 +187,8 @@ function LoadoutDrawerCtrl(
       const clone = copy(item);
 
       const discriminator = clone.type.toLowerCase();
-      const typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
+      const typeInventory = (vm.loadout.items[discriminator] =
+        vm.loadout.items[discriminator] || []);
 
       clone.amount = Math.min(clone.amount, $event.shiftKey ? 5 : 1);
 
@@ -194,7 +203,7 @@ function LoadoutDrawerCtrl(
 
       if (!dupe) {
         if (typeInventory.length < maxSlots) {
-          clone.equipped = item.equipment && (typeInventory.length === 0);
+          clone.equipped = item.equipment && typeInventory.length === 0;
 
           // Only allow one subclass per burn
           if (clone.type === 'Class') {
@@ -226,7 +235,7 @@ function LoadoutDrawerCtrl(
       return;
     }
     const discriminator = item.type.toLowerCase();
-    const typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
+    const typeInventory = (vm.loadout.items[discriminator] = vm.loadout.items[discriminator] || []);
 
     const index = typeInventory.findIndex((i) => i.hash === item.hash && i.id === item.id);
 
@@ -251,7 +260,9 @@ function LoadoutDrawerCtrl(
       return;
     }
 
-    const index = (vm.loadout.warnitems || []).findIndex((i) => i.hash === item.hash && i.id === item.id);
+    const index = (vm.loadout.warnitems || []).findIndex(
+      (i) => i.hash === item.hash && i.id === item.id
+    );
     if (index >= 0) {
       vm.loadout.warnitems!.splice(index, 1);
     }
@@ -263,24 +274,24 @@ function LoadoutDrawerCtrl(
     }
 
     if (item.equipment) {
-      if ((item.type === 'Class') && (!item.equipped)) {
+      if (item.type === 'Class' && !item.equipped) {
         item.equipped = true;
       } else if (item.equipped) {
         item.equipped = false;
       } else {
         const allItems: DimItem[] = _.flatten(Object.values(vm.loadout.items));
         if (item.equippingLabel) {
-          const exotics = allItems.filter((i) => i.equippingLabel === item.equippingLabel && i.equipped);
+          const exotics = allItems.filter(
+            (i) => i.equippingLabel === item.equippingLabel && i.equipped
+          );
           for (const exotic of exotics) {
             exotic.equipped = false;
           }
         }
 
-        allItems
-          .filter((i) => i.type === item.type && i.equipped)
-          .forEach((i) => {
-            i.equipped = false;
-          });
+        allItems.filter((i) => i.type === item.type && i.equipped).forEach((i) => {
+          i.equipped = false;
+        });
 
         item.equipped = true;
       }
@@ -319,7 +330,7 @@ function LoadoutDrawerCtrl(
     // Seven types of things that contribute to these stats, times 3 stats, equals
     // a complete set of armor, ghost and artifact.
     vm.hasArmor = numInterestingStats > 0;
-    vm.completeArmor = numInterestingStats === (7 * 3);
+    vm.completeArmor = numInterestingStats === 7 * 3;
 
     if (_.isEmpty(combinedStats)) {
       vm.stats = null;

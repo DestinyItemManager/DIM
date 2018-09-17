@@ -1,5 +1,5 @@
-import { DtrReviewer, DimWorkingUserReview, DtrRating, DimUserReview } from "./dtr-api-types";
-import { DestinyActivityModeType } from "bungie-api-ts/destiny2";
+import { DtrReviewer, DimWorkingUserReview, DtrRating, DimUserReview } from './dtr-api-types';
+import { DestinyActivityModeType } from 'bungie-api-ts/destiny2';
 
 /**
  * A "basic" item.
@@ -15,6 +15,8 @@ export interface DtrD2BasicItem {
   attachedMods?: number[];
   /** What perks does the user have selected? */
   selectedPerks?: number[];
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
 }
 
 /** The form that votes come back to us in for items in D2. */
@@ -38,14 +40,18 @@ export interface DtrD2Vote {
 export interface D2ItemFetchRequest {
   /** Reference ID (hash ID). */
   referenceId: number;
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
 }
 
 /** The fetch response for a single item. */
 export interface D2ItemFetchResponse {
   /** Reference ID (hash ID). */
   referenceId: number;
-  /** The votes for a single item. */
+  /** The votes for a single item. Includes ratings with and without review text. */
   votes: DtrD2Vote;
+  /** The votes that have review text along with them. */
+  reviewVotes: DtrD2Vote;
 }
 
 /** If the user chooses to make any review moves on an item, they're stored here. */
@@ -83,6 +89,8 @@ export interface D2ItemUserReview extends DimUserReview {
   text: string;
   /** What perks did the user have selected on this item? */
   selectedPerks: number[];
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
   /** What power mods did the user have attached to this item? */
   attachedMods: number[];
   /** What play mode is this for? */
@@ -116,7 +124,8 @@ export enum DtrD2ActivityModes {
   playerVersusEnemy = DestinyActivityModeType.AllPvE,
   playerVersusPlayer = DestinyActivityModeType.AllPvP,
   raid = DestinyActivityModeType.Raid,
-  trials = DestinyActivityModeType.TrialsOfTheNine
+  // trials = DestinyActivityModeType.TrialsOfTheNine
+  gambit = DestinyActivityModeType.Gambit
 }
 
 /**
@@ -126,6 +135,8 @@ export enum DtrD2ActivityModes {
 export interface D2RatingData extends DtrRating {
   /** Reference ID (hash ID). This is all we need to look up an item for D2 (currently). */
   referenceId: number;
+  /** The roll (perk hashes in the form that DTR expects). */
+  roll: string | null;
   /** The bulk rating fetch response (if there was one). */
   fetchResponse?: D2ItemFetchResponse;
   /** The item reviews response (if there was one). */

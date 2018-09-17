@@ -2,9 +2,8 @@ import {
   DestinyCharacterComponent,
   DestinyProfileResponse,
   DestinyVendorsResponse
-  } from 'bungie-api-ts/destiny2';
+} from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import { $q } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
@@ -16,7 +15,6 @@ import { reportException } from '../exceptions';
 import { D2ManifestService } from '../manifest/manifest-service';
 import { loadingTracker, toaster } from '../ngimport-more';
 import '../rx-operators';
-import { IPromise } from 'angular';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -47,16 +45,20 @@ const forceReloadTrigger = new Subject();
 // A stream of progress that switches on account changes and supports reloading.
 // This is a ConnectableObservable that must be connected to start.
 const progressStream: ConnectableObservable<ProgressProfile> = accountStream
-      // Only emit when the account changes
-      .distinctUntilChanged(compareAccounts)
-      // But also re-emit the current value of the account stream
-      // whenever the force reload triggers
-      .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
-      // Whenever either trigger happens, load progress
-      .switchMap(loadProgress)
-      .filter(Boolean)
-      // Keep track of the last value for new subscribers
-      .publishReplay(1);
+  // Only emit when the account changes
+  .distinctUntilChanged(compareAccounts)
+  // But also re-emit the current value of the account stream
+  // whenever the force reload triggers
+  .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
+  // Whenever either trigger happens, load progress
+  .switchMap((account) => {
+    const promise = loadProgress(account);
+    loadingTracker.addPromise(promise);
+    return promise;
+  })
+  .filter(Boolean)
+  // Keep track of the last value for new subscribers
+  .publishReplay(1);
 
 /**
  * Set the current account, and get a stream of progress updates.
@@ -81,40 +83,44 @@ export function reloadProgress() {
   forceReloadTrigger.next(); // signal the force reload
 }
 
-function loadProgress(account: DestinyAccount): IPromise<ProgressProfile | undefined> {
-  // TODO: this would be nicer as async/await, but we need the scope-awareness of the Angular promise for now
-  const reloadPromise = $q.all([getProgression(account), getDefinitions()])
-    .then(([profileInfo, defs]) => {
-      const characterIds = Object.keys(profileInfo.characters.data);
-      return $q.all(characterIds.map((characterId) => getVendors(account, characterId))).then((vendors) => {
-        return {
-          defs,
-          profileInfo,
-          vendors: _.object(_.zip(characterIds, vendors)) as ProgressProfile['vendors'],
-          get lastPlayedDate() {
-            return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce((memo, character: DestinyCharacterComponent) => {
-              const d1 = new Date(character.dateLastPlayed);
-              return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
-            }, new Date(0));
-          }
-        };
-      });
-    })
-    .catch((e) => {
-      toaster.pop(bungieErrorToaster(e));
-      console.error('Error loading progress', e);
-      reportException('progressService', e);
-      // It's important that we swallow all errors here - otherwise
-      // our observable will fail on the first error. We could work
-      // around that with some rxjs operators, but it's easier to
-      // just make this never fail.
-      return undefined;
-    })
-    .finally(() => {
-      D2ManifestService.loaded = true;
-    });
-
-  loadingTracker.addPromise(reloadPromise);
-
-  return reloadPromise;
+async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | undefined> {
+  try {
+    const defsPromise = getDefinitions();
+    const profileInfo = await getProgression(account);
+    const characterIds = Object.keys(profileInfo.characters.data);
+    let vendors: DestinyVendorsResponse[] = [];
+    try {
+      vendors = await Promise.all(
+        characterIds.map((characterId) => getVendors(account, characterId))
+      );
+    } catch (e) {
+      console.error('Failed to load vendors', e);
+    }
+    const defs = await defsPromise;
+    return {
+      defs,
+      profileInfo,
+      vendors: _.object(_.zip(characterIds, vendors)) as ProgressProfile['vendors'],
+      get lastPlayedDate() {
+        return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce(
+          (memo, character: DestinyCharacterComponent) => {
+            const d1 = new Date(character.dateLastPlayed);
+            return memo ? (d1 >= memo ? d1 : memo) : d1;
+          },
+          new Date(0)
+        );
+      }
+    };
+  } catch (e) {
+    toaster.pop(bungieErrorToaster(e));
+    console.error('Error loading progress', e);
+    reportException('progressService', e);
+    // It's important that we swallow all errors here - otherwise
+    // our observable will fail on the first error. We could work
+    // around that with some rxjs operators, but it's easier to
+    // just make this never fail.
+    return undefined;
+  } finally {
+    D2ManifestService.loaded = true;
+  }
 }

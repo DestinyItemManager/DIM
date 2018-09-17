@@ -8,11 +8,15 @@ import { D1InventoryComponent } from './d1-inventory.component';
 
 export { states } from './routes';
 
-export const angularModule = module('destiny1Module',
-  [
-    recordBooksModule,
-    activitiesModule,
-    loadoutBuilderModule,
-    vendorsModule
-  ])
-  .component('inventory1', D1InventoryComponent);
+const mod = module('destiny1Module', [
+  recordBooksModule,
+  activitiesModule,
+  loadoutBuilderModule,
+  vendorsModule
+]);
+
+if (!$featureFlags.reactInventory) {
+  mod.component('inventory1', D1InventoryComponent);
+}
+
+export const angularModule = mod;

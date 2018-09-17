@@ -51,8 +51,7 @@
     "Throttled": "Bungie APIの制限が超えました。しばらくしてからお待ちください。",
     "Twitter": "最新情報に更新します。:",
     "UnknownError": "Bungie.netからのメッセージ: {{message}}",
-    "VendorNotFound": "ベンダー情報ありません",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "ベンダー情報ありません"
   },
   "Compare": {
     "All": "{{type}} 比較 ({{quantity}})",
@@ -102,6 +101,7 @@
     "Delete": "削除",
     "Edit": "編集",
     "ForGameMode": "For game mode",
+    "ForPlatform": "For platform(s)",
     "Help": "レビューを書く(オプション)",
     "HelpCons": "この武器の悪いところを書いてください(オプション)",
     "HelpPros": "この武器の良いところを書いてください(オプション)",
@@ -115,6 +115,7 @@
       "Xbox": "XBOXのみ"
     },
     "Pros": "長所",
+    "RatingsOptions": "Ratings Options",
     "ReallyReport": "報告",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
@@ -171,6 +172,7 @@
       "WotM": "機械の天罰"
     },
     "Activity": "<i>{{activity}}</i>から入手可能",
+    "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "カテゴリー別に防具を表示",
     "Ascended": "ノードの開放完了の有無に関わらず、アップグレード可能なアイテムを表示",
     "Categories": "高レベル・アイテムカテゴリー",
@@ -216,11 +218,12 @@
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
-    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "希少性を基に表示",
     "Rated": "Destiny トラッカーから評価をされた武器を全て表示",
     "Rating": "ユーザーからの評価を基に武器を表示",
+    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reforgeable": "銃器技師で融合可能なアイテムを表示",
     "Release": "<i>{{release}}</i>から入手可能",
     "Releases": {
@@ -264,6 +267,7 @@
     "BulkTag": "ロットマークピンは",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "アイテム、効果または{{example}}から検索",
+    "FilterHelpBrief": "Search items",
     "Filters": "フィルター",
     "Inventory": "インベントリー",
     "Refresh": "デスティニーデータを更新",
@@ -285,8 +289,7 @@
     "UpdateAvailable": "DIM 更新",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
-    "Version_release": "DIM v{{version}} がリリースされました",
-    "Xur": "Xûrはここです"
+    "Version_release": "DIM v{{version}} がリリースされました"
   },
   "Hotkey": {
     "ClearNewItems": "新しいアイテムをクリアする",
@@ -496,6 +499,7 @@
     "OverviewTab": "概要",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "レビュー",
+    "Rewards": "Rewards:",
     "Split": "分割",
     "Store": "保管する",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -522,11 +526,10 @@
     "Daily": "デイリー",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "ファクション",
-    "Milestones": "マイルストーン",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "アカウントのマイルス トーン",
     "ProfileQuests": "アカウントクエスト",
     "Progress": "進行状況",
-    "Quests": "Pursuits & Quests",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",
@@ -593,7 +596,7 @@
     "Discipline": "鍛錬",
     "Intellect": "知性",
     "Level": "レベル",
-    "MaxBasePower": "最大ベースパワー（変更なし）",
+    "MaxBasePower": "Max Power",
     "NoBonus": "ボーナスなし。",
     "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",
@@ -670,6 +673,11 @@
     "Flawless": "完全勝利",
     "SevenWins": "7勝目の報酬 (武器)"
   },
+  "VendorEngramsXyz": {
+    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
+    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
+    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
+  },
   "Vendors": {
     "All": "全て",
     "ArmorAndWeapons": "アーマーとウェポン",
@@ -679,6 +687,7 @@
     "Collections": "コレクション",
     "Compare": "装備中のものと比較:",
     "Consumables": "消費アイテム",
+    "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Emotes": "感情表現",
     "Engram": "Reward Engram",

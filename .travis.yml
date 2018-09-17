@@ -1,5 +1,5 @@
 language: node_js
-node_js: "9.11.1"
+node_js: 10
 install: yarn install
 before_script: yarn run publish-beta && VERSION=$(node -p -e "require('./package.json').version + '.' + process.env.TRAVIS_BUILD_NUMBER") && npx sentry-cli releases new "$VERSION" --finalize && npx sentry-cli releases set-commits "$VERSION" --auto
 sudo: false

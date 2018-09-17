@@ -4,7 +4,7 @@ import './settings.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { changeLanguage } from 'i18next';
-import { settings } from '../settings/settings';
+import { settings } from './settings';
 import { resetHiddenInfos } from '../shell/info-popup';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
@@ -16,6 +16,7 @@ import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import { getPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 
 export const SettingsComponent: IComponentOptions = {
   template,
@@ -44,8 +45,14 @@ export function SettingsController(
     settings.save();
   });
 
-  vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
-  vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: $i18next.t('Settings.ColumnSize', { num }) }));
+  vm.charColOptions = _.range(3, 6).map((num) => ({
+    id: num,
+    name: $i18next.t('Settings.ColumnSize', { num })
+  }));
+  vm.vaultColOptions = _.range(5, 21).map((num) => ({
+    id: num,
+    name: $i18next.t('Settings.ColumnSize', { num })
+  }));
   vm.vaultColOptions.unshift({ id: 999, name: $i18next.t('Settings.ColumnSizeAuto') });
 
   subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
@@ -59,6 +66,7 @@ export function SettingsController(
     'es-mx': 'Español (México)',
     fr: 'Français',
     it: 'Italiano',
+    ko: '한국어',
     pl: 'Polski',
     'pt-br': 'Português (Brasil)',
     ru: 'Русский',
@@ -66,20 +74,24 @@ export function SettingsController(
     'zh-cht': '繁體中文' // Chinese (Traditional)
   };
 
-  vm.reviewsPlatformOptions = {
-    0: $i18next.t('DtrReview.Platforms.All'),
-    1: $i18next.t('DtrReview.Platforms.Xbox'),
-    2: $i18next.t('DtrReview.Platforms.Playstation'),
-    3: $i18next.t('DtrReview.Platforms.AllConsoles'),
-    4: $i18next.t('DtrReview.Platforms.Pc')
-  };
+  vm.reviewsPlatformOptions = getPlatformOptions();
 
   getDefinitions().then((defs) => {
     vm.reviewModeOptions = getReviewModes(defs);
   });
 
   if ($featureFlags.colorA11y) {
-    vm.colorA11yOptions = ['-', 'Protanopia', 'Protanomaly', 'Deuteranopia', 'Deuteranomaly', 'Tritanopia', 'Tritanomaly', 'Achromatopsia', 'Achromatomaly'];
+    vm.colorA11yOptions = [
+      '-',
+      'Protanopia',
+      'Protanomaly',
+      'Deuteranopia',
+      'Deuteranomaly',
+      'Tritanopia',
+      'Tritanomaly',
+      'Achromatopsia',
+      'Achromatomaly'
+    ];
   }
 
   vm.fakeWeapon = {
@@ -125,19 +137,25 @@ export function SettingsController(
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)');
 
   vm.downloadWeaponCsv = () => {
-    downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : D1StoresService.getStores(), "Weapons");
+    downloadCsvFiles(
+      vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : D1StoresService.getStores(),
+      'Weapons'
+    );
     ga('send', 'event', 'Download CSV', 'Weapons');
   };
 
   vm.downloadArmorCsv = () => {
-    downloadCsvFiles(vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : D1StoresService.getStores(), "Armor");
+    downloadCsvFiles(
+      vm.settings.destinyVersion === 2 ? D2StoresService.getStores() : D1StoresService.getStores(),
+      'Armor'
+    );
     ga('send', 'event', 'Download CSV', 'Armor');
   };
 
   vm.resetHiddenInfos = resetHiddenInfos;
 
   vm.resetItemSize = () => {
-    vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
+    vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
   };
 
   vm.saveAndReloadReviews = () => {
@@ -146,7 +164,7 @@ export function SettingsController(
   };
 
   vm.changeLanguage = () => {
-    localStorage.dimLanguage = vm.settings.language;
+    localStorage.setItem('dimLanguage', vm.settings.language);
     changeLanguage(vm.settings.language, () => {
       $rootScope.$applyAsync(() => {
         $rootScope.$broadcast('i18nextLanguageChange');
@@ -162,7 +180,6 @@ export function SettingsController(
     typeName: $i18next.t('Settings.SortByType'),
     rarity: $i18next.t('Settings.SortByRarity'),
     primStat: $i18next.t('Settings.SortByPrimary'),
-    basePower: $i18next.t('Settings.SortByBasePower'),
     rating: $i18next.t('Settings.SortByRating'),
     classType: $i18next.t('Settings.SortByClassType'),
     name: $i18next.t('Settings.SortName')
@@ -186,16 +203,19 @@ export function SettingsController(
     vm.settings.itemSort = 'custom';
   }
 
-  vm.itemSortCustom = _.sortBy(_.map(itemSortProperties, (displayName, id) => {
-    return {
-      id,
-      displayName,
-      enabled: sortOrder.includes(id)
-    };
-  }), (o) => {
-    const index = sortOrder.indexOf(o.id);
-    return index >= 0 ? index : 999;
-  });
+  vm.itemSortCustom = _.sortBy(
+    _.map(itemSortProperties, (displayName, id) => {
+      return {
+        id,
+        displayName,
+        enabled: sortOrder.includes(id)
+      };
+    }),
+    (o) => {
+      const index = sortOrder.indexOf(o.id);
+      return index >= 0 ? index : 999;
+    }
+  );
 
   vm.itemSortOrderChanged = (sortOrder) => {
     vm.itemSortCustom = sortOrder;

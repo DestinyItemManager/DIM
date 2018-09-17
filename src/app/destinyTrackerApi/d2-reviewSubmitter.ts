@@ -18,6 +18,8 @@ interface D2ReviewSubmitRequest {
   attachedMods?: number[];
   /** What perks does the user have selected? */
   selectedPerks?: number[];
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
 
   reviewer: DtrReviewer;
   voted: number;
@@ -55,8 +57,7 @@ class D2ReviewSubmitter {
   }
 
   _submitReviewPromise(item: D2Item, membershipInfo: DestinyAccount | null) {
-    if (!item.dtrRating ||
-        !item.dtrRating.userReview) {
+    if (!item.dtrRating || !item.dtrRating.userReview) {
       return Promise.resolve<DtrSubmitResponse>({});
     }
 
@@ -83,8 +84,7 @@ class D2ReviewSubmitter {
   }
 
   _markItemAsReviewedAndSubmitted(item: D2Item) {
-    if (!item.dtrRating ||
-        !item.dtrRating.userReview) {
+    if (!item.dtrRating || !item.dtrRating.userReview) {
       return;
     }
 
@@ -92,16 +92,14 @@ class D2ReviewSubmitter {
   }
 
   async submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
-    if (!item.dtrRating ||
-        !item.dtrRating.userReview) {
+    if (!item.dtrRating || !item.dtrRating.userReview) {
       return Promise.resolve();
     }
 
-    return this._submitReviewPromise(item, membershipInfo)
-      .then(() => {
-        this._markItemAsReviewedAndSubmitted(item);
-        this._eventuallyPurgeCachedData(item);
-      });
+    return this._submitReviewPromise(item, membershipInfo).then(() => {
+      this._markItemAsReviewedAndSubmitted(item);
+      this._eventuallyPurgeCachedData(item);
+    });
   }
 }
 

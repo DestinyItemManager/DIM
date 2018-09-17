@@ -1,4 +1,4 @@
-.user-review{
+.user-review {
   &--header {
     display: flex;
     justify-content: space-between;
@@ -63,7 +63,8 @@
     margin: 20px 10px;
   }
 
-  &--who, &--procon {
+  &--who,
+  &--procon {
     display: flex;
     justify-content: space-between;
     padding-top: 5px;
@@ -76,7 +77,7 @@
 
   &--game-mode {
     display: flex;
-    opacity: .9;
+    opacity: 0.9;
   }
 
   &--procon > *:first-child {
@@ -100,11 +101,11 @@
   }
 
   &--report {
-    color:black;
-    border-radius:10px;
-    padding:10px 10px 10px 36px;
-    margin:10px;
-    border:1px solid #ff0000;
+    color: black;
+    border-radius: 10px;
+    padding: 10px 10px 10px 36px;
+    margin: 10px;
+    border: 1px solid #ff0000;
     background: #ff9999;
     font-size: larger;
   }
@@ -118,7 +119,7 @@
   }
 
   &--thumbs-down {
-    color:#cc6666 !important;
+    color: #cc6666 !important;
   }
 
   &--thumbs-up {

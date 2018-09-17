@@ -3,6 +3,10 @@ import { getActivePlatform } from '../../accounts/platform.service';
 import { DestinyAccount } from '../../accounts/destiny-account.service';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
+import { Subject } from 'rxjs/Subject';
+import { $rootScope } from 'ngimport';
+import store from '../../store/store';
+import { setNewItems } from '../actions';
 
 const _removedNewItems = new Set<string>();
 
@@ -13,7 +17,17 @@ const _removedNewItems = new Set<string>();
  * They are tracked whether or not the option to display them is on.
  */
 export const NewItemsService = {
-  hasNewItems: false,
+  _hasNewItems: false,
+  get hasNewItems() {
+    return this._hasNewItems;
+  },
+  set hasNewItems(hasNew) {
+    if (hasNew !== this._hasNewItems) {
+      this.$hasNewItems.next(hasNew);
+    }
+    this._hasNewItems = hasNew;
+  },
+  $hasNewItems: new Subject<boolean>(),
 
   /**
    * Should this item display as new? Note the check for previousItems size, so that
@@ -27,7 +41,7 @@ export const NewItemsService = {
       isNew = false;
     } else if (previousItems.size) {
       // Zero id check is to ignore general items and consumables
-      isNew = (id !== '0' && !previousItems.has(id));
+      isNew = id !== '0' && !previousItems.has(id);
       if (isNew) {
         newItems.add(id);
       }
@@ -44,7 +58,7 @@ export const NewItemsService = {
     const account = getActivePlatform();
     return this.loadNewItems(account).then((newItems) => {
       newItems.delete(item.id);
-      this.hasNewItems = (newItems.size !== 0);
+      this.hasNewItems = newItems.size !== 0;
       this.saveNewItems(newItems, account, item.destinyVersion);
     });
   },
@@ -53,27 +67,32 @@ export const NewItemsService = {
     if (!stores || !account) {
       return;
     }
-    stores.forEach((store) => {
-      store.items.forEach((item) => {
-        if (item.isNew) {
-          _removedNewItems.add(item.id);
-          item.isNew = false;
-        }
+    $rootScope.$apply(() => {
+      stores.forEach((store) => {
+        store.items.forEach((item) => {
+          if (item.isNew) {
+            _removedNewItems.add(item.id);
+            item.isNew = false;
+          }
+        });
       });
+      this.hasNewItems = false;
+      this.saveNewItems(new Set(), account);
     });
-    this.hasNewItems = false;
-    this.saveNewItems(new Set(), account);
   },
 
   loadNewItems(account: DestinyAccount): Promise<Set<string>> {
     if (account) {
       const key = newItemsKey(account);
-      return Promise.resolve(idbKeyval.get(key)).then((v) => v as Set<string> || new Set<string>());
+      return Promise.resolve(idbKeyval.get(key)).then(
+        (v) => (v as Set<string>) || new Set<string>()
+      );
     }
     return Promise.resolve(new Set<string>());
   },
 
   saveNewItems(newItems: Set<string>, account: DestinyAccount) {
+    store.dispatch(setNewItems(newItems));
     return Promise.resolve(idbKeyval.set(newItemsKey(account), newItems));
   },
 
@@ -90,7 +109,7 @@ export const NewItemsService = {
   applyRemovedNewItems(newItems: Set<string>) {
     _removedNewItems.forEach((id) => newItems.delete(id));
     _removedNewItems.clear();
-    this.hasNewItems = (newItems.size !== 0);
+    this.hasNewItems = newItems.size !== 0;
   }
 };
 

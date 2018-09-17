@@ -22,7 +22,7 @@ export const requireSqlLib = _.memoize(() => {
   function importAsmJs() {
     delete window.Module;
     delete window.SQL;
-    console.log("Using asm.js SQLite");
+    console.log('Using asm.js SQLite');
     // tslint:disable-next-line:space-in-parens
     return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
   }
@@ -44,16 +44,16 @@ export const requireSqlLib = _.memoize(() => {
             try {
               // Do a self-test
               const db = new window.SQL.Database();
-              db.run("CREATE TABLE hello (a int, b char);");
+              db.run('CREATE TABLE hello (a int, b char);');
               db.run("INSERT INTO hello VALUES (0, 'hello');");
-              db.exec("SELECT * FROM hello");
+              db.exec('SELECT * FROM hello');
             } catch (e) {
               console.error('Failed to load WASM SQLite, falling back', e);
               importAsmJs().then(resolve, reject);
               return;
             }
 
-            console.info("Using WASM SQLite");
+            console.info('Using WASM SQLite');
             resolve(window.SQL);
             delete window.SQL;
           }

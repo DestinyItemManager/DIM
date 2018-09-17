@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import template from './search-filter.html';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
-import { searchFilters, buildSearchConfig } from './search-filters';
+import { searchFilters, buildSearchConfig, SearchFilters } from './search-filters';
 import filtersTemplate from '../search/filters.html';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
@@ -15,6 +15,11 @@ import { DimItem } from '../inventory/item-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimVendorService } from '../vendors/vendor.service';
+import { setSearchQuery } from '../shell/actions';
+import store from '../store/store';
+import { subscribeOnScope } from '../rx-utils';
+import { isPhonePortraitStream } from '../mediaQueries';
+import { t } from 'i18next';
 
 /**
  * A simple holder to share the search query among components
@@ -39,7 +44,6 @@ function SearchFilterCtrl(
   hotkeys,
   $i18next,
   $element: IRootElementService,
-  toaster,
   ngDialog
 ) {
   'ngInject';
@@ -52,17 +56,27 @@ function SearchFilterCtrl(
     return vm.account.destinyVersion === 2 ? D2StoresService : D1StoresService;
   }
 
-  let filters;
+  let filters: SearchFilters;
   let searchConfig;
   let filteredItems: DimItem[] = [];
+
+  subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
+    $scope.$apply(() => {
+      console.log('isPhonePortrait', isPhonePortrait);
+      vm.placeholder = isPhonePortrait
+        ? t('Header.FilterHelpBrief')
+        : t('Header.FilterHelp', { example: 'is:dupe' });
+    });
+  });
 
   vm.$onChanges = (changes) => {
     if (changes.account && changes.account) {
       searchConfig = buildSearchConfig(
         vm.account.destinyVersion,
         itemTags,
-        vm.account.destinyVersion === 1 ? D1Categories : D2Categories);
-      filters = searchFilters(searchConfig, getStoresService(), toaster, $i18next);
+        vm.account.destinyVersion === 1 ? D1Categories : D2Categories
+      );
+      filters = searchFilters(searchConfig, getStoresService());
       setupTextcomplete();
     }
   };
@@ -75,34 +89,36 @@ function SearchFilterCtrl(
     }
     const editor = new Textarea($element[0].getElementsByTagName('input')[0]);
     textcomplete = new Textcomplete(editor);
-    textcomplete.register([
-      {
-        words: searchConfig.keywords,
-        match: /\b([\w:]{3,})$/i,
-        search(term, callback) {
-          if (term) {
-            let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
-            words = _.sortBy(words, (word: string) => word.indexOf(term.toLowerCase()));
-            if (term.match(/\b((is:|not:|tag:|notes:|stat:)\w*)$/i)) {
-              callback(words);
-            } else if (words.length) {
-              callback([term, ...words]);
-            } else {
-              callback([]);
+    textcomplete.register(
+      [
+        {
+          words: searchConfig.keywords,
+          match: /\b([\w:]{3,})$/i,
+          search(term, callback) {
+            if (term) {
+              let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
+              words = _.sortBy(words, (word: string) => word.indexOf(term.toLowerCase()));
+              if (term.match(/\b((is:|not:|tag:|notes:|stat:)\w*)$/i)) {
+                callback(words);
+              } else if (words.length) {
+                callback([term, ...words]);
+              } else {
+                callback([]);
+              }
             }
+          },
+          // TODO: use "template" to include help text
+          index: 1,
+          replace(word) {
+            word = word.toLowerCase();
+            return word.startsWith('is:') && word.startsWith('not:') ? `${word} ` : word;
           }
-        },
-        // TODO: use "template" to include help text
-        index: 1,
-        replace(word) {
-          word = word.toLowerCase();
-          return (word.startsWith('is:') && word.startsWith('not:'))
-            ? `${word} ` : word;
         }
+      ],
+      {
+        zIndex: 1000
       }
-    ], {
-      zIndex: 1000
-    });
+    );
 
     textcomplete.on('rendered', () => {
       if (textcomplete.dropdown.items.length) {
@@ -130,7 +146,17 @@ function SearchFilterCtrl(
     vm.filter();
   });
 
-  hotkeys.bindTo($scope)
+  $scope.$on('dim-filter-requery-loadouts', () => {
+    vm.filter();
+  });
+
+  $scope.$on('dim-filter-invalidate-loadouts', () => {
+    filters.resetLoadouts();
+    vm.filter();
+  });
+
+  hotkeys
+    .bindTo($scope)
     .add({
       combo: ['f'],
       description: $i18next.t('Hotkey.StartSearch'),
@@ -188,7 +214,7 @@ function SearchFilterCtrl(
   }
 
   vm.blurFilterInputIfEmpty = () => {
-    if (vm.search.query === "") {
+    if (vm.search.query === '') {
       vm.blurFilterInput();
     }
   };
@@ -203,17 +229,19 @@ function SearchFilterCtrl(
 
   vm.clearFilter = () => {
     filteredItems = [];
-    vm.search.query = "";
+    vm.search.query = '';
     vm.filter();
     textcomplete.trigger('');
   };
 
   vm.bulkTag = () => {
     getItemInfoSource(vm.account).then((itemInfoService) => {
-      itemInfoService.bulkSave(filteredItems.filter((i) => i.taggable).map((item) => {
-        item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
-        return item;
-      }));
+      itemInfoService.bulkSave(
+        filteredItems.filter((i) => i.taggable).map((item) => {
+          item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
+          return item;
+        })
+      );
 
       // invalidate and filter
       filters.reset();
@@ -225,8 +253,10 @@ function SearchFilterCtrl(
   vm.filter = () => {
     vm.selectedTag = undefined;
     filteredItems = [];
-    let filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
+    let filterValue = vm.search.query ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
+
+    store.dispatch(setSearchQuery(filterValue));
 
     const filterFn = filters.filterFunction(filterValue);
 
