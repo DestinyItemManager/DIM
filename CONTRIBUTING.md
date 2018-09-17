@@ -28,10 +28,6 @@ Install dependencies:
 Check code Style
 * `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-Run your own local web server
-* Run `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'` to generate server certificates.
-* After the one-time setup, run `yarn start` and you're off to the races. Changes to CSS or React components should show up automatically without needing to reload the page (watch the console for details).
-
 Get your own API key:
 
 1. Goto [Bungie](https://www.bungie.net/en/Application)
