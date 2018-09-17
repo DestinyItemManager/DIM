@@ -1,5 +1,7 @@
 # Next
 
+* Removed a bunch of help popups.
+
 # 4.70.0 (2018-09-16)
 
 * Display armor resistance type on item icon and include in search filters.
