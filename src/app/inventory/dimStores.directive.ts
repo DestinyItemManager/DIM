@@ -4,7 +4,6 @@ import './Stores.scss';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
-import { showInfoPopup } from '../shell/info-popup';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
 import { sortStores } from '../shell/dimAngularFilters.filter';
 import { DimStore } from './store-types';
@@ -31,22 +30,11 @@ function StoresCtrl(
     selectedStoreIndex: number;
   },
   $scope: IScope,
-  $rootScope: IRootScopeService & { dragItem: DimItem },
-  $i18next
+  $rootScope: IRootScopeService & { dragItem: DimItem }
 ) {
   'ngInject';
 
   const vm = this;
-  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.Collapse')}</p>
-                              <p>${$i18next.t('DidYouKnow.Expand')}</p>`;
-  // Only show this once per session
-  const didYouKnow = _.once(() => {
-    showInfoPopup('collapsed', {
-      title: $i18next.t('DidYouKnow.DidYouKnow'),
-      body: didYouKnowTemplate,
-      hide: $i18next.t('DidYouKnow.DontShowAgain')
-    });
-  });
 
   vm.swipeLeft = () => {
     if ($rootScope.dragItem || !vm.selectedStore) {
@@ -75,10 +63,6 @@ function StoresCtrl(
   };
   vm.settings = settings;
   vm.toggleSection = (id) => {
-    // Only tip when collapsing
-    if (!vm.settings.collapsedSections[id]) {
-      didYouKnow();
-    }
     vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
     vm.settings.save();
   };

@@ -187,16 +187,8 @@ module.exports = function(grunt) {
           });
         }));
 
-        let brotli;
-        let brotliArgs;
-
-        if (process.env.BROTLI) {
-          brotli = process.env.BROTLI;
-          brotliArgs = ["--quality", "9", "--input", file, "--output", file + ".br"];
-        } else {
-          brotli = 'brotli/brotli';
-          brotliArgs = [file];
-        }
+        const brotli = process.env.BROTLI || 'brotli/brotli';
+        const brotliArgs = [file];
 
         promises.push(new Promise(function(resolve, reject) {
           child_process.execFile(brotli, brotliArgs, function(error, stdout, stderr) {

@@ -314,6 +314,12 @@ export function makeItem(
 
   // def.bucketTypeHash is where it goes normally
   let normalBucket = buckets.byHash[itemDef.inventory.bucketTypeHash];
+
+  // https://github.com/Bungie-net/api/issues/687
+  if (itemDef.inventory.bucketTypeHash === 2422292810) {
+    normalBucket = buckets.byHash[3313201758];
+  }
+
   // item.bucket is where it IS right now
   let currentBucket = buckets.byHash[item.bucketHash] || normalBucket;
   if (!normalBucket) {
@@ -1060,9 +1066,22 @@ const EXCLUDED_PLUGS = new Set([
 function filterReusablePlug(reusablePlug: DimPlug) {
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
-    !reusablePlug.plugItem.itemCategoryHashes.includes(141186804)
+    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
+
+// Deprecated Damage Mods
+const DEPRECATED_MODS = new Set([
+  4160547565,
+  344032858,
+  1837294881,
+  2273483223,
+  3728733956,
+  3994397859,
+  4126105782,
+  4207478320
+]);
 
 function buildDefinedSocket(
   defs: D2ManifestDefinitions,
@@ -1185,7 +1204,14 @@ function buildSocket(
 
   return {
     socketIndex: index,
-    plug,
+    plug:
+      plug &&
+      plug.plugItem &&
+      !DEPRECATED_MODS.has(plug.plugItem.hash) &&
+      (plug.plugItem.plug.plugCategoryIdentifier === 'enhancements.universal' ||
+        !plug.plugItem.plug.plugCategoryIdentifier.startsWith('enhancements.'))
+        ? plug
+        : null,
     plugOptions,
     hasRandomizedPlugItems
   };

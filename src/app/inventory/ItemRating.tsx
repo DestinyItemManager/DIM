@@ -13,7 +13,7 @@ export default class ItemRender extends React.Component<Props> {
 
     if (rating !== undefined && !hideRating) {
       return (
-        <div className="review-score">
+        <div className="review-score" title={rating.toLocaleString()}>
           <i className={classNames('fa', rating >= 4 ? 'fa-thumbs-up' : '')} />
         </div>
       );

@@ -8,8 +8,6 @@ import { sortStores } from '../shell/dimAngularFilters.filter';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { $rootScope } from 'ngimport';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
-import { t } from 'i18next';
-import { toaster } from '../ngimport-more';
 import { createSelector } from 'reselect';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets.service';
@@ -334,7 +332,6 @@ export function searchFilters(
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   let _lowerDupes = {};
-  let _dupeInPost = false;
   let _sortedStores: DimStore[] | null = null;
   let _loadoutItemIds: Set<string> | undefined;
   let _loadoutItemIdsPromise: Promise<void> | undefined;
@@ -447,7 +444,6 @@ export function searchFilters(
     reset() {
       _duplicates = null;
       _lowerDupes = {};
-      _dupeInPost = false;
       _sortedStores = null;
     },
 
@@ -648,13 +644,6 @@ export function searchFilters(
                   !dupe.notransfer
                 ) {
                   _lowerDupes[dupe.id] = dupe !== bestDupe;
-                }
-              }
-
-              if (!_dupeInPost) {
-                if (dupes.some((dupe) => Boolean(dupe.location.inPostmaster))) {
-                  toaster.pop('warning', t('Filter.DupeInPostmaster'));
-                  _dupeInPost = true;
                 }
               }
             }
