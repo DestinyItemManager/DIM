@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { dtrRatingColor } from '../shell/dimAngularFilters.filter';
 import './ItemRender.scss';
+import classNames from 'classnames';
 
 interface Props {
   rating?: number;
@@ -14,8 +14,7 @@ export default class ItemRender extends React.Component<Props> {
     if (rating !== undefined && !hideRating) {
       return (
         <div className="review-score">
-          {rating}
-          <i className="fa fa-star" style={dtrRatingColor(rating)} />
+          <i className={classNames('fa', rating >= 4 ? 'fa-thumbs-up' : '')} />
         </div>
       );
     } else {
