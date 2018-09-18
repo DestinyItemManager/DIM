@@ -169,8 +169,11 @@ function findD1Characters(account: DestinyAccount): IPromise<any | null> {
  */
 export function compareAccounts(account1: DestinyAccount, account2: DestinyAccount): boolean {
   return (
-    account1.platformType === account2.platformType &&
-    account1.membershipId === account2.membershipId &&
-    account1.destinyVersion === account2.destinyVersion
+    account1 === account2 ||
+    (account1 &&
+      account2 &&
+      account1.platformType === account2.platformType &&
+      account1.membershipId === account2.membershipId &&
+      account1.destinyVersion === account2.destinyVersion)
   );
 }

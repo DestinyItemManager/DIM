@@ -60,7 +60,7 @@ export default class InventoryItem extends React.Component<Props> {
         title={`${item.name}\n${item.typeName}`}
         className={classNames('item', {
           'search-hidden': searchHidden,
-          'd2-item': item.isDestiny2()
+          'd2-item': $featureFlags.forsakenTiles && item.isDestiny2()
         })}
       >
         {$featureFlags.forsakenTiles && item.isDestiny2() ? (
