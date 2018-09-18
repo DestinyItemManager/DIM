@@ -128,7 +128,10 @@ function SearchFilterCtrl(
     });
 
     $scope.$on('$destroy', () => {
-      textcomplete.destroy();
+      if (textcomplete) {
+        textcomplete.destroy();
+        textcomplete = null;
+      }
     });
   }
 

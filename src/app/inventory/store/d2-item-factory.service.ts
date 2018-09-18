@@ -314,6 +314,12 @@ export function makeItem(
 
   // def.bucketTypeHash is where it goes normally
   let normalBucket = buckets.byHash[itemDef.inventory.bucketTypeHash];
+
+  // https://github.com/Bungie-net/api/issues/687
+  if (itemDef.inventory.bucketTypeHash === 2422292810) {
+    normalBucket = buckets.byHash[3313201758];
+  }
+
   // item.bucket is where it IS right now
   let currentBucket = buckets.byHash[item.bucketHash] || normalBucket;
   if (!normalBucket) {
@@ -505,7 +511,9 @@ export function makeItem(
     createdItem.bucket.sort === 'Armor' &&
     createdItem.sockets &&
     createdItem.sockets.categories &&
+    createdItem.sockets.categories.length &&
     createdItem.sockets.categories[1] &&
+    createdItem.sockets.categories[1].sockets[1].plug &&
     createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats &&
     createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats.length
   ) {
