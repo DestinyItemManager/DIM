@@ -1,7 +1,6 @@
 import * as _ from 'underscore';
 import template from './talent-grid.html';
 import './talent-grid.scss';
-import { showInfoPopup } from '../shell/info-popup';
 import { IComponentOptions, IController, IAngularEvent } from 'angular';
 import { DimTalentGrid, DimGridNode } from '../inventory/item-types';
 
@@ -25,8 +24,7 @@ function TalentGridCtrl(
     talentGrid: DimTalentGrid;
     perksOnly: boolean;
     infuse(args: { $event: IAngularEvent }): void;
-  },
-  $i18next
+  }
 ) {
   'ngInject';
 
@@ -40,14 +38,6 @@ function TalentGridCtrl(
   vm.nodeClick = (node: DimGridNode, $event) => {
     if (node.hash === infuseHash) {
       vm.infuse({ $event });
-    } else if (node.exclusiveInColumn) {
-      // popup warning
-      showInfoPopup('changeperks', {
-        type: 'warning',
-        title: $i18next.t('Help.ChangingPerks'),
-        body: $i18next.t('Help.ChangingPerksInfo'),
-        hide: $i18next.t('Help.NeverShow')
-      });
     }
   };
 

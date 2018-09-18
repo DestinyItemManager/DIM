@@ -1,5 +1,7 @@
 # Next
 
+* Removed a bunch of help popups.
+
 # 4.70.2 (2018-09-17)
 
 * Fix some instances where DIM wouldn't load.

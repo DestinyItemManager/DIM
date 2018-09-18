@@ -15,7 +15,6 @@ import { getClass } from './character-utils';
 import vaultBackground from 'app/images/vault-background.png';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';
-import { showInfoPopup } from '../../shell/info-popup';
 import { t } from 'i18next';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
@@ -115,17 +114,6 @@ const StoreProto = {
   addItem(this: D2Store, item: D2Item) {
     this.items = [...this.items, item];
     this.buckets[item.location.id] = [...this.buckets[item.location.id], item];
-    if (
-      item.location.type === 'LostItems' &&
-      this.buckets[item.location.id].length >= item.location.capacity
-    ) {
-      showInfoPopup('lostitems', {
-        type: 'warning',
-        title: t('Postmaster.Limit'),
-        body: t('Postmaster.Desc', { store: this.name }),
-        hide: t('Help.NeverShow')
-      });
-    }
     item.owner = this.id;
 
     if (this.current && item.location.accountWide && this.vault) {

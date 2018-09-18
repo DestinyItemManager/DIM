@@ -9,6 +9,7 @@ import { D2Item } from './item-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import './ItemRender.scss';
 import { TagValue } from './dim-item-info';
+import * as _ from 'underscore';
 
 interface Props {
   item: D2Item;
@@ -26,6 +27,10 @@ export default class ItemRender extends React.Component<Props> {
       item.sockets.categories.find(
         (category) => category.category.categoryStyle === DestinySocketCategoryStyle.Consumable
       );
+
+    const sockets = category
+      ? _.take(category.sockets.filter((socketInfo) => socketInfo.plug), 3)
+      : [];
 
     return (
       <div
@@ -45,20 +50,14 @@ export default class ItemRender extends React.Component<Props> {
         </div>
         <div className="plugs">
           {category &&
-            category.sockets.map((socketInfo, index) => {
-              if (index > 2) {
-                return null;
-              }
-
-              return (
-                <div key={socketInfo.socketIndex} className={`plug-${index + 1}`}>
-                  {socketInfo.plug &&
-                    category.category.categoryStyle !== DestinySocketCategoryStyle.Reusable && (
-                      <ItemMod mod={socketInfo.plug.plugItem} />
-                    )}
-                </div>
-              );
-            })}
+            sockets.map((socketInfo, index) => (
+              <div key={socketInfo.socketIndex} className={`plug-${index + 1}`}>
+                {socketInfo.plug &&
+                  category.category.categoryStyle !== DestinySocketCategoryStyle.Reusable && (
+                    <ItemMod mod={socketInfo.plug.plugItem} />
+                  )}
+              </div>
+            ))}
         </div>
         <div className="attributes">
           <div className="area-overlap attribute-1">

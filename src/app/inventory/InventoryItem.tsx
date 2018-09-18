@@ -52,6 +52,9 @@ export default class InventoryItem extends React.Component<Props> {
 
     const badgeInfo = getBadgeInfo(item);
 
+    const elaborateTile =
+      $featureFlags.forsakenTiles && item.isDestiny2() && (item.primStat || item.sockets);
+
     return (
       <div
         id={item.index}
@@ -60,10 +63,10 @@ export default class InventoryItem extends React.Component<Props> {
         title={`${item.name}\n${item.typeName}`}
         className={classNames('item', {
           'search-hidden': searchHidden,
-          'd2-item': $featureFlags.forsakenTiles && item.isDestiny2()
+          'd2-item': elaborateTile
         })}
       >
-        {$featureFlags.forsakenTiles && item.isDestiny2() ? (
+        {elaborateTile && item.isDestiny2() ? (
           <ItemRender
             item={item}
             badge={badgeInfo}

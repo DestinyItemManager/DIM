@@ -1,7 +1,6 @@
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
 import { queuedAction } from './action-queue';
-import { showInfoPopup } from '../shell/info-popup';
 import { IPromise } from 'angular';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
@@ -10,23 +9,11 @@ import { t } from 'i18next';
 import { toaster, loadingTracker } from '../ngimport-more';
 import { $q } from 'ngimport';
 
-// Only show this once per session
-const didYouKnow = _.once(() => {
-  const didYouKnowTemplate = `<p>${t('DidYouKnow.DragAndDrop')}</p>
-                              <p>${t('DidYouKnow.TryNext')}</p>`;
-  showInfoPopup('movebox', {
-    title: t('DidYouKnow.DidYouKnow'),
-    body: didYouKnowTemplate,
-    hide: t('DidYouKnow.DontShowAgain')
-  });
-});
-
 /**
  * Move the item to the specified store. Equip it if equip is true.
  */
 export const moveItemTo = queuedAction(
   (item: DimItem, store: DimStore, equip: boolean, amount: number) => {
-    didYouKnow();
     const reload = item.equipped || equip;
     let promise: IPromise<any> = dimItemService.moveTo(item, store, equip, amount);
 
