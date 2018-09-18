@@ -67,7 +67,13 @@ export default class InventoryItem extends React.Component<Props> {
         })}
       >
         {elaborateTile && item.isDestiny2() ? (
-          <ItemRender item={item} badge={badgeInfo} rating={rating} hideRating={hideRating} />
+          <ItemRender
+            item={item}
+            badge={badgeInfo}
+            rating={rating}
+            hideRating={hideRating}
+            tag={tag}
+          />
         ) : (
           <div>
             {item.percentComplete > 0 &&
