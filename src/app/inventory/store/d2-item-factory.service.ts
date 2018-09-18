@@ -1058,7 +1058,8 @@ const EXCLUDED_PLUGS = new Set([
 function filterReusablePlug(reusablePlug: DimPlug) {
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804)
+    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
 
@@ -1195,7 +1196,14 @@ function buildSocket(
 
   return {
     socketIndex: index,
-    plug: plug && plug.plugItem && !DEPRECATED_MODS.has(plug.plugItem.hash) ? plug : null,
+    plug:
+      plug &&
+      plug.plugItem &&
+      !DEPRECATED_MODS.has(plug.plugItem.hash) &&
+      (plug.plugItem.plug.plugCategoryIdentifier === 'enhancements.universal' ||
+        !plug.plugItem.plug.plugCategoryIdentifier.startsWith('enhancements.'))
+        ? plug
+        : null,
     plugOptions,
     hasRandomizedPlugItems
   };
