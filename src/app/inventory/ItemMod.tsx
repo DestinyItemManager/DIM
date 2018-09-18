@@ -15,6 +15,7 @@ export default class ItemRender extends React.Component<Props> {
     return (
       <div
         className={classNames(`item-mod`)}
+        title={mod.displayProperties.name}
         style={bungieBackgroundStyle(mod.displayProperties.icon)}
       />
     );
