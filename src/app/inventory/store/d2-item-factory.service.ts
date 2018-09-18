@@ -1216,12 +1216,13 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
     const statDef = defs.Stat.get(masterwork.statTypeHash);
     createdItem.masterworkInfo = {
       typeName: null,
-      typeIcon: '',
-      typeDesc: null,
+      typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
+      typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
       statHash: masterwork.statTypeHash,
       statName: statDef.displayProperties.name,
       statValue: masterwork.value
     };
+    // masterworkSocket.plug.plugItem.displayProperties.name = createdItem.masterworkInfo.statName;
   }
 }
 
