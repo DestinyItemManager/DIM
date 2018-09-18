@@ -2,22 +2,25 @@ import * as React from 'react';
 import classNames from 'classnames';
 import ItemMod from './ItemMod';
 import ItemRating from './ItemRating';
+import ItemTag from './ItemTag';
 import { BadgeInfo } from './get-badge-info';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { D2Item } from './item-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import './ItemRender.scss';
+import { TagValue } from './dim-item-info';
 
 interface Props {
   item: D2Item;
   badge: BadgeInfo;
   rating?: number;
   hideRating?: boolean;
+  tag?: TagValue;
 }
 
 export default class ItemRender extends React.Component<Props> {
   render() {
-    const { item, badge, rating, hideRating } = this.props;
+    const { item, badge, rating, hideRating, tag } = this.props;
     const category =
       item.sockets &&
       item.sockets.categories.find(
@@ -59,7 +62,7 @@ export default class ItemRender extends React.Component<Props> {
         </div>
         <div className="attributes">
           <div className="area-overlap attribute-1">
-            <ItemRating rating={rating} hideRating={hideRating} />
+            {tag ? <ItemTag tag={tag} /> : <ItemRating rating={rating} hideRating={hideRating} />}
           </div>
           <div className="attribute-2">
             {badge.showBadge && <div className="power">{badge.badgeCount}</div>}
