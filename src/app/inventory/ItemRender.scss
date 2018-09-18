@@ -17,6 +17,28 @@
       position: relative;
     }
 
+    &.ammo-overlay .image::before {
+      right: 3px;
+      bottom: 2px;
+      position: absolute;
+      width: 10px;
+      height: 7px;
+      content: '';
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+
+    &.ammo-type-1 .image::before {
+      background-image: url('../../images/primary.png');
+    }
+    &.ammo-type-2 .image::before {
+      background-image: url('../../images/special.png');
+    }
+    &.ammo-type-3 .image::before {
+      background-image: url('../../images/heavy.png');
+    }
+
     .image-well {
       background: rgba(183, 183, 183, 0.2);
       width: 100%;
@@ -86,8 +108,12 @@
       vertical-align: middle;
     }
 
+    .review-score {
+      color: #cccccc;
+    }
+
     .power {
-      margin-right: 2px;
+      margin-right: 12px;
       text-align: right;
     }
 
@@ -97,7 +123,7 @@
     }
 
     .power::before {
-      right: 100%;
+      right: -10px;
       position: absolute;
       width: 1em;
       height: 1em;
