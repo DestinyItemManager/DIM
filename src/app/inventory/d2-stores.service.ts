@@ -146,6 +146,7 @@ function makeD2StoresService(): D2StoreServiceType {
             }
           }
         });
+        service.touch();
         return _stores;
       });
   }
