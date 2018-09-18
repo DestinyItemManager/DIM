@@ -1222,7 +1222,6 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
       statName: statDef.displayProperties.name,
       statValue: masterwork.value
     };
-    // masterworkSocket.plug.plugItem.displayProperties.name = createdItem.masterworkInfo.statName;
   }
 }
 

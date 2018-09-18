@@ -191,8 +191,8 @@ function PlugTooltip({
   return (
     <>
       <h2>
-        {plug.plugItem.displayProperties.name}{' '}
-        {item.masterworkInfo && `(${item.masterworkInfo.statName})`}
+        {plug.plugItem.displayProperties.name}
+        {item.masterworkInfo && ` (${item.masterworkInfo.statName})`}
       </h2>
 
       {plug.plugItem.displayProperties.description ? (
