@@ -389,9 +389,12 @@ class Progress extends React.Component<Props, State> {
   private milestonesForCharacter(character: DestinyCharacterComponent): DestinyMilestone[] {
     const { profileInfo } = this.state.progress!;
 
-    const allMilestones: DestinyMilestone[] = Object.values(
-      profileInfo.characterProgressions.data[character.characterId].milestones
-    );
+    const allMilestones: DestinyMilestone[] =
+      profileInfo.characterProgressions &&
+      profileInfo.characterProgressions.data &&
+      profileInfo.characterProgressions.data[character.characterId]
+        ? Object.values(profileInfo.characterProgressions.data[character.characterId].milestones)
+        : [];
 
     const filteredMilestones = allMilestones.filter(
       (milestone) =>

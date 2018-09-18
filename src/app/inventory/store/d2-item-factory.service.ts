@@ -505,7 +505,9 @@ export function makeItem(
     createdItem.bucket.sort === 'Armor' &&
     createdItem.sockets &&
     createdItem.sockets.categories &&
+    createdItem.sockets.categories.length &&
     createdItem.sockets.categories[1] &&
+    createdItem.sockets.categories[1].sockets[1].plug &&
     createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats &&
     createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats.length
   ) {

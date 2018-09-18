@@ -67,9 +67,13 @@ export function getActivePlatform(): DestinyAccount | null {
 }
 
 export function setActivePlatform(platform: DestinyAccount) {
-  activePlatform$.next(platform);
-  store.dispatch(actions.setCurrentAccount(platform));
-  return current$.take(1).toPromise();
+  if (platform) {
+    activePlatform$.next(platform);
+    store.dispatch(actions.setCurrentAccount(platform));
+    return current$.take(1).toPromise();
+  } else {
+    return Promise.resolve(null);
+  }
 }
 
 export function getActiveAccountStream() {

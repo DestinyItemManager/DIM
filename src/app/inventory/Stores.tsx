@@ -50,10 +50,10 @@ class Stores extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, isPhonePortrait } = this.props;
+    const { stores, buckets, isPhonePortrait } = this.props;
     const { selectedStoreId } = this.state;
 
-    if (!stores.length) {
+    if (!stores.length || !buckets) {
       return null;
     }
 
@@ -176,7 +176,9 @@ function categoryHasItems(
   stores: DimStore[]
 ): boolean {
   const bucketIds = buckets.byCategory[category].map((b) => b.id);
-  return stores.some((s) => bucketIds.some((bucketId) => s.buckets[bucketId].length > 0));
+  return stores.some((s) =>
+    bucketIds.some((bucketId) => s.buckets[bucketId] && s.buckets[bucketId].length > 0)
+  );
 }
 
 export default connect<Props>(mapStateToProps)(Stores);
