@@ -21,7 +21,7 @@
       right: 2px;
       bottom: 2px;
       position: absolute;
-      width: calc(v(var(--item-size) + 4px) / 4);
+      width: calc((var(--item-size) + 4px) / 4);
       height: calc((var(--item-size) + 4px) / 6);
       content: '';
       background-size: contain;
