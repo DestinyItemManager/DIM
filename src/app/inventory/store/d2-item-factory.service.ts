@@ -572,30 +572,12 @@ export function makeItem(
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
 
-  // New masterwork
+  // Forsaken Masterwork
   if (createdItem.sockets) {
-    const masterworkSocket = createdItem.sockets.sockets.find((socket) => {
-      return !!(
-        socket.plug && socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
-      );
-    });
-    if (masterworkSocket && masterworkSocket.plug) {
-      // createdItem.masterwork = true;
-      const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
-      if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
-        createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
-          resistanceMods[masterwork.statTypeHash]
-        ] as typeof createdItem.dmg;
-      }
-      const statDef = defs.Stat.get(masterwork.statTypeHash);
-      createdItem.masterworkInfo = {
-        typeName: null,
-        typeIcon: '',
-        typeDesc: null,
-        statHash: masterwork.statTypeHash,
-        statName: statDef.displayProperties.name,
-        statValue: masterwork.value
-      };
+    try {
+      buildForsakenMasterworkInfo(createdItem, defs);
+    } catch (e) {
+      console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
     }
   }
 
@@ -1215,6 +1197,32 @@ function buildSocket(
     plugOptions,
     hasRandomizedPlugItems
   };
+}
+
+function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefinitions) {
+  const masterworkSocket = createdItem.sockets!.sockets.find((socket) => {
+    return !!(
+      socket.plug && socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+    );
+  });
+  if (masterworkSocket && masterworkSocket.plug) {
+    // createdItem.masterwork = true;
+    const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
+    if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
+      createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
+        resistanceMods[masterwork.statTypeHash]
+      ] as typeof createdItem.dmg;
+    }
+    const statDef = defs.Stat.get(masterwork.statTypeHash);
+    createdItem.masterworkInfo = {
+      typeName: null,
+      typeIcon: '',
+      typeDesc: null,
+      statHash: masterwork.statTypeHash,
+      statName: statDef.displayProperties.name,
+      statValue: masterwork.value
+    };
+  }
 }
 
 // TODO: revisit this

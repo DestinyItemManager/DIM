@@ -263,12 +263,14 @@ export function buildSearchConfig(
     ranges.push('quality', 'percentage');
   }
 
+  if (destinyVersion === 2) {
+    ranges.push('masterwork');
+  }
+
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
     ranges.push('ratingcount');
   }
-
-  ranges.push('masterwork');
 
   ranges.forEach((range) => {
     comparisons.forEach((comparison) => {
@@ -628,7 +630,7 @@ export function searchFilters(
         return item.lockable && item.locked;
       },
       masterwork(item: DimItem) {
-        return !!item.masterworkInfo;
+        return item.masterwork;
       },
       dupe(item: DimItem, predicate: string) {
         if (_duplicates === null) {
