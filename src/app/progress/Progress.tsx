@@ -437,6 +437,10 @@ class Progress extends React.Component<Props, State> {
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
 
+      if (itemDef.redacted) {
+        return false;
+      }
+
       // Pursuits
       if (itemDef.inventory && itemDef.inventory.bucketTypeHash === 1345459588) {
         return true;
