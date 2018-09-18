@@ -1,12 +1,12 @@
 .d2-item {
-  width: var(--item-size);
-  height: var(--item-size);
+  width: calc(var(--item-size) + 4px);
+  height: calc(var(--item-size) + 4px);
 
   .item-render {
     background-color: #262626;
     display: grid;
-    width: var(--item-size);
-    height: var(--item-size);
+    width: calc(var(--item-size) + 4px);
+    height: calc(var(--item-size) + 4px);
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-gap: 1px;
