@@ -152,7 +152,7 @@ export function SettingsController(
   };
 
   vm.resetItemSize = () => {
-    vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
+    vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
   };
 
   vm.saveAndReloadReviews = () => {

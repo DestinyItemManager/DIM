@@ -174,6 +174,7 @@ module.exports = (env) => {
             }
           ]
         },
+        // These static pages have a special loader setup so they get extracted to files
         {
           test: /src\/views\/(about|support)\.html$/,
           use: [
@@ -181,6 +182,7 @@ module.exports = (env) => {
               loader: 'file-loader',
               options: { name: '[name]-[hash:6].[ext]' }
             },
+            'extract-loader',
             'html-loader'
           ]
         },
@@ -313,7 +315,9 @@ module.exports = (env) => {
         // React inventory implementation
         '$featureFlags.reactInventory': JSON.stringify(true),
         // Respect the "do not track" header
-        '$featureFlags.respectDNT': JSON.stringify(env !== 'release')
+        '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
+        // Forsaken Item Tiles
+        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release')
       })
 
       // Enable if you want to debug the size of the chunks

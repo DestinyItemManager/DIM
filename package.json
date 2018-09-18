@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "4.70.0",
+  "version": "4.70.2",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -56,6 +56,7 @@
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^1.0.0",
     "exports-loader": "^0.7.0",
+    "extract-loader": "^2.0.1",
     "file-loader": "^2.0.0",
     "generate-json-webpack-plugin": "^0.3.1",
     "grunt": "^1.0.2",

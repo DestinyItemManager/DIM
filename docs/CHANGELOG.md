@@ -2,6 +2,14 @@
 
 * Removed a bunch of help popups.
 
+# 4.70.2 (2018-09-17)
+
+* Fix some instances where DIM wouldn't load.
+* Fix the About and Backers pages.
+* Hide classified pursuits.
+
+# 4.70.1 (2018-09-17)
+
 # 4.70.0 (2018-09-16)
 
 * Display armor resistance type on item icon and include in search filters.
@@ -15,6 +23,8 @@
 * Restored the keyboard shortcut cheat sheet (press ?).
 * The max light loadout prefers legendaries over rares.
 * Unclaimed engrams are shown up in the Postmaster section.
+* Infusion transfer button is now visible on mobile devices.
+* Item tiles have been redesigned for Forsaken.
 
 # 4.69.1 (2018-09-10)
 

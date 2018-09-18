@@ -62,10 +62,11 @@ const StoreProto = {
     if (item.location.accountWide && !this.current) {
       return 0;
     }
-    const openStacks = Math.max(
-      0,
-      this.capacityForItem(item) - this.buckets[item.bucket.id].length
-    );
+    if (!item.bucket) {
+      return 0;
+    }
+    const occupiedStacks = this.buckets[item.bucket.id] ? this.buckets[item.bucket.id].length : 10;
+    const openStacks = Math.max(0, this.capacityForItem(item) - occupiedStacks);
     const maxStackSize = item.maxStackSize || 1;
     if (maxStackSize === 1) {
       return openStacks;

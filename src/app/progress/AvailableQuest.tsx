@@ -50,6 +50,7 @@ export default function AvailableQuest({
           // Filter out rewards that are for other characters
           .filter(
             (i) =>
+              i &&
               (i.classType === characterClass || i.classType === DestinyClass.Unknown) &&
               // And quest steps, they're not interesting
               !i.itemCategoryHashes.includes(16)
