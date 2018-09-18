@@ -1,5 +1,7 @@
 # Next
 
+# 4.70.2 (2018-09-17)
+
 * Fix some instances where DIM wouldn't load.
 * Fix the About and Backers pages.
 * Hide classified pursuits.
