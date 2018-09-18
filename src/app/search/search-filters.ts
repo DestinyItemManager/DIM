@@ -270,6 +270,8 @@ export function buildSearchConfig(
     ranges.push('ratingcount');
   }
 
+  ranges.push('masterwork');
+
   ranges.forEach((range) => {
     comparisons.forEach((comparison) => {
       keywords.push(range + comparison);
@@ -498,6 +500,9 @@ export function searchFilters(
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter);
+        } else if (term.startsWith('masterwork:')) {
+          const filter = term.replace('masterwork:', '');
+          addPredicate('masterworkValue', filter);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
           addPredicate('stack', filter);
@@ -627,7 +632,7 @@ export function searchFilters(
         return item.lockable && item.locked;
       },
       masterwork(item: DimItem) {
-        return item.masterwork;
+        return !!item.masterworkInfo;
       },
       dupe(item: DimItem, predicate: string) {
         if (_duplicates === null) {
@@ -831,6 +836,12 @@ export function searchFilters(
           return false;
         }
         return compareByOperand(item.primStat.value, predicate);
+      },
+      masterworkValue(item: D2Item, predicate: string) {
+        if (!item.masterworkInfo) {
+          return false;
+        }
+        return compareByOperand(item.masterworkInfo.statValue, predicate);
       },
       level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);

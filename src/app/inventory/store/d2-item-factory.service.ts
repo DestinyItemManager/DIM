@@ -499,23 +499,6 @@ export function makeItem(
     console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
   }
 
-  // Set damage type if is armor and has a damage type... and that's a big IF
-  if (
-    createdItem.bucket &&
-    createdItem.bucket.sort === 'Armor' &&
-    createdItem.sockets &&
-    createdItem.sockets.categories &&
-    createdItem.sockets.categories[1] &&
-    createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats &&
-    createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats.length
-  ) {
-    const dmgHash = createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats[0]
-      .statTypeHash;
-    createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
-      resistanceMods[dmgHash]
-    ] as typeof createdItem.dmg;
-  }
-
   if (itemDef.perks && itemDef.perks.length) {
     createdItem.perks = itemDef.perks
       .map(
@@ -582,6 +565,33 @@ export function makeItem(
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
+
+  // New masterwork
+  if (createdItem.sockets) {
+    const masterworkSocket = createdItem.sockets.sockets.find((socket) => {
+      return !!(
+        socket.plug && socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+      );
+    });
+    if (masterworkSocket && masterworkSocket.plug) {
+      // createdItem.masterwork = true;
+      const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
+      if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
+        createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
+          resistanceMods[masterwork.statTypeHash]
+        ] as typeof createdItem.dmg;
+      }
+      const statDef = defs.Stat.get(masterwork.statTypeHash);
+      createdItem.masterworkInfo = {
+        typeName: null,
+        typeIcon: '',
+        typeDesc: null,
+        statHash: masterwork.statTypeHash,
+        statName: statDef.displayProperties.name,
+        statValue: masterwork.value
+      };
+    }
+  }
 
   // Masterwork
   if (createdItem.masterwork && createdItem.sockets) {
