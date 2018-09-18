@@ -21,8 +21,8 @@
       right: 2px;
       bottom: 2px;
       position: absolute;
-      width: calc(var(--item-size) / 4);
-      height: calc(var(--item-size) / 6);
+      width: calc(v(var(--item-size) + 4px) / 4);
+      height: calc((var(--item-size) + 4px) / 6);
       content: '';
       background-size: contain;
       background-repeat: no-repeat;
@@ -79,7 +79,7 @@
       grid-template-rows: 1fr;
       grid-gap: 0;
       grid-template-areas: '1a 2a';
-      font-size: calc(var(--item-size) / 5.8);
+      font-size: calc((var(--item-size) + 4px) / 5.8);
       line-height: 100%;
     }
 
@@ -112,7 +112,7 @@
     }
 
     .power {
-      margin-right: calc(var(--item-size) / 4);
+      margin-right: calc((var(--item-size) + 4px) / 4);
       text-align: right;
     }
 
@@ -122,7 +122,7 @@
     }
 
     .power::before {
-      right: calc(var(--item-size) / -4.5);
+      right: calc((var(--item-size) + 4px) / -4.5);
       position: absolute;
       width: 1em;
       height: 1em;
