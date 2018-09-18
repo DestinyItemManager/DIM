@@ -26,10 +26,7 @@ export default class ItemRender extends React.Component<Props> {
       );
 
     const sockets = category
-      ? _.take(
-          category.sockets.filter((socketInfo) => socketInfo.plug && socketInfo.plug.enabled),
-          3
-        )
+      ? _.take(category.sockets.filter((socketInfo) => socketInfo.plug), 3)
       : [];
 
     return (

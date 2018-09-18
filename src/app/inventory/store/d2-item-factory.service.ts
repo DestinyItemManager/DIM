@@ -1058,9 +1058,21 @@ const EXCLUDED_PLUGS = new Set([
 function filterReusablePlug(reusablePlug: DimPlug) {
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
-    !reusablePlug.plugItem.itemCategoryHashes.includes(141186804)
+    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804)
   );
 }
+
+// Deprecated Damage Mods
+const DEPRECATED_MODS = new Set([
+  4160547565,
+  344032858,
+  1837294881,
+  2273483223,
+  3728733956,
+  3994397859,
+  4126105782,
+  4207478320
+]);
 
 function buildDefinedSocket(
   defs: D2ManifestDefinitions,
@@ -1183,7 +1195,7 @@ function buildSocket(
 
   return {
     socketIndex: index,
-    plug,
+    plug: plug && plug.plugItem && !DEPRECATED_MODS.has(plug.plugItem.hash) ? plug : null,
     plugOptions,
     hasRandomizedPlugItems
   };
