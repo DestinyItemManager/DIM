@@ -29,7 +29,7 @@ export default class ItemRender extends React.Component<Props> {
         className={classNames(
           `item-render`,
           item.dmg || '',
-          'ammo-overlay ammo-type-' + item.ammoType || '',
+          item.ammoType > 0 ? 'ammo-overlay ammo-type-' + item.ammoType : '',
           {
             masterwork: item.masterwork,
             exotic: item.isExotic
