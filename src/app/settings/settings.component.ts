@@ -36,6 +36,7 @@ export function SettingsController(
 
   vm.featureFlags = {
     reviewsEnabled: $featureFlags.reviewsEnabled,
+    forsakenTiles: $featureFlags.forsakenTiles,
     colorA11y: $featureFlags.colorA11y
   };
   vm.loadingTracker = loadingTracker;
