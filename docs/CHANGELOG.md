@@ -1,6 +1,7 @@
 # Next
 
 * Removed a bunch of help popups.
+* Added masterwork tier range filter.
 
 # 4.70.2 (2018-09-17)
 
