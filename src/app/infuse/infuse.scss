@@ -122,6 +122,11 @@
     justify-content: space-around;
     display: flex;
 
+    @media (max-width: 768px) {
+      display: block;
+      max-height: 50vh;
+    }
+
     .infuseSeparator {
       width: 1px;
       margin: 15px 8px 0px 8px;
