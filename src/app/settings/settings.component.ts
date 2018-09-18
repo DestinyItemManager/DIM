@@ -5,7 +5,6 @@ import { isPhonePortraitStream } from '../mediaQueries';
 import { subscribeOnScope } from '../rx-utils';
 import { changeLanguage } from 'i18next';
 import { settings } from './settings';
-import { resetHiddenInfos } from '../shell/info-popup';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies
@@ -151,8 +150,6 @@ export function SettingsController(
     );
     ga('send', 'event', 'Download CSV', 'Armor');
   };
-
-  vm.resetHiddenInfos = resetHiddenInfos;
 
   vm.resetItemSize = () => {
     vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;

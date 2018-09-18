@@ -3,7 +3,6 @@ import uuidv4 from 'uuid/v4';
 import { sum, count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
-import { showInfoPopup } from '../../shell/info-popup';
 import { copy as angularCopy } from 'angular';
 import { t } from 'i18next';
 // tslint:disable-next-line:no-implicit-dependencies
@@ -126,14 +125,6 @@ const StoreProto = {
     this.items.push(item);
     const bucketItems = this.buckets[item.location.id];
     bucketItems.push(item);
-    if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
-      showInfoPopup('lostitems', {
-        type: 'warning',
-        title: t('Postmaster.Limit'),
-        body: t('Postmaster.Desc', { store: this.name }),
-        hide: t('Help.NeverShow')
-      });
-    }
     item.owner = this.id;
   },
 
