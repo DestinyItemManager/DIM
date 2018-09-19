@@ -326,6 +326,8 @@ export interface SearchFilters {
   reset(): void;
 }
 
+const alwaysTrue = () => true;
+
 /**
  * This builds an object that can be used to generate filter functions from search queried.
  *
@@ -460,6 +462,10 @@ export function searchFilters(
      * Build a complex predicate function from a full query string.
      */
     filterFunction(query: string): (item: DimItem) => boolean {
+      if (!query.length) {
+        return alwaysTrue;
+      }
+
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*"[^"]*" -> match is:"stuff here"
       // [^\s]*'[^']*' -> match is:'stuff here'
