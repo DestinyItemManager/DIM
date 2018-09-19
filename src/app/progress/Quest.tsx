@@ -4,7 +4,9 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { sum } from '../util';
 import Objective from './Objective';
 import { Reward } from './Reward';
+import { t } from 'i18next';
 import MilestoneDisplay from './MilestoneDisplay';
+import Countdown from '../dim-ui/Countdown';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;
@@ -36,6 +38,11 @@ export default function Quest(props: QuestProps) {
 
   return (
     <MilestoneDisplay displayProperties={itemDef.displayProperties} progress={progress}>
+      {item.expirationDate && (
+        <div className="quest-expiration">
+          {t('Progress.QuestExpires')} <Countdown endTime={new Date(item.expirationDate)} />
+        </div>
+      )}
       <div className="quest-objectives">
         {objectives.map((objective) => (
           <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
