@@ -15,19 +15,25 @@ import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { querySelector } from '../shell/reducer';
+import { storesSelector } from '../inventory/reducer';
 
 /**
  * A selector for the search config for a particular destiny version.
  */
-const searchConfigSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
-  // From search filter component
-  const searchConfig = buildSearchConfig(
-    destinyVersion,
-    itemTags,
-    destinyVersion === 1 ? D1Categories : D2Categories
-  );
-  return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
-});
+const searchConfigSelector = createSelector(
+  destinyVersionSelector,
+  // TODO: pass stores into search config
+  storesSelector,
+  (destinyVersion, _stores) => {
+    // From search filter component
+    const searchConfig = buildSearchConfig(
+      destinyVersion,
+      itemTags,
+      destinyVersion === 1 ? D1Categories : D2Categories
+    );
+    return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
+  }
+);
 
 /**
  * A selector for a predicate function for searching items, given the current search query.

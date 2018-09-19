@@ -11,7 +11,7 @@ import { createSelector } from 'reselect';
 import { characterOrderSelector } from '../settings/reducer';
 import { sortStores } from '../shell/dimAngularFilters.filter';
 
-const storesSelector = (state: RootState) => state.inventory.stores;
+export const storesSelector = (state: RootState) => state.inventory.stores;
 export const sortedStoresSelector = createSelector(
   storesSelector,
   characterOrderSelector,
