@@ -14,8 +14,8 @@
   resolved "https://codeload.github.com/DestinyItemManager/zip.js/tar.gz/6931dae24f729399100ee7a6fe5dce43007581f0"
 
 "@sentry/cli@^1.30.4":
-  version "1.35.5"
-  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.35.5.tgz#5fdc6bb71236ccb80b758cb6b35452f80097acd0"
+  version "1.35.6"
+  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.35.6.tgz#5cf9dcf7a005a82fef057e2cbf2aa341a38306dd"
   dependencies:
     https-proxy-agent "^2.2.1"
     node-fetch "^2.1.2"
@@ -55,8 +55,8 @@
     "@types/angular" "*"
 
 "@types/angular@*", "@types/angular@^1.6.34", "@types/angular@^1.6.39", "@types/angular@^1.6.43":
-  version "1.6.50"
-  resolved "https://registry.yarnpkg.com/@types/angular/-/angular-1.6.50.tgz#8b6599088d80f68ef0cad7d3a2062248ebe72b3d"
+  version "1.6.51"
+  resolved "https://registry.yarnpkg.com/@types/angular/-/angular-1.6.51.tgz#a67515b0ba6a2ff68894a39405c1343cbf9c36d4"
 
 "@types/lodash.frompairs@^4.0.3":
   version "4.0.4"
@@ -75,8 +75,8 @@
     "@types/angular" "*"
 
 "@types/node@*", "@types/node@^10.9.3":
-  version "10.9.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.9.4.tgz#0f4cb2dc7c1de6096055357f70179043c33e9897"
+  version "10.10.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.10.1.tgz#d5c96ca246a418404914d180b7fdd625ad18eca6"
 
 "@types/prop-types@*", "@types/prop-types@^15.5.2":
   version "15.5.5"
@@ -1223,8 +1223,8 @@ big.js@^3.1.3:
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
 
 binary-extensions@^1.0.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.11.0.tgz#46aa1751fb6a2f93ee5e689bb1087d4b14c6c205"
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.12.0.tgz#c2d780f53d45bba8317a8902d4ceeaf3a6385b14"
 
 "binary@>= 0.3.0 < 1":
   version "0.3.0"
@@ -1438,8 +1438,8 @@ builtin-status-codes@^3.0.0:
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
 bungie-api-ts@^1.6.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-1.12.0.tgz#e3ab5a725f4107e80227171d120b907acf5e076d"
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-1.13.0.tgz#018f7e324b4b6101a335c1aebaf0161f1b522067"
 
 bytes@3.0.0:
   version "3.0.0"
@@ -1733,9 +1733,15 @@ colors@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.1.2.tgz#168a4701756b6a7f51a12ce0c97bfa28c084ed63"
 
-combined-stream@1.0.6, combined-stream@~1.0.5, combined-stream@~1.0.6:
+combined-stream@1.0.6:
   version "1.0.6"
-  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.6.tgz#723e7df6e801ac5613113a7e445a9b69cb632818"
+  resolved "http://registry.npmjs.org/combined-stream/-/combined-stream-1.0.6.tgz#723e7df6e801ac5613113a7e445a9b69cb632818"
+  dependencies:
+    delayed-stream "~1.0.0"
+
+combined-stream@~1.0.5, combined-stream@~1.0.6:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.7.tgz#2d1d24317afb8abe95d6d2c0b07b57813539d828"
   dependencies:
     delayed-stream "~1.0.0"
 
@@ -2360,8 +2366,8 @@ ejs@^2.5.7:
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
 
 electron-to-chromium@^1.3.47, electron-to-chromium@^1.3.62:
-  version "1.3.67"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.67.tgz#5e8f3ffac89b4b0402c7e1a565be06f3a109abbc"
+  version "1.3.69"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.69.tgz#0fd5d4bfd89ba6a431a144375245aea65073e3ca"
 
 elliptic@^6.0.0:
   version "6.4.1"
@@ -4220,7 +4226,7 @@ load-grunt-tasks@^4.0.0:
 
 load-json-file@^1.0.0:
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
+  resolved "http://registry.npmjs.org/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
   dependencies:
     graceful-fs "^4.1.2"
     parse-json "^2.2.0"
@@ -4567,8 +4573,8 @@ min-document@^2.19.0:
     dom-walk "^0.1.0"
 
 mini-css-extract-plugin@^0.4.0:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.4.2.tgz#b3ecc0d6b1bbe5ff14add42b946a7b200cf78651"
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.4.3.tgz#98d60fcc5d228c3e36a9bd15a1d6816d6580beb8"
   dependencies:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
@@ -4819,8 +4825,8 @@ no-case@^2.2.0:
     lower-case "^1.1.1"
 
 node-abi@^2.2.0:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-2.4.3.tgz#43666b7b17e57863e572409edbb82115ac7af28b"
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-2.4.4.tgz#410d8968809fe616dc078a181c44a370912f12fd"
   dependencies:
     semver "^5.4.1"
 
@@ -5758,13 +5764,13 @@ react-dnd@^5.0.0:
     shallowequal "^1.0.2"
 
 react-dom@^16.3.1:
-  version "16.5.1"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.1.tgz#29d0c5a01ed3b6b4c14309aa91af6ec4eb4f292c"
+  version "16.5.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.2.tgz#b69ee47aa20bab5327b2b9d7c1fe2a30f2cfa9d7"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    schedule "^0.4.0"
+    schedule "^0.5.0"
 
 react-hammerjs@^1.0.1:
   version "1.0.1"
@@ -5845,13 +5851,13 @@ react2angular@^4.0.1:
     ngcomponent "^4.1.0"
 
 react@^16.3.1:
-  version "16.5.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.5.1.tgz#8cb8e9f8cdcb4bde41c9a138bfbf907e66132372"
+  version "16.5.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.5.2.tgz#19f6b444ed139baa45609eee6dc3d318b3895d42"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    schedule "^0.4.0"
+    schedule "^0.5.0"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -6286,9 +6292,9 @@ sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
-schedule@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.4.0.tgz#fa20cfd0bfbf91c47d02272fd7096780d3170bbb"
+schedule@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.5.0.tgz#c128fffa0b402488b08b55ae74bb9df55cc29cc8"
   dependencies:
     object-assign "^4.1.1"
 
@@ -7432,8 +7438,8 @@ webpack-sources@^1.1.0, webpack-sources@^1.2.0:
     source-map "~0.6.1"
 
 webpack@^4.5.0:
-  version "4.19.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.19.0.tgz#252296c8af2d21c0994911007defdb3913a7bc66"
+  version "4.19.1"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.19.1.tgz#096674bc3b573f8756c762754366e5b333d6576f"
   dependencies:
     "@webassemblyjs/ast" "1.7.6"
     "@webassemblyjs/helper-module-context" "1.7.6"
