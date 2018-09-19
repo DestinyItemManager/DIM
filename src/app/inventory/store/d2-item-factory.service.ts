@@ -115,15 +115,6 @@ const categoryFromHash = {
   54: 'CATEGORY_SWORD'
 };
 
-const damageMods = {
-  1837294881: DamageType.Void,
-  3728733956: DamageType.Void,
-  3994397859: DamageType.Arc,
-  4126105782: DamageType.Arc,
-  344032858: DamageType.Thermal,
-  2273483223: DamageType.Thermal
-};
-
 const resistanceMods = {
   1546607980: DamageType.Void,
   1546607978: DamageType.Arc,
@@ -513,6 +504,7 @@ export function makeItem(
     createdItem.sockets.categories &&
     createdItem.sockets.categories.length &&
     createdItem.sockets.categories[1] &&
+    createdItem.sockets.categories[1].sockets.length > 1 &&
     createdItem.sockets.categories[1].sockets[1].plug &&
     createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats &&
     createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats.length
@@ -565,17 +557,6 @@ export function makeItem(
 
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
-    }
-
-    // Fix damage type for Y1 weapons. Should be fixed 9/18/2018
-    // https://github.com/Bungie-net/api/issues/662
-    for (const socket of createdItem.sockets.sockets) {
-      if (socket.plug && damageMods[socket.plug.plugItem.hash]) {
-        createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
-          damageMods[socket.plug.plugItem.hash]
-        ] as typeof createdItem.dmg;
-        break;
-      }
     }
   }
 
@@ -990,15 +971,15 @@ function buildSockets(
     return null;
   }
 
-  const realSockets = sockets.map((socket, i) =>
-    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i)
-  );
+  const realSockets = sockets
+    .filter((s) => s.isVisible)
+    .map((socket, i) => buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i));
 
   const categories = itemDef.sockets.socketCategories.map(
     (category): DimSocketCategory => {
       return {
         category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes.map((index) => realSockets[index])
+        sockets: category.socketIndexes.map((index) => realSockets[index]).filter(Boolean)
       };
     }
   );
@@ -1062,18 +1043,6 @@ function filterReusablePlug(reusablePlug: DimPlug) {
     !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
-
-// Deprecated Damage Mods
-const DEPRECATED_MODS = new Set([
-  4160547565,
-  344032858,
-  1837294881,
-  2273483223,
-  3728733956,
-  3994397859,
-  4126105782,
-  4207478320
-]);
 
 function buildDefinedSocket(
   defs: D2ManifestDefinitions,
@@ -1196,14 +1165,7 @@ function buildSocket(
 
   return {
     socketIndex: index,
-    plug:
-      plug &&
-      plug.plugItem &&
-      !DEPRECATED_MODS.has(plug.plugItem.hash) &&
-      (plug.plugItem.plug.plugCategoryIdentifier === 'enhancements.universal' ||
-        !plug.plugItem.plug.plugCategoryIdentifier.startsWith('enhancements.'))
-        ? plug
-        : null,
+    plug,
     plugOptions,
     hasRandomizedPlugItems
   };

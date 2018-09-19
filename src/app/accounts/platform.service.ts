@@ -15,6 +15,7 @@ import { getBungieAccounts } from './bungie-account.service';
 import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../ngimport-more';
+import { update } from '../inventory/actions';
 
 let _platforms: DestinyAccount[] = [];
 let _active: DestinyAccount | null = null;
@@ -69,7 +70,6 @@ export function getActivePlatform(): DestinyAccount | null {
 export function setActivePlatform(platform: DestinyAccount) {
   if (platform) {
     activePlatform$.next(platform);
-    store.dispatch(actions.setCurrentAccount(platform));
     return current$.take(1).toPromise();
   } else {
     return Promise.resolve(null);
@@ -118,6 +118,10 @@ function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
   if (account === null) {
     return SyncService.remove('platformType');
   } else {
+    store.dispatch(actions.setCurrentAccount(account));
+    // Also clear inventory
+    store.dispatch(update([]));
+
     if (settings.destinyVersion !== account.destinyVersion) {
       settings.destinyVersion = account.destinyVersion;
       settings.save();

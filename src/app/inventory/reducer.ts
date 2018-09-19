@@ -4,14 +4,13 @@ import { ActionType, getType } from 'typesafe-actions';
 import { DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItemInfo } from './dim-item-info';
-import { setCurrentAccount } from '../accounts/actions';
 import { AccountsAction } from '../accounts/reducer';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { characterOrderSelector } from '../settings/reducer';
 import { sortStores } from '../shell/dimAngularFilters.filter';
 
-const storesSelector = (state: RootState) => state.inventory.stores;
+export const storesSelector = (state: RootState) => state.inventory.stores;
 export const sortedStoresSelector = createSelector(
   storesSelector,
   characterOrderSelector,
@@ -59,11 +58,6 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
   action: InventoryAction | AccountsAction
 ) => {
   switch (action.type) {
-    // When the account changes, clear the inventory state
-    case getType(setCurrentAccount):
-      return {
-        ...initialInventoryState
-      };
     case getType(actions.update):
       // TODO: we really want to decompose these, drive out all deep mutation
       // TODO: mark DimItem, DimStore properties as Readonly
