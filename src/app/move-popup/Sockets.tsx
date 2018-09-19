@@ -51,8 +51,6 @@ export default class Sockets extends React.Component<Props, State> {
       return null;
     }
 
-    console.log(item.sockets);
-
     // TODO: styles for mods and perks
 
     return (

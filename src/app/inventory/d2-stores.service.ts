@@ -470,7 +470,7 @@ function makeD2StoresService(): D2StoreServiceType {
     if (!account.versionsOwned) {
       return 600;
     }
-    if (8 & account.versionsOwned) {
+    if (DestinyGameVersions.Forsaken & account.versionsOwned) {
       return 600;
     }
     if (DestinyGameVersions.DLC2 & account.versionsOwned) {

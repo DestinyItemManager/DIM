@@ -504,6 +504,7 @@ export function makeItem(
     createdItem.sockets.categories &&
     createdItem.sockets.categories.length &&
     createdItem.sockets.categories[1] &&
+    createdItem.sockets.categories[1].sockets.length > 1 &&
     createdItem.sockets.categories[1].sockets[1].plug &&
     createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats &&
     createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats.length
@@ -970,15 +971,15 @@ function buildSockets(
     return null;
   }
 
-  const realSockets = sockets.map((socket, i) =>
-    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i)
-  );
+  const realSockets = sockets
+    .filter((s) => s.isVisible)
+    .map((socket, i) => buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i));
 
   const categories = itemDef.sockets.socketCategories.map(
     (category): DimSocketCategory => {
       return {
         category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes.map((index) => realSockets[index])
+        sockets: category.socketIndexes.map((index) => realSockets[index]).filter(Boolean)
       };
     }
   );
@@ -1042,18 +1043,6 @@ function filterReusablePlug(reusablePlug: DimPlug) {
     !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
-
-// Deprecated Damage Mods
-const DEPRECATED_MODS = new Set([
-  4160547565,
-  344032858,
-  1837294881,
-  2273483223,
-  3728733956,
-  3994397859,
-  4126105782,
-  4207478320
-]);
 
 function buildDefinedSocket(
   defs: D2ManifestDefinitions,
@@ -1176,15 +1165,7 @@ function buildSocket(
 
   return {
     socketIndex: index,
-    plug:
-      plug &&
-      plug.plugItem &&
-      !DEPRECATED_MODS.has(plug.plugItem.hash) &&
-      (!plug.plugItem.plug ||
-        plug.plugItem.plug.plugCategoryIdentifier === 'enhancements.universal' ||
-        !plug.plugItem.plug.plugCategoryIdentifier.startsWith('enhancements.'))
-        ? plug
-        : null,
+    plug,
     plugOptions,
     hasRandomizedPlugItems
   };
