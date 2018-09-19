@@ -12,6 +12,7 @@ import './dimStoreItem.scss';
 import './InventoryItem.scss';
 import { TagValue } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
+import { settings } from '../settings/settings';
 
 interface Props {
   item: DimItem;
@@ -53,7 +54,10 @@ export default class InventoryItem extends React.Component<Props> {
     const badgeInfo = getBadgeInfo(item);
 
     const elaborateTile =
-      $featureFlags.forsakenTiles && item.isDestiny2() && (item.primStat || item.sockets);
+      $featureFlags.forsakenTiles &&
+      settings.betaForsakenTiles &&
+      item.isDestiny2() &&
+      (item.primStat || item.sockets);
 
     return (
       <div
@@ -67,7 +71,13 @@ export default class InventoryItem extends React.Component<Props> {
         })}
       >
         {elaborateTile && item.isDestiny2() ? (
-          <ItemRender item={item} badge={badgeInfo} rating={rating} hideRating={hideRating} />
+          <ItemRender
+            item={item}
+            badge={badgeInfo}
+            rating={rating}
+            hideRating={hideRating}
+            tag={tag}
+          />
         ) : (
           <div>
             {item.percentComplete > 0 &&

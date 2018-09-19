@@ -116,9 +116,16 @@
       text-align: right;
     }
 
-    .review-score {
+    .review-score,
+    .tag {
       text-align: left;
       margin-left: 2px;
+
+      .item-tag {
+        position: initial;
+        top: 0;
+        left: 0;
+      }
     }
 
     .power::before {

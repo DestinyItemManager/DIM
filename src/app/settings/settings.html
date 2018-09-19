@@ -78,6 +78,11 @@
         <dim-store-item item-data="vm.fakeArmor"></dim-store-item>
       </div>
 
+      <div class="setting horizontal" ng-if="::vm.featureFlags.forsakenTiles">
+        <label for="forsakenTiles">Beta Forsaken Tiles</label>
+        <input type="checkbox" id="forsakenTiles" ng-model="vm.settings.betaForsakenTiles" />
+      </div>
+
       <div class="setting horizontal">
         <label for="itemQuality" ng-i18next="Settings.EnableAdvancedStats"></label>
         <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality" />

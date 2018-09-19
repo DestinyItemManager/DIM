@@ -94,6 +94,8 @@ export class Settings {
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
   reviewsModeSelection = 0;
 
+  betaForsakenTiles = false;
+
   ready = new Promise((resolve) => (readyResolve = resolve));
 
   language = defaultLanguage();
