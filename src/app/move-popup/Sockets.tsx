@@ -76,35 +76,32 @@ export default class Sockets extends React.Component<Props, State> {
                   )}
                 </div>
                 <div className="item-sockets">
-                  {category.sockets.map(
-                    (socketInfo) =>
-                      socketInfo.plug && (
-                        <div key={socketInfo.socketIndex} className="item-socket">
-                          {/* This re-sorts mods to have the currently equipped plug in front */}
-                          {category.category.categoryStyle !==
-                            DestinySocketCategoryStyle.Reusable && (
-                            <Plug
-                              key={socketInfo.plug.plugItem.hash}
-                              plug={socketInfo.plug}
-                              item={item}
-                              socketInfo={socketInfo}
-                              defs={defs}
-                            />
-                          )}
-                          {filterPlugOptions(category.category.categoryStyle, socketInfo).map(
-                            (plug) => (
-                              <Plug
-                                key={plug.plugItem.hash}
-                                plug={plug}
-                                item={item}
-                                socketInfo={socketInfo}
-                                defs={defs}
-                              />
-                            )
-                          )}
-                        </div>
-                      )
-                  )}
+                  {category.sockets.map((socketInfo) => (
+                    <div key={socketInfo.socketIndex} className="item-socket">
+                      {/* This re-sorts mods to have the currently equipped plug in front */}
+                      {socketInfo.plug &&
+                        category.category.categoryStyle !== DestinySocketCategoryStyle.Reusable && (
+                          <Plug
+                            key={socketInfo.plug.plugItem.hash}
+                            plug={socketInfo.plug}
+                            item={item}
+                            socketInfo={socketInfo}
+                            defs={defs}
+                          />
+                        )}
+                      {filterPlugOptions(category.category.categoryStyle, socketInfo).map(
+                        (plug) => (
+                          <Plug
+                            key={plug.plugItem.hash}
+                            plug={plug}
+                            item={item}
+                            socketInfo={socketInfo}
+                            defs={defs}
+                          />
+                        )
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             )
