@@ -115,15 +115,6 @@ const categoryFromHash = {
   54: 'CATEGORY_SWORD'
 };
 
-const damageMods = {
-  1837294881: DamageType.Void,
-  3728733956: DamageType.Void,
-  3994397859: DamageType.Arc,
-  4126105782: DamageType.Arc,
-  344032858: DamageType.Thermal,
-  2273483223: DamageType.Thermal
-};
-
 const resistanceMods = {
   1546607980: DamageType.Void,
   1546607978: DamageType.Arc,
@@ -565,17 +556,6 @@ export function makeItem(
 
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
-    }
-
-    // Fix damage type for Y1 weapons. Should be fixed 9/18/2018
-    // https://github.com/Bungie-net/api/issues/662
-    for (const socket of createdItem.sockets.sockets) {
-      if (socket.plug && damageMods[socket.plug.plugItem.hash]) {
-        createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
-          damageMods[socket.plug.plugItem.hash]
-        ] as typeof createdItem.dmg;
-        break;
-      }
     }
   }
 
@@ -1200,7 +1180,8 @@ function buildSocket(
       plug &&
       plug.plugItem &&
       !DEPRECATED_MODS.has(plug.plugItem.hash) &&
-      (plug.plugItem.plug.plugCategoryIdentifier === 'enhancements.universal' ||
+      (!plug.plugItem.plug ||
+        plug.plugItem.plug.plugCategoryIdentifier === 'enhancements.universal' ||
         !plug.plugItem.plug.plugCategoryIdentifier.startsWith('enhancements.'))
         ? plug
         : null,
