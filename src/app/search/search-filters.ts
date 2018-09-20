@@ -269,6 +269,10 @@ export function buildSearchConfig(
     ranges.push('quality', 'percentage');
   }
 
+  if (destinyVersion === 2) {
+    ranges.push('masterwork');
+  }
+
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
     ranges.push('ratingcount');
@@ -506,6 +510,9 @@ export function searchFilters(
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter);
+        } else if (term.startsWith('masterwork:')) {
+          const filter = term.replace('masterwork:', '');
+          addPredicate('masterworkValue', filter);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
           addPredicate('stack', filter);
@@ -832,6 +839,12 @@ export function searchFilters(
           return false;
         }
         return compareByOperand(item.primStat.value, predicate);
+      },
+      masterworkValue(item: D2Item, predicate: string) {
+        if (!item.masterworkInfo) {
+          return false;
+        }
+        return compareByOperand(item.masterworkInfo.statValue, predicate);
       },
       level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);
