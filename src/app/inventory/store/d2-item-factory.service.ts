@@ -1167,12 +1167,18 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
     );
   });
   if (masterworkSocket && masterworkSocket.plug) {
-    // createdItem.masterwork = true;
     const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
     if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
       createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
         resistanceMods[masterwork.statTypeHash]
       ] as typeof createdItem.dmg;
+    }
+
+    if (
+      (createdItem.bucket.sort === 'Armor' && masterwork.value === 5) ||
+      (createdItem.bucket.sort === 'Weapon' && masterwork.value === 10)
+    ) {
+      createdItem.masterwork = true;
     }
     const statDef = defs.Stat.get(masterwork.statTypeHash);
     createdItem.masterworkInfo = {
