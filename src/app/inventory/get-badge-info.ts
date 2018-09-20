@@ -6,6 +6,7 @@ export interface BadgeInfo {
     [key: string]: boolean;
   };
   badgeCount: string;
+  isCapped: boolean;
 }
 
 export default function getBadgeInfo(item: DimItem): BadgeInfo {
@@ -24,7 +25,8 @@ function processBounty(item: DimItem) {
   const result = {
     showBadge: showBountyPercentage,
     badgeClassNames: {},
-    badgeCount: ''
+    badgeCount: '',
+    isCapped: false
   };
 
   if (showBountyPercentage) {
@@ -36,10 +38,21 @@ function processBounty(item: DimItem) {
 }
 
 function processStackable(item: DimItem) {
+  const isCapped =
+    item.amount === item.maxStackSize &&
+    Boolean(item.stackUniqueLabel && item.stackUniqueLabel.length);
   return {
     showBadge: true,
-    badgeClassNames: { 'item-stat': true, 'item-stackable-max': item.amount === item.maxStackSize },
-    badgeCount: item.amount.toString()
+    badgeClassNames: {
+      'item-stat': true,
+      'item-stackable-max': item.amount === item.maxStackSize,
+      'badge-capped': isCapped
+    },
+    badgeCount:
+      item.maxStackSize > 0 && item.stackUniqueLabel && item.stackUniqueLabel.length > 0
+        ? `${item.amount}/${item.maxStackSize}`
+        : item.amount.toString(),
+    isCapped
   };
 }
 
@@ -49,7 +62,8 @@ function processItem(item: DimItem) {
     badgeClassNames: {
       'item-equipment': true
     },
-    badgeCount: ''
+    badgeCount: '',
+    isCapped: false
   };
   if (item.primStat && result.showBadge) {
     result.badgeClassNames['item-stat'] = true;

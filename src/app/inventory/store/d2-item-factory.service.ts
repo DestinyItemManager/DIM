@@ -372,6 +372,7 @@ export function makeItem(
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
     equipRequiredLevel: (instanceDef && instanceDef.equipRequiredLevel) || 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
+    stackUniqueLabel: itemDef.inventory.stackUniqueLabel,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeName: itemDef.redacted ? 'unknown' : getClass(itemDef.classType),
