@@ -651,15 +651,11 @@ export function searchFilters(
       maxpower(item: DimItem) {
         if (!_maxPowerItems.length) {
           storeService.getStores().forEach((store) => {
-            const items: DimItem[] = _.flatten(
-              Object.values(maxLightLoadout(storeService, store).items)
+            _maxPowerItems.push(
+              ..._.flatten(Object.values(maxLightLoadout(storeService, store).items)).map((i) => {
+                return i.id;
+              })
             );
-
-            const loadoutItemIds = items.map((i) => {
-              return i.id;
-            });
-
-            _maxPowerItems.push(...loadoutItemIds);
           });
         }
 
