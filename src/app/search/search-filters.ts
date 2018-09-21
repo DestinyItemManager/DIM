@@ -16,6 +16,7 @@ import { D1StoresService } from '../inventory/d1-stores.service';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { querySelector } from '../shell/reducer';
 import { storesSelector } from '../inventory/reducer';
+import { maxLightLoadout } from '../loadout/auto-loadouts';
 
 /**
  * A selector for the search config for a particular destiny version.
@@ -153,6 +154,7 @@ export function buildSearchConfig(
     stackable: ['stackable'],
     category: Object.keys(categoryFilters),
     inloadout: ['inloadout'],
+    maxpower: ['maxpower'],
     new: ['new'],
     tag: ['tagged'],
     level: ['level'],
@@ -337,6 +339,7 @@ export function searchFilters(
   storeService: StoreServiceType
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
+  const _bestItems: string[] = [];
   let _lowerDupes = {};
   let _sortedStores: DimStore[] | null = null;
   let _loadoutItemIds: Set<string> | undefined;
@@ -449,6 +452,7 @@ export function searchFilters(
      */
     reset() {
       _duplicates = null;
+      _bestItems.length = 0;
       _lowerDupes = {};
       _sortedStores = null;
     },
@@ -636,6 +640,24 @@ export function searchFilters(
       },
       masterwork(item: DimItem) {
         return item.masterwork;
+      },
+      maxpower(item: DimItem) {
+        // we need to return out best sets for each subclass.
+        if (!_bestItems.length) {
+          storeService.getStores().forEach((store) => {
+            const items: DimItem[] = _.flatten(
+              Object.values(maxLightLoadout(storeService, store).items)
+            );
+
+            const loadoutItemIds = items.map((i) => {
+              return i.id;
+            });
+
+            _bestItems.push(...loadoutItemIds);
+          });
+        }
+
+        return _bestItems.includes(item.id);
       },
       dupe(item: DimItem, predicate: string) {
         if (_duplicates === null) {
