@@ -78,7 +78,7 @@ mod.filter('sortStores', () => sortStores);
 
 export function sortStores(stores: DimStore[], order: string) {
   if (order === 'mostRecent') {
-    return _.sortBy(stores, 'lastPlayed').reverse();
+    return _.sortBy(stores, (store) => store.lastPlayed).reverse();
   } else if (order === 'mostRecentReverse') {
     return _.sortBy(stores, (store) => {
       if (store.isVault) {
@@ -87,9 +87,11 @@ export function sortStores(stores: DimStore[], order: string) {
         return store.lastPlayed;
       }
     });
-  } else if (stores.length) {
-    return _.sortBy(stores, 'id');
+  } else if (stores.length && stores[0].destinyVersion === 1) {
+    return _.sortBy(stores, (s) => s.id);
   } else {
+    // The response is in character creation order by default, at least in D2
+    // https://github.com/Bungie-net/api/issues/614
     return stores;
   }
 }
