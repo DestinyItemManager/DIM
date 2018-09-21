@@ -1203,6 +1203,7 @@ function buildMasterworkInfo(
   if (
     !socket ||
     !socket.plug ||
+    !socket.plug.plugObjectives ||
     !socket.plug.plugObjectives.length ||
     !socket.plugOptions ||
     !socket.plugOptions.length
