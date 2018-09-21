@@ -496,26 +496,6 @@ export function makeItem(
     console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
   }
 
-  // Set damage type if is armor and has a damage type... and that's a big IF
-  if (
-    createdItem.bucket &&
-    createdItem.bucket.sort === 'Armor' &&
-    createdItem.sockets &&
-    createdItem.sockets.categories &&
-    createdItem.sockets.categories.length &&
-    createdItem.sockets.categories[1] &&
-    createdItem.sockets.categories[1].sockets.length > 1 &&
-    createdItem.sockets.categories[1].sockets[1].plug &&
-    createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats &&
-    createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats.length
-  ) {
-    const dmgHash = createdItem.sockets.categories[1].sockets[1].plug!.plugItem.investmentStats[0]
-      .statTypeHash;
-    createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
-      resistanceMods[dmgHash]
-    ] as typeof createdItem.dmg;
-  }
-
   if (itemDef.perks && itemDef.perks.length) {
     createdItem.perks = itemDef.perks
       .map(
@@ -571,6 +551,15 @@ export function makeItem(
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
+
+  // Forsaken Masterwork
+  if (createdItem.sockets) {
+    try {
+      buildForsakenMasterworkInfo(createdItem, defs);
+    } catch (e) {
+      console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+    }
+  }
 
   // Masterwork
   if (createdItem.masterwork && createdItem.sockets) {
@@ -1169,6 +1158,38 @@ function buildSocket(
     plugOptions,
     hasRandomizedPlugItems
   };
+}
+
+function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefinitions) {
+  const masterworkSocket = createdItem.sockets!.sockets.find((socket) => {
+    return !!(
+      socket.plug && socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+    );
+  });
+  if (masterworkSocket && masterworkSocket.plug) {
+    const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
+    if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
+      createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
+        resistanceMods[masterwork.statTypeHash]
+      ] as typeof createdItem.dmg;
+    }
+
+    if (
+      (createdItem.bucket.sort === 'Armor' && masterwork.value === 5) ||
+      (createdItem.bucket.sort === 'Weapon' && masterwork.value === 10)
+    ) {
+      createdItem.masterwork = true;
+    }
+    const statDef = defs.Stat.get(masterwork.statTypeHash);
+    createdItem.masterworkInfo = {
+      typeName: null,
+      typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
+      typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
+      statHash: masterwork.statTypeHash,
+      statName: statDef.displayProperties.name,
+      statValue: masterwork.value
+    };
+  }
 }
 
 // TODO: revisit this
