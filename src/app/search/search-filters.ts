@@ -15,19 +15,25 @@ import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { querySelector } from '../shell/reducer';
+import { storesSelector } from '../inventory/reducer';
 
 /**
  * A selector for the search config for a particular destiny version.
  */
-const searchConfigSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
-  // From search filter component
-  const searchConfig = buildSearchConfig(
-    destinyVersion,
-    itemTags,
-    destinyVersion === 1 ? D1Categories : D2Categories
-  );
-  return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
-});
+const searchConfigSelector = createSelector(
+  destinyVersionSelector,
+  // TODO: pass stores into search config
+  storesSelector,
+  (destinyVersion, _stores) => {
+    // From search filter component
+    const searchConfig = buildSearchConfig(
+      destinyVersion,
+      itemTags,
+      destinyVersion === 1 ? D1Categories : D2Categories
+    );
+    return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
+  }
+);
 
 /**
  * A selector for a predicate function for searching items, given the current search query.
@@ -263,6 +269,10 @@ export function buildSearchConfig(
     ranges.push('quality', 'percentage');
   }
 
+  if (destinyVersion === 2) {
+    ranges.push('masterwork');
+  }
+
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
     ranges.push('ratingcount');
@@ -319,6 +329,8 @@ export interface SearchFilters {
   resetLoadouts(): void;
   reset(): void;
 }
+
+const alwaysTrue = () => true;
 
 /**
  * This builds an object that can be used to generate filter functions from search queried.
@@ -454,6 +466,10 @@ export function searchFilters(
      * Build a complex predicate function from a full query string.
      */
     filterFunction(query: string): (item: DimItem) => boolean {
+      if (!query.length) {
+        return alwaysTrue;
+      }
+
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*"[^"]*" -> match is:"stuff here"
       // [^\s]*'[^']*' -> match is:'stuff here'
@@ -494,6 +510,9 @@ export function searchFilters(
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter);
+        } else if (term.startsWith('masterwork:')) {
+          const filter = term.replace('masterwork:', '');
+          addPredicate('masterworkValue', filter);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
           addPredicate('stack', filter);
@@ -820,6 +839,12 @@ export function searchFilters(
           return false;
         }
         return compareByOperand(item.primStat.value, predicate);
+      },
+      masterworkValue(item: D2Item, predicate: string) {
+        if (!item.masterworkInfo) {
+          return false;
+        }
+        return compareByOperand(item.masterworkInfo.statValue, predicate);
       },
       level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);

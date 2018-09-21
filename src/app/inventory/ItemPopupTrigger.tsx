@@ -6,6 +6,7 @@ import { ngDialog } from '../ngimport-more';
 import { NewItemsService } from './store/new-items.service';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import './dimStoreItem.scss';
+import { $rootScope } from 'ngimport';
 
 let otherDialog: any = null;
 
@@ -58,9 +59,9 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         this.dialogResult = null;
       }
     } else if (dimLoadoutService.dialogOpen) {
-      dimLoadoutService.addItemToLoadout(item, e);
+      $rootScope.$apply(() => dimLoadoutService.addItemToLoadout(item, e));
     } else if (CompareService.dialogOpen) {
-      CompareService.addItemToCompare(item, e);
+      $rootScope.$apply(() => CompareService.addItemToCompare(item, e));
     } else {
       // This is separate to hopefully work around an issue where Angular can't instantiate the controller with ES6 object shorthands
       function dialogController() {
