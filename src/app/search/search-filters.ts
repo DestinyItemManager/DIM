@@ -343,7 +343,7 @@ export function searchFilters(
   storeService: StoreServiceType
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
-  const _bestItems: string[] = [];
+  const _maxPowerItems: string[] = [];
   let _lowerDupes = {};
   let _sortedStores: DimStore[] | null = null;
   let _loadoutItemIds: Set<string> | undefined;
@@ -649,8 +649,7 @@ export function searchFilters(
         return item.masterwork;
       },
       maxpower(item: DimItem) {
-        // we need to return out best sets for each subclass.
-        if (!_bestItems.length) {
+        if (!_maxPowerItems.length) {
           storeService.getStores().forEach((store) => {
             const items: DimItem[] = _.flatten(
               Object.values(maxLightLoadout(storeService, store).items)
@@ -660,11 +659,11 @@ export function searchFilters(
               return i.id;
             });
 
-            _bestItems.push(...loadoutItemIds);
+            _maxPowerItems.push(...loadoutItemIds);
           });
         }
 
-        return _bestItems.includes(item.id);
+        return _maxPowerItems.includes(item.id);
       },
       dupe(item: DimItem, predicate: string) {
         if (_duplicates === null) {
