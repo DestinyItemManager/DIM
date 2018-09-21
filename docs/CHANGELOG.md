@@ -1,6 +1,7 @@
 # Next
 
 * Removed a bunch of help popups.
+* Bounties with expiration times are now shown, and are sorted in front in order of expiration time.
 * Added masterwork tier range filter.
 * Highlight the stat that is boosted by masterwork in item details.
 * Masterwork mod hover now shows the type/name of masterwork.
