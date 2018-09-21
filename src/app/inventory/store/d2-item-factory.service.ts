@@ -1163,7 +1163,9 @@ function buildSocket(
 function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefinitions) {
   const masterworkSocket = createdItem.sockets!.sockets.find((socket) => {
     return !!(
-      socket.plug && socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+      socket.plug &&
+      socket.plug.plugItem.plug &&
+      socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
     );
   });
   if (masterworkSocket && masterworkSocket.plug) {
