@@ -580,16 +580,6 @@ export function makeItem(
     createdItem.complete = true;
   }
 
-  // Mark upgradeable stacks of rare modifications
-  if (
-    createdItem.maxStackSize > 1 &&
-    createdItem.amount >= 3 &&
-    createdItem.tier === 'Rare' &&
-    createdItem.bucket.hash === 3313201758
-  ) {
-    createdItem.complete = true;
-  }
-
   createdItem.index = createItemIndex(createdItem);
 
   return createdItem;
