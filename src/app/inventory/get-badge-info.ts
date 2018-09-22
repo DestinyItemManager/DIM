@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { DimItem } from './item-types';
 
 export interface BadgeInfo {
@@ -38,9 +39,7 @@ function processBounty(item: DimItem) {
 }
 
 function processStackable(item: DimItem) {
-  const isCapped =
-    item.amount === item.maxStackSize &&
-    Boolean(item.stackUniqueLabel && item.stackUniqueLabel.length);
+  const isCapped = item.amount === item.maxStackSize && item.uniqueStack;
   return {
     showBadge: true,
     badgeClassNames: {
@@ -48,10 +47,7 @@ function processStackable(item: DimItem) {
       'item-stackable-max': item.amount === item.maxStackSize,
       'badge-capped': isCapped
     },
-    badgeCount:
-      item.maxStackSize > 0 && item.stackUniqueLabel && item.stackUniqueLabel.length > 0
-        ? `${item.amount}/${item.maxStackSize}`
-        : item.amount.toString(),
+    badgeCount: isCapped ? t('Badge.Max') : item.amount.toString(),
     isCapped
   };
 }

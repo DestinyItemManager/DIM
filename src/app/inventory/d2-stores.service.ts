@@ -470,19 +470,21 @@ function makeD2StoresService(): D2StoreServiceType {
     if (!account.versionsOwned) {
       return 600;
     }
-    if (DestinyGameVersions.Forsaken & account.versionsOwned) {
-      return 600;
-    }
-    if (DestinyGameVersions.DLC2 & account.versionsOwned) {
-      return 380;
-    }
-    if (DestinyGameVersions.DLC1 & account.versionsOwned) {
-      return 330;
-    }
-    if (DestinyGameVersions.Destiny2 & account.versionsOwned) {
-      return 300;
-    }
+
     return 600;
+    // if (DestinyGameVersions.Forsaken & account.versionsOwned) {
+    //   return 600;
+    // }
+    // if (DestinyGameVersions.DLC2 & account.versionsOwned) {
+    //   return 380;
+    // }
+    // if (DestinyGameVersions.DLC1 & account.versionsOwned) {
+    //   return 330;
+    // }
+    // if (DestinyGameVersions.Destiny2 & account.versionsOwned) {
+    //   return 300;
+    // }
+    // return 600;
   }
 
   function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {

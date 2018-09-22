@@ -83,8 +83,8 @@ export interface DimItem {
   equipRequiredLevel: number;
   /** The maximum number of items that stack together for this item type. */
   maxStackSize: number;
-  /** If this exists, it means that there's a maximum of one of these stacks per account. */
-  stackUniqueLabel: string;
+  /** Is this stack unique (one per account, sometimes two if you can move to vault)? */
+  uniqueStack: boolean;
   /** The class this item is restricted to. Unknown means it can be used by any class. */
   classType: DestinyClass;
   /** The readable English name of the class this item is restricted to. */

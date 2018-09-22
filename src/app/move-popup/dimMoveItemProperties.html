@@ -24,7 +24,10 @@
       <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">
         <div ng-if="vm.item.dmg && vm.item.dmg !== 'kinetic'" class="element" ng-class="::vm.item.dmg"></div>
       </div>
-      <div class="item-type-info"><div ng-if="vm.item.ammoType" class="ammo-type" ng-class="::vm.item.ammoType | ammoTypeClass"></div><span ng-i18next="[i18next]({ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType ? vm.classType : ' ', typeName: vm.item.typeName, context: vm.light ? 'Gear' : 'Consumable' })MovePopup.Subtitle"></span></div>
+      <div class="item-type-info">
+        <div ng-if="vm.item.ammoType" class="ammo-type" ng-class="::vm.item.ammoType | ammoTypeClass"></div>
+        <span ng-i18next="[i18next]({ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType ? vm.classType : ' ', typeName: vm.item.typeName, context: vm.light ? 'Gear' : 'Consumable' })MovePopup.Subtitle"></span>
+      </div>
       <div ng-if="vm.item.objectives && !vm.item.hidePercentage" ng-i18next="[i18next]({ percent: vm.item.percentComplete })ItemService.PercentComplete"></div>
       <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
     </div>
@@ -32,8 +35,12 @@
       <star-rating rating="vm.item.dtrRating.overallScore" read-only></star-rating>
       <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating.overallScore, numRatings: vm.item.dtrRating.ratingCount || 0 })DtrReview.AverageRating"></span>
     </div>
+    <div ng-if="vm.item.uniqueStack">
+      <span ng-i18next="[i18next]({ amount: vm.item.amount, maxStackSize: vm.item.maxStackSize })MovePopup.Subtitle_Stackable_Unique"></span>
+    </div>
   </div>
-  <div class="item-details failure-reason" ng-if="failureString.length" ng-repeat="failureString in vm.failureStrings">{{ failureString }}</div>
+  <div class="item-details failure-reason" ng-if="failureString.length" ng-repeat="failureString in vm.failureStrings">{{
+    failureString }}</div>
   <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>
   <div ng-if="vm.itemDetails" class="move-popup-details">
     <div ng-if="vm.item.reviewable" class="move-popup-tabs">
@@ -42,17 +49,20 @@
     </div>
     <dim-item-review item="vm.item" ng-if="vm.item.reviewable" ng-show="vm.tab === 'reviews'"></dim-item-review>
     <div ng-show="vm.tab === 'default'">
-      <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ updateOn: 'blur' }" ng-change="vm.updateNote()"></textarea></form>
+      <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help"
+          ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ updateOn: 'blur' }" ng-change="vm.updateNote()"></textarea></form>
       <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
       <div class="item-description" ng-if="vm.showDescription" ng-bind="::vm.item.description"></div>
       <div class="item-lore" ng-if="::vm.item.loreHash">
-        <a target="_blank" rel="noopener noreferrer" ng-href="http://www.ishtar-collective.net/entries/{{::vm.item.loreHash}}"><img src="~app/images/ishtar-collective.svg" height="16" width="16"/></a>
-        <a target="_blank" rel="noopener noreferrer" ng-href="http://www.ishtar-collective.net/entries/{{::vm.item.loreHash}}"><span ng-i18next="MovePopup.ReadLore"></span></a>
+        <a target="_blank" rel="noopener noreferrer" ng-href="http://www.ishtar-collective.net/entries/{{::vm.item.loreHash}}"><img
+            src="~app/images/ishtar-collective.svg" height="16" width="16" /></a>
+        <a target="_blank" rel="noopener noreferrer" ng-href="http://www.ishtar-collective.net/entries/{{::vm.item.loreHash}}"><span
+            ng-i18next="MovePopup.ReadLore"></span></a>
       </div>
-      <img class="item-details" ng-if="vm.item.type === 'Emblems' || vm.item.type === 'Emblem'" ng-src="{{vm.item.secondaryIcon | bungieIcon}}" width="237"
-      height="48"/>
-      <div class="masterwork-progress" ng-if="vm.item.masterworkInfo" >
-        <img ng-src="{{ ::vm.item.masterworkInfo.typeIcon | bungieIcon }}" title="{{ ::vm.item.masterworkInfo.typeName }}"/>
+      <img class="item-details" ng-if="vm.item.type === 'Emblems' || vm.item.type === 'Emblem'" ng-src="{{vm.item.secondaryIcon | bungieIcon}}"
+        width="237" height="48" />
+      <div class="masterwork-progress" ng-if="vm.item.masterworkInfo">
+        <img ng-src="{{ ::vm.item.masterworkInfo.typeIcon | bungieIcon }}" title="{{ ::vm.item.masterworkInfo.typeName }}" />
         <span> {{ ::vm.item.masterworkInfo.typeDesc }} <strong> {{ ::vm.item.masterworkInfo.progress }} </strong></span>
       </div>
       <div class="item-details" ng-if="vm.item.classified" ng-i18next="ItemService.Classified2"></div>
@@ -78,7 +88,7 @@
       <div ng-if="vm.rewards.length" class="item-details">
         <div ng-i18next="MovePopup.Rewards"></div>
         <div class="milestone-reward" ng-repeat="reward in vm.rewards">
-          <img ng-src="{{reward.item.displayProperties.icon | bungieIcon }}"/>
+          <img ng-src="{{reward.item.displayProperties.icon | bungieIcon }}" />
           <span>{{reward.item.displayProperties.name}}<span ng-if="reward.quantity > 1"> +{{reward.quantity}}</span></span>
         </div>
       </div>
