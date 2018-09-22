@@ -29,7 +29,6 @@ const searchConfigSelector = createSelector(
     // From search filter component
     const searchConfig = buildSearchConfig(
       destinyVersion,
-      itemTags,
       destinyVersion === 1 ? D1Categories : D2Categories
     );
     return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
@@ -66,7 +65,6 @@ interface SearchConfig {
  */
 export function buildSearchConfig(
   destinyVersion: 1 | 2,
-  itemTags: TagInfo[],
   categories: {
     [category: string]: string[];
   }
@@ -85,8 +83,11 @@ export function buildSearchConfig(
     bow: ['CATEGORY_BOW'],
     machinegun: ['CATEGORY_MACHINE_GUN']
   };
+  const itemCategoryHashFilters = {};
 
-  const itemTypes: string[] = [];
+  const itemTypes = flatMap(Object.values(categories), (l: string[]) =>
+    l.map((v) => v.toLowerCase())
+  );
 
   const stats = [
     'charge',
@@ -106,9 +107,6 @@ export function buildSearchConfig(
       heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
       machinegun: ['CATEGORY_MACHINE_GUN']
     });
-    itemTypes.push(
-      ...flatMap(Object.values(categories), (l: string[]) => l.map((v) => v.toLowerCase()))
-    );
     stats.push('rof');
   } else {
     Object.assign(categoryFilters, {
@@ -117,9 +115,8 @@ export function buildSearchConfig(
       tracerifle: ['CATEGORY_TRACE_RIFLE'],
       linearfusionrifle: ['CATEGORY_LINEAR_FUSION_RIFLE']
     });
-    itemTypes.push(
-      ...flatMap(Object.values(categories), (l: string[]) => l.map((v) => v.toLowerCase()))
-    );
+    // TODO: map D1 categories into D2?
+    itemCategoryHashFilters = {};
     stats.push('rpm');
     stats.push('mobility');
     stats.push('recovery');

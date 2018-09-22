@@ -73,7 +73,6 @@ function SearchFilterCtrl(
     if (changes.account && changes.account) {
       searchConfig = buildSearchConfig(
         vm.account.destinyVersion,
-        itemTags,
         vm.account.destinyVersion === 1 ? D1Categories : D2Categories
       );
       filters = searchFilters(searchConfig, getStoresService());
