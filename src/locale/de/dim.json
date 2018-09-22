@@ -83,15 +83,6 @@
     "Banner": "DIM wird es auch für Destiny 2 geben",
     "ComingSoon": "Wir werden deine Destiny 2 Charaktere in DIM, kurz nach dem das Spiel für Konsolen erschienen ist, unterstützen, so gut wie es uns dann schon möglich ist. Gib uns ein paar Wochen um das Spiel kennen zu lernen (und es auch selber zu spielen!)."
   },
-  "DidYouKnow": {
-    "Collapse": "Du hast gerade eine Sektion in DIM eingeklappt! Das kann nützlich sein um Teile von DIM zu verstecken, die du normalerweise nicht verwendest.",
-    "DidYouKnow": "Wusstest du schon?",
-    "DontShowAgain": "Diesen Tipp nicht erneut zeigen",
-    "DoubleClick": "Wenn du ein Item zu deinem aktiven (zuletzt eingeloggt) Charakter bewegst, kannst du es stattdessen doppelt anklicken um es sofort auszurüsten.",
-    "DragAndDrop": "Items können zwischen verschiedenen Charakteren und dem Tresor per \"Drag and Drop\" verschoben werden.",
-    "Expand": "Klicke das Plus-Zeichen auf der linken Seite der eingeklappten Kategorie an, um diese wieder aufzuklappen.",
-    "TryNext": "Probiere es das nächste Mal aus!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
     "BestRatedKey": " = Empfohlener Perk",
@@ -184,7 +175,6 @@
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
-    "DupeInPostmaster": "Einige Item-Duplikate sind bei der Poststelle.",
     "Engrams": "Zeige Engramme.",
     "EnterName": "Trage einen Namen ein:",
     "EnterNote": "Trage eine Beschreibung ein:",
@@ -279,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "Item kann nicht von diesem Charakter wegbewegt werden.",
-    "ChangingPerks": "Verändern der Perks wird nicht unterstützt",
-    "ChangingPerksInfo": "Entschuldigung, es gibt keine Möglichkeit die Perks außerhalb des Spiels zu verändern. Wir würden es nur zu gern!",
     "Drag": "Halte Shift oder pausiere über dem Ziel, um einen Teilstapel zu übertragen.",
     "HidePopup": "Dieses Fenster ausblenden",
-    "NeverShow": "Diesen Tipp nicht erneut zeigen.",
     "NoStorage": "DIM kann die Daten nicht speichern",
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. DIM kann nicht fortfahren.",
     "UpdateAvailable": "DIM aktualisiert",
@@ -517,10 +504,6 @@
     "Complete": "Vollständig",
     "Incomplete": "Unvollständig"
   },
-  "Postmaster": {
-    "Desc": "Es sind 20 verlorene Items in der Poststelle deines {{store}}. Jedes neue Item wird bereits vorhandene überschreiben.",
-    "Limit": "Poststellenlimit"
-  },
   "Progress": {
     "CrucibleRank": "Schmelztiegel-Ränge",
     "Daily": "Täglich",
@@ -530,6 +513,7 @@
     "ProfileMilestones": "Konto-Meilensteine",
     "ProfileQuests": "Konto-Quests",
     "Progress": "Fortschritt",
+    "QuestExpires": "Läuft ab in ",
     "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
     "RewardNotEarned": "Belohnung nicht erhalten",
     "RewardRedeemed": "Belohnung eingelöst",
@@ -550,7 +534,6 @@
     "ColorA11y": "Konfiguration für Farbenblinde",
     "ColumnSize": "{{num}} Items",
     "ColumnSizeAuto": "Automatisch",
-    "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps",
     "Data": "Excel Tabelle",
     "DontForgetDupes": "Vergiss nicht dass du nach is:dupe oder is:dupelower suchen kannst um schnell doppelte Items zu finden und dass du das Vergleichstool nutzen kannst um verwandte Items zu evaluieren.",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",

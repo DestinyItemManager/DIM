@@ -83,15 +83,6 @@
     "Banner": "DIM將支援Destiny2",
     "ComingSoon": "我們將遊戲上線後不久在DIM中支持您的天命2角色。請給我們幾個星期的時間來學習這個遊戲（並且讓我們也玩一會兒！）。"
   },
-  "DidYouKnow": {
-    "Collapse": "您剛才在DIM中隱藏了一個分區!隱藏您不需要的部分能使得使用更加方便.",
-    "DidYouKnow": "你知道嗎?",
-    "DontShowAgain": "不再顯示此提示",
-    "DoubleClick": "如果您希望移動物品到您當前啟動的角色（最後登入的角色）,您可以按兩下滑鼠左鍵立即裝備它.",
-    "DragAndDrop": "物品可以在不同角色和保險庫之間拖放移動.",
-    "Expand": "按一下類別最左側的加號標誌來重新展開一個分區.",
-    "TryNext": "下次試試吧！"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基於{{numRatings}} 項評測.",
     "BestRatedKey": " = 推薦特性",
@@ -184,7 +175,6 @@
     "DamageType": "按照傷害類型顯示.",
     "Description": "描述",
     "Dupe": "顯示重複物品",
-    "DupeInPostmaster": "有一些重複物品在郵政官處.",
     "Engrams": "顯示記憶水晶.",
     "EnterName": "輸入物品名稱:",
     "EnterNote": "輸入備註文本:",
@@ -279,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "無法從該角色中移出物品.",
-    "ChangingPerks": "無法改變特性",
-    "ChangingPerksInfo": "對不起， 無法在遊戲外更改特性。 我們對此也無能為力！",
     "Drag": "按住Shift或者在目的地區域停留一會兒來完成一次部分堆疊。",
     "HidePopup": "不再顯示此彈出視窗",
-    "NeverShow": "不要再顯示此資訊.",
     "NoStorage": "DIM無法儲存資料",
     "NoStorageMessage": "DIM無法在您的瀏覽器中儲存資料。這可能是瀏覽器的無痕視窗造成的，或許您磁碟空間不足。DIM無法完成後續操作。",
     "UpdateAvailable": "DIM已更新",
@@ -517,10 +504,6 @@
     "Complete": "已完成",
     "Incomplete": "未完成"
   },
-  "Postmaster": {
-    "Desc": "在你的{{store}} 郵政官處有20件遺失物品。任何新獲得的物品都將覆蓋掉現有的物品。",
-    "Limit": "郵政官處已經沒有物品空間了"
-  },
   "Progress": {
     "CrucibleRank": "Crucible Ranks",
     "Daily": "每日",
@@ -530,6 +513,7 @@
     "ProfileMilestones": "賬戶里程碑",
     "ProfileQuests": "賬戶任務",
     "Progress": "進度",
+    "QuestExpires": "Expires in ",
     "RewardEarned": "獎勵已解鎖但尚未兌換",
     "RewardNotEarned": "獎勵不可用",
     "RewardRedeemed": "獲取獎勵",
@@ -550,7 +534,6 @@
     "ColorA11y": "色盲模式",
     "ColumnSize": "{{num}} 個物品",
     "ColumnSizeAuto": "自動",
-    "DIMPopupsReset": "重置之前隱藏的提示資訊",
     "Data": "試算表",
     "DontForgetDupes": "您可以在搜尋框使用 is:dupe或 is:dupelower 來快速查找重複物品, 也可以使用對比工具來對比相關物品.",
     "EnableAdvancedStats": "在防具上顯示評分(D1)",

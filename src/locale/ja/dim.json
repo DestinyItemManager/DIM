@@ -83,15 +83,6 @@
     "Banner": "DIMはデスティニー 2 をサポートします。",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
-  "DidYouKnow": {
-    "Collapse": "あなたは、ちょうどDIMでセクションを崩壊させました！\nこれは、あなたが通常使う必要はないDIMの部分を隠すために役に立つかもしれません。",
-    "DidYouKnow": "知っていますか？",
-    "DontShowAgain": "このヒントをこれ以降表示しない",
-    "DoubleClick": "今使用中のキャラクター(最後にログインしたキャラクター)にアイテムを移動する時はダブルクリックで即座に装備出来ます。",
-    "DragAndDrop": "各キャラ及び、保管庫の間にアイテムをドラッグ＆ドロップできます。",
-    "Expand": "セクションを再展開するには、折りたたんでいるカテゴリの一番左にあるプラス記号アイコンをクリックします。",
-    "TryNext": "今度お試しください。"
-  },
   "DtrReview": {
     "AverageRating": "{{numRatings}}人の評価({{itemRating}})",
     "BestRatedKey": " = 推奨Perk",
@@ -184,7 +175,6 @@
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "重複するアイテムを表示",
-    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "エングラムを表示",
     "EnterName": "アイテム名を入力してください。",
     "EnterNote": "ここにノート入力:",
@@ -279,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "キャラクターからこのアイテムを外せません",
-    "ChangingPerks": "パーク変更は対応していません",
-    "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
     "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
     "HidePopup": "ポップアップを非表示にする",
-    "NeverShow": "次回から表示しない",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
     "UpdateAvailable": "DIM 更新",
@@ -517,10 +504,6 @@
     "Complete": "完成",
     "Incomplete": "未完"
   },
-  "Postmaster": {
-    "Desc": "{{store}} のポストマスターに20個のアイテムがあります。新アイテムは前のと入り替わります.",
-    "Limit": "ポストマスターに空きがありません"
-  },
   "Progress": {
     "CrucibleRank": "Crucible Ranks",
     "Daily": "デイリー",
@@ -530,6 +513,7 @@
     "ProfileMilestones": "アカウントのマイルス トーン",
     "ProfileQuests": "アカウントクエスト",
     "Progress": "進行状況",
+    "QuestExpires": "Expires in ",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",
@@ -550,7 +534,6 @@
     "ColorA11y": "色覚設定",
     "ColumnSize": "{{num}}個",
     "ColumnSizeAuto": "オート",
-    "DIMPopupsReset": "以前非表示にしたヒントをリセットする",
     "Data": "Spreadsheets",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
