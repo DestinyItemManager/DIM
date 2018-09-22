@@ -158,7 +158,8 @@ export class VendorItem {
         }
       },
       undefined,
-      true
+      // TODO: still dim these out if they have fail reasons?
+      enableFailReasons.length === 0
     );
   }
 
