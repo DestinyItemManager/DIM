@@ -13,6 +13,8 @@ let otherDialog: any = null;
 interface Props {
   item: DimItem;
   children?: React.ReactNode;
+  alternateTemplate?: string;
+  extraData?: any;
 }
 
 /**
@@ -42,7 +44,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private clicked = (e) => {
     e.stopPropagation();
 
-    const item = this.props.item;
+    const { item, alternateTemplate, extraData } = this.props;
 
     NewItemsService.dropNewItem(item);
 
@@ -68,10 +70,13 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         'ngInject';
         this.item = item;
         this.store = item.getStoresService().getStore(this.item.owner);
+        if (extraData) {
+          Object.assign(this, extraData);
+        }
       }
 
       this.dialogResult = ngDialog.open({
-        template: dialogTemplate,
+        template: alternateTemplate || dialogTemplate,
         plain: true,
         overlay: false,
         className: 'move-popup-dialog',

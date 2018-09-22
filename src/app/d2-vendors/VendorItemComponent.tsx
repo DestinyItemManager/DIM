@@ -83,7 +83,7 @@ export default class VendorItemComponent extends React.Component<Props> {
           onClick={this.openDetailsPopup}
         >
           {progress > 0 &&
-            !item.canPurchase && (
+            progress < 1 && (
               <div className="item-xp-bar-small" style={{ width: percent(progress) }} />
             )}
           <div
@@ -105,9 +105,7 @@ export default class VendorItemComponent extends React.Component<Props> {
             </div>
           )}
           {progress > 0 &&
-            !item.canPurchase && (
-              <div className="item-stat item-equipment">{percent(progress)}</div>
-            )}
+            progress < 1 && <div className="item-stat item-equipment">{percent(progress)}</div>}
         </div>
         {item.costs.length > 0 && (
           <div className="vendor-costs">

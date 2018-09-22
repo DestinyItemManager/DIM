@@ -123,7 +123,7 @@ export class VendorItem {
     defs: D2ManifestDefinitions,
     itemHash: number,
     objectives: DestinyObjectiveProgress[],
-    canInsert: boolean,
+    _canInsert: boolean,
     enableFailReasons: string[]
   ): VendorItem {
     const fakeInstance = ({} as any) as DestinyItemInstanceComponent;
@@ -158,7 +158,7 @@ export class VendorItem {
         }
       },
       undefined,
-      canInsert
+      true
     );
   }
 
@@ -168,7 +168,7 @@ export class VendorItem {
     attachedItemHash: number,
     itemHash: number,
     objectives: DestinyObjectiveProgress[],
-    canInsert: boolean,
+    _canInsert: boolean,
     enableFailReasons: string[]
   ): VendorItem {
     const fakeInstance = ({} as any) as DestinyItemInstanceComponent;
@@ -216,7 +216,7 @@ export class VendorItem {
         }
       },
       undefined,
-      canInsert
+      true
     );
   }
 

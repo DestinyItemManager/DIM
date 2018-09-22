@@ -2,12 +2,10 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getKiosks } from '../bungie-api/destiny2-api';
+import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
-import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
-import { Subscription } from 'rxjs/Subscription';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
@@ -20,9 +18,41 @@ import { loadingTracker } from '../ngimport-more';
 import { $rootScope } from 'ngimport';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
+import PresentationNode from './PresentationNode';
+import { connect } from 'react-redux';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { RootState } from '../store/reducers';
+import { createSelector } from 'reselect';
+import { storesSelector } from '../inventory/reducer';
 
-interface Props {
+interface ProvidedProps {
   account: DestinyAccount;
+}
+
+interface StoreProps {
+  buckets?: InventoryBuckets;
+  ownedItemHashes: Set<number>;
+}
+
+type Props = ProvidedProps & StoreProps;
+
+const ownedItemHashesSelector = createSelector(storesSelector, (stores) => {
+  const ownedItemHashes = new Set<number>();
+  if (stores) {
+    for (const store of stores) {
+      for (const item of store.items) {
+        ownedItemHashes.add(item.hash);
+      }
+    }
+  }
+  return ownedItemHashes;
+});
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    buckets: state.inventory.buckets,
+    ownedItemHashes: ownedItemHashesSelector(state)
+  };
 }
 
 interface State {
@@ -30,14 +60,12 @@ interface State {
   profileResponse?: DestinyProfileResponse;
   trackerService?: DestinyTrackerService;
   stores?: DimStore[];
-  ownedItemHashes?: Set<number>;
 }
 
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-export default class Collections extends React.Component<Props & UIViewInjectedProps, State> {
-  private storesSubscription: Subscription;
+class Collections extends React.Component<Props & UIViewInjectedProps, State> {
   private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
@@ -52,11 +80,12 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
 
-    const profileResponse = await getKiosks(this.props.account);
-    this.setState({ profileResponse, defs });
+    const profileResponse = await getCollections(this.props.account);
 
-    const trackerService = await fetchRatingsForKiosks(defs, profileResponse);
-    this.setState({ trackerService });
+    // TODO: put collectibles in redux
+    // TODO: convert collectibles into DimItems
+
+    this.setState({ profileResponse, defs });
   }
 
   componentDidMount() {
@@ -67,30 +96,18 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
       loadingTracker.addPromise(this.loadCollections());
     });
 
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
-      (stores) => {
-        if (stores) {
-          const ownedItemHashes = new Set<number>();
-          for (const store of stores) {
-            for (const item of store.items) {
-              ownedItemHashes.add(item.hash);
-            }
-          }
-          this.setState({ stores, ownedItemHashes });
-        }
-      }
-    );
+    D2StoresService.getStoresStream(this.props.account);
   }
 
   componentWillUnmount() {
-    this.storesSubscription.unsubscribe();
     this.$scope.$destroy();
   }
 
   render() {
+    const { buckets, ownedItemHashes } = this.props;
     const { defs, profileResponse, trackerService } = this.state;
 
-    if (!profileResponse || !defs) {
+    if (!profileResponse || !defs || !buckets) {
       return (
         <div className="vendor d2-vendors dim-page">
           <Loading />
@@ -107,6 +124,8 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
       });
     });
 
+    // TODO: how to search and find an item within all nodes?
+
     return (
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Ornaments">
@@ -114,6 +133,15 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
         </ErrorBoundary>
         <ErrorBoundary name="Catalysts">
           <Catalysts defs={defs} profileResponse={profileResponse} />
+        </ErrorBoundary>
+        <ErrorBoundary name="Collections">
+          <PresentationNode
+            presentationNodeHash={3790247699}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+          />
         </ErrorBoundary>
         <ErrorBoundary name="PlugSets">
           {Array.from(plugSetHashes).map((plugSetHash) => (
@@ -156,3 +184,5 @@ function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: n
     )
   );
 }
+
+export default connect<StoreProps>(mapStateToProps)(Collections);
