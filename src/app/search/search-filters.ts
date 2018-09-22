@@ -456,7 +456,7 @@ export function searchFilters(
      */
     reset() {
       _duplicates = null;
-      _bestItems.length = 0;
+      _maxPowerItems.length = 0;
       _lowerDupes = {};
       _sortedStores = null;
     },
