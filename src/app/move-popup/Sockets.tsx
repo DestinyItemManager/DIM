@@ -190,15 +190,15 @@ function PlugTooltip({
 
   return (
     <>
-      <h2>{plug.plugItem.displayProperties.name}</h2>
-      {plug.isMasterwork &&
-        item.masterworkInfo && (
-          <div>
-            <strong>
-              {item.masterworkInfo.statName} {item.masterworkInfo.statValue}
-            </strong>
-          </div>
-        )}
+      <h2>
+        {plug.plugItem.displayProperties.name}
+        {item.masterworkInfo &&
+          plug.plugItem.investmentStats &&
+          plug.plugItem.investmentStats[0] &&
+          item.masterworkInfo.statHash === plug.plugItem.investmentStats[0].statTypeHash &&
+          ` (${item.masterworkInfo.statName})`}
+      </h2>
+
       {plug.plugItem.displayProperties.description ? (
         <div>{plug.plugItem.displayProperties.description}</div>
       ) : (

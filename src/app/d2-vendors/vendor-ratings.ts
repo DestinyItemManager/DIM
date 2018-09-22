@@ -18,7 +18,8 @@ function isWeaponOrArmor(
   defs: D2ManifestDefinitions,
   saleItemComponent: DestinyVendorSaleItemComponent | DestinyVendorItemDefinition
 ): boolean {
-  const inventoryItemStats = defs.InventoryItem.get(saleItemComponent.itemHash).stats;
+  const itemDef = defs.InventoryItem.get(saleItemComponent.itemHash);
+  const inventoryItemStats = itemDef && itemDef.stats;
   return (
     inventoryItemStats &&
     (inventoryItemStats.primaryBaseStatHash === 1480404414 || // weapon

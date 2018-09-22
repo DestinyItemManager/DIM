@@ -4,7 +4,9 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { sum } from '../util';
 import Objective from './Objective';
 import { Reward } from './Reward';
+import { t } from 'i18next';
 import MilestoneDisplay from './MilestoneDisplay';
+import Countdown from '../dim-ui/Countdown';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;
@@ -29,13 +31,32 @@ export default function Quest(props: QuestProps) {
 
   const progress = (
     <>
-      {percentComplete > 0 && <span>{Math.round(percentComplete * 100)}%</span>}
+      {percentComplete > 0 && <span>{Math.min(100, Math.round(percentComplete * 100))}%</span>}
       {itemDef.inventory.maxStackSize > 1 && <span>{item.quantity}</span>}
     </>
   );
 
+  const expired = item.expirationDate
+    ? new Date(item.expirationDate).getTime() < Date.now()
+    : false;
+  const complete = percentComplete >= 1;
+  const suppressExpiration =
+    itemDef.inventory.suppressExpirationWhenObjectivesComplete && expired && complete;
+
   return (
     <MilestoneDisplay displayProperties={itemDef.displayProperties} progress={progress}>
+      {item.expirationDate &&
+        !suppressExpiration && (
+          <div className="quest-expiration">
+            {expired ? (
+              itemDef.inventory.expiredInActivityMessage
+            ) : (
+              <>
+                {t('Progress.QuestExpires')} <Countdown endTime={new Date(item.expirationDate)} />
+              </>
+            )}
+          </div>
+        )}
       <div className="quest-objectives">
         {objectives.map((objective) => (
           <Objective defs={defs} objective={objective} key={objective.objectiveHash} />

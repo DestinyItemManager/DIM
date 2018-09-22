@@ -93,35 +93,9 @@ Become a sponsor and get your logo here with a link to your site.
 ## Translation
 If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, Korean, or Portuguese), a great way to help with DIM development is to provide translations. See [translation guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/TRANSLATIONS.md) for more info on how to help.
 
-## Developer Quick start
-Clone the repo:
+## Contributing
 
-* `git clone https://github.com/DestinyItemManager/DIM.git`
+See [CONTRIBUTING.md](https://github.com/DestinyItemManager/DIM/blob/master/docs/CONTRIBUTING.md) for information on how to Contribute to the development of DIM.
 
-Install dependencies:
-
-* Install [NodeJS](https://nodejs.org/).
-* Install [Yarn](https://yarnpkg.com/en/docs/install). If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)". If you were already using NPM with DIM, run `yarn` to convert to Yarn. **Note (2018/4/25): Yarn from Homebrew will come with NodeJS 10, which isn't ready for prime time. Either install via `npm install -g yarn` or downgrade Node after installing.**
-* Windows-based developers will need to install `windows-build-tools` (`yarn global add windows-build-tools`) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
-* Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to runninng `yarn install`.
-* Run `yarn install`.
-  * Note that on Windows, the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
-* It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests.
-
-Check code Style
-* `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
-
-Run your own local web server
-* Run `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'` to generate server certificates.
-* After the one-time setup, run `yarn start` and you're off to the races. Changes to CSS or React components should show up automatically without needing to reload the page (watch the console for details).
-
-Get your own API key:
-
-* Goto [Bungie](https://www.bungie.net/en/Application)
-* Open your extension in another tab, copy the url up to `/index.html`.
-* Paste your extension url into the `Origin Header` section on bungie.net
-* Copy your API-key from bungie.net into DIM developer settings panel when it is loaded.
-
-Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/CONTRIBUTING.md) for more tips.
-
+## License
 Code released under the [MIT license](http://choosealicense.com/licenses/mit/).

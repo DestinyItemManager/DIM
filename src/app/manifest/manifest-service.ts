@@ -243,7 +243,6 @@ class ManifestService {
         return typedArray;
       });
     } else {
-      ga('send', 'event', 'Manifest', 'Need New Manifest');
       return Promise.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }
   }
