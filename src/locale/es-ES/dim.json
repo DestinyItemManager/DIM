@@ -83,15 +83,6 @@
     "Banner": "DIM soportará Destiny 2",
     "ComingSoon": "Daremos soporte a tus personajes de Destiny 2 en cuanto el juego se encuentre disponible en consolas, de acuerdo a nuestras capacidades. Danos algunas semanas para conocer el juego (¡y entretenernos!)."
   },
-  "DidYouKnow": {
-    "Collapse": "¡Acabas de colapsar una sección en DIM!. Esto podría ser útil para ocultar partes de DIM que no necesites usar normalmente.",
-    "DidYouKnow": "¿Sabías que?",
-    "DontShowAgain": "No mostrar esta sugerencia de nuevo",
-    "DoubleClick": "Si estas moviendo un objeto a tu personaje activo (último al que iniciaste sesión), puedes darle doble click al objeto para equiparlo instantáneamente.",
-    "DragAndDrop": "Los objetos pueden ser arrastrados y soltados entre diferentes columnas de personajes/depósito.",
-    "Expand": "Para expandir de nuevo una sección, simplemente da click en el símbolo de más a la izquierda de la categoría que colapsaste.",
-    "TryNext": "¡Inténtalo la próxima vez!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} calificaciones.",
     "BestRatedKey": " = ventaja sugerida",
@@ -184,7 +175,6 @@
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra los objetos duplicados",
-    "DupeInPostmaster": "Algunos objetos duplicados están en Administración.",
     "Engrams": "Muestra engramas.",
     "EnterName": "Escribe el nombre de un objeto:",
     "EnterNote": "Inserta notas de texto:",
@@ -279,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "No puedes mover ese objeto de este personaje.",
-    "ChangingPerks": "Cambio de Ventajas No Soportado",
-    "ChangingPerksInfo": "Lo sentimos, no hay forma de cambiar las ventajas fuera del juego. ¡Desearíamos poder hacerlo!",
     "Drag": "\nMantén Shift o pausa sobre la zona para soltar para transferir un pila parcial.",
     "HidePopup": "Esconder Esta Ventana",
-    "NeverShow": "No mostrar esto nunca.",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tienes poco espacio en disco. DIM no puede continuar.",
     "UpdateAvailable": "DIM actualizado",
@@ -517,10 +504,6 @@
     "Complete": "Completo",
     "Incomplete": "Incompleto"
   },
-  "Postmaster": {
-    "Desc": "Hay 20 objetos perdidos en la Administración en tu {{store}}. Nuevos objetos reemplazarán los ya existentes.",
-    "Limit": "Límite de Administración"
-  },
   "Progress": {
     "CrucibleRank": "Rangos de Crisol",
     "Daily": "Diario",
@@ -530,6 +513,7 @@
     "ProfileMilestones": "Hazañas de cuenta",
     "ProfileQuests": "Misiones de cuenta",
     "Progress": "Progreso",
+    "QuestExpires": "Expira en ",
     "RewardEarned": "Recompensa obtenida pero no reclamada",
     "RewardNotEarned": "Recompensa no obtenida",
     "RewardRedeemed": "Recompensa reclamada",
@@ -550,7 +534,6 @@
     "ColorA11y": "Configuración de daltonismo",
     "ColumnSize": "{{num}} objetos",
     "ColumnSizeAuto": "Automático",
-    "DIMPopupsReset": "Reestablecer consejos de información anteriormente escondidos",
     "Data": "Hojas de cálculo",
     "DontForgetDupes": "No te olvides de que puedes buscar is:dupe o is:dupelower para encontrar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
     "EnableAdvancedStats": "Mostrar la calificación de la calidad de las estadísticas en la armadura (D1)",

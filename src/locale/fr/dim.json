@@ -83,15 +83,6 @@
     "Banner": "DIM supportera Destiny 2",
     "ComingSoon": "Nous aurons un support pour vos personnages de Destiny 2 sur DIM le plus vite possible après la sorti du jeu sur consoles. Donnez nous quelques semaines pour apprendre des choses sur le jeu."
   },
-  "DidYouKnow": {
-    "Collapse": "Vous venez de réduire une section dans DIM! Il peut être utile de cache des parties de DIM que vous n'avez pas besoin d'utiliser normalement.",
-    "DidYouKnow": "Le saviez-vous?",
-    "DontShowAgain": "Ne plus jamais afficher cette astuce",
-    "DoubleClick": "Si vous déplacez un objet vers votre personnage actuellement actif (dernière connexion), vous pouvez double-cliquer cet objet pour l'équiper instantanément.",
-    "DragAndDrop": "Les objets peuvent être glissés et déposés entre différentes colonnes de personnages/coffre.",
-    "Expand": "Pour ré-élargir une section, cliquez simplement l'icône \"plus\" sur la gauche de la catégorie que vous avez réduite.",
-    "TryNext": "Essayez ultérieurement!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
     "BestRatedKey": " = perk recommandé",
@@ -184,7 +175,6 @@
     "DamageType": "Affiche les objets selon leur type de dégât.",
     "Description": "Description",
     "Dupe": "Affiche les objets dupliqués",
-    "DupeInPostmaster": "Certains doublons sont au commis des postes.",
     "Engrams": "Affiche les engrammes.",
     "EnterName": "Entrez un nom d'objet:",
     "EnterNote": "Entrez vos notes:",
@@ -279,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
-    "ChangingPerks": "Changement d'Abilités Non Supporté",
-    "ChangingPerksInfo": "Désolé, ce n'est pas possible de changer d'abilités en dehors du jeu. On aurait aimé!",
     "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile.",
     "HidePopup": "Cacher Ce Popup",
-    "NeverShow": "Ne plus jamais afficher.",
     "NoStorage": "DIM ne peut pas stocker de données",
     "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible. DIM ne peut pas continuer.",
     "UpdateAvailable": "DIM mis à jour",
@@ -517,10 +504,6 @@
     "Complete": "Achevé",
     "Incomplete": "Incomplet"
   },
-  "Postmaster": {
-    "Desc": "Il y a 20 objets perdus au Commis Des Postes sur votre {{store}}. Tous les nouveaux objets remplaceront les objets existants.",
-    "Limit": "Limite du Commis Des Postes"
-  },
   "Progress": {
     "CrucibleRank": "Rangs de l'épreuve",
     "Daily": "Quotidient",
@@ -530,6 +513,7 @@
     "ProfileMilestones": "Jalons de compte",
     "ProfileQuests": "Quêtes de compte",
     "Progress": "Progression",
+    "QuestExpires": "Expires in ",
     "RewardEarned": "Récompense obtenue mais non récupérée",
     "RewardNotEarned": "Récompense non obtenue",
     "RewardRedeemed": "Récompense récupérée",
@@ -550,7 +534,6 @@
     "ColorA11y": "Option de daltonisme",
     "ColumnSize": "{{num}} objets",
     "ColumnSizeAuto": "Auto",
-    "DIMPopupsReset": "Réinitialiser les astuces cachées précédemment",
     "Data": "Tableur",
     "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe ou is:dupelower pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
     "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures (D1)",

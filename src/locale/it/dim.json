@@ -83,15 +83,6 @@
     "Banner": "DIM supporterà Destiny 2",
     "ComingSoon": "Supporteremo i tuoi personaggi in Destiny 2 con DIM al massimo delle nostre possibilità poco dopo l'uscita del gioco su console. Dacci qualche settimana per capire come funziona il gioco (e per giocarlo!)."
   },
-  "DidYouKnow": {
-    "Collapse": "Hai appena chiuso una sezione in DIM! Questo può essere utile per nascondere parti di DIM che non utilizzi solitamente.",
-    "DidYouKnow": "Lo sapevi?",
-    "DontShowAgain": "Non mostrare nuovamente questo suggerimento",
-    "DoubleClick": "Se stai spostando un oggetto al personaggio attualmente attivo (ultimo utilizzato), puoi semplicemente fare doppio click su quell'oggetto per equipaggiarlo immediatamente.",
-    "DragAndDrop": "Gli oggetti possono essere trascinati e rilasciati tra le colonne dei personaggi e del deposito.",
-    "Expand": "Per riaprire una sezione, clicca sul 'più' sulla parte sinistra della categoria che hai chiuso.",
-    "TryNext": "Provaci la prossima volta!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi.",
     "BestRatedKey": " = perk suggerito",
@@ -184,7 +175,6 @@
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
     "Description": "Descrizione",
     "Dupe": "Mostra gli oggetti doppioni",
-    "DupeInPostmaster": "Alcuni oggetti duplicati sono dall'Amministratrice.",
     "Engrams": "Mostra engrammi.",
     "EnterName": "Inserisci il nome di un oggetto:",
     "EnterNote": "Inserisci delle note:",
@@ -279,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "Non posso spostare quell'oggetto da questo personaggio.",
-    "ChangingPerks": "Selezione dei perk non supportata",
-    "ChangingPerksInfo": "Scusa, non è possibile cambiare i perk dall'esterno del gioco. Ci piacerebbe poterlo fare!",
     "Drag": "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa quantità.",
     "HidePopup": "Nascondi Questo Popup",
-    "NeverShow": "Non mostrarmi più questo messaggio.",
     "NoStorage": "DIM non può salvare dati",
     "NoStorageMessage": "DIM non può salvare dati nel tuo browser. Questo può essere causato dalla navigazione con privacy o in modalità in incognito, oppure se hai poco spazio libero in memoria. DIM non può continuare.",
     "UpdateAvailable": "DIM aggiornato",
@@ -517,10 +504,6 @@
     "Complete": "Completo",
     "Incomplete": "Incompleto"
   },
-  "Postmaster": {
-    "Desc": "Sul tuo {{store}} ci sono 20 oggetti persi dall'amministratore. Qualsiasi nuovo oggetto sovrascriverà uno degli esistenti.",
-    "Limit": "Limite Amministratore"
-  },
   "Progress": {
     "CrucibleRank": "Classifiche Crogiolo",
     "Daily": "Giornaliera",
@@ -530,6 +513,7 @@
     "ProfileMilestones": "Pietre miliari account",
     "ProfileQuests": "Imprese Account",
     "Progress": "Avanzamento",
+    "QuestExpires": "Scade tra ",
     "RewardEarned": "Ricompensa sbloccata ma non ancora presa",
     "RewardNotEarned": "Ricompensa non sbloccata",
     "RewardRedeemed": "Ricompensa presa",
@@ -550,7 +534,6 @@
     "ColorA11y": "Impostazioni per daltonici",
     "ColumnSize": "{{num}} oggetti",
     "ColumnSizeAuto": "Automatico",
-    "DIMPopupsReset": "Ripristina i consigli precedentemente nascosti",
     "Data": "Fogli di calcolo",
     "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe o is:dupelower per trovare velocemente oggetti duplicati, e puoi usare lo strumento di confronto per valutarli.",
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature (D1)",

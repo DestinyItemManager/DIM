@@ -83,15 +83,6 @@
     "Banner": "DIM será compatível com Destiny 2",
     "ComingSoon": "Daremos suporte aos seus personagens em Destiny 2 dentro das nossas capacidades assim que o jogo sair nos consoles. Nos deem algumas semanas pra aprendermos sobre o jogo (e jogá-lo também!)."
   },
-  "DidYouKnow": {
-    "Collapse": "Você ocultou uma seção no DIM! Isso pode ser útil para esconder partes do DIM que você normalmente não usa.",
-    "DidYouKnow": "Você sabia?",
-    "DontShowAgain": "Não exibir esta dica novamente",
-    "DoubleClick": "Se você está movendo um item para o seu personagem ativo atualmente (último logado), você pode dar um duplo clique para equipá-lo instantaneamente.",
-    "DragAndDrop": "Itens podem ser arrastados e soltos entre diferentes colunas de personagens/cofre.",
-    "Expand": "Para re-expandir uma seção, basta clicar no ícone de sinal de mais à esquerda da categoria que você ocultou.",
-    "TryNext": "Tente na próxima vez!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) baseado em {{numRatings}} avaliações.",
     "BestRatedKey": " = perk sugerido",
@@ -184,7 +175,6 @@
     "DamageType": "Mostrar items baseado no seu tipo de dano.",
     "Description": "Descrição",
     "Dupe": "Mostrar items duplicados",
-    "DupeInPostmaster": "Alguns itens duplicados estão no chefe dos correios.",
     "Engrams": "Mostrar engramas.",
     "EnterName": "Digite um nome de item:",
     "EnterNote": "Digite a anotação:",
@@ -279,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "Não é possível remover o item deste personagem.",
-    "ChangingPerks": "Mudança de perks não é suportada",
-    "ChangingPerksInfo": "Desculpe, não tem como alterar perks fora do jogo. Bem que gostaríamos!",
     "Drag": "Segure SHIFT ou mantenha o cursor sobre o inventário para mover uma parte.",
     "HidePopup": "Esconder este Popup",
-    "NeverShow": "Não mostre isso novamente.",
     "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não pode salvar dados no navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco. DIM não pode prosseguir.",
     "UpdateAvailable": "DIM atualizado",
@@ -517,10 +504,6 @@
     "Complete": "Completo",
     "Incomplete": "Incompleto"
   },
-  "Postmaster": {
-    "Desc": "Há 20 itens perdidos em seu Correio com seu {{store}}. Quaisquer novos itens irão substituir os existentes.",
-    "Limit": "Limite do Chefe de Correio"
-  },
   "Progress": {
     "CrucibleRank": "Ranque do Crisol",
     "Daily": "Diário",
@@ -530,6 +513,7 @@
     "ProfileMilestones": "Marcos da Conta",
     "ProfileQuests": "Jornadas da Conta",
     "Progress": "Progresso",
+    "QuestExpires": "Expires in ",
     "RewardEarned": "Recompensa ganha mas não resgatada",
     "RewardNotEarned": "Recompensa não ganha",
     "RewardRedeemed": "Recompensa resgatada",
@@ -550,7 +534,6 @@
     "ColorA11y": "Configuração de cegueira de cores",
     "ColumnSize": "{{num}} itens",
     "ColumnSizeAuto": "Auto",
-    "DIMPopupsReset": "Resetar todos os alertas ocultos",
     "Data": "Planilhas",
     "DontForgetDupes": "Não se esqueça que você pode buscar por is:dupe ou is:dupelower para localizar rapidamente itens duplicados, e você pode usar a ferramenta de comparação para avaliar itens relacionados.",
     "EnableAdvancedStats": "Mostrar a avaliação de estatísticas de qualidade em armaduras (D1)",

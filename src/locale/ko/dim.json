@@ -83,15 +83,6 @@
     "Banner": "DIM은 데스티니 2를 지원할 것입니다.",
     "ComingSoon": "저희는 저희의 능력이 되든 말든 콘솔에 데스티니 2가 출시하고 짧은 기간 안에 당신의 데스티니 2 캐릭터를 지원할 것입니다. 저희가 게임에 대해 배울 몇 주의 시간을 주세요. (플레이 할 시간도요!)"
   },
-  "DidYouKnow": {
-    "Collapse": "방금 DIM의 한 섹션을 없애셨습니다! 이것은 당신이 평소에 사용하지 않는 DIM의 섹션들을 없앨 때 유용할 것입니다.",
-    "DidYouKnow": "알고 계셨나요?",
-    "DontShowAgain": "이 팁을 다시 표시하지 않음",
-    "DoubleClick": "현재 접속하고 있는 (마지막으로 접속한) 캐릭터로 아이템을 옮기려고 하신다면, 해당 아이템을 더블 클릭하여 바로 착용할 수 있습니다.",
-    "DragAndDrop": "아이템은 서로 다른 캐릭터/금고 사이에서 끌어서 옮길 수 있습니다.",
-    "Expand": "다시 확장하려면 접은 항목의 맨 왼쪽의 더하기 아이콘을 누르세요.",
-    "TryNext": "한번 시도해보세요!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) {{numRatings}} 개의 평가에 근거함",
     "BestRatedKey": " = 추천 특성",
@@ -184,7 +175,6 @@
     "DamageType": "대미지 유형에 따른 아이템 표시",
     "Description": "설명",
     "Dupe": "중복된 아이템 표시",
-    "DupeInPostmaster": "우편 담당자에게 중복된 아이템이 있습니다.",
     "Engrams": "엔그램 보기",
     "EnterName": "아이템 이름 입력:",
     "EnterNote": "메모를 입력하세요:",
@@ -279,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "그 아이템은 해당 캐릭터에서 옮길 수 없습니다.",
-    "ChangingPerks": "특성 변경은 지원되지 않음",
-    "ChangingPerksInfo": "죄송하지만 게임 밖에서 특성을 바꿀 방법이 없습니다. 저희도 할 수 있었으면 좋겠어요!",
     "Drag": "묶음 일부분을 옮기기 위해 쉬프트를 누르고 있거나 드랍 존 위에 올리세요.",
     "HidePopup": "이 창 숨기기",
-    "NeverShow": "다시 표시 안 함",
     "NoStorage": "DIM이 데이터를 저장할 수 없음",
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 이 문제는 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 발생할 수 있습니다. DIM을 시작할 수 없습니다.",
     "UpdateAvailable": "DIM이 업데이트됨",
@@ -472,7 +459,7 @@
   },
   "Manifest": {
     "Build": "데스티니 정보 데이터베이스 구축 중",
-    "Download": "Bungie로부터 데스티니의 최신 정보를 받아 오는 중",
+    "Download": "Bungie에서 최신 데스티니 정보 받아 오는 중",
     "Error": "데스티니 정보를 가져오는데 실패했습니다:\n{{error}}\n새로고침 하여 다시 시도하세요.",
     "Load": "저장된 데스티니 정보를 불러오는 중",
     "LoadCharInv": "데스티니 캐릭터와 소지품 불러오기 실패",
@@ -517,10 +504,6 @@
     "Complete": "완료",
     "Incomplete": "미완료"
   },
-  "Postmaster": {
-    "Desc": "{{store}} 에 있는 우편 담당자에게 20개의 놓친 아이템이 있습니다. 모든 새 아이템들은 존재하는 아이템을 덮어씁니다.",
-    "Limit": "우편 담당자 한계"
-  },
   "Progress": {
     "CrucibleRank": "시련의 장 랭크",
     "Daily": "일간",
@@ -530,6 +513,7 @@
     "ProfileMilestones": "계정 이정표",
     "ProfileQuests": "계정 퀘스트",
     "Progress": "진척도",
+    "QuestExpires": "만료일까지 ",
     "RewardEarned": "제공되었지만 받지는 못한 보상",
     "RewardNotEarned": "보상을 받지 않음",
     "RewardRedeemed": "보상을 받음",
@@ -550,7 +534,6 @@
     "ColorA11y": "색맹 설정",
     "ColumnSize": "{{num}} 개의 아이템",
     "ColumnSizeAuto": "자동",
-    "DIMPopupsReset": "최근에 숨긴 정보 팁 복구하기",
     "Data": "스프레드시트",
     "DontForgetDupes": "빠르게 중복된 아이템들을 찾기 위해 is:dupe 나 is:dupelower 를 검색할 수 있고, 연관된 아이템을 비교 도구로 측정할 수 있습니다",
     "EnableAdvancedStats": "(데스티니 1) 스탯 품질 보여주기",
