@@ -25,8 +25,8 @@
         <div ng-if="vm.item.dmg && vm.item.dmg !== 'kinetic'" class="element" ng-class="::vm.item.dmg"></div>
       </div>
       <div class="item-type-info">
-        <div ng-if="vm.item.ammoType" class="ammo-type" ng-class="::vm.item.ammoType | ammoTypeClass"></div>
-        <span ng-i18next="[i18next]({ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType ? vm.classType : ' ', typeName: vm.item.typeName, context: vm.light ? 'Gear' : 'Consumable' })MovePopup.Subtitle"></span>
+        <div ng-if="vm.item.ammoType" class="ammo-type" ng-class="::vm.item.ammoType | ammoTypeClass"></div><span
+          ng-i18next="[i18next]({ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType ? vm.classType : ' ', typeName: vm.item.typeName, context: vm.light ? 'Gear' : 'Consumable' })MovePopup.Subtitle"></span>
       </div>
       <div ng-if="vm.item.objectives && !vm.item.hidePercentage" ng-i18next="[i18next]({ percent: vm.item.percentComplete })ItemService.PercentComplete"></div>
       <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
@@ -61,7 +61,7 @@
       </div>
       <img class="item-details" ng-if="vm.item.type === 'Emblems' || vm.item.type === 'Emblem'" ng-src="{{vm.item.secondaryIcon | bungieIcon}}"
         width="237" height="48" />
-      <div class="masterwork-progress" ng-if="vm.item.masterworkInfo">
+      <div class="masterwork-progress" ng-if="vm.item.isMasterwork && vm.item.masterworkInfo">
         <img ng-src="{{ ::vm.item.masterworkInfo.typeIcon | bungieIcon }}" title="{{ ::vm.item.masterworkInfo.typeName }}" />
         <span> {{ ::vm.item.masterworkInfo.typeDesc }} <strong> {{ ::vm.item.masterworkInfo.progress }} </strong></span>
       </div>

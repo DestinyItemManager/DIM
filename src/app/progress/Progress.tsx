@@ -437,7 +437,7 @@ class Progress extends React.Component<Props, State> {
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
 
-      if (itemDef.redacted) {
+      if (!itemDef || itemDef.redacted) {
         return false;
       }
 
@@ -452,6 +452,9 @@ class Progress extends React.Component<Props, State> {
 
     filteredItems.sort(
       chainComparator(
+        compareBy((item) => {
+          return item.expirationDate ? new Date(item.expirationDate) : new Date(8640000000000000);
+        }),
         compareBy((item) => {
           const itemDef = defs.InventoryItem.get(item.itemHash);
           return itemDef.itemType;
