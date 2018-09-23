@@ -91,7 +91,7 @@ function LoadoutService(): LoadoutServiceType {
     let loadouts: Loadout[] = [];
     if (version === 'v3.0') {
       const ids = data['loadouts-v3.0'];
-      loadouts = ids.map((id) => hydrate(data[id]));
+      loadouts = ids.filter((id) => data[id]).map((id) => hydrate(data[id]));
     }
 
     const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
