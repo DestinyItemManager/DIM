@@ -1,13 +1,11 @@
-import { destinyAccountResolver } from "../accounts/destiny-account-resolver";
-import { ReactStateDeclaration } from "@uirouter/react";
-import Destiny from "../shell/Destiny";
-import { angular2react } from "angular2react";
-import { D1InventoryComponent } from "../destiny1/d1-inventory.component";
-import { lazyInjector } from "../../lazyInjector";
+import { destinyAccountResolver } from '../accounts/destiny-account-resolver';
+import { ReactStateDeclaration } from '@uirouter/react';
+import Destiny from '../shell/Destiny';
 import { states as recordBookStates } from '../record-books/routes';
 import { states as activitiesStates } from '../activities/routes';
 import { states as loadoutBuilderStates } from '../loadout-builder/routes';
 import { states as vendorsStates } from '../vendors/routes';
+import Inventory from '../inventory/Inventory';
 
 // Root state for Destiny 1 views
 export const states: ReactStateDeclaration[] = [
@@ -19,10 +17,11 @@ export const states: ReactStateDeclaration[] = [
     resolve: {
       account: destinyAccountResolver(1)
     }
-  }, {
+  },
+  {
     name: 'destiny1.inventory',
     url: '/inventory',
-    component: angular2react('inventory1', D1InventoryComponent, lazyInjector.$injector as angular.auto.IInjectorService)
+    component: Inventory
   },
   ...recordBookStates,
   ...activitiesStates,

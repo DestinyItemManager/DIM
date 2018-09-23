@@ -59,16 +59,11 @@ const allVendors = [
 
 // Vendors we don't want to load by default
 const vendorBlackList = [
-  2021251983, // Postmaster,
+  2021251983 // Postmaster,
 ];
 
 // Hashes for 'Decode Engram'
-const categoryBlacklist = [
-  3574600435,
-  3612261728,
-  1333567905,
-  2634310414
-];
+const categoryBlacklist = [3574600435, 3612261728, 1333567905, 2634310414];
 
 const xur = 2796397637;
 
@@ -145,7 +140,10 @@ export interface VendorServiceType {
   reloadVendors(): void;
   getVendors(): this['vendors'];
   requestRatings(): Promise<void>;
-  countCurrencies(stores: D1Store[], vendors: this['vendors']): {
+  countCurrencies(
+    stores: D1Store[],
+    vendors: this['vendors']
+  ): {
     [currencyHash: number]: number;
   };
 }
@@ -185,7 +183,10 @@ function VendorService(): VendorServiceType {
       service.vendors = {};
       service.vendorsLoaded = false;
     })
-    .switchMap((account) => D1StoresService.getStoresStream(account!), (account, stores) => [account!, stores!])
+    .switchMap(
+      (account) => D1StoresService.getStoresStream(account!),
+      (account, stores) => [account!, stores!]
+    )
     .switchMap(([account, stores]: [DestinyAccount, D1Store[]]) => loadVendors(account, stores))
     // Keep track of the last value for new subscribers
     .publishReplay(1);
@@ -235,7 +236,10 @@ function VendorService(): VendorServiceType {
   /**
    * Returns a promise for a fresh view of the vendors and their items.
    */
-  function loadVendors(account: DestinyAccount, stores: D1Store[]): IPromise<[D1Store[], { [vendorHash: number]: Vendor }]> {
+  function loadVendors(
+    account: DestinyAccount,
+    stores: D1Store[]
+  ): IPromise<[D1Store[], { [vendorHash: number]: Vendor }]> {
     const characters = (stores || []).filter((s) => !s.isVault);
 
     const reloadPromise = getDefinitions()
@@ -246,31 +250,45 @@ function VendorService(): VendorServiceType {
         service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
         service.loadedVendors = 0;
 
-        return $q.all(_.flatten(vendorList.map((vendorDef) => {
-          if (vendorBlackList.includes(vendorDef.hash)) {
-            return null;
-          }
+        return $q.all(
+          _.flatten(
+            vendorList.map((vendorDef) => {
+              if (vendorBlackList.includes(vendorDef.hash)) {
+                return null;
+              }
 
-          if (service.vendors[vendorDef.hash] &&
-              _.all(stores, (store) =>
-                cachedVendorUpToDate(service.vendors[vendorDef.hash].cacheKeys[store.id],
-                                         store,
-                                         vendorDef))) {
-            service.loadedVendors++;
-            return service.vendors[vendorDef.hash];
-          } else {
-            return $q.all(characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs)))
-              .then((vendors) => {
-                const nonNullVendors = _.compact(vendors);
-                if (nonNullVendors.length) {
-                  const mergedVendor = mergeVendors(_.compact(vendors));
-                  service.vendors[mergedVendor.hash] = mergedVendor;
-                } else {
-                  delete service.vendors[vendorDef.hash];
-                }
-              });
-          }
-        })));
+              if (
+                service.vendors[vendorDef.hash] &&
+                _.all(stores, (store) =>
+                  cachedVendorUpToDate(
+                    service.vendors[vendorDef.hash].cacheKeys[store.id],
+                    store,
+                    vendorDef
+                  )
+                )
+              ) {
+                service.loadedVendors++;
+                return service.vendors[vendorDef.hash];
+              } else {
+                return $q
+                  .all(
+                    characters.map((store) =>
+                      loadVendorForCharacter(account, store, vendorDef, defs)
+                    )
+                  )
+                  .then((vendors) => {
+                    const nonNullVendors = _.compact(vendors);
+                    if (nonNullVendors.length) {
+                      const mergedVendor = mergeVendors(_.compact(vendors));
+                      service.vendors[mergedVendor.hash] = mergedVendor;
+                    } else {
+                      delete service.vendors[vendorDef.hash];
+                    }
+                  });
+              }
+            })
+          )
+        );
       })
       .then(() => {
         $rootScope.$broadcast('dim-filter-invalidate');
@@ -333,7 +351,12 @@ function VendorService(): VendorServiceType {
     mergedCategory.hasBounties = mergedCategory.hasBounties || otherCategory.hasBounties;
   }
 
-  function loadVendorForCharacter(account: DestinyAccount, store: D1Store, vendorDef, defs: D1ManifestDefinitions) {
+  function loadVendorForCharacter(
+    account: DestinyAccount,
+    store: D1Store,
+    vendorDef,
+    defs: D1ManifestDefinitions
+  ) {
     return loadVendor(account, store, vendorDef, defs)
       .then((vendor) => {
         service.loadedVendors++;
@@ -341,8 +364,12 @@ function VendorService(): VendorServiceType {
       })
       .catch((e) => {
         service.loadedVendors++;
-        if (vendorDef.hash !== 2796397637 && vendorDef.hash !== 2610555297) { // Xur, IB
-          console.error(`Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`, e);
+        if (vendorDef.hash !== 2796397637 && vendorDef.hash !== 2610555297) {
+          // Xur, IB
+          console.error(
+            `Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`,
+            e
+          );
         }
         return null;
       });
@@ -352,9 +379,11 @@ function VendorService(): VendorServiceType {
    * Get this character's level for the given faction.
    */
   function factionLevel(store: D1Store, factionHash: number) {
-    const rep = store.progression && store.progression.progressions.find((rep) => {
-      return rep.faction && rep.faction.hash === factionHash;
-    });
+    const rep =
+      store.progression &&
+      store.progression.progressions.find((rep) => {
+        return rep.faction && rep.faction.hash === factionHash;
+      });
     return (rep && rep.level) || 0;
   }
 
@@ -386,17 +415,25 @@ function VendorService(): VendorServiceType {
     store: D1Store,
     vendorDef
   ) {
-    return vendor &&
+    return (
+      vendor &&
       vendor.expires > Date.now() &&
       vendor.factionLevel === factionLevel(store, vendorDef.summary.factionHash) &&
-      vendor.factionAligned === factionAligned(store, vendorDef.summary.factionHash);
+      vendor.factionAligned === factionAligned(store, vendorDef.summary.factionHash)
+    );
   }
 
-  function loadVendor(account: DestinyAccount, store: D1Store, vendorDef, defs: D1ManifestDefinitions) {
+  function loadVendor(
+    account: DestinyAccount,
+    store: D1Store,
+    vendorDef,
+    defs: D1ManifestDefinitions
+  ) {
     const vendorHash = vendorDef.hash;
 
     const key = vendorKey(store, vendorHash);
-    return idbKeyval.get<Vendor>(key)
+    return idbKeyval
+      .get<Vendor>(key)
       .then((vendor) => {
         if (cachedVendorUpToDate(vendor, store, vendorDef)) {
           // console.log("loaded local", vendorDef.summary.vendorName, key, vendor);
@@ -411,8 +448,7 @@ function VendorService(): VendorServiceType {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
               vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
-              return idbKeyval.set(key, vendor)
-                .then(() => vendor);
+              return idbKeyval.set(key, vendor).then(() => vendor);
             })
             .catch((e) => {
               // console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
@@ -421,16 +457,14 @@ function VendorService(): VendorServiceType {
                   failed: true,
                   code: e.code,
                   status: e.status,
-                  expires: Date.now() + (60 * 60 * 1000) + ((Math.random() - 0.5) * (60 * 60 * 1000)),
+                  expires: Date.now() + 60 * 60 * 1000 + (Math.random() - 0.5) * (60 * 60 * 1000),
                   factionLevel: factionLevel(store, vendorDef.summary.factionHash),
                   factionAligned: factionAligned(store, vendorDef.summary.factionHash)
                 };
 
-                return idbKeyval
-                  .set(key, vendor)
-                  .then(() => {
-                    throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
-                  });
+                return idbKeyval.set(key, vendor).then(() => {
+                  throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
+                });
               }
               throw new Error(`Failed to load vendor ${vendorDef.summary.vendorName}`);
             });
@@ -457,12 +491,12 @@ function VendorService(): VendorServiceType {
       // Xur always expires in an hour, because Bungie's data only
       // says when his stock will refresh, not when he becomes
       // unavailable.
-      return Math.min(date, Date.now() + (60 * 60 * 1000));
+      return Math.min(date, Date.now() + 60 * 60 * 1000);
     }
 
     // If the expiration is too far in the future, replace it with +8h
     if (date - Date.now() > 7 * 24 * 60 * 60 * 1000) {
-      return Date.now() + (8 * 60 * 60 * 1000);
+      return Date.now() + 8 * 60 * 60 * 1000;
     }
 
     return date;
@@ -501,16 +535,19 @@ function VendorService(): VendorServiceType {
       hasBounties: false
     };
 
-    const saleItems: any[] = flatMap(vendor.saleItemCategories, (categoryData: any) => categoryData.saleItems);
+    const saleItems: any[] = flatMap(
+      vendor.saleItemCategories,
+      (categoryData: any) => categoryData.saleItems
+    );
 
     saleItems.forEach((saleItem) => {
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
     });
 
-    return processItems({ id: null } as any, saleItems.map((i) => i.item))
-      .then((items) => {
-        const itemsById = _.indexBy(items, 'id');
-        const categories = _.compact(_.map(vendor.saleItemCategories, (category: any) => {
+    return processItems({ id: null } as any, saleItems.map((i) => i.item)).then((items) => {
+      const itemsById = _.indexBy(items, 'id');
+      const categories = _.compact(
+        _.map(vendor.saleItemCategories, (category: any) => {
           const categoryInfo = vendorDef.categories[category.categoryIndex];
           if (_.contains(categoryBlacklist, categoryInfo.categoryHash)) {
             return null;
@@ -520,17 +557,26 @@ function VendorService(): VendorServiceType {
             const unlocked = isSaleItemUnlocked(saleItem);
             return {
               index: saleItem.vendorItemIndex,
-              costs: saleItem.costs.map((cost) => {
-                return {
-                  value: cost.value,
-                  currency: _.pick(defs.InventoryItem.get(cost.itemHash), 'itemName', 'icon', 'itemHash')
-                };
-              }).filter((c) => c.value > 0),
+              costs: saleItem.costs
+                .map((cost) => {
+                  return {
+                    value: cost.value,
+                    currency: _.pick(
+                      defs.InventoryItem.get(cost.itemHash),
+                      'itemName',
+                      'icon',
+                      'itemHash'
+                    )
+                  };
+                })
+                .filter((c) => c.value > 0),
               item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
               // TODO: caveat, this won't update very often!
               unlocked,
               unlockedByCharacter: unlocked ? [store.id] : [],
-              failureStrings: saleItem.failureIndexes.map((i) => vendorDef.failureStrings[i]).join('. ')
+              failureStrings: saleItem.failureIndexes
+                .map((i) => vendorDef.failureStrings[i])
+                .join('. ')
             };
           });
 
@@ -542,7 +588,12 @@ function VendorService(): VendorServiceType {
           let hasBounties = false;
           categoryItems.forEach((saleItem) => {
             const item = saleItem.item;
-            if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
+            if (
+              item.bucket.sort === 'Weapons' ||
+              item.bucket.sort === 'Armor' ||
+              item.type === 'Artifact' ||
+              item.type === 'Ghost'
+            ) {
               if (item.talentGrid) {
                 item.dtrRoll = _.compact(item.talentGrid.nodes.map((i) => i.dtrRoll)).join(';');
               }
@@ -551,13 +602,13 @@ function VendorService(): VendorServiceType {
             if (item.type === 'Ship' || item.type === 'Vehicle') {
               hasVehicles = true;
             }
-            if (item.type === "Emblem" || item.type === "Shader") {
+            if (item.type === 'Emblem' || item.type === 'Shader') {
               hasShadersEmbs = true;
             }
-            if (item.type === "Emote") {
+            if (item.type === 'Emote') {
               hasEmotes = true;
             }
-            if (item.type === "Material" || item.type === "Consumable") {
+            if (item.type === 'Material' || item.type === 'Consumable') {
               hasConsumables = true;
             }
             if (item.type === 'Bounties') {
@@ -576,23 +627,24 @@ function VendorService(): VendorServiceType {
             hasConsumables,
             hasBounties
           };
-        }));
+        })
+      );
 
-        items.forEach((item: any) => {
-          item.vendorIcon = createdVendor.icon;
-        });
-
-        createdVendor.categories = categories;
-
-        createdVendor.hasArmorWeaps = _.any(categories, (c) => c.hasArmorWeaps);
-        createdVendor.hasVehicles = _.any(categories, (c) => c.hasVehicles);
-        createdVendor.hasShadersEmbs = _.any(categories, (c) => c.hasShadersEmbs);
-        createdVendor.hasEmotes = _.any(categories, (c) => c.hasEmotes);
-        createdVendor.hasConsumables = _.any(categories, (c) => c.hasConsumables);
-        createdVendor.hasBounties = _.any(categories, (c) => c.hasBounties);
-
-        return createdVendor;
+      items.forEach((item: any) => {
+        item.vendorIcon = createdVendor.icon;
       });
+
+      createdVendor.categories = categories;
+
+      createdVendor.hasArmorWeaps = _.any(categories, (c) => c.hasArmorWeaps);
+      createdVendor.hasVehicles = _.any(categories, (c) => c.hasVehicles);
+      createdVendor.hasShadersEmbs = _.any(categories, (c) => c.hasShadersEmbs);
+      createdVendor.hasEmotes = _.any(categories, (c) => c.hasEmotes);
+      createdVendor.hasConsumables = _.any(categories, (c) => c.hasConsumables);
+      createdVendor.hasBounties = _.any(categories, (c) => c.hasBounties);
+
+      return createdVendor;
+    });
   }
 
   function isSaleItemUnlocked(saleItem) {
@@ -632,20 +684,20 @@ function VendorService(): VendorServiceType {
     currencies.forEach((currencyHash) => {
       // Legendary marks and glimmer are special cases
       switch (currencyHash) {
-      case 2534352370:
-        totalCoins[currencyHash] = D1StoresService.getVault()!.legendaryMarks;
-        break;
-      case 3159615086:
-        totalCoins[currencyHash] = D1StoresService.getVault()!.glimmer;
-        break;
-      case 2749350776:
-        totalCoins[currencyHash] = D1StoresService.getVault()!.silver;
-        break;
-      default:
-        totalCoins[currencyHash] = sum(stores, (store) => {
-          return store.amountOfItem({ hash: currencyHash } as any);
-        });
-        break;
+        case 2534352370:
+          totalCoins[currencyHash] = D1StoresService.getVault()!.legendaryMarks;
+          break;
+        case 3159615086:
+          totalCoins[currencyHash] = D1StoresService.getVault()!.glimmer;
+          break;
+        case 2749350776:
+          totalCoins[currencyHash] = D1StoresService.getVault()!.silver;
+          break;
+        default:
+          totalCoins[currencyHash] = sum(stores, (store) => {
+            return store.amountOfItem({ hash: currencyHash } as any);
+          });
+          break;
       }
     });
     return totalCoins;

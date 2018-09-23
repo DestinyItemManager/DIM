@@ -1,12 +1,25 @@
-import { DestinyVendorItemDefinition, DestinyVendorSaleItemComponent, DestinyItemComponentSetOfint32, DestinyInventoryItemDefinition, DestinyItemInstanceComponent, DestinyVendorDefinition, ItemBindStatus, ItemLocation, TransferStatuses, ItemState, DestinyItemSocketEntryPlugItemDefinition, DestinyObjectiveProgress } from "bungie-api-ts/destiny2";
-import { D2ManifestDefinitions } from "../destiny2/d2-definitions.service";
+import {
+  DestinyVendorItemDefinition,
+  DestinyVendorSaleItemComponent,
+  DestinyItemComponentSetOfint32,
+  DestinyInventoryItemDefinition,
+  DestinyItemInstanceComponent,
+  DestinyVendorDefinition,
+  ItemBindStatus,
+  ItemLocation,
+  TransferStatuses,
+  ItemState,
+  DestinyItemSocketEntryPlugItemDefinition,
+  DestinyObjectiveProgress
+} from 'bungie-api-ts/destiny2';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { equals } from 'angular';
-import { makeItem } from "../inventory/store/d2-item-factory.service";
-import { D2ReviewDataCache } from "../destinyTrackerApi/d2-reviewDataCache";
-import { D2Item } from "../inventory/item-types";
-import { InventoryBuckets } from "../inventory/inventory-buckets";
-import { D2RatingData } from "../item-review/d2-dtr-api-types";
-import { sum } from "../util";
+import { makeItem } from '../inventory/store/d2-item-factory.service';
+import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
+import { D2Item } from '../inventory/item-types';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { D2RatingData } from '../item-review/d2-dtr-api-types';
+import { sum } from '../util';
 
 /**
  * A displayable vendor item. The only state it holds is raw responses/definitions - all
@@ -21,7 +34,7 @@ export class VendorItem {
     defs: D2ManifestDefinitions,
     plugItemDef: DestinyItemSocketEntryPlugItemDefinition,
     reviewCache?: D2ReviewDataCache,
-    canPurchase = true,
+    canPurchase = true
   ): VendorItem {
     return new VendorItem(
       defs,
@@ -43,9 +56,10 @@ export class VendorItem {
     canPurchase: boolean,
     reviewCache?: D2ReviewDataCache
   ): VendorItem {
-    const failureStrings = (vendorItemDef && vendorDef)
-      ? (vendorItemDef.failureIndexes || []).map((i) => vendorDef!.failureStrings[i])
-      : [];
+    const failureStrings =
+      vendorItemDef && vendorDef
+        ? (vendorItemDef.failureIndexes || []).map((i) => vendorDef!.failureStrings[i])
+        : [];
 
     return new VendorItem(
       defs,
@@ -73,9 +87,10 @@ export class VendorItem {
       instance = itemComponents.instances.data[saleItem.vendorItemIndex];
     }
     const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
-    const failureStrings = (saleItem && vendorDef)
-      ? (saleItem.failureIndexes || []).map((i) => vendorDef!.failureStrings[i])
-      : [];
+    const failureStrings =
+      saleItem && vendorDef
+        ? (saleItem.failureIndexes || []).map((i) => vendorDef!.failureStrings[i])
+        : [];
 
     return new VendorItem(
       defs,
@@ -111,9 +126,7 @@ export class VendorItem {
     canInsert: boolean,
     enableFailReasons: string[]
   ): VendorItem {
-    const fakeInstance = {
-
-    } as any as DestinyItemInstanceComponent;
+    const fakeInstance = ({} as any) as DestinyItemInstanceComponent;
     return new VendorItem(
       defs,
       defs.InventoryItem.get(itemHash),
@@ -126,7 +139,7 @@ export class VendorItem {
           data: {
             [itemHash]: {
               objectives,
-              flavorObjective: undefined as any as DestinyObjectiveProgress,
+              flavorObjective: (undefined as any) as DestinyObjectiveProgress
             }
           },
           privacy: 2
@@ -137,9 +150,12 @@ export class VendorItem {
         sockets: { data: {}, privacy: 2 },
         talentGrids: { data: {}, privacy: 2 },
         plugStates: { data: {}, privacy: 2 },
-        instances: { data: {
-          [itemHash]: fakeInstance
-        }, privacy: 2 }
+        instances: {
+          data: {
+            [itemHash]: fakeInstance
+          },
+          privacy: 2
+        }
       },
       undefined,
       canInsert
@@ -155,9 +171,7 @@ export class VendorItem {
     canInsert: boolean,
     enableFailReasons: string[]
   ): VendorItem {
-    const fakeInstance = {
-
-    } as any as DestinyItemInstanceComponent;
+    const fakeInstance = ({} as any) as DestinyItemInstanceComponent;
 
     const modDef = defs.InventoryItem.get(itemHash);
     const itemDef = defs.InventoryItem.get(attachedItemHash);
@@ -183,7 +197,7 @@ export class VendorItem {
           data: {
             [itemHash]: {
               objectives,
-              flavorObjective: undefined as any as DestinyObjectiveProgress,
+              flavorObjective: (undefined as any) as DestinyObjectiveProgress
             }
           },
           privacy: 2
@@ -194,9 +208,12 @@ export class VendorItem {
         sockets: { data: {}, privacy: 2 },
         talentGrids: { data: {}, privacy: 2 },
         plugStates: { data: {}, privacy: 2 },
-        instances: { data: {
-          [itemHash]: fakeInstance
-        }, privacy: 2 }
+        instances: {
+          data: {
+            [itemHash]: fakeInstance
+          },
+          privacy: 2
+        }
       },
       undefined,
       canInsert
@@ -224,7 +241,7 @@ export class VendorItem {
     // TODO: this'll be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
     instance?: DestinyItemInstanceComponent,
-    canPurchase = true,
+    canPurchase = true
   ) {
     this.defs = defs;
     this.vendorItemDef = vendorItemDef;
@@ -269,7 +286,7 @@ export class VendorItem {
    * Should this be displayed in a vendor?
    */
   get canBeSold() {
-    return (!this.saleItem || this.saleItem.failureIndexes.length === 0);
+    return !this.saleItem || this.saleItem.failureIndexes.length === 0;
   }
 
   /**
@@ -284,7 +301,7 @@ export class VendorItem {
   }
 
   get primaryStat() {
-    return (this.instance && this.instance.primaryStat && this.instance.primaryStat.value);
+    return this.instance && this.instance.primaryStat && this.instance.primaryStat.value;
   }
 
   get rating(): number | null {
@@ -303,12 +320,17 @@ export class VendorItem {
   }
 
   get objectiveProgress(): number {
-    if (this.itemComponents && this.itemComponents.objectives && this.itemComponents.objectives.data[this.inventoryItem.hash]) {
+    if (
+      this.itemComponents &&
+      this.itemComponents.objectives &&
+      this.itemComponents.objectives.data[this.inventoryItem.hash]
+    ) {
       const objectives = this.itemComponents.objectives.data[this.inventoryItem.hash].objectives;
       return sum(objectives, (objective) => {
-        const objectiveDef = this.defs.Objective.get(objective.objectiveHash);
-        if (objectiveDef.completionValue) {
-          return Math.min(1, (objective.progress || 0) / objectiveDef.completionValue) / objectives.length;
+        if (objective.completionValue) {
+          return (
+            Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length
+          );
         } else {
           return 0;
         }
@@ -319,20 +341,19 @@ export class VendorItem {
 
   equals(other: VendorItem) {
     // Defs can be ref-compared
-    return this.vendorItemDef === other.vendorItemDef &&
+    return (
+      this.vendorItemDef === other.vendorItemDef &&
       this.canPurchase === other.canPurchase &&
       this.rating === other.rating &&
       // Deep equals
-      equals(this.saleItem, other.saleItem);
+      equals(this.saleItem, other.saleItem)
+    );
   }
 
   /**
    * TODO: This is really gross, but it allows us to make enough of an item to show the move popup.
    */
-  toDimItem(
-    buckets: InventoryBuckets,
-    reviewData: D2RatingData | null
-  ): D2Item | null {
+  toDimItem(buckets: InventoryBuckets, reviewData: D2RatingData | null): D2Item | null {
     return makeItem(
       this.defs,
       buckets,
@@ -342,7 +363,9 @@ export class VendorItem {
       this.itemComponents,
       {
         itemHash: this.itemHash,
-        itemInstanceId: this.saleItem ? this.saleItem.vendorItemIndex.toString() : this.itemHash.toString(),
+        itemInstanceId: this.saleItem
+          ? this.saleItem.vendorItemIndex.toString()
+          : this.itemHash.toString(),
         quantity: this.vendorItemDef ? this.vendorItemDef.quantity : 1,
         bindStatus: ItemBindStatus.NotBound,
         location: ItemLocation.Vendor,

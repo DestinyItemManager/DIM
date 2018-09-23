@@ -1,6 +1,4 @@
-import {
-  DestinyProfileResponse
-} from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -11,7 +9,6 @@ import './collections.scss';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
 import { DimStore } from '../inventory/store-types';
-import Kiosk from './Kiosk';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -70,17 +67,19 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
       loadingTracker.addPromise(this.loadCollections());
     });
 
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
-      if (stores) {
-        const ownedItemHashes = new Set<number>();
-        for (const store of stores) {
-          for (const item of store.items) {
-            ownedItemHashes.add(item.hash);
+    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
+      (stores) => {
+        if (stores) {
+          const ownedItemHashes = new Set<number>();
+          for (const store of stores) {
+            for (const item of store.items) {
+              ownedItemHashes.add(item.hash);
+            }
           }
+          this.setState({ stores, ownedItemHashes });
         }
-        this.setState({ stores, ownedItemHashes });
       }
-    });
+    );
   }
 
   componentWillUnmount() {
@@ -89,22 +88,17 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
   }
 
   render() {
-    const { defs, profileResponse, trackerService, ownedItemHashes } = this.state;
-    const { account } = this.props;
+    const { defs, profileResponse, trackerService } = this.state;
 
     if (!profileResponse || !defs) {
-      return <div className="vendor d2-vendors dim-page"><Loading/></div>;
+      return (
+        <div className="vendor d2-vendors dim-page">
+          <Loading />
+        </div>
+      );
     }
 
     // TODO: a lot of this processing should happen at setState, not render?
-
-    // Note that today, there is only one kiosk vendor
-    const kioskVendors = new Set(Object.keys(profileResponse.profileKiosks.data.kioskItems));
-    _.each(profileResponse.characterKiosks.data, (kiosk) => {
-      _.each(kiosk.kioskItems, (_, kioskHash) => {
-        kioskVendors.add(kioskHash);
-      });
-    });
 
     const plugSetHashes = new Set(Object.keys(profileResponse.profilePlugSets.data.plugs));
     _.each(profileResponse.characterPlugSets.data, (plugSet) => {
@@ -116,32 +110,13 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     return (
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Ornaments">
-          <Ornaments
-            defs={defs}
-            profileResponse={profileResponse}
-          />
+          <Ornaments defs={defs} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Catalysts">
-          <Catalysts
-            defs={defs}
-            profileResponse={profileResponse}
-          />
-        </ErrorBoundary>
-        <ErrorBoundary name="Kiosks">
-          {Array.from(kioskVendors).map((vendorHash) =>
-            <Kiosk
-              key={vendorHash}
-              defs={defs}
-              vendorHash={Number(vendorHash)}
-              items={itemsForKiosk(profileResponse, Number(vendorHash))}
-              trackerService={trackerService}
-              ownedItemHashes={ownedItemHashes}
-              account={account}
-            />
-          )}
+          <Catalysts defs={defs} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="PlugSets">
-          {Array.from(plugSetHashes).map((plugSetHash) =>
+          {Array.from(plugSetHashes).map((plugSetHash) => (
             <PlugSet
               key={plugSetHash}
               defs={defs}
@@ -149,13 +124,23 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
               items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
               trackerService={trackerService}
             />
-          )}
+          ))}
         </ErrorBoundary>
         <div className="collections-partners">
-          <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://destinysets.com">
+          <a
+            className="collections-partner dim-button"
+            target="_blank"
+            rel="noopener"
+            href="https://destinysets.com"
+          >
             {t('Vendors.DestinySets')}
           </a>
-          <a className="collections-partner dim-button" target="_blank" rel="noopener" href="https://lowlidev.com.au/destiny/maps">
+          <a
+            className="collections-partner dim-button"
+            target="_blank"
+            rel="noopener"
+            href="https://lowlidev.com.au/destiny/maps"
+          >
             {t('Vendors.DestinyMap')}
           </a>
         </div>
@@ -164,10 +149,10 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
   }
 }
 
-function itemsForKiosk(profileResponse: DestinyProfileResponse, vendorHash: number) {
-  return profileResponse.profileKiosks.data.kioskItems[vendorHash].concat(_.flatten(Object.values(profileResponse.characterKiosks.data).map((d) => d.kioskItems[vendorHash])));
-}
-
 function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
-  return profileResponse.profilePlugSets.data.plugs[plugSetHash].concat(_.flatten(Object.values(profileResponse.characterPlugSets.data).map((d) => d.plugs[plugSetHash])));
+  return profileResponse.profilePlugSets.data.plugs[plugSetHash].concat(
+    _.flatten(
+      Object.values(profileResponse.characterPlugSets.data).map((d) => d.plugs[plugSetHash])
+    )
+  );
 }

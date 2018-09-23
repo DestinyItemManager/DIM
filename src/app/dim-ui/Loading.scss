@@ -33,7 +33,8 @@
   .outer {
     stroke-dasharray: 1000;
     stroke-dashoffset: 1000;
-    animation: dim-loading-dash $logoDuration ease-in-out ($initialDelay + $logoDelay) alternate infinite;
+    animation: dim-loading-dash $logoDuration ease-in-out ($initialDelay + $logoDelay) alternate
+      infinite;
   }
   .inner {
     animation: dim-loading-pop $logoDuration ease-in ($initialDelay + $logoDelay) forwards;
@@ -45,7 +46,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    animation: dim-loading-rotateGrow $outlineDuration linear ($initialDelay + $outlineDelay) alternate infinite;
+    animation: dim-loading-rotateGrow $outlineDuration linear ($initialDelay + $outlineDelay)
+      alternate infinite;
     opacity: 0;
   }
   .outlines2 {
@@ -63,7 +65,8 @@
     position: absolute;
     border: 1px solid #999;
   }
-  .outlines, .outlines2 {
+  .outlines,
+  .outlines2 {
     .outline:nth-child(2) {
       transform: rotate(45deg);
     }

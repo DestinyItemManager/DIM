@@ -51,8 +51,7 @@
     "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
-    "VendorNotFound": "Vendor data is unavailable.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "Vendor data is unavailable."
   },
   "Compare": {
     "All": "{{type}} comparisons ({{quantity}})",
@@ -84,15 +83,6 @@
     "Banner": "DIM will support Destiny 2",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
-  "DidYouKnow": {
-    "Collapse": "You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don't need to normally use.",
-    "DidYouKnow": "Did you know?",
-    "DontShowAgain": "Don't show this tip again",
-    "DoubleClick": "If you're moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.",
-    "DragAndDrop": "Items can be dragged and dropped between different characters/vault columns.",
-    "Expand": "To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.",
-    "TryNext": "Try it out next time!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
@@ -102,6 +92,7 @@
     "Delete": "Delete",
     "Edit": "Edit",
     "ForGameMode": "For game mode",
+    "ForPlatform": "For platform(s)",
     "Help": "Write a review (optional)",
     "HelpCons": "Describe the negatives of this weapon (optional)",
     "HelpPros": "Describe the positives of this weapon (optional)",
@@ -115,6 +106,7 @@
       "Xbox": "XBox Only"
     },
     "Pros": "Pros",
+    "RatingsOptions": "Ratings Options",
     "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
     "ServiceSubmitError": "Destiny tracker service submit failed.",
@@ -183,7 +175,6 @@
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items",
-    "DupeInPostmaster": "Some item duplicates are at the postmaster.",
     "Engrams": "Shows engrams.",
     "EnterName": "Enter an item name:",
     "EnterNote": "Enter notes text:",
@@ -217,11 +208,12 @@
     "PartialMatch": "Shows items where their name/perk has a partial match to the filter text.",
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
-    "PowerMod": "Items that have a mod to increase their Power.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
     "Rating": "Shows weapons based on their rating from Destiny Tracker.",
+    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "Releases": {
@@ -259,16 +251,13 @@
     "WeaponType": "Shows weapons based on their weapon type.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
-  "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
-  },
   "Header": {
     "About": "About",
     "Back": "Go Back",
     "BulkTag": "Bulk tag items",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "Search item/perk or {{example}}",
+    "FilterHelpBrief": "Search items",
     "Filters": "Filters",
     "Inventory": "Inventory",
     "Refresh": "Refresh Destiny Data",
@@ -280,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
-    "ChangingPerks": "Changing Perks Not Supported",
-    "ChangingPerksInfo": "Sorry, there's no way to change perks outside the game. We wish we could!",
     "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
     "HidePopup": "Hide This Popup",
-    "NeverShow": "Never show me this again.",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
     "UpdateAvailable": "DIM Updated",
@@ -500,6 +486,7 @@
     "OverviewTab": "Overview",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
+    "Rewards": "Rewards:",
     "Split": "Split",
     "Store": "Store",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -517,20 +504,16 @@
     "Complete": "Complete",
     "Incomplete": "Incomplete"
   },
-  "Postmaster": {
-    "Desc": "There are 20 lost items at the Postmaster on your {{store}}. Any new items will overwrite the existing.",
-    "Limit": "Postmaster Limit"
-  },
   "Progress": {
     "CrucibleRank": "Crucible Ranks",
     "Daily": "Daily",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",
-    "Milestones": "Milestones",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
-    "Quests": "Pursuits & Quests",
+    "QuestExpires": "Expires in ",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",
@@ -551,7 +534,6 @@
     "ColorA11y": "Color blindness configuration",
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",
-    "DIMPopupsReset": "Reset previously hidden info tips",
     "Data": "Spreadsheets",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
@@ -597,7 +579,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "Level": "Level",
-    "MaxBasePower": "Max Base Power (w/o mods)",
+    "MaxBasePower": "Max Power",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",

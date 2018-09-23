@@ -5,49 +5,75 @@
 }
 
 #filter-input {
-  width: 250px;
-  margin-left: -3px;
-  margin-top: 4px;
-  padding-right: 20px;
   border-radius: 0;
   -webkit-appearance: none;
+  height: 25px;
+}
+
+dim-search-filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: rgb(46, 46, 46);
+  border-bottom: 1px solid gray;
+  padding-left: 5px;
+  margin-left: -3px;
+  height: 25px;
+  width: 275px;
 
   @media (max-width: 1100px) {
-    width: 175px;
+    width: 200px;
+  }
+  @include phone-portrait {
+    width: auto;
+    height: 34px;
+  }
+
+  &:hover,
+  &:focus {
+    background: transparent;
+    outline: none;
+    border-bottom: 1px solid $orange;
+  }
+
+  input[type='text'] {
+    border: none;
+    color: white;
+    background: transparent;
+    outline: none;
+    flex: 1;
   }
 }
 
 .search-link {
-  position: relative;
-  top: -2px;
-
   // Yikes this is a hack
   @include phone-portrait {
     display: none;
 
     &.show {
-      position: absolute;
-      left: 29px;
-      top: 4px;
       display: block;
+      flex: 1;
 
       #filter-input {
-        height: 28px;
+        height: 34px;
         margin-top: 0;
-        width: 150px;
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .filter-help {
-        top: 8px;
+        top: 0;
       }
 
       .dim-input {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: #222;
         }
       }
 
-      input, select:focus {
+      input,
+      select:focus {
         font-size: 16px; // so iOS doesn't zoom
       }
     }
@@ -61,15 +87,23 @@
 }
 
 .filter-help {
-  position: absolute;
-  right: -2px;
-  top: 8px;
   cursor: pointer;
+  @include phone-portrait {
+    margin-right: 8px !important;
+  }
+
   .fa {
     font-size: 16px !important;
     color: #999 !important;
+    // Increase touch target size
+    padding: 4px;
+    margin: -4px;
+    margin-left: 4px;
+    &:first-child {
+      margin-left: -4px;
+    }
     &:hover {
-      color: #E8A534 !important;
+      color: #e8a534 !important;
     }
   }
   .bulk-tag-select {
@@ -109,7 +143,8 @@
   border: 1px solid #ddd;
   background-color: white;
   transform: translate(0, -1px);
-  .textcomplete-header, .textcomplete-footer {
+  .textcomplete-header,
+  .textcomplete-footer {
     display: none;
   }
   li {
@@ -125,7 +160,8 @@
   .active {
     background-color: #555;
   }
-  li:hover a, .active a {
+  li:hover a,
+  .active a {
     color: white;
   }
   a {

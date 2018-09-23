@@ -39,11 +39,17 @@ function MoveAmountController(this: IController) {
   };
 
   vm.upstack = () => {
-    vm.amount = Math.min(vm.maximum, (Math.floor(vm.amount / vm.maxStackSize) * vm.maxStackSize) + vm.maxStackSize);
+    vm.amount = Math.min(
+      vm.maximum,
+      Math.floor(vm.amount / vm.maxStackSize) * vm.maxStackSize + vm.maxStackSize
+    );
   };
 
   vm.downstack = () => {
-    vm.amount = Math.max(1, (Math.ceil(vm.amount / vm.maxStackSize) * vm.maxStackSize) - vm.maxStackSize);
+    vm.amount = Math.max(
+      1,
+      Math.ceil(vm.amount / vm.maxStackSize) * vm.maxStackSize - vm.maxStackSize
+    );
   };
 
   vm.constrain = () => {

@@ -5,6 +5,8 @@ import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { Subject } from 'rxjs/Subject';
 import { $rootScope } from 'ngimport';
+import store from '../../store/store';
+import { setNewItems } from '../actions';
 
 const _removedNewItems = new Set<string>();
 
@@ -39,7 +41,7 @@ export const NewItemsService = {
       isNew = false;
     } else if (previousItems.size) {
       // Zero id check is to ignore general items and consumables
-      isNew = (id !== '0' && !previousItems.has(id));
+      isNew = id !== '0' && !previousItems.has(id);
       if (isNew) {
         newItems.add(id);
       }
@@ -56,7 +58,7 @@ export const NewItemsService = {
     const account = getActivePlatform();
     return this.loadNewItems(account).then((newItems) => {
       newItems.delete(item.id);
-      this.hasNewItems = (newItems.size !== 0);
+      this.hasNewItems = newItems.size !== 0;
       this.saveNewItems(newItems, account, item.destinyVersion);
     });
   },
@@ -82,12 +84,15 @@ export const NewItemsService = {
   loadNewItems(account: DestinyAccount): Promise<Set<string>> {
     if (account) {
       const key = newItemsKey(account);
-      return Promise.resolve(idbKeyval.get(key)).then((v) => v as Set<string> || new Set<string>());
+      return Promise.resolve(idbKeyval.get(key)).then(
+        (v) => (v as Set<string>) || new Set<string>()
+      );
     }
     return Promise.resolve(new Set<string>());
   },
 
   saveNewItems(newItems: Set<string>, account: DestinyAccount) {
+    store.dispatch(setNewItems(newItems));
     return Promise.resolve(idbKeyval.set(newItemsKey(account), newItems));
   },
 
@@ -104,7 +109,7 @@ export const NewItemsService = {
   applyRemovedNewItems(newItems: Set<string>) {
     _removedNewItems.forEach((id) => newItems.delete(id));
     _removedNewItems.clear();
-    this.hasNewItems = (newItems.size !== 0);
+    this.hasNewItems = newItems.size !== 0;
   }
 };
 

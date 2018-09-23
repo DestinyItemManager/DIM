@@ -9,7 +9,9 @@ import './BungieAlerts.scss';
 
 export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   // Fetch global alerts, but swallow errors
-  .switchMap(() => Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty<GlobalAlert[]>()))
+  .switchMap(() =>
+    Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty<GlobalAlert[]>())
+  )
   .startWith([] as GlobalAlert[])
   // Deep equals
   .distinctUntilChanged<GlobalAlert[]>(equals)
@@ -44,19 +46,18 @@ export default class BungieAlerts extends React.Component<{}, State> {
 
     return (
       <div className="bungie-alerts">
-        {alerts.map((alert) =>
-          <div
-            key={alert.key}
-            className={`bungie-alert bungie-alert-${alert.type}`}
-          >
+        {alerts.map((alert) => (
+          <div key={alert.key} className={`bungie-alert bungie-alert-${alert.type}`}>
             <b>{t('BungieAlert.Title')}</b>
             <p dangerouslySetInnerHTML={{ __html: alert.body }} />
             <div>
               {t('BungieService.Twitter')}{' '}
-              <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp">@BungieHelp Twitter</a>
+              <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp">
+                @BungieHelp Twitter
+              </a>
             </div>
           </div>
-        )}
+        ))}
       </div>
     );
   }

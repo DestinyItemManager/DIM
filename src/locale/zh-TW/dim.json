@@ -51,8 +51,7 @@
     "Throttled": "Bungie API流量限制已超出.請稍後重試.",
     "Twitter": "查看伺服器更新狀態:",
     "UnknownError": "來自Bungie.net的消息:{{message}}",
-    "VendorNotFound": "商販資料不可用.",
-    "WarmindLoginNeeded": "We can't load your inventory due to a bug in the Destiny API. To fix it, load each of your characters and set up the emote wheel."
+    "VendorNotFound": "商販資料不可用."
   },
   "Compare": {
     "All": "{{type}} 對比({{quantity}})",
@@ -84,15 +83,6 @@
     "Banner": "DIM將支援Destiny2",
     "ComingSoon": "我們將遊戲上線後不久在DIM中支持您的天命2角色。請給我們幾個星期的時間來學習這個遊戲（並且讓我們也玩一會兒！）。"
   },
-  "DidYouKnow": {
-    "Collapse": "您剛才在DIM中隱藏了一個分區!隱藏您不需要的部分能使得使用更加方便.",
-    "DidYouKnow": "你知道嗎?",
-    "DontShowAgain": "不再顯示此提示",
-    "DoubleClick": "如果您希望移動物品到您當前啟動的角色（最後登入的角色）,您可以按兩下滑鼠左鍵立即裝備它.",
-    "DragAndDrop": "物品可以在不同角色和保險庫之間拖放移動.",
-    "Expand": "按一下類別最左側的加號標誌來重新展開一個分區.",
-    "TryNext": "下次試試吧！"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基於{{numRatings}} 項評測.",
     "BestRatedKey": " = 推薦特性",
@@ -102,6 +92,7 @@
     "Delete": "刪除",
     "Edit": "編輯",
     "ForGameMode": "遊戲模式：",
+    "ForPlatform": "For platform(s)",
     "Help": "撰寫評測 (可選)",
     "HelpCons": "描述此武器的缺點（可選）",
     "HelpPros": "描述此武器的優點（可選）",
@@ -115,6 +106,7 @@
       "Xbox": "僅限XBox"
     },
     "Pros": "優點",
+    "RatingsOptions": "Ratings Options",
     "ReallyReport": "檢舉",
     "ServiceCallError": "無法連接到Destiny tracker伺服器.",
     "ServiceSubmitError": "無法訪問Destiny tracker伺服器.",
@@ -183,7 +175,6 @@
     "DamageType": "按照傷害類型顯示.",
     "Description": "描述",
     "Dupe": "顯示重複物品",
-    "DupeInPostmaster": "有一些重複物品在郵政官處.",
     "Engrams": "顯示記憶水晶.",
     "EnterName": "輸入物品名稱:",
     "EnterNote": "輸入備註文本:",
@@ -217,11 +208,12 @@
     "PartialMatch": "顯示名稱/特性與篩選器搜尋內容部分匹配的物品.",
     "Postmaster": "目前在郵政官處的物品.",
     "PowerLevel": "根據光等來顯示物品(武器攻擊力; 防具護甲值).",
-    "PowerMod": "顯示所有裝備了增強模組的物品.",
     "Quality": "根據其統計品質百分比來顯示物品'{{percentage}}'別名'{{quality}}'.",
+    "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "按照稀有度顯示.",
     "Rated": "顯示具有Destiny Tracker評級的物品.",
     "Rating": "以Destiny Tracker的評分來顯示武器.",
+    "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
     "Reforgeable": "顯示可以在槍匠那裡重新鍛造的物品.",
     "Release": "可從<i>{{release}}</i>發行版本獲得",
     "Releases": {
@@ -259,16 +251,13 @@
     "WeaponType": "按照武器類型顯示.",
     "Year": "按照物品推出年份顯示."
   },
-  "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
-  },
   "Header": {
     "About": "關於",
     "Back": "返回",
     "BulkTag": "批量標記物品",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "搜尋物品/特性或使用{{example}}查找重複物品",
+    "FilterHelpBrief": "Search items",
     "Filters": "篩選器",
     "Inventory": "背包",
     "Refresh": "重新載入天命資料",
@@ -280,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "無法從該角色中移出物品.",
-    "ChangingPerks": "無法改變特性",
-    "ChangingPerksInfo": "對不起， 無法在遊戲外更改特性。 我們對此也無能為力！",
     "Drag": "按住Shift或者在目的地區域停留一會兒來完成一次部分堆疊。",
     "HidePopup": "不再顯示此彈出視窗",
-    "NeverShow": "不要再顯示此資訊.",
     "NoStorage": "DIM無法儲存資料",
     "NoStorageMessage": "DIM無法在您的瀏覽器中儲存資料。這可能是瀏覽器的無痕視窗造成的，或許您磁碟空間不足。DIM無法完成後續操作。",
     "UpdateAvailable": "DIM已更新",
@@ -500,6 +486,7 @@
     "OverviewTab": "概述",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "評測",
+    "Rewards": "Rewards:",
     "Split": "拆分",
     "Store": "寄存",
     "Subtitle_Consumable": "{{classType}}{{typeName}}",
@@ -517,20 +504,16 @@
     "Complete": "已完成",
     "Incomplete": "未完成"
   },
-  "Postmaster": {
-    "Desc": "在你的{{store}} 郵政官處有20件遺失物品。任何新獲得的物品都將覆蓋掉現有的物品。",
-    "Limit": "郵政官處已經沒有物品空間了"
-  },
   "Progress": {
     "CrucibleRank": "Crucible Ranks",
     "Daily": "每日",
     "ExpiresIn": "於{{endTime}}過期",
     "Factions": "陣營",
-    "Milestones": "里程碑",
+    "Milestones": "Milestones & Challenges",
     "ProfileMilestones": "賬戶里程碑",
     "ProfileQuests": "賬戶任務",
     "Progress": "進度",
-    "Quests": "Pursuits & Quests",
+    "QuestExpires": "Expires in ",
     "RewardEarned": "獎勵已解鎖但尚未兌換",
     "RewardNotEarned": "獎勵不可用",
     "RewardRedeemed": "獲取獎勵",
@@ -551,7 +534,6 @@
     "ColorA11y": "色盲模式",
     "ColumnSize": "{{num}} 個物品",
     "ColumnSizeAuto": "自動",
-    "DIMPopupsReset": "重置之前隱藏的提示資訊",
     "Data": "試算表",
     "DontForgetDupes": "您可以在搜尋框使用 is:dupe或 is:dupelower 來快速查找重複物品, 也可以使用對比工具來對比相關物品.",
     "EnableAdvancedStats": "在防具上顯示評分(D1)",
@@ -597,7 +579,7 @@
     "Discipline": "訓練",
     "Intellect": "智力",
     "Level": "等級",
-    "MaxBasePower": "最高基本光等（無模組）",
+    "MaxBasePower": "Max Power",
     "NoBonus": "無加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉範圍{{range}}",

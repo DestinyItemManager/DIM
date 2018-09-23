@@ -1,16 +1,16 @@
-@import "../../scss/pop-in.scss";
+@import '../../scss/pop-in.scss';
 
 #item-farming {
   position: fixed;
   backface-visibility: hidden;
   bottom: 0;
   background-color: rgba(34, 34, 34, 0.9);
-  @supports(backdrop-filter: blur(10px)) {
+  @supports (backdrop-filter: blur(10px)) {
     background-color: rgba(34, 34, 34, 0.6);
     backdrop-filter: blur(10px);
   }
   width: 43rem;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   color: #e0e0e0;
   align-items: center;
   text-align: left;
@@ -25,15 +25,16 @@
 
   button {
     color: white;
-    background-color: rgba(128, 128, 128, .4);
+    background-color: rgba(128, 128, 128, 0.4);
     border: none;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     text-align: center;
     font-size: 1.5em;
     margin-left: 1rem;
-    transition: .3s background-color;
-    &:hover, &:active {
-      background-color: rgba(232, 165, 52, .8);
+    transition: 0.3s background-color;
+    &:hover,
+    &:active {
+      background-color: rgba(232, 165, 52, 0.8);
     }
   }
 
@@ -79,7 +80,7 @@
   }
 
   p {
-    margin: .25em 0;
+    margin: 0.25em 0;
   }
 
   @include pop-in;

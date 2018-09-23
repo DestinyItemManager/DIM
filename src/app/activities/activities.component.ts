@@ -71,15 +71,17 @@ function ActivitiesController(
       'wrathofthemachine',
       // 'elderchallenge',
       'nightfall',
-      'heroicstrike',
+      'heroicstrike'
     ];
 
     getDefinitions().then((defs) => {
       const rawActivities = stores[0].advisors.activities;
-      vm.activities = Object.values(rawActivities).filter((a: any) => a.activityTiers && whitelist.includes(a.identifier));
+      vm.activities = Object.values(rawActivities).filter(
+        (a: any) => a.activityTiers && whitelist.includes(a.identifier)
+      );
       vm.activities = _.sortBy(vm.activities, (a: any) => {
         const ix = whitelist.indexOf(a.identifier);
-        return (ix === -1) ? 999 : ix;
+        return ix === -1 ? 999 : ix;
       }).map((a) => processActivities(defs, stores, a));
 
       vm.activities.forEach((a) => {
@@ -100,10 +102,13 @@ function ActivitiesController(
       name: def.activityName,
       icon: rawActivity.display.icon,
       image: rawActivity.display.image,
-      type: rawActivity.identifier === "nightfall" ? $i18next.t('Activities.Nightfall')
-        : rawActivity.identifier === "heroicstrike" ? $i18next.t('Activities.WeeklyHeroic')
-          : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
-      skulls: null as (Skull[] | null),
+      type:
+        rawActivity.identifier === 'nightfall'
+          ? $i18next.t('Activities.Nightfall')
+          : rawActivity.identifier === 'heroicstrike'
+            ? $i18next.t('Activities.WeeklyHeroic')
+            : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
+      skulls: null as Skull[] | null,
       tiers: [] as ActivityTier[]
     };
 
@@ -127,7 +132,9 @@ function ActivitiesController(
       activity.skulls = _.flatten(activity.skulls);
     }
 
-    activity.tiers = rawActivity.activityTiers.map((r, i) => processActivity(defs, rawActivity.identifier, stores, r, i));
+    activity.tiers = rawActivity.activityTiers.map((r, i) =>
+      processActivity(defs, rawActivity.identifier, stores, r, i)
+    );
 
     return activity;
   }
@@ -155,24 +162,31 @@ function ActivitiesController(
   ): ActivityTier {
     const tierDef = defs.Activity.get(tier.activityHash);
 
-    const name = tier.activityData.recommendedLight === 390 ? 390
-      : (tier.tierDisplayName ? $i18next.t(`Activities.${tier.tierDisplayName}`) : tierDef.activityName);
+    const name =
+      tier.activityData.recommendedLight === 390
+        ? 390
+        : tier.tierDisplayName
+          ? $i18next.t(`Activities.${tier.tierDisplayName}`)
+          : tierDef.activityName;
 
-    const characters = activityId === 'heroicstrike' ? [] : stores.map((store) => {
-      let steps = store.advisors.activities[activityId].activityTiers[index].steps;
+    const characters =
+      activityId === 'heroicstrike'
+        ? []
+        : stores.map((store) => {
+            let steps = store.advisors.activities[activityId].activityTiers[index].steps;
 
-      if (!steps) {
-        steps = [store.advisors.activities[activityId].activityTiers[index].completion];
-      }
+            if (!steps) {
+              steps = [store.advisors.activities[activityId].activityTiers[index].completion];
+            }
 
-      return {
-        name: store.name,
-        lastPlayed: store.lastPlayed,
-        id: store.id,
-        icon: store.icon,
-        steps
-      };
-    });
+            return {
+              name: store.name,
+              lastPlayed: store.lastPlayed,
+              id: store.id,
+              icon: store.icon,
+              steps
+            };
+          });
 
     return {
       hash: tierDef.activityHash,
@@ -191,21 +205,21 @@ function ActivitiesController(
   function i18nActivitySkulls(skulls, defs: D1ManifestDefinitions): Skull[] {
     const skullHashesByName = {
       Heroic: 0,
-      "Arc Burn": 1,
-      "Solar Burn": 2,
-      "Void Burn": 3,
+      'Arc Burn': 1,
+      'Solar Burn': 2,
+      'Void Burn': 3,
       Berserk: 4,
       Brawler: 5,
       Lightswitch: 6,
-      "Small Arms": 7,
+      'Small Arms': 7,
       Specialist: 8,
       Juggler: 9,
       Grounded: 10,
       Bloodthirsty: 11,
       Chaff: 12,
-      "Fresh Troops": 13,
+      'Fresh Troops': 13,
       Ironclad: 14,
-      "Match Game": 15,
+      'Match Game': 15,
       Exposure: 16,
       Airborne: 17,
       Catapult: 18,
@@ -219,10 +233,14 @@ function ActivitiesController(
 
     for (const skull of skulls[0]) {
       const hash = skullHashesByName[skull.displayName];
-      skull.displayName = hash === 20 ? activity.epic.skulls[0].displayName
-        : activity.heroic.skulls[hash].displayName;
-      skull.description = hash === 20 ? activity.epic.skulls[0].description
-        : activity.heroic.skulls[hash].description;
+      skull.displayName =
+        hash === 20
+          ? activity.epic.skulls[0].displayName
+          : activity.heroic.skulls[hash].displayName;
+      skull.description =
+        hash === 20
+          ? activity.epic.skulls[0].description
+          : activity.heroic.skulls[hash].description;
     }
     return skulls;
   }

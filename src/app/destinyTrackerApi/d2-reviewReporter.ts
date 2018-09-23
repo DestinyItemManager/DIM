@@ -1,11 +1,11 @@
-import { D2ReviewDataCache } from "./d2-reviewDataCache";
-import { DestinyAccount } from "../accounts/destiny-account.service";
-import { loadingTracker } from "../ngimport-more";
-import { handleD2SubmitErrors } from "./d2-trackerErrorHandler";
-import { dtrFetch } from "./dtr-service-helper";
-import { DtrReviewer } from "../item-review/dtr-api-types";
-import { D2ItemUserReview } from "../item-review/d2-dtr-api-types";
-import { ignoreUser } from "./userFilter";
+import { D2ReviewDataCache } from './d2-reviewDataCache';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { loadingTracker } from '../ngimport-more';
+import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
+import { dtrFetch } from './dtr-service-helper';
+import { DtrReviewer } from '../item-review/dtr-api-types';
+import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { ignoreUser } from './userFilter';
 
 export interface DimReviewReport {
   reviewId: string;
@@ -35,7 +35,7 @@ class D2ReviewReporter {
 
     return {
       reviewId,
-      text: "",
+      text: '',
       reporter
     };
   }
@@ -66,11 +66,10 @@ class D2ReviewReporter {
       return;
     }
 
-    return this._submitReportReviewPromise(review.id, membershipInfo)
-        .then(() => {
-          this._reviewDataCache.markReviewAsIgnored(review);
-          this._ignoreReportedUser(review);
-        });
+    return this._submitReportReviewPromise(review.id, membershipInfo).then(() => {
+      this._reviewDataCache.markReviewAsIgnored(review);
+      this._ignoreReportedUser(review);
+    });
   }
 }
 

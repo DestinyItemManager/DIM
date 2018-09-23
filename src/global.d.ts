@@ -31,14 +31,20 @@ declare const $featureFlags: {
   vendors: boolean;
   /** Enable vendorengrams.xyz integration */
   vendorEngrams: boolean;
-}
+  /** Use the new React inventory screen. */
+  reactInventory: boolean;
+  /** Respect the "do not track" header. */
+  respectDNT: boolean;
+  /** Forsaken Item Tiles */
+  forsakenTiles: boolean;
+};
 
 declare function ga(...params: string[]);
 
 interface Window {
   CSS: {
     supports(propertyName: string);
-  }
+  };
   BroadcastChannel?: BroadcastChannel;
 }
 
@@ -46,51 +52,51 @@ interface Navigator {
   storage: any;
 }
 
-declare module "*/CHANGELOG.md" {
+declare module '*/CHANGELOG.md' {
   const value: {
     version: string;
     date?: string;
-    changes: string[]
+    changes: string[];
   }[];
   export default value;
 }
 
-declare module "*.json" {
+declare module '*.json' {
   const value: any;
   export default value;
 }
 
-declare module "*.jpg" {
+declare module '*.jpg' {
   const value: string;
   export default value;
 }
 
-declare module "*.svg" {
+declare module '*.svg' {
   const value: string;
   export default value;
 }
 
-declare module "*.png" {
+declare module '*.png' {
   const value: string;
   export default value;
 }
 
-declare module "*.html" {
+declare module '*.html' {
   const value: string;
   export default value;
 }
 
-declare module "*.scss" {
+declare module '*.scss' {
   const value: string;
   export default value;
 }
 
-declare module "file-loader?*" {
+declare module 'file-loader?*' {
   const value: string;
   export default value;
 }
 
-declare module "*dim.json" {
+declare module '*dim.json' {
   const value: string;
   export default value;
 }

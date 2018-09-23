@@ -1,4 +1,4 @@
-@import "../../scss/variables.scss";
+@import '../../scss/variables.scss';
 
 .faction {
   display: flex;
@@ -7,7 +7,7 @@
   margin-bottom: 16px;
 
   &.faction-unavailable {
-    opacity: .4;
+    opacity: 0.4;
   }
 
   .faction-info {
@@ -20,7 +20,7 @@
   }
 
   .faction-level {
-    color: #A1A2A2;
+    color: #a1a2a2;
   }
 
   .purchase-unlocked {

@@ -51,8 +51,7 @@
     "Throttled": "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.",
     "Twitter": "Hol dir Status-Updates auf:",
     "UnknownError": "Bungie.net Nachricht: {{message}}",
-    "VendorNotFound": "Händler Daten nicht verfügbar.",
-    "WarmindLoginNeeded": "Wir können dein Inventar aufgrund eines Bugs der Destiny API nicht laden. Lade jeden deiner Charaktere und erstelle ein Emote-Rad um das Problem zu lösen."
+    "VendorNotFound": "Händler Daten nicht verfügbar."
   },
   "Compare": {
     "All": "{{type}} Vergleich ({{quantity}})",
@@ -84,15 +83,6 @@
     "Banner": "DIM wird es auch für Destiny 2 geben",
     "ComingSoon": "Wir werden deine Destiny 2 Charaktere in DIM, kurz nach dem das Spiel für Konsolen erschienen ist, unterstützen, so gut wie es uns dann schon möglich ist. Gib uns ein paar Wochen um das Spiel kennen zu lernen (und es auch selber zu spielen!)."
   },
-  "DidYouKnow": {
-    "Collapse": "Du hast gerade eine Sektion in DIM eingeklappt! Das kann nützlich sein um Teile von DIM zu verstecken, die du normalerweise nicht verwendest.",
-    "DidYouKnow": "Wusstest du schon?",
-    "DontShowAgain": "Diesen Tipp nicht erneut zeigen",
-    "DoubleClick": "Wenn du ein Item zu deinem aktiven (zuletzt eingeloggt) Charakter bewegst, kannst du es stattdessen doppelt anklicken um es sofort auszurüsten.",
-    "DragAndDrop": "Items können zwischen verschiedenen Charakteren und dem Tresor per \"Drag and Drop\" verschoben werden.",
-    "Expand": "Klicke das Plus-Zeichen auf der linken Seite der eingeklappten Kategorie an, um diese wieder aufzuklappen.",
-    "TryNext": "Probiere es das nächste Mal aus!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
     "BestRatedKey": " = Empfohlener Perk",
@@ -102,6 +92,7 @@
     "Delete": "Löschen",
     "Edit": "Ändern",
     "ForGameMode": "Für Spielmodus",
+    "ForPlatform": "Für Plattform(en)",
     "Help": "Schreibe einen Bericht (Optional)",
     "HelpCons": "Beschreibe die negativen Eigenschaften dieser Waffe (Optional)",
     "HelpPros": "Beschreibe die positiven Eigenschaften dieser Waffe (Optional)",
@@ -115,6 +106,7 @@
       "Xbox": "Nur XBox"
     },
     "Pros": "Vorteile",
+    "RatingsOptions": "Bewertungsoptionen",
     "ReallyReport": "Melden",
     "ServiceCallError": "Destiny-Tracker-Service-Aufruf fehlgeschlagen.",
     "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen.",
@@ -183,7 +175,6 @@
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
-    "DupeInPostmaster": "Einige Item-Duplikate sind bei der Poststelle.",
     "Engrams": "Zeige Engramme.",
     "EnterName": "Trage einen Namen ein:",
     "EnterNote": "Trage eine Beschreibung ein:",
@@ -217,11 +208,12 @@
     "PartialMatch": "Zeigt Items, deren Name/Perk eine partielle Übereinstimmung mit dem Filtertext hat.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
     "PowerLevel": "Zeigt Items basierend auf dem Powerlevel (Angriff für Waffen; Verteidigung für Rüstung).",
-    "PowerMod": "Items, die ein Mod haben, um das Powerlevel zu erhöhen.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
+    "RandomRoll": "Zeige Items die mit Zufalls-Rolls droppen.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
     "Rated": "Zeigt alle Waffen, die eine Bewertung auf Destiny Tracker haben.",
     "Rating": "Zeigt alle Waffen basierend auf ihrer Bewertung bei Destiny Tracker an.",
+    "RatingCount": "Zeigt Waffen basierend auf der der Anzahl der Bewertungen an, die sie für die derzeitige Sandbox auf Destiny Tracker haben.",
     "Reforgeable": "Zeigt Items, die beim Waffenmeister umgeschmiedet werden können.",
     "Release": "Verfügbar seit Veröffentlichung <i>{{release}}</i>",
     "Releases": {
@@ -259,16 +251,13 @@
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
   },
-  "Forsaken": {
-    "Progress": "Note: Progress data can be incomplete or incorrect until some time after Forsaken launches.",
-    "Vendors": "Vendors will be unavailable until some time after Forsaken launches."
-  },
   "Header": {
     "About": "Über",
     "Back": "Zurück",
     "BulkTag": "Massenbeschriftung Items",
     "BungieNetAlert": "Bungie-Warnung",
     "FilterHelp": "Suche nach Item/Perk oder {{example}}",
+    "FilterHelpBrief": "Suche Items",
     "Filters": "Filter",
     "Inventory": "Inventar",
     "Refresh": "Aktualisiere Destiny Daten",
@@ -280,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "Item kann nicht von diesem Charakter wegbewegt werden.",
-    "ChangingPerks": "Verändern der Perks wird nicht unterstützt",
-    "ChangingPerksInfo": "Entschuldigung, es gibt keine Möglichkeit die Perks außerhalb des Spiels zu verändern. Wir würden es nur zu gern!",
     "Drag": "Halte Shift oder pausiere über dem Ziel, um einen Teilstapel zu übertragen.",
     "HidePopup": "Dieses Fenster ausblenden",
-    "NeverShow": "Diesen Tipp nicht erneut zeigen.",
     "NoStorage": "DIM kann die Daten nicht speichern",
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. DIM kann nicht fortfahren.",
     "UpdateAvailable": "DIM aktualisiert",
@@ -500,6 +486,7 @@
     "OverviewTab": "Übersicht",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReviewsTab": "Berichte",
+    "Rewards": "Belohnungen:",
     "Split": "Teilen",
     "Store": "Lagern",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -517,20 +504,16 @@
     "Complete": "Vollständig",
     "Incomplete": "Unvollständig"
   },
-  "Postmaster": {
-    "Desc": "Es sind 20 verlorene Items in der Poststelle deines {{store}}. Jedes neue Item wird bereits vorhandene überschreiben.",
-    "Limit": "Poststellenlimit"
-  },
   "Progress": {
     "CrucibleRank": "Schmelztiegel-Ränge",
     "Daily": "Täglich",
     "ExpiresIn": "läuft ab {{endTime}}",
     "Factions": "Fraktionen",
-    "Milestones": "Meilensteine",
+    "Milestones": "Meilensteine & Herausforderungen",
     "ProfileMilestones": "Konto-Meilensteine",
     "ProfileQuests": "Konto-Quests",
     "Progress": "Fortschritt",
-    "Quests": "Beschäftigungen & Quests",
+    "QuestExpires": "Läuft ab in ",
     "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
     "RewardNotEarned": "Belohnung nicht erhalten",
     "RewardRedeemed": "Belohnung eingelöst",
@@ -551,7 +534,6 @@
     "ColorA11y": "Konfiguration für Farbenblinde",
     "ColumnSize": "{{num}} Items",
     "ColumnSizeAuto": "Automatisch",
-    "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps",
     "Data": "Excel Tabelle",
     "DontForgetDupes": "Vergiss nicht dass du nach is:dupe oder is:dupelower suchen kannst um schnell doppelte Items zu finden und dass du das Vergleichstool nutzen kannst um verwandte Items zu evaluieren.",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",
@@ -597,7 +579,7 @@
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
     "Level": "Level",
-    "MaxBasePower": "Max Basis Power (ohne Mods)",
+    "MaxBasePower": "Max Power",
     "NoBonus": "Kein Bonus",
     "NotApplicable": "N/V",
     "OfMaxRoll": "{{range}} des max. Rolls",

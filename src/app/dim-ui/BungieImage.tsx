@@ -12,7 +12,9 @@ interface BungieImageProps {
 /**
  * An image tag that links its src to bungie.net. Other props pass through to the underlying image.
  */
-export default function BungieImage(props: BungieImageProps & React.ImgHTMLAttributes<HTMLImageElement>) {
+export default function BungieImage(
+  props: BungieImageProps & React.ImgHTMLAttributes<HTMLImageElement>
+) {
   const { src, ...otherProps } = props;
   return <img src={bungieNetPath(src)} {...otherProps} />;
 }

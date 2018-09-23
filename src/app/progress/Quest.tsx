@@ -1,10 +1,12 @@
 import { DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import BungieImage from '../dim-ui/BungieImage';
 import { sum } from '../util';
-import './quest.scss';
 import Objective from './Objective';
+import { Reward } from './Reward';
+import { t } from 'i18next';
+import MilestoneDisplay from './MilestoneDisplay';
+import Countdown from '../dim-ui/Countdown';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;
@@ -18,32 +20,51 @@ export default function Quest(props: QuestProps) {
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
   const percentComplete = sum(objectives, (objective) => {
-    const objectiveDef = defs.Objective.get(objective.objectiveHash);
-    if (objectiveDef.completionValue) {
-      return Math.min(1, (objective.progress || 0) / objectiveDef.completionValue) / objectives.length;
+    if (objective.completionValue) {
+      return Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length;
     } else {
       return 0;
     }
   });
 
+  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+
+  const progress = (
+    <>
+      {percentComplete > 0 && <span>{Math.min(100, Math.round(percentComplete * 100))}%</span>}
+      {itemDef.inventory.maxStackSize > 1 && <span>{item.quantity}</span>}
+    </>
+  );
+
+  const expired = item.expirationDate
+    ? new Date(item.expirationDate).getTime() < Date.now()
+    : false;
+  const complete = percentComplete >= 1;
+  const suppressExpiration =
+    itemDef.inventory.suppressExpirationWhenObjectivesComplete && expired && complete;
+
   return (
-    <div className="milestone-quest item-quest">
-      <div className="milestone-icon">
-        <BungieImage src={itemDef.displayProperties.icon} />
-        {percentComplete > 0 &&
-          <span>{Math.floor(percentComplete * 100)}%</span>}
-        {itemDef.inventory.maxStackSize > 1 &&
-          <span>{item.quantity}</span>}
+    <MilestoneDisplay displayProperties={itemDef.displayProperties} progress={progress}>
+      {item.expirationDate &&
+        !suppressExpiration && (
+          <div className="quest-expiration">
+            {expired ? (
+              itemDef.inventory.expiredInActivityMessage
+            ) : (
+              <>
+                {t('Progress.QuestExpires')} <Countdown endTime={new Date(item.expirationDate)} />
+              </>
+            )}
+          </div>
+        )}
+      <div className="quest-objectives">
+        {objectives.map((objective) => (
+          <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
+        ))}
       </div>
-      <div className="milestone-info">
-        <span className="milestone-name">{itemDef.displayProperties.name}</span>
-        <div className="milestone-description">{itemDef.displayProperties.description}</div>
-        <div className="quest-objectives">
-          {objectives.map((objective) =>
-            <Objective defs={defs} objective={objective} key={objective.objectiveHash}/>
-          )}
-        </div>
-      </div>
-    </div>
+      {rewards.map((reward) => (
+        <Reward key={reward.itemHash} reward={reward} defs={defs} />
+      ))}
+    </MilestoneDisplay>
   );
 }

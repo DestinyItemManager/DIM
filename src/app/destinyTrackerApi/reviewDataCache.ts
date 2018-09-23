@@ -1,6 +1,11 @@
 import * as _ from 'underscore';
 import { D1Item } from '../inventory/item-types';
-import { D1RatingData, D1ItemFetchResponse, WorkingD1Rating, D1ItemReviewResponse } from '../item-review/d1-dtr-api-types';
+import {
+  D1RatingData,
+  D1ItemFetchResponse,
+  WorkingD1Rating,
+  D1ItemReviewResponse
+} from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
 
 /**
@@ -39,9 +44,9 @@ export class ReviewDataCache {
   _createBlankUserReview(): WorkingD1Rating {
     return {
       rating: 0,
-      pros: "",
-      review: "",
-      cons: "",
+      pros: '',
+      review: '',
+      cons: '',
       treatAsSubmitted: false
     };
   }
@@ -50,7 +55,7 @@ export class ReviewDataCache {
     const dtrItem = translateToDtrWeapon(item);
 
     return {
-      referenceId : dtrItem.referenceId,
+      referenceId: dtrItem.referenceId,
       roll: dtrItem.roll,
       userReview: this._createBlankUserReview(),
       lastUpdated: new Date(),
@@ -61,7 +66,7 @@ export class ReviewDataCache {
   }
 
   _toAtMostOneDecimal(rating: number): number {
-    if ((rating % 1) === 0) {
+    if (rating % 1 === 0) {
       return rating;
     }
 
@@ -72,16 +77,19 @@ export class ReviewDataCache {
    * Add (and track) the community score.
    */
   addScore(dtrRating: D1ItemFetchResponse) {
-    if (dtrRating && dtrRating.rating) {  // not sure if we were sometimes receiving empty ratings or what
+    if (dtrRating && dtrRating.rating) {
+      // not sure if we were sometimes receiving empty ratings or what
       dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
     }
 
-    const previouslyCachedItem = this._itemStores.find((ci) => ci.roll === dtrRating.roll && ci.referenceId === dtrRating.referenceId);
+    const previouslyCachedItem = this._itemStores.find(
+      (ci) => ci.roll === dtrRating.roll && ci.referenceId === dtrRating.referenceId
+    );
 
     if (previouslyCachedItem) {
       previouslyCachedItem.fetchResponse = dtrRating;
       previouslyCachedItem.lastUpdated = new Date();
-      previouslyCachedItem.overallScore = (dtrRating.rating) ? dtrRating.rating : 0;
+      previouslyCachedItem.overallScore = dtrRating.rating ? dtrRating.rating : 0;
       previouslyCachedItem.ratingCount = dtrRating.ratingCount;
       dtrRating.highlightedRatingCount = dtrRating.highlightedRatingCount;
     } else {
@@ -107,8 +115,7 @@ export class ReviewDataCache {
    * is still feeding back cached data or processing it or whatever.
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
-  addUserReviewData(item: D1Item,
-                    userReview: WorkingD1Rating) {
+  addUserReviewData(item: D1Item, userReview: WorkingD1Rating) {
     const cachedItem = this.getRatingData(item);
 
     cachedItem.userReview = userReview;
@@ -118,8 +125,7 @@ export class ReviewDataCache {
    * Keep track of expanded item review data from the DTR API for this DIM store item.
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
-  addReviewsData(item: D1Item,
-                 reviewsData: D1ItemReviewResponse) {
+  addReviewsData(item: D1Item, reviewsData: D1ItemReviewResponse) {
     const cachedItem = this.getRatingData(item);
 
     cachedItem.reviewsResponse = reviewsData;
@@ -142,9 +148,7 @@ export class ReviewDataCache {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(
-    item: D1Item
-  ) {
+  markItemAsReviewedAndSubmitted(item: D1Item) {
     const cachedItem = this.getRatingData(item);
 
     if (!cachedItem || !cachedItem.userReview) {
@@ -157,9 +161,9 @@ export class ReviewDataCache {
       return;
     }
 
-    cachedItem.reviewsResponse.reviews = (cachedItem.reviewsResponse.reviews) ?
-       cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer) :
-       [];
+    cachedItem.reviewsResponse.reviews = cachedItem.reviewsResponse.reviews
+      ? cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer)
+      : [];
   }
 
   /**
@@ -178,7 +182,6 @@ export class ReviewDataCache {
 
       cachedItem.reviewsResponse = undefined;
       cachedItem.userReview.treatAsSubmitted = true;
-    },
-      tenMinutes);
+    }, tenMinutes);
   }
 }

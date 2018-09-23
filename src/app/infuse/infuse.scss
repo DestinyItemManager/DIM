@@ -34,7 +34,7 @@
   }
 
   .grey {
-    background-color: #6D6D6D;
+    background-color: #6d6d6d;
   }
 
   .green {
@@ -43,6 +43,7 @@
   }
 
   .infuseHeader {
+    flex: 0 0 auto;
     display: flex;
     flex-direction: row;
 
@@ -77,6 +78,7 @@
   }
 
   .gearsContainer {
+    flex: 0 0 auto;
     width: auto;
     padding: 8px;
     overflow: hidden;
@@ -117,7 +119,7 @@
   }
 
   .infuseSelector {
-    flex: 1;
+    flex: 1 1 auto;
     overflow: auto;
     justify-content: space-around;
     display: flex;
@@ -130,8 +132,8 @@
     }
   }
 
-  .infuseSources, .infuseTargets {
+  .infuseSources,
+  .infuseTargets {
     flex: 1;
   }
 }
-

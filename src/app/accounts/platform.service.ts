@@ -3,11 +3,19 @@ import { $q, $rootScope } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
-import { compareAccounts, DestinyAccount, getDestinyAccountsForBungieAccount } from './destiny-account.service';
+import {
+  compareAccounts,
+  DestinyAccount,
+  getDestinyAccountsForBungieAccount
+} from './destiny-account.service';
 import '../rx-operators';
 import { settings } from '../settings/settings';
 import { SyncService } from '../storage/sync.service';
 import { getBungieAccounts } from './bungie-account.service';
+import * as actions from './actions';
+import store from '../store/store';
+import { loadingTracker } from '../ngimport-more';
+import { update } from '../inventory/actions';
 
 let _platforms: DestinyAccount[] = [];
 let _active: DestinyAccount | null = null;
@@ -31,7 +39,7 @@ export function getPlatforms(): IPromise<DestinyAccount[]> {
   }
 
   // TODO: wire this up with observables?
-  return getBungieAccounts()
+  const promise = getBungieAccounts()
     .then((bungieAccounts) => {
       if (!bungieAccounts.length) {
         // We're not logged in, don't bother
@@ -45,10 +53,14 @@ export function getPlatforms(): IPromise<DestinyAccount[]> {
     })
     .then((destinyAccounts: DestinyAccount[]) => {
       _platforms = destinyAccounts;
+      store.dispatch(actions.accountsLoaded(destinyAccounts));
       return loadActivePlatform();
     })
     .then(setActivePlatform)
     .then(() => _platforms);
+
+  loadingTracker.addPromise(promise);
+  return promise;
 }
 
 export function getActivePlatform(): DestinyAccount | null {
@@ -56,8 +68,12 @@ export function getActivePlatform(): DestinyAccount | null {
 }
 
 export function setActivePlatform(platform: DestinyAccount) {
-  activePlatform$.next(platform);
-  return current$.take(1).toPromise();
+  if (platform) {
+    activePlatform$.next(platform);
+    return current$.take(1).toPromise();
+  } else {
+    return Promise.resolve(null);
+  }
 }
 
 export function getActiveAccountStream() {
@@ -80,7 +96,10 @@ async function loadActivePlatform(): Promise<DestinyAccount | null> {
     return _active;
   } else if (data && data.platformType) {
     let active = _platforms.find((platform) => {
-      return platform.platformType === data.platformType && platform.destinyVersion === data.destinyVersion;
+      return (
+        platform.platformType === data.platformType &&
+        platform.destinyVersion === data.destinyVersion
+      );
     });
     if (active) {
       return active;
@@ -99,10 +118,17 @@ function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
   if (account === null) {
     return SyncService.remove('platformType');
   } else {
+    store.dispatch(actions.setCurrentAccount(account));
+    // Also clear inventory
+    store.dispatch(update([]));
+
     if (settings.destinyVersion !== account.destinyVersion) {
       settings.destinyVersion = account.destinyVersion;
       settings.save();
     }
-    return SyncService.set({ platformType: account.platformType, destinyVersion: account.destinyVersion });
+    return SyncService.set({
+      platformType: account.platformType,
+      destinyVersion: account.destinyVersion
+    });
   }
 }

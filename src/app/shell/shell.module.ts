@@ -13,9 +13,7 @@ import { react2angular } from 'react2angular';
 import { ToasterContainerComponent } from './toaster-container.component';
 import { Loading } from '../dim-ui/Loading';
 
-export const ShellModule = module('dimShell', [
-    dimAngularFiltersModule
-  ])
+export const ShellModule = module('dimShell', [dimAngularFiltersModule])
   .factory('loadingTracker', loadingTracker)
   .component('dimPage', PageComponent)
   .component('countdown', CountdownComponent)
@@ -25,5 +23,4 @@ export const ShellModule = module('dimShell', [
   .component('manifestProgress', react2angular(ManifestProgress, ['destinyVersion'], ['$scope']))
   .component('dimToasterContainer', ToasterContainerComponent)
   .directive('scrollClass', ScrollClass)
-  .directive('dimClickAnywhereButHere', ClickAnywhereButHere)
-  .name;
+  .directive('dimClickAnywhereButHere', ClickAnywhereButHere).name;

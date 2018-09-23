@@ -2,7 +2,7 @@ import {
   DestinyCharacterComponent,
   DestinyProfileResponse,
   DestinyVendorsResponse
-  } from 'bungie-api-ts/destiny2';
+} from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -45,20 +45,20 @@ const forceReloadTrigger = new Subject();
 // A stream of progress that switches on account changes and supports reloading.
 // This is a ConnectableObservable that must be connected to start.
 const progressStream: ConnectableObservable<ProgressProfile> = accountStream
-      // Only emit when the account changes
-      .distinctUntilChanged(compareAccounts)
-      // But also re-emit the current value of the account stream
-      // whenever the force reload triggers
-      .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
-      // Whenever either trigger happens, load progress
-      .switchMap((account) => {
-        const promise = loadProgress(account);
-        loadingTracker.addPromise(promise);
-        return promise;
-      })
-      .filter(Boolean)
-      // Keep track of the last value for new subscribers
-      .publishReplay(1);
+  // Only emit when the account changes
+  .distinctUntilChanged(compareAccounts)
+  // But also re-emit the current value of the account stream
+  // whenever the force reload triggers
+  .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
+  // Whenever either trigger happens, load progress
+  .switchMap((account) => {
+    const promise = loadProgress(account);
+    loadingTracker.addPromise(promise);
+    return promise;
+  })
+  .filter(Boolean)
+  // Keep track of the last value for new subscribers
+  .publishReplay(1);
 
 /**
  * Set the current account, and get a stream of progress updates.
@@ -90,7 +90,9 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
     const characterIds = Object.keys(profileInfo.characters.data);
     let vendors: DestinyVendorsResponse[] = [];
     try {
-      vendors = await Promise.all(characterIds.map((characterId) => getVendors(account, characterId)));
+      vendors = await Promise.all(
+        characterIds.map((characterId) => getVendors(account, characterId))
+      );
     } catch (e) {
       console.error('Failed to load vendors', e);
     }
@@ -100,10 +102,13 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
       profileInfo,
       vendors: _.object(_.zip(characterIds, vendors)) as ProgressProfile['vendors'],
       get lastPlayedDate() {
-        return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce((memo, character: DestinyCharacterComponent) => {
-          const d1 = new Date(character.dateLastPlayed);
-          return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
-        }, new Date(0));
+        return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce(
+          (memo, character: DestinyCharacterComponent) => {
+            const d1 = new Date(character.dateLastPlayed);
+            return memo ? (d1 >= memo ? d1 : memo) : d1;
+          },
+          new Date(0)
+        );
       }
     };
   } catch (e) {

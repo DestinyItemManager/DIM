@@ -1,15 +1,21 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
+import { isPhonePortrait } from '../mediaQueries';
+import { RootState } from '../store/reducers';
+
+export const querySelector = (state: RootState) => state.shell.searchQuery;
 
 export interface ShellState {
   readonly isPhonePortrait: boolean;
+  readonly searchQuery: string;
 }
 
 export type ShellAction = ActionType<typeof actions>;
 
 export const initialAccountsState: ShellState = {
-  isPhonePortrait: false
+  isPhonePortrait: isPhonePortrait(),
+  searchQuery: ''
 };
 
 export const shell: Reducer<ShellState, ShellAction> = (
@@ -21,6 +27,11 @@ export const shell: Reducer<ShellState, ShellAction> = (
       return {
         ...state,
         isPhonePortrait: action.payload
+      };
+    case getType(actions.setSearchQuery):
+      return {
+        ...state,
+        searchQuery: action.payload
       };
     default:
       return state;

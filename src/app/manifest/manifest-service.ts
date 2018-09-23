@@ -52,20 +52,21 @@ class ManifestService {
    * often than every 10 seconds, and only warns if the manifest
    * version has actually changed.
    */
-  warnMissingDefinition = _.debounce(() => {
-    this.getManifestApi()
-      .then((data) => {
+  warnMissingDefinition = _.debounce(
+    () => {
+      this.getManifestApi().then((data) => {
         const language = settings.language;
         const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
         // The manifest has updated!
         if (path !== this.version) {
-          toaster.pop('warning',
-                      t('Manifest.Outdated'),
-                      t('Manifest.OutdatedExplanation'));
+          toaster.pop('warning', t('Manifest.Outdated'), t('Manifest.OutdatedExplanation'));
         }
       });
-  }, 10000, true);
+    },
+    10000,
+    true
+  );
 
   private manifestPromise: Promise<ManifestDB> | null = null;
   private makeStatement = _.memoize((table, db: ManifestDB) => {
@@ -94,11 +95,10 @@ class ManifestService {
 
     this.loaded = false;
 
-    this.manifestPromise = Promise
-      .all([
-        requireSqlLib(), // load in the sql.js library
-        this.loadManifest()
-      ])
+    this.manifestPromise = Promise.all([
+      requireSqlLib(), // load in the sql.js library
+      this.loadManifest()
+    ])
       .then(([SQLLib, typedArray]) => {
         this.statusText = `${t('Manifest.Build')}...`;
         const db = new SQLLib.Database(typedArray);
@@ -114,7 +114,7 @@ class ManifestService {
           message = navigator.onLine
             ? t('BungieService.NotConnectedOrBlocked')
             : t('BungieService.NotConnected');
-        // tslint:disable-next-line:space-in-parens
+          // tslint:disable-next-line:space-in-parens
         } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
           message = t('BungieService.Difficulties');
         } else if (e.status < 200 || e.status >= 400) {
@@ -129,7 +129,7 @@ class ManifestService {
 
         this.manifestPromise = null;
         this.setState({ error: e, statusText });
-        console.error("Manifest loading error", { error: e }, e);
+        console.error('Manifest loading error', { error: e }, e);
         reportException('manifest load', e);
         throw new Error(message);
       });
@@ -164,19 +164,19 @@ class ManifestService {
     return Promise.all([
       this.getManifestApi(),
       settings.ready // wait for settings to be ready
-    ])
-      .then(([data]: [DestinyManifest, {}]) => {
-        const language = settings.language;
-        const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+    ]).then(([data]: [DestinyManifest, {}]) => {
+      const language = settings.language;
+      const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
-        // Use the path as the version, rather than the "version" field, because
-        // Bungie can update the manifest file without changing that version.
-        const version = path;
-        this.version = version;
+      // Use the path as the version, rather than the "version" field, because
+      // Bungie can update the manifest file without changing that version.
+      const version = path;
+      this.version = version;
 
-        return this.loadManifestFromCache(version)
-          .catch(() => this.loadManifestRemote(version, path));
-      });
+      return this.loadManifestFromCache(version).catch(() =>
+        this.loadManifestRemote(version, path)
+      );
+    });
   }
 
   /**
@@ -186,7 +186,7 @@ class ManifestService {
     this.statusText = `${t('Manifest.Download')}...`;
 
     return fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`)
-      .then((response) => response.ok ? response.blob() : Promise.reject(response))
+      .then((response) => (response.ok ? response.blob() : Promise.reject(response)))
       .then((response: Blob) => {
         this.statusText = `${t('Manifest.Unzip')}...`;
         return unzipManifest(response);
@@ -196,18 +196,22 @@ class ManifestService {
 
         const typedArray = new Uint8Array(arraybuffer);
         // We intentionally don't wait on this promise
-        idbKeyval.set(this.idbKey, typedArray)
+        idbKeyval
+          .set(this.idbKey, typedArray)
           .then(() => {
             console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
             localStorage.setItem(this.localStorageKey, version);
           })
           .then(null, (e) => {
             console.error('Error saving manifest file', e);
-            toaster.pop({
-              title: t('Help.NoStorage'),
-              body: t('Help.NoStorageMessage'),
-              type: 'error'
-            }, 0);
+            toaster.pop(
+              {
+                title: t('Help.NoStorage'),
+                body: t('Help.NoStorageMessage'),
+                type: 'error'
+              },
+              0
+            );
           });
 
         $rootScope.$broadcast('dim-new-manifest');
@@ -226,7 +230,7 @@ class ManifestService {
    */
   private loadManifestFromCache(version): Promise<Uint8Array> {
     if (alwaysLoadRemote) {
-      return Promise.reject(new Error("Testing - always load remote"));
+      return Promise.reject(new Error('Testing - always load remote'));
     }
 
     this.statusText = `${t('Manifest.Load')}...`;
@@ -234,12 +238,11 @@ class ManifestService {
     if (currentManifestVersion === version) {
       return idbKeyval.get(this.idbKey).then((typedArray: Uint8Array) => {
         if (!typedArray) {
-          throw new Error("Empty cached manifest file");
+          throw new Error('Empty cached manifest file');
         }
         return typedArray;
       });
     } else {
-      ga('send', 'event', 'Manifest', 'Need New Manifest');
       return Promise.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }
   }
@@ -259,30 +262,44 @@ function unzipManifest(blob: Blob): Promise<ArrayBuffer> {
     zip.workerScripts = {
       inflater: [zipWorker, inflate]
     };
-    zip.createReader(new zip.BlobReader(blob), (zipReader) => {
-      // get all entries from the zip
-      zipReader.getEntries((entries) => {
-        if (entries.length) {
-          entries[0].getData(new zip.BlobWriter(), (blob) => {
-            const blobReader = new FileReader();
-            blobReader.addEventListener("error", (e) => { reject(e); });
-            blobReader.addEventListener("load", () => {
-              zipReader.close(() => {
-                if (blobReader.result instanceof ArrayBuffer) {
-                  resolve(blobReader.result);
-                }
+    zip.createReader(
+      new zip.BlobReader(blob),
+      (zipReader) => {
+        // get all entries from the zip
+        zipReader.getEntries((entries) => {
+          if (entries.length) {
+            entries[0].getData(new zip.BlobWriter(), (blob) => {
+              const blobReader = new FileReader();
+              blobReader.addEventListener('error', (e) => {
+                reject(e);
               });
+              blobReader.addEventListener('load', () => {
+                zipReader.close(() => {
+                  if (blobReader.result instanceof ArrayBuffer) {
+                    resolve(blobReader.result);
+                  }
+                });
+              });
+              blobReader.readAsArrayBuffer(blob);
             });
-            blobReader.readAsArrayBuffer(blob);
-          });
-        }
-      });
-    }, (error) => {
-      reject(error);
-    });
+          }
+        });
+      },
+      (error) => {
+        reject(error);
+      }
+    );
   });
 }
 
 // Two separate copies of the service, with separate state and separate storage
-export const D1ManifestService = new ManifestService('manifest-version', 'dimManifest', d1GetManifest);
-export const D2ManifestService = new ManifestService('d2-manifest-version', 'd2-manifest', d2GetManifest);
+export const D1ManifestService = new ManifestService(
+  'manifest-version',
+  'dimManifest',
+  d1GetManifest
+);
+export const D2ManifestService = new ManifestService(
+  'd2-manifest-version',
+  'd2-manifest',
+  d2GetManifest
+);

@@ -1,7 +1,6 @@
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
 import { queuedAction } from './action-queue';
-import { showInfoPopup } from '../shell/info-popup';
 import { IPromise } from 'angular';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
@@ -10,54 +9,42 @@ import { t } from 'i18next';
 import { toaster, loadingTracker } from '../ngimport-more';
 import { $q } from 'ngimport';
 
-// Only show this once per session
-const didYouKnow = _.once(() => {
-  const didYouKnowTemplate = `<p>${t("DidYouKnow.DragAndDrop")}</p>
-                              <p>${t("DidYouKnow.TryNext")}</p>`;
-  showInfoPopup("movebox", {
-    title: t("DidYouKnow.DidYouKnow"),
-    body: didYouKnowTemplate,
-    hide: t("DidYouKnow.DontShowAgain")
-  });
-});
-
 /**
  * Move the item to the specified store. Equip it if equip is true.
  */
-export const moveItemTo = queuedAction((item: DimItem, store: DimStore, equip: boolean, amount: number) => {
-  didYouKnow();
-  const reload = item.equipped || equip;
-  let promise: IPromise<any> = dimItemService.moveTo(item, store, equip, amount);
+export const moveItemTo = queuedAction(
+  (item: DimItem, store: DimStore, equip: boolean, amount: number) => {
+    const reload = item.equipped || equip;
+    let promise: IPromise<any> = dimItemService.moveTo(item, store, equip, amount);
 
-  if (reload) {
-    // Refresh light levels and such
-    promise = promise.then((item: DimItem) => {
-      return item.getStoresService()
-        .updateCharacters()
-        .then(() => item);
-    });
-  }
+    if (reload) {
+      // Refresh light levels and such
+      promise = promise.then((item: DimItem) => {
+        return item
+          .getStoresService()
+          .updateCharacters()
+          .then(() => item);
+      });
+    }
 
-  promise = promise
-    .then((item: DimItem) => item.updateManualMoveTimestamp())
-    .catch((e) => {
-      toaster.pop("error", item.name, e.message);
-      console.error("error moving item", item.name, "to", store.name, e);
+    promise = promise.then((item: DimItem) => item.updateManualMoveTimestamp()).catch((e) => {
+      toaster.pop('error', item.name, e.message);
+      console.error('error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting
       if (
-        e.code !== "wrong-level" &&
-        e.code !== "no-space" &&
-        e.code !==
-          1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */
+        e.code !== 'wrong-level' &&
+        e.code !== 'no-space' &&
+        e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */
       ) {
-        reportException("moveItem", e);
+        reportException('moveItem', e);
       }
     });
 
-  loadingTracker.addPromise(promise);
+    loadingTracker.addPromise(promise);
 
-  return promise;
-});
+    return promise;
+  }
+);
 
 /**
  * Consolidate all copies of a stackable item into a single stack in store.
@@ -72,11 +59,7 @@ export const consolidate = queuedAction((actionableItem: DimItem, store: DimStor
     stores.map((s) => {
       // First move everything into the vault
       const item = _.find(s.items, (i) => {
-        return (
-          store.id !== i.owner &&
-          i.hash === actionableItem.hash &&
-          !i.location.inPostmaster
-        );
+        return store.id !== i.owner && i.hash === actionableItem.hash && !i.location.inPostmaster;
       });
       if (item) {
         const amount = s.amountOfItem(actionableItem);
@@ -88,38 +71,38 @@ export const consolidate = queuedAction((actionableItem: DimItem, store: DimStor
 
   // Then move from the vault to the character
   if (!store.isVault) {
-    promise = promise.then((): IPromise<any> | undefined => {
-      const item = vault.items.find((i) => i.hash === actionableItem.hash && !i.location.inPostmaster);
-      if (item) {
-        const amount = vault.amountOfItem(actionableItem);
-        return dimItemService.moveTo(item, store, false, amount);
+    promise = promise.then(
+      (): IPromise<any> | undefined => {
+        const item = vault.items.find(
+          (i) => i.hash === actionableItem.hash && !i.location.inPostmaster
+        );
+        if (item) {
+          const amount = vault.amountOfItem(actionableItem);
+          return dimItemService.moveTo(item, store, false, amount);
+        }
+        return undefined;
       }
-      return undefined;
-    });
+    );
   }
 
   promise = promise
     .then(() => {
       let message;
       if (store.isVault) {
-        message = t("ItemMove.ToVault", {
+        message = t('ItemMove.ToVault', {
           name: actionableItem.name
         });
       } else {
-        message = t("ItemMove.ToStore", {
+        message = t('ItemMove.ToStore', {
           name: actionableItem.name,
           store: store.name
         });
       }
-      toaster.pop(
-        "success",
-        t("ItemMove.Consolidate", { name: actionableItem.name }),
-        message
-      );
+      toaster.pop('success', t('ItemMove.Consolidate', { name: actionableItem.name }), message);
     })
     .catch((a) => {
-      toaster.pop("error", actionableItem.name, a.message);
-      console.log("error consolidating", actionableItem, a);
+      toaster.pop('error', actionableItem.name, a.message);
+      console.log('error consolidating', actionableItem, a);
     });
 
   loadingTracker.addPromise(promise);
@@ -133,7 +116,7 @@ export const consolidate = queuedAction((actionableItem: DimItem, store: DimStor
 export const distribute = queuedAction((actionableItem: DimItem) => {
   // Sort vault to the end
   const stores = _.sortBy(actionableItem.getStoresService().getStores(), (s) => {
-    return s.id === "vault" ? 2 : 1;
+    return s.id === 'vault' ? 2 : 1;
   });
 
   let total = 0;
@@ -202,14 +185,11 @@ export const distribute = queuedAction((actionableItem: DimItem) => {
 
   promise = promise
     .then(() => {
-      toaster.pop(
-        "success",
-        t("ItemMove.Distributed", { name: actionableItem.name })
-      );
+      toaster.pop('success', t('ItemMove.Distributed', { name: actionableItem.name }));
     })
     .catch((a) => {
-      toaster.pop("error", actionableItem.name, a.message);
-      console.log("error distributing", actionableItem, a);
+      toaster.pop('error', actionableItem.name, a.message);
+      console.log('error distributing', actionableItem, a);
     });
 
   loadingTracker.addPromise(promise);

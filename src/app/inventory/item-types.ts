@@ -91,7 +91,11 @@ export interface DimItem {
   classTypeNameLocalized: string;
   /** The readable name of the damage type associated with this item. */
   dmg: 'kinetic' | 'arc' | 'solar' | 'void';
-  /** Whether this item should be shown. */
+  /**
+   * Whether this item should be shown.
+   *
+   * @deprecated this must not be used when rendering items in React.
+   */
   visible: boolean;
   /** Whether this item can be locked. */
   lockable: boolean;
@@ -113,9 +117,17 @@ export interface DimItem {
   comparable: boolean;
   /** Can this be reviewed? */
   reviewable: boolean;
-  /** Is this a new item? */
+  /**
+   * Is this a new item?
+   *
+   * @deprecated this must not be used when rendering items in React.
+   */
   isNew: boolean;
-  /** DIM tagging and notes info. */
+  /**
+   * DIM tagging and notes info.
+   *
+   * @deprecated this must not be used when rendering items in React.
+   */
   dimInfo: DimItemInfo;
   /** The "base power" without any power-enhancing mods. */
   basePower: number;
@@ -140,7 +152,11 @@ export interface DimItem {
   /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
 
-  /** Information about community ratings. */
+  /**
+   * Information about community ratings.
+   *
+   * @deprecated this must not be used when rendering items in React.
+   */
   dtrRating: DtrRating | null;
 
   /** Can this item be equipped by the given store? */
@@ -202,6 +218,8 @@ export interface D2Item extends DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
+  /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
+  itemCategoryHashes: number[];
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   dtrRating: D2RatingData | null;

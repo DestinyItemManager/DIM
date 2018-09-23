@@ -43,6 +43,9 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
   reloadStores(): Promise<StoreType[] | undefined>;
   /** Reload DTR rating data. */
   refreshRatingsData(): void;
+
+  /** Tell Redux things have changed. Temporary bridge for Redux. */
+  touch(): void;
 }
 
 /**
@@ -142,6 +145,9 @@ export interface DimStore {
 
   /** The stores service associated with this store. */
   getStoresService(): StoreServiceType;
+
+  /** A temporary way of telling Redux that something about the stores has changed. */
+  touch(): void;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
@@ -223,6 +229,7 @@ export interface D1Progression extends DestinyProgression {
     factionName: string;
     factionIcon: string;
   };
+  order: number;
 }
 
 /**
@@ -241,10 +248,7 @@ export interface D1Store extends DimStore {
   // TODO: shape?
   advisors: any;
 
-  updateCharacterInfo(
-    defs: D1ManifestDefinitions,
-    bStore: any
-  ): IPromise<D1Store[]>;
+  updateCharacterInfo(defs: D1ManifestDefinitions, bStore: any): IPromise<D1Store[]>;
   updateCharacterInfoFromEquip(characterInfo);
   /** Which faction is this character currently aligned with? */
   factionAlignment();

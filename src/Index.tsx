@@ -3,67 +3,46 @@ import 'babel-polyfill';
 import 'core-js/fn/promise/finally';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { module, bootstrap } from 'angular';
-import { UIRouter } from '@uirouter/react';
-import { Provider } from 'react-redux';
-import makeRouter from './router.config';
+import { module as angularModule, bootstrap } from 'angular';
 
 import './app/google';
 import './app/exceptions';
 
 // Initialize the main DIM app
 import { AppModule } from './app/app.module';
-import App from './app/App';
 
 import './scss/main.scss';
 
 import { initi18n } from './app/i18n';
 
 // Drag and drop
-import { polyfill } from "mobile-drag-drop";
+import { polyfill } from 'mobile-drag-drop';
 import 'mobile-drag-drop/default.css';
 
 import registerServiceWorker from './register-service-worker';
 import { lazyInjector } from './lazyInjector';
-import { setRouter } from './router';
-import store from './app/store/store';
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  console.log('prompt login');
-  if (window.confirm('Save to desktop?')) {
-
-    console.log('save to desktop');
-    (e as any).prompt();
-  }
-});
+import { safariTouchFix } from './safari-touch-fix';
+import Root from './Root';
+import updateCSSVariables from './app/css-variables';
 
 polyfill({
-  holdToDrag: 300
+  holdToDrag: 300,
+  dragImageCenterOnTouch: true
 });
 
-// https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
-window.addEventListener('touchmove', () => { return; });
+safariTouchFix();
 
 if ($DIM_FLAVOR !== 'dev') {
   registerServiceWorker();
 }
 
 initi18n().then(() => {
-  module('Bootstrap', [AppModule])
-    .run(($injector) => {
-      'ngInject';
-      lazyInjector.$injector = $injector;
-      const router = makeRouter();
-      setRouter(router);
-      ReactDOM.render(
-        <Provider store={store}>
-          <UIRouter router={router}>
-            <App/>
-          </UIRouter>
-        </Provider>,
-        document.getElementById('app')
-      );
-    });
-  bootstrap(document.createElement('div'), ['Bootstrap'], { strictDi: true });
+  angularModule('Bootstrap', [AppModule]).run(($injector) => {
+    'ngInject';
+    lazyInjector.$injector = $injector;
+    updateCSSVariables();
+
+    ReactDOM.render(<Root />, document.getElementById('app'));
+  });
+  bootstrap(document.getElementById('angular')!, ['Bootstrap'], { strictDi: true });
 });

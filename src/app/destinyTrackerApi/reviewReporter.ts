@@ -29,7 +29,7 @@ export class ReviewReporter {
 
     return {
       reviewId,
-      report: "",
+      report: '',
       reporter
     };
   }

@@ -50,14 +50,7 @@ function InfuseCtrl(
 
       if (vm.query.destinyVersion === 1) {
         getDefinitions().then((defs) => {
-          [
-            452597397,
-            2534352370,
-            3159615086,
-            937555249,
-            1898539128,
-            1542293174
-          ].forEach((hash) => {
+          [452597397, 2534352370, 3159615086, 937555249, 1898539128, 1542293174].forEach((hash) => {
             vm.items[hash] = defs.InventoryItem.get(hash);
           });
         });
@@ -147,11 +140,16 @@ function InfuseCtrl(
       }
 
       if (source.isDestiny1()) {
-        return (source.type === target.type) && (source.primStat!.value < target.primStat!.value);
+        return source.type === target.type && source.primStat!.value < target.primStat!.value;
       } else if (source.isDestiny2() && target.isDestiny2()) {
-        return source.infusionQuality && target.infusionQuality &&
-               (source.infusionQuality.infusionCategoryHashes.some((h) => target.infusionQuality!.infusionCategoryHashes.includes(h))) &&
-               (source.basePower < target.basePower);
+        return (
+          source.infusionQuality &&
+          target.infusionQuality &&
+          source.infusionQuality.infusionCategoryHashes.some((h) =>
+            target.infusionQuality!.infusionCategoryHashes.includes(h)
+          ) &&
+          source.basePower < target.basePower
+        );
       }
 
       // Don't try to apply logic for unknown Destiny versions.
@@ -161,7 +159,12 @@ function InfuseCtrl(
     itemComparator: chainComparator(
       reverseComparator(compareBy((item: DimItem) => item.basePower)),
       reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
-      compareBy((item: DimItem) => (item.isDestiny1() && item.talentGrid) ? ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5) : 0)
+      compareBy(
+        (item: DimItem) =>
+          item.isDestiny1() && item.talentGrid
+            ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
+            : 0
+      )
     ),
 
     closeDialog() {

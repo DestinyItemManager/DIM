@@ -31,13 +31,9 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
   componentDidMount() {
     this.subscriptions = [
-      DimVersions.showChangelog$.subscribe((showChangelog) =>
-        this.setState({ showChangelog })
-      ),
+      DimVersions.showChangelog$.subscribe((showChangelog) => this.setState({ showChangelog })),
       alerts$.subscribe((alerts) => this.setState({ alerts })),
-      dimNeedsUpdate$.subscribe((dimNeedsUpdate) =>
-        this.setState({ dimNeedsUpdate })
-      )
+      dimNeedsUpdate$.subscribe((dimNeedsUpdate) => this.setState({ dimNeedsUpdate }))
     ];
   }
 

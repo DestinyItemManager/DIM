@@ -1,7 +1,4 @@
-import {
-  DestinyVendorsResponse,
-  DestinyVendorGroup
-  } from 'bungie-api-ts/destiny2';
+import { DestinyVendorsResponse, DestinyVendorGroup } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
@@ -52,7 +49,13 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
   // TODO: pull this into a service?
   async loadVendors() {
-    dimVendorEngramsService.getAllVendorDrops().then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
+    if (this.state.error) {
+      this.setState({ error: undefined });
+    }
+
+    dimVendorEngramsService
+      .getAllVendorDrops()
+      .then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
 
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
@@ -62,7 +65,11 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     // we at least need to display that character!
     let characterId: string = this.props.transition!.params().characterId;
     if (!characterId) {
-      const stores = this.state.stores || await D2StoresService.getStoresStream(this.props.account).take(1).toPromise();
+      const stores =
+        this.state.stores ||
+        (await D2StoresService.getStoresStream(this.props.account)
+          .take(1)
+          .toPromise());
       if (stores) {
         characterId = stores.find((s) => s.current)!.id;
 
@@ -74,6 +81,11 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
           this.setState({ basePowerLevel });
         }
       }
+    }
+
+    if (!characterId) {
+      this.setState({ error: new Error("Couldn't load any characters.") });
+      return;
     }
 
     let vendorsResponse;
@@ -99,17 +111,19 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       loadingTracker.addPromise(promise);
     });
 
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
-      if (stores) {
-        const ownedItemHashes = new Set<number>();
-        for (const store of stores) {
-          for (const item of store.items) {
-            ownedItemHashes.add(item.hash);
+    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
+      (stores) => {
+        if (stores) {
+          const ownedItemHashes = new Set<number>();
+          for (const store of stores) {
+            for (const item of store.items) {
+              ownedItemHashes.add(item.hash);
+            }
           }
+          this.setState({ stores, ownedItemHashes });
         }
-        this.setState({ stores, ownedItemHashes });
       }
-    });
+    );
   }
 
   componentWillUnmount() {
@@ -118,24 +132,39 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const { defs, vendorsResponse, trackerService, ownedItemHashes, vendorEngramDrops, basePowerLevel, error } = this.state;
+    const {
+      defs,
+      vendorsResponse,
+      trackerService,
+      ownedItemHashes,
+      vendorEngramDrops,
+      basePowerLevel,
+      error
+    } = this.state;
     const { account } = this.props;
 
     if (error) {
       return (
         <div className="vendor dim-page">
-          <h2>{t('Forsaken.Vendors')}</h2>
+          <div className="dim-error">
+            <h2>{t('ErrorBoundary.Title')}</h2>
+            <div>{error.message}</div>
+          </div>
         </div>
       );
     }
 
     if (!vendorsResponse || !defs) {
-      return <div className="vendor dim-page"><Loading/></div>;
+      return (
+        <div className="vendor dim-page">
+          <Loading />
+        </div>
+      );
     }
 
     return (
       <div className="vendor d2-vendors dim-page">
-        {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) =>
+        {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => (
           <VendorGroup
             key={group.vendorGroupHash}
             defs={defs}
@@ -147,8 +176,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
             vendorEngramDrops={vendorEngramDrops}
             basePowerLevel={basePowerLevel}
           />
-        )}
-
+        ))}
       </div>
     );
   }
@@ -178,14 +206,17 @@ function VendorGroup({
   return (
     <>
       <h2>{groupDef.categoryName}</h2>
-      {group.vendorHashes.map((h) => vendorsResponse.vendors.data[h]).map((vendor) =>
+      {group.vendorHashes.map((h) => vendorsResponse.vendors.data[h]).map((vendor) => (
         <ErrorBoundary key={vendor.vendorHash} name="Vendor">
           <Vendor
             account={account}
             defs={defs}
             vendor={vendor}
             itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
-            sales={vendorsResponse.sales.data[vendor.vendorHash] && vendorsResponse.sales.data[vendor.vendorHash].saleItems}
+            sales={
+              vendorsResponse.sales.data[vendor.vendorHash] &&
+              vendorsResponse.sales.data[vendor.vendorHash].saleItems
+            }
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
@@ -193,7 +224,7 @@ function VendorGroup({
             basePowerLevel={basePowerLevel}
           />
         </ErrorBoundary>
-      )}
+      ))}
     </>
   );
 }

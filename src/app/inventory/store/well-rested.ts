@@ -1,4 +1,7 @@
-import { DestinyCharacterProgressionComponent, DestinyProgressionDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyCharacterProgressionComponent,
+  DestinyProgressionDefinition
+} from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
 
 /**
@@ -22,8 +25,7 @@ export function isWellRested(
 
   // You can only be well-rested if you've hit the normal level cap.
   // And if you haven't ever gained 3 legend levels, no dice.
-  if (levelProgress.level < levelProgress.levelCap ||
-      legendProgress.level < 4) {
+  if (levelProgress.level < levelProgress.levelCap || legendProgress.level < 4) {
     return {
       wellRested: false
     };
@@ -31,7 +33,8 @@ export function isWellRested(
 
   const progress = legendProgress.weeklyProgress;
 
-  const requiredXP = xpRequiredForLevel(legendProgress.level, legendProgressDef) +
+  const requiredXP =
+    xpRequiredForLevel(legendProgress.level, legendProgressDef) +
     xpRequiredForLevel(legendProgress.level - 1, legendProgressDef) +
     xpRequiredForLevel(legendProgress.level - 2, legendProgressDef);
 
@@ -46,10 +49,7 @@ export function isWellRested(
 /**
  * How much XP was required to achieve the given level?
  */
-function xpRequiredForLevel(
-  level: number,
-  progressDef: DestinyProgressionDefinition
-) {
+function xpRequiredForLevel(level: number, progressDef: DestinyProgressionDefinition) {
   const stepIndex = Math.min(Math.max(0, level), progressDef.steps.length - 1);
   return progressDef.steps[stepIndex].progressTotal;
 }

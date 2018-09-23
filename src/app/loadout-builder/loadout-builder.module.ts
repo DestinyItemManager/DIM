@@ -13,5 +13,4 @@ export default module('loadoutBuilderModule', [])
   .component('loadoutBuilderItem', LoadoutBuilderItem)
   .component('loadoutBuilderLocks', LoadoutBuilderLocks)
   .component('loadoutBuilderCharacterSelect', LoadoutBuilderCharacterSelect)
-  .component('loadoutBuilderCharacterPopup', LoadoutBuilderCharacterPopup)
-  .name;
+  .component('loadoutBuilderCharacterPopup', LoadoutBuilderCharacterPopup).name;

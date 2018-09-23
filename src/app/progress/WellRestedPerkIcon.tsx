@@ -21,8 +21,16 @@ export default function WellRestedPerkIcon({
   return (
     <div className="well-rested milestone-quest">
       <div className="milestone-icon">
-        <BungieImage className="perk" src={perkDef.displayProperties.icon} title={perkDef.displayProperties.description} />
-        <span>{formatter.format(wellRestedInfo.progress!)}<wbr/>/<wbr/>{formatter.format(wellRestedInfo.requiredXP!)}</span>
+        <BungieImage
+          className="perk"
+          src={perkDef.displayProperties.icon}
+          title={perkDef.displayProperties.description}
+        />
+        <span>
+          {formatter.format(wellRestedInfo.progress!)}
+          <wbr />/<wbr />
+          {formatter.format(wellRestedInfo.requiredXP!)}
+        </span>
       </div>
       <div className="milestone-info">
         <span className="milestone-name">{perkDef.displayProperties.name}</span>

@@ -8,9 +8,13 @@ import * as _ from 'underscore';
  */
 export function sum<T>(list: T[], summer: _.ListIterator<T, number>): number {
   const fn = _.iteratee(summer) as _.ListIterator<T, number>;
-  return _.reduce(list, (memo, val, index) => {
-    return memo + fn(val, index, list);
-  }, 0);
+  return _.reduce(
+    list,
+    (memo, val, index) => {
+      return memo + fn(val, index, list);
+    },
+    0
+  );
 }
 
 /**

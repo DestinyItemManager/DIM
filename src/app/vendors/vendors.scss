@@ -78,7 +78,7 @@
     margin-left: 2px;
     text-transform: uppercase;
     font-size: 12px;
-    color: #CCC;
+    color: #ccc;
     margin-bottom: 4px;
     &:first-child {
       margin-top: 0px;
@@ -103,7 +103,7 @@
     z-index: 4;
   }
   .vendorHeaderWrapper {
-    position:fixed;
+    position: fixed;
     top: $header-height;
     max-width: 900px;
     width: 100%;
@@ -169,7 +169,7 @@
     height: 18px;
   }
   .notenough {
-    color: #CC5C58;
+    color: #cc5c58;
   }
   .modal-open {
     overflow: visible;
@@ -198,7 +198,7 @@
   left: 2px;
   pointer-events: none;
   z-index: 1;
-  background-color: rgba(40,40,40,0.6);
+  background-color: rgba(40, 40, 40, 0.6);
   margin-top: 2px;
   backface-visibility: hidden;
 }
@@ -218,7 +218,7 @@
     opacity: 0.5;
   }
   .selected {
-    opacity: 1.0;
+    opacity: 1;
   }
   a {
     outline: 0;
@@ -229,15 +229,20 @@
   float: right;
 }
 
-vendor-currencies, .vendor-currencies {
+vendor-currencies,
+.vendor-currencies {
   font-size: 12px;
   float: right;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 50%;
+  justify-content: flex-end;
   .vendor-currency {
-    margin-right: 10px;
-    &:last-child {
-      margin-right: 0;
+    margin-left: 10px;
+    margin-bottom: 8px;
+    &:first-child {
+      margin-left: 0;
     }
     img {
       vertical-align: bottom;

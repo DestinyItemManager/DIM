@@ -1,4 +1,4 @@
-import { IDirective } from "angular";
+import { IDirective } from 'angular';
 
 export function percent(val: number): string {
   return `${Math.min(100, Math.floor(100 * val))}%`;

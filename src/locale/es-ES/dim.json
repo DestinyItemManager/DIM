@@ -51,8 +51,7 @@
     "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelve a intentarlo.",
     "Twitter": "Entérate de las actualizaciones de estados en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
-    "VendorNotFound": "Los datos de los comerciantes no están disponibles.",
-    "WarmindLoginNeeded": "No podemos cargar tu intentario debido a un fallo en la API de Destiny. Para arreglarlo, carga cada uno de tus personajes y configura los multigestos."
+    "VendorNotFound": "Los datos de los comerciantes no están disponibles."
   },
   "Compare": {
     "All": "Comparaciones de {{type}} ({{quantity}})",
@@ -84,15 +83,6 @@
     "Banner": "DIM soportará Destiny 2",
     "ComingSoon": "Daremos soporte a tus personajes de Destiny 2 en cuanto el juego se encuentre disponible en consolas, de acuerdo a nuestras capacidades. Danos algunas semanas para conocer el juego (¡y entretenernos!)."
   },
-  "DidYouKnow": {
-    "Collapse": "¡Acabas de colapsar una sección en DIM!. Esto podría ser útil para ocultar partes de DIM que no necesites usar normalmente.",
-    "DidYouKnow": "¿Sabías que?",
-    "DontShowAgain": "No mostrar esta sugerencia de nuevo",
-    "DoubleClick": "Si estas moviendo un objeto a tu personaje activo (último al que iniciaste sesión), puedes darle doble click al objeto para equiparlo instantáneamente.",
-    "DragAndDrop": "Los objetos pueden ser arrastrados y soltados entre diferentes columnas de personajes/depósito.",
-    "Expand": "Para expandir de nuevo una sección, simplemente da click en el símbolo de más a la izquierda de la categoría que colapsaste.",
-    "TryNext": "¡Inténtalo la próxima vez!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} calificaciones.",
     "BestRatedKey": " = ventaja sugerida",
@@ -102,6 +92,7 @@
     "Delete": "Borrar",
     "Edit": "Editar",
     "ForGameMode": "Para el modo de juego",
+    "ForPlatform": "Para la(s) plataforma(s)",
     "Help": "Escribir una calificación (opcional)",
     "HelpCons": "Describe las cosas negativas de esta arma (opcional)",
     "HelpPros": "Describe las cosas positivas de esta arma (opcional)",
@@ -115,6 +106,7 @@
       "Xbox": "Solo Xbox"
     },
     "Pros": "Pros",
+    "RatingsOptions": "Opciones de calificaciones",
     "ReallyReport": "Reportar",
     "ServiceCallError": "Fallo al llamar al servicio de Destiny Tracker.",
     "ServiceSubmitError": "Fallo al enviar al servicio de Destiny Tracker.",
@@ -183,7 +175,6 @@
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra los objetos duplicados",
-    "DupeInPostmaster": "Algunos objetos duplicados están en Administración.",
     "Engrams": "Muestra engramas.",
     "EnterName": "Escribe el nombre de un objeto:",
     "EnterNote": "Inserta notas de texto:",
@@ -217,11 +208,12 @@
     "PartialMatch": "Muestra objetos donde su nombre/ventaja coincidie parcialmente con el filtro de texto.",
     "Postmaster": "Objetos que están actualmente en la Administración.",
     "PowerLevel": "Muestra objetos basado en su nivel de luz (Ataque para armas; Defensa para armaduras).",
-    "PowerMod": "Objetos que tienen un modificador para aumentar su Poder.",
     "Quality": "Muestra objetos basado en el porcentaje de calidad total de su estadística. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
+    "RandomRoll": "Muestra objetos que suelten tiradas aleatorias.",
     "RarityTier": "Muestra objetos basado en su nivel de rareza.",
     "Rated": "Muestra todas las armas que tienen calificación en Destiny Tracker.",
     "Rating": "Muestra armas basado en su calificación en Destiny Tracker.",
+    "RatingCount": "Muestra armas basadas en el número de calificaciones que tengan para el \"sandbox\" actual en Destiny Tracker.",
     "Reforgeable": "Muestra objetos que pueden ser reforjados en el armero.",
     "Release": "Disponible desde el lanzamiento <i>{{release}}</i>",
     "Releases": {
@@ -256,12 +248,8 @@
     },
     "VideoExample": "Para un mejor ejemplo de cómo usar los filtros, échale un vistazo a este video en {{link}}",
     "WeaponClass": "Muestra objetos basado en las clases de arma.",
-    "WeaponType": "Muestra armas basado en su tipo de daño.",
+    "WeaponType": "Muestra las armas basadas en su tipo de arma.",
     "Year": "Muestra los objetos con su respectivo año de aparición en Destiny."
-  },
-  "Forsaken": {
-    "Progress": "Nota: La información del progreso puede ser incompleta o incorrecta durante un tiempo después del lanzamiento de Los Renegados.",
-    "Vendors": "Los vendedores no estarán disponibles durante un tiempo después del lanzamiento de Los Renegados."
   },
   "Header": {
     "About": "Acerca de",
@@ -269,6 +257,7 @@
     "BulkTag": "Grupos de etiquetas para objetos",
     "BungieNetAlert": "Alerta de Bungie",
     "FilterHelp": "Buscar objeto/ventaja o {{example}}",
+    "FilterHelpBrief": "Buscar objetos",
     "Filters": "Filtros",
     "Inventory": "Inventario",
     "Refresh": "Actualizar datos de Destiny",
@@ -280,11 +269,8 @@
   },
   "Help": {
     "CannotMove": "No puedes mover ese objeto de este personaje.",
-    "ChangingPerks": "Cambio de Ventajas No Soportado",
-    "ChangingPerksInfo": "Lo sentimos, no hay forma de cambiar las ventajas fuera del juego. ¡Desearíamos poder hacerlo!",
     "Drag": "\nMantén Shift o pausa sobre la zona para soltar para transferir un pila parcial.",
     "HidePopup": "Esconder Esta Ventana",
-    "NeverShow": "No mostrar esto nunca.",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tienes poco espacio en disco. DIM no puede continuar.",
     "UpdateAvailable": "DIM actualizado",
@@ -500,6 +486,7 @@
     "OverviewTab": "Resumen",
     "ReadLore": "Lee historia en Ishtar Collective",
     "ReviewsTab": "Calificaciones",
+    "Rewards": "Recompensas:",
     "Split": "Partir",
     "Store": "Meter",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -517,20 +504,16 @@
     "Complete": "Completo",
     "Incomplete": "Incompleto"
   },
-  "Postmaster": {
-    "Desc": "Hay 20 objetos perdidos en la Administración en tu {{store}}. Nuevos objetos reemplazarán los ya existentes.",
-    "Limit": "Límite de Administración"
-  },
   "Progress": {
     "CrucibleRank": "Rangos de Crisol",
     "Daily": "Diario",
     "ExpiresIn": "expira en {{endTime}}",
     "Factions": "Facciones",
-    "Milestones": "Hazañas",
+    "Milestones": "Hazañas & Desafíos",
     "ProfileMilestones": "Hazañas de cuenta",
     "ProfileQuests": "Misiones de cuenta",
     "Progress": "Progreso",
-    "Quests": "Búsquedas y Aventuras",
+    "QuestExpires": "Expira en ",
     "RewardEarned": "Recompensa obtenida pero no reclamada",
     "RewardNotEarned": "Recompensa no obtenida",
     "RewardRedeemed": "Recompensa reclamada",
@@ -551,7 +534,6 @@
     "ColorA11y": "Configuración de daltonismo",
     "ColumnSize": "{{num}} objetos",
     "ColumnSizeAuto": "Automático",
-    "DIMPopupsReset": "Reestablecer consejos de información anteriormente escondidos",
     "Data": "Hojas de cálculo",
     "DontForgetDupes": "No te olvides de que puedes buscar is:dupe o is:dupelower para encontrar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
     "EnableAdvancedStats": "Mostrar la calificación de la calidad de las estadísticas en la armadura (D1)",
@@ -597,7 +579,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "Level": "Nivel",
-    "MaxBasePower": "Máximo Poder base (sin mods)",
+    "MaxBasePower": "Poder máximo",
     "NoBonus": "Sin bonus",
     "NotApplicable": "No aplicable",
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",

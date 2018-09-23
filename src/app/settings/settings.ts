@@ -5,6 +5,8 @@ import * as _ from 'underscore';
 import { defaultLanguage } from '../i18n';
 import { SyncService } from '../storage/sync.service';
 import { Subject } from 'rxjs/Subject';
+import store from '../store/store';
+import { loaded } from './actions';
 
 const itemSortPresets = {
   primaryStat: ['primStat', 'name'],
@@ -49,7 +51,7 @@ let readyResolve;
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed';
 
-class Settings {
+export class Settings {
   // Show full details in item popup
   itemDetails = true;
   // Show item quality percentages
@@ -76,7 +78,7 @@ class Settings {
   // How many columns to display vault buckets
   vaultMaxCol = 999;
   // How big in pixels to draw items - start smaller for iPad
-  itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
+  itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
   // Which categories or buckets should be collapsed?
   collapsedSections: { [key: string]: boolean } = {};
   // What settings for farming mode
@@ -92,7 +94,9 @@ class Settings {
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
   reviewsModeSelection = 0;
 
-  ready = new Promise((resolve) => readyResolve = resolve);
+  betaForsakenTiles = false;
+
+  ready = new Promise((resolve) => (readyResolve = resolve));
 
   language = defaultLanguage();
 
@@ -106,14 +110,16 @@ class Settings {
     }
 
     this.$updates.next();
+    store.dispatch(loaded(this));
 
     return saveSettings(this);
   }
 
   itemSortOrder(): string[] {
-    return (this.itemSort === 'custom'
-      ? this.itemSortOrderCustom
-      : itemSortPresets[this.itemSort]) || itemSortPresets.primaryStat;
+    return (
+      (this.itemSort === 'custom' ? this.itemSortOrderCustom : itemSortPresets[this.itemSort]) ||
+      itemSortPresets.primaryStat
+    );
   }
 }
 
@@ -141,6 +147,7 @@ export function initSettings() {
     $rootScope.$evalAsync(() => {
       const languageChanged = savedSettings.language !== i18next.language;
       merge(settings, savedSettings);
+      store.dispatch(loaded(settings));
       settings.$updates.next();
       localStorage.setItem('dimLanguage', settings.language);
       if (languageChanged) {

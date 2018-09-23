@@ -53,8 +53,7 @@ function LoadoutBuilderItemCtrl(
           overlay: false,
           className: 'move-popup-dialog vendor-move-popup',
           showClose: false,
-          scope: extend($scope.$new(true), {
-          }),
+          scope: extend($scope.$new(true), {}),
           data: itemElement,
           controllerAs: 'vm',
           controller() {

@@ -1,5 +1,5 @@
-import { VendorDrop, VendorDropType, vendorHashToVendorEngramVendor } from "./vendorDrops";
-import { loadingTracker } from "../ngimport-more";
+import { VendorDrop, VendorDropType, vendorHashToVendorEngramVendor } from './vendorDrops';
+import { loadingTracker } from '../ngimport-more';
 import { t } from 'i18next';
 
 export class VendorEngramsXyzService {
@@ -26,11 +26,11 @@ export class VendorEngramsXyzService {
 
   vendorEngramsFetch(url: string) {
     const request = new Request(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json'
-        },
-      });
+      method: 'POST',
+      headers: {
+        Accept: 'application/json'
+      }
+    });
 
     return Promise.resolve(fetch(request));
   }
@@ -40,8 +40,12 @@ export class VendorEngramsXyzService {
       return this.cachedResponse;
     }
 
-    this.refreshPromise = this.refreshPromise || this.vendorEngramsFetch('https://api.vendorengrams.xyz/getVendorDrops?source=DIM')
-      .then(this.handleVendorEngramsErrors, this.handleVendorEngramsErrors);
+    this.refreshPromise =
+      this.refreshPromise ||
+      this.vendorEngramsFetch('https://api.vendorengrams.xyz/getVendorDrops?source=DIM').then(
+        this.handleVendorEngramsErrors,
+        this.handleVendorEngramsErrors
+      );
 
     loadingTracker.addPromise(this.refreshPromise);
 
@@ -53,14 +57,21 @@ export class VendorEngramsXyzService {
   }
 }
 
-export function getVendorDropsForVendor(vendorHash: number, vendorDrops?: VendorDrop[]): VendorDrop[] {
+export function getVendorDropsForVendor(
+  vendorHash: number,
+  vendorDrops?: VendorDrop[]
+): VendorDrop[] {
   const matchedValues = vendorHashToVendorEngramVendor[vendorHash];
 
   if (!matchedValues) {
     return [];
   }
 
-  return (vendorDrops && vendorDrops.filter((vd) => vd.enabled === 1 && matchedValues.includes(vd.vendor))) || [];
+  return (
+    (vendorDrops &&
+      vendorDrops.filter((vd) => vd.enabled === 1 && matchedValues.includes(vd.vendor))) ||
+    []
+  );
 }
 
 export function powerLevelMatters(powerLevel?: number): boolean {
@@ -68,8 +79,7 @@ export function powerLevelMatters(powerLevel?: number): boolean {
 }
 
 export function isVerified380(vendorDrop: VendorDrop): boolean {
-  return vendorDrop.type === VendorDropType.Likely380 &&
-    vendorDrop.verified === 1;
+  return vendorDrop.type === VendorDropType.Likely380 && vendorDrop.verified === 1;
 }
 
 export const dimVendorEngramsService = new VendorEngramsXyzService();

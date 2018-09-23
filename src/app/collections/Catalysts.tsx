@@ -1,7 +1,4 @@
-import {
-  DestinyProfileResponse,
-  DestinyObjectiveProgress
-} from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
@@ -27,17 +24,24 @@ export default function Catalysts({
       <div className="vendor-row">
         <h3 className="category-title">
           Catalysts
-          <div className="ornaments-disclaimer">{t("Vendors.CatalystsDisclaimer")}</div>
+          <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
         </h3>
         <div className="vendor-items">
-        {catalysts.map((catalyst) =>
-          <VendorItemComponent
-            key={catalyst.itemHash}
-            defs={defs}
-            item={VendorItem.forCatalyst(defs, catalyst.attachedItemHash, catalyst.itemHash, catalyst.objectives, catalyst.canInsert, catalyst.enableFailReasons)}
-            owned={false}
-          />
-        )}
+          {catalysts.map((catalyst) => (
+            <VendorItemComponent
+              key={catalyst.itemHash}
+              defs={defs}
+              item={VendorItem.forCatalyst(
+                defs,
+                catalyst.attachedItemHash,
+                catalyst.itemHash,
+                catalyst.objectives,
+                catalyst.canInsert,
+                catalyst.enableFailReasons
+              )}
+              owned={false}
+            />
+          ))}
         </div>
       </div>
     </div>
@@ -77,7 +81,9 @@ function getCatalysts(
                 itemHash: reusablePlug.plugItemHash,
                 objectives: reusablePlug.plugObjectives,
                 canInsert: reusablePlug.canInsert,
-                enableFailReasons: (reusablePlug.insertFailIndexes || []).map((i) => item.plug.insertionRules[i].failureMessage)
+                enableFailReasons: (reusablePlug.insertFailIndexes || []).map(
+                  (i) => item.plug.insertionRules[i].failureMessage
+                )
               };
             }
           }
@@ -92,7 +98,7 @@ function getCatalysts(
   });
 }
 
-function *allItemInstances(profileResponse: DestinyProfileResponse) {
+function* allItemInstances(profileResponse: DestinyProfileResponse) {
   for (const item of profileResponse.profileInventory.data.items) {
     yield item;
   }

@@ -1,11 +1,11 @@
 {
   "AWA": {
-    "ConfirmDescription": "데스티니 가디언즈 컴패니언 앱을 실행하여 DIM이 아이템 수정 권한을 얻을수 있도록 해주십시오.",
+    "ConfirmDescription": "데스티니 가디언즈 컴패니언 앱을 실행하여 DIM이 아이템을 수정할 수 있도록 허용해주십시오.",
     "ConfirmTitle": "동작 확인"
   },
   "Accounts": {
     "Blizzard": "PC",
-    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 가디언즈 캐릭터가 없습니다. 다른 계정으로 접속해 보세요.",
+    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시요.",
     "PlayStation": "PS4",
     "Xbox": "XB1"
   },
@@ -32,14 +32,14 @@
     "Title": "Bungie로부터의 메시지:"
   },
   "BungieService": {
-    "DestinyLegacyPlatform": "만약 당신이 이전 세대의 콘솔에서 데스티니 1을 플레이 하였을 경우 당신의 데스티니 2 정보를 불러오는것을 제한하는 Bungie측의 버그가 있습니다. 번지가 곧 고칠 것이지만, 당신의 정보에 접근하기 위해서는 고쳐질 때 까지 최근 세대의 콘솔에서 데스티니 1을 플레이 하셔야 합니다.",
+    "DestinyLegacyPlatform": "번지의 서비스에는 이전 세대의 콘솔에서 데스티니 1을 플레이하였을 경우 DIM이 데스티니 2 정보를 불러오지 못하게 막는 버그가 있습니다. 번지가 이 버그를 곧 고칠 것이지만, 그전에 당신의 정보에 접근하기 위해서는 현세대 콘솔에서 데스티니 1을 플레이하셔야 합니다.",
     "DevVersion": "DIM의 개발 버전을 실행 중이신가요? bungie.net의 크롬 확장 프로그램을 등록 하셔야 합니다.",
     "Difficulties": "현재 Bungie API에 문제가 있습니다.",
     "ErrorTitle": "Bungie.net 오류",
     "ItemUniqueness": "아이템 희귀도",
-    "ItemUniquenessExplanation": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템 혹은 장비를 소유하고 있으며 이 아이템 혹은 장비는 캐릭터당 하나만 소유 할 수 있습니다.",
-    "ItemUniquenessExplanation_female": "당신은 '{{name}}' {{type}}을 당신의 {{character}}에게 옮기려 하셨지만, 이미 그 캐릭터는 그 아이템을 가지고 있고, 그 아이템은 하나만 허용되어 있습니다.",
-    "ItemUniquenessExplanation_male": "당신의 {{character}}에게 '{{name}}'{{type}}을(를) 옮기려 하였지만, 이미 그 캐릭터는 그 아이템을 가지고 있고, 그 아이템은 단 하나만 허용되어 있습니다.",
+    "ItemUniquenessExplanation": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
+    "ItemUniquenessExplanation_female": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
+    "ItemUniquenessExplanation_male": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "Maintenance": "Bungie.net 서버가 점검 중입니다.",
     "NetworkError": "통신 오류 - {{status}} {{statusText}}",
     "NoAccount": "{{platform}} 에서 데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨습니까?",
@@ -48,11 +48,10 @@
     "NotConnected": "인터넷에 연결되지 않았을 수 있습니다.",
     "NotConnectedOrBlocked": "인터넷에 연결되지 않았거나, 광고 차단 혹은 개인정보 관련 확장 프로그램이 Bungie.net을 차단하고 있을 수 있습니다.",
     "NotLoggedIn": "이 프로그램을 사용하기 위해서는 DIM에게 권한을 부여해 주세요.",
-    "Throttled": "번지 API 제한이 초과되었습니다.\n잠시 기다리신 후, 시도해 주세요.",
+    "Throttled": "번지 API 제한이 초과되었습니다. 잠시 후 다시 시도해 주십시오.",
     "Twitter": "정보를 업데이트 하는 중:",
     "UnknownError": "Bungie.net 메시지: {{message}}",
-    "VendorNotFound": "상인의 정보가 없습니다.",
-    "WarmindLoginNeeded": "데스티니 API내의 버그로 당신의 소지품을 불러올 수 없습니다. 해결하기 위해서는 각각의 캐릭터를 불러오고, 감정표현을 설정 하십시오."
+    "VendorNotFound": "상인의 정보가 없습니다."
   },
   "Compare": {
     "All": "{{type}} 비교 ({{quantity}})",
@@ -84,15 +83,6 @@
     "Banner": "DIM은 데스티니 2를 지원할 것입니다.",
     "ComingSoon": "저희는 저희의 능력이 되든 말든 콘솔에 데스티니 2가 출시하고 짧은 기간 안에 당신의 데스티니 2 캐릭터를 지원할 것입니다. 저희가 게임에 대해 배울 몇 주의 시간을 주세요. (플레이 할 시간도요!)"
   },
-  "DidYouKnow": {
-    "Collapse": "방금 DIM의 한 섹션을 없애셨습니다! 이것은 당신이 평소에 사용하지 않는 DIM의 섹션들을 없앨 때 유용할 것입니다.",
-    "DidYouKnow": "알고 계셨나요?",
-    "DontShowAgain": "이 팁을 다시 표시하지 않음",
-    "DoubleClick": "현재 접속하고 있는 (마지막으로 접속한) 캐릭터로 아이템을 옮기려고 하신다면, 해당 아이템을 더블 클릭하여 바로 착용할 수 있습니다.",
-    "DragAndDrop": "아이템은 서로 다른 캐릭터/금고 사이에서 끌어서 옮길 수 있습니다.",
-    "Expand": "다시 확장하려면 접은 항목의 맨 왼쪽의 더하기 아이콘을 누르세요.",
-    "TryNext": "다음에 다시 시도해 보세요!"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) {{numRatings}} 개의 평가에 근거함",
     "BestRatedKey": " = 추천 특성",
@@ -102,6 +92,7 @@
     "Delete": "삭제",
     "Edit": "수정",
     "ForGameMode": "게임 모드",
+    "ForPlatform": "플랫폼",
     "Help": "평가 작성 (선택 사항)",
     "HelpCons": "이 무기의 단점을 설명하십시오. (선택 사항)",
     "HelpPros": "이 무기의 장점을 설명하십시오. (선택 사항)",
@@ -115,6 +106,7 @@
       "Xbox": "엑스박스 한정"
     },
     "Pros": "장점",
+    "RatingsOptions": "평가 설정",
     "ReallyReport": "신고",
     "ServiceCallError": "데스티니 트래커 서비스 불러오기 실패",
     "ServiceSubmitError": "데스티니 트래커 서비스에 전송 실패",
@@ -128,8 +120,8 @@
     "Title": "문제가 발생했습니다."
   },
   "Faction": {
-    "EngramsAvailable": "한 개의 엔그램 보유 중",
-    "EngramsAvailable_plural": "{{count}} 개의 엔그램들 보유 중"
+    "EngramsAvailable": "엔그램 1 개 보유 중",
+    "EngramsAvailable_plural": "엔그램 {{count}} 개 보유 중"
   },
   "FarmingMode": {
     "Configuration": "설정",
@@ -178,12 +170,11 @@
     "Class": "직업 선호도를 기준으로 아이템 표시",
     "ClickFilters": "밑의 필터를 클릭해서 적용하거나 검색창에 쳐보세요.",
     "Combine": "필터는 모두 '그리고' 로 검색됩니다. 예를 들어 '{{example}}'은 모든 전기 속성 '그리고' 300이상 인 아이템만 보여집니다. '{{not}}' 을 사용하여 제외될 항목을 선택 할 수 있습니다. 예를 들어 '{{notexample}}'은 엔그램이 아닌 아이템을 보여줍니다.",
-    "ContributeLight": "라이트 레벨 높일 수 있는 아이템을 보여주기",
-    "ContributePower": "전투력을 높일 수 있는 수치를 가진 아이템을 보여주기",
+    "ContributeLight": "라이트 레벨을 높일 수 있는 아이템 표시",
+    "ContributePower": "전투력을 높일 수 있는 수치를 가진 아이템을 표시",
     "DamageType": "대미지 유형에 따른 아이템 표시",
     "Description": "설명",
     "Dupe": "중복된 아이템 표시",
-    "DupeInPostmaster": "우편 담당자에게 중복된 아이템이 있습니다.",
     "Engrams": "엔그램 보기",
     "EnterName": "아이템 이름 입력:",
     "EnterNote": "메모를 입력하세요:",
@@ -201,10 +192,10 @@
     "Infusable": "주입할 수 있는 장비 표시",
     "Leveling": {
       "Complete": "{{term}} - 완전히 완료된 아이템 표시 - 모든 업그레이드 해금됨.",
-      "Incomplete": "{{term}} - 완료되지 않은 아이템 표시 - 여전히 최소 하나의 언락해야 하는 업그래이드.",
+      "Incomplete": "{{term}} - 완료되지 않은 아이템 표시 - 여전히 최소 하나의 해금해야 하는 업그레이드.",
       "Leveling": "다양한 레벨 상태에 따른 아이템 표시:",
       "NeedsXP": "{{term}} - 여전히 경험치를 줄 수 있는 아이템 표시",
-      "Upgraded": "{{term}} - 모든 노드를 해금할 수 있는 충분항 경험치를 가졌지만, 모든 노드가 언락되지 않은 아이템 표시",
+      "Upgraded": "{{term}} - 모든 노드를 해금할 수 있는 충분한 경험치를 가졌지만, 모든 노드가 언락되지 않은 아이템 표시",
       "XPComplete": "{{term}} - 경험치를 더이상 줄 수 없는 아이템 표시(업그레이드가 해금 되었든 않았든)"
     },
     "LightLevel": "라이트 레벨에 기초한 아이템 표시 (무기는 공격력; 방어구는 방어력)",
@@ -212,17 +203,18 @@
     "Locked": "잠금 여부에 따른 아이템 표시",
     "NamedStat": "언급 된 스탯에 포인트가 있는 방어구 표시",
     "NewItems": "새로운 아이템 표시",
-    "Notes": "노트를 적어놓은 아이템 검색하기",
+    "Notes": "메모를 적어 놓은 아이템 검색하기",
     "Ornament": "장식 및 필터가 있는 항목 표시",
     "PartialMatch": "필터 내용에 부분적으로 일치하는 이름/특성을 가진 아이템 표시",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
     "PowerLevel": "파워 레벨에 기초하여 아이템 보여주기 (무기는 공격; 방어구는 방어)",
-    "PowerMod": "전투력을 올리는 개조 부품이 장착된 아이템",
     "Quality": "전체 스탯 백분율에 기초하여 아이템 보여주기. '{{percentage}}' 은(는) '{{quality}}' 로 불립니다.",
-    "RarityTier": "희귀도에 따라 분류된 아이템 표시",
+    "RandomRoll": "무작위 특성과 함께 나오는 아이템 표시",
+    "RarityTier": "희귀도에 따라 분류한 아이템 보여주기",
     "Rated": "데스티니 트래커에서의 평가가 있는 모든 무기 표시",
     "Rating": "데스티니 트래커의 평가 등급에 따른 무기 표시",
-    "Reforgeable": "총포상에게 다시 제작될 수 있는 아이템 표시",
+    "RatingCount": "데스티니 트래커의 현재 샌드박스의 평가 등급에 따른 무기 보여주기",
+    "Reforgeable": "총포상에 의해 다시 제작될 수 있는 아이템 표시",
     "Release": "출시 후 사용가능 <i>{{release}}</i>",
     "Releases": {
       "RoI": "Rise of Iron",
@@ -236,7 +228,7 @@
     "Tags": {
       "Dismantle": "분해하고 싶은 아이템 표시",
       "Favorite": "즐겨찾기한 아이템을 표시",
-      "Infuse": "주입 하고싶은 아이템들 표시",
+      "Infuse": "주입하고 싶은 아이템들 표시",
       "Keep": "보관할 아이템 표시",
       "NoTag": "태그가 없는 아이템 표시"
     },
@@ -254,24 +246,21 @@
       "Shipwright": "조선공",
       "Speaker": "대변자"
     },
-    "VideoExample": "필터를 쓰는 법에 대한 더 나은 예시를 위해{{link}} 영상을 시청해주세요.",
+    "VideoExample": "필터 사용 방법에 대한 더 나은 예시를 보시려면 {{link}} 에서 영상을 시청하세요.",
     "WeaponClass": "무기 클래스에 따른 아이템 표시",
     "WeaponType": "무기 유형에 따른 아이템 표시",
     "Year": "데스티니 1의 어떤 해에서 나온 아이템인지 표시"
-  },
-  "Forsaken": {
-    "Progress": "주의: 포세이큰 확장팩이 출시하고 시간이 좀 지날 때 까지는 진척도 데이터가 완벽하지 않거나 틀릴 수 있습니다.",
-    "Vendors": "포세이큰 확장팩 출시 후 일정 시간이 지날 때까지 상인 이용이 불가능합니다."
   },
   "Header": {
     "About": "정보",
     "Back": "돌아가기",
     "BulkTag": "아이템 대량으로 태그하기",
-    "BungieNetAlert": "Bungie 경고",
+    "BungieNetAlert": "Bungie 알림",
     "FilterHelp": "아이템/특성이나 {{example}} 검색하기",
+    "FilterHelpBrief": "아이템 검색",
     "Filters": "필터",
     "Inventory": "소지품",
-    "Refresh": "데스티니 데이터 새로 고침",
+    "Refresh": "데스티니 데이터 새로고침",
     "ReportBug": "버그 제보",
     "Shop": "상점",
     "SupportDIM": "후원자들",
@@ -280,16 +269,13 @@
   },
   "Help": {
     "CannotMove": "그 아이템은 해당 캐릭터에서 옮길 수 없습니다.",
-    "ChangingPerks": "특성 변경은 지원되지 않음",
-    "ChangingPerksInfo": "죄송하지만 게임 밖에서 특성을 바꿀 방법이 없습니다. 저희도 할 수 있었으면 좋겠어요!",
     "Drag": "묶음 일부분을 옮기기 위해 쉬프트를 누르고 있거나 드랍 존 위에 올리세요.",
-    "HidePopup": "창 숨기기",
-    "NeverShow": "다시 표시 안 함",
+    "HidePopup": "이 창 숨기기",
     "NoStorage": "DIM이 데이터를 저장할 수 없음",
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 이 문제는 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 발생할 수 있습니다. DIM을 시작할 수 없습니다.",
     "UpdateAvailable": "DIM이 업데이트됨",
-    "UpdateAvailableMessage": "DIM을 위한 업데이트가 가능합니다. 업데이트를 위해 페이지를 다시 로드 해 주십시오.",
-    "Version_beta": "베타 버전이 v{{version}} 로 업데이트 되었습니다.",
+    "UpdateAvailableMessage": "DIM 업데이트가 가능합니다. 업데이트를 위해 페이지를 새로 고침 해 주십시오.",
+    "Version_beta": "베타 버전이 v{{version}} 로 업데이트되었습니다.",
     "Version_release": "DIM v{{version}} 출시됨"
   },
   "Hotkey": {
@@ -299,10 +285,10 @@
     "RefreshInventory": "소지품 새로고침",
     "StartSearch": "검색 시작",
     "StartSearchClear": "새로운 검색 시작",
-    "ToggleDetails": "모든 아이템 정보 표시"
+    "ToggleDetails": "모든 아이템 정보 표시 토글"
   },
   "Infusion": {
-    "BringGear": "{{name}} 을(를) 대려오는 중:",
+    "BringGear": "{{name}} 을(를) 데려오는 중:",
     "Calc": "주입 계산기",
     "InfuseSource": "{{name}} 을(를) 주입할 아이템 선택:",
     "InfuseTarget": "{{name}} 에 주입할 아이템 선택:",
@@ -316,11 +302,11 @@
     "Uninfusable": "이 아이템은 주입될 수 없습니다."
   },
   "ItemInfoService": {
-    "SaveInfoErrorDescription": "아이템에 대한 구체적인 DIM 정보를 저장하는데 문제가 발생했습니다. 문제중 하나는 알마나 많은 데이터가 저장 될 수 있는 양에 제한이 있다는 갓입니다 - 태그와 메모 기능이 아직 베타에만 있는 이유죠. 에러는 다음과 같습니다: {{error}}.",
+    "SaveInfoErrorDescription": "아이템에 DIM의 정보를 저장하는 중 문제가 발생하였습니다. 한 가지 문제는 데이터가 저장될 수 있는 한도가 있는 것입니다. 이것이 태그와 메모 기능을 베타 버전에서만 사용할 수 있는 이유입니다. 오류는 다음과 같습니다: {{error}}",
     "SaveInfoErrorTitle": "아이템 정보 저장 중 문제 발생"
   },
   "ItemMove": {
-    "Consolidate": "{{name}} 합치기",
+    "Consolidate": "{{name}} 합쳐짐",
     "Distributed": "{{name}} 이(가) 분산됨\n{{name}} 은(는) 이제 모든 캐릭터들에게 공평하게 나눠졌습니다.",
     "ToStore": "모든 {{name}}들은 이제 당신의 {{store}}에 있습니다.",
     "ToVault": "이제 모든 {{name}} 은(는) 금고에 있습니다."
@@ -333,7 +319,7 @@
       "Vault": "{{store}} 에 너무 많은 {{itemtype}} 종류의 아이템들이 있습니다."
     },
     "Classified": "아이템이 기밀 상태이고 지금은 옮길 수 없습니다",
-    "Classified2": "기밀 상태의 아이템. 번지가 이 아이템에 대해 아직 정보를 제공하지 않았습니다. 노트를 추가하시고 \"notes:\" 필터를 이용해 찾을 때 사용하세요.",
+    "Classified2": "기밀 상태의 아이템. 번지가 이 아이템에 대해 아직 정보를 제공하지 않았습니다. 메모를 추가하시고 \"notes:\" 필터를 이용해 찾을 때 사용하세요.",
     "Deequip": "{{itemname}} 대신 장착할 다른 아이템을 찾지 못하였습니다.",
     "ExoticError": "{{slot}} 슬롯에 있는 경의 등급의 아이템이 장착 해제 될 수 없어 {{itemname}} 을(를) 장착하실 수 없습니다. {{error}}",
     "NotEnoughRoom": "{{store}} 에서 {{itemname}} 을(를) 위한 공간을 위해 움직일 수 있는 아이템이 없습니다.",
@@ -342,7 +328,7 @@
     "PercentComplete": "({{percent, pct}} 완료)",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "TooMuch": "흐음, 이 아이템을 가지고 있는 것보다 더 많이 이동을 요청하신 것 같군요!",
-    "TwoExotics": "어떻게 2개 이상의 경이 아이템을 장착하셨는지 모르겠어요!"
+    "TwoExotics": "어떻게 두 개 이상의 경이 아이템을 장착하셨는지 모르겠어요!"
   },
   "LB": {
     "AdvancedOptions": "고급 옵션",
@@ -356,7 +342,7 @@
     "Guardians": "수호자",
     "Help": {
       "And": "이 특성을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
-      "ChangeNodes": "로드아웃을 생성하기 위해서는 표기된 값으로 게임 내에서 지능, 힘, 규율 스탯을 변경하세요.",
+      "ChangeNodes": "로드아웃을 생성하려면 표기된 값으로 게임 내에서 지능, 힘, 규율 스탯을 변경하세요.",
       "Discipline": "규율 스탯은 수류탄 재충전 속도를 올려줍니다.",
       "DragAndDrop": "오직 그 장비로만 세트를 만들기 위해 잠겨진 바구에 끌어서 놓으세요",
       "Help": "도움이 필요하신가요?",
@@ -367,7 +353,7 @@
       "NoPerk": "만약 특성이 나타나지 않는다면, 당신은 그 특성을 가진 방어구가 없다는 뜻 입니다",
       "Or": "이 특성들을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
       "ShiftClick": "해당 장비없이 세트를 만들기 위해 아이템을 쉬프트 + 클릭 하세요",
-      "StatsIncrease": "아이템의 방어 수준이 올라가면, 그 아이템의 스탯(힘, 지능, 규율) 또한 올라 갈 것입니다",
+      "StatsIncrease": "아이템의 방어 수준이 올라가면, 그 아이템의 스탯(힘/지능/규율) 또한 올라 갈 것입니다",
       "Strength": "힘 스탯은 근접공격 재충전 시간을 줄입니다",
       "Synergy": "당신이 쓰는 무기 유형을 위한 탄약 증가 특성이 달린 방어구를 찾아보세요",
       "Tier11Example": "4/5/2 (11티어 빌드) 는 4의 지능 스탯, 5의 규율 스탯, 2의 힘 스탯입니다. (4+5+2 = 티어11)"
@@ -388,12 +374,12 @@
     "Locked": "잠긴 아이템들",
     "LockedHelp": "특정 장비 없이 세트를 만들기 위해 이 비구니에 드래그 하고 놓으세요. 쉬프트 + 클릭으로 아이템을 제외 시킬 수 있습니다.",
     "Missing1": "완전한 세트를 만들기 위해 필요한 전설이나 경이 등급의 장비가 부족합니다!",
-    "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경의 등급의 장비가 부족합니다!",
+    "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
     "ProcessingMode": {
       "Fast": "빠름",
       "Full": "최대",
-      "HelpFast": "당신의 최고의 장비만 보여줌",
-      "HelpFull": "더 많은 장비들을 보지만, 더 오래걸림.",
+      "HelpFast": "최고의 장비만 보여주기",
+      "HelpFull": "더 많은 장비들을 보지만, 더 오래걸림",
       "ProcessingMode": "처리 모드"
     },
     "Scaled": "확대 됨",
@@ -404,20 +390,20 @@
   },
   "Loadouts": {
     "Any": "모든 직업",
-    "Applied": "로드아웃의 장비중 하나가 당신의 {{store}} 로 이동되었습니다",
+    "Applied": "아이템 로드아웃 1개를 {{store}} 으(로) 이동하였습니다.",
     "AppliedAuto": "자동 로드아웃 생성기",
-    "AppliedError": "당신의 로드아웃중 어떤 장비도 이동될 수 없습니다.",
+    "AppliedError": "로드아웃에 이동할 수 있는 장비가 없습니다.",
     "AppliedWarn": "당신의 로드아웃이 부분적으로 옮겨졌지만, {{total}} 아이템들 중 {{failed}} 은(는) 에러가 발생했습니다.",
-    "Applied_female": "로드아웃의 장비중 하나가 당신의 {{store}} 로 이동되었습니다",
-    "Applied_male": "로드아웃의 장비중 하나가 당신의 {{store}} 로 이동되었습니다",
-    "Applied_plural": "로드아웃중 {{count}} 개의 장비가 당신의{{store}} 로 이동되었습니다",
-    "Applied_plural_female": "로드아웃중 {{count}} 개의 장비가 당신의{{store}} 로 이동되었습니다",
-    "Applied_plural_male": "로드아웃중 {{count}} 개의 장비가 당신의{{store}} 로 이동되었습니다",
+    "Applied_female": "아이템 로드아웃 1개를 {{store}} 으(로) 이동하였습니다.",
+    "Applied_male": "아이템 로드아웃 1개를 {{store}} 으(로) 이동하였습니다.",
+    "Applied_plural": "로드아웃의 {{count}} 개의 아이템을 {{store}} (으)로 이동하였습니다.",
+    "Applied_plural_female": "로드아웃의 {{count}} 개의 아이템을 {{store}} (으)로 이동하였습니다.",
+    "Applied_plural_male": "로드아웃의 {{count}} 개의 아이템을 {{store}} (으)로 이동하였습니다.",
     "ApplySearch": "운반 검색 \"{{query}}\"",
     "Before": "'{{name}}' 이전",
     "Cancel": "취소",
-    "Classified": "당신의 아이템중 몇몇은 기밀의 상태라서 최대 파워 계산에는 포함 될 수가 없습니다.",
-    "ConfirmDelete": "정말 '{{name}}'을(를) 삭제 하시겠습니까?",
+    "Classified": "당신의 아이템중 몇몇은 기밀 상태라서 최대 파워 계산에는 포함 될 수가 없습니다.",
+    "ConfirmDelete": "정말 '{{name}}' 을(를) 삭제 하시겠습니까?",
     "CouldNotEquip": "{{itemname}} 을(를) 장착할 수 없습니다.",
     "Create": "로드아웃 만들기",
     "Delete": "로드아읏 지우기",
@@ -443,10 +429,10 @@
     "MakeRoomDone_plural_male": "{{store}} 에서 {{movedNum}} 개의 아이템을 옮김으로서 우편 담장자의 {{count}} 개의 빈 공간을 만들었습니다.",
     "MakeRoomError": "모든 우편 담당자 아이템을 위한 공간을 만들 수 없습니다: {{error}}",
     "MaxSlots": "당신은 로드아웃에 있는 그 종류의 아이템의 {{slots}} 만을 가질 수 있습니다.",
-    "MaximizeLight": "라이트 레벨 최대화",
+    "MaximizeLight": "전투력 최대화",
     "MaximizePower": "전투력 최대화",
     "NameRequired": "이름이 필요합니다.",
-    "NoEngrams": "이동할 수 있는 전설 엔그램이 없습니다.",
+    "NoEngrams": "경의 등급이 아닌 이동 가능한 엔그램이 없습니다.",
     "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
     "NoTokens": "이동할 수 있는 평판 아이템이 없습니다.",
     "OnlyItems": "오직 장착이 가능한 아이템, 재료, 소모품들만이 로드아웃에 추가될 수 있습니다.",
@@ -473,8 +459,8 @@
   },
   "Manifest": {
     "Build": "데스티니 정보 데이터베이스 구축 중",
-    "Download": "Bungie로부터 데스티니의 최신 정보를 받아 오는 중",
-    "Error": "데스티니 정보를 가져오기 실패:\n{{error}}\n새로고침 하여 다시 시도하세요",
+    "Download": "Bungie에서 최신 데스티니 정보 받아 오는 중",
+    "Error": "데스티니 정보를 가져오는데 실패했습니다:\n{{error}}\n새로고침 하여 다시 시도하세요.",
     "Load": "저장된 데스티니 정보를 불러오는 중",
     "LoadCharInv": "데스티니 캐릭터와 소지품 불러오기 실패",
     "Outdated": "오래된 데스티니 정보",
@@ -487,7 +473,7 @@
     "DownStack": "다음 최대 중첩량으로 감소시키기",
     "Increment": "하나 더",
     "Max": "이 위치에 총합량",
-    "Min": "최소 개수(1)",
+    "Min": "최소 중첩 개수 (1)",
     "UpStack": "다음 최대 중첩량으로 증가시키기"
   },
   "MovePopup": {
@@ -498,39 +484,36 @@
     "LockUnlock_Lock": "{{itemType}} 잠그기",
     "LockUnlock_Unlock": "{{itemType}} 잠금 해제하기",
     "OverviewTab": "개요",
-    "ReadLore": "Ishtar Collective에서 설정 읽기",
+    "ReadLore": "Ishtar Collective에서 지식 읽기",
     "ReviewsTab": "평가",
+    "Rewards": "보상:",
     "Split": "분할",
-    "Store": "상점",
+    "Store": "보관",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Take": "가져가기",
+    "Take": "모으기",
     "TrackUntrack_Track": "{{itemType}} 추적",
     "TrackUntrack_Untrack": "{{itemType}} 추적 해제",
     "Vault": "금고"
   },
   "Notes": {
-    "Error": "에러! 노트는 최대 120자 까지 쓰실 수 있습니다.",
-    "Help": "이 아이템에 노트 추가하기"
+    "Error": "에러! 메모는 최대 120자 까지 쓰실 수 있습니다.",
+    "Help": "이 아이템에 메모 추가하기"
   },
   "Objectives": {
     "Complete": "완료",
-    "Incomplete": "완료되지 않음"
-  },
-  "Postmaster": {
-    "Desc": "당신의 {{store}}에 있는 우편 담당자에게 20개의 잃어버린 아이템이 있습니다. 모든 새 아이템들은 존재하는 존재하는 아이템을 덮어씁니다.",
-    "Limit": "우편 담당자 한계"
+    "Incomplete": "미완료"
   },
   "Progress": {
     "CrucibleRank": "시련의 장 랭크",
     "Daily": "일간",
     "ExpiresIn": "{{endTime}} 에 끝남",
     "Factions": "세력",
-    "Milestones": "마일스톤",
-    "ProfileMilestones": "계정 마일스톤",
+    "Milestones": "이정표 & 도전",
+    "ProfileMilestones": "계정 이정표",
     "ProfileQuests": "계정 퀘스트",
     "Progress": "진척도",
-    "Quests": "퀘스트와 목표",
+    "QuestExpires": "만료일까지 ",
     "RewardEarned": "제공되었지만 받지는 못한 보상",
     "RewardNotEarned": "보상을 받지 않음",
     "RewardRedeemed": "보상을 받음",
@@ -538,11 +521,11 @@
   },
   "RecordBooks": {
     "HideCompleted": "완료한 기록 숨기기",
-    "RecordBooks": "기록 책"
+    "RecordBooks": "기록 모음집"
   },
   "Settings": {
     "AllowIdPostToDtr": "자세한 무기 리뷰를 보여주고 무기 평가 허용하기",
-    "AllowIdPostToDtrLine2": "이것은 당신의 계정 이름과 평가한 아이템을 데스티니 트래커와 공유할 것입니다.",
+    "AllowIdPostToDtrLine2": "당신의 계정 이름과 평가한 아이템을 데스티니 트래커와 공유할 것입니다.",
     "AlwaysShowDetails": "항상 넓어진 아이템 팝업으로 표시",
     "CharacterOrder": "캐릭터 정렬 방법",
     "CharacterOrderFixed": "캐릭터 나이",
@@ -551,7 +534,6 @@
     "ColorA11y": "색맹 설정",
     "ColumnSize": "{{num}} 개의 아이템",
     "ColumnSizeAuto": "자동",
-    "DIMPopupsReset": "최근에 숨긴 정보 팁 복구하기",
     "Data": "스프레드시트",
     "DontForgetDupes": "빠르게 중복된 아이템들을 찾기 위해 is:dupe 나 is:dupelower 를 검색할 수 있고, 연관된 아이템을 비교 도구로 측정할 수 있습니다",
     "EnableAdvancedStats": "(데스티니 1) 스탯 품질 보여주기",
@@ -576,11 +558,11 @@
     "Settings": "설정",
     "ShowAnimations": "새 아이템 강조",
     "ShowAnimationsHelp": "새 아이템에 빛나는 효과를 표시합니다. 이 효과를 꺼서 CPU 사용량을 절약할 수 있습니다.",
-    "ShowElemental": "무기에 속성 데미지 아이콘 표시",
+    "ShowElemental": "무기에 속성 대미지 아이콘 표시",
     "ShowOverlay": "새로운 아이템에 빛나는 오버레이 표시",
-    "ShowReviews": "무기에 커뮤니티 평가 표시",
+    "ShowReviews": "무기에 대한 커뮤니티 평가 표시",
     "SizeItem": "아이템 크기",
-    "SortByBasePower": "기초 파워(데스티니 2만)",
+    "SortByBasePower": "기본 전투력 (데스티니2 전용)",
     "SortByClassType": "필요한 직업",
     "SortByPrimary": "주 능력치 (공격/방어)",
     "SortByRarity": "희귀도",
@@ -597,16 +579,16 @@
     "Discipline": "규율",
     "Intellect": "지능",
     "Level": "레벨",
-    "MaxBasePower": "최대 파워 (모드 없이)",
+    "MaxBasePower": "최대 전투력",
     "NoBonus": "보너스 없음",
     "NotApplicable": "해당 없음",
     "OfMaxRoll": "최대로 나올 수 있는 {{range}}",
     "PercentHelp": "클릭하셔서 품질에 대한 자세한 내용을 확인하세요.",
-    "Prestige": "명성 레벨: {{level}}\n5개의 빛 티끌까지 {{exp}}xp",
-    "PrestigeD2": "명성 레벨: {{level}}\n밝은 엔그램 까지 {{exp}}xp",
-    "Quality": "스탯 수준",
+    "Prestige": "명성 레벨: {{level}}\n5개의 빛의 티끌까지 {{exp}}xp",
+    "PrestigeD2": "명성 레벨: {{level}}\n광휘 엔그램 까지 {{exp}}xp",
+    "Quality": "스탯 품질",
     "Strength": "힘",
-    "TierProgress": "티어{{nextTier}}을(를) 구하기 위해 티어{{tier}} {{statName}} {{progress}}/60 하기\n",
+    "TierProgress": "티어{{nextTier}} 을(를) 구하기 위해 티어{{tier}} ({{statName}} {{progress}}/60)\n",
     "TierProgress_Max": "티어{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "Storage": {
@@ -636,9 +618,9 @@
     "ImportConfirm": "현재 설정을 이 버전으로 덮어씌우시겠습니까?",
     "ImportExport": "데이터 백업",
     "ImportNoFile": "선택된 파일이 없습니다!",
-    "ImportSuccess": "DIM 데이터 복원!",
+    "ImportSuccess": "DIM 데이터 복원함!",
     "IndexedDBStorage": "로컬 브라우저 저장소",
-    "LoadRevision": "정보 불러오기",
+    "LoadRevision": "콘텐츠 불러오기",
     "LoadoutsD1": "데스티니 1 로드아웃 {{value}} 개",
     "LoadoutsD2": "데스티니 2 로드아웃 {{value}} 개",
     "NoData": "데이터 없음",
@@ -657,8 +639,8 @@
     "Move": "이동"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "구글 드라이브를 재인증하기 위해서는 브라우저를 재시작하여야 합니다.",
-    "OneItemTooLarge": "당신의 세이브 파일에는 너무 큰 아이템이 들어 있습니다. 저장된 로드아웃에 너무 많은 아이템들이 있습니다",
+    "GoogleDriveReAuth": "구글 드라이브를 재인증 하려면 브라우저를 재시작하여야 합니다.",
+    "OneItemTooLarge": "당신의 세이브 파일에는 너무 큰 항목이 들어 있습니다. 저장된 로드아웃에 너무 많은 아이템들이 있을 가능성이 있습니다.",
     "SaveTooLarge": "저장된 파일이 너무 큽니다. 저장된 로드아웃을 삭제하십시오."
   },
   "Tags": {
@@ -703,7 +685,7 @@
       "BungieCopyright": "모든 이미지와 콘텐츠들은 번지의 소유물 입니다. 문제가 있다면 저희와 연락해 주세요.",
       "ContactUs": "문의하기",
       "Discord": "Discord",
-      "DiscordHelp": "저희의 디스코드 채널에서 질문하고, 피드백 주고, 도움을 받으세요",
+      "DiscordHelp": "저희의 디스코드 채널에서 질문하고, 피드백을 주고, 도움을 받으세요.",
       "FAQ": "자주 묻는 질문",
       "FAQAccess": "DIM이 어떻게 제 데스티니 데이터에 접근하나요?",
       "FAQAccessAnswer": "우리는 Bungie의 앱 인증을 사용하여 DIM이 당신의 아이템을 보고 이동할 권한을 얻습니다. DIM은 사용자 이름이나 비밀번호를 알지 못합니다. 이 방법은 데스티니 컴패니언 앱의 작동 원리와 같습니다.",
@@ -714,7 +696,7 @@
       "FAQKeyboard": "DIM이 키보드 단축키를 지원하나요?",
       "FAQKeyboardAnswer": "네! \"?\" 키를 눌러 사용할 수 있는 단축키를 볼 수 있습니다.",
       "FAQLogout": "DIM에서 로그아웃하려면 어떻게 해야 하나요?",
-      "FAQLogoutAnswer": "화면 오른쪽 위의 계정 버튼을 누르고 \"로그 아웃\" 버튼을 누르세요.",
+      "FAQLogoutAnswer": "화면 우측 상단의 계정을 누르고 \"로그아웃\" 버튼을 누르세요.",
       "FAQLostItem": "이 앱을 사용하다가 아이템이 사라졌어요!",
       "FAQLostItemAnswer": "Bungie는 앱이 아이템을 삭제하는 것을 허용하지 않습니다 (본인들의 프로그램 조차도!). 전송이 실패하여 금고나 캐릭터에 남아있을 수 있습니다. 아이템을 검색하실 수 있습니다. 아이템이 뜨지 않는다면 새로고침을 해보세요. {{link}} 나 게임 안에서 아이템이 여전히 있는지 확인하세요. 저희는 여전히 있을거라고 확신합니다.",
       "FAQMobile": "DIM이 모바일을 지원하나요? 앱이 있나요?",
@@ -722,20 +704,20 @@
       "GitHub": "GitHub",
       "GitHubHelp": "이 프로젝트에 기여하는데 관심이 있으시다면, 저희 프로젝트 페이지인 {{link}} 에 방문해보세요.",
       "Header": "데스티니 아이템 매니저(DIM)에 관하여",
-      "HowItsMade": "DIM은 Bungie.net과 데스티니 컴페니언 앱과 동일한 서비스를 사용하여 만들어졌습니다. DIM은 당신의 엑스박스, 플레이스테이션, PC에 있는 수호자들의 소지품과 금고 안의 아이템에 접근할 수 있습니다. 당신은 아이템을 끌어서 원하는 곳으로 이동시킬 수 있습니다.",
+      "HowItsMade": "DIM은 Bungie.net과 데스티니 컴페니언 앱과 동일한 서비스를 사용하여 만들어졌습니다. DIM은 당신의 엑스박스, 플레이스테이션, PC에 있는 수호자들의 소지품과 금고 안의 아이템에 접근할 수 있습니다. 접근이 되면 아이템을 끌어서 원하는 곳으로 이동시킬 수 있습니다.",
       "Reddit": "Reddit",
       "RedditHelp": "질문, 댓글 혹은 제안이 있다면 저희에게 알려주세요!",
-      "Schedule_beta": "이 베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다. 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
+      "Schedule_beta": "베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다. 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
       "Schedule_release": "이 버전의 DIM은 태평양 표준시 기준으로 매주 토요일 오후에 업데이트됩니다.",
       "Translation": "번역 팀에 참여하세요!",
       "TranslationText": "우리는 편리한 번역을 위해 {{link}} 을 사용합니다. 만약 DIM의 번역을 개선하고 싶으시다면 팀에 참여하세요.",
       "Twitter": "Twitter",
-      "TwitterHelp": "프로그램에 대한 최신 정보와 상태를 얻기 위해 저희를 팔로우 해주세요",
+      "TwitterHelp": "프로그램의 업데이트와 실시간 상태 정보를 얻고 싶으시다면 저희를 팔로우 해주세요.",
       "Version": "버전 {{version}} {{flavor}}, {{date}} 에 만들어짐"
     },
     "Login": {
       "Auth": "Bungie.net으로 인증",
-      "Explanation": "당신의 데스티니 가디언즈 캐릭터와 금고, 진행사항을 확인하고 수정하기 위해 DIM의 접근을 허용해 주십시오.",
+      "Explanation": "DIM이 데스티니 캐릭터와 금고, 진행사항을 확인하고 수정할 수 있도록 허용해주십시오.",
       "LearnMore": "더 알고 싶으신가요?",
       "Permission": "당신의 허가를 필요로 합니다..."
     },

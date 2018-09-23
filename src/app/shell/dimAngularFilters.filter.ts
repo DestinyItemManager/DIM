@@ -33,9 +33,7 @@ mod.filter('bungieBackground', () => {
 
     // Hacky workaround so we can reference local images
     if (value.startsWith('~')) {
-      const baseUrl = ($DIM_FLAVOR === 'dev')
-        ? ''
-        : 'https://beta.destinyitemmanager.com';
+      const baseUrl = $DIM_FLAVOR === 'dev' ? '' : 'https://beta.destinyitemmanager.com';
       return {
         'background-image': `url(${baseUrl}${value.substr(1)})`
       };
@@ -58,18 +56,18 @@ mod.filter('equipped', () => {
 
 function rarity(item: DimItem) {
   switch (item.tier) {
-  case 'Exotic':
-    return 0;
-  case 'Legendary':
-    return 1;
-  case 'Rare':
-    return 2;
-  case 'Uncommon':
-    return 3;
-  case 'Common':
-    return 4;
-  default:
-    return 5;
+    case 'Exotic':
+      return 0;
+    case 'Legendary':
+      return 1;
+    case 'Rare':
+      return 2;
+    case 'Uncommon':
+      return 3;
+    case 'Common':
+      return 4;
+    default:
+      return 5;
   }
 }
 
@@ -80,7 +78,7 @@ mod.filter('sortStores', () => sortStores);
 
 export function sortStores(stores: DimStore[], order: string) {
   if (order === 'mostRecent') {
-    return _.sortBy(stores, 'lastPlayed').reverse();
+    return _.sortBy(stores, (store) => store.lastPlayed).reverse();
   } else if (order === 'mostRecentReverse') {
     return _.sortBy(stores, (store) => {
       if (store.isVault) {
@@ -89,9 +87,11 @@ export function sortStores(stores: DimStore[], order: string) {
         return store.lastPlayed;
       }
     });
-  } else if (stores.length) {
-    return _.sortBy(stores, 'id');
+  } else if (stores.length && stores[0].destinyVersion === 1) {
+    return _.sortBy(stores, (s) => s.id);
   } else {
+    // The response is in character creation order by default, at least in D2
+    // https://github.com/Bungie-net/api/issues/614
     return stores;
   }
 }
@@ -166,10 +166,10 @@ const D1_MATERIAL_SORT_ORDER = [
 // Don't resort postmaster items - that way people can see
 // what'll get bumped when it's full.
 const ITEM_SORT_BLACKLIST = new Set([
-  "BUCKET_BOUNTIES",
-  "BUCKET_MISSION",
-  "BUCKET_QUESTS",
-  "BUCKET_POSTMASTER",
+  'BUCKET_BOUNTIES',
+  'BUCKET_MISSION',
+  'BUCKET_QUESTS',
+  'BUCKET_POSTMASTER',
   '215593132' // LostItems
 ]);
 
@@ -177,13 +177,19 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
   primStat: reverseComparator(compareBy((item: DimItem) => item.primStat && item.primStat.value)),
-  basePower: reverseComparator(compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))),
-  rating: reverseComparator(compareBy((item: DimItem & { quality: { min: number }}) =>
-    (item.quality && item.quality.min)
-      ? item.quality.min
-      : item.dtrRating
-        ? item.dtrRating.overallScore
-        : undefined)),
+  basePower: reverseComparator(
+    compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
+  ),
+  rating: reverseComparator(
+    compareBy(
+      (item: DimItem & { quality: { min: number } }) =>
+        item.quality && item.quality.min
+          ? item.quality.min
+          : item.dtrRating
+            ? item.dtrRating.overallScore
+            : undefined
+    )
+  ),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
@@ -208,19 +214,19 @@ export function sortItems(items: DimItem[], itemSortOrder = settings.itemSortOrd
 
   let specificSortOrder: number[] = [];
   // Group like items in the General Section
-  if (itemLocationId === "BUCKET_CONSUMABLES") {
+  if (itemLocationId === 'BUCKET_CONSUMABLES') {
     specificSortOrder = D1_CONSUMABLE_SORT_ORDER;
   }
 
   // Group like items in the General Section
-  if (itemLocationId === "BUCKET_MATERIALS") {
+  if (itemLocationId === 'BUCKET_MATERIALS') {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
   if (specificSortOrder.length > 0 && !itemSortOrder.includes('rarity')) {
     items = _.sortBy(items, (item) => {
       const ix = specificSortOrder.indexOf(item.hash);
-      return (ix === -1) ? 999 : ix;
+      return ix === -1 ? 999 : ix;
     });
     return items;
   }
@@ -236,12 +242,14 @@ export function sortItems(items: DimItem[], itemSortOrder = settings.itemSortOrd
 
   // Re-sort consumables
   if (itemLocationId === '1469714392') {
-    return items.sort(chainComparator(
-      ITEM_COMPARATORS.typeName,
-      ITEM_COMPARATORS.rarity,
-      ITEM_COMPARATORS.name,
-      ITEM_COMPARATORS.amount
-    ));
+    return items.sort(
+      chainComparator(
+        ITEM_COMPARATORS.typeName,
+        ITEM_COMPARATORS.rarity,
+        ITEM_COMPARATORS.name,
+        ITEM_COMPARATORS.amount
+      )
+    );
   }
 
   // Re-sort shaders
@@ -250,7 +258,9 @@ export function sortItems(items: DimItem[], itemSortOrder = settings.itemSortOrd
     return items.sort(ITEM_COMPARATORS.name);
   }
 
-  const comparator = chainComparator(...itemSortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default));
+  const comparator = chainComparator(
+    ...itemSortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
+  );
   return items.sort(comparator);
 }
 

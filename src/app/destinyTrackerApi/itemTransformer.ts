@@ -1,5 +1,5 @@
-import { D1Item } from "../inventory/item-types";
-import { D1ItemFetchRequest, D1ItemReviewRequest } from "../item-review/d1-dtr-api-types";
+import { D1Item } from '../inventory/item-types';
+import { D1ItemFetchRequest, D1ItemReviewRequest } from '../item-review/d1-dtr-api-types';
 
 /**
  * Translate a DIM weapon item into the basic form that the DTR understands a weapon to contain.
@@ -20,7 +20,7 @@ export function getRollAndPerks(weapon: D1Item): D1ItemReviewRequest {
   return {
     ...translateToDtrWeapon(weapon),
     selectedPerks: getDtrPerks(weapon),
-    instanceId: weapon.id,
+    instanceId: weapon.id
   };
 }
 
