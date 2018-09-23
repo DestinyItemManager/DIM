@@ -513,6 +513,9 @@ export function sortCharacters(characters: DestinyCharacterComponent[], order: C
     return _.sortBy(characters, (store) => {
       return new Date(store.dateLastPlayed).getTime();
     });
+  } else if (characters.length) {
+    // https://github.com/Bungie-net/api/issues/614
+    return _.sortBy(characters, (c) => c.characterId);
   } else {
     return characters;
   }
