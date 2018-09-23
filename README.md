@@ -120,7 +120,7 @@ Run your own local web server
 Install Dependencies, start webpack, and start local web server, with Docker
 * Install Docker https://www.docker.com/get-started
 * Open terminal/cmd/powershell window and change to the cloned folder
-* `docker-compose up` to build the dist and start yarn watcher and http environment
+* `docker-compose up` to build the dist and start yarn watcher
 * It will take a while for the dist files to build on the first startup while yarn installs dependencies
 * `ctrl+c` to stop
 * `docker-compose up -d` to start in detached mode
