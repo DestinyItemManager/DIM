@@ -202,6 +202,12 @@ function MoveItemPropertiesCtrl(
     }
   };
 
+  vm.visitCollection = (e: Event, hash: number) => {
+    e.preventDefault();
+    router.stateService.go('destiny2.presentationNode', { presentationNodeHash: hash });
+    return false;
+  };
+
   $scope.$watch('vm.settings.itemDetails', (show) => {
     vm.itemDetails = vm.itemDetails || show;
   });

@@ -19,6 +19,14 @@ export default class PresentationNode extends React.Component<Props> {
   render() {
     const { presentationNodeHash, defs, profileResponse, buckets, ownedItemHashes } = this.props;
     const presentationNodeDef = defs.PresentationNode.get(presentationNodeHash);
+    if (!presentationNodeDef) {
+      return (
+        <div className="dim-error">
+          <h2>Bad presentation node</h2>
+          <div>This isn't real {presentationNodeHash}</div>
+        </div>
+      );
+    }
     // TODO: class based on displayStyle
     const visibleCollectibles = count(
       presentationNodeDef.children.collectibles,
