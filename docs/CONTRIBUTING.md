@@ -27,6 +27,17 @@ Install dependencies:
 Check code Style
 * `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
+## Docker Compose Setup
+Install Dependencies, start webpack, and start local web server, with Docker
+* Install Docker https://www.docker.com/get-started
+* Open terminal/cmd/powershell window and change to the cloned folder
+* `docker-compose up` to build the dist and start yarn watcher
+* It will take a while for the dist files to build on the first startup while yarn installs dependencies
+* `ctrl+c` to stop
+* `docker-compose up -d` to start in detached mode
+* `docker-compose stop` to stop detached mode
+* `docker-compose build` to re-build if the compose files change
+
 Get your own API key:
 
 1. Goto [Bungie](https://www.bungie.net/en/Application)
