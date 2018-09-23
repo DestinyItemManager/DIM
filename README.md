@@ -97,6 +97,5 @@ If you speak a language other than English that Destiny supports (Italian, Germa
 
 See [CONTRIBUTING.md](https://github.com/DestinyItemManager/DIM/blob/master/docs/CONTRIBUTING.md) for information on how to Contribute to the development of DIM.
 
-
 ## License
 Code released under the [MIT license](http://choosealicense.com/licenses/mit/).
