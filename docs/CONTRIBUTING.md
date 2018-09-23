@@ -28,7 +28,7 @@ Check code Style
 * `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
 ## Docker Compose Setup
-Install Dependencies, start webpack, and start local web server, with Docker
+Install Dependencies, and start webpack, with Docker
 * Install Docker https://www.docker.com/get-started
 * Open terminal/cmd/powershell window and change to the cloned folder
 * `docker-compose up` to build the dist and start yarn watcher
