@@ -6,7 +6,7 @@ export const states: ReactStateDeclaration[] = [
   {
     name: 'destiny2.collections',
     component: Collections,
-    url: '/collections'
+    url: '/collections?{presentationNodeHash:int}'
   },
   {
     name: 'destiny2.presentationNode',

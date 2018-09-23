@@ -118,6 +118,7 @@ class SinglePresentationNode extends React.Component<Props, State> {
             profileResponse={profileResponse}
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
+            path={[]}
           />
         </ErrorBoundary>
       </div>

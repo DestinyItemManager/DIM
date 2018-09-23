@@ -25,13 +25,14 @@ import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
 
-interface ProvidedProps {
+interface ProvidedProps extends UIViewInjectedProps {
   account: DestinyAccount;
 }
 
 interface StoreProps {
   buckets?: InventoryBuckets;
   ownedItemHashes: Set<number>;
+  presentationNodeHash?: number;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -48,10 +49,11 @@ const ownedItemHashesSelector = createSelector(storesSelector, (stores) => {
   return ownedItemHashes;
 });
 
-function mapStateToProps(state: RootState): StoreProps {
+function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps {
   return {
     buckets: state.inventory.buckets,
-    ownedItemHashes: ownedItemHashesSelector(state)
+    ownedItemHashes: ownedItemHashesSelector(state),
+    presentationNodeHash: ownProps.transition && ownProps.transition.params().presentationNodeHash
   };
 }
 
@@ -65,7 +67,7 @@ interface State {
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-class Collections extends React.Component<Props & UIViewInjectedProps, State> {
+class Collections extends React.Component<Props, State> {
   private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
@@ -104,7 +106,7 @@ class Collections extends React.Component<Props & UIViewInjectedProps, State> {
   }
 
   render() {
-    const { buckets, ownedItemHashes } = this.props;
+    const { buckets, ownedItemHashes, presentationNodeHash } = this.props;
     const { defs, profileResponse, trackerService } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
@@ -125,6 +127,20 @@ class Collections extends React.Component<Props & UIViewInjectedProps, State> {
     });
 
     // TODO: how to search and find an item within all nodes?
+    let nodePath: number[] = [];
+    if (presentationNodeHash) {
+      let currentHash = presentationNodeHash;
+      nodePath = [currentHash];
+      let node = defs.PresentationNode.get(currentHash);
+      while (node.parentNodeHashes.length) {
+        nodePath.unshift(node.parentNodeHashes[0]);
+        currentHash = node.parentNodeHashes[0];
+        node = defs.PresentationNode.get(currentHash);
+      }
+    }
+    nodePath.unshift(3790247699);
+
+    console.log(nodePath);
 
     return (
       <div className="vendor d2-vendors dim-page">
@@ -141,6 +157,7 @@ class Collections extends React.Component<Props & UIViewInjectedProps, State> {
             profileResponse={profileResponse}
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
+            path={nodePath}
           />
         </ErrorBoundary>
         <ErrorBoundary name="PlugSets">
