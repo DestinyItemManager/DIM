@@ -1,5 +1,7 @@
 # Next
 
+# 4.71.0 (2018-09-23)
+
 * Removed a bunch of help popups.
 * Added `is:maxpower` search to return highest light items.
 * Bounties with expiration times are now shown, and are sorted in front in order of expiration time.
