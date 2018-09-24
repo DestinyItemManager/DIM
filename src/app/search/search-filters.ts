@@ -1106,9 +1106,11 @@ export function searchFilters(
           item.sockets &&
           item.sockets.sockets.some((socket) => {
             return !!(
-              (socket.plug || false) &&
-              ![2323986101, 2600899007].includes(socket.plug.plugItem.hash) &&
-              socket.plug.plugItem.itemTypeDisplayName.includes(' Mod')
+              socket.plug &&
+              ![2323986101, 2600899007, 1835369552].includes(socket.plug.plugItem.hash) &&
+              socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+                /(v400.weapon.mod_guns|enhancements.)/
+              )
             );
           })
         );
