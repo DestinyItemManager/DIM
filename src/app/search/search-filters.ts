@@ -231,6 +231,7 @@ export function buildSearchConfig(
       complete: ['goldborder', 'yellowborder', 'complete'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
+      hasMod: ['modded', 'hasmod'],
       prophecy: ['prophecy'],
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
@@ -1096,6 +1097,20 @@ export function searchFilters(
               (socket.plug || false) &&
               socket.plug.plugItem.plug.plugCategoryHash === 2973005342 &&
               socket.plug.plugItem.hash !== 4248210736
+            );
+          })
+        );
+      },
+      hasMod(item: D2Item) {
+        return (
+          item.sockets &&
+          item.sockets.sockets.some((socket) => {
+            return !!(
+              socket.plug &&
+              ![2323986101, 2600899007, 1835369552].includes(socket.plug.plugItem.hash) &&
+              socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+                /(v400.weapon.mod_guns|enhancements.)/
+              )
             );
           })
         );
