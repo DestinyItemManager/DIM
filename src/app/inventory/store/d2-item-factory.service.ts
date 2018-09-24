@@ -116,6 +116,7 @@ const categoryFromHash = {
 };
 
 const resistanceMods = {
+  1546607977: DamageType.Kinetic,
   1546607980: DamageType.Void,
   1546607978: DamageType.Arc,
   1546607979: DamageType.Thermal
@@ -1161,7 +1162,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
   if (masterworkSocket && masterworkSocket.plug) {
     const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
     if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
-      createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
+      createdItem.dmg = [null, 'heroic', 'arc', 'solar', 'void'][
         resistanceMods[masterwork.statTypeHash]
       ] as typeof createdItem.dmg;
     }

@@ -1,5 +1,7 @@
 # Next
 
+* Added `is:heroic` search filter for armor with heroic resistance.
+
 # 4.71.0 (2018-09-23)
 
 * Removed a bunch of help popups.

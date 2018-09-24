@@ -133,7 +133,7 @@ export function buildSearchConfig(
   const filterTrans: {
     [key: string]: string[];
   } = {
-    dmg: ['arc', 'solar', 'void', 'kinetic'],
+    dmg: ['arc', 'solar', 'void', 'kinetic', 'heroic'],
     type: itemTypes,
     tier: [
       'common',
