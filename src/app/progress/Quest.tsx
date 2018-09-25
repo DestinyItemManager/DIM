@@ -40,8 +40,7 @@ export default function Quest(props: QuestProps) {
     ? new Date(item.expirationDate).getTime() < Date.now()
     : false;
   const complete = percentComplete >= 1;
-  const suppressExpiration =
-    itemDef.inventory.suppressExpirationWhenObjectivesComplete && expired && complete;
+  const suppressExpiration = itemDef.inventory.suppressExpirationWhenObjectivesComplete && complete;
 
   return (
     <MilestoneDisplay displayProperties={itemDef.displayProperties} progress={progress}>
