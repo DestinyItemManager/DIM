@@ -62,6 +62,8 @@ export default class InventoryItem extends React.Component<Props> {
       item.isDestiny2() &&
       (item.primStat || item.sockets);
 
+    const darkTiles = true;
+
     return (
       <div
         id={item.index}
@@ -70,7 +72,9 @@ export default class InventoryItem extends React.Component<Props> {
         title={`${item.name}\n${item.typeName}`}
         className={classNames('item', {
           'search-hidden': searchHidden,
-          'd2-item': elaborateTile
+          'd2-item': elaborateTile,
+          // TODO: do this higher up!
+          'dark-item': darkTiles
         })}
       >
         {elaborateTile && item.isDestiny2 && item.isDestiny2() ? (
@@ -81,6 +85,46 @@ export default class InventoryItem extends React.Component<Props> {
             hideRating={hideRating}
             tag={tag}
           />
+        ) : darkTiles ? (
+          <div>
+            {item.percentComplete > 0 &&
+              !item.complete && (
+                <div
+                  className="item-xp-bar-small"
+                  style={{ width: percent(item.percentComplete) }}
+                />
+              )}
+            <div
+              className={classNames('item-img', itemImageStyles)}
+              style={bungieBackgroundStyle(item.icon)}
+            />
+            {item.isDestiny1() &&
+              item.quality && (
+                <div
+                  className="item-stat item-quality"
+                  style={getColor(item.quality.min, 'backgroundColor')}
+                >
+                  {item.quality.min}%
+                </div>
+              )}
+            {rating !== undefined &&
+              !hideRating && (
+                <div className="item-stat item-review">
+                  {rating}
+                  <i className="fa fa-star" style={dtrRatingColor(rating)} />
+                </div>
+              )}
+            <div className={classNames('item-element', item.dmg)} />
+            <div className={tagClasses(tag)} />
+            {isNew && (
+              <div className="new_overlay_overflow">
+                <img className="new_overlay" src={newOverlay} height="44" width="44" />
+              </div>
+            )}
+            {badgeInfo.showBadge && (
+              <div className={classNames(badgeInfo.badgeClassNames)}>{badgeInfo.badgeCount}</div>
+            )}
+          </div>
         ) : (
           <div>
             {item.percentComplete > 0 &&
