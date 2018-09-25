@@ -4,10 +4,15 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { RootState } from '../store/reducers';
 
-export const destinyVersionSelector = (state: RootState) =>
-  (state.accounts.currentAccount &&
-    state.accounts.accounts[state.accounts.currentAccount].destinyVersion) ||
-  2;
+export const currentAccountSelector = (state: RootState) =>
+  state.accounts.currentAccount === 0
+    ? undefined
+    : state.accounts.accounts[state.accounts.currentAccount];
+
+export const destinyVersionSelector = (state: RootState) => {
+  const currentAccount = currentAccountSelector(state);
+  return (currentAccount && currentAccount.destinyVersion) || 2;
+};
 
 export interface AccountsState {
   readonly accounts: ReadonlyArray<DestinyAccount>;

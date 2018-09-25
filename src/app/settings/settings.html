@@ -138,6 +138,8 @@
             <input type="radio" ng-model="vm.settings.characterOrder" value="fixed">
             <span ng-i18next="Settings.CharacterOrderFixed"></span>
           </label>
+          <character-order-editor ng-if="vm.settings.characterOrder == 'fixed'" order="vm.characterSortCustom"
+            on-sort-order-changed="vm.characterSortOrderChanged"></character-order-editor>
         </div>
       </div>
 
