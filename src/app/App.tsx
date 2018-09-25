@@ -52,7 +52,8 @@ class App extends React.Component<Props> {
           'show-elements': this.props.showElements,
           itemQuality: this.props.itemQuality,
           'show-new-items': this.props.showNewItems,
-          'new-item-animated': this.props.showNewAnimation
+          'new-item-animated': this.props.showNewAnimation,
+          'dark-tiles': true
         })}
       >
         <Header />

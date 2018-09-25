@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { DimItem } from './item-types';
 import { percent } from './dimPercentWidth.directive';
-import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
+import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { getColor, dtrRatingColor } from '../shell/dimAngularFilters.filter';
 import { tagIconFilter } from './dimStoreItem.directive';
 import ItemRender from './ItemRender';
@@ -10,6 +10,7 @@ import ItemRender from './ItemRender';
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
 import './InventoryItem.scss';
+import './DarkTile.scss';
 import { TagValue } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import { settings } from '../settings/settings';
@@ -52,7 +53,8 @@ export default class InventoryItem extends React.Component<Props> {
       diamond:
         (item.isDestiny2 && item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram,
       masterwork: item.masterwork,
-      capped: badgeInfo.isCapped
+      capped: badgeInfo.isCapped,
+      exotic: item.isExotic
     };
 
     const elaborateTile =
@@ -70,12 +72,15 @@ export default class InventoryItem extends React.Component<Props> {
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         title={`${item.name}\n${item.typeName}`}
-        className={classNames('item', {
-          'search-hidden': searchHidden,
-          'd2-item': elaborateTile,
-          // TODO: do this higher up!
-          'dark-item': darkTiles
-        })}
+        className={classNames(
+          'item',
+          {
+            'search-hidden': searchHidden,
+            'd2-item': elaborateTile
+          },
+          item.dmg || '',
+          item.isDestiny2() && item.ammoType > 0 ? 'ammo-overlay ammo-type-' + item.ammoType : ''
+        )}
       >
         {elaborateTile && item.isDestiny2 && item.isDestiny2() ? (
           <ItemRender
@@ -86,7 +91,7 @@ export default class InventoryItem extends React.Component<Props> {
             tag={tag}
           />
         ) : darkTiles ? (
-          <div>
+          <div className={classNames(itemImageStyles)}>
             {item.percentComplete > 0 &&
               !item.complete && (
                 <div
@@ -94,10 +99,8 @@ export default class InventoryItem extends React.Component<Props> {
                   style={{ width: percent(item.percentComplete) }}
                 />
               )}
-            <div
-              className={classNames('item-img', itemImageStyles)}
-              style={bungieBackgroundStyle(item.icon)}
-            />
+            <div className="overlay" />
+            <div className="item-img" style={bungieBackgroundStyle(item.icon)} />
             {item.isDestiny1() &&
               item.quality && (
                 <div
@@ -114,7 +117,6 @@ export default class InventoryItem extends React.Component<Props> {
                   <i className="fa fa-star" style={dtrRatingColor(rating)} />
                 </div>
               )}
-            <div className={classNames('item-element', item.dmg)} />
             <div className={tagClasses(tag)} />
             {isNew && (
               <div className="new_overlay_overflow">
@@ -122,7 +124,27 @@ export default class InventoryItem extends React.Component<Props> {
               </div>
             )}
             {badgeInfo.showBadge && (
-              <div className={classNames(badgeInfo.badgeClassNames)}>{badgeInfo.badgeCount}</div>
+              <div className={classNames(badgeInfo.badgeClassNames)}>
+                {item.dmg === 'void' && (
+                  <BungieImage
+                    className="element void"
+                    src="/img/destiny_content/damage_types/destiny2/void.png"
+                  />
+                )}
+                {item.dmg === 'solar' && (
+                  <BungieImage
+                    className="element"
+                    src="/img/destiny_content/damage_types/destiny2/thermal.png"
+                  />
+                )}
+                {item.dmg === 'arc' && (
+                  <BungieImage
+                    className="element"
+                    src="/img/destiny_content/damage_types/destiny2/arc.png"
+                  />
+                )}
+                {badgeInfo.badgeCount}
+              </div>
             )}
           </div>
         ) : (
