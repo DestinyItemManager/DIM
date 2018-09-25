@@ -1108,6 +1108,7 @@ export function searchFilters(
             return !!(
               socket.plug &&
               ![2323986101, 2600899007, 1835369552].includes(socket.plug.plugItem.hash) &&
+              socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_guns|enhancements.)/
               )
