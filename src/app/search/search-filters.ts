@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
-import { TagInfo, settings, itemTags } from '../settings/settings';
+import { settings } from '../settings/settings';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { sortStores } from '../shell/dimAngularFilters.filter';
@@ -17,6 +17,7 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { querySelector } from '../shell/reducer';
 import { storesSelector } from '../inventory/reducer';
 import { maxLightLoadout } from '../loadout/auto-loadouts';
+import { itemTags } from '../inventory/dim-item-info';
 
 /**
  * A selector for the search config for a particular destiny version.
@@ -29,7 +30,6 @@ const searchConfigSelector = createSelector(
     // From search filter component
     const searchConfig = buildSearchConfig(
       destinyVersion,
-      itemTags,
       destinyVersion === 1 ? D1Categories : D2Categories
     );
     return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
@@ -66,7 +66,6 @@ interface SearchConfig {
  */
 export function buildSearchConfig(
   destinyVersion: 1 | 2,
-  itemTags: TagInfo[],
   categories: {
     [category: string]: string[];
   }

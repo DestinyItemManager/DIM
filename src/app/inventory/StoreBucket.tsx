@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DimItem } from './item-types';
-import { Settings } from '../settings/settings';
 import classNames from 'classnames';
 import { sortItems } from '../shell/dimAngularFilters.filter';
 import './dimStoreBucket.scss';
@@ -16,6 +15,7 @@ import { searchFilterSelector } from '../search/search-filters';
 import { connect } from 'react-redux';
 import { D1RatingData } from '../item-review/d1-dtr-api-types';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
+import { itemSortOrderSelector } from '../settings/reducer';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -40,14 +40,14 @@ const EMPTY_SET = new Set<string>();
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { storeId, bucketId } = props;
-  const settings = state.settings.settings as Settings;
+  const settings = state.settings;
   const store = state.inventory.stores.find((s) => s.id === storeId)!;
 
   return {
     items: store.buckets[bucketId],
     bucket: state.inventory.buckets!.byId[props.bucketId],
     store,
-    itemSortOrder: settings.itemSortOrder(),
+    itemSortOrder: itemSortOrderSelector(state),
     // If "show new items" is off, don't pay the cost of propagating new item updates
     newItems: settings.showNewItems ? state.inventory.newItems : EMPTY_SET,
     itemInfos: state.inventory.itemInfos,

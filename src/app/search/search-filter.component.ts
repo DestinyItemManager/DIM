@@ -6,8 +6,7 @@ import { searchFilters, buildSearchConfig, SearchFilters } from './search-filter
 import filtersTemplate from '../search/filters.html';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
-import { itemTags } from '../settings/settings';
-import { getItemInfoSource } from '../inventory/dim-item-info';
+import { getItemInfoSource, itemTags } from '../inventory/dim-item-info';
 import './search-filter.scss';
 import { IComponentOptions, IController, IScope, IRootElementService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -73,7 +72,6 @@ function SearchFilterCtrl(
     if (changes.account && changes.account) {
       searchConfig = buildSearchConfig(
         vm.account.destinyVersion,
-        itemTags,
         vm.account.destinyVersion === 1 ? D1Categories : D2Categories
       );
       filters = searchFilters(searchConfig, getStoresService());

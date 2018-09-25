@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Settings, settings } from '../settings/settings';
+import { settings } from '../settings/settings';
 import classNames from 'classnames';
+import { Settings } from '../settings/reducer';
 
 interface Props {
   sectionId: string;

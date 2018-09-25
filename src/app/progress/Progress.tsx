@@ -19,7 +19,6 @@ import { Milestone } from './Milestone';
 import './progress.scss';
 import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
 import Quest from './Quest';
-import { CharacterOrder, Settings } from '../settings/settings';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -28,6 +27,7 @@ import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { chainComparator, compareBy } from '../comparators';
+import { characterOrderSelector, CharacterOrder } from '../settings/reducer';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -64,10 +64,9 @@ interface State {
 }
 
 function mapStateToProps(state: RootState): Partial<Props> {
-  const settings = state.settings.settings as Settings;
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
-    characterOrder: settings.characterOrder
+    characterOrder: characterOrderSelector(state)
   };
 }
 

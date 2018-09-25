@@ -1,8 +1,7 @@
 import * as React from 'react';
 import './ItemTag.scss';
 import classNames from 'classnames';
-import { TagValue } from './dim-item-info';
-import { itemTags } from '../settings/settings';
+import { TagValue, itemTags } from './dim-item-info';
 
 interface Props {
   tag?: TagValue;

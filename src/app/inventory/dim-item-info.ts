@@ -21,6 +21,22 @@ export interface DimItemInfo {
   save?(): void;
 }
 
+export interface TagInfo {
+  type?: TagValue;
+  label: string;
+  hotkey?: string;
+  icon?: string;
+}
+
+// Predefined item tags. Maybe eventually allow to add more.
+export const itemTags: TagInfo[] = [
+  { label: 'Tags.TagItem' },
+  { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: 'star' },
+  { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: 'tag' },
+  { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: 'ban' },
+  { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: 'bolt' }
+];
+
 /**
  * An account-specific source of item info objects, keyed off instanceId.
  */
