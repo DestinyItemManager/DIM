@@ -549,7 +549,8 @@ export function searchFilters(
 
       return (item) => {
         return filters.every((filter) => {
-          const result = this.filters[filter.predicate](item, filter.value);
+          const result =
+            this.filters[filter.predicate] && this.filters[filter.predicate](item, filter.value);
           return filter.invert ? !result : result;
         });
       };
