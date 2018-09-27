@@ -281,9 +281,9 @@ header {
     padding: 1em;
     text-decoration: none; }
     .sliding-panel-content li a:focus {
-      background-color: #22949E; }
+      background-color: #5BB1CE; }
     .sliding-panel-content li a:hover {
-      background-color: #22949E;
+      background-color: #5BB1CE;
       color: #fff; }
   .sliding-panel-content.is-visible {
     transform: translateX(0); }
@@ -307,13 +307,13 @@ header {
  * Sections
  */
 .hero {
-  background: -webkit-linear-gradient(135deg, #F47524, #F5A623);
+  background: -webkit-linear-gradient(135deg, #F49600, #EE6D0D);
   /* Safari 5.1-6.0 */
-  background: -o-linear-gradient(135deg, #F47524, #F5A623);
+  background: -o-linear-gradient(135deg, #F49600, #EE6D0D);
   /* Opera 11.1-12.0 */
-  background: -moz-linear-gradient(135deg, #F47524, #F5A623);
+  background: -moz-linear-gradient(135deg, #F49600, #EE6D0D);
   /* Firefox 3.6-15 */
-  background: linear-gradient(135deg, #F47524, #F5A623);
+  background: linear-gradient(135deg, #F49600, #EE6D0D);
   /* Standard syntax */
   height: 600px;
   overflow: hidden;
@@ -332,14 +332,20 @@ header {
       .hero .row a.launch {
         font-size: 20px;
         font-weight: 800;
-        color: #ffffff;
+        color: #EE6D0D;
         text-transform: uppercase;
-        background: #22949E;
+        background: #ffffff;
         letter-spacing: 1px;
         width: 220px;
         height: 58px;
         margin: 0 auto;
-        line-height: 55px; }
+        line-height: 55px;
+        transition: .3s }
+      .hero .row a.launch:hover{
+        box-shadow:
+          0 0 0 2px #EE6D0D,
+          0 0 0 3px #ffffff;
+      }
       .hero .row a.beta {
         color: #ffffff;
         width: 220px;
@@ -426,13 +432,19 @@ section.access {
       font-weight: 800;
       color: #ffffff;
       text-transform: uppercase;
-      background: #22949E;
+      background: #EE6D0D;
       letter-spacing: 1px;
       width: 220px;
       height: 58px;
       text-align: center;
       margin: 0 auto;
-      line-height: 55px; }
+      line-height: 55px;
+      transition: .3s;}
+      section.access a.launch:hover{
+        box-shadow:
+          0 0 0 2px #ffffff,
+          0 0 0 3px #EE6D0D;
+      }
     section.access a.beta {
       color: #000000;
       width: 220px;
