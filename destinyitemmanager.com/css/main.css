@@ -463,7 +463,7 @@ section.d2 {
   display: flex;
   padding: 150px 0; }
   section.d2 .d2-support svg {
-    display: inline-block;
+    display: block;
     float: left; }
   section.d2 .d2-support h4 {
     display: inline-block;
