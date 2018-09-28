@@ -19,7 +19,8 @@ export default function D1ReputationSection({
         title={t('Bucket.Reputation')}
         sectionId="Reputation"
         collapsedSections={collapsedSections}
-      >
+      />
+      {!collapsedSections.Reputation && (
         <div className="store-row items reputation">
           {stores.map((store: D1Store) => (
             <div
@@ -32,7 +33,7 @@ export default function D1ReputationSection({
             </div>
           ))}
         </div>
-      </CollapsibleTitle>
+      )}
     </div>
   );
 }
