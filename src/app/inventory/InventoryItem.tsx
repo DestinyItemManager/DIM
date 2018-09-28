@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { DimItem } from './item-types';
 import { percent } from './dimPercentWidth.directive';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
-import { getColor, dtrRatingColor } from '../shell/dimAngularFilters.filter';
+import { getColor } from '../shell/dimAngularFilters.filter';
 import { tagIconFilter } from './dimStoreItem.directive';
 import ItemRender from './ItemRender';
 // tslint:disable-next-line:no-implicit-dependencies
@@ -103,8 +103,12 @@ export default class InventoryItem extends React.Component<Props> {
             {rating !== undefined &&
               !hideRating && (
                 <div className="item-stat item-review">
+                  <i
+                    className={
+                      rating > 4 ? 'fa fa-star' : rating > 2 ? 'fa fa-star-half-o' : 'fa fa-star-o'
+                    }
+                  />
                   {rating}
-                  <i className="fa fa-star" style={dtrRatingColor(rating)} />
                 </div>
               )}
             <div className={classNames('item-element', item.dmg)} />

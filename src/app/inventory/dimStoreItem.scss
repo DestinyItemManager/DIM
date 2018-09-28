@@ -40,13 +40,14 @@
   left: 0;
   text-align: left;
   display: none;
+  color: #444;
   .show-reviews & {
     display: block;
   }
-  .fa-star {
+  .fa {
     font-size: 0.8em;
     bottom: 1px;
-    padding-left: 1px;
+    padding-right: 1px;
     position: relative;
   }
 }
@@ -104,7 +105,7 @@ dim-store-item,
 
 .item-img {
   @include item-size;
-  border: 2px solid #ddd;
+  border: 2px solid #afadb0;
   background-size: cover;
   background-repeat: no-repeat;
   display: block;
