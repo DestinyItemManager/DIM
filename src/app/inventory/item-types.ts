@@ -35,8 +35,8 @@ export interface DimItem {
   hash: number;
   /** This is the type of the item (see InventoryBuckets) regardless of location. This string is a DIM concept with no direct correlation to the API types. */
   type: string;
-  /** String names of "item categories" the item may be in. These are not the same as DestinyItemCategoryDefinitions. */
-  categories: string[];
+  /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
+  itemCategoryHashes: number[];
   /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
   tier: string;
   /** Is this an Exotic item? */
@@ -161,8 +161,6 @@ export interface DimItem {
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
-  /** Is this item in the given category name? Only really useful in D1. */
-  inCategory(categoryName: string): boolean;
   /** Could this be added to a loadout? */
   canBeInLoadout(): boolean;
   /** "Touch" the item to mark it as having been manually moved. */
@@ -218,8 +216,6 @@ export interface D2Item extends DimItem {
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
-  /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
-  itemCategoryHashes: number[];
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   dtrRating: D2RatingData | null;

@@ -4,8 +4,6 @@ import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { searchFilters, buildSearchConfig, SearchFilters } from './search-filters';
 import filtersTemplate from '../search/filters.html';
-import { D2Categories } from '../destiny2/d2-buckets.service';
-import { D1Categories } from '../destiny1/d1-buckets.service';
 import { itemTags } from '../settings/settings';
 import { getItemInfoSource } from '../inventory/dim-item-info';
 import './search-filter.scss';
@@ -71,10 +69,7 @@ function SearchFilterCtrl(
 
   vm.$onChanges = (changes) => {
     if (changes.account && changes.account) {
-      searchConfig = buildSearchConfig(
-        vm.account.destinyVersion,
-        vm.account.destinyVersion === 1 ? D1Categories : D2Categories
-      );
+      searchConfig = buildSearchConfig(vm.account.destinyVersion);
       filters = searchFilters(searchConfig, getStoresService());
       setupTextcomplete();
     }
