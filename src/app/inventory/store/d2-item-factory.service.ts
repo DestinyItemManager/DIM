@@ -1018,7 +1018,10 @@ const EXCLUDED_PLUGS = new Set([
 function filterReusablePlug(reusablePlug: DimPlug) {
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
+    // Masterwork Mods
     !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    // Ghost Projections
+    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
     !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
