@@ -1,11 +1,13 @@
-version: "3.7"
+version: '3'
 services:
   webpack:
     container_name: dim-webpack
     image: node:10.9.0
-    build:
-      context: ./docker-compose/webpack
-    command: bash -c "yarn install && yarn start"
+    ports:
+      - '8080:8080'
+    command: bash -c 'yarn install && yarn start'
+    environment:
+      - NODE_ENV=dev
     restart: always
     volumes:
       - .:/usr/src/app
