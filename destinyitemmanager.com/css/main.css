@@ -385,6 +385,8 @@ section.whats-dim {
       margin-right: 0; }
   section.whats-dim .info .text-wrap {
     width: 100%; }
+    .text-wrap a {
+      color: #ffffff; }
   section.whats-dim img {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5); }
 
