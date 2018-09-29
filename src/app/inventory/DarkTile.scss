@@ -13,6 +13,7 @@
     background-color: #262626;
     color: white;
     font-size: calc((var(--item-size) + 4px) / 5.5);
+    -webkit-font-smoothing: antialiased;
   }
 
   .item-img {
@@ -20,10 +21,16 @@
   }
 
   .item-review {
-    &.godroll {
+    .decimal {
+      font-size: 0.7em;
+      color: #aaa;
+      display: none;
+    }
+    .godroll {
       color: $gold;
     }
     .fa {
+      font-size: 0.8em;
       padding-right: 1px;
       padding-left: 0;
     }

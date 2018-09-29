@@ -113,16 +113,14 @@ export default class InventoryItem extends React.Component<Props> {
               )}
             {rating !== undefined &&
               !hideRating && (
-                <div className={classNames('item-stat', 'item-review', { godroll: rating === 5 })}>
+                <div className={classNames('item-stat', 'item-review')}>
                   <i
-                    className={
-                      rating > 4
-                        ? 'fa fa-thumbs-up'
-                        : rating > 2
-                          ? 'fa fa-thumbs-o-up'
-                          : 'fa fa-thumbs-down'
-                    }
+                    className={classNames(
+                      rating > 4 ? 'fa fa-star' : rating > 2 ? 'fa fa-star-half-o' : 'fa fa-star-o',
+                      { godroll: rating === 5 }
+                    )}
                   />
+                  {sliceRating(rating)}
                 </div>
               )}
             {tag && <div className={tagClasses(tag)} />}
@@ -201,4 +199,16 @@ export default class InventoryItem extends React.Component<Props> {
       </div>
     );
   }
+}
+
+function sliceRating(rating: number) {
+  const whole = Math.floor(rating);
+  const parts = rating.toString().split('.');
+
+  return (
+    <>
+      <span>{whole}</span>
+      {parts.length > 1 && <span className="decimal">.{parts[1]}</span>}
+    </>
+  );
 }
