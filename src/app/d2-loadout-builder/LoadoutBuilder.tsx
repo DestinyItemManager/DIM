@@ -1,6 +1,8 @@
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
+import { t } from 'i18next';
+import { $rootScope } from 'ngimport';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -10,19 +12,18 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import './loadoutbuilder.scss';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { Subscription } from 'rxjs/Subscription';
+import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
 import { DimStore } from '../inventory/store-types';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../ngimport-more';
-import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
 import CharacterDropdown from '../character-select/dropdown';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import StoreInventoryItem from '../inventory/StoreInventoryItem';
 import { D2Item } from '../inventory/item-types';
 import LockedArmor from './LockedArmor';
-import { sum } from '../util';
 
 interface Props {
   account: DestinyAccount;
@@ -74,7 +75,7 @@ interface SetType {
   };
 }
 
-// bucket enum, also used for ordering ofcate the buckets.
+// bucket lookup, also used for ordering ofcate the buckets.
 const lockableBuckets = {
   helmet: 3448274439,
   gauntlets: 3551918588,
@@ -125,7 +126,7 @@ function getActiveHighestSets(
   return matchedSets;
 }
 
-function processdatshizz(armor) {
+function process(armor, callback) {
   const pstart = performance.now();
   const helms = armor[lockableBuckets.helmet] || [];
   const gaunts = armor[lockableBuckets.gauntlets] || [];
@@ -186,7 +187,6 @@ function processdatshizz(armor) {
   // }
 
   // vm.hasSets = false;
-  const that = this;
   function step(h = 0, g = 0, c = 0, l = 0, ci = 0, processedCount = 0) {
     for (; h < helms.length; ++h) {
       for (; g < gaunts.length; ++g) {
@@ -303,7 +303,7 @@ function processdatshizz(armor) {
 
     const tiers = _.each(
       _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-        return sum(tierString.split('/'), (num) => parseInt(num, 10));
+        return tierString.split('/').reduce((a, b) => a + parseInt(b, 10), 0);
       }),
       (tier) => {
         tier.sort().reverse();
@@ -321,17 +321,12 @@ function processdatshizz(armor) {
         });
       }
     }
-    that.setState({ setTiers });
+    // that.setState({ setTiers });
+    callback(setMap, setTiers);
 
     // // Finish progress
     // vm.progress = processedCount / combos;
-    console.log(
-      'processed',
-      combos,
-      'combinations in',
-      (performance.now() - pstart) / 1000,
-      'seconds.'
-    );
+    console.log('processed', combos, 'combinations in', performance.now() - pstart);
   }
 
   step();
@@ -411,36 +406,8 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.$scope.$destroy();
   }
 
-  onCharacterChanged = (storeId: string) => {
-    this.setState({ lockedMap: {} });
-
-    const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore });
-  };
-
-  toggleShowingItems = () => {
-    this.setState({ showingItems: !this.state.showingItems });
-  };
-
-  handleBucketChange = (element) => {
-    this.setState({ selectedBucketId: element.target.value });
-  };
-
-  setSelectedTier = (element) => {
-    if (!this.state.processedSets) {
-      return;
-    }
-    this.setState({ selectedTier: element.target.value });
-    const matchedSets = getActiveHighestSets(this.state.processedSets, element.target.value);
-    this.setState({ matchedSets });
-  };
-
-  updateLockedArmor = (bucket: InventoryBucket, locked: D2Item[]) => {
-    console.log('locked things updated!!');
-    const lockedMap = this.state.lockedMap;
-    lockedMap[bucket.hash] = locked;
-
-    const filteredItems = { ...this.state.items[this.state.selectedStore!.classType] };
+  computeSets = (classType: number, lockedMap: {}) => {
+    const filteredItems = { ...this.state.items[classType] };
     Object.keys(lockedMap).forEach((bucket) => {
       // if there are locked items for this bucket
       if (lockedMap[bucket].length) {
@@ -462,21 +429,108 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     });
 
     // re-process all sets
-    const processedSets = processdatshizz.call(this, filteredItems);
-    // const processedSets = procesed.setMap;
-    // const setTiers = procesed.setTiers;
-    // const { processedSets, setTiers } = procesed;
-    const setTiers = this.state.setTiers;
-    let selectedTier = this.state.selectedTier;
-    if (!setTiers.includes(selectedTier)) {
-      selectedTier = setTiers[1];
+    console.log('calculating new sets...');
+    process.call(this, filteredItems, (processedSets, setTiers) => {
+      let selectedTier = this.state.selectedTier;
+      if (!setTiers.includes(selectedTier)) {
+        selectedTier = setTiers[1];
+      }
+
+      // get the sets to render for the selected tier
+      const matchedSets = getActiveHighestSets(processedSets, selectedTier);
+
+      // finally... lets update that state... whew....
+      this.setState({ lockedMap, setTiers, selectedTier, processedSets, matchedSets });
+    });
+  };
+
+  resetLocked = () => {
+    this.setState({ lockedMap: {}, setTiers: [], matchedSets: undefined });
+    this.computeSets(this.state.selectedStore!.classType, {});
+  };
+
+  lockEquipped = () => {
+    const lockedMap = {};
+    this.state.selectedStore!.items.forEach((item) => {
+      if (item.equipped && item.bucket.inArmor) {
+        lockedMap[item.bucket.hash] = [item];
+      }
+    });
+
+    this.computeSets(this.state.selectedStore!.classType, lockedMap);
+  };
+
+  onCharacterChanged = (storeId: string) => {
+    const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
+    this.setState({ selectedStore, lockedMap: {}, setTiers: [], matchedSets: undefined });
+    this.computeSets(selectedStore.classType, {});
+  };
+
+  updateLockedArmor = (bucket: InventoryBucket, locked: D2Item[]) => {
+    console.log('locked things updated!!');
+    const lockedMap = this.state.lockedMap;
+    lockedMap[bucket.hash] = locked;
+
+    this.computeSets(this.state.selectedStore!.classType, lockedMap);
+  };
+
+  toggleShowingItems = () => {
+    this.setState({ showingItems: !this.state.showingItems });
+  };
+
+  handleBucketChange = (element) => {
+    this.setState({ selectedBucketId: element.target.value });
+  };
+
+  setSelectedTier = (element) => {
+    if (!this.state.processedSets) {
+      return;
     }
+    this.setState({ selectedTier: element.target.value });
+    const matchedSets = getActiveHighestSets(this.state.processedSets, element.target.value);
+    this.setState({ matchedSets });
+  };
 
-    // get the sets to render for the selected tier
-    const matchedSets = getActiveHighestSets(processedSets, selectedTier);
+  newLoadout = (element) => {
+    const set = this.state.processedSets![element.target.value].set;
+    const loadout: Loadout = {
+      name: '',
+      items: {},
+      classType: { warlock: 0, titan: 1, hunter: 2 }[this.state.selectedStore!.classType]
+    };
+    const items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem');
+    _.each(items, (itemContainer: any, itemType) => {
+      loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
+    });
 
-    // finally... lets update that state... whew....
-    this.setState({ lockedMap, setTiers, selectedTier, processedSets, matchedSets });
+    this.$scope.$broadcast('dim-edit-loadout', {
+      loadout,
+      equipAll: true,
+      showClass: false
+    });
+  };
+
+  equipItems = (element) => {
+    const set = this.state.processedSets![element.target.value].set;
+    const loadout: Loadout = {
+      items: {},
+      name: t('Loadouts.AppliedAuto'),
+      classType: { warlock: 0, titan: 1, hunter: 2 }[this.state.selectedStore!.classType]
+    };
+    const items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem');
+    loadout.items.helmet = [items.Helmet];
+    loadout.items.chest = [items.Chest];
+    loadout.items.gauntlets = [items.Gauntlets];
+    loadout.items.leg = [items.Leg];
+    loadout.items.classitem = [items.ClassItem];
+
+    // loadout = copy(loadout);
+
+    _.each(loadout.items, (val) => {
+      val[0].equipped = true;
+    });
+
+    return dimLoadoutService.applyLoadout(this.state.selectedStore!, loadout, true);
   };
 
   render() {
@@ -515,7 +569,9 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           onCharacterChanged={this.onCharacterChanged}
         />
         <h3>
-          <button onClick={this.toggleShowingItems}>{showingItems ? 'Hide' : 'Show'} items</button>
+          <button className="dim-button" onClick={this.toggleShowingItems}>
+            {showingItems ? 'Hide' : 'Show'} items
+          </button>
         </h3>
         {showingItems && (
           <div>
@@ -544,6 +600,12 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           </div>
         )}
         <div>
+          <button className="dim-button" onClick={this.lockEquipped}>
+            Lock Equipped
+          </button>
+          <button className="dim-button" onClick={this.resetLocked}>
+            Clear Equipped
+          </button>
           <div className="locked-equipment">
             {Object.values(lockableBuckets).map((armor) => {
               return (
@@ -572,20 +634,34 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           this.state.matchedSets.map((set) => {
             // return <span key={set.setHash}>{set.setHash}</span>;
             return (
-              <div key={set.setHash} className="sub-bucket">
-                {Object.values(set.armor).map((item) => {
-                  return (
-                    <StoreInventoryItem
-                      key={item.index}
-                      item={item}
-                      isNew={false}
-                      // tag={getTag(item, itemInfos)}
-                      // rating={dtrRating ? dtrRating.overallScore : undefined}
-                      // hideRating={!showRating}
-                      searchHidden={false}
-                    />
-                  );
-                })}
+              <div key={set.setHash}>
+                <div>
+                  {/* <button className="dim-button" value={set.setHash} onClick={this.newLoadout}>
+                    Create Loadout
+                  </button> */}
+                  <button
+                    className="dim-button equip-button"
+                    value={set.setHash}
+                    onClick={this.equipItems}
+                  >
+                    Equip on {this.state.selectedStore!.name}
+                  </button>
+                </div>
+                <div className="sub-bucket">
+                  {Object.values(set.armor).map((item) => {
+                    return (
+                      <StoreInventoryItem
+                        key={item.index}
+                        item={item}
+                        isNew={false}
+                        // tag={getTag(item, itemInfos)}
+                        // rating={dtrRating ? dtrRating.overallScore : undefined}
+                        // hideRating={!showRating}
+                        searchHidden={false}
+                      />
+                    );
+                  })}
+                </div>
               </div>
             );
           })}
