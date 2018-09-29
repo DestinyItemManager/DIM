@@ -7,6 +7,7 @@ import Header from './Header';
 import ManifestProgress from './ManifestProgress';
 import { PageComponent } from './page.component';
 import { ClickAnywhereButHere } from './click-anywhere-but-here.directive';
+import { FontAwesomeIcon } from './font-awesome-icon.directive';
 import loadingTracker from './dimLoadingTracker.factory';
 import dimAngularFiltersModule from './dimAngularFilters.filter';
 import { react2angular } from 'react2angular';
@@ -23,4 +24,5 @@ export const ShellModule = module('dimShell', [dimAngularFiltersModule])
   .component('manifestProgress', react2angular(ManifestProgress, ['destinyVersion'], ['$scope']))
   .component('dimToasterContainer', ToasterContainerComponent)
   .directive('scrollClass', ScrollClass)
+  .directive('fontAwesomeIcon', FontAwesomeIcon)
   .directive('dimClickAnywhereButHere', ClickAnywhereButHere).name;
