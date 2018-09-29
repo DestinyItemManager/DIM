@@ -1,5 +1,7 @@
 # Next
 
+* Add searches `is:transmat`, `is:armormod`, `is:weaponmod`, and `is:transmat`, and removed D1 `is:primaryweaponengram`, `is:specialweaponengram`, and `is:heavyweaponengram`.
+
 # 4.71.0 (2018-09-23)
 
 * Removed a bunch of help popups.

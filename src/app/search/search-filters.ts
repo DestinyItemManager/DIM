@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
-import { TagInfo, settings, itemTags } from '../settings/settings';
+import { settings, itemTags } from '../settings/settings';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { sortStores } from '../shell/dimAngularFilters.filter';
@@ -27,11 +27,7 @@ const searchConfigSelector = createSelector(
   storesSelector,
   (destinyVersion, _stores) => {
     // From search filter component
-    const searchConfig = buildSearchConfig(
-      destinyVersion,
-      itemTags,
-      destinyVersion === 1 ? D1Categories : D2Categories
-    );
+    const searchConfig = buildSearchConfig(destinyVersion);
     return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
   }
 );
@@ -57,36 +53,33 @@ export const searchFilterSelector = createSelector(
 interface SearchConfig {
   destinyVersion: 1 | 2;
   keywords: string[];
-  categoryFilters: { [key: string]: string[] };
+  categoryHashFilters: { [key: string]: number };
   keywordToFilter: { [key: string]: string };
 }
 
 /**
  * Builds an object that describes the available search keywords and category mappings.
  */
-export function buildSearchConfig(
-  destinyVersion: 1 | 2,
-  itemTags: TagInfo[],
-  categories: {
-    [category: string]: string[];
-  }
-): SearchConfig {
-  const categoryFilters = {
-    pulserifle: ['CATEGORY_PULSE_RIFLE'],
-    scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
-    handcannon: ['CATEGORY_HAND_CANNON'],
-    autorifle: ['CATEGORY_AUTO_RIFLE'],
-    sniperrifle: ['CATEGORY_SNIPER_RIFLE'],
-    shotgun: ['CATEGORY_SHOTGUN'],
-    sidearm: ['CATEGORY_SIDEARM'],
-    rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
-    fusionrifle: ['CATEGORY_FUSION_RIFLE'],
-    sword: ['CATEGORY_SWORD'],
-    bow: ['CATEGORY_BOW'],
-    machinegun: ['CATEGORY_MACHINE_GUN']
-  };
+export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
+  const categories = destinyVersion === 1 ? D1Categories : D2Categories;
+  const itemTypes = flatMap(Object.values(categories), (l: string[]) =>
+    l.map((v) => v.toLowerCase())
+  );
 
-  const itemTypes: string[] = [];
+  // Add new ItemCategoryHash hashes to this (or down below in the D2 area) to add new category searches
+  let categoryHashFilters: { [key: string]: number } = {
+    autorifle: 5,
+    handcannon: 6,
+    pulserifle: 7,
+    scoutrifle: 8,
+    fusionrifle: 9,
+    sniperrifle: 10,
+    shotgun: 11,
+    machinegun: 12,
+    rocketlauncher: 13,
+    sidearm: 14,
+    sword: 54
+  };
 
   const stats = [
     'charge',
@@ -100,30 +93,21 @@ export function buildSearchConfig(
   ];
 
   if (destinyVersion === 1) {
-    Object.assign(categoryFilters, {
-      primaryweaponengram: ['CATEGORY_PRIMARY_WEAPON', 'CATEGORY_ENGRAM'],
-      specialweaponengram: ['CATEGORY_SPECIAL_WEAPON', 'CATEGORY_ENGRAM'],
-      heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
-      machinegun: ['CATEGORY_MACHINE_GUN']
-    });
-    itemTypes.push(
-      ...flatMap(Object.values(categories), (l: string[]) => l.map((v) => v.toLowerCase()))
-    );
     stats.push('rof');
   } else {
-    Object.assign(categoryFilters, {
-      grenadelauncher: ['CATEGORY_GRENADE_LAUNCHER'],
-      submachine: ['CATEGORY_SUBMACHINEGUN'],
-      tracerifle: ['CATEGORY_TRACE_RIFLE'],
-      linearfusionrifle: ['CATEGORY_LINEAR_FUSION_RIFLE']
-    });
-    itemTypes.push(
-      ...flatMap(Object.values(categories), (l: string[]) => l.map((v) => v.toLowerCase()))
-    );
-    stats.push('rpm');
-    stats.push('mobility');
-    stats.push('recovery');
-    stats.push('resilience');
+    categoryHashFilters = {
+      ...categoryHashFilters,
+      grenadelauncher: 153950757,
+      tracerifle: 2489664120,
+      linearfusionrifle: 1504945536,
+      submachine: 3954685534,
+      bow: 3317538576,
+      transmat: 208981632,
+      weaponmod: 610365472,
+      armormod: 4104513227,
+      reptoken: 2088636411
+    };
+    stats.push('rpm', 'mobility', 'recovery', 'resilience');
   }
 
   /**
@@ -152,7 +136,7 @@ export function buildSearchConfig(
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
-    category: Object.keys(categoryFilters),
+    categoryHash: Object.keys(categoryHashFilters),
     inloadout: ['inloadout'],
     maxpower: ['maxpower'],
     new: ['new'],
@@ -301,8 +285,8 @@ export function buildSearchConfig(
   return {
     keywordToFilter,
     keywords,
-    categoryFilters,
-    destinyVersion
+    destinyVersion,
+    categoryHashFilters
   };
 }
 
@@ -811,13 +795,14 @@ export function searchFilters(
       infusable(item: DimItem) {
         return item.infusable;
       },
-      category(item: DimItem, predicate: string) {
-        const categories = searchConfig.categoryFilters[predicate.toLowerCase().replace(/\s/g, '')];
+      categoryHash(item: D2Item, predicate: string) {
+        const categoryHash =
+          searchConfig.categoryHashFilters[predicate.toLowerCase().replace(/\s/g, '')];
 
-        if (!categories || !categories.length) {
+        if (!categoryHash) {
           return false;
         }
-        return categories.every((c) => item.inCategory(c));
+        return item.itemCategoryHashes.includes(categoryHash);
       },
       keyword(item: DimItem, predicate: string) {
         return (
