@@ -4,6 +4,7 @@
 
 * Removed a bunch of help popups.
 * Added `is:maxpower` search to return highest light items.
+* Added `is:modded` search to return items that have a mod applied.
 * Bounties with expiration times are now shown, and are sorted in front in order of expiration time.
 * Added masterwork tier range filter.
 * Highlight the stat that is boosted by masterwork in item details.

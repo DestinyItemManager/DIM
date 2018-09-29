@@ -552,19 +552,19 @@ export function makeItem(
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
 
-  // Forsaken Masterwork
-  if (createdItem.sockets) {
+  // Masterwork
+  if (createdItem.masterwork && createdItem.sockets) {
     try {
-      buildForsakenMasterworkInfo(createdItem, defs);
+      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
     } catch (e) {
       console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
     }
   }
 
-  // Masterwork
-  if (createdItem.masterwork && createdItem.sockets) {
+  // Forsaken Masterwork
+  if (createdItem.sockets) {
     try {
-      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
+      buildForsakenMasterworkInfo(createdItem, defs);
     } catch (e) {
       console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
     }
@@ -1018,7 +1018,10 @@ const EXCLUDED_PLUGS = new Set([
 function filterReusablePlug(reusablePlug: DimPlug) {
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
+    // Masterwork Mods
     !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    // Ghost Projections
+    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
     !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
