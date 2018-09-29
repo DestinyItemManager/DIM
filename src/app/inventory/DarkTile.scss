@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .dark-tiles .item-drag-container {
   width: calc(var(--item-size) + 8px);
   height: calc(var(--item-size) + 21px);
@@ -10,19 +12,29 @@
   .item-stat {
     background-color: #262626;
     color: white;
-    font-size: calc((var(--item-size) + 4px) / 5.8);
+    font-size: calc((var(--item-size) + 4px) / 5.5);
   }
 
   .item-img {
-    border: 1px solid #262626;
-    width: calc(var(--item-size) + 2px);
-    height: calc(var(--item-size) + 2px);
+    border: 2px solid #afadb0;
+  }
+
+  .item-review {
+    &.godroll {
+      color: $gold;
+    }
+    .fa {
+      padding-right: 1px;
+      padding-left: 0;
+    }
   }
 
   .item-tag {
+    // TODO: proportional size
     right: 4px;
     left: auto;
     text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
+    color: white;
   }
 
   .masterwork {
@@ -84,7 +96,7 @@
     transform: translateY(0.5px);
     &.void {
       filter: brightness(200%);
-      background-color: none;
+      background-color: transparent !important;
     }
   }
 

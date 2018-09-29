@@ -26,6 +26,7 @@ interface Props {
   hideRating?: boolean;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
+  /** TODO: item locked needs to be passed in */
   onClick?(e);
   onDoubleClick?(e);
 }
@@ -112,12 +113,20 @@ export default class InventoryItem extends React.Component<Props> {
               )}
             {rating !== undefined &&
               !hideRating && (
-                <div className="item-stat item-review">
-                  {rating}
-                  <i className="fa fa-star" style={dtrRatingColor(rating)} />
+                <div className={classNames('item-stat', 'item-review', { godroll: rating === 5 })}>
+                  <i
+                    className={
+                      rating > 4
+                        ? 'fa fa-thumbs-up'
+                        : rating > 2
+                          ? 'fa fa-thumbs-o-up'
+                          : 'fa fa-thumbs-down'
+                    }
+                  />
                 </div>
               )}
-            <div className={tagClasses(tag)} />
+            {tag && <div className={tagClasses(tag)} />}
+            {item.locked && <div className="item-tag fa fa-lock" />}
             {isNew && (
               <div className="new_overlay_overflow">
                 <img className="new_overlay" src={newOverlay} height="44" width="44" />
