@@ -15,52 +15,52 @@ export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed';
 
 export interface Settings {
   // Show full details in item popup
-  itemDetails: boolean;
+  readonly itemDetails: boolean;
   // Show item quality percentages
-  itemQuality: boolean;
+  readonly itemQuality: boolean;
   // Show new items with an overlay
-  showNewItems: boolean;
+  readonly showNewItems: boolean;
   // Show animation of new item overlay on new items
-  showNewAnimation: boolean;
+  readonly showNewAnimation: boolean;
   // Show item reviews
-  showReviews: boolean;
+  readonly showReviews: boolean;
   // Show elemental damage icons
-  showElements: boolean;
+  readonly showElements: boolean;
   // Can we post identifying information to DTR?
-  allowIdPostToDtr: boolean;
+  readonly allowIdPostToDtr: boolean;
   // Sort characters (mostRecent, mostRecentReverse, fixed)
-  characterOrder: CharacterOrder;
+  readonly characterOrder: CharacterOrder;
   // Sort items in buckets (primaryStat, rarityThenPrimary, quality)
-  itemSort: string;
-  itemSortOrderCustom: string[];
+  readonly itemSort: string;
+  readonly itemSortOrderCustom: string[];
   // How many columns to display character buckets
-  charCol: 3;
+  readonly charCol: 3;
   // How many columns to display character buckets on Mobile
-  charColMobile: 3;
+  readonly charColMobile: 3;
   // How many columns to display vault buckets
-  vaultMaxCol: 999;
+  readonly vaultMaxCol: 999;
   // How big in pixels to draw items - start smaller for iPad
-  itemSize: number;
+  readonly itemSize: number;
   // Which categories or buckets should be collapsed?
-  collapsedSections: { [key: string]: boolean };
+  readonly collapsedSections: { [key: string]: boolean };
   // What settings for farming mode
-  farming: {
+  readonly farming: {
     // Whether to keep one slot per item type open
-    makeRoomForItems: boolean;
-    moveTokens: boolean;
+    readonly makeRoomForItems: boolean;
+    readonly moveTokens: boolean;
   };
   // Active destiny version
-  destinyVersion: 2;
+  readonly destinyVersion: 2;
   // Destiny 2 platform selection for ratings + reviews
-  reviewsPlatformSelection: 0;
+  readonly reviewsPlatformSelection: 0;
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
-  reviewsModeSelection: 0;
+  readonly reviewsModeSelection: 0;
 
-  betaForsakenTiles: false;
+  readonly betaForsakenTiles: false;
 
-  language: string;
+  readonly language: string;
 
-  colorA11y: string;
+  readonly colorA11y: string;
 }
 
 const itemSortPresets = {
