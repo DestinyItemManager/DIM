@@ -315,7 +315,9 @@ module.exports = (env) => {
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
         // Forsaken Item Tiles
-        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release')
+        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
+        // D2 Loadout Builder
+        '$featureFlags.d2LoadoutBuilder': JSON.stringify(false)
       })
 
       // Enable if you want to debug the size of the chunks

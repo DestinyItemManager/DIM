@@ -388,6 +388,9 @@
     "ShowGear": "Show {{class}} gear",
     "Vendor": "Include Vendor items"
   },
+  "LoadoutBuilder": {
+    "Title": "Loadout Builder"
+  },
   "Loadouts": {
     "Any": "Any class",
     "Applied": "Your single item loadout has been transferred to your {{store}}.",

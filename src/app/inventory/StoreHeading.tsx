@@ -18,7 +18,9 @@ import CharacterStats from './CharacterStats';
 
 interface Props {
   store: DimStore;
-  internalLoadoutMenu: boolean;
+  internalLoadoutMenu?: boolean;
+  detailedCard?: boolean;
+  hideDropdownIcon?: boolean;
   selectedStore?: DimStore;
   onTapped?(storeId: string): void;
 }
@@ -31,7 +33,7 @@ export default class StoreHeading extends React.Component<Props> {
   private dialogResult: any = null;
 
   render() {
-    const { store, internalLoadoutMenu } = this.props;
+    const { store, internalLoadoutMenu, detailedCard, hideDropdownIcon } = this.props;
 
     if (isVault(store)) {
       return (
@@ -61,7 +63,7 @@ export default class StoreHeading extends React.Component<Props> {
               />
             </div>
           </div>
-          {internalLoadoutMenu && <div className="loadout-menu" loadout-id={store.id} />}
+          {detailedCard && <div className="loadout-menu" loadout-id={store.id} />}
           <div className="vault-capacity">
             {Object.keys(store.vaultCounts).map((bucketId) => (
               <PressTip
@@ -119,14 +121,18 @@ export default class StoreHeading extends React.Component<Props> {
                 />
               </PressTip>
             </div>
-            <i
-              className="loadout-button fa fa-chevron-circle-down"
-              ng-i18next="[title]Loadouts.Loadouts"
-            />
+            {!hideDropdownIcon && (
+              <i
+                className="loadout-button fa fa-chevron-circle-down"
+                ng-i18next="[title]Loadouts.Loadouts"
+              />
+            )}
           </div>
         </div>
         {internalLoadoutMenu && <div className="loadout-menu" loadout-id={store.id} />}
-        <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+        {detailedCard && (
+          <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+        )}
       </div>
     );
   }
@@ -134,9 +140,9 @@ export default class StoreHeading extends React.Component<Props> {
   private openLoadoutPopup = (e) => {
     e.stopPropagation();
 
-    const { store, internalLoadoutMenu, selectedStore, onTapped } = this.props;
+    const { store, internalLoadoutMenu, detailedCard, selectedStore, onTapped } = this.props;
 
-    if (store !== selectedStore && !internalLoadoutMenu) {
+    if (!detailedCard || (store !== selectedStore && !internalLoadoutMenu)) {
       onTapped && onTapped(store.id);
       return;
     }

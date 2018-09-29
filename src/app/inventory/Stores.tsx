@@ -81,7 +81,7 @@ class Stores extends React.Component<Props, State> {
                   {stores.map((store) => (
                     <View className="store-cell" key={store.id}>
                       <StoreHeading
-                        internalLoadoutMenu={false}
+                        detailedCard={true}
                         store={store}
                         selectedStore={selectedStore}
                         onTapped={this.selectStore}
@@ -107,7 +107,7 @@ class Stores extends React.Component<Props, State> {
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
           {stores.map((store) => (
             <div className="store-cell" key={store.id}>
-              <StoreHeading internalLoadoutMenu={true} store={store} />
+              <StoreHeading detailedCard={true} internalLoadoutMenu={true} store={store} />
             </div>
           ))}
         </ScrollClassDiv>
