@@ -307,7 +307,6 @@ export function makeItem(
     hash: item.itemHash,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
-    categories: [],
     itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
