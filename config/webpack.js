@@ -317,7 +317,7 @@ module.exports = (env) => {
         // Forsaken Item Tiles
         '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
         // D2 Loadout Builder
-        '$featureFlags.d2LoadoutBuilder': JSON.stringify(false)
+        '$featureFlags.d2LoadoutBuilder': JSON.stringify(env === 'dev')
       })
 
       // Enable if you want to debug the size of the chunks
