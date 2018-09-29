@@ -1,7 +1,9 @@
 <div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in $ctrl.vendors | values | vendorTab:$ctrl.activeTab | orderBy:['vendorOrder'] track by vendor.hash">
   <div class="title">
     <div class="collapse-handle" ng-click="$ctrl.toggleSection('d1vendor-'+vendorHash)">
-      <i class="fa collapse" ng-class="$ctrl.settings.collapsedSections['d1vendor-'+vendorHash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
+      <font-awesome-icon class="collapse" icon="expand" ng-if="$ctrl.settings.collapsedSections['d1vendor-'+vendorHash]"></font-awesome-icon>
+      <font-awesome-icon class="collapse" icon="collapse" ng-if="!$ctrl.settings.collapsedSections['d1vendor-'+vendorHash]"></font-awesome-icon>
+
       <img class="vendor-icon" ng-src="{{ ::vendor.icon | bungieIcon }}" />
       {{ ::vendor.name }}
       <span class="vendor-location">{{ ::vendor.location }}</span>
