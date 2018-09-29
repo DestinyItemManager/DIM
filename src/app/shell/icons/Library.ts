@@ -1,4 +1,6 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faMinusSquare, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faArrowCircleUp,
   faBars,
@@ -8,9 +10,22 @@ import {
   faStar,
   faTimes
 } from '@fortawesome/free-solid-svg-icons';
-import { faMinusSquare, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 
-library.add(faArrowCircleUp, faBars, faCog, faSearch, faSignOutAlt, faTimes);
+// necessary while angular code still lives
+library.add(
+  faTwitter,
+
+  faMinusSquare,
+  faPlusSquare,
+
+  faArrowCircleUp,
+  faBars,
+  faCog,
+  faSearch,
+  faSignOutAlt,
+  faStar,
+  faTimes
+);
 
 export {
   faArrowCircleUp as updateIcon,
@@ -21,5 +36,6 @@ export {
   faSearch as searchIcon,
   faSignOutAlt as signOutIcon,
   faStar as starIcon,
-  faTimes as closeIcon
+  faTimes as closeIcon,
+  faTwitter as twitterIcon
 };
