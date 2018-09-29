@@ -16,6 +16,9 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
+  "Badge": {
+    "Max": "MAX"
+  },
   "Bucket": {
     "Armor": "Armor",
     "General": "General",
@@ -491,6 +494,8 @@
     "Store": "Store",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle_Stackable_Unique": "Quantity: {{amount}}/{{maxStackSize}} (MAX).",
+    "Subtitle_Stackable_UniqueMax": "Quantity: {{amount}} (MAX).",
     "Take": "Take",
     "TrackUntrack_Track": "Track {{itemType}}",
     "TrackUntrack_Untrack": "Untrack {{itemType}}",
