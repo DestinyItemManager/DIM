@@ -12,7 +12,6 @@ import '../rx-operators';
 import { SyncService } from '../storage/sync.service';
 import { getBungieAccounts } from './bungie-account.service';
 import * as actions from './actions';
-import { setSetting } from '../settings/actions';
 import store from '../store/store';
 import { loadingTracker } from '../ngimport-more';
 import { update } from '../inventory/actions';
@@ -122,7 +121,6 @@ function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
     store.dispatch(actions.setCurrentAccount(account));
     // Also clear inventory
     store.dispatch(update([]));
-    store.dispatch(setSetting('destinyVersion', account.destinyVersion));
 
     return SyncService.set({
       platformType: account.platformType,
