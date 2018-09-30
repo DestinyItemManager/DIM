@@ -55,18 +55,18 @@ Here are some tips to make sure your pull request can be merged smoothly:
 This step will need to be done each time you clear your browser cache. You will be automatically redirected to a screen to enter these credentials
 if the app can't load them from local storage when it starts.
 
-1. Open your browser and navigate to [https://localhost:8080][]
+1. Open your browser and navigate to [https://localhost:8080]()
 1. Copy your API-key, Oauth Client_id, and OAuth client_secret from bungie.net into DIM developer settings panel when it is loaded.
 
 ### Development
 
 **Overview**
 
-The `yarn start` step will create a hot-loading webserver, and a TLS cert/key pair. You will access your local development site by visiting [https://localhost:8080][].
+The `yarn start` step will create a hot-loading webserver, and a TLS cert/key pair. You will access your local development site by visiting [https://localhost:8080]().
 You will likely get a security warning about the certificate not being trusted. This is because it's a self-signed cert generated dynamically for your environment,
 and is not signed by a recognized autority. Dismass/advance past these warning to view your local DIM application.
 
 **Check code Style**
 
 * `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
-Check out the [docs](https://github.com/DestinyItemManager/DIM/blob/master/docs) folder for more tips.
+Check out the [docs]() folder for more tips.
