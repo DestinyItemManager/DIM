@@ -185,17 +185,20 @@ export default class StorageSettings extends React.Component<{}, State> {
     );
   }
 
-  private forceSync = async () => {
+  private forceSync = async (e?) => {
+    e && e.preventDefault();
     const data = await SyncService.get(true);
     await SyncService.set(data, true);
-    return Promise.all(SyncService.adapters.map(this.refreshAdapter));
+    Promise.all(SyncService.adapters.map(this.refreshAdapter));
+    return false;
   };
 
-  private driveSync = async () => {
+  private driveSync = async (e) => {
+    e.preventDefault();
     if (confirm(t('Storage.GDriveSignInWarning'))) {
       try {
         await SyncService.GoogleDriveStorage.authorize();
-        await this.forceSync();
+        await this.forceSync(e);
       } catch (e) {
         alert(t('Storage.GDriveSignInError') + e.message);
         reportException('Google Drive Signin', e);
@@ -204,12 +207,15 @@ export default class StorageSettings extends React.Component<{}, State> {
     return null;
   };
 
-  private driveLogout = () => {
+  private driveLogout = (e) => {
+    e.preventDefault();
     alert(t('Storage.GDriveLogout'));
     return SyncService.GoogleDriveStorage.revokeDrive();
+    return false;
   };
 
-  private exportData = () => {
+  private exportData = (e) => {
+    e.preventDefault();
     // Function to download data to a file
     function download(data, filename, type) {
       const a = document.createElement('a');
@@ -228,14 +234,17 @@ export default class StorageSettings extends React.Component<{}, State> {
     SyncService.get().then((data) => {
       download(JSON.stringify(data), 'dim-data.json', 'application/json');
     });
+    return false;
   };
 
-  private goToRevisions = () => {
+  private goToRevisions = (e) => {
+    e.preventDefault();
     router.stateService.go('gdrive-revisions');
     return false;
   };
 
-  private importData = () => {
+  private importData = (e) => {
+    e.preventDefault();
     const reader = new FileReader();
     reader.onload = () => {
       // TODO: we're kinda trusting that this is the right data here, no validation!
@@ -253,14 +262,17 @@ export default class StorageSettings extends React.Component<{}, State> {
     } else {
       alert(t('Storage.ImportNoFile'));
     }
+    return false;
   };
 
-  private clearIgnoredUsers = () => {
+  private clearIgnoredUsers = (e) => {
+    e.preventDefault();
     if (!canClearIgnoredUsers) {
       return;
     }
 
     clearIgnoredUsers();
+    return false;
   };
 
   private refreshAdapter = async (adapter: StorageAdapter) => {

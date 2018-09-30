@@ -24,7 +24,7 @@ import { settings } from './settings';
 import { storesLoadedSelector } from '../inventory/reducer';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Checkbox from './Checkbox';
-import Select from './Select';
+import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
 
 interface StoreProps {
@@ -93,10 +93,10 @@ const fakeArmor = {
     value: 300
   },
   isDestiny2() {
-    return true;
+    return false;
   },
   isDestiny1() {
-    return false;
+    return true;
   }
 };
 
@@ -152,19 +152,6 @@ const colorA11yOptions = $featureFlags.colorA11y
 
 // Edge doesn't support these
 const supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)');
-
-function mapToOptions(map: { [key: string]: string }) {
-  return _.map(map, (value, key) => {
-    return {
-      name: value,
-      value: key
-    };
-  });
-}
-
-function listToOptions(list: string[]) {
-  return list.map((value) => ({ value }));
-}
 
 class SettingsPage extends React.Component<Props, State> {
   state: State = {};
@@ -250,7 +237,7 @@ class SettingsPage extends React.Component<Props, State> {
 
           <section>
             <div className="examples">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} />
+              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} rating={4.6} />
             </div>
 
             {supportsCssVar &&
@@ -262,6 +249,7 @@ class SettingsPage extends React.Component<Props, State> {
                     type="range"
                     min="38"
                     max="66"
+                    name="itemSize"
                     onChange={this.onChange}
                   />
                   <button
@@ -315,7 +303,8 @@ class SettingsPage extends React.Component<Props, State> {
                   <label key={value}>
                     <input
                       type="radio"
-                      value={settings.itemSort}
+                      name="itemSort"
+                      value={value}
                       checked={settings.itemSort === value}
                       onChange={this.onChange}
                     />
@@ -337,8 +326,8 @@ class SettingsPage extends React.Component<Props, State> {
 
           <section>
             <div className="examples">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.6} />
-              <InventoryItem item={(fakeArmor as any) as DimItem} />
+              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.6} isNew={true} />
+              <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
             </div>
 
             {$featureFlags.forsakenTiles && (
@@ -414,6 +403,7 @@ class SettingsPage extends React.Component<Props, State> {
                 <label>
                   <input
                     type="radio"
+                    name="characterOrder"
                     checked={settings.characterOrder === 'mostRecent'}
                     value="mostRecent"
                     onChange={this.onChange}
@@ -423,6 +413,7 @@ class SettingsPage extends React.Component<Props, State> {
                 <label>
                   <input
                     type="radio"
+                    name="characterOrder"
                     checked={settings.characterOrder === 'mostRecentReverse'}
                     value="mostRecentReverse"
                     onChange={this.onChange}
@@ -432,6 +423,7 @@ class SettingsPage extends React.Component<Props, State> {
                 <label>
                   <input
                     type="radio"
+                    name="characterOrder"
                     checked={settings.characterOrder === 'fixed'}
                     value="fixed"
                     onChange={this.onChange}
@@ -448,26 +440,25 @@ class SettingsPage extends React.Component<Props, State> {
 
             {supportsCssVar &&
               (isPhonePortrait ? (
-                <Select
-                  label="Settings.InventoryColumns"
-                  name="charCol"
-                  value={settings.charCol}
-                  options={charColOptions}
-                  onChange={this.onChange}
-                />
+                <div className="setting">
+                  <Select
+                    label="Settings.InventoryColumnsMobile"
+                    name="charColMobile"
+                    value={settings.charColMobile}
+                    options={charColOptions}
+                    onChange={this.onChange}
+                  />
+                  <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
+                </div>
               ) : (
                 <>
-                  <div className="setting">
-                    <Select
-                      label="Settings.InventoryColumnsMobile"
-                      name="charColMobile"
-                      value={settings.charColMobile}
-                      options={charColOptions}
-                      onChange={this.onChange}
-                    />
-                    <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
-                  </div>
-
+                  <Select
+                    label="Settings.InventoryColumns"
+                    name="charCol"
+                    value={settings.charCol}
+                    options={charColOptions}
+                    onChange={this.onChange}
+                  />
                   <Select
                     label="Settings.VaultColumns"
                     name="vaultMaxCol"
@@ -512,9 +503,15 @@ class SettingsPage extends React.Component<Props, State> {
   }
 
   private onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
+    if (e.target.name.length === 0) {
+      console.error(new Error('You need to have a name on the form input'));
+    }
+
     if (isInputElement(e.target) && e.target.type === 'checkbox') {
+      console.log(settings[e.target.name], e.target.checked);
       this.props.setSetting(e.target.name as any, e.target.checked);
     } else {
+      console.log(settings[e.target.name], e.target.value);
       const value = e.target.value;
       // const numVal = parseInt(e.target.value, 10);
       this.props.setSetting(e.target.name as any, value /*isNaN(numVal) ? value : numVal*/);
@@ -530,15 +527,20 @@ class SettingsPage extends React.Component<Props, State> {
       $rootScope.$applyAsync(() => {
         $rootScope.$broadcast('i18nextLanguageChange');
       });
+      this.setState({});
     });
   };
 
-  private downloadWeaponCsv = () => {
+  private downloadWeaponCsv = (e) => {
+    e.preventDefault();
     this.downloadCsv('Weapons');
+    return false;
   };
 
-  private downloadArmorCsv = () => {
+  private downloadArmorCsv = (e) => {
+    e.preventDefault();
     this.downloadCsv('Armor');
+    return false;
   };
 
   private downloadCsv = (type: 'Armor' | 'Weapons') => {
@@ -551,17 +553,23 @@ class SettingsPage extends React.Component<Props, State> {
     ga('send', 'event', 'Download CSV', type);
   };
 
-  private resetItemSize = () => {
+  private resetItemSize = (e) => {
+    e.preventDefault();
     this.props.setSetting('itemSize', defaultItemSize());
+    return false;
   };
 
   private saveAndReloadReviews = (e) => {
+    e.preventDefault();
     this.onChange(e);
     D2StoresService.refreshRatingsData();
+    return false;
   };
 
-  private reloadDim = () => {
+  private reloadDim = (e) => {
+    e.preventDefault();
     window.location.reload(false);
+    return false;
   };
 
   private itemSortOrderChanged = (sortOrder: SortProperty[]) => {

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Settings } from './reducer';
 import { t } from 'i18next';
+import * as _ from 'underscore';
 
 export default function Select({
   label,
@@ -21,7 +22,7 @@ export default function Select({
   return (
     <div className="setting horizontal">
       <label htmlFor={name}>{t(label)}</label>
-      <select id={name} value={value} required={true} onChange={onChange}>
+      <select name={name} value={value} required={true} onChange={onChange}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.name ? option.name : option.value}
@@ -30,4 +31,17 @@ export default function Select({
       </select>
     </div>
   );
+}
+
+export function mapToOptions(map: { [key: string]: string }) {
+  return _.map(map, (value, key) => {
+    return {
+      name: value,
+      value: key
+    };
+  });
+}
+
+export function listToOptions(list: string[]) {
+  return list.map((value) => ({ value }));
 }

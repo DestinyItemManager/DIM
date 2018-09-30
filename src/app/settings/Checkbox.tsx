@@ -32,7 +32,7 @@ export default function Checkbox({
           rel="noopener noreferrer"
         />
       )}
-      <input type="checkbox" id={name} checked={value} onChange={onChange} />
+      <input type="checkbox" name={name} checked={value} onChange={onChange} />
     </div>
   );
 }
