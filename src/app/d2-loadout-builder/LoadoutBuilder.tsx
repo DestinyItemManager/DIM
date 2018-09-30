@@ -1,13 +1,14 @@
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { t } from 'i18next';
 import { $rootScope } from 'ngimport';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
+import BungieImage from '../dim-ui/BungieImage';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getKiosks } from '../bungie-api/destiny2-api';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
+import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './loadoutbuilder.scss';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
@@ -22,8 +23,9 @@ import { Loading } from '../dim-ui/Loading';
 import CharacterDropdown from '../character-select/dropdown';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import StoreInventoryItem from '../inventory/StoreInventoryItem';
-import { D2Item } from '../inventory/item-types';
+import { D2Item, DimSocket } from '../inventory/item-types';
 import LockedArmor from './LockedArmor';
+import PressTip from '../dim-ui/PressTip';
 
 interface Props {
   account: DestinyAccount;
@@ -38,29 +40,26 @@ interface State {
   matchedSets?: ArmorSet[];
   setTiers: string[];
   selectedTier: string;
-  showingItems: boolean;
   selectedStore?: DimStore;
-  selectedBucketId?: string;
-  defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
   trackerService?: DestinyTrackerService;
-  stores?: DimStore[];
-  perks: {};
-  items: {};
 }
+
+const perks: {
+  [classType: number]: { [bucketHash: number]: any };
+} = {};
+const items: {
+  [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
+} = {};
+
+// let killProcess = false;
 
 type ArmorTypes = 'Helmet' | 'Gauntlets' | 'Chest' | 'Leg' | 'ClassItem';
 type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
 
 interface ArmorSet {
-  armor: { [armorType in ArmorTypes]: D2Item };
-  stats: {
-    [statType in StatTypes]: {
-      value: number;
-      tier: 0 | 1 | 2 | 3 | 4 | 5;
-      name: string;
-    }
-  };
+  armor: D2Item[]; // { [armorType in ArmorTypes]: D2Item };
+  stats: { [statType in StatTypes]: number };
   setHash: string;
   includesVendorItems: boolean;
 }
@@ -92,28 +91,14 @@ function mapStateToProps(state: RootState): Partial<Props> {
   };
 }
 
-function addPerks(perkHashes: Set<number>, item: D2Item) {
-  if (!item || !item.sockets || !item.sockets.categories) {
-    return;
-  }
-
-  // TODO: better filter for socket category so it works for class items.
-  item.sockets.categories[0].sockets.forEach((socket) => {
-    // TODO: filter out some perks
-    if (socket.plug) {
-      perkHashes.add(socket.plug.plugItem.hash);
-    }
-  });
-}
-
 function getActiveHighestSets(
-  setMap: { [setHash: number]: SetType },
+  setMap: { [setHash: string]: SetType },
   activeSets: string
 ): ArmorSet[] {
   let count = 0;
   const matchedSets: ArmorSet[] = [];
   Object.values(setMap).forEach((setType) => {
-    // limit to just 10 sets, for now.
+    // limit to render just 10 sets, for now.
     if (count >= 10) {
       return;
     }
@@ -132,47 +117,36 @@ function process(armor, callback) {
   const gaunts = armor[lockableBuckets.gauntlets] || [];
   const chests = armor[lockableBuckets.chest] || [];
   const legs = armor[lockableBuckets.leg] || [];
-  const classItems = armor[lockableBuckets.classitem] || [];
+  const classitems = armor[lockableBuckets.classitem] || [];
   const setMap: { [setHash: number]: SetType } = {};
   const tiersSet = new Set<string>();
   const setTiers: string[] = [];
-  const combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
+  const combos = helms.length * gaunts.length * chests.length * legs.length * classitems.length;
 
   if (combos === 0) {
-    return null;
-  }
-
-  function genSetHash(armorPieces) {
-    let hash = '';
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < armorPieces.length; i++) {
-      hash += armorPieces[i].id;
-    }
-    return hash;
+    // why should this ever happen?
+    return;
   }
 
   function calcArmorStats(pieces, stats) {
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < pieces.length; i++) {
-      const armor = pieces[i];
-      if (!armor.stats.length) {
-        return;
+    let i = pieces.length;
+    while (i--) {
+      if (pieces[i].stats.length) {
+        stats.STAT_MOBILITY += pieces[i].stats[0].base;
+        stats.STAT_RESILIENCE += pieces[i].stats[0].base;
+        stats.STAT_RECOVERY += pieces[i].stats[1].base;
       }
-      const [mob, res, rec] = armor.stats;
-      stats.STAT_MOBILITY.value += mob.base;
-      stats.STAT_RESILIENCE.value += res.base;
-      stats.STAT_RECOVERY.value += rec.base;
-      switch (armor.bonusType) {
-        case 'int':
-          stats.STAT_MOBILITY.value += mob.bonus;
-          break;
-        case 'dis':
-          stats.STAT_RESILIENCE.value += res.bonus;
-          break;
-        case 'str':
-          stats.STAT_RECOVERY.value += rec.bonus;
-          break;
-      }
+      // switch (armor.bonusType) {
+      //   case 'int':
+      //     stats.STAT_MOBILITY.value += mob.bonus;
+      //     break;
+      //   case 'dis':
+      //     stats.STAT_RESILIENCE.value += res.bonus;
+      //     break;
+      //   case 'str':
+      //     stats.STAT_RECOVERY.value += rec.bonus;
+      //     break;
+      // }
     }
   }
 
@@ -192,7 +166,7 @@ function process(armor, callback) {
       for (; g < gaunts.length; ++g) {
         for (; c < chests.length; ++c) {
           for (; l < legs.length; ++l) {
-            for (; ci < classItems.length; ++ci) {
+            for (; ci < classitems.length; ++ci) {
               const validSet =
                 Number(helms[h].isExotic) +
                   Number(gaunts[g].isExotic) +
@@ -202,44 +176,21 @@ function process(armor, callback) {
 
               if (validSet) {
                 const set: ArmorSet = {
-                  armor: {
-                    Helmet: helms[h],
-                    Gauntlets: gaunts[g],
-                    Chest: chests[c],
-                    Leg: legs[l],
-                    ClassItem: classItems[ci]
-                  },
+                  armor: [helms[h], gaunts[g], chests[c], legs[l], classitems[ci]],
                   stats: {
-                    STAT_MOBILITY: {
-                      value: 0,
-                      tier: 0,
-                      name: 'Mobility'
-                      // icon: intellectIcon
-                    },
-                    STAT_RESILIENCE: {
-                      value: 0,
-                      tier: 0,
-                      name: 'Resilience'
-                      // icon: disciplineIcon
-                    },
-                    STAT_RECOVERY: {
-                      value: 0,
-                      tier: 0,
-                      name: 'Recovery'
-                      // icon: strengthIcon
-                    }
+                    STAT_MOBILITY: 0,
+                    STAT_RESILIENCE: 0,
+                    STAT_RECOVERY: 0
                   },
-                  setHash: '',
+                  setHash:
+                    helms[h].id + gaunts[g].id + chests[c].id + legs[l].id + classitems[ci].id,
                   includesVendorItems: false
                 };
 
-                // vm.hasSets = true;
-                const pieces = Object.values(set.armor);
-                set.setHash = genSetHash(pieces);
-                calcArmorStats(pieces, set.stats);
-                const tiersString = `${set.stats.STAT_MOBILITY.value}/${
-                  set.stats.STAT_RESILIENCE.value
-                }/${set.stats.STAT_RECOVERY.value}`;
+                calcArmorStats(set.armor, set.stats);
+                const tiersString = `${set.stats.STAT_MOBILITY}/${set.stats.STAT_RESILIENCE}/${
+                  set.stats.STAT_RECOVERY
+                }`;
 
                 tiersSet.add(tiersString);
 
@@ -267,29 +218,20 @@ function process(armor, callback) {
                     // configs: [getBonusConfig(set.armor)]
                   };
                 }
-
                 // set.includesVendorItems = pieces.some((armor: any) => armor.isVendorItem);
               }
 
               processedCount++;
               if (processedCount % 50000 === 0) {
-                // do this so the page doesn't lock up
-                // if (
-                //   vm.active !== activeGuardian ||
-                //   vm.lockedchanged ||
-                //   vm.excludedchanged ||
-                //   vm.perkschanged ||
-                //   !vm.transition.router.stateService.is('destiny1.loadout-builder')
-                // ) {
-                //   // If active guardian or page is changed then stop processing combinations
-                //   vm.lockedchanged = false;
-                //   vm.excludedchanged = false;
-                //   vm.perkschanged = false;
+                // if (killProcess) {
+                //   console.log('Killing existing process to start new.');
+                //   killProcess = false;
                 //   return;
                 // }
                 // vm.progress = processedCount / combos;
-                setTimeout(step, h, g, c, l, ci, processedCount);
-                return;
+                return window.requestAnimationFrame(() => {
+                  step(h, g, c, l, ci, processedCount);
+                });
               }
             }
             ci = 0;
@@ -310,8 +252,6 @@ function process(armor, callback) {
       }
     );
 
-    // console.log(tiers);
-
     const tierKeys = Object.keys(tiers);
     for (let t = tierKeys.length; t > tierKeys.length - 3; t--) {
       if (tierKeys[t]) {
@@ -325,13 +265,11 @@ function process(armor, callback) {
     callback(setMap, setTiers);
 
     // // Finish progress
-    // vm.progress = processedCount / combos;
+    // setState.progress = processedCount / combos;
     console.log('processed', combos, 'combinations in', performance.now() - pstart);
   }
 
-  step();
-
-  return setMap;
+  return step();
 }
 
 /**
@@ -346,23 +284,19 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.state = {
       setTiers: [],
       selectedTier: '7/7/7', // what is the defacto "best", akin to 5/5/2?
-      showingItems: false,
-      perks: {},
-      items: {},
       lockedMap: {}
     };
   }
 
   async loadCollections() {
-    // TODO: don't really have to serialize these...
-
-    // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
 
+    // not currently using this
     const profileResponse = await getKiosks(this.props.account);
-    this.setState({ profileResponse, defs });
+    this.setState({ profileResponse });
 
+    // not currently using this... or this...
     const trackerService = await fetchRatingsForKiosks(defs, profileResponse);
     this.setState({ trackerService });
   }
@@ -381,22 +315,43 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           this.setState({ selectedStore: stores.find((s) => s.current) });
           for (const store of stores) {
             for (const item of store.items) {
-              if (!item.bucket.inArmor || !['Exotic', 'Legendary'].includes(item.tier)) {
+              if (
+                !item ||
+                !item.sockets ||
+                !item.bucket.inArmor ||
+                !['Exotic', 'Legendary'].includes(item.tier)
+              ) {
                 continue;
               }
-              if (!this.state.perks[item.classType]) {
-                this.state.perks[item.classType] = {};
-                this.state.items[item.classType] = {};
+              if (!perks[item.classType]) {
+                perks[item.classType] = {};
+                items[item.classType] = {};
               }
-              if (!this.state.perks[item.classType][item.bucket.hash]) {
-                this.state.perks[item.classType][item.bucket.hash] = new Set<number>();
-                this.state.items[item.classType][item.bucket.hash] = [];
+              if (!perks[item.classType][item.bucket.hash]) {
+                perks[item.classType][item.bucket.hash] = new Set<DestinyInventoryItemDefinition>();
+                items[item.classType][item.bucket.hash] = [];
               }
-              this.state.items[item.classType][item.bucket.hash].push(item);
-              addPerks(this.state.perks[item.classType][item.bucket.hash], item);
+
+              if (!items[item.classType][item.bucket.hash][item.hash]) {
+                items[item.classType][item.bucket.hash][item.hash] = [];
+              }
+              items[item.classType][item.bucket.hash][item.hash].push(item);
+
+              // build the filtered unique perks item picker
+              item.sockets.categories[0].sockets.filter(filterPlugs).forEach((socket) => {
+                perks[item.classType][item.bucket.hash].add(socket!.plug!.plugItem);
+              });
             }
           }
         }
+        Object.keys(perks).forEach((classType) =>
+          Object.keys(perks[classType]).forEach(
+            (bucket) =>
+              (perks[classType][bucket] = [...perks[classType][bucket]].sort(
+                (a, b) => b.inventory.tierType - a.inventory.tierType
+              ))
+          )
+        );
       }
     );
   }
@@ -407,7 +362,21 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
   }
 
   computeSets = (classType: number, lockedMap: {}) => {
-    const filteredItems = { ...this.state.items[classType] };
+    const allItems = { ...items[classType] };
+    const filteredItems: { [bucket: number]: D2Item[] } = {};
+
+    Object.keys(allItems).forEach((bucket) => {
+      filteredItems[bucket] = _.flatten(
+        Object.values(allItems[bucket]).map((items: D2Item[]) => {
+          // if there is no locked item for that instance, just pick any
+          if (!lockedMap[bucket]) {
+            return items[0];
+          }
+          return items;
+        })
+      );
+    });
+
     Object.keys(lockedMap).forEach((bucket) => {
       // if there are locked items for this bucket
       if (lockedMap[bucket].length) {
@@ -474,14 +443,6 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.computeSets(this.state.selectedStore!.classType, lockedMap);
   };
 
-  toggleShowingItems = () => {
-    this.setState({ showingItems: !this.state.showingItems });
-  };
-
-  handleBucketChange = (element) => {
-    this.setState({ selectedBucketId: element.target.value });
-  };
-
   setSelectedTier = (element) => {
     if (!this.state.processedSets) {
       return;
@@ -535,7 +496,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
   render() {
     const { storesLoaded, stores, buckets } = this.props;
-    const { lockedMap, setTiers, selectedStore, selectedBucketId, showingItems, defs } = this.state;
+    const { lockedMap, setTiers, selectedStore } = this.state;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -546,96 +507,63 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
       store = this.props.stores.find((s) => s.current)!;
     }
 
-    const selectedBucket = selectedBucketId
-      ? buckets.byId[selectedBucketId]
-      : buckets.byType.Helmet;
-
-    if (!this.state.perks[store.classType]) {
+    if (!perks[store.classType]) {
       return <Loading />;
     }
-
-    const perks = this.state.perks[store.classType];
-    // const vault = stores.find((s) => s.isVault) as DimVault;
-
-    const items = this.state.items[store.classType][selectedBucket.hash];
 
     return (
       <div className="vendor d2-vendors dim-page">
         <h1>Loadout Builder</h1>
         <h3>Select Character</h3>
-        <CharacterDropdown
-          selectedStore={store}
-          stores={stores}
-          onCharacterChanged={this.onCharacterChanged}
-        />
-        <h3>
-          <button className="dim-button" onClick={this.toggleShowingItems}>
-            {showingItems ? 'Hide' : 'Show'} items
-          </button>
-        </h3>
-        {showingItems && (
-          <div>
-            <SelectBucket
-              {...{
-                defs,
-                lockableBuckets: Object.values(lockableBuckets),
-                handleBucketChange: this.handleBucketChange
-              }}
-            />
-            <div className="sub-bucket">
-              {items.map((item) => {
-                return (
-                  <StoreInventoryItem
-                    key={item.index}
-                    item={item}
-                    isNew={false}
-                    // tag={getTag(item, itemInfos)}
-                    // rating={dtrRating ? dtrRating.overallScore : undefined}
-                    // hideRating={!showRating}
-                    searchHidden={false}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
-        <div>
-          <button className="dim-button" onClick={this.lockEquipped}>
-            Lock Equipped
-          </button>
-          <button className="dim-button" onClick={this.resetLocked}>
-            Clear Equipped
-          </button>
-          <div className="locked-equipment">
+        <div className="flex">
+          <CharacterDropdown
+            selectedStore={store}
+            stores={stores}
+            onCharacterChanged={this.onCharacterChanged}
+          />
+          <div className="flex">
             {Object.values(lockableBuckets).map((armor) => {
               return (
                 <LockedArmor
                   key={armor}
-                  defs={defs!}
                   locked={lockedMap[armor] || []}
                   bucket={buckets.byId[armor]}
-                  perks={perks[armor]}
+                  items={items[store!.classType][armor]}
+                  perks={perks[store!.classType][armor]}
                   onLockChanged={this.updateLockedArmor}
                 />
               );
             })}
           </div>
+          <div className="flex column">
+            <button className="dim-button" onClick={this.lockEquipped}>
+              Lock Equipped
+            </button>
+            <button className="dim-button" onClick={this.resetLocked}>
+              Reset Locked
+            </button>
+          </div>
         </div>
+
         {this.state.setTiers.length !== 0 && (
-          <select onChange={this.setSelectedTier}>
-            {setTiers.map((tier) => (
-              <option key={tier} value={tier} disabled={tier.charAt(0) === '-'}>
-                {tier}
-              </option>
-            ))}
-          </select>
+          <>
+            <h3>Select Build Tier</h3>
+            <select onChange={this.setSelectedTier}>
+              {setTiers.map((tier) => (
+                <option key={tier} value={tier} disabled={tier.charAt(0) === '-'}>
+                  {tier}
+                </option>
+              ))}
+            </select>
+          </>
         )}
-        {this.state.matchedSets &&
-          this.state.matchedSets.map((set) => {
-            // return <span key={set.setHash}>{set.setHash}</span>;
-            return (
-              <div key={set.setHash}>
-                <div>
+
+        {this.state.matchedSets && (
+          <>
+            <h3>Generated Builds</h3>
+            {this.state.matchedSets.map((set) => (
+              <div className="generated-build" key={set.setHash}>
+                <div className="generated-build-buttons">
                   {/* <button className="dim-button" value={set.setHash} onClick={this.newLoadout}>
                     Create Loadout
                   </button> */}
@@ -650,40 +578,82 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
                 <div className="sub-bucket">
                   {Object.values(set.armor).map((item) => {
                     return (
-                      <StoreInventoryItem
-                        key={item.index}
-                        item={item}
-                        isNew={false}
-                        // tag={getTag(item, itemInfos)}
-                        // rating={dtrRating ? dtrRating.overallScore : undefined}
-                        // hideRating={!showRating}
-                        searchHidden={false}
-                      />
+                      <div className="generated-build-items" key={item.index}>
+                        <StoreInventoryItem
+                          item={item}
+                          isNew={false}
+                          // tag={getTag(item, itemInfos)}
+                          // rating={dtrRating ? dtrRating.overallScore : undefined}
+                          // hideRating={!showRating}
+                          searchHidden={false}
+                        />
+                        {item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
+                          <PressTip
+                            key={socket!.plug!.plugItem.hash}
+                            tooltip={<PlugTooltip item={item} socket={socket} />}
+                          >
+                            <div>
+                              <BungieImage
+                                className="item-mod"
+                                src={socket!.plug!.plugItem.displayProperties.icon}
+                              />
+                            </div>
+                          </PressTip>
+                        ))}
+                      </div>
                     );
                   })}
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </>
+        )}
       </div>
     );
   }
 }
 
-const SelectBucket = (props) => {
-  const bucketDef = props.defs.InventoryBucket;
+function filterPlugs(socket) {
+  if (
+    socket.plug &&
+    ![3530997750, 2032054360, 1633794450, 702981643].includes(socket.plug.plugItem.hash)
+  ) {
+    if (
+      socket.plug.plugItem.inventory.tierType !== 6 &&
+      socket.plug.plugItem.plug.plugCategoryHash === 1744546145
+    ) {
+      return false;
+    }
+    return true;
+  }
+}
 
+function PlugTooltip({ item, socket }: { item: D2Item; socket: DimSocket }) {
   return (
-    <select onChange={props.handleBucketChange}>
-      {props.lockableBuckets.map((armor) => {
-        return (
-          <option key={armor} value={armor}>
-            {bucketDef[armor].displayProperties.name}
-          </option>
-        );
-      })}
-    </select>
+    <>
+      <h2>
+        {socket!.plug!.plugItem.displayProperties.name}
+        {item.masterworkInfo &&
+          socket!.plug!.plugItem.investmentStats &&
+          socket!.plug!.plugItem.investmentStats[0] &&
+          item.masterworkInfo.statHash === socket!.plug!.plugItem.investmentStats[0].statTypeHash &&
+          ` (${item.masterworkInfo.statName})`}
+      </h2>
+
+      {socket!.plug!.plugItem.displayProperties.description ? (
+        <div>{socket!.plug!.plugItem.displayProperties.description}</div>
+      ) : (
+        socket!.plug!.perks.map((perk) => (
+          <div key={perk.hash}>
+            {socket!.plug!.plugItem.displayProperties.name !== perk.displayProperties.name && (
+              <div>{perk.displayProperties.name}</div>
+            )}
+            <div>{perk.displayProperties.description}</div>
+          </div>
+        ))
+      )}
+    </>
   );
-};
+}
 
 export default connect(mapStateToProps)(LoadoutBuilder);

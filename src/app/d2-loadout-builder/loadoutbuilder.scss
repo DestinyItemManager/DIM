@@ -1,11 +1,17 @@
 .character-select {
+  min-width: 230px;
   height: 45px;
   z-index: 2;
   position: relative;
 }
 
-.locked-equipment {
+.flex {
   display: flex;
+  flex-wrap: wrap;
+}
+
+.column {
+  flex-direction: column;
 }
 
 .locked-item {
@@ -27,8 +33,7 @@
 }
 
 .add-perk-options {
-  display: flex;
-  width: 294px;
+  width: 300px;
   height: auto;
   flex-wrap: wrap;
   background: #222;
@@ -103,10 +108,31 @@
 .clear {
   background-color: rgba(100, 100, 100, 0.6);
   position: absolute;
-  right: 25px;
+  right: 5px;
   border: none;
   color: white;
   &:hover {
     background-color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.generated-build {
+  padding-bottom: 20px;
+
+  .generated-build-buttons {
+    padding-bottom: 5px;
+  }
+  .generated-build-items {
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+  }
+  .item-mod {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #999999;
+    border-radius: 50%;
+    background-color: #4887ba;
+    transform: scale(0.9);
   }
 }
