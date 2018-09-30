@@ -52,31 +52,28 @@ class CharacterOrderEditor extends React.Component<Props> {
         <Droppable droppableId="characters" direction="horizontal">
           {(provided) => (
             <div className="character-order-editor" ref={provided.innerRef}>
-              {characters.map(
-                (character, index) =>
-                  character.id !== 'vault' && (
-                    <Draggable draggableId={character.id} index={index} key={character.id}>
-                      {(provided, snapshot) => (
-                        <div
-                          className={classNames('character-order-editor-item', {
-                            'is-dragging': snapshot.isDragging
-                          })}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <div className="sortable-character">
-                            <img src={character.icon} />
-                            <div className="character-text">
-                              <span className="power-level">{character.powerLevel}</span>{' '}
-                              {character.className}
-                            </div>
-                          </div>
+              {characters.filter((c) => !c.isVault).map((character, index) => (
+                <Draggable draggableId={character.id} index={index} key={character.id}>
+                  {(provided, snapshot) => (
+                    <div
+                      className={classNames('character-order-editor-item', {
+                        'is-dragging': snapshot.isDragging
+                      })}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <div className="sortable-character">
+                        <img src={character.icon} />
+                        <div className="character-text">
+                          <span className="power-level">{character.powerLevel}</span>{' '}
+                          {character.className}
                         </div>
-                      )}
-                    </Draggable>
-                  )
-              )}
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
               {provided.placeholder}
             </div>
           )}
@@ -87,7 +84,11 @@ class CharacterOrderEditor extends React.Component<Props> {
 
   private moveItem(oldIndex, newIndex) {
     newIndex = Math.min(this.props.characters.length, Math.max(newIndex, 0));
-    const order = reorder(this.props.characters.map((c) => c.id), oldIndex, newIndex);
+    const order = reorder(
+      this.props.characters.filter((c) => !c.isVault).map((c) => c.id),
+      oldIndex,
+      newIndex
+    );
     this.props.onSortOrderChanged(order);
   }
 }

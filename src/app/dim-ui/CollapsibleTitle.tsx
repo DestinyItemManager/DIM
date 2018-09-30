@@ -8,7 +8,7 @@ import { Dispatch } from 'redux';
 interface ProvidedProps {
   sectionId: string;
   title: React.ReactNode;
-  children(): React.ReactNode;
+  children?: React.ReactNode;
 }
 
 interface StoreProps {
@@ -51,7 +51,7 @@ class CollapsibleTitle extends React.Component<Props> {
             <span>{title}</span>
           </span>
         </div>
-        {!collapsed && children()}
+        {!collapsed && children}
       </>
     );
   }

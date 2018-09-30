@@ -595,8 +595,6 @@ class SettingsPage extends React.Component<Props, State> {
   };
 
   private characterSortOrderChanged = (order: string[]) => {
-    console.log(order);
-
     this.props.setCharacterOrder(order);
   };
 }

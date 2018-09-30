@@ -22,7 +22,8 @@ export const characterSortSelector = (state: RootState) => {
 
     case 'custom':
       const customSortOrder = state.settings.customCharacterSort;
-      return (stores: DimStore[]) => _.sortBy(stores, (s) => customSortOrder.indexOf(s.id));
+      return (stores: DimStore[]) =>
+        _.sortBy(stores, (s) => (s.isVault ? 999 : customSortOrder.indexOf(s.id)));
 
     default:
     case 'fixed': // "Age"

@@ -15,20 +15,18 @@ export default function D1ReputationSection({
   return (
     <div className="section">
       <CollapsibleTitle title={t('Bucket.Reputation')} sectionId="Reputation">
-        {() => (
-          <div className="store-row items reputation">
-            {stores.map((store: D1Store) => (
-              <div
-                key={store.id}
-                className={classNames('store-cell', {
-                  vault: store.isVault
-                })}
-              >
-                <D1Reputation store={store} />
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="store-row items reputation">
+          {stores.map((store: D1Store) => (
+            <div
+              key={store.id}
+              className={classNames('store-cell', {
+                vault: store.isVault
+              })}
+            >
+              <D1Reputation store={store} />
+            </div>
+          ))}
+        </div>
       </CollapsibleTitle>
     </div>
   );

@@ -8,11 +8,11 @@ export function observeStore<T>(
   let currentState;
 
   function handleChange() {
-    // TODO: this can assume immutable now
     const nextState = select(store.getState());
-    onChange(currentState, nextState);
-    // tslint:disable-next-line:prefer-object-spread
-    currentState = Object.assign({}, nextState);
+    if (currentState !== nextState) {
+      onChange(currentState, nextState);
+      currentState = nextState;
+    }
   }
 
   const unsubscribe = store.subscribe(handleChange);

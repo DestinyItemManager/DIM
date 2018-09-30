@@ -56,10 +56,10 @@ export function initSettings() {
           });
         });
       }
-    });
 
-    readyResolve();
-    // Start saving settings changes
-    unsubscribe = saveSettingsOnUpdate();
+      readyResolve();
+      // Start saving settings changes
+      unsubscribe = saveSettingsOnUpdate();
+    });
   });
 }
