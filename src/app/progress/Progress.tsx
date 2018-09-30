@@ -27,7 +27,7 @@ import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { chainComparator, compareBy } from '../comparators';
-import { characterOrderSelector, CharacterOrder } from '../settings/reducer';
+import { characterComponentSortSelector } from '../settings/character-sort';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -54,8 +54,8 @@ const factionOrder = [
 interface Props {
   $scope: IScope;
   account: DestinyAccount;
-  characterOrder: CharacterOrder;
   isPhonePortrait: boolean;
+  characterOrder(characters: DestinyCharacterComponent[]): DestinyCharacterComponent[];
 }
 
 interface State {
@@ -66,7 +66,7 @@ interface State {
 function mapStateToProps(state: RootState): Partial<Props> {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
-    characterOrder: characterOrderSelector(state)
+    characterOrder: characterComponentSortSelector(state)
   };
 }
 
@@ -89,7 +89,7 @@ class Progress extends React.Component<Props, State> {
           currentCharacterId: prevState.currentCharacterId
         };
         if (prevState.currentCharacterId === '') {
-          const characters = this.sortedCharacters(progress, this.props.characterOrder);
+          const characters = Object.values(progress.profileInfo.characters.data);
           if (characters.length) {
             const lastPlayedDate = progress.lastPlayedDate;
             updatedState.currentCharacterId = characters.find((c) =>
@@ -125,7 +125,7 @@ class Progress extends React.Component<Props, State> {
 
     const { defs, profileInfo } = this.state.progress;
 
-    const characters = this.sortedCharacters();
+    const characters = this.props.characterOrder(Object.values(profileInfo.characters.data));
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
     const profileQuests = this.questItems(profileInfo.profileInventory.data.items);
@@ -333,16 +333,6 @@ class Progress extends React.Component<Props, State> {
     );
   }
 
-  /**
-   * The list of characters in the current (or provided) state, ordered in the preferred way.
-   */
-  private sortedCharacters(
-    progress: ProgressProfile = this.state.progress!,
-    characterOrder: CharacterOrder = this.props.characterOrder
-  ): DestinyCharacterComponent[] {
-    return sortCharacters(Object.values(progress.profileInfo.characters.data), characterOrder);
-  }
-
   private vendorForFaction(
     character: DestinyCharacterComponent,
     faction: DestinyFactionProgression
@@ -497,26 +487,6 @@ class Progress extends React.Component<Props, State> {
         item.itemHash
       ] || []
     );
-  }
-}
-
-/**
- * Sort a list of characters by a specified sorting method.
- */
-export function sortCharacters(characters: DestinyCharacterComponent[], order: CharacterOrder) {
-  if (order === 'mostRecent') {
-    return _.sortBy(characters, (store) => {
-      return -1 * new Date(store.dateLastPlayed).getTime();
-    });
-  } else if (order === 'mostRecentReverse') {
-    return _.sortBy(characters, (store) => {
-      return new Date(store.dateLastPlayed).getTime();
-    });
-  } else if (characters.length) {
-    // https://github.com/Bungie-net/api/issues/614
-    return _.sortBy(characters, (c) => c.characterId);
-  } else {
-    return characters;
   }
 }
 

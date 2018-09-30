@@ -1,5 +1,5 @@
 import { createStandardAction, createAction } from 'typesafe-actions';
-import { Settings } from './reducer';
+import { Settings } from './settings';
 
 /** Bulk update settings after they've been loaded. */
 export const loaded = createStandardAction('settings/LOADED')<Partial<Settings>>();
@@ -11,3 +11,6 @@ export const setSetting = createAction('settings/SET', (resolve) => {
 
 /** Update a collapsible section */
 export const toggleCollapsedSection = createStandardAction('settings/COLLAPSIBLE')<string>();
+
+/** Set the custom character order */
+export const setCharacterOrder = createStandardAction('settings/CHARACTER_ORDER')<string[]>();

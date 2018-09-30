@@ -15,7 +15,7 @@ import { searchFilterSelector } from '../search/search-filters';
 import { connect } from 'react-redux';
 import { D1RatingData } from '../item-review/d1-dtr-api-types';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
-import { itemSortOrderSelector } from '../settings/reducer';
+import { itemSortOrderSelector } from '../settings/item-sort';
 
 // Props provided from parents
 interface ProvidedProps {

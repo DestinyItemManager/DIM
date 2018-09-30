@@ -4,7 +4,7 @@ import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import D1Reputation from './D1Reputation';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import { Settings } from '../settings/reducer';
+import { Settings } from '../settings/settings';
 
 export default function D1ReputationSection({
   stores

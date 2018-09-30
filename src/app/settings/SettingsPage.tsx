@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { t, changeLanguage } from 'i18next';
-import { setSetting } from './actions';
-import { Settings, itemSortOrder, defaultItemSize } from './reducer';
+import { setSetting, setCharacterOrder } from './actions';
 import { RootState } from '../store/reducers';
 import InventoryItem from '../inventory/InventoryItem';
-import SortOrderEditor, { SortProperty } from './sort-order-editor';
-// import CharacterOrderEditor from './CharacterOrderEditor';
+import SortOrderEditor, { SortProperty } from './SortOrderEditor';
+import CharacterOrderEditor from './CharacterOrderEditor';
 import { connect } from 'react-redux';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
@@ -20,12 +19,14 @@ import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { settings } from './settings';
+import { settings, Settings, defaultItemSize } from './settings';
 import { storesLoadedSelector } from '../inventory/reducer';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Checkbox from './Checkbox';
 import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
+import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
+import { itemSortOrder } from './item-sort';
 
 interface StoreProps {
   settings: Settings;
@@ -42,7 +43,8 @@ function mapStateToProps(state: RootState) {
 }
 
 const mapDispatchToProps = {
-  setSetting
+  setSetting,
+  setCharacterOrder
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -159,6 +161,14 @@ class SettingsPage extends React.Component<Props, State> {
 
   componentDidMount() {
     getDefinitions().then((defs) => this.setState({ defs }));
+    getPlatforms().then(() => {
+      const account = getActivePlatform();
+      if (account) {
+        account.destinyVersion === 2
+          ? D2StoresService.getStoresStream(account)
+          : D1StoresService.getStoresStream(account);
+      }
+    });
   }
 
   render() {
@@ -430,11 +440,19 @@ class SettingsPage extends React.Component<Props, State> {
                   />
                   <span>{t('Settings.CharacterOrderFixed')}</span>
                 </label>
-                {/*<CharacterOrderEditor
-                  ng-if="settings.characterOrder == 'fixed'"
-                  order={this.characterSortCustom}
-                  onSortOrderChanged={this.characterSortOrderChanged}
-                />*/}
+                <label>
+                  <input
+                    type="radio"
+                    name="characterOrder"
+                    checked={settings.characterOrder === 'custom'}
+                    value="custom"
+                    onChange={this.onChange}
+                  />
+                  <span>{t('Settings.CharacterOrderCustom')}</span>
+                </label>
+                {settings.characterOrder === 'custom' && (
+                  <CharacterOrderEditor onSortOrderChanged={this.characterSortOrderChanged} />
+                )}
               </div>
             </div>
 
@@ -508,13 +526,9 @@ class SettingsPage extends React.Component<Props, State> {
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {
-      console.log(settings[e.target.name], e.target.checked);
       this.props.setSetting(e.target.name as any, e.target.checked);
     } else {
-      console.log(settings[e.target.name], e.target.value);
-      const value = e.target.value;
-      // const numVal = parseInt(e.target.value, 10);
-      this.props.setSetting(e.target.name as any, value /*isNaN(numVal) ? value : numVal*/);
+      this.props.setSetting(e.target.name as any, e.target.value);
     }
   };
 
@@ -577,6 +591,12 @@ class SettingsPage extends React.Component<Props, State> {
       'itemSortOrderCustom',
       sortOrder.filter((o) => o.enabled).map((o) => o.id)
     );
+  };
+
+  private characterSortOrderChanged = (order: string[]) => {
+    console.log(order);
+
+    this.props.setCharacterOrder(order);
   };
 }
 

@@ -5,7 +5,9 @@ import { compareBy, reverseComparator, chainComparator, Comparator } from '../co
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { itemSortOrder as itemSortOrderFn } from '../settings/reducer';
+import { itemSortOrder as itemSortOrderFn } from '../settings/item-sort';
+import { characterSortSelector } from '../settings/character-sort';
+import store from '../store/store';
 
 // This file defines Angular filters for DIM that may be shared among
 // different parts of DIM.
@@ -77,23 +79,8 @@ function rarity(item: DimItem) {
  */
 mod.filter('sortStores', () => sortStores);
 
-export function sortStores(stores: DimStore[], order: string) {
-  if (order === 'mostRecent') {
-    return _.sortBy(stores, (store) => store.lastPlayed).reverse();
-  } else if (order === 'mostRecentReverse') {
-    return _.sortBy(stores, (store) => {
-      if (store.isVault) {
-        return Infinity;
-      } else {
-        return store.lastPlayed;
-      }
-    });
-  } else if (stores.length) {
-    // https://github.com/Bungie-net/api/issues/614
-    return _.sortBy(stores, (s) => s.id);
-  } else {
-    return stores;
-  }
+export function sortStores(stores: DimStore[]) {
+  return characterSortSelector(store.getState())(stores);
 }
 
 const D1_CONSUMABLE_SORT_ORDER = [

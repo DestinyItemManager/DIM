@@ -7,14 +7,13 @@ import { DimItemInfo } from './dim-item-info';
 import { AccountsAction } from '../accounts/reducer';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
-import { characterOrderSelector } from '../settings/reducer';
-import { sortStores } from '../shell/dimAngularFilters.filter';
+import { characterSortSelector } from '../settings/character-sort';
 
 export const storesSelector = (state: RootState) => state.inventory.stores;
 export const sortedStoresSelector = createSelector(
   storesSelector,
-  characterOrderSelector,
-  sortStores
+  characterSortSelector,
+  (stores, sortStores) => sortStores(stores)
 );
 export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
 

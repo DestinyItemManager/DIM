@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Settings } from './reducer';
+import { Settings } from './settings';
 import { t } from 'i18next';
 import * as _ from 'underscore';
 

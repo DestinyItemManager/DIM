@@ -1,10 +1,8 @@
 import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
-import { settings } from '../settings/settings';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
-import { sortStores } from '../shell/dimAngularFilters.filter';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { $rootScope } from 'ngimport';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
@@ -18,6 +16,8 @@ import { querySelector } from '../shell/reducer';
 import { storesSelector } from '../inventory/reducer';
 import { maxLightLoadout } from '../loadout/auto-loadouts';
 import { itemTags } from '../inventory/dim-item-info';
+import { characterSortSelector } from '../settings/character-sort';
+import store from '../store/store';
 
 /**
  * A selector for the search config for a particular destiny version.
@@ -709,7 +709,7 @@ export function searchFilters(
       location(item: DimItem, predicate: string) {
         let storeIndex = 0;
         if (_sortedStores === null) {
-          _sortedStores = sortStores(storeService.getStores(), settings.characterOrder);
+          _sortedStores = characterSortSelector(store.getState())(storeService.getStores());
         }
 
         switch (predicate) {

@@ -5,7 +5,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import { RootState } from '../store/reducers';
 
 export const currentAccountSelector = (state: RootState) =>
-  state.accounts.currentAccount === 0
+  state.accounts.currentAccount === -1
     ? undefined
     : state.accounts.accounts[state.accounts.currentAccount];
 

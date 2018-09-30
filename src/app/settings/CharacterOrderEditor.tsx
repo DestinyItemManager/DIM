@@ -1,27 +1,17 @@
 import * as React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import classNames from 'classnames';
-import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimStore } from '../inventory/store-types';
-import StoreHeading from '../inventory/StoreHeading';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { storesSelector } from '../inventory/reducer';
-import { currentAccountSelector } from '../accounts/reducer';
-
-export interface SortProperty {
-  readonly id: string;
-  readonly displayName: string;
-  readonly enabled: boolean;
-  // TODO, should we support up/down?
-}
+import { sortedStoresSelector } from '../inventory/reducer';
+import './CharacterOrderEditor.scss';
 
 interface ProvidedProps {
-  onSortOrderChanged(account: DestinyAccount, order: string[]): void;
+  onSortOrderChanged(order: string[]): void;
 }
 
 interface StoreProps {
-  currentAccount?: DestinyAccount;
   characters: DimStore[];
 }
 
@@ -29,8 +19,7 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    characters: storesSelector(state),
-    currentAccount: currentAccountSelector(state)
+    characters: sortedStoresSelector(state)
   };
 }
 
@@ -49,27 +38,45 @@ class CharacterOrderEditor extends React.Component<Props> {
 
   render() {
     const { characters } = this.props;
+
+    if (!characters.length) {
+      return (
+        <div className="character-order-editor">
+          <i className="fa fa-refresh fa-spin" /> Loading characters...
+        </div>
+      );
+    }
+
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="droppable">
+        <Droppable droppableId="characters" direction="horizontal">
           {(provided) => (
             <div className="character-order-editor" ref={provided.innerRef}>
-              {characters.map((character, index) => (
-                <Draggable draggableId={character.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      className={classNames('character-order-editor-item', {
-                        'is-dragging': snapshot.isDragging
-                      })}
-                      data-index={index}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                    >
-                      <StoreHeading store={character} internalLoadoutMenu={false} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              {characters.map(
+                (character, index) =>
+                  character.id !== 'vault' && (
+                    <Draggable draggableId={character.id} index={index} key={character.id}>
+                      {(provided, snapshot) => (
+                        <div
+                          className={classNames('character-order-editor-item', {
+                            'is-dragging': snapshot.isDragging
+                          })}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <div className="sortable-character">
+                            <img src={character.icon} />
+                            <div className="character-text">
+                              <span className="power-level">{character.powerLevel}</span>{' '}
+                              {character.className}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  )
+              )}
               {provided.placeholder}
             </div>
           )}
@@ -81,7 +88,7 @@ class CharacterOrderEditor extends React.Component<Props> {
   private moveItem(oldIndex, newIndex) {
     newIndex = Math.min(this.props.characters.length, Math.max(newIndex, 0));
     const order = reorder(this.props.characters.map((c) => c.id), oldIndex, newIndex);
-    this.props.onSortOrderChanged(this.props.currentAccount!, order);
+    this.props.onSortOrderChanged(order);
   }
 }
 
