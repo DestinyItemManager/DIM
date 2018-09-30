@@ -181,33 +181,30 @@ function SearchFilterCtrl(
       }
     });
 
-  vm.showFilters = showPopup('filters', filtersTemplate);
+  vm.showFilters = (e) => {
+    e.stopPropagation();
 
-  /**
-   * Show a popup dialog containing the given template. Its class
-   * will be based on the name.
-   */
-  function showPopup(name, template) {
     let result;
-    return (e) => {
-      e.stopPropagation();
+    if (result) {
+      result.close();
+    } else {
+      ngDialog.closeAll();
+      result = ngDialog.open({
+        template: filtersTemplate,
+        className: 'filters',
+        controllerAs: 'vm',
+        appendClassName: 'modal-dialog',
+        controller() {
+          this.destinyVersion = vm.account.destinyVersion;
+          this.reviewsEnabled = $featureFlags.reviewsEnabled;
+        }
+      });
 
-      if (result) {
-        result.close();
-      } else {
-        ngDialog.closeAll();
-        result = ngDialog.open({
-          template,
-          className: name,
-          appendClassName: 'modal-dialog'
-        });
-
-        result.closePromise.then(() => {
-          result = null;
-        });
-      }
-    };
-  }
+      result.closePromise.then(() => {
+        result = null;
+      });
+    }
+  };
 
   vm.blurFilterInputIfEmpty = () => {
     if (vm.search.query === '') {

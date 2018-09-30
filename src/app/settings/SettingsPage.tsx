@@ -559,8 +559,12 @@ class SettingsPage extends React.Component<Props, State> {
   };
 
   private downloadCsv = (type: 'Armor' | 'Weapons') => {
+    const activePlatform = getActivePlatform();
+    if (!activePlatform) {
+      return;
+    }
     downloadCsvFiles(
-      this.props.settings.destinyVersion === 2
+      activePlatform.destinyVersion === 2
         ? D2StoresService.getStores()
         : D1StoresService.getStores(),
       type
