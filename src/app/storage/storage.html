@@ -5,30 +5,32 @@
     <p ng-i18next="Storage.Explain"></p>
 
     <button class="dim-button" ng-click="$ctrl.forceSync()">
-      <i class="fa fa-save"></i>
+      <font-awesome-icon icon="save"></font-awesome-icon>
       <span ng-i18next="Storage.ForceSync"></span>
     </button>
 
-    <button class="dim-button"
-            ng-click="$ctrl.clearIgnoredUsers()"
-            ng-show="$ctrl.canClearIgnoredUsers">
-      <i class="fa fa-eraser"></i>
+    <button class="dim-button" ng-click="$ctrl.clearIgnoredUsers()" ng-show="$ctrl.canClearIgnoredUsers">
+
+      <font-awesome-icon icon="clear"></font-awesome-icon>
       <span ng-i18next="Storage.ClearIgnoredUsers"></span>
     </button>
 
     <div ng-if="$ctrl.quota" class="storage-adapter">
-      <div class="storage-guage"><div dim-percent-width="{{$ctrl.quota.usage / $ctrl.quota.quota}}"></div></div>
-      <p ng-i18next="[i18next]({ usage: $ctrl.quota.usage, quota: $ctrl.quota.quota })Storage.Usage">DIM is using {{$ctrl.quota.usage | humanBytes}} out of {{$ctrl.quota.quota | humanBytes}} available to it.</p>
+      <div class="storage-guage">
+        <div dim-percent-width="{{$ctrl.quota.usage / $ctrl.quota.quota}}"></div>
+      </div>
+      <p ng-i18next="[i18next]({ usage: $ctrl.quota.usage, quota: $ctrl.quota.quota })Storage.Usage">DIM is using
+        {{$ctrl.quota.usage | humanBytes}} out of {{$ctrl.quota.quota | humanBytes}} available to it.</p>
     </div>
 
-    <div ng-repeat="adapter in $ctrl.syncService.adapters | orderBy:'-' track by adapter.name"
-        ng-switch="adapter.name"
-        class="storage-adapter">
+    <div ng-repeat="adapter in $ctrl.syncService.adapters | orderBy:'-' track by adapter.name" ng-switch="adapter.name"
+      class="storage-adapter">
       <h2>
         <span ng-i18next="Storage.{{adapter.name}}"></span>
-        <span class="storage-status"
-              ng-class="{ enabled: adapter.enabled }">
-          <i class="fa" ng-class="adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'"></i>
+        <span class="storage-status" ng-class="{ enabled: adapter.enabled }">
+          <font-awesome-icon icon="enabled" ng-if="adapter.enabled"></font-awesome-icon>
+          <font-awesome-icon icon="disabled" ng-if="!adapter.enabled"></font-awesome-icon>
+
           <span ng-i18next="Storage.{{adapter.enabled ? 'Enabled' : 'Disabled'}}"></span>
         </span>
       </h2>
@@ -39,17 +41,20 @@
         <p class="warning-block" ng-if="$ctrl.googleApiBlocked" ng-i18next="Storage.GoogleApiBlocked"></p>
         <div ng-if="!$ctrl.googleApiBlocked">
           <button ng-if="!adapter.enabled" class="dim-button" ng-click="$ctrl.driveSync()">
-            <i class="fa fa-sign-in"></i>
+            <font-awesome-icon icon="signIn"></font-awesome-icon>
+
             <span ng-i18next="Storage.DriveSync"></span>
           </button>
           <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.driveLogout()">
-            <i class="fa fa-sign-out"></i>
+            <font-awesome-icon icon="signOut"></font-awesome-icon>
+
             <span ng-i18next="Storage.DriveLogout"></span>
           </button>
           <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.goToRevisions()">
-              <i class="fa fa-upload"></i>
-              <span ng-i18next="Storage.GDriveRevisions"></span>
-            </button>
+            <font-awesome-icon icon="revisions"></font-awesome-icon>
+
+            <span ng-i18next="Storage.GDriveRevisions"></span>
+          </button>
         </div>
       </div>
 
@@ -68,13 +73,15 @@
       <h2 ng-i18next="Storage.ImportExport"></h2>
       <p>
         <button class="dim-button" ng-click="$ctrl.exportData()">
-          <i class="fa fa-download"></i>
+          <font-awesome-icon icon="download"></font-awesome-icon>
+
           <span ng-i18next="Storage.Export"></span>
         </button>
       </p>
       <p>
         <button class="dim-button" ng-click="$ctrl.importData()">
-          <i class="fa fa-upload"></i>
+          <font-awesome-icon icon="upload"></font-awesome-icon>
+
           <span ng-i18next="Storage.Import"></span>
         </button>
         <input type="file" id="importFile">
