@@ -1,5 +1,5 @@
 import { RootState } from '../store/reducers';
-import { Settings } from './settings';
+import { Settings } from './reducer';
 
 const itemSortPresets = {
   primaryStat: ['primStat', 'name'],

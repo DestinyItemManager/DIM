@@ -13,7 +13,7 @@ import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
 import { sortedStoresSelector } from './reducer';
-import { Settings } from '../settings/settings';
+import { Settings } from '../settings/reducer';
 
 interface Props {
   stores: DimStore[];

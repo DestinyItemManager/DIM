@@ -19,7 +19,7 @@ import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { settings, Settings, defaultItemSize } from './settings';
+import { settings } from './settings';
 import { storesLoadedSelector } from '../inventory/reducer';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Checkbox from './Checkbox';
@@ -27,6 +27,7 @@ import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
 import { itemSortOrder } from './item-sort';
+import { Settings, defaultItemSize } from './reducer';
 
 interface StoreProps {
   settings: Settings;
