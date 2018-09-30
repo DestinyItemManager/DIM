@@ -30,6 +30,9 @@ import { SearchService } from '../search/search-filter.component';
 import { D2FarmingService } from '../farming/d2farming.service';
 import { D1FarmingService } from '../farming/farming.service';
 import { router } from '../../router';
+import { newLoadout } from './loadout-utils';
+import { previousLoadoutSelector } from './reducer';
+import store from '../store/store';
 
 export const LoadoutPopupComponent: IComponentOptions = {
   controller: LoadoutPopupCtrl,
@@ -53,7 +56,7 @@ interface LoadoutPopupCtrlVM extends IController {
 
   newLoadout($event: IAngularEvent);
   newLoadoutFromEquipped($event: IAngularEvent);
-  editLoadout(loadout: Loadout | {}, $event: IAngularEvent);
+  editLoadout(loadout: Loadout, $event: IAngularEvent);
   deleteLoadout(loadout: Loadout);
   applyLoadout(loadout: Loadout, $event: IAngularEvent, filterToEquipped?: boolean);
   itemLevelingLoadout($event: IAngularEvent);
@@ -79,7 +82,7 @@ function LoadoutPopupCtrl(
   const vm = this;
 
   vm.$onInit = () => {
-    vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
+    vm.previousLoadout = previousLoadoutSelector(store.getState(), vm.store.id);
 
     vm.classTypeId = {
       warlock: 0,
@@ -135,9 +138,9 @@ function LoadoutPopupCtrl(
   $scope.$on('dim-save-loadout', initLoadouts);
   $scope.$on('dim-delete-loadout', initLoadouts);
 
-  vm.newLoadout = function newLoadout($event: IAngularEvent) {
+  vm.newLoadout = function createNewLoadout($event: IAngularEvent) {
     ngDialog.closeAll();
-    vm.editLoadout({}, $event);
+    vm.editLoadout(newLoadout('', {}), $event);
   };
 
   vm.newLoadoutFromEquipped = function newLoadoutFromEquipped($event: IAngularEvent) {
@@ -204,7 +207,7 @@ function LoadoutPopupCtrl(
     }
 
     dimLoadoutService.applyLoadout(vm.store, loadout, true).then(() => {
-      vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
+      vm.previousLoadout = previousLoadoutSelector(store.getState(), vm.store.id);
     });
   };
 

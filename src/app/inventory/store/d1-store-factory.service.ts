@@ -1,5 +1,4 @@
 import * as _ from 'underscore';
-import uuidv4 from 'uuid/v4';
 import { sum, count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
@@ -12,6 +11,7 @@ import vaultBackground from 'app/images/vault-background.png';
 import { D1Store, D1Vault } from '../store-types';
 import { D1Item } from '../item-types';
 import { D1StoresService } from '../d1-stores.service';
+import { newLoadout } from '../../loadout/loadout-utils';
 
 // Label isn't used, but it helps us understand what each one is
 const progressionMeta = {
@@ -134,12 +134,7 @@ const StoreProto = {
       .filter((item) => item.canBeInLoadout())
       // tslint:disable-next-line:no-unnecessary-callback-wrapper
       .map((item) => angularCopy(item));
-    return {
-      id: uuidv4(),
-      classType: -1,
-      name,
-      items: _.groupBy(allItems, (i) => i.type.toLowerCase())
-    };
+    return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
   },
 
   factionAlignment(this: D1Store) {
