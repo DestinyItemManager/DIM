@@ -449,7 +449,7 @@ class SettingsPage extends React.Component<Props, State> {
                     value="custom"
                     onChange={this.onChange}
                   />
-                  <span>{t('Settings.CharacterOrderCustom')}</span>
+                  <span>{t('Settings.SortCustom')}</span>
                 </label>
                 {settings.characterOrder === 'custom' && (
                   <CharacterOrderEditor onSortOrderChanged={this.characterSortOrderChanged} />

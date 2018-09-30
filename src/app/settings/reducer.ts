@@ -85,7 +85,7 @@ export const initialSettingsState: Settings = {
   characterOrder: 'mostRecent',
   // Sort items in buckets (primaryStat, rarityThenPrimary, quality)
   itemSort: 'primaryStat',
-  itemSortOrderCustom: [],
+  itemSortOrderCustom: ['primStat', 'name'],
   // How many columns to display character buckets
   charCol: 3,
   // How many columns to display character buckets on Mobile
