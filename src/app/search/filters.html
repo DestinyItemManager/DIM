@@ -354,13 +354,15 @@
             <dim-filter-link filter="tag:junk"></dim-filter-link>
             <dim-filter-link filter="tag:infuse"></dim-filter-link>
           </td>
-          <td><ul>
-            <li ng-i18next="Filter.Tags.NoTag"></li>
-            <li ng-i18next="Filter.Tags.Favorite"></li>
-            <li ng-i18next="Filter.Tags.Keep"></li>
-            <li ng-i18next="Filter.Tags.Dismantle"></li>
-            <li ng-i18next="Filter.Tags.Infuse"></li>
-          </ul></td>
+          <td>
+            <ul>
+              <li ng-i18next="Filter.Tags.NoTag"></li>
+              <li ng-i18next="Filter.Tags.Favorite"></li>
+              <li ng-i18next="Filter.Tags.Keep"></li>
+              <li ng-i18next="Filter.Tags.Dismantle"></li>
+              <li ng-i18next="Filter.Tags.Infuse"></li>
+            </ul>
+          </td>
         </tr>
         <tr>
           <td>
@@ -411,14 +413,14 @@
         </td>
         <td ng-i18next="Filter.InLoadout"></td>
       </tr>
-    <tr ng-if="vm.settings.destinyVersion === 1">
-      <td>
-        <dim-filter-link filter="is:ornamentable"></dim-filter-link>
-        <dim-filter-link filter="is:ornamentmissing"></dim-filter-link>
-        <dim-filter-link filter="is:ornamentunlocked"></dim-filter-link>
-      </td>
-      <td ng-i18next="Filter.Ornament"></td>
-    </tr>
+      <tr ng-if="vm.settings.destinyVersion === 1">
+        <td>
+          <dim-filter-link filter="is:ornamentable"></dim-filter-link>
+          <dim-filter-link filter="is:ornamentmissing"></dim-filter-link>
+          <dim-filter-link filter="is:ornamentunlocked"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.Ornament"></td>
+      </tr>
       <tr>
         <td>
           <dim-filter-link filter="is:postmaster"></dim-filter-link>

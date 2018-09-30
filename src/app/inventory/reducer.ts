@@ -16,6 +16,7 @@ export const sortedStoresSelector = createSelector(
   characterOrderSelector,
   sortStores
 );
+export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
 
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {

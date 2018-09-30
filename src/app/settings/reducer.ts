@@ -6,10 +6,11 @@ import { defaultLanguage } from '../i18n';
 
 export const characterOrderSelector = (state: RootState) => state.settings.characterOrder;
 
-export const itemSortOrderSelector = (state: RootState) =>
-  (state.settings.itemSort === 'custom'
-    ? state.settings.itemSortOrderCustom
-    : itemSortPresets[state.settings.itemSort]) || itemSortPresets.primaryStat;
+export const itemSortOrderSelector = (state: RootState) => itemSortOrder(state.settings);
+export const itemSortOrder = (settings: Settings) =>
+  (settings.itemSort === 'custom'
+    ? settings.itemSortOrderCustom
+    : itemSortPresets[settings.itemSort]) || itemSortPresets.primaryStat;
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed';
 
@@ -56,6 +57,9 @@ export interface Settings {
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
   readonly reviewsModeSelection: 0;
 
+  // Hide completed Destiny 1 records
+  readonly hideCompletedRecords: boolean;
+
   readonly betaForsakenTiles: false;
 
   readonly language: string;
@@ -72,6 +76,10 @@ const itemSortPresets = {
   typeThenPrimary: ['typeName', 'classType', 'primStat', 'name'],
   typeThenName: ['typeName', 'classType', 'name']
 };
+
+export function defaultItemSize() {
+  return window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
+}
 
 export const initialSettingsState: Settings = {
   // Show full details in item popup
@@ -100,7 +108,7 @@ export const initialSettingsState: Settings = {
   // How many columns to display vault buckets
   vaultMaxCol: 999,
   // How big in pixels to draw items - start smaller for iPad
-  itemSize: window.matchMedia('(max-width: 1025px)').matches ? 38 : 48,
+  itemSize: defaultItemSize(),
   // Which categories or buckets should be collapsed?
   collapsedSections: {},
   // What settings for farming mode
@@ -115,6 +123,7 @@ export const initialSettingsState: Settings = {
   reviewsPlatformSelection: 0,
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
   reviewsModeSelection: 0,
+  hideCompletedRecords: false,
 
   betaForsakenTiles: false,
 
@@ -125,7 +134,6 @@ export const initialSettingsState: Settings = {
 
 export type SettingsAction = ActionType<typeof actions>;
 
-// TODO: Figure out how to drive saving settings from this state
 export const settings: Reducer<Settings, SettingsAction> = (
   state: Settings = initialSettingsState,
   action: SettingsAction
@@ -140,14 +148,25 @@ export const settings: Reducer<Settings, SettingsAction> = (
           ...action.payload.farming
         }
       };
-    case getType(actions.set):
+
+    case getType(actions.toggleCollapsedSection):
       return {
         ...state,
-        settings: {
-          ...state,
-          [action.payload.property]: action.payload.value
+        collapsedSections: {
+          ...state.collapsedSections,
+          [action.payload]: !state.collapsedSections[action.payload]
         }
       };
+
+    case getType(actions.setSetting):
+      if (state[action.payload.property] !== action.payload.value) {
+        return {
+          ...state,
+          [action.payload.property]: action.payload.value
+        };
+      } else {
+        return state;
+      }
     default:
       return state;
   }

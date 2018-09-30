@@ -1,6 +1,8 @@
 import { settings } from '../settings/settings';
 import template from './vendor-items.html';
-import { IComponentOptions } from 'angular';
+import { IComponentOptions, IController } from 'angular';
+import store from '../store/store';
+import { toggleCollapsedSection } from '../settings/actions';
 
 export const VendorItems: IComponentOptions = {
   controller: VendorItemsCtrl,
@@ -14,7 +16,11 @@ export const VendorItems: IComponentOptions = {
   template
 };
 
-function VendorItemsCtrl() {
+function VendorItemsCtrl(
+  this: IController & {
+    settings: typeof settings;
+  }
+) {
   'ngInject';
 
   const vm = this;
@@ -22,7 +28,6 @@ function VendorItemsCtrl() {
   vm.settings = settings;
 
   vm.toggleSection = (id) => {
-    vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
-    vm.settings.save();
+    store.dispatch(toggleCollapsedSection(id));
   };
 }

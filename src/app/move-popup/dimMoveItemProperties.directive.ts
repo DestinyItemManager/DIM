@@ -31,6 +31,7 @@ function MoveItemPropertiesCtrl(
       quantity: number;
       item: DestinyInventoryItemDefinition;
     }[];
+    settings: typeof settings;
     infuse(item: DimItem, $event: IAngularEvent): void;
   },
   ngDialog,

@@ -223,7 +223,7 @@ function FarmingService() {
         );
 
         this.farmItems().then(() => {
-          if (settings.makeRoomForItems) {
+          if (settings.farming.makeRoomForItems) {
             this.makeRoomForItems();
           }
         });

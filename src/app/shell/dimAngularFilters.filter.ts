@@ -5,6 +5,7 @@ import { compareBy, reverseComparator, chainComparator, Comparator } from '../co
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
+import { itemSortOrder as itemSortOrderFn } from '../settings/reducer';
 
 // This file defines Angular filters for DIM that may be shared among
 // different parts of DIM.
@@ -201,7 +202,7 @@ mod.filter('sortItems', () => (items) => sortItems(items));
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-export function sortItems(items: DimItem[], itemSortOrder = settings.itemSortOrder()) {
+export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(settings)) {
   if (!items.length) {
     return items;
   }

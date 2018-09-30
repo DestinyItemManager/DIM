@@ -4,6 +4,8 @@ import './farming.scss';
 import { IComponentOptions } from 'angular';
 import { D1FarmingService } from './farming.service';
 import { consolidate } from '../inventory/dimItemMoveService.factory';
+import store from '../store/store';
+import { setSetting } from '../settings/actions';
 
 export const FarmingComponent: IComponentOptions = {
   controller: FarmingCtrl,
@@ -18,11 +20,19 @@ function FarmingCtrl() {
 
   Object.assign(vm, {
     service: D1FarmingService,
-    settings,
     consolidate,
+    makeRoomForItems: settings.farming.makeRoomForItems,
     stop($event) {
       $event.preventDefault();
       D1FarmingService.stop();
+    },
+    makeRoomForItemsChanged() {
+      store.dispatch(
+        setSetting('farming', {
+          ...settings.farming,
+          makeRoomForItems: this.makeRoomForItems
+        })
+      );
     }
   });
 }

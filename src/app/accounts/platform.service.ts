@@ -9,10 +9,10 @@ import {
   getDestinyAccountsForBungieAccount
 } from './destiny-account.service';
 import '../rx-operators';
-import { settings } from '../settings/settings';
 import { SyncService } from '../storage/sync.service';
 import { getBungieAccounts } from './bungie-account.service';
 import * as actions from './actions';
+import { setSetting } from '../settings/actions';
 import store from '../store/store';
 import { loadingTracker } from '../ngimport-more';
 import { update } from '../inventory/actions';
@@ -118,14 +118,12 @@ function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
   if (account === null) {
     return SyncService.remove('platformType');
   } else {
+    // TODO: Starting to look like a saga
     store.dispatch(actions.setCurrentAccount(account));
     // Also clear inventory
     store.dispatch(update([]));
+    store.dispatch(setSetting('destinyVersion', account.destinyVersion));
 
-    if (settings.destinyVersion !== account.destinyVersion) {
-      settings.destinyVersion = account.destinyVersion;
-      settings.save();
-    }
     return SyncService.set({
       platformType: account.platformType,
       destinyVersion: account.destinyVersion
