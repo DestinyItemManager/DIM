@@ -26,7 +26,7 @@ Here are some tips to make sure your pull request can be merged smoothly:
 * Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to runninng `yarn install`.
 
 **Docker Supported Development**
-* As an alternative to installing the above, we support a docker-based development environment. See: [Docker Development Guide](DOCKER.md) 
+* As an alternative to installing the above, we support a docker-based development environment. See: [Docker Development Guide](Docker.md) 
 
 
 ### Clone the repo
