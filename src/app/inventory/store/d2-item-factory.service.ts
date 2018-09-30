@@ -95,26 +95,6 @@ const statWhiteList = [
 
 const statsNoBar = [4284893193, 3871231066, 2961396640, 447667954, 1931675084];
 
-// Mapping from itemCategoryHash to our category strings for filtering.
-const categoryFromHash = {
-  153950757: 'CATEGORY_GRENADE_LAUNCHER',
-  3954685534: 'CATEGORY_SUBMACHINEGUN',
-  2489664120: 'CATEGORY_TRACE_RIFLE',
-  1504945536: 'CATEGORY_LINEAR_FUSION_RIFLE',
-  3317538576: 'CATEGORY_BOW',
-  5: 'CATEGORY_AUTO_RIFLE',
-  6: 'CATEGORY_HAND_CANNON',
-  7: 'CATEGORY_PULSE_RIFLE',
-  8: 'CATEGORY_SCOUT_RIFLE',
-  9: 'CATEGORY_FUSION_RIFLE',
-  10: 'CATEGORY_SNIPER_RIFLE',
-  11: 'CATEGORY_SHOTGUN',
-  12: 'CATEGORY_MACHINE_GUN',
-  13: 'CATEGORY_ROCKET_LAUNCHER',
-  14: 'CATEGORY_SIDEARM',
-  54: 'CATEGORY_SWORD'
-};
-
 const resistanceMods = {
   1546607980: DamageType.Void,
   1546607978: DamageType.Arc,
@@ -140,9 +120,6 @@ const ItemProto = {
       (!this.notransfer || this.owner === store.id) &&
       !this.location.inPostmaster
     );
-  },
-  inCategory(this: D2Item, categoryName: string) {
-    return this.categories.includes(categoryName);
   },
   canBeInLoadout(this: D2Item) {
     return this.equipment || this.type === 'Material' || this.type === 'Consumable';
@@ -244,23 +221,6 @@ export function createItemIndex(item: D2Item): string {
 }
 
 /**
- * Construct the search category (CATEGORY_*) list from an item definition.
- * @param itemDef the item definition object
- */
-function findCategories(itemDef): string[] {
-  const categories: string[] = [];
-  if (itemDef.itemCategoryHashes) {
-    for (const hash of itemDef.itemCategoryHashes) {
-      const c = categoryFromHash[hash];
-      if (c) {
-        categories.push(c);
-      }
-    }
-  }
-  return categories;
-}
-
-/**
  * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
  * @param buckets the bucket definitions
@@ -327,8 +287,6 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const categories = findCategories(itemDef);
-
   const dmgName = instanceDef
     ? [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0]
     : null;
@@ -349,8 +307,7 @@ export function makeItem(
     hash: item.itemHash,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
-    categories, // see defs.ItemCategories
-    itemCategoryHashes: itemDef.itemCategoryHashes || [],
+    itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
     isVendorItem: !owner || owner.id === null,
@@ -1018,7 +975,10 @@ const EXCLUDED_PLUGS = new Set([
 function filterReusablePlug(reusablePlug: DimPlug) {
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
+    // Masterwork Mods
     !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    // Ghost Projections
+    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
     !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
