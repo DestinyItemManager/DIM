@@ -42,8 +42,6 @@ export interface Settings {
     readonly makeRoomForItems: boolean;
     readonly moveTokens: boolean;
   };
-  /** Active destiny version */
-  readonly destinyVersion: 2;
   /** Destiny 2 platform selection for ratings + reviews */
   readonly reviewsPlatformSelection: 0;
   /** Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values */
@@ -102,8 +100,6 @@ export const initialSettingsState: Settings = {
     makeRoomForItems: true,
     moveTokens: false
   },
-  // Active destiny version
-  destinyVersion: 2,
   // Destiny 2 platform selection for ratings + reviews
   reviewsPlatformSelection: 0,
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
