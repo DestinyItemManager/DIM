@@ -65,9 +65,7 @@ module.exports = (env) => {
           https: {
             key: fs.readFileSync('key.pem'), // Private keys in PEM format.
             cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
-          },
-          host: '0.0.0.0',
-          port: '8080'
+          }
         }
       : {},
 
