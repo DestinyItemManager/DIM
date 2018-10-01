@@ -2,7 +2,7 @@
   <h1>
     <div class="hide-completed">
       <label>
-        <input type="checkbox" ng-model="$ctrl.settings.hideCompletedRecords" ng-change="$ctrl.settingsChanged()">
+        <input type="checkbox" ng-model="$ctrl.hideCompletedRecords" ng-change="$ctrl.hideCompletedRecordsChanged()">
         <span ng-i18next="RecordBooks.HideCompleted"></span>
       </label>
     </div>
@@ -19,7 +19,8 @@
     </div>
 
     <div ng-if="!$ctrl.settings.collapsedSections[book.hash]">
-      <div class="record-book-page" ng-class="{ complete: page.complete }" ng-repeat="page in book.pages track by $index" ng-if="::!page.rewardsPage">
+      <div class="record-book-page" ng-class="{ complete: page.complete }" ng-repeat="page in book.pages track by $index"
+        ng-if="::!page.rewardsPage">
         <div class="collapse-handle" ng-click="$ctrl.toggleSection(page.id)">
           <i class="fa collapse" ng-class="$ctrl.settings.collapsedSections[page.id] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
           <span class="record-book-page-title">{{ ::page.name }}</span>

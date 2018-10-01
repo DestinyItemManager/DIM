@@ -21,6 +21,7 @@ function controller(
     amount: number;
     store: DimStore;
     stores: DimStore[];
+    settings: typeof settings;
   },
   $scope
 ) {

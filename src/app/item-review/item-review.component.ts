@@ -10,6 +10,8 @@ import { DimItem } from '../inventory/item-types';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
 import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
 import { dimDestinyTrackerService } from './destiny-tracker.service';
+import store from '../store/store';
+import { setSetting } from '../settings/actions';
 
 export const ItemReviewComponent: IComponentOptions = {
   bindings: {
@@ -32,6 +34,8 @@ function ItemReviewController(
 
   const vm = this;
   vm.canReview = settings.allowIdPostToDtr;
+  vm.allowIdPostToDtr = settings.allowIdPostToDtr;
+  vm.showReviews = settings.showReviews;
   vm.toggledFlags = [];
   vm.submitted = false;
   vm.isCollapsed = false;
@@ -235,20 +239,19 @@ function ItemReviewController(
     reviewsEnabled: $featureFlags.reviewsEnabled
   };
 
-  vm.settings = settings;
-
   $rootScope.$on('dim-item-reviews-fetched', () => {
     vm.reviewData = vm.getReviewData();
   });
 
   vm.valueChanged = () => {
-    vm.canReview = settings.allowIdPostToDtr;
+    vm.canReview = vm.allowIdPostToDtr;
 
     if (vm.canReview) {
       dimDestinyTrackerService.getItemReviews(vm.item);
     }
 
-    settings.save();
+    store.dispatch(setSetting('allowIdPostToDtr', vm.allowIdPostToDtr));
+    store.dispatch(setSetting('showReviews', vm.showReviews));
   };
 
   vm.translateReviewMode = (review: D2ItemUserReview) => {

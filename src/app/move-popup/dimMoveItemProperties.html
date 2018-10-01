@@ -35,6 +35,10 @@
       <star-rating rating="vm.item.dtrRating.overallScore" read-only></star-rating>
       <span ng-if="vm.item.reviewable" ng-i18next="[i18next]({ itemRating: vm.item.dtrRating.overallScore, numRatings: vm.item.dtrRating.ratingCount || 0 })DtrReview.AverageRating"></span>
     </div>
+    <div ng-if="vm.item.uniqueStack">
+      <span ng-if="vm.item.amount === vm.item.maxStackSize" ng-i18next="[i18next]({ amount: vm.item.amount })MovePopup.Subtitle_Stackable_UniqueMax"></span>
+      <span ng-if="vm.item.amount !== vm.item.maxStackSize" ng-i18next="[i18next]({ amount: vm.item.amount, maxStackSize: vm.item.maxStackSize })MovePopup.Subtitle_Stackable_Unique"></span>
+    </div>
   </div>
   <div class="item-details failure-reason" ng-if="failureString.length" ng-repeat="failureString in vm.failureStrings">{{
     failureString }}</div>

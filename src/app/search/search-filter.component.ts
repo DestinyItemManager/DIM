@@ -4,8 +4,7 @@ import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { searchFilters, buildSearchConfig, SearchFilters } from './search-filters';
 import filtersTemplate from '../search/filters.html';
-import { itemTags } from '../settings/settings';
-import { getItemInfoSource } from '../inventory/dim-item-info';
+import { getItemInfoSource, itemTags } from '../inventory/dim-item-info';
 import './search-filter.scss';
 import { IComponentOptions, IController, IScope, IRootElementService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -182,33 +181,30 @@ function SearchFilterCtrl(
       }
     });
 
-  vm.showFilters = showPopup('filters', filtersTemplate);
+  vm.showFilters = (e) => {
+    e.stopPropagation();
 
-  /**
-   * Show a popup dialog containing the given template. Its class
-   * will be based on the name.
-   */
-  function showPopup(name, template) {
     let result;
-    return (e) => {
-      e.stopPropagation();
+    if (result) {
+      result.close();
+    } else {
+      ngDialog.closeAll();
+      result = ngDialog.open({
+        template: filtersTemplate,
+        className: 'filters',
+        controllerAs: 'vm',
+        appendClassName: 'modal-dialog',
+        controller() {
+          this.destinyVersion = vm.account.destinyVersion;
+          this.reviewsEnabled = $featureFlags.reviewsEnabled;
+        }
+      });
 
-      if (result) {
-        result.close();
-      } else {
-        ngDialog.closeAll();
-        result = ngDialog.open({
-          template,
-          className: name,
-          appendClassName: 'modal-dialog'
-        });
-
-        result.closePromise.then(() => {
-          result = null;
-        });
-      }
-    };
-  }
+      result.closePromise.then(() => {
+        result = null;
+      });
+    }
+  };
 
   vm.blurFilterInputIfEmpty = () => {
     if (vm.search.query === '') {
