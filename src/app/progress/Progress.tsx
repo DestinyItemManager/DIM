@@ -376,7 +376,7 @@ class Progress extends React.Component<Props, State> {
    * Get all the milestones to show for a particular character, filtered to active milestones and sorted.
    */
   private milestonesForCharacter(character: DestinyCharacterComponent): DestinyMilestone[] {
-    const { profileInfo } = this.state.progress!;
+    const { profileInfo, defs } = this.state.progress!;
 
     const allMilestones: DestinyMilestone[] =
       profileInfo.characterProgressions &&
@@ -385,17 +385,20 @@ class Progress extends React.Component<Props, State> {
         ? Object.values(profileInfo.characterProgressions.data[character.characterId].milestones)
         : [];
 
-    const filteredMilestones = allMilestones.filter(
-      (milestone) =>
-        milestone.activities ||
-        (milestone.availableQuests &&
-          milestone.availableQuests.every(
-            (q) =>
-              q.status.stepObjectives.length > 0 &&
-              q.status.started &&
-              (!q.status.completed || !q.status.redeemed)
-          ))
-    );
+    const filteredMilestones = allMilestones.filter((milestone) => {
+      const def = defs.Milestone.get(milestone.milestoneHash);
+      return (
+        (def.showInExplorer || def.showInMilestones) &&
+        (milestone.activities ||
+          (milestone.availableQuests &&
+            milestone.availableQuests.every(
+              (q) =>
+                q.status.stepObjectives.length > 0 &&
+                q.status.started &&
+                (!q.status.completed || !q.status.redeemed)
+            )))
+      );
+    });
 
     return _.sortBy(filteredMilestones, (milestone) => milestone.order);
   }

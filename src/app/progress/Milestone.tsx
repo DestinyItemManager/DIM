@@ -55,7 +55,7 @@ export function Milestone({
         }
       />
     );
-  } else if (milestone.activities && milestone.activities.length && milestone.rewards) {
+  } else if (milestone.activities && milestone.activities.length) {
     // TODO: loadoutRequirementIndex
 
     const objectives = milestone.activities[0].challenges.map((a) => a.objective);
@@ -81,14 +81,15 @@ export function Milestone({
             />
           ))}
         </div>
-        {milestone.rewards.map((reward) =>
-          Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).map(
-            (entry) =>
-              entry.items.map((reward) => (
-                <Reward key={reward.itemHash} reward={reward} defs={defs} />
-              ))
-          )
-        )}
+        {milestone.rewards &&
+          milestone.rewards.map((reward) =>
+            Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).map(
+              (entry) =>
+                entry.items.map((reward) => (
+                  <Reward key={reward.itemHash} reward={reward} defs={defs} />
+                ))
+            )
+          )}
       </MilestoneDisplay>
     );
   } else if (milestone.rewards) {
