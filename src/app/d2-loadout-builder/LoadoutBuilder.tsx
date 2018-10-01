@@ -26,6 +26,7 @@ import StoreInventoryItem from '../inventory/StoreInventoryItem';
 import { D2Item, DimSocket } from '../inventory/item-types';
 import LockedArmor from './LockedArmor';
 import PressTip from '../dim-ui/PressTip';
+import LoadoutDrawer from '../loadout/loadout-drawer';
 
 interface Props {
   account: DestinyAccount;
@@ -35,6 +36,7 @@ interface Props {
 }
 
 interface State {
+  loadout?: Loadout;
   lockedMap: {};
   processedSets?: {};
   matchedSets?: ArmorSet[];
@@ -133,8 +135,8 @@ function process(armor, callback) {
     while (i--) {
       if (pieces[i].stats.length) {
         stats.STAT_MOBILITY += pieces[i].stats[0].base;
-        stats.STAT_RESILIENCE += pieces[i].stats[0].base;
-        stats.STAT_RECOVERY += pieces[i].stats[1].base;
+        stats.STAT_RESILIENCE += pieces[i].stats[1].base;
+        stats.STAT_RECOVERY += pieces[i].stats[2].base;
       }
       // switch (armor.bonusType) {
       //   case 'int':
@@ -228,7 +230,6 @@ function process(armor, callback) {
                 //   killProcess = false;
                 //   return;
                 // }
-                // vm.progress = processedCount / combos;
                 return window.requestAnimationFrame(() => {
                   step(h, g, c, l, ci, processedCount);
                 });
@@ -261,11 +262,10 @@ function process(armor, callback) {
         });
       }
     }
-    // that.setState({ setTiers });
+
     callback(setMap, setTiers);
 
-    // // Finish progress
-    // setState.progress = processedCount / combos;
+    // Finish progress
     console.log('processed', combos, 'combinations in', performance.now() - pstart);
   }
 
@@ -452,40 +452,35 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.setState({ matchedSets });
   };
 
-  newLoadout = (element) => {
+  createLoadout(element): Loadout {
     const set = this.state.processedSets![element.target.value].set;
     const loadout: Loadout = {
-      name: '',
-      items: {},
-      classType: { warlock: 0, titan: 1, hunter: 2 }[this.state.selectedStore!.classType]
+      platform: this.props.account.platformLabel, // Playstation or Xbox
+      destinyVersion: this.props.account.destinyVersion, // D1 or D2
+      items: {
+        helmet: [set.armor[0]],
+        gauntlets: [set.armor[1]],
+        chest: [set.armor[2]],
+        leg: [set.armor[3]],
+        classitem: [set.armor[4]]
+      },
+      name: t('Loadouts.AppliedAuto'),
+      classType: { warlock: 0, titan: 1, hunter: 2 }[this.state.selectedStore!.class]
     };
-    const items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem');
-    _.each(items, (itemContainer: any, itemType) => {
-      loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
-    });
 
-    this.$scope.$broadcast('dim-edit-loadout', {
-      loadout,
-      equipAll: true,
-      showClass: false
-    });
+    return loadout;
+  }
+
+  resetActiveLoadout = () => {
+    this.setState({ loadout: undefined });
+  };
+
+  newLoadout = (element) => {
+    this.setState({ loadout: this.createLoadout(element) });
   };
 
   equipItems = (element) => {
-    const set = this.state.processedSets![element.target.value].set;
-    const loadout: Loadout = {
-      items: {},
-      name: t('Loadouts.AppliedAuto'),
-      classType: { warlock: 0, titan: 1, hunter: 2 }[this.state.selectedStore!.classType]
-    };
-    const items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem');
-    loadout.items.helmet = [items.Helmet];
-    loadout.items.chest = [items.Chest];
-    loadout.items.gauntlets = [items.Gauntlets];
-    loadout.items.leg = [items.Leg];
-    loadout.items.classitem = [items.ClassItem];
-
-    // loadout = copy(loadout);
+    const loadout: Loadout = this.createLoadout(element);
 
     _.each(loadout.items, (val) => {
       val[0].equipped = true;
@@ -564,9 +559,9 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
             {this.state.matchedSets.map((set) => (
               <div className="generated-build" key={set.setHash}>
                 <div className="generated-build-buttons">
-                  {/* <button className="dim-button" value={set.setHash} onClick={this.newLoadout}>
+                  <button className="dim-button" value={set.setHash} onClick={this.newLoadout}>
                     Create Loadout
-                  </button> */}
+                  </button>
                   <button
                     className="dim-button equip-button"
                     value={set.setHash}
@@ -608,6 +603,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
             ))}
           </>
         )}
+        <LoadoutDrawer loadout={this.state.loadout} onClose={this.resetActiveLoadout} />
       </div>
     );
   }
