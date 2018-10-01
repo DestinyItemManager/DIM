@@ -6,30 +6,30 @@ import { t } from 'i18next';
 import { D2StoresService } from './d2-stores.service';
 import { D1StoresService } from './d1-stores.service';
 import { NewItemsService } from './store/new-items.service';
-import { settings } from '../settings/settings';
-import { Subscription } from 'rxjs/Subscription';
 import './ClearNewItems.scss';
+import { connect } from 'react-redux';
+import { RootState } from '../store/reducers';
 
-interface Props {
+interface ProvidedProps {
   account: DestinyAccount;
 }
 
-interface State {
+interface StoreProps {
   showNewItems: boolean;
   hasNewItems: boolean;
 }
 
-export default class ClearNewItems extends React.Component<Props, State> {
-  private $scope = $rootScope.$new(true);
-  private subscriptions: Subscription[] = [];
+type Props = ProvidedProps & StoreProps;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      showNewItems: settings.showNewItems,
-      hasNewItems: NewItemsService.hasNewItems
-    };
-  }
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    showNewItems: state.settings.showNewItems,
+    hasNewItems: state.inventory.newItems.size > 0
+  };
+}
+
+class ClearNewItems extends React.Component<Props> {
+  private $scope = $rootScope.$new(true);
 
   componentDidMount() {
     const scopedHotkeys = hotkeys.bindTo(this.$scope);
@@ -41,27 +41,14 @@ export default class ClearNewItems extends React.Component<Props, State> {
         this.clearNewItems();
       }
     });
-
-    this.subscriptions = [
-      settings.$updates.subscribe(() => {
-        if (this.state.showNewItems !== settings.showNewItems) {
-          this.setState({ showNewItems: settings.showNewItems });
-        }
-      }),
-      NewItemsService.$hasNewItems.subscribe((hasNewItems) => {
-        this.setState({ hasNewItems });
-      })
-    ];
   }
 
   componentWillUnmount() {
     this.$scope.$destroy();
-    this.subscriptions.forEach((s) => s.unsubscribe());
-    this.subscriptions = [];
   }
 
   render() {
-    const { showNewItems, hasNewItems } = this.state;
+    const { showNewItems, hasNewItems } = this.props;
 
     if (!showNewItems || !hasNewItems) {
       return null;
@@ -84,3 +71,5 @@ export default class ClearNewItems extends React.Component<Props, State> {
     NewItemsService.clearNewItems(stores, this.props.account);
   };
 }
+
+export default connect(mapStateToProps)(ClearNewItems);

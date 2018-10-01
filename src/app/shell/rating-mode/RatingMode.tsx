@@ -2,31 +2,44 @@ import * as React from 'react';
 import { t } from 'i18next';
 import './RatingMode.scss';
 import ClickOutside from '../../dim-ui/ClickOutside';
-import { settings } from '../../settings/settings';
 import { $rootScope } from 'ngimport';
 import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
 import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../../inventory/d2-stores.service';
-import { getPlatformOptions } from '../../destinyTrackerApi/platformOptionsFetcher';
+import { reviewPlatformOptions } from '../../destinyTrackerApi/platformOptionsFetcher';
+import { setSetting } from '../../settings/actions';
+import store from '../../store/store';
+import { connect } from 'react-redux';
+import { RootState } from '../../store/reducers';
+
+interface StoreProps {
+  reviewsModeSelection: number;
+  platformSelection: number;
+}
+
+type Props = StoreProps;
 
 interface State {
   open: boolean;
-  reviewsModeSelection: number;
-  platformSelection: number;
   defs?: D2ManifestDefinitions;
 }
 
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    reviewsModeSelection: state.settings.reviewsModeSelection,
+    platformSelection: state.settings.reviewsPlatformSelection
+  };
+}
+
 // TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.
-export default class RatingMode extends React.Component<{}, State> {
+class RatingMode extends React.Component<Props, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
   private _reviewModeOptions?: D2ReviewMode[];
 
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-      reviewsModeSelection: settings.reviewsModeSelection,
-      platformSelection: settings.reviewsPlatformSelection
+      open: false
     };
   }
 
@@ -35,7 +48,8 @@ export default class RatingMode extends React.Component<{}, State> {
   }
 
   render() {
-    const { open, reviewsModeSelection, defs, platformSelection } = this.state;
+    const { open, defs } = this.state;
+    const { reviewsModeSelection, platformSelection } = this.props;
 
     if (!defs) {
       return null;
@@ -82,9 +96,9 @@ export default class RatingMode extends React.Component<{}, State> {
                     value={platformSelection}
                     onChange={this.platformChange}
                   >
-                    {getPlatformOptions().map((r) => (
+                    {reviewPlatformOptions.map((r) => (
                       <option key={r.description} value={r.platform}>
-                        {r.description}
+                        {t(r.description)}
                       </option>
                     ))}
                   </select>
@@ -120,9 +134,8 @@ export default class RatingMode extends React.Component<{}, State> {
     }
 
     const newModeSelection = e.target.value;
-    settings.reviewsModeSelection = newModeSelection;
+    store.dispatch(setSetting('reviewsModeSelection', newModeSelection));
     D2StoresService.refreshRatingsData();
-    this.setState({ reviewsModeSelection: newModeSelection });
     $rootScope.$broadcast('dim-refresh');
   };
 
@@ -132,9 +145,10 @@ export default class RatingMode extends React.Component<{}, State> {
     }
 
     const newPlatformSelection = e.target.value;
-    settings.reviewsPlatformSelection = newPlatformSelection;
+    store.dispatch(setSetting('reviewsPlatformSelection', newPlatformSelection));
     D2StoresService.refreshRatingsData();
-    this.setState({ platformSelection: newPlatformSelection });
     $rootScope.$broadcast('dim-refresh');
   };
 }
+
+export default connect<StoreProps>(mapStateToProps)(RatingMode);

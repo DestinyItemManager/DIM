@@ -1,9 +1,8 @@
 import * as _ from 'underscore';
-import { itemTags } from '../settings/settings';
 import template from './item-tag.html';
 import './item-tag.scss';
 import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
-import { TagValue } from '../inventory/dim-item-info';
+import { TagValue, itemTags } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 
 export const ItemTagComponent: IComponentOptions = {
