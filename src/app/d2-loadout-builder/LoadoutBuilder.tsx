@@ -100,6 +100,7 @@ function getActiveHighestSets(
 ): ArmorSet[] {
   let count = 0;
   const matchedSets: ArmorSet[] = [];
+  // TODO: this lookup by tier is expensive
   Object.values(setMap).forEach((setType) => {
     // limit to render just 10 sets, for now.
     if (count >= 10) {
@@ -462,9 +463,10 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     if (!this.state.processedSets) {
       return;
     }
-    this.setState({ selectedTier: element.target.value });
-    const matchedSets = getActiveHighestSets(this.state.processedSets, element.target.value);
-    this.setState({ matchedSets });
+    this.setState({
+      selectedTier: element.target.value,
+      matchedSets: getActiveHighestSets(this.state.processedSets, element.target.value)
+    });
   };
 
   createLoadout(element): Loadout {
@@ -506,7 +508,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
   render() {
     const { storesLoaded, stores, buckets } = this.props;
-    const { lockedMap, setTiers, selectedStore } = this.state;
+    const { lockedMap, setTiers, selectedStore, processRunning } = this.state;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -555,74 +557,76 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           </div>
         </div>
 
-        {this.state.processRunning > 0 && (
-          <h3>Generating builds... {this.state.processRunning}%</h3>
-        )}
+        {processRunning > 0 && <h3>Generating builds... {this.state.processRunning}%</h3>}
 
-        {this.state.setTiers.length !== 0 && (
-          <>
-            <h3>Select Build Tier</h3>
-            <select onChange={this.setSelectedTier}>
-              {setTiers.map((tier) => (
-                <option key={tier} value={tier} disabled={tier.charAt(0) === '-'}>
-                  {tier}
-                </option>
+        {processRunning === 0 &&
+          this.state.setTiers.length !== 0 && (
+            <>
+              <h3>Select Build Tier</h3>
+              <select onChange={this.setSelectedTier}>
+                {setTiers.map((tier) => (
+                  <option key={tier} value={tier} disabled={tier.charAt(0) === '-'}>
+                    {tier}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+
+        {processRunning === 0 &&
+          this.state.matchedSets && (
+            <>
+              <h3>Generated Builds</h3>
+              {this.state.matchedSets.map((set) => (
+                <div className="generated-build" key={set.setHash}>
+                  <div className="generated-build-buttons">
+                    <button className="dim-button" value={set.setHash} onClick={this.newLoadout}>
+                      Create Loadout
+                    </button>
+                    <button
+                      className="dim-button equip-button"
+                      value={set.setHash}
+                      onClick={this.equipItems}
+                    >
+                      Equip on {this.state.selectedStore!.name}
+                    </button>
+                  </div>
+                  <div className="sub-bucket">
+                    {Object.values(set.armor).map((item) => {
+                      return (
+                        <div className="generated-build-items" key={item.index}>
+                          <StoreInventoryItem
+                            item={item}
+                            isNew={false}
+                            // tag={getTag(item, itemInfos)}
+                            // rating={dtrRating ? dtrRating.overallScore : undefined}
+                            // hideRating={!showRating}
+                            searchHidden={false}
+                          />
+                          {item!.sockets!.categories.length === 2 &&
+                            item!
+                              .sockets!.categories[0].sockets.filter(filterPlugs)
+                              .map((socket) => (
+                                <PressTip
+                                  key={socket!.plug!.plugItem.hash}
+                                  tooltip={<PlugTooltip item={item} socket={socket} />}
+                                >
+                                  <div>
+                                    <BungieImage
+                                      className="item-mod"
+                                      src={socket!.plug!.plugItem.displayProperties.icon}
+                                    />
+                                  </div>
+                                </PressTip>
+                              ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               ))}
-            </select>
-          </>
-        )}
-
-        {this.state.matchedSets && (
-          <>
-            <h3>Generated Builds</h3>
-            {this.state.matchedSets.map((set) => (
-              <div className="generated-build" key={set.setHash}>
-                <div className="generated-build-buttons">
-                  <button className="dim-button" value={set.setHash} onClick={this.newLoadout}>
-                    Create Loadout
-                  </button>
-                  <button
-                    className="dim-button equip-button"
-                    value={set.setHash}
-                    onClick={this.equipItems}
-                  >
-                    Equip on {this.state.selectedStore!.name}
-                  </button>
-                </div>
-                <div className="sub-bucket">
-                  {Object.values(set.armor).map((item) => {
-                    return (
-                      <div className="generated-build-items" key={item.index}>
-                        <StoreInventoryItem
-                          item={item}
-                          isNew={false}
-                          // tag={getTag(item, itemInfos)}
-                          // rating={dtrRating ? dtrRating.overallScore : undefined}
-                          // hideRating={!showRating}
-                          searchHidden={false}
-                        />
-                        {item!.sockets!.categories.length === 2 &&
-                          item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
-                            <PressTip
-                              key={socket!.plug!.plugItem.hash}
-                              tooltip={<PlugTooltip item={item} socket={socket} />}
-                            >
-                              <div>
-                                <BungieImage
-                                  className="item-mod"
-                                  src={socket!.plug!.plugItem.displayProperties.icon}
-                                />
-                              </div>
-                            </PressTip>
-                          ))}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </>
-        )}
+            </>
+          )}
         <LoadoutDrawer loadout={this.state.loadout} onClose={this.resetActiveLoadout} />
       </div>
     );
