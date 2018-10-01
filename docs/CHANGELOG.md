@@ -1,6 +1,7 @@
 # Next
 
 * New option to manually sort your characters.
+* No longer forgetting what perks we recommended.
 
 # 4.72.0 (2018-09-30)
 
