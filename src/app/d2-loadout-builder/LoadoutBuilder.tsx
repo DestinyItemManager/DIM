@@ -36,6 +36,7 @@ interface Props {
 }
 
 interface State {
+  processRunning: number;
   loadout?: Loadout;
   lockedMap: {};
   processedSets?: {};
@@ -54,7 +55,7 @@ const items: {
   [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
 } = {};
 
-// let killProcess = false;
+let killProcess = false;
 
 type ArmorTypes = 'Helmet' | 'Gauntlets' | 'Chest' | 'Leg' | 'ClassItem';
 type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
@@ -113,7 +114,7 @@ function getActiveHighestSets(
   return matchedSets;
 }
 
-function process(armor, callback) {
+function process(armor) {
   const pstart = performance.now();
   const helms = armor[lockableBuckets.helmet] || [];
   const gaunts = armor[lockableBuckets.gauntlets] || [];
@@ -225,13 +226,14 @@ function process(armor, callback) {
 
               processedCount++;
               if (processedCount % 50000 === 0) {
-                // if (killProcess) {
-                //   console.log('Killing existing process to start new.');
-                //   killProcess = false;
-                //   return;
-                // }
+                if (killProcess) {
+                  this.setState({ processRunning: 0 });
+                  killProcess = false;
+                  return;
+                }
+                this.setState({ processRunning: Math.floor((processedCount / combos) * 100) });
                 return window.requestAnimationFrame(() => {
-                  step(h, g, c, l, ci, processedCount);
+                  step.call(this, h, g, c, l, ci, processedCount);
                 });
               }
             }
@@ -263,13 +265,22 @@ function process(armor, callback) {
       }
     }
 
-    callback(setMap, setTiers);
+    let selectedTier = this.state.selectedTier;
+    if (!setTiers.includes(selectedTier)) {
+      selectedTier = setTiers[1];
+    }
 
-    // Finish progress
+    this.setState({
+      setTiers,
+      selectedTier,
+      processedSets: setMap,
+      matchedSets: getActiveHighestSets(setMap, selectedTier),
+      processRunning: 0
+    });
     console.log('processed', combos, 'combinations in', performance.now() - pstart);
   }
 
-  return step();
+  return step.call(this);
 }
 
 /**
@@ -282,6 +293,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
   constructor(props: Props) {
     super(props);
     this.state = {
+      processRunning: 0,
       setTiers: [],
       selectedTier: '7/7/7', // what is the defacto "best", akin to 5/5/2?
       lockedMap: {}
@@ -311,40 +323,44 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
     this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
       (stores) => {
-        if (stores) {
-          this.setState({ selectedStore: stores.find((s) => s.current) });
-          for (const store of stores) {
-            for (const item of store.items) {
-              if (
-                !item ||
-                !item.sockets ||
-                !item.bucket.inArmor ||
-                !['Exotic', 'Legendary'].includes(item.tier)
-              ) {
-                continue;
-              }
-              if (!perks[item.classType]) {
-                perks[item.classType] = {};
-                items[item.classType] = {};
-              }
-              if (!perks[item.classType][item.bucket.hash]) {
-                perks[item.classType][item.bucket.hash] = new Set<DestinyInventoryItemDefinition>();
-                items[item.classType][item.bucket.hash] = [];
-              }
+        if (!stores) {
+          return;
+        }
 
-              if (!items[item.classType][item.bucket.hash][item.hash]) {
-                items[item.classType][item.bucket.hash][item.hash] = [];
-              }
-              items[item.classType][item.bucket.hash][item.hash].push(item);
-
-              // build the filtered unique perks item picker
-              item.sockets.categories.length === 2 &&
-                item.sockets.categories[0].sockets.filter(filterPlugs).forEach((socket) => {
-                  perks[item.classType][item.bucket.hash].add(socket!.plug!.plugItem);
-                });
+        this.setState({ selectedStore: stores.find((s) => s.current) });
+        for (const store of stores) {
+          for (const item of store.items) {
+            if (
+              !item ||
+              !item.sockets ||
+              !item.bucket.inArmor ||
+              !['Exotic', 'Legendary'].includes(item.tier)
+            ) {
+              continue;
             }
+            if (!perks[item.classType]) {
+              perks[item.classType] = {};
+              items[item.classType] = {};
+            }
+            if (!perks[item.classType][item.bucket.hash]) {
+              perks[item.classType][item.bucket.hash] = new Set<DestinyInventoryItemDefinition>();
+              items[item.classType][item.bucket.hash] = [];
+            }
+
+            if (!items[item.classType][item.bucket.hash][item.hash]) {
+              items[item.classType][item.bucket.hash][item.hash] = [];
+            }
+            items[item.classType][item.bucket.hash][item.hash].push(item);
+
+            // build the filtered unique perks item picker
+            item.sockets.categories.length === 2 &&
+              item.sockets.categories[0].sockets.filter(filterPlugs).forEach((socket) => {
+                perks[item.classType][item.bucket.hash].add(socket!.plug!.plugItem);
+              });
           }
         }
+
+        // sort exotic perks first
         Object.keys(perks).forEach((classType) =>
           Object.keys(perks[classType]).forEach(
             (bucket) =>
@@ -399,19 +415,17 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     });
 
     // re-process all sets
-    console.log('calculating new sets...');
-    process.call(this, filteredItems, (processedSets, setTiers) => {
-      let selectedTier = this.state.selectedTier;
-      if (!setTiers.includes(selectedTier)) {
-        selectedTier = setTiers[1];
-      }
+    this.startNewProcess(filteredItems);
+    this.setState({ lockedMap });
+  };
 
-      // get the sets to render for the selected tier
-      const matchedSets = getActiveHighestSets(processedSets, selectedTier);
+  startNewProcess = (filteredItems) => {
+    if (this.state.processRunning !== 0) {
+      killProcess = true;
+      return window.requestAnimationFrame(() => this.startNewProcess(filteredItems));
+    }
 
-      // finally... lets update that state... whew....
-      this.setState({ lockedMap, setTiers, selectedTier, processedSets, matchedSets });
-    });
+    process.call(this, filteredItems);
   };
 
   resetLocked = () => {
@@ -540,6 +554,10 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
             </button>
           </div>
         </div>
+
+        {this.state.processRunning > 0 && (
+          <h3>Generating builds... {this.state.processRunning}%</h3>
+        )}
 
         {this.state.setTiers.length !== 0 && (
           <>
