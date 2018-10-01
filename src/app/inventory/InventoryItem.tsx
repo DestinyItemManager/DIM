@@ -45,13 +45,14 @@ export default class InventoryItem extends React.Component<Props> {
       onDoubleClick
     } = this.props;
 
+    const badgeInfo = getBadgeInfo(item);
+
     const itemImageStyles = {
       complete: item.complete,
       diamond: (item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram,
-      masterwork: item.masterwork
+      masterwork: item.masterwork,
+      capped: badgeInfo.isCapped
     };
-
-    const badgeInfo = getBadgeInfo(item);
 
     const elaborateTile =
       $featureFlags.forsakenTiles &&

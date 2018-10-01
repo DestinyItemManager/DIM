@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DimStore, DimVault } from './store-types';
-import { Settings } from '../settings/settings';
 import { InventoryBuckets } from './inventory-buckets';
 import { t } from 'i18next';
 import './Stores.scss';
@@ -14,6 +13,7 @@ import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
 import { sortedStoresSelector } from './reducer';
+import { Settings } from '../settings/reducer';
 
 interface Props {
   stores: DimStore[];
@@ -29,7 +29,7 @@ interface State {
 }
 
 function mapStateToProps(state: RootState): Props {
-  const settings = state.settings.settings as Settings;
+  const settings = state.settings;
   return {
     stores: sortedStoresSelector(state),
     buckets: state.inventory.buckets!,
@@ -149,15 +149,11 @@ class Stores extends React.Component<Props, State> {
           (category) =>
             categoryHasItems(buckets, category, stores) && (
               <div key={category} className="section">
-                <CollapsibleTitle
-                  title={t(`Bucket.${category}`)}
-                  sectionId={category}
-                  collapsedSections={collapsedSections}
-                />
-                {!collapsedSections[category] &&
-                  buckets.byCategory[category].map((bucket) => (
+                <CollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category}>
+                  {buckets.byCategory[category].map((bucket) => (
                     <StoreBuckets key={bucket.id} bucket={bucket} stores={stores} vault={vault} />
                   ))}
+                </CollapsibleTitle>
               </div>
             )
         )}

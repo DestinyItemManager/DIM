@@ -30,6 +30,7 @@ function LoadoutDrawerCtrl(
     account: DestinyAccount;
     stores: DimStore[];
     loadout?: Loadout & { warnitems?: DimItem[] };
+    settings: typeof settings;
   },
   $scope: IScope,
   toaster,

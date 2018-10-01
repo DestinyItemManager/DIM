@@ -1,5 +1,5 @@
 import { copy } from 'angular';
-import { settings as dimSettings } from '../settings/settings';
+import { settings } from '../settings/settings';
 import * as _ from 'underscore';
 import { sum } from '../util';
 import { getBuckets } from '../destiny1/d1-buckets.service';
@@ -43,8 +43,6 @@ function FarmingService() {
     'BUCKET_MATERIALS'
   ];
 
-  const settings = dimSettings.farming;
-
   const outOfSpaceWarning = _.throttle((store) => {
     toaster.pop(
       'info',
@@ -63,7 +61,7 @@ function FarmingService() {
     moveItemsToVault(items: D1Item[], incrementCounter: boolean) {
       return getBuckets().then((buckets) => {
         const reservations: MoveReservations = {};
-        if (settings.makeRoomForItems) {
+        if (settings.farming.makeRoomForItems) {
           // reserve one space in the active character
           reservations[this.store.id] = {};
           makeRoomTypes.forEach((type) => {
@@ -225,7 +223,7 @@ function FarmingService() {
         );
 
         this.farmItems().then(() => {
-          if (settings.makeRoomForItems) {
+          if (settings.farming.makeRoomForItems) {
             this.makeRoomForItems();
           }
         });

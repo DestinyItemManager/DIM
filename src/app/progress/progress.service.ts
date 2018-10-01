@@ -96,6 +96,7 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
     } catch (e) {
       console.error('Failed to load vendors', e);
     }
+
     const defs = await defsPromise;
     return {
       defs,

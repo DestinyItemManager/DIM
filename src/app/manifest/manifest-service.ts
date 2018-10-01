@@ -13,7 +13,7 @@ import { requireSqlLib } from './database';
 import { reportException } from '../exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
-import { settings } from '../settings/settings';
+import { settings, settingsReady } from '../settings/settings';
 import { $rootScope } from 'ngimport';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
@@ -163,7 +163,7 @@ class ManifestService {
   private loadManifest(): Promise<Uint8Array> {
     return Promise.all([
       this.getManifestApi(),
-      settings.ready // wait for settings to be ready
+      settingsReady // wait for settings to be ready
     ]).then(([data]: [DestinyManifest, {}]) => {
       const language = settings.language;
       const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;

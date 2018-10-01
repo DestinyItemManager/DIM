@@ -1,31 +1,27 @@
-import { t } from 'i18next';
-
 export interface DtrPlatformOption {
   platform: number;
   description: string;
 }
 
-export function getPlatformOptions(): DtrPlatformOption[] {
-  return [
-    {
-      platform: 0,
-      description: t('DtrReview.Platforms.All')
-    },
-    {
-      platform: 1,
-      description: t('DtrReview.Platforms.Xbox')
-    },
-    {
-      platform: 2,
-      description: t('DtrReview.Platforms.Playstation')
-    },
-    {
-      platform: 3,
-      description: t('DtrReview.Platforms.AllConsoles')
-    },
-    {
-      platform: 4,
-      description: t('DtrReview.Platforms.Pc')
-    }
-  ];
-}
+export const reviewPlatformOptions: DtrPlatformOption[] = [
+  {
+    platform: 0,
+    description: 'DtrReview.Platforms.All'
+  },
+  {
+    platform: 1,
+    description: 'DtrReview.Platforms.Xbox'
+  },
+  {
+    platform: 2,
+    description: 'DtrReview.Platforms.Playstation'
+  },
+  {
+    platform: 3,
+    description: 'DtrReview.Platforms.AllConsoles'
+  },
+  {
+    platform: 4,
+    description: 'DtrReview.Platforms.Pc'
+  }
+];
