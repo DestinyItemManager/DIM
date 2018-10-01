@@ -6,13 +6,13 @@ import store from '../store/store';
 import { loaded } from './actions';
 import { observeStore } from '../redux-utils';
 import { Unsubscribe } from 'redux';
-import { Settings } from './reducer';
+import { Settings, initialSettingsState } from './reducer';
 
 let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 
 // This is a backwards-compatibility shim for all the code that directly uses settings
-export let settings: Settings;
+export let settings = initialSettingsState;
 
 const saveSettings = _.throttle((settings) => {
   return SyncService.set({
