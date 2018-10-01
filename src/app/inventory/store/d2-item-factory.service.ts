@@ -909,21 +909,23 @@ function buildSockets(
     return null;
   }
 
-  const realSockets = sockets
-    .filter((s) => s.isVisible)
-    .map((socket, i) => buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i));
+  const realSockets = sockets.map((socket, i) =>
+    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i)
+  );
 
   const categories = itemDef.sockets.socketCategories.map(
     (category): DimSocketCategory => {
       return {
         category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes.map((index) => realSockets[index]).filter(Boolean)
+        sockets: category.socketIndexes
+          .map((index) => realSockets[index])
+          .filter(Boolean) as DimSocket[]
       };
     }
   );
 
   return {
-    sockets: realSockets, // Flat list of sockets
+    sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
     categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
   };
 }
@@ -1081,7 +1083,11 @@ function buildSocket(
   socket: DestinyItemSocketState,
   socketEntry: DestinyItemSocketEntryDefinition,
   index: number
-): DimSocket {
+): DimSocket | undefined {
+  if (!socket.isVisible) {
+    return undefined;
+  }
+
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
   const reusablePlugs = compact(
