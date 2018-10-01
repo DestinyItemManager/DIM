@@ -1094,10 +1094,12 @@ export function searchFilters(
           item.sockets.sockets.some((socket) => {
             return !!(
               socket.plug &&
-              ![2323986101, 2600899007, 1835369552].includes(socket.plug.plugItem.hash) &&
+              ![2323986101, 2600899007, 1835369552, 3851138800].includes(
+                socket.plug.plugItem.hash
+              ) &&
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
-                /(v400.weapon.mod_guns|enhancements.)/
+                /(v400.weapon.mod_(guns|damage)|enhancements.)/
               )
             );
           })
