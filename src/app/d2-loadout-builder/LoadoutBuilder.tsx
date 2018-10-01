@@ -338,9 +338,10 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
               items[item.classType][item.bucket.hash][item.hash].push(item);
 
               // build the filtered unique perks item picker
-              item.sockets.categories[0].sockets.filter(filterPlugs).forEach((socket) => {
-                perks[item.classType][item.bucket.hash].add(socket!.plug!.plugItem);
-              });
+              item.sockets.categories.length === 2 &&
+                item.sockets.categories[0].sockets.filter(filterPlugs).forEach((socket) => {
+                  perks[item.classType][item.bucket.hash].add(socket!.plug!.plugItem);
+                });
             }
           }
         }
@@ -582,19 +583,20 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
                           // hideRating={!showRating}
                           searchHidden={false}
                         />
-                        {item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
-                          <PressTip
-                            key={socket!.plug!.plugItem.hash}
-                            tooltip={<PlugTooltip item={item} socket={socket} />}
-                          >
-                            <div>
-                              <BungieImage
-                                className="item-mod"
-                                src={socket!.plug!.plugItem.displayProperties.icon}
-                              />
-                            </div>
-                          </PressTip>
-                        ))}
+                        {item!.sockets!.categories.length === 2 &&
+                          item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
+                            <PressTip
+                              key={socket!.plug!.plugItem.hash}
+                              tooltip={<PlugTooltip item={item} socket={socket} />}
+                            >
+                              <div>
+                                <BungieImage
+                                  className="item-mod"
+                                  src={socket!.plug!.plugItem.displayProperties.icon}
+                                />
+                              </div>
+                            </PressTip>
+                          ))}
                       </div>
                     );
                   })}
