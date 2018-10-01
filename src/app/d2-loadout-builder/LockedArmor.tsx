@@ -1,23 +1,24 @@
-import './loadoutbuilder.scss';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
-import * as classNames from 'classnames';
 import { UIViewInjectedProps } from '@uirouter/react';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import * as classNames from 'classnames';
+import * as React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { InventoryBucket } from '../inventory/inventory-buckets';
-import LoadoutBucketDropTarget from './LoadoutBucketDropTarget';
-import { DimItem, D2Item } from '../inventory/item-types';
-import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import InventoryItem from '../inventory/InventoryItem';
+import { D2Item } from '../inventory/item-types';
+import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import StoreInventoryItem from '../inventory/StoreInventoryItem';
+import LoadoutBucketDropTarget from './LoadoutBucketDropTarget';
+import { LockType } from './LoadoutBuilder';
+import './loadoutbuilder.scss';
 
 interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
   perks: DestinyInventoryItemDefinition[];
-  locked: DimItem[];
-  onLockChanged(bucket: InventoryBucket, locked: DimItem[]): void;
+  locked?: LockType;
+  onLockChanged(bucket: InventoryBucket, locked?: LockType): void;
 }
 
 interface State {
@@ -44,23 +45,35 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
   };
 
   reset = () => {
-    this.props.onLockChanged(this.props.bucket, []);
+    this.props.onLockChanged(this.props.bucket);
   };
 
-  setLockedItem = (lockedItem: DimItem) => {
-    this.props.onLockChanged(this.props.bucket, [lockedItem]);
+  setLockedItem = (lockedItem: D2Item) => {
+    this.props.onLockChanged(this.props.bucket, {
+      type: 'item',
+      items: [lockedItem]
+    });
   };
 
-  toggleLockedPerk = (lockedPerk: DimItem) => {
-    const newPerks = new Set(this.props.locked);
+  toggleLockedPerk = (lockedPerk: D2Item) => {
+    let newPerks = new Set();
+    if (this.props.locked && this.props.locked.type === 'perk') {
+      newPerks = new Set(this.props.locked.items);
+    }
     if (newPerks.has(lockedPerk)) {
       newPerks.delete(lockedPerk);
     } else {
       newPerks.add(lockedPerk);
     }
 
-    const locked = Array.from(newPerks);
-    this.props.onLockChanged(this.props.bucket, locked);
+    if (newPerks.size === 0) {
+      return this.props.onLockChanged(this.props.bucket);
+    }
+
+    this.props.onLockChanged(this.props.bucket, {
+      type: 'perk',
+      items: Array.from(newPerks)
+    });
   };
 
   resetHover = () => {
@@ -69,8 +82,8 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
   setHoveredPerk = (hoveredPerk: string) => {
     this.setState({ hoveredPerk });
   };
-  setTab = (element) => {
-    this.setState({ tabSelected: element.target.dataset.tab });
+  setTab = (event) => {
+    this.setState({ tabSelected: event.target.dataset.tab });
   };
 
   render() {
@@ -80,7 +93,9 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     return (
       <div className="locked-item">
         <LoadoutBucketDropTarget bucketType={bucket.type!} onItemLocked={this.setLockedItem}>
-          {locked.length !== 0 && <div className="close" onClick={this.reset} />}
+          {locked &&
+            locked.items &&
+            locked.items.length !== 0 && <div className="close" onClick={this.reset} />}
           <LockedItem {...{ locked, bucket, toggleOpen: this.openPerkSelect, reset: this.reset }} />
         </LoadoutBucketDropTarget>
 
@@ -104,42 +119,25 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
               <div className="close" onClick={this.closePerkSelect} />
             </div>
 
-            {tabSelected === 'items' && (
-              <>
-                <div>Drag item to lock</div>
-                <div className="add-perk-options-content">
-                  {Object.values(items).map((instances) =>
-                    instances.map((item) => {
-                      return (
-                        <StoreInventoryItem
-                          key={item.index}
-                          item={item}
-                          isNew={false}
-                          // tag={getTag(item, itemInfos)}
-                          // rating={dtrRating ? dtrRating.overallScore : undefined}
-                          // hideRating={!showRating}
-                          searchHidden={false}
-                        />
-                      );
-                    })
-                  )}
-                </div>
-              </>
-            )}
+            {tabSelected === 'items' && <LockableItems items={items} locked={locked} />}
             {tabSelected === 'perks' && (
               <>
-                {locked.length !== 0 && (
-                  <button className="clear" onClick={this.reset}>
-                    Reset
-                  </button>
-                )}
+                {locked &&
+                  locked.items &&
+                  locked.items.length !== 0 && (
+                    <button className="clear" onClick={this.reset}>
+                      Reset
+                    </button>
+                  )}
                 <div>{hoveredPerk}</div>
                 <div className="add-perk-options-content" onMouseLeave={this.resetHover}>
                   {perks &&
                     perks.map((perk) => (
                       <SelectableBungieImage
                         key={perk.hash}
-                        selected={locked.find((p) => p.hash === perk.hash)}
+                        selected={
+                          locked && locked.items && locked.items.find((p) => p.hash === perk.hash)
+                        }
                         perk={perk}
                         onLockedPerk={this.toggleLockedPerk}
                         onHoveredPerk={this.setHoveredPerk}
@@ -154,6 +152,61 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     );
   }
 }
+
+const LockableItems = (props) => {
+  const onExclude = (item) => {
+    props.onLockChanged(this.props.bucket, {
+      type: 'exclude',
+      items: [item]
+    });
+  };
+
+  return (
+    <>
+      <div>Drag item to lock (Shift-click to exclude)</div>
+      <div className="add-perk-options-content">
+        {Object.values(props.items).map((instances: D2Item[]) =>
+          instances.map((item) => (
+            <ExcludableItem key={item.id} item={item} locked={props.locked} onExclude={onExclude} />
+          ))
+        )}
+      </div>
+    </>
+  );
+};
+
+const ExcludableItem = (props) => {
+  // const handleShiftClick = (event) => {
+  //   if (event.shiftKey) {
+  //     props.onLockChanged(this.props.bucket, {
+  //       type: 'exclude',
+  //       items: []
+  //     });
+  //     event.preventDefault();
+  //   }
+  // };
+
+  return (
+    <div
+      className={classNames({
+        selected:
+          props.locked &&
+          props.locked.items &&
+          props.locked.items.find((p) => p.index === props.item.index)
+      })}
+      // onClick={handleShiftClick}
+    >
+      <StoreInventoryItem
+        item={props.item}
+        isNew={false}
+        // tag={getTag(item, itemInfos)}
+        // rating={dtrRating ? dtrRating.overallScore : undefined}
+        // hideRating={!showRating}
+        searchHidden={false}
+      />
+    </div>
+  );
+};
 
 const SelectableBungieImage = (props) => {
   const handleClick = () => {
@@ -177,43 +230,59 @@ const SelectableBungieImage = (props) => {
 };
 
 const LockedItem = (props) => {
-  if (props.locked && props.locked[0] && props.locked[0].equipment) {
+  // Nothing locked
+  if (!props.locked) {
     return (
-      <ItemPopupTrigger item={props.locked[0]}>
-        <InventoryItem item={props.locked[0]} />
+      <div className="empty-item" onClick={props.toggleOpen}>
+        <div className="add-perk-container">
+          <div className="add-perk-text">Lock {props.bucket.name}</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Multi-things locked
+  if (props.locked.items.length > 1) {
+    return (
+      <div className="empty-item" onClick={props.toggleOpen}>
+        <div
+          className={classNames('add-perk-container', {
+            'has-locked': props.locked.items.length
+          })}
+        >
+          <div className="add-perk-text">
+            {props.locked.items.length}{' '}
+            {props.locked.type === 'exclude' ? 'excluded' : 'locked perks'}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const item = props.locked.items[0];
+
+  // one item locked/excluded
+  if (props.locked.type === 'exclude' || props.locked.type === 'item') {
+    return (
+      <ItemPopupTrigger item={item}>
+        <InventoryItem item={item} />
       </ItemPopupTrigger>
     );
   }
 
-  if (props.locked && props.locked.length) {
-    if (props.locked.length > 1) {
-      return (
-        <div className="empty-item" onClick={props.toggleOpen}>
-          <div className={classNames('add-perk-container', { 'has-locked': props.locked.length })}>
-            <div className="add-perk-text">{props.locked.length} locked perks</div>
-          </div>
-        </div>
-      );
-    }
+  // one perk locked
+  if (props.locked.type === 'perk') {
     return (
       <div onClick={props.toggleOpen}>
-        {props.locked.map((lockedPerk) => (
-          <BungieImage
-            key={lockedPerk.hash}
-            className="empty-item"
-            title={lockedPerk.displayProperties.name}
-            src={lockedPerk.displayProperties.icon}
-          />
-        ))}
+        <BungieImage
+          key={item.hash}
+          className="empty-item"
+          title={item.displayProperties.name}
+          src={item.displayProperties.icon}
+        />
       </div>
     );
   }
 
-  return (
-    <div className="empty-item" onClick={props.toggleOpen}>
-      <div className="add-perk-container">
-        <div className="add-perk-text">Lock {props.bucket.name}</div>
-      </div>
-    </div>
-  );
+  return null;
 };
