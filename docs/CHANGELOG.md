@@ -1,6 +1,7 @@
 # Next
 
 * Add searches `is:transmat`, `is:armormod`, `is:weaponmod`, and `is:transmat`, and removed D1 `is:primaryweaponengram`, `is:specialweaponengram`, and `is:heavyweaponengram`.
+* Show daily gambit challenge and daily heroic adventure in milestones.
 
 # 4.71.0 (2018-09-23)
 
