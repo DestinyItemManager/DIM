@@ -14,6 +14,8 @@ import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
 import { sortedStoresSelector } from './reducer';
 import { Settings } from '../settings/reducer';
+import LoadoutPopup from '../loadout/LoadoutPopup';
+import ClickOutside from '../dim-ui/ClickOutside';
 
 interface Props {
   stores: DimStore[];
@@ -26,6 +28,7 @@ interface Props {
 
 interface State {
   selectedStoreId?: string;
+  loadoutPopupOpenFor?: string;
 }
 
 function mapStateToProps(state: RootState): Props {
@@ -51,7 +54,7 @@ class Stores extends React.Component<Props, State> {
 
   render() {
     const { stores, buckets, isPhonePortrait } = this.props;
-    const { selectedStoreId } = this.state;
+    const { selectedStoreId, loadoutPopupOpenFor } = this.state;
 
     if (!stores.length || !buckets) {
       return null;
@@ -81,10 +84,12 @@ class Stores extends React.Component<Props, State> {
                   {stores.map((store) => (
                     <View className="store-cell" key={store.id}>
                       <StoreHeading
-                        internalLoadoutMenu={false}
                         store={store}
+                        internalLoadoutMenu={false}
                         selectedStore={selectedStore}
                         onTapped={this.selectStore}
+                        loadoutPopupOpen={false}
+                        onLoadoutPopupOpen={this.onLoadoutPopupOpen}
                       />
                     </View>
                   ))}
@@ -93,7 +98,13 @@ class Stores extends React.Component<Props, State> {
             </ViewPager>
           </ScrollClassDiv>
 
-          <div className="detached" loadout-id={selectedStore.id} />
+          {loadoutPopupOpenFor === selectedStore.id && (
+            <div className="loadout-menu detached">
+              <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu}>
+                <LoadoutPopup dimStore={selectedStore} />
+              </ClickOutside>
+            </div>
+          )}
 
           <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
             {this.renderStores([selectedStore], vault)}
@@ -107,7 +118,12 @@ class Stores extends React.Component<Props, State> {
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
           {stores.map((store) => (
             <div className="store-cell" key={store.id}>
-              <StoreHeading internalLoadoutMenu={true} store={store} />
+              <StoreHeading
+                store={store}
+                internalLoadoutMenu={true}
+                loadoutPopupOpen={loadoutPopupOpenFor === store.id}
+                onLoadoutPopupOpen={this.onLoadoutPopupOpen}
+              />
             </div>
           ))}
         </ScrollClassDiv>
@@ -140,6 +156,16 @@ class Stores extends React.Component<Props, State> {
     this.setState({ selectedStoreId: storeId });
   };
 
+  private onLoadoutPopupOpen = (storeId: string, loadoutPopupOpen: boolean) => {
+    this.setState({ loadoutPopupOpenFor: loadoutPopupOpen ? storeId : undefined });
+  };
+
+  private clickOutsideLoadoutMenu = (e) => {
+    e.stopPropagation();
+    this.setState({ loadoutPopupOpenFor: undefined });
+  };
+
+  // TODO: move RenderStores to a component
   private renderStores(stores: DimStore[], vault: DimVault) {
     const { buckets, collapsedSections } = this.props;
 

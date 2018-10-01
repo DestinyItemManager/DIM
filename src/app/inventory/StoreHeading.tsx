@@ -11,16 +11,18 @@ import legendaryMarks from 'app/images/legendaryMarks.png';
 // tslint:disable-next-line:no-implicit-dependencies
 import legendaryShards from 'app/images/legendaryShards.png';
 import { InventoryBucket } from './inventory-buckets';
-import { ngDialog } from '../ngimport-more';
-import dialogTemplate from './dimStoreHeading.directive.dialog.html';
 import './StoreHeading.scss';
 import CharacterStats from './CharacterStats';
+import LoadoutPopup from '../loadout/LoadoutPopup';
+import ClickOutside from '../dim-ui/ClickOutside';
 
 interface Props {
   store: DimStore;
   internalLoadoutMenu: boolean;
   selectedStore?: DimStore;
+  loadoutPopupOpen: boolean;
   onTapped?(storeId: string): void;
+  onLoadoutPopupOpen(storeId: string, open: boolean): void;
 }
 
 function isVault(store: DimStore): store is DimVault {
@@ -28,15 +30,31 @@ function isVault(store: DimStore): store is DimVault {
 }
 
 export default class StoreHeading extends React.Component<Props> {
-  private dialogResult: any = null;
+  private menuTrigger = React.createRef<HTMLDivElement>();
 
   render() {
-    const { store, internalLoadoutMenu } = this.props;
+    const { store, internalLoadoutMenu, loadoutPopupOpen } = this.props;
+
+    // TODO: maybe manage the popup state internally after all...
+    const loadoutMenu = internalLoadoutMenu &&
+      loadoutPopupOpen && (
+        <div className="loadout-menu">
+          <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu}>
+            <LoadoutPopup dimStore={store} />
+          </ClickOutside>
+        </div>
+      );
+
+    // TODO: break up into some pure components
 
     if (isVault(store)) {
       return (
         <div className="character">
-          <div className="character-box vault" onClick={this.openLoadoutPopup}>
+          <div
+            className="character-box vault"
+            ref={this.menuTrigger}
+            onClick={this.openLoadoutPopup}
+          >
             <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
             <div className="details">
               <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />
@@ -61,7 +79,7 @@ export default class StoreHeading extends React.Component<Props> {
               />
             </div>
           </div>
-          {internalLoadoutMenu && <div className="loadout-menu" loadout-id={store.id} />}
+          {loadoutMenu}
           <div className="vault-capacity">
             {Object.keys(store.vaultCounts).map((bucketId) => (
               <PressTip
@@ -97,6 +115,7 @@ export default class StoreHeading extends React.Component<Props> {
             destiny2: store.isDestiny2()
           })}
           onClick={this.openLoadoutPopup}
+          ref={this.menuTrigger}
         >
           <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
           <div className="details">
@@ -125,7 +144,7 @@ export default class StoreHeading extends React.Component<Props> {
             />
           </div>
         </div>
-        {internalLoadoutMenu && <div className="loadout-menu" loadout-id={store.id} />}
+        {loadoutMenu}
         <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
       </div>
     );
@@ -134,30 +153,28 @@ export default class StoreHeading extends React.Component<Props> {
   private openLoadoutPopup = (e) => {
     e.stopPropagation();
 
-    const { store, internalLoadoutMenu, selectedStore, onTapped } = this.props;
+    const {
+      store,
+      internalLoadoutMenu,
+      selectedStore,
+      onTapped,
+      onLoadoutPopupOpen,
+      loadoutPopupOpen
+    } = this.props;
 
     if (store !== selectedStore && !internalLoadoutMenu) {
       onTapped && onTapped(store.id);
       return;
     }
 
-    if (this.dialogResult === null) {
-      ngDialog.closeAll();
-      this.dialogResult = ngDialog.open({
-        template: dialogTemplate,
-        plain: true,
-        appendTo: `div[loadout-id="${store.id}"]`,
-        overlay: false,
-        className: 'loadout-popup',
-        showClose: false,
-        data: store
-      });
 
-      this.dialogResult.closePromise.then(() => {
-        this.dialogResult = null;
-      });
-    } else {
-      this.dialogResult.close();
+    onLoadoutPopupOpen(store.id, !loadoutPopupOpen);
+  };
+
+  private clickOutsideLoadoutMenu = (e) => {
+    const { store, onLoadoutPopupOpen } = this.props;
+    if (!e || !this.menuTrigger.current || !this.menuTrigger.current.contains(e.target)) {
+      onLoadoutPopupOpen(store.id, false);
     }
   };
 }

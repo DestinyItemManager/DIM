@@ -1,4 +1,4 @@
-import { copy, IPromise } from 'angular';
+import { copy } from 'angular';
 import * as _ from 'underscore';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
@@ -47,13 +47,16 @@ interface DehydratedLoadout {
 
 export interface LoadoutServiceType {
   dialogOpen: boolean;
-  getLoadouts(): IPromise<Loadout[]>;
-  deleteLoadout(loadout: Loadout): IPromise<void>;
-  saveLoadout(loadout: Loadout): IPromise<void>;
+  getLoadouts(): Promise<Loadout[]>;
+  deleteLoadout(loadout: Loadout): Promise<void>;
+  saveLoadout(loadout: Loadout): Promise<void>;
   addItemToLoadout(item: DimItem, $event);
-  applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): IPromise<void>;
+  applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
   getLoadoutItemIds(destinyVersion: number): Promise<Set<string>>;
 }
+
+// TODO: un-object-ify, this holds no state!
+// at least, once dialogOpen is gone
 
 export const dimLoadoutService = LoadoutService();
 

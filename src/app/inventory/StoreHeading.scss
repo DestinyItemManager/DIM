@@ -194,14 +194,6 @@
   opacity: 0.8;
 }
 
-.loadout-menu {
-  position: relative;
-  max-width: 230px;
-  [role='button'] {
-    outline: none;
-  }
-}
-
 .current {
   &.character,
   &.character-swipe {
