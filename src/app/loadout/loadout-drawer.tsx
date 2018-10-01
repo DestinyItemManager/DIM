@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { t } from 'i18next';
-import { dimLoadoutService, Loadout } from './loadout.service';
-import { toaster } from '../ngimport-more';
+import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
+import { toaster } from '../ngimport-more';
+import { dimLoadoutService, Loadout } from './loadout.service';
 
 interface Props {
   loadout?: Loadout;

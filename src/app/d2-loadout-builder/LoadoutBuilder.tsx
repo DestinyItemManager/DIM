@@ -1,32 +1,32 @@
-import { DestinyProfileResponse, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
-import * as _ from 'underscore';
+import { UIViewInjectedProps } from '@uirouter/react';
+import { DestinyInventoryItemDefinition, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import { $rootScope } from 'ngimport';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { RootState } from '../store/reducers';
-import BungieImage from '../dim-ui/BungieImage';
+import { Subscription } from 'rxjs/Subscription';
+import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getKiosks } from '../bungie-api/destiny2-api';
-import { getDefinitions } from '../destiny2/d2-definitions.service';
-import { D2ManifestService } from '../manifest/manifest-service';
-import './loadoutbuilder.scss';
-import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
-import { Subscription } from 'rxjs/Subscription';
-import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
-import { DimStore } from '../inventory/store-types';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
-import { D2StoresService } from '../inventory/d2-stores.service';
-import { UIViewInjectedProps } from '@uirouter/react';
-import { loadingTracker } from '../ngimport-more';
-import { Loading } from '../dim-ui/Loading';
 import CharacterDropdown from '../character-select/dropdown';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
-import StoreInventoryItem from '../inventory/StoreInventoryItem';
-import { D2Item, DimSocket } from '../inventory/item-types';
-import LockedArmor from './LockedArmor';
+import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
+import { getDefinitions } from '../destiny2/d2-definitions.service';
+import BungieImage from '../dim-ui/BungieImage';
+import { Loading } from '../dim-ui/Loading';
 import PressTip from '../dim-ui/PressTip';
+import { D2StoresService } from '../inventory/d2-stores.service';
+import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import { D2Item, DimSocket } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
+import StoreInventoryItem from '../inventory/StoreInventoryItem';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import LoadoutDrawer from '../loadout/loadout-drawer';
+import { dimLoadoutService, Loadout } from '../loadout/loadout.service';
+import { D2ManifestService } from '../manifest/manifest-service';
+import { loadingTracker } from '../ngimport-more';
+import { RootState } from '../store/reducers';
+import './loadoutbuilder.scss';
+import LockedArmor from './LockedArmor';
 
 interface Props {
   account: DestinyAccount;
@@ -61,7 +61,7 @@ type ArmorTypes = 'Helmet' | 'Gauntlets' | 'Chest' | 'Leg' | 'ClassItem';
 type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
 
 interface ArmorSet {
-  armor: D2Item[]; // { [armorType in ArmorTypes]: D2Item };
+  armor: D2Item[];
   stats: { [statType in StatTypes]: number };
   setHash: string;
   includesVendorItems: boolean;
@@ -140,31 +140,9 @@ function process(armor) {
         stats.STAT_RESILIENCE += pieces[i].stats[1].base;
         stats.STAT_RECOVERY += pieces[i].stats[2].base;
       }
-      // switch (armor.bonusType) {
-      //   case 'int':
-      //     stats.STAT_MOBILITY.value += mob.bonus;
-      //     break;
-      //   case 'dis':
-      //     stats.STAT_RESILIENCE.value += res.bonus;
-      //     break;
-      //   case 'str':
-      //     stats.STAT_RECOVERY.value += rec.bonus;
-      //     break;
-      // }
     }
   }
 
-  // function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorTypes]: string } {
-  //   return {
-  //     Helmet: '', // armor.Helmet.bonusType,
-  //     Gauntlets: '', // armor.Gauntlets.bonusType,
-  //     Chest: '', // armor.Chest.bonusType,
-  //     Leg: '', // armor.Leg.bonusType,
-  //     ClassItem: '' // armor.ClassItem.bonusType
-  //   };
-  // }
-
-  // vm.hasSets = false;
   function step(h = 0, g = 0, c = 0, l = 0, ci = 0, processedCount = 0) {
     for (; h < helms.length; ++h) {
       for (; g < gaunts.length; ++g) {
@@ -198,12 +176,6 @@ function process(armor) {
 
                 tiersSet.add(tiersString);
 
-                // setMap[set.setHash] = {
-                //   set,
-                //   stats:
-                // };
-
-                // setMap[set.setHash] = set;
                 // Build a map of all sets but only keep one copy of armor
                 // so we reduce memory usage
                 if (setMap[set.setHash]) {
@@ -558,9 +530,8 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
         </div>
 
         {processRunning > 0 && <h3>Generating builds... {this.state.processRunning}%</h3>}
-
         {processRunning === 0 &&
-          this.state.setTiers.length !== 0 && (
+          setTiers.length !== 0 && (
             <>
               <h3>Select Build Tier</h3>
               <select onChange={this.setSelectedTier}>
@@ -572,7 +543,6 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
               </select>
             </>
           )}
-
         {processRunning === 0 &&
           this.state.matchedSets && (
             <>

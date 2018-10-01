@@ -1,12 +1,12 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import {
+  ConnectDropTarget,
   DropTarget,
-  DropTargetSpec,
   DropTargetConnector,
   DropTargetMonitor,
-  ConnectDropTarget
+  DropTargetSpec
 } from 'react-dnd';
-import * as classNames from 'classnames';
 import { DimItem } from '../inventory/item-types';
 
 interface ExternalProps {
