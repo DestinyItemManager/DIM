@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import CharacterDropdown from '../character-select/dropdown';
+import CharacterDropdown from '../character-select/CharacterDropdown';
 import BungieImage from '../dim-ui/BungieImage';
 import { Loading } from '../dim-ui/Loading';
 import PressTip from '../dim-ui/PressTip';
