@@ -43,12 +43,16 @@
   left: 6px;
 }
 .add-perk-options-title {
-  margin: 5px;
+  margin: 5px 0;
   display: flex;
   .close {
     top: 5px;
     right: 5px;
   }
+}
+.add-perk-options-details {
+  text-align: left;
+  padding: 5px;
 }
 .add-perk-options-content {
   cursor: pointer;

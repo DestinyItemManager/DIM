@@ -24,16 +24,13 @@ interface Props {
 interface State {
   tabSelected: string;
   isOpen: boolean;
-  hoveredPerk: string;
+  hoveredPerk?: { name: string; description: string };
 }
-
-const defaultPerkTitle = 'Select perks to lock';
 
 export default class LockedArmor extends React.Component<Props & UIViewInjectedProps, State> {
   state: State = {
     tabSelected: 'items',
-    isOpen: false,
-    hoveredPerk: defaultPerkTitle
+    isOpen: false
   };
 
   openPerkSelect = () => {
@@ -53,6 +50,10 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
       type: 'item',
       items: [lockedItem]
     });
+  };
+
+  onPerkHover = (hoveredPerk) => {
+    this.setState({ hoveredPerk });
   };
 
   toggleLockedPerk = (lockedPerk: D2Item) => {
@@ -76,12 +77,6 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     });
   };
 
-  resetHover = () => {
-    this.setState({ hoveredPerk: defaultPerkTitle });
-  };
-  setHoveredPerk = (hoveredPerk: string) => {
-    this.setState({ hoveredPerk });
-  };
   setTab = (event) => {
     this.setState({ tabSelected: event.target.dataset.tab });
   };
@@ -119,32 +114,18 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
               <div className="close" onClick={this.closePerkSelect} />
             </div>
 
-            {tabSelected === 'items' && <LockableItems items={items} locked={locked} />}
+            {tabSelected === 'items' && <LockableItems {...{ items, locked }} />}
             {tabSelected === 'perks' && (
-              <>
-                {locked &&
-                  locked.items &&
-                  locked.items.length !== 0 && (
-                    <button className="clear" onClick={this.reset}>
-                      Reset
-                    </button>
-                  )}
-                <div>{hoveredPerk}</div>
-                <div className="add-perk-options-content" onMouseLeave={this.resetHover}>
-                  {perks &&
-                    perks.map((perk) => (
-                      <SelectableBungieImage
-                        key={perk.hash}
-                        selected={
-                          locked && locked.items && locked.items.find((p) => p.hash === perk.hash)
-                        }
-                        perk={perk}
-                        onLockedPerk={this.toggleLockedPerk}
-                        onHoveredPerk={this.setHoveredPerk}
-                      />
-                    ))}
-                </div>
-              </>
+              <LockablePerks
+                {...{
+                  perks,
+                  locked,
+                  hoveredPerk,
+                  onPerkHover: this.onPerkHover,
+                  reset: this.reset,
+                  toggleLockedPerk: this.toggleLockedPerk
+                }}
+              />
             )}
           </ClickOutside>
         )}
@@ -171,6 +152,48 @@ const LockableItems = (props) => {
           ))
         )}
       </div>
+    </>
+  );
+};
+
+const LockablePerks = (props) => {
+  const isLocked = props.locked && props.locked.items && props.locked.items.length !== 0;
+
+  const resetHover = () => {
+    props.onPerkHover();
+  };
+  const setHoveredPerk = (hoveredPerk) => {
+    props.onPerkHover(hoveredPerk);
+  };
+
+  return (
+    <>
+      {isLocked && (
+        <button className="clear" onClick={props.reset}>
+          Reset
+        </button>
+      )}
+
+      <div>Select perks to lock</div>
+      <div className="add-perk-options-content" onMouseLeave={resetHover}>
+        {props.perks &&
+          props.perks.map((perk) => (
+            <SelectableBungieImage
+              key={perk.hash}
+              selected={isLocked && props.locked.items.find((p) => p.hash === perk.hash)}
+              perk={perk}
+              onLockedPerk={props.toggleLockedPerk}
+              onHoveredPerk={setHoveredPerk}
+            />
+          ))}
+      </div>
+
+      {props.hoveredPerk && (
+        <div className="add-perk-options-details">
+          <h3>{props.hoveredPerk.name}</h3>
+          <div>{props.hoveredPerk.description}</div>
+        </div>
+      )}
     </>
   );
 };
@@ -213,7 +236,7 @@ const SelectableBungieImage = (props) => {
     props.onLockedPerk(props.perk);
   };
   const handleHover = () => {
-    props.onHoveredPerk(props.perk.displayProperties.name);
+    props.onHoveredPerk(props.perk.displayProperties);
   };
 
   return (
@@ -277,7 +300,7 @@ const LockedItem = (props) => {
         <BungieImage
           key={item.hash}
           className="empty-item"
-          title={item.displayProperties.description}
+          title={item.displayProperties.name}
           src={item.displayProperties.icon}
         />
       </div>
