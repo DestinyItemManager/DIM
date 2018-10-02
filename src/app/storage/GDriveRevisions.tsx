@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import './GDriveRevisions.scss';
 import { GDriveRevision } from './google-drive-storage';
-import { dataStats } from './storage.component';
+import { dataStats } from './data-stats';
 import { SyncService } from './sync.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 

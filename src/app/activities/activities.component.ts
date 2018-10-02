@@ -9,6 +9,8 @@ import { IComponentOptions, IController, IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { D1Store } from '../inventory/store-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import store from '../store/store';
+import { toggleCollapsedSection } from '../settings/actions';
 
 export const ActivitiesComponent: IComponentOptions = {
   controller: ActivitiesController,
@@ -32,14 +34,8 @@ function ActivitiesController(
 
   vm.settings = settings;
 
-  vm.settingsChanged = () => {
-    vm.settings.save();
-  };
-
-  // TODO: it's time for a directive
   vm.toggleSection = (id) => {
-    vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
-    vm.settings.save();
+    store.dispatch(toggleCollapsedSection(id));
   };
 
   this.$onInit = () => {

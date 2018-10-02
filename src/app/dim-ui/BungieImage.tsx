@@ -33,5 +33,9 @@ export function bungieNetPath(src: BungieImagePath): string {
   if (!src) {
     return '';
   }
+  if (src.startsWith('~')) {
+    const baseUrl = $DIM_FLAVOR === 'dev' ? '' : 'https://beta.destinyitemmanager.com';
+    return `${baseUrl}${src.substr(1)}`;
+  }
   return `https://www.bungie.net${src}`;
 }

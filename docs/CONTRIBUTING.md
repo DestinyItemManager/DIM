@@ -10,24 +10,30 @@ Here are some tips to make sure your pull request can be merged smoothly:
 1. Don't forget to add a description of your change to `CHANGELOG.md` so it'll be included in the release notes!
 
 ## Developer Quick start
-Clone the repo:
 
-* `git clone https://github.com/DestinyItemManager/DIM.git`
+1. [Install Pre-requisites](#pre-requisites)
+1. [Clone](#clone-the-repo)
+1. [Get your own API key](#get-your-own-api-key)
+1. [Start Dev Server](#start-dev-server)
+1. [Enter API credentials](#enter-api-credentials)
 
-Install dependencies:
+### Pre-requisites
 
 * Install [NodeJS](https://nodejs.org/).
 * Install [Yarn](https://yarnpkg.com/en/docs/install). If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)". If you were already using NPM with DIM, run `yarn` to convert to Yarn. 
 * Windows-based developers will need to install `windows-build-tools` (`yarn global add windows-build-tools`) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
-* Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to runninng `yarn install`.
-* Run `yarn install`.
-  * Note that on Windows, the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
 * It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests.
+* Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to runninng `yarn install`.
 
-Check code Style
-* `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
+**Docker Supported Development**
+* As an alternative to installing the above, we support a docker-based development environment. See: [Docker Development Guide](Docker.md) 
 
-Get your own API key:
+
+### Clone the repo
+
+    git clone https://github.com/DestinyItemManager/DIM.git
+
+### Get your own API key:
 
 1. Goto [Bungie](https://www.bungie.net/en/Application)
 1. Click `Create New App`
@@ -36,7 +42,31 @@ Get your own API key:
 1. Set your redirect url to `https://127.0.0.1:8080/return.html` (or whatever the IP or hostname is of your dev server)
 1. Select all scopes _except_ the Administrate Groups/Clans
 1. Enter `https://127.0.0.1:8080` as the `Origin Header`
-1. Run `yarn install && yarn start`
+
+### Start Dev Server
+
+* Run `yarn install`
+* Run `yarn start`
+
+*Note:* on Windows, when running `yarn install` the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
+
+### Enter API Credentials
+
+This step will need to be done each time you clear your browser cache. You will be automatically redirected to a screen to enter these credentials
+if the app can't load them from local storage when it starts.
+
+1. Open your browser and navigate to [https://localhost:8080]()
 1. Copy your API-key, Oauth Client_id, and OAuth client_secret from bungie.net into DIM developer settings panel when it is loaded.
 
-Check out the [docs](https://github.com/DestinyItemManager/DIM/blob/master/docs) folder for more tips.
+### Development
+
+**Overview**
+
+The `yarn start` step will create a hot-loading webserver, and a TLS cert/key pair. You will access your local development site by visiting [https://localhost:8080]().
+You will likely get a security warning about the certificate not being trusted. This is because it's a self-signed cert generated dynamically for your environment,
+and is not signed by a recognized autority. Dismass/advance past these warning to view your local DIM application.
+
+**Check code Style**
+
+* `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
+Check out the [docs]() folder for more tips.

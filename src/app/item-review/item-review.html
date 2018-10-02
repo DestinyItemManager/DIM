@@ -4,10 +4,11 @@
       <div>
         <div class="review-setting-table--name">
           <label for="showReviews" ng-i18next="Settings.ShowReviews"></label>
-          <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md" target="_blank" rel="noopener noreferrer"></a>
+          <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
+            target="_blank" rel="noopener noreferrer"></a>
         </div>
         <div class="review-setting-table--value">
-          <input type="checkbox" id="showReviews" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.showReviews"/>
+          <input type="checkbox" id="showReviews" ng-change="$ctrl.valueChanged('showReviews')" ng-model="$ctrl.showReviews" />
         </div>
       </div>
       <div>
@@ -15,11 +16,12 @@
           <label for="allowIdPostToDtr" ng-i18next="Settings.AllowIdPostToDtr"></label>
           <div>
             <label class="fineprint" ng-i18next="Settings.AllowIdPostToDtrLine2"></label>
-            <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md" target="_blank" rel="noopener noreferrer"></a>
+            <a class="fa fa-question-circle stylizedAnchor" aria-hidden="true" href="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md"
+              target="_blank" rel="noopener noreferrer"></a>
           </div>
         </div>
         <div class="review-setting-table--value">
-          <input type="checkbox" id="allowIdPostToDtr" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.allowIdPostToDtr"/>
+          <input type="checkbox" id="allowIdPostToDtr" ng-change="$ctrl.valueChanged('allowIdPostToDtr')" ng-model="$ctrl.allowIdPostToDtr" />
         </div>
       </div>
     </div>
@@ -34,8 +36,8 @@
     <div class="stat-box-row" ng-repeat="rating in $ctrl.reviewLabels track by $index">
       <span class="stat-box-text stat-box-cell"> {{ rating }} </span>
       <span class="stat-box-outer"><span class="stat-box-container">
-        <span class="stat-box-inner rating-chart-bar-color" dim-percent-width="{{ $ctrl.reviewData[$index] / $ctrl.totalReviews }}"></span>
-      </span></span>
+          <span class="stat-box-inner rating-chart-bar-color" dim-percent-width="{{ $ctrl.reviewData[$index] / $ctrl.totalReviews }}"></span>
+        </span></span>
     </div>
   </div>
 </div>
@@ -45,24 +47,23 @@
 
   <div ng-if="$ctrl.item.destinyVersion === 2" class="user-review--thumbs">
     <div class="user-review--thumbs-up link" ng-click="$ctrl.setUserVote(1)">
-        <span class="user-review--thumbs-up-button">
-          <i class="fa fa-2x"
-             ng-class="{'fa-thumbs-o-up': $ctrl.item.dtrRating.userReview.voted !== 1, 'fa-thumbs-up': $ctrl.item.dtrRating.userReview.voted === 1}"
-             aria-hidden="true"></i>
-        </span>
+      <span class="user-review--thumbs-up-button">
+        <i class="fa fa-2x" ng-class="{'fa-thumbs-o-up': $ctrl.item.dtrRating.userReview.voted !== 1, 'fa-thumbs-up': $ctrl.item.dtrRating.userReview.voted === 1}"
+          aria-hidden="true"></i>
+      </span>
     </div>
 
     <div class="user-review--thumbs-down">
       <span class="user-review--thumbs-down-button" ng-click="$ctrl.setUserVote(-1)">
-        <i class="fa fa-2x"
-           ng-class="{'fa-thumbs-o-down': $ctrl.item.dtrRating.userReview.voted !== -1, 'fa-thumbs-down': $ctrl.item.dtrRating.userReview.voted === -1}"
-           aria-hidden="true"></i>
+        <i class="fa fa-2x" ng-class="{'fa-thumbs-o-down': $ctrl.item.dtrRating.userReview.voted !== -1, 'fa-thumbs-down': $ctrl.item.dtrRating.userReview.voted === -1}"
+          aria-hidden="true"></i>
       </span>
     </div>
   </div>
 
   <div ng-if="$ctrl.item.destinyVersion === 1">
-    <star-rating rating="$ctrl.item.dtrRating.userReview.rating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()" ng-click="$event.stopPropagation()"></star-rating>
+    <star-rating rating="$ctrl.item.dtrRating.userReview.rating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()"
+      ng-click="$event.stopPropagation()"></star-rating>
   </div>
 
   <span ng-show="$ctrl.expandReview">
@@ -74,36 +75,23 @@
 <div ng-if="$ctrl.canReview" class="community-review--details" ng-show="$ctrl.expandReview">
   <div ng-if="$ctrl.item.destinyVersion === 2" class="community-review--mode">
     <label for="reviewMode" ng-i18next="DtrReview.ForGameMode"></label>
-    <select id="reviewMode"
-      ng-model="$ctrl.item.dtrRating.userReview.mode"
-      ng-options="::reviewModeOption.mode as reviewModeOption.description for reviewModeOption in $ctrl.reviewModeOptions">
+    <select id="reviewMode" ng-model="$ctrl.item.dtrRating.userReview.mode" ng-options="::reviewModeOption.mode as reviewModeOption.description for reviewModeOption in $ctrl.reviewModeOptions">
     </select>
   </div>
-  <textarea ng-i18next="[placeholder]DtrReview.Help"
-            ng-if="$ctrl.item.destinyVersion === 1"
-            ng-model="$ctrl.item.dtrRating.userReview.review"
-            ng-blur="$ctrl.reviewBlur()"></textarea>
-  <textarea ng-i18next="[placeholder]DtrReview.Help"
-            ng-if="$ctrl.item.destinyVersion === 2"
-            ng-model="$ctrl.item.dtrRating.userReview.text"
-            ng-blur="$ctrl.reviewBlur()"></textarea>
+  <textarea ng-i18next="[placeholder]DtrReview.Help" ng-if="$ctrl.item.destinyVersion === 1" ng-model="$ctrl.item.dtrRating.userReview.review"
+    ng-blur="$ctrl.reviewBlur()"></textarea>
+  <textarea ng-i18next="[placeholder]DtrReview.Help" ng-if="$ctrl.item.destinyVersion === 2" ng-model="$ctrl.item.dtrRating.userReview.text"
+    ng-blur="$ctrl.reviewBlur()"></textarea>
   <div ng-if="$ctrl.procon" class="community-review--procon">
-    <textarea ng-i18next="[placeholder]DtrReview.HelpPros"
-              ng-model="$ctrl.item.dtrRating.userReview.pros"
-              ng-blur="$ctrl.reviewBlur()"></textarea>
-    <textarea ng-i18next="[placeholder]DtrReview.HelpCons"
-              ng-model="$ctrl.item.dtrRating.userReview.cons"
-              ng-blur="$ctrl.reviewBlur()"></textarea>
+    <textarea ng-i18next="[placeholder]DtrReview.HelpPros" ng-model="$ctrl.item.dtrRating.userReview.pros" ng-blur="$ctrl.reviewBlur()"></textarea>
+    <textarea ng-i18next="[placeholder]DtrReview.HelpCons" ng-model="$ctrl.item.dtrRating.userReview.cons" ng-blur="$ctrl.reviewBlur()"></textarea>
   </div>
 </div>
 
 <div ng-if="$ctrl.canReview" class="community-review--reviews" ng-hide="$ctrl.expandReview">
-  <div ng-if="$ctrl.submitted"
-       class="community-review--message"
-       ng-i18next="DtrReview.ThankYou"></div>
-  <div ng-if="!$ctrl.item.dtrRating.reviewsResponse.reviews.length && !$ctrl.submitted"
-       class="community-review--message"
-       ng-i18next="DtrReview.NoReviews"></div>
+  <div ng-if="$ctrl.submitted" class="community-review--message" ng-i18next="DtrReview.ThankYou"></div>
+  <div ng-if="!$ctrl.item.dtrRating.reviewsResponse.reviews.length && !$ctrl.submitted" class="community-review--message"
+    ng-i18next="DtrReview.NoReviews"></div>
   <div ng-if="$ctrl.procon" class="community-review--procon">
     <div>
       <div ng-i18next="DtrReview.Pros"></div>
@@ -122,8 +110,8 @@
           <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
           <div ng-bind="review.timestamp | date:'mediumDate'"></div>
           <div ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
-                          'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"
-               ng-click="$ctrl.openFlagContext(review.reviewId)"></div>
+                          'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }"
+            aria-hidden="true" ng-click="$ctrl.openFlagContext(review.reviewId)"></div>
         </div>
         <div class="community-review--review" ng-bind="review.review"></div>
       </div>
@@ -146,46 +134,45 @@
     </div>
     <div ng-if="$ctrl.item.destinyVersion === 2">
       <div ng-class="{'link community-review--clickable' : review.isReviewer}" ng-click="$ctrl.editReview(review.id)">
-          <div class="community-review--who">
-            <div ng-if="review.voted === 1">
-              <span class="community-review--thumbs-up">
-                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-              </span>
-            </div>
-            <div ng-if="review.voted === -1">
-              <span class="community-review--thumbs-down">
-                <i class="fa fa-thumbs-down" aria-hidden="true"></i>
-              </span>
-            </div>
-            <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
-            <div ng-bind="review.timestamp | date:'mediumDate'"></div>
-            <div ng-if="!$ctrl.item.isVendorItem"
-                 ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
-                            'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }" aria-hidden="true"
-                 ng-click="$ctrl.openFlagContext(review.id)"></div>
+        <div class="community-review--who">
+          <div ng-if="review.voted === 1">
+            <span class="community-review--thumbs-up">
+              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+            </span>
           </div>
-          <div class="community-review--game-mode">
-            <div class="community-review--game-mode-for" ng-i18next="DtrReview.ForGameMode"></div>
-            <div class="community-review--game-mode" ng-bind="$ctrl.translateReviewMode(review)"></div>
+          <div ng-if="review.voted === -1">
+            <span class="community-review--thumbs-down">
+              <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+            </span>
           </div>
-          <div class="community-review--review" ng-bind="review.text"></div>
+          <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
+          <div ng-bind="review.timestamp | date:'mediumDate'"></div>
+          <div ng-if="!$ctrl.item.isVendorItem" ng-class="{'fa fa-pencil-square-o' : review.isReviewer,
+                            'link fa fa-flag fa-2x community-review--clickable' : !review.isReviewer && !review.isHighlighted }"
+            aria-hidden="true" ng-click="$ctrl.openFlagContext(review.id)"></div>
         </div>
-        <div class="community-revew--report-container" ng-show="$ctrl.toggledFlags.indexOf(review.id) != -1">
-          <div class="community-review--report">
-            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-            <span ng-i18next="DtrReview.VerifyReport"></span>
-          </div>
-          <div class="community-review--report-buttons">
-            <button class="dim-button community-review--report-yes" ng-click="$ctrl.reportReview(review.id); $event.stopPropagation();">
-              <i class="fa fa-flag" aria-hidden="true"></i>
-              <span ng-i18next="DtrReview.ReallyReport"></span>
-            </button>
-            <button class="dim-button community-review--report-cancel" ng-click="$ctrl.closeFlagContext(review.id)">
-              <i class="fa fa-ban" aria-hidden="true"></i>
-              <span ng-i18next="DtrReview.Cancel"></span>
-            </button>
-          </div>
+        <div class="community-review--game-mode">
+          <div class="community-review--game-mode-for" ng-i18next="DtrReview.ForGameMode"></div>
+          <div class="community-review--game-mode" ng-bind="$ctrl.translateReviewMode(review)"></div>
         </div>
+        <div class="community-review--review" ng-bind="review.text"></div>
+      </div>
+      <div class="community-revew--report-container" ng-show="$ctrl.toggledFlags.indexOf(review.id) != -1">
+        <div class="community-review--report">
+          <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+          <span ng-i18next="DtrReview.VerifyReport"></span>
+        </div>
+        <div class="community-review--report-buttons">
+          <button class="dim-button community-review--report-yes" ng-click="$ctrl.reportReview(review.id); $event.stopPropagation();">
+            <i class="fa fa-flag" aria-hidden="true"></i>
+            <span ng-i18next="DtrReview.ReallyReport"></span>
+          </button>
+          <button class="dim-button community-review--report-cancel" ng-click="$ctrl.closeFlagContext(review.id)">
+            <i class="fa fa-ban" aria-hidden="true"></i>
+            <span ng-i18next="DtrReview.Cancel"></span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

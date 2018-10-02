@@ -4,8 +4,8 @@ import ManifestProgress from './ManifestProgress';
 import { $rootScope } from 'ngimport';
 import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
-import { itemTags } from '../settings/settings';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { itemTags } from '../inventory/dim-item-info';
 
 interface Props {
   account: DestinyAccount;

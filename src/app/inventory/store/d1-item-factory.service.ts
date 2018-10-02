@@ -79,9 +79,6 @@ const ItemProto = {
       factionItemAligns(store, this)
     );
   },
-  inCategory(this: D1Item, categoryName: string) {
-    return _.contains(this.categories, categoryName);
-  },
   canBeInLoadout(this: D1Item) {
     return this.equipment || this.type === 'Material' || this.type === 'Consumable';
   },
@@ -281,15 +278,6 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const categories = itemDef.itemCategoryHashes
-    ? _.compact(
-        itemDef.itemCategoryHashes.map((c) => {
-          const category = defs.ItemCategory.get(c);
-          return category ? category.identifier : null;
-        })
-      )
-    : [];
-
   const dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
   itemDef.sourceHashes = itemDef.sourceHashes || [];
@@ -309,7 +297,7 @@ function makeItem(
     hash: item.itemHash,
     // This is the type of the item (see dimCategory/dimBucketService) regardless of location
     type: itemType,
-    categories, // see defs.ItemCategory
+    itemCategoryHashes: itemDef.itemCategoryHashes || [],
     tier: tiers[itemDef.tierType] || 'Common',
     isExotic: tiers[itemDef.tierType] === 'Exotic',
     isVendorItem: !owner || owner.id === null,
@@ -332,7 +320,7 @@ function makeItem(
     amount: item.stackSize,
     primStat: item.primaryStat || null,
     typeName: itemDef.itemTypeName,
-    isEngram: categories.includes('CATEGORY_ENGRAM'),
+    isEngram: (itemDef.itemCategoryHashes || []).includes(34),
     // "perks" are the two or so talent grid items that are "featured" for an
     // item in its popup in the game. We don't currently use these.
     // perks: item.perks,
@@ -370,9 +358,7 @@ function makeItem(
   });
 
   // *able
-  createdItem.taggable = Boolean(
-    createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM')
-  );
+  createdItem.taggable = Boolean(createdItem.lockable && !createdItem.isEngram);
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
   createdItem.reviewable = Boolean(
     $featureFlags.reviewsEnabled &&
@@ -381,7 +367,7 @@ function makeItem(
   );
 
   // Moving rare masks destroys them
-  if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
+  if (createdItem.itemCategoryHashes.includes(55) && createdItem.tier !== 'Legendary') {
     createdItem.notransfer = true;
   }
 
