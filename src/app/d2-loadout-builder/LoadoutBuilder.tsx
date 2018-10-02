@@ -18,6 +18,7 @@ import StoreInventoryItem from '../inventory/StoreInventoryItem';
 import LoadoutDrawer from '../loadout/loadout-drawer';
 import { dimLoadoutService, Loadout } from '../loadout/loadout.service';
 import { RootState } from '../store/reducers';
+import { sum } from '../util';
 import './loadoutbuilder.scss';
 import LockedArmor from './LockedArmor';
 
@@ -230,7 +231,7 @@ function process(filteredItems: { [bucket: number]: D2Item[] }) {
 
     const tiers = _.each(
       _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-        return tierString.split('/').reduce((a, b) => a + parseInt(b, 10), 0);
+        return sum(tierString.split('/'), (num) => parseInt(num, 10));
       }),
       (tier) => {
         tier.sort().reverse();
