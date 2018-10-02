@@ -92,7 +92,7 @@ export interface DimItem {
   /** The localized name of the class this item is restricted to. */
   classTypeNameLocalized: string;
   /** The readable name of the damage type associated with this item. */
-  dmg: 'kinetic' | 'arc' | 'solar' | 'void';
+  dmg: 'kinetic' | 'arc' | 'solar' | 'void' | 'heroic';
   /**
    * Whether this item should be shown.
    *

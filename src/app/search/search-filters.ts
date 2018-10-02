@@ -118,7 +118,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const filterTrans: {
     [key: string]: string[];
   } = {
-    dmg: ['arc', 'solar', 'void', 'kinetic'],
+    dmg: ['arc', 'solar', 'void', 'kinetic', 'heroic'],
     type: itemTypes,
     tier: [
       'common',

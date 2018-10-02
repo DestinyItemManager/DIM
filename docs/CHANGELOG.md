@@ -1,5 +1,6 @@
 # Next
 
+* Added `is:heroic` search filter for armor with heroic resistance.
 * New option to manually sort your characters.
 * No longer forgetting what perks we recommended.
 * Fix mods/perks on items - there was a bug that affected both display and searches.
