@@ -389,7 +389,12 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
       // filter out items without extra perks on them
       if (requirePerks) {
         filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-          if (item && item.sockets && item.sockets.categories) {
+          if (
+            item &&
+            item.sockets &&
+            item.sockets.categories &&
+            item.sockets.categories.length === 2
+          ) {
             return item.sockets.categories[0].sockets.filter(filterPlugs).length;
           }
         });
@@ -575,7 +580,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
             checked={this.state.requirePerks}
             onChange={this.setRequiredPerks}
           />
-          <label htmlFor="required-perks">Require additional perks</label>
+          <label htmlFor="required-perks">Require additional perks on all amor</label>
         </div>
 
         {processRunning > 0 && <h3>Generating builds... {this.state.processRunning}%</h3>}
