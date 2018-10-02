@@ -37,6 +37,7 @@ interface Props {
 
 interface State {
   processRunning: number;
+  requirePerks: boolean;
   loadout?: Loadout;
   lockedMap: { [bucketHash: number]: LockType };
   processedSets?: {};
@@ -66,6 +67,7 @@ export interface LockType {
 
 interface ArmorSet {
   armor: D2Item[];
+  power: number;
   stats: { [statType in StatTypes]: number };
   setHash: string;
   includesVendorItems: boolean;
@@ -116,7 +118,7 @@ function getActiveHighestSets(
       count += 1;
     }
   });
-  return matchedSets;
+  return matchedSets.sort((a, b) => b.power - a.power);
 }
 
 function process(filteredItems) {
@@ -163,6 +165,12 @@ function process(filteredItems) {
               if (validSet) {
                 const set: ArmorSet = {
                   armor: [helms[h], gaunts[g], chests[c], legs[l], classitems[ci]],
+                  power:
+                    helms[h].basePower +
+                    gaunts[g].basePower +
+                    chests[c].basePower +
+                    legs[l].basePower +
+                    classitems[ci].basePower,
                   stats: {
                     STAT_MOBILITY: 0,
                     STAT_RESILIENCE: 0,
@@ -270,6 +278,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
   constructor(props: Props) {
     super(props);
     this.state = {
+      requirePerks: true,
       processRunning: 0,
       setTiers: [],
       selectedTier: '7/7/7', // what is the defacto "best", akin to 5/5/2?
@@ -356,32 +365,47 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.$scope.$destroy();
   }
 
-  computeSets = (classType: number, lockedMap: {}) => {
+  computeSets = (classType: number, lockedMap: {}, requirePerks: boolean) => {
     const allItems = { ...items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
 
     Object.keys(allItems).forEach((bucket) => {
+      // if we are locking an item in that bucket, filter to only those items
+      if (lockedMap[bucket] && lockedMap[bucket].type === 'item') {
+        filteredItems[bucket] = lockedMap[bucket].items;
+        return;
+      }
+
+      // otherwise flatten all item instances to each bucket
       filteredItems[bucket] = _.flatten(
         Object.values(allItems[bucket]).map((items: D2Item[]) => {
-          // if there is no locked item for that instance, just pick any
           if (!lockedMap[bucket]) {
             return items[0];
           }
           return items;
         })
       );
+
+      // filter out items without extra perks on them
+      if (requirePerks) {
+        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
+          if (item && item.sockets && item.sockets.categories) {
+            return item.sockets.categories[0].sockets.filter(filterPlugs).length;
+          }
+        });
+      }
+
+      // if there is nothing locked for that instance, just pick good items
     });
 
+    // filter to only include items that are in the locked map
     Object.keys(lockedMap).forEach((bucket) => {
       // if there are locked items for this bucket
       if (lockedMap[bucket] && lockedMap[bucket].items.length) {
-        // if the locked bucket is an item
-        if (lockedMap[bucket].type === 'item') {
-          filteredItems[bucket] = lockedMap[bucket].items;
-        } else if (lockedMap[bucket].type === 'perk') {
-          // otherwise it is a list of perks (oh my... the complexity)
+        // if the locked bucket is a perk
+        if (lockedMap[bucket].type === 'perk') {
+          // filter out items that do not have a locked perk
           filteredItems[bucket] = filteredItems[bucket].filter((item) =>
-            // filter out items that do not have a locked perk
             item.sockets.sockets.find((slot) =>
               slot.plugOptions.find((perk) =>
                 lockedMap[bucket].items.find((lockedPerk) => lockedPerk.hash === perk.plugItem.hash)
@@ -408,7 +432,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
   resetLocked = () => {
     this.setState({ lockedMap: {}, setTiers: [], matchedSets: undefined });
-    this.computeSets(this.state.selectedStore!.classType, {});
+    this.computeSets(this.state.selectedStore!.classType, {}, this.state.requirePerks);
   };
 
   lockEquipped = () => {
@@ -422,20 +446,20 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
       }
     });
 
-    this.computeSets(this.state.selectedStore!.classType, lockedMap);
+    this.computeSets(this.state.selectedStore!.classType, lockedMap, this.state.requirePerks);
   };
 
   onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
     this.setState({ selectedStore, lockedMap: {}, setTiers: [], matchedSets: undefined });
-    this.computeSets(selectedStore.classType, {});
+    this.computeSets(selectedStore.classType, {}, this.state.requirePerks);
   };
 
   updateLockedArmor = (bucket: InventoryBucket, locked: LockType) => {
     const lockedMap = this.state.lockedMap;
     lockedMap[bucket.hash] = locked;
 
-    this.computeSets(this.state.selectedStore!.classType, lockedMap);
+    this.computeSets(this.state.selectedStore!.classType, lockedMap, this.state.requirePerks);
   };
 
   setSelectedTier = (element) => {
@@ -446,6 +470,15 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
       selectedTier: element.target.value,
       matchedSets: getActiveHighestSets(this.state.processedSets, element.target.value)
     });
+  };
+
+  setRequiredPerks = (element) => {
+    this.setState({ requirePerks: element.target.checked });
+    this.computeSets(
+      this.state.selectedStore!.classType,
+      this.state.lockedMap,
+      element.target.checked
+    );
   };
 
   createLoadout(hash): Loadout {
@@ -532,6 +565,17 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
               Reset Locked
             </button>
           </div>
+        </div>
+
+        <h3>Options</h3>
+        <div>
+          <input
+            id="required-perks"
+            type="checkbox"
+            checked={this.state.requirePerks}
+            onChange={this.setRequiredPerks}
+          />
+          <label htmlFor="required-perks">Require additional perks</label>
         </div>
 
         {processRunning > 0 && <h3>Generating builds... {this.state.processRunning}%</h3>}

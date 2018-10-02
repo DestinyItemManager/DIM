@@ -277,7 +277,7 @@ const LockedItem = (props) => {
         <BungieImage
           key={item.hash}
           className="empty-item"
-          title={item.displayProperties.name}
+          title={item.displayProperties.description}
           src={item.displayProperties.icon}
         />
       </div>
