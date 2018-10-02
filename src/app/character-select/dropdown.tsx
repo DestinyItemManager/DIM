@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
-import StoreHeading from '../inventory/StoreHeading';
+import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
 
 interface Props {
   stores: DimStore[];
@@ -25,21 +25,17 @@ export default class CharacterDropdown extends React.Component<Props, State> {
 
     return (
       <ClickOutside onClickOutside={this.closeDropdown} className="character-select">
-        <StoreHeading
-          store={selectedStore}
-          selectedStore={selectedStore}
-          onTapped={this.toggleDropdown}
-        />
+        <div onClick={this.toggleDropdown}>
+          <SimpleCharacterTile character={selectedStore} />
+        </div>
         {dropdownOpen &&
           stores
             .filter((s) => !s.isVault && s.id !== selectedStore.id)
             .map((store) => (
-              <StoreHeading
+              <SimpleCharacterTile
                 key={store.id}
-                store={store}
-                selectedStore={selectedStore}
-                hideDropdownIcon={true}
-                onTapped={this.selectCharacter}
+                character={store}
+                onClick={this.selectCharacter}
               />
             ))}
       </ClickOutside>
@@ -54,10 +50,8 @@ export default class CharacterDropdown extends React.Component<Props, State> {
     this.setState({ dropdownOpen: false });
   };
 
-  private selectCharacter = (storeId?: string) => {
+  private selectCharacter = (storeId: string) => {
     this.setState({ dropdownOpen: false });
-    if (storeId) {
-      this.props.onCharacterChanged(storeId);
-    }
+    this.props.onCharacterChanged(storeId);
   };
 }

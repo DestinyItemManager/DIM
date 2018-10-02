@@ -2,9 +2,19 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { DimStore } from './store-types';
 
-export default function SimpleCharacterTile({ character }: { character: DimStore }) {
+export default function SimpleCharacterTile({
+  character,
+  onClick
+}: {
+  character: DimStore;
+  onClick?(id: string): void;
+}) {
+  const handleClick = () => {
+    onClick && onClick(character.id);
+  };
+
   return (
-    <div className={classNames('character', { current: character.current })}>
+    <div onClick={handleClick} className={classNames('character', { current: character.current })}>
       <div
         className={classNames('character-box', {
           destiny2: character.isDestiny2()
