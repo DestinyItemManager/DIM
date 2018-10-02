@@ -1,16 +1,12 @@
 import { UIViewInjectedProps } from '@uirouter/react';
-import { DestinyInventoryItemDefinition, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
-import { $rootScope } from 'ngimport';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getKiosks } from '../bungie-api/destiny2-api';
 import CharacterDropdown from '../character-select/dropdown';
-import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
-import { getDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import { Loading } from '../dim-ui/Loading';
 import PressTip from '../dim-ui/PressTip';
@@ -19,14 +15,17 @@ import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-bucket
 import { D2Item, DimSocket } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import StoreInventoryItem from '../inventory/StoreInventoryItem';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import LoadoutDrawer from '../loadout/loadout-drawer';
 import { dimLoadoutService, Loadout } from '../loadout/loadout.service';
-import { D2ManifestService } from '../manifest/manifest-service';
-import { loadingTracker } from '../ngimport-more';
 import { RootState } from '../store/reducers';
 import './loadoutbuilder.scss';
 import LockedArmor from './LockedArmor';
+
+import { getKiosks } from '../bungie-api/destiny2-api';
+import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
+import { getDefinitions } from '../destiny2/d2-definitions.service';
+import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { loadingTracker } from '../ngimport-more';
 
 interface Props {
   account: DestinyAccount;
@@ -45,7 +44,6 @@ interface State {
   setTiers: string[];
   selectedTier: string;
   selectedStore?: DimStore;
-  profileResponse?: DestinyProfileResponse;
   trackerService?: DestinyTrackerService;
 }
 
@@ -112,7 +110,6 @@ function getActiveHighestSets(
     if (count >= 10) {
       return;
     }
-
     if (setType.tiers[activeSets]) {
       matchedSets.push(setType.set);
       count += 1;
@@ -121,7 +118,7 @@ function getActiveHighestSets(
   return matchedSets.sort((a, b) => b.power - a.power);
 }
 
-function process(filteredItems) {
+function process(filteredItems: { [bucket: number]: D2Item[] }) {
   const pstart = performance.now();
   const helms = filteredItems[lockableBuckets.helmet] || [];
   const gaunts = filteredItems[lockableBuckets.gauntlets] || [];
@@ -273,7 +270,6 @@ function process(filteredItems) {
  */
 class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
-  private $scope = $rootScope.$new(true);
 
   constructor(props: Props) {
     super(props);
@@ -288,11 +284,9 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
   async loadCollections() {
     const defs = await getDefinitions();
-    D2ManifestService.loaded = true;
 
     // not currently using this
     const profileResponse = await getKiosks(this.props.account);
-    this.setState({ profileResponse });
 
     // not currently using this... or this...
     const trackerService = await fetchRatingsForKiosks(defs, profileResponse);
@@ -301,11 +295,6 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
   componentDidMount() {
     loadingTracker.addPromise(this.loadCollections());
-
-    // We need to make a scope
-    this.$scope.$on('dim-refresh', () => {
-      loadingTracker.addPromise(this.loadCollections());
-    });
 
     this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
       (stores) => {
@@ -362,7 +351,6 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
   componentWillUnmount() {
     this.storesSubscription.unsubscribe();
-    this.$scope.$destroy();
   }
 
   computeSets = (classType: number, lockedMap: {}, requirePerks: boolean) => {
@@ -426,7 +414,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.setState({ lockedMap });
   };
 
-  startNewProcess = (filteredItems) => {
+  startNewProcess = (filteredItems: { [bucket: number]: D2Item[] }) => {
     if (this.state.processRunning !== 0) {
       killProcess = true;
       return window.requestAnimationFrame(() => this.startNewProcess(filteredItems));
@@ -531,7 +519,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
     let store = selectedStore;
     if (!store) {
-      store = this.props.stores.find((s) => s.current)!;
+      store = stores.find((s) => s.current)!;
     }
 
     if (!perks[store.classType]) {
@@ -549,18 +537,16 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
             onCharacterChanged={this.onCharacterChanged}
           />
           <div className="flex">
-            {Object.values(lockableBuckets).map((armor) => {
-              return (
-                <LockedArmor
-                  key={armor}
-                  locked={lockedMap[armor]}
-                  bucket={buckets.byId[armor]}
-                  items={items[store!.classType][armor]}
-                  perks={perks[store!.classType][armor]}
-                  onLockChanged={this.updateLockedArmor}
-                />
-              );
-            })}
+            {Object.values(lockableBuckets).map((armor) => (
+              <LockedArmor
+                key={armor}
+                locked={lockedMap[armor]}
+                bucket={buckets.byId[armor]}
+                items={items[store!.classType][armor]}
+                perks={perks[store!.classType][armor]}
+                onLockChanged={this.updateLockedArmor}
+              />
+            ))}
           </div>
           <div className="flex column">
             <button className="dim-button" onClick={this.lockEquipped}>
@@ -619,36 +605,25 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
                     </button>
                   </div>
                   <div className="sub-bucket">
-                    {Object.values(set.armor).map((item) => {
-                      return (
-                        <div className="generated-build-items" key={item.index}>
-                          <StoreInventoryItem
-                            item={item}
-                            isNew={false}
-                            // tag={getTag(item, itemInfos)}
-                            // rating={dtrRating ? dtrRating.overallScore : undefined}
-                            // hideRating={!showRating}
-                            searchHidden={false}
-                          />
-                          {item!.sockets!.categories.length === 2 &&
-                            item!
-                              .sockets!.categories[0].sockets.filter(filterPlugs)
-                              .map((socket) => (
-                                <PressTip
-                                  key={socket!.plug!.plugItem.hash}
-                                  tooltip={<PlugTooltip item={item} socket={socket} />}
-                                >
-                                  <div>
-                                    <BungieImage
-                                      className="item-mod"
-                                      src={socket!.plug!.plugItem.displayProperties.icon}
-                                    />
-                                  </div>
-                                </PressTip>
-                              ))}
-                        </div>
-                      );
-                    })}
+                    {Object.values(set.armor).map((item) => (
+                      <div className="generated-build-items" key={item.index}>
+                        <StoreInventoryItem item={item} isNew={false} searchHidden={false} />
+                        {item!.sockets!.categories.length === 2 &&
+                          item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
+                            <PressTip
+                              key={socket!.plug!.plugItem.hash}
+                              tooltip={<PlugTooltip item={item} socket={socket} />}
+                            >
+                              <div>
+                                <BungieImage
+                                  className="item-mod"
+                                  src={socket!.plug!.plugItem.displayProperties.icon}
+                                />
+                              </div>
+                            </PressTip>
+                          ))}
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))}
@@ -660,11 +635,9 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
   }
 }
 
+// Filter out plugs that we don't want to show in the perk dropdown.
 function filterPlugs(socket) {
-  if (
-    socket.plug &&
-    ![3530997750, 2032054360, 1633794450, 702981643].includes(socket.plug.plugItem.hash)
-  ) {
+  if (socket.plug && ![3530997750, 2032054360, 1633794450].includes(socket.plug.plugItem.hash)) {
     if (
       socket.plug.plugItem.inventory.tierType !== 6 &&
       socket.plug.plugItem.plug.plugCategoryHash === 1744546145
@@ -676,23 +649,27 @@ function filterPlugs(socket) {
 }
 
 function PlugTooltip({ item, socket }: { item: D2Item; socket: DimSocket }) {
+  const plug = socket.plug;
+  if (!plug) {
+    return null;
+  }
   return (
     <>
       <h2>
-        {socket!.plug!.plugItem.displayProperties.name}
+        {plug.plugItem.displayProperties.name}
         {item.masterworkInfo &&
-          socket!.plug!.plugItem.investmentStats &&
-          socket!.plug!.plugItem.investmentStats[0] &&
-          item.masterworkInfo.statHash === socket!.plug!.plugItem.investmentStats[0].statTypeHash &&
+          plug.plugItem.investmentStats &&
+          plug.plugItem.investmentStats[0] &&
+          item.masterworkInfo.statHash === plug.plugItem.investmentStats[0].statTypeHash &&
           ` (${item.masterworkInfo.statName})`}
       </h2>
 
-      {socket!.plug!.plugItem.displayProperties.description ? (
-        <div>{socket!.plug!.plugItem.displayProperties.description}</div>
+      {plug.plugItem.displayProperties.description ? (
+        <div>{plug.plugItem.displayProperties.description}</div>
       ) : (
-        socket!.plug!.perks.map((perk) => (
+        plug.perks.map((perk) => (
           <div key={perk.hash}>
-            {socket!.plug!.plugItem.displayProperties.name !== perk.displayProperties.name && (
+            {plug.plugItem.displayProperties.name !== perk.displayProperties.name && (
               <div>{perk.displayProperties.name}</div>
             )}
             <div>{perk.displayProperties.description}</div>

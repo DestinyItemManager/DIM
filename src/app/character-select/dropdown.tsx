@@ -2,6 +2,7 @@ import * as React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
 import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
+import './dropdown.scss';
 
 interface Props {
   stores: DimStore[];
@@ -24,21 +25,20 @@ export default class CharacterDropdown extends React.Component<Props, State> {
     const { dropdownOpen } = this.state;
 
     return (
-      <ClickOutside onClickOutside={this.closeDropdown} className="character-select">
-        <div onClick={this.toggleDropdown}>
-          <SimpleCharacterTile character={selectedStore} />
-        </div>
-        {dropdownOpen &&
-          stores
-            .filter((s) => !s.isVault && s.id !== selectedStore.id)
-            .map((store) => (
+      <div className="character-select">
+        <SimpleCharacterTile character={selectedStore} onClick={this.toggleDropdown} />
+        {dropdownOpen && (
+          <ClickOutside onClickOutside={this.closeDropdown}>
+            {stores.filter((s) => !s.isVault && s.id !== selectedStore.id).map((store) => (
               <SimpleCharacterTile
                 key={store.id}
                 character={store}
                 onClick={this.selectCharacter}
               />
             ))}
-      </ClickOutside>
+          </ClickOutside>
+        )}
+      </div>
     );
   }
 

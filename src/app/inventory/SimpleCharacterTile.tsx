@@ -7,7 +7,7 @@ export default function SimpleCharacterTile({
   onClick
 }: {
   character: DimStore;
-  onClick?(id: string): void;
+  onClick(id: string): void;
 }) {
   const handleClick = () => {
     onClick && onClick(character.id);

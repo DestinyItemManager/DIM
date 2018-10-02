@@ -31,8 +31,6 @@ function dragType(props: ExternalProps) {
 // This determines the behavior of dropping on this target
 const dropSpec: DropTargetSpec<Props> = {
   drop(props, monitor) {
-    // TODO: ooh, monitor has interesting offset info
-    // https://github.com/react-dnd/react-dnd-html5-backend/issues/23
     const item = monitor.getItem().item as DimItem;
     props.onItemLocked(item);
   }
@@ -53,7 +51,6 @@ class LoadoutBucketDropTarget extends React.Component<Props> {
   render() {
     const { connectDropTarget, children, isOver } = this.props;
 
-    // TODO: I don't like that we're managing the classes for sub-bucket here
     return connectDropTarget(
       <div
         className={classNames({
