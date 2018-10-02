@@ -344,7 +344,7 @@ class SettingsPage extends React.Component<Props, State> {
             {$featureFlags.forsakenTiles && (
               <Checkbox
                 label="Beta Forsaken Tiles"
-                name="itemQuality"
+                name="betaForsakenTiles"
                 value={settings.betaForsakenTiles}
                 onChange={this.onChange}
               />
