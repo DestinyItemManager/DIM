@@ -380,7 +380,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
       filteredItems[bucket] = _.flatten(
         Object.values(allItems[bucket]).map((items: D2Item[]) => {
           if (!lockedMap[bucket]) {
-            return items[0];
+            return Math.max.apply(Math, items.map((item) => item.basePower));
           }
           return items;
         })
