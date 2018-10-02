@@ -4,8 +4,6 @@ import AriaModule from 'angular-aria';
 import 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
 
-import MessagesModule from 'angular-messages';
-
 import 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
 import ngI18Next from 'ng-i18next';
@@ -33,7 +31,6 @@ import run from './dimApp.run';
 const dependencies = [
   AriaModule,
   DragAndDropModule,
-  MessagesModule,
   ngI18Next,
   ngSanitize,
   ocLazyLoadModule,
