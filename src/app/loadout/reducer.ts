@@ -48,7 +48,7 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction | AccountsAction> =
       const loadout = action.payload;
       return {
         ...state,
-        loadouts: [...state.loadouts.filter((l) => l.id === loadout.id), loadout]
+        loadouts: [...state.loadouts.filter((l) => l.id !== loadout.id), loadout]
       };
 
     case getType(actions.savePreviousLoadout):
@@ -58,7 +58,7 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction | AccountsAction> =
       previousLoadouts =
         lastPreviousLoadout && loadoutId === lastPreviousLoadout.id
           ? // Pop the previous loadout since we're reapplying it
-            previousLoadouts.filter((l) => l.id === loadoutId)
+            previousLoadouts.filter((l) => l.id !== loadoutId)
           : // Push the previous loadout
             [...previousLoadouts, previousLoadout];
       return {

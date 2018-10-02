@@ -20,7 +20,7 @@ import {
 } from './auto-loadouts';
 import { querySelector } from '../shell/reducer';
 import { newLoadout } from './loadout-utils';
-import { ngDialog, toaster } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import { $rootScope } from 'ngimport';
 import { D1FarmingService } from '../farming/farming.service';
 import { D2FarmingService } from '../farming/d2farming.service';
@@ -34,6 +34,7 @@ import engramSvg from '../../images/engram.svg';
 
 interface ProvidedProps {
   dimStore: DimStore;
+  onClick(e): void;
 }
 
 interface StoreProps {
@@ -78,13 +79,13 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
 }
 
 class LoadoutPopup extends React.Component<Props> {
-  componentWillMount() {
+  componentDidMount() {
     // Need this to poke the state
     dimLoadoutService.getLoadouts();
   }
 
   render() {
-    const { dimStore, previousLoadout, loadouts, query } = this.props;
+    const { dimStore, previousLoadout, loadouts, query, onClick } = this.props;
 
     // TODO: it'd be nice to memoize some of this - we'd need a memoized map of selectors!
     const hasClassified = dimStore
@@ -106,7 +107,7 @@ class LoadoutPopup extends React.Component<Props> {
     // TODO: kill dim-save-loadout dim-edit-loadout
 
     return (
-      <div className="loadout-popup-content">
+      <div className="loadout-popup-content" onClick={onClick}>
         <ul className="loadout-list">
           <li className="loadout-set">
             <span onClick={this.newLoadout}>
@@ -216,7 +217,7 @@ class LoadoutPopup extends React.Component<Props> {
                 {previousLoadout.name}
               </span>
               <span onClick={(e) => this.applyLoadout(previousLoadout, e)}>
-                <span>{t('Loadouts.RedimStoreAllItems')}</span>
+                <span>{t('Loadouts.RestoreAllItems')}</span>
               </span>
             </li>
           )}
@@ -244,13 +245,11 @@ class LoadoutPopup extends React.Component<Props> {
   }
 
   private newLoadout = () => {
-    ngDialog.closeAll();
     this.editLoadout(newLoadout('', {}));
   };
 
   private newLoadoutFromEquipped = () => {
     const { dimStore, classTypeId } = this.props;
-    ngDialog.closeAll();
 
     const loadout = filterLoadoutToEquipped(dimStore.loadoutFromCurrentlyEquipped(''));
     // We don't want to prepopulate the loadout with a bunch of cosmetic junk
@@ -293,11 +292,12 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   private editLoadout = function editLoadout(loadout: Loadout) {
-    ngDialog.closeAll();
-    $rootScope.$broadcast('dim-edit-loadout', {
-      loadout,
-      showClass: true
-    });
+    $rootScope.$apply(() =>
+      $rootScope.$broadcast('dim-edit-loadout', {
+        loadout,
+        showClass: true
+      })
+    );
   };
 
   // TODO: move all these fancy loadouts to a new service
@@ -305,7 +305,6 @@ class LoadoutPopup extends React.Component<Props> {
   private applyLoadout = (loadout: Loadout, e, filterToEquipped = false) => {
     const { dimStore } = this.props;
     e.preventDefault();
-    ngDialog.closeAll();
     D1FarmingService.stop();
     D2FarmingService.stop();
 
@@ -364,20 +363,17 @@ class LoadoutPopup extends React.Component<Props> {
 
   private makeRoomForPostmaster = () => {
     const { dimStore } = this.props;
-    ngDialog.closeAll();
     const bucketsService = dimStore.destinyVersion === 1 ? d1GetBuckets : d2GetBuckets;
     return queueAction(() => makeRoomForPostmaster(dimStore, toaster, bucketsService));
   };
 
   private pullFromPostmaster = () => {
     const { dimStore } = this.props;
-    ngDialog.closeAll();
     return queueAction(() => pullFromPostmaster(dimStore, dimItemService, toaster));
   };
 
   private startFarming = function startFarming() {
     const { dimStore } = this.props;
-    ngDialog.closeAll();
     (dimStore.isDestiny2() ? D2FarmingService : D1FarmingService).start(
       getPlatformMatching({
         membershipId: router.globals.params.membershipId,

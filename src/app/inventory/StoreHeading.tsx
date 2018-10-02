@@ -47,7 +47,7 @@ export default class StoreHeading extends React.Component<Props, State> {
     if (loadoutMenuOpen) {
       const menuContents = (
         <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu}>
-          <LoadoutPopup dimStore={store} />
+          <LoadoutPopup dimStore={store} onClick={this.clickOutsideLoadoutMenu} />
         </ClickOutside>
       );
 
@@ -175,7 +175,6 @@ export default class StoreHeading extends React.Component<Props, State> {
       onTapped && onTapped(store.id);
       return;
     }
-
 
     this.setState({ loadoutMenuOpen: !loadoutMenuOpen });
   };
