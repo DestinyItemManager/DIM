@@ -2,7 +2,7 @@ import * as React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
 import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
-import './dropdown.scss';
+import './characterdropdown.scss';
 
 interface Props {
   stores: DimStore[];
