@@ -15,35 +15,56 @@ import './StoreHeading.scss';
 import CharacterStats from './CharacterStats';
 import LoadoutPopup from '../loadout/LoadoutPopup';
 import ClickOutside from '../dim-ui/ClickOutside';
+import * as ReactDOM from 'react-dom';
 
 interface Props {
   store: DimStore;
-  internalLoadoutMenu: boolean;
+  /** If this ref is provided, the loadout menu will be placed inside of it instead of in this tile. */
+  loadoutMenuRef?: React.RefObject<HTMLElement>;
+  /** For mobile, this is whichever store is visible at the time. */
   selectedStore?: DimStore;
-  loadoutPopupOpen: boolean;
+  /** Fires if a store other than the selected store is tapped. */
   onTapped?(storeId: string): void;
-  onLoadoutPopupOpen(storeId: string, open: boolean): void;
+}
+
+interface State {
+  loadoutMenuOpen: boolean;
 }
 
 function isVault(store: DimStore): store is DimVault {
   return store.isVault;
 }
 
-export default class StoreHeading extends React.Component<Props> {
+export default class StoreHeading extends React.Component<Props, State> {
+  state: State = { loadoutMenuOpen: false };
   private menuTrigger = React.createRef<HTMLDivElement>();
 
   render() {
-    const { store, internalLoadoutMenu, loadoutPopupOpen } = this.props;
+    const { store, loadoutMenuRef } = this.props;
+    const { loadoutMenuOpen } = this.state;
 
-    // TODO: maybe manage the popup state internally after all...
-    const loadoutMenu = internalLoadoutMenu &&
-      loadoutPopupOpen && (
-        <div className="loadout-menu">
-          <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu}>
-            <LoadoutPopup dimStore={store} />
-          </ClickOutside>
-        </div>
+    let loadoutMenu;
+    if (loadoutMenuOpen) {
+      const menuContents = (
+        <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu}>
+          <LoadoutPopup dimStore={store} />
+        </ClickOutside>
       );
+
+      loadoutMenu = loadoutMenuRef ? (
+        ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
+      ) : (
+        <div className="loadout-menu">{menuContents}</div>
+      );
+    }
+
+    const loadoutButton = (
+      <i className="loadout-button fa fa-chevron-circle-down" title={t('Loadouts.Loadouts')} />
+    );
+    const background = (
+      <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
+    );
+    const emblem = <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />;
 
     // TODO: break up into some pure components
 
@@ -55,9 +76,9 @@ export default class StoreHeading extends React.Component<Props> {
             ref={this.menuTrigger}
             onClick={this.openLoadoutPopup}
           >
-            <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
+            {background}
             <div className="details">
-              <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />
+              {emblem}
               <div className="character-text">
                 <div className="top">
                   <div className="class">{store.className}</div>
@@ -73,10 +94,7 @@ export default class StoreHeading extends React.Component<Props> {
                   <img src={store.isDestiny1() ? legendaryMarks : legendaryShards} />
                 </div>
               </div>
-              <i
-                className="loadout-button fa fa-chevron-circle-down"
-                title={t('Loadouts.Loadouts')}
-              />
+              {loadoutButton}
             </div>
           </div>
           {loadoutMenu}
@@ -117,9 +135,9 @@ export default class StoreHeading extends React.Component<Props> {
           onClick={this.openLoadoutPopup}
           ref={this.menuTrigger}
         >
-          <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
+          {background}
           <div className="details">
-            <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />
+            {emblem}
             <div className="character-text">
               <div className="top">
                 <div className="class">{store.className}</div>
@@ -138,10 +156,7 @@ export default class StoreHeading extends React.Component<Props> {
                 />
               </PressTip>
             </div>
-            <i
-              className="loadout-button fa fa-chevron-circle-down"
-              ng-i18next="[title]Loadouts.Loadouts"
-            />
+            {loadoutButton}
           </div>
         </div>
         {loadoutMenu}
@@ -153,28 +168,21 @@ export default class StoreHeading extends React.Component<Props> {
   private openLoadoutPopup = (e) => {
     e.stopPropagation();
 
-    const {
-      store,
-      internalLoadoutMenu,
-      selectedStore,
-      onTapped,
-      onLoadoutPopupOpen,
-      loadoutPopupOpen
-    } = this.props;
+    const { store, selectedStore, onTapped } = this.props;
+    const { loadoutMenuOpen } = this.state;
 
-    if (store !== selectedStore && !internalLoadoutMenu) {
+    if (store !== selectedStore && onTapped) {
       onTapped && onTapped(store.id);
       return;
     }
 
 
-    onLoadoutPopupOpen(store.id, !loadoutPopupOpen);
+    this.setState({ loadoutMenuOpen: !loadoutMenuOpen });
   };
 
   private clickOutsideLoadoutMenu = (e) => {
-    const { store, onLoadoutPopupOpen } = this.props;
     if (!e || !this.menuTrigger.current || !this.menuTrigger.current.contains(e.target)) {
-      onLoadoutPopupOpen(store.id, false);
+      this.setState({ loadoutMenuOpen: false });
     }
   };
 }
