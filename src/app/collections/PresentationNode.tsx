@@ -7,7 +7,6 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
-import { router } from '../../router';
 
 interface Props {
   presentationNodeHash: number;
@@ -16,6 +15,7 @@ interface Props {
   profileResponse: DestinyProfileResponse;
   ownedItemHashes: Set<number>;
   path: number[];
+  onNodePathSelected(nodePath: number[]);
 }
 
 const rootNodes = [3790247699];
@@ -28,7 +28,8 @@ export default class PresentationNode extends React.Component<Props> {
       profileResponse,
       buckets,
       ownedItemHashes,
-      path
+      path,
+      onNodePathSelected
     } = this.props;
     const presentationNodeDef = defs.PresentationNode.get(presentationNodeHash);
     if (!presentationNodeDef) {
@@ -68,6 +69,10 @@ export default class PresentationNode extends React.Component<Props> {
 
     // console.log({ childrenExpanded, path, presentationNodeHash });
 
+    // TODO: count up owned items and total items at the root!
+
+    // TODO: hey, the image for the heavy/special/primary categories is the icon!
+
     const displayStyle = {
       /** Display the item as a category, through which sub-items are filtered. */
       0: 'Category',
@@ -83,6 +88,8 @@ export default class PresentationNode extends React.Component<Props> {
       2: 'Badge'
     };
 
+    // TODO: each child node gets a path separate from the selected path?
+
     return (
       <div
         className={classNames(
@@ -92,11 +99,23 @@ export default class PresentationNode extends React.Component<Props> {
         )}
       >
         {!rootNodes.includes(presentationNodeHash) && (
-          <h3 onClick={this.expandChildren}>
-            <BungieImage src={presentationNodeDef.displayProperties.icon} />
-            {presentationNodeDef.displayProperties.name} {acquiredCollectibles} /{' '}
-            {visibleCollectibles}
-          </h3>
+          <div className="title" onClick={this.expandChildren}>
+            <span className="collapse-handle">
+              <i
+                className={classNames(
+                  'fa collapse',
+                  childrenExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'
+                )}
+              />{' '}
+              {presentationNodeDef.displayProperties.icon && (
+                <BungieImage src={presentationNodeDef.displayProperties.icon} />
+              )}{' '}
+              {presentationNodeDef.displayProperties.name}
+            </span>
+            <span>
+              {acquiredCollectibles} / {visibleCollectibles}
+            </span>
+          </div>
         )}
         {childrenExpanded &&
           presentationNodeDef.children.presentationNodes.map((node) => (
@@ -108,6 +127,7 @@ export default class PresentationNode extends React.Component<Props> {
               buckets={buckets}
               ownedItemHashes={ownedItemHashes}
               path={path}
+              onNodePathSelected={onNodePathSelected}
             />
           ))}
         {childrenExpanded &&
@@ -130,8 +150,8 @@ export default class PresentationNode extends React.Component<Props> {
   }
 
   private expandChildren = () => {
-    const { presentationNodeHash } = this.props;
-    router.stateService.go(router.stateService.$current.name, { presentationNodeHash });
+    const { presentationNodeHash, path } = this.props;
+    this.props.onNodePathSelected([...path, presentationNodeHash]);
     return false;
   };
 }

@@ -1,5 +1,14 @@
 .presentation-node {
-  margin-left: 1em;
+  .title {
+    img {
+      height: 24px;
+      width: 24px;
+    }
+  }
+
+  > .presentation-node > .presentation-node {
+    margin-left: 1em;
+  }
 }
 
 .collectibles {

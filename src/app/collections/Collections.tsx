@@ -6,7 +6,6 @@ import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
-import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -61,7 +60,7 @@ interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
   trackerService?: DestinyTrackerService;
-  stores?: DimStore[];
+  nodePath: number[];
 }
 
 /**
@@ -72,7 +71,7 @@ class Collections extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = {};
+    this.state = { nodePath: [] };
   }
 
   async loadCollections() {
@@ -86,6 +85,7 @@ class Collections extends React.Component<Props, State> {
 
     // TODO: put collectibles in redux
     // TODO: convert collectibles into DimItems
+    // TODO: bring back ratings for collections
 
     this.setState({ profileResponse, defs });
   }
@@ -107,7 +107,7 @@ class Collections extends React.Component<Props, State> {
 
   render() {
     const { buckets, ownedItemHashes, presentationNodeHash } = this.props;
-    const { defs, profileResponse, trackerService } = this.state;
+    const { defs, profileResponse, trackerService, nodePath } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
       return (
@@ -127,10 +127,10 @@ class Collections extends React.Component<Props, State> {
     });
 
     // TODO: how to search and find an item within all nodes?
-    let nodePath: number[] = [];
-    if (presentationNodeHash) {
+    let fullNodePath = nodePath;
+    if (nodePath.length === 0 && presentationNodeHash) {
       let currentHash = presentationNodeHash;
-      nodePath = [currentHash];
+      fullNodePath = [currentHash];
       let node = defs.PresentationNode.get(currentHash);
       while (node.parentNodeHashes.length) {
         nodePath.unshift(node.parentNodeHashes[0]);
@@ -138,17 +138,17 @@ class Collections extends React.Component<Props, State> {
         node = defs.PresentationNode.get(currentHash);
       }
     }
-    nodePath.unshift(3790247699);
+    fullNodePath.unshift(3790247699);
 
     console.log(nodePath);
 
     return (
       <div className="vendor d2-vendors dim-page">
-        <ErrorBoundary name="Ornaments">
-          <Ornaments defs={defs} profileResponse={profileResponse} />
-        </ErrorBoundary>
         <ErrorBoundary name="Catalysts">
           <Catalysts defs={defs} profileResponse={profileResponse} />
+        </ErrorBoundary>
+        <ErrorBoundary name="Ornaments">
+          <Ornaments defs={defs} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
           <PresentationNode
@@ -157,7 +157,8 @@ class Collections extends React.Component<Props, State> {
             profileResponse={profileResponse}
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
-            path={nodePath}
+            path={fullNodePath}
+            onNodePathSelected={this.onNodePathSelected}
           />
         </ErrorBoundary>
         <ErrorBoundary name="PlugSets">
@@ -192,6 +193,13 @@ class Collections extends React.Component<Props, State> {
       </div>
     );
   }
+
+  // TODO: onNodeDeselected!
+  private onNodePathSelected = (nodePath: number[]) => {
+    this.setState({
+      nodePath
+    });
+  };
 }
 
 function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {

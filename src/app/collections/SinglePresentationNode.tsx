@@ -119,6 +119,9 @@ class SinglePresentationNode extends React.Component<Props, State> {
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
             path={[]}
+            onNodePathSelected={(nodePath) => {
+              console.log(nodePath);
+            }}
           />
         </ErrorBoundary>
       </div>
