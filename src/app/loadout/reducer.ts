@@ -41,7 +41,7 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction | AccountsAction> =
     case getType(actions.deleteLoadout):
       return {
         ...state,
-        loadouts: state.loadouts.filter((l) => l.id === action.payload)
+        loadouts: state.loadouts.filter((l) => l.id !== action.payload)
       };
 
     case getType(actions.updateLoadout):

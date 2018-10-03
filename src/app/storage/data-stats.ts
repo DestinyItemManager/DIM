@@ -17,11 +17,11 @@ export function dataStats(data) {
 
   const loadoutsD1 = count(
     data['loadouts-v3.0'] || [],
-    (loadoutId: string) => data[loadoutId].destinyVersion !== 2
+    (loadoutId: string) => data[loadoutId] && data[loadoutId].destinyVersion !== 2
   );
   const loadoutsD2 = count(
     data['loadouts-v3.0'] || [],
-    (loadoutId: string) => data[loadoutId].destinyVersion === 2
+    (loadoutId: string) => data[loadoutId] && data[loadoutId].destinyVersion === 2
   );
 
   return {
