@@ -151,10 +151,10 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     requireBurn = this.state.requireBurn
   }: {
     classType?: number;
-    lockedMap?: {};
+    lockedMap?: { [bucketHash: number]: LockType };
     requirePerks?: boolean;
     requireBurn?: string;
-  } = {}) => {
+  }) => {
     const allItems = { ...items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
 
