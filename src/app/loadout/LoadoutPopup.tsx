@@ -121,7 +121,7 @@ class LoadoutPopup extends React.Component<Props> {
             <li className="loadout-set">
               <span onClick={this.searchLoadout}>
                 <i className="fa fa-search" />
-                <span>{t('[i18next]({ query: this.search.query })Loadouts.ApplySearch')}</span>
+                <span>{t('Loadouts.ApplySearch', { query })}</span>
               </span>
             </li>
           )}
