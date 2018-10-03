@@ -37,6 +37,8 @@ declare const $featureFlags: {
   respectDNT: boolean;
   /** Forsaken Item Tiles */
   forsakenTiles: boolean;
+  /** D2 Loadout Builder */
+  d2LoadoutBuilder: boolean;
 };
 
 declare function ga(...params: string[]);
