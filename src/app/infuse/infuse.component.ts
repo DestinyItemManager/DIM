@@ -4,9 +4,10 @@ import { flatMap } from '../util';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
 import './infuse.scss';
-import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
+import { dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../comparators';
+import { newLoadout } from '../loadout/loadout-utils';
 
 export const InfuseComponent: IComponentOptions = {
   template,
@@ -229,11 +230,7 @@ function InfuseCtrl(
         });
       }
 
-      const loadout: Loadout = {
-        classType: -1,
-        name: $i18next.t('Infusion.InfusionMaterials'),
-        items
-      };
+      const loadout = newLoadout($i18next.t('Infusion.InfusionMaterials'), items);
 
       vm.transferInProgress = true;
       return dimLoadoutService.applyLoadout(store, loadout).then(() => {

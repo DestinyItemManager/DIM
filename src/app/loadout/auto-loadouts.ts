@@ -1,7 +1,7 @@
 import { copy } from 'angular';
 import { t } from 'i18next';
 import * as _ from 'underscore';
-import { optimalLoadout } from './loadout-utils';
+import { optimalLoadout, newLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
 import { sum, flatMap } from '../util';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
@@ -137,11 +137,7 @@ export function gatherEngramsLoadout(
     }
   });
 
-  return {
-    classType: -1,
-    name: t('Loadouts.GatherEngrams'),
-    items: finalItems
-  };
+  return newLoadout(t('Loadouts.GatherEngrams'), finalItems);
 }
 
 export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
@@ -165,11 +161,7 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
     }
   });
 
-  return {
-    classType: -1,
-    name: t('Loadouts.GatherTokens'),
-    items: finalItems
-  };
+  return newLoadout(t('Loadouts.GatherTokens'), finalItems);
 }
 
 /**
@@ -198,11 +190,7 @@ export function searchLoadout(storeService: StoreServiceType, store: DimStore): 
     }
   });
 
-  return {
-    classType: -1,
-    name: t('Loadouts.FilteredItems'),
-    items: finalItems
-  };
+  return newLoadout(t('Loadouts.FilteredItems'), finalItems);
 }
 
 function limitToBucketSize(items: DimItem[], isVault) {

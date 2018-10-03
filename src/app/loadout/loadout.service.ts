@@ -1,6 +1,5 @@
-import { copy, IPromise } from 'angular';
+import { copy } from 'angular';
 import * as _ from 'underscore';
-import uuidv4 from 'uuid/v4';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
@@ -8,9 +7,12 @@ import { DimStore } from '../inventory/store-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimItemService } from '../inventory/dimItemService.factory';
-import { $rootScope, $q } from 'ngimport';
+import { $rootScope } from 'ngimport';
 import { t } from 'i18next';
 import { toaster, loadingTracker } from '../ngimport-more';
+import { default as reduxStore } from '../store/store';
+import * as actions from './actions';
+import { loadoutsSelector } from './reducer';
 
 export const enum LoadoutClass {
   any = -1,
@@ -23,7 +25,7 @@ type LoadoutItem = DimItem;
 
 // TODO: move into loadouts service
 export interface Loadout {
-  id?: string;
+  id: string;
   classType: LoadoutClass;
   name: string;
   items: {
@@ -34,7 +36,7 @@ export interface Loadout {
 }
 
 interface DehydratedLoadout {
-  id?: string;
+  id: string;
   classType: LoadoutClass;
   name: string;
   items: LoadoutItem[];
@@ -45,14 +47,16 @@ interface DehydratedLoadout {
 
 export interface LoadoutServiceType {
   dialogOpen: boolean;
-  previousLoadouts: { [characterId: string]: Loadout[] };
-  getLoadouts(getLatest?: boolean): IPromise<Loadout[]>;
-  deleteLoadout(loadout: Loadout): IPromise<Loadout[]>;
-  saveLoadout(loadout: Loadout): IPromise<Loadout[]>;
+  getLoadouts(): Promise<Loadout[]>;
+  deleteLoadout(loadout: Loadout): Promise<void>;
+  saveLoadout(loadout: Loadout): Promise<void>;
   addItemToLoadout(item: DimItem, $event);
-  applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): IPromise<void>;
+  applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
   getLoadoutItemIds(destinyVersion: number): Promise<Set<string>>;
 }
+
+// TODO: un-object-ify, this holds no state!
+// at least, once dialogOpen is gone
 
 export const dimLoadoutService = LoadoutService();
 
@@ -62,9 +66,6 @@ function LoadoutService(): LoadoutServiceType {
     return destinyVersion === 2 ? D2StoresService : D1StoresService;
   }
 
-  let _loadouts: Loadout[] = [];
-  const _previousLoadouts: { [characterId: string]: Loadout[] } = {}; // by character ID
-
   return {
     dialogOpen: false,
     getLoadouts,
@@ -72,7 +73,6 @@ function LoadoutService(): LoadoutServiceType {
     saveLoadout,
     addItemToLoadout,
     applyLoadout,
-    previousLoadouts: _previousLoadouts,
     getLoadoutItemIds
   };
 
@@ -103,7 +103,7 @@ function LoadoutService(): LoadoutServiceType {
       .filter((item) => {
         return objectTest(item) && hasGuid(item) && !containsLoadoutGuids(item);
       })
-      .map((i: any) => i.id);
+      .map((i: DehydratedLoadout) => i.id);
 
     if (orphanIds.length > 0) {
       SyncService.remove(orphanIds);
@@ -112,94 +112,47 @@ function LoadoutService(): LoadoutServiceType {
     return loadouts;
   }
 
-  function getLoadouts(getLatest = false): IPromise<Loadout[]> {
+  async function getLoadouts(getLatest = false): Promise<Loadout[]> {
+    const loadouts = loadoutsSelector(reduxStore.getState());
     // Avoids the hit going to data store if we have data already.
-    if (getLatest || !_loadouts.length) {
-      return $q.when(
-        SyncService.get()
-          .then((data) => {
-            if (_.has(data, 'loadouts-v3.0')) {
-              return processLoadout(data, 'v3.0');
-            } else {
-              return [];
-            }
-          })
-          .then((newLoadouts) => {
-            _loadouts = newLoadouts;
-            return _loadouts;
-          })
-      );
-    } else {
-      return $q.when(_loadouts);
+    if (!getLatest && loadouts.length) {
+      return loadouts;
     }
+
+    const data = await SyncService.get();
+    const newLoadouts = 'loadouts-v3.0' in data ? processLoadout(data, 'v3.0') : [];
+    reduxStore.dispatch(actions.loaded(newLoadouts));
+    return loadoutsSelector(reduxStore.getState());
   }
 
-  function saveLoadouts(loadouts: Loadout[]): IPromise<Loadout[]> {
-    return $q.when(loadouts || getLoadouts()).then((loadouts) => {
-      _loadouts = loadouts;
+  async function saveLoadouts(loadouts: Loadout[]): Promise<Loadout[]> {
+    const loadoutPrimitives = loadouts.map(dehydrate);
 
-      const loadoutPrimitives = _.map(loadouts, dehydrate);
+    const data = {
+      'loadouts-v3.0': loadoutPrimitives.map((l) => l.id),
+      ..._.indexBy(loadoutPrimitives, (l) => l.id)
+    };
 
-      const data = {
-        'loadouts-v3.0': [] as string[]
-      };
+    await SyncService.set(data);
+    return loadouts;
+  }
 
-      _.each(loadoutPrimitives, (l) => {
-        data['loadouts-v3.0'].push(l.id!);
-        data[l.id!] = l;
-      });
-
-      return SyncService.set(data).then(() => loadouts) as IPromise<Loadout[]>;
+  async function deleteLoadout(loadout: Loadout): Promise<void> {
+    reduxStore.dispatch(actions.deleteLoadout(loadout.id));
+    await SyncService.remove(loadout.id);
+    await saveLoadouts(reduxStore.getState().loadouts.loadouts);
+    $rootScope.$broadcast('dim-delete-loadout', {
+      loadout
     });
   }
 
-  function deleteLoadout(loadout: Loadout): IPromise<Loadout[]> {
-    return getLoadouts()
-      .then((loadouts) => {
-        const index = _.findIndex(loadouts, { id: loadout.id });
-        if (index >= 0) {
-          loadouts.splice(index, 1);
-        }
-
-        return SyncService.remove(loadout.id!.toString()).then(() => loadouts) as IPromise<
-          Loadout[]
-        >;
-      })
-      .then(saveLoadouts)
-      .then((loadouts) => {
-        $rootScope.$broadcast('dim-delete-loadout', {
-          loadout
-        });
-
-        return loadouts;
-      });
-  }
-
-  function saveLoadout(loadout: Loadout): IPromise<Loadout[]> {
-    return getLoadouts()
-      .then((loadouts) => {
-        if (!_.has(loadout, 'id')) {
-          loadout.id = uuidv4();
-        }
-
-        // Handle overwriting an old loadout
-        const existingLoadoutIndex = _.findIndex(loadouts, { id: loadout.id });
-        if (existingLoadoutIndex > -1) {
-          loadouts[existingLoadoutIndex] = loadout;
-        } else {
-          loadouts.push(loadout);
-        }
-
-        return saveLoadouts(loadouts);
-      })
-      .then((loadouts) => {
-        $rootScope.$broadcast('dim-filter-invalidate-loadouts');
-        $rootScope.$broadcast('dim-save-loadout', {
-          loadout
-        });
-
-        return loadouts;
-      });
+  async function saveLoadout(loadout: Loadout): Promise<void> {
+    reduxStore.dispatch(actions.updateLoadout(loadout));
+    await saveLoadouts(reduxStore.getState().loadouts.loadouts);
+    $rootScope.$broadcast('dim-filter-invalidate-loadouts');
+    $rootScope.$broadcast('dim-save-loadout', {
+      loadout
+    });
   }
 
   function hydrate(loadoutData: DehydratedLoadout): Loadout {
@@ -233,7 +186,7 @@ function LoadoutService(): LoadoutServiceType {
    * @param allowUndo whether to include this loadout in the "undo loadout" menu stack.
    * @return a promise for the completion of the whole loadout operation.
    */
-  function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): IPromise<void> {
+  async function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): Promise<void> {
     if (!store) {
       throw new Error('You need a store!');
     }
@@ -243,23 +196,17 @@ function LoadoutService(): LoadoutServiceType {
       console.log('LoadoutService: Apply loadout', loadout.name, 'to', store.name);
     }
 
-    return queueAction(() => {
-      if (allowUndo) {
-        if (!_previousLoadouts[store.id]) {
-          _previousLoadouts[store.id] = [];
-        }
-
-        if (!store.isVault) {
-          const lastPreviousLoadout = _.last(_previousLoadouts[store.id]);
-          if (lastPreviousLoadout && loadout.id === lastPreviousLoadout.id) {
-            _previousLoadouts[store.id].pop();
-          } else {
-            const previousLoadout = store.loadoutFromCurrentlyEquipped(
+    const doLoadout = async () => {
+      if (allowUndo && !store.isVault) {
+        reduxStore.dispatch(
+          actions.savePreviousLoadout({
+            storeId: store.id,
+            loadoutId: loadout.id,
+            previousLoadout: store.loadoutFromCurrentlyEquipped(
               t('Loadouts.Before', { name: loadout.name })
-            );
-            _previousLoadouts[store.id].push(previousLoadout);
-          }
-        }
+            )
+          })
+        );
       }
 
       let items: DimItem[] = copy(_.flatten(Object.values(loadout.items)));
@@ -329,8 +276,6 @@ function LoadoutService(): LoadoutServiceType {
         successfulItems: [] as DimItem[]
       };
 
-      let promise: IPromise<any> = $q.when();
-
       if (itemsToDequip.length > 1) {
         const realItemsToDequip = _.compact(
           itemsToDequip.map((i) => storeService.getItemAcrossStores(i))
@@ -341,75 +286,69 @@ function LoadoutService(): LoadoutServiceType {
           );
           return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
         });
-        promise = $q.all(dequips);
+        await Promise.all(dequips);
       }
 
-      promise = promise
-        .then(() => applyLoadoutItems(store, items, loadoutItemIds, scope))
-        .then(() => {
-          if (itemsToEquip.length > 1) {
-            // Use the bulk equipAll API to equip all at once.
-            itemsToEquip = itemsToEquip.filter((i) =>
-              scope.successfulItems.find((si) => si.id === i.id)
-            );
-            const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
-            return dimItemService.equipItems(store, realItemsToEquip);
-          } else {
-            return itemsToEquip;
-          }
-        })
-        .then((equippedItems) => {
-          if (equippedItems.length < itemsToEquip.length) {
-            const failedItems = _.filter(itemsToEquip, (i) => {
-              return !_.find(equippedItems, { id: i.id });
-            });
-            failedItems.forEach((item) => {
-              scope.failed++;
-              toaster.pop(
-                'error',
-                loadout.name,
-                t('Loadouts.CouldNotEquip', { itemname: item.name })
-              );
-            });
-          }
-        })
-        .then(() => {
-          // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
-          // is fixed on Bungie's end. When that happens, just remove this call.
-          if (scope.successfulItems.length > 0) {
-            return storeService.updateCharacters();
-          }
-          return [];
-        })
-        .then(() => {
-          let value = 'success';
+      await applyLoadoutItems(store, items, loadoutItemIds, scope);
 
-          let message = t('Loadouts.Applied', {
-            count: scope.total,
-            store: store.name,
-            gender: store.gender
-          });
+      let equippedItems;
+      if (itemsToEquip.length > 1) {
+        // Use the bulk equipAll API to equip all at once.
+        itemsToEquip = itemsToEquip.filter((i) =>
+          scope.successfulItems.find((si) => si.id === i.id)
+        );
+        const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i, store)));
+        equippedItems = await dimItemService.equipItems(store, realItemsToEquip);
+      } else {
+        equippedItems = itemsToEquip;
+      }
 
-          if (scope.failed > 0) {
-            if (scope.failed === scope.total) {
-              value = 'error';
-              message = t('Loadouts.AppliedError');
-            } else {
-              value = 'warning';
-              message = t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total });
-            }
-          }
-
-          toaster.pop(value, loadout.name, message);
+      if (equippedItems.length < itemsToEquip.length) {
+        const failedItems = _.filter(itemsToEquip, (i) => {
+          return !_.find(equippedItems, { id: i.id });
         });
+        failedItems.forEach((item) => {
+          scope.failed++;
+          toaster.pop('error', loadout.name, t('Loadouts.CouldNotEquip', { itemname: item.name }));
+        });
+      }
 
+      // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
+      // is fixed on Bungie's end. When that happens, just remove this call.
+      if (scope.successfulItems.length > 0) {
+        await storeService.updateCharacters();
+      }
+
+      let value = 'success';
+
+      let message = t('Loadouts.Applied', {
+        count: scope.total,
+        store: store.name,
+        gender: store.gender
+      });
+
+      if (scope.failed > 0) {
+        if (scope.failed === scope.total) {
+          value = 'error';
+          message = t('Loadouts.AppliedError');
+        } else {
+          value = 'warning';
+          message = t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total });
+        }
+      }
+
+      toaster.pop(value, loadout.name, message);
+    };
+
+    return queueAction(() => {
+      const promise = doLoadout();
       loadingTracker.addPromise(promise);
       return promise;
     });
   }
 
   // Move one loadout item at a time. Called recursively to move items!
-  function applyLoadoutItems(
+  async function applyLoadoutItems(
     store: DimStore,
     items: DimItem[],
     loadoutItemIds: { id: string; hash: number }[],
@@ -421,41 +360,40 @@ function LoadoutService(): LoadoutServiceType {
   ) {
     if (items.length === 0) {
       // We're done!
-      return $q.when();
+      return;
     }
 
-    let promise: IPromise<any> = $q.when();
     const pseudoItem = items.shift()!;
     const item = getLoadoutItem(pseudoItem, store);
 
-    if (item) {
-      if (item.maxStackSize > 1) {
-        // handle consumables!
-        const amountAlreadyHave = store.amountOfItem(pseudoItem);
-        let amountNeeded = pseudoItem.amount - amountAlreadyHave;
-        if (amountNeeded > 0) {
-          const otherStores = store
-            .getStoresService()
-            .getStores()
-            .filter((otherStore) => store.id !== otherStore.id);
-          const storesByAmount = _.sortBy(
-            otherStores.map((store) => {
-              return {
-                store,
-                amount: store.amountOfItem(pseudoItem)
-              };
-            }),
-            'amount'
-          ).reverse();
+    try {
+      if (item) {
+        if (item.maxStackSize > 1) {
+          // handle consumables!
+          const amountAlreadyHave = store.amountOfItem(pseudoItem);
+          let amountNeeded = pseudoItem.amount - amountAlreadyHave;
+          if (amountNeeded > 0) {
+            const otherStores = store
+              .getStoresService()
+              .getStores()
+              .filter((otherStore) => store.id !== otherStore.id);
+            const storesByAmount = _.sortBy(
+              otherStores.map((store) => {
+                return {
+                  store,
+                  amount: store.amountOfItem(pseudoItem)
+                };
+              }),
+              'amount'
+            ).reverse();
 
-          let totalAmount = amountAlreadyHave;
-          while (amountNeeded > 0) {
-            const source = _.max(storesByAmount, (s) => s.amount);
-            const amountToMove = Math.min(source.amount, amountNeeded);
-            const sourceItem = _.find(source.store.items, { hash: pseudoItem.hash });
+            let totalAmount = amountAlreadyHave;
+            while (amountNeeded > 0) {
+              const source = _.max(storesByAmount, (s) => s.amount);
+              const amountToMove = Math.min(source.amount, amountNeeded);
+              const sourceItem = _.find(source.store.items, { hash: pseudoItem.hash });
 
-            if (amountToMove === 0 || !sourceItem) {
-              promise = promise.then(() => {
+              if (amountToMove === 0 || !sourceItem) {
                 const error: Error & { level?: string } = new Error(
                   t('Loadouts.TooManyRequested', {
                     total: totalAmount,
@@ -464,49 +402,41 @@ function LoadoutService(): LoadoutServiceType {
                   })
                 );
                 error.level = 'warn';
-                return $q.reject(error);
-              });
-              break;
+                throw error;
+              }
+
+              source.amount -= amountToMove;
+              amountNeeded -= amountToMove;
+              totalAmount += amountToMove;
+
+              await dimItemService.moveTo(sourceItem, store, false, amountToMove, loadoutItemIds);
             }
-
-            source.amount -= amountToMove;
-            amountNeeded -= amountToMove;
-            totalAmount += amountToMove;
-
-            promise = promise.then(() =>
-              dimItemService.moveTo(sourceItem, store, false, amountToMove, loadoutItemIds)
-            );
           }
+        } else {
+          // Pass in the list of items that shouldn't be moved away
+          await dimItemService.moveTo(
+            item,
+            store,
+            pseudoItem.equipped,
+            item.amount,
+            loadoutItemIds
+          );
         }
-      } else {
-        // Pass in the list of items that shouldn't be moved away
-        promise = dimItemService.moveTo(
-          item,
-          store,
-          pseudoItem.equipped,
-          item.amount,
-          loadoutItemIds
-        );
       }
+
+      if (item) {
+        scope.successfulItems.push(item);
+      }
+    } catch (e) {
+      const level = e.level || 'error';
+      if (level === 'error') {
+        scope.failed++;
+      }
+      toaster.pop(e.level || 'error', item ? item.name : 'Unknown', e.message);
     }
 
-    promise = promise
-      .then(() => {
-        if (item) {
-          scope.successfulItems.push(item);
-        }
-      })
-      .catch((e) => {
-        const level = e.level || 'error';
-        if (level === 'error') {
-          scope.failed++;
-        }
-        toaster.pop(e.level || 'error', item ? item.name : 'Unknown', e.message);
-      })
-      // Keep going
-      .finally(() => applyLoadoutItems(store, items, loadoutItemIds, scope));
-
-    return promise;
+    // Keep going
+    return applyLoadoutItems(store, items, loadoutItemIds, scope);
   }
 
   function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {

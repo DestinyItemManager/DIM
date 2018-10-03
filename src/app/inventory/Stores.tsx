@@ -44,6 +44,8 @@ function mapStateToProps(state: RootState): Props {
  * Display inventory and character headers for all characters and the vault.
  */
 class Stores extends React.Component<Props, State> {
+  private detachedLoadoutMenu = React.createRef<HTMLDivElement>();
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -81,10 +83,10 @@ class Stores extends React.Component<Props, State> {
                   {stores.map((store) => (
                     <View className="store-cell" key={store.id}>
                       <StoreHeading
-                        internalLoadoutMenu={false}
                         store={store}
                         selectedStore={selectedStore}
                         onTapped={this.selectStore}
+                        loadoutMenuRef={this.detachedLoadoutMenu}
                       />
                     </View>
                   ))}
@@ -93,7 +95,7 @@ class Stores extends React.Component<Props, State> {
             </ViewPager>
           </ScrollClassDiv>
 
-          <div className="detached" loadout-id={selectedStore.id} />
+          <div className="loadout-menu detached" ref={this.detachedLoadoutMenu} />
 
           <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
             {this.renderStores([selectedStore], vault)}
@@ -107,7 +109,7 @@ class Stores extends React.Component<Props, State> {
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
           {stores.map((store) => (
             <div className="store-cell" key={store.id}>
-              <StoreHeading internalLoadoutMenu={true} store={store} />
+              <StoreHeading store={store} />
             </div>
           ))}
         </ScrollClassDiv>
@@ -140,6 +142,7 @@ class Stores extends React.Component<Props, State> {
     this.setState({ selectedStoreId: storeId });
   };
 
+  // TODO: move RenderStores to a component
   private renderStores(stores: DimStore[], vault: DimVault) {
     const { buckets, collapsedSections } = this.props;
 

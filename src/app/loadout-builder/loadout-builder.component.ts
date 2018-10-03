@@ -18,6 +18,7 @@ import { D1Store } from '../inventory/store-types';
 import { dimVendorService } from '../vendors/vendor.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { Transition } from '@uirouter/react';
+import { newLoadout } from '../loadout/loadout-utils';
 
 export const LoadoutBuilderComponent: IComponentOptions = {
   controller: LoadoutBuilderController,
@@ -793,11 +794,8 @@ function LoadoutBuilderController(
       },
       newLoadout(set) {
         ngDialog.closeAll();
-        const loadout: Loadout = {
-          name: '',
-          items: {},
-          classType: { warlock: 0, titan: 1, hunter: 2 }[vm.active]
-        };
+        const loadout = newLoadout('', {});
+        loadout.classType = { warlock: 0, titan: 1, hunter: 2 }[vm.active];
         const items = _.pick(
           set.armor,
           'Helmet',
@@ -820,11 +818,8 @@ function LoadoutBuilderController(
       },
       equipItems(set) {
         ngDialog.closeAll();
-        let loadout: Loadout = {
-          items: {},
-          name: $i18next.t('Loadouts.AppliedAuto'),
-          classType: { warlock: 0, titan: 1, hunter: 2 }[vm.active]
-        };
+        let loadout: Loadout = newLoadout($i18next.t('Loadouts.AppliedAuto'), {});
+        loadout.classType = { warlock: 0, titan: 1, hunter: 2 }[vm.active];
         const items = _.pick(
           set.armor,
           'Helmet',
