@@ -1,7 +1,7 @@
-import * as React from 'react';
-import * as classNames from 'classnames';
-import BungieImage from '../dim-ui/BungieImage';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import * as classNames from 'classnames';
+import * as React from 'react';
+import BungieImage from '../../../dim-ui/BungieImage';
 
 export default function SelectableBungieImage({
   perk,

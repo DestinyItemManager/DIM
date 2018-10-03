@@ -6,27 +6,24 @@ import { connect } from 'react-redux';
 import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import CharacterDropdown from '../character-select/CharacterDropdown';
-import BungieImage from '../dim-ui/BungieImage';
-import { Loading } from '../dim-ui/Loading';
-import PressTip from '../dim-ui/PressTip';
-import { D2StoresService } from '../inventory/d2-stores.service';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
-import { D2Item, DimSocket } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
-import StoreInventoryItem from '../inventory/StoreInventoryItem';
-import LoadoutDrawer from '../loadout/loadout-drawer';
-import { dimLoadoutService, Loadout } from '../loadout/loadout.service';
-import { RootState } from '../store/reducers';
-import { sum } from '../util';
-import './loadoutbuilder.scss';
-import LockedArmor from './LockedArmor';
-
 import { getKiosks } from '../bungie-api/destiny2-api';
+import CharacterDropdown from '../character-select/CharacterDropdown';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
+import { Loading } from '../dim-ui/Loading';
+import { D2StoresService } from '../inventory/d2-stores.service';
+import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import { D2Item } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { loadingTracker } from '../ngimport-more';
+import { RootState } from '../store/reducers';
+import GeneratedSets from './generated-sets/GeneratedSets';
+import './loadoutbuilder.scss';
+import { ArmorSet, LockableBuckets, LockType, SetType } from './types';
+import { filterPlugs, getSetsForTier } from './utils';
+import LockedArmor from './locked-armor/LockedArmor';
+import startNewProcess from './process';
 
 interface Props {
   account: DestinyAccount;
@@ -38,12 +35,10 @@ interface Props {
 interface State {
   processRunning: number;
   requirePerks: boolean;
-  loadout?: Loadout;
   lockedMap: { [bucketHash: number]: LockType };
-  processedSets?: {};
-  matchedSets?: ArmorSet[];
+  processedSets: { [setHash: string]: SetType };
+  matchedSets: ArmorSet[];
   setTiers: string[];
-  selectedTier: string;
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
 }
@@ -55,215 +50,12 @@ const items: {
   [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
 } = {};
 
-let killProcess = false;
-
-type ArmorTypes = 'Helmet' | 'Gauntlets' | 'Chest' | 'Leg' | 'ClassItem';
-type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
-export interface LockType {
-  type: 'item' | 'perk' | 'exclude';
-  items: D2Item[];
-}
-
-interface ArmorSet {
-  armor: D2Item[];
-  power: number;
-  stats: { [statType in StatTypes]: number };
-  setHash: string;
-  includesVendorItems: boolean;
-}
-
-interface SetType {
-  set: ArmorSet;
-  tiers: {
-    [tierString: string]: {
-      stats: ArmorSet['stats'];
-      configs: { [armorType in ArmorTypes]: string };
-    };
-  };
-}
-
-// bucket lookup, also used for ordering of the buckets.
-const lockableBuckets = {
-  helmet: 3448274439,
-  gauntlets: 3551918588,
-  chest: 14239492,
-  leg: 20886954,
-  classitem: 1585787867
-};
-
 function mapStateToProps(state: RootState): Partial<Props> {
   return {
     buckets: state.inventory.buckets!,
     storesLoaded: state.inventory.stores.length > 0,
     stores: state.inventory.stores
   };
-}
-
-function getActiveHighestSets(
-  setMap: { [setHash: string]: SetType },
-  activeSets: string
-): ArmorSet[] {
-  let count = 0;
-  const matchedSets: ArmorSet[] = [];
-  // TODO: this lookup by tier is expensive
-  Object.values(setMap).forEach((setType) => {
-    // limit to render just 10 sets, for now.
-    if (count >= 10) {
-      return;
-    }
-    if (setType.tiers[activeSets]) {
-      matchedSets.push(setType.set);
-      count += 1;
-    }
-  });
-  return matchedSets.sort((a, b) => b.power - a.power);
-}
-
-function process(filteredItems: { [bucket: number]: D2Item[] }) {
-  const pstart = performance.now();
-  const helms = filteredItems[lockableBuckets.helmet] || [];
-  const gaunts = filteredItems[lockableBuckets.gauntlets] || [];
-  const chests = filteredItems[lockableBuckets.chest] || [];
-  const legs = filteredItems[lockableBuckets.leg] || [];
-  const classitems = filteredItems[lockableBuckets.classitem] || [];
-  const setMap: { [setHash: number]: SetType } = {};
-  const tiersSet = new Set<string>();
-  const setTiers: string[] = [];
-  const combos = helms.length * gaunts.length * chests.length * legs.length * classitems.length;
-
-  if (combos === 0) {
-    // why should this ever happen?
-    return;
-  }
-
-  function calcArmorStats(pieces, stats) {
-    let i = pieces.length;
-    while (i--) {
-      if (pieces[i].stats.length) {
-        stats.STAT_MOBILITY += pieces[i].stats[0].base;
-        stats.STAT_RESILIENCE += pieces[i].stats[1].base;
-        stats.STAT_RECOVERY += pieces[i].stats[2].base;
-      }
-    }
-  }
-
-  function step(h = 0, g = 0, c = 0, l = 0, ci = 0, processedCount = 0) {
-    for (; h < helms.length; ++h) {
-      for (; g < gaunts.length; ++g) {
-        for (; c < chests.length; ++c) {
-          for (; l < legs.length; ++l) {
-            for (; ci < classitems.length; ++ci) {
-              const validSet =
-                Number(helms[h].isExotic) +
-                  Number(gaunts[g].isExotic) +
-                  Number(chests[c].isExotic) +
-                  Number(legs[l].isExotic) <
-                2;
-
-              if (validSet) {
-                const set: ArmorSet = {
-                  armor: [helms[h], gaunts[g], chests[c], legs[l], classitems[ci]],
-                  power:
-                    helms[h].basePower +
-                    gaunts[g].basePower +
-                    chests[c].basePower +
-                    legs[l].basePower +
-                    classitems[ci].basePower,
-                  stats: {
-                    STAT_MOBILITY: 0,
-                    STAT_RESILIENCE: 0,
-                    STAT_RECOVERY: 0
-                  },
-                  setHash:
-                    helms[h].id + gaunts[g].id + chests[c].id + legs[l].id + classitems[ci].id,
-                  includesVendorItems: false
-                };
-
-                calcArmorStats(set.armor, set.stats);
-                const tiersString = `${set.stats.STAT_MOBILITY}/${set.stats.STAT_RESILIENCE}/${
-                  set.stats.STAT_RECOVERY
-                }`;
-
-                tiersSet.add(tiersString);
-
-                // Build a map of all sets but only keep one copy of armor
-                // so we reduce memory usage
-                if (setMap[set.setHash]) {
-                  if (setMap[set.setHash].tiers[tiersString]) {
-                    // setMap[set.setHash].tiers[tiersString].configs.push(getBonusConfig(set.armor));
-                  } else {
-                    setMap[set.setHash].tiers[tiersString] = {
-                      stats: set.stats
-                      // configs: [getBonusConfig(set.armor)]
-                    };
-                  }
-                } else {
-                  setMap[set.setHash] = { set, tiers: {} };
-                  setMap[set.setHash].tiers[tiersString] = {
-                    stats: set.stats
-                    // configs: [getBonusConfig(set.armor)]
-                  };
-                }
-                // set.includesVendorItems = pieces.some((armor: any) => armor.isVendorItem);
-              }
-
-              processedCount++;
-              if (processedCount % 50000 === 0) {
-                if (killProcess) {
-                  this.setState({ processRunning: 0 });
-                  killProcess = false;
-                  return;
-                }
-                this.setState({ processRunning: Math.floor((processedCount / combos) * 100) });
-                return window.requestAnimationFrame(() => {
-                  step.call(this, h, g, c, l, ci, processedCount);
-                });
-              }
-            }
-            ci = 0;
-          }
-          l = 0;
-        }
-        c = 0;
-      }
-      g = 0;
-    }
-
-    const tiers = _.each(
-      _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-        return sum(tierString.split('/'), (num) => parseInt(num, 10));
-      }),
-      (tier) => {
-        tier.sort().reverse();
-      }
-    );
-
-    const tierKeys = Object.keys(tiers);
-    for (let t = tierKeys.length; t > tierKeys.length - 3; t--) {
-      if (tierKeys[t]) {
-        setTiers.push(`- Tier ${tierKeys[t]} -`);
-        tiers[tierKeys[t]].forEach((set) => {
-          setTiers.push(set);
-        });
-      }
-    }
-
-    let selectedTier = this.state.selectedTier;
-    if (!setTiers.includes(selectedTier)) {
-      selectedTier = setTiers[1];
-    }
-
-    this.setState({
-      setTiers,
-      selectedTier,
-      processedSets: setMap,
-      matchedSets: getActiveHighestSets(setMap, selectedTier),
-      processRunning: 0
-    });
-    console.log('processed', combos, 'combinations in', performance.now() - pstart);
-  }
-
-  return step.call(this);
 }
 
 /**
@@ -277,9 +69,10 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.state = {
       requirePerks: true,
       processRunning: 0,
-      setTiers: [],
-      selectedTier: '7/7/7', // what is the defacto "best", akin to 5/5/2?
-      lockedMap: {}
+      lockedMap: {},
+      processedSets: {},
+      matchedSets: [],
+      setTiers: []
     };
   }
 
@@ -354,6 +147,11 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.storesSubscription.unsubscribe();
   }
 
+  /**
+   * This function should be fired any time that a configuration option changes
+   *
+   * The work done in this function is to filter down items to process based on what is locked
+   */
   computeSets = (classType: number, lockedMap: {}, requirePerks: boolean) => {
     const allItems = { ...items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
@@ -388,16 +186,19 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           }
         });
       }
-
-      // if there is nothing locked for that instance, just pick good items
     });
 
     // filter to only include items that are in the locked map
     Object.keys(lockedMap).forEach((bucket) => {
       // if there are locked items for this bucket
       if (lockedMap[bucket] && lockedMap[bucket].items.length) {
-        // if the locked bucket is a perk
-        if (lockedMap[bucket].type === 'perk') {
+        // filter out excluded items
+        if (lockedMap[bucket].type === 'exclude') {
+          filteredItems[bucket] = filteredItems[bucket].filter(
+            (item) =>
+              !lockedMap[bucket].items.find((excludeItem) => excludeItem.index === item.index)
+          );
+        } else if (lockedMap[bucket].type === 'perk') {
           // filter out items that do not have a locked perk
           filteredItems[bucket] = filteredItems[bucket].filter((item) =>
             item.sockets.sockets.find((slot) =>
@@ -411,24 +212,23 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     });
 
     // re-process all sets
-    this.startNewProcess(filteredItems);
+    startNewProcess.call(this, filteredItems);
     this.setState({ lockedMap });
   };
 
-  startNewProcess = (filteredItems: { [bucket: number]: D2Item[] }) => {
-    if (this.state.processRunning !== 0) {
-      killProcess = true;
-      return window.requestAnimationFrame(() => this.startNewProcess(filteredItems));
-    }
-
-    process.call(this, filteredItems);
-  };
-
+  /**
+   * Reset all locked items and recompute for all sets
+   * Recomputes matched sets
+   */
   resetLocked = () => {
-    this.setState({ lockedMap: {}, setTiers: [], matchedSets: undefined });
+    this.setState({ lockedMap: {}, matchedSets: [] });
     this.computeSets(this.state.selectedStore!.classType, {}, this.state.requirePerks);
   };
 
+  /**
+   * Lock currently equipped items on a character
+   * Recomputes matched sets
+   */
   lockEquipped = () => {
     const lockedMap = {};
     this.state.selectedStore!.items.forEach((item) => {
@@ -443,12 +243,20 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.computeSets(this.state.selectedStore!.classType, lockedMap, this.state.requirePerks);
   };
 
+  /**
+   * Handle when selected character changes
+   * Recomputes matched sets
+   */
   onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {}, setTiers: [], matchedSets: undefined });
+    this.setState({ selectedStore, lockedMap: {}, setTiers: [], matchedSets: [] });
     this.computeSets(selectedStore.classType, {}, this.state.requirePerks);
   };
 
+  /**
+   * Adds an item to the locked map bucket
+   * Recomputes matched sets
+   */
   updateLockedArmor = (bucket: InventoryBucket, locked: LockType) => {
     const lockedMap = this.state.lockedMap;
     lockedMap[bucket.hash] = locked;
@@ -456,16 +264,10 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.computeSets(this.state.selectedStore!.classType, lockedMap, this.state.requirePerks);
   };
 
-  setSelectedTier = (element) => {
-    if (!this.state.processedSets) {
-      return;
-    }
-    this.setState({
-      selectedTier: element.target.value,
-      matchedSets: getActiveHighestSets(this.state.processedSets, element.target.value)
-    });
-  };
-
+  /**
+   * Handle then the required perks checkbox is toggled
+   * Recomputes matched sets
+   */
   setRequiredPerks = (element) => {
     this.setState({ requirePerks: element.target.checked });
     this.computeSets(
@@ -475,44 +277,18 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     );
   };
 
-  createLoadout(hash): Loadout {
-    const set = this.state.processedSets![hash].set;
-    return {
-      platform: this.props.account.platformLabel, // Playstation or Xbox
-      destinyVersion: this.props.account.destinyVersion, // D1 or D2
-      items: {
-        helmet: [set.armor[0]],
-        gauntlets: [set.armor[1]],
-        chest: [set.armor[2]],
-        leg: [set.armor[3]],
-        classitem: [set.armor[4]]
-      },
-      name: t('Loadouts.AppliedAuto'),
-      classType: { warlock: 0, titan: 1, hunter: 2 }[this.state.selectedStore!.class]
-    };
-  }
-
-  resetActiveLoadout = () => {
-    this.setState({ loadout: undefined });
-  };
-
-  newLoadout = (element) => {
-    this.setState({ loadout: this.createLoadout(element.target.value) });
-  };
-
-  equipItems = (element) => {
-    const loadout: Loadout = this.createLoadout(element.target.value);
-
-    _.each(loadout.items, (val) => {
-      val[0].equipped = true;
+  /**
+   *  Handle when the tier dropdown changes to render previously generated sets that match the tier
+   */
+  setSelectedTier = (tier) => {
+    this.setState({
+      matchedSets: getSetsForTier(this.state.processedSets, this.state.lockedMap, tier)
     });
-
-    return dimLoadoutService.applyLoadout(this.state.selectedStore!, loadout, true);
   };
 
   render() {
-    const { storesLoaded, stores, buckets } = this.props;
-    const { lockedMap, setTiers, selectedStore, processRunning } = this.state;
+    const { account, storesLoaded, stores, buckets } = this.props;
+    const { processRunning, lockedMap, matchedSets, setTiers, selectedStore } = this.state;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -529,8 +305,8 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
     return (
       <div className="vendor d2-vendors dim-page">
-        <h1>Loadout Builder</h1>
-        <h3>Select Character</h3>
+        <h1>{t('LoadoutBuilder.Title')}</h1>
+        <h3>{t('LoadoutBuilder.SelectCharacter')}</h3>
         <div className="flex">
           <CharacterDropdown
             selectedStore={store}
@@ -538,7 +314,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
             onCharacterChanged={this.onCharacterChanged}
           />
           <div className="flex">
-            {Object.values(lockableBuckets).map((armor) => (
+            {Object.values(LockableBuckets).map((armor) => (
               <LockedArmor
                 key={armor}
                 locked={lockedMap[armor]}
@@ -551,15 +327,15 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           </div>
           <div className="flex column">
             <button className="dim-button" onClick={this.lockEquipped}>
-              Lock Equipped
+              {t('LoadoutBuilder.LockEquipped')}
             </button>
             <button className="dim-button" onClick={this.resetLocked}>
-              Reset Locked
+              {t('LoadoutBuilder.ResetLocked')}
             </button>
           </div>
         </div>
 
-        <h3>Options</h3>
+        <h3>{t('LoadoutBuilder.Options')}</h3>
         <div>
           <input
             id="required-perks"
@@ -567,118 +343,23 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
             checked={this.state.requirePerks}
             onChange={this.setRequiredPerks}
           />
-          <label htmlFor="required-perks">Require additional perks on all amor</label>
+          <label htmlFor="required-perks">{t('LoadoutBuilder.RequirePerks')}</label>
         </div>
 
-        {processRunning > 0 && <h3>Generating builds... {this.state.processRunning}%</h3>}
-        {processRunning === 0 &&
-          setTiers.length !== 0 && (
-            <>
-              <h3>Select Build Tier</h3>
-              <select onChange={this.setSelectedTier}>
-                {setTiers.map((tier) => (
-                  <option key={tier} value={tier} disabled={tier.charAt(0) === '-'}>
-                    {tier}
-                  </option>
-                ))}
-              </select>
-            </>
-          )}
-        {processRunning === 0 &&
-          this.state.matchedSets && (
-            <>
-              <h3>
-                {this.state.matchedSets.length === 0 && 'Found 0 '}
-                Generated Builds
-              </h3>
-              {this.state.matchedSets.map((set) => (
-                <div className="generated-build" key={set.setHash}>
-                  <div className="generated-build-buttons">
-                    <button className="dim-button" value={set.setHash} onClick={this.newLoadout}>
-                      Create Loadout
-                    </button>
-                    <button
-                      className="dim-button equip-button"
-                      value={set.setHash}
-                      onClick={this.equipItems}
-                    >
-                      Equip on {this.state.selectedStore!.name}
-                    </button>
-                  </div>
-                  <div className="sub-bucket">
-                    {Object.values(set.armor).map((item) => (
-                      <div className="generated-build-items" key={item.index}>
-                        <StoreInventoryItem item={item} isNew={false} searchHidden={false} />
-                        {item!.sockets!.categories.length === 2 &&
-                          item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
-                            <PressTip
-                              key={socket!.plug!.plugItem.hash}
-                              tooltip={<PlugTooltip item={item} socket={socket} />}
-                            >
-                              <div>
-                                <BungieImage
-                                  className="item-mod"
-                                  src={socket!.plug!.plugItem.displayProperties.icon}
-                                />
-                              </div>
-                            </PressTip>
-                          ))}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </>
-          )}
-        <LoadoutDrawer loadout={this.state.loadout} onClose={this.resetActiveLoadout} />
+        <GeneratedSets
+          {...{
+            processRunning,
+            setTiers,
+            matchedSets,
+            lockedMap,
+            account,
+            selectedStore,
+            setSelectedTier: this.setSelectedTier
+          }}
+        />
       </div>
     );
   }
-}
-
-// Filter out plugs that we don't want to show in the perk dropdown.
-function filterPlugs(socket) {
-  if (socket.plug && ![3530997750, 2032054360, 1633794450].includes(socket.plug.plugItem.hash)) {
-    if (
-      socket.plug.plugItem.inventory.tierType !== 6 &&
-      socket.plug.plugItem.plug.plugCategoryHash === 1744546145
-    ) {
-      return false;
-    }
-    return true;
-  }
-}
-
-function PlugTooltip({ item, socket }: { item: D2Item; socket: DimSocket }) {
-  const plug = socket.plug;
-  if (!plug) {
-    return null;
-  }
-  return (
-    <>
-      <h2>
-        {plug.plugItem.displayProperties.name}
-        {item.masterworkInfo &&
-          plug.plugItem.investmentStats &&
-          plug.plugItem.investmentStats[0] &&
-          item.masterworkInfo.statHash === plug.plugItem.investmentStats[0].statTypeHash &&
-          ` (${item.masterworkInfo.statName})`}
-      </h2>
-
-      {plug.plugItem.displayProperties.description ? (
-        <div>{plug.plugItem.displayProperties.description}</div>
-      ) : (
-        plug.perks.map((perk) => (
-          <div key={perk.hash}>
-            {plug.plugItem.displayProperties.name !== perk.displayProperties.name && (
-              <div>{perk.displayProperties.name}</div>
-            )}
-            <div>{perk.displayProperties.description}</div>
-          </div>
-        ))
-      )}
-    </>
-  );
 }
 
 export default connect(mapStateToProps)(LoadoutBuilder);

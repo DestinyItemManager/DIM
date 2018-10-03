@@ -1,11 +1,17 @@
-import * as React from 'react';
-import { LockType } from './LoadoutBuilder';
 import classNames from 'classnames';
-import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
-import InventoryItem from '../inventory/InventoryItem';
-import BungieImage from '../dim-ui/BungieImage';
-import { InventoryBucket } from '../inventory/inventory-buckets';
+import { t } from 'i18next';
+import * as React from 'react';
+import BungieImage from '../../dim-ui/BungieImage';
+import { InventoryBucket } from '../../inventory/inventory-buckets';
+import InventoryItem from '../../inventory/InventoryItem';
+import ItemPopupTrigger from '../../inventory/ItemPopupTrigger';
+import { LockType } from '../types';
+import './lockeditem.scss';
 
+/**
+ * Render the locked item bucket. Could contain an item, perk, or a string if
+ * multiple things are selected.
+ */
 export default function LockedItem({
   locked,
   bucket,
@@ -20,7 +26,9 @@ export default function LockedItem({
     return (
       <div className="empty-item" onClick={toggleOpen}>
         <div className="add-perk-container">
-          <div className="add-perk-text">Lock {bucket.name}</div>
+          <div className="add-perk-text">
+            {t('LoadoutBuilder.LockBucket', { bucket: bucket.name })}
+          </div>
         </div>
       </div>
     );

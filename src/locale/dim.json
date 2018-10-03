@@ -392,7 +392,24 @@
     "Vendor": "Include Vendor items"
   },
   "LoadoutBuilder": {
-    "Title": "Loadout Builder"
+    "Title": "Loadout Builder",
+    "SelectCharacter": "Select Character",
+    "LockEquipped": "Lock Equipped",
+    "ResetLocked": "Reset Locked",
+    "Options": "Options",
+    "RequirePerks": "Require additional perks on all amor",
+    "Loading": "Generating builds... {{loading}}%",
+    "NoBuildsFound": "No Generated Builds Found",
+    "SelectTier": "Select Build Tier",
+    "GeneratedBuilds": "Generated Builds",
+    "CreateLoadout": "Create Loadout",
+    "EquipItems": "Equip on {{name}}",
+    "LockBucket": "Lock {{bucket}}",
+    "LockItemTabTitle": "Items",
+    "LockPerksTabTitle": "Perks",
+    "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
+    "LockPerksTitle": "Select perks to lock",
+    "ResetPerks": "Reset"
   },
   "Loadouts": {
     "Any": "Any class",
