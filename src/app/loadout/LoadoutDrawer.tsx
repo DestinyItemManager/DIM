@@ -5,7 +5,7 @@ import { toaster } from '../ngimport-more';
 import { dimLoadoutService, Loadout } from './loadout.service';
 import CharacterStats from '../inventory/CharacterStats';
 import * as _ from 'underscore';
-import { D1CharacterStat } from '../inventory/store-types';
+import { D1Store, D2Store } from '../inventory/store-types';
 import { $rootScope } from 'ngimport';
 import { sortItems } from '../shell/dimAngularFilters.filter';
 import classNames from 'classnames';
@@ -15,6 +15,7 @@ import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.s
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DimItem } from '../inventory/item-types';
 import { getCharacterStatsData } from '../inventory/store/character-utils';
+import { getCharacterStatsData as getD2CharacterStatsData } from '../inventory/store/d2-store-factory.service';
 import uuidv4 from 'uuid/v4';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
@@ -45,9 +46,7 @@ interface State {
   show: boolean;
 
   // D1 stats display
-  stats?: {
-    [statHash: string]: D1CharacterStat;
-  };
+  stats?: D1Store['stats'] | D2Store['stats'];
   hasArmor: boolean;
   completeArmor: boolean;
 }
@@ -144,6 +143,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
         loadout,
         warnitems
       });
+
+      this.recalculateStats(loadout);
     });
 
     this.$scope.$on('dim-store-item-clicked', (_event, args) => {
@@ -215,7 +216,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
               </span>
             </form>
           </div>
-          {warnitems.length && (
+          {warnitems.length > 0 && (
             <>
               <p>{t('Loadouts.VendorsCannotEquip')}:</p>
               <div className="loadout-contents">
@@ -425,41 +426,58 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
   };
 
-  private recalculateStats = () => {
+  private recalculateStats = (loadout = this.state.loadout) => {
     const { destinyVersion } = this.props;
-    const { loadout } = this.state;
 
-    if (destinyVersion !== 1 || !loadout || !loadout.items) {
+    if (!loadout || !loadout.items) {
       this.setState({ stats: undefined });
       return;
     }
 
     const items = loadout.items;
-    const interestingStats = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
+    const interestingStats = new Set([
+      'STAT_INTELLECT',
+      'STAT_DISCIPLINE',
+      'STAT_STRENGTH',
+      'maxBasePower',
+      '2996146975',
+      '392767087',
+      '1943323491'
+    ]);
 
     let numInterestingStats = 0;
     const allItems: DimItem[] = _.flatten(Object.values(items));
     const equipped = allItems.filter((i) => i.equipped);
     const stats = flatMap(equipped, (i) => i.stats!);
-    const filteredStats = stats.filter((stat) => stat && interestingStats.has(stat.id.toString()));
+    const filteredStats = stats.filter(
+      (stat) =>
+        stat &&
+        (interestingStats.has(stat.id.toString()) || interestingStats.has(stat.statHash.toString()))
+    );
     const combinedStats = filteredStats.reduce((stats, stat) => {
       numInterestingStats++;
-      if (stats[stat.id]) {
-        stats[stat.id].value += stat.value;
+      if (destinyVersion === 1) {
+        if (stats[stat.id]) {
+          stats[stat.id].value += stat.value;
+        } else {
+          stats[stat.id] = {
+            statHash: stat.statHash,
+            value: stat.value
+          };
+        }
       } else {
-        stats[stat.id] = {
-          statHash: stat.statHash,
-          value: stat.value
-        };
+        stats[stat.statHash] = (stats[stat.statHash] || 0) + stat.value;
       }
       return stats;
     }, {});
+
+    console.log({ stats, filteredStats, combinedStats });
 
     // Seven types of things that contribute to these stats, times 3 stats, equals
     // a complete set of armor, ghost and artifact.
     this.setState({
       hasArmor: numInterestingStats > 0,
-      completeArmor: numInterestingStats === 7 * 3
+      completeArmor: numInterestingStats === (destinyVersion === 1 ? 7 : 5) * 3
     });
 
     if (_.isEmpty(combinedStats)) {
@@ -467,9 +485,17 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return;
     }
 
-    getD1Definitions().then((defs) => {
-      this.setState({ stats: getCharacterStatsData(defs.Stat, { stats: combinedStats }) });
-    });
+    if (destinyVersion === 1) {
+      getD1Definitions().then((defs) => {
+        this.setState({ stats: getCharacterStatsData(defs.Stat, { stats: combinedStats }) });
+      });
+    } else {
+      getD2Definitions().then((defs) => {
+        this.setState({
+          stats: getD2CharacterStatsData(defs.Stat, combinedStats)
+        });
+      });
+    }
   };
 
   private removeWarnItem = (item: DimItem) => {
