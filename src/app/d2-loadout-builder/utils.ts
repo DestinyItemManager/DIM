@@ -56,7 +56,7 @@ export function getSetsForTier(
               return 0;
             }
             return item.sockets.sockets.filter((slot) =>
-              slot.plugOptions.find((perk) =>
+              slot.plugOptions.some((perk) =>
                 lockedMap[bucket].items.find((lockedPerk) => lockedPerk.hash === perk.plugItem.hash)
               )
             ).length;
@@ -66,7 +66,7 @@ export function getSetsForTier(
               return 0;
             }
             return item.sockets.sockets.filter((slot) =>
-              slot.plugOptions.find((perk) =>
+              slot.plugOptions.some((perk) =>
                 lockedMap[bucket].items.find((lockedPerk) => lockedPerk.hash === perk.plugItem.hash)
               )
             ).length;
