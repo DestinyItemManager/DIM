@@ -6,17 +6,13 @@ import { connect } from 'react-redux';
 import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'underscore';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getKiosks } from '../bungie-api/destiny2-api';
 import CharacterDropdown from '../character-select/CharacterDropdown';
-import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
-import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
-import { loadingTracker } from '../ngimport-more';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import './loadoutbuilder.scss';
@@ -76,20 +72,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     };
   }
 
-  async loadCollections() {
-    const defs = await getDefinitions();
-
-    // not currently using this
-    const profileResponse = await getKiosks(this.props.account);
-
-    // not currently using this... or this...
-    const trackerService = await fetchRatingsForKiosks(defs, profileResponse);
-    this.setState({ trackerService });
-  }
-
   componentDidMount() {
-    loadingTracker.addPromise(this.loadCollections());
-
     this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
       (stores) => {
         if (!stores) {
@@ -287,7 +270,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
   };
 
   render() {
-    const { account, storesLoaded, stores, buckets } = this.props;
+    const { storesLoaded, stores, buckets } = this.props;
     const { processRunning, lockedMap, matchedSets, setTiers, selectedStore } = this.state;
 
     if (!storesLoaded) {
@@ -347,15 +330,12 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
         </div>
 
         <GeneratedSets
-          {...{
-            processRunning,
-            setTiers,
-            matchedSets,
-            lockedMap,
-            account,
-            selectedStore,
-            setSelectedTier: this.setSelectedTier
-          }}
+          processRunning={processRunning}
+          setTiers={setTiers}
+          matchedSets={matchedSets}
+          lockedMap={lockedMap}
+          selectedStore={selectedStore}
+          setSelectedTier={this.setSelectedTier}
         />
       </div>
     );

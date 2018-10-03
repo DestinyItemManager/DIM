@@ -1,6 +1,5 @@
 import { t } from 'i18next';
 import * as React from 'react';
-import { DestinyAccount } from '../../accounts/destiny-account.service';
 import BungieImage from '../../dim-ui/BungieImage';
 import PressTip from '../../dim-ui/PressTip';
 import StoreInventoryItem from '../../inventory/StoreInventoryItem';
@@ -14,7 +13,6 @@ import { DimStore } from '../../inventory/store-types';
 
 interface Props {
   processRunning: number;
-  account: DestinyAccount;
   selectedStore?: DimStore;
   matchedSets: ArmorSet[];
   lockedMap: { [bucketHash: number]: LockType };
@@ -38,7 +36,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
   };
 
   render() {
-    const { processRunning, matchedSets, setTiers, account, selectedStore } = this.props;
+    const { processRunning, matchedSets, setTiers, selectedStore } = this.props;
     const { loadout } = this.state;
 
     if (processRunning > 0) {
@@ -71,7 +69,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
               <div className="generated-build" key={set.setHash}>
                 <GeneratedSetButtons
                   set={set}
-                  account={account}
                   store={selectedStore!}
                   onLoadoutSet={this.setCreateLoadout}
                 />
