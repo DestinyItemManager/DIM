@@ -360,7 +360,7 @@ class SettingsPage extends React.Component<Props, State> {
             {$featureFlags.reviewsEnabled && (
               <>
                 <Checkbox
-                  label="Settings.EnableAdvancedStats"
+                  label="Settings.ShowReviews"
                   name="showReviews"
                   helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
                   value={settings.showReviews}
