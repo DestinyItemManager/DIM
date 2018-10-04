@@ -65,7 +65,7 @@ export const consolidate = queuedAction((actionableItem: DimItem, store: DimStor
         const amount = s.amountOfItem(actionableItem);
         return dimItemService.moveTo(item, vault, false, amount);
       }
-      return undefined;
+      return $q.when();
     })
   );
 

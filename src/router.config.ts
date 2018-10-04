@@ -34,7 +34,10 @@ export default function makeRouter() {
 
   // Scroll to the top of the page when we switch pages
   router.transitionService.onSuccess({}, () => {
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    if (document.documentElement) {
+      document.documentElement.scrollTop = 0;
+    }
   });
 
   if ($featureFlags.googleAnalyticsForRouter) {
