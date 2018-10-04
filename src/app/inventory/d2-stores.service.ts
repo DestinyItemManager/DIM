@@ -26,7 +26,7 @@ import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
-import { $rootScope, $q } from 'ngimport';
+import { $q } from 'ngimport';
 import { loadingTracker, toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
@@ -301,7 +301,6 @@ function makeD2StoresService(): D2StoreServiceType {
         return undefined;
       })
       .finally(() => {
-        $rootScope.$broadcast('dim-filter-invalidate');
         D2ManifestService.loaded = true;
       });
 

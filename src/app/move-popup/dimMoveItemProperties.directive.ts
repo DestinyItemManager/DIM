@@ -173,8 +173,8 @@ function MoveItemPropertiesCtrl(
     if (item.isDestiny2()) {
       $q.when(d2SetLockState(store, item, state))
         .then(() => {
+          // TODO: this doesn't work in React land
           item.locked = state;
-          $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(() => {
           vm.locking = false;
@@ -187,7 +187,6 @@ function MoveItemPropertiesCtrl(
           } else if (type === 'track') {
             item.tracked = state;
           }
-          $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(() => {
           vm.locking = false;

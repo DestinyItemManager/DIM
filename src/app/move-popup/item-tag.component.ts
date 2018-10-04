@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import template from './item-tag.html';
 import './item-tag.scss';
-import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
+import { IComponentOptions, IController, IScope } from 'angular';
 import { TagValue, itemTags } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 
@@ -17,8 +17,7 @@ function ItemTagController(
   this: IController & {
     item: DimItem;
   },
-  $scope: IScope,
-  $rootScope: IRootScopeService
+  $scope: IScope
 ) {
   'ngInject';
   const vm = this;
@@ -37,7 +36,6 @@ function ItemTagController(
     if (!vm.item.dimInfo.tag) {
       delete vm.item.dimInfo.tag;
     }
-    $rootScope.$broadcast('dim-filter-invalidate');
     vm.item.dimInfo.save!();
   };
 
@@ -47,7 +45,6 @@ function ItemTagController(
     } else {
       vm.item.dimInfo.tag = args.tag;
     }
-    $rootScope.$broadcast('dim-filter-invalidate');
     vm.item.dimInfo.save!();
   });
 }
