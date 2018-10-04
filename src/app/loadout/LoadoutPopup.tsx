@@ -372,7 +372,7 @@ class LoadoutPopup extends React.Component<Props> {
     return queueAction(() => pullFromPostmaster(dimStore, dimItemService, toaster));
   };
 
-  private startFarming = function startFarming() {
+  private startFarming = () => {
     const { dimStore } = this.props;
     (dimStore.isDestiny2() ? D2FarmingService : D1FarmingService).start(
       getPlatformMatching({
