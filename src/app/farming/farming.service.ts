@@ -10,6 +10,7 @@ import { t } from 'i18next';
 import { toaster } from '../ngimport-more';
 import { $q, $interval, $rootScope } from 'ngimport';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { refresh } from '../shell/refresh';
 
 export const D1FarmingService = FarmingService();
 
@@ -248,7 +249,7 @@ function FarmingService() {
 
         intervalId = $interval(() => {
           // just start reloading stores more often
-          $rootScope.$broadcast('dim-refresh');
+          refresh();
         }, 60000);
       }
     },

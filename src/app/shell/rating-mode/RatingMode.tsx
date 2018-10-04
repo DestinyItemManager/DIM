@@ -11,6 +11,7 @@ import { setSetting } from '../../settings/actions';
 import store from '../../store/store';
 import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import { refresh } from '../refresh';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -136,7 +137,7 @@ class RatingMode extends React.Component<Props, State> {
     const newModeSelection = e.target.value;
     store.dispatch(setSetting('reviewsModeSelection', newModeSelection));
     D2StoresService.refreshRatingsData();
-    $rootScope.$broadcast('dim-refresh');
+    refresh();
   };
 
   private platformChange = (e?) => {
@@ -147,7 +148,7 @@ class RatingMode extends React.Component<Props, State> {
     const newPlatformSelection = e.target.value;
     store.dispatch(setSetting('reviewsPlatformSelection', newPlatformSelection));
     D2StoresService.refreshRatingsData();
-    $rootScope.$broadcast('dim-refresh');
+    refresh();
   };
 }
 
