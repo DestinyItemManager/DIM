@@ -15,6 +15,7 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { $rootScope, $q } from 'ngimport';
 import { loadingTracker } from '../ngimport-more';
+import { D1ManifestService } from '../manifest/manifest-service';
 
 /*
 const allVendors = [
@@ -192,7 +193,7 @@ function VendorService(): VendorServiceType {
     .publishReplay(1);
 
   const clearVendors = _.once(() => {
-    $rootScope.$on('dim-new-manifest', () => {
+    D1ManifestService.newManifest$.subscribe(() => {
       service.vendors = {};
       service.vendorsLoaded = false;
       deleteCachedVendors();
