@@ -27,6 +27,8 @@ import { createSelector } from 'reselect';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { storesSelector } from '../inventory/reducer';
 import spartan from '../../images/spartan.png';
+import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
 
 interface StoreProps {
   types: string[];
@@ -36,6 +38,8 @@ interface StoreProps {
     label: string;
     value: number;
   }[];
+  storeIds: string[];
+  buckets: InventoryBuckets;
 }
 
 type Props = StoreProps;
@@ -88,12 +92,16 @@ const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
   return classTypeValues;
 });
 
+const storeIdsSelector = createSelector(storesSelector, (stores) => stores.map((s) => s.id));
+
 function mapStateToProps(state: RootState): StoreProps {
   return {
     itemSortOrder: itemSortOrderSelector(state),
     types: typesSelector(state),
     destinyVersion: destinyVersionSelector(state),
-    classTypeOptions: classTypeOptionsSelector(state)
+    classTypeOptions: classTypeOptionsSelector(state),
+    storeIds: storeIdsSelector(state),
+    buckets: state.inventory.buckets!
   };
 }
 
@@ -158,7 +166,14 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    const { types, destinyVersion, itemSortOrder, classTypeOptions } = this.props;
+    const {
+      types,
+      buckets,
+      destinyVersion,
+      itemSortOrder,
+      classTypeOptions,
+      storeIds
+    } = this.props;
     const { show, loadout, hasArmor, completeArmor, stats, warnitems } = this.state;
 
     if (!loadout || !show) {
@@ -173,6 +188,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
     // TODO: drag and drop
     // TODO: animation
+
+    const bucketTypes = Object.keys(buckets.byType);
 
     return (
       <div id="loadout-drawer" className="loadout-create">
@@ -216,42 +233,48 @@ class LoadoutDrawer extends React.Component<Props, State> {
               </span>
             </form>
           </div>
-          {warnitems.length > 0 && (
-            <>
-              <p>{t('Loadouts.VendorsCannotEquip')}:</p>
-              <div className="loadout-contents">
-                {warnitems.map((item) => (
-                  <div key={item.index} className="loadout-item">
-                    <InventoryItem item={item} />
-                    <div className="close" onClick={() => this.removeWarnItem(item)} />
-                    <div className="fa warn" />
-                  </div>
-                ))}
-              </div>
-              <p>{t('Loadouts.VendorsCanEquip')}:</p>
-            </>
-          )}
-          <div id="loadout-contents" className="loadout-contents">
-            {types.map(
-              (value) =>
-                loadout.items[value] &&
-                loadout.items[value].length > 0 && (
-                  <div key={value} className={`loadout-${value} loadout-bucket`}>
-                    {sortItems(loadout.items[value], itemSortOrder).map((item) => (
-                      <div
-                        key={item.index}
-                        onClick={() => this.equip(item)}
-                        className="loadout-item"
-                      >
-                        <InventoryItem item={item} />
-                        <div className="close" onClick={(e) => this.remove(item, e)} />
-                        {item.equipped && <div className="equipped" ng-show="item.equipped" />}
-                      </div>
-                    ))}
-                  </div>
-                )
+          <LoadoutDrawerDropTarget
+            bucketTypes={bucketTypes}
+            storeIds={storeIds}
+            onDroppedItem={this.add}
+          >
+            {warnitems.length > 0 && (
+              <>
+                <p>{t('Loadouts.VendorsCannotEquip')}</p>
+                <div className="loadout-contents">
+                  {warnitems.map((item) => (
+                    <div key={item.id} className="loadout-item">
+                      <InventoryItem item={item} />
+                      <div className="close" onClick={() => this.removeWarnItem(item)} />
+                      <div className="fa warn" />
+                    </div>
+                  ))}
+                </div>
+                <p>{t('Loadouts.VendorsCanEquip')}</p>
+              </>
             )}
-          </div>
+            <div className="loadout-contents">
+              {types.map(
+                (value) =>
+                  loadout.items[value] &&
+                  loadout.items[value].length > 0 && (
+                    <div key={value} className={`loadout-${value} loadout-bucket`}>
+                      {sortItems(loadout.items[value], itemSortOrder).map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => this.equip(item)}
+                          className="loadout-item"
+                        >
+                          <InventoryItem item={item} />
+                          <div className="close" onClick={(e) => this.remove(item, e)} />
+                          {item.equipped && <div className="equipped" ng-show="item.equipped" />}
+                        </div>
+                      ))}
+                    </div>
+                  )
+              )}
+            </div>
+          </LoadoutDrawerDropTarget>
           {hasArmor &&
             stats && (
               <div className={classNames('dim-stats', { complete: completeArmor })}>
@@ -263,7 +286,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
     );
   }
 
-  private add = (item, e: MouseEvent) => {
+  private add = (item: DimItem, e?: MouseEvent) => {
+    console.log('ADD!', item);
     const { loadout } = this.state;
     if (!loadout) {
       return;
@@ -274,7 +298,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       const discriminator = clone.type.toLowerCase();
       const typeInventory = (loadout.items[discriminator] = loadout.items[discriminator] || []);
 
-      clone.amount = Math.min(clone.amount, e.shiftKey ? 5 : 1);
+      clone.amount = Math.min(clone.amount, e && e.shiftKey ? 5 : 1);
 
       const dupe = _.find(typeInventory, { hash: clone.hash, id: clone.id });
 
@@ -307,6 +331,9 @@ class LoadoutDrawer extends React.Component<Props, State> {
         dupe.amount += increment;
         // TODO: handle stack splits
       }
+      console.log(loadout);
+
+      this.setState({ loadout });
     } else {
       toaster.pop('warning', '', t('Loadouts.OnlyItems'));
     }

@@ -68,7 +68,6 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
   };
 }
 
-// TODO: enter/leave dwell indicator stuff (with redux??)
 class StoreBucketDropTarget extends React.Component<Props> {
   dragTimer?: number;
   shiftKeyDown = false;
