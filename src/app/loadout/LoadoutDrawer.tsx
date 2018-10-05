@@ -3,19 +3,14 @@ import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { toaster } from '../ngimport-more';
 import { dimLoadoutService, Loadout } from './loadout.service';
-import CharacterStats from '../inventory/CharacterStats';
 import * as _ from 'underscore';
-import { D1Store, D2Store } from '../inventory/store-types';
 import { $rootScope } from 'ngimport';
 import { sortItems } from '../shell/dimAngularFilters.filter';
-import classNames from 'classnames';
 import { copy } from 'angular';
 import { flatMap } from '../util';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DimItem } from '../inventory/item-types';
-import { getCharacterStatsData } from '../inventory/store/character-utils';
-import { getCharacterStatsData as getD2CharacterStatsData } from '../inventory/store/d2-store-factory.service';
 import uuidv4 from 'uuid/v4';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
@@ -48,11 +43,6 @@ interface State {
   loadout?: Loadout;
   warnitems: DimItem[];
   show: boolean;
-
-  // D1 stats display
-  stats?: D1Store['stats'] | D2Store['stats'];
-  hasArmor: boolean;
-  completeArmor: boolean;
 }
 
 const typesSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
@@ -108,9 +98,7 @@ function mapStateToProps(state: RootState): StoreProps {
 class LoadoutDrawer extends React.Component<Props, State> {
   state: State = {
     warnitems: [],
-    show: false,
-    hasArmor: false,
-    completeArmor: false
+    show: false
   };
   private $scope = $rootScope.$new(true);
   // tslint:disable-next-line:ban-types
@@ -136,6 +124,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       this.fillInDefinitionsForWarnItems(this.props.destinyVersion, warnitems);
 
       // TODO: find equivalent items for warnitems
+      // tricky part, we only have hash!
 
       _.each(loadout.items, (items, type) => {
         loadout.items[type] = items.filter((item) => item.owner);
@@ -151,8 +140,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
         loadout,
         warnitems
       });
-
-      this.recalculateStats(loadout);
     });
 
     this.$scope.$on('dim-store-item-clicked', (_event, args) => {
@@ -166,27 +153,21 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      types,
-      buckets,
-      destinyVersion,
-      itemSortOrder,
-      classTypeOptions,
-      storeIds
-    } = this.props;
-    const { show, loadout, hasArmor, completeArmor, stats, warnitems } = this.state;
+    const { types, buckets, itemSortOrder, classTypeOptions, storeIds } = this.props;
+    const { show, loadout, warnitems } = this.state;
 
     if (!loadout || !show) {
       return null;
     }
 
-    // TODO: show class if anything can be muli-class?
+    // TODO: remove angular events
+
+    // TODO: show class if anything can be multi-class?
     const showClass = true;
 
     // TODO: take this from the event
     const isNew = false;
 
-    // TODO: drag and drop
     // TODO: animation
 
     const bucketTypes = Object.keys(buckets.byType);
@@ -275,12 +256,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
               )}
             </div>
           </LoadoutDrawerDropTarget>
-          {hasArmor &&
-            stats && (
-              <div className={classNames('dim-stats', { complete: completeArmor })}>
-                <CharacterStats destinyVersion={destinyVersion} stats={stats} />
-              </div>
-            )}
         </div>
       </div>
     );
@@ -337,8 +312,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
     } else {
       toaster.pop('warning', '', t('Loadouts.OnlyItems'));
     }
-
-    this.recalculateStats();
   };
 
   private remove = (item, $event) => {
@@ -364,7 +337,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       typeInventory[0].equipped = true;
     }
 
-    this.recalculateStats();
+    this.setState({ loadout });
   };
 
   private setName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -453,78 +426,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
   };
 
-  private recalculateStats = (loadout = this.state.loadout) => {
-    const { destinyVersion } = this.props;
-
-    if (!loadout || !loadout.items) {
-      this.setState({ stats: undefined });
-      return;
-    }
-
-    const items = loadout.items;
-    const interestingStats = new Set([
-      'STAT_INTELLECT',
-      'STAT_DISCIPLINE',
-      'STAT_STRENGTH',
-      'maxBasePower',
-      '2996146975',
-      '392767087',
-      '1943323491'
-    ]);
-
-    let numInterestingStats = 0;
-    const allItems: DimItem[] = _.flatten(Object.values(items));
-    const equipped = allItems.filter((i) => i.equipped);
-    const stats = flatMap(equipped, (i) => i.stats!);
-    const filteredStats = stats.filter(
-      (stat) =>
-        stat &&
-        (interestingStats.has(stat.id.toString()) || interestingStats.has(stat.statHash.toString()))
-    );
-    const combinedStats = filteredStats.reduce((stats, stat) => {
-      numInterestingStats++;
-      if (destinyVersion === 1) {
-        if (stats[stat.id]) {
-          stats[stat.id].value += stat.value;
-        } else {
-          stats[stat.id] = {
-            statHash: stat.statHash,
-            value: stat.value
-          };
-        }
-      } else {
-        stats[stat.statHash] = (stats[stat.statHash] || 0) + stat.value;
-      }
-      return stats;
-    }, {});
-
-    console.log({ stats, filteredStats, combinedStats });
-
-    // Seven types of things that contribute to these stats, times 3 stats, equals
-    // a complete set of armor, ghost and artifact.
-    this.setState({
-      hasArmor: numInterestingStats > 0,
-      completeArmor: numInterestingStats === (destinyVersion === 1 ? 7 : 5) * 3
-    });
-
-    if (_.isEmpty(combinedStats)) {
-      this.setState({ stats: undefined });
-      return;
-    }
-
-    if (destinyVersion === 1) {
-      getD1Definitions().then((defs) => {
-        this.setState({ stats: getCharacterStatsData(defs.Stat, { stats: combinedStats }) });
-      });
-    } else {
-      getD2Definitions().then((defs) => {
-        this.setState({
-          stats: getD2CharacterStatsData(defs.Stat, combinedStats)
-        });
-      });
-    }
-  };
-
   private removeWarnItem = (item: DimItem) => {
     const { warnitems } = this.state;
 
@@ -563,7 +464,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       }
     }
 
-    this.recalculateStats();
+    this.setState({ loadout });
   };
 }
 
