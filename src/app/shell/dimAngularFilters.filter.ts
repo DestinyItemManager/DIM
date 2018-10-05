@@ -272,7 +272,7 @@ export function getColor(value: number, property = 'background-color') {
     color = 190;
   }
   const result = {};
-  result[property] = `hsla(${color},65%,50%, .85)`;
+  result[property] = `hsla(${color},65%,50%, 1)`;
   return result;
 }
 
