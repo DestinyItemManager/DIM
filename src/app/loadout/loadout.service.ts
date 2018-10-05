@@ -141,9 +141,6 @@ function LoadoutService(): LoadoutServiceType {
     reduxStore.dispatch(actions.deleteLoadout(loadout.id));
     await SyncService.remove(loadout.id);
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
-    $rootScope.$broadcast('dim-delete-loadout', {
-      loadout
-    });
   }
 
   async function saveLoadout(loadout: Loadout): Promise<void> {
