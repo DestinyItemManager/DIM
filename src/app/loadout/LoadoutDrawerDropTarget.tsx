@@ -37,6 +37,11 @@ const dropSpec: DropTargetSpec<Props> = {
   drop(props, monitor) {
     const item = monitor.getItem().item as DimItem;
     props.onDroppedItem(item);
+  },
+  canDrop(_, monitor) {
+    // But equipping has requirements
+    const item = monitor.getItem().item as DimItem;
+    return item.canBeInLoadout();
   }
 };
 
@@ -44,7 +49,7 @@ const dropSpec: DropTargetSpec<Props> = {
 function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): InternalProps {
   return {
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver() && monitor.canDrop()
   };
 }
 
