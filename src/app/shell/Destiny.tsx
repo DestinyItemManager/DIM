@@ -35,7 +35,7 @@ export default class Destiny extends React.Component<Props> {
             tag: t(tag.label)
           }),
           callback() {
-            $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
+            // Empty - this gets redefined in item-tag.component.ts
           }
         });
       }
