@@ -2,7 +2,6 @@ import * as React from 'react';
 import { t } from 'i18next';
 import './RatingMode.scss';
 import ClickOutside from '../../dim-ui/ClickOutside';
-import { $rootScope } from 'ngimport';
 import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
 import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../../inventory/d2-stores.service';

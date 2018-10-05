@@ -8,7 +8,7 @@ import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { t } from 'i18next';
 import { toaster } from '../ngimport-more';
-import { $q, $interval, $rootScope } from 'ngimport';
+import { $q, $interval } from 'ngimport';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { refresh } from '../shell/refresh';
 

@@ -1,4 +1,3 @@
-import { Subscription } from 'rxjs/Subscription';
 import { IScope } from 'angular';
 import {
   DestinyCharacterComponent,
@@ -22,7 +21,6 @@ import Quest from './Quest';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
