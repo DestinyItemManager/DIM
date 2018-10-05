@@ -31,6 +31,7 @@ interface Props {
 interface State {
   processRunning: number;
   requirePerks: boolean;
+  requireBurn: 'none' | 'arc' | 'solar' | 'void';
   lockedMap: { [bucketHash: number]: LockType };
   processedSets: { [setHash: string]: SetType };
   matchedSets: ArmorSet[];
@@ -38,6 +39,13 @@ interface State {
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
 }
+
+const burnTypes = {
+  none: 'BurnTypeNone',
+  arc: 'BurnTypeArc',
+  solar: 'BurnTypeSolar',
+  void: 'BurnTypeVoid'
+};
 
 const perks: {
   [classType: number]: { [bucketHash: number]: any };
@@ -64,6 +72,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     super(props);
     this.state = {
       requirePerks: true,
+      requireBurn: 'none',
       processRunning: 0,
       lockedMap: {},
       processedSets: {},
@@ -135,7 +144,17 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
    *
    * The work done in this function is to filter down items to process based on what is locked
    */
-  computeSets = (classType: number, lockedMap: {}, requirePerks: boolean) => {
+  computeSets = ({
+    classType = this.state.selectedStore!.classType,
+    lockedMap = this.state.lockedMap,
+    requirePerks = this.state.requirePerks,
+    requireBurn = this.state.requireBurn
+  }: {
+    classType?: number;
+    lockedMap?: { [bucketHash: number]: LockType };
+    requirePerks?: boolean;
+    requireBurn?: string;
+  }) => {
     const allItems = { ...items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
 
@@ -167,6 +186,13 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           ) {
             return item.sockets.categories[0].sockets.filter(filterPlugs).length;
           }
+        });
+      }
+
+      // filter out items that do not match the burn type
+      if (requireBurn !== 'none') {
+        filteredItems[bucket] = filteredItems[bucket].filter((item: D2Item) => {
+          return item && item.dmg === requireBurn;
         });
       }
     });
@@ -205,7 +231,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
    */
   resetLocked = () => {
     this.setState({ lockedMap: {}, matchedSets: [] });
-    this.computeSets(this.state.selectedStore!.classType, {}, this.state.requirePerks);
+    this.computeSets({ lockedMap: {} });
   };
 
   /**
@@ -223,7 +249,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
       }
     });
 
-    this.computeSets(this.state.selectedStore!.classType, lockedMap, this.state.requirePerks);
+    this.computeSets({ lockedMap });
   };
 
   /**
@@ -233,7 +259,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
   onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
     this.setState({ selectedStore, lockedMap: {}, setTiers: [], matchedSets: [] });
-    this.computeSets(selectedStore.classType, {}, this.state.requirePerks);
+    this.computeSets({ classType: selectedStore.classType, lockedMap: {} });
   };
 
   /**
@@ -244,7 +270,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     const lockedMap = this.state.lockedMap;
     lockedMap[bucket.hash] = locked;
 
-    this.computeSets(this.state.selectedStore!.classType, lockedMap, this.state.requirePerks);
+    this.computeSets({ lockedMap });
   };
 
   /**
@@ -253,11 +279,12 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
    */
   setRequiredPerks = (element) => {
     this.setState({ requirePerks: element.target.checked });
-    this.computeSets(
-      this.state.selectedStore!.classType,
-      this.state.lockedMap,
-      element.target.checked
-    );
+    this.computeSets({ requirePerks: element.target.checked });
+  };
+
+  setRequiredBurn = (element) => {
+    this.setState({ requireBurn: element.target.value });
+    this.computeSets({ requireBurn: element.target.value });
   };
 
   /**
@@ -320,13 +347,25 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
         <h3>{t('LoadoutBuilder.Options')}</h3>
         <div>
-          <input
-            id="required-perks"
-            type="checkbox"
-            checked={this.state.requirePerks}
-            onChange={this.setRequiredPerks}
-          />
-          <label htmlFor="required-perks">{t('LoadoutBuilder.RequirePerks')}</label>
+          <p>
+            <input
+              id="required-perks"
+              type="checkbox"
+              checked={this.state.requirePerks}
+              onChange={this.setRequiredPerks}
+            />
+            <label htmlFor="required-perks">{t('LoadoutBuilder.RequirePerks')}</label>
+          </p>
+          <p>
+            <select id="required-burn" onChange={this.setRequiredBurn}>
+              {Object.keys(burnTypes).map((burn) => (
+                <option key={burn} value={burn}>
+                  {t(`LoadoutBuilder.${burnTypes[burn]}`)}
+                </option>
+              ))}
+            </select>
+            <label htmlFor="required-burn">{t('LoadoutBuilder.RequireBurn')}</label>
+          </p>
         </div>
 
         <GeneratedSets
