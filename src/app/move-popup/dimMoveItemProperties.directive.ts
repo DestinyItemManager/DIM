@@ -8,6 +8,8 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { $q } from 'ngimport';
 import { router } from '../../router';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { hotkeys } from '../ngimport-more';
+import { t } from 'i18next';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -125,9 +127,15 @@ function MoveItemPropertiesCtrl(
     }
   };
 
+  const hot = hotkeys.bindTo($scope);
+
   // The 'i' keyboard shortcut toggles full details
-  $scope.$on('dim-toggle-item-details', () => {
-    vm.itemDetails = !vm.itemDetails;
+  hot.add({
+    combo: ['i'],
+    description: t('Hotkey.ToggleDetails'),
+    callback() {
+      vm.itemDetails = !vm.itemDetails;
+    }
   });
 
   $scope.$watch('vm.itemDetails', (newValue, oldValue) => {

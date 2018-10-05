@@ -20,11 +20,12 @@ export default class Destiny extends React.Component<Props> {
   componentDidMount() {
     const hot = hotkeys.bindTo(this.$scope);
 
+    // Define some hotkeys without implementation, so they show up in the help
     hot.add({
       combo: ['i'],
       description: t('Hotkey.ToggleDetails'),
       callback() {
-        $rootScope.$broadcast('dim-toggle-item-details');
+        // Empty - this gets redefined in dimMoveItemProperties
       }
     });
     itemTags.forEach((tag) => {
