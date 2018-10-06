@@ -19,7 +19,8 @@ if ($featureFlags.sentry) {
       "An unexpected error has occurred on Bungie's servers",
       'Destiny tracker service call failed.',
       'Appel au service de Destiny tracker échoué.',
-      /You may not be connected to the internet/
+      /You may not be connected to the internet/,
+      'Software caused connection abort'
     ],
     ignoreUrls: [
       // Chrome extensions
