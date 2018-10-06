@@ -223,28 +223,31 @@ function makeD2StoresService(): D2StoreServiceType {
           itemInfoService
         );
 
-        const processStorePromises = Object.keys(profileInfo.characters.data).map((characterId) =>
-          processCharacter(
-            defs,
-            profileInfo.characters.data[characterId],
-            profileInfo.characterInventories.data &&
-            profileInfo.characterInventories.data[characterId]
-              ? profileInfo.characterInventories.data[characterId].items
-              : [],
-            profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
-            profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId]
-              ? profileInfo.characterEquipment.data[characterId].items
-              : [],
-            profileInfo.itemComponents,
-            profileInfo.characterProgressions.data &&
-            profileInfo.characterProgressions.data[characterId]
-              ? profileInfo.characterProgressions.data[characterId].progressions
-              : [],
-            buckets,
-            previousItems,
-            newItems,
-            itemInfoService,
-            lastPlayedDate
+        const processStorePromises = $q.all(
+          Object.keys(profileInfo.characters.data).map((characterId) =>
+            processCharacter(
+              defs,
+              profileInfo.characters.data[characterId],
+              profileInfo.characterInventories.data &&
+              profileInfo.characterInventories.data[characterId]
+                ? profileInfo.characterInventories.data[characterId].items
+                : [],
+              profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
+              profileInfo.characterEquipment.data &&
+              profileInfo.characterEquipment.data[characterId]
+                ? profileInfo.characterEquipment.data[characterId].items
+                : [],
+              profileInfo.itemComponents,
+              profileInfo.characterProgressions.data &&
+              profileInfo.characterProgressions.data[characterId]
+                ? profileInfo.characterProgressions.data[characterId].progressions
+                : [],
+              buckets,
+              previousItems,
+              newItems,
+              itemInfoService,
+              lastPlayedDate
+            )
           )
         );
 
@@ -256,46 +259,37 @@ function makeD2StoresService(): D2StoreServiceType {
           newItems,
           itemInfoService,
           processVaultPromise,
-          ...processStorePromises
+          processStorePromises
         ]);
       })
-      .then(
-        ([defs, buckets, newItems, itemInfoService, vault, ...characters]: [
-          D2ManifestDefinitions,
-          InventoryBuckets,
-          Set<string>,
-          any,
-          D2Vault,
-          ...D2Store[]
-        ]) => {
-          // Save the list of new item IDs
-          NewItemsService.applyRemovedNewItems(newItems);
-          NewItemsService.saveNewItems(newItems, account);
+      .then(([defs, buckets, newItems, itemInfoService, vault, characters]) => {
+        // Save the list of new item IDs
+        NewItemsService.applyRemovedNewItems(newItems);
+        NewItemsService.saveNewItems(newItems, account);
 
-          const stores: D2Store[] = [...characters, vault];
-          _stores = stores;
+        const stores = [...characters, vault];
+        _stores = stores;
 
-          // TODO: update vault counts for character account-wide
-          updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
+        // TODO: update vault counts for character account-wide
+        updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
 
-          dimDestinyTrackerService.fetchReviews(stores);
+        dimDestinyTrackerService.fetchReviews(stores);
 
-          itemInfoService.cleanInfos(stores);
+        itemInfoService.cleanInfos(stores);
 
-          stores.forEach((s) => updateBasePower(account, stores, s, defs));
+        stores.forEach((s) => updateBasePower(account, stores, s, defs));
 
-          // Let our styling know how many characters there are
-          document
-            .querySelector('html')!
-            .style.setProperty('--num-characters', String(_stores.length - 1));
+        // Let our styling know how many characters there are
+        document
+          .querySelector('html')!
+          .style.setProperty('--num-characters', String(_stores.length - 1));
 
-          dimDestinyTrackerService.reattachScoresFromCache(stores);
+        dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-          store.dispatch(update(stores));
+        store.dispatch(update(stores));
 
-          return stores;
-        }
-      )
+        return stores;
+      })
       .catch((e: DimError) => {
         toaster.pop(bungieErrorToaster(e));
         console.error('Error loading stores', e);

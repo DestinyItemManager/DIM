@@ -1,9 +1,7 @@
 import * as _ from 'underscore';
-import { sum } from '../util';
 import { D2Item } from '../inventory/item-types';
-import { SetType, LockableBuckets, ArmorSet } from './types';
-import { getSetsForTier } from './utils';
 import { LoadoutBuilder } from './LoadoutBuilder';
+import { LockableBuckets, ArmorSet, StatTypes } from './types';
 
 let killProcess = false;
 
@@ -35,25 +33,12 @@ function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item
   const chests = filteredItems[LockableBuckets.chest] || [];
   const legs = filteredItems[LockableBuckets.leg] || [];
   const classitems = filteredItems[LockableBuckets.classitem] || [];
-  const setMap: { [setHash: number]: SetType } = {};
-  const tiersSet = new Set<string>();
-  const setTiers: string[] = [];
+  const setMap: ArmorSet[] = [];
   const combos = helms.length * gaunts.length * chests.length * legs.length * classitems.length;
 
   if (combos === 0) {
-    this.setState({ matchedSets: [], setTiers: [] });
+    this.setState({ processedSets: [] });
     return;
-  }
-
-  function calcArmorStats(pieces, stats) {
-    let i = pieces.length;
-    while (i--) {
-      if (pieces[i].stats.length) {
-        stats.STAT_MOBILITY += pieces[i].stats[0].base;
-        stats.STAT_RESILIENCE += pieces[i].stats[1].base;
-        stats.STAT_RECOVERY += pieces[i].stats[2].base;
-      }
-    }
   }
 
   function step(h = 0, g = 0, c = 0, l = 0, ci = 0, processedCount = 0) {
@@ -78,42 +63,32 @@ function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item
                     chests[c].basePower +
                     legs[l].basePower +
                     classitems[ci].basePower,
-                  stats: {
-                    STAT_MOBILITY: 0,
-                    STAT_RESILIENCE: 0,
-                    STAT_RECOVERY: 0
-                  },
-                  setHash:
-                    helms[h].id + gaunts[g].id + chests[c].id + legs[l].id + classitems[ci].id,
+                  tiers: [],
                   includesVendorItems: false
                 };
 
-                calcArmorStats(set.armor, set.stats);
-                const tiersString = `${set.stats.STAT_MOBILITY}/${set.stats.STAT_RESILIENCE}/${
-                  set.stats.STAT_RECOVERY
-                }`;
+                const stats: { [statType in StatTypes]: number } = {
+                  STAT_MOBILITY: 0,
+                  STAT_RESILIENCE: 0,
+                  STAT_RECOVERY: 0
+                };
 
-                tiersSet.add(tiersString);
-
-                // Build a map of all sets but only keep one copy of armor
-                // so we reduce memory usage
-                if (setMap[set.setHash]) {
-                  if (setMap[set.setHash].tiers[tiersString]) {
-                    // setMap[set.setHash].tiers[tiersString].configs.push(getBonusConfig(set.armor));
-                  } else {
-                    setMap[set.setHash].tiers[tiersString] = {
-                      stats: set.stats
-                      // configs: [getBonusConfig(set.armor)]
-                    };
+                let i = set.armor.length;
+                while (i--) {
+                  if (set.armor[i].stats!.length) {
+                    stats.STAT_MOBILITY += set.armor[i].stats![0].base;
+                    stats.STAT_RESILIENCE += set.armor[i].stats![1].base;
+                    stats.STAT_RECOVERY += set.armor[i].stats![2].base;
                   }
-                } else {
-                  setMap[set.setHash] = { set, tiers: {} };
-                  setMap[set.setHash].tiers[tiersString] = {
-                    stats: set.stats
-                    // configs: [getBonusConfig(set.armor)]
-                  };
                 }
+
+                // TODO: iterate over perk bonus options and add all tier options
+                set.tiers.push(
+                  `${stats.STAT_MOBILITY}/${stats.STAT_RESILIENCE}/${stats.STAT_RECOVERY}`
+                );
+
                 // set.includesVendorItems = pieces.some((armor: any) => armor.isVendorItem);
+                setMap.push(set);
               }
 
               processedCount++;
@@ -138,32 +113,19 @@ function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item
       g = 0;
     }
 
-    const tiers = _.each(
-      _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-        return sum(tierString.split('/'), (num) => parseInt(num, 10));
-      }),
-      (tier) => {
-        tier.sort().reverse();
-      }
-    );
-
-    const tierKeys = Object.keys(tiers);
-    for (let t = tierKeys.length; t > tierKeys.length - 3; t--) {
-      if (tierKeys[t]) {
-        setTiers.push(`- Tier ${tierKeys[t]} -`);
-        tiers[tierKeys[t]].forEach((set) => {
-          setTiers.push(set);
-        });
-      }
-    }
-
     this.setState({
-      setTiers,
       processedSets: setMap,
-      matchedSets: getSetsForTier(setMap, this.state.lockedMap, setTiers[1]),
       processRunning: 0
     });
-    console.log('processed', combos, 'combinations in', performance.now() - pstart);
+
+    console.log(
+      'found',
+      Object.keys(setMap).length,
+      'sets after processing',
+      combos,
+      'combinations in',
+      performance.now() - pstart
+    );
   }
 
   return step.call(this);

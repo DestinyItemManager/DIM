@@ -15,11 +15,11 @@ import { DimStore } from '../inventory/store-types';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
+import { filterPlugs } from './generated-sets/utils';
 import './loadoutbuilder.scss';
-import { ArmorSet, LockableBuckets, LockType, SetType } from './types';
-import { filterPlugs, getSetsForTier } from './utils';
 import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
+import { ArmorSet, LockableBuckets, LockType } from './types';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -36,13 +36,19 @@ type Props = ProvidedProps & StoreProps;
 interface State {
   processRunning: number;
   requirePerks: boolean;
+  requireBurn: 'none' | 'arc' | 'solar' | 'void';
   lockedMap: { [bucketHash: number]: LockType };
-  processedSets: { [setHash: string]: SetType };
-  matchedSets: ArmorSet[];
-  setTiers: string[];
+  processedSets: ArmorSet[];
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
 }
+
+const burnTypes = {
+  none: 'BurnTypeNone',
+  arc: 'BurnTypeArc',
+  solar: 'BurnTypeSolar',
+  void: 'BurnTypeVoid'
+};
 
 const perks: {
   [classType: number]: { [bucketHash: number]: any };
@@ -69,11 +75,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     super(props);
     this.state = {
       requirePerks: true,
+      requireBurn: 'none',
       processRunning: 0,
       lockedMap: {},
-      processedSets: {},
-      matchedSets: [],
-      setTiers: []
+      processedSets: []
     };
   }
 
@@ -148,11 +153,17 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    *
    * The work done in this function is to filter down items to process based on what is locked
    */
-  computeSets = (
+  computeSets = ({
     classType = this.state.selectedStore!.classType,
-    lockedMap: State['lockedMap'] = {},
-    requirePerks = this.state.requirePerks
-  ) => {
+    lockedMap = this.state.lockedMap,
+    requirePerks = this.state.requirePerks,
+    requireBurn = this.state.requireBurn
+  }: {
+    classType?: number;
+    lockedMap?: { [bucketHash: number]: LockType };
+    requirePerks?: boolean;
+    requireBurn?: string;
+  }) => {
     const allItems = { ...items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
 
@@ -186,6 +197,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           ) {
             return item.sockets.categories[0].sockets.filter(filterPlugs).length;
           }
+        });
+      }
+
+      // filter out items that do not match the burn type
+      if (requireBurn !== 'none') {
+        filteredItems[bucket] = filteredItems[bucket].filter((item: D2Item) => {
+          return item && item.dmg === requireBurn;
         });
       }
     });
@@ -232,8 +250,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Recomputes matched sets
    */
   resetLocked = () => {
-    this.setState({ lockedMap: {}, matchedSets: [] });
-    this.computeSets();
+    this.setState({ lockedMap: {} });
+    this.computeSets({ lockedMap: {} });
   };
 
   /**
@@ -251,7 +269,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       }
     });
 
-    this.computeSets(this.state.selectedStore!.classType, lockedMap, this.state.requirePerks);
+    this.computeSets({ lockedMap });
   };
 
   /**
@@ -260,8 +278,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    */
   onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {}, setTiers: [], matchedSets: [] });
-    this.computeSets(selectedStore.classType, {}, this.state.requirePerks);
+    this.setState({ selectedStore, lockedMap: {} });
+    this.computeSets({ classType: selectedStore.classType, lockedMap: {} });
   };
 
   /**
@@ -272,7 +290,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     const lockedMap = this.state.lockedMap;
     lockedMap[bucket.hash] = locked;
 
-    this.computeSets(this.state.selectedStore!.classType, lockedMap, this.state.requirePerks);
+    this.computeSets({ lockedMap });
   };
 
   /**
@@ -281,25 +299,21 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    */
   setRequiredPerks = (element) => {
     this.setState({ requirePerks: element.target.checked });
-    this.computeSets(
-      this.state.selectedStore!.classType,
-      this.state.lockedMap,
-      element.target.checked
-    );
+    this.computeSets({ requirePerks: element.target.checked });
   };
 
   /**
-   *  Handle when the tier dropdown changes to render previously generated sets that match the tier
+   * Handle then the required perks checkbox is toggled
+   * Recomputes matched sets
    */
-  setSelectedTier = (tier) => {
-    this.setState({
-      matchedSets: getSetsForTier(this.state.processedSets, this.state.lockedMap, tier)
-    });
+  setRequiredBurn = (element) => {
+    this.setState({ requireBurn: element.target.value });
+    this.computeSets({ requireBurn: element.target.value });
   };
 
   render() {
     const { storesLoaded, stores, buckets } = this.props;
-    const { processRunning, lockedMap, matchedSets, setTiers, selectedStore } = this.state;
+    const { processedSets, processRunning, lockedMap, selectedStore } = this.state;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -348,22 +362,32 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
         <h3>{t('LoadoutBuilder.Options')}</h3>
         <div>
-          <input
-            id="required-perks"
-            type="checkbox"
-            checked={this.state.requirePerks}
-            onChange={this.setRequiredPerks}
-          />
-          <label htmlFor="required-perks">{t('LoadoutBuilder.RequirePerks')}</label>
+          <p>
+            <input
+              id="required-perks"
+              type="checkbox"
+              checked={this.state.requirePerks}
+              onChange={this.setRequiredPerks}
+            />
+            <label htmlFor="required-perks">{t('LoadoutBuilder.RequirePerks')}</label>
+          </p>
+          <p>
+            <select id="required-burn" onChange={this.setRequiredBurn}>
+              {Object.keys(burnTypes).map((burn) => (
+                <option key={burn} value={burn}>
+                  {t(`LoadoutBuilder.${burnTypes[burn]}`)}
+                </option>
+              ))}
+            </select>
+            <label htmlFor="required-burn">{t('LoadoutBuilder.RequireBurn')}</label>
+          </p>
         </div>
 
         <GeneratedSets
           processRunning={processRunning}
-          setTiers={setTiers}
-          matchedSets={matchedSets}
+          processedSets={processedSets}
           lockedMap={lockedMap}
           selectedStore={selectedStore}
-          setSelectedTier={this.setSelectedTier}
         />
       </div>
     );

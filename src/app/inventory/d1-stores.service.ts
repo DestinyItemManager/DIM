@@ -191,25 +191,27 @@ function StoreService(): D1StoreServiceType {
           silver: 0
         };
 
-        const processStorePromises = _.compact(
-          (rawStores as any[]).map((raw) =>
-            processStore(
-              raw,
-              defs,
-              buckets,
-              previousItems,
-              newItems,
-              itemInfoService,
-              currencies,
-              lastPlayedDate
+        const processStorePromises = $q.all(
+          _.compact(
+            (rawStores as any[]).map((raw) =>
+              processStore(
+                raw,
+                defs,
+                buckets,
+                previousItems,
+                newItems,
+                itemInfoService,
+                currencies,
+                lastPlayedDate
+              )
             )
           )
         );
 
         store.dispatch(setBuckets(buckets));
-        return $q.all([newItems, itemInfoService, ...processStorePromises]);
+        return $q.all([newItems, itemInfoService, processStorePromises]);
       })
-      .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, ...D1Store[]]) => {
+      .then(([newItems, itemInfoService, stores]) => {
         // Save and notify about new items
         NewItemsService.applyRemovedNewItems(newItems);
         NewItemsService.saveNewItems(newItems, account);
