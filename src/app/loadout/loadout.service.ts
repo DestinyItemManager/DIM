@@ -53,6 +53,10 @@ export interface LoadoutServiceType {
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
   getLoadoutItemIds(destinyVersion: number): Promise<Set<string>>;
+  editLoadout(
+    loadout: Loadout,
+    options: { equipAll?: boolean; showClass?: boolean; isNew?: boolean }
+  ): void;
 }
 
 // TODO: un-object-ify, this holds no state!
@@ -73,8 +77,21 @@ function LoadoutService(): LoadoutServiceType {
     saveLoadout,
     addItemToLoadout,
     applyLoadout,
-    getLoadoutItemIds
+    getLoadoutItemIds,
+    editLoadout
   };
+
+  function editLoadout(
+    loadout: Loadout,
+    { equipAll = false, showClass = true, isNew = false } = {}
+  ) {
+    $rootScope.$broadcast('dim-edit-loadout', {
+      loadout,
+      equipAll,
+      showClass,
+      isNew
+    });
+  }
 
   function addItemToLoadout(item: DimItem, $event) {
     $rootScope.$broadcast('dim-store-item-clicked', {

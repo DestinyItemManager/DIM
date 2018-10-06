@@ -810,8 +810,7 @@ function LoadoutBuilderController(
           loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
         });
 
-        $scope.$broadcast('dim-edit-loadout', {
-          loadout,
+        dimLoadoutService.editLoadout(loadout, {
           equipAll: true,
           showClass: false
         });

@@ -292,10 +292,7 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   private editLoadout = (loadout: Loadout) => {
-    $rootScope.$broadcast('dim-edit-loadout', {
-      loadout,
-      showClass: true
-    });
+    dimLoadoutService.editLoadout(loadout, { showClass: true });
   };
 
   // TODO: move all these fancy loadouts to a new service
