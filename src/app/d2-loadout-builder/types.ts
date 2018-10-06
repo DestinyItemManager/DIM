@@ -1,7 +1,6 @@
 import { D2Item } from '../inventory/item-types';
 
-type ArmorTypes = 'Helmet' | 'Gauntlets' | 'Chest' | 'Leg' | 'ClassItem';
-type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
+export type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
 
 export interface LockType {
   type: 'item' | 'perk' | 'exclude';
@@ -11,19 +10,8 @@ export interface LockType {
 export interface ArmorSet {
   armor: D2Item[];
   power: number;
-  stats: { [statType in StatTypes]: number };
-  setHash: string;
+  tiers: string[];
   includesVendorItems: boolean;
-}
-
-export interface SetType {
-  set: ArmorSet;
-  tiers: {
-    [tierString: string]: {
-      stats: ArmorSet['stats'];
-      configs: { [armorType in ArmorTypes]: string };
-    };
-  };
 }
 
 // bucket lookup, also used for ordering of the buckets.
