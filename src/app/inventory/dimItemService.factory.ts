@@ -427,16 +427,18 @@ function ItemService(): ItemServiceType {
     amount: number = item.amount
   ) {
     if ($featureFlags.debugMoves) {
-      console.log(
-        'Move',
-        amount,
-        item.name,
-        item.type,
-        'to',
-        store.name,
-        'from',
-        item.getStoresService().getStore(item.owner)!.name
-      );
+      item.location.inPostmaster
+        ? console.log('Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
+        : console.log(
+            'Move',
+            amount,
+            item.name,
+            item.type,
+            'to',
+            store.name,
+            'from',
+            item.getStoresService().getStore(item.owner)!.name
+          );
     }
     return transferApi(item)(item, store, amount).then(() => {
       const source = item.getStoresService().getStore(item.owner)!;
@@ -943,7 +945,7 @@ function ItemService(): ItemServiceType {
     item: DimItem,
     target: DimStore,
     equip: boolean = false,
-    amount: number = item.amount,
+    amount: number = item.amount || 1,
     excludes?: DimItem[],
     reservations?: MoveReservations
   ): IPromise<DimItem> {
