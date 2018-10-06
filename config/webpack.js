@@ -24,6 +24,9 @@ const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 const packageJson = require('../package.json');
 
 module.exports = (env) => {
+  if (process.env.WEBPACK_ENV) {
+    env = process.env.WEBPACK_ENV;
+  }
   const isDev = env === 'dev';
   let version = packageJson.version.toString();
   if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
