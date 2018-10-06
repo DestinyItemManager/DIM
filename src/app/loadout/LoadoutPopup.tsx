@@ -35,14 +35,14 @@ import {
   AppIcon,
   addIcon,
   searchIcon,
-  maximizePowerIcon,
   levellingIcon,
   makeRoomIcon,
   banIcon,
   raiseReputationIcon,
   undoIcon,
   deleteIcon,
-  editIcon
+  editIcon,
+  powerIcon
 } from '../shell/icons';
 
 interface ProvidedProps {
@@ -146,7 +146,7 @@ class LoadoutPopup extends React.Component<Props> {
                   <span className="light" press-tip={hasClassified ? t('Loadouts.Classified') : ''}>
                     {maxLightValue}
                   </span>
-                  <AppIcon icon={maximizePowerIcon} />
+                  <AppIcon icon={powerIcon} />
                   <span>
                     {t(
                       dimStore.destinyVersion === 2

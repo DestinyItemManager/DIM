@@ -32,6 +32,8 @@ import {
   faPencilAlt
 } from '@fortawesome/free-solid-svg-icons';
 
+import { dimPowerIcon } from './custom';
+
 // necessary while angular code still lives
 library.add(
   faTwitter,
@@ -63,10 +65,13 @@ library.add(
   faTimes,
   faTimesCircle,
   faUndo,
-  faUpload
+  faUpload,
+
+  dimPowerIcon
 );
 
 export {
+  dimPowerIcon as powerIcon,
   faArrowAltCircleUp as raiseReputationIcon,
   faArrowCircleUp as updateIcon,
   faBan as banIcon,

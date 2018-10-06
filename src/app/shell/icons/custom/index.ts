@@ -1,0 +1,1 @@
+export { dimPowerIcon } from './Power';
