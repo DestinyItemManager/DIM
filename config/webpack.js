@@ -52,7 +52,8 @@ module.exports = (env) => {
 
     // webpack devServer
     devServer: {
-      https: true
+      https: true,
+      stats: 'errors-only'
     },
 
     // Bail and fail hard on first error
