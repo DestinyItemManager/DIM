@@ -13,7 +13,6 @@ import {
   DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { equals } from 'angular';
 import { makeItem } from '../inventory/store/d2-item-factory.service';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2Item } from '../inventory/item-types';
@@ -345,8 +344,7 @@ export class VendorItem {
       this.vendorItemDef === other.vendorItemDef &&
       this.canPurchase === other.canPurchase &&
       this.rating === other.rating &&
-      // Deep equals
-      equals(this.saleItem, other.saleItem)
+      this.saleItem === other.saleItem
     );
   }
 
