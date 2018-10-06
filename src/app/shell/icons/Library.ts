@@ -33,7 +33,8 @@ import {
 
 import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
 
-// necessary while angular code still lives
+// TODO: remove when Angular is out and all icons are imported
+//       in JS
 library.add(
   faTwitter,
 
