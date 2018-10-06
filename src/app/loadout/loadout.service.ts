@@ -13,6 +13,7 @@ import { toaster, loadingTracker } from '../ngimport-more';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
+import { Subject } from 'rxjs/Subject';
 
 export const enum LoadoutClass {
   any = -1,
@@ -46,6 +47,16 @@ interface DehydratedLoadout {
 }
 
 export interface LoadoutServiceType {
+  editLoadout$: Subject<{
+    loadout: Loadout;
+    equipAll?: boolean;
+    showClass?: boolean;
+    isNew?: boolean;
+  }>;
+  addItem$: Subject<{
+    item: DimItem;
+    clickEvent: MouseEvent;
+  }>;
   dialogOpen: boolean;
   getLoadouts(): Promise<Loadout[]>;
   deleteLoadout(loadout: Loadout): Promise<void>;
@@ -71,6 +82,16 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   return {
+    editLoadout$: new Subject<{
+      loadout: Loadout;
+      equipAll?: boolean;
+      showClass?: boolean;
+      isNew?: boolean;
+    }>(),
+    addItem$: new Subject<{
+      item: DimItem;
+      clickEvent: MouseEvent;
+    }>(),
     dialogOpen: false,
     getLoadouts,
     deleteLoadout,
@@ -83,9 +104,9 @@ function LoadoutService(): LoadoutServiceType {
 
   function editLoadout(
     loadout: Loadout,
-    { equipAll = false, showClass = true, isNew = false } = {}
+    { equipAll = false, showClass = true, isNew = true } = {}
   ) {
-    $rootScope.$broadcast('dim-edit-loadout', {
+    this.editLoadout$({
       loadout,
       equipAll,
       showClass,
@@ -94,7 +115,7 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   function addItemToLoadout(item: DimItem, $event) {
-    $rootScope.$broadcast('dim-store-item-clicked', {
+    this.addItem$({
       item,
       clickEvent: $event
     });

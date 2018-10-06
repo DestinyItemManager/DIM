@@ -21,7 +21,6 @@ import {
 import { querySelector } from '../shell/reducer';
 import { newLoadout } from './loadout-utils';
 import { toaster } from '../ngimport-more';
-import { $rootScope } from 'ngimport';
 import { D1FarmingService } from '../farming/farming.service';
 import { D2FarmingService } from '../farming/d2farming.service';
 import { makeRoomForPostmaster, pullFromPostmaster, pullablePostmasterItems } from './postmaster';
@@ -234,7 +233,10 @@ class LoadoutPopup extends React.Component<Props> {
               >
                 <i className="fa fa-trash-o" />
               </span>
-              <span title={t('Loadouts.Edit')} onClick={() => this.editLoadout(loadout)}>
+              <span
+                title={t('Loadouts.Edit')}
+                onClick={() => this.editLoadout(loadout, { isNew: false })}
+              >
                 <i className="fa fa-pencil" />
               </span>
             </li>
@@ -291,8 +293,8 @@ class LoadoutPopup extends React.Component<Props> {
     }
   };
 
-  private editLoadout = (loadout: Loadout) => {
-    dimLoadoutService.editLoadout(loadout, { showClass: true });
+  private editLoadout = (loadout: Loadout, { isNew = true } = {}) => {
+    dimLoadoutService.editLoadout(loadout, { showClass: true, isNew });
   };
 
   // TODO: move all these fancy loadouts to a new service
