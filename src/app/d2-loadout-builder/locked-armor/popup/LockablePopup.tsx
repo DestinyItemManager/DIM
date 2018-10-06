@@ -12,7 +12,7 @@ import LockablePerks from './LockablePerksTab';
 interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
-  perks: DestinyInventoryItemDefinition[];
+  perks: Set<DestinyInventoryItemDefinition>;
   isOpen: boolean;
   locked?: LockType;
   onClose(): void;
@@ -129,14 +129,11 @@ export default class LockablePopup extends React.Component<Props, State> {
         )}
         {tabSelected === 'perks' && (
           <LockablePerks
-            {...{
-              perks,
-              locked,
-              hoveredPerk,
-              onPerkHover: this.onPerkHover,
-              reset: this.reset,
-              toggleLockedPerk: this.toggleLockedPerk
-            }}
+            perks={perks}
+            locked={locked}
+            hoveredPerk={hoveredPerk}
+            onPerkHover={this.onPerkHover}
+            toggleLockedPerk={this.toggleLockedPerk}
           />
         )}
       </ClickOutside>

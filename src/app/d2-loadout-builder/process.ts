@@ -1,5 +1,6 @@
 import * as _ from 'underscore';
 import { D2Item } from '../inventory/item-types';
+import { LoadoutBuilder } from './LoadoutBuilder';
 import { LockableBuckets, ArmorSet, StatTypes } from './types';
 
 let killProcess = false;
@@ -7,7 +8,10 @@ let killProcess = false;
 /**
  * This safely waits for an existing process to be killed, then begins another.
  */
-export default function startNewProcess(filteredItems: { [bucket: number]: D2Item[] }) {
+export default function startNewProcess(
+  this: LoadoutBuilder,
+  filteredItems: { [bucket: number]: D2Item[] }
+) {
   if (this.state.processRunning !== 0) {
     killProcess = true;
     return window.requestAnimationFrame(() => startNewProcess.call(this, filteredItems));
@@ -22,7 +26,7 @@ export default function startNewProcess(filteredItems: { [bucket: number]: D2Ite
  *
  * @param filteredItems paired down list of items to process sets from
  */
-function process(filteredItems: { [bucket: number]: D2Item[] }) {
+function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item[] }) {
   const pstart = performance.now();
   const helms = filteredItems[LockableBuckets.helmet] || [];
   const gaunts = filteredItems[LockableBuckets.gauntlets] || [];
