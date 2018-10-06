@@ -35,7 +35,7 @@ import {
   addIcon,
   searchIcon,
   levellingIcon,
-  makeRoomIcon,
+  sendIcon,
   banIcon,
   raiseReputationIcon,
   undoIcon,
@@ -170,7 +170,7 @@ class LoadoutPopup extends React.Component<Props> {
 
                   <li className="loadout-set">
                     <span onClick={this.makeRoomForPostmaster}>
-                      <AppIcon icon={makeRoomIcon} />
+                      <AppIcon icon={sendIcon} />
                       <span>{t('Loadouts.MakeRoom')}</span>
                     </span>
                   </li>
@@ -181,7 +181,7 @@ class LoadoutPopup extends React.Component<Props> {
                 numPostmasterItems > 0 && (
                   <li className="loadout-set">
                     <span onClick={this.pullFromPostmaster}>
-                      <AppIcon icon={makeRoomIcon} />
+                      <AppIcon icon={sendIcon} />
                       <span className="badge" ng-bind="this.numPostmasterItems" />
                       <span>{t('Loadouts.PullFromPostmaster')}</span>
                     </span>

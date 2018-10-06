@@ -84,7 +84,7 @@ export {
   faCheckCircle as enabledIcon,
   faCog as settingsIcon,
   faDownload as downloadIcon,
-  faEnvelope as makeRoomIcon,
+  faEnvelope as sendIcon,
   faEraser as clearIcon,
   faLevelUpAlt as levellingIcon,
   faMinusSquare as collapseIcon,
