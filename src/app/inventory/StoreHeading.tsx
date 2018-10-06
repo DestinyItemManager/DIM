@@ -60,9 +60,7 @@ export default class StoreHeading extends React.Component<Props, State> {
     }
 
     const loadoutButton = (
-      <span title={t('Loadouts.Loadouts')}>
-        <AppIcon className="loadout-button" icon={openDropdownIcon} />
-      </span>
+      <AppIcon className="loadout-button" icon={openDropdownIcon} title={t('Loadouts.Loadouts')} />
     );
     const background = (
       <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
