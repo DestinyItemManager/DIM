@@ -130,7 +130,8 @@ const StoreProto = {
 
   // Create a loadout from this store's equipped items
   loadoutFromCurrentlyEquipped(this: D1Store, name: string) {
-    const allItems = this.items.filter((item) => item.canBeInLoadout()).map(copy);
+    // tslint:disable-next-line:no-unnecessary-callback-wrapper
+    const allItems = this.items.filter((item) => item.canBeInLoadout()).map((item) => copy(item));
     return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
   },
 
