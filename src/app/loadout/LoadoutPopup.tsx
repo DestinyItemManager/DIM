@@ -31,6 +31,19 @@ import { getPlatformMatching } from '../accounts/platform.service';
 import { router } from '../../router';
 // tslint:disable-next-line:no-implicit-dependencies
 import engramSvg from '../../images/engram.svg';
+import {
+  AppIcon,
+  addIcon,
+  searchIcon,
+  maximizePowerIcon,
+  levellingIcon,
+  makeRoomIcon,
+  banIcon,
+  raiseReputationIcon,
+  undoIcon,
+  deleteIcon,
+  editIcon
+} from '../shell/icons';
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -111,7 +124,7 @@ class LoadoutPopup extends React.Component<Props> {
         <ul className="loadout-list">
           <li className="loadout-set">
             <span onClick={this.newLoadout}>
-              <i className="fa fa-plus-circle" />
+              <AppIcon icon={addIcon} />
               <span>{t('Loadouts.Create')}</span>
             </span>
             <span onClick={this.newLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
@@ -120,7 +133,7 @@ class LoadoutPopup extends React.Component<Props> {
           {query.length > 0 && (
             <li className="loadout-set">
               <span onClick={this.searchLoadout}>
-                <i className="fa fa-search" />
+                <AppIcon icon={searchIcon} />
                 <span>{t('Loadouts.ApplySearch', { query })}</span>
               </span>
             </li>
@@ -133,7 +146,7 @@ class LoadoutPopup extends React.Component<Props> {
                   <span className="light" press-tip={hasClassified ? t('Loadouts.Classified') : ''}>
                     {maxLightValue}
                   </span>
-                  <i className="fa">✦</i>
+                  <AppIcon icon={maximizePowerIcon} />
                   <span>
                     {t(
                       dimStore.destinyVersion === 2
@@ -148,14 +161,14 @@ class LoadoutPopup extends React.Component<Props> {
                 <>
                   <li className="loadout-set">
                     <span onClick={this.itemLevelingLoadout}>
-                      <i className="fa fa-level-up" />
+                      <AppIcon icon={levellingIcon} />
                       <span>{t('Loadouts.ItemLeveling')}</span>
                     </span>
                   </li>
 
                   <li className="loadout-set">
                     <span onClick={this.makeRoomForPostmaster}>
-                      <i className="fa fa-envelope" />
+                      <AppIcon icon={makeRoomIcon} />
                       <span>{t('Loadouts.MakeRoom')}</span>
                     </span>
                   </li>
@@ -166,7 +179,7 @@ class LoadoutPopup extends React.Component<Props> {
                 numPostmasterItems > 0 && (
                   <li className="loadout-set">
                     <span onClick={this.pullFromPostmaster}>
-                      <i className="fa fa-envelope" />
+                      <AppIcon icon={makeRoomIcon} />
                       <span className="badge" ng-bind="this.numPostmasterItems" />
                       <span>{t('Loadouts.PullFromPostmaster')}</span>
                     </span>
@@ -183,7 +196,7 @@ class LoadoutPopup extends React.Component<Props> {
                 <span>{t('Loadouts.GatherEngrams')}</span>
               </span>
               <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: false })}>
-                <i className="fa fa-ban" />
+                <AppIcon icon={banIcon} />
                 <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
               </span>
             </li>
@@ -192,7 +205,7 @@ class LoadoutPopup extends React.Component<Props> {
           {dimStore.isDestiny2() && (
             <li className="loadout-set">
               <span onClick={this.gatherTokensLoadout}>
-                <i className="fa fa-arrow-circle-o-up" />
+                <AppIcon icon={raiseReputationIcon} />
                 <span>{t('Loadouts.GatherTokens')}</span>
               </span>
             </li>
@@ -213,7 +226,7 @@ class LoadoutPopup extends React.Component<Props> {
                 title={previousLoadout.name}
                 onClick={(e) => this.applyLoadout(previousLoadout, e, true)}
               >
-                <i className="fa fa-undo" />
+                <AppIcon icon={undoIcon} />
                 {previousLoadout.name}
               </span>
               <span onClick={(e) => this.applyLoadout(previousLoadout, e)}>
@@ -232,10 +245,10 @@ class LoadoutPopup extends React.Component<Props> {
                 title={t('Loadouts.Delete')}
                 onClick={() => this.deleteLoadout(loadout)}
               >
-                <i className="fa fa-trash-o" />
+                <AppIcon icon={deleteIcon} />
               </span>
               <span title={t('Loadouts.Edit')} onClick={() => this.editLoadout(loadout)}>
-                <i className="fa fa-pencil" />
+                <AppIcon icon={editIcon} />
               </span>
             </li>
           ))}
