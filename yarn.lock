@@ -387,10 +387,6 @@ angular-hotkeys@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#052e6b6f44dfcd824427798b7f10e1917e8700a1"
 
-angular-messages@^1.6.9:
-  version "1.7.4"
-  resolved "https://registry.yarnpkg.com/angular-messages/-/angular-messages-1.7.4.tgz#845c3e3dce80ca698ba62bcf70105ab76cfdbb50"
-
 "angular-native-dragdrop@github:DestinyItemManager/angular-dragdrop":
   version "1.2.2"
   resolved "https://codeload.github.com/DestinyItemManager/angular-dragdrop/tar.gz/0a8770f97abf290617fac366db63c85d081e2cbf"
