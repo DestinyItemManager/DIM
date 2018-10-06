@@ -4,6 +4,7 @@ import {
   faArrowAltCircleUp,
   faMinusSquare,
   faPlusSquare,
+  faQuestionCircle,
   faTrashAlt
 } from '@fortawesome/free-regular-svg-icons';
 import {
@@ -41,6 +42,7 @@ library.add(
   faArrowAltCircleUp,
   faMinusSquare,
   faPlusSquare,
+  faQuestionCircle,
   faTrashAlt,
 
   faArrowCircleUp,
@@ -89,6 +91,7 @@ export {
   faPencilAlt as editIcon,
   faPlusSquare as expandIcon,
   faPlusCircle as addIcon,
+  faQuestionCircle as helpIcon,
   faSave as saveIcon,
   faSearch as searchIcon,
   faSignInAlt as signInIcon,
