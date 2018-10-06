@@ -13,6 +13,7 @@ import {
   faSignInAlt,
   faSignOutAlt,
   faStar,
+  faThumbsUp,
   faTimes,
   faTimesCircle,
   faUpload
@@ -27,11 +28,19 @@ library.add(
 
   faArrowCircleUp,
   faBars,
+  faCheckCircle,
   faCog,
+  faDownload,
+  faEraser,
+  faSave,
   faSearch,
+  faSignInAlt,
   faSignOutAlt,
   faStar,
-  faTimes
+  faThumbsUp,
+  faTimes,
+  faTimesCircle,
+  faUpload
 );
 
 export {
@@ -48,6 +57,7 @@ export {
   faSignInAlt as signInIcon,
   faSignOutAlt as signOutIcon,
   faStar as starIcon,
+  faThumbsUp as thumbsUpIcon,
   faTimes as closeIcon,
   faTimesCircle as disabledIcon,
   faTwitter as twitterIcon,
