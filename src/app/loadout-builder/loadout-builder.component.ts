@@ -1,4 +1,5 @@
 import * as _ from 'underscore';
+import copy from 'fast-copy';
 import template from './loadout-builder.html';
 // tslint:disable-next-line:no-implicit-dependencies
 import intellectIcon from 'app/images/intellect.png';
@@ -8,7 +9,7 @@ import disciplineIcon from 'app/images/discipline.png';
 import strengthIcon from 'app/images/strength.png';
 import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
-import { IComponentOptions, IController, IScope, ITimeoutService, extend, copy } from 'angular';
+import { IComponentOptions, IController, IScope, ITimeoutService, extend } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
 import { sum } from '../util';

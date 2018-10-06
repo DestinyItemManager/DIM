@@ -6,7 +6,7 @@ import { dimLoadoutService, Loadout } from './loadout.service';
 import * as _ from 'underscore';
 import { $rootScope } from 'ngimport';
 import { sortItems } from '../shell/dimAngularFilters.filter';
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import { flatMap } from '../util';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';

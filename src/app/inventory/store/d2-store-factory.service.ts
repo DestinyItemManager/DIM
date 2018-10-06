@@ -1,4 +1,4 @@
-import { copy as angularCopy } from 'angular';
+import copy from 'fast-copy';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
@@ -123,10 +123,7 @@ const StoreProto = {
 
   // Create a loadout from this store's equipped items
   loadoutFromCurrentlyEquipped(this: D2Store, name: string): Loadout {
-    const allItems = (this.items as D2Item[])
-      .filter((item) => item.canBeInLoadout())
-      // tslint:disable-next-line:no-unnecessary-callback-wrapper
-      .map((item) => angularCopy(item));
+    const allItems = (this.items as D2Item[]).filter((item) => item.canBeInLoadout()).map(copy);
     return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
   },
 

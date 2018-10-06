@@ -1,4 +1,5 @@
-import { extend, copy, IComponentOptions, IController, IQService } from 'angular';
+import { extend, IComponentOptions, IController, IQService } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'underscore';
 import { flatMap } from '../util';
 import { getDefinitions } from '../destiny1/d1-definitions.service';

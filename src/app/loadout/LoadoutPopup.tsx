@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { copy as angularCopy } from 'angular';
 import { t } from 'i18next';
 import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
@@ -31,6 +30,7 @@ import { getPlatformMatching } from '../accounts/platform.service';
 import { router } from '../../router';
 // tslint:disable-next-line:no-implicit-dependencies
 import engramSvg from '../../images/engram.svg';
+import copy from 'fast-copy';
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -385,7 +385,7 @@ class LoadoutPopup extends React.Component<Props> {
 export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
 
 function filterLoadoutToEquipped(loadout: Loadout) {
-  const filteredLoadout = angularCopy(loadout);
+  const filteredLoadout = copy(loadout);
   filteredLoadout.items = _.mapObject(filteredLoadout.items, (items) =>
     items.filter((i) => i.equipped)
   );

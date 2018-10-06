@@ -1,4 +1,5 @@
-import { equals, copy, extend } from 'angular';
+import { equals, extend } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
