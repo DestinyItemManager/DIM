@@ -30,7 +30,6 @@ import { dimItemService } from '../inventory/dimItemService.factory';
 import { getPlatformMatching } from '../accounts/platform.service';
 import { router } from '../../router';
 // tslint:disable-next-line:no-implicit-dependencies
-import engramSvg from '../../images/engram.svg';
 import {
   AppIcon,
   addIcon,
@@ -42,7 +41,9 @@ import {
   undoIcon,
   deleteIcon,
   editIcon,
-  powerIcon
+  engramIcon,
+  powerActionIcon,
+  powerIndicatorIcon
 } from '../shell/icons';
 
 interface ProvidedProps {
@@ -144,9 +145,10 @@ class LoadoutPopup extends React.Component<Props> {
               <li className="loadout-set">
                 <span onClick={this.maxLightLoadout}>
                   <span className="light" press-tip={hasClassified ? t('Loadouts.Classified') : ''}>
+                    <AppIcon icon={powerIndicatorIcon} />
                     {maxLightValue}
                   </span>
-                  <AppIcon icon={powerIcon} />
+                  <AppIcon icon={powerActionIcon} />
                   <span>
                     {t(
                       dimStore.destinyVersion === 2
@@ -214,7 +216,7 @@ class LoadoutPopup extends React.Component<Props> {
           {!dimStore.isVault && (
             <li className="loadout-set">
               <span onClick={this.startFarming}>
-                <img className="fa" src={engramSvg} height="12" width="12" />
+                <AppIcon icon={engramIcon} />
                 <span>{t('FarmingMode.FarmingMode')}</span>
               </span>
             </li>

@@ -57,12 +57,6 @@
     font-weight: 200;
     color: $gold;
     float: right;
-    &:before {
-      content: '\2726';
-      display: inline-block;
-      vertical-align: 7%;
-      font-size: 50%;
-    }
   }
 }
 
