@@ -4,7 +4,6 @@ import Header from './shell/Header';
 import classNames from 'classnames';
 import { angular2react } from 'angular2react';
 import { ToasterContainerComponent } from './shell/toaster-container.component';
-import { settings, Settings } from './settings/settings';
 import { lazyInjector } from '../lazyInjector';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
 import { connect } from 'react-redux';
@@ -27,8 +26,7 @@ interface Props {
 }
 
 function mapStateToProps(state: RootState): Props {
-  // TODO: this is a bit brute force
-  const settings = state.settings.settings as Settings;
+  const settings = state.settings;
   return {
     language: settings.language,
     showReviews: settings.showReviews,
@@ -49,7 +47,7 @@ class App extends React.Component<Props> {
       // TODO: Add key={`lang-${settings.language}`} so the whole tree
       // re-renders when language changes. Can't do it now because Angular.
       <div
-        className={classNames('app', `lang-${settings.language}`, {
+        className={classNames('app', `lang-${this.props.language}`, {
           'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
           'show-elements': this.props.showElements,
           itemQuality: this.props.itemQuality,

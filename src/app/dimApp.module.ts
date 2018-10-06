@@ -5,7 +5,6 @@ import 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
 
 import MessagesModule from 'angular-messages';
-import TouchModule from 'angular-touch';
 
 import 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
@@ -23,9 +22,7 @@ import itemReviewModule from './item-review/item-review.module';
 import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
-import settingsModule from './settings/settings.module';
 import oauthModule from './oauth/oauth.module';
-import storageModule from './storage/storage.module';
 import loadoutModule from './loadout/loadout.module';
 import movePopupModule from './move-popup/move-popup.module';
 import searchModule from './search/search.module';
@@ -37,7 +34,6 @@ const dependencies = [
   AriaModule,
   DragAndDropModule,
   MessagesModule,
-  TouchModule,
   ngI18Next,
   ngSanitize,
   ocLazyLoadModule,
@@ -49,9 +45,7 @@ const dependencies = [
   compareModule,
   infuseModule,
   farmingModule,
-  settingsModule,
   oauthModule,
-  storageModule,
   loadoutModule,
   movePopupModule,
   searchModule,

@@ -18,7 +18,7 @@ function isD1Stats(
   return destinyVersion === 1;
 }
 
-export default class CharacterStats extends React.Component<Props> {
+export default class CharacterStats extends React.PureComponent<Props> {
   render() {
     const { stats, destinyVersion } = this.props;
 

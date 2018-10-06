@@ -3,6 +3,16 @@ import * as _ from 'underscore';
 import { sum } from '../util';
 import { Loadout } from './loadout.service';
 import { DimItem } from '../inventory/item-types';
+import uuidv4 from 'uuid/v4';
+
+export function newLoadout(name: string, items: Loadout['items']): Loadout {
+  return {
+    id: uuidv4(),
+    classType: -1,
+    name,
+    items
+  };
+}
 
 // Generate an optimized loadout based on a filtered set of items and a value function
 export function optimalLoadout(
@@ -66,9 +76,5 @@ export function optimalLoadout(
     finalItems[type.toLowerCase()] = [itemCopy];
   });
 
-  return {
-    classType: -1,
-    name,
-    items: finalItems
-  };
+  return newLoadout(name, finalItems);
 }

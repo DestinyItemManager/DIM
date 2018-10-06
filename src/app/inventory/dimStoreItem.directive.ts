@@ -1,5 +1,4 @@
 import { queuedAction } from './action-queue';
-import { itemTags } from '../settings/settings';
 import { NewItemsService } from './store/new-items.service';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import template from './dimStoreItem.directive.html';
@@ -15,6 +14,7 @@ import { dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from './item-types';
 import { CompareService } from '../compare/compare.service';
 import { moveItemTo } from './dimItemMoveService.factory';
+import { itemTags } from './dim-item-info';
 
 export function tagIconFilter() {
   'ngInject';

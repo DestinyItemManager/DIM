@@ -69,6 +69,14 @@ const destiny2Links = [
   }
 ];
 
+// conditionally add in the d2 loadout builder
+if ($featureFlags.d2LoadoutBuilder) {
+  destiny2Links.splice(1, 0, {
+    state: 'destiny2.loadoutbuilder',
+    text: 'LoadoutBuilder.Title'
+  });
+}
+
 const shopLink = 'https://shop.destinyitemmanager.com/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 

@@ -1,8 +1,20 @@
 # Next
 
+* Added `is:heroic` search filter for armor with heroic resistance.
+* New option to manually sort your characters.
+* No longer forgetting what perks we recommended.
+* Fix mods/perks on items - there was a bug that affected both display and searches.
+* Fix is:hasmod search to include some more mods.
+
+# 4.72.0 (2018-09-30)
+
+* Add searches `is:transmat`, `is:armormod`, `is:weaponmod`, and `is:transmat`, and removed D1 `is:primaryweaponengram`, `is:specialweaponengram`, and `is:heavyweaponengram`.
+* Show daily gambit challenge and daily heroic adventure in milestones.
+
 # 4.71.0 (2018-09-23)
 
 * Removed a bunch of help popups.
+* Added information about unique stacks.
 * Added `is:maxpower` search to return highest light items.
 * Added `is:modded` search to return items that have a mod applied.
 * Bounties with expiration times are now shown, and are sorted in front in order of expiration time.

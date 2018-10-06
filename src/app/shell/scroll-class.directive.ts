@@ -11,8 +11,10 @@ export function ScrollClass(): IDirective {
       const threshold = attrs.scrollClassThreshold || 0;
 
       function stickyHeader() {
-        const scrolled =
-          document.body.scrollTop > threshold || document.documentElement.scrollTop > threshold;
+        const scrolled = Boolean(
+          document.body.scrollTop > threshold ||
+            (document.documentElement && document.documentElement.scrollTop > threshold)
+        );
         elem[0].classList.toggle(attrs.scrollClass, scrolled);
       }
 

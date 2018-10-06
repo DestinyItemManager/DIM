@@ -95,27 +95,8 @@ const statWhiteList = [
 
 const statsNoBar = [4284893193, 3871231066, 2961396640, 447667954, 1931675084];
 
-// Mapping from itemCategoryHash to our category strings for filtering.
-const categoryFromHash = {
-  153950757: 'CATEGORY_GRENADE_LAUNCHER',
-  3954685534: 'CATEGORY_SUBMACHINEGUN',
-  2489664120: 'CATEGORY_TRACE_RIFLE',
-  1504945536: 'CATEGORY_LINEAR_FUSION_RIFLE',
-  3317538576: 'CATEGORY_BOW',
-  5: 'CATEGORY_AUTO_RIFLE',
-  6: 'CATEGORY_HAND_CANNON',
-  7: 'CATEGORY_PULSE_RIFLE',
-  8: 'CATEGORY_SCOUT_RIFLE',
-  9: 'CATEGORY_FUSION_RIFLE',
-  10: 'CATEGORY_SNIPER_RIFLE',
-  11: 'CATEGORY_SHOTGUN',
-  12: 'CATEGORY_MACHINE_GUN',
-  13: 'CATEGORY_ROCKET_LAUNCHER',
-  14: 'CATEGORY_SIDEARM',
-  54: 'CATEGORY_SWORD'
-};
-
 const resistanceMods = {
+  1546607977: DamageType.Kinetic,
   1546607980: DamageType.Void,
   1546607978: DamageType.Arc,
   1546607979: DamageType.Thermal
@@ -140,9 +121,6 @@ const ItemProto = {
       (!this.notransfer || this.owner === store.id) &&
       !this.location.inPostmaster
     );
-  },
-  inCategory(this: D2Item, categoryName: string) {
-    return this.categories.includes(categoryName);
   },
   canBeInLoadout(this: D2Item) {
     return this.equipment || this.type === 'Material' || this.type === 'Consumable';
@@ -244,23 +222,6 @@ export function createItemIndex(item: D2Item): string {
 }
 
 /**
- * Construct the search category (CATEGORY_*) list from an item definition.
- * @param itemDef the item definition object
- */
-function findCategories(itemDef): string[] {
-  const categories: string[] = [];
-  if (itemDef.itemCategoryHashes) {
-    for (const hash of itemDef.itemCategoryHashes) {
-      const c = categoryFromHash[hash];
-      if (c) {
-        categories.push(c);
-      }
-    }
-  }
-  return categories;
-}
-
-/**
  * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
  * @param buckets the bucket definitions
@@ -327,8 +288,6 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const categories = findCategories(itemDef);
-
   const dmgName = instanceDef
     ? [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0]
     : null;
@@ -349,8 +308,7 @@ export function makeItem(
     hash: item.itemHash,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
-    categories, // see defs.ItemCategories
-    itemCategoryHashes: itemDef.itemCategoryHashes || [],
+    itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
     isVendorItem: !owner || owner.id === null,
@@ -372,6 +330,8 @@ export function makeItem(
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
     equipRequiredLevel: (instanceDef && instanceDef.equipRequiredLevel) || 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
+    uniqueStack:
+      itemDef.inventory.stackUniqueLabel && itemDef.inventory.stackUniqueLabel.length > 0,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeName: itemDef.redacted ? 'unknown' : getClass(itemDef.classType),
@@ -950,21 +910,23 @@ function buildSockets(
     return null;
   }
 
-  const realSockets = sockets
-    .filter((s) => s.isVisible)
-    .map((socket, i) => buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i));
+  const realSockets = sockets.map((socket, i) =>
+    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i)
+  );
 
   const categories = itemDef.sockets.socketCategories.map(
     (category): DimSocketCategory => {
       return {
         category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes.map((index) => realSockets[index]).filter(Boolean)
+        sockets: category.socketIndexes
+          .map((index) => realSockets[index])
+          .filter(Boolean) as DimSocket[]
       };
     }
   );
 
   return {
-    sockets: realSockets, // Flat list of sockets
+    sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
     categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
   };
 }
@@ -1122,7 +1084,11 @@ function buildSocket(
   socket: DestinyItemSocketState,
   socketEntry: DestinyItemSocketEntryDefinition,
   index: number
-): DimSocket {
+): DimSocket | undefined {
+  if (!socket.isVisible) {
+    return undefined;
+  }
+
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
   const reusablePlugs = compact(
@@ -1164,7 +1130,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
   if (masterworkSocket && masterworkSocket.plug) {
     const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
     if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
-      createdItem.dmg = [null, 'kinetic', 'arc', 'solar', 'void'][
+      createdItem.dmg = [null, 'heroic', 'arc', 'solar', 'void'][
         resistanceMods[masterwork.statTypeHash]
       ] as typeof createdItem.dmg;
     }

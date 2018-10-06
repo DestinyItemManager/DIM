@@ -21,6 +21,8 @@
     flex-direction: row;
     align-items: center;
     padding: 4px 6px 4px 8px;
+    position: relative;
+    z-index: 0;
   }
 
   .background {
@@ -31,7 +33,7 @@
     background-size: cover;
     background-position: left center;
     background-repeat: no-repeat;
-    z-index: -1;
+    z-index: 0;
   }
 
   .overlay {
@@ -190,14 +192,6 @@
   margin-left: 6px;
   margin-top: 1px;
   opacity: 0.8;
-}
-
-.loadout-menu {
-  position: relative;
-  max-width: 230px;
-  [role='button'] {
-    outline: none;
-  }
 }
 
 .current {

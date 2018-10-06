@@ -16,6 +16,9 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
+  "Badge": {
+    "Max": "MAX"
+  },
   "Bucket": {
     "Armor": "Armor",
     "General": "General",
@@ -388,6 +391,31 @@
     "ShowGear": "Show {{class}} gear",
     "Vendor": "Include Vendor items"
   },
+  "LoadoutBuilder": {
+    "Title": "Loadout Builder",
+    "SelectCharacter": "Select Character",
+    "LockEquipped": "Lock Equipped",
+    "ResetLocked": "Reset Locked",
+    "Options": "Options",
+    "RequirePerks": "Require additional perks on all armor",
+    "RequireBurn": "Require armor with matching damage resistance burn",
+    "BurnTypeNone": "None",
+    "BurnTypeArc": "Arc",
+    "BurnTypeSolar": "Solar",
+    "BurnTypeVoid": "Void",
+    "Loading": "Generating builds... {{loading}}%",
+    "NoBuildsFound": "No Generated Builds Found",
+    "SelectTier": "Select Build Tier",
+    "GeneratedBuilds": "Generated Builds",
+    "CreateLoadout": "Create Loadout",
+    "EquipItems": "Equip on {{name}}",
+    "LockBucket": "Lock {{bucket}}",
+    "LockItemTabTitle": "Items",
+    "LockPerksTabTitle": "Perks",
+    "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
+    "LockPerksTitle": "Select perks to lock",
+    "ResetPerks": "Reset"
+  },
   "Loadouts": {
     "Any": "Any class",
     "Applied": "Your single item loadout has been transferred to your {{store}}.",
@@ -491,6 +519,8 @@
     "Store": "Store",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle_Stackable_Unique": "Quantity: {{amount}}/{{maxStackSize}} (MAX).",
+    "Subtitle_Stackable_UniqueMax": "Quantity: {{amount}} (MAX).",
     "Take": "Take",
     "TrackUntrack_Track": "Track {{itemType}}",
     "TrackUntrack_Untrack": "Untrack {{itemType}}",
@@ -528,9 +558,9 @@
     "AllowIdPostToDtrLine2": "This will share your account name and reviewed items with Destiny Tracker.",
     "AlwaysShowDetails": "Always show expanded item popup",
     "CharacterOrder": "Sort characters by",
-    "CharacterOrderFixed": "character age",
-    "CharacterOrderRecent": "most recent character",
-    "CharacterOrderReversed": "most recent character (reversed)",
+    "CharacterOrderFixed": "Character age (buggy on PC)",
+    "CharacterOrderRecent": "Most recent character",
+    "CharacterOrderReversed": "Most recent character (reversed)",
     "ColorA11y": "Color blindness configuration",
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",

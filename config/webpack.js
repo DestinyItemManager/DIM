@@ -65,9 +65,7 @@ module.exports = (env) => {
           https: {
             key: fs.readFileSync('key.pem'), // Private keys in PEM format.
             cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
-          },
-          host: '0.0.0.0',
-          port: '8080'
+          }
         }
       : {},
 
@@ -317,7 +315,9 @@ module.exports = (env) => {
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
         // Forsaken Item Tiles
-        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release')
+        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
+        // D2 Loadout Builder
+        '$featureFlags.d2LoadoutBuilder': JSON.stringify(env !== 'release')
       })
 
       // Enable if you want to debug the size of the chunks

@@ -5,7 +5,6 @@ import {
   DestinyStatDefinition
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'underscore';
-import uuidv4 from 'uuid/v4';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count, sum } from '../../util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
@@ -19,6 +18,7 @@ import { t } from 'i18next';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores.service';
+import { newLoadout } from '../../loadout/loadout-utils';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -127,12 +127,7 @@ const StoreProto = {
       .filter((item) => item.canBeInLoadout())
       // tslint:disable-next-line:no-unnecessary-callback-wrapper
       .map((item) => angularCopy(item));
-    return {
-      id: uuidv4(),
-      classType: -1,
-      name,
-      items: _.groupBy(allItems, (i) => i.type.toLowerCase())
-    };
+    return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
   },
 
   isDestiny1(this: D2Store) {

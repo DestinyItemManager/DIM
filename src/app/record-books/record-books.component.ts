@@ -9,6 +9,8 @@ import template from './record-books.html';
 import './record-books.scss';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import { setSetting, toggleCollapsedSection } from '../settings/actions';
+import store from '../store/store';
 
 export const RecordBooksComponent: IComponentOptions = {
   controller: RecordBooksController,
@@ -29,16 +31,14 @@ function RecordBooksController(
 
   const vm = this;
 
-  vm.settings = settings;
+  vm.hideCompletedRecords = settings.hideCompletedRecords;
 
-  // TODO: it's time for a directive
   vm.toggleSection = (id) => {
-    vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
-    vm.settings.save();
+    store.dispatch(toggleCollapsedSection(id));
   };
 
-  vm.settingsChanged = () => {
-    vm.settings.save();
+  vm.hideCompletedRecordsChanged = () => {
+    store.dispatch(setSetting('hideCompletedRecords', vm.hideCompletedRecords));
   };
 
   this.$onInit = () => {

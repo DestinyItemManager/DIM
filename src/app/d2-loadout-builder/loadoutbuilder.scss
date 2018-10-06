@@ -1,0 +1,29 @@
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.generated-build {
+  padding-bottom: 20px;
+
+  .generated-build-buttons {
+    padding-bottom: 5px;
+  }
+  .generated-build-items {
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+  }
+  .item-mod {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #999999;
+    border-radius: 50%;
+    background-color: #4887ba;
+    transform: scale(0.9);
+  }
+}

@@ -16,7 +16,13 @@ export const VendorsComponent: IComponentOptions = {
   controllerAs: 'vm'
 };
 
-function VendorsController(this: IController & { account: DestinyAccount }, $scope: IScope) {
+function VendorsController(
+  this: IController & {
+    account: DestinyAccount;
+    settings: typeof settings;
+  },
+  $scope: IScope
+) {
   'ngInject';
 
   const vm = this;

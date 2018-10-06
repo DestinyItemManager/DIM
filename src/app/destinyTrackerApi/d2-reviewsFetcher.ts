@@ -123,6 +123,7 @@ class D2ReviewsFetcher {
       item.dtrRating = cachedData;
     }
     if (cachedData && cachedData.reviewsResponse) {
+      ratePerks(item);
       return;
     }
 
