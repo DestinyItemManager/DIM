@@ -16,6 +16,7 @@ import CharacterStats from './CharacterStats';
 import LoadoutPopup from '../loadout/LoadoutPopup';
 import ClickOutside from '../dim-ui/ClickOutside';
 import * as ReactDOM from 'react-dom';
+import { AppIcon, powerActionIcon, openDropdownIcon } from '../shell/icons';
 
 interface Props {
   store: DimStore;
@@ -59,7 +60,9 @@ export default class StoreHeading extends React.Component<Props, State> {
     }
 
     const loadoutButton = (
-      <i className="loadout-button fa fa-chevron-circle-down" title={t('Loadouts.Loadouts')} />
+      <span title={t('Loadouts.Loadouts')}>
+        <AppIcon className="loadout-button" icon={openDropdownIcon} />
+      </span>
     );
     const background = (
       <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
@@ -141,7 +144,10 @@ export default class StoreHeading extends React.Component<Props, State> {
             <div className="character-text">
               <div className="top">
                 <div className="class">{store.className}</div>
-                <div className="powerLevel">{store.powerLevel}</div>
+                <div className="powerLevel">
+                  <AppIcon icon={powerActionIcon} />
+                  {store.powerLevel}
+                </div>
               </div>
               <div className="bottom">
                 <div className="race-gender">{store.genderRace}</div>

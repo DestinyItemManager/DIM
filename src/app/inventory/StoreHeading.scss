@@ -101,11 +101,11 @@
   }
   .powerLevel {
     color: $gold;
-    &:before {
-      content: '\2726';
-      display: inline-block;
+
+    .app-icon {
       vertical-align: 25%;
       font-size: 50%;
+      margin-right: 2px;
     }
   }
   .currencies {

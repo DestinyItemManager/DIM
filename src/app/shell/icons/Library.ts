@@ -29,7 +29,8 @@ import {
   faLevelUpAlt,
   faBan,
   faUndo,
-  faPencilAlt
+  faPencilAlt,
+  faChevronCircleDown
 } from '@fortawesome/free-solid-svg-icons';
 
 import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
@@ -49,6 +50,7 @@ library.add(
   faBan,
   faBars,
   faCheckCircle,
+  faChevronCircleDown,
   faCog,
   faDownload,
   faEnvelope,
@@ -82,6 +84,7 @@ export {
   faBan as banIcon,
   faBars as menuIcon,
   faCheckCircle as enabledIcon,
+  faChevronCircleDown as openDropdownIcon,
   faCog as settingsIcon,
   faDownload as downloadIcon,
   faEnvelope as sendIcon,
