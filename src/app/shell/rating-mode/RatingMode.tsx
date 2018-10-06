@@ -11,6 +11,7 @@ import { setSetting } from '../../settings/actions';
 import store from '../../store/store';
 import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import { thumbsUpIcon, AppIcon } from '../icons';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -63,7 +64,7 @@ class RatingMode extends React.Component<Props, State> {
           ref={this.dropdownToggler}
           title={t('DtrReview.RatingsOptions')}
         >
-          <i className="fa fa fa-thumbs-up" />
+          <AppIcon icon={thumbsUpIcon} />
         </span>
         {open && (
           <ClickOutside onClickOutside={this.closeDropdown}>

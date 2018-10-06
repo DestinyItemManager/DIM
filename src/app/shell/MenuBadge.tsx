@@ -2,6 +2,7 @@ import * as React from 'react';
 import '../whats-new/WhatsNewLink.scss';
 import './MenuBadge.scss';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
+import { AppIcon, updateIcon } from './icons';
 
 /**
  * A badge for the hamburger menu - must be kept in sync with WhatsNewLink, but may also incorporate other sources.
@@ -14,7 +15,7 @@ export default class MenuBadge extends WhatsNewLink {
     const { dimNeedsUpdate, alerts, showChangelog } = this.state;
 
     if (dimNeedsUpdate) {
-      return <i className="upgrade fa fa-arrow-circle-up" />;
+      return <AppIcon className="upgrade" icon={updateIcon} />;
     }
 
     if (alerts.length) {
