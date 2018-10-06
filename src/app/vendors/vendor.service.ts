@@ -15,6 +15,7 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { $rootScope, $q } from 'ngimport';
 import { loadingTracker } from '../ngimport-more';
+import { handleLocalStorageFullError } from '../compatibility';
 
 /*
 const allVendors = [
@@ -448,7 +449,10 @@ function VendorService(): VendorServiceType {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
               vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
-              return idbKeyval.set(key, vendor).then(() => vendor);
+              return idbKeyval
+                .set(key, vendor)
+                .catch(handleLocalStorageFullError)
+                .then(() => vendor);
             })
             .catch((e) => {
               // console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
@@ -462,9 +466,12 @@ function VendorService(): VendorServiceType {
                   factionAligned: factionAligned(store, vendorDef.summary.factionHash)
                 };
 
-                return idbKeyval.set(key, vendor).then(() => {
-                  throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
-                });
+                return idbKeyval
+                  .set(key, vendor)
+                  .catch(handleLocalStorageFullError)
+                  .then(() => {
+                    throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
+                  });
               }
               throw new Error(`Failed to load vendor ${vendorDef.summary.vendorName}`);
             });

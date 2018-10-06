@@ -250,21 +250,23 @@ export default class Header extends React.PureComponent<{}, State> {
   }
 
   private updateVendorEngrams = (account = this.state.account) => {
-    if (!$featureFlags.vendorEngrams || !account || account.destinyVersion !== 2) {
-      this.stopPollingVendorEngrams();
-      return;
-    }
+    if ($featureFlags.vendorEngrams) {
+      if (!account || account.destinyVersion !== 2) {
+        this.stopPollingVendorEngrams();
+        return;
+      }
 
-    dimVendorEngramsService.getAllVendorDrops().then((vds) => {
-      const anyActive = vds.some(isVerified380);
-      this.setState({ vendorEngramDropActive: anyActive });
-    });
+      dimVendorEngramsService.getAllVendorDrops().then((vds) => {
+        const anyActive = vds.some(isVerified380);
+        this.setState({ vendorEngramDropActive: anyActive });
+      });
 
-    if (!this.engramRefreshTimer) {
-      this.engramRefreshTimer = window.setInterval(
-        this.updateVendorEngrams,
-        dimVendorEngramsService.refreshInterval
-      );
+      if (!this.engramRefreshTimer) {
+        this.engramRefreshTimer = window.setInterval(
+          this.updateVendorEngrams,
+          dimVendorEngramsService.refreshInterval
+        );
+      }
     }
   };
 
