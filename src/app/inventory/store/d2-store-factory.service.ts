@@ -254,7 +254,7 @@ export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
 /**
  * Compute character-level stats.
  */
-function getCharacterStatsData(
+export function getCharacterStatsData(
   statDefs: LazyDefinition<DestinyStatDefinition>,
   stats: {
     [key: number]: number;

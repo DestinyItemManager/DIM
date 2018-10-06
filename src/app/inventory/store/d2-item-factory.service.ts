@@ -123,7 +123,7 @@ const ItemProto = {
     );
   },
   canBeInLoadout(this: D2Item) {
-    return this.equipment || this.type === 'Material' || this.type === 'Consumable';
+    return this.equipment || this.type === 'Consumables';
   },
   // Mark that this item has been moved manually
   updateManualMoveTimestamp(this: D2Item) {

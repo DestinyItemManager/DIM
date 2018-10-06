@@ -3,14 +3,15 @@ import * as React from 'react';
 import * as _ from 'underscore';
 import BungieImage from '../../dim-ui/BungieImage';
 import PressTip from '../../dim-ui/PressTip';
-import { DimStore } from '../../inventory/store-types';
 import StoreInventoryItem from '../../inventory/StoreInventoryItem';
-import LoadoutDrawer from '../../loadout/loadout-drawer';
 import { Loadout } from '../../loadout/loadout.service';
 import { ArmorSet, LockType } from '../types';
 import { filterPlugs, getSetsForTier, getSetTiers } from './utils';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import PlugTooltip from './PlugTooltip';
+import { DimStore } from '../../inventory/store-types';
+import LoadoutDrawer from '../../loadout/LoadoutDrawer';
+import { $rootScope } from 'ngimport';
 
 interface Props {
   processRunning: number;
@@ -20,7 +21,6 @@ interface Props {
 }
 
 interface State {
-  loadout?: Loadout;
   minimumPower: number;
   selectedTier: string;
 }
@@ -38,7 +38,10 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   // Set the loadout property to show/hide the loadout menu
   setCreateLoadout = (loadout?: Loadout) => {
-    this.setState({ loadout });
+    $rootScope.$broadcast('dim-edit-loadout', {
+      loadout,
+      showClass: false
+    });
   };
 
   componentWillReceiveProps(props: Props) {
@@ -49,7 +52,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   render() {
     const { processRunning, lockedMap, selectedStore } = this.props;
-    const { loadout, selectedTier, minimumPower } = this.state;
+    const { selectedTier, minimumPower } = this.state;
 
     if (processRunning > 0) {
       return <h3>{t('LoadoutBuilder.Loading', { loading: processRunning })}</h3>;
@@ -146,7 +149,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             </div>
           </div>
         ))}
-        <LoadoutDrawer loadout={loadout} onClose={this.setCreateLoadout} />
+        <LoadoutDrawer />
       </>
     );
   }

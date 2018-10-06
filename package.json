@@ -113,7 +113,6 @@
     "angular-aria": "^1.6.9",
     "angular-duration-format": "^1.0.1",
     "angular-hotkeys": "^1.7.0",
-    "angular-messages": "^1.6.9",
     "angular-native-dragdrop": "github:DestinyItemManager/angular-dragdrop",
     "angular-promise-tracker": "^2.2.2",
     "angular-sanitize": "^1.6.9",
