@@ -15,11 +15,11 @@ import { DimStore } from '../inventory/store-types';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
+import { filterPlugs } from './generated-sets/utils';
 import './loadoutbuilder.scss';
-import { ArmorSet, LockableBuckets, LockType, SetType } from './types';
-import { filterPlugs, getSetsForTier } from './utils';
 import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
+import { ArmorSet, LockableBuckets, LockType } from './types';
 
 interface Props {
   account: DestinyAccount;
@@ -33,9 +33,7 @@ interface State {
   requirePerks: boolean;
   requireBurn: 'none' | 'arc' | 'solar' | 'void';
   lockedMap: { [bucketHash: number]: LockType };
-  processedSets: { [setHash: string]: SetType };
-  matchedSets: ArmorSet[];
-  setTiers: string[];
+  processedSets: ArmorSet[];
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
 }
@@ -75,9 +73,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
       requireBurn: 'none',
       processRunning: 0,
       lockedMap: {},
-      processedSets: {},
-      matchedSets: [],
-      setTiers: []
+      processedSets: []
     };
   }
 
@@ -230,7 +226,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
    * Recomputes matched sets
    */
   resetLocked = () => {
-    this.setState({ lockedMap: {}, matchedSets: [] });
+    this.setState({ lockedMap: {} });
     this.computeSets({ lockedMap: {} });
   };
 
@@ -258,7 +254,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
    */
   onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {}, setTiers: [], matchedSets: [] });
+    this.setState({ selectedStore, lockedMap: {} });
     this.computeSets({ classType: selectedStore.classType, lockedMap: {} });
   };
 
@@ -282,23 +278,18 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.computeSets({ requirePerks: element.target.checked });
   };
 
+  /**
+   * Handle then the required perks checkbox is toggled
+   * Recomputes matched sets
+   */
   setRequiredBurn = (element) => {
     this.setState({ requireBurn: element.target.value });
     this.computeSets({ requireBurn: element.target.value });
   };
 
-  /**
-   *  Handle when the tier dropdown changes to render previously generated sets that match the tier
-   */
-  setSelectedTier = (tier) => {
-    this.setState({
-      matchedSets: getSetsForTier(this.state.processedSets, this.state.lockedMap, tier)
-    });
-  };
-
   render() {
     const { storesLoaded, stores, buckets } = this.props;
-    const { processRunning, lockedMap, matchedSets, setTiers, selectedStore } = this.state;
+    const { processedSets, processRunning, lockedMap, selectedStore } = this.state;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -370,11 +361,9 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
         <GeneratedSets
           processRunning={processRunning}
-          setTiers={setTiers}
-          matchedSets={matchedSets}
+          processedSets={processedSets}
           lockedMap={lockedMap}
           selectedStore={selectedStore}
-          setSelectedTier={this.setSelectedTier}
         />
       </div>
     );
