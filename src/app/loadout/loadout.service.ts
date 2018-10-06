@@ -185,9 +185,6 @@ function LoadoutService(): LoadoutServiceType {
     reduxStore.dispatch(actions.updateLoadout(loadout));
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
     $rootScope.$broadcast('dim-filter-invalidate-loadouts');
-    $rootScope.$broadcast('dim-save-loadout', {
-      loadout
-    });
   }
 
   function hydrate(loadoutData: DehydratedLoadout): Loadout {

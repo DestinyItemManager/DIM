@@ -103,8 +103,6 @@ class LoadoutPopup extends React.Component<Props> {
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
 
-    // TODO: kill dim-save-loadout dim-edit-loadout
-
     return (
       <div className="loadout-popup-content" onClick={onClick}>
         <ul className="loadout-list">
