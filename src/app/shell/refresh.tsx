@@ -5,6 +5,7 @@ import { t } from 'i18next';
 import classNames from 'classnames';
 import { loadingTrackerStream } from './dimLoadingTracker.factory';
 import { Subscription } from 'rxjs/Subscription';
+import { AppIcon, refreshIcon } from './icons';
 
 export default class Refresh extends React.Component<{}, { active: boolean }> {
   private subscription: Subscription;
@@ -38,7 +39,7 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
 
     return (
       <span className="link" onClick={this.refresh} title={t('Header.Refresh')}>
-        <i className={classNames('fa', 'fa-refresh', { 'fa-spin': active })} />
+        <AppIcon icon={refreshIcon} className={classNames({ 'fa-spin': active })} />
       </span>
     );
   }
