@@ -2,6 +2,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
   faArrowAltCircleUp,
+  faCheckCircle as faCheckCircleRegular,
   faMinusSquare,
   faPlusSquare,
   faQuestionCircle,
@@ -41,6 +42,7 @@ library.add(
   faTwitter,
 
   faArrowAltCircleUp,
+  faCheckCircleRegular,
   faMinusSquare,
   faPlusSquare,
   faQuestionCircle,
@@ -84,6 +86,7 @@ export {
   faBan as banIcon,
   faBars as menuIcon,
   faCheckCircle as enabledIcon,
+  faCheckCircleRegular as completedIcon,
   faChevronCircleDown as openDropdownIcon,
   faCog as settingsIcon,
   faDownload as downloadIcon,
