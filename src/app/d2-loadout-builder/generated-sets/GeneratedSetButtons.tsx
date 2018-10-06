@@ -36,12 +36,13 @@ export default function GeneratedSetButtons({
 
   return (
     <div className="generated-build-buttons">
-      <button className="dim-button" value={set.setHash} onClick={openLoadout}>
+      <button className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>
-      <button className="dim-button equip-button" value={set.setHash} onClick={equipItems}>
+      <button className="dim-button equip-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
+      {t('LoadoutBuilder.ArmorPower', { power: set.power / 5 })}
     </div>
   );
 }
