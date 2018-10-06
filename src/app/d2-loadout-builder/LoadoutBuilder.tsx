@@ -138,7 +138,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         } else {
           const selectedStore = stores.find((s) => s.id === this.state.selectedStore!.id)!;
           this.setState({ selectedStore });
-          this.computeSets(selectedStore.classType);
+          this.computeSets({ classType: selectedStore.classType });
         }
       }
     );
