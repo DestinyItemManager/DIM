@@ -24,7 +24,8 @@ if ($featureFlags.sentry) {
     ignoreUrls: [
       // Chrome extensions
       /extensions\//i,
-      /^chrome:\/\//i
+      /^chrome:\/\//i,
+      /^moz-extension:\/\//i
     ],
     attachStackTrace: true
   });
