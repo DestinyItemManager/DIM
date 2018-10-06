@@ -24,6 +24,7 @@ import { storesSelector } from '../inventory/reducer';
 import spartan from '../../images/spartan.png';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
+import './loadout-drawer.scss';
 
 interface StoreProps {
   types: string[];
