@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
-export default function AppIconComponent({
+export function AppIconComponent({
   icon,
   className,
   style
@@ -13,3 +13,5 @@ export default function AppIconComponent({
 }) {
   return <FontAwesomeIcon className={'app-icon ' + (className || '')} icon={icon} style={style} />;
 }
+
+export default AppIconComponent;

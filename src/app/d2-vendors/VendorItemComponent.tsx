@@ -9,13 +9,12 @@ import { IDialogOpenResult } from 'ng-dialog';
 import dialogTemplate from './vendor-item-dialog.html';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
-import { dtrRatingColor } from '../shell/dimAngularFilters.filter';
 import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
 import checkMark from '../../images/check.svg';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import { UISref } from '@uirouter/react';
-import { AppIcon, starIcon } from '../shell/icons';
+import { RatingIcon } from '../shell/icons/ReviewIcon';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -93,7 +92,7 @@ export default class VendorItemComponent extends React.Component<Props> {
               {Boolean(item.rating && item.rating > 0) && (
                 <div className="item-stat item-review">
                   {item.rating}
-                  <AppIcon icon={starIcon} style={dtrRatingColor(item.rating!)} />
+                  <RatingIcon rating={item.rating!} />
                 </div>
               )}
               {Boolean(item.primaryStat) && (
