@@ -1,4 +1,3 @@
-import { extend } from 'angular';
 import copy from 'fast-copy';
 import { deepEqual } from 'fast-equals';
 import * as _ from 'underscore';
@@ -109,7 +108,7 @@ export const SyncService = {
       // update our data
       cached = copy(value) as DimData;
     } else {
-      extend(cached, copy(value));
+      Object.assign(cached, copy(value));
     }
 
     for (const adapter of adapters) {

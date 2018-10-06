@@ -1,4 +1,4 @@
-import { extend, IComponentOptions, IController, IQService } from 'angular';
+import { IComponentOptions, IController, IQService } from 'angular';
 import copy from 'fast-copy';
 import * as _ from 'underscore';
 import { flatMap } from '../util';
@@ -34,7 +34,7 @@ function InfuseCtrl(
 
   const vm = this;
 
-  extend(vm, {
+  Object.assign(vm, {
     items: {},
     getAllItems: true,
     showLockedItems: false,

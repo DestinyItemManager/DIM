@@ -1,4 +1,4 @@
-import { IComponentOptions, extend } from 'angular';
+import { IComponentOptions } from 'angular';
 import * as _ from 'underscore';
 import template from './loadout-builder-locks.html';
 import dialogTemplate from './loadout-builder-locks-dialog.html';
@@ -26,7 +26,7 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
   const vm = this;
   let dialogResult: any = null;
 
-  extend(vm, {
+  Object.assign(vm, {
     getFirstPerk(lockedPerks, type) {
       return lockedPerks[type][_.keys(lockedPerks[type])[0]];
     },
@@ -45,7 +45,7 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
         className: 'perk-select-popup',
         showClose: false,
         appendTo: `#locked-perks-${type}`,
-        scope: extend($scope.$new(true), {}),
+        scope: $scope.$new(true),
         controllerAs: 'vmd',
         controller($document, $scope) {
           'ngInject';
@@ -75,7 +75,7 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
             $document.off('keyup', keydown);
           });
 
-          extend(vmd, {
+          Object.assign(vmd, {
             perks,
             lockedPerks,
             shiftHeld: false,
