@@ -11,7 +11,7 @@
     "build-beta": "npm run bundle -s -- --env=beta",
     "build-dev": "npm run bundle -s -- --env=dev --watch",
     "watch": "npm run build-dev -s",
-    "start": "WEBPACK_ENV='dev' webpack-dev-server --config config/webpack.js",
+    "start": "WEBPACK_ENV='dev' webpack-dev-server --config config/webpack.js --hot",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss}'",
