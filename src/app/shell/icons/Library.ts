@@ -35,7 +35,9 @@ import {
   faPencilAlt,
   faChevronCircleDown,
   faChevronDown,
-  faChevronUp
+  faChevronUp,
+  faBolt,
+  faTag
 } from '@fortawesome/free-solid-svg-icons';
 
 import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
@@ -56,6 +58,7 @@ library.add(
   faArrowCircleUp,
   faBan,
   faBars,
+  faBolt,
   faCheckCircle,
   faChevronCircleDown,
   faChevronDown,
@@ -74,6 +77,7 @@ library.add(
   faStar,
   faSync,
   faTable,
+  faTag,
   faThumbsUp,
   faTimes,
   faTimesCircle,
@@ -94,6 +98,7 @@ export {
   faBan as banIcon,
   faBars as menuIcon,
   faBars as reorderIcon,
+  faBolt as boltIcon,
   faCheckCircle as enabledIcon,
   faCheckCircle as redeemedIcon,
   faCheckCircleRegular as completedIcon,
@@ -118,6 +123,7 @@ export {
   faStar as starIcon,
   faSync as refreshIcon,
   faTable as spreadsheetIcon,
+  faTag as tagIcon,
   faThumbsUp as thumbsUpIcon,
   faTimes as closeIcon,
   faTimesCircle as disabledIcon,
