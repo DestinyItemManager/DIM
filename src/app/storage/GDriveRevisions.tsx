@@ -6,6 +6,8 @@ import { GDriveRevision } from './google-drive-storage';
 import { dataStats } from './data-stats';
 import { SyncService } from './sync.service';
 import { UIViewInjectedProps } from '@uirouter/react';
+import { initSettings } from '../settings/settings';
+import { dimLoadoutService } from '../loadout/loadout.service';
 
 interface State {
   revisions?: any;
@@ -152,6 +154,8 @@ class GDriveRevisionComponent extends React.Component<
     if (content && confirm(t('Storage.ImportConfirm'))) {
       await SyncService.set(content!, true);
       alert(t('Storage.ImportSuccess'));
+      initSettings();
+      dimLoadoutService.getLoadouts(true);
       this.props.onRestoreSuccess();
     }
   }
