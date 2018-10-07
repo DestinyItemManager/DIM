@@ -5,7 +5,6 @@ import { queueAction } from './action-queue';
 import { $q } from 'ngimport';
 import { dimItemService } from './dimItemService.factory';
 import { toaster } from '../ngimport-more';
-import classNames from 'classnames';
 import { t } from 'i18next';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 
@@ -31,10 +30,7 @@ export class PullFromPostmaster extends React.Component<Props, State> {
 
     return (
       <div className="dim-button bucket-button" onClick={this.onClick}>
-        <AppIcon
-          className={classNames({ 'fa-spin': working })}
-          icon={working ? refreshIcon : sendIcon}
-        />{' '}
+        <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />{' '}
         <span className="badge">{numPullablePostmasterItems}</span>{' '}
         {t('Loadouts.PullFromPostmaster')}
       </div>
