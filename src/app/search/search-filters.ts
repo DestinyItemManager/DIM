@@ -465,21 +465,42 @@ export function searchFilters(
       // [^\s]*?'[^']+?' -> match is:'stuff here'
       // [^\s"']+' -> match is:stuff
       const searchTerms = query.match(/[^\s]*?"[^"]+?"|[^\s]*?'[^']+?'|[^\s"']+/g) || [];
-      const filters: {
+      interface Filter {
         invert: boolean;
         value: string;
         predicate: string;
-      }[] = [];
+        orFilters?: Filter[];
+      }
+      const filters: Filter[] = [];
+
+      // The entire implementation of "or" is a dirty hack - we should really
+      // build an expression tree instead. But here, we flip a flag when we see
+      // an "or" token, and then on the next filter we instead combine the filter
+      // with the previous one in a hacked-up "or" node that we'll handle specially.
+      let or = false;
 
       function addPredicate(predicate: string, filter: string, invert = false) {
-        filters.push({ predicate, value: filter, invert });
+        const filterDef: Filter = { predicate, value: filter, invert };
+        if (or && filters.length) {
+          const lastFilter = filters.pop();
+          filters.push({
+            predicate: 'or',
+            invert: false,
+            value: '',
+            orFilters: [...(lastFilter!.orFilters! || [lastFilter])!, filterDef]
+          });
+        } else {
+          filters.push(filterDef);
+        }
+        or = false;
       }
 
-      // TODO: replace this if-ladder with a split and check
       for (let term of searchTerms) {
         term = term.replace(/['"]/g, '');
 
-        if (term.startsWith('is:')) {
+        if (term === 'or') {
+          or = true;
+        } else if (term.startsWith('is:')) {
           const filter = term.replace('is:', '');
           const predicate = searchConfig.keywordToFilter[filter];
           if (predicate) {
@@ -532,10 +553,21 @@ export function searchFilters(
 
       _sortedStores = null;
 
-      return (item) => {
+      return (item: DimItem) => {
         return filters.every((filter) => {
-          const result =
-            this.filters[filter.predicate] && this.filters[filter.predicate](item, filter.value);
+          let result;
+          if (filter.orFilters) {
+            result = filter.orFilters.some((filter) => {
+              const result =
+                this.filters[filter.predicate] &&
+                this.filters[filter.predicate](item, filter.value);
+
+              return filter.invert ? !result : result;
+            });
+          } else {
+            result =
+              this.filters[filter.predicate] && this.filters[filter.predicate](item, filter.value);
+          }
           return filter.invert ? !result : result;
         });
       };
