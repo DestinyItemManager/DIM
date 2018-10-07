@@ -67,6 +67,26 @@ function buildNodeString(nodes) {
   return data;
 }
 
+function downloadGhost(items, nameMap) {
+  const header = 'Name,Owner,Perks\n';
+
+  let data = '';
+  items.forEach((item) => {
+    data += `${item.name},`;
+    data += `${nameMap[item.owner]},`;
+
+    if (item.talentGrid) {
+      data += buildNodeString(item.talentGrid.nodes);
+    } else if (item.sockets) {
+      data += buildSocketString(item.sockets);
+    }
+
+    data += '\n';
+  });
+
+  downloadCsv('destinyGhosts', header + data);
+}
+
 function downloadArmor(items, nameMap) {
   const header =
     'Name,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n';
@@ -252,22 +272,34 @@ export function downloadCsvFiles(stores, type) {
   });
   const items: DimItem[] = [];
   allItems.forEach((item) => {
-    if (!item.primStat) {
+    if (!item.primStat && type !== 'Ghost') {
       return;
     }
+
     if (type === 'Weapons') {
-      if (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414) {
+      if (
+        item.primStat &&
+        (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414)
+      ) {
         items.push(item);
       }
     } else if (type === 'Armor') {
-      if (item.primStat.statHash === 3897883278) {
+      if (item.primStat && item.primStat.statHash === 3897883278) {
         items.push(item);
       }
+    } else if (type === 'Ghost' && item.bucket.hash === 4023194814) {
+      items.push(item);
     }
   });
-  if (type === 'Weapons') {
-    downloadWeapons(items, nameMap);
-  } else {
-    downloadArmor(items, nameMap);
+  switch (type) {
+    case 'Weapons':
+      downloadWeapons(items, nameMap);
+      break;
+    case 'Armor':
+      downloadArmor(items, nameMap);
+      break;
+    case 'Ghost':
+      downloadGhost(items, nameMap);
+      break;
   }
 }
