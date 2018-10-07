@@ -276,7 +276,7 @@
     "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
     "HidePopup": "Hide This Popup",
     "NoStorage": "DIM can't store data",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. DIM cannot continue.",
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space.",
     "UpdateAvailable": "DIM Updated",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "Version_beta": "Beta has been updated to v{{version}}",

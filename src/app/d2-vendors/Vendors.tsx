@@ -53,9 +53,11 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       this.setState({ error: undefined });
     }
 
-    dimVendorEngramsService
-      .getAllVendorDrops()
-      .then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
+    if ($featureFlags.vendorEngrams) {
+      dimVendorEngramsService
+        .getAllVendorDrops()
+        .then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
+    }
 
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
