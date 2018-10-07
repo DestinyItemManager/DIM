@@ -116,8 +116,6 @@ function downloadArmor(items, nameMap) {
 
     data += cleanNotes(item);
 
-    console.log(item);
-
     // if DB is out of date this can be null, can't hurt to be careful
     if (item.talentGrid) {
       data += buildNodeString(item.talentGrid.nodes);
@@ -205,8 +203,6 @@ function downloadWeapons(guns, nameMap) {
     data += `${stats.equipSpeed},`;
 
     data += cleanNotes(gun);
-
-    console.log(gun);
 
     // haven't seen this null yet, but can't hurt to check since we saw it on armor above
     if (gun.talentGrid) {
