@@ -7,6 +7,7 @@ import {
 import './ManifestProgress.scss';
 import { Subscription } from 'rxjs/Subscription';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { AppIcon, refreshIcon } from './icons';
 
 interface Props {
   destinyVersion: number;
@@ -41,7 +42,7 @@ export default class ManifestProgress extends React.Component<Props, ManifestSer
           statusText && (
             <CSSTransition classNames="manifest" timeout={{ enter: 300, exit: 300 }}>
               <div className="manifest-progress">
-                {!error && <i className="fa fa-spin fa-refresh" />}
+                {!error && <AppIcon icon={refreshIcon} spinning={true} />}
                 <div>{statusText}</div>
               </div>
             </CSSTransition>
