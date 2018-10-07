@@ -1,6 +1,7 @@
 import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
+import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 
 export default class ComponentPlayground extends React.Component {
   render() {
@@ -17,6 +18,7 @@ export default class ComponentPlayground extends React.Component {
       bucket: {
         type: 'energy'
       },
+      ammoType: DestinyAmmunitionType.Special,
       visible: true,
       primStat: {
         value: 300
