@@ -6,6 +6,7 @@
 * Fix mods/perks on items - there was a bug that affected both display and searches.
 * Fix is:hasmod search to include some more mods.
 * You can now drag items into the loadout drawer.
+* Lock and unlock items matching your current search from the same menu you use for tagging them.
 
 # 4.72.0 (2018-09-30)
 
