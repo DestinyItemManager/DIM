@@ -568,7 +568,6 @@ class SettingsPage extends React.Component<Props, State> {
 
   private downloadGhostCsv = (e) => {
     e.preventDefault();
-    console.log('ghost');
     this.downloadCsv('Ghost');
     return false;
   };
