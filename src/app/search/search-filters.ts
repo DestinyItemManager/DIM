@@ -461,10 +461,10 @@ export function searchFilters(
       }
 
       // could probably tidy this regex, just a quick hack to support multi term:
-      // [^\s]*"[^"]*" -> match is:"stuff here"
-      // [^\s]*'[^']*' -> match is:'stuff here'
+      // [^\s]*?"[^"]+?" -> match is:"stuff here"
+      // [^\s]*?'[^']+?' -> match is:'stuff here'
       // [^\s"']+' -> match is:stuff
-      const searchTerms = query.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g) || [];
+      const searchTerms = query.match(/[^\s]*?"[^"]+?"|[^\s]*?'[^']+?'|[^\s"']+/g) || [];
       const filters: {
         invert: boolean;
         value: string;
