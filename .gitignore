@@ -13,3 +13,4 @@ key.pem
 .npmrc
 npm-debug.log
 .nvmrc
+ssl/

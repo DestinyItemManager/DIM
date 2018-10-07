@@ -37,7 +37,7 @@ async function doMoveDroppedItem(
     }
   }
 
-  let moveAmount = item.amount;
+  let moveAmount = item.amount || 1;
 
   try {
     if (

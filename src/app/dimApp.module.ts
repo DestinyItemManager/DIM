@@ -4,8 +4,6 @@ import AriaModule from 'angular-aria';
 import 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
 
-import MessagesModule from 'angular-messages';
-
 import 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
 import ngI18Next from 'ng-i18next';
@@ -23,7 +21,6 @@ import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
 import oauthModule from './oauth/oauth.module';
-import loadoutModule from './loadout/loadout.module';
 import movePopupModule from './move-popup/move-popup.module';
 import searchModule from './search/search.module';
 
@@ -33,7 +30,6 @@ import run from './dimApp.run';
 const dependencies = [
   AriaModule,
   DragAndDropModule,
-  MessagesModule,
   ngI18Next,
   ngSanitize,
   ocLazyLoadModule,
@@ -46,7 +42,6 @@ const dependencies = [
   infuseModule,
   farmingModule,
   oauthModule,
-  loadoutModule,
   movePopupModule,
   searchModule,
   'ajoslin.promise-tracker',

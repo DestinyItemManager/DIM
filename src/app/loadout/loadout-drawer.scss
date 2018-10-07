@@ -15,7 +15,7 @@
   // 10px below the character header
   max-height: calc(100% - #{$header-height} - 82px - 10px);
 
-  dim-stats {
+  .dim-stats {
     display: block;
     width: 300px;
     opacity: 0.3;
@@ -24,6 +24,15 @@
       opacity: 1;
     }
   }
+}
+
+.loadout-equip-help {
+  border: 1px solid #333;
+  background-color: #f00;
+  margin: 0 2px;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
 }
 
 .loadout-item {
@@ -63,6 +72,12 @@
     content: '\f071';
     background-color: rgba(255, 204, 204, 0.6);
     background-size: 14px 14px;
+  }
+}
+
+.loadout-drop {
+  &.on-drag-hover {
+    box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
   }
 }
 

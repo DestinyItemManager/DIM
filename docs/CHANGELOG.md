@@ -5,6 +5,7 @@
 * No longer forgetting what perks we recommended.
 * Fix mods/perks on items - there was a bug that affected both display and searches.
 * Fix is:hasmod search to include some more mods.
+* You can now drag items into the loadout drawer.
 
 # 4.72.0 (2018-09-30)
 

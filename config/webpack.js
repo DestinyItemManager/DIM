@@ -24,14 +24,8 @@ const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 const packageJson = require('../package.json');
 
 module.exports = (env) => {
-  if (process.env.WEBPACK_SERVE) {
-    env = 'dev';
-    if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
-      console.log('Generating certificate');
-      execSync(
-        "openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'"
-      );
-    }
+  if (process.env.WEBPACK_ENV) {
+    env = process.env.WEBPACK_ENV;
   }
   const isDev = env === 'dev';
   let version = packageJson.version.toString();
@@ -56,18 +50,11 @@ module.exports = (env) => {
       chunkFilename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js'
     },
 
-    // Dev server
-    serve: process.env.WEBPACK_SERVE
-      ? {
-          devMiddleware: {
-            stats: 'errors-only'
-          },
-          https: {
-            key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-            cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
-          }
-        }
-      : {},
+    // webpack devServer
+    devServer: {
+      https: true,
+      stats: 'errors-only'
+    },
 
     // Bail and fail hard on first error
     bail: !isDev,

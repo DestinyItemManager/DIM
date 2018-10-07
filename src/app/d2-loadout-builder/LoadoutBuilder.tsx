@@ -15,27 +15,30 @@ import { DimStore } from '../inventory/store-types';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
+import { filterPlugs } from './generated-sets/utils';
 import './loadoutbuilder.scss';
-import { ArmorSet, LockableBuckets, LockType, SetType } from './types';
-import { filterPlugs, getSetsForTier } from './utils';
 import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
+import { ArmorSet, LockableBuckets, LockType } from './types';
 
-interface Props {
+interface ProvidedProps {
   account: DestinyAccount;
+}
+
+interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
   buckets: InventoryBuckets;
 }
+
+type Props = ProvidedProps & StoreProps;
 
 interface State {
   processRunning: number;
   requirePerks: boolean;
   requireBurn: 'none' | 'arc' | 'solar' | 'void';
   lockedMap: { [bucketHash: number]: LockType };
-  processedSets: { [setHash: string]: SetType };
-  matchedSets: ArmorSet[];
-  setTiers: string[];
+  processedSets: ArmorSet[];
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
 }
@@ -54,7 +57,7 @@ const items: {
   [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
 } = {};
 
-function mapStateToProps(state: RootState): Partial<Props> {
+function mapStateToProps(state: RootState): StoreProps {
   return {
     buckets: state.inventory.buckets!,
     storesLoaded: state.inventory.stores.length > 0,
@@ -65,7 +68,7 @@ function mapStateToProps(state: RootState): Partial<Props> {
 /**
  * The Loadout Builder screen
  */
-class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
+export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
 
   constructor(props: Props) {
@@ -75,9 +78,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
       requireBurn: 'none',
       processRunning: 0,
       lockedMap: {},
-      processedSets: {},
-      matchedSets: [],
-      setTiers: []
+      processedSets: []
     };
   }
 
@@ -131,6 +132,14 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
             )).sort((a, b) => b.inventory.tierType - a.inventory.tierType)
           )
         );
+
+        if (!this.state.selectedStore) {
+          this.onCharacterChanged(stores.find((s) => s.current)!.id);
+        } else {
+          const selectedStore = stores.find((s) => s.id === this.state.selectedStore!.id)!;
+          this.setState({ selectedStore });
+          this.computeSets({ classType: selectedStore.classType });
+        }
       }
     );
   }
@@ -158,7 +167,9 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     const allItems = { ...items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
 
-    Object.keys(allItems).forEach((bucket) => {
+    Object.keys(allItems).forEach((bucketStr) => {
+      const bucket = parseInt(bucketStr, 10);
+
       // if we are locking an item in that bucket, filter to only those items
       if (lockedMap[bucket] && lockedMap[bucket].type === 'item') {
         filteredItems[bucket] = lockedMap[bucket].items;
@@ -167,7 +178,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
       // otherwise flatten all item instances to each bucket
       filteredItems[bucket] = _.flatten(
-        Object.values(allItems[bucket]).map((items: D2Item[]) => {
+        Object.values(allItems[bucket]).map((items) => {
           if (!lockedMap[bucket]) {
             return items.reduce((a, b) => (a.basePower > b.basePower ? a : b));
           }
@@ -198,7 +209,8 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     });
 
     // filter to only include items that are in the locked map
-    Object.keys(lockedMap).forEach((bucket) => {
+    Object.keys(lockedMap).forEach((bucketStr) => {
+      const bucket = parseInt(bucketStr, 10);
       // if there are locked items for this bucket
       if (lockedMap[bucket] && lockedMap[bucket].items.length) {
         // filter out excluded items
@@ -209,12 +221,20 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
           );
         } else if (lockedMap[bucket].type === 'perk') {
           // filter out items that do not have a locked perk
-          filteredItems[bucket] = filteredItems[bucket].filter((item) =>
-            item.sockets.sockets.find((slot) =>
-              slot.plugOptions.find((perk) =>
-                lockedMap[bucket].items.find((lockedPerk) => lockedPerk.hash === perk.plugItem.hash)
+          filteredItems[bucket] = filteredItems[bucket].filter(
+            (item) =>
+              item.sockets &&
+              item.sockets.sockets.find((slot) =>
+                Boolean(
+                  slot.plugOptions.find((perk) =>
+                    Boolean(
+                      lockedMap[bucket].items.find(
+                        (lockedPerk) => lockedPerk.hash === perk.plugItem.hash
+                      )
+                    )
+                  )
+                )
               )
-            )
           );
         }
       }
@@ -230,7 +250,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
    * Recomputes matched sets
    */
   resetLocked = () => {
-    this.setState({ lockedMap: {}, matchedSets: [] });
+    this.setState({ lockedMap: {} });
     this.computeSets({ lockedMap: {} });
   };
 
@@ -239,9 +259,9 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
    * Recomputes matched sets
    */
   lockEquipped = () => {
-    const lockedMap = {};
+    const lockedMap: State['lockedMap'] = {};
     this.state.selectedStore!.items.forEach((item) => {
-      if (item.equipped && item.bucket.inArmor) {
+      if (item.isDestiny2() && item.equipped && item.bucket.inArmor) {
         lockedMap[item.bucket.hash] = {
           type: 'item',
           items: [item]
@@ -258,7 +278,7 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
    */
   onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {}, setTiers: [], matchedSets: [] });
+    this.setState({ selectedStore, lockedMap: {} });
     this.computeSets({ classType: selectedStore.classType, lockedMap: {} });
   };
 
@@ -282,23 +302,18 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
     this.computeSets({ requirePerks: element.target.checked });
   };
 
+  /**
+   * Handle then the required perks checkbox is toggled
+   * Recomputes matched sets
+   */
   setRequiredBurn = (element) => {
     this.setState({ requireBurn: element.target.value });
     this.computeSets({ requireBurn: element.target.value });
   };
 
-  /**
-   *  Handle when the tier dropdown changes to render previously generated sets that match the tier
-   */
-  setSelectedTier = (tier) => {
-    this.setState({
-      matchedSets: getSetsForTier(this.state.processedSets, this.state.lockedMap, tier)
-    });
-  };
-
   render() {
     const { storesLoaded, stores, buckets } = this.props;
-    const { processRunning, lockedMap, matchedSets, setTiers, selectedStore } = this.state;
+    const { processedSets, processRunning, lockedMap, selectedStore } = this.state;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -370,15 +385,13 @@ class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State>
 
         <GeneratedSets
           processRunning={processRunning}
-          setTiers={setTiers}
-          matchedSets={matchedSets}
+          processedSets={processedSets}
           lockedMap={lockedMap}
           selectedStore={selectedStore}
-          setSelectedTier={this.setSelectedTier}
         />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps)(LoadoutBuilder);
+export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);
