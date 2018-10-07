@@ -2,26 +2,31 @@
 
 .dark-tiles .item-drag-container {
   width: calc(var(--item-size) + 8px);
-  height: calc(var(--item-size) + 21px);
+  height: calc(var(--item-size) + 19px);
 }
 
 .dark-tiles .item {
   width: calc(var(--item-size) + 4px);
-  height: calc(var(--item-size) + 17px);
+  height: calc(var(--item-size) + 15px);
 
   .item-stat {
-    background-color: #262626;
-    color: white;
+    background-color: #ddd;
+    color: black;
     font-size: calc((var(--item-size) + 4px) / 5.5);
     -webkit-font-smoothing: antialiased;
+    width: 100%;
+    display: flex;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 0 2px;
+    white-space: pre;
+  }
+
+  .primary-stat {
+    flex: 1;
   }
 
   .item-review {
-    .decimal {
-      font-size: 0.7em;
-      color: #aaa;
-      display: none;
-    }
     .godroll {
       color: $gold;
     }
@@ -104,7 +109,8 @@
   }
 
   .item-review {
-    color: #ccc;
+    color: #333;
+    text-align: left;
   }
 
   .item-render {

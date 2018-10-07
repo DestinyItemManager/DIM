@@ -76,7 +76,7 @@ export default class InventoryItem extends React.Component<Props> {
             hideRating={hideRating}
             tag={tag}
           />
-        ) : darkTiles ? (
+        ) : darkTiles && item.maxStackSize === 1 ? (
           <DarkItemTile
             item={item}
             badgeInfo={badgeInfo}
