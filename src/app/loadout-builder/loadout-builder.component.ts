@@ -10,7 +10,7 @@ import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import { IComponentOptions, IController, IScope, ITimeoutService, extend, copy } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
+import { Loadout, dimLoadoutService, LoadoutClass } from '../loadout/loadout.service';
 import { sum } from '../util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D1Item, D1GridNode } from '../inventory/item-types';
@@ -598,7 +598,10 @@ function LoadoutBuilderController(
       },
       onSelectedChange(prevIdx, selectedIdx) {
         if (vm.activeCharacters[prevIdx].class !== vm.activeCharacters[selectedIdx].class) {
-          vm.active = vm.activeCharacters[selectedIdx].class;
+          const classType = vm.activeCharacters[selectedIdx].class;
+          if (classType !== 'vault') {
+            vm.active = classType;
+          }
           vm.onCharacterChange();
           vm.selectedCharacter = selectedIdx;
         }
@@ -795,7 +798,7 @@ function LoadoutBuilderController(
       newLoadout(set) {
         ngDialog.closeAll();
         const loadout = newLoadout('', {});
-        loadout.classType = { warlock: 0, titan: 1, hunter: 2 }[vm.active];
+        loadout.classType = LoadoutClass[vm.active];
         const items = _.pick(
           set.armor,
           'Helmet',
@@ -819,7 +822,7 @@ function LoadoutBuilderController(
       equipItems(set) {
         ngDialog.closeAll();
         let loadout: Loadout = newLoadout($i18next.t('Loadouts.AppliedAuto'), {});
-        loadout.classType = { warlock: 0, titan: 1, hunter: 2 }[vm.active];
+        loadout.classType = LoadoutClass[vm.active];
         const items = _.pick(
           set.armor,
           'Helmet',

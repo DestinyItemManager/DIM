@@ -14,7 +14,7 @@ import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
 
-export const enum LoadoutClass {
+export enum LoadoutClass {
   any = -1,
   warlock = 0,
   titan = 1,

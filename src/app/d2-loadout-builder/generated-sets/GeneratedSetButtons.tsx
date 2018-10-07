@@ -2,7 +2,7 @@ import { t } from 'i18next';
 import * as React from 'react';
 import * as _ from 'underscore';
 import { DimStore } from '../../inventory/store-types';
-import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
+import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';
 import { ArmorSet } from '../types';
 import { newLoadout } from '../../loadout/loadout-utils';
 
@@ -50,7 +50,7 @@ export default function GeneratedSetButtons({
 /**
  * Create a Loadout object, used for equipping or creating a new saved loadout
  */
-function createLoadout(classType: string, set: ArmorSet): Loadout {
+function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
   const loadout = newLoadout(t('Loadouts.AppliedAuto'), {
     helmet: [set.armor[0]],
     gauntlets: [set.armor[1]],
@@ -58,6 +58,6 @@ function createLoadout(classType: string, set: ArmorSet): Loadout {
     leg: [set.armor[3]],
     classitem: [set.armor[4]]
   });
-  loadout.classType = { warlock: 0, titan: 1, hunter: 2 }[classType];
+  loadout.classType = LoadoutClass[classType];
   return loadout;
 }
