@@ -18,7 +18,11 @@ const FILTER_NODE_NAMES = [
   'Kinetic Damage',
   'Solar Damage',
   'Arc Damage',
-  'Void Damage'
+  'Void Damage',
+  'Default Shader',
+  'Default Ornament',
+  'Empty Mod Socket',
+  'No Projection'
 ];
 
 function capitalizeFirstLetter(str: string) {
@@ -40,15 +44,17 @@ function downloadCsv(filename, csv) {
 
 function buildSocketString(sockets: DimSockets): string {
   const socketItems = sockets.sockets.map((s) =>
-    s.plugOptions.map(
-      (p) =>
-        s.plug && s.plug.plugItem.hash && p.plugItem.hash === s.plug.plugItem.hash
-          ? `${p.plugItem.displayProperties.name}*`
-          : p.plugItem.displayProperties.name
-    )
+    s.plugOptions
+      .filter((p) => FILTER_NODE_NAMES.every((n) => n !== p.plugItem.displayProperties.name))
+      .map(
+        (p) =>
+          s.plug && s.plug.plugItem.hash && p.plugItem.hash === s.plug.plugItem.hash
+            ? `${p.plugItem.displayProperties.name}*`
+            : p.plugItem.displayProperties.name
+      )
   );
 
-  return socketItems.join(',');
+  return socketItems.flat().join(',');
 }
 
 function buildNodeString(nodes) {
@@ -68,12 +74,16 @@ function buildNodeString(nodes) {
 }
 
 function downloadGhost(items, nameMap) {
-  const header = 'Name,Owner,Perks\n';
+  const header = 'Name,Tag,Tier,Owner,Locked,Equipped,Perks\n';
 
   let data = '';
   items.forEach((item) => {
-    data += `${item.name},`;
+    data += `"${item.name}",`;
+    data += `${item.dimInfo.tag || ''},`;
+    data += `${item.tier},`;
     data += `${nameMap[item.owner]},`;
+    data += `${item.locked},`;
+    data += `${item.equipped},`;
 
     if (item.talentGrid) {
       data += buildNodeString(item.talentGrid.nodes);
