@@ -82,7 +82,7 @@ export class VendorItem {
     // TODO: this'll be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32
   ): VendorItem {
-    let instance;
+    let instance: DestinyItemInstanceComponent | undefined;
     if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
       instance = itemComponents.instances.data[saleItem.vendorItemIndex];
     }
@@ -265,6 +265,9 @@ export class VendorItem {
   // TODO: I'm not sold on having a bunch of property getters, vs just exposing the raw underlying stuff
 
   get displayProperties() {
+    if (this.saleItem && this.saleItem.overrideStyleItemHash) {
+      return this.defs.InventoryItem.get(this.saleItem.overrideStyleItemHash).displayProperties;
+    }
     return this.inventoryItem.displayProperties;
   }
 

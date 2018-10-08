@@ -67,6 +67,18 @@ export default class Vendor extends React.Component<Props> {
       return null;
     }
 
+    const vendorItems = getVendorItems(
+      account,
+      defs,
+      vendorDef,
+      trackerService,
+      itemComponents,
+      sales
+    );
+    if (!vendorItems.length) {
+      return null;
+    }
+
     const destinationDef = defs.Destination.get(
       vendorDef.locations[vendor.vendorLocationIndex].destinationHash
     );
@@ -109,14 +121,7 @@ export default class Vendor extends React.Component<Props> {
           defs={defs}
           vendor={vendor}
           vendorDef={vendorDef}
-          vendorItems={getVendorItems(
-            account,
-            defs,
-            vendorDef,
-            trackerService,
-            itemComponents,
-            sales
-          )}
+          vendorItems={vendorItems}
           trackerService={trackerService}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={currencyLookups}
