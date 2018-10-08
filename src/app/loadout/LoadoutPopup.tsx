@@ -194,7 +194,7 @@ class LoadoutPopup extends React.Component<Props> {
           {dimStore.isDestiny1() && (
             <li className="loadout-set">
               <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: true })}>
-                <img className="fa" src={engramSvg} height="12" width="12" />
+                <AppIcon icon={engramIcon} />
                 <span>{t('Loadouts.GatherEngrams')}</span>
               </span>
               <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: false })}>
