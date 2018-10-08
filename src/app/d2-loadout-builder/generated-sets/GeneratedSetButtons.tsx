@@ -42,7 +42,7 @@ export default function GeneratedSetButtons({
       <button className="dim-button equip-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
-      {t('LoadoutBuilder.ArmorPower', { power: set.power / 5 })}
+      <span className="light">{set.power / set.armor.length}</span>
     </div>
   );
 }
