@@ -15,6 +15,7 @@ interface Props {
   profileResponse: DestinyProfileResponse;
   ownedItemHashes: Set<number>;
   path: number[];
+  parents: number[];
   onNodePathSelected(nodePath: number[]);
 }
 
@@ -65,7 +66,10 @@ export default class PresentationNode extends React.Component<Props> {
     }
 
     // TODO: look at how companion and in-game shows it!
-    const childrenExpanded = path.includes(presentationNodeHash);
+    const childrenExpanded =
+      path.includes(presentationNodeHash) || rootNodes.includes(presentationNodeHash);
+
+    const parents = [...this.props.parents, presentationNodeHash];
 
     // console.log({ childrenExpanded, path, presentationNodeHash });
 
@@ -127,6 +131,7 @@ export default class PresentationNode extends React.Component<Props> {
               buckets={buckets}
               ownedItemHashes={ownedItemHashes}
               path={path}
+              parents={parents}
               onNodePathSelected={onNodePathSelected}
             />
           ))}
@@ -150,8 +155,10 @@ export default class PresentationNode extends React.Component<Props> {
   }
 
   private expandChildren = () => {
-    const { presentationNodeHash, path } = this.props;
-    this.props.onNodePathSelected([...path, presentationNodeHash]);
+    const { presentationNodeHash, parents, path } = this.props;
+    const childrenExpanded =
+      path.includes(presentationNodeHash) || rootNodes.includes(presentationNodeHash);
+    this.props.onNodePathSelected(childrenExpanded ? parents : [...parents, presentationNodeHash]);
     return false;
   };
 }
@@ -161,3 +168,34 @@ function countCollectibles(presentationNodeDef, profileResponse) {
 
 }
 */
+
+function countCollectibles(
+  defs: D2ManifestDefinitions,
+  node: number,
+  profileResponse: DestinyProfileResponse
+) {
+  const presentationNodeDef = defs.PresentationNode.get(node);
+  if (presentationNodeDef.children.collectibles) {
+    // TODO: class based on displayStyle
+    const visibleCollectibles = count(
+      presentationNodeDef.children.collectibles,
+      (c) =>
+        !(
+          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
+          DestinyCollectibleState.Invisible
+        )
+    );
+    const acquiredCollectibles = count(
+      presentationNodeDef.children.collectibles,
+      (c) =>
+        !(
+          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
+          DestinyCollectibleState.NotAcquired
+        )
+    );
+
+    // add an entry for self and return
+  } else {
+    // call for all children, then add 'em up
+  }
+}

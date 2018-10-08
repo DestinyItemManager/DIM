@@ -204,7 +204,7 @@ function MoveItemPropertiesCtrl(
 
   vm.visitCollection = (e: Event, hash: number) => {
     e.preventDefault();
-    router.stateService.go('destiny2.presentationNode', { presentationNodeHash: hash });
+    router.stateService.go('destiny2.collections', { presentationNodeHash: hash });
     return false;
   };
 

@@ -137,10 +137,12 @@ class Collections extends React.Component<Props, State> {
         currentHash = node.parentNodeHashes[0];
         node = defs.PresentationNode.get(currentHash);
       }
+      fullNodePath.unshift(3790247699);
     }
-    fullNodePath.unshift(3790247699);
 
     console.log(nodePath);
+
+    // TODO: make a thing for root-presentation-node
 
     return (
       <div className="vendor d2-vendors dim-page">
@@ -159,6 +161,7 @@ class Collections extends React.Component<Props, State> {
             ownedItemHashes={ownedItemHashes}
             path={fullNodePath}
             onNodePathSelected={this.onNodePathSelected}
+            parents={[]}
           />
         </ErrorBoundary>
         <ErrorBoundary name="PlugSets">
