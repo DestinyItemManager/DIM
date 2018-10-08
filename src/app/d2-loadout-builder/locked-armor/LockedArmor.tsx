@@ -12,7 +12,7 @@ import LockablePopup from './popup/LockablePopup';
 interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
-  perks: DestinyInventoryItemDefinition[];
+  perks: Set<DestinyInventoryItemDefinition>;
   locked?: LockType;
   onLockChanged(bucket: InventoryBucket, locked?: LockType): void;
 }
@@ -58,15 +58,13 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
           <LockedItem {...{ locked, bucket, toggleOpen: this.openPerkSelect }} />
         </LoadoutBucketDropTarget>
         <LockablePopup
-          {...{
-            bucket,
-            items,
-            perks,
-            locked,
-            isOpen,
-            onLockChanged,
-            onClose: this.closePerkSelect
-          }}
+          bucket={bucket}
+          items={items}
+          perks={perks}
+          locked={locked}
+          isOpen={isOpen}
+          onLockChanged={onLockChanged}
+          onClose={this.closePerkSelect}
         />
       </div>
     );

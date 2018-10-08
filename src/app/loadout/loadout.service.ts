@@ -47,7 +47,7 @@ interface DehydratedLoadout {
 
 export interface LoadoutServiceType {
   dialogOpen: boolean;
-  getLoadouts(): Promise<Loadout[]>;
+  getLoadouts(getLatest?: boolean): Promise<Loadout[]>;
   deleteLoadout(loadout: Loadout): Promise<void>;
   saveLoadout(loadout: Loadout): Promise<void>;
   addItemToLoadout(item: DimItem, $event);

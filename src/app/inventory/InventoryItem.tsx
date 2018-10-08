@@ -49,7 +49,8 @@ export default class InventoryItem extends React.Component<Props> {
 
     const itemImageStyles = {
       complete: item.complete,
-      diamond: (item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram,
+      diamond:
+        (item.isDestiny2 && item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram,
       masterwork: item.masterwork,
       capped: badgeInfo.isCapped
     };
@@ -57,6 +58,7 @@ export default class InventoryItem extends React.Component<Props> {
     const elaborateTile =
       $featureFlags.forsakenTiles &&
       settings.betaForsakenTiles &&
+      item.isDestiny2 &&
       item.isDestiny2() &&
       (item.primStat || item.sockets);
 
@@ -71,7 +73,7 @@ export default class InventoryItem extends React.Component<Props> {
           'd2-item': elaborateTile
         })}
       >
-        {elaborateTile && item.isDestiny2() ? (
+        {elaborateTile && item.isDestiny2 && item.isDestiny2() ? (
           <ItemRender
             item={item}
             badge={badgeInfo}
@@ -92,7 +94,8 @@ export default class InventoryItem extends React.Component<Props> {
               className={classNames('item-img', itemImageStyles)}
               style={bungieBackgroundStyle(item.icon)}
             />
-            {item.isDestiny1() &&
+            {item.isDestiny1 &&
+              item.isDestiny1() &&
               item.quality && (
                 <div
                   className="item-stat item-quality"

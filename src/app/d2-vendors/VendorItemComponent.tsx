@@ -71,8 +71,12 @@ export default class VendorItemComponent extends React.Component<Props> {
     const progress = item.objectiveProgress;
 
     return (
-      <div className={classNames('vendor-item', { owned })}>
-        {(!item.canPurchase || !item.canBeSold) && <div className="locked-overlay" />}
+      <div
+        className={classNames('vendor-item', {
+          owned,
+          unavailable: !item.canPurchase || !item.canBeSold
+        })}
+      >
         <div
           className="item"
           title={item.displayProperties.name}

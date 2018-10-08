@@ -194,12 +194,11 @@ class LoadoutPopup extends React.Component<Props> {
           {dimStore.isDestiny1() && (
             <li className="loadout-set">
               <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: true })}>
-                <img className="fa" src="~app/images/engram.svg" height="12" width="12" />
+                <img className="fa" src={engramSvg} height="12" width="12" />
                 <span>{t('Loadouts.GatherEngrams')}</span>
               </span>
               <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: false })}>
-                <AppIcon icon={banIcon} />
-                <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
+                <AppIcon icon={banIcon} /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
               </span>
             </li>
           )}
@@ -306,13 +305,11 @@ class LoadoutPopup extends React.Component<Props> {
     }
   };
 
-  private editLoadout = function editLoadout(loadout: Loadout) {
-    $rootScope.$apply(() =>
-      $rootScope.$broadcast('dim-edit-loadout', {
-        loadout,
-        showClass: true
-      })
-    );
+  private editLoadout = (loadout: Loadout) => {
+    $rootScope.$broadcast('dim-edit-loadout', {
+      loadout,
+      showClass: true
+    });
   };
 
   // TODO: move all these fancy loadouts to a new service
