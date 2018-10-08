@@ -1,5 +1,7 @@
 # Next
 
+# 4.73.0 (2018-10-07)
+
 * Added `is:heroic` search filter for armor with heroic resistance.
 * New option to manually sort your characters.
 * No longer forgetting what perks we recommended.
