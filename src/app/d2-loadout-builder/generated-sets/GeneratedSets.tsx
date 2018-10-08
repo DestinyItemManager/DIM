@@ -64,7 +64,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       uniquePowerLevels.add(Math.floor(set.power / 5));
       return set.power / 5 > minimumPower;
     });
-    const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => a - b);
+    const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
     powerLevelOptions.splice(0, 0, 0);
 
     // build tier dropdown options
