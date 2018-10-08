@@ -6,6 +6,8 @@
 * Fix mods/perks on items - there was a bug that affected both display and searches.
 * Fix is:hasmod search to include some more mods.
 * You can now drag items into the loadout drawer.
+* D2 spreadsheet export (in settings) covers perks now.
+* You can also export ghosts (with perks) for D1/D2.
 * Filters can now be combined with "or" to match either filter. For example: "is:shotgun or is:handcannon".
 
 # 4.72.0 (2018-09-30)

@@ -514,6 +514,14 @@ class SettingsPage extends React.Component<Props, State> {
               >
                 <i className="fa fa-table" /> <span>{t('Bucket.Armor')}</span>
               </button>
+              <button
+                className="dim-button"
+                onClick={this.downloadGhostCsv}
+                disabled={!storesLoaded}
+                title="Download Csv"
+              >
+                <i className="fa fa-table" /> <span>{t('Bucket.Ghost')}</span>
+              </button>
             </div>
           </section>
         </form>
@@ -558,7 +566,13 @@ class SettingsPage extends React.Component<Props, State> {
     return false;
   };
 
-  private downloadCsv = (type: 'Armor' | 'Weapons') => {
+  private downloadGhostCsv = (e) => {
+    e.preventDefault();
+    this.downloadCsv('Ghost');
+    return false;
+  };
+
+  private downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
     const activePlatform = getActivePlatform();
     if (!activePlatform) {
       return;
