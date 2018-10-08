@@ -2,6 +2,7 @@
 
 * Added negative search. Prefix any search term with `-` and it will match the opposite.
 * Added `perk:"* **"` seach filter to match any keywords against perks on an item
+* Lock and unlock items matching your current search from the same menu you use for tagging them.
 
 # 4.73.0 (2018-10-07)
 

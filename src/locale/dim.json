@@ -254,7 +254,11 @@
     "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
-    "Year": "Shows items from which year of Destiny they appeared in."
+    "Year": "Shows items from which year of Destiny they appeared in.",
+    "LockAllSuccess": "Locked {{num}} items",
+    "UnlockAllSuccess": "Unlocked {{num}} items",
+    "LockAllFailed": "Failed to lock items",
+    "UnlockAllFailed": "Failed to unlock items"
   },
   "Header": {
     "About": "About",
@@ -685,7 +689,10 @@
     "Infuse": "Infuse",
     "Junk": "Junk",
     "Keep": "Keep",
-    "TagItem": "Tag Item"
+    "TagItem": "Tag Item",
+    "TagItems": "Tag Items",
+    "LockAll": "Lock Items",
+    "UnlockAll": "Unlock Items"
   },
   "TrialsCard": {
     "FiveWins": "5 Win Reward (Armor)",
