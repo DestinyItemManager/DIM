@@ -45,7 +45,7 @@ function downloadCsv(filename, csv) {
 function buildSocketString(sockets: DimSockets): string {
   const socketItems = sockets.sockets.map((s) =>
     s.plugOptions
-      .filter((p) => FILTER_NODE_NAMES.every((n) => n !== p.plugItem.displayProperties.name))
+      .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugItem.displayProperties.name))
       .map(
         (p) =>
           s.plug && s.plug.plugItem.hash && p.plugItem.hash === s.plug.plugItem.hash
