@@ -1,12 +1,20 @@
 # Next
 
+* Added negative search. Prefix any search term with `-` and it will match the opposite.
+* Added `perk:"* **"` seach filter to match any keywords against perks on an item
+* Lock and unlock items matching your current search from the same menu you use for tagging them.
+
+# 4.73.0 (2018-10-07)
+
 * Added `is:heroic` search filter for armor with heroic resistance.
 * New option to manually sort your characters.
 * No longer forgetting what perks we recommended.
 * Fix mods/perks on items - there was a bug that affected both display and searches.
 * Fix is:hasmod search to include some more mods.
 * You can now drag items into the loadout drawer.
-* Lock and unlock items matching your current search from the same menu you use for tagging them.
+* D2 spreadsheet export (in settings) covers perks now.
+* You can also export ghosts (with perks) for D1/D2.
+* Filters can now be combined with "or" to match either filter. For example: "is:shotgun or is:handcannon".
 
 # 4.72.0 (2018-09-30)
 

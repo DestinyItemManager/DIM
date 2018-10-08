@@ -99,26 +99,31 @@ export default function VendorItems({
             </div>
           </div>
         )}
-      {_.map(itemsByCategory, (items, categoryIndex) => (
-        <div className="vendor-row" key={categoryIndex}>
-          <h3 className="category-title">
-            {(vendorDef.displayCategories[categoryIndex] &&
-              vendorDef.displayCategories[categoryIndex].displayProperties.name) ||
-              'Unknown'}
-          </h3>
-          <div className="vendor-items">
-            {_.sortBy(items, (i) => i.displayProperties.name).map((item) => (
-              <VendorItemComponent
-                key={item.key}
-                defs={defs}
-                item={item}
-                trackerService={trackerService}
-                owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.itemHash))}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
+      {_.map(
+        itemsByCategory,
+        (items, categoryIndex) =>
+          vendorDef.displayCategories[categoryIndex] &&
+          vendorDef.displayCategories[categoryIndex].identifier !== 'category_preview' && (
+            <div className="vendor-row" key={categoryIndex}>
+              <h3 className="category-title">
+                {(vendorDef.displayCategories[categoryIndex] &&
+                  vendorDef.displayCategories[categoryIndex].displayProperties.name) ||
+                  'Unknown'}
+              </h3>
+              <div className="vendor-items">
+                {_.sortBy(items, (i) => i.displayProperties.name).map((item) => (
+                  <VendorItemComponent
+                    key={item.key}
+                    defs={defs}
+                    item={item}
+                    trackerService={trackerService}
+                    owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.itemHash))}
+                  />
+                ))}
+              </div>
+            </div>
+          )
+      )}
     </div>
   );
 }

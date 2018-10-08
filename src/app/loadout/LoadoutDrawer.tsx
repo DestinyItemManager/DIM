@@ -19,17 +19,18 @@ import { RootState } from '../store/reducers';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { destinyVersionSelector } from '../accounts/reducer';
+import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { storesSelector } from '../inventory/reducer';
 import spartan from '../../images/spartan.png';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
 interface StoreProps {
   types: string[];
   itemSortOrder: string[];
-  destinyVersion: 1 | 2;
+  account: DestinyAccount;
   classTypeOptions: {
     label: string;
     value: number;
@@ -89,7 +90,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     itemSortOrder: itemSortOrderSelector(state),
     types: typesSelector(state),
-    destinyVersion: destinyVersionSelector(state),
+    account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     storeIds: storeIdsSelector(state),
     buckets: state.inventory.buckets!
@@ -111,18 +112,21 @@ class LoadoutDrawer extends React.Component<Props, State> {
     });
 
     this.$scope.$on('dim-edit-loadout', (_event, args: { loadout: Loadout; equipAll: boolean }) => {
+      const { account } = this.props;
       const loadout = copy(args.loadout);
       dimLoadoutService.dialogOpen = true;
       if (loadout.classType === undefined) {
         loadout.classType = -1;
       }
       loadout.items = loadout.items || {};
+      loadout.destinyVersion = account.destinyVersion;
+      loadout.platform = account.platformLabel;
 
       // Filter out any vendor items and equip all if requested
       const warnitems = flatMap(Object.values(loadout.items), (items) =>
         items.filter((item) => !item.owner)
       );
-      this.fillInDefinitionsForWarnItems(this.props.destinyVersion, warnitems);
+      this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
 
       // TODO: find equivalent items for warnitems
       // tricky part, we only have hash!
@@ -189,7 +193,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 placeholder={t('Loadouts.LoadoutName')}
               />{' '}
               {showClass && (
-                <select name="classType" onChange={this.setClassType}>
+                <select name="classType" onChange={this.setClassType} value={loadout.classType}>
                   {classTypeOptions.map((option) => (
                     <option key={option.value} label={option.label} value={option.value} />
                   ))}
