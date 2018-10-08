@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DimItem } from './item-types';
 import './dimStoreBucket.scss';
-import StoreInventoryItem from './StoreInventoryItem';
 import { InventoryState } from './reducer';
 import { ReviewsState } from '../item-review/reducer';
 import { TagValue } from './dim-item-info';
@@ -9,6 +8,7 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { D1RatingData } from '../item-review/d1-dtr-api-types';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
+import InventoryItem from './InventoryItem';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -54,14 +54,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
     const { item, isNew, tag, rating, hideRating } = this.props;
 
     return (
-      <StoreInventoryItem
-        key={item.index}
-        item={item}
-        isNew={isNew}
-        tag={tag}
-        rating={rating}
-        hideRating={hideRating}
-      />
+      <InventoryItem item={item} isNew={isNew} tag={tag} rating={rating} hideRating={hideRating} />
     );
   }
 }

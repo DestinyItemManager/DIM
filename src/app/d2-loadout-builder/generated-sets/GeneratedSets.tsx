@@ -8,7 +8,7 @@ import GeneratedSetButtons from './GeneratedSetButtons';
 import { DimStore } from '../../inventory/store-types';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { $rootScope } from 'ngimport';
-import GeneratedSet from './GeneratedSet';
+import GeneratedSetItem from './GeneratedSetItem';
 
 interface Props {
   processRunning: number;
@@ -123,7 +123,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             />
             <div className="sub-bucket">
               {Object.values(set.armor).map((item) => (
-                <GeneratedSet key={item.index} item={item} />
+                <GeneratedSetItem key={item.index} item={item} />
               ))}
             </div>
           </div>
