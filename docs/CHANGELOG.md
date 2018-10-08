@@ -1,5 +1,7 @@
 # Next
 
+* Added negative search. Prefix any search term with `-` and it will match the opposite.
+* Added `perk:"* **"` seach filter to match any keywords against perks on an item
 * Added `is:heroic` search filter for armor with heroic resistance.
 * New option to manually sort your characters.
 * No longer forgetting what perks we recommended.
