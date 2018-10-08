@@ -97,6 +97,7 @@
   },
   "dependencies": {
     "@destiny-item-manager/zip.js": "github:DestinyItemManager/zip.js",
+    "@sentry/browser": "^4.0.6",
     "@types/angular": "^1.6.43",
     "@types/angular-hotkeys": "^1.7.0",
     "@types/angular-mocks": "^1.5.11",
@@ -136,7 +137,6 @@
     "ngimport": "^1.0.0",
     "oclazyload": "^1.1.0",
     "popper.js": "^1.14.3",
-    "raven-js": "^3.24.1",
     "react": "^16.3.1",
     "react-beautiful-dnd": "^9.0.0",
     "react-dnd": "^5.0.0",
