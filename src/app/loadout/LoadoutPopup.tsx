@@ -167,7 +167,7 @@ class LoadoutPopup extends React.Component<Props> {
                   <li className="loadout-set">
                     <span onClick={this.pullFromPostmaster}>
                       <i className="fa fa-envelope" />
-                      <span className="badge" ng-bind="this.numPostmasterItems" />
+                      <span className="badge">{numPostmasterItems}</span>{' '}
                       <span>{t('Loadouts.PullFromPostmaster')}</span>
                     </span>
                     <span onClick={this.makeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
