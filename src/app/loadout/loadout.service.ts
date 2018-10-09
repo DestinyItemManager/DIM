@@ -1,4 +1,4 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'underscore';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';

@@ -1,4 +1,4 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import { settings } from '../settings/settings';
 import * as _ from 'underscore';
 import { sum } from '../util';

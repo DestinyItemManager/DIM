@@ -1,4 +1,4 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'underscore';
 import { sum } from '../util';
 import { Loadout } from './loadout.service';
