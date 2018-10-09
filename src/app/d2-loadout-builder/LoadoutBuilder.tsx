@@ -170,7 +170,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     Object.keys(allItems).forEach((bucketStr) => {
       const bucket = parseInt(bucketStr, 10);
 
-      // if we are locking an item in that bucket, filter to only those items
+      // if we are locking an item in that bucket, filter to only include that single item
       if (lockedMap[bucket] && lockedMap[bucket][0].type === 'item') {
         filteredItems[bucket] = [lockedMap[bucket][0].item as D2Item];
         return;
@@ -179,9 +179,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       // otherwise flatten all item instances to each bucket
       filteredItems[bucket] = _.flatten(
         Object.values(allItems[bucket]).map((items) => {
+          // if nothing is locked in the current bucket
           if (!lockedMap[bucket]) {
+            // pick the item instance with the highest power
             return items.reduce((a, b) => (a.basePower > b.basePower ? a : b));
           }
+          // otherwise, return all item instances (and then filter down later by perks)
           return items;
         })
       );
