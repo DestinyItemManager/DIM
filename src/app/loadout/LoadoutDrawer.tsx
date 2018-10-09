@@ -173,9 +173,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return null;
     }
 
-    // TODO: show class if anything can be multi-class?
-    // TODO: animation
-
     const bucketTypes = Object.keys(buckets.byType);
 
     return (
@@ -191,6 +188,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 maxLength={50}
                 required={true}
                 type="search"
+                value={loadout.name}
                 placeholder={t('Loadouts.LoadoutName')}
               />{' '}
               {showClass && (
