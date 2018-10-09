@@ -1,9 +1,11 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import template from './item-tag.html';
 import './item-tag.scss';
-import { IComponentOptions, IController, IScope, IRootScopeService } from 'angular';
-import { TagValue, itemTags } from '../inventory/dim-item-info';
+import { IComponentOptions, IController, IScope } from 'angular';
+import { itemTags } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
+import { hotkeys } from '../ngimport-more';
+import { t } from 'i18next';
 
 export const ItemTagComponent: IComponentOptions = {
   controller: ItemTagController,
@@ -17,8 +19,7 @@ function ItemTagController(
   this: IController & {
     item: DimItem;
   },
-  $scope: IScope,
-  $rootScope: IRootScopeService
+  $scope: IScope
 ) {
   'ngInject';
   const vm = this;
@@ -37,17 +38,26 @@ function ItemTagController(
     if (!vm.item.dimInfo.tag) {
       delete vm.item.dimInfo.tag;
     }
-    $rootScope.$broadcast('dim-filter-invalidate');
     vm.item.dimInfo.save!();
   };
 
-  $scope.$on('dim-item-tag', (_e, args: { tag: TagValue }) => {
-    if (vm.item.dimInfo.tag === args.tag) {
-      delete vm.item.dimInfo.tag;
-    } else {
-      vm.item.dimInfo.tag = args.tag;
+  const hot = hotkeys.bindTo($scope);
+  itemTags.forEach((tag) => {
+    if (tag.hotkey) {
+      hot.add({
+        combo: [tag.hotkey],
+        description: t('Hotkey.MarkItemAs', {
+          tag: t(tag.label)
+        }),
+        callback() {
+          if (vm.item.dimInfo.tag === tag.type) {
+            delete vm.item.dimInfo.tag;
+          } else {
+            vm.item.dimInfo.tag = tag.type;
+          }
+          vm.item.dimInfo.save!();
+        }
+      });
     }
-    $rootScope.$broadcast('dim-filter-invalidate');
-    vm.item.dimInfo.save!();
   });
 }

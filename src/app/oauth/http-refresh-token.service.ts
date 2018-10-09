@@ -8,7 +8,7 @@ import {
   removeAccessToken
 } from './oauth-token.service';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import { $rootScope } from 'ngimport';
+import { router } from '../../router';
 
 let cache: Promise<Tokens> | null = null;
 
@@ -29,7 +29,7 @@ export async function fetchWithBungieOAuth(
     if (e.name === 'FatalTokenError') {
       console.warn('Unable to get auth token, clearing auth tokens & going to login: ', e);
       removeToken();
-      $rootScope.$broadcast('dim-no-token-found');
+      goToLoginPage();
     }
     throw e;
   }
@@ -40,7 +40,7 @@ export async function fetchWithBungieOAuth(
     if (triedRefresh) {
       // Give up
       removeToken();
-      $rootScope.$broadcast('dim-no-token-found');
+      goToLoginPage();
       throw new Error("Access token expired, and we've already tried to refresh. Failing.");
     }
     // OK, Bungie has told us our access token is expired or
@@ -81,7 +81,7 @@ async function getActiveToken(): Promise<Tokens> {
   let token = getToken();
   if (!token) {
     removeToken();
-    $rootScope.$broadcast('dim-no-token-found');
+    goToLoginPage();
     throw new FatalTokenError('No auth token exists, redirect to login');
   }
 
@@ -94,7 +94,7 @@ async function getActiveToken(): Promise<Tokens> {
   const refreshTokenIsValid = token && !hasTokenExpired(token.refreshToken);
   if (!refreshTokenIsValid) {
     removeToken();
-    $rootScope.$broadcast('dim-no-token-found');
+    goToLoginPage();
     throw new FatalTokenError('Refresh token invalid, clearing auth tokens & going to login');
   }
 
@@ -154,4 +154,17 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     }
   }
   throw new Error('Unknown error getting response token: ' + response);
+}
+
+export function goToLoginPage() {
+  if (
+    $DIM_FLAVOR === 'dev' &&
+    (!localStorage.getItem('apiKey') ||
+      !localStorage.getItem('oauthClientId') ||
+      !localStorage.getItem('oauthClientSecret'))
+  ) {
+    router.stateService.go('developer');
+  } else {
+    router.stateService.go('login');
+  }
 }

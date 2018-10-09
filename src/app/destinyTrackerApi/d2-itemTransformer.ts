@@ -1,5 +1,4 @@
-import * as _ from 'underscore';
-import { compact, flatMap } from '../util';
+import * as _ from 'lodash';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { getPowerMods } from '../inventory/store/d2-item-factory.service';
@@ -40,7 +39,7 @@ function getSelectedPlugs(item: D2Item, powerModHashes: number[]): number[] {
     return [];
   }
 
-  const allPlugs = compact(
+  const allPlugs = _.compact(
     item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash)
   );
 
@@ -61,7 +60,7 @@ function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): numbe
       return undefined;
     }
 
-    const randomPlugOptions = flatMap(
+    const randomPlugOptions = _.flatMap(
       item.sockets.sockets,
       (s) => (s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : [])
     );

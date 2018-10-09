@@ -13,6 +13,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 
 // const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -318,6 +319,13 @@ module.exports = (env) => {
         '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
         // D2 Loadout Builder
         '$featureFlags.d2LoadoutBuilder': JSON.stringify(env !== 'release')
+      }),
+
+      new LodashModuleReplacementPlugin({
+        collections: true,
+        memoizing: true,
+        shorthands: true,
+        flattening: true
       })
 
       // Enable if you want to debug the size of the chunks

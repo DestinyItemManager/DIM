@@ -1,10 +1,9 @@
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
-import * as _ from 'underscore';
-import { sum } from '../../util';
-import { ArmorSet, LockedItemType } from '../types';
+import * as _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { ArmorSet, LockedItemType } from '../types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -55,7 +54,7 @@ export function getSetsForTier(
     // Sort based on what sets have the most matched perks
     matchedSets.sort((a, b) => {
       return (
-        sum(b.armor, (item) => {
+        _.sumBy(b.armor, (item) => {
           if (!item || !item.sockets) {
             return 0;
           }
@@ -65,7 +64,7 @@ export function getSetsForTier(
             )
           ).length;
         }) -
-        sum(a.armor, (item) => {
+        _.sumBy(a.armor, (item) => {
           if (!item || !item.sockets) {
             return 0;
           }
@@ -95,7 +94,7 @@ export function getSetTiers(armorSets: ArmorSet[]): string[] {
 
   const tiers = _.each(
     _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-      return sum(tierString.split('/'), (num) => parseInt(num, 10));
+      return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
     }),
     (tier) => {
       tier.sort().reverse();

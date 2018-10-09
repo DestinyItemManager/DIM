@@ -1,13 +1,12 @@
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getKiosks } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
 import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
-import { Subscription } from 'rxjs/Subscription';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
@@ -17,9 +16,11 @@ import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../ngimport-more';
-import { $rootScope } from 'ngimport';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
+import { refresh$ } from '../shell/refresh';
+import { D1StoresService } from '../inventory/d1-stores.service';
+import { Subscriptions } from '../rx-utils';
 
 interface Props {
   account: DestinyAccount;
@@ -37,8 +38,7 @@ interface State {
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
 export default class Collections extends React.Component<Props & UIViewInjectedProps, State> {
-  private storesSubscription: Subscription;
-  private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
 
   constructor(props: Props) {
     super(props);
@@ -62,13 +62,12 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
   componentDidMount() {
     loadingTracker.addPromise(this.loadCollections());
 
-    // We need to make a scope
-    this.$scope.$on('dim-refresh', () => {
-      loadingTracker.addPromise(this.loadCollections());
-    });
-
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
-      (stores) => {
+    this.subscriptions.add(
+      refresh$.subscribe(() => {
+        // TODO: refresh just advisors
+        D1StoresService.reloadStores();
+      }),
+      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
         if (stores) {
           const ownedItemHashes = new Set<number>();
           for (const store of stores) {
@@ -78,13 +77,12 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
           }
           this.setState({ stores, ownedItemHashes });
         }
-      }
+      })
     );
   }
 
   componentWillUnmount() {
-    this.storesSubscription.unsubscribe();
-    this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
   }
 
   render() {

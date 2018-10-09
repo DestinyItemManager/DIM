@@ -1,4 +1,5 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
+import copy from 'fast-copy';
 import template from './loadout-builder.html';
 // tslint:disable-next-line:no-implicit-dependencies
 import intellectIcon from 'app/images/intellect.png';
@@ -8,10 +9,9 @@ import disciplineIcon from 'app/images/discipline.png';
 import strengthIcon from 'app/images/strength.png';
 import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
-import { IComponentOptions, IController, IScope, ITimeoutService, extend, copy } from 'angular';
+import { IComponentOptions, IController, ITimeoutService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout, dimLoadoutService, LoadoutClass } from '../loadout/loadout.service';
-import { sum } from '../util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D1Item, D1GridNode } from '../inventory/item-types';
 import { D1Store } from '../inventory/store-types';
@@ -31,7 +31,7 @@ export const LoadoutBuilderComponent: IComponentOptions = {
 };
 
 interface D1ItemWithNormalStats extends D1Item {
-  normalStats: {
+  normalStats?: {
     [hash: number]: {
       statHash: number;
       base: number;
@@ -117,7 +117,6 @@ function LoadoutBuilderController(
     setOrderValues: string;
     lockedchanged: boolean;
   },
-  $scope: IScope,
   $timeout: ITimeoutService,
   $i18next,
   ngDialog
@@ -263,7 +262,7 @@ function LoadoutBuilderController(
   ) {
     // for specific armor (Helmet), look at stats (int/dis), return best one.
     return {
-      item: _.max(armor, (o) => {
+      item: _.maxBy(armor, (o) => {
         if (nonExotic && o.isExotic) {
           return 0;
         }
@@ -273,12 +272,12 @@ function LoadoutBuilderController(
         for (let i = 0; i < stats.length; i++) {
           const stat = stats[i];
           const scaleType = o.tier === 'Rare' ? 'base' : vm.scaleType;
-          const normalStats = o.normalStats[stat];
+          const normalStats = o.normalStats![stat];
           total += normalStats[scaleType];
           bonus = normalStats.bonus;
         }
         return total + bonus;
-      }),
+      })!,
       bonusType: type
     };
   }
@@ -431,7 +430,7 @@ function LoadoutBuilderController(
 
       bestCombs = [];
       _.each(
-        _.uniq(best, false, (o) => {
+        _.uniqBy(best, (o) => {
           return o.item.index;
         }),
         (obj) => {
@@ -487,7 +486,7 @@ function LoadoutBuilderController(
   }
 
   function alreadyExists(set: D1Item[], id: string) {
-    return _.findWhere(set, { id }) || _.findWhere(set, { index: id });
+    return _.find(set, { id }) || _.find(set, { index: id });
   }
 
   function mergeBuckets<T>(
@@ -512,22 +511,22 @@ function LoadoutBuilderController(
 
   function filterLoadoutToEquipped(loadout: Loadout) {
     const filteredLoadout = copy(loadout);
-    filteredLoadout.items = _.mapObject(filteredLoadout.items, (items) => {
+    filteredLoadout.items = _.mapValues(filteredLoadout.items, (items) => {
       return items.filter((i) => i.equipped);
     });
     return filteredLoadout;
   }
 
   getDefinitions().then((defs) => {
-    extend(vm, {
+    Object.assign(vm, {
       active: 'titan',
-      i18nClassNames: _.object(
+      i18nClassNames: _.zipObject(
         ['titan', 'hunter', 'warlock'],
         _.sortBy(Object.values(defs.Class), (classDef) => classDef.classType).map(
-          (c) => c.className
+          (c: any) => c.className
         )
       ),
-      i18nItemNames: _.object(
+      i18nItemNames: _.zipObject(
         ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'],
         [45, 46, 47, 48, 49, 38, 39].map((key) => defs.ItemCategory.get(key).title)
       ),
@@ -675,8 +674,8 @@ function LoadoutBuilderController(
 
           // Filter any vendor perks from locked perks
           _.each(vm.lockedperks, (perkMap, type) => {
-            vm.lockedperks[type] = _.omit(perkMap, (_perk, perkHash) => {
-              return _.findWhere(vendorPerks[vm.active][type], { hash: Number(perkHash) });
+            vm.lockedperks[type] = _.omitBy(perkMap, (_perk, perkHash) => {
+              return _.find(vendorPerks[vm.active][type], { hash: Number(perkHash) });
             });
           });
         }
@@ -767,13 +766,13 @@ function LoadoutBuilderController(
           'ghost'
         );
         // Do not lock items with no stats
-        vm.lockeditems.Helmet = items.helmet[0].stats ? items.helmet[0] : null;
-        vm.lockeditems.Gauntlets = items.gauntlets[0].stats ? items.gauntlets[0] : null;
-        vm.lockeditems.Chest = items.chest[0].stats ? items.chest[0] : null;
-        vm.lockeditems.Leg = items.leg[0].stats ? items.leg[0] : null;
-        vm.lockeditems.ClassItem = items.classitem[0].stats ? items.classitem[0] : null;
-        vm.lockeditems.Artifact = items.artifact[0].stats ? items.artifact[0] : null;
-        vm.lockeditems.Ghost = items.ghost[0].stats ? items.ghost[0] : null;
+        vm.lockeditems.Helmet = items.helmet[0].stats ? (items.helmet[0] as D1Item) : null;
+        vm.lockeditems.Gauntlets = items.gauntlets[0].stats ? (items.gauntlets[0] as D1Item) : null;
+        vm.lockeditems.Chest = items.chest[0].stats ? (items.chest[0] as D1Item) : null;
+        vm.lockeditems.Leg = items.leg[0].stats ? (items.leg[0] as D1Item) : null;
+        vm.lockeditems.ClassItem = items.classitem[0].stats ? (items.classitem[0] as D1Item) : null;
+        vm.lockeditems.Artifact = items.artifact[0].stats ? (items.artifact[0] as D1Item) : null;
+        vm.lockeditems.Ghost = items.ghost[0].stats ? (items.ghost[0] as D1Item) : null;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1) {
           vm.lockedchanged = true;
@@ -813,8 +812,7 @@ function LoadoutBuilderController(
           loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
         });
 
-        $scope.$broadcast('dim-edit-loadout', {
-          loadout,
+        dimLoadoutService.editLoadout(loadout, {
           equipAll: true,
           showClass: false
         });
@@ -1019,7 +1017,7 @@ function LoadoutBuilderController(
 
           const tiers = _.each(
             _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-              return sum(tierString.split('/'), (num) => parseInt(num, 10));
+              return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
             }),
             (tier) => {
               tier.sort().reverse();
@@ -1087,10 +1085,9 @@ function LoadoutBuilderController(
             193091484,
             2133116599
           ];
-          return _.chain(perks.concat(item.talentGrid!.nodes))
-            .uniq((node) => node.hash)
-            .reject((node) => _.contains(unwantedPerkHashes, node.hash))
-            .value();
+          return _.uniqBy(perks.concat(item.talentGrid!.nodes), (node: any) => node.hash).filter(
+            (node: any) => !unwantedPerkHashes.includes(node.hash)
+          );
         }
 
         function filterItems(items: D1Item[]) {
@@ -1125,7 +1122,7 @@ function LoadoutBuilderController(
           const felwinters = items.filter((i) => i.hash === 2672107540);
           if (felwinters.length) {
             vm.excludeditems.push(...felwinters);
-            vm.excludeditems = _.uniq(vm.excludeditems, 'id');
+            vm.excludeditems = _.uniqBy(vm.excludeditems, (i) => i.id);
           }
 
           allItems = allItems.concat(items);
@@ -1148,11 +1145,12 @@ function LoadoutBuilderController(
         // Process vendors here
         _.each(dimVendorService.vendors, (vendor: any) => {
           const vendItems = filterItems(
-            _.select(
-              vendor.allItems.map((i) => i.item),
-              (item) =>
-                item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'
-            )
+            vendor.allItems
+              .map((i) => i.item)
+              .filter(
+                (item) =>
+                  item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'
+              )
           );
           vendorItems = vendorItems.concat(vendItems);
 
@@ -1160,7 +1158,7 @@ function LoadoutBuilderController(
           const felwinters = vendorItems.filter((i) => i.hash === 2672107540);
           if (felwinters.length) {
             vm.excludeditems.push(...felwinters);
-            vm.excludeditems = _.uniq(vm.excludeditems, 'id');
+            vm.excludeditems = _.uniqBy(vm.excludeditems, (i) => i.id);
           }
 
           // Build a map of perks
@@ -1185,7 +1183,7 @@ function LoadoutBuilderController(
         _.each(vendorPerks, (perksWithType, classType) => {
           _.each(perksWithType, (perkArr, type) => {
             vendorPerks[classType][type] = _.reject(perkArr, (perk: any) =>
-              _.contains(perks[classType][type].map((i) => i.hash), perk.hash)
+              perks[classType][type].map((i) => i.hash).includes(perk.hash)
             );
           });
         });
@@ -1194,7 +1192,7 @@ function LoadoutBuilderController(
           function normalizeStats(item: D1ItemWithNormalStats) {
             item.normalStats = {};
             _.each(item.stats!, (stat: any) => {
-              item.normalStats[stat.statHash] = {
+              item.normalStats![stat.statHash] = {
                 statHash: stat.statHash,
                 base: stat.base,
                 scaled: stat.scaled ? stat.scaled.min : 0,

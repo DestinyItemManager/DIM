@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
@@ -11,6 +11,7 @@ import { D1Store } from '../inventory/store-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import store from '../store/store';
 import { toggleCollapsedSection } from '../settings/actions';
+import { refresh$ } from '../shell/refresh';
 
 export const ActivitiesComponent: IComponentOptions = {
   controller: ActivitiesController,
@@ -40,12 +41,11 @@ function ActivitiesController(
 
   this.$onInit = () => {
     subscribeOnScope($scope, D1StoresService.getStoresStream(vm.account), init);
+    subscribeOnScope($scope, refresh$, () =>
+      // TODO: refresh just advisors
+      D1StoresService.reloadStores()
+    );
   };
-
-  $scope.$on('dim-refresh', () => {
-    // TODO: refresh just advisors
-    D1StoresService.reloadStores();
-  });
 
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info

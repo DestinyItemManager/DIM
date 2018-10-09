@@ -27,13 +27,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap !important;
+    .app-icon,
     .fa {
       width: 12px;
       margin-right: 5px;
       text-align: center;
-    }
-    img.fa {
-      transform: translateY(1px);
     }
   }
 
@@ -41,8 +39,9 @@
     padding: 0 12px;
     text-align: center;
     color: #888;
+    .app-icon,
     .fa {
-      font-size: 1.2em;
+      font-size: 13px;
     }
     &:hover {
       background-color: $blue;
@@ -57,6 +56,12 @@
   .light {
     font-weight: 200;
     float: right;
+    .app-icon {
+      margin-right: 2px !important;
+    }
+    &::before {
+      display: none;
+    }
   }
 }
 

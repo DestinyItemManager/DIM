@@ -4,7 +4,7 @@ import { t } from 'i18next';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Subscription } from 'rxjs/Subscription';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import CharacterDropdown from '../character-select/CharacterDropdown';
 import { Loading } from '../dim-ui/Loading';

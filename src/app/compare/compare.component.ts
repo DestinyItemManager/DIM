@@ -1,8 +1,7 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import template from './compare.html';
 import './compare.scss';
 import { element as angularElement, IController, IComponentOptions, IScope } from 'angular';
-import { sum } from '../util';
 import { DimItem } from '../inventory/item-types';
 import { CompareService } from './compare.service';
 import { router } from '../../router';
@@ -165,7 +164,7 @@ function CompareCtrl(
   vm.sort = (statHash) => {
     vm.sortedHash = statHash;
     vm.comparisons = _.sortBy(
-      _.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(),
+      _.sortBy(vm.comparisons, (i) => [i.index, i.name]).reverse(),
       (item: DimItem) => {
         const stat =
           item.primStat && statHash === item.primStat.statHash
@@ -211,7 +210,7 @@ function CompareCtrl(
       let armorSplit;
       if (!vm.compare.location.inWeapons) {
         vm.similarTypes = vm.similarTypes.filter((i) => i.classType === vm.compare.classType);
-        armorSplit = sum(vm.compare.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash));
+        armorSplit = _.sumBy(vm.compare.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash));
       }
 
       // 4284893193 is RPM in D2
@@ -231,11 +230,13 @@ function CompareCtrl(
             }
             return archetypeMatch.base === archetypeStat.base;
           }
-          return sum(item.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
+          return (
+            _.sumBy(item.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit
+          );
         });
       }
       vm.comparisons = allItems.filter((i) => i.hash === vm.compare.hash).map(addMissingStats);
-    } else if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
+    } else if (!vm.comparisons.find((i) => i.hash === args.item.hash && i.id === args.item.id)) {
       addMissingStats(args.item);
       vm.comparisons.push(args.item);
     }

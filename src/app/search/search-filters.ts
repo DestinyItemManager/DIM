@@ -1,5 +1,5 @@
-import * as _ from 'underscore';
-import { flatMap } from '../util';
+import * as _ from 'lodash';
+
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
@@ -63,7 +63,7 @@ interface SearchConfig {
  */
 export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const categories = destinyVersion === 1 ? D1Categories : D2Categories;
-  const itemTypes = flatMap(Object.values(categories), (l: string[]) =>
+  const itemTypes = _.flatMap(Object.values(categories), (l: string[]) =>
     l.map((v) => v.toLowerCase())
   );
 
@@ -645,7 +645,7 @@ export function searchFilters(
         return item.talentGrid && item.talentGrid.hasAscendNode && !item.talentGrid.ascended;
       },
       reforgeable(item: DimItem) {
-        return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
+        return item.talentGrid && item.talentGrid.nodes.some((n) => n.hash === 617082448);
       },
       ornament(item: D1Item, predicate: string) {
         const complete = item.talentGrid && item.talentGrid.nodes.some((n) => n.ornament);
@@ -818,7 +818,7 @@ export function searchFilters(
       stattype(item: DimItem, predicate: string) {
         return (
           item.stats &&
-          _.any(item.stats, (s) =>
+          item.stats.some((s) =>
             Boolean(s.name.toLowerCase() === predicate && s.value && s.value > 0)
           )
         );
@@ -1123,7 +1123,7 @@ export function searchFilters(
       hasShader(item: D2Item) {
         return (
           item.sockets &&
-          _.any(item.sockets.sockets, (socket) => {
+          item.sockets.sockets.some((socket) => {
             return (
               (socket.plug || false) &&
               socket.plug.plugItem.plug.plugCategoryHash === 2973005342 &&

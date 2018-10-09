@@ -1,14 +1,13 @@
 import { t } from 'i18next';
-import { $rootScope } from 'ngimport';
 import * as React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimStore } from '../../inventory/store-types';
-import { Loadout } from '../../loadout/loadout.service';
+import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { ArmorSet, LockedItemType } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import { getSetsForTier, getSetTiers, toggleLockedItem, isD2Item } from './utils';
+import { getSetsForTier, getSetTiers, isD2Item, toggleLockedItem } from './utils';
 
 interface Props {
   processRunning: number;
@@ -37,11 +36,8 @@ export default class GeneratedSets extends React.Component<Props, State> {
   };
 
   // Set the loadout property to show/hide the loadout menu
-  setCreateLoadout = (loadout?: Loadout) => {
-    $rootScope.$broadcast('dim-edit-loadout', {
-      loadout,
-      showClass: false
-    });
+  setCreateLoadout = (loadout: Loadout) => {
+    dimLoadoutService.editLoadout(loadout, { showClass: false });
   };
 
   componentWillReceiveProps(props: Props) {

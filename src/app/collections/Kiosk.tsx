@@ -1,6 +1,6 @@
 import { DestinyKioskItem, BungieMembershipType } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';

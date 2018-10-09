@@ -92,6 +92,7 @@ export default class Vendor extends React.Component<Props> {
       ? getVendorDropsForVendor(vendor.vendorHash, allVendorEngramDrops)
       : [];
     const dropActive = vendorEngramDrops.some(isVerified380);
+
     const vendorLinkTitle = dropActive ? 'VendorEngramsXyz.Likely380' : 'VendorEngramsXyz.Vote';
 
     return (

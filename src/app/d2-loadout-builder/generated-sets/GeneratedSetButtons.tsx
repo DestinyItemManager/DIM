@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';
 import { ArmorSet } from '../types';

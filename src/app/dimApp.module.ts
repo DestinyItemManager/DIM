@@ -20,7 +20,6 @@ import itemReviewModule from './item-review/item-review.module';
 import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
-import oauthModule from './oauth/oauth.module';
 import movePopupModule from './move-popup/move-popup.module';
 import searchModule from './search/search.module';
 
@@ -41,7 +40,6 @@ const dependencies = [
   compareModule,
   infuseModule,
   farmingModule,
-  oauthModule,
   movePopupModule,
   searchModule,
   'ajoslin.promise-tracker',

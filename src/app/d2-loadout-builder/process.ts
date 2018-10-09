@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { D2Item } from '../inventory/item-types';
 import { LoadoutBuilder } from './LoadoutBuilder';
 import { LockableBuckets, ArmorSet, StatTypes } from './types';
