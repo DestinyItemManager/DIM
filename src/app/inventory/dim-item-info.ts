@@ -131,3 +131,23 @@ function getInfos(key: string): Promise<{ [itemInstanceId: string]: DimItemInfo 
 function setInfos(key: string, infos: { [itemInstanceId: string]: DimItemInfo }) {
   return SyncService.set({ [key]: infos });
 }
+
+export function tagIconFilter() {
+  'ngInject';
+  const iconType = {};
+
+  itemTags.forEach((tag) => {
+    if (tag.type) {
+      iconType[tag.type] = tag.icon;
+    }
+  });
+
+  return function tagIcon(value) {
+    const icon = iconType[value];
+    if (icon) {
+      return `item-tag fa fa-${icon}`;
+    } else {
+      return 'item-tag no-tag';
+    }
+  };
+}
