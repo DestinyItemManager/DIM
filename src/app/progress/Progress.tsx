@@ -1,4 +1,3 @@
-import { Subscription } from 'rxjs/Subscription';
 import { IScope } from 'angular';
 import {
   DestinyCharacterComponent,
@@ -22,12 +21,13 @@ import Quest from './Quest';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { chainComparator, compareBy } from '../comparators';
 import { characterComponentSortSelector } from '../settings/character-sort';
+import { Subscriptions } from '../rx-utils';
+import { refresh$ } from '../shell/refresh';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -71,8 +71,7 @@ function mapStateToProps(state: RootState): Partial<Props> {
 }
 
 class Progress extends React.Component<Props, State> {
-  subscription: Subscription;
-  private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
 
   constructor(props) {
     super(props);
@@ -82,36 +81,32 @@ class Progress extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.subscription = getProgressStream(this.props.account).subscribe((progress) => {
-      this.setState((prevState) => {
-        const updatedState = {
-          progress,
-          currentCharacterId: prevState.currentCharacterId
-        };
-        if (prevState.currentCharacterId === '') {
-          const characters = Object.values(progress.profileInfo.characters.data);
-          if (characters.length) {
-            const lastPlayedDate = progress.lastPlayedDate;
-            updatedState.currentCharacterId = characters.find((c) =>
-              characterIsCurrent(c, lastPlayedDate)
-            )!.characterId;
+    this.subscriptions.add(
+      refresh$.subscribe(reloadProgress),
+      getProgressStream(this.props.account).subscribe((progress) => {
+        this.setState((prevState) => {
+          const updatedState = {
+            progress,
+            currentCharacterId: prevState.currentCharacterId
+          };
+          if (prevState.currentCharacterId === '') {
+            const characters = Object.values(progress.profileInfo.characters.data);
+            if (characters.length) {
+              const lastPlayedDate = progress.lastPlayedDate;
+              updatedState.currentCharacterId = characters.find((c) =>
+                characterIsCurrent(c, lastPlayedDate)
+              )!.characterId;
+            }
           }
-        }
 
-        return updatedState;
-      });
-    });
-
-    this.$scope.$on('dim-refresh', () => {
-      reloadProgress();
-    });
+          return updatedState;
+        });
+      })
+    );
   }
 
   componentWillUnmount() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-    this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
   }
 
   render() {

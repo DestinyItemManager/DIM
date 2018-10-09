@@ -6,7 +6,8 @@ import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.ser
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { processItems } from '../inventory/store/d1-item-factory.service';
-import { IPromise, copy } from 'angular';
+import { IPromise } from 'angular';
+import copy from 'fast-copy';
 import { D1Store } from '../inventory/store-types';
 import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
@@ -14,6 +15,8 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { $rootScope, $q } from 'ngimport';
 import { loadingTracker } from '../ngimport-more';
+import { D1ManifestService } from '../manifest/manifest-service';
+import { handleLocalStorageFullError } from '../compatibility';
 
 /*
 const allVendors = [
@@ -191,7 +194,7 @@ function VendorService(): VendorServiceType {
     .publishReplay(1);
 
   const clearVendors = _.once(() => {
-    $rootScope.$on('dim-new-manifest', () => {
+    D1ManifestService.newManifest$.subscribe(() => {
       service.vendors = {};
       service.vendorsLoaded = false;
       deleteCachedVendors();
@@ -447,7 +450,10 @@ function VendorService(): VendorServiceType {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
               vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
-              return idbKeyval.set(key, vendor).then(() => vendor);
+              return idbKeyval
+                .set(key, vendor)
+                .catch(handleLocalStorageFullError)
+                .then(() => vendor);
             })
             .catch((e) => {
               // console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
@@ -461,9 +467,12 @@ function VendorService(): VendorServiceType {
                   factionAligned: factionAligned(store, vendorDef.summary.factionHash)
                 };
 
-                return idbKeyval.set(key, vendor).then(() => {
-                  throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
-                });
+                return idbKeyval
+                  .set(key, vendor)
+                  .catch(handleLocalStorageFullError)
+                  .then(() => {
+                    throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
+                  });
               }
               throw new Error(`Failed to load vendor ${vendorDef.summary.vendorName}`);
             });

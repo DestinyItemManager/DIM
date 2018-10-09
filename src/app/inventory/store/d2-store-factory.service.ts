@@ -1,4 +1,4 @@
-import { copy as angularCopy } from 'angular';
+import copy from 'fast-copy';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
@@ -126,7 +126,7 @@ const StoreProto = {
     const allItems = (this.items as D2Item[])
       .filter((item) => item.canBeInLoadout())
       // tslint:disable-next-line:no-unnecessary-callback-wrapper
-      .map((item) => angularCopy(item));
+      .map((item) => copy(item));
     return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
   },
 

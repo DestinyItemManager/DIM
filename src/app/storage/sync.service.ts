@@ -1,10 +1,10 @@
-import { equals, copy, extend } from 'angular';
+import copy from 'fast-copy';
+import { deepEqual } from 'fast-equals';
 import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
 import { BungieMembershipType } from 'bungie-api-ts/user';
-import { $rootScope } from 'ngimport';
 import { initSettings } from '../settings/settings';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import { humanBytes } from './human-bytes';
@@ -24,9 +24,9 @@ export interface DimData {
 }
 
 export interface StorageAdapter {
-  supported: boolean;
+  readonly supported: boolean;
+  readonly name: string;
   enabled: boolean;
-  name: string;
 
   get(): Promise<DimData>;
   set(value: object): Promise<void>;
@@ -75,7 +75,7 @@ export const SyncService = {
   init() {
     GoogleDriveStorageAdapter.init();
 
-    $rootScope.$on('gdrive-sign-in', () => {
+    GoogleDriveStorageAdapter.signIn$.subscribe(() => {
       // Force refresh data
       console.log('GDrive sign in, refreshing data');
       this.get(true).then(initSettings);
@@ -94,7 +94,7 @@ export const SyncService = {
       throw new Error('Must call get at least once before setting');
     }
 
-    if (!PUT && equals(_.pick(cached, Object.keys(value)), value)) {
+    if (!PUT && deepEqual(_.pick(cached, Object.keys(value)), value)) {
       if ($featureFlags.debugSync) {
         console.log(_.pick(cached, Object.keys(value)), value);
         console.log('Skip save, already got it');
@@ -107,7 +107,7 @@ export const SyncService = {
       // update our data
       cached = copy(value) as DimData;
     } else {
-      extend(cached, copy(value));
+      Object.assign(cached, copy(value));
     }
 
     for (const adapter of adapters) {

@@ -1,4 +1,5 @@
-import { extend, copy, IComponentOptions, IController, IQService } from 'angular';
+import { IComponentOptions, IController, IQService } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'lodash';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
@@ -32,7 +33,7 @@ function InfuseCtrl(
 
   const vm = this;
 
-  extend(vm, {
+  Object.assign(vm, {
     items: {},
     getAllItems: true,
     showLockedItems: false,

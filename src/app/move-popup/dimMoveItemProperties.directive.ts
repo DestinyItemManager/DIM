@@ -8,6 +8,8 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { $q } from 'ngimport';
 import { router } from '../../router';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { hotkeys } from '../ngimport-more';
+import { t } from 'i18next';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -125,9 +127,15 @@ function MoveItemPropertiesCtrl(
     }
   };
 
+  const hot = hotkeys.bindTo($scope);
+
   // The 'i' keyboard shortcut toggles full details
-  $scope.$on('dim-toggle-item-details', () => {
-    vm.itemDetails = !vm.itemDetails;
+  hot.add({
+    combo: ['i'],
+    description: t('Hotkey.ToggleDetails'),
+    callback() {
+      vm.itemDetails = !vm.itemDetails;
+    }
   });
 
   $scope.$watch('vm.itemDetails', (newValue, oldValue) => {
@@ -173,8 +181,8 @@ function MoveItemPropertiesCtrl(
     if (item.isDestiny2()) {
       $q.when(d2SetLockState(store, item, state))
         .then(() => {
+          // TODO: this doesn't work in React land
           item.locked = state;
-          $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(() => {
           vm.locking = false;
@@ -187,7 +195,6 @@ function MoveItemPropertiesCtrl(
           } else if (type === 'track') {
             item.tracked = state;
           }
-          $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(() => {
           vm.locking = false;

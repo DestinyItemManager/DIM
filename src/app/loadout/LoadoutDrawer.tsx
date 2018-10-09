@@ -4,9 +4,8 @@ import InventoryItem from '../inventory/InventoryItem';
 import { toaster } from '../ngimport-more';
 import { dimLoadoutService, Loadout } from './loadout.service';
 import * as _ from 'lodash';
-import { $rootScope } from 'ngimport';
 import { sortItems } from '../shell/dimAngularFilters.filter';
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DimItem } from '../inventory/item-types';
@@ -18,17 +17,19 @@ import { RootState } from '../store/reducers';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { destinyVersionSelector } from '../accounts/reducer';
+import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { storesSelector } from '../inventory/reducer';
 import spartan from '../../images/spartan.png';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
+import { Subscriptions } from '../rx-utils';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
 interface StoreProps {
   types: string[];
   itemSortOrder: string[];
-  destinyVersion: 1 | 2;
+  account: DestinyAccount;
   classTypeOptions: {
     label: string;
     value: number;
@@ -43,6 +44,8 @@ interface State {
   loadout?: Loadout;
   warnitems: DimItem[];
   show: boolean;
+  showClass: boolean;
+  isNew: boolean;
 }
 
 const typesSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
@@ -88,7 +91,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     itemSortOrder: itemSortOrderSelector(state),
     types: typesSelector(state),
-    destinyVersion: destinyVersionSelector(state),
+    account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     storeIds: storeIdsSelector(state),
     buckets: state.inventory.buckets!
@@ -98,9 +101,11 @@ function mapStateToProps(state: RootState): StoreProps {
 class LoadoutDrawer extends React.Component<Props, State> {
   state: State = {
     warnitems: [],
-    show: false
+    show: false,
+    showClass: true,
+    isNew: false
   };
-  private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private listener: Function;
 
@@ -109,65 +114,66 @@ class LoadoutDrawer extends React.Component<Props, State> {
       this.close();
     });
 
-    this.$scope.$on('dim-edit-loadout', (_event, args: { loadout: Loadout; equipAll: boolean }) => {
-      const loadout = copy(args.loadout);
-      dimLoadoutService.dialogOpen = true;
-      if (loadout.classType === undefined) {
-        loadout.classType = -1;
-      }
-      loadout.items = loadout.items || {};
+    this.subscriptions.add(
+      dimLoadoutService.editLoadout$.subscribe(
+        (args: { loadout: Loadout; equipAll?: boolean; showClass?: boolean; isNew?: boolean }) => {
+          const { account } = this.props;
+          const loadout = copy(args.loadout);
+          dimLoadoutService.dialogOpen = true;
+          if (loadout.classType === undefined) {
+            loadout.classType = -1;
+          }
+          loadout.items = loadout.items || {};
+          loadout.destinyVersion = account.destinyVersion;
+          loadout.platform = account.platformLabel;
 
-      // Filter out any vendor items and equip all if requested
-      const warnitems = _.flatMap(Object.values(loadout.items), (items) =>
-        items.filter((item) => !item.owner)
-      );
-      this.fillInDefinitionsForWarnItems(this.props.destinyVersion, warnitems);
+          // Filter out any vendor items and equip all if requested
+          const warnitems = _.flatMap(Object.values(loadout.items), (items) =>
+            items.filter((item) => !item.owner)
+          );
+          this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
 
-      // TODO: find equivalent items for warnitems
-      // tricky part, we only have hash!
+          // TODO: find equivalent items for warnitems
+          // tricky part, we only have hash!
 
-      _.each(loadout.items, (items, type) => {
-        loadout.items[type] = items.filter((item) => item.owner);
-        if (args.equipAll && loadout.items[type][0]) {
-          loadout.items[type][0].equipped = true;
+          _.each(loadout.items, (items, type) => {
+            loadout.items[type] = items.filter((item) => item.owner);
+            if (args.equipAll && loadout.items[type][0]) {
+              loadout.items[type][0].equipped = true;
+            }
+          });
+
+          // TODO: match up items with real store items!
+
+          this.setState({
+            show: true,
+            loadout,
+            warnitems,
+            showClass: Boolean(args.showClass),
+            isNew: Boolean(args.isNew)
+          });
         }
-      });
-
-      // TODO: match up items with real store items!
-
-      this.setState({
-        show: true,
-        loadout,
-        warnitems
-      });
-    });
-
-    this.$scope.$on('dim-store-item-clicked', (_event, args) => {
-      this.add(args.item, args.clickEvent);
-    });
+      ),
+      dimLoadoutService.addItem$.subscribe((args: { item: DimItem; clickEvent: MouseEvent }) => {
+        this.add(args.item, args.clickEvent);
+      })
+    );
   }
 
   componentWillUnmount() {
-    this.$scope.$destroy();
     this.listener();
+    this.subscriptions.unsubscribe();
   }
 
   render() {
     const { types, buckets, itemSortOrder, classTypeOptions, storeIds } = this.props;
-    const { show, loadout, warnitems } = this.state;
+    const { show, loadout, warnitems, showClass, isNew } = this.state;
 
     if (!loadout || !show) {
       return null;
     }
 
-    // TODO: remove angular events
-
     // TODO: show class if anything can be multi-class?
-    const showClass = true;
-
-    // TODO: take this from the event
-    const isNew = false;
-
     // TODO: animation
 
     const bucketTypes = Object.keys(buckets.byType);
@@ -188,7 +194,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 placeholder={t('Loadouts.LoadoutName')}
               />{' '}
               {showClass && (
-                <select name="classType" onChange={this.setClassType}>
+                <select name="classType" onChange={this.setClassType} value={loadout.classType}>
                   {classTypeOptions.map((option) => (
                     <option key={option.value} label={option.label} value={option.value} />
                   ))}

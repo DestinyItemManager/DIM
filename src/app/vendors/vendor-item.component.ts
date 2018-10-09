@@ -1,4 +1,4 @@
-import { IComponentOptions, IController, extend } from 'angular';
+import { IComponentOptions, IController } from 'angular';
 import * as _ from 'lodash';
 import template from './vendor-item.html';
 import dialogTemplate from './vendor-item-dialog.html';
@@ -53,11 +53,11 @@ function VendorItemCtrl(this: IController, $scope, $element, ngDialog) {
         overlay: false,
         className: `move-popup-dialog vendor-move-popup ${vm.extraMovePopupClass || ''}`,
         showClose: false,
-        scope: extend($scope.$new(true), {}),
+        scope: $scope.$new(true),
         data: itemElement, // Dialog anchor
         controllerAs: 'vm',
         controller() {
-          extend(this, {
+          Object.assign(this, {
             settings: this.settings,
             item,
             saleItem: vm.saleItem,

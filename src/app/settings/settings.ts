@@ -50,11 +50,7 @@ export function initSettings() {
       const settings = store.getState().settings;
       localStorage.setItem('dimLanguage', settings.language);
       if (languageChanged) {
-        i18next.changeLanguage(settings.language, () => {
-          $rootScope.$applyAsync(() => {
-            $rootScope.$broadcast('i18nextLanguageChange');
-          });
-        });
+        i18next.changeLanguage(settings.language);
       }
 
       readyResolve();

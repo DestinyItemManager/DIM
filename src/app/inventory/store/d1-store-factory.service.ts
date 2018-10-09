@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
-import { copy as angularCopy } from 'angular';
+import copy from 'fast-copy';
 import { t } from 'i18next';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';
@@ -130,10 +130,8 @@ const StoreProto = {
 
   // Create a loadout from this store's equipped items
   loadoutFromCurrentlyEquipped(this: D1Store, name: string) {
-    const allItems = this.items
-      .filter((item) => item.canBeInLoadout())
-      // tslint:disable-next-line:no-unnecessary-callback-wrapper
-      .map((item) => angularCopy(item));
+    // tslint:disable-next-line:no-unnecessary-callback-wrapper
+    const allItems = this.items.filter((item) => item.canBeInLoadout()).map((item) => copy(item));
     return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
   },
 

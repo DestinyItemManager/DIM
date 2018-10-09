@@ -13,7 +13,6 @@ import {
   DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { equals } from 'angular';
 import { makeItem } from '../inventory/store/d2-item-factory.service';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2Item } from '../inventory/item-types';
@@ -82,7 +81,7 @@ export class VendorItem {
     // TODO: this'll be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32
   ): VendorItem {
-    let instance;
+    let instance: DestinyItemInstanceComponent | undefined;
     if (saleItem && itemComponents && itemComponents.instances && itemComponents.instances.data) {
       instance = itemComponents.instances.data[saleItem.vendorItemIndex];
     }
@@ -265,6 +264,9 @@ export class VendorItem {
   // TODO: I'm not sold on having a bunch of property getters, vs just exposing the raw underlying stuff
 
   get displayProperties() {
+    if (this.saleItem && this.saleItem.overrideStyleItemHash) {
+      return this.defs.InventoryItem.get(this.saleItem.overrideStyleItemHash).displayProperties;
+    }
     return this.inventoryItem.displayProperties;
   }
 
@@ -345,8 +347,7 @@ export class VendorItem {
       this.vendorItemDef === other.vendorItemDef &&
       this.canPurchase === other.canPurchase &&
       this.rating === other.rating &&
-      // Deep equals
-      equals(this.saleItem, other.saleItem)
+      this.saleItem === other.saleItem
     );
   }
 

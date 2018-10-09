@@ -24,7 +24,10 @@ export default function SelectableBungieImage({
   return (
     <BungieImage
       className={classNames('perk-image', {
-        'locked-perk': selected
+        'locked-perk': selected,
+        'ammo-primary': perk.hash === 143442373,
+        'ammo-special': perk.hash === 2620835322,
+        'ammo-heavy': perk.hash === 2867719094
       })}
       title={perk.displayProperties.name}
       src={perk.displayProperties.icon}

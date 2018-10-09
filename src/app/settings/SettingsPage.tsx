@@ -11,7 +11,6 @@ import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleArmorImage from 'app/images/example-armor.jpg';
 import './settings.scss';
-import { $rootScope } from 'ngimport';
 import { DimItem } from '../inventory/item-types';
 import * as _ from 'lodash';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
@@ -517,6 +516,14 @@ class SettingsPage extends React.Component<Props, State> {
               >
                 <i className="fa fa-table" /> <span>{t('Bucket.Armor')}</span>
               </button>
+              <button
+                className="dim-button"
+                onClick={this.downloadGhostCsv}
+                disabled={!storesLoaded}
+                title="Download Csv"
+              >
+                <i className="fa fa-table" /> <span>{t('Bucket.Ghost')}</span>
+              </button>
             </div>
           </section>
         </form>
@@ -542,9 +549,6 @@ class SettingsPage extends React.Component<Props, State> {
 
     localStorage.setItem('dimLanguage', language);
     changeLanguage(language, () => {
-      $rootScope.$applyAsync(() => {
-        $rootScope.$broadcast('i18nextLanguageChange');
-      });
       this.setState({});
     });
   };
@@ -561,7 +565,13 @@ class SettingsPage extends React.Component<Props, State> {
     return false;
   };
 
-  private downloadCsv = (type: 'Armor' | 'Weapons') => {
+  private downloadGhostCsv = (e) => {
+    e.preventDefault();
+    this.downloadCsv('Ghost');
+    return false;
+  };
+
+  private downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
     const activePlatform = getActivePlatform();
     if (!activePlatform) {
       return;

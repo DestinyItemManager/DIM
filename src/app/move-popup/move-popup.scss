@@ -324,14 +324,14 @@ $item-header-spacing: 5px;
   background-repeat: no-repeat;
   border-radius: 5px;
   margin-top: 1px;
+}
 
-  &.ammo-primary {
-    background-image: url('../../images/primary.png');
-  }
-  &.ammo-special {
-    background-image: url('../../images/special.png');
-  }
-  &.ammo-heavy {
-    background-image: url('../../images/heavy.png');
-  }
+.ammo-primary {
+  background-image: url('../../images/primary.png');
+}
+.ammo-special {
+  background-image: url('../../images/special.png');
+}
+.ammo-heavy {
+  background-image: url('../../images/heavy.png');
 }
