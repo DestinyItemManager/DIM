@@ -1,5 +1,5 @@
 import { IPromise } from 'angular';
-import { $q, $rootScope } from 'ngimport';
+import { $q } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'underscore';
@@ -15,6 +15,7 @@ import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../ngimport-more';
 import { update } from '../inventory/actions';
+import { goToLoginPage } from '../oauth/http-refresh-token.service';
 
 let _platforms: DestinyAccount[] = [];
 let _active: DestinyAccount | null = null;
@@ -42,7 +43,7 @@ export function getPlatforms(): IPromise<DestinyAccount[]> {
     .then((bungieAccounts) => {
       if (!bungieAccounts.length) {
         // We're not logged in, don't bother
-        $rootScope.$broadcast('dim-no-token-found');
+        goToLoginPage();
         return [];
       }
 

@@ -9,7 +9,7 @@ import disciplineIcon from 'app/images/discipline.png';
 import strengthIcon from 'app/images/strength.png';
 import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
-import { IComponentOptions, IController, IScope, ITimeoutService } from 'angular';
+import { IComponentOptions, IController, ITimeoutService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout, dimLoadoutService, LoadoutClass } from '../loadout/loadout.service';
 import { sum } from '../util';
@@ -118,7 +118,6 @@ function LoadoutBuilderController(
     setOrderValues: string;
     lockedchanged: boolean;
   },
-  $scope: IScope,
   $timeout: ITimeoutService,
   $i18next,
   ngDialog
@@ -814,8 +813,7 @@ function LoadoutBuilderController(
           loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
         });
 
-        $scope.$broadcast('dim-edit-loadout', {
-          loadout,
+        dimLoadoutService.editLoadout(loadout, {
           equipAll: true,
           showClass: false
         });

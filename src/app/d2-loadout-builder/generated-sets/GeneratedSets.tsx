@@ -1,13 +1,12 @@
 import { t } from 'i18next';
 import * as React from 'react';
 import * as _ from 'underscore';
-import { Loadout } from '../../loadout/loadout.service';
+import { Loadout, dimLoadoutService } from '../../loadout/loadout.service';
 import { ArmorSet, LockType } from '../types';
 import { getSetsForTier, getSetTiers } from './utils';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import { DimStore } from '../../inventory/store-types';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { $rootScope } from 'ngimport';
 import GeneratedSetItem from './GeneratedSetItem';
 
 interface Props {
@@ -34,11 +33,8 @@ export default class GeneratedSets extends React.Component<Props, State> {
   };
 
   // Set the loadout property to show/hide the loadout menu
-  setCreateLoadout = (loadout?: Loadout) => {
-    $rootScope.$broadcast('dim-edit-loadout', {
-      loadout,
-      showClass: false
-    });
+  setCreateLoadout = (loadout: Loadout) => {
+    dimLoadoutService.editLoadout(loadout, { showClass: false });
   };
 
   componentWillReceiveProps(props: Props) {

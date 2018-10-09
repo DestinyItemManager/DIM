@@ -10,7 +10,8 @@ import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
-import { $q, $interval, $rootScope } from 'ngimport';
+import { $q, $interval } from 'ngimport';
+import { refresh } from '../shell/refresh';
 
 export const D2FarmingService = makeD2FarmingService();
 
@@ -119,7 +120,7 @@ function makeD2FarmingService() {
 
         intervalId = $interval(() => {
           // just start reloading stores more often
-          $rootScope.$broadcast('dim-refresh');
+          refresh();
         }, 60000);
       }
     },

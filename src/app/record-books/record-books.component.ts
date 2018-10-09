@@ -11,6 +11,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { setSetting, toggleCollapsedSection } from '../settings/actions';
 import store from '../store/store';
+import { refresh$ } from '../shell/refresh';
 
 export const RecordBooksComponent: IComponentOptions = {
   controller: RecordBooksController,
@@ -43,12 +44,11 @@ function RecordBooksController(
 
   this.$onInit = () => {
     subscribeOnScope($scope, D1StoresService.getStoresStream(vm.account), init);
+    subscribeOnScope($scope, refresh$, () => {
+      // TODO: refresh just advisors
+      D1StoresService.reloadStores();
+    });
   };
-
-  $scope.$on('dim-refresh', () => {
-    // TODO: refresh just advisors
-    D1StoresService.reloadStores();
-  });
 
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info

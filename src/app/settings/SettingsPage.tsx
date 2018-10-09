@@ -11,7 +11,6 @@ import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleArmorImage from 'app/images/example-armor.jpg';
 import './settings.scss';
-import { $rootScope } from 'ngimport';
 import { DimItem } from '../inventory/item-types';
 import * as _ from 'underscore';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
@@ -547,9 +546,6 @@ class SettingsPage extends React.Component<Props, State> {
 
     localStorage.setItem('dimLanguage', language);
     changeLanguage(language, () => {
-      $rootScope.$applyAsync(() => {
-        $rootScope.$broadcast('i18nextLanguageChange');
-      });
       this.setState({});
     });
   };

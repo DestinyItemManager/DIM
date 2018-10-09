@@ -5,7 +5,6 @@ import { reportException } from '../exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
 import { BungieMembershipType } from 'bungie-api-ts/user';
-import { $rootScope } from 'ngimport';
 import { initSettings } from '../settings/settings';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import { humanBytes } from './human-bytes';
@@ -25,9 +24,9 @@ export interface DimData {
 }
 
 export interface StorageAdapter {
-  supported: boolean;
+  readonly supported: boolean;
+  readonly name: string;
   enabled: boolean;
-  name: string;
 
   get(): Promise<DimData>;
   set(value: object): Promise<void>;
@@ -76,7 +75,7 @@ export const SyncService = {
   init() {
     GoogleDriveStorageAdapter.init();
 
-    $rootScope.$on('gdrive-sign-in', () => {
+    GoogleDriveStorageAdapter.signIn$.subscribe(() => {
       // Force refresh data
       console.log('GDrive sign in, refreshing data');
       this.get(true).then(initSettings);

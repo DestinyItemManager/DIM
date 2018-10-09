@@ -13,6 +13,7 @@ import { toaster, loadingTracker } from '../ngimport-more';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
+import { Subject } from 'rxjs/Subject';
 
 export enum LoadoutClass {
   any = -1,
@@ -46,6 +47,16 @@ interface DehydratedLoadout {
 }
 
 export interface LoadoutServiceType {
+  editLoadout$: Subject<{
+    loadout: Loadout;
+    equipAll?: boolean;
+    showClass?: boolean;
+    isNew?: boolean;
+  }>;
+  addItem$: Subject<{
+    item: DimItem;
+    clickEvent: MouseEvent;
+  }>;
   dialogOpen: boolean;
   getLoadouts(getLatest?: boolean): Promise<Loadout[]>;
   deleteLoadout(loadout: Loadout): Promise<void>;
@@ -53,6 +64,10 @@ export interface LoadoutServiceType {
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
   getLoadoutItemIds(destinyVersion: number): Promise<Set<string>>;
+  editLoadout(
+    loadout: Loadout,
+    options: { equipAll?: boolean; showClass?: boolean; isNew?: boolean }
+  ): void;
 }
 
 // TODO: un-object-ify, this holds no state!
@@ -67,17 +82,40 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   return {
+    editLoadout$: new Subject<{
+      loadout: Loadout;
+      equipAll?: boolean;
+      showClass?: boolean;
+      isNew?: boolean;
+    }>(),
+    addItem$: new Subject<{
+      item: DimItem;
+      clickEvent: MouseEvent;
+    }>(),
     dialogOpen: false,
     getLoadouts,
     deleteLoadout,
     saveLoadout,
     addItemToLoadout,
     applyLoadout,
-    getLoadoutItemIds
+    getLoadoutItemIds,
+    editLoadout
   };
 
+  function editLoadout(
+    loadout: Loadout,
+    { equipAll = false, showClass = true, isNew = true } = {}
+  ) {
+    this.editLoadout$({
+      loadout,
+      equipAll,
+      showClass,
+      isNew
+    });
+  }
+
   function addItemToLoadout(item: DimItem, $event) {
-    $rootScope.$broadcast('dim-store-item-clicked', {
+    this.addItem$({
       item,
       clickEvent: $event
     });
@@ -141,18 +179,12 @@ function LoadoutService(): LoadoutServiceType {
     reduxStore.dispatch(actions.deleteLoadout(loadout.id));
     await SyncService.remove(loadout.id);
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
-    $rootScope.$broadcast('dim-delete-loadout', {
-      loadout
-    });
   }
 
   async function saveLoadout(loadout: Loadout): Promise<void> {
     reduxStore.dispatch(actions.updateLoadout(loadout));
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
     $rootScope.$broadcast('dim-filter-invalidate-loadouts');
-    $rootScope.$broadcast('dim-save-loadout', {
-      loadout
-    });
   }
 
   function hydrate(loadoutData: DehydratedLoadout): Loadout {

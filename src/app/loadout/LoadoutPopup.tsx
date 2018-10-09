@@ -20,7 +20,6 @@ import {
 import { querySelector } from '../shell/reducer';
 import { newLoadout } from './loadout-utils';
 import { toaster } from '../ngimport-more';
-import { $rootScope } from 'ngimport';
 import { D1FarmingService } from '../farming/farming.service';
 import { D2FarmingService } from '../farming/d2farming.service';
 import { makeRoomForPostmaster, pullFromPostmaster, pullablePostmasterItems } from './postmaster';
@@ -98,8 +97,6 @@ class LoadoutPopup extends React.Component<Props> {
       (hasClassified ? '*' : '');
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
-
-    // TODO: kill dim-save-loadout dim-edit-loadout
 
     return (
       <div className="loadout-popup-content" onClick={onClick}>
@@ -228,7 +225,10 @@ class LoadoutPopup extends React.Component<Props> {
               >
                 <i className="fa fa-trash-o" />
               </span>
-              <span title={t('Loadouts.Edit')} onClick={() => this.editLoadout(loadout)}>
+              <span
+                title={t('Loadouts.Edit')}
+                onClick={() => this.editLoadout(loadout, { isNew: false })}
+              >
                 <i className="fa fa-pencil" />
               </span>
             </li>
@@ -285,11 +285,8 @@ class LoadoutPopup extends React.Component<Props> {
     }
   };
 
-  private editLoadout = (loadout: Loadout) => {
-    $rootScope.$broadcast('dim-edit-loadout', {
-      loadout,
-      showClass: true
-    });
+  private editLoadout = (loadout: Loadout, { isNew = true } = {}) => {
+    dimLoadoutService.editLoadout(loadout, { showClass: true, isNew });
   };
 
   // TODO: move all these fancy loadouts to a new service

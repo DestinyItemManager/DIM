@@ -14,7 +14,7 @@ import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';
-import { $rootScope, $q } from 'ngimport';
+import { $q } from 'ngimport';
 import { loadingTracker, toaster } from '../ngimport-more';
 import { IPromise } from 'angular';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
@@ -245,7 +245,6 @@ function StoreService(): D1StoreServiceType {
       })
       .finally(() => {
         D1ManifestService.loaded = true;
-        $rootScope.$broadcast('dim-filter-invalidate');
       });
 
     loadingTracker.addPromise(reloadPromise);
