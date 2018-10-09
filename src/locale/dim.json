@@ -398,7 +398,6 @@
     "Vendor": "Include Vendor items"
   },
   "LoadoutBuilder": {
-    "ArmorPower": "Armor power: {{power}}",
     "BurnTypeArc": "Arc",
     "BurnTypeNone": "None",
     "BurnTypeSolar": "Solar",

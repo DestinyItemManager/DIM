@@ -15,7 +15,7 @@ interface Props {
   tag?: TagValue;
   rating?: number;
   hideRating?: boolean;
-  searchHidden: boolean;
+  searchHidden?: boolean;
   onShiftClicked?(item: DimItem): void;
 }
 

@@ -1,19 +1,15 @@
 import { t } from 'i18next';
-import * as React from 'react';
-import * as _ from 'underscore';
-import BungieImage from '../../dim-ui/BungieImage';
-import PressTip from '../../dim-ui/PressTip';
-import { Loadout } from '../../loadout/loadout.service';
-import { ArmorSet, LockedItemType } from '../types';
-import { filterPlugs, getSetsForTier, getSetTiers } from './utils';
-import GeneratedSetButtons from './GeneratedSetButtons';
-import PlugTooltip from './PlugTooltip';
-import { DimStore } from '../../inventory/store-types';
-import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { $rootScope } from 'ngimport';
-import ExcludableItem from '../locked-armor/popup/ExcludableItem';
+import * as React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
+import { DimStore } from '../../inventory/store-types';
+import { Loadout } from '../../loadout/loadout.service';
+import LoadoutDrawer from '../../loadout/LoadoutDrawer';
+import { ArmorSet, LockedItemType } from '../types';
+import GeneratedSetButtons from './GeneratedSetButtons';
+import GeneratedSetItem from './GeneratedSetItem';
+import { getSetsForTier, getSetTiers } from './utils';
 
 interface Props {
   processRunning: number;
@@ -150,29 +146,12 @@ export default class GeneratedSets extends React.Component<Props, State> {
             />
             <div className="sub-bucket">
               {Object.values(set.armor).map((item) => (
-                <div className="generated-build-items" key={item.index}>
-                  <ExcludableItem
-                    item={item}
-                    locked={lockedMap[item.bucket.hash]}
-                    onExclude={this.toggleLockedItem}
-                  />
-                  {item!.sockets &&
-                    item!.sockets!.categories.length === 2 &&
-                    // TODO: look at plugs that we filtered on to see if they match selected perk or not.
-                    item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
-                      <PressTip
-                        key={socket!.plug!.plugItem.hash}
-                        tooltip={<PlugTooltip item={item} socket={socket} />}
-                      >
-                        <div>
-                          <BungieImage
-                            className="item-mod"
-                            src={socket!.plug!.plugItem.displayProperties.icon}
-                          />
-                        </div>
-                      </PressTip>
-                    ))}
-                </div>
+                <GeneratedSetItem
+                  key={item.index}
+                  item={item}
+                  locked={lockedMap[item.bucket.hash]}
+                  onExclude={this.toggleLockedItem}
+                />
               ))}
             </div>
           </div>
