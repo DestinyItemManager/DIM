@@ -9,6 +9,7 @@ export interface LockedItemType {
 }
 
 export interface ArmorSet {
+  id: number;
   armor: D2Item[];
   power: number;
   tiers: string[];

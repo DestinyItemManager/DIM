@@ -128,8 +128,8 @@ export default class GeneratedSets extends React.Component<Props, State> {
         </select>
 
         <h3>{t('LoadoutBuilder.GeneratedBuilds')}</h3>
-        {matchedSets.slice(0, shownSets).map((set, index) => (
-          <div className="generated-build" key={index}>
+        {matchedSets.slice(0, shownSets).map((set) => (
+          <div className="generated-build" key={set.id}>
             <GeneratedSetButtons
               set={set}
               store={selectedStore!}
