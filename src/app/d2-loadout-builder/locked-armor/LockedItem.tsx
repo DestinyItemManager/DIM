@@ -3,9 +3,8 @@ import { t } from 'i18next';
 import * as React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import InventoryItem from '../../inventory/InventoryItem';
-import { D2Item } from '../../inventory/item-types';
-import ItemPopupTrigger from '../../inventory/ItemPopupTrigger';
+import { isInventoryItemDefinition, isD2Item } from '../generated-sets/utils';
+import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType } from '../types';
 import './lockeditem.scss';
 
@@ -16,11 +15,13 @@ import './lockeditem.scss';
 export default function LockedItem({
   locked,
   bucket,
-  toggleOpen
+  toggleOpen,
+  onExclude
 }: {
   locked?: LockedItemType[];
   bucket: InventoryBucket;
   toggleOpen(): void;
+  onExclude(excludedItem: LockedItemType): void;
 }) {
   // Nothing locked
   if (!locked) {
@@ -63,23 +64,19 @@ export default function LockedItem({
   const lockedItem = locked[0];
 
   // one item locked/excluded
-  if (lockedItem.type === 'item') {
-    return (
-      <ItemPopupTrigger item={lockedItem.item as D2Item}>
-        <InventoryItem item={lockedItem.item as D2Item} />
-      </ItemPopupTrigger>
-    );
+  if (lockedItem.type === 'item' && isD2Item(lockedItem.item)) {
+    return <LoadoutBuilderItem item={lockedItem.item} locked={locked} onExclude={onExclude} />;
   }
 
   // one perk locked
-  if (lockedItem.type === 'perk') {
+  if (lockedItem.type === 'perk' && isInventoryItemDefinition(lockedItem.item)) {
     return (
       <div onClick={toggleOpen}>
         <BungieImage
           key={lockedItem.item.hash}
           className="empty-item"
-          title={(lockedItem.item as any).displayProperties.name}
-          src={(lockedItem.item as any).displayProperties.icon}
+          title={lockedItem.item.displayProperties.name}
+          src={lockedItem.item.displayProperties.icon}
         />
       </div>
     );

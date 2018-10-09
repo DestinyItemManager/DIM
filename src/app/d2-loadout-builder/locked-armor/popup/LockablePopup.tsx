@@ -8,6 +8,7 @@ import { D2Item } from '../../../inventory/item-types';
 import { LockedItemType } from '../../types';
 import LockableItems from './LockableItemsTab';
 import LockablePerks from './LockablePerksTab';
+import { toggleLockedItem } from '../../generated-sets/utils';
 
 interface Props {
   bucket: InventoryBucket;
@@ -44,22 +45,7 @@ export default class LockablePopup extends React.Component<Props, State> {
   };
 
   toggleLockedItem = (lockedItem: LockedItemType) => {
-    let newLockedItems: LockedItemType[] = [];
-    if (this.props.locked && this.props.locked[0].type !== 'item') {
-      newLockedItems = this.props.locked;
-    }
-
-    const existingIndex = newLockedItems.findIndex((existing) => existing.item === lockedItem.item);
-    if (existingIndex > -1) {
-      newLockedItems.splice(existingIndex, 1);
-    } else {
-      newLockedItems.push(lockedItem);
-    }
-
-    this.props.onLockChanged(
-      this.props.bucket,
-      newLockedItems.length === 0 ? undefined : newLockedItems
-    );
+    toggleLockedItem(lockedItem, this.props.bucket, this.props.onLockChanged, this.props.locked);
   };
 
   render() {
@@ -91,7 +77,7 @@ export default class LockablePopup extends React.Component<Props, State> {
         </div>
 
         {tabSelected === 'items' && (
-          <LockableItems {...{ items, locked, toggleExcludeItem: this.toggleLockedItem }} />
+          <LockableItems items={items} locked={locked} toggleExcludeItem={this.toggleLockedItem} />
         )}
         {tabSelected === 'perks' && (
           <LockablePerks

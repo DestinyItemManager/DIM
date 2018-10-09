@@ -8,6 +8,7 @@ import LoadoutBucketDropTarget from './LoadoutBucketDropTarget';
 import './lockedarmor.scss';
 import LockedItem from './LockedItem';
 import LockablePopup from './popup/LockablePopup';
+import { toggleLockedItem } from '../generated-sets/utils';
 
 interface Props {
   bucket: InventoryBucket;
@@ -43,6 +44,10 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     ]);
   };
 
+  toggleLockedItem = (lockedItem: LockedItemType) => {
+    toggleLockedItem(lockedItem, this.props.bucket, this.props.onLockChanged, this.props.locked);
+  };
+
   reset = () => {
     this.props.onLockChanged(this.props.bucket);
   };
@@ -55,7 +60,12 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
       <div className="locked-item">
         <LoadoutBucketDropTarget bucketType={bucket.type!} onItemLocked={this.setLockedItem}>
           {locked && locked.length !== 0 && <div className="close" onClick={this.reset} />}
-          <LockedItem {...{ locked, bucket, toggleOpen: this.openPerkSelect }} />
+          <LockedItem
+            locked={locked}
+            bucket={bucket}
+            toggleOpen={this.openPerkSelect}
+            onExclude={this.toggleLockedItem}
+          />
         </LoadoutBucketDropTarget>
         <LockablePopup
           bucket={bucket}

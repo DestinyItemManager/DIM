@@ -2,14 +2,13 @@ import { t } from 'i18next';
 import { $rootScope } from 'ngimport';
 import * as React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import { D2Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
 import { Loadout } from '../../loadout/loadout.service';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { ArmorSet, LockedItemType } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import { getSetsForTier, getSetTiers } from './utils';
+import { getSetsForTier, getSetTiers, toggleLockedItem, isD2Item } from './utils';
 
 interface Props {
   processRunning: number;
@@ -64,20 +63,16 @@ export default class GeneratedSets extends React.Component<Props, State> {
   };
 
   toggleLockedItem = (lockedItem: LockedItemType) => {
-    let newLockedItems: LockedItemType[] = [];
-    const bucket = (lockedItem.item as D2Item).bucket;
-    if (this.props.lockedMap[bucket.hash] && this.props.lockedMap[bucket.hash][0].type !== 'item') {
-      newLockedItems = this.props.lockedMap[bucket.hash];
+    if (!isD2Item(lockedItem.item)) {
+      return;
     }
-
-    const existingIndex = newLockedItems.findIndex((existing) => existing.item === lockedItem.item);
-    if (existingIndex > -1) {
-      newLockedItems.splice(existingIndex, 1);
-    } else {
-      newLockedItems.push(lockedItem);
-    }
-
-    this.props.onLockChanged(bucket, newLockedItems.length === 0 ? undefined : newLockedItems);
+    const bucket = lockedItem.item.bucket;
+    toggleLockedItem(
+      lockedItem,
+      bucket,
+      this.props.onLockChanged,
+      this.props.lockedMap[bucket.hash]
+    );
   };
 
   render() {
