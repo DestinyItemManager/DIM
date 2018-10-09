@@ -1,5 +1,7 @@
 # Next
 
+# 4.73.1 (2018-10-08)
+
 # 4.73.0 (2018-10-07)
 
 * Added `is:heroic` search filter for armor with heroic resistance.
