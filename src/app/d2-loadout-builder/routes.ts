@@ -1,12 +1,20 @@
 import { ReactStateDeclaration } from '@uirouter/react';
-import LoadoutBuilder from './LoadoutBuilder';
 
-export const states: ReactStateDeclaration[] = $featureFlags.d2LoadoutBuilder
-  ? [
-      {
-        name: 'destiny2.loadoutbuilder',
-        component: LoadoutBuilder,
-        url: '/loadoutbuilder'
-      }
-    ]
-  : [];
+export const states: ReactStateDeclaration[] = [
+  {
+    name: 'destiny2.loadoutbuilder.**',
+    lazyLoad: async () => {
+      // tslint:disable-next-line:space-in-parens
+      const module = await import(/* webpackChunkName: "loadoutBuilder" */ './LoadoutBuilder');
+      return {
+        states: [
+          {
+            name: 'destiny2.loadoutbuilder',
+            url: '/loadoutbuilder',
+            component: module.default
+          }
+        ]
+      };
+    }
+  }
+];
