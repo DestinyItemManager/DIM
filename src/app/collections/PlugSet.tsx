@@ -1,6 +1,6 @@
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';

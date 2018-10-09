@@ -4,12 +4,12 @@ import './storage.scss';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 import { StorageAdapter, SyncService } from './sync.service';
 import { router } from '../../router';
-import { $rootScope } from 'ngimport';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import classNames from 'classnames';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { dataStats } from './data-stats';
+import { Subscriptions } from '../rx-utils';
 import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
 
@@ -36,7 +36,7 @@ export default class StorageSettings extends React.Component<{}, State> {
     browserMayClearData: true,
     adapterStats: {}
   };
-  private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
   private fileInput = React.createRef<HTMLInputElement>();
 
   componentDidMount() {
@@ -52,27 +52,25 @@ export default class StorageSettings extends React.Component<{}, State> {
         this.setState({ browserMayClearData: !persistent });
       });
     }
-    // TODO: observable?
-    this.$scope.$on('gdrive-sign-in', () => {
-      if (router.globals.params.gdrive === 'true') {
-        this.forceSync().then(() =>
-          router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
-        );
-      }
-    });
-    // TODO: problematic
-    SyncService.adapters.forEach((adapter) => {
-      this.$scope.$watch(
-        () => adapter.enabled,
-        () => {
-          this.refreshAdapter(adapter);
+    this.subscriptions.add(
+      SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
+        if (router.globals.params.gdrive === 'true') {
+          this.forceSync().then(() =>
+            router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
+          );
         }
-      );
-    });
+      }),
+
+      SyncService.GoogleDriveStorage.enabled$.subscribe(() => {
+        this.refreshAdapter(SyncService.GoogleDriveStorage);
+      })
+    );
+
+    SyncService.adapters.filter((adapter) => adapter.enabled).forEach(this.refreshAdapter);
   }
 
   componentWillUnmount() {
-    this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
   }
 
   render() {

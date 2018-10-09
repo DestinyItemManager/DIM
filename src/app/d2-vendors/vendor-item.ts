@@ -13,13 +13,12 @@ import {
   DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { equals } from 'angular';
 import { makeItem } from '../inventory/store/d2-item-factory.service';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2Item } from '../inventory/item-types';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
-import { sum } from '../util';
+import * as _ from 'lodash';
 
 /**
  * A displayable vendor item. The only state it holds is raw responses/definitions - all
@@ -329,7 +328,7 @@ export class VendorItem {
       this.itemComponents.objectives.data[this.inventoryItem.hash]
     ) {
       const objectives = this.itemComponents.objectives.data[this.inventoryItem.hash].objectives;
-      return sum(objectives, (objective) => {
+      return _.sumBy(objectives, (objective) => {
         if (objective.completionValue) {
           return (
             Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length
@@ -348,8 +347,7 @@ export class VendorItem {
       this.vendorItemDef === other.vendorItemDef &&
       this.canPurchase === other.canPurchase &&
       this.rating === other.rating &&
-      // Deep equals
-      equals(this.saleItem, other.saleItem)
+      this.saleItem === other.saleItem
     );
   }
 

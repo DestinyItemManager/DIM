@@ -1,12 +1,12 @@
-import { copy as angularCopy } from 'angular';
+import copy from 'fast-copy';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
   DestinyStatDefinition
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
-import { count, sum } from '../../util';
+import { count } from '../../util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
@@ -32,7 +32,7 @@ const StoreProto = {
    * excluding stuff in the postmaster.
    */
   amountOfItem(this: D2Store, item: D2Item) {
-    return sum(this.items, (i) => {
+    return _.sumBy(this.items, (i) => {
       return i.hash === item.hash && (!i.location || !i.location.inPostmaster) ? i.amount : 0;
     });
   },
@@ -126,7 +126,7 @@ const StoreProto = {
     const allItems = (this.items as D2Item[])
       .filter((item) => item.canBeInLoadout())
       // tslint:disable-next-line:no-unnecessary-callback-wrapper
-      .map((item) => angularCopy(item));
+      .map((item) => copy(item));
     return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
   },
 
@@ -220,9 +220,8 @@ export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
       }
       const vaultBucket = item.bucket.vaultBucket;
       const usedSpace = item.bucket.vaultBucket
-        ? count(
-            this.items as D2Item[],
-            (i) => i.bucket.vaultBucket && i.bucket.vaultBucket.id === vaultBucket.id
+        ? count(this.items, (i) =>
+            Boolean(i.bucket.vaultBucket && i.bucket.vaultBucket.id === vaultBucket.id)
           )
         : 0;
       const openStacks = Math.max(0, this.capacityForItem(item) - usedSpace);

@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { error, httpAdapter, DimError } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';

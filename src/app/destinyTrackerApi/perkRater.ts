@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { D1GridNode, D1Item } from '../inventory/item-types';
 import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 
@@ -69,7 +69,7 @@ function getMaxColumn(item: D1Item): number | undefined {
     return undefined;
   }
 
-  return _.max(item.talentGrid.nodes, (node) => node.column).column;
+  return _.maxBy(item.talentGrid.nodes, (node) => node.column)!.column;
 }
 
 function getPerkNodesInColumn(item: D1Item, column): D1GridNode[] {
@@ -77,7 +77,7 @@ function getPerkNodesInColumn(item: D1Item, column): D1GridNode[] {
     return [];
   }
 
-  return _.where(item.talentGrid.nodes, { column });
+  return item.talentGrid.nodes.filter((n) => n.column === column);
 }
 
 function getPerkRatingsAndReviewCount(
@@ -88,7 +88,7 @@ function getPerkRatingsAndReviewCount(
 
   const ratingCount = matchingReviews.length;
   const averageReview =
-    _.pluck(matchingReviews, 'rating').reduce((memo, num) => memo + num, 0) /
+    matchingReviews.map((r) => r.rating).reduce((memo, num) => memo + num, 0) /
       matchingReviews.length || 1;
 
   const ratingAndReview = {

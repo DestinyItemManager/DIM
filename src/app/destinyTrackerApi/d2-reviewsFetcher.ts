@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { getActivePlatform } from '../accounts/platform.service';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { loadingTracker } from '../ngimport-more';

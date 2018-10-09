@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import template from './talent-grid.html';
 import './talent-grid.scss';
 import { IComponentOptions, IController, IAngularEvent } from 'angular';
@@ -44,18 +44,18 @@ function TalentGridCtrl(
   vm.$onInit = () => {
     vm.hiddenColumns = 0;
     if (vm.perksOnly) {
-      if (_.find(vm.talentGrid.nodes, { hash: infuseHash })) {
+      if (_.find(vm.talentGrid.nodes, (n) => n.hash === infuseHash)) {
         vm.hiddenColumns += 1;
       }
-      if (_.find(vm.talentGrid.nodes, { hash: 2133116599 })) {
+      if (_.find(vm.talentGrid.nodes, (n) => n.hash === 2133116599)) {
         vm.hiddenColumns += 1;
       }
     }
 
     if (vm.talentGrid) {
       const visibleNodes = vm.talentGrid.nodes.filter((n) => !n.hidden);
-      vm.numColumns = _.max(visibleNodes, (n) => n.column).column + 1 - vm.hiddenColumns;
-      vm.numRows = vm.perksOnly ? 2 : _.max(visibleNodes, (n) => n.row).row + 1;
+      vm.numColumns = _.maxBy(visibleNodes, (n) => n.column)!.column + 1 - vm.hiddenColumns;
+      vm.numRows = vm.perksOnly ? 2 : _.maxBy(visibleNodes, (n) => n.row)!.row + 1;
     }
   };
 }

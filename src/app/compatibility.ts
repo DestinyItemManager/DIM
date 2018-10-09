@@ -1,7 +1,7 @@
 import { t } from 'i18next';
 import { $rootScope } from 'ngimport';
 import { toaster } from './ngimport-more';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 
 /**
  * Test and alert if crucial functionality is missing.

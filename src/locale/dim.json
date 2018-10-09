@@ -172,8 +172,8 @@
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",
     "Class": "Shows items based on their class affinty.",
-    "ClickFilters": "Click filters below to apply, or by typing in the search box.",
-    "Combine": "Filters are combined using 'and' logic, for example '{{example}}' will return all arc items with over 300 light.",
+    "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
+    "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Shows items that have light and can contribute to your light level.",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "DamageType": "Shows items based on their damage type.",
@@ -206,11 +206,11 @@
     "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
     "Locked": "Shows items based on their locked status.",
     "NamedStat": "Shows armor that has points in the named stat.",
-    "Negate": "Filters can be negated using '{{not}}', for example '{{notexample}}' will find all non-engram items. For text searches, use the dash, for example -\"Triple Tap\" will find all weapons without the Triple Tap perk.",
+    "Negate": "To negate a search, prefix that search term with a minus sign: {{notexample}} will find all non-engram items.",
     "NewItems": "Shows new items.",
     "Notes": "Search for items that you have tagged with custom notes",
     "Ornament": "Shows items with ornaments and filters for their status.",
-    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Also, you can search for phrases using quotes.",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
@@ -251,10 +251,14 @@
       "Shipwright": "Shipwright",
       "Speaker": "Speaker"
     },
-    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
+    "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
-    "Year": "Shows items from which year of Destiny they appeared in."
+    "Year": "Shows items from which year of Destiny they appeared in.",
+    "LockAllSuccess": "Locked {{num}} items",
+    "UnlockAllSuccess": "Unlocked {{num}} items",
+    "LockAllFailed": "Failed to lock items",
+    "UnlockAllFailed": "Failed to unlock items"
   },
   "Header": {
     "About": "About",
@@ -394,7 +398,6 @@
     "Vendor": "Include Vendor items"
   },
   "LoadoutBuilder": {
-    "ArmorPower": "Armor power: {{power}}",
     "BurnTypeArc": "Arc",
     "BurnTypeNone": "None",
     "BurnTypeSolar": "Solar",
@@ -685,7 +688,10 @@
     "Infuse": "Infuse",
     "Junk": "Junk",
     "Keep": "Keep",
-    "TagItem": "Tag Item"
+    "TagItem": "Tag Item",
+    "TagItems": "Tag Items",
+    "LockAll": "Lock Items",
+    "UnlockAll": "Unlock Items"
   },
   "TrialsCard": {
     "FiveWins": "5 Win Reward (Armor)",

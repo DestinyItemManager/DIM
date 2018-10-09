@@ -1,5 +1,4 @@
-import * as _ from 'underscore';
-import { sum, flatMap } from '../util';
+import * as _ from 'lodash';
 import * as idbKeyval from 'idb-keyval';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
@@ -7,7 +6,8 @@ import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.ser
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { processItems } from '../inventory/store/d1-item-factory.service';
-import { IPromise, copy } from 'angular';
+import { IPromise } from 'angular';
+import copy from 'fast-copy';
 import { D1Store } from '../inventory/store-types';
 import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
@@ -15,6 +15,7 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { $rootScope, $q } from 'ngimport';
 import { loadingTracker } from '../ngimport-more';
+import { D1ManifestService } from '../manifest/manifest-service';
 import { handleLocalStorageFullError } from '../compatibility';
 
 /*
@@ -193,7 +194,7 @@ function VendorService(): VendorServiceType {
     .publishReplay(1);
 
   const clearVendors = _.once(() => {
-    $rootScope.$on('dim-new-manifest', () => {
+    D1ManifestService.newManifest$.subscribe(() => {
       service.vendors = {};
       service.vendorsLoaded = false;
       deleteCachedVendors();
@@ -253,14 +254,14 @@ function VendorService(): VendorServiceType {
 
         return $q.all(
           _.flatten(
-            vendorList.map((vendorDef) => {
+            vendorList.map(async (vendorDef) => {
               if (vendorBlackList.includes(vendorDef.hash)) {
                 return null;
               }
 
               if (
                 service.vendors[vendorDef.hash] &&
-                _.all(stores, (store) =>
+                stores.every((store) =>
                   cachedVendorUpToDate(
                     service.vendors[vendorDef.hash].cacheKeys[store.id],
                     store,
@@ -326,7 +327,7 @@ function VendorService(): VendorServiceType {
       mergedVendor.hasBounties = mergedVendor.hasBounties || vendor.hasBounties;
     });
 
-    mergedVendor.allItems = _.flatten(mergedVendor.categories.map((i) => i.saleItems), true);
+    mergedVendor.allItems = _.flatten(mergedVendor.categories.map((i) => i.saleItems));
 
     return mergedVendor;
   }
@@ -542,7 +543,7 @@ function VendorService(): VendorServiceType {
       hasBounties: false
     };
 
-    const saleItems: any[] = flatMap(
+    const saleItems: any[] = _.flatMap(
       vendor.saleItemCategories,
       (categoryData: any) => categoryData.saleItems
     );
@@ -552,40 +553,42 @@ function VendorService(): VendorServiceType {
     });
 
     return processItems({ id: null } as any, saleItems.map((i) => i.item)).then((items) => {
-      const itemsById = _.indexBy(items, 'id');
+      const itemsById = _.keyBy(items, (i) => i.id);
       const categories = _.compact(
         _.map(vendor.saleItemCategories, (category: any) => {
           const categoryInfo = vendorDef.categories[category.categoryIndex];
-          if (_.contains(categoryBlacklist, categoryInfo.categoryHash)) {
+          if (categoryBlacklist.includes(categoryInfo.categoryHash)) {
             return null;
           }
 
-          const categoryItems = category.saleItems.map((saleItem) => {
-            const unlocked = isSaleItemUnlocked(saleItem);
-            return {
-              index: saleItem.vendorItemIndex,
-              costs: saleItem.costs
-                .map((cost) => {
-                  return {
-                    value: cost.value,
-                    currency: _.pick(
-                      defs.InventoryItem.get(cost.itemHash),
-                      'itemName',
-                      'icon',
-                      'itemHash'
-                    )
-                  };
-                })
-                .filter((c) => c.value > 0),
-              item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
-              // TODO: caveat, this won't update very often!
-              unlocked,
-              unlockedByCharacter: unlocked ? [store.id] : [],
-              failureStrings: saleItem.failureIndexes
-                .map((i) => vendorDef.failureStrings[i])
-                .join('. ')
-            };
-          });
+          const categoryItems: any[] = _.compact(
+            category.saleItems.map((saleItem) => {
+              const unlocked = isSaleItemUnlocked(saleItem);
+              return {
+                index: saleItem.vendorItemIndex,
+                costs: saleItem.costs
+                  .map((cost) => {
+                    return {
+                      value: cost.value,
+                      currency: _.pick(
+                        defs.InventoryItem.get(cost.itemHash),
+                        'itemName',
+                        'icon',
+                        'itemHash'
+                      )
+                    };
+                  })
+                  .filter((c) => c.value > 0),
+                item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
+                // TODO: caveat, this won't update very often!
+                unlocked,
+                unlockedByCharacter: unlocked ? [store.id] : [],
+                failureStrings: saleItem.failureIndexes
+                  .map((i) => vendorDef.failureStrings[i])
+                  .join('. ')
+              };
+            })
+          );
 
           let hasArmorWeaps = false;
           let hasVehicles = false;
@@ -643,12 +646,12 @@ function VendorService(): VendorServiceType {
 
       createdVendor.categories = categories;
 
-      createdVendor.hasArmorWeaps = _.any(categories, (c) => c.hasArmorWeaps);
-      createdVendor.hasVehicles = _.any(categories, (c) => c.hasVehicles);
-      createdVendor.hasShadersEmbs = _.any(categories, (c) => c.hasShadersEmbs);
-      createdVendor.hasEmotes = _.any(categories, (c) => c.hasEmotes);
-      createdVendor.hasConsumables = _.any(categories, (c) => c.hasConsumables);
-      createdVendor.hasBounties = _.any(categories, (c) => c.hasBounties);
+      createdVendor.hasArmorWeaps = _.some(categories, (c) => c.hasArmorWeaps);
+      createdVendor.hasVehicles = _.some(categories, (c) => c.hasVehicles);
+      createdVendor.hasShadersEmbs = _.some(categories, (c) => c.hasShadersEmbs);
+      createdVendor.hasEmotes = _.some(categories, (c) => c.hasEmotes);
+      createdVendor.hasConsumables = _.some(categories, (c) => c.hasConsumables);
+      createdVendor.hasBounties = _.some(categories, (c) => c.hasBounties);
 
       return createdVendor;
     });
@@ -682,9 +685,9 @@ function VendorService(): VendorServiceType {
       return {};
     }
 
-    const categories = flatMap(Object.values(vendors), (v) => v.categories);
-    const saleItems = flatMap(categories, (c) => c.saleItems);
-    const costs = flatMap(saleItems, (i: any) => i.costs);
+    const categories = _.flatMap(Object.values(vendors), (v) => v.categories);
+    const saleItems = _.flatMap(categories, (c) => c.saleItems);
+    const costs = _.flatMap(saleItems, (i: any) => i.costs);
     const currencies = costs.map((c: any) => c.currency.itemHash);
 
     const totalCoins: { [currencyHash: number]: number } = {};
@@ -701,7 +704,7 @@ function VendorService(): VendorServiceType {
           totalCoins[currencyHash] = D1StoresService.getVault()!.silver;
           break;
         default:
-          totalCoins[currencyHash] = sum(stores, (store) => {
+          totalCoins[currencyHash] = _.sumBy(stores, (store) => {
             return store.amountOfItem({ hash: currencyHash } as any);
           });
           break;

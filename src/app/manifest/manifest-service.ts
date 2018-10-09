@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import * as idbKeyval from 'idb-keyval';
 
 // For zip
@@ -14,12 +14,12 @@ import { reportException } from '../exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
 import { settings, settingsReady } from '../settings/settings';
-import { $rootScope } from 'ngimport';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
 import '../rx-operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 declare const zip: any;
 
@@ -46,6 +46,8 @@ class ManifestService {
     loaded: false
   };
   state$ = new BehaviorSubject<ManifestServiceState>(this.state);
+  /** A signal for when we've loaded a new remote manifest. */
+  newManifest$ = new Subject();
 
   /**
    * This tells users to reload the extension. It fires no more
@@ -53,19 +55,21 @@ class ManifestService {
    * version has actually changed.
    */
   warnMissingDefinition = _.debounce(
-    () => {
-      this.getManifestApi().then((data) => {
-        const language = settings.language;
-        const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+    async () => {
+      const data = await this.getManifestApi();
+      const language = settings.language;
+      const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
-        // The manifest has updated!
-        if (path !== this.version) {
-          toaster.pop('warning', t('Manifest.Outdated'), t('Manifest.OutdatedExplanation'));
-        }
-      });
+      // The manifest has updated!
+      if (path !== this.version) {
+        toaster.pop('warning', t('Manifest.Outdated'), t('Manifest.OutdatedExplanation'));
+      }
     },
     10000,
-    true
+    {
+      leading: true,
+      trailing: false
+    }
   );
 
   private manifestPromise: Promise<ManifestDB> | null = null;
@@ -95,18 +99,18 @@ class ManifestService {
 
     this.loaded = false;
 
-    this.manifestPromise = Promise.all([
-      requireSqlLib(), // load in the sql.js library
-      this.loadManifest()
-    ])
-      .then(([SQLLib, typedArray]) => {
+    this.manifestPromise = (async () => {
+      try {
+        const [SQLLib, typedArray] = await Promise.all([
+          requireSqlLib(), // load in the sql.js library
+          this.loadManifest()
+        ]);
         this.statusText = `${t('Manifest.Build')}...`;
         const db = new SQLLib.Database(typedArray);
         // do a small request, just to test it out
         this.getAllRecords(db, 'DestinyRaceDefinition');
         return db;
-      })
-      .catch((e) => {
+      } catch (e) {
         let message = e.message || e;
         const statusText = t('Manifest.Error', { error: message });
 
@@ -132,7 +136,8 @@ class ManifestService {
         console.error('Manifest loading error', { error: e }, e);
         reportException('manifest load', e);
         throw new Error(message);
-      });
+      }
+    })();
 
     return this.manifestPromise;
   }
@@ -160,63 +165,56 @@ class ManifestService {
     return result;
   }
 
-  private loadManifest(): Promise<Uint8Array> {
-    return Promise.all([
-      this.getManifestApi(),
-      settingsReady // wait for settings to be ready
-    ]).then(([data]: [DestinyManifest, {}]) => {
-      const language = settings.language;
-      const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+  private async loadManifest(): Promise<Uint8Array> {
+    const data = await this.getManifestApi();
+    await settingsReady; // wait for settings to be ready
+    const language = settings.language;
+    const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
-      // Use the path as the version, rather than the "version" field, because
-      // Bungie can update the manifest file without changing that version.
-      const version = path;
-      this.version = version;
+    // Use the path as the version, rather than the "version" field, because
+    // Bungie can update the manifest file without changing that version.
+    const version = path;
+    this.version = version;
 
-      return this.loadManifestFromCache(version).catch(() =>
-        this.loadManifestRemote(version, path)
-      );
-    });
+    try {
+      return this.loadManifestFromCache(version);
+    } catch (e) {
+      return this.loadManifestRemote(version, path);
+    }
   }
 
   /**
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
-  private loadManifestRemote(version, path): Promise<Uint8Array> {
+  private async loadManifestRemote(version, path): Promise<Uint8Array> {
     this.statusText = `${t('Manifest.Download')}...`;
 
-    return fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`)
-      .then((response) => (response.ok ? response.blob() : Promise.reject(response)))
-      .then((response: Blob) => {
-        this.statusText = `${t('Manifest.Unzip')}...`;
-        return unzipManifest(response);
-      })
-      .then((arraybuffer) => {
-        this.statusText = `${t('Manifest.Save')}...`;
-
-        const typedArray = new Uint8Array(arraybuffer);
-        // We intentionally don't wait on this promise
-        idbKeyval
-          .set(this.idbKey, typedArray)
-          .then(() => {
-            console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
-            localStorage.setItem(this.localStorageKey, version);
-          })
-          .then(null, (e) => {
-            console.error('Error saving manifest file', e);
-            toaster.pop(
-              {
-                title: t('Help.NoStorage'),
-                body: t('Help.NoStorageMessage'),
-                type: 'error'
-              },
-              0
-            );
-          });
-
-        $rootScope.$broadcast('dim-new-manifest');
-        return typedArray;
-      });
+    const response = await fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`);
+    const body = await (response.ok ? response.blob() : Promise.reject(response));
+    this.statusText = `${t('Manifest.Unzip')}...`;
+    const arraybuffer = await unzipManifest(body);
+    this.statusText = `${t('Manifest.Save')}...`;
+    const typedArray = new Uint8Array(arraybuffer);
+    // We intentionally don't wait on this promise
+    (async () => {
+      try {
+        await idbKeyval.set(this.idbKey, typedArray);
+        console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
+        localStorage.setItem(this.localStorageKey, version);
+      } catch (e) {
+        console.error('Error saving manifest file', e);
+        toaster.pop(
+          {
+            title: t('Help.NoStorage'),
+            body: t('Help.NoStorageMessage'),
+            type: 'error'
+          },
+          0
+        );
+      }
+    })();
+    this.newManifest$.next();
+    return typedArray;
   }
 
   private deleteManifestFile() {
@@ -228,7 +226,7 @@ class ManifestService {
    * Returns a promise for the cached manifest of the specified
    * version as a Uint8Array, or rejects.
    */
-  private loadManifestFromCache(version): Promise<Uint8Array> {
+  private async loadManifestFromCache(version): Promise<Uint8Array> {
     if (alwaysLoadRemote) {
       return Promise.reject(new Error('Testing - always load remote'));
     }
@@ -236,12 +234,11 @@ class ManifestService {
     this.statusText = `${t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
     if (currentManifestVersion === version) {
-      return idbKeyval.get(this.idbKey).then((typedArray: Uint8Array) => {
-        if (!typedArray) {
-          throw new Error('Empty cached manifest file');
-        }
-        return typedArray;
-      });
+      const typedArray = (await idbKeyval.get(this.idbKey)) as Uint8Array;
+      if (!typedArray) {
+        throw new Error('Empty cached manifest file');
+      }
+      return typedArray;
     } else {
       return Promise.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }

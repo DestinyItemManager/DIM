@@ -1,6 +1,5 @@
 import { t } from 'i18next';
-import * as _ from 'underscore';
-import { sum } from '../../util';
+import * as _ from 'lodash';
 import { ArmorSet, LockType } from '../types';
 
 /**
@@ -52,7 +51,7 @@ export function getSetsForTier(
       // Sort based on what sets have the most matched perks
       matchedSets.sort((a, b) => {
         return (
-          sum(b.armor, (item) => {
+          _.sumBy(b.armor, (item) => {
             if (!item || !item.sockets) {
               return 0;
             }
@@ -62,7 +61,7 @@ export function getSetsForTier(
               )
             ).length;
           }) -
-          sum(a.armor, (item) => {
+          _.sumBy(a.armor, (item) => {
             if (!item || !item.sockets) {
               return 0;
             }
@@ -93,7 +92,7 @@ export function getSetTiers(armorSets: ArmorSet[]): string[] {
 
   const tiers = _.each(
     _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-      return sum(tierString.split('/'), (num) => parseInt(num, 10));
+      return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
     }),
     (tier) => {
       tier.sort().reverse();
