@@ -324,7 +324,8 @@ module.exports = (env) => {
       new LodashModuleReplacementPlugin({
         collections: true,
         memoizing: true,
-        shorthands: true
+        shorthands: true,
+        flattening: true
       })
 
       // Enable if you want to debug the size of the chunks
