@@ -27,13 +27,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap !important;
+    .app-icon,
     .fa {
       width: 12px;
       margin-right: 5px;
       text-align: center;
-    }
-    img.fa {
-      transform: translateY(1px);
     }
   }
 
@@ -41,6 +39,7 @@
     padding: 0 12px;
     text-align: center;
     color: #888;
+    .app-icon,
     .fa {
       font-size: 1.2em;
     }
