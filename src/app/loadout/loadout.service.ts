@@ -106,7 +106,7 @@ function LoadoutService(): LoadoutServiceType {
     loadout: Loadout,
     { equipAll = false, showClass = true, isNew = true } = {}
   ) {
-    this.editLoadout$({
+    this.editLoadout$.next({
       loadout,
       equipAll,
       showClass,
@@ -115,7 +115,7 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   function addItemToLoadout(item: DimItem, $event) {
-    this.addItem$({
+    this.addItem$.next({
       item,
       clickEvent: $event
     });
