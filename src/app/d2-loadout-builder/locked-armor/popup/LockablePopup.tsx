@@ -43,10 +43,6 @@ export default class LockablePopup extends React.Component<Props, State> {
     this.props.onClose();
   };
 
-  reset = () => {
-    this.props.onLockChanged(this.props.bucket);
-  };
-
   toggleLockedItem = (lockedItem: LockedItemType) => {
     let newLockedItems: LockedItemType[] = [];
     if (this.props.locked && this.props.locked[0].type !== 'item') {
@@ -92,12 +88,6 @@ export default class LockablePopup extends React.Component<Props, State> {
             {t('LoadoutBuilder.LockPerksTabTitle')}
           </span>
           <div className="close" onClick={this.closePerkSelect} />
-          {locked &&
-            locked.length !== 0 && (
-              <button className="clear" onClick={this.reset}>
-                {t('LoadoutBuilder.ResetPerks')}
-              </button>
-            )}
         </div>
 
         {tabSelected === 'items' && (
