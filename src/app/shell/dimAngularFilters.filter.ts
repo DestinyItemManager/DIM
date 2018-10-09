@@ -47,16 +47,6 @@ mod.filter('bungieBackground', () => {
   };
 });
 
-/**
- * Filter a list of items down to only the equipped (or unequipped) items.
- * Usage: items | equipped:true
- */
-mod.filter('equipped', () => {
-  return function equipped(items: DimItem[], isEquipped: boolean) {
-    return (items || []).filter((item) => item.equipped === isEquipped);
-  };
-});
-
 function rarity(item: DimItem) {
   switch (item.tier) {
     case 'Exotic':
@@ -183,9 +173,6 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   default: (_a, _b) => 0
 };
 
-// tslint:disable-next-line:no-unnecessary-callback-wrapper
-mod.filter('sortItems', () => (items) => sortItems(items));
-
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
@@ -301,15 +288,6 @@ export function dtrRatingColor(value: number, property: string = 'color') {
 }
 
 mod.filter('dtrRatingColor', () => dtrRatingColor);
-
-/**
- * Reduce a string to its first letter.
- */
-mod.filter('firstLetter', () => {
-  return (str: string) => {
-    return str.substring(0, 1);
-  };
-});
 
 /**
  * Filter to turn a number into an array so that we can use ng-repeat
