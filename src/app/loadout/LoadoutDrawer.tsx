@@ -165,15 +165,10 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return null;
     }
 
-    // TODO: remove angular events
-
-    // TODO: show class if anything can be multi-class?
     const showClass = true;
 
     // TODO: take this from the event
     const isNew = false;
-
-    // TODO: animation
 
     const bucketTypes = Object.keys(buckets.byType);
 
@@ -190,6 +185,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 maxLength={50}
                 required={true}
                 type="search"
+                value={loadout.name}
                 placeholder={t('Loadouts.LoadoutName')}
               />{' '}
               {showClass && (
