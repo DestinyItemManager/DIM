@@ -177,7 +177,7 @@ class ManifestService {
     this.version = version;
 
     try {
-      return this.loadManifestFromCache(version);
+      return await this.loadManifestFromCache(version);
     } catch (e) {
       return this.loadManifestRemote(version, path);
     }
@@ -228,7 +228,7 @@ class ManifestService {
    */
   private async loadManifestFromCache(version): Promise<Uint8Array> {
     if (alwaysLoadRemote) {
-      return Promise.reject(new Error('Testing - always load remote'));
+      throw new Error('Testing - always load remote');
     }
 
     this.statusText = `${t('Manifest.Load')}...`;
@@ -240,7 +240,7 @@ class ManifestService {
       }
       return typedArray;
     } else {
-      return Promise.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
+      throw new Error(`version mismatch: ${version} ${currentManifestVersion}`);
     }
   }
 
