@@ -39,7 +39,7 @@ export function getSetsForTier(
   });
 
   // Sort based on power level
-  matchedSets.sort((a, b) => b.power - a.power);
+  let sortedSets = _.sortBy(matchedSets, (set) => -set.power);
 
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
@@ -52,33 +52,21 @@ export function getSetsForTier(
       return;
     }
     // Sort based on what sets have the most matched perks
-    matchedSets.sort((a, b) => {
-      return (
-        _.sumBy(b.armor, (item) => {
-          if (!item || !item.sockets) {
-            return 0;
-          }
-          return item.sockets.sockets.filter((slot) =>
-            slot.plugOptions.some((perk) =>
-              lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
-            )
-          ).length;
-        }) -
-        _.sumBy(a.armor, (item) => {
-          if (!item || !item.sockets) {
-            return 0;
-          }
-          return item.sockets.sockets.filter((slot) =>
-            slot.plugOptions.some((perk) =>
-              lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
-            )
-          ).length;
-        })
-      );
+    sortedSets = _.sortBy(sortedSets, (set) => {
+      return -_.sumBy(set.armor, (item) => {
+        if (!item || !item.sockets) {
+          return 0;
+        }
+        return item.sockets.sockets.filter((slot) =>
+          slot.plugOptions.some((perk) =>
+            lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
+          )
+        ).length;
+      });
     });
   });
 
-  return matchedSets;
+  return sortedSets;
 }
 
 /**
