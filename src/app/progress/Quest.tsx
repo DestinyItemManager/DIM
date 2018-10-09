@@ -1,12 +1,12 @@
 import { DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { sum } from '../util';
 import Objective from './Objective';
 import { Reward } from './Reward';
 import { t } from 'i18next';
 import MilestoneDisplay from './MilestoneDisplay';
 import Countdown from '../dim-ui/Countdown';
+import * as _ from 'lodash';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;
@@ -19,7 +19,7 @@ export default function Quest(props: QuestProps) {
 
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
-  const percentComplete = sum(objectives, (objective) => {
+  const percentComplete = _.sumBy(objectives, (objective) => {
     if (objective.completionValue) {
       return Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length;
     } else {

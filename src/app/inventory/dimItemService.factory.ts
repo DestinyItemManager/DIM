@@ -1,6 +1,6 @@
 import { IPromise } from 'angular';
 import copy from 'fast-copy';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import {
   equip as d1equip,
@@ -299,7 +299,7 @@ function ItemService(): ItemServiceType {
         // Not the same item
         i.id !== item.id &&
         // Not on the exclusion list
-        !_.any(exclusionsList, { id: i.id, hash: i.hash })
+        !exclusionsList.some((item) => item.id === i.id && item.hash === i.hash)
       );
     });
 
@@ -313,7 +313,7 @@ function ItemService(): ItemServiceType {
 
     // TODO: unify this value function w/ the others!
     const sortedCandidates = _.sortBy(candidates, (i) => {
-      let value = {
+      let value: number = {
         Legendary: 4,
         Rare: 3,
         Uncommon: 2,
@@ -677,8 +677,8 @@ function ItemService(): ItemServiceType {
         (s) => cachedSpaceLeft(s, candidate)
       ).reverse();
       otherNonVaultStores.push(storeService.getStore(item.owner)!);
-      const otherCharacterWithSpace = otherNonVaultStores.find((s) =>
-        cachedSpaceLeft(s, candidate)
+      const otherCharacterWithSpace = otherNonVaultStores.find(
+        (s) => cachedSpaceLeft(s, candidate) > 0
       );
 
       if (store.isVault) {
@@ -786,7 +786,7 @@ function ItemService(): ItemServiceType {
     }
 
     // How many moves (in amount, not stacks) are needed from each
-    const movesNeeded = {};
+    const movesNeeded: { [storeId: string]: number } = {};
     stores.forEach((s) => {
       if (storeReservations[s.id]) {
         movesNeeded[s.id] = Math.max(
@@ -796,7 +796,7 @@ function ItemService(): ItemServiceType {
       }
     });
 
-    if (!_.any(movesNeeded)) {
+    if (!Object.values(movesNeeded).some((m) => m > 0)) {
       return $q.resolve(true);
     } else if (store.isVault || triedFallback) {
       // Move aside one of the items that's in the way
@@ -813,7 +813,7 @@ function ItemService(): ItemServiceType {
       };
 
       // Move starting from the vault (which is always last)
-      const moves = _.pairs(movesNeeded)
+      const moves = Object.entries(movesNeeded)
         .reverse()
         .find(([_, moveAmount]) => moveAmount > 0)!;
       const moveAsideSource = storeService.getStore(moves[0])!;

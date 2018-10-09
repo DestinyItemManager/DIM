@@ -1,6 +1,5 @@
 import { IComponentOptions, IController } from 'angular';
-import * as _ from 'underscore';
-import { sum, flatMap } from '../util';
+import * as _ from 'lodash';
 import template from './vendor-item.html';
 import dialogTemplate from './vendor-item-dialog.html';
 import { D1StoresService } from '../inventory/d1-stores.service';
@@ -41,11 +40,11 @@ function VendorItemCtrl(this: IController, $scope, $element, ngDialog) {
     } else {
       const item = vm.saleItem.item;
 
-      const compareItems = flatMap(D1StoresService.getStores(), (store) => {
+      const compareItems = _.flatMap(D1StoresService.getStores(), (store) => {
         return store.items.filter((i) => i.hash === item.hash);
       });
 
-      const compareItemCount = sum(compareItems, (i) => i.amount);
+      const compareItemCount = _.sumBy(compareItems, (i) => i.amount);
 
       const itemElement = $element[0].getElementsByClassName('item')[0];
 
@@ -66,7 +65,7 @@ function VendorItemCtrl(this: IController, $scope, $element, ngDialog) {
               _.find(D1StoresService.getStores(), { id })
             ),
             compareItems,
-            compareItem: _.first(compareItems),
+            compareItem: _.take(compareItems),
             compareItemCount,
             setCompareItem(item) {
               this.compareItem = item;

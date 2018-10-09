@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DimItem, DimSockets } from './item-types';
 import { t } from 'i18next';
 
@@ -60,7 +60,7 @@ function buildSocketString(sockets: DimSockets): string {
 function buildNodeString(nodes) {
   let data = '';
   nodes.forEach((node) => {
-    if (_.contains(FILTER_NODE_NAMES, node.name)) {
+    if (FILTER_NODE_NAMES.includes(node.name)) {
       return;
     }
     data += node.name;

@@ -18,7 +18,7 @@ import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2Item } from '../inventory/item-types';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
-import { sum } from '../util';
+import * as _ from 'lodash';
 
 /**
  * A displayable vendor item. The only state it holds is raw responses/definitions - all
@@ -328,7 +328,7 @@ export class VendorItem {
       this.itemComponents.objectives.data[this.inventoryItem.hash]
     ) {
       const objectives = this.itemComponents.objectives.data[this.inventoryItem.hash].objectives;
-      return sum(objectives, (objective) => {
+      return _.sumBy(objectives, (objective) => {
         if (objective.completionValue) {
           return (
             Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length

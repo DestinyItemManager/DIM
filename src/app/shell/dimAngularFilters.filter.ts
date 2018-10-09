@@ -1,5 +1,5 @@
 import { module } from 'angular';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';

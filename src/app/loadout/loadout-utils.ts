@@ -1,6 +1,5 @@
 import copy from 'fast-copy';
-import * as _ from 'underscore';
-import { sum } from '../util';
+import * as _ from 'lodash';
 import { Loadout } from './loadout.service';
 import { DimItem } from '../inventory/item-types';
 import uuidv4 from 'uuid/v4';
@@ -20,24 +19,21 @@ export function optimalLoadout(
   bestItemFn: (item: DimItem) => number,
   name: string
 ): Loadout {
-  const itemsByType = _.groupBy(applicableItems, 'type');
+  const itemsByType = _.groupBy(applicableItems, (i) => i.type);
 
   // Pick the best item
-  let items = _.mapObject(itemsByType, (items) => _.max(items, bestItemFn));
+  let items = _.mapValues(itemsByType, (items) => _.maxBy(items, bestItemFn)!);
 
   // Solve for the case where our optimizer decided to equip two exotics
-  const getLabel = (i) => i.equippingLabel;
+  const getLabel = (i: DimItem) => i.equippingLabel;
   // All items that share an equipping label, grouped by label
-  const overlaps: _.Dictionary<DimItem[]> = _.groupBy(
-    Object.values(items).filter(getLabel),
-    getLabel
-  );
+  const overlaps = _.groupBy(Object.values(items).filter(getLabel), getLabel);
   _.each(overlaps, (overlappingItems) => {
     if (overlappingItems.length <= 1) {
       return;
     }
 
-    const options: _.Dictionary<DimItem>[] = [];
+    const options: { [x: string]: DimItem }[] = [];
     // For each item, replace all the others overlapping it with the next best thing
     for (const item of overlappingItems) {
       const option = copy(items);
@@ -49,7 +45,7 @@ export function optimalLoadout(
         // that may fail if there are ever mutual-exclusion items beyond exotics.
         const nonExotics = itemsByType[otherItem.type].filter((i) => !i.equippingLabel);
         if (nonExotics.length) {
-          option[otherItem.type] = _.max(nonExotics, bestItemFn);
+          option[otherItem.type] = _.maxBy(nonExotics, bestItemFn)!;
         } else {
           // this option isn't usable because we couldn't swap this exotic for any non-exotic
           optionValid = false;
@@ -63,7 +59,7 @@ export function optimalLoadout(
 
     // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
     if (options.length > 0) {
-      const bestOption = _.max(options, (opt) => sum(Object.values(opt), bestItemFn));
+      const bestOption = _.maxBy(options, (opt) => _.sumBy(Object.values(opt), bestItemFn))!;
       items = bestOption;
     }
   });

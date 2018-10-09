@@ -1,5 +1,5 @@
-import * as _ from 'underscore';
-import { sum, count } from '../../util';
+import * as _ from 'lodash';
+import { count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
 import copy from 'fast-copy';
@@ -48,7 +48,7 @@ const StoreProto = {
    * excluding stuff in the postmaster.
    */
   amountOfItem(this: D1Store, item: D1Item) {
-    return sum(
+    return _.sumBy(
       this.items.filter((i) => {
         return i.hash === item.hash && !i.location.inPostmaster;
       }),
@@ -232,7 +232,7 @@ export function makeCharacter(
         defs.Progression.get(prog.progressionHash),
         progressionMeta[prog.progressionHash]
       );
-      const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
+      const faction = _.find(defs.Faction, (f) => f.progressionHash === prog.progressionHash);
       if (faction) {
         prog.faction = faction;
       }

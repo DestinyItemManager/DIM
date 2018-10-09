@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { Loadout, dimLoadoutService } from '../../loadout/loadout.service';
 import { ArmorSet, LockType } from '../types';
 import { getSetsForTier, getSetTiers } from './utils';

@@ -10,7 +10,7 @@ import {
 import { t } from 'i18next';
 import * as React from 'react';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import CharacterTile, { characterIsCurrent } from './CharacterTile';
 import { Faction } from './Faction';

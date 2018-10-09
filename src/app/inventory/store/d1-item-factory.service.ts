@@ -1,5 +1,4 @@
-import * as _ from 'underscore';
-import { sum } from '../../util';
+import * as _ from 'lodash';
 // tslint:disable-next-line:no-implicit-dependencies
 import missingSources from 'app/data/missing_sources.json';
 import { getClass, getBonus } from './character-utils';
@@ -434,7 +433,7 @@ function makeItem(
     createdItem.complete =
       (!createdItem.talentGrid || createdItem.complete) &&
       createdItem.objectives.every((o) => o.complete);
-    createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
+    createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
       if (objective.completionValue) {
         return Math.min(1, objective.progress / objective.completionValue) / objectives.length;
       } else {
@@ -579,7 +578,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
         // If only one can be activated, the cost only needs to be
         // paid once per row.
         (exclusiveInColumn &&
-          _.any(talentNodeGroup.exlusiveWithNodes, (nodeIndex: number) => {
+          _.some(talentNodeGroup.exlusiveWithNodes, (nodeIndex: number) => {
             return item.nodes[nodeIndex].isActivated;
           }));
 
@@ -689,7 +688,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   ) as D1GridNode[];
 
   // We need to unique-ify because Ornament nodes show up twice!
-  gridNodes = _.uniq(_.compact(gridNodes), false, (n) => n.hash);
+  gridNodes = _.uniqBy(_.compact(gridNodes), (n) => n.hash);
 
   if (!gridNodes.length) {
     return null;
@@ -698,23 +697,23 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   // This can be handy for visualization/debugging
   // var columns = _.groupBy(gridNodes, 'column');
 
-  const maxLevelRequired = _.max(gridNodes, (n: any) => n.activatedAtGridLevel)
+  const maxLevelRequired = _.maxBy(gridNodes, (n: any) => n.activatedAtGridLevel)
     .activatedAtGridLevel;
   const totalXPRequired = xpToReachLevel(maxLevelRequired);
 
   const ascendNode: any = _.find(gridNodes, { hash: 1920788875 });
 
   // Fix for stuff that has nothing in early columns
-  const minColumn = _.min(_.reject(gridNodes, (n: any) => n.hidden), (n: any) => n.column).column;
+  const minColumn = _.minBy(_.reject(gridNodes, (n: any) => n.hidden), (n: any) => n.column).column;
   if (minColumn > 0) {
     gridNodes.forEach((node) => {
       node.column -= minColumn;
     });
   }
-  const maxColumn = _.max(gridNodes, (n: any) => n.column).column;
+  const maxColumn = _.maxBy(gridNodes, (n: any) => n.column).column;
 
   return {
-    nodes: _.sortBy(gridNodes, (node: any) => node.column + 0.1 * node.row),
+    nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),
     xpComplete: totalXPRequired <= totalXP,
     totalXPRequired,
     totalXP: Math.min(totalXPRequired, totalXP),
@@ -725,7 +724,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
     dtrRoll: _.compact(gridNodes.map((i) => i.dtrRoll)).join(';'),
     complete:
       totalXPRequired <= totalXP &&
-      _.all(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
+      _.every(gridNodes, (n: any) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
   };
 }
 

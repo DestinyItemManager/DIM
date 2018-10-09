@@ -1,6 +1,6 @@
 import { IPromise } from 'angular';
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { getDefinitions } from './d2-definitions.service';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 
@@ -62,7 +62,7 @@ _.each(D2Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.memoize(getBucketsUncached) as () => IPromise<InventoryBuckets>;
+export const getBuckets = _.once(getBucketsUncached) as () => IPromise<InventoryBuckets>;
 
 function getBucketsUncached() {
   return getDefinitions().then((defs) => {

@@ -10,11 +10,11 @@ import classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { sum } from '../util';
 import './faction.scss';
 import PressTip from '../dim-ui/PressTip';
 import FactionIcon from './FactionIcon';
 import { UISref } from '@uirouter/react';
+import * as _ from 'lodash';
 
 interface FactionProps {
   factionProgress: DestinyFactionProgression;
@@ -85,7 +85,7 @@ function calculateEngramsAvailable(
   factionDef: DestinyFactionDefinition,
   factionProgress: DestinyFactionProgression
 ): number {
-  const totalXPAvailable: number = sum(profileInventory.items, (item: DestinyItemComponent) => {
+  const totalXPAvailable: number = _.sumBy(profileInventory.items, (item: DestinyItemComponent) => {
     return ((factionDef.tokenValues && factionDef.tokenValues[item.itemHash]) || 0) * item.quantity;
   });
 

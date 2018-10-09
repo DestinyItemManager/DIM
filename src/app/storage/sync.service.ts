@@ -1,6 +1,6 @@
 import copy from 'fast-copy';
 import { deepEqual } from 'fast-equals';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';

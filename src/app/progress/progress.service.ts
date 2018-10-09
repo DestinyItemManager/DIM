@@ -3,7 +3,7 @@ import {
   DestinyProfileResponse,
   DestinyVendorsResponse
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
@@ -101,7 +101,7 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
     return {
       defs,
       profileInfo,
-      vendors: _.object(_.zip(characterIds, vendors)) as ProgressProfile['vendors'],
+      vendors: _.zipObject(characterIds, vendors) as ProgressProfile['vendors'],
       get lastPlayedDate() {
         return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce(
           (memo, character: DestinyCharacterComponent) => {

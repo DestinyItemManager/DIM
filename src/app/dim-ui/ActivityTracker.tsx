@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import * as React from 'react';
 import { loadingTracker } from '../ngimport-more';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';

@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import * as idbKeyval from 'idb-keyval';
 
 // For zip
@@ -66,7 +66,10 @@ class ManifestService {
       }
     },
     10000,
-    true
+    {
+      leading: true,
+      trailing: false
+    }
   );
 
   private manifestPromise: Promise<ManifestDB> | null = null;

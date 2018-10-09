@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { SyncService } from '../storage/sync.service';
 

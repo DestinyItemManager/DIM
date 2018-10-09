@@ -6,7 +6,7 @@ import { StorageAdapter, SyncService } from './sync.service';
 import { router } from '../../router';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import classNames from 'classnames';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { dataStats } from './data-stats';
 import { Subscriptions } from '../rx-utils';
