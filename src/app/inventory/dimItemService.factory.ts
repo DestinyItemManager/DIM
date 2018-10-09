@@ -1,4 +1,5 @@
-import { copy as angularCopy, IPromise } from 'angular';
+import { IPromise } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'underscore';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import {
@@ -20,6 +21,7 @@ import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { t } from 'i18next';
 import { $q } from 'ngimport';
+import { shallowCopy } from '../util';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -191,7 +193,7 @@ function ItemService(): ItemServiceType {
           // amount. This is because we've switched to bind-once for
           // the amount since it rarely changes.
           source.removeItem(sourceItem);
-          sourceItem = angularCopy(sourceItem);
+          sourceItem = copy(sourceItem);
           sourceItem.amount -= amountToRemove;
           sourceItem.index = createItemIndex(sourceItem);
           source.addItem(sourceItem);
@@ -208,7 +210,7 @@ function ItemService(): ItemServiceType {
         if (!targetItem) {
           targetItem = item;
           if (!removedSourceItem) {
-            targetItem = angularCopy(item);
+            targetItem = copy(item);
             targetItem.index = createItemIndex(targetItem);
           }
           removedSourceItem = false; // only move without cloning once
@@ -226,7 +228,7 @@ function ItemService(): ItemServiceType {
         // because we've switched to bind-once for the amount since it
         // rarely changes.
         target.removeItem(targetItem);
-        targetItem = angularCopy(targetItem);
+        targetItem = shallowCopy(targetItem);
         targetItem.amount += amountToAdd;
         targetItem.index = createItemIndex(targetItem);
         target.addItem(targetItem);
@@ -427,16 +429,18 @@ function ItemService(): ItemServiceType {
     amount: number = item.amount
   ) {
     if ($featureFlags.debugMoves) {
-      console.log(
-        'Move',
-        amount,
-        item.name,
-        item.type,
-        'to',
-        store.name,
-        'from',
-        item.getStoresService().getStore(item.owner)!.name
-      );
+      item.location.inPostmaster
+        ? console.log('Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
+        : console.log(
+            'Move',
+            amount,
+            item.name,
+            item.type,
+            'to',
+            store.name,
+            'from',
+            item.getStoresService().getStore(item.owner)!.name
+          );
     }
     return transferApi(item)(item, store, amount).then(() => {
       const source = item.getStoresService().getStore(item.owner)!;
@@ -943,7 +947,7 @@ function ItemService(): ItemServiceType {
     item: DimItem,
     target: DimStore,
     equip: boolean = false,
-    amount: number = item.amount,
+    amount: number = item.amount || 1,
     excludes?: DimItem[],
     reservations?: MoveReservations
   ): IPromise<DimItem> {

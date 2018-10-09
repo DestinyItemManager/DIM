@@ -10,6 +10,8 @@ import * as _ from 'underscore';
 import { reportException } from '../exceptions';
 import { dataStats } from './data-stats';
 import { Subscriptions } from '../rx-utils';
+import { initSettings } from '../settings/settings';
+import { dimLoadoutService } from '../loadout/loadout.service';
 
 declare global {
   interface Window {
@@ -247,9 +249,12 @@ export default class StorageSettings extends React.Component<{}, State> {
     reader.onload = () => {
       // TODO: we're kinda trusting that this is the right data here, no validation!
       if (reader.result && typeof reader.result === 'string') {
-        SyncService.set(JSON.parse(reader.result), true).then(() =>
-          Promise.all(SyncService.adapters.map(this.refreshAdapter))
-        );
+        SyncService.set(JSON.parse(reader.result), true)
+          .then(() => Promise.all(SyncService.adapters.map(this.refreshAdapter)))
+          .then(() => {
+            initSettings();
+            dimLoadoutService.getLoadouts(true);
+          });
         alert(t('Storage.ImportSuccess'));
       }
     };

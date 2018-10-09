@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { copy as angularCopy } from 'angular';
 import { t } from 'i18next';
 import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
-import { Loadout, getLight, dimLoadoutService } from './loadout.service';
+import { Loadout, getLight, dimLoadoutService, LoadoutClass } from './loadout.service';
 import { RootState } from '../store/reducers';
 import { previousLoadoutSelector, loadoutsSelector } from './reducer';
 import { currentAccountSelector } from '../accounts/reducer';
@@ -30,6 +29,7 @@ import { getPlatformMatching } from '../accounts/platform.service';
 import { router } from '../../router';
 // tslint:disable-next-line:no-implicit-dependencies
 import engramSvg from '../../images/engram.svg';
+import copy from 'fast-copy';
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -50,14 +50,7 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
   const currentAccount = currentAccountSelector(state)!;
   const { dimStore } = ownProps;
 
-  let classTypeId = {
-    warlock: 0,
-    titan: 1,
-    hunter: 2
-  }[dimStore.class];
-  if (classTypeId === undefined) {
-    classTypeId = -1;
-  }
+  const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
 
   const loadoutsForPlatform = _.sortBy(loadouts, 'name').filter((loadout: Loadout) => {
     return (
@@ -65,7 +58,9 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
         ? loadout.destinyVersion === 2
         : loadout.destinyVersion !== 2) &&
       (loadout.platform === undefined || loadout.platform === currentAccount.platformLabel) &&
-      (classTypeId === -1 || loadout.classType === -1 || loadout.classType === classTypeId)
+      (classTypeId === LoadoutClass.any ||
+        loadout.classType === LoadoutClass.any ||
+        loadout.classType === classTypeId)
     );
   });
 
@@ -164,7 +159,7 @@ class LoadoutPopup extends React.Component<Props> {
                   <li className="loadout-set">
                     <span onClick={this.pullFromPostmaster}>
                       <i className="fa fa-envelope" />
-                      <span className="badge" ng-bind="this.numPostmasterItems" />
+                      <span className="badge">{numPostmasterItems}</span>{' '}
                       <span>{t('Loadouts.PullFromPostmaster')}</span>
                     </span>
                     <span onClick={this.makeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
@@ -176,12 +171,11 @@ class LoadoutPopup extends React.Component<Props> {
           {dimStore.isDestiny1() && (
             <li className="loadout-set">
               <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: true })}>
-                <img className="fa" src="~app/images/engram.svg" height="12" width="12" />
+                <img className="fa" src={engramSvg} height="12" width="12" />
                 <span>{t('Loadouts.GatherEngrams')}</span>
               </span>
               <span onClick={(e) => this.gatherEngramsLoadout(e, { exotics: false })}>
-                <i className="fa fa-ban" />
-                <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
+                <i className="fa fa-ban" /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
               </span>
             </li>
           )}
@@ -382,7 +376,7 @@ class LoadoutPopup extends React.Component<Props> {
 export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
 
 function filterLoadoutToEquipped(loadout: Loadout) {
-  const filteredLoadout = angularCopy(loadout);
+  const filteredLoadout = copy(loadout);
   filteredLoadout.items = _.mapObject(filteredLoadout.items, (items) =>
     items.filter((i) => i.equipped)
   );

@@ -49,3 +49,8 @@ export function flatMap<T, TResult>(list: T[], fx: _.ListIterator<T, TResult[]>)
 export function compact<T>(arr: (T | false | undefined | 0 | '' | null)[]): T[] {
   return arr.filter(Boolean) as T[];
 }
+
+/** A shallow copy (just top level properties) of an object, preserving its prototype. */
+export function shallowCopy<T>(o: T): T {
+  return Object.assign(Object.create(Object.getPrototypeOf(o)), o);
+}

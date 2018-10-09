@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { extend, IComponentOptions, IController, IScope } from 'angular';
+import { IComponentOptions, IController, IScope } from 'angular';
 import { sum, count } from '../util';
 import { subscribeOnScope } from '../rx-utils';
 import { settings } from '../settings/settings';
@@ -123,10 +123,10 @@ function RecordBooksController(
     // TODO: show rewards
 
     if (rawRecordBook.progression) {
-      rawRecordBook.progression = extend(
-        rawRecordBook.progression,
-        defs.Progression.get(rawRecordBook.progression.progressionHash)
-      );
+      rawRecordBook.progression = {
+        ...rawRecordBook.progression,
+        ...defs.Progression.get(rawRecordBook.progression.progressionHash)
+      };
       rawRecordBook.progress = rawRecordBook.progression;
       rawRecordBook.percentComplete =
         rawRecordBook.progress.currentProgress /

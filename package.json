@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "4.72.0",
+  "version": "4.73.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -97,6 +97,7 @@
   },
   "dependencies": {
     "@destiny-item-manager/zip.js": "github:DestinyItemManager/zip.js",
+    "@sentry/browser": "^4.0.6",
     "@types/angular": "^1.6.43",
     "@types/angular-hotkeys": "^1.7.0",
     "@types/angular-mocks": "^1.5.11",
@@ -127,6 +128,8 @@
     "classnames": "^2.2.5",
     "components-font-awesome": "^4.7.0",
     "core-js": "^2.5.5",
+    "fast-copy": "^1.2.2",
+    "fast-equals": "^1.6.1",
     "i18next": "^11.2.3",
     "i18next-xhr-backend": "^1.5.1",
     "idb-keyval": "^2.3.0",
@@ -136,7 +139,6 @@
     "ngimport": "^1.0.0",
     "oclazyload": "^1.1.0",
     "popper.js": "^1.14.3",
-    "raven-js": "^3.24.1",
     "react": "^16.3.1",
     "react-beautiful-dnd": "^9.0.0",
     "react-dnd": "^5.0.0",

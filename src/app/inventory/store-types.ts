@@ -88,7 +88,7 @@ export interface DimStore {
   /** Power/light level. */
   powerLevel: number;
   /** String class name. */
-  class: 'titan' | 'warlock' | 'hunter';
+  class: 'titan' | 'warlock' | 'hunter' | 'vault';
   /** Integer class type. */
   classType: DestinyClass;
   /** Localized class name. */

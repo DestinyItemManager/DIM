@@ -54,11 +54,6 @@ if ($DIM_FLAVOR === 'dev') {
   dependencies.push(require('./developer/developer.module').default);
 }
 
-if ($featureFlags.sentry) {
-  // tslint:disable-next-line
-  dependencies.push(require('raven-js/plugins/angular').moduleName);
-}
-
 export const DimAppModule = module('dimApp', dependencies)
   .config(config)
   .run(run).name;

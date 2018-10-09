@@ -1,4 +1,4 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import { t } from 'i18next';
 import * as _ from 'underscore';
 import { optimalLoadout, newLoadout } from './loadout-utils';

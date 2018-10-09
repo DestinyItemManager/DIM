@@ -1,4 +1,5 @@
 import * as _ from 'underscore';
+import copy from 'fast-copy';
 import template from './loadout-builder.html';
 // tslint:disable-next-line:no-implicit-dependencies
 import intellectIcon from 'app/images/intellect.png';
@@ -8,9 +9,9 @@ import disciplineIcon from 'app/images/discipline.png';
 import strengthIcon from 'app/images/strength.png';
 import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
-import { IComponentOptions, IController, IScope, ITimeoutService, extend, copy } from 'angular';
+import { IComponentOptions, IController, ITimeoutService } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
+import { Loadout, dimLoadoutService, LoadoutClass } from '../loadout/loadout.service';
 import { sum } from '../util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D1Item, D1GridNode } from '../inventory/item-types';
@@ -117,7 +118,6 @@ function LoadoutBuilderController(
     setOrderValues: string;
     lockedchanged: boolean;
   },
-  $scope: IScope,
   $timeout: ITimeoutService,
   $i18next,
   ngDialog
@@ -519,7 +519,7 @@ function LoadoutBuilderController(
   }
 
   getDefinitions().then((defs) => {
-    extend(vm, {
+    Object.assign(vm, {
       active: 'titan',
       i18nClassNames: _.object(
         ['titan', 'hunter', 'warlock'],
@@ -598,7 +598,10 @@ function LoadoutBuilderController(
       },
       onSelectedChange(prevIdx, selectedIdx) {
         if (vm.activeCharacters[prevIdx].class !== vm.activeCharacters[selectedIdx].class) {
-          vm.active = vm.activeCharacters[selectedIdx].class;
+          const classType = vm.activeCharacters[selectedIdx].class;
+          if (classType !== 'vault') {
+            vm.active = classType;
+          }
           vm.onCharacterChange();
           vm.selectedCharacter = selectedIdx;
         }
@@ -795,7 +798,7 @@ function LoadoutBuilderController(
       newLoadout(set) {
         ngDialog.closeAll();
         const loadout = newLoadout('', {});
-        loadout.classType = { warlock: 0, titan: 1, hunter: 2 }[vm.active];
+        loadout.classType = LoadoutClass[vm.active];
         const items = _.pick(
           set.armor,
           'Helmet',
@@ -818,7 +821,7 @@ function LoadoutBuilderController(
       equipItems(set) {
         ngDialog.closeAll();
         let loadout: Loadout = newLoadout($i18next.t('Loadouts.AppliedAuto'), {});
-        loadout.classType = { warlock: 0, titan: 1, hunter: 2 }[vm.active];
+        loadout.classType = LoadoutClass[vm.active];
         const items = _.pick(
           set.armor,
           'Helmet',

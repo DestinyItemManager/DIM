@@ -5,7 +5,7 @@ import { toaster } from '../ngimport-more';
 import { dimLoadoutService, Loadout } from './loadout.service';
 import * as _ from 'underscore';
 import { sortItems } from '../shell/dimAngularFilters.filter';
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import { flatMap } from '../util';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
@@ -18,18 +18,19 @@ import { RootState } from '../store/reducers';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { destinyVersionSelector } from '../accounts/reducer';
+import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { storesSelector } from '../inventory/reducer';
 import spartan from '../../images/spartan.png';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
 import { Subscriptions } from '../rx-utils';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
 interface StoreProps {
   types: string[];
   itemSortOrder: string[];
-  destinyVersion: 1 | 2;
+  account: DestinyAccount;
   classTypeOptions: {
     label: string;
     value: number;
@@ -91,7 +92,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     itemSortOrder: itemSortOrderSelector(state),
     types: typesSelector(state),
-    destinyVersion: destinyVersionSelector(state),
+    account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     storeIds: storeIdsSelector(state),
     buckets: state.inventory.buckets!
@@ -117,18 +118,21 @@ class LoadoutDrawer extends React.Component<Props, State> {
     this.subscriptions.add(
       dimLoadoutService.editLoadout$.subscribe(
         (args: { loadout: Loadout; equipAll?: boolean; showClass?: boolean; isNew?: boolean }) => {
+          const { account } = this.props;
           const loadout = copy(args.loadout);
           dimLoadoutService.dialogOpen = true;
           if (loadout.classType === undefined) {
             loadout.classType = -1;
           }
           loadout.items = loadout.items || {};
+          loadout.destinyVersion = account.destinyVersion;
+          loadout.platform = account.platformLabel;
 
           // Filter out any vendor items and equip all if requested
           const warnitems = flatMap(Object.values(loadout.items), (items) =>
             items.filter((item) => !item.owner)
           );
-          this.fillInDefinitionsForWarnItems(this.props.destinyVersion, warnitems);
+          this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
 
           // TODO: find equivalent items for warnitems
           // tricky part, we only have hash!
@@ -191,7 +195,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 placeholder={t('Loadouts.LoadoutName')}
               />{' '}
               {showClass && (
-                <select name="classType" onChange={this.setClassType}>
+                <select name="classType" onChange={this.setClassType} value={loadout.classType}>
                   {classTypeOptions.map((option) => (
                     <option key={option.value} label={option.label} value={option.value} />
                   ))}

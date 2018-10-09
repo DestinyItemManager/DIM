@@ -1,4 +1,5 @@
-import { equals, copy, extend } from 'angular';
+import copy from 'fast-copy';
+import { deepEqual } from 'fast-equals';
 import * as _ from 'underscore';
 import { reportException } from '../exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
@@ -93,7 +94,7 @@ export const SyncService = {
       throw new Error('Must call get at least once before setting');
     }
 
-    if (!PUT && equals(_.pick(cached, Object.keys(value)), value)) {
+    if (!PUT && deepEqual(_.pick(cached, Object.keys(value)), value)) {
       if ($featureFlags.debugSync) {
         console.log(_.pick(cached, Object.keys(value)), value);
         console.log('Skip save, already got it');
@@ -106,7 +107,7 @@ export const SyncService = {
       // update our data
       cached = copy(value) as DimData;
     } else {
-      extend(cached, copy(value));
+      Object.assign(cached, copy(value));
     }
 
     for (const adapter of adapters) {

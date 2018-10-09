@@ -1,4 +1,4 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'underscore';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
@@ -15,7 +15,7 @@ import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
 import { Subject } from 'rxjs/Subject';
 
-export const enum LoadoutClass {
+export enum LoadoutClass {
   any = -1,
   warlock = 0,
   titan = 1,
@@ -58,7 +58,7 @@ export interface LoadoutServiceType {
     clickEvent: MouseEvent;
   }>;
   dialogOpen: boolean;
-  getLoadouts(): Promise<Loadout[]>;
+  getLoadouts(getLatest?: boolean): Promise<Loadout[]>;
   deleteLoadout(loadout: Loadout): Promise<void>;
   saveLoadout(loadout: Loadout): Promise<void>;
   addItemToLoadout(item: DimItem, $event);
