@@ -3,7 +3,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
-import { LockType } from '../types';
+import { LockedItemType } from '../types';
 import LoadoutBucketDropTarget from './LoadoutBucketDropTarget';
 import './lockedarmor.scss';
 import LockedItem from './LockedItem';
@@ -13,8 +13,8 @@ interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
   perks: Set<DestinyInventoryItemDefinition>;
-  locked?: LockType;
-  onLockChanged(bucket: InventoryBucket, locked?: LockType): void;
+  locked?: LockedItemType[];
+  onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
 
 interface State {
@@ -34,11 +34,13 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     this.setState({ isOpen: false });
   };
 
-  setLockedItem = (lockedItem: D2Item) => {
-    this.props.onLockChanged(this.props.bucket, {
-      type: 'item',
-      items: [lockedItem]
-    });
+  setLockedItem = (item: D2Item) => {
+    this.props.onLockChanged(this.props.bucket, [
+      {
+        type: 'item',
+        item
+      }
+    ]);
   };
 
   reset = () => {
@@ -52,9 +54,7 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     return (
       <div className="locked-item">
         <LoadoutBucketDropTarget bucketType={bucket.type!} onItemLocked={this.setLockedItem}>
-          {locked &&
-            locked.items &&
-            locked.items.length !== 0 && <div className="close" onClick={this.reset} />}
+          {locked && locked.length !== 0 && <div className="close" onClick={this.reset} />}
           <LockedItem {...{ locked, bucket, toggleOpen: this.openPerkSelect }} />
         </LoadoutBucketDropTarget>
         <LockablePopup

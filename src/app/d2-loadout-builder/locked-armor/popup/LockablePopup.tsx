@@ -5,7 +5,7 @@ import * as React from 'react';
 import ClickOutside from '../../../dim-ui/ClickOutside';
 import { InventoryBucket } from '../../../inventory/inventory-buckets';
 import { D2Item } from '../../../inventory/item-types';
-import { LockType } from '../../types';
+import { LockedItemType } from '../../types';
 import LockableItems from './LockableItemsTab';
 import LockablePerks from './LockablePerksTab';
 
@@ -14,9 +14,9 @@ interface Props {
   items: { [itemHash: number]: D2Item[] };
   perks: Set<DestinyInventoryItemDefinition>;
   isOpen: boolean;
-  locked?: LockType;
+  locked?: LockedItemType[];
   onClose(): void;
-  onLockChanged(bucket: InventoryBucket, locked?: LockType): void;
+  onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
 
 interface State {
@@ -47,46 +47,23 @@ export default class LockablePopup extends React.Component<Props, State> {
     this.props.onLockChanged(this.props.bucket);
   };
 
-  toggleExcludeItem = (excludedItem: D2Item) => {
-    let newExcludes = new Set();
-    if (this.props.locked && this.props.locked.type === 'exclude') {
-      newExcludes = new Set(this.props.locked.items);
+  toggleLockedItem = (lockedItem: LockedItemType) => {
+    let newLockedItems: LockedItemType[] = [];
+    if (this.props.locked && this.props.locked[0].type !== 'item') {
+      newLockedItems = this.props.locked;
     }
-    if (newExcludes.has(excludedItem)) {
-      newExcludes.delete(excludedItem);
+
+    const existingIndex = newLockedItems.findIndex((existing) => existing.item === lockedItem.item);
+    if (existingIndex > -1) {
+      newLockedItems.splice(existingIndex, 1);
     } else {
-      newExcludes.add(excludedItem);
+      newLockedItems.push(lockedItem);
     }
 
-    if (newExcludes.size === 0) {
-      return this.props.onLockChanged(this.props.bucket);
-    }
-
-    this.props.onLockChanged(this.props.bucket, {
-      type: 'exclude',
-      items: Array.from(newExcludes)
-    });
-  };
-
-  toggleLockedPerk = (lockedPerk: DestinyInventoryItemDefinition) => {
-    let newPerks = new Set();
-    if (this.props.locked && this.props.locked.type === 'perk') {
-      newPerks = new Set(this.props.locked.items);
-    }
-    if (newPerks.has(lockedPerk)) {
-      newPerks.delete(lockedPerk);
-    } else {
-      newPerks.add(lockedPerk);
-    }
-
-    if (newPerks.size === 0) {
-      return this.props.onLockChanged(this.props.bucket);
-    }
-
-    this.props.onLockChanged(this.props.bucket, {
-      type: 'perk',
-      items: Array.from(newPerks)
-    });
+    this.props.onLockChanged(
+      this.props.bucket,
+      newLockedItems.length === 0 ? undefined : newLockedItems
+    );
   };
 
   render() {
@@ -116,8 +93,7 @@ export default class LockablePopup extends React.Component<Props, State> {
           </span>
           <div className="close" onClick={this.closePerkSelect} />
           {locked &&
-            locked.items &&
-            locked.items.length !== 0 && (
+            locked.length !== 0 && (
               <button className="clear" onClick={this.reset}>
                 {t('LoadoutBuilder.ResetPerks')}
               </button>
@@ -125,7 +101,7 @@ export default class LockablePopup extends React.Component<Props, State> {
         </div>
 
         {tabSelected === 'items' && (
-          <LockableItems {...{ items, locked, toggleExcludeItem: this.toggleExcludeItem }} />
+          <LockableItems {...{ items, locked, toggleExcludeItem: this.toggleLockedItem }} />
         )}
         {tabSelected === 'perks' && (
           <LockablePerks
@@ -133,7 +109,7 @@ export default class LockablePopup extends React.Component<Props, State> {
             locked={locked}
             hoveredPerk={hoveredPerk}
             onPerkHover={this.onPerkHover}
-            toggleLockedPerk={this.toggleLockedPerk}
+            toggleLockedPerk={this.toggleLockedItem}
           />
         )}
       </ClickOutside>

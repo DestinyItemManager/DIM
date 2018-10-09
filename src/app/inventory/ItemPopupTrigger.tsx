@@ -13,6 +13,7 @@ let otherDialog: any = null;
 interface Props {
   item: DimItem;
   children?: React.ReactNode;
+  onShiftClicked?(item: DimItem): void;
 }
 
 /**
@@ -43,6 +44,11 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     e.stopPropagation();
 
     const item = this.props.item;
+
+    if (e.shiftKey && this.props.onShiftClicked) {
+      this.props.onShiftClicked(item);
+      return;
+    }
 
     NewItemsService.dropNewItem(item);
 

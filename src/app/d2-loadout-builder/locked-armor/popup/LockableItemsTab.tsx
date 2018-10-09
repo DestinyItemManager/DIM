@@ -1,7 +1,7 @@
 import { t } from 'i18next';
 import * as React from 'react';
 import { D2Item } from '../../../inventory/item-types';
-import { LockType } from '../../types';
+import { LockedItemType } from '../../types';
 import ExcludableItem from './ExcludableItem';
 
 export default function LockableItems({
@@ -12,8 +12,8 @@ export default function LockableItems({
   items: {
     [itemHash: number]: D2Item[];
   };
-  locked?: LockType;
-  toggleExcludeItem(excludedItem: D2Item): void;
+  locked?: LockedItemType[];
+  toggleExcludeItem(excludedItem: LockedItemType): void;
 }) {
   return (
     <>

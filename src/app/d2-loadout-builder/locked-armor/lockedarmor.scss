@@ -80,14 +80,3 @@
 .close {
   z-index: 1;
 }
-
-.clear {
-  background-color: rgba(100, 100, 100, 0.6);
-  position: absolute;
-  right: 5px;
-  border: none;
-  color: white;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-}

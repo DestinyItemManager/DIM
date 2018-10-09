@@ -1,7 +1,7 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
-import { LockType } from '../../types';
+import { LockedItemType } from '../../types';
 import SelectableBungieImage from './SelectableBungieImage';
 
 export default function LockablePerks({
@@ -12,16 +12,14 @@ export default function LockablePerks({
   toggleLockedPerk
 }: {
   perks: Set<DestinyInventoryItemDefinition>;
-  locked?: LockType;
+  locked?: LockedItemType[];
   hoveredPerk?: {
     name: string;
     description: string;
   };
   onPerkHover(hoveredPerk?: {}): void;
-  toggleLockedPerk(perk: DestinyInventoryItemDefinition): void;
+  toggleLockedPerk(perk: LockedItemType): void;
 }) {
-  const isLocked = locked && locked.items && locked.items.length !== 0;
-
   const resetHover = () => {
     onPerkHover();
   };
@@ -38,7 +36,7 @@ export default function LockablePerks({
           Array.from(perks).map((perk) => (
             <SelectableBungieImage
               key={perk.hash}
-              selected={isLocked! && locked!.items.some((p) => p.hash === perk.hash)}
+              selected={Boolean(locked && locked.some((p) => p.item.hash === perk.hash))}
               perk={perk}
               onLockedPerk={toggleLockedPerk}
               onHoveredPerk={setHoveredPerk}

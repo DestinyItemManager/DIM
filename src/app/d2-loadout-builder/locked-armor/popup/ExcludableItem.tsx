@@ -2,32 +2,33 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { D2Item } from '../../../inventory/item-types';
 import StoreInventoryItem from '../../../inventory/StoreInventoryItem';
-import { LockType } from '../../types';
+import { LockedItemType } from '../../types';
 
 export default function ExcludableItem({
   locked,
   item,
   onExclude
 }: {
-  locked?: LockType;
+  locked?: LockedItemType[];
   item: D2Item;
-  onExclude(item: D2Item): void;
+  onExclude(item: LockedItemType): void;
 }) {
-  const handleShiftClick = (event) => {
-    if (event.shiftKey) {
-      event.preventDefault();
-      onExclude(item);
-    }
+  const handleShiftClick = (item) => {
+    onExclude({ type: 'exclude', item });
   };
 
   return (
     <div
       className={classNames({
-        'excluded-item': locked && locked.items && locked.items.find((p) => p.index === item.index)
+        'excluded-item': locked && locked.find((p) => p.item.index === item.index)
       })}
-      onClick={handleShiftClick}
     >
-      <StoreInventoryItem item={item} isNew={false} searchHidden={false} />
+      <StoreInventoryItem
+        item={item}
+        onShiftClicked={handleShiftClick}
+        isNew={false}
+        searchHidden={false}
+      />
     </div>
   );
 }

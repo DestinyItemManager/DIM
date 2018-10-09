@@ -16,6 +16,7 @@ interface Props {
   rating?: number;
   hideRating?: boolean;
   searchHidden: boolean;
+  onShiftClicked?(item: DimItem): void;
 }
 
 /**
@@ -36,11 +37,11 @@ export default class StoreInventoryItem extends React.PureComponent<Props> {
   });
 
   render() {
-    const { item, isNew, tag, rating, searchHidden, hideRating } = this.props;
+    const { item, isNew, tag, rating, searchHidden, hideRating, onShiftClicked } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
-        <ItemPopupTrigger item={item}>
+        <ItemPopupTrigger item={item} onShiftClicked={onShiftClicked}>
           <InventoryItem
             item={item}
             onDoubleClick={this.doubleClicked}

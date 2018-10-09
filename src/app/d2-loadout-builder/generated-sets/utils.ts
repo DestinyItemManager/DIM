@@ -1,7 +1,7 @@
 import { t } from 'i18next';
 import * as _ from 'underscore';
 import { sum } from '../../util';
-import { ArmorSet, LockType } from '../types';
+import { ArmorSet, LockedItemType } from '../types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -25,20 +25,14 @@ export function filterPlugs(socket) {
  */
 export function getSetsForTier(
   setMap: ArmorSet[],
-  lockedMap: { [bucketHash: number]: LockType },
+  lockedMap: { [bucketHash: number]: LockedItemType[] },
   tier: string
 ): ArmorSet[] {
   const matchedSets: ArmorSet[] = [];
-  let count = 0;
 
   Object.values(setMap).forEach((set) => {
-    if (count > 10) {
-      return;
-    }
-
     if (set.tiers.includes(tier)) {
       matchedSets.push(set);
-      count++;
     }
   });
 
@@ -47,34 +41,39 @@ export function getSetsForTier(
 
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
-    // if there are locked items for this bucket
-    if (lockedMap[bucket] && lockedMap[bucket].items.length && lockedMap[bucket].type === 'perk') {
-      // Sort based on what sets have the most matched perks
-      matchedSets.sort((a, b) => {
-        return (
-          sum(b.armor, (item) => {
-            if (!item || !item.sockets) {
-              return 0;
-            }
-            return item.sockets.sockets.filter((slot) =>
-              slot.plugOptions.some((perk) =>
-                lockedMap[bucket].items.find((lockedPerk) => lockedPerk.hash === perk.plugItem.hash)
-              )
-            ).length;
-          }) -
-          sum(a.armor, (item) => {
-            if (!item || !item.sockets) {
-              return 0;
-            }
-            return item.sockets.sockets.filter((slot) =>
-              slot.plugOptions.some((perk) =>
-                lockedMap[bucket].items.find((lockedPerk) => lockedPerk.hash === perk.plugItem.hash)
-              )
-            ).length;
-          })
-        );
-      });
+    // if there are locked perks for this bucket
+    if (lockedMap[bucket] === undefined) {
+      return;
     }
+    const lockedPerks = lockedMap[bucket].filter((lockedItem) => lockedItem.type === 'perk');
+    if (!lockedPerks.length) {
+      return;
+    }
+    // Sort based on what sets have the most matched perks
+    matchedSets.sort((a, b) => {
+      return (
+        sum(b.armor, (item) => {
+          if (!item || !item.sockets) {
+            return 0;
+          }
+          return item.sockets.sockets.filter((slot) =>
+            slot.plugOptions.some((perk) =>
+              lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
+            )
+          ).length;
+        }) -
+        sum(a.armor, (item) => {
+          if (!item || !item.sockets) {
+            return 0;
+          }
+          return item.sockets.sockets.filter((slot) =>
+            slot.plugOptions.some((perk) =>
+              lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
+            )
+          ).length;
+        })
+      );
+    });
   });
 
   return matchedSets;

@@ -1,10 +1,11 @@
 import { D2Item } from '../inventory/item-types';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 
 export type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
 
-export interface LockType {
+export interface LockedItemType {
   type: 'item' | 'perk' | 'exclude';
-  items: D2Item[];
+  item: D2Item | DestinyInventoryItemDefinition;
 }
 
 export interface ArmorSet {
