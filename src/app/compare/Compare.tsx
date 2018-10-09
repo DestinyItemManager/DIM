@@ -5,11 +5,10 @@ import Sockets from '../move-popup/Sockets';
 import { DimItem, DimStat, DimTalentGrid, D1Stat } from '../inventory/item-types';
 import { router } from '../../router';
 import { $rootScope } from 'ngimport';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { CompareService } from './compare.service';
 import { toaster } from '../ngimport-more';
 import { chainComparator, reverseComparator, compareBy } from '../comparators';
-import { sum } from '../util';
 import ItemTagSelector from '../move-popup/ItemTagSelector';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { angular2react } from 'angular2react';
@@ -357,7 +356,7 @@ export default class Compare extends React.Component<{}, State> {
 
     let armorSplit = 0;
     if (compare.bucket.inArmor) {
-      armorSplit = sum(compare.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash));
+      armorSplit = _.sumBy(compare.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash));
     }
 
     const isArchetypeStat = (s: DimStat) =>
@@ -376,7 +375,7 @@ export default class Compare extends React.Component<{}, State> {
           }
           return archetypeMatch.base === archetypeStat.base;
         }
-        return sum(item.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
+        return _.sumBy(item.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
       });
     }
     return [];
