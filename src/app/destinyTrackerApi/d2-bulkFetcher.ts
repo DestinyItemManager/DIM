@@ -59,22 +59,17 @@ class D2BulkFetcher {
       arrayOfArrays.push(itemList.slice(i, i + size));
     }
 
-    const arrayOfPromises: Promise<D2ItemFetchResponse[]>[] = [];
-
-    for (const arraySlice of arrayOfArrays) {
-      arrayOfPromises.push(
-        dtrFetch(
-          `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
-          arraySlice
-        ).then(handleD2Errors, handleD2Errors)
-      );
-    }
-
     const results: D2ItemFetchResponse[] = [];
 
-    for (const promiseStep of arrayOfPromises) {
-      loadingTracker.addPromise(promiseStep);
-      const result = await promiseStep;
+    for (const arraySlice of arrayOfArrays) {
+      const promiseSlice = dtrFetch(
+        `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
+        arraySlice
+      ).then(handleD2Errors, handleD2Errors);
+
+      loadingTracker.addPromise(promiseSlice);
+
+      const result = await promiseSlice;
       results.push(...result);
     }
 
