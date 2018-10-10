@@ -49,11 +49,6 @@ const dependencies = [
   ngimportMoreModule
 ];
 
-if ($DIM_FLAVOR === 'dev') {
-  // tslint:disable-next-line
-  dependencies.push(require('./developer/developer.module').default);
-}
-
 export const DimAppModule = module('dimApp', dependencies)
   .config(config)
   .run(run).name;

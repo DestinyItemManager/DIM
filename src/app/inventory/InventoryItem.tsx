@@ -4,13 +4,12 @@ import { DimItem } from './item-types';
 import { percent } from './dimPercentWidth.directive';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { getColor, dtrRatingColor } from '../shell/dimAngularFilters.filter';
-import { tagIconFilter } from './dimStoreItem.directive';
 import ItemRender from './ItemRender';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
 import './InventoryItem.scss';
-import { TagValue } from './dim-item-info';
+import { TagValue, tagIconFilter } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import { settings } from '../settings/settings';
 
