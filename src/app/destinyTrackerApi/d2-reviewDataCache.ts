@@ -202,8 +202,6 @@ class D2ReviewDataCache {
       highlightedRatingCount: 0 // bugbug: D2 API doesn't seem to be returning highlighted ratings in fetch
     };
 
-    console.log(cachedItem);
-
     this._itemStores.push(cachedItem);
   }
 
