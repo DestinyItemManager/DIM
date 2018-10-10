@@ -37,6 +37,10 @@ export function getReferenceKey(
   }
 }
 
+export function getD2Roll(availablePerks?: number[]): string {
+  return availablePerks && availablePerks.length > 0 ? availablePerks.join(',') : 'fixed';
+}
+
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
@@ -54,7 +58,7 @@ class D2ReviewDataCache {
     return this._itemStores.find(
       (s) =>
         s.referenceId === referenceKey.referenceId &&
-        (!referenceKey.availablePerks || s.roll === referenceKey.availablePerks.join(','))
+        (!referenceKey.availablePerks || s.roll === getD2Roll(referenceKey.availablePerks))
     );
   }
 
@@ -76,10 +80,7 @@ class D2ReviewDataCache {
     const referenceKey = getReferenceKey(item, itemHash);
     const blankItem: D2RatingData = {
       referenceId: referenceKey.referenceId,
-      roll:
-        referenceKey.availablePerks && referenceKey.availablePerks.length > 0
-          ? referenceKey.availablePerks.join(',')
-          : 'fixed',
+      roll: getD2Roll(referenceKey.availablePerks),
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
       overallScore: 0,
@@ -165,7 +166,7 @@ class D2ReviewDataCache {
         const matchingStore = this._itemStores.find(
           (ci) =>
             ci.referenceId === bulkRanking.referenceId &&
-            (!bulkRanking.availablePerks || bulkRanking.availablePerks.join(',') === ci.roll)
+            (!bulkRanking.availablePerks || getD2Roll(bulkRanking.availablePerks) === ci.roll)
         );
 
         if (matchingStore) {
@@ -192,10 +193,7 @@ class D2ReviewDataCache {
 
     const cachedItem: D2RatingData = {
       referenceId: dtrRating.referenceId,
-      roll:
-        dtrRating.availablePerks && dtrRating.availablePerks.length > 0
-          ? dtrRating.availablePerks.join(',')
-          : 'fixed',
+      roll: getD2Roll(dtrRating.availablePerks),
       overallScore: dimScore,
       fetchResponse: dtrRating,
       lastUpdated: new Date(),
@@ -236,7 +234,7 @@ class D2ReviewDataCache {
     const cachedItem = this._itemStores.find(
       (s) =>
         s.referenceId === reviewsData.referenceId &&
-        (!referenceKey.availablePerks || s.roll === referenceKey.availablePerks.join(','))
+        (!referenceKey.availablePerks || s.roll === getD2Roll(referenceKey.availablePerks))
     );
 
     if (!cachedItem) {

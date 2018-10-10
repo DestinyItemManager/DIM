@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { D1RatingData } from '../item-review/d1-dtr-api-types';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
 import InventoryItem from './InventoryItem';
-import { getReferenceKey } from '../destinyTrackerApi/d2-reviewDataCache';
+import { getReferenceKey, getD2Roll } from '../destinyTrackerApi/d2-reviewDataCache';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -76,10 +76,7 @@ function getRating(
   } else if (item.isDestiny2()) {
     const referenceKey = getReferenceKey(item);
 
-    roll =
-      referenceKey.availablePerks && referenceKey.availablePerks.length > 0
-        ? referenceKey.availablePerks.join(',')
-        : 'fixed';
+    roll = getD2Roll(referenceKey.availablePerks);
   }
 
   const itemKey = `${item.hash}-${roll}`;
