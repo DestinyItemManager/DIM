@@ -230,11 +230,13 @@ class D2ReviewDataCache {
    * Keep track of expanded item review data from the DTR API for this DIM store item.
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
-  addReviewsData(reviewsData: D2ItemReviewResponse) {
+  addReviewsData(item: D2Item, reviewsData: D2ItemReviewResponse) {
+    const referenceKey = getReferenceKey(item);
+
     const cachedItem = this._itemStores.find(
       (s) =>
         s.referenceId === reviewsData.referenceId &&
-        (!reviewsData.availablePerks || s.roll === reviewsData.availablePerks.join(','))
+        (!referenceKey.availablePerks || s.roll === referenceKey.availablePerks.join(','))
     );
 
     if (!cachedItem) {
