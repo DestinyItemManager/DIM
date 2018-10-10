@@ -21,9 +21,9 @@ class D2BulkFetcher {
     stores: D2Store[],
     platformSelection: number,
     mode: number
-  ): Promise<D2ItemFetchResponse[][]> {
+  ): Promise<D2ItemFetchResponse[]> {
     if (!stores.length) {
-      return Promise.resolve<D2ItemFetchResponse[][]>([]);
+      return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
     const itemList = getItemList(stores, this._reviewDataCache);
@@ -35,22 +35,22 @@ class D2BulkFetcher {
     mode: number,
     vendorSaleItems?: DestinyVendorSaleItemComponent[],
     vendorItems?: DestinyVendorItemDefinition[]
-  ): Promise<D2ItemFetchResponse[][]> {
+  ): Promise<D2ItemFetchResponse[]> {
     if ((vendorSaleItems && !vendorSaleItems.length) || (vendorItems && !vendorItems.length)) {
-      return Promise.resolve<D2ItemFetchResponse[][]>([]);
+      return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
     const vendorDtrItems = getVendorItemList(this._reviewDataCache, vendorSaleItems, vendorItems);
     return this._getBulkItems(vendorDtrItems, platformSelection, mode);
   }
 
-  _getBulkItems(
+  async _getBulkItems(
     itemList: D2ItemFetchRequest[],
     platformSelection: number,
     mode: number
-  ): Promise<D2ItemFetchResponse[][]> {
+  ): Promise<D2ItemFetchResponse[]> {
     if (!itemList.length) {
-      return Promise.resolve<D2ItemFetchResponse[][]>([]);
+      return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
     const size = 10;
@@ -70,11 +70,15 @@ class D2BulkFetcher {
       );
     }
 
-    const promise4All = Promise.all<D2ItemFetchResponse[]>(arrayOfPromises);
+    const results: D2ItemFetchResponse[] = [];
 
-    loadingTracker.addPromise(promise4All);
+    for (const promiseStep of arrayOfPromises) {
+      loadingTracker.addPromise(promiseStep);
+      const result = await promiseStep;
+      results.push(...result);
+    }
 
-    return promise4All;
+    return results;
   }
 
   /**
@@ -82,7 +86,7 @@ class D2BulkFetcher {
    */
   bulkFetch(stores: D2Store[], platformSelection: number, mode: number) {
     this._getBulkFetchPromise(stores, platformSelection, mode).then((bulkRankings) =>
-      bulkRankings.forEach((br) => this.attachRankings(br, stores))
+      this.attachRankings(bulkRankings, stores)
     );
   }
 
@@ -108,7 +112,7 @@ class D2BulkFetcher {
       mode,
       vendorSaleItems,
       vendorItems
-    ).then((bulkRankings) => bulkRankings.forEach((br) => this._addScores(br)));
+    ).then((bulkRankings) => this._addScores(bulkRankings));
   }
 
   attachRankings(bulkRankings: D2ItemFetchResponse[] | null, stores: D2Store[]): void {
