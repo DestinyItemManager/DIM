@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { D1RatingData } from '../item-review/d1-dtr-api-types';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
 import InventoryItem from './InventoryItem';
+import { getReferenceKey } from '../destinyTrackerApi/d2-reviewDataCache';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -68,7 +69,19 @@ function getRating(
   item: DimItem,
   ratings: ReviewsState['ratings']
 ): D2RatingData | D1RatingData | undefined {
-  const roll = item.isDestiny1() ? (item.talentGrid ? item.talentGrid.dtrRoll : null) : 'fixed'; // TODO: implement random rolls
+  let roll: string | null = null;
+
+  if (item.isDestiny1() && item.talentGrid) {
+    roll = item.talentGrid.dtrRoll;
+  } else if (item.isDestiny2()) {
+    const referenceKey = getReferenceKey(item);
+
+    roll =
+      referenceKey.availablePerks && referenceKey.availablePerks.length > 0
+        ? referenceKey.availablePerks.join(',')
+        : 'fixed';
+  }
+
   const itemKey = `${item.hash}-${roll}`;
   return ratings[itemKey] && ratings[itemKey];
 }

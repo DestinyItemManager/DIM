@@ -12,6 +12,31 @@ import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings } from '../item-review/actions';
 import store from '../store/store';
 
+export interface D2ReviewKey {
+  referenceId: number;
+  availablePerks?: number[];
+}
+
+export function getReferenceKey(
+  item?: D2Item | DestinyVendorSaleItemComponent,
+  itemHash?: number
+): D2ReviewKey {
+  if (item) {
+    const dtrItem = translateToDtrItem(item);
+
+    return {
+      referenceId: dtrItem.referenceId,
+      availablePerks: dtrItem.availablePerks
+    };
+  } else if (itemHash) {
+    return {
+      referenceId: itemHash
+    };
+  } else {
+    throw new Error('No data supplied to find a matching item from our stores.');
+  }
+}
+
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
@@ -25,20 +50,12 @@ class D2ReviewDataCache {
     item?: D2Item | DestinyVendorSaleItemComponent,
     itemHash?: number
   ): D2RatingData | undefined {
-    const referenceId = this._getReferenceId(item, itemHash);
-    return this._itemStores.find((s) => s.referenceId === referenceId);
-  }
-
-  _getReferenceId(item?: D2Item | DestinyVendorSaleItemComponent, itemHash?: number): number {
-    if (item) {
-      const dtrItem = translateToDtrItem(item);
-
-      return dtrItem.referenceId;
-    } else if (itemHash) {
-      return itemHash;
-    } else {
-      throw new Error('No data supplied to find a matching item from our stores.');
-    }
+    const referenceKey = getReferenceKey(item, itemHash);
+    return this._itemStores.find(
+      (s) =>
+        s.referenceId === referenceKey.referenceId &&
+        (!referenceKey.availablePerks || s.roll === referenceKey.availablePerks.join(','))
+    );
   }
 
   _getBlankWorkingD2Rating(): WorkingD2Rating {
@@ -56,10 +73,13 @@ class D2ReviewDataCache {
     item?: D2Item | DestinyVendorSaleItemComponent,
     itemHash?: number
   ): D2RatingData {
-    const referenceId = this._getReferenceId(item, itemHash);
+    const referenceKey = getReferenceKey(item, itemHash);
     const blankItem: D2RatingData = {
-      referenceId,
-      roll: 'fixed', // TODO: implement random rolls
+      referenceId: referenceKey.referenceId,
+      roll:
+        referenceKey.availablePerks && referenceKey.availablePerks.length > 0
+          ? referenceKey.availablePerks.join(',')
+          : 'fixed',
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
       overallScore: 0,
@@ -143,7 +163,9 @@ class D2ReviewDataCache {
 
       bulkRankings.forEach((bulkRanking) => {
         const matchingStore = this._itemStores.find(
-          (ci) => ci.referenceId === bulkRanking.referenceId
+          (ci) =>
+            ci.referenceId === bulkRanking.referenceId &&
+            (!bulkRanking.availablePerks || bulkRanking.availablePerks.join(',') === ci.roll)
         );
 
         if (matchingStore) {
@@ -170,7 +192,10 @@ class D2ReviewDataCache {
 
     const cachedItem: D2RatingData = {
       referenceId: dtrRating.referenceId,
-      roll: 'fixed', // TODO: implement random rolls
+      roll:
+        dtrRating.availablePerks && dtrRating.availablePerks.length > 0
+          ? dtrRating.availablePerks.join(',')
+          : 'fixed',
       overallScore: dimScore,
       fetchResponse: dtrRating,
       lastUpdated: new Date(),
@@ -178,6 +203,8 @@ class D2ReviewDataCache {
       ratingCount: dtrRating.votes.total,
       highlightedRatingCount: 0 // bugbug: D2 API doesn't seem to be returning highlighted ratings in fetch
     };
+
+    console.log(cachedItem);
 
     this._itemStores.push(cachedItem);
   }
@@ -204,7 +231,11 @@ class D2ReviewDataCache {
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
   addReviewsData(reviewsData: D2ItemReviewResponse) {
-    const cachedItem = this._itemStores.find((s) => s.referenceId === reviewsData.referenceId);
+    const cachedItem = this._itemStores.find(
+      (s) =>
+        s.referenceId === reviewsData.referenceId &&
+        (!reviewsData.availablePerks || s.roll === reviewsData.availablePerks.join(','))
+    );
 
     if (!cachedItem) {
       return;

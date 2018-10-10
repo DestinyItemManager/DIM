@@ -108,6 +108,8 @@ export interface D2ItemUserReview extends DimUserReview {
 export interface D2ItemReviewResponse {
   /** Reference ID (hash ID). */
   referenceId: number;
+  /** If it's a random roll, what's the complete list of (random) perks on it? */
+  availablePerks?: number[];
   /** The votes for a single item. */
   votes: DtrD2Vote;
   /** The total number of reviews. */
