@@ -16,8 +16,10 @@ export default function LoadoutBuilderItem({
   onExclude(item: LockedItemType): void;
 }) {
   const handleShiftClick = (e) => {
-    e.stopPropagation();
-    onExclude({ type: 'exclude', item });
+    if (e.shiftKey) {
+      e.stopPropagation();
+      onExclude({ type: 'exclude', item });
+    }
   };
 
   return (
@@ -28,7 +30,7 @@ export default function LoadoutBuilderItem({
             'excluded-item': locked && locked.some((p) => p.item.index === item.index)
           })}
         >
-          <ConnectedInventoryItem item={item} onShiftClicked={handleShiftClick} />
+          <ConnectedInventoryItem item={item} onClick={handleShiftClick} />
         </div>
       </ItemPopupTrigger>
     </DraggableInventoryItem>
