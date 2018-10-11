@@ -13,6 +13,7 @@ import InventoryItem from './InventoryItem';
 // Props provided from parents
 interface ProvidedProps {
   item: DimItem;
+  onShiftClicked?(e): void;
 }
 
 // Props from Redux via mapStateToProps
@@ -51,10 +52,17 @@ type Props = ProvidedProps & StoreProps;
  */
 class ConnectedInventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, tag, rating, hideRating } = this.props;
+    const { item, isNew, tag, rating, hideRating, onShiftClicked } = this.props;
 
     return (
-      <InventoryItem item={item} isNew={isNew} tag={tag} rating={rating} hideRating={hideRating} />
+      <InventoryItem
+        item={item}
+        isNew={isNew}
+        tag={tag}
+        rating={rating}
+        hideRating={hideRating}
+        onShiftClicked={onShiftClicked}
+      />
     );
   }
 }

@@ -27,23 +27,23 @@ interface Props {
   searchHidden?: boolean;
   onClick?(e);
   onDoubleClick?(e);
+  onShiftClicked?(e);
 }
 
 const tagClasses = tagIconFilter();
 
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
+  handleClick = (e) => {
+    if (e.shiftKey && this.props.onShiftClicked) {
+      return this.props.onShiftClicked(e);
+    } else if (this.props.onClick) {
+      return this.props.onClick(e);
+    }
+  };
+
   render() {
-    const {
-      item,
-      isNew,
-      tag,
-      rating,
-      searchHidden,
-      hideRating,
-      onClick,
-      onDoubleClick
-    } = this.props;
+    const { item, isNew, tag, rating, searchHidden, hideRating, onDoubleClick } = this.props;
 
     const badgeInfo = getBadgeInfo(item);
 
@@ -65,7 +65,7 @@ export default class InventoryItem extends React.Component<Props> {
     return (
       <div
         id={item.index}
-        onClick={onClick}
+        onClick={this.handleClick}
         onDoubleClick={onDoubleClick}
         title={`${item.name}\n${item.typeName}`}
         className={classNames('item', {

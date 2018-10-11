@@ -15,19 +15,20 @@ export default function LoadoutBuilderItem({
   locked?: LockedItemType[];
   onExclude(item: LockedItemType): void;
 }) {
-  const handleShiftClick = (item) => {
+  const handleShiftClick = (e) => {
+    e.stopPropagation();
     onExclude({ type: 'exclude', item });
   };
 
   return (
     <DraggableInventoryItem item={item}>
-      <ItemPopupTrigger item={item} onShiftClicked={handleShiftClick}>
+      <ItemPopupTrigger item={item}>
         <div
           className={classNames({
             'excluded-item': locked && locked.some((p) => p.item.index === item.index)
           })}
         >
-          <ConnectedInventoryItem item={item} />
+          <ConnectedInventoryItem item={item} onShiftClicked={handleShiftClick} />
         </div>
       </ItemPopupTrigger>
     </DraggableInventoryItem>
