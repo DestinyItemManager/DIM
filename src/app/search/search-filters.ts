@@ -1177,7 +1177,13 @@ export function searchFilters(
       equipspeed: filterByStats('equipspeed'),
       mobility: filterByStats('mobility'),
       recovery: filterByStats('recovery'),
-      resilience: filterByStats('resilience')
+      resilience: filterByStats('resilience'),
+      blastradius: filterByStats('blastradius'),
+      drawtime: filterByStats('drawtime'),
+      inventorysize: filterByStats('inventorysize'),
+      recoildirection: filterByStats('recoildirection'),
+      velocity: filterByStats('velocity'),
+      zoom: filterByStats('zoom')
     }
   };
 }
