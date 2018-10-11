@@ -19,7 +19,7 @@ import { filterPlugs } from './generated-sets/utils';
 import './loadoutbuilder.scss';
 import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
-import { ArmorSet, LockableBuckets, LockType } from './types';
+import { ArmorSet, LockableBuckets, LockedItemType } from './types';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -37,7 +37,7 @@ interface State {
   processRunning: number;
   requirePerks: boolean;
   requireBurn: 'none' | 'arc' | 'solar' | 'void';
-  lockedMap: { [bucketHash: number]: LockType };
+  lockedMap: { [bucketHash: number]: LockedItemType[] };
   processedSets: ArmorSet[];
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
@@ -160,7 +160,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     requireBurn = this.state.requireBurn
   }: {
     classType?: number;
-    lockedMap?: { [bucketHash: number]: LockType };
+    lockedMap?: { [bucketHash: number]: LockedItemType[] };
     requirePerks?: boolean;
     requireBurn?: string;
   }) => {
@@ -170,18 +170,21 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     Object.keys(allItems).forEach((bucketStr) => {
       const bucket = parseInt(bucketStr, 10);
 
-      // if we are locking an item in that bucket, filter to only those items
-      if (lockedMap[bucket] && lockedMap[bucket].type === 'item') {
-        filteredItems[bucket] = lockedMap[bucket].items;
+      // if we are locking an item in that bucket, filter to only include that single item
+      if (lockedMap[bucket] && lockedMap[bucket][0].type === 'item') {
+        filteredItems[bucket] = [lockedMap[bucket][0].item as D2Item];
         return;
       }
 
       // otherwise flatten all item instances to each bucket
       filteredItems[bucket] = _.flatten(
         Object.values(allItems[bucket]).map((items) => {
+          // if nothing is locked in the current bucket
           if (!lockedMap[bucket]) {
+            // pick the item instance with the highest power
             return items.reduce((a, b) => (a.basePower > b.basePower ? a : b));
           }
+          // otherwise, return all item instances (and then filter down later by perks)
           return items;
         })
       );
@@ -212,31 +215,35 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     Object.keys(lockedMap).forEach((bucketStr) => {
       const bucket = parseInt(bucketStr, 10);
       // if there are locked items for this bucket
-      if (lockedMap[bucket] && lockedMap[bucket].items.length) {
-        // filter out excluded items
-        if (lockedMap[bucket].type === 'exclude') {
-          filteredItems[bucket] = filteredItems[bucket].filter(
-            (item) =>
-              !lockedMap[bucket].items.find((excludeItem) => excludeItem.index === item.index)
-          );
-        } else if (lockedMap[bucket].type === 'perk') {
-          // filter out items that do not have a locked perk
-          filteredItems[bucket] = filteredItems[bucket].filter(
-            (item) =>
-              item.sockets &&
-              item.sockets.sockets.find((slot) =>
-                Boolean(
-                  slot.plugOptions.find((perk) =>
-                    Boolean(
-                      lockedMap[bucket].items.find(
-                        (lockedPerk) => lockedPerk.hash === perk.plugItem.hash
+      if (lockedMap[bucket] && lockedMap[bucket].length) {
+        // loop over each locked item
+        lockedMap[bucket].forEach((lockedItem: LockedItemType) => {
+          // filter out excluded items
+          if (lockedItem.type === 'exclude') {
+            filteredItems[bucket] = filteredItems[bucket].filter(
+              (item) =>
+                !lockedMap[bucket].find((excludeItem) => excludeItem.item.index === item.index)
+            );
+          }
+          if (lockedItem.type === 'perk') {
+            // filter out items that do not have a locked perk
+            filteredItems[bucket] = filteredItems[bucket].filter(
+              (item) =>
+                item.sockets &&
+                item.sockets.sockets.find((slot) =>
+                  Boolean(
+                    slot.plugOptions.find((perk) =>
+                      Boolean(
+                        lockedMap[bucket].find(
+                          (lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash
+                        )
                       )
                     )
                   )
                 )
-              )
-          );
-        }
+            );
+          }
+        });
       }
     });
 
@@ -262,10 +269,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     const lockedMap: State['lockedMap'] = {};
     this.state.selectedStore!.items.forEach((item) => {
       if (item.isDestiny2() && item.equipped && item.bucket.inArmor) {
-        lockedMap[item.bucket.hash] = {
-          type: 'item',
-          items: [item]
-        };
+        lockedMap[item.bucket.hash] = [
+          {
+            type: 'item',
+            item
+          }
+        ];
       }
     });
 
@@ -286,7 +295,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Adds an item to the locked map bucket
    * Recomputes matched sets
    */
-  updateLockedArmor = (bucket: InventoryBucket, locked: LockType) => {
+  updateLockedArmor = (bucket: InventoryBucket, locked: LockedItemType[]) => {
     const lockedMap = this.state.lockedMap;
     lockedMap[bucket.hash] = locked;
 
@@ -388,6 +397,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           processedSets={processedSets}
           lockedMap={lockedMap}
           selectedStore={selectedStore}
+          onLockChanged={this.updateLockedArmor}
         />
       </div>
     );
