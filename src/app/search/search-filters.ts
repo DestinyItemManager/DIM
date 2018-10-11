@@ -380,18 +380,24 @@ export function searchFilters(
   const filterByStats = (statType) => {
     const statHash = {
       rpm: 4284893193,
+      rof: 4284893193,
       charge: 2961396640,
       impact: 4043523819,
       range: 1240592695,
       stability: 155624089,
-      rof: 4284893193,
       reload: 4188031367,
-      magazine: 387123106,
+      magazine: 3871231066,
       aimassist: 1345609583,
       equipspeed: 943549884,
       mobility: 2996146975,
       resilience: 392767087,
-      recovery: 1943323491
+      recovery: 1943323491,
+      velocity: 2523465841,
+      blastradius: 2523465841,
+      recoildirection: 2715839340,
+      drawtime: 447667954,
+      zoom: 3555269338,
+      inventorysize: 1931675084
     }[statType];
 
     return (item: DimItem, predicate: string) => {
