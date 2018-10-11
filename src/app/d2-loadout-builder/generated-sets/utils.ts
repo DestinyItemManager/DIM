@@ -111,7 +111,7 @@ export function toggleLockedItem(
 ) {
   let newLockedItems: LockedItemType[] = [];
   if (locked && locked[0].type !== 'item') {
-    newLockedItems = locked;
+    newLockedItems = Array.from(locked);
   }
 
   const existingIndex = newLockedItems.findIndex((existing) => existing.item === lockedItem.item);
