@@ -11,35 +11,74 @@ import legendaryMarks from 'app/images/legendaryMarks.png';
 // tslint:disable-next-line:no-implicit-dependencies
 import legendaryShards from 'app/images/legendaryShards.png';
 import { InventoryBucket } from './inventory-buckets';
-import { ngDialog } from '../ngimport-more';
-import dialogTemplate from './dimStoreHeading.directive.dialog.html';
 import './StoreHeading.scss';
 import CharacterStats from './CharacterStats';
+import LoadoutPopup from '../loadout/LoadoutPopup';
+import ClickOutside from '../dim-ui/ClickOutside';
+import * as ReactDOM from 'react-dom';
 
 interface Props {
   store: DimStore;
-  internalLoadoutMenu: boolean;
+  /** If this ref is provided, the loadout menu will be placed inside of it instead of in this tile. */
+  loadoutMenuRef?: React.RefObject<HTMLElement>;
+  /** For mobile, this is whichever store is visible at the time. */
   selectedStore?: DimStore;
+  /** Fires if a store other than the selected store is tapped. */
   onTapped?(storeId: string): void;
+}
+
+interface State {
+  loadoutMenuOpen: boolean;
 }
 
 function isVault(store: DimStore): store is DimVault {
   return store.isVault;
 }
 
-export default class StoreHeading extends React.Component<Props> {
-  private dialogResult: any = null;
+export default class StoreHeading extends React.Component<Props, State> {
+  state: State = { loadoutMenuOpen: false };
+  private menuTrigger = React.createRef<HTMLDivElement>();
 
   render() {
-    const { store, internalLoadoutMenu } = this.props;
+    const { store, loadoutMenuRef } = this.props;
+    const { loadoutMenuOpen } = this.state;
+
+    let loadoutMenu;
+    if (loadoutMenuOpen) {
+      const menuContents = (
+        <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu}>
+          <LoadoutPopup dimStore={store} onClick={this.clickOutsideLoadoutMenu} />
+        </ClickOutside>
+      );
+
+      loadoutMenu = loadoutMenuRef ? (
+        ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
+      ) : (
+        <div className="loadout-menu">{menuContents}</div>
+      );
+    }
+
+    const loadoutButton = (
+      <i className="loadout-button fa fa-chevron-circle-down" title={t('Loadouts.Loadouts')} />
+    );
+    const background = (
+      <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
+    );
+    const emblem = <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />;
+
+    // TODO: break up into some pure components
 
     if (isVault(store)) {
       return (
         <div className="character">
-          <div className="character-box vault" onClick={this.openLoadoutPopup}>
-            <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
+          <div
+            className="character-box vault"
+            ref={this.menuTrigger}
+            onClick={this.openLoadoutPopup}
+          >
+            {background}
             <div className="details">
-              <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />
+              {emblem}
               <div className="character-text">
                 <div className="top">
                   <div className="class">{store.className}</div>
@@ -55,13 +94,10 @@ export default class StoreHeading extends React.Component<Props> {
                   <img src={store.isDestiny1() ? legendaryMarks : legendaryShards} />
                 </div>
               </div>
-              <i
-                className="loadout-button fa fa-chevron-circle-down"
-                title={t('Loadouts.Loadouts')}
-              />
+              {loadoutButton}
             </div>
           </div>
-          {internalLoadoutMenu && <div className="loadout-menu" loadout-id={store.id} />}
+          {loadoutMenu}
           <div className="vault-capacity">
             {Object.keys(store.vaultCounts).map((bucketId) => (
               <PressTip
@@ -97,10 +133,11 @@ export default class StoreHeading extends React.Component<Props> {
             destiny2: store.isDestiny2()
           })}
           onClick={this.openLoadoutPopup}
+          ref={this.menuTrigger}
         >
-          <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
+          {background}
           <div className="details">
-            <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />
+            {emblem}
             <div className="character-text">
               <div className="top">
                 <div className="class">{store.className}</div>
@@ -119,13 +156,10 @@ export default class StoreHeading extends React.Component<Props> {
                 />
               </PressTip>
             </div>
-            <i
-              className="loadout-button fa fa-chevron-circle-down"
-              ng-i18next="[title]Loadouts.Loadouts"
-            />
+            {loadoutButton}
           </div>
         </div>
-        {internalLoadoutMenu && <div className="loadout-menu" loadout-id={store.id} />}
+        {loadoutMenu}
         <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
       </div>
     );
@@ -134,30 +168,20 @@ export default class StoreHeading extends React.Component<Props> {
   private openLoadoutPopup = (e) => {
     e.stopPropagation();
 
-    const { store, internalLoadoutMenu, selectedStore, onTapped } = this.props;
+    const { store, selectedStore, onTapped } = this.props;
+    const { loadoutMenuOpen } = this.state;
 
-    if (store !== selectedStore && !internalLoadoutMenu) {
+    if (store !== selectedStore && onTapped) {
       onTapped && onTapped(store.id);
       return;
     }
 
-    if (this.dialogResult === null) {
-      ngDialog.closeAll();
-      this.dialogResult = ngDialog.open({
-        template: dialogTemplate,
-        plain: true,
-        appendTo: `div[loadout-id="${store.id}"]`,
-        overlay: false,
-        className: 'loadout-popup',
-        showClose: false,
-        data: store
-      });
+    this.setState({ loadoutMenuOpen: !loadoutMenuOpen });
+  };
 
-      this.dialogResult.closePromise.then(() => {
-        this.dialogResult = null;
-      });
-    } else {
-      this.dialogResult.close();
+  private clickOutsideLoadoutMenu = (e) => {
+    if (!e || !this.menuTrigger.current || !this.menuTrigger.current.contains(e.target)) {
+      this.setState({ loadoutMenuOpen: false });
     }
   };
 }

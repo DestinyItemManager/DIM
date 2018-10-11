@@ -1,0 +1,82 @@
+.add-perk-options {
+  width: 300px;
+  height: auto;
+  flex-wrap: wrap;
+  background: #222;
+  position: absolute;
+  z-index: 1;
+  top: 44px;
+  left: 6px;
+}
+.add-perk-options-title {
+  margin: 5px 0;
+  display: flex;
+  .close {
+    top: 5px;
+    right: 5px;
+  }
+}
+.add-perk-options-details {
+  text-align: left;
+  padding: 5px;
+}
+.add-perk-options-content {
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+}
+.add-perk-options-content .excluded-item .item-img {
+  border-color: orange;
+}
+
+.perk-image {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #222;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: 14px 10px;
+  // width: calc(var(--item-size) * 15px);
+  // height: calc(var(--item-size) * 15px);
+  &:hover {
+    border: 1px solid gray;
+  }
+}
+.perk-image.locked-perk {
+  border: 1px solid orange;
+}
+
+.add-perk-container {
+  opacity: 0.5;
+  display: table-cell;
+  vertical-align: middle;
+  width: var(--item-size);
+  height: var(--item-size);
+
+  &:hover {
+    opacity: 1;
+    transition: 0.3s;
+  }
+
+  &.has-locked {
+    opacity: 1;
+  }
+
+  .add-perk-text {
+    display: block;
+    font-size: 8px;
+  }
+}
+
+.add-perk-label {
+  font-size: 10px;
+}
+
+.on-loadout-hover {
+  .empty-item {
+    background-color: limegreen;
+  }
+}
+.close {
+  z-index: 1;
+}

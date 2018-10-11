@@ -37,7 +37,7 @@ async function doMoveDroppedItem(
     }
   }
 
-  let moveAmount = item.amount;
+  let moveAmount = item.amount || 1;
 
   try {
     if (
@@ -118,7 +118,8 @@ async function doMoveDroppedItem(
       if (
         e.code !== 'wrong-level' &&
         e.code !== 'no-space' &&
-        e.code !== PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation
+        e.code !== PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation &&
+        e.code !== PlatformErrorCodes.DestinyItemNotFound
       ) {
         reportException('moveItem', e);
       }

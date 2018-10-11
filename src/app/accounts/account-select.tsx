@@ -9,6 +9,7 @@ import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
 import { router } from '../../router';
+import { AppIcon, signOutIcon } from '../shell/icons';
 
 const Account = React.forwardRef(
   (
@@ -102,7 +103,9 @@ export default class AccountSelect extends React.Component<Props, State> {
               </UISref>
             ))}
             <div className="log-out" onClick={this.logOut}>
-              <i className="fa fa-sign-out" /> {t('Settings.LogOut')}
+              <AppIcon icon={signOutIcon} />
+              &nbsp;
+              {t('Settings.LogOut')}
             </div>
           </ClickOutside>
         )}

@@ -27,13 +27,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap !important;
+    .app-icon,
     .fa {
       width: 12px;
-      margin-right: 2px;
+      margin-right: 5px;
       text-align: center;
-    }
-    img.fa {
-      transform: translateY(1px);
     }
   }
 
@@ -41,8 +39,9 @@
     padding: 0 12px;
     text-align: center;
     color: #888;
+    .app-icon,
     .fa {
-      font-size: 1.2em;
+      font-size: 13px;
     }
     &:hover {
       background-color: $blue;
@@ -56,13 +55,12 @@
 
   .light {
     font-weight: 200;
-    color: $gold;
     float: right;
-    &:before {
-      content: '\2726';
-      display: inline-block;
-      vertical-align: 7%;
-      font-size: 50%;
+    .app-icon {
+      margin-right: 2px !important;
+    }
+    &::before {
+      display: none;
     }
   }
 }
@@ -82,23 +80,23 @@
   color: #e4e4e4;
 }
 
-.ngdialog.loadout-popup {
+.loadout-menu {
   position: absolute;
-  display: block;
+  max-width: 230px;
   width: 100%;
   max-height: calc(100vh - 121px);
   overflow: auto;
   z-index: 2;
-  top: 0;
-  bottom: initial;
-  margin: 0;
-  padding: 0;
   color: rgba(245, 245, 245, 0.6);
   margin-bottom: 10px;
   cursor: pointer;
 
-  .detached & {
-    top: 103px;
+  [role='button'] {
+    outline: none;
+  }
+
+  &.detached {
+    top: 101px;
     z-index: 1000;
     max-height: calc(100vh - 221px);
     max-width: 230px;

@@ -72,6 +72,10 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+
+    &.unavailable .item {
+      opacity: 0.5;
+    }
   }
   .category-title {
     margin-top: 10px;
@@ -188,19 +192,6 @@
     background-color: rgba(0, 0, 0, 0.2);
     background-size: cover;
   }
-}
-
-.locked-overlay {
-  width: calc(var(--item-size) + 4px);
-  height: calc(var(--item-size) + 4px);
-  position: absolute;
-  top: 0;
-  left: 2px;
-  pointer-events: none;
-  z-index: 1;
-  background-color: rgba(40, 40, 40, 0.6);
-  margin-top: 2px;
-  backface-visibility: hidden;
 }
 
 .ngdialog.vendor-move-popup {

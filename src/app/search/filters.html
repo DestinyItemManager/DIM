@@ -2,7 +2,8 @@
   <h1 ng-i18next="Header.Filters"></h1>
   <div class="ngdialog-inner-content">
     <p ng-i18next="Filter.ClickFilters"></p>
-    <p ng-i18next="[i18next]({ example: 'is:arc light:>300', not: 'not:', notexample: 'not:engram' })Filter.Combine"></p>
+    <p ng-i18next="[i18next]({ example: 'is:arc light:>300'})Filter.Combine"></p>
+    <p ng-i18next="[i18next]({ notexample: '-is:engram' })Filter.Negate"></p>
     <p ng-i18next="[html:i18next]({ link: '<a href=\'https://youtu.be/T0tjH95AG_I\' target=\'_blank\' rel=\'noopener noreferrer\'>Youtube</a>' })Filter.VideoExample"></p>
     <table>
       <tr>
@@ -11,7 +12,9 @@
       </tr>
       <tr>
         <td>
-          <dim-filter-link filter="item name"></dim-filter-link>
+          <dim-filter-link filter="perk"></dim-filter-link>
+          <dim-filter-link filter="&quot;item name&quot;"></dim-filter-link>
+          <dim-filter-link filter="perk:magazine"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.PartialMatch"></td>
       </tr>

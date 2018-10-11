@@ -67,6 +67,18 @@ export default class Vendor extends React.Component<Props> {
       return null;
     }
 
+    const vendorItems = getVendorItems(
+      account,
+      defs,
+      vendorDef,
+      trackerService,
+      itemComponents,
+      sales
+    );
+    if (!vendorItems.length) {
+      return null;
+    }
+
     const destinationDef = defs.Destination.get(
       vendorDef.locations[vendor.vendorLocationIndex].destinationHash
     );
@@ -76,10 +88,10 @@ export default class Vendor extends React.Component<Props> {
       .filter((n) => n.length)
       .join(', ');
 
-    const vendorEngramDrops = getVendorDropsForVendor(vendor.vendorHash, allVendorEngramDrops);
+    const vendorEngramDrops = $featureFlags.vendorEngrams
+      ? getVendorDropsForVendor(vendor.vendorHash, allVendorEngramDrops)
+      : [];
     const dropActive = vendorEngramDrops.some(isVerified380);
-
-    const vendorEngramClass = classNames('fa', 'xyz-engram', { 'xyz-active-throb': dropActive });
 
     const vendorLinkTitle = dropActive ? 'VendorEngramsXyz.Likely380' : 'VendorEngramsXyz.Vote';
 
@@ -92,7 +104,7 @@ export default class Vendor extends React.Component<Props> {
               powerLevelMatters(basePowerLevel) && (
                 <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/">
                   <img
-                    className={vendorEngramClass}
+                    className={classNames('fa', 'xyz-engram', { 'xyz-active-throb': dropActive })}
                     src={vendorEngramSvg}
                     title={t(vendorLinkTitle)}
                   />
@@ -110,14 +122,7 @@ export default class Vendor extends React.Component<Props> {
           defs={defs}
           vendor={vendor}
           vendorDef={vendorDef}
-          vendorItems={getVendorItems(
-            account,
-            defs,
-            vendorDef,
-            trackerService,
-            itemComponents,
-            sales
-          )}
+          vendorItems={vendorItems}
           trackerService={trackerService}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={currencyLookups}

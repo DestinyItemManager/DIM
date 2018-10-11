@@ -1,5 +1,5 @@
-import * as _ from 'underscore';
-import { flatMap } from '../util';
+import * as _ from 'lodash';
+
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
@@ -63,7 +63,7 @@ interface SearchConfig {
  */
 export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const categories = destinyVersion === 1 ? D1Categories : D2Categories;
-  const itemTypes = flatMap(Object.values(categories), (l: string[]) =>
+  const itemTypes = _.flatMap(Object.values(categories), (l: string[]) =>
     l.map((v) => v.toLowerCase())
   );
 
@@ -137,14 +137,14 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
+    weapon: ['weapon'],
+    armor: ['armor'],
     categoryHash: Object.keys(categoryHashFilters),
     inloadout: ['inloadout'],
     maxpower: ['maxpower'],
     new: ['new'],
     tag: ['tagged'],
     level: ['level'],
-    weapon: ['weapon'],
-    armor: ['armor'],
     equipment: ['equipment', 'equippable'],
     postmaster: ['postmaster', 'inpostmaster'],
     equipped: ['equipped'],
@@ -274,6 +274,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   // free form notes on items
   keywords.push('notes:');
+  keywords.push('perk:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -461,63 +462,90 @@ export function searchFilters(
       }
 
       // could probably tidy this regex, just a quick hack to support multi term:
-      // [^\s]*"[^"]*" -> match is:"stuff here"
-      // [^\s]*'[^']*' -> match is:'stuff here'
+      // [^\s]*?"[^"]+?" -> match is:"stuff here"
+      // [^\s]*?'[^']+?' -> match is:'stuff here'
       // [^\s"']+' -> match is:stuff
-      const searchTerms = query.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g) || [];
-      const filters: {
+      const searchTerms = query.match(/[^\s]*?"[^"]+?"|[^\s]*?'[^']+?'|[^\s"']+/g) || [];
+      interface Filter {
         invert: boolean;
         value: string;
         predicate: string;
-      }[] = [];
+        orFilters?: Filter[];
+      }
+      const filters: Filter[] = [];
 
-      function addPredicate(predicate: string, filter: string, invert = false) {
-        filters.push({ predicate, value: filter, invert });
+      // The entire implementation of "or" is a dirty hack - we should really
+      // build an expression tree instead. But here, we flip a flag when we see
+      // an "or" token, and then on the next filter we instead combine the filter
+      // with the previous one in a hacked-up "or" node that we'll handle specially.
+      let or = false;
+
+      function addPredicate(predicate: string, filter: string, invert: boolean = false) {
+        const filterDef: Filter = { predicate, value: filter, invert };
+        if (or && filters.length) {
+          const lastFilter = filters.pop();
+          filters.push({
+            predicate: 'or',
+            invert: false,
+            value: '',
+            orFilters: [...(lastFilter!.orFilters! || [lastFilter])!, filterDef]
+          });
+        } else {
+          filters.push(filterDef);
+        }
+        or = false;
       }
 
-      // TODO: replace this if-ladder with a split and check
-      for (let term of searchTerms) {
-        term = term.replace(/['"]/g, '');
+      for (let search of searchTerms) {
+        search = search.replace(/['"]/g, '');
 
-        if (term.startsWith('is:')) {
+        const invert = search.startsWith('-');
+        const term = search.replace(/^-/, '');
+
+        if (term === 'or') {
+          or = true;
+        } else if (term.startsWith('is:')) {
           const filter = term.replace('is:', '');
           const predicate = searchConfig.keywordToFilter[filter];
           if (predicate) {
-            addPredicate(predicate, filter);
+            addPredicate(predicate, filter, invert);
           }
         } else if (term.startsWith('not:')) {
           const filter = term.replace('not:', '');
           const predicate = searchConfig.keywordToFilter[filter];
           if (predicate) {
-            addPredicate(predicate, filter, true);
+            addPredicate(predicate, filter, !invert);
           }
         } else if (term.startsWith('tag:')) {
           const filter = term.replace('tag:', '');
-          addPredicate('itemtags', filter);
+          addPredicate('itemtags', filter, invert);
         } else if (term.startsWith('notes:')) {
           const filter = term.replace('notes:', '');
-          addPredicate('notes', filter);
+          addPredicate('notes', filter, invert);
+        } else if (term.startsWith('perk:')) {
+          const filter = term.replace('perk:', '');
+          addPredicate('perk', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
-          addPredicate('light', filter);
+          addPredicate('light', filter, invert);
         } else if (term.startsWith('masterwork:')) {
           const filter = term.replace('masterwork:', '');
-          addPredicate('masterworkValue', filter);
+          addPredicate('masterworkValue', filter, invert);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
-          addPredicate('stack', filter);
+          addPredicate('stack', filter, invert);
         } else if (term.startsWith('level:')) {
           const filter = term.replace('level:', '');
-          addPredicate('level', filter);
+          addPredicate('level', filter, invert);
         } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
           const filter = term.replace('quality:', '').replace('percentage:', '');
-          addPredicate('quality', filter);
+          addPredicate('quality', filter, invert);
         } else if (term.startsWith('rating:')) {
           const filter = term.replace('rating:', '');
-          addPredicate('rating', filter);
+          addPredicate('rating', filter, invert);
         } else if (term.startsWith('ratingcount:')) {
           const filter = term.replace('ratingcount:', '');
-          addPredicate('ratingcount', filter);
+          addPredicate('ratingcount', filter, invert);
         } else if (term.startsWith('stat:')) {
           // Avoid console.error by checking if all parameters are typed
           const pieces = term.split(':');
@@ -526,16 +554,27 @@ export function searchFilters(
             addPredicate(filter, pieces[2]);
           }
         } else if (!/^\s*$/.test(term)) {
-          addPredicate('keyword', term.replace(/^-/, ''), term.startsWith('-'));
+          addPredicate('keyword', term, invert);
         }
       }
 
       _sortedStores = null;
 
-      return (item) => {
+      return (item: DimItem) => {
         return filters.every((filter) => {
-          const result =
-            this.filters[filter.predicate] && this.filters[filter.predicate](item, filter.value);
+          let result;
+          if (filter.orFilters) {
+            result = filter.orFilters.some((filter) => {
+              const result =
+                this.filters[filter.predicate] &&
+                this.filters[filter.predicate](item, filter.value);
+
+              return filter.invert ? !result : result;
+            });
+          } else {
+            result =
+              this.filters[filter.predicate] && this.filters[filter.predicate](item, filter.value);
+          }
           return filter.invert ? !result : result;
         });
       };
@@ -606,7 +645,7 @@ export function searchFilters(
         return item.talentGrid && item.talentGrid.hasAscendNode && !item.talentGrid.ascended;
       },
       reforgeable(item: DimItem) {
-        return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
+        return item.talentGrid && item.talentGrid.nodes.some((n) => n.hash === 617082448);
       },
       ornament(item: D1Item, predicate: string) {
         const complete = item.talentGrid && item.talentGrid.nodes.some((n) => n.ornament);
@@ -779,7 +818,7 @@ export function searchFilters(
       stattype(item: DimItem, predicate: string) {
         return (
           item.stats &&
-          _.any(item.stats, (s) =>
+          item.stats.some((s) =>
             Boolean(s.name.toLowerCase() === predicate && s.value && s.value > 0)
           )
         );
@@ -812,6 +851,11 @@ export function searchFilters(
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
+          this.perk(item, predicate)
+        );
+      },
+      perk(item: DimItem, predicate: string) {
+        return (
           (item.talentGrid &&
             item.talentGrid.nodes.some((node) => {
               // Fixed #798 by searching on the description too.
@@ -1079,7 +1123,7 @@ export function searchFilters(
       hasShader(item: D2Item) {
         return (
           item.sockets &&
-          _.any(item.sockets.sockets, (socket) => {
+          item.sockets.sockets.some((socket) => {
             return (
               (socket.plug || false) &&
               socket.plug.plugItem.plug.plugCategoryHash === 2973005342 &&

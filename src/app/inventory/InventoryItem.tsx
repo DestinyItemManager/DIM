@@ -4,13 +4,12 @@ import { DimItem } from './item-types';
 import { percent } from './dimPercentWidth.directive';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { getColor, dtrRatingColor } from '../shell/dimAngularFilters.filter';
-import { tagIconFilter } from './dimStoreItem.directive';
 import ItemRender from './ItemRender';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
 import './InventoryItem.scss';
-import { TagValue } from './dim-item-info';
+import { TagValue, tagIconFilter } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import { settings } from '../settings/settings';
 
@@ -49,7 +48,8 @@ export default class InventoryItem extends React.Component<Props> {
 
     const itemImageStyles = {
       complete: item.complete,
-      diamond: (item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram,
+      diamond:
+        (item.isDestiny2 && item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram,
       masterwork: item.masterwork,
       capped: badgeInfo.isCapped
     };
@@ -57,6 +57,7 @@ export default class InventoryItem extends React.Component<Props> {
     const elaborateTile =
       $featureFlags.forsakenTiles &&
       settings.betaForsakenTiles &&
+      item.isDestiny2 &&
       item.isDestiny2() &&
       (item.primStat || item.sockets);
 
@@ -71,7 +72,7 @@ export default class InventoryItem extends React.Component<Props> {
           'd2-item': elaborateTile
         })}
       >
-        {elaborateTile && item.isDestiny2() ? (
+        {elaborateTile && item.isDestiny2 && item.isDestiny2() ? (
           <ItemRender
             item={item}
             badge={badgeInfo}
@@ -92,7 +93,8 @@ export default class InventoryItem extends React.Component<Props> {
               className={classNames('item-img', itemImageStyles)}
               style={bungieBackgroundStyle(item.icon)}
             />
-            {item.isDestiny1() &&
+            {item.isDestiny1 &&
+              item.isDestiny1() &&
               item.quality && (
                 <div
                   className="item-stat item-quality"

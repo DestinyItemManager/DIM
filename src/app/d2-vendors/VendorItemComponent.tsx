@@ -15,6 +15,7 @@ import checkMark from '../../images/check.svg';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import { UISref } from '@uirouter/react';
+import { AppIcon, starIcon } from '../shell/icons';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -70,8 +71,12 @@ export default class VendorItemComponent extends React.Component<Props> {
     const progress = item.objectiveProgress;
 
     return (
-      <div className={classNames('vendor-item', { owned })}>
-        {(!item.canPurchase || !item.canBeSold) && <div className="locked-overlay" />}
+      <div
+        className={classNames('vendor-item', {
+          owned,
+          unavailable: !item.canPurchase || !item.canBeSold
+        })}
+      >
         <div
           className="item"
           title={item.displayProperties.name}
@@ -92,7 +97,7 @@ export default class VendorItemComponent extends React.Component<Props> {
               {Boolean(item.rating && item.rating > 0) && (
                 <div className="item-stat item-review">
                   {item.rating}
-                  <i className="fa fa-star" style={dtrRatingColor(item.rating!)} />
+                  <AppIcon icon={starIcon} style={dtrRatingColor(item.rating!)} />
                 </div>
               )}
               {Boolean(item.primaryStat) && (

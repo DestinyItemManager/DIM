@@ -1,9 +1,8 @@
-import * as _ from 'underscore';
-import uuidv4 from 'uuid/v4';
-import { sum, count } from '../../util';
+import * as _ from 'lodash';
+import { count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
-import { copy as angularCopy } from 'angular';
+import copy from 'fast-copy';
 import { t } from 'i18next';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';
@@ -12,6 +11,7 @@ import vaultBackground from 'app/images/vault-background.png';
 import { D1Store, D1Vault } from '../store-types';
 import { D1Item } from '../item-types';
 import { D1StoresService } from '../d1-stores.service';
+import { newLoadout } from '../../loadout/loadout-utils';
 
 // Label isn't used, but it helps us understand what each one is
 const progressionMeta = {
@@ -48,7 +48,7 @@ const StoreProto = {
    * excluding stuff in the postmaster.
    */
   amountOfItem(this: D1Store, item: D1Item) {
-    return sum(
+    return _.sumBy(
       this.items.filter((i) => {
         return i.hash === item.hash && !i.location.inPostmaster;
       }),
@@ -130,16 +130,9 @@ const StoreProto = {
 
   // Create a loadout from this store's equipped items
   loadoutFromCurrentlyEquipped(this: D1Store, name: string) {
-    const allItems = this.items
-      .filter((item) => item.canBeInLoadout())
-      // tslint:disable-next-line:no-unnecessary-callback-wrapper
-      .map((item) => angularCopy(item));
-    return {
-      id: uuidv4(),
-      classType: -1,
-      name,
-      items: _.groupBy(allItems, (i) => i.type.toLowerCase())
-    };
+    // tslint:disable-next-line:no-unnecessary-callback-wrapper
+    const allItems = this.items.filter((item) => item.canBeInLoadout()).map((item) => copy(item));
+    return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
   },
 
   factionAlignment(this: D1Store) {
@@ -239,7 +232,7 @@ export function makeCharacter(
         defs.Progression.get(prog.progressionHash),
         progressionMeta[prog.progressionHash]
       );
-      const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
+      const faction = _.find(defs.Faction, (f) => f.progressionHash === prog.progressionHash);
       if (faction) {
         prog.faction = faction;
       }

@@ -1,9 +1,8 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import { t } from 'i18next';
-import * as _ from 'underscore';
-import { optimalLoadout } from './loadout-utils';
+import * as _ from 'lodash';
+import { optimalLoadout, newLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
-import { sum, flatMap } from '../util';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 
@@ -118,13 +117,13 @@ export function gatherEngramsLoadout(
     throw new Error(engramWarning);
   }
 
-  const itemsByType = _.mapObject(_.groupBy(engrams, 'type'), (items) => {
+  const itemsByType = _.mapValues(_.groupBy(engrams, (e) => e.type), (items) => {
     // Sort exotic engrams to the end so they don't crowd out other types
     items = _.sortBy(items, (i) => {
       return i.isExotic ? 1 : 0;
     });
     // No more than 9 engrams of a type
-    return _.first(items, 9);
+    return _.take(items, 9);
   });
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
@@ -137,11 +136,7 @@ export function gatherEngramsLoadout(
     }
   });
 
-  return {
-    classType: -1,
-    name: t('Loadouts.GatherEngrams'),
-    items: finalItems
-  };
+  return newLoadout(t('Loadouts.GatherEngrams'), finalItems);
 }
 
 export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
@@ -155,7 +150,7 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
 
   tokens = addUpStackables(tokens);
 
-  const itemsByType = _.groupBy(tokens, 'type');
+  const itemsByType = _.groupBy(tokens, (t) => t.type);
 
   // Copy the items and put them in arrays, so they look like a loadout
   const finalItems = {};
@@ -165,11 +160,7 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
     }
   });
 
-  return {
-    classType: -1,
-    name: t('Loadouts.GatherTokens'),
-    items: finalItems
-  };
+  return newLoadout(t('Loadouts.GatherTokens'), finalItems);
 }
 
 /**
@@ -182,7 +173,7 @@ export function searchLoadout(storeService: StoreServiceType, store: DimStore): 
 
   items = addUpStackables(items);
 
-  const itemsByType = _.mapObject(_.groupBy(items, 'type'), (items) =>
+  const itemsByType = _.mapValues(_.groupBy(items, (i) => i.type), (items) =>
     limitToBucketSize(items, store.isVault)
   );
 
@@ -198,11 +189,7 @@ export function searchLoadout(storeService: StoreServiceType, store: DimStore): 
     }
   });
 
-  return {
-    classType: -1,
-    name: t('Loadouts.FilteredItems'),
-    items: finalItems
-  };
+  return newLoadout(t('Loadouts.FilteredItems'), finalItems);
 }
 
 function limitToBucketSize(items: DimItem[], isVault) {
@@ -212,24 +199,24 @@ function limitToBucketSize(items: DimItem[], isVault) {
   const item = items[0];
 
   if (!item.bucket) {
-    return isVault ? items : _.first(items, 9);
+    return isVault ? items : _.take(items, 9);
   }
   const bucket = isVault ? item.bucket.vaultBucket : item.bucket;
 
   if (!bucket) {
-    return isVault ? items : _.first(items, 9);
+    return isVault ? items : _.take(items, 9);
   }
   // TODO: this doesn't take into account stacks that need to split
-  return _.first(items, bucket.capacity - (item.equipment ? 1 : 0));
+  return _.take(items, bucket.capacity - (item.equipment ? 1 : 0));
 }
 
 // Add up stackable items so we don't have duplicates. This helps us actually move them, see
 // https://github.com/DestinyItemManager/DIM/issues/2691#issuecomment-373970255
 function addUpStackables(items: DimItem[]) {
-  return flatMap(Object.values(_.groupBy(items, (t) => t.hash)), (items) => {
+  return _.flatMap(Object.values(_.groupBy(items, (t) => t.hash)), (items) => {
     if (items[0].maxStackSize > 1) {
       const item = copy(items[0]);
-      item.amount = sum(items, (i) => i.amount);
+      item.amount = _.sumBy(items, (i) => i.amount);
       return [item];
     } else {
       return items;

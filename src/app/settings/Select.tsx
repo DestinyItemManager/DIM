@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Settings } from './reducer';
 import { t } from 'i18next';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 
 export default function Select({
   label,

@@ -1,9 +1,7 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
-
-import { flatMap } from '../util';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
@@ -14,7 +12,7 @@ import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';
-import { $rootScope, $q } from 'ngimport';
+import { $q } from 'ngimport';
 import { loadingTracker, toaster } from '../ngimport-more';
 import { IPromise } from 'angular';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
@@ -63,7 +61,7 @@ function StoreService(): D1StoreServiceType {
     getStores: () => _stores,
     getStore: (id) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
-    getAllItems: () => flatMap(_stores, (s) => s.items),
+    getAllItems: () => _.flatMap(_stores, (s) => s.items),
     refreshRatingsData() {
       return;
     },
@@ -123,7 +121,7 @@ function StoreService(): D1StoreServiceType {
     return $q.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
-          const bStore: any = _.find(bungieStores, { id: dStore.id });
+          const bStore = bungieStores.find((s) => s.id === dStore.id)!;
           dStore.updateCharacterInfo(defs, bStore.base);
         }
       });
@@ -191,25 +189,27 @@ function StoreService(): D1StoreServiceType {
           silver: 0
         };
 
-        const processStorePromises = _.compact(
-          (rawStores as any[]).map((raw) =>
-            processStore(
-              raw,
-              defs,
-              buckets,
-              previousItems,
-              newItems,
-              itemInfoService,
-              currencies,
-              lastPlayedDate
+        const processStorePromises = $q.all(
+          _.compact(
+            (rawStores as any[]).map((raw) =>
+              processStore(
+                raw,
+                defs,
+                buckets,
+                previousItems,
+                newItems,
+                itemInfoService,
+                currencies,
+                lastPlayedDate
+              )
             )
           )
         );
 
         store.dispatch(setBuckets(buckets));
-        return $q.all([newItems, itemInfoService, ...processStorePromises]);
+        return $q.all([newItems, itemInfoService, processStorePromises]);
       })
-      .then(([newItems, itemInfoService, ...stores]: [Set<string>, any, ...D1Store[]]) => {
+      .then(([newItems, itemInfoService, stores]) => {
         // Save and notify about new items
         NewItemsService.applyRemovedNewItems(newItems);
         NewItemsService.saveNewItems(newItems, account);
@@ -243,7 +243,6 @@ function StoreService(): D1StoreServiceType {
       })
       .finally(() => {
         D1ManifestService.loaded = true;
-        $rootScope.$broadcast('dim-filter-invalidate');
       });
 
     loadingTracker.addPromise(reloadPromise);

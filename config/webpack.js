@@ -13,9 +13,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 
-// const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
@@ -315,11 +316,17 @@ module.exports = (env) => {
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
         // Forsaken Item Tiles
-        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release')
-      })
+        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
+        // D2 Loadout Builder
+        '$featureFlags.d2LoadoutBuilder': JSON.stringify(env !== 'release')
+      }),
 
-      // Enable if you want to debug the size of the chunks
-      // new Visualizer(),
+      new LodashModuleReplacementPlugin({
+        collections: true,
+        memoizing: true,
+        shorthands: true,
+        flattening: true
+      })
     ],
 
     node: {
@@ -328,6 +335,11 @@ module.exports = (env) => {
       tls: 'empty'
     }
   };
+
+  // Enable if you want to debug the size of the chunks
+  if (process.env.WEBPACK_VISUALIZE) {
+    config.plugins.push(new Visualizer());
+  }
 
   if (isDev) {
     config.plugins.push(

@@ -1,14 +1,14 @@
-import { sum, count } from '../util';
-import * as _ from 'underscore';
+import { count } from '../util';
+import * as _ from 'lodash';
 
 export function dataStats(data) {
-  const taggedItemsD1 = sum(
+  const taggedItemsD1 = _.sumBy(
     Object.keys(data)
       .filter((k) => k.startsWith('dimItemInfo') && k.endsWith('-d1'))
       .map((k) => _.size(data[k])),
     (v) => v
   );
-  const taggedItemsD2 = sum(
+  const taggedItemsD2 = _.sumBy(
     Object.keys(data)
       .filter((k) => k.startsWith('dimItemInfo') && k.endsWith('-d2'))
       .map((k) => _.size(data[k])),
@@ -17,11 +17,11 @@ export function dataStats(data) {
 
   const loadoutsD1 = count(
     data['loadouts-v3.0'] || [],
-    (loadoutId: string) => data[loadoutId].destinyVersion !== 2
+    (loadoutId: string) => data[loadoutId] && data[loadoutId].destinyVersion !== 2
   );
   const loadoutsD2 = count(
     data['loadouts-v3.0'] || [],
-    (loadoutId: string) => data[loadoutId].destinyVersion === 2
+    (loadoutId: string) => data[loadoutId] && data[loadoutId].destinyVersion === 2
   );
 
   return {

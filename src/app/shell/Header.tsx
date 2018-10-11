@@ -25,6 +25,7 @@ import {
   dimVendorEngramsService,
   isVerified380
 } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 
 const destiny1Links = [
   {
@@ -67,6 +68,14 @@ const destiny2Links = [
     text: 'Vendors.Collections'
   }
 ];
+
+// conditionally add in the d2 loadout builder
+if ($featureFlags.d2LoadoutBuilder) {
+  destiny2Links.splice(1, 0, {
+    state: 'destiny2.loadoutbuilder',
+    text: 'LoadoutBuilder.Title'
+  });
+}
 
 const shopLink = 'https://shop.destinyitemmanager.com/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
@@ -180,7 +189,7 @@ export default class Header extends React.PureComponent<{}, State> {
     return (
       <div id="header" className={showSearch ? 'search-expanded' : ''}>
         <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>
-          <i className="fa fa-bars" />
+          <AppIcon icon={menuIcon} />
           <MenuBadge />
         </span>
 
@@ -224,7 +233,9 @@ export default class Header extends React.PureComponent<{}, State> {
             settings.showReviews && <RatingMode />}
           {!showSearch && (
             <UISref to="settings">
-              <a className="link fa fa-cog" title={t('Settings.Settings')} />
+              <a className="link" title={t('Settings.Settings')}>
+                <AppIcon icon={settingsIcon} />
+              </a>
             </UISref>
           )}
           {account && (
@@ -233,7 +244,7 @@ export default class Header extends React.PureComponent<{}, State> {
             </span>
           )}
           <span className="link search-button" onClick={this.toggleSearch}>
-            <i className="fa fa-search" />
+            <AppIcon icon={searchIcon} />
           </span>
           {account && <AccountSelect currentAccount={account} />}
         </span>
@@ -242,21 +253,23 @@ export default class Header extends React.PureComponent<{}, State> {
   }
 
   private updateVendorEngrams = (account = this.state.account) => {
-    if (!$featureFlags.vendorEngrams || !account || account.destinyVersion !== 2) {
-      this.stopPollingVendorEngrams();
-      return;
-    }
+    if ($featureFlags.vendorEngrams) {
+      if (!account || account.destinyVersion !== 2) {
+        this.stopPollingVendorEngrams();
+        return;
+      }
 
-    dimVendorEngramsService.getAllVendorDrops().then((vds) => {
-      const anyActive = vds.some(isVerified380);
-      this.setState({ vendorEngramDropActive: anyActive });
-    });
+      dimVendorEngramsService.getAllVendorDrops().then((vds) => {
+        const anyActive = vds.some(isVerified380);
+        this.setState({ vendorEngramDropActive: anyActive });
+      });
 
-    if (!this.engramRefreshTimer) {
-      this.engramRefreshTimer = window.setInterval(
-        this.updateVendorEngrams,
-        dimVendorEngramsService.refreshInterval
-      );
+      if (!this.engramRefreshTimer) {
+        this.engramRefreshTimer = window.setInterval(
+          this.updateVendorEngrams,
+          dimVendorEngramsService.refreshInterval
+        );
+      }
     }
   };
 

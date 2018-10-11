@@ -1,5 +1,6 @@
 import * as idbKeyval from 'idb-keyval';
 import { settings } from '../../settings/settings';
+import { handleLocalStorageFullError } from '../../compatibility';
 
 let classifiedDataPromise: Promise<ClassifiedData> | undefined;
 
@@ -53,7 +54,7 @@ export function getClassifiedData(): Promise<ClassifiedData> {
       .then((remoteData: ClassifiedData) => {
         remoteData.time = Date.now();
         // Don't wait for the set - for some reason this was hanging
-        idbKeyval.set('classified-data', remoteData);
+        idbKeyval.set('classified-data', remoteData).catch(handleLocalStorageFullError);
         return remoteData;
       })
       .catch((e) => {

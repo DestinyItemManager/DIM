@@ -1,7 +1,6 @@
 {
   "libs": [
     "browser",
-    "underscore",
     "angular"
   ],
   "loadEagerly": [

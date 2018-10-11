@@ -11,9 +11,8 @@ import exampleWeaponImage from 'app/images/example-weapon.jpg';
 // tslint:disable-next-line:no-implicit-dependencies
 import exampleArmorImage from 'app/images/example-armor.jpg';
 import './settings.scss';
-import { $rootScope } from 'ngimport';
 import { DimItem } from '../inventory/item-types';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
@@ -198,13 +197,16 @@ class SettingsPage extends React.Component<Props, State> {
     }
 
     const itemSortCustom = _.sortBy(
-      _.map(itemSortProperties, (displayName, id) => {
-        return {
-          id,
-          displayName,
-          enabled: sortOrder.includes(id)
-        };
-      }),
+      _.map(
+        itemSortProperties,
+        (displayName, id): SortProperty => {
+          return {
+            id,
+            displayName,
+            enabled: sortOrder.includes(id)
+          };
+        }
+      ),
       (o) => {
         const index = sortOrder.indexOf(o.id);
         return index >= 0 ? index : 999;
@@ -344,7 +346,7 @@ class SettingsPage extends React.Component<Props, State> {
             {$featureFlags.forsakenTiles && (
               <Checkbox
                 label="Beta Forsaken Tiles"
-                name="itemQuality"
+                name="betaForsakenTiles"
                 value={settings.betaForsakenTiles}
                 onChange={this.onChange}
               />
@@ -360,7 +362,7 @@ class SettingsPage extends React.Component<Props, State> {
             {$featureFlags.reviewsEnabled && (
               <>
                 <Checkbox
-                  label="Settings.EnableAdvancedStats"
+                  label="Settings.ShowReviews"
                   name="showReviews"
                   helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
                   value={settings.showReviews}
@@ -514,6 +516,14 @@ class SettingsPage extends React.Component<Props, State> {
               >
                 <i className="fa fa-table" /> <span>{t('Bucket.Armor')}</span>
               </button>
+              <button
+                className="dim-button"
+                onClick={this.downloadGhostCsv}
+                disabled={!storesLoaded}
+                title="Download Csv"
+              >
+                <i className="fa fa-table" /> <span>{t('Bucket.Ghost')}</span>
+              </button>
             </div>
           </section>
         </form>
@@ -539,9 +549,6 @@ class SettingsPage extends React.Component<Props, State> {
 
     localStorage.setItem('dimLanguage', language);
     changeLanguage(language, () => {
-      $rootScope.$applyAsync(() => {
-        $rootScope.$broadcast('i18nextLanguageChange');
-      });
       this.setState({});
     });
   };
@@ -558,7 +565,13 @@ class SettingsPage extends React.Component<Props, State> {
     return false;
   };
 
-  private downloadCsv = (type: 'Armor' | 'Weapons') => {
+  private downloadGhostCsv = (e) => {
+    e.preventDefault();
+    this.downloadCsv('Ghost');
+    return false;
+  };
+
+  private downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
     const activePlatform = getActivePlatform();
     if (!activePlatform) {
       return;

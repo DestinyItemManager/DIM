@@ -21,8 +21,9 @@ export function isPhonePortrait() {
 export function isPhonePortraitStream(): Observable<boolean> {
   return Observable.defer(() => {
     return Observable.fromEventPattern(
-      (h: MediaQueryListListener) => phoneWidthQuery.addListener(h),
-      (h: MediaQueryListListener) => phoneWidthQuery.removeListener(h)
+      (h: (this: MediaQueryList, ev: MediaQueryListEvent) => any) => phoneWidthQuery.addListener(h),
+      (h: (this: MediaQueryList, ev: MediaQueryListEvent) => any) =>
+        phoneWidthQuery.removeListener(h)
     )
       .map((e: MediaQueryList) => e.matches)
       .startWith(phoneWidthQuery.matches)

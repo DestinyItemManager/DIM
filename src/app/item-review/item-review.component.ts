@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { settings } from '../settings/settings';
 import template from './item-review.html';
 import './item-review.scss';
@@ -172,8 +172,8 @@ function ItemReviewController(
     // the score histogram is a D1-only thing
     const mapData = _.map(labels, (label) => {
       if (vm.item.destinyVersion === 1) {
-        const matchingReviews = _.where(itemReviews, { rating: label });
-        const highlightedReviews = _.where(matchingReviews, { isHighlighted: true });
+        const matchingReviews = itemReviews.filter((r) => r.rating === label);
+        const highlightedReviews = matchingReviews.filter((r) => r.isHighlighted);
 
         return matchingReviews.length + highlightedReviews.length * 4;
       } else {

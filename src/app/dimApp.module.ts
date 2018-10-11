@@ -4,9 +4,6 @@ import AriaModule from 'angular-aria';
 import 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
 
-import MessagesModule from 'angular-messages';
-import TouchModule from 'angular-touch';
-
 import 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
 import ngI18Next from 'ng-i18next';
@@ -23,8 +20,6 @@ import itemReviewModule from './item-review/item-review.module';
 import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
-import oauthModule from './oauth/oauth.module';
-import loadoutModule from './loadout/loadout.module';
 import movePopupModule from './move-popup/move-popup.module';
 import searchModule from './search/search.module';
 
@@ -34,8 +29,6 @@ import run from './dimApp.run';
 const dependencies = [
   AriaModule,
   DragAndDropModule,
-  MessagesModule,
-  TouchModule,
   ngI18Next,
   ngSanitize,
   ocLazyLoadModule,
@@ -47,8 +40,6 @@ const dependencies = [
   compareModule,
   infuseModule,
   farmingModule,
-  oauthModule,
-  loadoutModule,
   movePopupModule,
   searchModule,
   'ajoslin.promise-tracker',
@@ -57,16 +48,6 @@ const dependencies = [
   'ngDialog',
   ngimportMoreModule
 ];
-
-if ($DIM_FLAVOR === 'dev') {
-  // tslint:disable-next-line
-  dependencies.push(require('./developer/developer.module').default);
-}
-
-if ($featureFlags.sentry) {
-  // tslint:disable-next-line
-  dependencies.push(require('raven-js/plugins/angular').moduleName);
-}
 
 export const DimAppModule = module('dimApp', dependencies)
   .config(config)

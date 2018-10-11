@@ -18,7 +18,7 @@ function isD1Stats(
   return destinyVersion === 1;
 }
 
-export default class CharacterStats extends React.Component<Props> {
+export default class CharacterStats extends React.PureComponent<Props> {
   render() {
     const { stats, destinyVersion } = this.props;
 
@@ -89,14 +89,17 @@ export default class CharacterStats extends React.Component<Props> {
 
       return (
         <div className="stat-bars destiny2">
-          {statList.map((stat, index) => (
-            <PressTip key={stat.id} tooltip={tooltips[index]}>
-              <div className="stat">
-                <img src={stat.icon} />
-                {stat.tiers && <div>{stat.value}</div>}
-              </div>
-            </PressTip>
-          ))}
+          {statList.map(
+            (stat, index) =>
+              stat && (
+                <PressTip key={stat.id} tooltip={tooltips[index]}>
+                  <div className="stat">
+                    <img src={stat.icon} />
+                    {stat.tiers && <div>{stat.value}</div>}
+                  </div>
+                </PressTip>
+              )
+          )}
         </div>
       );
     }

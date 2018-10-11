@@ -1,4 +1,3 @@
-import { IScope } from 'angular';
 import { DestinyVendorDefinition, DestinyVendorResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -10,18 +9,17 @@ import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
-import { Subscription } from 'rxjs/Subscription';
 import { D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { loadingTracker } from '../ngimport-more';
-import { $rootScope } from 'ngimport';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
+import { Subscriptions } from '../rx-utils';
+import { refresh$ } from '../shell/refresh';
 
 interface Props {
-  $scope: IScope;
   account: DestinyAccount;
 }
 
@@ -39,8 +37,7 @@ interface State {
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
  */
 export default class SingleVendor extends React.Component<Props & UIViewInjectedProps, State> {
-  private storesSubscription: Subscription;
-  private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
 
   constructor(props: Props) {
     super(props);
@@ -93,8 +90,11 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
   }
 
   componentDidMount() {
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
-      (stores) => {
+    this.subscriptions.add(
+      refresh$.subscribe(() => {
+        loadingTracker.addPromise(this.loadVendor());
+      }),
+      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
         if (stores) {
           const ownedItemHashes = new Set<number>();
           for (const store of stores) {
@@ -104,18 +104,13 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
           }
           this.setState({ stores, ownedItemHashes });
         }
-      }
+      })
     );
     loadingTracker.addPromise(this.loadVendor());
-
-    this.$scope.$on('dim-refresh', () => {
-      loadingTracker.addPromise(this.loadVendor());
-    });
   }
 
   componentWillUnmount() {
-    this.storesSubscription.unsubscribe();
-    this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
   }
 
   render() {

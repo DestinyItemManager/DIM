@@ -1,5 +1,4 @@
-import { extend } from 'angular';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { SyncService } from '../storage/sync.service';
 
@@ -47,29 +46,27 @@ export class ItemInfoSource {
     const itemKey = `${hash}-${id}`;
     const info = this.infos[itemKey];
     const accountKey = this.key;
-    return extend(
-      {
-        save() {
-          return getInfos(accountKey).then((infos) => {
-            infos[itemKey] = _.omit(this, 'save');
-            if (_.isEmpty(infos[itemKey])) {
-              delete infos[itemKey];
-            }
-            store.dispatch(setTagsAndNotesForItem({ key: itemKey, info: infos[itemKey] }));
-            setInfos(accountKey, infos).catch((e) => {
-              toaster.pop(
-                'error',
-                t('ItemInfoService.SaveInfoErrorTitle'),
-                t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
-              );
-              console.error('Error saving item info (tags, notes):', e);
-              reportException('itemInfo', e);
-            });
+    return {
+      ...info,
+      save() {
+        return getInfos(accountKey).then((infos) => {
+          infos[itemKey] = _.omit(this, 'save');
+          if (_.isEmpty(infos[itemKey])) {
+            delete infos[itemKey];
+          }
+          store.dispatch(setTagsAndNotesForItem({ key: itemKey, info: infos[itemKey] }));
+          setInfos(accountKey, infos).catch((e) => {
+            toaster.pop(
+              'error',
+              t('ItemInfoService.SaveInfoErrorTitle'),
+              t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
+            );
+            console.error('Error saving item info (tags, notes):', e);
+            reportException('itemInfo', e);
           });
-        }
-      },
-      info
-    );
+        });
+      }
+    };
   }
 
   // Remove all item info that isn't in stores' items
@@ -133,4 +130,24 @@ function getInfos(key: string): Promise<{ [itemInstanceId: string]: DimItemInfo 
  */
 function setInfos(key: string, infos: { [itemInstanceId: string]: DimItemInfo }) {
   return SyncService.set({ [key]: infos });
+}
+
+export function tagIconFilter() {
+  'ngInject';
+  const iconType = {};
+
+  itemTags.forEach((tag) => {
+    if (tag.type) {
+      iconType[tag.type] = tag.icon;
+    }
+  });
+
+  return function tagIcon(value) {
+    const icon = iconType[value];
+    if (icon) {
+      return `item-tag fa fa-${icon}`;
+    } else {
+      return 'item-tag no-tag';
+    }
+  };
 }

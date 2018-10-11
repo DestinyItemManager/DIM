@@ -12,7 +12,7 @@ const itemSortPresets = {
 };
 
 export const itemSortOrderSelector = (state: RootState) => itemSortOrder(state.settings);
-export const itemSortOrder = (settings: Settings) =>
+export const itemSortOrder = (settings: Settings): string[] =>
   (settings.itemSort === 'custom'
     ? settings.itemSortOrderCustom
     : itemSortPresets[settings.itemSort]) || itemSortPresets.primaryStat;
