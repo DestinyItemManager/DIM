@@ -135,7 +135,6 @@
     "classnames": "^2.2.5",
     "components-font-awesome": "^4.7.0",
     "core-js": "^2.5.5",
-    "fast-copy": "^1.2.2",
     "fast-equals": "^1.6.1",
     "i18next": "^11.2.3",
     "i18next-xhr-backend": "^1.5.1",

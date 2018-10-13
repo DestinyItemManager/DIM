@@ -1,4 +1,4 @@
-import copy from 'fast-copy';
+import { copy } from 'angular';
 import { t } from 'i18next';
 import * as _ from 'lodash';
 import { optimalLoadout, newLoadout } from './loadout-utils';

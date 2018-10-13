@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import copy from 'fast-copy';
 import template from './loadout-builder.html';
 // tslint:disable-next-line:no-implicit-dependencies
 import intellectIcon from 'app/images/intellect.png';
@@ -9,7 +8,7 @@ import disciplineIcon from 'app/images/discipline.png';
 import strengthIcon from 'app/images/strength.png';
 import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
-import { IComponentOptions, IController, ITimeoutService } from 'angular';
+import { IComponentOptions, IController, ITimeoutService, copy } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loadout, dimLoadoutService, LoadoutClass } from '../loadout/loadout.service';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

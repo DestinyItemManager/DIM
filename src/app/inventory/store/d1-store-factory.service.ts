@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
-import copy from 'fast-copy';
+import { copy } from 'angular';
 import { t } from 'i18next';
 // tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.png';

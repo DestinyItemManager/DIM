@@ -1,4 +1,4 @@
-import copy from 'fast-copy';
+import { copy } from 'angular';
 import * as _ from 'lodash';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
