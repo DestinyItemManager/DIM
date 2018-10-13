@@ -51,7 +51,7 @@ export const searchFilterSelector = createSelector(
   (query, filters) => filters.filterFunction(query)
 );
 
-interface SearchConfig {
+export interface SearchConfig {
   destinyVersion: 1 | 2;
   keywords: string[];
   categoryHashFilters: { [key: string]: number };

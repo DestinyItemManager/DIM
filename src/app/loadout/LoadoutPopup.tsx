@@ -43,6 +43,8 @@ import {
   powerActionIcon,
   powerIndicatorIcon
 } from '../shell/icons';
+import { DimItem } from '../inventory/item-types';
+import { searchFilterSelector } from '../search/search-filters';
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -54,6 +56,7 @@ interface StoreProps {
   loadouts: Loadout[];
   query: string;
   classTypeId: number;
+  searchFilter(item: DimItem): boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -81,6 +84,7 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
     previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
     loadouts: loadoutsForPlatform,
     query: querySelector(state),
+    searchFilter: searchFilterSelector(state),
     classTypeId
   };
 }
@@ -359,8 +363,8 @@ class LoadoutPopup extends React.Component<Props> {
 
   // Move items matching the current search. Max 9 per type.
   private searchLoadout = (e) => {
-    const { dimStore } = this.props;
-    const loadout = searchLoadout(dimStore.getStoresService(), dimStore);
+    const { dimStore, searchFilter } = this.props;
+    const loadout = searchLoadout(dimStore.getStoresService(), dimStore, searchFilter);
     this.applyLoadout(loadout, e);
   };
 

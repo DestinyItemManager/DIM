@@ -166,9 +166,13 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
 /**
  * Move items matching the current search.
  */
-export function searchLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
+export function searchLoadout(
+  storeService: StoreServiceType,
+  store: DimStore,
+  searchFilter: (item: DimItem) => boolean
+): Loadout {
   let items = storeService.getAllItems().filter((i) => {
-    return i.visible && !i.location.inPostmaster && !i.notransfer;
+    return !i.location.inPostmaster && !i.notransfer && searchFilter(i);
   });
 
   items = addUpStackables(items);

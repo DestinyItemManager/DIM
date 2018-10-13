@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import template from './search-filter.html';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
-import { searchFilters, buildSearchConfig, SearchFilters } from './search-filters';
+import { searchFilters, buildSearchConfig, SearchFilters, SearchConfig } from './search-filters';
 import filtersTemplate from '../search/filters.html';
 import { getItemInfoSource, itemTags } from '../inventory/dim-item-info';
 import './search-filter.scss';
@@ -61,7 +61,6 @@ function SearchFilterCtrl(
   }
 
   let filters: SearchFilters;
-  let searchConfig;
   let filteredItems: DimItem[] = [];
 
   subscribeOnScope($scope, isPhonePortraitStream(), (isPhonePortrait) => {
@@ -75,14 +74,14 @@ function SearchFilterCtrl(
 
   vm.$onChanges = (changes) => {
     if (changes.account && changes.account) {
-      searchConfig = buildSearchConfig(vm.account.destinyVersion);
+      const searchConfig = buildSearchConfig(vm.account.destinyVersion);
       filters = searchFilters(searchConfig, getStoresService());
-      setupTextcomplete();
+      setupTextcomplete(searchConfig);
     }
   };
 
-  let textcomplete;
-  function setupTextcomplete() {
+  let textcomplete: Textcomplete;
+  function setupTextcomplete(searchConfig: SearchConfig) {
     if (textcomplete) {
       textcomplete.destroy();
       textcomplete = null;
@@ -299,19 +298,13 @@ function SearchFilterCtrl(
 
   vm.filter = () => {
     vm.selectedTag = undefined;
-    filteredItems = [];
     let filterValue = vm.search.query ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
-
-    store.dispatch(setSearchQuery(filterValue));
 
     const filterFn = filters.filterFunction(filterValue);
 
     for (const item of getStoresService().getAllItems()) {
       item.visible = filterFn(item);
-      if (item.visible) {
-        filteredItems.push(item);
-      }
     }
 
     if (vm.account.destinyVersion === 1) {
@@ -322,5 +315,7 @@ function SearchFilterCtrl(
         }
       });
     }
+
+    store.dispatch(setSearchQuery(filterValue));
   };
 }
