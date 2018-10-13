@@ -22,6 +22,7 @@
   "Bucket": {
     "Armor": "Armatura",
     "General": "Generale",
+    "Ghost": "Spettro",
     "Inventory": "Inventario",
     "Postmaster": "Amministratrice",
     "Progress": "Progresso",
@@ -171,8 +172,8 @@
     "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" e se sono stati ascesi o no.",
     "Categories": "Categorie di oggetti di alto livello.",
     "Class": "Mostra gli oggetti in base alla loro affinità di classe.",
-    "ClickFilters": "Fai clic sui filtri qui sotto per applicare, oppure digitando nella casella di ricerca.",
-    "Combine": "I filtri sono combinati usando la logica \"and\", per esempio '{{example}}' restituirà oggetti sopra 300 di Luce.",
+    "ClickFilters": "Fai clic sui filtri qui sotto per applicare, oppure digitando nella casella di ricerca. ",
+    "Combine": "I filtri possono essere combinati per restringere la ricerca: '{{example}}' restituirà tutti gli oggetti ad arco più alti di 300 Luce.",
     "ContributeLight": "Mostra gli oggetti che hanno Luce e possono contribuire al tuo livello Luce.",
     "ContributePower": "Mostra gli oggetti che hanno Potere e possono contribuire al tuo livello Potere.",
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
@@ -203,13 +204,15 @@
     },
     "LightLevel": "Mostra gli oggetti basandosi sul loro livello luce (Attacco per le armi; Difesa per le armature).",
     "Location": "Mostra gli oggetti basandosi sulla loro posizione all'interno dell'app. left/middle/right è una indicazione visiva del personaggio, e mentre inleftchar funzionerà sempre, le altre due dipendono da quanti personaggi hai. current è il tuo ultimo/attuale personaggio connesso (segnato con un triangolo giallo).",
+    "LockAllFailed": "Impossibile bloccare gli oggetti",
+    "LockAllSuccess": "Bloccati {{num}} oggetti",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "NamedStat": "Mostra armature che hanno punti nella statistica specificata.",
-    "Negate": "I filtri possono essere inversi usando '{{not}}', per exempio '{{notexample}}' troverà tutti gli oggetti non-engrammi. Per ricerche testuali, usa il trattino, per esempio -\"Triplo Colpo\" troverà tutte le armi senza il perk Triplo Colpo.",
+    "Negate": "Per negare e invertire una ricerca, aggiungere il segno meno davanti al termine di ricerca: {{notexample}} troverà tutti gli oggetti non-engrammi.",
     "NewItems": "Mostra i nuovi oggetti.",
     "Notes": "Cerca oggetti che hai segnato con note",
     "Ornament": "Mostra gli oggetti con decori e li filtra in base allo stato.",
-    "PartialMatch": "Mostra gli oggetti il quale nome/perk ha una corrispondenza parziale col testo nel filtro. Inoltre, puoi cercare frasi usando le virgolette.",
+    "PartialMatch": "Mostra gli oggetti i quali nomi/perk hanno una corrispondenza parziale con il testo del filtro. Cerca intere frasi usando le virgolette. Il filtro 'perk:' cercherà solo perks.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerLevel": "Mostra gli oggetti basandosi sul loro livello di Potere (Attacco per le armi; Difesa per le armature).",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
@@ -238,6 +241,8 @@
     },
     "Tracked": "Mostra le imprese/taglie basandosi sul loro stato monitorato.",
     "Transferable": "Oggetti che possono essere spostati tra i personaggi.",
+    "UnlockAllFailed": "Impossibile sbloccare oggetti",
+    "UnlockAllSuccess": "Sbloccati {{num}} oggetti",
     "Vendor": "Oggetto disponibile dal mercante <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "Oggetto disponibile dal mercante <i>{{vendor}}</i>",
     "Vendors": {
@@ -250,7 +255,7 @@
       "Shipwright": "Nostromo",
       "Speaker": "L'Oratore"
     },
-    "VideoExample": "Per una migliore comprensione di come usare i filtri, guarda questo video su {{link}}",
+    "VideoExample": "Visita {{link}} per una guida dettagliata sui filtri.",
     "WeaponClass": "Mostra gli oggetti basandosi sulla loro classe arma.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",
     "Year": "Mostra gli oggetti divisi per anno di Destiny in cui sono apparsi."
@@ -276,7 +281,7 @@
     "Drag": "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa quantità.",
     "HidePopup": "Nascondi Questo Popup",
     "NoStorage": "DIM non può salvare dati",
-    "NoStorageMessage": "DIM non può salvare dati nel tuo browser. Questo può essere causato dalla navigazione con privacy o in modalità in incognito, oppure se hai poco spazio libero in memoria. DIM non può continuare.",
+    "NoStorageMessage": "DIM non può salvare dati nel tuo browser. Questo può essere causato dalla navigazione con privacy o in modalità in incognito, oppure se hai poco spazio libero in memoria.",
     "UpdateAvailable": "DIM aggiornato",
     "UpdateAvailableMessage": "E' disponibile un aggiornamento per DIM. Ricarica la pagina per aggiornare.",
     "Version_beta": "La Beta è stata aggiornata alla versione v{{version}}",
@@ -393,13 +398,13 @@
     "Vendor": "Includi oggetti dei Mercanti"
   },
   "LoadoutBuilder": {
-    "ArmorPower": "Potere dell'armatura: {{power}}",
     "BurnTypeArc": "Arco",
     "BurnTypeNone": "Nessuno",
     "BurnTypeSolar": "Solare",
     "BurnTypeVoid": "Vuoto",
     "CreateLoadout": "Crea Loadout",
     "EquipItems": "Equipaggia su {{name}}",
+    "ExcludedItems": "{{locked}} esclusi",
     "GeneratedBuilds": "Build Generate",
     "Loading": "Generazione build... {{loading}}%",
     "LockBucket": "Blocca {{bucket}}",
@@ -408,17 +413,18 @@
     "LockItemTitle": "Trascina oggetto da bloccare (Shift-click per escludere)",
     "LockPerksTabTitle": "Perks",
     "LockPerksTitle": "Seleziona perks da bloccare",
+    "LockedPerks": "{{locked}} perks esclusi",
     "NoBuildsFound": "Nessuna Build Generata Trovata",
     "Options": "Opzioni",
     "RequireBurn": "Richiede armatura con resistenza alle ceneri corrispondenti",
     "RequirePerks": "Richiedi perks addizionali su tutte le armature",
     "ResetLocked": "Ripristina Bloccati",
-    "ResetPerks": "Ripristina",
     "SelectCharacter": "Seleziona Personaggio",
     "SelectPower": "Potere Minimo",
     "SelectPowerMinimum": "- Nessun Minimo -",
     "SelectTier": "Tier della Build",
     "SelectTierHeader": "- Tier {{tier}} -",
+    "ShowMore": "Mostra Altri",
     "Title": "Costruttore di Loadout (Beta)"
   },
   "Loadouts": {
@@ -510,6 +516,7 @@
     "UpStack": "Aumento fino al prossimo stack pieno"
   },
   "MovePopup": {
+    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
@@ -684,7 +691,10 @@
     "Infuse": "Infondi",
     "Junk": "Smantella",
     "Keep": "Tieni",
-    "TagItem": "Etichetta Oggetto"
+    "LockAll": "Blocca Oggetti",
+    "TagItem": "Etichetta Oggetto",
+    "TagItems": "Etichetta Oggetti",
+    "UnlockAll": "Sblocca Oggetti"
   },
   "TrialsCard": {
     "FiveWins": "Ricompensa 5 Vittorie (Armatura)",

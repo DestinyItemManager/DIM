@@ -22,6 +22,7 @@
   "Bucket": {
     "Armor": "Armaduras",
     "General": "Geral",
+    "Ghost": "Fantasma",
     "Inventory": "Inventário",
     "Postmaster": "Chefe do Correio",
     "Progress": "Progresso",
@@ -171,8 +172,8 @@
     "Ascended": "Mostra itens que tenham um nódulo de ascensão e se eles foram ascendidos ou não.",
     "Categories": "Categoria de items de Alto Nível.",
     "Class": "Mostrar items baseado em sua afinidade por classe.",
-    "ClickFilters": "Clique nos filtros abaixo para aplicar, ou para escrever na caixa de pesquisa.",
-    "Combine": "Filters are combined using 'and' logic, for example '{{example}}' will return all arc items with over 300 light.",
+    "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
+    "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Mostra os itens que tem luz e que podem contribuir para o seu nível de luz.",
     "ContributePower": "Mostra os itens que tem poder e que podem contribuir para o seu nível de poder.",
     "DamageType": "Mostrar items baseado no seu tipo de dano.",
@@ -203,13 +204,15 @@
     },
     "LightLevel": "Mostra itens baseado em seus níveis de Luz (Ataque para Armas; Defesa para Armaduras).",
     "Location": "Mostra itens baseado na sua localização dentro do app. left/middle/right (esquerda/meio/direita) são a localização visual do personagem, e enquanto inleftchar funciona sempre, os outros funcionam baseado em quantos personagens você tem. current é o seu personagem atualmente logado ou logado pela última vez (é aquele marcado com um triângulo amarelo).",
+    "LockAllFailed": "Failed to lock items",
+    "LockAllSuccess": "Locked {{num}} items",
     "Locked": "Mostra itens baseado em seu estado de travamento.",
     "NamedStat": "Mostra armaduras que tem pontos no atributo nomeado.",
-    "Negate": "Filters can be negated using '{{not}}', for example '{{notexample}}' will find all non-engram items. For text searches, use the dash, for example -\"Triple Tap\" will find all weapons without the Triple Tap perk.",
+    "Negate": "To negate a search, prefix that search term with a minus sign: {{notexample}} will find all non-engram items.",
     "NewItems": "Mostra novos itens.",
     "Notes": "Procura por itens que você marcou com notas customizadas",
     "Ornament": "Mostra itens com ornamentos e filtros pra seus estados.",
-    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Also, you can search for phrases using quotes.",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
     "PowerLevel": "Mostra itens baseado em seus níveis de poder (Ataque para Armas; Defesa para Armaduras).",
     "Quality": "Mostra itens baseado na porcentagem total da qualidade de seus atributos. '{{percentage}}' é um apelido pra '{{quality}}'.",
@@ -238,6 +241,8 @@
     },
     "Tracked": "Exibir jornadas/contratos baseados em seu status de rastreamento.",
     "Transferable": "Itens que podem ser movidos entre personagens.",
+    "UnlockAllFailed": "Falha ao destravar itens",
+    "UnlockAllSuccess": "{{num}} itens destravados",
     "Vendor": "O item está disponível no vendedor <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "O item está disponível no vendedor <i>{{vendor}}</i>",
     "Vendors": {
@@ -250,7 +255,7 @@
       "Shipwright": "Contramestre",
       "Speaker": "O Porta-Voz"
     },
-    "VideoExample": "Para um melhor exemplo de como usar filtros, Assista a este vídeo em {{link}}",
+    "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "Exibir itens baseado na sua classe de arma.",
     "WeaponType": "Exibir armas baseado no seu tipo de arma.",
     "Year": "Exibir itens a partir de qual ano foi inserido em Destiny."
@@ -276,7 +281,7 @@
     "Drag": "Segure SHIFT ou mantenha o cursor sobre o inventário para mover uma parte.",
     "HidePopup": "Esconder este Popup",
     "NoStorage": "DIM não pode salvar os dados",
-    "NoStorageMessage": "DIM não pode salvar dados no navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco. DIM não pode prosseguir.",
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space.",
     "UpdateAvailable": "DIM atualizado",
     "UpdateAvailableMessage": "Uma atualização para o DIM está disponível. Recarregue a página para atualizar.",
     "Version_beta": "Beta foi atualizado para v{{version}}",
@@ -393,13 +398,13 @@
     "Vendor": "Incluir itens de vendedores"
   },
   "LoadoutBuilder": {
-    "ArmorPower": "Armor power: {{power}}",
     "BurnTypeArc": "Arc",
     "BurnTypeNone": "None",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Void",
     "CreateLoadout": "Criar Set",
     "EquipItems": "Equipe em {{name}}",
+    "ExcludedItems": "{{locked}} excluded",
     "GeneratedBuilds": "Construções Geradas",
     "Loading": "Gerando construções... {{loading}}%",
     "LockBucket": "Travar {{bucket}}",
@@ -408,17 +413,18 @@
     "LockItemTitle": "Arraste o item para travar (shift-clique para excluir)",
     "LockPerksTabTitle": "Perks",
     "LockPerksTitle": "Selecione os perks para travar",
+    "LockedPerks": "{{locked}} locked perks",
     "NoBuildsFound": "Nenhuma Construção Gerada Encontrada",
     "Options": "Opções",
     "RequireBurn": "Require armor with matching damage resistance burn",
     "RequirePerks": "Require additional perks on all armor",
     "ResetLocked": "Resetar Travados",
-    "ResetPerks": "Resetar",
     "SelectCharacter": "Selecione o Personagem",
     "SelectPower": "Minimum Power",
     "SelectPowerMinimum": "- No Minimum -",
     "SelectTier": "Build Tier",
     "SelectTierHeader": "- Tier {{tier}} -",
+    "ShowMore": "Show More",
     "Title": "Loadout Builder (Beta)"
   },
   "Loadouts": {
@@ -510,6 +516,7 @@
     "UpStack": "Completar pilha"
   },
   "MovePopup": {
+    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
@@ -684,7 +691,10 @@
     "Infuse": "Infundir",
     "Junk": "Lixo",
     "Keep": "Manter",
-    "TagItem": "Marcar item"
+    "LockAll": "Lock Items",
+    "TagItem": "Marcar item",
+    "TagItems": "Tag Items",
+    "UnlockAll": "Destravar items"
   },
   "TrialsCard": {
     "FiveWins": "Recompensa de 5 vitórias (armadura)",

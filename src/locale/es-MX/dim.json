@@ -22,6 +22,7 @@
   "Bucket": {
     "Armor": "Armadura",
     "General": "General",
+    "Ghost": "Espectro",
     "Inventory": "Inventario",
     "Postmaster": "Administración",
     "Progress": "Progreso",
@@ -171,8 +172,8 @@
     "Ascended": "Muestra objetos que tienen un nodo ascendente y si han sido ascendidos o no.",
     "Categories": "Categorías de objetos de nivel alto.",
     "Class": "Muestra objetos basados en su afinidad de clase.",
-    "ClickFilters": "Haz click en los filtros debajo para aplicar, o escribe en la casilla de búsqueda.",
-    "Combine": "Los filtros se combinan usando la lógica 'and', por ejemplo '{{example}}' devolverá todos los objetos de arco por encima de 300 de luz.",
+    "ClickFilters": "Haga click en los filtros debajo para aplicar, o escribiendo en la caja de búsqueda. ",
+    "Combine": "Los filtros pueden ser combinados para acortar tu búsqueda: '{{example}}' devolverá todos los objetos de arco con más de 300 de luz.",
     "ContributeLight": "Muestra los objetos que tienen luz y que pueden contribuir a subir tu nivel de luz.",
     "ContributePower": "Muestra los objetos que tienen poder y que contribuyen a subir tu nivel de poder.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
@@ -203,13 +204,15 @@
     },
     "LightLevel": "Muestra objetos basado en su nivel de luz (Ataque para Armas; Defensa para Armaduras).",
     "Location": "Muestra objetos basados en su localización dentro de la app. \"Left/middle/right\" son la localización visual del personaje, y mientras \"inleftchar\" siempre funcionará, los otros dos están basados en cuántos personajes tengas. \"Current\" es tu último/actual personaje iniciado (que está marcado con un triángulo amarillo).",
+    "LockAllFailed": "Error al bloquear objetos",
+    "LockAllSuccess": "Bloqueados {{num}} objetos",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
     "NamedStat": "Muestra armadura que tiene puntos en el atributo mencionado.",
-    "Negate": "Los filtros pueden ser negados usando '{{not}}', por ejemplo '{{notexample}}' encontrará todos los objetos que no sean engramas. Para búsquedas de texto, usa el guión, por ejemplo -\"Triple Impacto\" encontrará todas las armas sin la ventaja Triple Impacto.",
+    "Negate": "Para negar una búsqueda, antepon el término de búsqueda con el signo menos: {{notexample}} encontrará todos los objetos que no sean engramas.",
     "NewItems": "Muestra objetos nuevos.",
     "Notes": "Busca los objetos que has etiquetado con notas personalizadas",
     "Ornament": "Muestra objetos con ornamentos y filtros para su estado.",
-    "PartialMatch": "Muestra objetos donde su nombre/ventaja tiene una coincidencia parcial con el texto filtrado. También, puedes buscar por frases usando comillas.",
+    "PartialMatch": "Muestra objetos donde su nombre/ventaja tiene una coincidencia parcial con el texto filtrado. Busca frases entera usando comillas. El filtro \"perk:\" sólo encontará ventajas.",
     "Postmaster": "Objetos que están actualmente en la administración.",
     "PowerLevel": "Muestra objetos basado en su nivel de poder (Ataque para Armas; Defensa para Armaduras).",
     "Quality": "Muestra objetos basado en el porcentaje de calidad de su estadística total. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
@@ -238,6 +241,8 @@
     },
     "Tracked": "Muestra aventuras/contratos basados en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
+    "UnlockAllFailed": "Error al desbloquear objetos",
+    "UnlockAllSuccess": "Desbloqueados {{num}} objetos",
     "Vendor": "El objeto está disponible con el vendedor <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "El objeto está disponible con el vendedor <i>{{vendor}}</i>",
     "Vendors": {
@@ -250,7 +255,7 @@
       "Shipwright": "Contramaestre",
       "Speaker": "El Orador"
     },
-    "VideoExample": "Para un mejor ejemplo de cómo usar los filtros, ve este video en {{link}}",
+    "VideoExample": "Visita {{link}} para una guía de filtros de búsqueda en profundidad.",
     "WeaponClass": "Muestra objetos basados en sus clases de arma.",
     "WeaponType": "Muestra armas basadas en su tipo de arma.",
     "Year": "Muestra los objetos según el año de aparición en Destiny."
@@ -276,7 +281,7 @@
     "Drag": "Mantén presionado Shift o pausa sobre la zona a soltar para transferir un monto parcial.",
     "HidePopup": "Esconde ésta ventana",
     "NoStorage": "DIM no puede almacenar información",
-    "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tienes poco espacio en disco. DIM no puede continuar.",
+    "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tengas bajo espacio en disco.",
     "UpdateAvailable": "DIM Actualizado",
     "UpdateAvailableMessage": "Hay una actualización lista para DIM. Recarga la página para aplicarla.",
     "Version_beta": "La Beta ha sido actualizada a la v{{version}}",
@@ -393,13 +398,13 @@
     "Vendor": "Incluir objetos de vendedores"
   },
   "LoadoutBuilder": {
-    "ArmorPower": "Poder de la armadura: {{power}}",
     "BurnTypeArc": "Arco",
     "BurnTypeNone": "Ninguno",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Vacío",
     "CreateLoadout": "Crear Equipación",
     "EquipItems": "Equipar en {{name}}",
+    "ExcludedItems": "{{locked}} excluídos",
     "GeneratedBuilds": "Equipaciones Generadas",
     "Loading": "Generando equipaciones...{{loading}}%",
     "LockBucket": "Bloquear {{bucket}}",
@@ -408,17 +413,18 @@
     "LockItemTitle": "Arrastra un objeto para bloquear (SHIFT+CLICK para excluir)",
     "LockPerksTabTitle": "Ventajas",
     "LockPerksTitle": "Seleccionar ventajas para bloquear",
+    "LockedPerks": "{{locked}} ventajas bloqueadas",
     "NoBuildsFound": "No se encontraron equipaciones generadas",
     "Options": "Opciones",
     "RequireBurn": "Requiere armadura que coincida con resistencia de daño de quemadura",
     "RequirePerks": "Requiere ventajas adicionales en toda la armadura",
     "ResetLocked": "Reiniciar Bloqueados",
-    "ResetPerks": "Reiniciar",
     "SelectCharacter": "Seleccionar Personaje",
     "SelectPower": "Poder Mínimo",
     "SelectPowerMinimum": "- Sin mínimo -",
     "SelectTier": "Nivel de Equipamiento",
     "SelectTierHeader": "- Nivel {{tier}} -",
+    "ShowMore": "Mostrar Más",
     "Title": "Creador de Equipamiento (Beta)"
   },
   "Loadouts": {
@@ -510,6 +516,7 @@
     "UpStack": "Incrementar al siguiente montón lleno"
   },
   "MovePopup": {
+    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir Equitativamente",
     "Equip": "Equipa",
@@ -684,7 +691,10 @@
     "Infuse": "Infundir",
     "Junk": "Basura",
     "Keep": "Mantener",
-    "TagItem": "Etiqueta de objeto"
+    "LockAll": "Bloquear objetos",
+    "TagItem": "Etiqueta de objeto",
+    "TagItems": "Etiquetar objetos",
+    "UnlockAll": "Desbloquear objetos"
   },
   "TrialsCard": {
     "FiveWins": "Recompensa de 5 victorias (Armadura)",
