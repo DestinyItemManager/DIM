@@ -2,6 +2,14 @@ import * as React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import classNames from 'classnames';
 import './SortOrderEditor.scss';
+import {
+  reorderIcon,
+  AppIcon,
+  enabledIcon,
+  disabledIcon,
+  moveUpIcon,
+  moveDownIcon
+} from '../shell/icons';
 
 export interface SortProperty {
   readonly id: string;
@@ -152,19 +160,17 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
-          <i className="fa fa-bars" {...provided.dragHandleProps} />
+          <span {...provided.dragHandleProps}>
+            <AppIcon icon={reorderIcon} className="reorder-handle" />
+          </span>
           <span className="name" {...provided.dragHandleProps}>
             {item.displayName}
           </span>
-          <i className="sort-button sort-up fa fa-chevron-up" />
-          <i className="sort-button sort-down fa fa-chevron-down" />
-          <i
-            className={classNames(
-              'sort-button',
-              'sort-toggle',
-              'fa',
-              item.enabled ? 'fa-check-circle-o' : 'fa-circle-o'
-            )}
+          <AppIcon icon={moveUpIcon} className="sort-button sort-up" />
+          <AppIcon icon={moveDownIcon} className="sort-button sort-down" />
+          <AppIcon
+            icon={item.enabled ? enabledIcon : disabledIcon}
+            className="sort-button sort-toggle"
           />
         </div>
       )}

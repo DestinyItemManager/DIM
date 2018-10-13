@@ -23,6 +23,7 @@ import spartan from '../../images/spartan.png';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
+import { closeIcon, AppIcon } from '../shell/icons';
 import { Subscriptions } from '../rx-utils';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 
@@ -210,7 +211,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 </button>
               )}{' '}
               <button className="dim-button" onClick={this.close}>
-                <span>{t('Loadouts.Cancel')}</span> <i className="fa fa-close" />
+                <span>{t('Loadouts.Cancel')}</span> <AppIcon icon={closeIcon} />
               </button>{' '}
               <span>
                 <img src={spartan} className="loadout-equip-help" />
