@@ -9,6 +9,7 @@ import { D2Store } from '../inventory/store-types';
 import { dtrFetch } from './dtr-service-helper';
 import { D2ItemFetchResponse, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 import { getVendorItemList, getItemList } from './d2-itemListBuilder';
+import * as _ from 'lodash';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
@@ -53,11 +54,7 @@ class D2BulkFetcher {
       return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
-    const size = 10;
-    const arrayOfArrays: D2ItemFetchRequest[][] = [];
-    for (let i = 0; i < itemList.length; i += size) {
-      arrayOfArrays.push(itemList.slice(i, i + size));
-    }
+    const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 10);
 
     const results: D2ItemFetchResponse[] = [];
 
