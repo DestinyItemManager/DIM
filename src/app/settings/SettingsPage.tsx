@@ -523,7 +523,7 @@ class SettingsPage extends React.Component<Props, State> {
                 disabled={!storesLoaded}
                 title="Download Csv"
               >
-                <i className="fa fa-table" /> <span>{t('Bucket.Ghost')}</span>
+                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
               </button>
             </div>
           </section>
