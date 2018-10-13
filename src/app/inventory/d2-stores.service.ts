@@ -222,6 +222,15 @@ function makeD2StoresService(): D2StoreServiceType {
           itemInfoService
         );
 
+        // Try to catch the bug where we get two accounts' worth of data
+        if (Object.keys(profileInfo.characters.data).length > 3) {
+          reportException(
+            'tooManyCharacters',
+            new Error(`GetProfile returned too many characters`),
+            { profileInfo: JSON.stringify(profileInfo) }
+          );
+        }
+
         const processStorePromises = $q.all(
           Object.keys(profileInfo.characters.data).map((characterId) =>
             processCharacter(
