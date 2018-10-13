@@ -7,39 +7,10 @@ import {
   D2ItemUserReview,
   D2ItemReviewResponse
 } from '../item-review/d2-dtr-api-types';
-import { translateToDtrItem } from './d2-itemTransformer';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings } from '../item-review/actions';
 import store from '../store/store';
-
-export interface D2ReviewKey {
-  referenceId: number;
-  availablePerks?: number[];
-}
-
-export function getReviewKey(
-  item?: D2Item | DestinyVendorSaleItemComponent,
-  itemHash?: number
-): D2ReviewKey {
-  if (item) {
-    const dtrItem = translateToDtrItem(item);
-
-    return {
-      referenceId: dtrItem.referenceId,
-      availablePerks: dtrItem.availablePerks
-    };
-  } else if (itemHash) {
-    return {
-      referenceId: itemHash
-    };
-  } else {
-    throw new Error('No data supplied to find a matching item from our stores.');
-  }
-}
-
-export function getD2Roll(availablePerks?: number[]): string {
-  return availablePerks && availablePerks.length > 0 ? availablePerks.join(',') : 'fixed';
-}
+import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
 
 /**
  * Cache of review data.
