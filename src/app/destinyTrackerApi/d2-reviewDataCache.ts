@@ -17,7 +17,7 @@ export interface D2ReviewKey {
   availablePerks?: number[];
 }
 
-export function getReferenceKey(
+export function getReviewKey(
   item?: D2Item | DestinyVendorSaleItemComponent,
   itemHash?: number
 ): D2ReviewKey {
@@ -54,11 +54,16 @@ class D2ReviewDataCache {
     item?: D2Item | DestinyVendorSaleItemComponent,
     itemHash?: number
   ): D2RatingData | undefined {
-    const referenceKey = getReferenceKey(item, itemHash);
+    const reviewKey = getReviewKey(item, itemHash);
+
+    return this._getMatchingItemByReviewKey(reviewKey);
+  }
+
+  _getMatchingItemByReviewKey(reviewKey: D2ReviewKey): D2RatingData | undefined {
     return this._itemStores.find(
       (s) =>
-        s.referenceId === referenceKey.referenceId &&
-        (!referenceKey.availablePerks || s.roll === getD2Roll(referenceKey.availablePerks))
+        s.referenceId === reviewKey.referenceId &&
+        (!reviewKey.availablePerks || s.roll === getD2Roll(reviewKey.availablePerks))
     );
   }
 
@@ -77,10 +82,10 @@ class D2ReviewDataCache {
     item?: D2Item | DestinyVendorSaleItemComponent,
     itemHash?: number
   ): D2RatingData {
-    const referenceKey = getReferenceKey(item, itemHash);
+    const reviewKey = getReviewKey(item, itemHash);
     const blankItem: D2RatingData = {
-      referenceId: referenceKey.referenceId,
-      roll: getD2Roll(referenceKey.availablePerks),
+      referenceId: reviewKey.referenceId,
+      roll: getD2Roll(reviewKey.availablePerks),
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
       overallScore: 0,
@@ -163,17 +168,13 @@ class D2ReviewDataCache {
       this._setMaximumTotalVotes(bulkRankings);
 
       bulkRankings.forEach((bulkRanking) => {
-        const matchingStore = this._itemStores.find(
-          (ci) =>
-            ci.referenceId === bulkRanking.referenceId &&
-            (!bulkRanking.availablePerks || getD2Roll(bulkRanking.availablePerks) === ci.roll)
-        );
+        const matchingScore = this._getMatchingItemByReviewKey(bulkRanking);
 
-        if (matchingStore) {
-          matchingStore.fetchResponse = bulkRanking;
-          matchingStore.lastUpdated = new Date();
-          matchingStore.overallScore = this._getScore(bulkRanking);
-          matchingStore.ratingCount = bulkRanking.votes.total;
+        if (matchingScore) {
+          matchingScore.fetchResponse = bulkRanking;
+          matchingScore.lastUpdated = new Date();
+          matchingScore.overallScore = this._getScore(bulkRanking);
+          matchingScore.ratingCount = bulkRanking.votes.total;
         } else {
           this._addScore(bulkRanking);
         }
@@ -227,13 +228,7 @@ class D2ReviewDataCache {
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
   addReviewsData(item: D2Item, reviewsData: D2ItemReviewResponse) {
-    const referenceKey = getReferenceKey(item);
-
-    const cachedItem = this._itemStores.find(
-      (s) =>
-        s.referenceId === reviewsData.referenceId &&
-        (!referenceKey.availablePerks || s.roll === getD2Roll(referenceKey.availablePerks))
-    );
+    const cachedItem = this._getMatchingItem(item);
 
     if (!cachedItem) {
       return;
