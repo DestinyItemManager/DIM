@@ -5,7 +5,7 @@ import { toaster } from '../ngimport-more';
 import { dimLoadoutService, Loadout } from './loadout.service';
 import * as _ from 'lodash';
 import { sortItems } from '../shell/dimAngularFilters.filter';
-import copy from 'fast-copy';
+import { copy } from 'angular';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DimItem } from '../inventory/item-types';

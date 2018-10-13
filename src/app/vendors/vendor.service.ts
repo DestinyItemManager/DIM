@@ -6,8 +6,7 @@ import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.ser
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { processItems } from '../inventory/store/d1-item-factory.service';
-import { IPromise } from 'angular';
-import copy from 'fast-copy';
+import { IPromise, copy } from 'angular';
 import { D1Store } from '../inventory/store-types';
 import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';

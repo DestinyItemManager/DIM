@@ -1,4 +1,4 @@
-import copy from 'fast-copy';
+import { copy } from 'angular';
 import { deepEqual } from 'fast-equals';
 import * as _ from 'lodash';
 import { reportException } from '../exceptions';

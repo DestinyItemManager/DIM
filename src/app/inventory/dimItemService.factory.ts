@@ -1,5 +1,4 @@
-import { IPromise } from 'angular';
-import copy from 'fast-copy';
+import { IPromise, copy } from 'angular';
 import * as _ from 'lodash';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import {
