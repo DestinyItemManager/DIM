@@ -64,10 +64,14 @@ class D2BulkFetcher {
         arraySlice
       ).then(handleD2Errors, handleD2Errors);
 
-      loadingTracker.addPromise(promiseSlice);
+      try {
+        loadingTracker.addPromise(promiseSlice);
 
-      const result = await promiseSlice;
-      results.push(...result);
+        const result = await promiseSlice;
+        results.push(...result);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     return results;
