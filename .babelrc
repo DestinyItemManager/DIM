@@ -17,6 +17,7 @@
     }]
   ],
   "plugins": [
+    "lodash",
     "angularjs-annotate",
     "syntax-dynamic-import",
     ["transform-object-rest-spread", { "useBuiltIns": true }],

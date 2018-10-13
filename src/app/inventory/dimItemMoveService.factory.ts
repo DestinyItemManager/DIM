@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { queuedAction } from './action-queue';
 import { IPromise } from 'angular';
@@ -137,7 +137,7 @@ export const distribute = queuedAction((actionableItem: DimItem) => {
     return result;
   });
   const deltas = _.zip(amounts, targets).map((pair) => {
-    return pair[1] - pair[0];
+    return pair[1]! - pair[0]!;
   });
 
   const vaultMoves: {

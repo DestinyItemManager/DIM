@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { D1Store } from './store-types';
 import DiamondProgress from '../dim-ui/DiamondProgress';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import PressTip from '../dim-ui/PressTip';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import './dimStoreReputation.scss';

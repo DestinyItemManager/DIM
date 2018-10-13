@@ -1,10 +1,9 @@
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 import { t } from 'i18next';
-import { $rootScope } from 'ngimport';
 import { API_KEY } from './bungie-api-utils';
 import { getActivePlatform } from '../accounts/platform.service';
-import { fetchWithBungieOAuth } from '../oauth/http-refresh-token.service';
+import { fetchWithBungieOAuth, goToLoginPage } from '../oauth/http-refresh-token.service';
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
 import { router } from '../../router';
@@ -62,7 +61,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
   }
   // Token expired and other auth maladies
   if (response.status === 401 || response.status === 403) {
-    $rootScope.$broadcast('dim-no-token-found');
+    goToLoginPage();
     throw new Error(t('BungieService.NotLoggedIn'));
   }
   /* 526 = cloudflare */
@@ -92,7 +91,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
 
     case PlatformErrorCodes.AuthorizationCodeInvalid:
     case PlatformErrorCodes.AccessNotPermittedByApplicationScope:
-      $rootScope.$broadcast('dim-no-token-found');
+      goToLoginPage();
       throw error('DIM does not have permission to perform this action.', errorCode);
 
     case PlatformErrorCodes.SystemDisabled:
@@ -106,7 +105,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     case PlatformErrorCodes.AccessTokenHasExpired:
     case PlatformErrorCodes.WebAuthRequired:
     case PlatformErrorCodes.WebAuthModuleAsyncFailed: // means the access token has expired
-      $rootScope.$broadcast('dim-no-token-found');
+      goToLoginPage();
       throw error(t('BungieService.NotLoggedIn'), errorCode);
 
     case PlatformErrorCodes.DestinyAccountNotFound:

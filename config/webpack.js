@@ -13,9 +13,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 
-// const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
@@ -24,8 +25,14 @@ const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 const packageJson = require('../package.json');
 
 module.exports = (env) => {
-  if (process.env.WEBPACK_ENV) {
-    env = process.env.WEBPACK_ENV;
+  if (process.env.WEBPACK_SERVE) {
+    env = 'dev';
+    if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
+      console.log('Generating certificate');
+      execSync(
+        "openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'"
+      );
+    }
   }
   const isDev = env === 'dev';
   let version = packageJson.version.toString();
@@ -50,11 +57,18 @@ module.exports = (env) => {
       chunkFilename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js'
     },
 
-    // webpack devServer
-    devServer: {
-      https: true,
-      stats: 'errors-only'
-    },
+    // Dev server
+    serve: process.env.WEBPACK_SERVE
+      ? {
+          devMiddleware: {
+            stats: 'errors-only'
+          },
+          https: {
+            key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+            cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
+          }
+        }
+      : {},
 
     // Bail and fail hard on first error
     bail: !isDev,
@@ -305,10 +319,14 @@ module.exports = (env) => {
         '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
         // D2 Loadout Builder
         '$featureFlags.d2LoadoutBuilder': JSON.stringify(env !== 'release')
-      })
+      }),
 
-      // Enable if you want to debug the size of the chunks
-      // new Visualizer(),
+      new LodashModuleReplacementPlugin({
+        collections: true,
+        memoizing: true,
+        shorthands: true,
+        flattening: true
+      })
     ],
 
     node: {
@@ -317,6 +335,11 @@ module.exports = (env) => {
       tls: 'empty'
     }
   };
+
+  // Enable if you want to debug the size of the chunks
+  if (process.env.WEBPACK_VISUALIZE) {
+    config.plugins.push(new Visualizer());
+  }
 
   if (isDev) {
     config.plugins.push(

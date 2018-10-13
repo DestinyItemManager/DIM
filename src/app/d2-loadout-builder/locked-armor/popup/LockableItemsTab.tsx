@@ -1,8 +1,8 @@
 import { t } from 'i18next';
 import * as React from 'react';
 import { D2Item } from '../../../inventory/item-types';
-import { LockType } from '../../types';
-import ExcludableItem from './ExcludableItem';
+import { LockedItemType } from '../../types';
+import LoadoutBuilderItem from '../../LoadoutBuilderItem';
 
 export default function LockableItems({
   items,
@@ -12,8 +12,8 @@ export default function LockableItems({
   items: {
     [itemHash: number]: D2Item[];
   };
-  locked?: LockType;
-  toggleExcludeItem(excludedItem: D2Item): void;
+  locked?: LockedItemType[];
+  toggleExcludeItem(excludedItem: LockedItemType): void;
 }) {
   return (
     <>
@@ -21,7 +21,12 @@ export default function LockableItems({
       <div className="add-perk-options-content">
         {Object.values(items).map((instances: D2Item[]) =>
           instances.map((item) => (
-            <ExcludableItem key={item.id} {...{ item, locked, onExclude: toggleExcludeItem }} />
+            <LoadoutBuilderItem
+              key={item.id}
+              item={item}
+              locked={locked}
+              onExclude={toggleExcludeItem}
+            />
           ))
         )}
       </div>

@@ -12,6 +12,9 @@
 
   .generated-build-buttons {
     padding-bottom: 5px;
+    > * {
+      margin-right: 4px;
+    }
   }
   .generated-build-items {
     display: flex;

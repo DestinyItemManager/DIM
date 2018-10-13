@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import template from './search-filter.html';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
@@ -17,6 +17,9 @@ import store from '../store/store';
 import { subscribeOnScope } from '../rx-utils';
 import { isPhonePortraitStream } from '../mediaQueries';
 import { t } from 'i18next';
+import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
+import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
+import { toaster, loadingTracker } from '../ngimport-more';
 
 /**
  * A simple holder to share the search query among components
@@ -46,8 +49,12 @@ function SearchFilterCtrl(
   'ngInject';
   const vm = this;
   vm.search = SearchService;
-  vm.bulkItemTags = _.clone(itemTags);
+  vm.bulkItemTags = Array.from(itemTags);
+  vm.bulkItemTags.shift();
+  vm.bulkItemTags.unshift({ label: 'Tags.TagItems' });
   vm.bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
+  vm.bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
+  vm.bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
   function getStoresService() {
     return vm.account.destinyVersion === 2 ? D2StoresService : D1StoresService;
@@ -228,19 +235,66 @@ function SearchFilterCtrl(
   };
 
   vm.bulkTag = () => {
-    getItemInfoSource(vm.account).then((itemInfoService) => {
-      itemInfoService.bulkSave(
-        filteredItems.filter((i) => i.taggable).map((item) => {
-          item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
-          return item;
-        })
-      );
+    vm.showSelect = false;
 
-      // invalidate and filter
-      filters.reset();
-      vm.filter();
-      vm.showSelect = false;
-    });
+    const promise = (async () => {
+      if (vm.selectedTag.type === 'lock' || vm.selectedTag.type === 'unlock') {
+        // Bulk locking/unlocking
+
+        const state = vm.selectedTag.type === 'lock';
+        const lockables = filteredItems.filter((i) => i.lockable);
+        try {
+          for (const item of lockables) {
+            const store =
+              item.owner === 'vault'
+                ? item.getStoresService().getActiveStore()!
+                : item.getStoresService().getStore(item.owner)!;
+
+            if (item.isDestiny2()) {
+              await d2SetLockState(store, item, state);
+            } else if (item.isDestiny1()) {
+              await d1SetItemState(item, store, state, 'lock');
+            }
+
+            // TODO: Gotta do this differently in react land
+            item.locked = state;
+          }
+          toaster.pop(
+            'success',
+            t(state ? 'Filter.LockAllSuccess' : 'Filter.UnlockAllSuccess', {
+              num: lockables.length
+            })
+          );
+        } catch (e) {
+          toaster.pop(
+            'error',
+            t(state ? 'Filter.LockAllFailed' : 'Filter.UnlockAllFailed'),
+            e.message
+          );
+        } finally {
+          filters.reset();
+          vm.filter();
+        }
+      } else {
+        // Bulk tagging
+        const itemInfoService = await getItemInfoSource(vm.account);
+        await itemInfoService.bulkSave(
+          filteredItems.filter((i) => i.taggable).map((item) => {
+            item.dimInfo.tag = vm.selectedTag.type === 'clear' ? undefined : vm.selectedTag.type;
+            return item;
+          })
+        );
+      }
+
+      $scope.$apply(() => {
+        // invalidate and filter
+        filters.reset();
+        vm.filter();
+        vm.showSelect = false;
+      });
+    })();
+
+    loadingTracker.addPromise(promise);
   };
 
   vm.filter = () => {

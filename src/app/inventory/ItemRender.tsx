@@ -9,7 +9,7 @@ import { D2Item } from './item-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import './ItemRender.scss';
 import { TagValue } from './dim-item-info';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 
 interface Props {
   item: D2Item;

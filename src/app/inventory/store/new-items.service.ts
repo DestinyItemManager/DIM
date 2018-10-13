@@ -6,6 +6,7 @@ import { DimStore } from '../store-types';
 import { $rootScope } from 'ngimport';
 import store from '../../store/store';
 import { setNewItems } from '../actions';
+import { handleLocalStorageFullError } from '../../compatibility';
 
 const _removedNewItems = new Set<string>();
 
@@ -78,7 +79,9 @@ export const NewItemsService = {
 
   saveNewItems(newItems: Set<string>, account: DestinyAccount) {
     store.dispatch(setNewItems(newItems));
-    return Promise.resolve(idbKeyval.set(newItemsKey(account), newItems));
+    return Promise.resolve(idbKeyval.set(newItemsKey(account), newItems)).catch(
+      handleLocalStorageFullError
+    );
   },
 
   buildItemSet(stores) {

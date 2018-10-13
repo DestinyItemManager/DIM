@@ -1,5 +1,5 @@
-import { copy } from 'angular';
-import * as _ from 'underscore';
+import copy from 'fast-copy';
+import * as _ from 'lodash';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
@@ -13,8 +13,9 @@ import { toaster, loadingTracker } from '../ngimport-more';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
+import { Subject } from 'rxjs/Subject';
 
-export const enum LoadoutClass {
+export enum LoadoutClass {
   any = -1,
   warlock = 0,
   titan = 1,
@@ -46,13 +47,27 @@ interface DehydratedLoadout {
 }
 
 export interface LoadoutServiceType {
+  editLoadout$: Subject<{
+    loadout: Loadout;
+    equipAll?: boolean;
+    showClass?: boolean;
+    isNew?: boolean;
+  }>;
+  addItem$: Subject<{
+    item: DimItem;
+    clickEvent: MouseEvent;
+  }>;
   dialogOpen: boolean;
-  getLoadouts(): Promise<Loadout[]>;
+  getLoadouts(getLatest?: boolean): Promise<Loadout[]>;
   deleteLoadout(loadout: Loadout): Promise<void>;
   saveLoadout(loadout: Loadout): Promise<void>;
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
   getLoadoutItemIds(destinyVersion: number): Promise<Set<string>>;
+  editLoadout(
+    loadout: Loadout,
+    options: { equipAll?: boolean; showClass?: boolean; isNew?: boolean }
+  ): void;
 }
 
 // TODO: un-object-ify, this holds no state!
@@ -67,17 +82,40 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   return {
+    editLoadout$: new Subject<{
+      loadout: Loadout;
+      equipAll?: boolean;
+      showClass?: boolean;
+      isNew?: boolean;
+    }>(),
+    addItem$: new Subject<{
+      item: DimItem;
+      clickEvent: MouseEvent;
+    }>(),
     dialogOpen: false,
     getLoadouts,
     deleteLoadout,
     saveLoadout,
     addItemToLoadout,
     applyLoadout,
-    getLoadoutItemIds
+    getLoadoutItemIds,
+    editLoadout
   };
 
+  function editLoadout(
+    loadout: Loadout,
+    { equipAll = false, showClass = true, isNew = true } = {}
+  ) {
+    this.editLoadout$.next({
+      loadout,
+      equipAll,
+      showClass,
+      isNew
+    });
+  }
+
   function addItemToLoadout(item: DimItem, $event) {
-    $rootScope.$broadcast('dim-store-item-clicked', {
+    this.addItem$.next({
       item,
       clickEvent: $event
     });
@@ -130,7 +168,7 @@ function LoadoutService(): LoadoutServiceType {
 
     const data = {
       'loadouts-v3.0': loadoutPrimitives.map((l) => l.id),
-      ..._.indexBy(loadoutPrimitives, (l) => l.id)
+      ..._.keyBy(loadoutPrimitives, (l) => l.id)
     };
 
     await SyncService.set(data);
@@ -141,18 +179,12 @@ function LoadoutService(): LoadoutServiceType {
     reduxStore.dispatch(actions.deleteLoadout(loadout.id));
     await SyncService.remove(loadout.id);
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
-    $rootScope.$broadcast('dim-delete-loadout', {
-      loadout
-    });
   }
 
   async function saveLoadout(loadout: Loadout): Promise<void> {
     reduxStore.dispatch(actions.updateLoadout(loadout));
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
     $rootScope.$broadcast('dim-filter-invalidate-loadouts');
-    $rootScope.$broadcast('dim-save-loadout', {
-      loadout
-    });
   }
 
   function hydrate(loadoutData: DehydratedLoadout): Loadout {
@@ -280,18 +312,21 @@ function LoadoutService(): LoadoutServiceType {
         const realItemsToDequip = _.compact(
           itemsToDequip.map((i) => storeService.getItemAcrossStores(i))
         );
-        const dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), (dequipItems, owner) => {
-          const equipItems = _.compact(
-            dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))
-          );
-          return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
-        });
+        const dequips = _.map(
+          _.groupBy(realItemsToDequip, (i) => i.owner),
+          (dequipItems, owner) => {
+            const equipItems = _.compact(
+              dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))
+            );
+            return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
+          }
+        );
         await Promise.all(dequips);
       }
 
       await applyLoadoutItems(store, items, loadoutItemIds, scope);
 
-      let equippedItems;
+      let equippedItems: DimItem[];
       if (itemsToEquip.length > 1) {
         // Use the bulk equipAll API to equip all at once.
         itemsToEquip = itemsToEquip.filter((i) =>
@@ -304,8 +339,8 @@ function LoadoutService(): LoadoutServiceType {
       }
 
       if (equippedItems.length < itemsToEquip.length) {
-        const failedItems = _.filter(itemsToEquip, (i) => {
-          return !_.find(equippedItems, { id: i.id });
+        const failedItems = itemsToEquip.filter((i) => {
+          return !equippedItems.find((it) => it.id === i.id);
         });
         failedItems.forEach((item) => {
           scope.failed++;
@@ -389,9 +424,9 @@ function LoadoutService(): LoadoutServiceType {
 
             let totalAmount = amountAlreadyHave;
             while (amountNeeded > 0) {
-              const source = _.max(storesByAmount, (s) => s.amount);
+              const source = _.maxBy(storesByAmount, (s) => s.amount)!;
               const amountToMove = Math.min(source.amount, amountNeeded);
-              const sourceItem = _.find(source.store.items, { hash: pseudoItem.hash });
+              const sourceItem = source.store.items.find((i) => i.hash === pseudoItem.hash);
 
               if (amountToMove === 0 || !sourceItem) {
                 const error: Error & { level?: string } = new Error(
@@ -558,8 +593,8 @@ export function getLight(store: DimStore, loadout: Loadout): string {
       (memo, item) => {
         return (
           memo +
-          item.primStat.value *
-            itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort]
+          item.primStat!.value *
+            itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort!]
         );
       },
       0

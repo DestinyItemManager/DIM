@@ -24,6 +24,7 @@ import { lazyInjector } from './lazyInjector';
 import { safariTouchFix } from './safari-touch-fix';
 import Root from './Root';
 import updateCSSVariables from './app/css-variables';
+import setupRateLimiter from './app/bungie-api/rate-limit-config';
 
 polyfill({
   holdToDrag: 300,
@@ -41,6 +42,7 @@ initi18n().then(() => {
     'ngInject';
     lazyInjector.$injector = $injector;
     updateCSSVariables();
+    setupRateLimiter();
 
     ReactDOM.render(<Root />, document.getElementById('app'));
   });

@@ -41,7 +41,7 @@
     color: #888;
     .app-icon,
     .fa {
-      font-size: 1.2em;
+      font-size: 13px;
     }
     &:hover {
       background-color: $blue;
@@ -55,8 +55,13 @@
 
   .light {
     font-weight: 200;
-    color: $gold;
     float: right;
+    .app-icon {
+      margin-right: 2px !important;
+    }
+    &::before {
+      display: none;
+    }
   }
 }
 

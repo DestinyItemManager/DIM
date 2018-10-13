@@ -1,12 +1,14 @@
 import { t } from 'i18next';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import './GDriveRevisions.scss';
 import { GDriveRevision } from './google-drive-storage';
 import { dataStats } from './data-stats';
 import { SyncService } from './sync.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { refreshIcon, AppIcon } from '../shell/icons';
+import { initSettings } from '../settings/settings';
+import { dimLoadoutService } from '../loadout/loadout.service';
 
 interface State {
   revisions?: any;
@@ -153,6 +155,8 @@ class GDriveRevisionComponent extends React.Component<
     if (content && confirm(t('Storage.ImportConfirm'))) {
       await SyncService.set(content!, true);
       alert(t('Storage.ImportSuccess'));
+      initSettings();
+      dimLoadoutService.getLoadouts(true);
       this.props.onRestoreSuccess();
     }
   }

@@ -10,7 +10,6 @@ export function bungieErrorToaster(e: Error) {
   const twitterIcon = `<span style="font-size: 1.8em; vertical-align: middle;">${renderToHtmlByLibraryName(
     'twitterIcon'
   )}</span>`;
-  console.log(twitterIcon);
   const twitterLink = `<a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/ThisIsDIM">${twitterIcon}</a>`;
   const twitter = `<div> ${t('BungieService.Twitter')} ${twitterLink}</div>`;
 

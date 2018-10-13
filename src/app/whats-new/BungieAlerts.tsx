@@ -1,4 +1,3 @@
-import { equals } from 'angular';
 import { t } from 'i18next';
 import * as React from 'react';
 import { Observable } from 'rxjs/Observable';
@@ -6,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
 import '../rx-operators';
 import './BungieAlerts.scss';
+import { deepEqual } from 'fast-equals';
 
 export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   // Fetch global alerts, but swallow errors
@@ -14,7 +14,7 @@ export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   )
   .startWith([] as GlobalAlert[])
   // Deep equals
-  .distinctUntilChanged<GlobalAlert[]>(equals)
+  .distinctUntilChanged<GlobalAlert[]>(deepEqual)
   .shareReplay();
 
 interface State {

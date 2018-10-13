@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 
 const localStorageKey = 'dim-changelog-viewed-version';
 
@@ -46,7 +46,7 @@ class Versions {
 // Clean out Beta versions to ignore their build number.
 function cleanVersion(version: string | null) {
   if (version) {
-    return _.first(version.split('.'), 3).join('.');
+    return _.take(version.split('.'), 3).join('.');
   }
   return version;
 }
