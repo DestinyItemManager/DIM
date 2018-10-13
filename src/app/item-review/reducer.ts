@@ -53,9 +53,9 @@ export function getRating(
   if (item.isDestiny1() && item.talentGrid) {
     roll = item.talentGrid.dtrRoll;
   } else if (item.isDestiny2()) {
-    const referenceKey = getReviewKey(item);
+    const reviewKey = getReviewKey(item);
 
-    roll = getD2Roll(referenceKey.availablePerks);
+    roll = getD2Roll(reviewKey.availablePerks);
   }
 
   const itemKey = `${item.hash}-${roll}`;
