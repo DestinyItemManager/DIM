@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import * as React from 'react';
 import * as _ from 'lodash';
 import { DimStore } from '../../inventory/store-types';
