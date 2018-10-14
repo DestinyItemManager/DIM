@@ -70,7 +70,7 @@ class D2BulkFetcher {
         const result = await promiseSlice;
         results.push(...result);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
