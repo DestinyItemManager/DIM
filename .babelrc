@@ -4,18 +4,27 @@
       "@babel/preset-env",
       {
         "modules": false,
-        "useBuiltIns": "usage",
-        "shippedProposals": true
+        "loose": true,
+        "useBuiltIns": "entry",
+        "shippedProposals": true,
+        "debug": true
       }
     ],
-    ["@babel/preset-react", { "useBuiltIns": true }]
+    ["@babel/preset-react", { "useBuiltIns": true, "loose": true }]
   ],
   "plugins": [
     "lodash",
     "angularjs-annotate",
     "@babel/plugin-syntax-dynamic-import",
-    ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": true }],
+    ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": true, "loose": true }],
     "react-hot-loader/babel",
-    "@babel/plugin-transform-react-constant-elements"
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "useESModules": true
+      }
+    ],
+    "@babel/plugin-transform-react-constant-elements",
+    "@babel/plugin-transform-react-inline-elements"
   ]
 }

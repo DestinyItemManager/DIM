@@ -43,6 +43,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-transform-react-constant-elements": "^7.0.0",
     "@babel/plugin-transform-react-inline-elements": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@sentry/cli": "^1.30.4",
@@ -102,6 +103,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.1.2",
     "@destiny-item-manager/zip.js": "github:DestinyItemManager/zip.js",
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
     "@fortawesome/free-brands-svg-icons": "^5.3.1",
