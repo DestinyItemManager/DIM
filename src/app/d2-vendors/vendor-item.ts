@@ -15,7 +15,7 @@ import {
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { makeItem } from '../inventory/store/d2-item-factory.service';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
-import { D2Item } from '../inventory/item-types';
+import { D2Item, DimItem } from '../inventory/item-types';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
 import * as _ from 'lodash';
@@ -31,12 +31,14 @@ import * as _ from 'lodash';
 export class VendorItem {
   static forPlugSetItem(
     defs: D2ManifestDefinitions,
+    buckets: InventoryBuckets,
     plugItemDef: DestinyItemSocketEntryPlugItemDefinition,
     reviewCache?: D2ReviewDataCache,
     canPurchase = true
   ): VendorItem {
     return new VendorItem(
       defs,
+      buckets,
       defs.InventoryItem.get(plugItemDef.plugItemHash),
       [],
       undefined,
@@ -50,6 +52,7 @@ export class VendorItem {
 
   static forKioskItem(
     defs: D2ManifestDefinitions,
+    buckets: InventoryBuckets,
     vendorDef: DestinyVendorDefinition,
     vendorItemDef: DestinyVendorItemDefinition,
     canPurchase: boolean,
@@ -62,6 +65,7 @@ export class VendorItem {
 
     return new VendorItem(
       defs,
+      buckets,
       defs.InventoryItem.get(vendorItemDef.itemHash),
       failureStrings,
       vendorItemDef,
@@ -75,6 +79,7 @@ export class VendorItem {
 
   static forVendorSaleItem(
     defs: D2ManifestDefinitions,
+    buckets: InventoryBuckets,
     vendorDef: DestinyVendorDefinition,
     saleItem: DestinyVendorSaleItemComponent,
     reviewCache?: D2ReviewDataCache,
@@ -93,6 +98,7 @@ export class VendorItem {
 
     return new VendorItem(
       defs,
+      buckets,
       defs.InventoryItem.get(vendorItemDef.itemHash),
       failureStrings,
       vendorItemDef,
@@ -105,11 +111,13 @@ export class VendorItem {
 
   static forVendorDefinitionItem(
     defs: D2ManifestDefinitions,
+    buckets: InventoryBuckets,
     vendorItemDef: DestinyVendorItemDefinition,
     reviewCache?: D2ReviewDataCache
   ): VendorItem {
     return new VendorItem(
       defs,
+      buckets,
       defs.InventoryItem.get(vendorItemDef.itemHash),
       [],
       vendorItemDef,
@@ -120,6 +128,7 @@ export class VendorItem {
   // TODO: This is getting silly. Rethink this whole thing.
   static forOrnament(
     defs: D2ManifestDefinitions,
+    buckets: InventoryBuckets,
     itemHash: number,
     objectives: DestinyObjectiveProgress[],
     canInsert: boolean,
@@ -128,6 +137,7 @@ export class VendorItem {
     const fakeInstance = ({} as any) as DestinyItemInstanceComponent;
     return new VendorItem(
       defs,
+      buckets,
       defs.InventoryItem.get(itemHash),
       enableFailReasons,
       undefined,
@@ -164,6 +174,7 @@ export class VendorItem {
   // TODO: This is getting silly. Rethink this whole thing.
   static forCatalyst(
     defs: D2ManifestDefinitions,
+    buckets: InventoryBuckets,
     attachedItemHash: number,
     itemHash: number,
     objectives: DestinyObjectiveProgress[],
@@ -184,8 +195,9 @@ export class VendorItem {
       }
     };
 
-    return new VendorItem(
+    const vendorItem = new VendorItem(
       defs,
+      buckets,
       fakedDef,
       enableFailReasons,
       undefined,
@@ -217,8 +229,13 @@ export class VendorItem {
       undefined,
       canInsert
     );
+
+    vendorItem.item.name = itemDef.displayProperties.name;
+    vendorItem.item.icon = itemDef.displayProperties.icon;
+    return vendorItem;
   }
 
+  readonly item: DimItem;
   readonly canPurchase: boolean;
   readonly failureStrings: string[];
 
@@ -226,12 +243,11 @@ export class VendorItem {
   private vendorItemDef?: DestinyVendorItemDefinition;
   private saleItem?: DestinyVendorSaleItemComponent;
   private inventoryItem: DestinyInventoryItemDefinition;
-  private instance?: DestinyItemInstanceComponent;
   private defs: D2ManifestDefinitions;
-  private reviewData: D2RatingData | null;
 
   constructor(
     defs: D2ManifestDefinitions,
+    buckets: InventoryBuckets,
     inventoryItem: DestinyInventoryItemDefinition,
     failureStrings: string[],
     vendorItemDef?: DestinyVendorItemDefinition,
@@ -248,9 +264,36 @@ export class VendorItem {
     this.inventoryItem = inventoryItem;
     this.canPurchase = canPurchase;
     this.itemComponents = itemComponents;
-    this.reviewData = reviewData || null;
-    this.instance = instance;
     this.failureStrings = failureStrings;
+
+    this.item = makeItem(
+      this.defs,
+      buckets,
+      new Set(),
+      new Set(),
+      undefined,
+      this.itemComponents,
+      {
+        itemHash: this.itemHash,
+        itemInstanceId: this.saleItem
+          ? this.saleItem.vendorItemIndex.toString()
+          : this.itemHash.toString(),
+        quantity: this.vendorItemDef ? this.vendorItemDef.quantity : 1,
+        bindStatus: ItemBindStatus.NotBound,
+        location: ItemLocation.Vendor,
+        bucketHash: 0,
+        transferStatus: TransferStatuses.NotTransferrable,
+        lockable: false,
+        state: ItemState.None
+      },
+      undefined
+    )!;
+    if (this.saleItem && this.saleItem.overrideStyleItemHash) {
+      const display = this.defs.InventoryItem.get(this.saleItem.overrideStyleItemHash)
+        .displayProperties;
+      this.item.name = display.name;
+      this.item.icon = display.icon;
+    }
   }
 
   get key() {
@@ -302,18 +345,6 @@ export class VendorItem {
     return (this.saleItem && this.saleItem.costs) || [];
   }
 
-  get primaryStat() {
-    return this.instance && this.instance.primaryStat && this.instance.primaryStat.value;
-  }
-
-  get rating(): number | null {
-    if (this.reviewData) {
-      return this.reviewData.overallScore;
-    }
-
-    return null;
-  }
-
   get previewVendorHash(): number | null {
     if (this.inventoryItem.preview && this.inventoryItem.preview.previewVendorHash) {
       return this.inventoryItem.preview.previewVendorHash;
@@ -321,62 +352,12 @@ export class VendorItem {
     return null;
   }
 
-  get objectiveProgress(): number {
-    if (
-      this.itemComponents &&
-      this.itemComponents.objectives &&
-      this.itemComponents.objectives.data[this.inventoryItem.hash]
-    ) {
-      const objectives = this.itemComponents.objectives.data[this.inventoryItem.hash].objectives;
-      return _.sumBy(objectives, (objective) => {
-        if (objective.completionValue) {
-          return (
-            Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length
-          );
-        } else {
-          return 0;
-        }
-      });
-    }
-    return 0;
-  }
-
   equals(other: VendorItem) {
     // Defs can be ref-compared
     return (
       this.vendorItemDef === other.vendorItemDef &&
       this.canPurchase === other.canPurchase &&
-      this.rating === other.rating &&
       this.saleItem === other.saleItem
-    );
-  }
-
-  /**
-   * TODO: This is really gross, but it allows us to make enough of an item to show the move popup.
-   */
-  toDimItem(buckets: InventoryBuckets, reviewData: D2RatingData | null): D2Item | null {
-    return makeItem(
-      this.defs,
-      buckets,
-      new Set(),
-      new Set(),
-      undefined,
-      this.itemComponents,
-      {
-        itemHash: this.itemHash,
-        itemInstanceId: this.saleItem
-          ? this.saleItem.vendorItemIndex.toString()
-          : this.itemHash.toString(),
-        quantity: this.vendorItemDef ? this.vendorItemDef.quantity : 1,
-        bindStatus: ItemBindStatus.NotBound,
-        location: ItemLocation.Vendor,
-        bucketHash: 0,
-        transferStatus: TransferStatuses.NotTransferrable,
-        lockable: false,
-        state: ItemState.None
-      },
-      undefined,
-      reviewData
     );
   }
 }

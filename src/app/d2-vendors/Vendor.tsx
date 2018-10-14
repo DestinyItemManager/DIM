@@ -25,9 +25,11 @@ import vendorEngramSvg from '../../images/engram.svg';
 import { t } from 'i18next';
 import classNames from 'classnames';
 import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
 
 interface Props {
   defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
   vendor: DestinyVendorComponent;
   itemComponents?: DestinyItemComponentSetOfint32;
   sales?: {
@@ -51,6 +53,7 @@ export default class Vendor extends React.Component<Props> {
     const {
       vendor,
       defs,
+      buckets,
       account,
       trackerService,
       sales,
@@ -70,6 +73,7 @@ export default class Vendor extends React.Component<Props> {
     const vendorItems = getVendorItems(
       account,
       defs,
+      buckets,
       vendorDef,
       trackerService,
       itemComponents,
@@ -135,6 +139,7 @@ export default class Vendor extends React.Component<Props> {
 export function getVendorItems(
   account: DestinyAccount,
   defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
   vendorDef: DestinyVendorDefinition,
   trackerService?: DestinyTrackerService,
   itemComponents?: DestinyItemComponentSetOfint32,
@@ -149,7 +154,7 @@ export function getVendorItems(
   if (sales && itemComponents) {
     const components = Object.values(sales);
     return components.map((component) =>
-      VendorItem.forVendorSaleItem(defs, vendorDef, component, reviewCache, itemComponents)
+      VendorItem.forVendorSaleItem(defs, buckets, vendorDef, component, reviewCache, itemComponents)
     );
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
@@ -162,6 +167,6 @@ export function getVendorItems(
           i.exclusivity === BungieMembershipType.All ||
           i.exclusivity === account.platformType
       )
-      .map((i) => VendorItem.forVendorDefinitionItem(defs, i, reviewCache));
+      .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i, reviewCache));
   }
 }

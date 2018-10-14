@@ -7,17 +7,20 @@ import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from '../d2-vendors/vendor-item';
 import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import VendorItemComponent from '../d2-vendors/VendorItemComponent';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
 
 /**
  * A single plug set.
  */
 export default function PlugSet({
   defs,
+  buckets,
   plugSetHash,
   items,
   trackerService
 }: {
   defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
   plugSetHash: number;
   items: DestinyItemPlug[];
   trackerService?: DestinyTrackerService;
@@ -32,6 +35,7 @@ export default function PlugSet({
   const vendorItems = plugSetDef.reusablePlugItems.map((i) =>
     VendorItem.forPlugSetItem(
       defs,
+      buckets,
       i,
       reviewCache,
       items.some((k) => k.plugItemHash === i.plugItemHash && k.enabled)

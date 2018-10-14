@@ -21,6 +21,8 @@ import { Loading } from '../dim-ui/Loading';
 import { refresh$ } from '../shell/refresh';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { Subscriptions } from '../rx-utils';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { getBuckets } from '../destiny2/d2-buckets.service';
 
 interface Props {
   account: DestinyAccount;
@@ -28,6 +30,7 @@ interface Props {
 
 interface State {
   defs?: D2ManifestDefinitions;
+  buckets?: InventoryBuckets;
   profileResponse?: DestinyProfileResponse;
   trackerService?: DestinyTrackerService;
   stores?: DimStore[];
@@ -51,9 +54,10 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
+    const buckets = await getBuckets();
 
     const profileResponse = await getKiosks(this.props.account);
-    this.setState({ profileResponse, defs });
+    this.setState({ profileResponse, defs, buckets });
 
     const trackerService = await fetchRatingsForKiosks(defs, profileResponse);
     this.setState({ trackerService });
@@ -86,9 +90,9 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
   }
 
   render() {
-    const { defs, profileResponse, trackerService } = this.state;
+    const { defs, buckets, profileResponse, trackerService } = this.state;
 
-    if (!profileResponse || !defs) {
+    if (!profileResponse || !defs || !buckets) {
       return (
         <div className="vendor d2-vendors dim-page">
           <Loading />
@@ -108,16 +112,17 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     return (
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Ornaments">
-          <Ornaments defs={defs} profileResponse={profileResponse} />
+          <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Catalysts">
-          <Catalysts defs={defs} profileResponse={profileResponse} />
+          <Catalysts defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="PlugSets">
           {Array.from(plugSetHashes).map((plugSetHash) => (
             <PlugSet
               key={plugSetHash}
               defs={defs}
+              buckets={buckets}
               plugSetHash={Number(plugSetHash)}
               items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
               trackerService={trackerService}
