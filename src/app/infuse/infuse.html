@@ -18,8 +18,10 @@
       </div>
 
       <div class="infuseControls">
-        <label><input class="controls" type="checkbox" id="infuse-all" ng-model="vm.getAllItems" ng-change="vm.getItems()"><span ng-i18next="Infusion.ShowItems"></span></label>
-        <label><input class="controls" type="checkbox" id="infuse-locked" ng-model="vm.showLockedItems" ng-change="vm.getItems()"><span ng-i18next="Infusion.LockedItems"></span></label>
+        <label><input class="controls" type="checkbox" id="infuse-all" ng-model="vm.getAllItems" ng-change="vm.getItems()"><span
+            ng-i18next="Infusion.ShowItems"></span></label>
+        <label><input class="controls" type="checkbox" id="infuse-locked" ng-model="vm.showLockedItems" ng-change="vm.getItems()"><span
+            ng-i18next="Infusion.LockedItems"></span></label>
       </div>
 
     </div>
@@ -53,9 +55,13 @@
         <div class="infusionPlan">
           <div class="infusionEquation">
             <dim-simple-item class="infusedItem" item-data="vm.source"></dim-simple-item>
-            <div class="icon"><i class="fa fa-plus" aria-hidden="true"></i></div>
+            <div class="icon">
+              <font-awesome-icon icon="plus"></font-awesome-icon>
+            </div>
             <dim-simple-item class="infusedItem" item-data="vm.target"></dim-simple-item>
-            <div class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+            <div class="icon">
+              <font-awesome-icon icon="rightArrow"></font-awesome-icon>
+            </div>
             <dim-simple-item class="infusedItem" item-data="vm.result"></dim-simple-item>
           </div>
           <div class="result">
@@ -65,14 +71,19 @@
               <span class="green">(+ {{ vm.infused - vm.source.primStat.value }})</span>
             </div>
             <div ng-if="vm.query.destinyVersion === 1">
-              <span> 3 <span class="currency"><img alt="{{ ::vm.items[2534352370].itemName }}" title="{{ ::vm.items[2534352370].itemName }}" ng-src="{{ vm.items[2534352370].icon | bungieIcon }}"></span></span>
-              <span ng-if="vm.source.isExotic"> + 1 <span class="currency"><img alt="{{ ::vm.items[452597397].itemName }}" title="{{ ::vm.items[452597397].itemName }}" ng-src="{{ vm.items[452597397].icon | bungieIcon }}"></span></span>
-              <span> + 250 <span class="currency"><img alt="{{ ::vm.items[3159615086].itemName }}" title="{{ ::vm.items[3159615086].itemName }}" ng-src="{{ vm.items[3159615086].icon | bungieIcon }}"></span></span>
-              <span> + {{ vm.wildcardMaterialCost | number }} <span class="currency"><img alt="{{ ::vm.items[vm.wildcardMaterialHash].itemName }}" title="{{::vm.items[vm.wildcardMaterialHash].itemName }}" ng-src="{{ vm.items[vm.wildcardMaterialHash].icon | bungieIcon }}"></span></span>
+              <span> 3 <span class="currency"><img alt="{{ ::vm.items[2534352370].itemName }}" title="{{ ::vm.items[2534352370].itemName }}"
+                    ng-src="{{ vm.items[2534352370].icon | bungieIcon }}"></span></span>
+              <span ng-if="vm.source.isExotic"> + 1 <span class="currency"><img alt="{{ ::vm.items[452597397].itemName }}"
+                    title="{{ ::vm.items[452597397].itemName }}" ng-src="{{ vm.items[452597397].icon | bungieIcon }}"></span></span>
+              <span> + 250 <span class="currency"><img alt="{{ ::vm.items[3159615086].itemName }}" title="{{ ::vm.items[3159615086].itemName }}"
+                    ng-src="{{ vm.items[3159615086].icon | bungieIcon }}"></span></span>
+              <span> + {{ vm.wildcardMaterialCost | number }} <span class="currency"><img alt="{{ ::vm.items[vm.wildcardMaterialHash].itemName }}"
+                    title="{{::vm.items[vm.wildcardMaterialHash].itemName }}" ng-src="{{ vm.items[vm.wildcardMaterialHash].icon | bungieIcon }}"></span></span>
             </div>
           </div>
         </div>
-        <button class="dim-button infuse-btn" ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()" ng-i18next="Infusion.TransferItems"></button>
+        <button class="dim-button infuse-btn" ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()"
+          ng-i18next="Infusion.TransferItems"></button>
       </div>
     </div>
 
