@@ -2899,6 +2899,10 @@ eyes@0.1.x:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
 
+fast-copy@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/fast-copy/-/fast-copy-1.2.3.tgz#2539188451558fd43eadbf4409ff52567f46d2ee"
+
 fast-deep-equal@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz#c053477817c86b51daa853c81e059b733d023614"

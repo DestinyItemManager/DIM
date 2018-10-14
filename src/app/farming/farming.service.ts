@@ -1,4 +1,4 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import { settings } from '../settings/settings';
 import * as _ from 'lodash';
 import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
