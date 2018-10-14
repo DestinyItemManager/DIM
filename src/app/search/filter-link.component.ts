@@ -1,6 +1,8 @@
 import template from './filter-link.html';
 import { IController, IWindowService, IComponentOptions } from 'angular';
-import { SearchService } from './search-filter.component';
+import { querySelector } from '../shell/reducer';
+import store from '../store/store';
+import { setSearchQuery } from '../shell/actions';
 
 /**
  * Link to a specific filter in search. Clicking adds this term to the search.
@@ -68,12 +70,14 @@ function FilterLinkCtrl(this: IController, $window: IWindowService, $i18next) {
       }
     }
 
-    const text = SearchService.query;
+    let query = querySelector(store.getState());
 
     if (itemNameFilter) {
-      SearchService.query = filter + (text.length ? ` ${text}` : '');
-    } else if (`${text} `.indexOf(`${filter} `) < 0) {
-      SearchService.query = text.length > 0 ? `${text} ${filter}` : filter;
+      query = filter + (query.length ? ` ${query}` : '');
+    } else if (`${query} `.indexOf(`${filter} `) < 0) {
+      query = query.length > 0 ? `${query} ${filter}` : filter;
     }
+
+    store.dispatch(setSearchQuery(query));
   };
 }
