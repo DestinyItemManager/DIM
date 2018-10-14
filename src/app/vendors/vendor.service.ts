@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { $rootScope, $q } from 'ngimport';
+import { $q } from 'ngimport';
 import { loadingTracker } from '../ngimport-more';
 import { D1ManifestService } from '../manifest/manifest-service';
 import { handleLocalStorageFullError } from '../compatibility';
@@ -292,8 +292,6 @@ function VendorService(): VendorServiceType {
         );
       })
       .then(() => {
-        $rootScope.$broadcast('dim-filter-invalidate');
-        $rootScope.$broadcast('dim-vendors-updated');
         service.vendorsLoaded = true;
         fulfillRatingsRequest();
         return [stores, service.vendors] as [D1Store[], { [vendorHash: number]: Vendor }];
