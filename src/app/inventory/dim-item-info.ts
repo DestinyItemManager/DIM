@@ -10,6 +10,7 @@ import store from '../store/store';
 import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
 import { starIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 
@@ -110,7 +111,7 @@ export class ItemInfoSource {
  * The item info source maintains a map of extra, DIM-specific, synced data about items (per platform).
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
-export function getItemInfoSource(account): Promise<ItemInfoSource> {
+export function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
   const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${
     account.destinyVersion
   }`;

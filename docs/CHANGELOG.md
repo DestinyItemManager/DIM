@@ -4,6 +4,7 @@
 * Added `perk:"* **"` seach filter to match any keywords against perks on an item
 * Added some missing `stat:`
 * Lock and unlock items matching your current search from the same menu you use for tagging them.
+* We no longer support searching D1 vendor items.
 
 # 4.73.0 (2018-10-07)
 

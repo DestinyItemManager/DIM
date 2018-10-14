@@ -19,16 +19,17 @@ import { itemTags } from '../inventory/dim-item-info';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 
+export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
+
 /**
  * A selector for the search config for a particular destiny version.
  */
-const searchConfigSelector = createSelector(
+export const searchFiltersConfigSelector = createSelector(
   destinyVersionSelector,
   // TODO: pass stores into search config
   storesSelector,
-  (destinyVersion, _stores) => {
-    // From search filter component
-    const searchConfig = buildSearchConfig(destinyVersion);
+  searchConfigSelector,
+  (destinyVersion, _stores, searchConfig) => {
     return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
   }
 );
@@ -47,7 +48,7 @@ const searchConfigSelector = createSelector(
 // * and maybe some other stuff?
 export const searchFilterSelector = createSelector(
   querySelector,
-  searchConfigSelector,
+  searchFiltersConfigSelector,
   (query, filters) => filters.filterFunction(query)
 );
 
