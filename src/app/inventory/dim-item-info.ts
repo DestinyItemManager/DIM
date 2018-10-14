@@ -136,7 +136,7 @@ function setInfos(key: string, infos: { [itemInstanceId: string]: DimItemInfo })
 
 export function tagIconFilter() {
   'ngInject';
-  const iconType = {};
+  const iconType: { [P in TagValue]?: IconDefinition | undefined } = {};
 
   itemTags.forEach((tag) => {
     if (tag.type) {
@@ -144,10 +144,10 @@ export function tagIconFilter() {
     }
   });
 
-  return function tagIcon(value) {
+  return function tagIcon(value: TagValue) {
     const icon = iconType[value];
     if (icon) {
-      return `item-tag fa fa-${icon}`;
+      return `item-tag fa fa-${icon.iconName}`;
     } else {
       return 'item-tag no-tag';
     }
