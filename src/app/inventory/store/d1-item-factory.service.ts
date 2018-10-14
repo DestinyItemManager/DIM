@@ -375,9 +375,8 @@ function makeItem(
   }
 
   // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
-  createdItem.isNew = false;
   try {
-    createdItem.isNew = NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
+    NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
   } catch (e) {
     console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
   }
