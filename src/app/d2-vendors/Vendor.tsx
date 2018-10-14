@@ -14,7 +14,6 @@ import VendorItems from './VendorItems';
 import './vendor.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { UISref } from '@uirouter/react';
 import {
   isVerified380,
@@ -55,7 +54,6 @@ export default class Vendor extends React.Component<Props> {
       defs,
       buckets,
       account,
-      trackerService,
       sales,
       ownedItemHashes,
       itemComponents,
@@ -70,15 +68,7 @@ export default class Vendor extends React.Component<Props> {
       return null;
     }
 
-    const vendorItems = getVendorItems(
-      account,
-      defs,
-      buckets,
-      vendorDef,
-      trackerService,
-      itemComponents,
-      sales
-    );
+    const vendorItems = getVendorItems(account, defs, buckets, vendorDef, itemComponents, sales);
     if (!vendorItems.length) {
       return null;
     }
@@ -127,7 +117,6 @@ export default class Vendor extends React.Component<Props> {
           vendor={vendor}
           vendorDef={vendorDef}
           vendorItems={vendorItems}
-          trackerService={trackerService}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={currencyLookups}
         />
@@ -141,20 +130,15 @@ export function getVendorItems(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   vendorDef: DestinyVendorDefinition,
-  trackerService?: DestinyTrackerService,
   itemComponents?: DestinyItemComponentSetOfint32,
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   }
 ) {
-  const reviewCache: D2ReviewDataCache | undefined = trackerService
-    ? trackerService.getD2ReviewDataCache()
-    : undefined;
-
   if (sales && itemComponents) {
     const components = Object.values(sales);
     return components.map((component) =>
-      VendorItem.forVendorSaleItem(defs, buckets, vendorDef, component, reviewCache, itemComponents)
+      VendorItem.forVendorSaleItem(defs, buckets, vendorDef, component, itemComponents)
     );
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
@@ -167,6 +151,6 @@ export function getVendorItems(
           i.exclusivity === BungieMembershipType.All ||
           i.exclusivity === account.platformType
       )
-      .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i, reviewCache));
+      .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i));
   }
 }

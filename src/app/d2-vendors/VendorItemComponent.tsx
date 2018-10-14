@@ -4,9 +4,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
-import { IDialogOpenResult } from 'ng-dialog';
 import dialogTemplate from './vendor-item-dialog.html';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import checkMark from '../../images/check.svg';
 import { UISref } from '@uirouter/react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -16,27 +14,10 @@ import '../progress/milestone.scss';
 interface Props {
   defs: D2ManifestDefinitions;
   item: VendorItem;
-  trackerService?: DestinyTrackerService;
   owned: boolean;
 }
 
 export default class VendorItemComponent extends React.Component<Props> {
-  private dialogResult: IDialogOpenResult | null = null;
-
-  constructor(props: Props) {
-    super(props);
-  }
-
-  shouldComponentUpdate(nextProps: Readonly<Props>) {
-    return !nextProps.item.equals(this.props.item);
-  }
-
-  componentWillUnmount() {
-    if (this.dialogResult) {
-      this.dialogResult.close();
-    }
-  }
-
   render() {
     const { item, defs, owned } = this.props;
 
@@ -60,7 +41,7 @@ export default class VendorItemComponent extends React.Component<Props> {
       title = `${title}\n${item.failureStrings.join('\n')}`;
     }
 
-    const itemDef = defs.InventoryItem.get(item.itemHash);
+    const itemDef = defs.InventoryItem.get(item.item.hash);
     const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : []).map(
       (iq) => ({
         quantity: iq.quantity,

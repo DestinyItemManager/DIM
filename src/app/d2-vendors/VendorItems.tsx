@@ -4,7 +4,6 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';
 import { UISref } from '@uirouter/react';
@@ -19,7 +18,6 @@ export default function VendorItems({
   defs,
   vendorItems,
   vendor,
-  trackerService,
   ownedItemHashes,
   currencyLookups
 }: {
@@ -27,7 +25,6 @@ export default function VendorItems({
   defs: D2ManifestDefinitions;
   vendorItems: VendorItem[];
   vendor?: DestinyVendorComponent;
-  trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   currencyLookups?: {
     [itemHash: number]: number;
@@ -115,8 +112,7 @@ export default function VendorItems({
                     key={item.key}
                     defs={defs}
                     item={item}
-                    trackerService={trackerService}
-                    owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.itemHash))}
+                    owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.item.hash))}
                   />
                 ))}
               </div>

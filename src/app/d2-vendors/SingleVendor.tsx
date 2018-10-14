@@ -8,7 +8,6 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -33,7 +32,6 @@ interface State {
   buckets?: InventoryBuckets;
   vendorDef?: DestinyVendorDefinition;
   vendorResponse?: DestinyVendorResponse;
-  trackerService?: DestinyTrackerService;
 }
 
 /**
@@ -85,11 +83,9 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
 
       this.setState({ defs, vendorResponse, buckets });
 
-      const trackerService = await fetchRatingsForVendor(defs, vendorResponse);
-      this.setState({ trackerService });
+      await fetchRatingsForVendor(defs, vendorResponse);
     } else {
-      const trackerService = await fetchRatingsForVendorDef(defs, vendorDef);
-      this.setState({ trackerService });
+      await fetchRatingsForVendorDef(defs, vendorDef);
     }
   }
 
@@ -118,14 +114,7 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
   }
 
   render() {
-    const {
-      defs,
-      buckets,
-      vendorDef,
-      vendorResponse,
-      trackerService,
-      ownedItemHashes
-    } = this.state;
+    const { defs, buckets, vendorDef, vendorResponse, ownedItemHashes } = this.state;
     const { account } = this.props;
 
     if (!vendorDef || !defs || !buckets) {
@@ -160,7 +149,6 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
       defs,
       buckets,
       vendorDef,
-      trackerService,
       vendorResponse && vendorResponse.itemComponents,
       vendorResponse && vendorResponse.sales.data
     );
@@ -190,7 +178,6 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
             vendor={vendor}
             vendorDef={vendorDef}
             vendorItems={vendorItems}
-            trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={
               vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}

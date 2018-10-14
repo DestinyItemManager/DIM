@@ -34,14 +34,14 @@ export default function Catalysts({
             <VendorItemComponent
               key={catalyst.itemHash}
               defs={defs}
-              item={VendorItem.forCatalyst(
+              item={VendorItem.forOrnament(
                 defs,
                 buckets,
                 catalyst.attachedItemHash,
-                catalyst.itemHash,
                 catalyst.objectives,
                 catalyst.canInsert,
-                catalyst.enableFailReasons
+                catalyst.enableFailReasons,
+                catalyst.itemHash
               )}
               owned={false}
             />

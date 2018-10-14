@@ -11,7 +11,6 @@ import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
@@ -32,7 +31,6 @@ interface State {
   defs?: D2ManifestDefinitions;
   buckets?: InventoryBuckets;
   profileResponse?: DestinyProfileResponse;
-  trackerService?: DestinyTrackerService;
   stores?: DimStore[];
   ownedItemHashes?: Set<number>;
 }
@@ -59,8 +57,7 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     const profileResponse = await getKiosks(this.props.account);
     this.setState({ profileResponse, defs, buckets });
 
-    const trackerService = await fetchRatingsForKiosks(defs, profileResponse);
-    this.setState({ trackerService });
+    await fetchRatingsForKiosks(defs, profileResponse);
   }
 
   componentDidMount() {
@@ -90,7 +87,7 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
   }
 
   render() {
-    const { defs, buckets, profileResponse, trackerService } = this.state;
+    const { defs, buckets, profileResponse } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
       return (
@@ -125,7 +122,6 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
               buckets={buckets}
               plugSetHash={Number(plugSetHash)}
               items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
-              trackerService={trackerService}
             />
           ))}
         </ErrorBoundary>
