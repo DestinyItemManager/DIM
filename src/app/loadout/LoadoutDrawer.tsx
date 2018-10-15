@@ -195,7 +195,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
               {showClass && (
                 <select name="classType" onChange={this.setClassType} value={loadout.classType}>
                   {classTypeOptions.map((option) => (
-                    <option key={option.value} label={option.label} value={option.value}>
+                    <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
