@@ -1,10 +1,8 @@
 @import '../../scss/variables.scss';
 
-dim-compare {
-  #loadout-drawer {
-    padding-left: 1em;
-    padding-right: 1em;
-  }
+#loadout-drawer.compare {
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .compare-bucket {
@@ -90,7 +88,12 @@ dim-compare {
     }
   }
   .spacer {
-    height: 40px;
+    height: 21px;
+  }
+
+  .stat-rating .app-icon {
+    font-size: 8px;
+    vertical-align: initial;
   }
 
   .tip-text {

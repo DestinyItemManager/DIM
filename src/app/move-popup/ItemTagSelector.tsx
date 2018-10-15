@@ -16,10 +16,10 @@ export default class ItemTagSelector extends React.Component<Props> {
     }
 
     return (
-      <select onChange={(e) => onTagUpdated(e.currentTarget.value as TagValue)}>
+      <select onChange={(e) => onTagUpdated(e.currentTarget.value as TagValue)} value={tag}>
         {itemTags.map((tagOption) => (
-          <option key={tagOption.type} value={tagOption.type} selected={tag === tagOption.type}>
-            {t('tagOption.label')}
+          <option key={tagOption.type || 'reset'} value={tagOption.type}>
+            {t(tagOption.label)}
           </option>
         ))}
       </select>
