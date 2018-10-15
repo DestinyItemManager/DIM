@@ -959,7 +959,7 @@ FileETag None
 
 <IfModule mod_headers.c>
 
-    <FilesMatch "\.(js|css|png|jpg)(\.(gz|br))?$">
+    <FilesMatch "\.(json|wasm|js|css|png|jpg)(\.(gz|br))?$">
         Header merge Cache-Control "immutable"
     </FilesMatch>
 
