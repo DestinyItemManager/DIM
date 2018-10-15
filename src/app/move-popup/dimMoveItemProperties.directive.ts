@@ -74,7 +74,7 @@ function MoveItemPropertiesCtrl(
     dimDestinyTrackerService.getItemReviews(vm.item).then(() => $scope.$apply());
 
     // DTR 404s on the new D2 languages for D1 items
-    let language = vm.settings.language;
+    let language = settings.language;
     if (vm.item.destinyVersion === 1) {
       switch (language) {
         case 'es-mx':
@@ -95,7 +95,7 @@ function MoveItemPropertiesCtrl(
       }
     }
     vm.destinyDBLink = `http://db.destinytracker.com/d${vm.item.destinyVersion}/${
-      vm.settings.language
+      settings.language
     }/items/${vm.item.hash}`;
 
     if (vm.item.primStat) {
