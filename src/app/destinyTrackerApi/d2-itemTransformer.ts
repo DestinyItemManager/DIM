@@ -4,6 +4,35 @@ import { D2Item } from '../inventory/item-types';
 import { getPowerMods } from '../inventory/store/d2-item-factory.service';
 import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 
+export interface D2ReviewKey {
+  referenceId: number;
+  availablePerks?: number[];
+}
+
+export function getReviewKey(
+  item?: D2Item | DestinyVendorSaleItemComponent,
+  itemHash?: number
+): D2ReviewKey {
+  if (item) {
+    const dtrItem = translateToDtrItem(item);
+
+    return {
+      referenceId: dtrItem.referenceId,
+      availablePerks: dtrItem.availablePerks
+    };
+  } else if (itemHash) {
+    return {
+      referenceId: itemHash
+    };
+  } else {
+    throw new Error('No data supplied to find a matching item from our stores.');
+  }
+}
+
+export function getD2Roll(availablePerks?: number[]): string {
+  return availablePerks && availablePerks.length > 0 ? availablePerks.join(',') : 'fixed';
+}
+
 /**
  * Translate a DIM item into the basic form that the DTR understands an item to contain.
  * This does not contain personally-identifying information.
