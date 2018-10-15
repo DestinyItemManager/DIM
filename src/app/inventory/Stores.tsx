@@ -3,6 +3,7 @@ import { DimStore, DimVault } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { t } from 'i18next';
 import './Stores.scss';
+import './pull-to-refresh.scss';
 import StoreHeading from './StoreHeading';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
@@ -14,6 +15,8 @@ import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
 import { sortedStoresSelector } from './reducer';
 import { Settings } from '../settings/reducer';
+import ReactPullToRefresh from 'react-pull-to-refresh';
+import { AppIcon, refreshIcon } from '../shell/icons';
 
 interface Props {
   stores: DimStore[];
@@ -70,37 +73,39 @@ class Stores extends React.Component<Props, State> {
 
     if (isPhonePortrait) {
       return (
-        <div className="inventory-content phone-portrait react">
-          <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
-            <ViewPager>
-              <Frame className="frame" autoSize={false}>
-                <Track
-                  currentView={selectedStoreId === undefined ? currentStore.id : selectedStoreId}
-                  contain={false}
-                  onViewChange={this.onViewChange}
-                  className="track"
-                >
-                  {stores.map((store) => (
-                    <View className="store-cell" key={store.id}>
-                      <StoreHeading
-                        store={store}
-                        selectedStore={selectedStore}
-                        onTapped={this.selectStore}
-                        loadoutMenuRef={this.detachedLoadoutMenu}
-                      />
-                    </View>
-                  ))}
-                </Track>
-              </Frame>
-            </ViewPager>
-          </ScrollClassDiv>
+        <ReactPullToRefresh onRefresh={this.handleRefresh} icon={<AppIcon icon={refreshIcon} />}>
+          <div className="inventory-content phone-portrait react">
+            <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
+              <ViewPager>
+                <Frame className="frame" autoSize={false}>
+                  <Track
+                    currentView={selectedStoreId === undefined ? currentStore.id : selectedStoreId}
+                    contain={false}
+                    onViewChange={this.onViewChange}
+                    className="track"
+                  >
+                    {stores.map((store) => (
+                      <View className="store-cell" key={store.id}>
+                        <StoreHeading
+                          store={store}
+                          selectedStore={selectedStore}
+                          onTapped={this.selectStore}
+                          loadoutMenuRef={this.detachedLoadoutMenu}
+                        />
+                      </View>
+                    ))}
+                  </Track>
+                </Frame>
+              </ViewPager>
+            </ScrollClassDiv>
 
-          <div className="detached" ref={this.detachedLoadoutMenu} />
+            <div className="detached" ref={this.detachedLoadoutMenu} />
 
-          <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
-            {this.renderStores([selectedStore], vault)}
-          </Hammer>
-        </div>
+            <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
+              {this.renderStores([selectedStore], vault)}
+            </Hammer>
+          </div>
+        </ReactPullToRefresh>
       );
     }
 
@@ -117,6 +122,13 @@ class Stores extends React.Component<Props, State> {
       </div>
     );
   }
+
+  private handleRefresh = (resolve, reject) => {
+    this.props.stores[0]
+      .getStoresService()
+      .reloadStores()
+      .then(resolve, reject);
+  };
 
   private onViewChange = (indices) => {
     const { stores } = this.props;

@@ -1,0 +1,62 @@
+@import '../../scss/variables.scss';
+
+$ptrHeight: 50px;
+$iconSize: 30px;
+
+.ptr-element {
+  position: absolute;
+  top: $header-height;
+  left: 0;
+  width: 100%;
+  color: white;
+  z-index: 10;
+  text-align: center;
+  height: $ptrHeight;
+}
+
+.ptr-element .app-icon {
+  opacity: 0.6;
+  width: $iconSize;
+  height: $iconSize;
+  transition: all 0.25s ease;
+  transform: rotate(90deg);
+  margin-top: ($ptrHeight - $iconSize) / 2;
+}
+.ptr-refresh .ptr-element .app-icon {
+  transform: rotate(270deg);
+}
+.ptr-reset .ptr-element {
+  transform: translate3d(0, -$ptrHeight, 0);
+}
+
+.ptr-loading,
+.ptr-reset {
+  .ptr-element .app-icon {
+    animation: spin 2s infinite linear;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.ptr-loading .refresh-view,
+.ptr-reset .refresh-view,
+.ptr-loading .ptr-element,
+.ptr-reset .ptr-element {
+  transition: all 0.25s ease;
+}
+
+.ptr-reset .refresh-view {
+  transform: translate3d(0, 0, 0);
+}
+
+.ptr-loading .refresh-view {
+  transform: translate3d(0, $ptrHeight, 0);
+}
