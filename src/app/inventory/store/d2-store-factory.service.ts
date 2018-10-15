@@ -1,4 +1,4 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,

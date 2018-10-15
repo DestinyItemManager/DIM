@@ -42,7 +42,8 @@
   </div>
   <div class="item-details failure-reason" ng-if="failureString.length" ng-repeat="failureString in vm.failureStrings">{{
     failureString }}</div>
-  <div class="item-details failure-reason" ng-if="!vm.item.canPullFromPostmaster" ng-i18next="MovePopup.CantPullFromPostmaster"></div>
+  <div class="item-details failure-reason" ng-if="!vm.item.canPullFromPostmaster && vm.item.location.inPostmaster"
+    ng-i18next="MovePopup.CantPullFromPostmaster"></div>
   <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>
   <div ng-if="vm.itemDetails" class="move-popup-details">
     <div ng-if="vm.item.reviewable" class="move-popup-tabs">

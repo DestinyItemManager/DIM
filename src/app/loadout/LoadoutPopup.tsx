@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { copy } from 'angular';
 import { t } from 'i18next';
 import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
@@ -45,6 +44,7 @@ import {
 } from '../shell/icons';
 import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
+import copy from 'fast-copy';
 
 interface ProvidedProps {
   dimStore: DimStore;
