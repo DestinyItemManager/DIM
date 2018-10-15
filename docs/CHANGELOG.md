@@ -1,5 +1,7 @@
 # Next
 
+# 4.74.0 (2018-10-14)
+
 * Added negative search. Prefix any search term with `-` and it will match the opposite.
 * Added `perk:"* **"` seach filter to match any keywords against perks on an item
 * Added some missing `stat:`
