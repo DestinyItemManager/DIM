@@ -1,6 +1,4 @@
-import 'babel-polyfill';
-// Promise.finally isn't in the base polyfill
-import 'core-js/fn/promise/finally';
+import '@babel/polyfill';
 
 import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/oauth/oauth.service';
