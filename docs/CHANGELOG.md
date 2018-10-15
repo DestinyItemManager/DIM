@@ -4,6 +4,7 @@
 * Added `perk:"* **"` seach filter to match any keywords against perks on an item
 * Added some missing `stat:`
 * Lock and unlock items matching your current search from the same menu you use for tagging them.
+* Updated icons across the app.
 
 # 4.73.0 (2018-10-07)
 

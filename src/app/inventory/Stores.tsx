@@ -95,7 +95,7 @@ class Stores extends React.Component<Props, State> {
             </ViewPager>
           </ScrollClassDiv>
 
-          <div className="loadout-menu detached" ref={this.detachedLoadoutMenu} />
+          <div className="detached" ref={this.detachedLoadoutMenu} />
 
           <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
             {this.renderStores([selectedStore], vault)}

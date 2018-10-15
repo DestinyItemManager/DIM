@@ -97,7 +97,7 @@
     outline: none;
   }
 
-  &.detached {
+  .detached & {
     position: fixed;
     top: 101px;
     z-index: 1000;
