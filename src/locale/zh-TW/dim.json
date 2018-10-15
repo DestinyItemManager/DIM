@@ -22,6 +22,7 @@
   "Bucket": {
     "Armor": "防具",
     "General": "一般",
+    "Ghost": "Ghost",
     "Inventory": "庫存",
     "Postmaster": "郵政官",
     "Progress": "進度",
@@ -171,8 +172,8 @@
     "Ascended": "顯示可以提高光等的物品.",
     "Categories": "高級別物品類別.",
     "Class": "按照職業類別顯示.",
-    "ClickFilters": "點擊下方的篩選器或使用搜尋框查找.",
-    "Combine": "Filters are combined using 'and' logic, for example '{{example}}' will return all arc items with over 300 light.",
+    "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
+    "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "顯示擁有光等的物品.",
     "ContributePower": "顯示擁有光等的物品.",
     "DamageType": "按照傷害類型顯示.",
@@ -203,13 +204,15 @@
     },
     "LightLevel": "根據光等來顯示物品(武器攻擊力; 防具護甲值).",
     "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
+    "LockAllFailed": "Failed to lock items",
+    "LockAllSuccess": "Locked {{num}} items",
     "Locked": "根據物品鎖定狀態顯示.",
     "NamedStat": "顯示重要防具.",
-    "Negate": "Filters can be negated using '{{not}}', for example '{{notexample}}' will find all non-engram items. For text searches, use the dash, for example -\"Triple Tap\" will find all weapons without the Triple Tap perk.",
+    "Negate": "To negate a search, prefix that search term with a minus sign: {{notexample}} will find all non-engram items.",
     "NewItems": "顯示新獲得的物品.",
     "Notes": "搜尋已添加了自訂備註的物品",
     "Ornament": "顯示帶有裝飾物和篩選程式的物品.",
-    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Also, you can search for phrases using quotes.",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Postmaster": "目前在郵政官處的物品.",
     "PowerLevel": "根據光等來顯示物品(武器攻擊力; 防具護甲值).",
     "Quality": "根據其統計品質百分比來顯示物品'{{percentage}}'別名'{{quality}}'.",
@@ -238,6 +241,8 @@
     },
     "Tracked": "根據追蹤狀態顯示任務/賞金.",
     "Transferable": "可在角色間移動的物品.",
+    "UnlockAllFailed": "Failed to unlock items",
+    "UnlockAllSuccess": "Unlocked {{num}} items",
     "Vendor": "有物品 \"{{name}}\" 可從<i>{{vendor}}</i>商販處獲得",
     "Vendor_noname": "有物品可從<i>{{vendor}}</i>商販處獲得",
     "Vendors": {
@@ -250,7 +255,7 @@
       "Shipwright": "船匠",
       "Speaker": "預言者"
     },
-    "VideoExample": "想要更好的使用篩選器功能? 請查看{{link}}",
+    "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "按照武器類別顯示.",
     "WeaponType": "按照武器類型顯示.",
     "Year": "按照物品推出年份顯示."
@@ -276,7 +281,7 @@
     "Drag": "按住Shift或者在目的地區域停留一會兒來完成一次部分堆疊。",
     "HidePopup": "不再顯示此彈出視窗",
     "NoStorage": "DIM無法儲存資料",
-    "NoStorageMessage": "DIM無法在您的瀏覽器中儲存資料。這可能是瀏覽器的無痕視窗造成的，或許您磁碟空間不足。DIM無法完成後續操作。",
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space.",
     "UpdateAvailable": "DIM已更新",
     "UpdateAvailableMessage": "DIM有一個可適用更新. 請重新載入該頁面以應用更新.",
     "Version_beta": "Beta版已經更新至 v{{version}}",
@@ -393,13 +398,13 @@
     "Vendor": "包括商販物品"
   },
   "LoadoutBuilder": {
-    "ArmorPower": "Armor power: {{power}}",
     "BurnTypeArc": "Arc",
     "BurnTypeNone": "None",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Void",
     "CreateLoadout": "Create Loadout",
     "EquipItems": "Equip on {{name}}",
+    "ExcludedItems": "{{locked}} excluded",
     "GeneratedBuilds": "Generated Builds",
     "Loading": "Generating builds... {{loading}}%",
     "LockBucket": "Lock {{bucket}}",
@@ -408,17 +413,18 @@
     "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
     "LockPerksTabTitle": "Perks",
     "LockPerksTitle": "Select perks to lock",
+    "LockedPerks": "{{locked}} locked perks",
     "NoBuildsFound": "No Generated Builds Found",
     "Options": "Options",
     "RequireBurn": "Require armor with matching damage resistance burn",
     "RequirePerks": "Require additional perks on all armor",
     "ResetLocked": "Reset Locked",
-    "ResetPerks": "Reset",
     "SelectCharacter": "Select Character",
     "SelectPower": "Minimum Power",
     "SelectPowerMinimum": "- No Minimum -",
     "SelectTier": "Build Tier",
     "SelectTierHeader": "- Tier {{tier}} -",
+    "ShowMore": "Show More",
     "Title": "Loadout Builder (Beta)"
   },
   "Loadouts": {
@@ -510,6 +516,7 @@
     "UpStack": "增加一組"
   },
   "MovePopup": {
+    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "合併",
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
@@ -684,7 +691,10 @@
     "Infuse": "灌注",
     "Junk": "垃圾",
     "Keep": "保留",
-    "TagItem": "標記物品"
+    "LockAll": "Lock Items",
+    "TagItem": "標記物品",
+    "TagItems": "Tag Items",
+    "UnlockAll": "Unlock Items"
   },
   "TrialsCard": {
     "FiveWins": "五連勝獎勵 (防具)",

@@ -8,6 +8,9 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import store from '../store/store';
 import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
+import { starIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 
@@ -24,16 +27,16 @@ export interface TagInfo {
   type?: TagValue;
   label: string;
   hotkey?: string;
-  icon?: string;
+  icon?: IconDefinition;
 }
 
 // Predefined item tags. Maybe eventually allow to add more.
 export const itemTags: TagInfo[] = [
   { label: 'Tags.TagItem' },
-  { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: 'star' },
-  { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: 'tag' },
-  { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: 'ban' },
-  { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: 'bolt' }
+  { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: starIcon },
+  { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: tagIcon },
+  { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: banIcon },
+  { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: boltIcon }
 ];
 
 /**
@@ -108,7 +111,7 @@ export class ItemInfoSource {
  * The item info source maintains a map of extra, DIM-specific, synced data about items (per platform).
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
-export function getItemInfoSource(account): Promise<ItemInfoSource> {
+export function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
   const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${
     account.destinyVersion
   }`;
@@ -130,4 +133,24 @@ function getInfos(key: string): Promise<{ [itemInstanceId: string]: DimItemInfo 
  */
 function setInfos(key: string, infos: { [itemInstanceId: string]: DimItemInfo }) {
   return SyncService.set({ [key]: infos });
+}
+
+export function tagIconFilter() {
+  'ngInject';
+  const iconType: { [P in TagValue]?: IconDefinition | undefined } = {};
+
+  itemTags.forEach((tag) => {
+    if (tag.type) {
+      iconType[tag.type] = tag.icon;
+    }
+  });
+
+  return function tagIcon(value: TagValue) {
+    const icon = iconType[value];
+    if (icon) {
+      return `item-tag fa fa-${icon.iconName}`;
+    } else {
+      return 'item-tag no-tag';
+    }
+  };
 }

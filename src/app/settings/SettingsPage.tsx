@@ -27,6 +27,7 @@ import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
 import { itemSortOrder } from './item-sort';
 import { Settings, defaultItemSize } from './reducer';
+import { AppIcon, refreshIcon, spreadsheetIcon } from '../shell/icons';
 
 interface StoreProps {
   settings: Settings;
@@ -231,7 +232,7 @@ class SettingsPage extends React.Component<Props, State> {
               {this.initialLanguage !== settings.language && (
                 <div>
                   <button className="dim-button" onClick={this.reloadDim}>
-                    <i className="fa fa-refresh" /> <span>{t('Settings.ReloadDIM')}</span>
+                    <AppIcon icon={refreshIcon} /> <span>{t('Settings.ReloadDIM')}</span>
                   </button>
                 </div>
               )}
@@ -506,7 +507,7 @@ class SettingsPage extends React.Component<Props, State> {
                 disabled={!storesLoaded}
                 title="Download Csv"
               >
-                <i className="fa fa-table" /> <span>{t('Bucket.Weapons')}</span>
+                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
               </button>{' '}
               <button
                 className="dim-button"
@@ -514,7 +515,7 @@ class SettingsPage extends React.Component<Props, State> {
                 disabled={!storesLoaded}
                 title="Download Csv"
               >
-                <i className="fa fa-table" /> <span>{t('Bucket.Armor')}</span>
+                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
               </button>
               <button
                 className="dim-button"
@@ -522,7 +523,7 @@ class SettingsPage extends React.Component<Props, State> {
                 disabled={!storesLoaded}
                 title="Download Csv"
               >
-                <i className="fa fa-table" /> <span>{t('Bucket.Ghost')}</span>
+                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
               </button>
             </div>
           </section>

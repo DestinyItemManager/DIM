@@ -16,7 +16,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 
-// const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
@@ -98,9 +98,9 @@ module.exports = (env) => {
           exclude: [/sqlLib/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
           terserOptions: {
             ecma: 8,
-            compress: { warnings: false, inline: 1 },
-            mangle: { safari10: true },
-            output: { comments: false }
+            compress: { warnings: false, passes: 3, toplevel: true },
+            mangle: { safari10: true, toplevel: true },
+            output: { safari10: true }
           },
           sourceMap: true
         })
@@ -155,13 +155,14 @@ module.exports = (env) => {
           loader: 'awesome-typescript-loader',
           options: {
             useBabel: true,
+            babelCore: '@babel/core',
             useCache: true
           }
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
           enforce: 'pre',
-          test: /\.js$/,
+          test: /\.jsx?$/,
           loader: 'source-map-loader'
         },
         {
@@ -203,7 +204,7 @@ module.exports = (env) => {
     },
 
     resolve: {
-      extensions: ['.js', '.json', '.ts', '.tsx'],
+      extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
 
       alias: {
         app: path.resolve('./src')
@@ -327,9 +328,6 @@ module.exports = (env) => {
         shorthands: true,
         flattening: true
       })
-
-      // Enable if you want to debug the size of the chunks
-      // new Visualizer(),
     ],
 
     node: {
@@ -338,6 +336,11 @@ module.exports = (env) => {
       tls: 'empty'
     }
   };
+
+  // Enable if you want to debug the size of the chunks
+  if (process.env.WEBPACK_VISUALIZE) {
+    config.plugins.push(new Visualizer());
+  }
 
   if (isDev) {
     config.plugins.push(

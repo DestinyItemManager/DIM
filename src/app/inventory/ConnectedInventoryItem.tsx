@@ -11,6 +11,7 @@ import { getRating } from '../item-review/reducer';
 // Props provided from parents
 interface ProvidedProps {
   item: DimItem;
+  onClick?(e): void;
 }
 
 // Props from Redux via mapStateToProps
@@ -49,10 +50,17 @@ type Props = ProvidedProps & StoreProps;
  */
 class ConnectedInventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, tag, rating, hideRating } = this.props;
+    const { item, isNew, tag, rating, hideRating, onClick } = this.props;
 
     return (
-      <InventoryItem item={item} isNew={isNew} tag={tag} rating={rating} hideRating={hideRating} />
+      <InventoryItem
+        item={item}
+        isNew={isNew}
+        tag={tag}
+        rating={rating}
+        hideRating={hideRating}
+        onClick={onClick}
+      />
     );
   }
 }

@@ -1,10 +1,20 @@
-import Progress from './Progress';
 import { ReactStateDeclaration } from '@uirouter/react';
 
 export const states: ReactStateDeclaration[] = [
   {
-    name: 'destiny2.progress',
-    component: Progress,
-    url: '/progress'
+    name: 'destiny2.progress.**',
+    lazyLoad: async () => {
+      // tslint:disable-next-line:space-in-parens
+      const module = await import(/* webpackChunkName: "progress" */ './Progress');
+      return {
+        states: [
+          {
+            name: 'destiny2.progress',
+            url: '/progress',
+            component: module.default
+          }
+        ]
+      };
+    }
   }
 ];

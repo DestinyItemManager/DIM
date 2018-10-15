@@ -33,7 +33,12 @@ function ActivitiesController(
 
   const vm = this;
 
-  vm.settings = settings;
+  $scope.$watch(
+    () => settings,
+    () => {
+      vm.settings = settings;
+    }
+  );
 
   vm.toggleSection = (id) => {
     store.dispatch(toggleCollapsedSection(id));

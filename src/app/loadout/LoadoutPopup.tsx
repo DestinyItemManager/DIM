@@ -32,7 +32,7 @@ import {
   addIcon,
   searchIcon,
   levellingIcon,
-  makeRoomIcon,
+  sendIcon,
   banIcon,
   raiseReputationIcon,
   undoIcon,
@@ -42,6 +42,8 @@ import {
   powerActionIcon,
   powerIndicatorIcon
 } from '../shell/icons';
+import { DimItem } from '../inventory/item-types';
+import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
 
 interface ProvidedProps {
@@ -54,6 +56,7 @@ interface StoreProps {
   loadouts: Loadout[];
   query: string;
   classTypeId: number;
+  searchFilter(item: DimItem): boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -81,6 +84,7 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
     previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
     loadouts: loadoutsForPlatform,
     query: querySelector(state),
+    searchFilter: searchFilterSelector(state),
     classTypeId
   };
 }
@@ -161,7 +165,7 @@ class LoadoutPopup extends React.Component<Props> {
 
                   <li className="loadout-set">
                     <span onClick={this.makeRoomForPostmaster}>
-                      <AppIcon icon={makeRoomIcon} />
+                      <AppIcon icon={sendIcon} />
                       <span>{t('Loadouts.MakeRoom')}</span>
                     </span>
                   </li>
@@ -172,7 +176,7 @@ class LoadoutPopup extends React.Component<Props> {
                 numPostmasterItems > 0 && (
                   <li className="loadout-set">
                     <span onClick={this.pullFromPostmaster}>
-                      <AppIcon icon={makeRoomIcon} />
+                      <AppIcon icon={sendIcon} />
                       <span className="badge">{numPostmasterItems}</span>{' '}
                       <span>{t('Loadouts.PullFromPostmaster')}</span>
                     </span>
@@ -359,8 +363,8 @@ class LoadoutPopup extends React.Component<Props> {
 
   // Move items matching the current search. Max 9 per type.
   private searchLoadout = (e) => {
-    const { dimStore } = this.props;
-    const loadout = searchLoadout(dimStore.getStoresService(), dimStore);
+    const { dimStore, searchFilter } = this.props;
+    const loadout = searchLoadout(dimStore.getStoresService(), dimStore, searchFilter);
     this.applyLoadout(loadout, e);
   };
 

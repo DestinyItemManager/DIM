@@ -4,13 +4,14 @@
   display: none !important;
 }
 
-#filter-input {
+.filter-input {
   border-radius: 0;
   -webkit-appearance: none;
   height: 25px;
 }
 
-dim-search-filter {
+dim-search-filter,
+.search-filter {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -54,7 +55,7 @@ dim-search-filter {
       display: block;
       flex: 1;
 
-      #filter-input {
+      .filter-input {
         height: 34px;
         margin-top: 0;
         width: 100%;
@@ -92,8 +93,8 @@ dim-search-filter {
     margin-right: 8px !important;
   }
 
-  .fa {
-    font-size: 16px !important;
+  .app-icon {
+    font-size: 14px !important;
     color: #999 !important;
     // Increase touch target size
     padding: 4px;

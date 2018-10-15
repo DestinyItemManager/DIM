@@ -324,6 +324,7 @@ $item-header-spacing: 5px;
   background-repeat: no-repeat;
   border-radius: 5px;
   margin-top: 1px;
+  flex-shrink: 0;
 }
 
 .ammo-primary {

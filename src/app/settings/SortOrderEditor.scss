@@ -11,11 +11,13 @@
   align-items: center;
   transition: opacity 0.2s;
 
-  .fa {
+  .fa,
+  .app-icon {
     padding: 4px;
   }
 
   .sort-button {
+    cursor: pointer;
     transition: opacity 0.2s;
   }
 
@@ -25,7 +27,8 @@
     }
   }
 
-  .fa-bars {
+  .fa-bars,
+  .reorder-handle {
     color: #444;
   }
 

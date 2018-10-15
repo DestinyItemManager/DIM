@@ -1,15 +1,16 @@
 import * as React from 'react';
 import './ItemTag.scss';
-import classNames from 'classnames';
 import { TagValue, itemTags } from './dim-item-info';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { AppIcon } from '../shell/icons';
 
 interface Props {
   tag?: TagValue;
 }
 
-const iconType = {};
+const iconType: { [k: string]: IconDefinition } = {};
 itemTags.forEach((tag) => {
-  if (tag.type) {
+  if (tag.type && tag.icon) {
     iconType[tag.type] = tag.icon;
   }
 });
@@ -21,7 +22,7 @@ export default class ItemTag extends React.Component<Props> {
     if (tag !== undefined) {
       return (
         <div className="tag">
-          <i className={classNames('item-tag fa', 'fa-' + iconType[tag])} />
+          <AppIcon className="item-tag" icon={iconType[tag]} />
         </div>
       );
     } else {

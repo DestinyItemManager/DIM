@@ -6,27 +6,6 @@ import { IComponentOptions, IController, IScope, IRootElementService } from 'ang
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from './item-types';
 import { CompareService } from '../compare/compare.service';
-import { itemTags } from './dim-item-info';
-
-export function tagIconFilter() {
-  'ngInject';
-  const iconType = {};
-
-  itemTags.forEach((tag) => {
-    if (tag.type) {
-      iconType[tag.type] = tag.icon;
-    }
-  });
-
-  return function tagIcon(value) {
-    const icon = iconType[value];
-    if (icon) {
-      return `item-tag fa fa-${icon}`;
-    } else {
-      return 'item-tag no-tag';
-    }
-  };
-}
 
 export const StoreItemComponent: IComponentOptions = {
   controller: StoreItemCtrl,

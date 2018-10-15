@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { sortedStoresSelector } from '../inventory/reducer';
 import './CharacterOrderEditor.scss';
+import { AppIcon, refreshIcon } from '../shell/icons';
 
 interface ProvidedProps {
   onSortOrderChanged(order: string[]): void;
@@ -42,7 +43,7 @@ class CharacterOrderEditor extends React.Component<Props> {
     if (!characters.length) {
       return (
         <div className="character-order-editor">
-          <i className="fa fa-refresh fa-spin" /> Loading characters...
+          <AppIcon icon={refreshIcon} spinning={true} /> Loading characters...
         </div>
       );
     }

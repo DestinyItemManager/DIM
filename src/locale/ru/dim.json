@@ -22,6 +22,7 @@
   "Bucket": {
     "Armor": "Броня",
     "General": "Общее",
+    "Ghost": "Ghost",
     "Inventory": "Предметы",
     "Postmaster": "Почтмейстер",
     "Progress": "Прогресс",
@@ -171,8 +172,8 @@
     "Ascended": "Поднимающие уровень их Света и был ли он поднят или нет.",
     "Categories": "Максимального уровня по категориям.",
     "Class": "По классам персонажа.",
-    "ClickFilters": "Для установки фильтра, нажмите на него в таблице или введите в поиске.",
-    "Combine": "Фильтры используют логику 'И', например '{{example}}' все электрические предметы старше 300 лайта.",
+    "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
+    "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Увеличивающие Ваш лайт.",
     "ContributePower": "Увеличивающие Вашу силу.",
     "DamageType": "По типу урона.",
@@ -203,13 +204,15 @@
     },
     "LightLevel": "По уровню Силы (Атака для оружия, Защита для брони).",
     "Location": "Расположение в DIM. \nleft/middle/right - колонка персонажа. middle и right не работают на аккаунтах с одним персонажем. \ncurrent - персонаж с желтым треугольником.",
+    "LockAllFailed": "Failed to lock items",
+    "LockAllSuccess": "Locked {{num}} items",
     "Locked": "По статусу блокировки.",
     "NamedStat": "Показывать броню, у которой есть очки в указной характеристике.",
-    "Negate": "Для фильтров доступна приставка '{{not}}', например '{{notexample}}' найдет все предметы не являющиеся энграммами. Для поиска текста используйте минус. Например -\"Тройной Выстрел\" найдет предметы без перка Тройной Выстрел.",
+    "Negate": "To negate a search, prefix that search term with a minus sign: {{notexample}} will find all non-engram items.",
     "NewItems": "Новые предметы.",
     "Notes": "С Вашими заметками в DIM",
     "Ornament": "С орнаментами и фильтруемые по статусам.",
-    "PartialMatch": "Предметы с названиями/перками частично содержащими введенный текст. Доступен поиск словосочетаний в кавычках. ",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Postmaster": "У Почтмейстера.",
     "PowerLevel": "По Силе.",
     "Quality": "По общей сумме процентов характеристик. '{{percentage}}' означает '{{quality}}'.",
@@ -238,6 +241,8 @@
     },
     "Tracked": "Контракты/Преследования по статусу отслеживания.",
     "Transferable": "Доступные всем Персонажам.",
+    "UnlockAllFailed": "Failed to unlock items",
+    "UnlockAllSuccess": "Unlocked {{num}} items",
     "Vendor": "Предмет доступен у <i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "Доступен у <i>{{vendor}}</i>",
     "Vendors": {
@@ -250,7 +255,7 @@
       "Shipwright": "Корабел",
       "Speaker": "Глашатай"
     },
-    "VideoExample": "Наглядный пример функционала фильтров в ролике: {{link}}",
+    "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "Оружие по слотам.",
     "WeaponType": "Оружие по типам.",
     "Year": "Показать предметы по году появления в Destiny."
@@ -276,7 +281,7 @@
     "Drag": "Удерживайте shift или pause над зоной перетаскивания для передачи части пачки.",
     "HidePopup": "Скрыть",
     "NoStorage": "DIM не смог записать данные",
-    "NoStorageMessage": "DIM не смог сохранить данные в вашем браузере. Это может быть вызвано режимом инкогнито, настроек доступа или у вас мало места на жестком-диске. DIM не может запуститься.",
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space.",
     "UpdateAvailable": "Обновление DIM",
     "UpdateAvailableMessage": "Доступно обновление DIM. Перезагрузите страницу для обновления.",
     "Version_beta": "Бета-версия была обновлена до v{{version}}",
@@ -393,13 +398,13 @@
     "Vendor": "Включить предметы Вендоров"
   },
   "LoadoutBuilder": {
-    "ArmorPower": "Сила брони: {{power}}",
     "BurnTypeArc": "Молния",
     "BurnTypeNone": "Отсутствует",
     "BurnTypeSolar": "Солнце",
     "BurnTypeVoid": "Пустота",
     "CreateLoadout": "Создать Набор",
     "EquipItems": "Надеть на {{name}}",
+    "ExcludedItems": "{{locked}} excluded",
     "GeneratedBuilds": "Сгенерированные Билды",
     "Loading": "Генерируем Наборы... {{loading}} %",
     "LockBucket": "Заблокировать {{bucket}}",
@@ -408,17 +413,18 @@
     "LockItemTitle": "Перетащите для блокировки (Shift-ЛКМ для отмены)",
     "LockPerksTabTitle": "Перки",
     "LockPerksTitle": "Выбрать перки блокируемых",
+    "LockedPerks": "{{locked}} locked perks",
     "NoBuildsFound": "Сгенерированные Билды не найдены",
     "Options": "Настройки",
     "RequireBurn": "Броня с сопротивлением совпадающим с ожогом",
     "RequirePerks": "Требуется броня с доп. перками",
     "ResetLocked": "Сброс Заблокированных",
-    "ResetPerks": "Сброс",
     "SelectCharacter": "Выбор Персонажа",
     "SelectPower": "Минимальная Сила",
     "SelectPowerMinimum": "- Без Минимума -",
     "SelectTier": "Уровень Билда",
     "SelectTierHeader": "- Уровень {{tier}} -",
+    "ShowMore": "Show More",
     "Title": "Создатель Наборов (Бета)"
   },
   "Loadouts": {
@@ -510,6 +516,7 @@
     "UpStack": "Увеличить до предыдущей полной \"пачки\""
   },
   "MovePopup": {
+    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Собрать все",
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
@@ -684,7 +691,10 @@
     "Infuse": "На синтез",
     "Junk": "Мусор",
     "Keep": "Оставить",
-    "TagItem": "Тег"
+    "LockAll": "Lock Items",
+    "TagItem": "Тег",
+    "TagItems": "Tag Items",
+    "UnlockAll": "Unlock Items"
   },
   "TrialsCard": {
     "FiveWins": "Награда за 5 побед (Броня)",
