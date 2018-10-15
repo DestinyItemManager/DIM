@@ -2,6 +2,7 @@
 
 * We no longer support searching D1 vendor items.
 * Added support for showing ratings and reviews based on the item roll in Destiny 2.
+* Fix for missing class names in the loadout builder in Firefox.
 
 # 4.74.0 (2018-10-14)
 
