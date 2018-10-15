@@ -6,13 +6,14 @@ import { t } from 'i18next';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 
 export default function Objective({
   defs,
   objective,
   suppressObjectiveDescription
 }: {
-  defs: D2ManifestDefinitions;
+  defs: D2ManifestDefinitions | D1ManifestDefinitions;
   objective: DestinyObjectiveProgress;
   suppressObjectiveDescription?: boolean;
 }) {
@@ -27,9 +28,17 @@ export default function Objective({
     return null;
   }
 
+  // These two are to support D1 objectives
+  const completionValue =
+    objective.completionValue !== undefined
+      ? objective.completionValue
+      : objectiveDef.completionValue;
+
+  const complete = objective.complete || (objective as any).isComplete;
+
   const displayName =
     (!suppressObjectiveDescription && objectiveDef.progressDescription) ||
-    t(objective.complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
+    t(complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
 
   const formatter = new Intl.NumberFormat(settings.language);
 
@@ -50,14 +59,14 @@ export default function Objective({
   }
 
   const classes = classNames('objective-row', {
-    'objective-complete': objective.complete,
+    'objective-complete': complete,
     'objective-boolean':
       objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
-      (objective.completionValue === 1 && !objectiveDef.allowOvercompletion)
+      (completionValue === 1 && !objectiveDef.allowOvercompletion)
   });
 
   const progressBarStyle = {
-    width: percent(progress / objective.completionValue)
+    width: percent(progress / completionValue)
   };
 
   return (
@@ -68,11 +77,11 @@ export default function Objective({
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle} />
         <div className="objective-description">{displayName}</div>
-        {objectiveDef.allowOvercompletion && objective.completionValue === 1 ? (
+        {objectiveDef.allowOvercompletion && completionValue === 1 ? (
           <div className="objective-text">{formatter.format(progress)}</div>
         ) : (
           <div className="objective-text">
-            {formatter.format(progress)}/{formatter.format(objective.completionValue)}
+            {formatter.format(progress)}/{formatter.format(completionValue)}
           </div>
         )}
       </div>
