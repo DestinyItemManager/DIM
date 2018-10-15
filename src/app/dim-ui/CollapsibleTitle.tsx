@@ -8,6 +8,7 @@ import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
 interface ProvidedProps {
   sectionId: string;
   title: React.ReactNode;
+  extra?: React.ReactNode;
   children?: React.ReactNode;
 }
 
@@ -37,7 +38,7 @@ type Props = StoreProps & ProvidedProps & DispatchProps;
 
 class CollapsibleTitle extends React.Component<Props> {
   render() {
-    const { title, collapsed, children, toggle } = this.props;
+    const { title, collapsed, children, toggle, extra } = this.props;
     return (
       <>
         <div className="title" onClick={toggle}>
@@ -45,6 +46,7 @@ class CollapsibleTitle extends React.Component<Props> {
             <AppIcon className="collapse" icon={collapsed ? expandIcon : collapseIcon} />{' '}
             <span>{title}</span>
           </span>
+          {extra}
         </div>
         {!collapsed && children}
       </>
