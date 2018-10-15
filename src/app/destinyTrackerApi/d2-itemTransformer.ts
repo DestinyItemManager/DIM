@@ -4,11 +4,17 @@ import { D2Item } from '../inventory/item-types';
 import { getPowerMods } from '../inventory/store/d2-item-factory.service';
 import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 
+/**
+ * Lookup keys for review data in the cache.
+ * Reference ID comes from the underlying item's hash ID.
+ * Available perks is a collection of the item instance's available plug hash IDs.
+ */
 export interface D2ReviewKey {
   referenceId: number;
   availablePerks?: number[];
 }
 
+/** Translate a D2 item into its review key. */
 export function getReviewKey(
   item?: D2Item | DestinyVendorSaleItemComponent,
   itemHash?: number
@@ -29,6 +35,10 @@ export function getReviewKey(
   }
 }
 
+/**
+ * Translate a collection of available perks (plug hash IDs) into a string.
+ * Useful in reducers and other places where arrays aren't super useful.
+ */
 export function getD2Roll(availablePerks?: number[]): string {
   return availablePerks && availablePerks.length > 0 ? availablePerks.join(',') : 'fixed';
 }
