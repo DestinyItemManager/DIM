@@ -51,7 +51,12 @@ function MoveItemPropertiesCtrl(
     'is-void': false
   };
   vm.light = null;
-  vm.settings = settings;
+  $scope.$watch(
+    () => settings,
+    () => {
+      vm.settings = settings;
+    }
+  );
 
   vm.$onInit = () => {
     const item = vm.item;

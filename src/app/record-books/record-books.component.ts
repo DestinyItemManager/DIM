@@ -32,7 +32,13 @@ function RecordBooksController(
 
   const vm = this;
 
-  vm.hideCompletedRecords = settings.hideCompletedRecords;
+  $scope.$watch(
+    () => settings,
+    () => {
+      vm.hideCompletedRecords = settings.hideCompletedRecords;
+      vm.settings = settings;
+    }
+  );
 
   vm.toggleSection = (id) => {
     store.dispatch(toggleCollapsedSection(id));
