@@ -11,12 +11,12 @@ export default class ItemTagSelector extends React.Component<Props> {
   render() {
     const { tag, onTagUpdated } = this.props;
 
-    if (!tag) {
-      return null;
-    }
-
     return (
-      <select onChange={(e) => onTagUpdated(e.currentTarget.value as TagValue)} value={tag}>
+      <select
+        className="item-tag"
+        onChange={(e) => onTagUpdated(e.currentTarget.value as TagValue)}
+        value={tag}
+      >
         {itemTags.map((tagOption) => (
           <option key={tagOption.type || 'reset'} value={tagOption.type}>
             {t(tagOption.label)}

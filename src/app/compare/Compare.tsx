@@ -141,7 +141,7 @@ export default class Compare extends React.Component<{}, State> {
       <div id="loadout-drawer" className="compare">
         <div className="compare-options">
           {archeTypes.length > 1 && (
-            <button className="dim-button" onClick={() => this.compareSimilar('archetype')}>
+            <button className="dim-button" onClick={(e) => this.compareSimilar(e, 'archetype')}>
               {t(firstComparison.bucket.inWeapons ? 'Compare.Archetype' : 'Compare.Splits', {
                 quantity: archeTypes.length
               })}
@@ -227,7 +227,8 @@ export default class Compare extends React.Component<{}, State> {
     CompareService.dialogOpen = false;
   };
 
-  private compareSimilar = (type) => {
+  private compareSimilar = (e, type?: string) => {
+    e.preventDefault();
     this.setState({
       comparisons: type === 'archetype' ? this.state.archetypes : this.state.similarTypes
     });
@@ -262,14 +263,14 @@ export default class Compare extends React.Component<{}, State> {
     if (dupes) {
       const allItems = item.getStoresService().getAllItems();
       const similarTypes = this.findSimilarTypes(allItems, item);
-      const archetypes = this.findArchetypes(similarTypes);
+      const archetypes = this.findArchetypes(similarTypes, item);
       this.setState({
         comparisons: allItems.filter((i) => i.hash === item.hash),
         // TODO: I'd rather not store these on state - they should just be a memoized selector
         similarTypes,
         archetypes
       });
-    } else if (comparisons.some((i) => i.id === item.id)) {
+    } else if (comparisons.some((i) => i.id !== item.id)) {
       this.setState({ comparisons: [...comparisons, item] });
     }
   };
@@ -323,10 +324,7 @@ export default class Compare extends React.Component<{}, State> {
       : [];
   };
 
-  private findArchetypes = (similarTypes: DimItem[]) => {
-    const { comparisons } = this.state;
-    const compare = comparisons[0];
-
+  private findArchetypes = (similarTypes: DimItem[], compare = this.state.comparisons[0]) => {
     if (!compare) {
       return [];
     }
