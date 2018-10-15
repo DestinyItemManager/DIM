@@ -14,9 +14,7 @@ export interface D2ReviewKey {
   availablePerks?: number[];
 }
 
-/**
- * Translate a D2 item into its review key.
- */
+/** Translate a D2 item into its review key. */
 export function getReviewKey(
   item?: D2Item | DestinyVendorSaleItemComponent,
   itemHash?: number
