@@ -98,6 +98,7 @@
   }
 
   &.detached {
+    position: fixed;
     top: 101px;
     z-index: 1000;
     max-height: calc(100vh - 221px);
