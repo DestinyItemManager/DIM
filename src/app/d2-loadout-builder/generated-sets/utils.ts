@@ -2,24 +2,48 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import { D2Item } from '../../inventory/item-types';
+import { D2Item, DimSocket } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType } from '../types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
  */
-export function filterPlugs(socket) {
-  // filter out Mobility, Restorative, and Resilience mods
-  if (socket.plug && ![3530997750, 2032054360, 1633794450].includes(socket.plug.plugItem.hash)) {
-    // Filters out "Heavy Warlock Armor", for example
-    if (
-      socket.plug.plugItem.inventory.tierType !== 6 &&
-      socket.plug.plugItem.plug.plugCategoryHash === 1744546145
-    ) {
-      return false;
-    }
-    return true;
+export function filterPlugs(socket: DimSocket) {
+  if (!socket.plug) {
+    return false;
   }
+
+  // Remove unwanted sockets by category hash
+  if (
+    [
+      3313201758, // Mobility, Restorative, and Resilience perks
+      1514141499, // Void damage resistance
+      1514141501, // Arc damage resistance
+      1514141500, // Solar damage resistance
+      2973005342, // Shaders
+      3356843615, // Ornaments
+      2457930460 // Empty masterwork slot
+    ].includes(socket.plug.plugItem.plug.plugCategoryHash)
+  ) {
+    return false;
+  }
+
+  // Remove Archetype/Inherit perk
+  if (
+    socket.plug.plugItem.plug.plugCategoryHash === 1744546145 &&
+    socket.plug.plugItem.inventory.tierType !== 6 // keep exotics
+  ) {
+    return false;
+  }
+
+  // Remove empty mod slots
+  if (
+    socket.plug.plugItem.plug.plugCategoryHash === 3347429529 &&
+    socket.plug.plugItem.inventory.tierType === 2
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**
