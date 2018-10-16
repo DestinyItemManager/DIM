@@ -250,9 +250,9 @@ export interface DimMasterwork {
 }
 
 export interface DimStat {
-  /** Base stat without "increase defense", etc. Bonuses applied. */
+  /** Base stat without bonuses/mods/plugs applied. */
   base: number;
-  /** Stat bonus from leveling this item. A D1 thing. */
+  /** Stat bonus total `value - base = bonus` */
   bonus: number;
   /** DestinyStatDefinition hash. */
   statHash: number;
@@ -270,6 +270,12 @@ export interface DimStat {
   bar: boolean;
   /** Is this a placeholder for a "missing" stat (for compare view) */
   missingStat?: boolean;
+  /** Stat bonus from plugs */
+  plugBonus?: number;
+  /** Stat bonus from mods */
+  modsBonus?: number;
+  /** Stat bonus from perks */
+  perkBonus?: number;
 }
 
 export interface D1Stat extends DimStat {

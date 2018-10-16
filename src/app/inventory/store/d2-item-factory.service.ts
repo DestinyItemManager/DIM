@@ -58,6 +58,7 @@ import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D2RatingData } from '../../item-review/d2-dtr-api-types';
 import { D2StoresService } from '../d2-stores.service';
+import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -388,9 +389,25 @@ export function makeItem(
   }
 
   try {
+    // TODO: move socket handling and stuff into a different file
+    if (itemComponents && itemComponents.sockets && itemComponents.sockets.data) {
+      createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
+    } else if (itemDef.sockets) {
+      createdItem.sockets = buildDefinedSockets(defs, itemDef);
+    }
+  } catch (e) {
+    console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
+  }
+
+  try {
     if (itemComponents && itemComponents.stats && itemComponents.stats.data) {
       // Instanced stats
-      createdItem.stats = buildStats(item, itemComponents.stats.data, defs.Stat);
+      createdItem.stats = buildStats(
+        item,
+        createdItem.sockets,
+        itemComponents.stats.data,
+        defs.Stat
+      );
       if (itemDef.stats && itemDef.stats.stats) {
         // Hidden stats
         createdItem.stats = (createdItem.stats || []).concat(buildHiddenStats(itemDef, defs.Stat));
@@ -443,17 +460,6 @@ export function makeItem(
     }
   } catch (e) {
     console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
-  }
-
-  try {
-    // TODO: move socket handling and stuff into a different file
-    if (itemComponents && itemComponents.sockets && itemComponents.sockets.data) {
-      createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
-    } else if (itemDef.sockets) {
-      createdItem.sockets = buildDefinedSockets(defs, itemDef);
-    }
-  } catch (e) {
-    console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
   }
 
   if (itemDef.perks && itemDef.perks.length) {
@@ -642,6 +648,7 @@ function buildDefaultStats(
 
 function buildStats(
   item: DestinyItemComponent,
+  sockets: DimSockets | null,
   stats: { [key: string]: DestinyItemStatsComponent },
   statDefs: LazyDefinition<DestinyStatDefinition>
 ): DimStat[] {
@@ -649,6 +656,65 @@ function buildStats(
     return [];
   }
   const itemStats = stats[item.itemInstanceId].stats;
+
+  // determine bonuses for armor
+  const statBonuses = {};
+  if (sockets) {
+    const bonusPerk = sockets.sockets.find((socket) =>
+      Boolean(
+        // Mobility, Restorative, and Resilience perk
+        socket.plug && socket.plug.plugItem.plug.plugCategoryHash === 3313201758
+      )
+    );
+    // If we didn't find one, then it's not armor.
+    if (bonusPerk) {
+      statBonuses[bonusPerk.plug!.plugItem.investmentStats[0].statTypeHash] = {
+        plugs: bonusPerk.plug!.plugItem.investmentStats[0].value,
+        perks: 0,
+        mods: 0
+      };
+
+      // Custom applied mods
+      sockets.sockets
+        .filter((socket) =>
+          Boolean(
+            socket.plug &&
+              socket.plug.plugItem.plug.plugCategoryHash === 3347429529 &&
+              socket.plug.plugItem.inventory.tierType !== 2
+          )
+        )
+        .forEach((socket) => {
+          const bonusPerkStat = socket!.plug!.plugItem.investmentStats[0];
+          if (bonusPerkStat) {
+            if (!statBonuses[bonusPerkStat.statTypeHash]) {
+              statBonuses[bonusPerkStat.statTypeHash] = { mods: 0 };
+            }
+            statBonuses[bonusPerkStat.statTypeHash].mods += bonusPerkStat.value;
+          }
+        });
+
+      // Look for perks that modify stats (ie. Traction 1818103563)
+      sockets.sockets
+        .filter(filterPlugs)
+        .filter((socket) =>
+          Boolean(
+            socket.plug &&
+              socket.plug.plugItem.plug.plugCategoryHash !== 3347429529 &&
+              socket.plug.plugItem.investmentStats &&
+              socket.plug.plugItem.investmentStats.length
+          )
+        )
+        .forEach((socket) => {
+          const bonusPerkStat = socket!.plug!.plugItem.investmentStats[0];
+          if (bonusPerkStat) {
+            if (!statBonuses[bonusPerkStat.statTypeHash]) {
+              statBonuses[bonusPerkStat.statTypeHash] = { perks: 0 };
+            }
+            statBonuses[bonusPerkStat.statTypeHash].perks += bonusPerkStat.value;
+          }
+        });
+    }
+  }
 
   return _.compact(
     _.map(
@@ -660,16 +726,31 @@ function buildStats(
           return undefined;
         }
 
-        const val = itemStat ? itemStat.value : stat.value;
+        const value = itemStat ? itemStat.value : stat.value;
+        let base = value;
+        let bonus = 0;
+        let plugBonus = 0;
+        let modsBonus = 0;
+        let perkBonus = 0;
+        if (statBonuses[stat.statHash]) {
+          plugBonus = statBonuses[stat.statHash].plugs || 0;
+          modsBonus = statBonuses[stat.statHash].mods || 0;
+          perkBonus = statBonuses[stat.statHash].perks || 0;
+          bonus = plugBonus + perkBonus + modsBonus;
+          base -= bonus;
+        }
 
         return {
-          base: val,
-          bonus: 0,
+          base,
+          bonus,
+          plugBonus,
+          modsBonus,
+          perkBonus,
           statHash: stat.statHash,
           name: def.displayProperties.name,
           id: stat.statHash,
           sort: statWhiteList.indexOf(stat.statHash),
-          value: val,
+          value,
           maximumValue: itemStat.maximumValue,
           bar: !statsNoBar.includes(stat.statHash)
         };
