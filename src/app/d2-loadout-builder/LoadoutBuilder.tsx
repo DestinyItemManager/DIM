@@ -116,7 +116,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
             // build the filtered unique perks item picker
             item.sockets.categories.length === 2 &&
-              item.sockets.categories[0].sockets.filter(filterPlugs).forEach((socket) => {
+              item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
                 socket!.plugOptions.forEach((option) => {
                   perks[item.classType][item.bucket.hash].add(option.plugItem);
                 });
@@ -198,7 +198,15 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             item.sockets.categories &&
             item.sockets.categories.length === 2
           ) {
-            return item.sockets.categories[0].sockets.filter(filterPlugs).length;
+            return (
+              item.sockets.sockets
+                .filter(filterPlugs)
+                // this will exclude the deprecated pre-forsaken mods
+                .filter(
+                  (socket) =>
+                    socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
+                ).length
+            );
           }
         });
       }
