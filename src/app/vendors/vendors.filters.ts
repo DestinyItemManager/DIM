@@ -8,7 +8,7 @@ export function vendorTab(categories, prop) {
   if (!prop || !prop.length) {
     return categories;
   }
-  return categories.filter((c) => c === prop);
+  return categories && categories.filter((c) => c[prop]);
 }
 
 /**

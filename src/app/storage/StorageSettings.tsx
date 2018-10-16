@@ -9,6 +9,17 @@ import classNames from 'classnames';
 import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { dataStats } from './data-stats';
+import {
+  AppIcon,
+  saveIcon,
+  clearIcon,
+  enabledIcon,
+  disabledIcon,
+  signOutIcon,
+  uploadIcon,
+  signInIcon,
+  downloadIcon
+} from '../shell/icons';
 import { Subscriptions } from '../rx-utils';
 import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
@@ -85,13 +96,11 @@ export default class StorageSettings extends React.Component<{}, State> {
         <section>
           <p>{t('Storage.Explain')}</p>
           <button className="dim-button" onClick={this.forceSync}>
-            <i className="fa fa-save" />
-            <span>{t('Storage.ForceSync')}</span>
+            <AppIcon icon={saveIcon} /> <span>{t('Storage.ForceSync')}</span>
           </button>{' '}
           {canClearIgnoredUsers && (
             <button className="dim-button" onClick={this.clearIgnoredUsers}>
-              <i className="fa fa-eraser" />
-              <span>{t('Storage.ClearIgnoredUsers')}</span>
+              <AppIcon icon={clearIcon} /> <span>{t('Storage.ClearIgnoredUsers')}</span>
             </button>
           )}
           {quota && (
@@ -107,12 +116,7 @@ export default class StorageSettings extends React.Component<{}, State> {
               <h2>
                 <span>{t(`Storage.${adapter.name}`)}</span>{' '}
                 <span className={classNames('storage-status', { enabled: adapter.enabled })}>
-                  <i
-                    className={classNames(
-                      'fa',
-                      adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'
-                    )}
-                  />
+                  <AppIcon icon={adapter.enabled ? enabledIcon : disabledIcon} />{' '}
                   <span>{t(`Storage.${adapter.enabled ? 'Enabled' : 'Disabled'}`)}</span>
                 </span>
               </h2>
@@ -127,18 +131,15 @@ export default class StorageSettings extends React.Component<{}, State> {
                     {adapter.enabled ? (
                       <>
                         <button className="dim-button" onClick={this.driveLogout}>
-                          <i className="fa fa-sign-out" />
-                          <span>{t('Storage.DriveLogout')}</span>
+                          <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
                         </button>{' '}
                         <button className="dim-button" onClick={this.goToRevisions}>
-                          <i className="fa fa-upload" />
-                          <span>{t('Storage.GDriveRevisions')}</span>
+                          <AppIcon icon={uploadIcon} /> <span>{t('Storage.GDriveRevisions')}</span>
                         </button>
                       </>
                     ) : (
                       <button className="dim-button" onClick={this.driveSync}>
-                        <i className="fa fa-sign-in" />
-                        <span>{t('Storage.DriveSync')}</span>
+                        <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
                       </button>
                     )}
                   </div>
@@ -167,14 +168,12 @@ export default class StorageSettings extends React.Component<{}, State> {
               <h2>{t('Storage.ImportExport')}</h2>
               <p>
                 <button className="dim-button" onClick={this.exportData}>
-                  <i className="fa fa-download" />
-                  <span>{t('Storage.Export')}</span>
+                  <AppIcon icon={downloadIcon} /> <span>{t('Storage.Export')}</span>
                 </button>
               </p>
               <p>
                 <button className="dim-button" onClick={this.importData}>
-                  <i className="fa fa-upload" />
-                  <span>{t('Storage.Import')}</span>
+                  <AppIcon icon={uploadIcon} /> <span>{t('Storage.Import')}</span>
                 </button>
                 <input type="file" id="importFile" ref={this.fileInput} />
               </p>

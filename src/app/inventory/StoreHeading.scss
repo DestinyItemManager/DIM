@@ -8,12 +8,11 @@
 .powerLevel,
 .light {
   color: $gold;
-  &:before {
-    content: '\2726';
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 2px;
+
+  .app-icon {
+    vertical-align: 25%;
     font-size: 50%;
+    margin-right: 2px;
   }
 }
 
@@ -111,6 +110,7 @@
   .level {
     margin-right: 1px;
   }
+
   .currencies {
     text-align: right;
   }

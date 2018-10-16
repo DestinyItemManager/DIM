@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
+import { completedIcon, uncompletedIcon, redeemedIcon, AppIcon } from '../shell/icons';
 
 /**
  * For profile-wide milestones with rewards, these show the status of each reward. So
@@ -20,11 +21,12 @@ export default function RewardActivity({
 }) {
   const rewardDef = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
 
-  const checkClass = rewardEntry.redeemed
-    ? 'fa-check-circle'
+  const checkIcon = rewardEntry.redeemed
+    ? redeemedIcon
     : rewardEntry.earned
-      ? 'fa-check-circle-o'
-      : 'fa-circle-o';
+      ? completedIcon
+      : uncompletedIcon;
+
   const tooltip = rewardEntry.redeemed
     ? 'Progress.RewardRedeemed'
     : rewardEntry.earned
@@ -36,7 +38,7 @@ export default function RewardActivity({
       className={classNames('milestone-reward-activity', { complete: rewardEntry.earned })}
       title={t(tooltip)}
     >
-      <i className={classNames('fa', checkClass)} />
+      <AppIcon icon={checkIcon} />
       {rewardDef.displayProperties.icon && <BungieImage src={rewardDef.displayProperties.icon} />}
       <span>{rewardDef.displayProperties.name}</span>
     </div>

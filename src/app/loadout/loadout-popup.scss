@@ -57,6 +57,8 @@
     font-weight: 200;
     float: right;
     .app-icon {
+      font-size: 10px;
+      vertical-align: -0.125em;
       margin-right: 2px !important;
     }
     &::before {
@@ -95,7 +97,8 @@
     outline: none;
   }
 
-  &.detached {
+  .detached & {
+    position: fixed;
     top: 101px;
     z-index: 1000;
     max-height: calc(100vh - 221px);
