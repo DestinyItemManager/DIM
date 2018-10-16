@@ -210,10 +210,7 @@ class SearchFilter extends React.Component<Props, State> {
 
   private onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     // TODO: Debounce?
-    const query = e.currentTarget.value
-      .trim()
-      .toLowerCase()
-      .replace(/\s+and\s+/, ' ');
+    const query = e.currentTarget.value;
     this.props.setSearchQuery(query);
   };
 
