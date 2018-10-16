@@ -108,7 +108,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               perks[item.classType][item.bucket.hash] = new Set<DestinyInventoryItemDefinition>();
               items[item.classType][item.bucket.hash] = [];
             }
-
             if (!items[item.classType][item.bucket.hash][item.hash]) {
               items[item.classType][item.bucket.hash][item.hash] = [];
             }
