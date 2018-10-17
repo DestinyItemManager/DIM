@@ -159,11 +159,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   computeSets = ({
     classType = this.state.selectedStore!.classType,
     lockedMap = this.state.lockedMap,
+    ignoreMods = this.state.ignoreMods,
     requirePerks = this.state.requirePerks,
     requireBurn = this.state.requireBurn
   }: {
     classType?: number;
     lockedMap?: { [bucketHash: number]: LockedItemType[] };
+    ignoreMods?: boolean;
     requirePerks?: boolean;
     requireBurn?: string;
   }) => {
@@ -259,7 +261,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     });
 
     // re-process all sets
-    startNewProcess.call(this, filteredItems);
+    startNewProcess.call(this, filteredItems, ignoreMods);
     this.setState({ lockedMap });
   };
 
@@ -324,7 +326,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
   setIgnoreMods = (element) => {
     this.setState({ ignoreMods: element.target.checked });
-    this.computeSets({});
+    this.computeSets({ ignoreMods: element.target.checked });
   };
 
   /**
@@ -385,12 +387,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           </div>
         </div>
 
-        <button
-          class="dim-button"
+        <input
+          type="button"
+          className="dim-button"
+          value={t('LoadoutBuilder.AdvancedOptions')}
           onClick={() => this.setState({ showingOptions: !this.state.showingOptions })}
-        >
-          {t('LoadoutBuilder.AdvancedOptions')}
-        </button>
+        />
         {this.state.showingOptions && (
           <div>
             <p>

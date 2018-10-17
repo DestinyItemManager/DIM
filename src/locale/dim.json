@@ -417,7 +417,7 @@
     "LockPerksTitle": "Select perks to lock",
     "LockedPerks": "{{locked}} locked perks",
     "NoBuildsFound": "No Generated Builds Found",
-    "AdvancedOptions": "AdvancedOptions",
+    "AdvancedOptions": "Advanced Options",
     "IgnoreMods": "Ignore stat bonus from mods (use base stats)",
     "RequireBurn": "Require armor with matching damage resistance burn",
     "RequirePerks": "Require additional perks on all armor",
