@@ -10,11 +10,14 @@ let killProcess = false;
  */
 export default function startNewProcess(
   this: LoadoutBuilder,
-  filteredItems: { [bucket: number]: D2Item[] }
+  filteredItems: { [bucket: number]: D2Item[] },
+  ignoreMods: boolean
 ) {
   if (this.state.processRunning !== 0) {
     killProcess = true;
-    return window.requestAnimationFrame(() => startNewProcess.call(this, filteredItems));
+    return window.requestAnimationFrame(() =>
+      startNewProcess.call(this, filteredItems, ignoreMods)
+    );
   }
 
   process.call(this, filteredItems);
@@ -26,7 +29,11 @@ export default function startNewProcess(
  *
  * @param filteredItems paired down list of items to process sets from
  */
-function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item[] }) {
+function process(
+  this: LoadoutBuilder,
+  filteredItems: { [bucket: number]: D2Item[] },
+  ignoreMods: boolean
+) {
   const pstart = performance.now();
   const helms = filteredItems[LockableBuckets.helmet] || [];
   const gaunts = filteredItems[LockableBuckets.gauntlets] || [];
@@ -75,7 +82,6 @@ function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item
                 };
 
                 let i = set.armor.length;
-                const ignoreMods = this.state.ignoreMods;
                 while (i--) {
                   const stat = set.armor[i].stats;
                   if (stat && stat.length) {
