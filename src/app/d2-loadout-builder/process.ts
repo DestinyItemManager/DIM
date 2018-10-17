@@ -11,16 +11,16 @@ let killProcess = false;
 export default function startNewProcess(
   this: LoadoutBuilder,
   filteredItems: { [bucket: number]: D2Item[] },
-  ignoreMods: boolean
+  useBaseStats: boolean
 ) {
   if (this.state.processRunning !== 0) {
     killProcess = true;
     return window.requestAnimationFrame(() =>
-      startNewProcess.call(this, filteredItems, ignoreMods)
+      startNewProcess.call(this, filteredItems, useBaseStats)
     );
   }
 
-  process.call(this, filteredItems);
+  process.call(this, filteredItems, useBaseStats);
 }
 
 /**
@@ -32,7 +32,7 @@ export default function startNewProcess(
 function process(
   this: LoadoutBuilder,
   filteredItems: { [bucket: number]: D2Item[] },
-  ignoreMods: boolean
+  useBaseStats: boolean
 ) {
   const pstart = performance.now();
   const helms = filteredItems[LockableBuckets.helmet] || [];
@@ -86,11 +86,11 @@ function process(
                   const stat = set.armor[i].stats;
                   if (stat && stat.length) {
                     stats.STAT_MOBILITY +=
-                      (stat[0].value || 0) - ((ignoreMods && stat[0].modsBonus) || 0);
+                      (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
                     stats.STAT_RESILIENCE +=
-                      (stat[1].value || 0) - ((ignoreMods && stat[1].modsBonus) || 0);
+                      (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0);
                     stats.STAT_RECOVERY +=
-                      (stat[2].value || 0) - ((ignoreMods && stat[2].modsBonus) || 0);
+                      (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0);
                   }
                 }
 

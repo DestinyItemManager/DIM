@@ -37,7 +37,7 @@ interface State {
   processRunning: number;
   showingOptions: boolean;
   requirePerks: boolean;
-  ignoreMods: boolean;
+  useBaseStats: boolean;
   requireBurn: 'none' | 'arc' | 'solar' | 'void';
   lockedMap: { [bucketHash: number]: LockedItemType[] };
   processedSets: ArmorSet[];
@@ -78,7 +78,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     this.state = {
       showingOptions: false,
       requirePerks: true,
-      ignoreMods: true,
+      useBaseStats: false,
       requireBurn: 'none',
       processRunning: 0,
       lockedMap: {},
@@ -159,13 +159,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   computeSets = ({
     classType = this.state.selectedStore!.classType,
     lockedMap = this.state.lockedMap,
-    ignoreMods = this.state.ignoreMods,
+    useBaseStats = this.state.useBaseStats,
     requirePerks = this.state.requirePerks,
     requireBurn = this.state.requireBurn
   }: {
     classType?: number;
     lockedMap?: { [bucketHash: number]: LockedItemType[] };
-    ignoreMods?: boolean;
+    useBaseStats?: boolean;
     requirePerks?: boolean;
     requireBurn?: string;
   }) => {
@@ -261,7 +261,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     });
 
     // re-process all sets
-    startNewProcess.call(this, filteredItems, ignoreMods);
+    startNewProcess.call(this, filteredItems, useBaseStats);
     this.setState({ lockedMap });
   };
 
@@ -324,9 +324,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     this.computeSets({ requirePerks: element.target.checked });
   };
 
-  setIgnoreMods = (element) => {
-    this.setState({ ignoreMods: element.target.checked });
-    this.computeSets({ ignoreMods: element.target.checked });
+  setUseBaseStats = (element) => {
+    this.setState({ useBaseStats: element.target.checked });
+    this.computeSets({ useBaseStats: element.target.checked });
   };
 
   /**
@@ -406,12 +406,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             </p>
             <p>
               <input
-                id="ignore-mods"
+                id="use-base-stats"
                 type="checkbox"
-                checked={this.state.ignoreMods}
-                onChange={this.setIgnoreMods}
+                checked={this.state.useBaseStats}
+                onChange={this.setUseBaseStats}
               />
-              <label htmlFor="ignore-mods">{t('LoadoutBuilder.IgnoreMods')}</label>
+              <label htmlFor="use-base-stats">{t('LoadoutBuilder.UseBaseStats')}</label>
             </p>
             <p>
               <select id="required-burn" onChange={this.setRequiredBurn}>
