@@ -75,19 +75,16 @@ function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item
                 };
 
                 let i = set.armor.length;
-                const useBaseStats = this.state.useBaseStats;
+                const ignoreMods = this.state.ignoreMods;
                 while (i--) {
                   const stat = set.armor[i].stats;
                   if (stat && stat.length) {
-                    stats.STAT_MOBILITY += useBaseStats
-                      ? stat[0].base // + (stat[0].perkBonus || 0)
-                      : stat[0].value || 0;
-                    stats.STAT_RESILIENCE += useBaseStats
-                      ? stat[1].base // + (stat[1].perkBonus || 0)
-                      : stat[1].value || 0;
-                    stats.STAT_RECOVERY += useBaseStats
-                      ? stat[2].base // + (stat[2].perkBonus || 0)
-                      : stat[2].value || 0;
+                    stats.STAT_MOBILITY +=
+                      (stat[0].value || 0) - ((ignoreMods && stat[0].modsBonus) || 0);
+                    stats.STAT_RESILIENCE +=
+                      (stat[1].value || 0) - ((ignoreMods && stat[1].modsBonus) || 0);
+                    stats.STAT_RECOVERY +=
+                      (stat[2].value || 0) - ((ignoreMods && stat[2].modsBonus) || 0);
                   }
                 }
 

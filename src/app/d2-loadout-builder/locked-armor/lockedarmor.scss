@@ -80,3 +80,11 @@
 .close {
   z-index: 1;
 }
+.good-perk {
+  background-image: url('../../../images/good.png');
+  background-size: 10px 10px;
+}
+.bad-perk {
+  background-image: url('../../../images/bad.png');
+  background-size: 10px 10px;
+}

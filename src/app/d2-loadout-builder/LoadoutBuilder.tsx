@@ -35,7 +35,9 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   processRunning: number;
+  showingOptions: boolean;
   requirePerks: boolean;
+  ignoreMods: boolean;
   requireBurn: 'none' | 'arc' | 'solar' | 'void';
   lockedMap: { [bucketHash: number]: LockedItemType[] };
   processedSets: ArmorSet[];
@@ -74,7 +76,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   constructor(props: Props) {
     super(props);
     this.state = {
+      showingOptions: false,
       requirePerks: true,
+      ignoreMods: true,
       requireBurn: 'none',
       processRunning: 0,
       lockedMap: {},
@@ -318,6 +322,11 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     this.computeSets({ requirePerks: element.target.checked });
   };
 
+  setIgnoreMods = (element) => {
+    this.setState({ ignoreMods: element.target.checked });
+    this.computeSets({});
+  };
+
   /**
    * Handle then the required perks checkbox is toggled
    * Recomputes matched sets
@@ -376,28 +385,44 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           </div>
         </div>
 
-        <h3>{t('LoadoutBuilder.Options')}</h3>
-        <div>
-          <p>
-            <input
-              id="required-perks"
-              type="checkbox"
-              checked={this.state.requirePerks}
-              onChange={this.setRequiredPerks}
-            />
-            <label htmlFor="required-perks">{t('LoadoutBuilder.RequirePerks')}</label>
-          </p>
-          <p>
-            <select id="required-burn" onChange={this.setRequiredBurn}>
-              {Object.keys(burnTypes).map((burn) => (
-                <option key={burn} value={burn}>
-                  {t(`LoadoutBuilder.${burnTypes[burn]}`)}
-                </option>
-              ))}
-            </select>
-            <label htmlFor="required-burn">{t('LoadoutBuilder.RequireBurn')}</label>
-          </p>
-        </div>
+        <button
+          class="dim-button"
+          onClick={() => this.setState({ showingOptions: !this.state.showingOptions })}
+        >
+          {t('LoadoutBuilder.AdvancedOptions')}
+        </button>
+        {this.state.showingOptions && (
+          <div>
+            <p>
+              <input
+                id="required-perks"
+                type="checkbox"
+                checked={this.state.requirePerks}
+                onChange={this.setRequiredPerks}
+              />
+              <label htmlFor="required-perks">{t('LoadoutBuilder.RequirePerks')}</label>
+            </p>
+            <p>
+              <input
+                id="ignore-mods"
+                type="checkbox"
+                checked={this.state.ignoreMods}
+                onChange={this.setIgnoreMods}
+              />
+              <label htmlFor="ignore-mods">{t('LoadoutBuilder.IgnoreMods')}</label>
+            </p>
+            <p>
+              <select id="required-burn" onChange={this.setRequiredBurn}>
+                {Object.keys(burnTypes).map((burn) => (
+                  <option key={burn} value={burn}>
+                    {t(`LoadoutBuilder.${burnTypes[burn]}`)}
+                  </option>
+                ))}
+              </select>
+              <label htmlFor="required-burn">{t('LoadoutBuilder.RequireBurn')}</label>
+            </p>
+          </div>
+        )}
 
         <GeneratedSets
           processRunning={processRunning}

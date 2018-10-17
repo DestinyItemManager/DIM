@@ -398,6 +398,8 @@
     "Vendor": "Include Vendor items"
   },
   "LoadoutBuilder": {
+    "Traction": "\nThe Traction perk provides +1 Mobility. It is considered a better option than the unflinching perks.",
+    "BadPerk": "\nAny perk that only \"Slightly\" modifies is generally considered not worth using.",
     "BurnTypeArc": "Arc",
     "BurnTypeNone": "None",
     "BurnTypeSolar": "Solar",
@@ -415,7 +417,8 @@
     "LockPerksTitle": "Select perks to lock",
     "LockedPerks": "{{locked}} locked perks",
     "NoBuildsFound": "No Generated Builds Found",
-    "Options": "Options",
+    "AdvancedOptions": "AdvancedOptions",
+    "IgnoreMods": "Ignore stat bonus from mods (use base stats)",
     "RequireBurn": "Require armor with matching damage resistance burn",
     "RequirePerks": "Require additional perks on all armor",
     "ResetLocked": "Reset Locked",
