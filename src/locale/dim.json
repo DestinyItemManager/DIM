@@ -418,7 +418,7 @@
     "LockedPerks": "{{locked}} locked perks",
     "NoBuildsFound": "No Generated Builds Found",
     "AdvancedOptions": "Advanced Options",
-    "IgnoreMods": "Ignore stat bonus from mods (use base stats)",
+    "IgnoreMods": "Use base stats (ignore stat bonus from mods)",
     "RequireBurn": "Require armor with matching damage resistance burn",
     "RequirePerks": "Require additional perks on all armor",
     "ResetLocked": "Reset Locked",
