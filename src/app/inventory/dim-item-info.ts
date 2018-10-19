@@ -8,11 +8,11 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import store from '../store/store';
 import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
-import { starIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
+import { starIcon, banIcon, tagIcon, boltIcon, leafIcon, userIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 
-export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
+export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse' | 'pve' | 'pvp';
 
 /**
  * Extra DIM-specific info, stored per item.
@@ -36,7 +36,9 @@ export const itemTags: TagInfo[] = [
   { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: starIcon },
   { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: tagIcon },
   { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: banIcon },
-  { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: boltIcon }
+  { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: boltIcon },
+  { type: 'pve', label: 'Tags.PVE', hotkey: 'shift+5', icon: leafIcon },
+  { type: 'pvp', label: 'Tags.PVP', hotkey: 'shift+6', icon: userIcon }
 ];
 
 /**
