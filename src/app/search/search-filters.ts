@@ -370,7 +370,7 @@ function searchFilters(
     573576346 // sagira shell
   ]);
 
-  const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643]);
+  const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
