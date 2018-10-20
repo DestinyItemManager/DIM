@@ -1147,7 +1147,7 @@ function searchFilters(
               ) &&
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
-                /(v400.weapon.mod_(guns|damage)|enhancements.)/
+                /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
               )
             );
           })
