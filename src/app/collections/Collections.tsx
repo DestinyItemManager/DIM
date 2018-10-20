@@ -66,7 +66,7 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     this.subscriptions.add(
       refresh$.subscribe(() => {
         // TODO: refresh just advisors
-        D1StoresService.reloadStores();
+        D2StoresService.reloadStores();
       }),
       D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
         if (stores) {
