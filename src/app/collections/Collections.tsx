@@ -18,7 +18,6 @@ import { loadingTracker } from '../ngimport-more';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
 import { refresh$ } from '../shell/refresh';
-import { D1StoresService } from '../inventory/d1-stores.service';
 import { Subscriptions } from '../rx-utils';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { getBuckets } from '../destiny2/d2-buckets.service';
