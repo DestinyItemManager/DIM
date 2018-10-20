@@ -9,8 +9,5 @@
     class="item-stat item-review">{{ vm.item.dtrRating.overallScore }}<i class="fa fa-star" ng-style="vm.item.dtrRating.overallScore | dtrRatingColor"></i></div>
   <div class="item-element" ng-class="::vm.item.dmg"></div>
   <div ng-class="vm.item.dimInfo.tag | tagIcon"></div>
-  <div ng-if="vm.item.isNew" class="new_overlay_overflow">
-    <img class="new_overlay" src="~app/images/overlay.svg" height="44" width="44" />
-  </div>
   <div ng-class="::vm.badgeClassNames" ng-if="::vm.showBadge" ng-bind="::vm.badgeCount"></div>
 </div>

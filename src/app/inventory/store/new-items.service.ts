@@ -3,7 +3,6 @@ import { getActivePlatform } from '../../accounts/platform.service';
 import { DestinyAccount } from '../../accounts/destiny-account.service';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
-import { $rootScope } from 'ngimport';
 import store from '../../store/store';
 import { setNewItems } from '../actions';
 import { handleLocalStorageFullError } from '../../compatibility';
@@ -38,11 +37,10 @@ export const NewItemsService = {
   },
 
   dropNewItem(item: DimItem) {
-    if (!item.isNew) {
+    if (!store.getState().inventory.newItems.has(item.id)) {
       return;
     }
     _removedNewItems.add(item.id);
-    item.isNew = false;
     const account = getActivePlatform();
     return this.loadNewItems(account).then((newItems) => {
       newItems.delete(item.id);
@@ -54,17 +52,7 @@ export const NewItemsService = {
     if (!stores || !account) {
       return;
     }
-    $rootScope.$apply(() => {
-      stores.forEach((store) => {
-        store.items.forEach((item) => {
-          if (item.isNew) {
-            _removedNewItems.add(item.id);
-            item.isNew = false;
-          }
-        });
-      });
-      this.saveNewItems(new Set(), account);
-    });
+    this.saveNewItems(new Set(), account);
   },
 
   loadNewItems(account: DestinyAccount): Promise<Set<string>> {

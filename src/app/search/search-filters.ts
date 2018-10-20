@@ -1089,7 +1089,8 @@ function searchFilters(
         return _loadoutItemIds && _loadoutItemIds.has(item.id);
       },
       new(item: DimItem) {
-        return item.isNew;
+        // TODO: pass newItems into the filter object too?
+        return store.getState().inventory.newItems.has(item.id);
       },
       tag(item: DimItem) {
         return item.dimInfo.tag !== undefined;
