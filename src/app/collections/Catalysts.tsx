@@ -6,15 +6,18 @@ import './collections.scss';
 import VendorItemComponent from '../d2-vendors/VendorItemComponent';
 import { VendorItem } from '../d2-vendors/vendor-item';
 import { t } from 'i18next';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
 
 /**
  * A single plug set.
  */
 export default function Catalysts({
   defs,
+  buckets,
   profileResponse
 }: {
   defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
 }) {
   const catalysts = getCatalysts(defs, profileResponse);
@@ -31,13 +34,14 @@ export default function Catalysts({
             <VendorItemComponent
               key={catalyst.itemHash}
               defs={defs}
-              item={VendorItem.forCatalyst(
+              item={VendorItem.forOrnament(
                 defs,
+                buckets,
                 catalyst.attachedItemHash,
-                catalyst.itemHash,
                 catalyst.objectives,
                 catalyst.canInsert,
-                catalyst.enableFailReasons
+                catalyst.enableFailReasons,
+                catalyst.itemHash
               )}
               owned={false}
             />
