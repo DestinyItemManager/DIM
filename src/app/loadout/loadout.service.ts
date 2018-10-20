@@ -173,12 +173,14 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   async function deleteLoadout(loadout: Loadout): Promise<void> {
+    await getLoadouts(); // make sure we have loaded all loadouts first!
     reduxStore.dispatch(actions.deleteLoadout(loadout.id));
     await SyncService.remove(loadout.id);
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
   }
 
   async function saveLoadout(loadout: Loadout): Promise<void> {
+    await getLoadouts(); // make sure we have loaded all loadouts first!
     reduxStore.dispatch(actions.updateLoadout(loadout));
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
   }
