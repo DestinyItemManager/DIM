@@ -15,15 +15,6 @@ import './vendor.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { UISref } from '@uirouter/react';
-import {
-  isVerified380,
-  powerLevelMatters,
-  getVendorDropsForVendor
-} from '../vendorEngramsXyzApi/vendorEngramsXyzService';
-import vendorEngramSvg from '../../images/engram.svg';
-import { t } from 'i18next';
-import classNames from 'classnames';
-import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 
 interface Props {
@@ -40,8 +31,6 @@ interface Props {
     [itemHash: number]: number;
   };
   account: DestinyAccount;
-  allVendorEngramDrops?: VendorDrop[];
-  basePowerLevel?: number;
 }
 
 /**
@@ -57,9 +46,7 @@ export default class Vendor extends React.Component<Props> {
       sales,
       ownedItemHashes,
       itemComponents,
-      currencyLookups,
-      basePowerLevel,
-      allVendorEngramDrops
+      currencyLookups
     } = this.props;
 
     const vendorDef = defs.Vendor.get(vendor.vendorHash);
@@ -82,28 +69,10 @@ export default class Vendor extends React.Component<Props> {
       .filter((n) => n.length)
       .join(', ');
 
-    const vendorEngramDrops = $featureFlags.vendorEngrams
-      ? getVendorDropsForVendor(vendor.vendorHash, allVendorEngramDrops)
-      : [];
-    const dropActive = vendorEngramDrops.some(isVerified380);
-
-    const vendorLinkTitle = dropActive ? 'VendorEngramsXyz.Likely380' : 'VendorEngramsXyz.Vote';
-
     return (
       <div className="vendor-char-items">
         <div className="title">
           <div className="collapse-handle">
-            {$featureFlags.vendorEngrams &&
-              vendorEngramDrops.length > 0 &&
-              powerLevelMatters(basePowerLevel) && (
-                <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/">
-                  <img
-                    className={classNames('fa', 'xyz-engram', { 'xyz-active-throb': dropActive })}
-                    src={vendorEngramSvg}
-                    title={t(vendorLinkTitle)}
-                  />
-                </a>
-              )}
             <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon" />
             <UISref to="destiny2.vendor" params={{ id: vendor.vendorHash }}>
               <span>{vendorDef.displayProperties.name}</span>

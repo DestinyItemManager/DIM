@@ -29,8 +29,6 @@ declare const $featureFlags: {
   sentry: boolean;
   /** D2 Vendors */
   vendors: boolean;
-  /** Enable vendorengrams.xyz integration */
-  vendorEngrams: boolean;
   /** Use the new React inventory screen. */
   reactInventory: boolean;
   /** Respect the "do not track" header. */

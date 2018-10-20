@@ -14,8 +14,6 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
-import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
-import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
 import { t } from 'i18next';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
@@ -33,8 +31,6 @@ interface State {
   trackerService?: DestinyTrackerService;
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
-  vendorEngramDrops?: VendorDrop[];
-  basePowerLevel?: number;
   error?: Error;
 }
 
@@ -55,12 +51,6 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       this.setState({ error: undefined });
     }
 
-    if ($featureFlags.vendorEngrams) {
-      dimVendorEngramsService
-        .getAllVendorDrops()
-        .then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
-    }
-
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
@@ -77,14 +67,6 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
           .toPromise());
       if (stores) {
         characterId = stores.find((s) => s.current)!.id;
-
-        const maxBasePower = stores.find((s) => s.current)!.stats.maxBasePower;
-
-        // maxBasePower.value gets an asterisk when classified items are present; could regex it
-        if (maxBasePower && maxBasePower.tiers) {
-          const basePowerLevel = +maxBasePower.tiers[0];
-          this.setState({ basePowerLevel });
-        }
       }
     }
 
@@ -135,16 +117,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const {
-      defs,
-      buckets,
-      vendorsResponse,
-      trackerService,
-      ownedItemHashes,
-      vendorEngramDrops,
-      basePowerLevel,
-      error
-    } = this.state;
+    const { defs, buckets, vendorsResponse, trackerService, ownedItemHashes, error } = this.state;
     const { account } = this.props;
 
     if (error) {
@@ -178,8 +151,6 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             account={account}
-            vendorEngramDrops={vendorEngramDrops}
-            basePowerLevel={basePowerLevel}
           />
         ))}
       </div>
@@ -194,9 +165,7 @@ function VendorGroup({
   vendorsResponse,
   trackerService,
   ownedItemHashes,
-  account,
-  vendorEngramDrops,
-  basePowerLevel
+  account
 }: {
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
@@ -205,8 +174,6 @@ function VendorGroup({
   trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
-  vendorEngramDrops?: VendorDrop[];
-  basePowerLevel?: number;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
 
@@ -228,8 +195,6 @@ function VendorGroup({
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
-            allVendorEngramDrops={vendorEngramDrops}
-            basePowerLevel={basePowerLevel}
           />
         </ErrorBoundary>
       ))}
