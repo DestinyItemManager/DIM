@@ -37,11 +37,11 @@ export default function Catalysts({
               item={VendorItem.forOrnament(
                 defs,
                 buckets,
-                catalyst.attachedItemHash,
+                catalyst.itemHash,
                 catalyst.objectives,
                 catalyst.canInsert,
                 catalyst.enableFailReasons,
-                catalyst.itemHash
+                catalyst.attachedItemHash
               )}
               owned={false}
             />

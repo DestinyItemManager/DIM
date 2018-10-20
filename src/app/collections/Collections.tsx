@@ -68,7 +68,7 @@ interface State {
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-class Collections extends React.Component<Props & UIViewInjectedProps, State> {
+class Collections extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
 
   constructor(props: Props) {

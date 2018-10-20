@@ -49,12 +49,6 @@ export default class VendorItemComponent extends React.Component<Props> {
       })
     );
 
-    function controller() {
-      this.item = item.item;
-      this.vendorItem = item;
-      this.rewards = rewards;
-    }
-
     return (
       <div
         className={classNames('vendor-item', {
@@ -63,7 +57,11 @@ export default class VendorItemComponent extends React.Component<Props> {
         })}
       >
         {owned && <img className="owned-icon" src={checkMark} />}
-        <ItemPopupTrigger item={item.item} template={dialogTemplate} controller={controller}>
+        <ItemPopupTrigger
+          item={item.item}
+          template={dialogTemplate}
+          extraData={{ vendorItem: item, rewards }}
+        >
           <ConnectedInventoryItem item={item.item} allowFilter={true} />
         </ItemPopupTrigger>
         {item.costs.length > 0 && (

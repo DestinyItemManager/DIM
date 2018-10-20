@@ -15,7 +15,6 @@ interface Props {
   children?: React.ReactNode;
   template?: string;
   extraData?: {};
-  controller?(): void;
 }
 
 /**
@@ -45,7 +44,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private clicked = (e) => {
     e.stopPropagation();
 
-    const { item, template, controller, extraData } = this.props;
+    const { item, template, extraData } = this.props;
 
     NewItemsService.dropNewItem(item);
 
@@ -84,7 +83,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         showClose: false,
         data: this.ref.current as {},
         controllerAs: 'vm',
-        controller: controller || dialogController,
+        controller: dialogController,
         // Setting these focus options prevents the page from
         // jumping as dialogs are shown/hidden
         trapFocus: false,
