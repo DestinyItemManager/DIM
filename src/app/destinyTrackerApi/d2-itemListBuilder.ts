@@ -1,4 +1,4 @@
-import { flatMap } from '../util';
+import * as _ from 'lodash';
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import {
   DestinyVendorSaleItemComponent,
@@ -74,7 +74,7 @@ function getNewVendorItems(vendorItems: D2ItemFetchRequest[], reviewDataCache: D
  * away.
  */
 function getAllItems(stores: D2Store[]): D2Item[] {
-  return flatMap(stores, (store) => store.items);
+  return _.flatMap(stores, (store) => store.items);
 }
 
 // Get all of the weapons from our stores in a DTR API-friendly format.

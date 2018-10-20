@@ -21,7 +21,7 @@ import {
   AwaAuthorizationResult
 } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimError, httpAdapter } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';

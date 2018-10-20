@@ -1,28 +1,26 @@
 import { t } from 'i18next';
 import * as React from 'react';
-import * as _ from 'underscore';
-import BungieImage from '../../dim-ui/BungieImage';
-import PressTip from '../../dim-ui/PressTip';
-import StoreInventoryItem from '../../inventory/StoreInventoryItem';
-import { Loadout } from '../../loadout/loadout.service';
-import { ArmorSet, LockType } from '../types';
-import { filterPlugs, getSetsForTier, getSetTiers } from './utils';
-import GeneratedSetButtons from './GeneratedSetButtons';
-import PlugTooltip from './PlugTooltip';
+import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimStore } from '../../inventory/store-types';
+import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { $rootScope } from 'ngimport';
+import { ArmorSet, LockedItemType } from '../types';
+import GeneratedSetButtons from './GeneratedSetButtons';
+import GeneratedSetItem from './GeneratedSetItem';
+import { getSetsForTier, getSetTiers, isD2Item, toggleLockedItem } from './utils';
 
 interface Props {
   processRunning: number;
   selectedStore?: DimStore;
   processedSets: ArmorSet[];
-  lockedMap: { [bucketHash: number]: LockType };
+  lockedMap: { [bucketHash: number]: LockedItemType[] };
+  onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
 
 interface State {
   minimumPower: number;
   selectedTier: string;
+  shownSets: number;
 }
 
 let matchedSets: ArmorSet[] = [];
@@ -33,26 +31,49 @@ let matchedSets: ArmorSet[] = [];
 export default class GeneratedSets extends React.Component<Props, State> {
   state: State = {
     selectedTier: '7/7/7',
-    minimumPower: 0
+    minimumPower: 0,
+    shownSets: 10
   };
 
   // Set the loadout property to show/hide the loadout menu
-  setCreateLoadout = (loadout?: Loadout) => {
-    $rootScope.$broadcast('dim-edit-loadout', {
-      loadout,
-      showClass: false
-    });
+  setCreateLoadout = (loadout: Loadout) => {
+    dimLoadoutService.editLoadout(loadout, { showClass: false });
   };
 
   componentWillReceiveProps(props: Props) {
     if (props.processedSets !== this.props.processedSets) {
-      this.setState({ minimumPower: 0 });
+      this.setState({ minimumPower: 0, shownSets: 10 });
     }
   }
 
+  showMore = () => {
+    this.setState({ shownSets: this.state.shownSets + 10 });
+  };
+
+  setSelectedTier = (element) => {
+    this.setState({ shownSets: 10, selectedTier: element.target.value });
+  };
+
+  setMinimumPower = (element) => {
+    this.setState({ shownSets: 10, minimumPower: parseInt(element.target.value, 10) });
+  };
+
+  toggleLockedItem = (lockedItem: LockedItemType) => {
+    if (!isD2Item(lockedItem.item)) {
+      return;
+    }
+    const bucket = lockedItem.item.bucket;
+    toggleLockedItem(
+      lockedItem,
+      bucket,
+      this.props.onLockChanged,
+      this.props.lockedMap[bucket.hash]
+    );
+  };
+
   render() {
     const { processRunning, lockedMap, selectedStore } = this.props;
-    const { selectedTier, minimumPower } = this.state;
+    const { selectedTier, minimumPower, shownSets } = this.state;
 
     if (processRunning > 0) {
       return <h3>{t('LoadoutBuilder.Loading', { loading: processRunning })}</h3>;
@@ -64,7 +85,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       uniquePowerLevels.add(Math.floor(set.power / 5));
       return set.power / 5 > minimumPower;
     });
-    const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => a - b);
+    const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
     powerLevelOptions.splice(0, 0, 0);
 
     // build tier dropdown options
@@ -84,12 +105,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
     return (
       <>
         <h3>{t('LoadoutBuilder.SelectPower')}</h3>
-        <select
-          value={minimumPower}
-          onChange={(element) => {
-            this.setState({ minimumPower: parseInt(element.target.value, 10) });
-          }}
-        >
+        <select value={minimumPower} onChange={this.setMinimumPower}>
           {powerLevelOptions.map((power) => {
             if (power === 0) {
               return (
@@ -103,12 +119,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
         </select>
 
         <h3>{t('LoadoutBuilder.SelectTier')}</h3>
-        <select
-          value={currentTier}
-          onChange={(element) => {
-            this.setState({ selectedTier: element.target.value });
-          }}
-        >
+        <select value={currentTier} onChange={this.setSelectedTier}>
           {setTiers.map((tier) => (
             <option key={tier} disabled={tier.charAt(0) === '-'}>
               {tier}
@@ -117,8 +128,8 @@ export default class GeneratedSets extends React.Component<Props, State> {
         </select>
 
         <h3>{t('LoadoutBuilder.GeneratedBuilds')}</h3>
-        {matchedSets.map((set, index) => (
-          <div className="generated-build" key={index}>
+        {matchedSets.slice(0, shownSets).map((set) => (
+          <div className="generated-build" key={set.id}>
             <GeneratedSetButtons
               set={set}
               store={selectedStore!}
@@ -126,29 +137,21 @@ export default class GeneratedSets extends React.Component<Props, State> {
             />
             <div className="sub-bucket">
               {Object.values(set.armor).map((item) => (
-                <div className="generated-build-items" key={item.index}>
-                  <StoreInventoryItem item={item} isNew={false} searchHidden={false} />
-                  {item!.sockets &&
-                    item!.sockets!.categories.length === 2 &&
-                    // TODO: look at plugs that we filtered on to see if they match selected perk or not.
-                    item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
-                      <PressTip
-                        key={socket!.plug!.plugItem.hash}
-                        tooltip={<PlugTooltip item={item} socket={socket} />}
-                      >
-                        <div>
-                          <BungieImage
-                            className="item-mod"
-                            src={socket!.plug!.plugItem.displayProperties.icon}
-                          />
-                        </div>
-                      </PressTip>
-                    ))}
-                </div>
+                <GeneratedSetItem
+                  key={item.index}
+                  item={item}
+                  locked={lockedMap[item.bucket.hash]}
+                  onExclude={this.toggleLockedItem}
+                />
               ))}
             </div>
           </div>
         ))}
+        {matchedSets.length > shownSets && (
+          <button className="dim-button" onClick={this.showMore}>
+            {t('LoadoutBuilder.ShowMore')}
+          </button>
+        )}
         <LoadoutDrawer />
       </>
     );

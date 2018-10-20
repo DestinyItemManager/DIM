@@ -1,20 +1,19 @@
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
+import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../ngimport-more';
-import { $rootScope } from 'ngimport';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
 import PresentationNode from './PresentationNode';
@@ -23,6 +22,8 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
+import { Subscriptions } from '../rx-utils';
+import { refresh$ } from '../shell/refresh';
 
 interface ProvidedProps extends UIViewInjectedProps {
   account: DestinyAccount;
@@ -59,15 +60,16 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
 interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
-  trackerService?: DestinyTrackerService;
   nodePath: number[];
+  stores?: DimStore[];
+  ownedItemHashes?: Set<number>;
 }
 
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-class Collections extends React.Component<Props, State> {
-  private $scope = $rootScope.$new(true);
+class Collections extends React.Component<Props & UIViewInjectedProps, State> {
+  private subscriptions = new Subscriptions();
 
   constructor(props: Props) {
     super(props);
@@ -93,21 +95,32 @@ class Collections extends React.Component<Props, State> {
   componentDidMount() {
     loadingTracker.addPromise(this.loadCollections());
 
-    // We need to make a scope
-    this.$scope.$on('dim-refresh', () => {
-      loadingTracker.addPromise(this.loadCollections());
-    });
-
-    D2StoresService.getStoresStream(this.props.account);
+    this.subscriptions.add(
+      refresh$.subscribe(() => {
+        // TODO: refresh just advisors
+        D2StoresService.reloadStores();
+      }),
+      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
+        if (stores) {
+          const ownedItemHashes = new Set<number>();
+          for (const store of stores) {
+            for (const item of store.items) {
+              ownedItemHashes.add(item.hash);
+            }
+          }
+          this.setState({ stores, ownedItemHashes });
+        }
+      })
+    );
   }
 
   componentWillUnmount() {
-    this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
   }
 
   render() {
     const { buckets, ownedItemHashes, presentationNodeHash } = this.props;
-    const { defs, profileResponse, trackerService, nodePath } = this.state;
+    const { defs, profileResponse, nodePath } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
       return (
@@ -147,10 +160,10 @@ class Collections extends React.Component<Props, State> {
     return (
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Catalysts">
-          <Catalysts defs={defs} profileResponse={profileResponse} />
+          <Catalysts defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Ornaments">
-          <Ornaments defs={defs} profileResponse={profileResponse} />
+          <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
           <PresentationNode
@@ -169,9 +182,9 @@ class Collections extends React.Component<Props, State> {
             <PlugSet
               key={plugSetHash}
               defs={defs}
+              buckets={buckets}
               plugSetHash={Number(plugSetHash)}
               items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
-              trackerService={trackerService}
             />
           ))}
         </ErrorBoundary>

@@ -8,6 +8,8 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { $q } from 'ngimport';
 import { router } from '../../router';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { hotkeys } from '../ngimport-more';
+import { t } from 'i18next';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -49,7 +51,12 @@ function MoveItemPropertiesCtrl(
     'is-void': false
   };
   vm.light = null;
-  vm.settings = settings;
+  $scope.$watch(
+    () => settings,
+    () => {
+      vm.settings = settings;
+    }
+  );
 
   vm.$onInit = () => {
     const item = vm.item;
@@ -67,7 +74,7 @@ function MoveItemPropertiesCtrl(
     dimDestinyTrackerService.getItemReviews(vm.item).then(() => $scope.$apply());
 
     // DTR 404s on the new D2 languages for D1 items
-    let language = vm.settings.language;
+    let language = settings.language;
     if (vm.item.destinyVersion === 1) {
       switch (language) {
         case 'es-mx':
@@ -88,7 +95,7 @@ function MoveItemPropertiesCtrl(
       }
     }
     vm.destinyDBLink = `http://db.destinytracker.com/d${vm.item.destinyVersion}/${
-      vm.settings.language
+      settings.language
     }/items/${vm.item.hash}`;
 
     if (vm.item.primStat) {
@@ -125,9 +132,15 @@ function MoveItemPropertiesCtrl(
     }
   };
 
+  const hot = hotkeys.bindTo($scope);
+
   // The 'i' keyboard shortcut toggles full details
-  $scope.$on('dim-toggle-item-details', () => {
-    vm.itemDetails = !vm.itemDetails;
+  hot.add({
+    combo: ['i'],
+    description: t('Hotkey.ToggleDetails'),
+    callback() {
+      vm.itemDetails = !vm.itemDetails;
+    }
   });
 
   $scope.$watch('vm.itemDetails', (newValue, oldValue) => {
@@ -173,8 +186,8 @@ function MoveItemPropertiesCtrl(
     if (item.isDestiny2()) {
       $q.when(d2SetLockState(store, item, state))
         .then(() => {
+          // TODO: this doesn't work in React land
           item.locked = state;
-          $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(() => {
           vm.locking = false;
@@ -187,7 +200,6 @@ function MoveItemPropertiesCtrl(
           } else if (type === 'track') {
             item.tracked = state;
           }
-          $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(() => {
           vm.locking = false;

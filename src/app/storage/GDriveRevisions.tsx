@@ -1,11 +1,12 @@
 import { t } from 'i18next';
 import * as React from 'react';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import './GDriveRevisions.scss';
 import { GDriveRevision } from './google-drive-storage';
 import { dataStats } from './data-stats';
 import { SyncService } from './sync.service';
 import { UIViewInjectedProps } from '@uirouter/react';
+import { refreshIcon, AppIcon } from '../shell/icons';
 import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
 
@@ -32,7 +33,7 @@ export default class GDriveRevisions extends React.Component<UIViewInjectedProps
       return (
         <div className="dim-page">
           {header}
-          <i className="fa fa-spinner fa-spin" />
+          <AppIcon icon={refreshIcon} spinning={true} />
         </div>
       );
     }
@@ -104,7 +105,7 @@ class GDriveRevisionComponent extends React.Component<
         <td className="revision-date">
           <div>{new Date(revision.modifiedTime).toLocaleString()}</div>
           <div>
-            {loading && <i className="fa fa-spinner fa-spin" />}
+            {loading && <AppIcon icon={refreshIcon} spinning={true} />}
             {error && error.message}
             <ul>
               {content &&

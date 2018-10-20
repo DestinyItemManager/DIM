@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { D2Item } from '../inventory/item-types';
 import { LoadoutBuilder } from './LoadoutBuilder';
 import { LockableBuckets, ArmorSet, StatTypes } from './types';
@@ -56,6 +56,7 @@ function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item
 
               if (validSet) {
                 const set: ArmorSet = {
+                  id: processedCount,
                   armor: [helms[h], gaunts[g], chests[c], legs[l], classitems[ci]],
                   power:
                     helms[h].basePower +

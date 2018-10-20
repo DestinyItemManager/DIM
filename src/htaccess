@@ -846,7 +846,7 @@ FileETag None
     ExpiresByType application/rdf+xml                   "access plus 1 hour"
     ExpiresByType application/rss+xml                   "access plus 1 hour"
 
-    ExpiresByType application/json                      "access plus 0 seconds"
+    ExpiresByType application/json                      "access plus 1 year"
     ExpiresByType application/ld+json                   "access plus 0 seconds"
     ExpiresByType application/schema+json               "access plus 0 seconds"
     ExpiresByType application/vnd.geo+json              "access plus 0 seconds"
@@ -869,6 +869,7 @@ FileETag None
     ExpiresByType application/javascript                "access plus 1 year"
     ExpiresByType application/x-javascript              "access plus 1 year"
     ExpiresByType text/javascript                       "access plus 1 year"
+    ExpiresByType application/wasm                      "access plus 1 year"
 
 
   # Manifest files
@@ -880,37 +881,37 @@ FileETag None
 
   # Media files
 
-    ExpiresByType audio/ogg                             "access plus 1 month"
-    ExpiresByType image/bmp                             "access plus 1 month"
-    ExpiresByType image/gif                             "access plus 1 month"
-    ExpiresByType image/jpeg                            "access plus 1 month"
-    ExpiresByType image/png                             "access plus 1 month"
-    ExpiresByType image/svg+xml                         "access plus 1 month"
-    ExpiresByType image/webp                            "access plus 1 month"
-    ExpiresByType video/mp4                             "access plus 1 month"
-    ExpiresByType video/ogg                             "access plus 1 month"
-    ExpiresByType video/webm                            "access plus 1 month"
+    ExpiresByType audio/ogg                             "access plus 1 year"
+    ExpiresByType image/bmp                             "access plus 1 year"
+    ExpiresByType image/gif                             "access plus 1 year"
+    ExpiresByType image/jpeg                            "access plus 1 year"
+    ExpiresByType image/png                             "access plus 1 year"
+    ExpiresByType image/svg+xml                         "access plus 1 year"
+    ExpiresByType image/webp                            "access plus 1 year"
+    ExpiresByType video/mp4                             "access plus 1 year"
+    ExpiresByType video/ogg                             "access plus 1 year"
+    ExpiresByType video/webm                            "access plus 1 year"
 
 
   # Web fonts
 
     # Embedded OpenType (EOT)
-    ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
-    ExpiresByType font/eot                              "access plus 1 month"
+    ExpiresByType application/vnd.ms-fontobject         "access plus 1 year"
+    ExpiresByType font/eot                              "access plus 1 year"
 
     # OpenType
-    ExpiresByType font/opentype                         "access plus 1 month"
+    ExpiresByType font/opentype                         "access plus 1 year"
 
     # TrueType
-    ExpiresByType application/x-font-ttf                "access plus 1 month"
+    ExpiresByType application/x-font-ttf                "access plus 1 year"
 
     # Web Open Font Format (WOFF) 1.0
-    ExpiresByType application/font-woff                 "access plus 1 month"
-    ExpiresByType application/x-font-woff               "access plus 1 month"
-    ExpiresByType font/woff                             "access plus 1 month"
+    ExpiresByType application/font-woff                 "access plus 1 year"
+    ExpiresByType application/x-font-woff               "access plus 1 year"
+    ExpiresByType font/woff                             "access plus 1 year"
 
     # Web Open Font Format (WOFF) 2.0
-    ExpiresByType application/font-woff2                "access plus 1 month"
+    ExpiresByType application/font-woff2                "access plus 1 year"
 
 
   # Other
@@ -959,7 +960,7 @@ FileETag None
 
 <IfModule mod_headers.c>
 
-    <FilesMatch "\.(js|css|png|jpg)(\.(gz|br))?$">
+    <FilesMatch "\.(json|wasm|js|css|png|jpg)(\.(gz|br))?$">
         Header merge Cache-Control "immutable"
     </FilesMatch>
 
@@ -977,14 +978,13 @@ FileETag None
     </IfModule>
 </FilesMatch>
 
-# Do not cache version.json either
+# Cache version.json for only 15 minutes
 
 <FilesMatch "version\.json(\.(gz|br))?">
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
-        Header set Pragma "no-cache"
+        Header set Cache-Control "max-age=900"
         Header unset Expires
     </IfModule>
 </FilesMatch>

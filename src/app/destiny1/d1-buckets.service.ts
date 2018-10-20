@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { getDefinitions } from './d1-definitions.service';
 import { IPromise } from 'angular';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
@@ -75,7 +75,7 @@ _.each(D1Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.memoize(() => {
+export const getBuckets: () => IPromise<any> = _.once(() => {
   return getDefinitions().then((defs) => {
     const buckets: InventoryBuckets = {
       byHash: {}, // numeric hash -> bucket

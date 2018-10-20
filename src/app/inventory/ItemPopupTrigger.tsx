@@ -13,8 +13,9 @@ let otherDialog: any = null;
 interface Props {
   item: DimItem;
   children?: React.ReactNode;
-  alternateTemplate?: string;
-  extraData?: any;
+  template?: string;
+  extraData?: {};
+  controller?(): void;
 }
 
 /**
@@ -44,7 +45,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private clicked = (e) => {
     e.stopPropagation();
 
-    const { item, alternateTemplate, extraData } = this.props;
+    const { item, template, controller, extraData } = this.props;
 
     NewItemsService.dropNewItem(item);
 
@@ -76,14 +77,14 @@ export default class ItemPopupTrigger extends React.Component<Props> {
       }
 
       this.dialogResult = ngDialog.open({
-        template: alternateTemplate || dialogTemplate,
+        template: template || dialogTemplate,
         plain: true,
         overlay: false,
         className: 'move-popup-dialog',
         showClose: false,
         data: this.ref.current as {},
         controllerAs: 'vm',
-        controller: dialogController,
+        controller: controller || dialogController,
         // Setting these focus options prevents the page from
         // jumping as dialogs are shown/hidden
         trapFocus: false,

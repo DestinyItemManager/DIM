@@ -1,11 +1,9 @@
-import { angular2react } from 'angular2react';
 import classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
-import { SearchFilterComponent } from '../search/search-filter.component';
 import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
@@ -25,6 +23,8 @@ import {
   dimVendorEngramsService,
   isVerified380
 } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
+import SearchFilter from '../search/SearchFilter';
 
 const destiny1Links = [
   {
@@ -93,15 +93,8 @@ export default class Header extends React.PureComponent<{}, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
   private engramRefreshTimer: number;
 
-  private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
-
   constructor(props) {
     super(props);
-
-    this.SearchFilter = angular2react<{ account: DestinyAccount }>(
-      'dimSearchFilter',
-      SearchFilterComponent
-    );
 
     this.state = {
       dropdownOpen: false,
@@ -131,7 +124,6 @@ export default class Header extends React.PureComponent<{}, State> {
 
   render() {
     const { account, showSearch, dropdownOpen, vendorEngramDropActive } = this.state;
-    const { SearchFilter } = this;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -188,7 +180,7 @@ export default class Header extends React.PureComponent<{}, State> {
     return (
       <div id="header" className={showSearch ? 'search-expanded' : ''}>
         <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>
-          <i className="fa fa-bars" />
+          <AppIcon icon={menuIcon} />
           <MenuBadge />
         </span>
 
@@ -232,16 +224,18 @@ export default class Header extends React.PureComponent<{}, State> {
             settings.showReviews && <RatingMode />}
           {!showSearch && (
             <UISref to="settings">
-              <a className="link fa fa-cog" title={t('Settings.Settings')} />
+              <a className="link" title={t('Settings.Settings')}>
+                <AppIcon icon={settingsIcon} />
+              </a>
             </UISref>
           )}
           {account && (
             <span className={classNames('link', 'search-link', { show: showSearch })}>
-              <SearchFilter account={account} />
+              <SearchFilter />
             </span>
           )}
           <span className="link search-button" onClick={this.toggleSearch}>
-            <i className="fa fa-search" />
+            <AppIcon icon={searchIcon} />
           </span>
           {account && <AccountSelect currentAccount={account} />}
         </span>

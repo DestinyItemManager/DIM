@@ -4,7 +4,7 @@ import { PlatformErrorCodes, DestinyGameVersions } from 'bungie-api-ts/destiny2'
 import { UserMembershipData } from 'bungie-api-ts/user';
 import { t } from 'i18next';
 import { $q } from 'ngimport';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { getAccounts } from '../bungie-api/bungie-user-api.service';
 import { getCharacters } from '../bungie-api/destiny1-api';
 import { getBasicProfile } from '../bungie-api/destiny2-api';
@@ -12,7 +12,6 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { toaster } from '../ngimport-more';
 import { removeToken } from '../oauth/oauth-token.service';
-import { flatMap } from '../util';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { router } from '../../router';
 
@@ -80,7 +79,7 @@ export function getDestinyAccountsForBungieAccount(
  * @param accounts raw Bungie API accounts response
  */
 function generatePlatforms(accounts: UserMembershipData): IPromise<DestinyAccount[]> {
-  const accountPromises = flatMap(accounts.destinyMemberships, (destinyAccount) => {
+  const accountPromises = _.flatMap(accounts.destinyMemberships, (destinyAccount) => {
     const account: DestinyAccount = {
       displayName: destinyAccount.displayName,
       platformType: destinyAccount.membershipType,

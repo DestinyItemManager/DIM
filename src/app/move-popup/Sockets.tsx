@@ -9,6 +9,7 @@ import { IScope } from 'angular';
 import Objective from '../progress/Objective';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
+import { thumbsUpIcon, AppIcon } from '../shell/icons';
 
 interface Props {
   item: D2Item;
@@ -174,7 +175,7 @@ function Plug({
 }
 
 function BestRatedIcon() {
-  return <i className="fa fa-thumbs-up thumbs-up" title={t('DtrReview.BestRatedTip')} />;
+  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('DtrReview.BestRatedTip')} />;
 }
 
 function PlugTooltip({

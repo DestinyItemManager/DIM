@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
@@ -10,7 +10,8 @@ import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
-import { $q, $interval, $rootScope } from 'ngimport';
+import { $q, $interval } from 'ngimport';
+import { refresh } from '../shell/refresh';
 
 export const D2FarmingService = makeD2FarmingService();
 
@@ -55,7 +56,7 @@ function makeD2FarmingService() {
         const items = store.buckets[makeRoomBucket.id];
         if (items.length > 0 && items.length >= makeRoomBucket.capacity) {
           // We'll move the lowest-value item to the vault.
-          const itemToMove = _.min(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
+          const itemToMove = _.minBy(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
             let value = {
               Common: 0,
               Uncommon: 1,
@@ -69,7 +70,7 @@ function makeD2FarmingService() {
             }
             return value;
           });
-          if (!_.isNumber(itemToMove)) {
+          if (itemToMove) {
             itemsToMove.push(itemToMove);
           }
         }
@@ -119,7 +120,7 @@ function makeD2FarmingService() {
 
         intervalId = $interval(() => {
           // just start reloading stores more often
-          $rootScope.$broadcast('dim-refresh');
+          refresh();
         }, 60000);
       }
     },

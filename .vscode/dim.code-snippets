@@ -1,0 +1,90 @@
+{
+  // Place your global snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+  // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+  // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+  // used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+  // Placeholders with the same ids are connected.
+  // Example:
+  // "Print to console": {
+  // 	"scope": "javascript,typescript",
+  // 	"prefix": "log",
+  // 	"body": [
+  // 		"console.log('$1');",
+  // 		"$2"
+  // 	],
+  // 	"description": "Log output to console"
+  // }
+  "React Component": {
+    "prefix": "comp",
+    "body": [
+      "import * as React from 'react';",
+      "",
+      "export default class ${1:ClassName} extends React.Component {",
+      "\trender() {",
+      "\t\treturn (",
+      "\t\t\t$0",
+      "\t\t);",
+      "\t}",
+      "}",
+      ""
+    ],
+    "description": "TypeScript React Component"
+  },
+
+  "SFC Component": {
+    "prefix": "sfc",
+    "body": [
+      "export default function ${1:ClassName}({",
+      "}: {",
+      "}) {",
+      "\treturn (",
+      "\t\t$0",
+      "\t);",
+      "}",
+      ""
+    ],
+    "description": "TypeScript Stateless Functional Component"
+  },
+
+  "import i18next": {
+    "prefix": "imt",
+    "body": ["import { t } from 'i18next';"],
+    "description": "Import t helper from i18next"
+  },
+
+  "import React": {
+    "prefix": "imr",
+    "body": ["import * as React from 'react';"],
+    "description": "Import React"
+  },
+
+  "import classNames": {
+    "prefix": "imc",
+    "body": ["import classNames from 'classnames';"],
+    "description": "Import classNames"
+  },
+
+  "mapStateToProps": {
+    "prefix": "mapStateToProps",
+    "body": [
+      "function mapStateToProps(state: RootState): StoreProps {",
+      "  return {",
+      "    $0",
+      "  };",
+      "}"
+    ],
+    "description": "mapStateToProps"
+  },
+
+  "mapDispatchToProps": {
+    "prefix": "mapDispatchToProps",
+    "body": [
+      "const mapDispatchToProps = {",
+      "  $0",
+      "};",
+      "type DispatchProps = typeof mapDispatchToProps"
+    ],
+    "description": "mapDispatchToProps"
+  }
+}

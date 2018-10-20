@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './ItemRender.scss';
-import classNames from 'classnames';
+import { AppIcon, thumbsUpIcon } from '../shell/icons';
 
 interface Props {
   rating?: number;
@@ -14,7 +14,7 @@ export default class ItemRender extends React.Component<Props> {
     if (rating !== undefined && !hideRating) {
       return (
         <div className="review-score" title={rating.toLocaleString()}>
-          <i className={classNames('fa', rating >= 4 ? 'fa-thumbs-up' : '')} />
+          {rating >= 4 && <AppIcon icon={thumbsUpIcon} />}
         </div>
       );
     } else {

@@ -81,7 +81,7 @@ export default class Collectible extends React.Component<Props> {
         {owned && <img className="owned-icon" src={checkMark} />}
         <ItemPopupTrigger
           item={item}
-          alternateTemplate={dialogTemplate}
+          template={dialogTemplate}
           extraData={{ collectible: collectibleDef, owned, checkMark, acquired }}
         >
           <InventoryItem item={item} />

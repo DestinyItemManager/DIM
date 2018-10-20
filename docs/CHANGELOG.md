@@ -1,5 +1,19 @@
 # Next
 
+* We no longer support searching D1 vendor items.
+* Added support for showing ratings and reviews based on the item roll in Destiny 2.
+* Fix for missing class names in the loadout builder in Firefox.
+
+# 4.74.0 (2018-10-14)
+
+* Added negative search. Prefix any search term with `-` and it will match the opposite.
+* Added `perk:"* **"` seach filter to match any keywords against perks on an item
+* Added some missing `stat:`
+* Lock and unlock items matching your current search from the same menu you use for tagging them.
+* Updated icons across the app.
+
+# 4.73.0 (2018-10-07)
+
 * Added `is:heroic` search filter for armor with heroic resistance.
 * New option to manually sort your characters.
 * No longer forgetting what perks we recommended.

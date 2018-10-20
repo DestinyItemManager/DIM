@@ -1,6 +1,7 @@
-import { flatMap } from '../util';
 import template from './vendor-currencies.component.html';
+import * as _ from 'lodash';
 import { IComponentOptions, IController, IScope } from 'angular';
+import { vendorTabItems } from './vendors.filters';
 
 export const VendorCurrencies: IComponentOptions = {
   controller: VendorCurrenciesCtrl,
@@ -13,21 +14,22 @@ export const VendorCurrencies: IComponentOptions = {
   template
 };
 
-function VendorCurrenciesCtrl(this: IController, $scope: IScope, $filter) {
+function VendorCurrenciesCtrl(this: IController, $scope: IScope) {
   'ngInject';
 
   const vm = this;
 
   $scope.$watchGroup(['vm.vendorCategories', 'vm.propertyFilter'], () => {
     const allCurrencies = {};
-    const vendorTabItems = $filter('vendorTabItems');
     const allItems = vendorTabItems(
-      flatMap(vm.vendorCategories, (category: any) => {
-        if (!vm.propertyFilter || !vm.propertyFilter.length || category[vm.propertyFilter]) {
-          return category.saleItems;
-        }
-        return undefined;
-      }),
+      _.compact(
+        _.flatMap(vm.vendorCategories, (category: any) => {
+          if (!vm.propertyFilter || !vm.propertyFilter.length || category[vm.propertyFilter]) {
+            return category.saleItems;
+          }
+          return undefined;
+        })
+      ),
       vm.propertyFilter
     );
 

@@ -1,16 +1,10 @@
 import { ReactStateDeclaration } from '@uirouter/react';
-import { angular2react } from 'angular2react';
-import { RecordBooksComponent } from './record-books.component';
-import { lazyInjector } from '../../lazyInjector';
+import RecordBooks from './RecordBooks';
 
 export const states: ReactStateDeclaration[] = [
   {
     name: 'destiny1.record-books',
-    component: angular2react(
-      'recordBooks',
-      RecordBooksComponent,
-      lazyInjector.$injector as angular.auto.IInjectorService
-    ),
+    component: RecordBooks,
     url: '/record-books'
   }
 ];

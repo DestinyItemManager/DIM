@@ -93,12 +93,6 @@ export interface DimItem {
   classTypeNameLocalized: string;
   /** The readable name of the damage type associated with this item. */
   dmg: 'kinetic' | 'arc' | 'solar' | 'void' | 'heroic';
-  /**
-   * Whether this item should be shown.
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
-  visible: boolean;
   /** Whether this item can be locked. */
   lockable: boolean;
   /** Is this item tracked? (D1 quests/bounties). */
@@ -119,12 +113,6 @@ export interface DimItem {
   comparable: boolean;
   /** Can this be reviewed? */
   reviewable: boolean;
-  /**
-   * Is this a new item?
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
-  isNew: boolean;
   /**
    * DIM tagging and notes info.
    *

@@ -25,7 +25,7 @@ import {
   DestinyAmmunitionType,
   DamageType
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
 import {
   getDefinitions,
@@ -33,7 +33,7 @@ import {
   LazyDefinition
 } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
-import { sum, compact } from '../../util';
+
 import { D2ManifestService } from '../../manifest/manifest-service';
 import { getClass } from './character-utils';
 import { NewItemsService } from './new-items.service';
@@ -373,9 +373,8 @@ export function makeItem(
   }
 
   // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
-  createdItem.isNew = false;
   try {
-    createdItem.isNew = NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
+    NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
   } catch (e) {
     console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
   }
@@ -477,7 +476,7 @@ export function makeItem(
     const length = realObjectives.length;
     if (length > 0) {
       createdItem.complete = realObjectives.every((o) => o.complete);
-      createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
+      createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
           return Math.min(1, objective.progress / objective.completionValue) / length;
         } else {
@@ -894,7 +893,7 @@ function buildTalentGrid(
   }
 
   // Fix for stuff that has nothing in early columns
-  const minByColumn = _.min(gridNodes.filter((n) => !n.hidden), (n) => n.column);
+  const minByColumn = _.minBy(gridNodes.filter((n) => !n.hidden), (n) => n.column)!;
   const minColumn = minByColumn.column;
   if (minColumn > 0) {
     gridNodes.forEach((node) => {
@@ -904,7 +903,7 @@ function buildTalentGrid(
 
   return {
     nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),
-    complete: _.all(gridNodes, (n) => n.unlocked)
+    complete: gridNodes.every((n) => n.unlocked)
   };
 }
 
@@ -1011,7 +1010,7 @@ function buildDefinedSocket(
   index: number
 ): DimSocket {
   // The currently equipped plug, if any
-  const reusablePlugs = compact(
+  const reusablePlugs = _.compact(
     (socket.reusablePlugItems || []).map((reusablePlug) => buildDefinedPlug(defs, reusablePlug))
   );
   const plugOptions: DimPlug[] = [];
@@ -1108,7 +1107,7 @@ function buildSocket(
 
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
-  const reusablePlugs = compact(
+  const reusablePlugs = _.compact(
     (socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug))
   );
   const plugOptions = plug ? [plug] : [];
@@ -1223,7 +1222,7 @@ function getBasePowerLevel(item: D2Item): number {
 
 export function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
   return item.sockets
-    ? compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
+    ? _.compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
         return (
           plug.itemCategoryHashes &&
           plug.investmentStats &&

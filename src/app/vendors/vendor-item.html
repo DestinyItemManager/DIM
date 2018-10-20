@@ -1,4 +1,4 @@
-<div class="vendor-item" ng-class="{ 'search-hidden': !$ctrl.saleItem.item.visible, unavailable: !$ctrl.saleItem.unlocked }">
+<div class="vendor-item" ng-class="{ unavailable: !$ctrl.saleItem.unlocked }">
   <dim-simple-item item-data="$ctrl.saleItem.item" ng-click="$ctrl.clicked($event)"></dim-simple-item>
   <div class="vendor-costs">
     <div ng-repeat="cost in ::$ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{ notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value) }">

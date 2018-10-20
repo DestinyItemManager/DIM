@@ -8,17 +8,19 @@ import { loadingTracker } from '../ngimport-more';
 import './vendor.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForVendors } from './vendor-ratings';
-import { Subscription } from 'rxjs/Subscription';
 import { D2Store } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
-import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
 import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
 import { t } from 'i18next';
+import { Subscriptions } from '../rx-utils';
+import { refresh$ } from '../shell/refresh';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { getBuckets } from '../destiny2/d2-buckets.service';
 
 interface Props {
   account: DestinyAccount;
@@ -26,6 +28,7 @@ interface Props {
 
 interface State {
   defs?: D2ManifestDefinitions;
+  buckets?: InventoryBuckets;
   vendorsResponse?: DestinyVendorsResponse;
   trackerService?: DestinyTrackerService;
   stores?: D2Store[];
@@ -39,8 +42,7 @@ interface State {
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
 export default class Vendors extends React.Component<Props & UIViewInjectedProps, State> {
-  private storesSubscription: Subscription;
-  private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
 
   constructor(props: Props) {
     super(props);
@@ -62,6 +64,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
+    const buckets = await getBuckets();
 
     // TODO: get for all characters, or let people select a character? This is a hack
     // we at least need to display that character!
@@ -93,7 +96,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     let vendorsResponse;
     try {
       vendorsResponse = await getVendorsApi(this.props.account, characterId);
-      this.setState({ defs, vendorsResponse });
+      this.setState({ defs, vendorsResponse, buckets });
     } catch (error) {
       this.setState({ error });
     }
@@ -108,13 +111,12 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     const promise = this.loadVendors();
     loadingTracker.addPromise(promise);
 
-    this.$scope.$on('dim-refresh', () => {
-      const promise = this.loadVendors();
-      loadingTracker.addPromise(promise);
-    });
-
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
-      (stores) => {
+    this.subscriptions.add(
+      refresh$.subscribe(() => {
+        const promise = this.loadVendors();
+        loadingTracker.addPromise(promise);
+      }),
+      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
         if (stores) {
           const ownedItemHashes = new Set<number>();
           for (const store of stores) {
@@ -124,18 +126,18 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
           }
           this.setState({ stores, ownedItemHashes });
         }
-      }
+      })
     );
   }
 
   componentWillUnmount() {
-    this.storesSubscription.unsubscribe();
-    this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
   }
 
   render() {
     const {
       defs,
+      buckets,
       vendorsResponse,
       trackerService,
       ownedItemHashes,
@@ -156,7 +158,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       );
     }
 
-    if (!vendorsResponse || !defs) {
+    if (!vendorsResponse || !defs || !buckets) {
       return (
         <div className="vendor dim-page">
           <Loading />
@@ -170,6 +172,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
           <VendorGroup
             key={group.vendorGroupHash}
             defs={defs}
+            buckets={buckets}
             group={group}
             vendorsResponse={vendorsResponse}
             trackerService={trackerService}
@@ -186,6 +189,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
 function VendorGroup({
   defs,
+  buckets,
   group,
   vendorsResponse,
   trackerService,
@@ -195,6 +199,7 @@ function VendorGroup({
   basePowerLevel
 }: {
   defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
   trackerService?: DestinyTrackerService;
@@ -213,6 +218,7 @@ function VendorGroup({
           <Vendor
             account={account}
             defs={defs}
+            buckets={buckets}
             vendor={vendor}
             itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
             sales={

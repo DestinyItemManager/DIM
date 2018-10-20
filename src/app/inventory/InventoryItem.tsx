@@ -3,16 +3,18 @@ import classNames from 'classnames';
 import { DimItem } from './item-types';
 import { percent } from './dimPercentWidth.directive';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
-import { getColor, dtrRatingColor } from '../shell/dimAngularFilters.filter';
-import { tagIconFilter } from './dimStoreItem.directive';
+import { getColor } from '../shell/dimAngularFilters.filter';
 import ItemRender from './ItemRender';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
 import './InventoryItem.scss';
-import { TagValue } from './dim-item-info';
+import { TagValue, itemTags } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import { settings } from '../settings/settings';
+import { RatingIcon } from '../shell/icons/ReviewIcon';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { AppIcon } from '../shell/icons';
 
 interface Props {
   item: DimItem;
@@ -29,7 +31,13 @@ interface Props {
   onDoubleClick?(e);
 }
 
-const tagClasses = tagIconFilter();
+const iconType: { [P in TagValue]?: IconDefinition | undefined } = {};
+
+itemTags.forEach((tag) => {
+  if (tag.type) {
+    iconType[tag.type] = tag.icon;
+  }
+});
 
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
@@ -108,11 +116,11 @@ export default class InventoryItem extends React.Component<Props> {
               !hideRating && (
                 <div className="item-stat item-review">
                   {rating}
-                  <i className="fa fa-star" style={dtrRatingColor(rating)} />
+                  <RatingIcon rating={rating} />
                 </div>
               )}
             <div className={classNames('item-element', item.dmg)} />
-            <div className={tagClasses(tag)} />
+            {tag && iconType[tag] && <AppIcon className="item-tag" icon={iconType[tag]!} />}
             {isNew && (
               <div className="new_overlay_overflow">
                 <img className="new_overlay" src={newOverlay} height="44" width="44" />

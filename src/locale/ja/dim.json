@@ -22,6 +22,7 @@
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
+    "Ghost": "Ghost",
     "Inventory": "在庫",
     "Postmaster": "ポストマスター",
     "Progress": "進行状況",
@@ -171,8 +172,8 @@
     "Ascended": "ノードの開放完了の有無に関わらず、アップグレード可能なアイテムを表示",
     "Categories": "高レベル・アイテムカテゴリー",
     "Class": "クラス別にアイテムを表示",
-    "ClickFilters": "下のフィルターをクリック、もしくは検索ボックスに入力して探すことができます。",
-    "Combine": "Filters are combined using 'and' logic, for example '{{example}}' will return all arc items with over 300 light.",
+    "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
+    "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Shows items that have light and can contribute to your light level.",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "DamageType": "ダメージタイプ別にアイテムを表示",
@@ -203,13 +204,15 @@
     },
     "LightLevel": "光レベルを基にアイテムを表示(武器の攻撃力、防具の防御力)",
     "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
+    "LockAllFailed": "Failed to lock items",
+    "LockAllSuccess": "Locked {{num}} items",
     "Locked": "アイテムの固定有無を基に表示",
     "NamedStat": "ステータスのある防具を表示",
-    "Negate": "Filters can be negated using '{{not}}', for example '{{notexample}}' will find all non-engram items. For text searches, use the dash, for example -\"Triple Tap\" will find all weapons without the Triple Tap perk.",
+    "Negate": "To negate a search, prefix that search term with a minus sign: {{notexample}} will find all non-engram items.",
     "NewItems": "新しいアイテムを表示",
     "Notes": "メモを付けたアイテムを検索",
     "Ornament": "装飾可能なアイテム、装飾状況を表示",
-    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Also, you can search for phrases using quotes.",
+    "PartialMatch": "Shows items where their name/perk has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
@@ -238,6 +241,8 @@
     },
     "Tracked": "クエスト、バウンティのステータスを基に表示",
     "Transferable": "キャラ間で移動可能なアイテムを表示",
+    "UnlockAllFailed": "Failed to unlock items",
+    "UnlockAllSuccess": "Unlocked {{num}} items",
     "Vendor": "ベンダーから入手可能なアイテム<i>{{vendor}}</i> {{name}}",
     "Vendor_noname": "ベンダーから入手可能なアイテム<i>{{vendor}}</i>",
     "Vendors": {
@@ -250,7 +255,7 @@
       "Shipwright": "造船工",
       "Speaker": "預言者"
     },
-    "VideoExample": "For an even better example of how to use filters, watch this video on {{link}}",
+    "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "武器のクラスを基に表示",
     "WeaponType": "武器の種類を基に表示",
     "Year": "Destinyの何年目にでてきたかを表示"
@@ -276,7 +281,7 @@
     "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
     "HidePopup": "ポップアップを非表示にする",
     "NoStorage": "DIMがデータを保管できません。",
-    "NoStorageMessage": "DIMがデータを保管できません。シークレットモード、匿名モードでブラウザーを使用している、もしくはディスクに空きが無い事に起因しています。DIMの使用ができません。",
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space.",
     "UpdateAvailable": "DIM 更新",
     "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
     "Version_beta": "ベータがv{{version}}にアップデートされました",
@@ -393,13 +398,13 @@
     "Vendor": "ベンダー装備も含む"
   },
   "LoadoutBuilder": {
-    "ArmorPower": "Armor power: {{power}}",
     "BurnTypeArc": "Arc",
     "BurnTypeNone": "None",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Void",
     "CreateLoadout": "Create Loadout",
     "EquipItems": "Equip on {{name}}",
+    "ExcludedItems": "{{locked}} excluded",
     "GeneratedBuilds": "Generated Builds",
     "Loading": "Generating builds... {{loading}}%",
     "LockBucket": "Lock {{bucket}}",
@@ -408,17 +413,18 @@
     "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
     "LockPerksTabTitle": "Perks",
     "LockPerksTitle": "Select perks to lock",
+    "LockedPerks": "{{locked}} locked perks",
     "NoBuildsFound": "No Generated Builds Found",
     "Options": "Options",
     "RequireBurn": "Require armor with matching damage resistance burn",
     "RequirePerks": "Require additional perks on all armor",
     "ResetLocked": "Reset Locked",
-    "ResetPerks": "Reset",
     "SelectCharacter": "Select Character",
     "SelectPower": "Minimum Power",
     "SelectPowerMinimum": "- No Minimum -",
     "SelectTier": "Build Tier",
     "SelectTierHeader": "- Tier {{tier}} -",
+    "ShowMore": "Show More",
     "Title": "Loadout Builder (Beta)"
   },
   "Loadouts": {
@@ -510,6 +516,7 @@
     "UpStack": "一群になるまで追加する"
   },
   "MovePopup": {
+    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
@@ -684,7 +691,10 @@
     "Infuse": "融合する",
     "Junk": "不要",
     "Keep": "保管",
-    "TagItem": "アイテムをタグする"
+    "LockAll": "Lock Items",
+    "TagItem": "アイテムをタグする",
+    "TagItems": "Tag Items",
+    "UnlockAll": "Unlock Items"
   },
   "TrialsCard": {
     "FiveWins": "5勝目の報酬 (防具)",

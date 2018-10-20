@@ -1,35 +1,33 @@
-import * as _ from 'underscore';
-import { flatMap } from '../util';
+import * as _ from 'lodash';
+
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
-import { StoreServiceType, DimStore } from '../inventory/store-types';
-import { dimLoadoutService } from '../loadout/loadout.service';
-import { $rootScope } from 'ngimport';
+import { DimStore } from '../inventory/store-types';
+import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets.service';
 import { D2Categories } from '../destiny2/d2-buckets.service';
-import { D1StoresService } from '../inventory/d1-stores.service';
-import { D2StoresService } from '../inventory/d2-stores.service';
 import { querySelector } from '../shell/reducer';
 import { storesSelector } from '../inventory/reducer';
 import { maxLightLoadout } from '../loadout/auto-loadouts';
 import { itemTags } from '../inventory/dim-item-info';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
+import { loadoutsSelector } from '../loadout/reducer';
+
+export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
 
 /**
  * A selector for the search config for a particular destiny version.
  */
-const searchConfigSelector = createSelector(
-  destinyVersionSelector,
-  // TODO: pass stores into search config
+export const searchFiltersConfigSelector = createSelector(
+  searchConfigSelector,
   storesSelector,
-  (destinyVersion, _stores) => {
-    // From search filter component
-    const searchConfig = buildSearchConfig(destinyVersion);
-    return searchFilters(searchConfig, destinyVersion === 1 ? D1StoresService : D2StoresService);
+  loadoutsSelector,
+  (searchConfig, stores, loadouts) => {
+    return searchFilters(searchConfig, stores, loadouts);
   }
 );
 
@@ -47,11 +45,11 @@ const searchConfigSelector = createSelector(
 // * and maybe some other stuff?
 export const searchFilterSelector = createSelector(
   querySelector,
-  searchConfigSelector,
+  searchFiltersConfigSelector,
   (query, filters) => filters.filterFunction(query)
 );
 
-interface SearchConfig {
+export interface SearchConfig {
   destinyVersion: 1 | 2;
   keywords: string[];
   categoryHashFilters: { [key: string]: number };
@@ -63,7 +61,7 @@ interface SearchConfig {
  */
 export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const categories = destinyVersion === 1 ? D1Categories : D2Categories;
-  const itemTypes = flatMap(Object.values(categories), (l: string[]) =>
+  const itemTypes = _.flatMap(Object.values(categories), (l: string[]) =>
     l.map((v) => v.toLowerCase())
   );
 
@@ -274,6 +272,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   // free form notes on items
   keywords.push('notes:');
+  keywords.push('perk:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -314,8 +313,6 @@ export interface SearchFilters {
     ) => boolean | '' | null | undefined | false | number;
   };
   filterFunction(query: string): (item: DimItem) => boolean;
-  resetLoadouts(): void;
-  reset(): void;
 }
 
 const alwaysTrue = () => true;
@@ -324,16 +321,17 @@ const alwaysTrue = () => true;
  * This builds an object that can be used to generate filter functions from search queried.
  *
  */
-export function searchFilters(
+function searchFilters(
   searchConfig: SearchConfig,
-  storeService: StoreServiceType
+  stores: DimStore[],
+  loadouts: Loadout[]
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerItems: string[] = [];
-  let _lowerDupes = {};
+  const _lowerDupes = {};
   let _sortedStores: DimStore[] | null = null;
   let _loadoutItemIds: Set<string> | undefined;
-  let _loadoutItemIdsPromise: Promise<void> | undefined;
+  const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
 
   const statHashes = new Set([
     1480404414, // D2 Attack
@@ -372,25 +370,31 @@ export function searchFilters(
     573576346 // sagira shell
   ]);
 
-  const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643]);
+  const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
   const filterByStats = (statType) => {
     const statHash = {
       rpm: 4284893193,
+      rof: 4284893193,
       charge: 2961396640,
       impact: 4043523819,
       range: 1240592695,
       stability: 155624089,
-      rof: 4284893193,
       reload: 4188031367,
-      magazine: 387123106,
+      magazine: 3871231066,
       aimassist: 1345609583,
       equipspeed: 943549884,
       mobility: 2996146975,
       resilience: 392767087,
-      recovery: 1943323491
+      recovery: 1943323491,
+      velocity: 2523465841,
+      blastradius: 2523465841,
+      recoildirection: 2715839340,
+      drawtime: 447667954,
+      zoom: 3555269338,
+      inventorysize: 1931675084
     }[statType];
 
     return (item: DimItem, predicate: string) => {
@@ -438,27 +442,17 @@ export function searchFilters(
   // reset, filterFunction, and filters
   return {
     /**
-     * Reset cached state in this filter object.
-     */
-    reset() {
-      _duplicates = null;
-      _maxPowerItems.length = 0;
-      _lowerDupes = {};
-      _sortedStores = null;
-    },
-
-    resetLoadouts() {
-      _loadoutItemIds = undefined;
-      _loadoutItemIdsPromise = undefined;
-    },
-
-    /**
      * Build a complex predicate function from a full query string.
      */
     filterFunction(query: string): (item: DimItem) => boolean {
       if (!query.length) {
         return alwaysTrue;
       }
+
+      query = query
+        .trim()
+        .toLowerCase()
+        .replace(/\s+and\s+/, ' ');
 
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*?"[^"]+?" -> match is:"stuff here"
@@ -479,7 +473,7 @@ export function searchFilters(
       // with the previous one in a hacked-up "or" node that we'll handle specially.
       let or = false;
 
-      function addPredicate(predicate: string, filter: string, invert = false) {
+      function addPredicate(predicate: string, filter: string, invert: boolean = false) {
         const filterDef: Filter = { predicate, value: filter, invert };
         if (or && filters.length) {
           const lastFilter = filters.pop();
@@ -495,8 +489,11 @@ export function searchFilters(
         or = false;
       }
 
-      for (let term of searchTerms) {
-        term = term.replace(/['"]/g, '');
+      for (let search of searchTerms) {
+        search = search.replace(/['"]/g, '');
+
+        const invert = search.startsWith('-');
+        const term = search.replace(/^-/, '');
 
         if (term === 'or') {
           or = true;
@@ -504,41 +501,44 @@ export function searchFilters(
           const filter = term.replace('is:', '');
           const predicate = searchConfig.keywordToFilter[filter];
           if (predicate) {
-            addPredicate(predicate, filter);
+            addPredicate(predicate, filter, invert);
           }
         } else if (term.startsWith('not:')) {
           const filter = term.replace('not:', '');
           const predicate = searchConfig.keywordToFilter[filter];
           if (predicate) {
-            addPredicate(predicate, filter, true);
+            addPredicate(predicate, filter, !invert);
           }
         } else if (term.startsWith('tag:')) {
           const filter = term.replace('tag:', '');
-          addPredicate('itemtags', filter);
+          addPredicate('itemtags', filter, invert);
         } else if (term.startsWith('notes:')) {
           const filter = term.replace('notes:', '');
-          addPredicate('notes', filter);
+          addPredicate('notes', filter, invert);
+        } else if (term.startsWith('perk:')) {
+          const filter = term.replace('perk:', '');
+          addPredicate('perk', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
-          addPredicate('light', filter);
+          addPredicate('light', filter, invert);
         } else if (term.startsWith('masterwork:')) {
           const filter = term.replace('masterwork:', '');
-          addPredicate('masterworkValue', filter);
+          addPredicate('masterworkValue', filter, invert);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
-          addPredicate('stack', filter);
+          addPredicate('stack', filter, invert);
         } else if (term.startsWith('level:')) {
           const filter = term.replace('level:', '');
-          addPredicate('level', filter);
+          addPredicate('level', filter, invert);
         } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
           const filter = term.replace('quality:', '').replace('percentage:', '');
-          addPredicate('quality', filter);
+          addPredicate('quality', filter, invert);
         } else if (term.startsWith('rating:')) {
           const filter = term.replace('rating:', '');
-          addPredicate('rating', filter);
+          addPredicate('rating', filter, invert);
         } else if (term.startsWith('ratingcount:')) {
           const filter = term.replace('ratingcount:', '');
-          addPredicate('ratingcount', filter);
+          addPredicate('ratingcount', filter, invert);
         } else if (term.startsWith('stat:')) {
           // Avoid console.error by checking if all parameters are typed
           const pieces = term.split(':');
@@ -547,7 +547,7 @@ export function searchFilters(
             addPredicate(filter, pieces[2]);
           }
         } else if (!/^\s*$/.test(term)) {
-          addPredicate('keyword', term.replace(/^-/, ''), term.startsWith('-'));
+          addPredicate('keyword', term, invert);
         }
       }
 
@@ -638,7 +638,7 @@ export function searchFilters(
         return item.talentGrid && item.talentGrid.hasAscendNode && !item.talentGrid.ascended;
       },
       reforgeable(item: DimItem) {
-        return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
+        return item.talentGrid && item.talentGrid.nodes.some((n) => n.hash === 617082448);
       },
       ornament(item: D1Item, predicate: string) {
         const complete = item.talentGrid && item.talentGrid.nodes.some((n) => n.ornament);
@@ -669,11 +669,11 @@ export function searchFilters(
       },
       maxpower(item: DimItem) {
         if (!_maxPowerItems.length) {
-          storeService.getStores().forEach((store) => {
+          stores.forEach((store) => {
             _maxPowerItems.push(
-              ..._.flatten(Object.values(maxLightLoadout(storeService, store).items)).map((i) => {
-                return i.id;
-              })
+              ..._.flatten(
+                Object.values(maxLightLoadout(store.getStoresService(), store).items)
+              ).map((i) => i.id)
             );
           });
         }
@@ -682,7 +682,16 @@ export function searchFilters(
       },
       dupe(item: DimItem, predicate: string) {
         if (_duplicates === null) {
-          _duplicates = _.groupBy(storeService.getAllItems(), (i) => i.hash);
+          _duplicates = {};
+          for (const store of stores) {
+            for (const i of store.items) {
+              if (!_duplicates[i.hash]) {
+                _duplicates[i.hash] = [];
+              }
+              _duplicates[i.hash].push(i);
+            }
+          }
+
           _.each(_duplicates, (dupes: DimItem[]) => {
             if (dupes.length > 1) {
               dupes.sort(dupeComparator);
@@ -716,7 +725,7 @@ export function searchFilters(
             desiredStore = 'vault';
             break;
           case 'incurrentchar':
-            const activeStore = storeService.getActiveStore();
+            const activeStore = stores[0].getStoresService().getActiveStore();
             if (activeStore) {
               desiredStore = activeStore.id;
             } else {
@@ -728,7 +737,7 @@ export function searchFilters(
       location(item: DimItem, predicate: string) {
         let storeIndex = 0;
         if (_sortedStores === null) {
-          _sortedStores = characterSortSelector(store.getState())(storeService.getStores());
+          _sortedStores = characterSortSelector(store.getState())(stores);
         }
 
         switch (predicate) {
@@ -811,7 +820,7 @@ export function searchFilters(
       stattype(item: DimItem, predicate: string) {
         return (
           item.stats &&
-          _.any(item.stats, (s) =>
+          item.stats.some((s) =>
             Boolean(s.name.toLowerCase() === predicate && s.value && s.value > 0)
           )
         );
@@ -844,6 +853,11 @@ export function searchFilters(
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
+          this.perk(item, predicate)
+        );
+      },
+      perk(item: DimItem, predicate: string) {
+        return (
           (item.talentGrid &&
             item.talentGrid.nodes.some((node) => {
               // Fixed #798 by searching on the description too.
@@ -1055,25 +1069,28 @@ export function searchFilters(
       },
       inloadout(item: DimItem) {
         // Lazy load loadouts and re-trigger
-        if (!_loadoutItemIds && !_loadoutItemIdsPromise) {
-          const promise = (_loadoutItemIdsPromise = dimLoadoutService
-            .getLoadoutItemIds(searchConfig.destinyVersion)
-            .then((loadoutItemIds) => {
-              if (_loadoutItemIdsPromise === promise) {
-                _loadoutItemIds = loadoutItemIds;
-                _loadoutItemIdsPromise = undefined;
-                $rootScope.$apply(() => {
-                  $rootScope.$broadcast('dim-filter-requery-loadouts');
-                });
-              }
-            }));
-          return false;
+        if (!_loadoutItemIds) {
+          if (loadouts.length === 0) {
+            getLoadouts();
+            return false;
+          }
+          _loadoutItemIds = new Set<string>();
+          for (const loadout of loadouts) {
+            if (loadout.destinyVersion === searchConfig.destinyVersion) {
+              _.each(loadout.items, (items) => {
+                for (const item of items) {
+                  _loadoutItemIds!.add(item.id);
+                }
+              });
+            }
+          }
         }
 
         return _loadoutItemIds && _loadoutItemIds.has(item.id);
       },
       new(item: DimItem) {
-        return item.isNew;
+        // TODO: pass newItems into the filter object too?
+        return store.getState().inventory.newItems.has(item.id);
       },
       tag(item: DimItem) {
         return item.dimInfo.tag !== undefined;
@@ -1111,7 +1128,7 @@ export function searchFilters(
       hasShader(item: D2Item) {
         return (
           item.sockets &&
-          _.any(item.sockets.sockets, (socket) => {
+          item.sockets.sockets.some((socket) => {
             return (
               (socket.plug || false) &&
               socket.plug.plugItem.plug.plugCategoryHash === 2973005342 &&
@@ -1131,7 +1148,7 @@ export function searchFilters(
               ) &&
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
-                /(v400.weapon.mod_(guns|damage)|enhancements.)/
+                /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
               )
             );
           })
@@ -1159,7 +1176,13 @@ export function searchFilters(
       equipspeed: filterByStats('equipspeed'),
       mobility: filterByStats('mobility'),
       recovery: filterByStats('recovery'),
-      resilience: filterByStats('resilience')
+      resilience: filterByStats('resilience'),
+      blastradius: filterByStats('blastradius'),
+      drawtime: filterByStats('drawtime'),
+      inventorysize: filterByStats('inventorysize'),
+      recoildirection: filterByStats('recoildirection'),
+      velocity: filterByStats('velocity'),
+      zoom: filterByStats('zoom')
     }
   };
 }

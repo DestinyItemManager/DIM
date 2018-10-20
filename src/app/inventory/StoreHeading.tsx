@@ -16,6 +16,7 @@ import CharacterStats from './CharacterStats';
 import LoadoutPopup from '../loadout/LoadoutPopup';
 import ClickOutside from '../dim-ui/ClickOutside';
 import * as ReactDOM from 'react-dom';
+import { AppIcon, powerActionIcon, openDropdownIcon } from '../shell/icons';
 
 interface Props {
   store: DimStore;
@@ -46,20 +47,18 @@ export default class StoreHeading extends React.Component<Props, State> {
     let loadoutMenu;
     if (loadoutMenuOpen) {
       const menuContents = (
-        <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu}>
+        <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu} className="loadout-menu">
           <LoadoutPopup dimStore={store} onClick={this.clickOutsideLoadoutMenu} />
         </ClickOutside>
       );
 
-      loadoutMenu = loadoutMenuRef ? (
-        ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
-      ) : (
-        <div className="loadout-menu">{menuContents}</div>
-      );
+      loadoutMenu = loadoutMenuRef
+        ? ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
+        : menuContents;
     }
 
     const loadoutButton = (
-      <i className="loadout-button fa fa-chevron-circle-down" title={t('Loadouts.Loadouts')} />
+      <AppIcon className="loadout-button" icon={openDropdownIcon} title={t('Loadouts.Loadouts')} />
     );
     const background = (
       <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
@@ -141,7 +140,10 @@ export default class StoreHeading extends React.Component<Props, State> {
             <div className="character-text">
               <div className="top">
                 <div className="class">{store.className}</div>
-                <div className="powerLevel">{store.powerLevel}</div>
+                <div className="powerLevel">
+                  <AppIcon icon={powerActionIcon} />
+                  {store.powerLevel}
+                </div>
               </div>
               <div className="bottom">
                 <div className="race-gender">{store.genderRace}</div>

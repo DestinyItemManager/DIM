@@ -33,6 +33,9 @@
   width: 40px;
   height: 40px;
   border: 1px solid #222;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: 14px 10px;
   // width: calc(var(--item-size) * 15px);
   // height: calc(var(--item-size) * 15px);
   &:hover {
@@ -76,15 +79,4 @@
 }
 .close {
   z-index: 1;
-}
-
-.clear {
-  background-color: rgba(100, 100, 100, 0.6);
-  position: absolute;
-  right: 5px;
-  border: none;
-  color: white;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.6);
-  }
 }
