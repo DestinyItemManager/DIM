@@ -210,11 +210,6 @@ export interface D2Item extends DimItem {
   previewVendor?: number;
   dtrRating: D2RatingData | null;
   ammoType: DestinyAmmunitionType;
-  collectibleNodes: {
-    hash: number;
-    name: string;
-    icon: string;
-  }[];
   getStoresService(): D2StoreServiceType;
 }
 

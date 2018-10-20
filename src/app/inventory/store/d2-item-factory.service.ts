@@ -353,8 +353,7 @@ export function makeItem(
     objectives: null, // filled in later
     dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
-    ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    collectibleNodes: []
+    ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None
   });
 
   // *able
@@ -538,22 +537,6 @@ export function makeItem(
   // Mark masterworks with a gold border
   if (createdItem.masterwork) {
     createdItem.complete = true;
-  }
-
-  if (itemDef.collectibleHash) {
-    const collectibleDef = defs.Collectible.get(itemDef.collectibleHash);
-    if (collectibleDef) {
-      createdItem.collectibleNodes = collectibleDef.presentationInfo.parentPresentationNodeHashes
-        .map((h) => {
-          const node = defs.PresentationNode.get(h);
-          return {
-            hash: node.hash,
-            name: node.displayProperties.name,
-            icon: node.displayProperties.icon
-          };
-        })
-        .filter((n) => !n.icon);
-    }
   }
 
   createdItem.index = createItemIndex(createdItem);

@@ -95,11 +95,6 @@
           <span>{{reward.item.displayProperties.name}}<span ng-if="reward.quantity > 1"> +{{reward.quantity}}</span></span>
         </div>
       </div>
-      <div ng-if="vm.item.collectibleNodes.length" class="item-details">
-        <div class="presentation-node" ng-repeat="node in vm.item.collectibleNodes">
-          <a ng-click="vm.visitCollection($event, node.hash)">{{node.name}}</a>
-        </div>
-      </div>
       <div ng-if="vm.featureFlags.debugMode" class="item-details">
         <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump" />
       </div>
