@@ -99,7 +99,8 @@ class ManifestService {
 
     this.loaded = false;
 
-    this.manifestPromise = (async () => {
+    // This is not an arrow function because of https://bugs.webkit.org/show_bug.cgi?id=166879
+    async function doGetManifest() {
       try {
         const [SQLLib, typedArray] = await Promise.all([
           requireSqlLib(), // load in the sql.js library
@@ -137,7 +138,9 @@ class ManifestService {
         reportException('manifest load', e);
         throw new Error(message);
       }
-    })();
+    }
+
+    this.manifestPromise = doGetManifest();
 
     return this.manifestPromise;
   }
@@ -195,8 +198,9 @@ class ManifestService {
     const arraybuffer = await unzipManifest(body);
     this.statusText = `${t('Manifest.Save')}...`;
     const typedArray = new Uint8Array(arraybuffer);
-    // We intentionally don't wait on this promise
-    (async () => {
+
+    // This is not an arrow function because of https://bugs.webkit.org/show_bug.cgi?id=166879
+    async function saveManifestToIndexedDB() {
       try {
         await idbKeyval.set(this.idbKey, typedArray);
         console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
@@ -212,7 +216,10 @@ class ManifestService {
           0
         );
       }
-    })();
+    }
+    // We intentionally don't wait on this promise
+    saveManifestToIndexedDB();
+
     this.newManifest$.next();
     return typedArray;
   }
