@@ -516,7 +516,7 @@
     "UpStack": "Aumento fino al prossimo stack pieno"
   },
   "MovePopup": {
-    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
+    "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",

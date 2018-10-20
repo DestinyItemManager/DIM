@@ -516,7 +516,7 @@
     "UpStack": "Incrementar al siguiente montón lleno"
   },
   "MovePopup": {
-    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
+    "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir Equitativamente",
     "Equip": "Equipa",
