@@ -148,7 +148,7 @@ class SearchFilter extends React.Component<Props, State> {
             {showSelect ? (
               <select className="bulk-tag-select" onChange={this.bulkTag}>
                 {bulkItemTags.map((tag) => (
-                  <option key={tag.type} value={tag.type}>
+                  <option key={tag.type || 'default'} value={tag.type}>
                     {t(tag.label)}
                   </option>
                 ))}
@@ -269,6 +269,11 @@ class SearchFilter extends React.Component<Props, State> {
             t(state ? 'Filter.LockAllFailed' : 'Filter.UnlockAllFailed'),
             e.message
           );
+        } finally {
+          // Touch the stores service to update state
+          if (lockables.length) {
+            lockables[0].getStoresService().touch();
+          }
         }
       } else {
         // Bulk tagging
