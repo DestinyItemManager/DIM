@@ -38,7 +38,6 @@ export default function Catalysts({
                   buckets,
                   catalyst.itemHash,
                   catalyst.objectives,
-                  catalyst.canInsert,
                   catalyst.enableFailReasons,
                   catalyst.attachedItemHash
                 )}

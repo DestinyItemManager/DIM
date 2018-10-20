@@ -80,7 +80,6 @@ export class VendorItem {
     buckets: InventoryBuckets,
     itemHash: number,
     objectives: DestinyObjectiveProgress[],
-    canInsert: boolean,
     enableFailReasons: string[],
     attachedItemHash?: number
   ): VendorItem {
@@ -114,8 +113,7 @@ export class VendorItem {
           },
           privacy: 2
         }
-      },
-      canInsert
+      }
     );
 
     if (attachedItemHash) {
