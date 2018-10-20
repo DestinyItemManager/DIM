@@ -12,11 +12,12 @@ import {
   DestinyCollectibleState,
   DestinyCollectibleDefinition
 } from 'bungie-api-ts/destiny2';
-import InventoryItem from '../inventory/InventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import dialogTemplate from './collectible-popup.html';
 import checkMark from '../../images/check.svg';
+import classNames from 'classnames';
 import './Collectible.scss';
+import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 
 interface Props {
   collectibleHash: number;
@@ -76,15 +77,19 @@ export default class Collectible extends React.Component<Props> {
     }
 
     return (
-      <div className="vendor-item">
-        {!acquired && <div className="locked-overlay" />}
+      <div
+        className={classNames('vendor-item', {
+          owned,
+          unavailable: !acquired
+        })}
+      >
         {owned && <img className="owned-icon" src={checkMark} />}
         <ItemPopupTrigger
           item={item}
           template={dialogTemplate}
           extraData={{ collectible: collectibleDef, owned, checkMark, acquired }}
         >
-          <InventoryItem item={item} />
+          <ConnectedInventoryItem item={item} allowFilter={true} />
         </ItemPopupTrigger>
       </div>
     );

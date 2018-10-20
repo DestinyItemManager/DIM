@@ -119,7 +119,7 @@ class Collections extends React.Component<Props, State> {
   }
 
   render() {
-    const { buckets, ownedItemHashes, presentationNodeHash } = this.props;
+    const { buckets, ownedItemHashes, transition } = this.props;
     const { defs, profileResponse, nodePath } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
@@ -139,6 +139,8 @@ class Collections extends React.Component<Props, State> {
       });
     });
 
+    const presentationNodeHash = transition && transition.params().presentationNodeHash;
+
     // TODO: how to search and find an item within all nodes?
     let fullNodePath = nodePath;
     if (nodePath.length === 0 && presentationNodeHash) {
@@ -153,13 +155,9 @@ class Collections extends React.Component<Props, State> {
       fullNodePath.unshift(3790247699);
     }
 
-    console.log(nodePath);
-
     // TODO: make a thing for root-presentation-node
 
     const collectionCounts = countCollectibles(defs, 3790247699, profileResponse);
-
-    console.log(collectionCounts);
 
     return (
       <div className="vendor d2-vendors dim-page">
@@ -170,28 +168,31 @@ class Collections extends React.Component<Props, State> {
           <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
-          <PresentationNode
-            collectionCounts={collectionCounts}
-            presentationNodeHash={3790247699}
-            defs={defs}
-            profileResponse={profileResponse}
-            buckets={buckets}
-            ownedItemHashes={ownedItemHashes}
-            path={fullNodePath}
-            onNodePathSelected={this.onNodePathSelected}
-            parents={[]}
-          />
-        </ErrorBoundary>
-        <ErrorBoundary name="PlugSets">
-          {Array.from(plugSetHashes).map((plugSetHash) => (
-            <PlugSet
-              key={plugSetHash}
+          <div className="vendor-row">
+            <h3 className="category-title">{t('Vendors.Collections')}</h3>
+            <PresentationNode
+              collectionCounts={collectionCounts}
+              presentationNodeHash={3790247699}
               defs={defs}
+              profileResponse={profileResponse}
               buckets={buckets}
-              plugSetHash={Number(plugSetHash)}
-              items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
+              ownedItemHashes={ownedItemHashes}
+              path={fullNodePath}
+              onNodePathSelected={this.onNodePathSelected}
+              parents={[]}
             />
-          ))}
+            {Array.from(plugSetHashes).map((plugSetHash) => (
+              <PlugSet
+                key={plugSetHash}
+                defs={defs}
+                buckets={buckets}
+                plugSetHash={Number(plugSetHash)}
+                items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
+                path={fullNodePath}
+                onNodePathSelected={this.onNodePathSelected}
+              />
+            ))}
+          </div>
         </ErrorBoundary>
         <div className="collections-partners">
           <a

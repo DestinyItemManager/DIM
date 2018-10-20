@@ -2,7 +2,11 @@ import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './PresentationNode.scss';
 import Collectible, { getCollectibleState } from './Collectible';
-import { DestinyProfileResponse, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import {
+  DestinyProfileResponse,
+  DestinyCollectibleState,
+  DestinyPresentationScreenStyle
+} from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
@@ -28,6 +32,16 @@ interface Props {
 const rootNodes = [3790247699];
 
 export default class PresentationNode extends React.Component<Props> {
+  private headerRef = React.createRef<HTMLDivElement>();
+
+  componentDidUpdate() {
+    if (
+      this.headerRef.current &&
+      this.props.path[this.props.path.length - 1] === this.props.presentationNodeHash
+    ) {
+      this.headerRef.current!.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
   render() {
     const {
       presentationNodeHash,
@@ -48,7 +62,6 @@ export default class PresentationNode extends React.Component<Props> {
         </div>
       );
     }
-    console.log(presentationNodeDef);
 
     // TODO: class based on displayStyle
     const { visible, acquired } = collectionCounts[presentationNodeHash];
@@ -57,15 +70,21 @@ export default class PresentationNode extends React.Component<Props> {
       return null;
     }
 
-    // TODO: look at how companion and in-game shows it!
-    const childrenExpanded =
-      path.includes(presentationNodeHash) || rootNodes.includes(presentationNodeHash);
-
     const parents = [...this.props.parents, presentationNodeHash];
 
-    // console.log({ childrenExpanded, path, presentationNodeHash });
+    const defaultExpanded =
+      parents.length >=
+      (parents.some(
+        (p) =>
+          defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
+      )
+        ? 5
+        : 4);
 
-    // TODO: count up owned items and total items at the root!
+    const childrenExpanded =
+      defaultExpanded ||
+      path.includes(presentationNodeHash) ||
+      rootNodes.includes(presentationNodeHash);
 
     // TODO: hey, the image for the heavy/special/primary categories is the icon!
 
@@ -84,31 +103,52 @@ export default class PresentationNode extends React.Component<Props> {
       2: 'Badge'
     };
 
-    // TODO: each child node gets a path separate from the selected path?
+    const nodeStyle = {
+      0: 'Default',
+      1: 'Category',
+      2: 'Collectibles',
+      3: 'Records'
+    };
+
+    const title = (
+      <span className="node-name">
+        {presentationNodeDef.displayProperties.icon && (
+          <BungieImage src={presentationNodeDef.displayProperties.icon} />
+        )}{' '}
+        {presentationNodeDef.displayProperties.name}
+      </span>
+    );
 
     return (
       <div
         className={classNames(
           'presentation-node',
           `display-style-${displayStyle[presentationNodeDef.displayStyle]}`,
-          `screen-style-${screenStyle[presentationNodeDef.screenStyle]}`
+          `screen-style-${screenStyle[presentationNodeDef.screenStyle]}`,
+          `node-style-${nodeStyle[presentationNodeDef.nodeType]}`,
+          `level-${parents.length}`
         )}
       >
         {!rootNodes.includes(presentationNodeHash) && (
-          <div className="title" onClick={this.expandChildren}>
-            <span className="collapse-handle">
-              <i
-                className={classNames(
-                  'fa collapse',
-                  childrenExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'
-                )}
-              />{' '}
-              {presentationNodeDef.displayProperties.icon && (
-                <BungieImage src={presentationNodeDef.displayProperties.icon} />
-              )}{' '}
-              {presentationNodeDef.displayProperties.name}
-            </span>
-            <span>
+          <div
+            className={defaultExpanded ? 'leaf-node' : 'title'}
+            onClick={this.expandChildren}
+            ref={this.headerRef}
+          >
+            {defaultExpanded ? (
+              title
+            ) : (
+              <span className="collapse-handle">
+                <i
+                  className={classNames(
+                    'fa collapse',
+                    childrenExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'
+                  )}
+                />{' '}
+                {title}
+              </span>
+            )}
+            <span className="node-progress">
               {acquired} / {visible}
             </span>
           </div>

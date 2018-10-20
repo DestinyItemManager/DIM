@@ -26,7 +26,7 @@ export default function Catalysts({
     <div className="vendor-char-items">
       <div className="vendor-row">
         <h3 className="category-title">
-          Catalysts
+          {t('Vendors.Catalysts')}
           <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
         </h3>
         <div className="vendor-items">
