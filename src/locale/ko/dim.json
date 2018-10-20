@@ -516,7 +516,7 @@
     "UpStack": "다음 최대 중첩량으로 증가시키기"
   },
   "MovePopup": {
-    "CantPullFromPostmaster": "이 아이템을 다시 받기 위해서는 타워로 돌아가야 합니다",
+    "CantPullFromPostmaster": "이 아이템을 회수하려면 탑으로 가야합니다.",
     "Consolidate": "모으기",
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
