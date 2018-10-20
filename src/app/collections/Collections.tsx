@@ -16,7 +16,7 @@ import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../ngimport-more';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
-import PresentationNode from './PresentationNode';
+import PresentationNode, { countCollectibles } from './PresentationNode';
 import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { RootState } from '../store/reducers';
@@ -157,6 +157,10 @@ class Collections extends React.Component<Props, State> {
 
     // TODO: make a thing for root-presentation-node
 
+    const collectionCounts = countCollectibles(defs, 3790247699, profileResponse);
+
+    console.log(collectionCounts);
+
     return (
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Catalysts">
@@ -167,6 +171,7 @@ class Collections extends React.Component<Props, State> {
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
           <PresentationNode
+            collectionCounts={collectionCounts}
             presentationNodeHash={3790247699}
             defs={defs}
             profileResponse={profileResponse}

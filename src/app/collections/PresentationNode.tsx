@@ -16,6 +16,12 @@ interface Props {
   ownedItemHashes: Set<number>;
   path: number[];
   parents: number[];
+  collectionCounts: {
+    [nodeHash: number]: {
+      acquired: number;
+      visible: number;
+    };
+  };
   onNodePathSelected(nodePath: number[]);
 }
 
@@ -30,6 +36,7 @@ export default class PresentationNode extends React.Component<Props> {
       buckets,
       ownedItemHashes,
       path,
+      collectionCounts,
       onNodePathSelected
     } = this.props;
     const presentationNodeDef = defs.PresentationNode.get(presentationNodeHash);
@@ -44,24 +51,9 @@ export default class PresentationNode extends React.Component<Props> {
     console.log(presentationNodeDef);
 
     // TODO: class based on displayStyle
-    const visibleCollectibles = count(
-      presentationNodeDef.children.collectibles,
-      (c) =>
-        !(
-          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
-          DestinyCollectibleState.Invisible
-        )
-    );
-    const acquiredCollectibles = count(
-      presentationNodeDef.children.collectibles,
-      (c) =>
-        !(
-          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
-          DestinyCollectibleState.NotAcquired
-        )
-    );
+    const { visible, acquired } = collectionCounts[presentationNodeHash];
 
-    if (!visibleCollectibles && !presentationNodeDef.children.presentationNodes.length) {
+    if (!visible && !acquired) {
       return null;
     }
 
@@ -117,7 +109,7 @@ export default class PresentationNode extends React.Component<Props> {
               {presentationNodeDef.displayProperties.name}
             </span>
             <span>
-              {acquiredCollectibles} / {visibleCollectibles}
+              {acquired} / {visible}
             </span>
           </div>
         )}
@@ -133,10 +125,11 @@ export default class PresentationNode extends React.Component<Props> {
               path={path}
               parents={parents}
               onNodePathSelected={onNodePathSelected}
+              collectionCounts={collectionCounts}
             />
           ))}
         {childrenExpanded &&
-          visibleCollectibles > 0 && (
+          visible > 0 && (
             <div className="collectibles">
               {presentationNodeDef.children.collectibles.map((collectible) => (
                 <Collectible
@@ -163,19 +156,20 @@ export default class PresentationNode extends React.Component<Props> {
   };
 }
 
-/*
-function countCollectibles(presentationNodeDef, profileResponse) {
-
-}
-*/
-
-function countCollectibles(
+/**
+ * Recursively count how many items are in the tree, and how many we have. This computes a map
+ * indexed by node hash for the entire tree.
+ */
+export function countCollectibles(
   defs: D2ManifestDefinitions,
   node: number,
   profileResponse: DestinyProfileResponse
 ) {
   const presentationNodeDef = defs.PresentationNode.get(node);
-  if (presentationNodeDef.children.collectibles) {
+  if (
+    presentationNodeDef.children.collectibles &&
+    presentationNodeDef.children.collectibles.length
+  ) {
     // TODO: class based on displayStyle
     const visibleCollectibles = count(
       presentationNodeDef.children.collectibles,
@@ -195,7 +189,34 @@ function countCollectibles(
     );
 
     // add an entry for self and return
+    return {
+      [node]: {
+        acquired: acquiredCollectibles,
+        visible: visibleCollectibles
+      }
+    };
   } else {
     // call for all children, then add 'em up
+    const ret = {};
+    let acquired = 0;
+    let visible = 0;
+    for (const presentationNode of presentationNodeDef.children.presentationNodes) {
+      const subnode = countCollectibles(
+        defs,
+        presentationNode.presentationNodeHash,
+        profileResponse
+      );
+      const subnodeValue = subnode[presentationNode.presentationNodeHash];
+      acquired += subnodeValue.acquired;
+      visible += subnodeValue.visible;
+      Object.assign(ret, subnode);
+    }
+    Object.assign(ret, {
+      [node]: {
+        acquired,
+        visible
+      }
+    });
+    return ret;
   }
 }
