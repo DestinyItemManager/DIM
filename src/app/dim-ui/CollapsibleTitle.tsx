@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { Dispatch } from 'redux';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
+import './CollapsibleTitle.scss';
 
 interface ProvidedProps {
   sectionId: string;

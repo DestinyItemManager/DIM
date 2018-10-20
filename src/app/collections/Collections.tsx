@@ -2,11 +2,10 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getKiosks } from '../bungie-api/destiny2-api';
+import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
-import { fetchRatingsForKiosks } from '../d2-vendors/vendor-ratings';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
 import PlugSet from './PlugSet';
@@ -17,19 +16,51 @@ import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../ngimport-more';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
-import { refresh$ } from '../shell/refresh';
-import { Subscriptions } from '../rx-utils';
+import PresentationNode, { countCollectibles } from './PresentationNode';
+import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { getBuckets } from '../destiny2/d2-buckets.service';
+import { RootState } from '../store/reducers';
+import { createSelector } from 'reselect';
+import { storesSelector } from '../inventory/reducer';
+import { Subscriptions } from '../rx-utils';
+import { refresh$ } from '../shell/refresh';
 
-interface Props {
+interface ProvidedProps extends UIViewInjectedProps {
   account: DestinyAccount;
+}
+
+interface StoreProps {
+  buckets?: InventoryBuckets;
+  ownedItemHashes: Set<number>;
+  presentationNodeHash?: number;
+}
+
+type Props = ProvidedProps & StoreProps;
+
+const ownedItemHashesSelector = createSelector(storesSelector, (stores) => {
+  const ownedItemHashes = new Set<number>();
+  if (stores) {
+    for (const store of stores) {
+      for (const item of store.items) {
+        ownedItemHashes.add(item.hash);
+      }
+    }
+  }
+  return ownedItemHashes;
+});
+
+function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps {
+  return {
+    buckets: state.inventory.buckets,
+    ownedItemHashes: ownedItemHashesSelector(state),
+    presentationNodeHash: ownProps.transition && ownProps.transition.params().presentationNodeHash
+  };
 }
 
 interface State {
   defs?: D2ManifestDefinitions;
-  buckets?: InventoryBuckets;
   profileResponse?: DestinyProfileResponse;
+  nodePath: number[];
   stores?: DimStore[];
   ownedItemHashes?: Set<number>;
 }
@@ -37,12 +68,12 @@ interface State {
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-export default class Collections extends React.Component<Props & UIViewInjectedProps, State> {
+class Collections extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
 
   constructor(props: Props) {
     super(props);
-    this.state = {};
+    this.state = { nodePath: [] };
   }
 
   async loadCollections() {
@@ -51,12 +82,14 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
-    const buckets = await getBuckets();
 
-    const profileResponse = await getKiosks(this.props.account);
-    this.setState({ profileResponse, defs, buckets });
+    const profileResponse = await getCollections(this.props.account);
 
-    await fetchRatingsForKiosks(defs, profileResponse);
+    // TODO: put collectibles in redux
+    // TODO: convert collectibles into DimItems
+    // TODO: bring back ratings for collections
+
+    this.setState({ profileResponse, defs });
   }
 
   componentDidMount() {
@@ -86,7 +119,8 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
   }
 
   render() {
-    const { defs, buckets, profileResponse } = this.state;
+    const { buckets, ownedItemHashes, transition } = this.props;
+    const { defs, profileResponse, nodePath } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
       return (
@@ -105,24 +139,60 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
       });
     });
 
+    const presentationNodeHash = transition && transition.params().presentationNodeHash;
+
+    // TODO: how to search and find an item within all nodes?
+    let fullNodePath = nodePath;
+    if (nodePath.length === 0 && presentationNodeHash) {
+      let currentHash = presentationNodeHash;
+      fullNodePath = [currentHash];
+      let node = defs.PresentationNode.get(currentHash);
+      while (node.parentNodeHashes.length) {
+        nodePath.unshift(node.parentNodeHashes[0]);
+        currentHash = node.parentNodeHashes[0];
+        node = defs.PresentationNode.get(currentHash);
+      }
+      fullNodePath.unshift(3790247699);
+    }
+
+    // TODO: make a thing for root-presentation-node
+
+    const collectionCounts = countCollectibles(defs, 3790247699, profileResponse);
+
     return (
       <div className="vendor d2-vendors dim-page">
-        <ErrorBoundary name="Ornaments">
-          <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
-        </ErrorBoundary>
         <ErrorBoundary name="Catalysts">
           <Catalysts defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
-        <ErrorBoundary name="PlugSets">
-          {Array.from(plugSetHashes).map((plugSetHash) => (
-            <PlugSet
-              key={plugSetHash}
+        <ErrorBoundary name="Ornaments">
+          <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
+        </ErrorBoundary>
+        <ErrorBoundary name="Collections">
+          <div className="vendor-row">
+            <h3 className="category-title">{t('Vendors.Collections')}</h3>
+            <PresentationNode
+              collectionCounts={collectionCounts}
+              presentationNodeHash={3790247699}
               defs={defs}
+              profileResponse={profileResponse}
               buckets={buckets}
-              plugSetHash={Number(plugSetHash)}
-              items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
+              ownedItemHashes={ownedItemHashes}
+              path={fullNodePath}
+              onNodePathSelected={this.onNodePathSelected}
+              parents={[]}
             />
-          ))}
+            {Array.from(plugSetHashes).map((plugSetHash) => (
+              <PlugSet
+                key={plugSetHash}
+                defs={defs}
+                buckets={buckets}
+                plugSetHash={Number(plugSetHash)}
+                items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
+                path={fullNodePath}
+                onNodePathSelected={this.onNodePathSelected}
+              />
+            ))}
+          </div>
         </ErrorBoundary>
         <div className="collections-partners">
           <a
@@ -145,6 +215,13 @@ export default class Collections extends React.Component<Props & UIViewInjectedP
       </div>
     );
   }
+
+  // TODO: onNodeDeselected!
+  private onNodePathSelected = (nodePath: number[]) => {
+    this.setState({
+      nodePath
+    });
+  };
 }
 
 function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
@@ -154,3 +231,5 @@ function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: n
     )
   );
 }
+
+export default connect<StoreProps>(mapStateToProps)(Collections);

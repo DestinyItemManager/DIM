@@ -24,7 +24,9 @@ import {
   DestinyPlaceDefinition,
   DestinyVendorGroupDefinition,
   DestinyActivityModeDefinition,
-  DestinyPlugSetDefinition
+  DestinyPlugSetDefinition,
+  DestinyCollectibleDefinition,
+  DestinyPresentationNodeDefinition
 } from 'bungie-api-ts/destiny2';
 import { $q } from 'ngimport';
 import * as _ from 'lodash';
@@ -48,7 +50,9 @@ const lazyTables = [
   'Destination',
   'Place',
   'VendorGroup',
-  'PlugSet'
+  'PlugSet',
+  'Collectible',
+  'PresentationNode'
 ];
 
 const eagerTables = [
@@ -84,6 +88,8 @@ export interface D2ManifestDefinitions {
   Place: LazyDefinition<DestinyPlaceDefinition>;
   VendorGroup: LazyDefinition<DestinyVendorGroupDefinition>;
   PlugSet: LazyDefinition<DestinyPlugSetDefinition>;
+  Collectible: LazyDefinition<DestinyCollectibleDefinition>;
+  PresentationNode: LazyDefinition<DestinyPresentationNodeDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };

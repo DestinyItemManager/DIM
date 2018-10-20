@@ -14,7 +14,7 @@ interface Props {
   item: DimItem;
   children?: React.ReactNode;
   template?: string;
-  controller?(): void;
+  extraData?: {};
 }
 
 /**
@@ -44,7 +44,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private clicked = (e) => {
     e.stopPropagation();
 
-    const { item, template, controller } = this.props;
+    const { item, template, extraData } = this.props;
 
     NewItemsService.dropNewItem(item);
 
@@ -70,6 +70,9 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         'ngInject';
         this.item = item;
         this.store = item.getStoresService().getStore(this.item.owner);
+        if (extraData) {
+          Object.assign(this, extraData);
+        }
       }
 
       this.dialogResult = ngDialog.open({
@@ -80,7 +83,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         showClose: false,
         data: this.ref.current as {},
         controllerAs: 'vm',
-        controller: controller || dialogController,
+        controller: dialogController,
         // Setting these focus options prevents the page from
         // jumping as dialogs are shown/hidden
         trapFocus: false,
