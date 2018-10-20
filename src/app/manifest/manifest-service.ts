@@ -91,7 +91,6 @@ class ManifestService {
     this.setState({ statusText });
   }
 
-  // TODO: redo all this with rxjs
   getManifest(): Promise<ManifestDB> {
     if (this.manifestPromise) {
       return this.manifestPromise;
@@ -99,48 +98,7 @@ class ManifestService {
 
     this.loaded = false;
 
-    // This is not an arrow function because of https://bugs.webkit.org/show_bug.cgi?id=166879
-    async function doGetManifest() {
-      try {
-        const [SQLLib, typedArray] = await Promise.all([
-          requireSqlLib(), // load in the sql.js library
-          this.loadManifest()
-        ]);
-        this.statusText = `${t('Manifest.Build')}...`;
-        const db = new SQLLib.Database(typedArray);
-        // do a small request, just to test it out
-        this.getAllRecords(db, 'DestinyRaceDefinition');
-        return db;
-      } catch (e) {
-        let message = e.message || e;
-        const statusText = t('Manifest.Error', { error: message });
-
-        if (e instanceof TypeError || e.status === -1) {
-          message = navigator.onLine
-            ? t('BungieService.NotConnectedOrBlocked')
-            : t('BungieService.NotConnected');
-          // tslint:disable-next-line:space-in-parens
-        } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-          message = t('BungieService.Difficulties');
-        } else if (e.status < 200 || e.status >= 400) {
-          message = t('BungieService.NetworkError', {
-            status: e.status,
-            statusText: e.statusText
-          });
-        } else {
-          // Something may be wrong with the manifest
-          this.deleteManifestFile();
-        }
-
-        this.manifestPromise = null;
-        this.setState({ error: e, statusText });
-        console.error('Manifest loading error', { error: e }, e);
-        reportException('manifest load', e);
-        throw new Error(message);
-      }
-    }
-
-    this.manifestPromise = doGetManifest();
+    this.manifestPromise = this.doGetManifest();
 
     return this.manifestPromise;
   }
@@ -168,6 +126,47 @@ class ManifestService {
     return result;
   }
 
+  // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
+  private async doGetManifest() {
+    try {
+      const [SQLLib, typedArray] = await Promise.all([
+        requireSqlLib(), // load in the sql.js library
+        this.loadManifest()
+      ]);
+      this.statusText = `${t('Manifest.Build')}...`;
+      const db = new SQLLib.Database(typedArray);
+      // do a small request, just to test it out
+      this.getAllRecords(db, 'DestinyRaceDefinition');
+      return db;
+    } catch (e) {
+      let message = e.message || e;
+      const statusText = t('Manifest.Error', { error: message });
+
+      if (e instanceof TypeError || e.status === -1) {
+        message = navigator.onLine
+          ? t('BungieService.NotConnectedOrBlocked')
+          : t('BungieService.NotConnected');
+        // tslint:disable-next-line:space-in-parens
+      } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
+        message = t('BungieService.Difficulties');
+      } else if (e.status < 200 || e.status >= 400) {
+        message = t('BungieService.NetworkError', {
+          status: e.status,
+          statusText: e.statusText
+        });
+      } else {
+        // Something may be wrong with the manifest
+        this.deleteManifestFile();
+      }
+
+      this.manifestPromise = null;
+      this.setState({ error: e, statusText });
+      console.error('Manifest loading error', { error: e }, e);
+      reportException('manifest load', e);
+      throw new Error(message);
+    }
+  }
+
   private async loadManifest(): Promise<Uint8Array> {
     const data = await this.getManifestApi();
     await settingsReady; // wait for settings to be ready
@@ -189,7 +188,7 @@ class ManifestService {
   /**
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
-  private async loadManifestRemote(version, path): Promise<Uint8Array> {
+  private async loadManifestRemote(version: string, path: string): Promise<Uint8Array> {
     this.statusText = `${t('Manifest.Download')}...`;
 
     const response = await fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`);
@@ -199,29 +198,30 @@ class ManifestService {
     this.statusText = `${t('Manifest.Save')}...`;
     const typedArray = new Uint8Array(arraybuffer);
 
-    // This is not an arrow function because of https://bugs.webkit.org/show_bug.cgi?id=166879
-    async function saveManifestToIndexedDB() {
-      try {
-        await idbKeyval.set(this.idbKey, typedArray);
-        console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
-        localStorage.setItem(this.localStorageKey, version);
-      } catch (e) {
-        console.error('Error saving manifest file', e);
-        toaster.pop(
-          {
-            title: t('Help.NoStorage'),
-            body: t('Help.NoStorageMessage'),
-            type: 'error'
-          },
-          0
-        );
-      }
-    }
     // We intentionally don't wait on this promise
-    saveManifestToIndexedDB();
+    this.saveManifestToIndexedDB(typedArray, version);
 
     this.newManifest$.next();
     return typedArray;
+  }
+
+  // This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
+  private async saveManifestToIndexedDB(typedArray: Uint8Array, version: string) {
+    try {
+      await idbKeyval.set(this.idbKey, typedArray);
+      console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
+      localStorage.setItem(this.localStorageKey, version);
+    } catch (e) {
+      console.error('Error saving manifest file', e);
+      toaster.pop(
+        {
+          title: t('Help.NoStorage'),
+          body: t('Help.NoStorageMessage'),
+          type: 'error'
+        },
+        0
+      );
+    }
   }
 
   private deleteManifestFile() {
@@ -233,7 +233,7 @@ class ManifestService {
    * Returns a promise for the cached manifest of the specified
    * version as a Uint8Array, or rejects.
    */
-  private async loadManifestFromCache(version): Promise<Uint8Array> {
+  private async loadManifestFromCache(version: string): Promise<Uint8Array> {
     if (alwaysLoadRemote) {
       throw new Error('Testing - always load remote');
     }
