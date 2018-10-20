@@ -41,7 +41,6 @@ export default function Ornaments({
                   buckets,
                   ornament.itemHash,
                   ornament.objectives,
-                  ornament.canInsert,
                   ornament.enableFailReasons
                 )}
                 owned={false}
