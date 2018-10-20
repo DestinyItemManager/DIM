@@ -7,6 +7,7 @@ import VendorItemComponent from '../d2-vendors/VendorItemComponent';
 import { VendorItem } from '../d2-vendors/vendor-item';
 import { t } from 'i18next';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 
 /**
  * A single plug set.
@@ -25,27 +26,29 @@ export default function Ornaments({
   return (
     <div className="vendor-char-items">
       <div className="vendor-row">
-        <h3 className="category-title">
-          {defs.Vendor.get(2107783226).displayProperties.name}
+        <CollapsibleTitle
+          title={defs.Vendor.get(2107783226).displayProperties.name}
+          sectionId="ornaments"
+        >
           <div className="ornaments-disclaimer">{t('Vendors.OrnamentsDisclaimer')}</div>
-        </h3>
-        <div className="vendor-items">
-          {ornaments.map((ornament) => (
-            <VendorItemComponent
-              key={ornament.itemHash}
-              defs={defs}
-              item={VendorItem.forOrnament(
-                defs,
-                buckets,
-                ornament.itemHash,
-                ornament.objectives,
-                ornament.canInsert,
-                ornament.enableFailReasons
-              )}
-              owned={false}
-            />
-          ))}
-        </div>
+          <div className="vendor-items">
+            {ornaments.map((ornament) => (
+              <VendorItemComponent
+                key={ornament.itemHash}
+                defs={defs}
+                item={VendorItem.forOrnament(
+                  defs,
+                  buckets,
+                  ornament.itemHash,
+                  ornament.objectives,
+                  ornament.canInsert,
+                  ornament.enableFailReasons
+                )}
+                owned={false}
+              />
+            ))}
+          </div>
+        </CollapsibleTitle>
       </div>
     </div>
   );

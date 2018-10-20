@@ -11,6 +11,7 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
+import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 
 interface Props {
   presentationNodeHash: number;
@@ -139,12 +140,7 @@ export default class PresentationNode extends React.Component<Props> {
               title
             ) : (
               <span className="collapse-handle">
-                <i
-                  className={classNames(
-                    'fa collapse',
-                    childrenExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'
-                  )}
-                />{' '}
+                <AppIcon className="collapse" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
                 {title}
               </span>
             )}

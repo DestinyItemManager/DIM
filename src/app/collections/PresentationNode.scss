@@ -18,12 +18,10 @@
   }
 
   .node-name {
-    display: flex;
-    align-items: center;
     img {
       height: 24px;
       width: 24px;
-      margin-right: 4px;
+      vertical-align: middle;
     }
   }
 }
