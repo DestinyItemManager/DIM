@@ -13,7 +13,7 @@ export default class ItemTagSelector extends React.Component<Props> {
 
     return (
       <select
-        className="item-tag"
+        className="item-tag-selector"
         onChange={(e) => onTagUpdated(e.currentTarget.value as TagValue)}
         value={tag}
       >

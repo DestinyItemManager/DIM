@@ -17,6 +17,7 @@ import { TalentGridComponent } from '../move-popup/talent-grid.component';
 import { getColor } from '../shell/dimAngularFilters.filter';
 import { IScope } from 'angular';
 import { AppIcon, starIcon, searchIcon } from '../shell/icons';
+import { TagValue } from '../inventory/dim-item-info';
 
 // TODO: There's far too much state here.
 // TODO: maybe have a holder/state component and a connected display component
@@ -93,7 +94,6 @@ export default class Compare extends React.Component<{}, State> {
 
     // TODO: memoizeone? reselect?
     // TODO: CSS Grid? Subcomponents?
-    // TODO: tags/ratings on items - do I need a connected item here?
     // TODO: animate show/hide
 
     const firstComparison = comparisons[0];
@@ -104,8 +104,10 @@ export default class Compare extends React.Component<{}, State> {
 
     const statBuckets = {};
 
+    // TODO: Drive the list of stats from this
     const bucketStat = (stat: { statHash: number; value?: number }) => {
       if (stat && stat.value) {
+        // TODO: Track min/max here
         (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
       }
     };
@@ -201,6 +203,7 @@ export default class Compare extends React.Component<{}, State> {
             <CompareItem
               item={item}
               key={item.id}
+              highlight={highlight}
               statRanges={statRanges}
               itemClick={this.itemClick}
               remove={this.remove}
@@ -380,13 +383,24 @@ function CompareItem({
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
 }) {
+  function onTagUpdated(tag?: TagValue) {
+    const info = item.dimInfo;
+    if (info) {
+      if (tag) {
+        info.tag = tag;
+      } else {
+        delete info.tag;
+      }
+      info.save!();
+    }
+  }
+
   return (
     <div className="compare-item">
       <div className="close" onClick={() => remove(item)} />
-      <ItemTagSelector
-        tag={item.dimInfo.tag}
-        onTagUpdated={() => console.error('NOT IMPLEMENTED')}
-      />
+      <div>
+        <ItemTagSelector tag={item.dimInfo.tag} onTagUpdated={onTagUpdated} />
+      </div>
       <div className="item-name" onClick={() => itemClick(item)}>
         {item.name} <AppIcon icon={searchIcon} />
       </div>

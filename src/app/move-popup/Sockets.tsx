@@ -68,16 +68,18 @@ export default class Sockets extends React.Component<Props, State> {
                   categoryStyle(category.category.categoryStyle)
                 )}
               >
-                <div className="item-socket-category-name">
-                  <div>{category.category.displayProperties.name}</div>
-                  {anyBestRatedUnselected(category) && (
-                    <div className="best-rated-key">
-                      <div className="tip-text">
-                        <BestRatedIcon /> {t('DtrReview.BestRatedKey')}
+                {!hideMods && (
+                  <div className="item-socket-category-name">
+                    <div>{category.category.displayProperties.name}</div>
+                    {anyBestRatedUnselected(category) && (
+                      <div className="best-rated-key">
+                        <div className="tip-text">
+                          <BestRatedIcon /> {t('DtrReview.BestRatedKey')}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )}
                 <div className="item-sockets">
                   {category.sockets.map((socketInfo) => (
                     <div key={socketInfo.socketIndex} className="item-socket">
