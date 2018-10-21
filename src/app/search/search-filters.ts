@@ -218,7 +218,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       prophecy: ['prophecy'],
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
-      ammoType: ['special', 'primary', 'heavy']
+      ammoType: ['special', 'primary', 'heavy'],
+      season: ['season1', 'season2', 'season3', 'season4', 'dawning', 'crimsondays', 'fotl']
     });
   }
 
@@ -934,6 +935,26 @@ function searchFilters(
             return item.year === 2;
           case 'year3':
             return item.year === 3;
+          default:
+            return false;
+        }
+      },
+      season(item: D2Item, predicate: string) {
+        switch (predicate) {
+          case 'season1':
+            return item.season === 1;
+          case 'season2':
+            return item.season === 2 || item.season === 2.1 || item.season === 2.2;
+          case 'season3':
+            return item.season === 3;
+          case 'season4':
+            return item.season === 4 || item.season === 4.1;
+          case 'dawning':
+            return item.season === 2.1;
+          case 'crimsondays':
+            return item.season === 2.2;
+          case 'fotl':
+            return item.season === 4.1;
           default:
             return false;
         }
