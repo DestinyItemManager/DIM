@@ -1,4 +1,3 @@
-import { IScope } from 'angular';
 import {
   DestinyCharacterComponent,
   DestinyFactionProgression,
@@ -51,19 +50,23 @@ const factionOrder = [
   3398051042 // Dead Orbit
 ];
 
-interface Props {
-  $scope: IScope;
+interface ProvidedProps {
   account: DestinyAccount;
+}
+
+interface StoreProps {
   isPhonePortrait: boolean;
   characterOrder(characters: DestinyCharacterComponent[]): DestinyCharacterComponent[];
 }
+
+type Props = ProvidedProps & StoreProps;
 
 interface State {
   progress?: ProgressProfile;
   currentCharacterId: string;
 }
 
-function mapStateToProps(state: RootState): Partial<Props> {
+function mapStateToProps(state: RootState): StoreProps {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
     characterOrder: characterComponentSortSelector(state)
@@ -488,4 +491,4 @@ class Progress extends React.Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(Progress);
+export default connect<StoreProps>(mapStateToProps)(Progress);
