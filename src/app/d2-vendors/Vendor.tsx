@@ -16,6 +16,7 @@ import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { UISref } from '@uirouter/react';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -71,24 +72,28 @@ export default class Vendor extends React.Component<Props> {
 
     return (
       <div className="vendor-char-items">
-        <div className="title">
-          <div className="collapse-handle">
-            <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon" />
-            <UISref to="destiny2.vendor" params={{ id: vendor.vendorHash }}>
-              <span>{vendorDef.displayProperties.name}</span>
-            </UISref>
-            <span className="vendor-location">{placeString}</span>
-          </div>
-          <Countdown endTime={new Date(vendor.nextRefreshDate)} />
-        </div>
-        <VendorItems
-          defs={defs}
-          vendor={vendor}
-          vendorDef={vendorDef}
-          vendorItems={vendorItems}
-          ownedItemHashes={ownedItemHashes}
-          currencyLookups={currencyLookups}
-        />
+        <CollapsibleTitle
+          title={
+            <>
+              <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon" />
+              <UISref to="destiny2.vendor" params={{ id: vendor.vendorHash }}>
+                <span>{vendorDef.displayProperties.name}</span>
+              </UISref>
+              <span className="vendor-location">{placeString}</span>
+            </>
+          }
+          extra={<Countdown endTime={new Date(vendor.nextRefreshDate)} />}
+          sectionId={`d2vendor-${vendor.vendorHash}`}
+        >
+          <VendorItems
+            defs={defs}
+            vendor={vendor}
+            vendorDef={vendorDef}
+            vendorItems={vendorItems}
+            ownedItemHashes={ownedItemHashes}
+            currencyLookups={currencyLookups}
+          />
+        </CollapsibleTitle>
       </div>
     );
   }
