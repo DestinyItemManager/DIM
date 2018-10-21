@@ -50,7 +50,10 @@ export default class PlugSet extends React.Component<Props> {
     return (
       <div className="presentation-node">
         <div className="title">
-          <span className="collapse-handle" onClick={() => onNodePathSelected([plugSetHash])}>
+          <span
+            className="collapse-handle"
+            onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
+          >
             <i
               className={classNames(
                 'fa collapse',
