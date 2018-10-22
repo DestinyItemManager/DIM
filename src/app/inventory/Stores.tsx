@@ -13,15 +13,11 @@ import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
 import { sortedStoresSelector } from './reducer';
-import { Settings } from '../settings/reducer';
 
 interface Props {
   stores: DimStore[];
   isPhonePortrait: boolean;
-  // TODO: bind just the settings we care about
-  settings: Settings;
   buckets: InventoryBuckets;
-  collapsedSections: Settings['collapsedSections'];
 }
 
 interface State {
@@ -29,14 +25,10 @@ interface State {
 }
 
 function mapStateToProps(state: RootState): Props {
-  const settings = state.settings;
   return {
     stores: sortedStoresSelector(state),
     buckets: state.inventory.buckets!,
-    isPhonePortrait: state.shell.isPhonePortrait,
-    settings,
-    // Pulling this out lets us do ref-equality
-    collapsedSections: settings.collapsedSections
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -144,7 +136,7 @@ class Stores extends React.Component<Props, State> {
 
   // TODO: move RenderStores to a component
   private renderStores(stores: DimStore[], vault: DimVault) {
-    const { buckets, collapsedSections } = this.props;
+    const { buckets } = this.props;
 
     return (
       <div>
@@ -160,9 +152,7 @@ class Stores extends React.Component<Props, State> {
               </div>
             )
         )}
-        {stores[0].isDestiny1() && (
-          <D1ReputationSection stores={stores} collapsedSections={collapsedSections} />
-        )}
+        {stores[0].isDestiny1() && <D1ReputationSection stores={stores} />}
       </div>
     );
   }
