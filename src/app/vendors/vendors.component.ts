@@ -36,7 +36,12 @@ function VendorsController(
     emotes: ['emotes']
   };
 
-  vm.settings = settings;
+  $scope.$watch(
+    () => settings,
+    () => {
+      vm.settings = settings;
+    }
+  );
 
   this.$onInit = () => {
     subscribeOnScope($scope, dimVendorService.getVendorsStream(vm.account), ([stores, vendors]) => {

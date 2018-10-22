@@ -15,6 +15,13 @@
     > * {
       margin-right: 4px;
     }
+    .light {
+      .app-icon {
+        font-size: 10px;
+        vertical-align: -0.125em;
+        margin-right: 0;
+      }
+    }
   }
   .generated-build-items {
     display: flex;

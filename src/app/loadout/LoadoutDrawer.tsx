@@ -5,7 +5,7 @@ import { toaster } from '../ngimport-more';
 import { dimLoadoutService, Loadout } from './loadout.service';
 import * as _ from 'lodash';
 import { sortItems } from '../shell/dimAngularFilters.filter';
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
 import { DimItem } from '../inventory/item-types';
@@ -195,7 +195,9 @@ class LoadoutDrawer extends React.Component<Props, State> {
               {showClass && (
                 <select name="classType" onChange={this.setClassType} value={loadout.classType}>
                   {classTypeOptions.map((option) => (
-                    <option key={option.value} label={option.label} value={option.value} />
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
                   ))}
                 </select>
               )}{' '}

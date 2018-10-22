@@ -47,16 +47,14 @@ export default class StoreHeading extends React.Component<Props, State> {
     let loadoutMenu;
     if (loadoutMenuOpen) {
       const menuContents = (
-        <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu}>
+        <ClickOutside onClickOutside={this.clickOutsideLoadoutMenu} className="loadout-menu">
           <LoadoutPopup dimStore={store} onClick={this.clickOutsideLoadoutMenu} />
         </ClickOutside>
       );
 
-      loadoutMenu = loadoutMenuRef ? (
-        ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
-      ) : (
-        <div className="loadout-menu">{menuContents}</div>
-      );
+      loadoutMenu = loadoutMenuRef
+        ? ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
+        : menuContents;
     }
 
     const loadoutButton = (

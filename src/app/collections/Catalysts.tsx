@@ -6,15 +6,19 @@ import './collections.scss';
 import VendorItemComponent from '../d2-vendors/VendorItemComponent';
 import { VendorItem } from '../d2-vendors/vendor-item';
 import { t } from 'i18next';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 
 /**
  * A single plug set.
  */
 export default function Catalysts({
   defs,
+  buckets,
   profileResponse
 }: {
   defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
 }) {
   const catalysts = getCatalysts(defs, profileResponse);
@@ -22,27 +26,26 @@ export default function Catalysts({
   return (
     <div className="vendor-char-items">
       <div className="vendor-row">
-        <h3 className="category-title">
-          Catalysts
+        <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
           <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
-        </h3>
-        <div className="vendor-items">
-          {catalysts.map((catalyst) => (
-            <VendorItemComponent
-              key={catalyst.itemHash}
-              defs={defs}
-              item={VendorItem.forCatalyst(
-                defs,
-                catalyst.attachedItemHash,
-                catalyst.itemHash,
-                catalyst.objectives,
-                catalyst.canInsert,
-                catalyst.enableFailReasons
-              )}
-              owned={false}
-            />
-          ))}
-        </div>
+          <div className="vendor-items">
+            {catalysts.map((catalyst) => (
+              <VendorItemComponent
+                key={catalyst.itemHash}
+                defs={defs}
+                item={VendorItem.forOrnament(
+                  defs,
+                  buckets,
+                  catalyst.itemHash,
+                  catalyst.objectives,
+                  catalyst.enableFailReasons,
+                  catalyst.attachedItemHash
+                )}
+                owned={false}
+              />
+            ))}
+          </div>
+        </CollapsibleTitle>
       </div>
     </div>
   );

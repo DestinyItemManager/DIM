@@ -1,4 +1,4 @@
-import { copy } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'lodash';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
@@ -7,7 +7,6 @@ import { DimStore } from '../inventory/store-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimItemService } from '../inventory/dimItemService.factory';
-import { $rootScope } from 'ngimport';
 import { t } from 'i18next';
 import { toaster, loadingTracker } from '../ngimport-more';
 import { default as reduxStore } from '../store/store';
@@ -63,7 +62,6 @@ export interface LoadoutServiceType {
   saveLoadout(loadout: Loadout): Promise<void>;
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
-  getLoadoutItemIds(destinyVersion: number): Promise<Set<string>>;
   editLoadout(
     loadout: Loadout,
     options: { equipAll?: boolean; showClass?: boolean; isNew?: boolean }
@@ -98,7 +96,6 @@ function LoadoutService(): LoadoutServiceType {
     saveLoadout,
     addItemToLoadout,
     applyLoadout,
-    getLoadoutItemIds,
     editLoadout
   };
 
@@ -176,15 +173,16 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   async function deleteLoadout(loadout: Loadout): Promise<void> {
+    await getLoadouts(); // make sure we have loaded all loadouts first!
     reduxStore.dispatch(actions.deleteLoadout(loadout.id));
     await SyncService.remove(loadout.id);
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
   }
 
   async function saveLoadout(loadout: Loadout): Promise<void> {
+    await getLoadouts(); // make sure we have loaded all loadouts first!
     reduxStore.dispatch(actions.updateLoadout(loadout));
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
-    $rootScope.$broadcast('dim-filter-invalidate-loadouts');
   }
 
   function hydrate(loadoutData: DehydratedLoadout): Loadout {
@@ -538,25 +536,6 @@ function LoadoutService(): LoadoutServiceType {
       destinyVersion: loadout.destinyVersion,
       items
     };
-  }
-
-  /**
-   * Get all item ids across all loadouts. Note that this is not restricted by platform,
-   * and thus assumes all item ids are unique.
-   */
-  async function getLoadoutItemIds(destinyVersion: number) {
-    const loadoutItemIds = new Set<string>();
-    const loadouts = await getLoadouts(true);
-    for (const loadout of loadouts) {
-      if (loadout.destinyVersion === destinyVersion) {
-        _.each(loadout.items, (items) => {
-          for (const item of items) {
-            loadoutItemIds.add(item.id);
-          }
-        });
-      }
-    }
-    return loadoutItemIds;
   }
 }
 

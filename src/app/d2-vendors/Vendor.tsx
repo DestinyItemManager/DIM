@@ -14,20 +14,13 @@ import VendorItems from './VendorItems';
 import './vendor.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { UISref } from '@uirouter/react';
-import {
-  isVerified380,
-  powerLevelMatters,
-  getVendorDropsForVendor
-} from '../vendorEngramsXyzApi/vendorEngramsXyzService';
-import vendorEngramSvg from '../../images/engram.svg';
-import { t } from 'i18next';
-import classNames from 'classnames';
-import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 
 interface Props {
   defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
   vendor: DestinyVendorComponent;
   itemComponents?: DestinyItemComponentSetOfint32;
   sales?: {
@@ -39,8 +32,6 @@ interface Props {
     [itemHash: number]: number;
   };
   account: DestinyAccount;
-  allVendorEngramDrops?: VendorDrop[];
-  basePowerLevel?: number;
 }
 
 /**
@@ -51,14 +42,12 @@ export default class Vendor extends React.Component<Props> {
     const {
       vendor,
       defs,
+      buckets,
       account,
-      trackerService,
       sales,
       ownedItemHashes,
       itemComponents,
-      currencyLookups,
-      basePowerLevel,
-      allVendorEngramDrops
+      currencyLookups
     } = this.props;
 
     const vendorDef = defs.Vendor.get(vendor.vendorHash);
@@ -67,14 +56,7 @@ export default class Vendor extends React.Component<Props> {
       return null;
     }
 
-    const vendorItems = getVendorItems(
-      account,
-      defs,
-      vendorDef,
-      trackerService,
-      itemComponents,
-      sales
-    );
+    const vendorItems = getVendorItems(account, defs, buckets, vendorDef, itemComponents, sales);
     if (!vendorItems.length) {
       return null;
     }
@@ -88,45 +70,30 @@ export default class Vendor extends React.Component<Props> {
       .filter((n) => n.length)
       .join(', ');
 
-    const vendorEngramDrops = $featureFlags.vendorEngrams
-      ? getVendorDropsForVendor(vendor.vendorHash, allVendorEngramDrops)
-      : [];
-    const dropActive = vendorEngramDrops.some(isVerified380);
-
-    const vendorLinkTitle = dropActive ? 'VendorEngramsXyz.Likely380' : 'VendorEngramsXyz.Vote';
-
     return (
       <div className="vendor-char-items">
-        <div className="title">
-          <div className="collapse-handle">
-            {$featureFlags.vendorEngrams &&
-              vendorEngramDrops.length > 0 &&
-              powerLevelMatters(basePowerLevel) && (
-                <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/">
-                  <img
-                    className={classNames('fa', 'xyz-engram', { 'xyz-active-throb': dropActive })}
-                    src={vendorEngramSvg}
-                    title={t(vendorLinkTitle)}
-                  />
-                </a>
-              )}
-            <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon" />
-            <UISref to="destiny2.vendor" params={{ id: vendor.vendorHash }}>
-              <span>{vendorDef.displayProperties.name}</span>
-            </UISref>
-            <span className="vendor-location">{placeString}</span>
-          </div>
-          <Countdown endTime={new Date(vendor.nextRefreshDate)} />
-        </div>
-        <VendorItems
-          defs={defs}
-          vendor={vendor}
-          vendorDef={vendorDef}
-          vendorItems={vendorItems}
-          trackerService={trackerService}
-          ownedItemHashes={ownedItemHashes}
-          currencyLookups={currencyLookups}
-        />
+        <CollapsibleTitle
+          title={
+            <>
+              <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon" />
+              <UISref to="destiny2.vendor" params={{ id: vendor.vendorHash }}>
+                <span>{vendorDef.displayProperties.name}</span>
+              </UISref>
+              <span className="vendor-location">{placeString}</span>
+            </>
+          }
+          extra={<Countdown endTime={new Date(vendor.nextRefreshDate)} />}
+          sectionId={`d2vendor-${vendor.vendorHash}`}
+        >
+          <VendorItems
+            defs={defs}
+            vendor={vendor}
+            vendorDef={vendorDef}
+            vendorItems={vendorItems}
+            ownedItemHashes={ownedItemHashes}
+            currencyLookups={currencyLookups}
+          />
+        </CollapsibleTitle>
       </div>
     );
   }
@@ -135,21 +102,17 @@ export default class Vendor extends React.Component<Props> {
 export function getVendorItems(
   account: DestinyAccount,
   defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
   vendorDef: DestinyVendorDefinition,
-  trackerService?: DestinyTrackerService,
   itemComponents?: DestinyItemComponentSetOfint32,
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   }
 ) {
-  const reviewCache: D2ReviewDataCache | undefined = trackerService
-    ? trackerService.getD2ReviewDataCache()
-    : undefined;
-
   if (sales && itemComponents) {
     const components = Object.values(sales);
     return components.map((component) =>
-      VendorItem.forVendorSaleItem(defs, vendorDef, component, reviewCache, itemComponents)
+      VendorItem.forVendorSaleItem(defs, buckets, vendorDef, component, itemComponents)
     );
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
@@ -162,6 +125,6 @@ export function getVendorItems(
           i.exclusivity === BungieMembershipType.All ||
           i.exclusivity === account.platformType
       )
-      .map((i) => VendorItem.forVendorDefinitionItem(defs, i, reviewCache));
+      .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i));
   }
 }

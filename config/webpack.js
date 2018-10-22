@@ -98,9 +98,9 @@ module.exports = (env) => {
           exclude: [/sqlLib/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
           terserOptions: {
             ecma: 8,
-            compress: { warnings: false, inline: 1 },
-            mangle: { safari10: true },
-            output: { comments: false }
+            compress: { warnings: false, passes: 3, toplevel: true },
+            mangle: { safari10: true, toplevel: true },
+            output: { safari10: true }
           },
           sourceMap: true
         })
@@ -155,13 +155,14 @@ module.exports = (env) => {
           loader: 'awesome-typescript-loader',
           options: {
             useBabel: true,
+            babelCore: '@babel/core',
             useCache: true
           }
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
           enforce: 'pre',
-          test: /\.js$/,
+          test: /\.jsx?$/,
           loader: 'source-map-loader'
         },
         {
@@ -203,7 +204,7 @@ module.exports = (env) => {
     },
 
     resolve: {
-      extensions: ['.js', '.json', '.ts', '.tsx'],
+      extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
 
       alias: {
         app: path.resolve('./src')
@@ -311,8 +312,6 @@ module.exports = (env) => {
         '$featureFlags.debugSW': JSON.stringify(env !== 'release'),
         // Send exception reports to Sentry.io on beta only
         '$featureFlags.sentry': JSON.stringify(env === 'beta'),
-        // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
         // Forsaken Item Tiles

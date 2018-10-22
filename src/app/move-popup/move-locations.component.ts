@@ -28,7 +28,12 @@ function controller(
   'ngInject';
   const vm = this;
 
-  vm.settings = settings;
+  $scope.$watch(
+    () => settings,
+    () => {
+      vm.settings = settings;
+    }
+  );
 
   vm.$onInit = () => {
     const storeService = vm.item.getStoresService();

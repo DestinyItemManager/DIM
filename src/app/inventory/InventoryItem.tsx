@@ -9,10 +9,12 @@ import ItemRender from './ItemRender';
 import newOverlay from 'app/images/overlay.svg';
 import './dimStoreItem.scss';
 import './InventoryItem.scss';
-import { TagValue, tagIconFilter } from './dim-item-info';
+import { TagValue, itemTags } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import { settings } from '../settings/settings';
 import { RatingIcon } from '../shell/icons/ReviewIcon';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { AppIcon } from '../shell/icons';
 
 interface Props {
   item: DimItem;
@@ -29,7 +31,13 @@ interface Props {
   onDoubleClick?(e);
 }
 
-const tagClasses = tagIconFilter();
+const iconType: { [P in TagValue]?: IconDefinition | undefined } = {};
+
+itemTags.forEach((tag) => {
+  if (tag.type) {
+    iconType[tag.type] = tag.icon;
+  }
+});
 
 // TODO: Separate high and low levels (display vs display logic)
 export default class InventoryItem extends React.Component<Props> {
@@ -112,7 +120,7 @@ export default class InventoryItem extends React.Component<Props> {
                 </div>
               )}
             <div className={classNames('item-element', item.dmg)} />
-            <div className={tagClasses(tag)} />
+            {tag && iconType[tag] && <AppIcon className="item-tag" icon={iconType[tag]!} />}
             {isNew && (
               <div className="new_overlay_overflow">
                 <img className="new_overlay" src={newOverlay} height="44" width="44" />

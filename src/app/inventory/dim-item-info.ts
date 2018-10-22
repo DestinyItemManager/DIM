@@ -10,6 +10,7 @@ import store from '../store/store';
 import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
 import { starIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 
@@ -99,7 +100,9 @@ export class ItemInfoSource {
   bulkSave(items: DimItem[]) {
     return getInfos(this.key).then((infos) => {
       items.forEach((item) => {
-        infos[`${item.hash}-${item.id}`] = { tag: item.dimInfo.tag };
+        const key = `${item.hash}-${item.id}`;
+        infos[key] = { tag: item.dimInfo.tag };
+        store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
       });
       return setInfos(this.key, infos);
     });
@@ -110,7 +113,7 @@ export class ItemInfoSource {
  * The item info source maintains a map of extra, DIM-specific, synced data about items (per platform).
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
-export function getItemInfoSource(account): Promise<ItemInfoSource> {
+export function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
   const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${
     account.destinyVersion
   }`;
@@ -136,7 +139,7 @@ function setInfos(key: string, infos: { [itemInstanceId: string]: DimItemInfo })
 
 export function tagIconFilter() {
   'ngInject';
-  const iconType = {};
+  const iconType: { [P in TagValue]?: IconDefinition | undefined } = {};
 
   itemTags.forEach((tag) => {
     if (tag.type) {
@@ -144,10 +147,10 @@ export function tagIconFilter() {
     }
   });
 
-  return function tagIcon(value) {
+  return function tagIcon(value: TagValue) {
     const icon = iconType[value];
     if (icon) {
-      return `item-tag fa fa-${icon}`;
+      return `item-tag fa fa-${icon.iconName}`;
     } else {
       return 'item-tag no-tag';
     }

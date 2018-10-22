@@ -22,7 +22,7 @@ export default function GeneratedSetItem({
       {item!.sockets &&
         item!.sockets!.categories.length === 2 &&
         // TODO: look at plugs that we filtered on to see if they match selected perk or not.
-        item!.sockets!.categories[0].sockets.filter(filterPlugs).map((socket) => (
+        item!.sockets!.sockets.filter(filterPlugs).map((socket) => (
           <PressTip
             key={socket!.plug!.plugItem.hash}
             tooltip={<PlugTooltip item={item} socket={socket} />}

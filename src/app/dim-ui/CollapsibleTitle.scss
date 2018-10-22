@@ -1,0 +1,48 @@
+@import '../../scss/variables.scss';
+
+.title {
+  flex: 1;
+  padding: 0 16px;
+  background-color: #353535;
+  color: white;
+  min-height: 34px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    background-color: #2f2f2f;
+  }
+
+  span[role='button'] {
+    cursor: pointer;
+    outline: none;
+  }
+  .bucket-count {
+    float: right;
+  }
+  .icon {
+    width: 30px;
+  }
+  .collapse {
+    margin-left: -7px;
+  }
+}
+
+.collapse {
+  cursor: pointer;
+  font-size: 14px;
+  color: $lightgray;
+  &:hover,
+  .collapse-handle:hover & {
+    color: $orange;
+  }
+}
+
+.collapse-handle {
+  cursor: pointer;
+}

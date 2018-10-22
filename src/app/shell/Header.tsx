@@ -1,11 +1,9 @@
-import { angular2react } from 'angular2react';
 import classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
-import { SearchFilterComponent } from '../search/search-filter.component';
 import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
@@ -21,11 +19,8 @@ import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { UISref } from '@uirouter/react';
-import {
-  dimVendorEngramsService,
-  isVerified380
-} from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
+import SearchFilter from '../search/SearchFilter';
 
 const destiny1Links = [
   {
@@ -84,7 +79,6 @@ interface State {
   account?: DestinyAccount;
   dropdownOpen: boolean;
   showSearch: boolean;
-  vendorEngramDropActive: boolean;
 }
 
 export default class Header extends React.PureComponent<{}, State> {
@@ -92,29 +86,19 @@ export default class Header extends React.PureComponent<{}, State> {
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLElement>();
-  private engramRefreshTimer: number;
-
-  private SearchFilter: React.ComponentClass<{ account: DestinyAccount }>;
 
   constructor(props) {
     super(props);
 
-    this.SearchFilter = angular2react<{ account: DestinyAccount }>(
-      'dimSearchFilter',
-      SearchFilterComponent
-    );
-
     this.state = {
       dropdownOpen: false,
-      showSearch: false,
-      vendorEngramDropActive: false
+      showSearch: false
     };
   }
 
   componentDidMount() {
     this.accountSubscription = getActiveAccountStream().subscribe((account) => {
       this.setState({ account: account || undefined });
-      this.updateVendorEngrams(account || undefined);
     });
 
     this.unregisterTransitionHooks = [
@@ -127,12 +111,10 @@ export default class Header extends React.PureComponent<{}, State> {
   componentWillUnmount() {
     this.unregisterTransitionHooks.forEach((f) => f());
     this.accountSubscription.unsubscribe();
-    this.stopPollingVendorEngrams();
   }
 
   render() {
-    const { account, showSearch, dropdownOpen, vendorEngramDropActive } = this.state;
-    const { SearchFilter } = this;
+    const { account, showSearch, dropdownOpen } = this.state;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -165,13 +147,7 @@ export default class Header extends React.PureComponent<{}, State> {
           .slice()
           .reverse()
           .map((link) => (
-            <Link
-              key={link.state}
-              account={account}
-              state={link.state}
-              text={link.text}
-              showWhatsNew={link.state === 'destiny2.vendors' && vendorEngramDropActive}
-            />
+            <Link key={link.state} account={account} state={link.state} text={link.text} />
           ))}
       </>
     );
@@ -240,7 +216,7 @@ export default class Header extends React.PureComponent<{}, State> {
           )}
           {account && (
             <span className={classNames('link', 'search-link', { show: showSearch })}>
-              <SearchFilter account={account} />
+              <SearchFilter />
             </span>
           )}
           <span className="link search-button" onClick={this.toggleSearch}>
@@ -251,34 +227,6 @@ export default class Header extends React.PureComponent<{}, State> {
       </div>
     );
   }
-
-  private updateVendorEngrams = (account = this.state.account) => {
-    if ($featureFlags.vendorEngrams) {
-      if (!account || account.destinyVersion !== 2) {
-        this.stopPollingVendorEngrams();
-        return;
-      }
-
-      dimVendorEngramsService.getAllVendorDrops().then((vds) => {
-        const anyActive = vds.some(isVerified380);
-        this.setState({ vendorEngramDropActive: anyActive });
-      });
-
-      if (!this.engramRefreshTimer) {
-        this.engramRefreshTimer = window.setInterval(
-          this.updateVendorEngrams,
-          dimVendorEngramsService.refreshInterval
-        );
-      }
-    }
-  };
-
-  private stopPollingVendorEngrams = () => {
-    if (this.engramRefreshTimer) {
-      clearInterval(this.engramRefreshTimer);
-      this.engramRefreshTimer = 0;
-    }
-  };
 
   private toggleDropdown = () => {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });

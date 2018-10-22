@@ -516,7 +516,7 @@
     "UpStack": "Auf nächsten vollen Stapel erhöhen"
   },
   "MovePopup": {
-    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
+    "CantPullFromPostmaster": "Du musst auf den Turm, um dieses Element abzurufen.",
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausr.",

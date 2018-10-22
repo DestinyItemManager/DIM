@@ -14,11 +14,11 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
-import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
-import { VendorDrop } from '../vendorEngramsXyzApi/vendorDrops';
 import { t } from 'i18next';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { getBuckets } from '../destiny2/d2-buckets.service';
 
 interface Props {
   account: DestinyAccount;
@@ -26,12 +26,11 @@ interface Props {
 
 interface State {
   defs?: D2ManifestDefinitions;
+  buckets?: InventoryBuckets;
   vendorsResponse?: DestinyVendorsResponse;
   trackerService?: DestinyTrackerService;
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
-  vendorEngramDrops?: VendorDrop[];
-  basePowerLevel?: number;
   error?: Error;
 }
 
@@ -52,15 +51,10 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       this.setState({ error: undefined });
     }
 
-    if ($featureFlags.vendorEngrams) {
-      dimVendorEngramsService
-        .getAllVendorDrops()
-        .then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
-    }
-
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
+    const buckets = await getBuckets();
 
     // TODO: get for all characters, or let people select a character? This is a hack
     // we at least need to display that character!
@@ -73,14 +67,6 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
           .toPromise());
       if (stores) {
         characterId = stores.find((s) => s.current)!.id;
-
-        const maxBasePower = stores.find((s) => s.current)!.stats.maxBasePower;
-
-        // maxBasePower.value gets an asterisk when classified items are present; could regex it
-        if (maxBasePower && maxBasePower.tiers) {
-          const basePowerLevel = +maxBasePower.tiers[0];
-          this.setState({ basePowerLevel });
-        }
       }
     }
 
@@ -92,7 +78,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     let vendorsResponse;
     try {
       vendorsResponse = await getVendorsApi(this.props.account, characterId);
-      this.setState({ defs, vendorsResponse });
+      this.setState({ defs, vendorsResponse, buckets });
     } catch (error) {
       this.setState({ error });
     }
@@ -131,15 +117,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const {
-      defs,
-      vendorsResponse,
-      trackerService,
-      ownedItemHashes,
-      vendorEngramDrops,
-      basePowerLevel,
-      error
-    } = this.state;
+    const { defs, buckets, vendorsResponse, trackerService, ownedItemHashes, error } = this.state;
     const { account } = this.props;
 
     if (error) {
@@ -153,7 +131,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       );
     }
 
-    if (!vendorsResponse || !defs) {
+    if (!vendorsResponse || !defs || !buckets) {
       return (
         <div className="vendor dim-page">
           <Loading />
@@ -167,13 +145,12 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
           <VendorGroup
             key={group.vendorGroupHash}
             defs={defs}
+            buckets={buckets}
             group={group}
             vendorsResponse={vendorsResponse}
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             account={account}
-            vendorEngramDrops={vendorEngramDrops}
-            basePowerLevel={basePowerLevel}
           />
         ))}
       </div>
@@ -183,22 +160,20 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
 function VendorGroup({
   defs,
+  buckets,
   group,
   vendorsResponse,
   trackerService,
   ownedItemHashes,
-  account,
-  vendorEngramDrops,
-  basePowerLevel
+  account
 }: {
   defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
   trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
-  vendorEngramDrops?: VendorDrop[];
-  basePowerLevel?: number;
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
 
@@ -210,6 +185,7 @@ function VendorGroup({
           <Vendor
             account={account}
             defs={defs}
+            buckets={buckets}
             vendor={vendor}
             itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
             sales={
@@ -219,8 +195,6 @@ function VendorGroup({
             trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
-            allVendorEngramDrops={vendorEngramDrops}
-            basePowerLevel={basePowerLevel}
           />
         </ErrorBoundary>
       ))}

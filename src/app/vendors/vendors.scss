@@ -120,10 +120,6 @@
   .vendor-headers {
     display: flex;
   }
-  .collapse-handle {
-    display: flex;
-    align-items: center;
-  }
   .title {
     .countdown {
       font-size: 11px;
@@ -154,7 +150,8 @@
   .vendor-icon {
     width: 30px;
     height: 30px;
-    margin: 5px 10px 5px 5px;
+    margin: 5px;
+    vertical-align: middle;
   }
   .currency img {
     height: 12px;

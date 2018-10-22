@@ -1,4 +1,5 @@
-import { IPromise, copy } from 'angular';
+import { IPromise } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'lodash';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import {
@@ -400,21 +401,15 @@ function ItemService(): ItemServiceType {
     });
   }
 
+  /** De-equip an item, which really means find another item to equip in its place. */
   function dequipItem(item: DimItem, excludeExotic = false): IPromise<DimItem> {
-    const storeService = item.getStoresService();
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
       return $q.reject(new Error(t('ItemService.Deequip', { itemname: item.name })));
     }
-    const source = storeService.getStore(item.owner)!;
-    const target = storeService.getStore(similarItem.owner)!;
 
-    let p = $q.when(item);
-    if (source.id !== target.id) {
-      p = moveTo(similarItem, source, true);
-    }
-
-    return p.then(() => equipItem(similarItem)).then(() => item);
+    const ownerStore = item.getStoresService().getStore(item.owner)!;
+    return moveTo(similarItem, ownerStore, true).then(() => item);
   }
 
   function moveToVault(item: DimItem, amount: number = item.amount) {

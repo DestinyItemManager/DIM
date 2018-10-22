@@ -6,13 +6,14 @@ import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.ser
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { processItems } from '../inventory/store/d1-item-factory.service';
-import { IPromise, copy } from 'angular';
+import { IPromise } from 'angular';
+import copy from 'fast-copy';
 import { D1Store } from '../inventory/store-types';
 import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { $rootScope, $q } from 'ngimport';
+import { $q } from 'ngimport';
 import { loadingTracker } from '../ngimport-more';
 import { D1ManifestService } from '../manifest/manifest-service';
 import { handleLocalStorageFullError } from '../compatibility';
@@ -292,8 +293,6 @@ function VendorService(): VendorServiceType {
         );
       })
       .then(() => {
-        $rootScope.$broadcast('dim-filter-invalidate');
-        $rootScope.$broadcast('dim-vendors-updated');
         service.vendorsLoaded = true;
         fulfillRatingsRequest();
         return [stores, service.vendors] as [D1Store[], { [vendorHash: number]: Vendor }];

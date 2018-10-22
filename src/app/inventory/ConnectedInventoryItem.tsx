@@ -2,17 +2,17 @@ import * as React from 'react';
 import { DimItem } from './item-types';
 import './dimStoreBucket.scss';
 import { InventoryState } from './reducer';
-import { ReviewsState } from '../item-review/reducer';
 import { TagValue } from './dim-item-info';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
-import { D1RatingData } from '../item-review/d1-dtr-api-types';
-import { D2RatingData } from '../item-review/d2-dtr-api-types';
 import InventoryItem from './InventoryItem';
+import { getRating } from '../item-review/reducer';
+import { searchFilterSelector } from '../search/search-filters';
 
 // Props provided from parents
 interface ProvidedProps {
   item: DimItem;
+  allowFilter?: boolean;
   onClick?(e): void;
 }
 
@@ -22,6 +22,7 @@ interface StoreProps {
   tag?: TagValue;
   rating?: number;
   hideRating?: boolean;
+  searchHidden?: boolean;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -40,7 +41,8 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, state.inventory.itemInfos),
     rating: dtrRating ? dtrRating.overallScore : undefined,
-    hideRating: !showRating
+    hideRating: !showRating,
+    searchHidden: props.allowFilter && !searchFilterSelector(state)(item)
   };
 }
 
@@ -52,7 +54,7 @@ type Props = ProvidedProps & StoreProps;
  */
 class ConnectedInventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, tag, rating, hideRating, onClick } = this.props;
+    const { item, isNew, tag, rating, hideRating, onClick, searchHidden } = this.props;
 
     return (
       <InventoryItem
@@ -62,6 +64,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
         rating={rating}
         hideRating={hideRating}
         onClick={onClick}
+        searchHidden={searchHidden}
       />
     );
   }
@@ -70,15 +73,6 @@ class ConnectedInventoryItem extends React.Component<Props> {
 function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue | undefined {
   const itemKey = `${item.hash}-${item.id}`;
   return itemInfos[itemKey] && itemInfos[itemKey].tag;
-}
-
-function getRating(
-  item: DimItem,
-  ratings: ReviewsState['ratings']
-): D2RatingData | D1RatingData | undefined {
-  const roll = item.isDestiny1() ? (item.talentGrid ? item.talentGrid.dtrRoll : null) : 'fixed'; // TODO: implement random rolls
-  const itemKey = `${item.hash}-${roll}`;
-  return ratings[itemKey] && ratings[itemKey];
 }
 
 export default connect<StoreProps>(mapStateToProps)(ConnectedInventoryItem);

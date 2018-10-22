@@ -66,6 +66,7 @@ dim-store-item,
   height: 52px;
   width: calc(var(--item-size) + 8px);
   height: calc(var(--item-size) + 8px);
+  contain: strict;
 }
 
 .item {
@@ -204,7 +205,7 @@ dim-store-item,
 }
 
 .item-tag {
-  text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.7));
   position: absolute;
   top: 4px;
   left: 4px;

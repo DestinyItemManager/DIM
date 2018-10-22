@@ -1,4 +1,5 @@
-import { IComponentOptions, IController, IQService, copy } from 'angular';
+import { IComponentOptions, IController, IQService } from 'angular';
+import copy from 'fast-copy';
 import * as _ from 'lodash';
 import { getDefinitions } from '../destiny1/d1-definitions.service';
 import template from './infuse.html';
