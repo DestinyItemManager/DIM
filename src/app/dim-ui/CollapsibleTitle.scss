@@ -1,5 +1,9 @@
 @import '../../scss/variables.scss';
-
+.section {
+  &.collapsed_true {
+    transform: scaleY(0);
+  }
+}
 .title {
   flex: 1;
   padding: 0 16px;
@@ -45,4 +49,16 @@
 
 .collapse-handle {
   cursor: pointer;
+}
+
+.collapsed_true {
+  animation: collapseFeedback 1.3s ease-in 1 forwards;
+}
+@keyframes collapseFeedback {
+  from {
+    background: #ee6d0d;
+  }
+  to {
+    background: #353535;
+  }
 }
