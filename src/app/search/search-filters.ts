@@ -219,7 +219,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy'],
-      season: ['season1', 'season2', 'season3', 'season4', 'dawning', 'crimsondays', 'fotl']
+      season: ['season1', 'season2', 'season3', 'season4'],
+      event: ['dawning', 'crimsondays', 'solstice', 'fotl']
     });
   }
 
@@ -944,17 +945,25 @@ function searchFilters(
           case 'season1':
             return item.season === 1;
           case 'season2':
-            return item.season === 2 || item.season === 2.1 || item.season === 2.2;
+            return item.season === 2;
           case 'season3':
             return item.season === 3;
           case 'season4':
-            return item.season === 4 || item.season === 4.1;
+            return item.season === 4;
+          default:
+            return false;
+        }
+      },
+      event(item: D2Item, predicate: string) {
+        switch (predicate) {
           case 'dawning':
-            return item.season === 2.1;
+            return item.event === 2.1;
           case 'crimsondays':
-            return item.season === 2.2;
+            return item.event === 2.2;
+          case 'solstice':
+            return item.event === 3.1;
           case 'fotl':
-            return item.season === 4.1;
+            return item.event === 4.1;
           default:
             return false;
         }

@@ -209,6 +209,7 @@ export interface D2Item extends DimItem {
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   season?: number;
+  event?: number;
   dtrRating: D2RatingData | null;
   ammoType: DestinyAmmunitionType;
   getStoresService(): D2StoreServiceType;

@@ -60,6 +60,8 @@ import { D2RatingData } from '../../item-review/d2-dtr-api-types';
 import { D2StoresService } from '../d2-stores.service';
 // tslint:disable-next-line:no-implicit-dependencies
 import D2Seasons from 'app/data/d2-seasons.json';
+// tslint:disable-next-line:no-implicit-dependencies
+import D2Events from 'app/data/d2-events.json';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -356,7 +358,8 @@ export function makeItem(
     dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    season: D2Seasons[item.itemHash]
+    season: D2Seasons[item.itemHash],
+    event: D2Events[item.itemHash]
   });
 
   // *able
