@@ -2,20 +2,23 @@
 
 .title {
   flex: 1;
-  padding: 0 16px;
-  background-color: #353535;
+  padding: 2px 16px;
+  background-color: transparent;
   color: white;
   min-height: 34px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  transition: 0.3s;
+  cursor: pointer;
+  border-bottom: 1px solid white;
 
   &:hover {
-    background-color: #2f2f2f;
+    letter-spacing: 4px;
   }
 
   span[role='button'] {
@@ -35,10 +38,15 @@
 
 .collapse {
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   color: $lightgray;
+  transition: 0.3s;
+
   &:hover,
   .collapse-handle:hover & {
+    color: $orange;
+  }
+  .title:hover & {
     color: $orange;
   }
 }
@@ -48,13 +56,11 @@
 }
 
 .collapsed_true {
-  animation: collapseFeedback 1.3s ease-in 1 forwards;
+  background-color: rgba(0, 0, 0, 0.8);
 }
-@keyframes collapseFeedback {
-  from {
-    background: #ee6d0d;
-  }
-  to {
-    background: #353535;
-  }
+.collapseHiddenText {
+  color: $lightgray;
+  font-size: 14px;
+  vertical-align: top;
+  line-height: 22px;
 }
