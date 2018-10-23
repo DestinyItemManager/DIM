@@ -136,7 +136,10 @@ class SearchFilter extends React.Component<Props, State> {
           type="text"
           name="filter"
           value={query}
-          onChange={this.onQueryChange}
+          onChange={() => {
+            return;
+          }}
+          onInput={this.onQueryChange}
         />
 
         {query.length === 0 ? (
