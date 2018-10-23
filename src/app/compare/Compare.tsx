@@ -1,23 +1,17 @@
 import * as React from 'react';
 import { t } from 'i18next';
 import classNames from 'classnames';
-import Sockets from '../move-popup/Sockets';
-import { DimItem, DimStat, DimTalentGrid, D1Stat } from '../inventory/item-types';
+import { DimItem, DimStat } from '../inventory/item-types';
 import { router } from '../../router';
 import { $rootScope } from 'ngimport';
 import * as _ from 'lodash';
 import { CompareService } from './compare.service';
 import { toaster } from '../ngimport-more';
 import { chainComparator, reverseComparator, compareBy } from '../comparators';
-import ItemTagSelector from '../move-popup/ItemTagSelector';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { angular2react } from 'angular2react';
-import { lazyInjector } from '../../lazyInjector';
-import { TalentGridComponent } from '../move-popup/talent-grid.component';
-import { getColor } from '../shell/dimAngularFilters.filter';
-import { IScope } from 'angular';
-import { AppIcon, starIcon, searchIcon, closeIcon } from '../shell/icons';
-import { TagValue } from '../inventory/dim-item-info';
+import { AppIcon, closeIcon } from '../shell/icons';
+import { createSelector } from 'reselect';
+import CompareItem from './CompareItem';
+import './compare.scss';
 
 // TODO: There's far too much state here.
 // TODO: maybe have a holder/state component and a connected display component
@@ -30,21 +24,14 @@ interface State {
   archetypes: DimItem[];
 }
 
-interface StatInfo {
+export interface StatInfo {
   id: string | number;
   name: string;
   min: number;
   max: number;
   enabled: boolean;
-  highlighted: boolean;
-  sorted: boolean;
-  getStat(item: DimItem): { value?: number; statHash: number };
+  getStat(item: DimItem): { value?: number; statHash: number } | undefined;
 }
-
-const TalentGrid = angular2react<{
-  talentGrid: DimTalentGrid;
-  perksOnly: boolean;
-}>('dimTalentGrid', TalentGridComponent, lazyInjector.$injector as angular.auto.IInjectorService);
 
 export default class Compare extends React.Component<{}, State> {
   state: State = {
@@ -57,6 +44,7 @@ export default class Compare extends React.Component<{}, State> {
   private $scope = $rootScope.$new(true);
   // tslint:disable-next-line:ban-types
   private listener: Function;
+  private getAllStatsSelector = createSelector((state: State) => state.comparisons, getAllStats);
 
   componentDidMount() {
     this.listener = router.transitionService.onExit({}, () => {
@@ -78,7 +66,14 @@ export default class Compare extends React.Component<{}, State> {
   }
 
   render() {
-    const { show, comparisons: unsortedComparisons, highlight, sortedHash } = this.state;
+    const {
+      show,
+      comparisons: unsortedComparisons,
+      sortedHash,
+      highlight,
+      similarTypes,
+      archetypes
+    } = this.state;
 
     if (!show || unsortedComparisons.length === 0) {
       CompareService.dialogOpen = false;
@@ -103,91 +98,16 @@ export default class Compare extends React.Component<{}, State> {
       )
     );
 
-    // TODO: memoizeone? reselect?
-    // TODO: CSS Grid? Subcomponents?
-    // TODO: animate show/hide
-
     const firstComparison = comparisons[0];
-
-    const allItems = firstComparison.getStoresService().getAllItems();
-    const similarTypes = this.findSimilarTypes(allItems);
-    const archeTypes = this.findArchetypes(similarTypes);
-
-    const stats: StatInfo[] = [];
-    if ($featureFlags.reviewsEnabled) {
-      stats.push({
-        id: 'Rating',
-        name: t('Compare.Rating'),
-        min: 0,
-        max: 0,
-        enabled: false,
-        highlighted: false,
-        sorted: false,
-        getStat(item: DimItem) {
-          return { statHash: 0, value: (item.dtrRating && item.dtrRating.overallScore) || 0 };
-        }
-      });
-    }
-    if (firstComparison.primStat) {
-      stats.push({
-        id: firstComparison.primStat.statHash,
-        name: firstComparison.primStat.stat.statName,
-        min: 0,
-        max: 0,
-        enabled: false,
-        highlighted: false,
-        sorted: false,
-        getStat(item: DimItem) {
-          return item.primStat!;
-        }
-      });
-    }
-
-    // Todo: map of stat id => stat object
-    // add 'em up
-    const statsByHash: { [statHash: string]: StatInfo } = {};
-    for (const item of comparisons) {
-      if (item.stats) {
-        for (const stat of item.stats) {
-          let statInfo = statsByHash[stat.statHash];
-          if (!statInfo) {
-            statInfo = {
-              id: stat.statHash,
-              name: stat.name,
-              min: 0,
-              max: 0,
-              enabled: false,
-              highlighted: false,
-              sorted: false,
-              getStat(item: DimItem) {
-                return item.stats!.find((s) => s.statHash === stat.statHash)!;
-              }
-            };
-            statsByHash[stat.statHash] = statInfo;
-            stats.push(statInfo);
-          }
-        }
-      }
-    }
-
-    stats.forEach((stat) => {
-      stat.highlighted = stat.id === highlight;
-      stat.sorted = stat.id === sortedHash;
-      for (const item of comparisons) {
-        const itemStat = stat.getStat(item);
-        stat.min = Math.min(stat.min, itemStat.value || 0);
-        stat.max = Math.max(stat.max, itemStat.value || 0);
-        stat.enabled = stat.min !== stat.max;
-      }
-    });
+    const stats = this.getAllStatsSelector(this.state);
 
     return (
       <div id="loadout-drawer" className="compare">
         <div className="compare-options">
-          {archeTypes.length > 1 && (
+          {archetypes.length > 1 && (
             <button className="dim-button" onClick={(e) => this.compareSimilar(e, 'archetype')}>
               {t(firstComparison.bucket.inWeapons ? 'Compare.Archetype' : 'Compare.Splits', {
-                quantity: archeTypes.length
+                quantity: archetypes.length
               })}
             </button>
           )}{' '}
@@ -207,8 +127,8 @@ export default class Compare extends React.Component<{}, State> {
               <div
                 key={stat.id}
                 className={classNames('compare-stat-label', {
-                  highlight: stat.highlighted,
-                  sorted: stat.sorted
+                  highlight: stat.id === highlight,
+                  sorted: stat.id === sortedHash
                 })}
                 onMouseOver={() => this.setHighlight(stat.id)}
                 onClick={() => this.sort(stat.id)}
@@ -226,6 +146,7 @@ export default class Compare extends React.Component<{}, State> {
               remove={this.remove}
               setHighlight={this.setHighlight}
               $scope={this.$scope}
+              highlight={highlight}
             />
           ))}
         </div>
@@ -377,102 +298,70 @@ export default class Compare extends React.Component<{}, State> {
   };
 }
 
-function CompareItem({
-  item,
-  stats,
-  $scope,
-  itemClick,
-  remove,
-  setHighlight
-}: {
-  item: DimItem;
-  stats: StatInfo[];
-  $scope: IScope;
-  itemClick(item: DimItem): void;
-  remove(item: DimItem): void;
-  setHighlight(value?: string | number): void;
-}) {
-  function onTagUpdated(tag?: TagValue) {
-    const info = item.dimInfo;
-    if (info) {
-      if (tag) {
-        info.tag = tag;
-      } else {
-        delete info.tag;
+function getAllStats(comparisons: DimItem[]) {
+  const firstComparison = comparisons[0];
+
+  const stats: StatInfo[] = [];
+  if ($featureFlags.reviewsEnabled) {
+    stats.push({
+      id: 'Rating',
+      name: t('Compare.Rating'),
+      min: 0,
+      max: 0,
+      enabled: false,
+      getStat(item: DimItem) {
+        return { statHash: 0, value: (item.dtrRating && item.dtrRating.overallScore) || 0 };
       }
-      info.save!();
+    });
+  }
+  if (firstComparison.primStat) {
+    stats.push({
+      id: firstComparison.primStat.statHash,
+      name: firstComparison.primStat.stat.statName,
+      min: 0,
+      max: 0,
+      enabled: false,
+      getStat(item: DimItem) {
+        return item.primStat!;
+      }
+    });
+  }
+
+  // Todo: map of stat id => stat object
+  // add 'em up
+  const statsByHash: { [statHash: string]: StatInfo } = {};
+  for (const item of comparisons) {
+    if (item.stats) {
+      for (const stat of item.stats) {
+        let statInfo = statsByHash[stat.statHash];
+        if (!statInfo) {
+          statInfo = {
+            id: stat.statHash,
+            name: stat.name,
+            min: 0,
+            max: 0,
+            enabled: false,
+            getStat(item: DimItem) {
+              return item.stats!.find((s) => s.statHash === stat.statHash)!;
+            }
+          };
+          statsByHash[stat.statHash] = statInfo;
+          stats.push(statInfo);
+        }
+      }
     }
   }
 
-  return (
-    <div className="compare-item">
-      <div className="close" onClick={() => remove(item)} />
-      <div>
-        <ItemTagSelector tag={item.dimInfo.tag} onTagUpdated={onTagUpdated} />
-      </div>
-      <div className="item-name" onClick={() => itemClick(item)}>
-        {item.name} <AppIcon icon={searchIcon} />
-      </div>
-      <ConnectedInventoryItem item={item} />
-      {stats.map((stat) => (
-        <CompareStat item={item} stat={stat} setHighlight={setHighlight} />
-      ))}
-      {item.talentGrid && <TalentGrid talentGrid={item.talentGrid} perksOnly={true} />}
-      {item.isDestiny2() && item.sockets && <Sockets item={item} $scope={$scope} hideMods={true} />}
-    </div>
-  );
-}
+  stats.forEach((stat) => {
+    for (const item of comparisons) {
+      const itemStat = stat.getStat(item);
+      if (itemStat) {
+        stat.min = Math.min(stat.min, itemStat.value || 0);
+        stat.max = Math.max(stat.max, itemStat.value || 0);
+        stat.enabled = stat.min !== stat.max;
+      }
+    }
+  });
 
-function CompareStat({
-  stat,
-  item,
-  setHighlight
-}: {
-  stat: StatInfo;
-  item: DimItem;
-  setHighlight(value?: string | number): void;
-}) {
-  const itemStat = stat.getStat(item);
-
-  return (
-    <div
-      key={stat.id}
-      className={classNames({ highlight: stat.highlighted })}
-      onMouseOver={() => setHighlight(stat.id)}
-      style={getColor(statRange(itemStat, stat), 'color')}
-    >
-      <span>
-        {stat.id === 'Rating' && (
-          <>
-            <AppIcon icon={starIcon} />{' '}
-          </>
-        )}
-        {itemStat.value || t('Stats.NotApplicable')}
-        {Boolean(itemStat.value) &&
-          (itemStat as D1Stat).qualityPercentage &&
-          Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
-            <span className="range">({(itemStat as D1Stat).qualityPercentage!.range})</span>
-          )}
-      </span>
-    </div>
-  );
-}
-
-// Turns a stat and a list of ranges into a 0-100 scale
-function statRange(
-  stat: { value?: number; statHash: number; qualityPercentage?: { min: number } },
-  statInfo: StatInfo
-) {
-  if (!stat) {
-    return -1;
-  }
-  if (stat.qualityPercentage) {
-    return stat.qualityPercentage.min;
-  }
-
-  if (!statRange || !statInfo.enabled) {
-    return -1;
-  }
-
-  return (100 * (stat.value || 0 - statInfo.min)) / (statInfo.max - statInfo.min);
+  return stats;
 }
