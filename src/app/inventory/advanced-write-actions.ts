@@ -7,7 +7,7 @@ import {
   DestinySocketArrayType
 } from 'bungie-api-ts/destiny2';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
-import * as idbKeyval from 'idb-keyval';
+import { get, set } from 'idb-keyval';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DimSocket, D2Item } from './item-types';
@@ -59,7 +59,7 @@ export async function getAwaToken(
 ): Promise<string> {
   if (!awaCache) {
     // load from cache first time
-    awaCache = ((await idbKeyval.get('awa-tokens')) || {}) as {
+    awaCache = ((await get('awa-tokens')) || {}) as {
       [key: number]: AwaAuthorizationResult & { used: number };
     };
   }
@@ -94,7 +94,7 @@ export async function getAwaToken(
   info.used++;
 
   // TODO: really should use a separate db for this
-  await idbKeyval.set('awa-tokens', awaCache);
+  await set('awa-tokens', awaCache);
 
   return info.actionToken;
 }
