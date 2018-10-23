@@ -26,11 +26,7 @@ export default function CompareStat({
       style={getColor(statRange(itemStat, stat), 'color')}
     >
       <span>
-        {stat.id === 'Rating' && (
-          <>
-            <AppIcon icon={starIcon} />{' '}
-          </>
-        )}
+        {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
         {(itemStat && itemStat.value) || t('Stats.NotApplicable')}
         {Boolean(itemStat && itemStat.value) &&
           (itemStat as D1Stat).qualityPercentage &&

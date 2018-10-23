@@ -163,18 +163,20 @@ class Compare extends React.Component<Props, State> {
               </div>
             ))}
           </div>
-          {comparisons.map((item) => (
-            <CompareItem
-              item={item}
-              key={item.id}
-              stats={stats}
-              itemClick={this.itemClick}
-              remove={this.remove}
-              setHighlight={this.setHighlight}
-              $scope={this.$scope}
-              highlight={highlight}
-            />
-          ))}
+          <div className="compare-items">
+            {comparisons.map((item) => (
+              <CompareItem
+                item={item}
+                key={item.id}
+                stats={stats}
+                itemClick={this.itemClick}
+                remove={this.remove}
+                setHighlight={this.setHighlight}
+                $scope={this.$scope}
+                highlight={highlight}
+              />
+            ))}
+          </div>
         </div>
       </div>
     );

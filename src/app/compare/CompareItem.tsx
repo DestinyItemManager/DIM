@@ -48,9 +48,9 @@ export default function CompareItem({
 
   return (
     <div className="compare-item">
-      <div className="close" onClick={() => remove(item)} />
-      <div>
+      <div className="compare-item-header">
         <ItemTagSelector tag={item.dimInfo.tag} onTagUpdated={onTagUpdated} />
+        <div className="close" onClick={() => remove(item)} />
       </div>
       <div className="item-name" onClick={() => itemClick(item)}>
         {item.name} <AppIcon icon={searchIcon} />
