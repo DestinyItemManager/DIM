@@ -4,7 +4,7 @@
   flex: 1;
   padding: 2px 16px;
   background-color: transparent;
-  color: white;
+  color: #ffffff;
   min-height: 34px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -15,7 +15,7 @@
   align-items: center;
   transition: 0.3s;
   cursor: pointer;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid #ffffff;
 
   &:hover {
     letter-spacing: 4px;
@@ -55,12 +55,13 @@
   cursor: pointer;
 }
 
-.collapsed_true {
-  background-color: rgba(0, 0, 0, 0.8);
+.collapsed-true {
+  background-color: $darkgray;
 }
-.collapseHiddenText {
+
+.collapse-hidden-Text {
   color: $lightgray;
   font-size: 14px;
-  vertical-align: top;
   line-height: 22px;
+  vertical-align: top;
 }
