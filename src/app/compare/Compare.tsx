@@ -109,6 +109,9 @@ export default class Compare extends React.Component<{}, State> {
     return (
       <div id="loadout-drawer" className="compare">
         <div className="compare-options">
+          <button className="dim-button" onClick={this.cancel}>
+            <span>{t('Compare.Close')}</span> <AppIcon icon={closeIcon} />
+          </button>{' '}
           {archetypes.length > 1 && (
             <button className="dim-button" onClick={(e) => this.compareSimilar(e, 'archetype')}>
               {t(firstComparison.bucket.inWeapons ? 'Compare.Archetype' : 'Compare.Splits', {
@@ -116,9 +119,6 @@ export default class Compare extends React.Component<{}, State> {
               })}
             </button>
           )}{' '}
-          <button className="dim-button" onClick={this.cancel}>
-            <span>{t('Compare.Close')}</span> <AppIcon icon={closeIcon} />
-          </button>{' '}
           {similarTypes.length > 1 && (
             <button className="dim-button" onClick={this.compareSimilar}>
               {t('Compare.All', { type: firstComparison.typeName, quantity: similarTypes.length })}
@@ -311,7 +311,7 @@ function getAllStats(comparisons: DimItem[]) {
     stats.push({
       id: 'Rating',
       name: t('Compare.Rating'),
-      min: 0,
+      min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
       getStat(item: DimItem) {
@@ -323,7 +323,7 @@ function getAllStats(comparisons: DimItem[]) {
     stats.push({
       id: firstComparison.primStat.statHash,
       name: firstComparison.primStat.stat.statName,
-      min: 0,
+      min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
       getStat(item: DimItem) {
@@ -343,7 +343,7 @@ function getAllStats(comparisons: DimItem[]) {
           statInfo = {
             id: stat.statHash,
             name: stat.name,
-            min: 0,
+            min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,
             getStat(item: DimItem) {
@@ -367,6 +367,8 @@ function getAllStats(comparisons: DimItem[]) {
       }
     }
   });
+
+  console.log(stats);
 
   return stats;
 }

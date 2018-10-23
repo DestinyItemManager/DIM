@@ -54,7 +54,7 @@ function statRange(
     return stat.qualityPercentage.min;
   }
 
-  if (!statRange || !statInfo.enabled) {
+  if (!statInfo || !statInfo.enabled) {
     return -1;
   }
 
