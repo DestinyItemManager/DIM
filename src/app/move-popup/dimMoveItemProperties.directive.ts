@@ -1,7 +1,7 @@
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { settings } from '../settings/settings';
-import { IController, IRootScopeService, IScope, IComponentOptions, IAngularEvent } from 'angular';
+import { IController, IScope, IComponentOptions, IAngularEvent } from 'angular';
 import template from './dimMoveItemProperties.html';
 import { DimItem } from '../inventory/item-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
@@ -10,6 +10,7 @@ import { router } from '../../router';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
+import { CompareService } from '../compare/compare.service';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -37,8 +38,7 @@ function MoveItemPropertiesCtrl(
     infuse(item: DimItem, $event: IAngularEvent): void;
   },
   ngDialog,
-  $scope: IScope,
-  $rootScope: IRootScopeService
+  $scope: IScope
 ) {
   'ngInject';
   const vm = this;
@@ -151,10 +151,7 @@ function MoveItemPropertiesCtrl(
 
   vm.openCompare = () => {
     ngDialog.closeAll();
-    $rootScope.$broadcast('dim-store-item-compare', {
-      item: vm.item,
-      dupes: true
-    });
+    CompareService.addItemToCompare(vm.item, true);
   };
 
   vm.updateNote = () => {

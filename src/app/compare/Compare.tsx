@@ -12,6 +12,7 @@ import { AppIcon, closeIcon } from '../shell/icons';
 import { createSelector } from 'reselect';
 import CompareItem from './CompareItem';
 import './compare.scss';
+import { Subscriptions } from '../rx-utils';
 
 // TODO: There's far too much state here.
 // TODO: maybe have a holder/state component and a connected display component
@@ -42,6 +43,7 @@ export default class Compare extends React.Component<{}, State> {
   };
   // tslint:disable-next-line:ban-types
   private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private listener: Function;
   private getAllStatsSelector = createSelector((state: State) => state.comparisons, getAllStats);
@@ -51,17 +53,20 @@ export default class Compare extends React.Component<{}, State> {
       this.cancel();
     });
 
-    this.$scope.$on('dim-store-item-compare', (_event, args) => {
-      this.setState({ show: true });
-      CompareService.dialogOpen = true;
+    this.subscriptions.add(
+      CompareService.compareItem$.subscribe((args) => {
+        this.setState({ show: true });
+        CompareService.dialogOpen = true;
 
-      this.add(args);
-    });
+        this.add(args);
+      })
+    );
   }
 
   componentWillUnmount() {
     this.listener();
     this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
     CompareService.dialogOpen = false;
   }
 

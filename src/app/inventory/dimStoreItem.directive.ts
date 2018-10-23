@@ -73,7 +73,7 @@ export function StoreItemCtrl(
         : vm.item.equipment || vm.item.bucket.hasTransferDestination;
   };
 
-  vm.clicked = function clicked(item, e) {
+  vm.clicked = function clicked(item: DimItem, e: MouseEvent) {
     e.stopPropagation();
 
     if (vm.shiftClickCallback && e.shiftKey) {
@@ -98,7 +98,7 @@ export function StoreItemCtrl(
     } else if (dimLoadoutService.dialogOpen) {
       dimLoadoutService.addItemToLoadout(item, e);
     } else if (CompareService.dialogOpen) {
-      CompareService.addItemToCompare(item, e);
+      CompareService.addItemToCompare(item);
     } else {
       // This is separate to hopefully work around an issue where Angular can't instantiate the controller with ES6 object shorthands
       function dialogController() {
