@@ -13,6 +13,21 @@ import { createSelector } from 'reselect';
 import CompareItem from './CompareItem';
 import './compare.scss';
 import { Subscriptions } from '../rx-utils';
+import { connect } from 'react-redux';
+import { ReviewsState, getRating } from '../item-review/reducer';
+import { RootState } from '../store/reducers';
+
+interface StoreProps {
+  ratings: ReviewsState['ratings'];
+}
+
+type Props = StoreProps;
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    ratings: state.reviews.ratings
+  };
+}
 
 // TODO: There's far too much state here.
 // TODO: maybe have a holder/state component and a connected display component
@@ -34,7 +49,7 @@ export interface StatInfo {
   getStat(item: DimItem): { value?: number; statHash: number } | undefined;
 }
 
-export default class Compare extends React.Component<{}, State> {
+class Compare extends React.Component<Props, State> {
   state: State = {
     comparisons: [],
     similarTypes: [],
@@ -46,7 +61,13 @@ export default class Compare extends React.Component<{}, State> {
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private listener: Function;
-  private getAllStatsSelector = createSelector((state: State) => state.comparisons, getAllStats);
+
+  // Memoize computing the list of stats
+  private getAllStatsSelector = createSelector(
+    (state: State) => state.comparisons,
+    (_state: State, props: Props) => props.ratings,
+    getAllStats
+  );
 
   componentDidMount() {
     this.listener = router.transitionService.onExit({}, () => {
@@ -104,7 +125,7 @@ export default class Compare extends React.Component<{}, State> {
     );
 
     const firstComparison = comparisons[0];
-    const stats = this.getAllStatsSelector(this.state);
+    const stats = this.getAllStatsSelector(this.state, this.props);
 
     return (
       <div id="loadout-drawer" className="compare">
@@ -303,7 +324,7 @@ export default class Compare extends React.Component<{}, State> {
   };
 }
 
-function getAllStats(comparisons: DimItem[]) {
+function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
   const firstComparison = comparisons[0];
 
   const stats: StatInfo[] = [];
@@ -315,7 +336,8 @@ function getAllStats(comparisons: DimItem[]) {
       max: 0,
       enabled: false,
       getStat(item: DimItem) {
-        return { statHash: 0, value: (item.dtrRating && item.dtrRating.overallScore) || 0 };
+        const dtrRating = getRating(item, ratings);
+        return { statHash: 0, value: (dtrRating && dtrRating.overallScore) || 0 };
       }
     });
   }
@@ -368,7 +390,7 @@ function getAllStats(comparisons: DimItem[]) {
     }
   });
 
-  console.log(stats);
-
   return stats;
 }
+
+export default connect<StoreProps>(mapStateToProps)(Compare);
