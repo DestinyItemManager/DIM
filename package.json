@@ -14,8 +14,12 @@
     "start": "webpack-serve ./config/webpack.js --no-reload",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
-    "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss}'",
-    "precommit": "pretty-quick --staged"
+    "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss}'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "repository": {
     "type": "git",
@@ -61,7 +65,7 @@
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^1.0.0",
     "exports-loader": "^0.7.0",
-    "extract-loader": "^2.0.1",
+    "extract-loader": "^3.0.0",
     "file-loader": "^2.0.0",
     "generate-json-webpack-plugin": "^0.3.1",
     "grunt": "^1.0.2",
@@ -75,7 +79,7 @@
     "html-webpack-include-sibling-chunks-plugin": "^0.1.4",
     "html-webpack-plugin": "^3.2.0",
     "htmlhint": "^0.10.1",
-    "husky": "^0.14.3",
+    "husky": "^1.1.2",
     "imports-loader": "^0.8.0",
     "load-grunt-tasks": "^4.0.0",
     "lodash-webpack-plugin": "^0.11.5",
