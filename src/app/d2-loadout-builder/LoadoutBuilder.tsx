@@ -78,7 +78,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     this.state = {
       showingOptions: false,
       requirePerks: true,
-      useBaseStats: false,
+      useBaseStats: true,
       requireBurn: 'none',
       processRunning: 0,
       lockedMap: {},
