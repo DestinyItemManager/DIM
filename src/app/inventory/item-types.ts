@@ -114,12 +114,6 @@ export interface DimItem {
   /** Can this be reviewed? */
   reviewable: boolean;
   /**
-   * Is this a new item?
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
-  isNew: boolean;
-  /**
    * DIM tagging and notes info.
    *
    * @deprecated this must not be used when rendering items in React.

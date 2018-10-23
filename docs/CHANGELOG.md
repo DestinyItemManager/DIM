@@ -1,13 +1,22 @@
 # Next
 
+# 4.74.1 (2018-10-21)
+
 * We no longer support searching D1 vendor items.
 * Added support for showing ratings and reviews based on the item roll in Destiny 2.
 * Fix for missing class names in the loadout builder in Firefox.
+* Added item search to D2 vendors.
+* Collections now include the in-game Collections.
+* D2 Vendors and Progress page now have collapsible sections.
+* Catalysts are sorted above Ornaments on the Collections page.
+* Fix a bug that could accidentally erase loadouts. Don't forget you can restore your data from old Google Drive backups from the Settings page.
+* is:hasmod now includes Backup Mag.
+* is:ikelos now includes Sleeper Simulant.
 
 # 4.74.0 (2018-10-14)
 
 * Added negative search. Prefix any search term with `-` and it will match the opposite.
-* Added `perk:"* **"` seach filter to match any keywords against perks on an item
+* Added `perk:"* **"` search filter to match any keywords against perks on an item
 * Added some missing `stat:`
 * Lock and unlock items matching your current search from the same menu you use for tagging them.
 * Updated icons across the app.

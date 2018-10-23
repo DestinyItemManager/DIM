@@ -704,11 +704,6 @@
     "Flawless": "Flawless",
     "SevenWins": "7 Win Reward (Weapon)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
-  },
   "Vendors": {
     "All": "All",
     "ArmorAndWeapons": "Armor & Weapons",
@@ -716,6 +711,7 @@
     "Bounties": "Bounties",
     "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
     "Collections": "Collections",
+    "Catalysts": "Catalysts",
     "Compare": "Compare with what you already have:",
     "Consumables": "Consumables",
     "DestinyMap": "Find collectibles on lowlines' Destiny map",

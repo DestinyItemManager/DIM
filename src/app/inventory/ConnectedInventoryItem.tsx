@@ -7,10 +7,12 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
 import { getRating } from '../item-review/reducer';
+import { searchFilterSelector } from '../search/search-filters';
 
 // Props provided from parents
 interface ProvidedProps {
   item: DimItem;
+  allowFilter?: boolean;
   onClick?(e): void;
 }
 
@@ -20,6 +22,7 @@ interface StoreProps {
   tag?: TagValue;
   rating?: number;
   hideRating?: boolean;
+  searchHidden?: boolean;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -38,7 +41,8 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, state.inventory.itemInfos),
     rating: dtrRating ? dtrRating.overallScore : undefined,
-    hideRating: !showRating
+    hideRating: !showRating,
+    searchHidden: props.allowFilter && !searchFilterSelector(state)(item)
   };
 }
 
@@ -50,7 +54,7 @@ type Props = ProvidedProps & StoreProps;
  */
 class ConnectedInventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, tag, rating, hideRating, onClick } = this.props;
+    const { item, isNew, tag, rating, hideRating, onClick, searchHidden } = this.props;
 
     return (
       <InventoryItem
@@ -60,6 +64,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
         rating={rating}
         hideRating={hideRating}
         onClick={onClick}
+        searchHidden={searchHidden}
       />
     );
   }

@@ -312,8 +312,6 @@ module.exports = (env) => {
         '$featureFlags.debugSW': JSON.stringify(env !== 'release'),
         // Send exception reports to Sentry.io on beta only
         '$featureFlags.sentry': JSON.stringify(env === 'beta'),
-        // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
         // Forsaken Item Tiles

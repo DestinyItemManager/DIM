@@ -1,4 +1,3 @@
-import { IScope } from 'angular';
 import {
   DestinyCharacterComponent,
   DestinyFactionProgression,
@@ -28,6 +27,7 @@ import { chainComparator, compareBy } from '../comparators';
 import { characterComponentSortSelector } from '../settings/character-sort';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -51,19 +51,23 @@ const factionOrder = [
   3398051042 // Dead Orbit
 ];
 
-interface Props {
-  $scope: IScope;
+interface ProvidedProps {
   account: DestinyAccount;
+}
+
+interface StoreProps {
   isPhonePortrait: boolean;
   characterOrder(characters: DestinyCharacterComponent[]): DestinyCharacterComponent[];
 }
+
+type Props = ProvidedProps & StoreProps;
 
 interface State {
   progress?: ProgressProfile;
   currentCharacterId: string;
 }
 
-function mapStateToProps(state: RootState): Partial<Props> {
+function mapStateToProps(state: RootState): StoreProps {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
     characterOrder: characterComponentSortSelector(state)
@@ -141,62 +145,68 @@ class Progress extends React.Component<Props, State> {
         <div className="profile-content">
           {profileMilestones.length > 0 && (
             <div className="section">
-              <div className="title">{t('Progress.ProfileMilestones')}</div>
-              <div className="progress-row">
-                <div className="progress-for-character">
-                  <ErrorBoundary name="AccountMilestones">
-                    {profileMilestones.map((milestone) => (
-                      <Milestone
-                        milestone={milestone}
-                        character={characters[0]}
-                        defs={defs}
-                        key={milestone.milestoneHash}
-                      />
-                    ))}
-                  </ErrorBoundary>
+              <CollapsibleTitle
+                title={t('Progress.ProfileMilestones')}
+                sectionId="profile-milestones"
+              >
+                <div className="progress-row">
+                  <div className="progress-for-character">
+                    <ErrorBoundary name="AccountMilestones">
+                      {profileMilestones.map((milestone) => (
+                        <Milestone
+                          milestone={milestone}
+                          character={characters[0]}
+                          defs={defs}
+                          key={milestone.milestoneHash}
+                        />
+                      ))}
+                    </ErrorBoundary>
+                  </div>
                 </div>
-              </div>
+              </CollapsibleTitle>
             </div>
           )}
 
           {profileQuests.length > 0 && (
             <div className="section">
-              <div className="title">{t('Progress.ProfileQuests')}</div>
-              <div className="progress-row">
-                <div className="progress-for-character">
-                  <ErrorBoundary name="AccountQuests">
-                    {profileQuests.map((item) => (
-                      <Quest
-                        defs={defs}
-                        item={item}
-                        objectives={this.objectivesForItem(characters[0], item)}
-                        key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}
-                      />
-                    ))}
-                  </ErrorBoundary>
+              <CollapsibleTitle title={t('Progress.ProfileQuests')} sectionId="profile-quests">
+                <div className="progress-row">
+                  <div className="progress-for-character">
+                    <ErrorBoundary name="AccountQuests">
+                      {profileQuests.map((item) => (
+                        <Quest
+                          defs={defs}
+                          item={item}
+                          objectives={this.objectivesForItem(characters[0], item)}
+                          key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}
+                        />
+                      ))}
+                    </ErrorBoundary>
+                  </div>
                 </div>
-              </div>
+              </CollapsibleTitle>
             </div>
           )}
 
           <div className="section crucible-ranks">
-            <div className="title">{t('Progress.CrucibleRank')}</div>
-            <div className="progress-row">
-              <div className="progress-for-character">
-                <ErrorBoundary name="CrucibleRanks">
-                  {crucibleRanks.map(
-                    (progression) =>
-                      progression && (
-                        <CrucibleRank
-                          key={progression.progressionHash}
-                          defs={defs}
-                          progress={progression}
-                        />
-                      )
-                  )}
-                </ErrorBoundary>
+            <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
+              <div className="progress-row">
+                <div className="progress-for-character">
+                  <ErrorBoundary name="CrucibleRanks">
+                    {crucibleRanks.map(
+                      (progression) =>
+                        progression && (
+                          <CrucibleRank
+                            key={progression.progressionHash}
+                            defs={defs}
+                            progress={progression}
+                          />
+                        )
+                    )}
+                  </ErrorBoundary>
+                </div>
               </div>
-            </div>
+            </CollapsibleTitle>
           </div>
         </div>
         <hr />
@@ -258,71 +268,74 @@ class Progress extends React.Component<Props, State> {
         </div>
 
         <div className="section">
-          <div className="title">{t('Progress.Milestones')}</div>
-          <div className="progress-row">
-            <ErrorBoundary name="Milestones">
-              {characters.map((character) => (
-                <div className="progress-for-character" key={character.characterId}>
-                  <WellRestedPerkIcon
-                    defs={defs}
-                    progressions={profileInfo.characterProgressions.data[character.characterId]}
-                  />
-                  {this.milestonesForCharacter(character).map((milestone) => (
-                    <Milestone
-                      milestone={milestone}
-                      character={character}
+          <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
+            <div className="progress-row">
+              <ErrorBoundary name="Milestones">
+                {characters.map((character) => (
+                  <div className="progress-for-character" key={character.characterId}>
+                    <WellRestedPerkIcon
                       defs={defs}
-                      key={milestone.milestoneHash}
+                      progressions={profileInfo.characterProgressions.data[character.characterId]}
                     />
-                  ))}
-                </div>
-              ))}
-            </ErrorBoundary>
-          </div>
+                    {this.milestonesForCharacter(character).map((milestone) => (
+                      <Milestone
+                        milestone={milestone}
+                        character={character}
+                        defs={defs}
+                        key={milestone.milestoneHash}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </ErrorBoundary>
+            </div>
+          </CollapsibleTitle>
         </div>
 
         <div className="section">
-          <div className="title">{pursuitsLabel}</div>
-          <div className="progress-row">
-            <ErrorBoundary name="Quests">
-              {characters.map((character) => (
-                <div className="progress-for-character" key={character.characterId}>
-                  {this.questItems(
-                    profileInfo.characterInventories.data[character.characterId].items
-                  ).map((item) => (
-                    <Quest
-                      defs={defs}
-                      item={item}
-                      objectives={this.objectivesForItem(character, item)}
-                      key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}
-                    />
-                  ))}
-                </div>
-              ))}
-            </ErrorBoundary>
-          </div>
+          <CollapsibleTitle title={pursuitsLabel} sectionId="pursuits">
+            <div className="progress-row">
+              <ErrorBoundary name="Quests">
+                {characters.map((character) => (
+                  <div className="progress-for-character" key={character.characterId}>
+                    {this.questItems(
+                      profileInfo.characterInventories.data[character.characterId].items
+                    ).map((item) => (
+                      <Quest
+                        defs={defs}
+                        item={item}
+                        objectives={this.objectivesForItem(character, item)}
+                        key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </ErrorBoundary>
+            </div>
+          </CollapsibleTitle>
         </div>
 
         <div className="section">
-          <div className="title">{t('Progress.Factions')}</div>
-          <div className="progress-row">
-            <ErrorBoundary name="Factions">
-              {characters.map((character) => (
-                <div className="progress-for-character" key={character.characterId}>
-                  {this.factionsForCharacter(character).map((faction) => (
-                    <Faction
-                      factionProgress={faction}
-                      defs={defs}
-                      character={character}
-                      profileInventory={profileInfo.profileInventory.data}
-                      key={faction.factionHash}
-                      vendor={this.vendorForFaction(character, faction)}
-                    />
-                  ))}
-                </div>
-              ))}
-            </ErrorBoundary>
-          </div>
+          <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
+            <div className="progress-row">
+              <ErrorBoundary name="Factions">
+                {characters.map((character) => (
+                  <div className="progress-for-character" key={character.characterId}>
+                    {this.factionsForCharacter(character).map((faction) => (
+                      <Faction
+                        factionProgress={faction}
+                        defs={defs}
+                        character={character}
+                        profileInventory={profileInfo.profileInventory.data}
+                        key={faction.factionHash}
+                        vendor={this.vendorForFaction(character, faction)}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </ErrorBoundary>
+            </div>
+          </CollapsibleTitle>
         </div>
       </>
     );
@@ -488,4 +501,4 @@ class Progress extends React.Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(Progress);
+export default connect<StoreProps>(mapStateToProps)(Progress);

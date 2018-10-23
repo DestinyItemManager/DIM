@@ -6,7 +6,6 @@ import {
   DestinyVendorsResponse,
   DestinyVendorSaleItemComponent,
   DestinyVendorResponse,
-  DestinyProfileResponse,
   DestinyVendorItemDefinition,
   DestinyVendorDefinition
 } from 'bungie-api-ts/destiny2';
@@ -50,26 +49,6 @@ export async function fetchRatingsForVendor(
   );
 
   return dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
-}
-
-export async function fetchRatingsForKiosks(
-  defs: D2ManifestDefinitions,
-  profileResponse: DestinyProfileResponse
-): Promise<DestinyTrackerService> {
-  const kioskVendorHashes = new Set(Object.keys(profileResponse.profileKiosks.data.kioskItems));
-  _.each(profileResponse.characterKiosks.data, (kiosk) => {
-    _.each(kiosk.kioskItems, (_, kioskHash) => {
-      kioskVendorHashes.add(kioskHash);
-    });
-  });
-
-  const vendorItems = _.flatMap(Array.from(kioskVendorHashes), (kvh) => {
-    const vendorHash = Number(kvh);
-    const vendorDef = defs.Vendor.get(vendorHash);
-    return vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
-  });
-
-  return dimDestinyTrackerService.bulkFetchKioskItems(vendorItems);
 }
 
 export async function fetchRatingsForVendorDef(

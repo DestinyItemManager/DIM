@@ -100,7 +100,9 @@ export class ItemInfoSource {
   bulkSave(items: DimItem[]) {
     return getInfos(this.key).then((infos) => {
       items.forEach((item) => {
-        infos[`${item.hash}-${item.id}`] = { tag: item.dimInfo.tag };
+        const key = `${item.hash}-${item.id}`;
+        infos[key] = { tag: item.dimInfo.tag };
+        store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
       });
       return setInfos(this.key, infos);
     });

@@ -370,7 +370,7 @@ function searchFilters(
     573576346 // sagira shell
   ]);
 
-  const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643]);
+  const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
@@ -1089,7 +1089,8 @@ function searchFilters(
         return _loadoutItemIds && _loadoutItemIds.has(item.id);
       },
       new(item: DimItem) {
-        return item.isNew;
+        // TODO: pass newItems into the filter object too?
+        return store.getState().inventory.newItems.has(item.id);
       },
       tag(item: DimItem) {
         return item.dimInfo.tag !== undefined;
@@ -1147,7 +1148,7 @@ function searchFilters(
               ) &&
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
-                /(v400.weapon.mod_(guns|damage)|enhancements.)/
+                /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
               )
             );
           })

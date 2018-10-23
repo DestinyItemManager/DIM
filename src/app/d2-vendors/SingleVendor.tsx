@@ -8,7 +8,6 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -18,6 +17,8 @@ import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { getBuckets } from '../destiny2/d2-buckets.service';
 
 interface Props {
   account: DestinyAccount;
@@ -28,9 +29,9 @@ interface State {
   stores?: D2Store[];
   ownedItemHashes?: Set<number>;
   defs?: D2ManifestDefinitions;
+  buckets?: InventoryBuckets;
   vendorDef?: DestinyVendorDefinition;
   vendorResponse?: DestinyVendorResponse;
-  trackerService?: DestinyTrackerService;
 }
 
 /**
@@ -50,6 +51,7 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
     // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
+    const buckets = await getBuckets();
 
     const vendorDef = defs.Vendor.get(this.state.vendorHash);
     if (!vendorDef) {
@@ -79,13 +81,11 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
         this.state.vendorHash
       );
 
-      this.setState({ defs, vendorResponse });
+      this.setState({ defs, vendorResponse, buckets });
 
-      const trackerService = await fetchRatingsForVendor(defs, vendorResponse);
-      this.setState({ trackerService });
+      await fetchRatingsForVendor(defs, vendorResponse);
     } else {
-      const trackerService = await fetchRatingsForVendorDef(defs, vendorDef);
-      this.setState({ trackerService });
+      await fetchRatingsForVendorDef(defs, vendorDef);
     }
   }
 
@@ -114,10 +114,10 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
   }
 
   render() {
-    const { defs, vendorDef, vendorResponse, trackerService, ownedItemHashes } = this.state;
+    const { defs, buckets, vendorDef, vendorResponse, ownedItemHashes } = this.state;
     const { account } = this.props;
 
-    if (!vendorDef || !defs) {
+    if (!vendorDef || !defs || !buckets) {
       return (
         <div className="vendor dim-page">
           <Loading />
@@ -147,8 +147,8 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
     const vendorItems = getVendorItems(
       account,
       defs,
+      buckets,
       vendorDef,
-      trackerService,
       vendorResponse && vendorResponse.itemComponents,
       vendorResponse && vendorResponse.sales.data
     );
@@ -178,7 +178,6 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
             vendor={vendor}
             vendorDef={vendorDef}
             vendorItems={vendorItems}
-            trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={
               vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}
