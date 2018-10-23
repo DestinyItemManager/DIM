@@ -16,7 +16,7 @@ import { lazyInjector } from '../../lazyInjector';
 import { TalentGridComponent } from '../move-popup/talent-grid.component';
 import { getColor } from '../shell/dimAngularFilters.filter';
 import { IScope } from 'angular';
-import { AppIcon, starIcon, searchIcon } from '../shell/icons';
+import { AppIcon, starIcon, searchIcon, closeIcon } from '../shell/icons';
 import { TagValue } from '../inventory/dim-item-info';
 
 // TODO: There's far too much state here.
@@ -28,6 +28,17 @@ interface State {
   sortedHash?: string | number;
   similarTypes: DimItem[];
   archetypes: DimItem[];
+}
+
+interface StatInfo {
+  id: string | number;
+  name: string;
+  min: number;
+  max: number;
+  enabled: boolean;
+  highlighted: boolean;
+  sorted: boolean;
+  getStat(item: DimItem): { value?: number; statHash: number };
 }
 
 const TalentGrid = angular2react<{
@@ -102,42 +113,73 @@ export default class Compare extends React.Component<{}, State> {
     const similarTypes = this.findSimilarTypes(allItems);
     const archeTypes = this.findArchetypes(similarTypes);
 
-    const statBuckets = {};
+    const stats: StatInfo[] = [];
+    if ($featureFlags.reviewsEnabled) {
+      stats.push({
+        id: 'Rating',
+        name: t('Compare.Rating'),
+        min: 0,
+        max: 0,
+        enabled: false,
+        highlighted: false,
+        sorted: false,
+        getStat(item: DimItem) {
+          return { statHash: 0, value: (item.dtrRating && item.dtrRating.overallScore) || 0 };
+        }
+      });
+    }
+    if (firstComparison.primStat) {
+      stats.push({
+        id: firstComparison.primStat.statHash,
+        name: firstComparison.primStat.stat.statName,
+        min: 0,
+        max: 0,
+        enabled: false,
+        highlighted: false,
+        sorted: false,
+        getStat(item: DimItem) {
+          return item.primStat!;
+        }
+      });
+    }
 
-    // TODO: Drive the list of stats from this
-    const bucketStat = (stat: { statHash: number; value?: number }) => {
-      if (stat && stat.value) {
-        // TODO: Track min/max here
-        (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
+    // Todo: map of stat id => stat object
+    // add 'em up
+    const statsByHash: { [statHash: string]: StatInfo } = {};
+    for (const item of comparisons) {
+      if (item.stats) {
+        for (const stat of item.stats) {
+          let statInfo = statsByHash[stat.statHash];
+          if (!statInfo) {
+            statInfo = {
+              id: stat.statHash,
+              name: stat.name,
+              min: 0,
+              max: 0,
+              enabled: false,
+              highlighted: false,
+              sorted: false,
+              getStat(item: DimItem) {
+                return item.stats!.find((s) => s.statHash === stat.statHash)!;
+              }
+            };
+            statsByHash[stat.statHash] = statInfo;
+            stats.push(statInfo);
+          }
+        }
       }
-    };
+    }
 
-    comparisons.forEach((item: DimItem) => {
-      if (item.stats && item.primStat) {
-        item.stats.forEach(bucketStat);
-        bucketStat(item.primStat);
-        bucketStat({ statHash: 0, value: (item.dtrRating && item.dtrRating.overallScore) || 0 });
+    stats.forEach((stat) => {
+      stat.highlighted = stat.id === highlight;
+      stat.sorted = stat.id === sortedHash;
+      for (const item of comparisons) {
+        const itemStat = stat.getStat(item);
+        stat.min = Math.min(stat.min, itemStat.value || 0);
+        stat.max = Math.max(stat.max, itemStat.value || 0);
+        stat.enabled = stat.min !== stat.max;
       }
     });
-
-    const statRanges: {
-      [hash: string]: {
-        min: number;
-        max: number;
-        enabled: boolean;
-      };
-    } = {};
-    _.each(statBuckets, (bucket: any, hash) => {
-      const statRange = {
-        min: Math.min(...bucket),
-        max: Math.max(...bucket),
-        enabled: false
-      };
-      statRange.enabled = statRange.min !== statRange.max;
-      statRanges[hash] = statRange;
-    });
-
-    // TODO: handle missing stats by building a master stat list here
 
     return (
       <div id="loadout-drawer" className="compare">
@@ -149,62 +191,37 @@ export default class Compare extends React.Component<{}, State> {
               })}
             </button>
           )}{' '}
+          <button className="dim-button" onClick={this.cancel}>
+            <span>{t('Compare.Close')}</span> <AppIcon icon={closeIcon} />
+          </button>{' '}
           {similarTypes.length > 1 && (
             <button className="dim-button" onClick={this.compareSimilar}>
               {t('Compare.All', { type: firstComparison.typeName, quantity: similarTypes.length })}
             </button>
-          )}{' '}
-          <button className="dim-button" onClick={this.cancel}>
-            <span>{t('Compare.Close')}</span> <i className="fa fa-close" />
-          </button>
+          )}
         </div>
         <div className="compare-bucket" onMouseLeave={() => this.setHighlight(undefined)}>
           <div className="compare-item fixed-left">
             <div className="spacer" />
-            <div
-              className={classNames('compare-stat-label', {
-                highlight: highlight === 'Rating',
-                sorted: sortedHash === 'Rating'
-              })}
-              onMouseOver={() => this.setHighlight('Rating')}
-              onClick={() => this.sort('Rating')}
-            >
-              {t('Compare.Rating')}
-            </div>
-            {firstComparison.primStat && (
+            {stats.map((stat) => (
               <div
+                key={stat.id}
                 className={classNames('compare-stat-label', {
-                  highlight: highlight === firstComparison.primStat.statHash,
-                  sorted: sortedHash === firstComparison.primStat.statHash
+                  highlight: stat.highlighted,
+                  sorted: stat.sorted
                 })}
-                onMouseOver={() => this.setHighlight(firstComparison.primStat!.statHash)}
-                onClick={() => this.sort(firstComparison.primStat!.statHash)}
+                onMouseOver={() => this.setHighlight(stat.id)}
+                onClick={() => this.sort(stat.id)}
               >
-                {firstComparison.primStat.stat.statName ||
-                  firstComparison.primStat.stat.displayProperties.name}
+                {stat.name}
               </div>
-            )}
-            {firstComparison.stats &&
-              firstComparison.stats.map((stat) => (
-                <div
-                  key={stat.statHash}
-                  className={classNames('compare-stat-label', {
-                    highlight: highlight === stat.statHash,
-                    sorted: sortedHash === stat.statHash
-                  })}
-                  onMouseOver={() => this.setHighlight(stat.statHash)}
-                  onClick={() => this.sort(stat.statHash)}
-                >
-                  {stat.name}
-                </div>
-              ))}
+            ))}
           </div>
           {comparisons.map((item) => (
             <CompareItem
               item={item}
               key={item.id}
-              highlight={highlight}
-              statRanges={statRanges}
+              stats={stats}
               itemClick={this.itemClick}
               remove={this.remove}
               setHighlight={this.setHighlight}
@@ -362,22 +379,14 @@ export default class Compare extends React.Component<{}, State> {
 
 function CompareItem({
   item,
-  highlight,
-  statRanges,
+  stats,
   $scope,
   itemClick,
   remove,
   setHighlight
 }: {
   item: DimItem;
-  highlight?: string | number;
-  statRanges: {
-    [hash: string]: {
-      min: number;
-      max: number;
-      enabled: boolean;
-    };
-  };
+  stats: StatInfo[];
   $scope: IScope;
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
@@ -405,48 +414,46 @@ function CompareItem({
         {item.name} <AppIcon icon={searchIcon} />
       </div>
       <ConnectedInventoryItem item={item} />
-      <div
-        className={classNames('stat-rating', { highlight: highlight === 'Rating' })}
-        onMouseOver={() => setHighlight('Rating')}
-        style={getColor(
-          statRange({ value: item.dtrRating!.overallScore, statHash: 0 }, statRanges),
-          'color'
-        )}
-      >
-        <span>
-          <AppIcon icon={starIcon} />{' '}
-          {(item.dtrRating && item.dtrRating.overallScore) || t('Stats.NotApplicable')}
-        </span>
-      </div>
-      {item.primStat && (
-        <div
-          className={classNames({ highlight: highlight === item.primStat.statHash })}
-          onMouseOver={() => setHighlight(item.primStat!.statHash)}
-          style={getColor(statRange(item.primStat!, statRanges), 'color')}
-        >
-          <span>{item.primStat.value}</span>
-        </div>
-      )}
-      {item.stats &&
-        item.stats.map((stat) => (
-          <div
-            key={stat.statHash}
-            className={classNames({ highlight: highlight === stat.statHash })}
-            onMouseOver={() => setHighlight(stat.statHash)}
-            style={getColor(statRange(stat, statRanges), 'color')}
-          >
-            <span>
-              {stat.value || t('Stats.NotApplicable')}
-              {Boolean(stat.value) &&
-                (stat as D1Stat).qualityPercentage &&
-                Boolean((stat as D1Stat).qualityPercentage!.range) && (
-                  <span className="range">({(stat as D1Stat).qualityPercentage!.range})</span>
-                )}
-            </span>
-          </div>
-        ))}
+      {stats.map((stat) => (
+        <CompareStat item={item} stat={stat} setHighlight={setHighlight} />
+      ))}
       {item.talentGrid && <TalentGrid talentGrid={item.talentGrid} perksOnly={true} />}
       {item.isDestiny2() && item.sockets && <Sockets item={item} $scope={$scope} hideMods={true} />}
+    </div>
+  );
+}
+
+function CompareStat({
+  stat,
+  item,
+  setHighlight
+}: {
+  stat: StatInfo;
+  item: DimItem;
+  setHighlight(value?: string | number): void;
+}) {
+  const itemStat = stat.getStat(item);
+
+  return (
+    <div
+      key={stat.id}
+      className={classNames({ highlight: stat.highlighted })}
+      onMouseOver={() => setHighlight(stat.id)}
+      style={getColor(statRange(itemStat, stat), 'color')}
+    >
+      <span>
+        {stat.id === 'Rating' && (
+          <>
+            <AppIcon icon={starIcon} />{' '}
+          </>
+        )}
+        {itemStat.value || t('Stats.NotApplicable')}
+        {Boolean(itemStat.value) &&
+          (itemStat as D1Stat).qualityPercentage &&
+          Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
+            <span className="range">({(itemStat as D1Stat).qualityPercentage!.range})</span>
+          )}
+      </span>
     </div>
   );
 }
@@ -454,25 +461,18 @@ function CompareItem({
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(
   stat: { value?: number; statHash: number; qualityPercentage?: { min: number } },
-  statRanges: {
-    [hash: string]: {
-      min: number;
-      max: number;
-      enabled: boolean;
-    };
-  }
+  statInfo: StatInfo
 ) {
   if (!stat) {
     return -1;
   }
-  const statRange = statRanges[stat.statHash];
   if (stat.qualityPercentage) {
     return stat.qualityPercentage.min;
   }
 
-  if (!statRange || !statRange.enabled) {
+  if (!statRange || !statInfo.enabled) {
     return -1;
   }
 
-  return (100 * (stat.value || 0 - statRange.min)) / (statRange.max - statRange.min);
+  return (100 * (stat.value || 0 - statInfo.min)) / (statInfo.max - statInfo.min);
 }
