@@ -61,10 +61,14 @@ class BulkFetcher {
       return;
     }
 
-    if (bulkRankings) {
+    if (bulkRankings && bulkRankings.length > 0) {
       bulkRankings.forEach((bulkRanking) => {
         this._reviewDataCache.addScore(bulkRanking);
       });
+
+      store.dispatch(
+        updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
+      );
     }
 
     stores.forEach((store) => {
@@ -76,10 +80,6 @@ class BulkFetcher {
         }
       });
     });
-
-    store.dispatch(
-      updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
-    );
   }
 
   attachVendorRankings(bulkRankings: D1ItemFetchResponse[], vendors: Vendor[]) {
