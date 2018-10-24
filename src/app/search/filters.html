@@ -400,13 +400,29 @@
           <td ng-i18next="Filter.RatingCount"></td>
         </tr>
       </span>
-      <tr ng-if="vm.destinyVersion === 1">
+      <tr>
         <td>
           <dim-filter-link filter="is:year1"></dim-filter-link>
           <dim-filter-link filter="is:year2"></dim-filter-link>
           <dim-filter-link filter="is:year3"></dim-filter-link>
         </td>
         <td ng-i18next="Filter.Year"></td>
+      </tr>
+      <tr ng-if="vm.destinyVersion === 2">
+        <td>
+          <dim-filter-link filter="is:season1"></dim-filter-link>
+          <dim-filter-link filter="is:season2"></dim-filter-link>
+          <dim-filter-link filter="is:season3"></dim-filter-link>
+          <dim-filter-link filter="is:season4"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.Season"></td>
+        <td>
+          <dim-filter-link filter="is:dawning"></dim-filter-link>
+          <dim-filter-link filter="is:crimsondays"></dim-filter-link>
+          <dim-filter-link filter="is:solstice"></dim-filter-link>
+          <dim-filter-link filter="is:fotl"></dim-filter-link>
+        </td>
+        <td ng-i18next="Filter.Event"></td>
       </tr>
       <tr>
         <td>
