@@ -16,7 +16,6 @@ import { itemTags } from '../inventory/dim-item-info';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
-import { isD2Item } from '../d2-loadout-builder/generated-sets/utils';
 
 export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
 
@@ -945,7 +944,7 @@ function searchFilters(
         } else if (item.isDestiny2()) {
           switch (predicate) {
             case 'year1':
-              return item.season <= 3;
+              return item.season >= 1 && item.season < 4;
             case 'year2':
               return item.season > 3;
             default:
