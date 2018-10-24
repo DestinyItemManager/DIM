@@ -3,6 +3,7 @@ import * as React from 'react';
 import { loadingTracker } from '../ngimport-more';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
 import { Subscription } from 'rxjs/Subscription';
+import { isDragging } from '../inventory/DraggableInventoryItem';
 
 const MIN_REFRESH_INTERVAL = 10 * 1000;
 const AUTO_REFRESH_INTERVAL = 30 * 1000;
@@ -93,8 +94,15 @@ export class ActivityTracker extends React.Component {
     const userWasActiveInTheLastHour = this.activeWithinTimespan(ONE_HOUR);
     const isDimVisible = !document.hidden;
     const isOnline = navigator.onLine;
+    const notDragging = !isDragging;
 
-    if (dimHasNoActivePromises && userWasActiveInTheLastHour && isDimVisible && isOnline) {
+    if (
+      dimHasNoActivePromises &&
+      userWasActiveInTheLastHour &&
+      isDimVisible &&
+      isOnline &&
+      notDragging
+    ) {
       this.refresh();
     }
   };
