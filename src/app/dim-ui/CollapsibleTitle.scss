@@ -4,7 +4,7 @@
   flex: 1;
   padding: 2px 16px;
   background-color: transparent;
-  color: #ffffff;
+  color: $white;
   min-height: 34px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -15,7 +15,7 @@
   align-items: center;
   transition: 0.3s;
   cursor: pointer;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid $white;
 
   &:hover {
     letter-spacing: 4px;
@@ -63,5 +63,4 @@
   color: $lightgray;
   font-size: 14px;
   line-height: 22px;
-  vertical-align: top;
 }
