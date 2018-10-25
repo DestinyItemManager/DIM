@@ -1,0 +1,11 @@
+div.diagnostic-info {
+  border: 1px solid gray;
+  border-radius: 4px;
+  background-color: #212222;
+  padding: 1em 1em;
+
+  pre {
+    max-height: 15em;
+    overflow: auto;
+  }
+}

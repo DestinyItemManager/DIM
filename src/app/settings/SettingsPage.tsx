@@ -27,7 +27,8 @@ import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
 import { itemSortOrder } from './item-sort';
 import { Settings, defaultItemSize } from './reducer';
-import { AppIcon, refreshIcon, spreadsheetIcon } from '../shell/icons';
+import { AppIcon, refreshIcon, spreadsheetIcon, diagnosticsIcon } from '../shell/icons';
+import { router } from '../../router';
 
 interface StoreProps {
   settings: Settings;
@@ -527,6 +528,15 @@ class SettingsPage extends React.Component<Props, State> {
               </button>
             </div>
           </section>
+
+          <section>
+            <div className="setting">
+              <h2>{t('Diagnostics.Title')}</h2>
+              <button className="dim-button" onClick={this.goToDiagnostics}>
+                <AppIcon icon={diagnosticsIcon} /> {t('Diagnostics.View')}
+              </button>
+            </div>
+          </section>
         </form>
       </div>
     );
@@ -614,6 +624,12 @@ class SettingsPage extends React.Component<Props, State> {
 
   private characterSortOrderChanged = (order: string[]) => {
     this.props.setCharacterOrder(order);
+  };
+
+  private goToDiagnostics = (e) => {
+    e.preventDefault();
+    router.stateService.go('diagnostics');
+    return false;
   };
 }
 
