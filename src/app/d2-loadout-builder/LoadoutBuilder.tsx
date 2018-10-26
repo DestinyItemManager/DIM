@@ -35,6 +35,7 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   processRunning: number;
+  showingOptions: boolean;
   requirePerks: boolean;
   useBaseStats: boolean;
   lockedMap: { [bucketHash: number]: LockedItemType[] };
@@ -67,6 +68,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   constructor(props: Props) {
     super(props);
     this.state = {
+      showingOptions: false,
       requirePerks: true,
       useBaseStats: true,
       processRunning: 0,
