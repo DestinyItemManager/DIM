@@ -27,7 +27,7 @@ export default function LoadoutBuilderItem({
       <ItemPopupTrigger item={item}>
         <div
           className={classNames({
-            'excluded-item': locked && locked.some((p) => p.item.index === item.index)
+            'excluded-item': locked && locked.some((p) => (p.item as D2Item).index === item.index)
           })}
         >
           <ConnectedInventoryItem item={item} onClick={handleShiftClick} />

@@ -117,7 +117,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
             return <option key={power}>{power}</option>;
           })}
         </select>
-
         <h3>{t('LoadoutBuilder.SelectTier')}</h3>
         <select value={currentTier} onChange={this.setSelectedTier}>
           {setTiers.map((tier) => (

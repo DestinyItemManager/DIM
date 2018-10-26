@@ -1,17 +1,19 @@
 .locked-item {
   cursor: pointer;
-  position: relative;
   text-align: center;
-  width: calc(var(--item-size) + 15px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
 
   .empty-item {
-    margin: 2px;
     background-color: #656565;
-    width: var(--item-size);
-    height: var(--item-size);
+    width: 48px;
+    height: 48px;
+    width: calc(var(--item-size) + 4px);
+    height: calc(var(--item-size) + 4px);
+    margin: 2px;
+    position: relative;
+    contain: strict;
+    box-sizing: border-box;
+    transition: opacity 0.2s, transform 0.2s;
     border: 2px solid #ddd;
   }
 }

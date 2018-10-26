@@ -1,8 +1,9 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
-import { LockedItemType } from '../../types';
+import { LockedItemType, BurnItem } from '../../types';
 import SelectableBungieImage from './SelectableBungieImage';
+import SelectableBurn from './SelectableBurn';
 
 export default function LockablePerks({
   perks,
@@ -28,15 +29,39 @@ export default function LockablePerks({
     onPerkHover(hoveredPerk);
   };
 
+  const burns: BurnItem[] = [
+    {
+      index: 'arc',
+      displayProperties: { name: t('LoadoutBuilder.BurnTypeArc'), icon: '../../images/arc.png' }
+    },
+    {
+      index: 'solar',
+      displayProperties: { name: t('LoadoutBuilder.BurnTypeSolar'), icon: '../../images/solar.png' }
+    },
+    {
+      index: 'void',
+      displayProperties: { name: t('LoadoutBuilder.BurnTypeVoid'), icon: '../../images/void.png' }
+    }
+  ];
+
   return (
     <>
       <div>{t('LoadoutBuilder.LockPerksTitle')}</div>
       <div className="add-perk-options-content" onMouseLeave={resetHover}>
+        {burns.map((burn) => (
+          <SelectableBurn
+            key={burn.index}
+            burn={burn}
+            selected={Boolean(locked && locked.some((p) => p.item.index === burn.index))}
+            onLockedPerk={toggleLockedPerk}
+            onHoveredPerk={setHoveredPerk}
+          />
+        ))}
         {perks &&
           Array.from(perks).map((perk) => (
             <SelectableBungieImage
               key={perk.hash}
-              selected={Boolean(locked && locked.some((p) => p.item.hash === perk.hash))}
+              selected={Boolean(locked && locked.some((p) => p.item.index === perk.index))}
               perk={perk}
               onLockedPerk={toggleLockedPerk}
               onHoveredPerk={setHoveredPerk}

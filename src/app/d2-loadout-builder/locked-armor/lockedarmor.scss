@@ -28,6 +28,14 @@
 .add-perk-options-content .excluded-item .item-img {
   border-color: orange;
 }
+.perk-image,
+.empty-item {
+  &.arc,
+  &.solar,
+  &.void {
+    background-size: 100%;
+  }
+}
 
 .perk-image {
   width: 40px;
@@ -73,9 +81,7 @@
 }
 
 .on-loadout-hover {
-  .empty-item {
-    background-color: limegreen;
-  }
+  background-color: orange;
 }
 .close {
   z-index: 1;

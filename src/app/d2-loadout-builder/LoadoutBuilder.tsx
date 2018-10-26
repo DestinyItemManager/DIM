@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import CharacterDropdown from '../character-select/CharacterDropdown';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
@@ -20,6 +19,7 @@ import './loadoutbuilder.scss';
 import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
+import CharacterSelect from '../character-select/CharacterSelect';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -35,22 +35,13 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   processRunning: number;
-  showingOptions: boolean;
   requirePerks: boolean;
   useBaseStats: boolean;
-  requireBurn: 'none' | 'arc' | 'solar' | 'void';
   lockedMap: { [bucketHash: number]: LockedItemType[] };
   processedSets: ArmorSet[];
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
 }
-
-const burnTypes = {
-  none: 'BurnTypeNone',
-  arc: 'BurnTypeArc',
-  solar: 'BurnTypeSolar',
-  void: 'BurnTypeVoid'
-};
 
 const perks: {
   [classType: number]: { [bucketHash: number]: any };
@@ -76,10 +67,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   constructor(props: Props) {
     super(props);
     this.state = {
-      showingOptions: false,
       requirePerks: true,
       useBaseStats: true,
-      requireBurn: 'none',
       processRunning: 0,
       lockedMap: {},
       processedSets: []
@@ -96,12 +85,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         this.setState({ selectedStore: stores.find((s) => s.current) });
         for (const store of stores) {
           for (const item of store.items) {
-            if (
-              !item ||
-              !item.sockets ||
-              !item.bucket.inArmor ||
-              !['Exotic', 'Legendary'].includes(item.tier)
-            ) {
+            if (!item || !item.sockets || !item.bucket.inArmor) {
               continue;
             }
             if (!perks[item.classType]) {
@@ -160,14 +144,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     classType = this.state.selectedStore!.classType,
     lockedMap = this.state.lockedMap,
     useBaseStats = this.state.useBaseStats,
-    requirePerks = this.state.requirePerks,
-    requireBurn = this.state.requireBurn
+    requirePerks = this.state.requirePerks
   }: {
     classType?: number;
     lockedMap?: { [bucketHash: number]: LockedItemType[] };
     useBaseStats?: boolean;
     requirePerks?: boolean;
-    requireBurn?: string;
   }) => {
     const allItems = { ...items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
@@ -197,6 +179,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       // filter out items without extra perks on them
       if (requirePerks) {
         filteredItems[bucket] = filteredItems[bucket].filter((item) => {
+          return ['Exotic', 'Legendary'].includes(item.tier);
+        });
+        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
           if (
             item &&
             item.sockets &&
@@ -215,13 +200,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           }
         });
       }
-
-      // filter out items that do not match the burn type
-      if (requireBurn !== 'none') {
-        filteredItems[bucket] = filteredItems[bucket].filter((item: D2Item) => {
-          return item && item.dmg === requireBurn;
-        });
-      }
     });
 
     // filter to only include items that are in the locked map
@@ -235,11 +213,20 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           if (lockedItem.type === 'exclude') {
             filteredItems[bucket] = filteredItems[bucket].filter(
               (item) =>
-                !lockedMap[bucket].find((excludeItem) => excludeItem.item.index === item.index)
+                !lockedMap[bucket].find(
+                  (excludeItem) => (excludeItem.item as D2Item).index === item.index
+                )
+            );
+          }
+          // filter out items that don't match the burn type
+          if (lockedItem.type === 'burn') {
+            filteredItems[bucket] = filteredItems[bucket].filter((item) =>
+              lockedMap[bucket].find((burnItem) => burnItem.item.index === item.dmg)
             );
           }
           if (lockedItem.type === 'perk') {
             // filter out items that do not have a locked perk
+            // OR by column. AND by row
             filteredItems[bucket] = filteredItems[bucket].filter(
               (item) =>
                 item.sockets &&
@@ -248,7 +235,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                     slot.plugOptions.find((perk) =>
                       Boolean(
                         lockedMap[bucket].find(
-                          (lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash
+                          (lockedPerk) => lockedPerk.item.index === perk.plugItem.index
                         )
                       )
                     )
@@ -300,8 +287,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    */
   onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {} });
-    this.computeSets({ classType: selectedStore.classType, lockedMap: {} });
+    this.setState({ selectedStore, lockedMap: {}, requirePerks: true });
+    this.computeSets({ classType: selectedStore.classType, lockedMap: {}, requirePerks: true });
   };
 
   /**
@@ -316,26 +303,20 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   };
 
   /**
-   * Handle then the required perks checkbox is toggled
-   * Recomputes matched sets
+   * Recomputes matched sets and includes items without additional perks
    */
-  setRequiredPerks = (element) => {
-    this.setState({ requirePerks: element.target.checked });
-    this.computeSets({ requirePerks: element.target.checked });
-  };
-
-  setUseBaseStats = (element) => {
-    this.setState({ useBaseStats: element.target.checked });
-    this.computeSets({ useBaseStats: element.target.checked });
+  setRequiredPerks = () => {
+    this.setState({ requirePerks: false });
+    this.computeSets({ requirePerks: false });
   };
 
   /**
-   * Handle then the required perks checkbox is toggled
+   * Handle then the use base stats checkbox is toggled
    * Recomputes matched sets
    */
-  setRequiredBurn = (element) => {
-    this.setState({ requireBurn: element.target.value });
-    this.computeSets({ requireBurn: element.target.value });
+  setUseBaseStats = (element) => {
+    this.setState({ useBaseStats: element.target.checked });
+    this.computeSets({ useBaseStats: element.target.checked });
   };
 
   render() {
@@ -357,26 +338,27 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
     return (
       <div className="vendor d2-vendors dim-page">
-        <h1>{t('LoadoutBuilder.Title')}</h1>
+        <h2>{t('LoadoutBuilder.Title')}</h2>
         <h3>{t('LoadoutBuilder.SelectCharacter')}</h3>
         <div className="flex">
-          <CharacterDropdown
+          <CharacterSelect
             selectedStore={store}
             stores={stores}
             onCharacterChanged={this.onCharacterChanged}
           />
-          <div className="flex">
-            {Object.values(LockableBuckets).map((armor) => (
-              <LockedArmor
-                key={armor}
-                locked={lockedMap[armor]}
-                bucket={buckets.byId[armor]}
-                items={items[store!.classType][armor]}
-                perks={perks[store!.classType][armor]}
-                onLockChanged={this.updateLockedArmor}
-              />
-            ))}
-          </div>
+        </div>
+        <h3>{t('LoadoutBuilder.SelectLockedItems')}</h3>
+        <div className="flex">
+          {Object.values(LockableBuckets).map((armor) => (
+            <LockedArmor
+              key={armor}
+              locked={lockedMap[armor]}
+              bucket={buckets.byId[armor]}
+              items={items[store!.classType][armor]}
+              perks={perks[store!.classType][armor]}
+              onLockChanged={this.updateLockedArmor}
+            />
+          ))}
           <div className="flex column">
             <button className="dim-button" onClick={this.lockEquipped}>
               {t('LoadoutBuilder.LockEquipped')}
@@ -387,52 +369,37 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           </div>
         </div>
 
-        <input
-          type="button"
-          className="dim-button"
-          value={t('LoadoutBuilder.AdvancedOptions')}
-          onClick={() => this.setState({ showingOptions: !this.state.showingOptions })}
-        />
-        {this.state.showingOptions && (
-          <div>
-            <p>
-              <input
-                id="required-perks"
-                type="checkbox"
-                checked={this.state.requirePerks}
-                onChange={this.setRequiredPerks}
-              />
-              <label htmlFor="required-perks">{t('LoadoutBuilder.RequirePerks')}</label>
-            </p>
-            <p>
-              <input
-                id="use-base-stats"
-                type="checkbox"
-                checked={this.state.useBaseStats}
-                onChange={this.setUseBaseStats}
-              />
-              <label htmlFor="use-base-stats">{t('LoadoutBuilder.UseBaseStats')}</label>
-            </p>
-            <p>
-              <select id="required-burn" onChange={this.setRequiredBurn}>
-                {Object.keys(burnTypes).map((burn) => (
-                  <option key={burn} value={burn}>
-                    {t(`LoadoutBuilder.${burnTypes[burn]}`)}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="required-burn">{t('LoadoutBuilder.RequireBurn')}</label>
-            </p>
-          </div>
+        {false && (
+          <p>
+            <input
+              id="use-base-stats"
+              type="checkbox"
+              checked={this.state.useBaseStats}
+              onChange={this.setUseBaseStats}
+            />
+            <label htmlFor="use-base-stats">{t('LoadoutBuilder.UseBaseStats')}</label>
+          </p>
         )}
-
-        <GeneratedSets
-          processRunning={processRunning}
-          processedSets={processedSets}
-          lockedMap={lockedMap}
-          selectedStore={selectedStore}
-          onLockChanged={this.updateLockedArmor}
-        />
+        {(processedSets.length === 0 &&
+          this.state.requirePerks && (
+            <>
+              <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
+              <input
+                type="button"
+                className="dim-button"
+                value={t('LoadoutBuilder.RequirePerks')}
+                onClick={this.setRequiredPerks}
+              />
+            </>
+          )) || (
+          <GeneratedSets
+            processRunning={processRunning}
+            processedSets={processedSets}
+            lockedMap={lockedMap}
+            selectedStore={selectedStore}
+            onLockChanged={this.updateLockedArmor}
+          />
+        )}
       </div>
     );
   }

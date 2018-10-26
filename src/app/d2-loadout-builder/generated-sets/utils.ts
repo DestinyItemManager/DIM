@@ -3,7 +3,7 @@ import { t } from 'i18next';
 import * as _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item, DimSocket } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType } from '../types';
+import { ArmorSet, LockedItemType, BurnItem } from '../types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -138,7 +138,9 @@ export function toggleLockedItem(
     newLockedItems = Array.from(locked);
   }
 
-  const existingIndex = newLockedItems.findIndex((existing) => existing.item === lockedItem.item);
+  const existingIndex = newLockedItems.findIndex(
+    (existing) => existing.item.index === lockedItem.item.index
+  );
   if (existingIndex > -1) {
     newLockedItems.splice(existingIndex, 1);
   } else {
@@ -149,11 +151,15 @@ export function toggleLockedItem(
 }
 
 export function isInventoryItemDefinition(
-  item: D2Item | DestinyInventoryItemDefinition
+  item: LockedItemType['item']
 ): item is DestinyInventoryItemDefinition {
-  return Boolean((item as DestinyInventoryItemDefinition).displayProperties);
+  return Boolean(item as DestinyInventoryItemDefinition);
 }
 
-export function isD2Item(item: D2Item | DestinyInventoryItemDefinition): item is D2Item {
-  return Boolean((item as D2Item).name);
+export function isD2Item(item: LockedItemType['item']): item is D2Item {
+  return Boolean(item as D2Item);
+}
+
+export function isBurnItem(item: LockedItemType['item']): item is BurnItem {
+  return Boolean(item as BurnItem);
 }

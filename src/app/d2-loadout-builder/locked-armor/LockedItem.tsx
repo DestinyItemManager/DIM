@@ -3,7 +3,7 @@ import { t } from 'i18next';
 import * as React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import { isInventoryItemDefinition, isD2Item } from '../generated-sets/utils';
+import { isD2Item, isInventoryItemDefinition, isBurnItem } from '../generated-sets/utils';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType } from '../types';
 import './lockeditem.scss';
@@ -38,7 +38,7 @@ export default function LockedItem({
 
   // Multi-things locked
   if (locked.length > 1 || locked[0].type === 'exclude') {
-    const perks = locked.filter((item) => item.type === 'perk');
+    const perks = locked.filter((item) => item.type === 'perk' || item.type === 'burn');
     const excluded = locked.filter((item) => item.type === 'exclude');
 
     return (
@@ -73,10 +73,21 @@ export default function LockedItem({
     return (
       <div onClick={toggleOpen}>
         <BungieImage
-          key={lockedItem.item.hash}
           className="empty-item"
           title={lockedItem.item.displayProperties.name}
           src={lockedItem.item.displayProperties.icon}
+        />
+      </div>
+    );
+  }
+
+  // one burn perk locked
+  if (lockedItem.type === 'burn' && isBurnItem(lockedItem.item)) {
+    return (
+      <div onClick={toggleOpen}>
+        <div
+          className={`empty-item ${lockedItem.item.index}`}
+          title={lockedItem.item.displayProperties.name}
         />
       </div>
     );
