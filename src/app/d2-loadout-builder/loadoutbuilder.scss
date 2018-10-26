@@ -3,6 +3,13 @@
   flex-wrap: wrap;
 }
 
+.mr4 {
+  margin-right: 40px;
+  > * {
+    margin-right: 4px;
+  }
+}
+
 .column {
   flex-direction: column;
 }

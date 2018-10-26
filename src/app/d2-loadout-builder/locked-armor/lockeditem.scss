@@ -3,6 +3,9 @@
   text-align: center;
   position: relative;
 
+  > div:first-child {
+    display: flex;
+  }
   .empty-item {
     background-color: #656565;
     width: 48px;

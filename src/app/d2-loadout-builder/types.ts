@@ -4,6 +4,11 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 export type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
 export type BurnTypes = 'arc' | 'solar' | 'void';
 
+export interface MinMax {
+  min: number;
+  max: number;
+}
+
 export interface BurnItem {
   index: BurnTypes;
   displayProperties: {
@@ -21,7 +26,7 @@ export interface ArmorSet {
   id: number;
   armor: D2Item[];
   power: number;
-  tiers: string[];
+  tiers: { [statType in StatTypes]: number }[];
   includesVendorItems: boolean;
 }
 

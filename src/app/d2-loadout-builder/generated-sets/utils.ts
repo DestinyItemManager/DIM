@@ -1,9 +1,7 @@
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { t } from 'i18next';
 import * as _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item, DimSocket } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType, BurnItem } from '../types';
+import { LockedItemType, ArmorSet, StatTypes, MinMax } from '../types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -49,21 +47,33 @@ export function filterPlugs(socket: DimSocket) {
 /**
  * Get the best sorted computed sets for a specfic tier
  */
-export function getSetsForTier(
+export function getBestSets(
   setMap: ArmorSet[],
   lockedMap: { [bucketHash: number]: LockedItemType[] },
-  tier: string
+  stats: { [statType in StatTypes]: MinMax }
 ): ArmorSet[] {
-  const matchedSets: ArmorSet[] = [];
-
-  Object.values(setMap).forEach((set) => {
-    if (set.tiers.includes(tier)) {
-      matchedSets.push(set);
-    }
-  });
-
   // Sort based on power level
-  let sortedSets = _.sortBy(matchedSets, (set) => -set.power);
+  let sortedSets = _.sortBy(setMap, (set) => -set.power);
+  // Sort by highest combined tier
+  sortedSets = _.sortBy(
+    sortedSets,
+    (set) =>
+      -(set.tiers[0].STAT_MOBILITY + set.tiers[0].STAT_RESILIENCE + set.tiers[0].STAT_RECOVERY)
+  );
+
+  // Remove sets that do not match tier filters
+  sortedSets = sortedSets.filter((set) => {
+    return set.tiers.some((tier) => {
+      return (
+        stats.STAT_MOBILITY.min <= tier.STAT_MOBILITY &&
+        stats.STAT_MOBILITY.max >= tier.STAT_MOBILITY &&
+        stats.STAT_RESILIENCE.min <= tier.STAT_RESILIENCE &&
+        stats.STAT_RESILIENCE.max >= tier.STAT_RESILIENCE &&
+        stats.STAT_RECOVERY.min <= tier.STAT_RECOVERY &&
+        stats.STAT_RECOVERY.max >= tier.STAT_RECOVERY
+      );
+    });
+  });
 
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
@@ -94,38 +104,85 @@ export function getSetsForTier(
 }
 
 /**
+ * Get the best sorted computed sets for a specfic tier
+ */
+// export function getSetsForTier(
+//   setMap: ArmorSet[],
+//   lockedMap: { [bucketHash: number]: LockedItemType[] },
+//   tier: string
+// ): ArmorSet[] {
+//   const matchedSets: ArmorSet[] = [];
+
+//   Object.values(setMap).forEach((set) => {
+//     if (set.tiers.includes(tier)) {
+//       matchedSets.push(set);
+//     }
+//   });
+
+//   // Sort based on power level
+//   let sortedSets = _.sortBy(matchedSets, (set) => -set.power);
+
+//   // Prioritize list based on number of matched perks
+//   Object.keys(lockedMap).forEach((bucket) => {
+//     // if there are locked perks for this bucket
+//     if (lockedMap[bucket] === undefined) {
+//       return;
+//     }
+//     const lockedPerks = lockedMap[bucket].filter((lockedItem) => lockedItem.type === 'perk');
+//     if (!lockedPerks.length) {
+//       return;
+//     }
+//     // Sort based on what sets have the most matched perks
+//     sortedSets = _.sortBy(sortedSets, (set) => {
+//       return -_.sumBy(set.armor, (item) => {
+//         if (!item || !item.sockets) {
+//           return 0;
+//         }
+//         return item.sockets.sockets.filter((slot) =>
+//           slot.plugOptions.some((perk) =>
+//             lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
+//           )
+//         ).length;
+//       });
+//     });
+//   });
+
+//   return sortedSets;
+// }
+
+/**
  * Build the dropdown options for a collection of armorSets
  */
-export function getSetTiers(armorSets: ArmorSet[]): string[] {
-  const tiersSet = new Set<string>();
-  armorSets.forEach((set: ArmorSet) => {
-    set.tiers.forEach((tier: string) => {
-      tiersSet.add(tier);
-    });
-  });
+// export function getSetTiers(armorSets: ArmorSet[]): string[] {
+//   const tiersSet = new Set<string>();
+//   armorSets.forEach((set: ArmorSet) => {
+//     set.tiers.forEach((tier: string) => {
+//       tiersSet.add(tier);
+//     });
+//   });
 
-  const tiers = _.each(
-    _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-      return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
-    }),
-    (tier) => {
-      tier.sort().reverse();
-    }
-  );
+//   const tiers = _.each(
+//     _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
+//       return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
+//     }),
+//     (tier) => {
+//       tier.sort().reverse();
+//     }
+//   );
 
-  const tierKeys = Object.keys(tiers);
-  const setTiers: string[] = [];
-  for (let tier = tierKeys.length; tier > tierKeys.length - 3; tier--) {
-    if (tierKeys[tier]) {
-      setTiers.push(t('LoadoutBuilder.SelectTierHeader', { tier: tierKeys[tier] }));
-      tiers[tierKeys[tier]].forEach((set) => {
-        setTiers.push(set);
-      });
-    }
-  }
+//   const tierKeys = Object.keys(tiers);
+//   const setTiers: string[] = [];
+//   for (let tier = tierKeys.length; tier > tierKeys.length - 3; tier--) {
+//     if (tierKeys[tier]) {
+//       setTiers.push(t('LoadoutBuilder.SelectTierHeader', { tier: tierKeys[tier] }));
+//       tiers[tierKeys[tier]].forEach((set) => {
+//         setTiers.push(set);
+//       });
+//     }
+//   }
 
-  return setTiers;
-}
+//   return setTiers;
+// }
 
 export function toggleLockedItem(
   lockedItem: LockedItemType,
@@ -150,16 +207,6 @@ export function toggleLockedItem(
   onLockChanged(bucket, newLockedItems.length === 0 ? undefined : newLockedItems);
 }
 
-export function isInventoryItemDefinition(
-  item: LockedItemType['item']
-): item is DestinyInventoryItemDefinition {
-  return Boolean(item as DestinyInventoryItemDefinition);
-}
-
 export function isD2Item(item: LockedItemType['item']): item is D2Item {
   return Boolean(item as D2Item);
-}
-
-export function isBurnItem(item: LockedItemType['item']): item is BurnItem {
-  return Boolean(item as BurnItem);
 }

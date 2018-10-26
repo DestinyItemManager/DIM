@@ -28,7 +28,7 @@ interface State {
 
 export default class LockablePopup extends React.Component<Props, State> {
   state: State = {
-    tabSelected: 'items',
+    tabSelected: 'perks',
     isOpen: false
   };
 
@@ -60,18 +60,18 @@ export default class LockablePopup extends React.Component<Props, State> {
       <ClickOutside onClickOutside={this.closePerkSelect} className="add-perk-options">
         <div className="add-perk-options-title move-popup-tabs">
           <span
-            className={classNames('move-popup-tab', { selected: tabSelected === 'items' })}
-            data-tab="items"
-            onClick={this.setTab}
-          >
-            {t('LoadoutBuilder.LockItemTabTitle')}
-          </span>
-          <span
             className={classNames('move-popup-tab', { selected: tabSelected === 'perks' })}
             data-tab="perks"
             onClick={this.setTab}
           >
             {t('LoadoutBuilder.LockPerksTabTitle')}
+          </span>
+          <span
+            className={classNames('move-popup-tab', { selected: tabSelected === 'items' })}
+            data-tab="items"
+            onClick={this.setTab}
+          >
+            {t('LoadoutBuilder.LockItemTabTitle')}
           </span>
           <div className="close" onClick={this.closePerkSelect} />
         </div>

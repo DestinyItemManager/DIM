@@ -352,26 +352,22 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           />
         </div>
         <h3>{t('LoadoutBuilder.SelectLockedItems')}</h3>
-        <div className="flex">
-          {Object.values(LockableBuckets).map((armor) => (
-            <LockedArmor
-              key={armor}
-              locked={lockedMap[armor]}
-              bucket={buckets.byId[armor]}
-              items={items[store!.classType][armor]}
-              perks={perks[store!.classType][armor]}
-              onLockChanged={this.updateLockedArmor}
-            />
-          ))}
-          <div className="flex column">
-            <button className="dim-button" onClick={this.lockEquipped}>
-              {t('LoadoutBuilder.LockEquipped')}
-            </button>
-            <button className="dim-button" onClick={this.resetLocked}>
-              {t('LoadoutBuilder.ResetLocked')}
-            </button>
-          </div>
-        </div>
+        <button className="dim-button" onClick={this.lockEquipped}>
+          {t('LoadoutBuilder.LockEquipped')}
+        </button>
+        <button className="dim-button" onClick={this.resetLocked}>
+          {t('LoadoutBuilder.ResetLocked')}
+        </button>
+        {Object.values(LockableBuckets).map((armor) => (
+          <LockedArmor
+            key={armor}
+            locked={lockedMap[armor]}
+            bucket={buckets.byId[armor]}
+            items={items[store!.classType][armor]}
+            perks={perks[store!.classType][armor]}
+            onLockChanged={this.updateLockedArmor}
+          />
+        ))}
 
         {false && (
           <p>

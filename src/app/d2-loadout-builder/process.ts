@@ -95,9 +95,7 @@ function process(
                 }
 
                 // TODO: iterate over perk bonus options and add all tier options
-                set.tiers.push(
-                  `${stats.STAT_MOBILITY}/${stats.STAT_RESILIENCE}/${stats.STAT_RECOVERY}`
-                );
+                set.tiers.push(stats);
 
                 // set.includesVendorItems = pieces.some((armor: any) => armor.isVendorItem);
                 setMap.push(set);

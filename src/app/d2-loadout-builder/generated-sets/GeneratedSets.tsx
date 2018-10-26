@@ -4,10 +4,11 @@ import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { ArmorSet, LockedItemType } from '../types';
+import { ArmorSet, LockedItemType, StatTypes, MinMax } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import { getSetsForTier, getSetTiers, isD2Item, toggleLockedItem } from './utils';
+import { isD2Item, toggleLockedItem, getBestSets } from './utils';
+import TierSelect from './TierSelect';
 
 interface Props {
   processRunning: number;
@@ -18,8 +19,8 @@ interface Props {
 }
 
 interface State {
+  stats: { [statType in StatTypes]: MinMax };
   minimumPower: number;
-  selectedTier: string;
   shownSets: number;
 }
 
@@ -30,7 +31,11 @@ let matchedSets: ArmorSet[] = [];
  */
 export default class GeneratedSets extends React.Component<Props, State> {
   state: State = {
-    selectedTier: '7/7/7',
+    stats: {
+      STAT_MOBILITY: { min: 0, max: 10 },
+      STAT_RESILIENCE: { min: 0, max: 10 },
+      STAT_RECOVERY: { min: 0, max: 10 }
+    },
     minimumPower: 0,
     shownSets: 10
   };
@@ -50,8 +55,21 @@ export default class GeneratedSets extends React.Component<Props, State> {
     this.setState({ shownSets: this.state.shownSets + 10 });
   };
 
-  setSelectedTier = (element) => {
-    this.setState({ shownSets: 10, selectedTier: element.target.value });
+  onTierChanged = (which: string, changed) => {
+    const newTiers = this.state.stats;
+    if (changed.min) {
+      if (changed.min >= newTiers[which].max) {
+        newTiers[which].max = changed.min;
+      }
+      newTiers[which].min = changed.min;
+    }
+    if (changed.max) {
+      if (changed.max <= newTiers[which].min) {
+        newTiers[which].min = changed.max;
+      }
+      newTiers[which].max = changed.max;
+    }
+    this.setState({ stats: newTiers });
   };
 
   setMinimumPower = (element) => {
@@ -73,7 +91,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   render() {
     const { processRunning, lockedMap, selectedStore } = this.props;
-    const { selectedTier, minimumPower, shownSets } = this.state;
+    const { minimumPower, shownSets, stats } = this.state;
 
     if (processRunning > 0) {
       return <h3>{t('LoadoutBuilder.Loading', { loading: processRunning })}</h3>;
@@ -88,45 +106,50 @@ export default class GeneratedSets extends React.Component<Props, State> {
     const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
     powerLevelOptions.splice(0, 0, 0);
 
-    // build tier dropdown options
-    const setTiers = getSetTiers(matchedSets);
-    let currentTier = selectedTier;
-    if (!setTiers.includes(currentTier)) {
-      currentTier = setTiers[1];
-    }
-
-    // Only render sets for the selected tier
-    matchedSets = getSetsForTier(matchedSets, lockedMap, currentTier);
-
-    if (matchedSets.length === 0) {
-      return <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>;
-    }
+    matchedSets = getBestSets(matchedSets, lockedMap, stats);
 
     return (
       <>
-        <h3>{t('LoadoutBuilder.SelectPower')}</h3>
-        <select value={minimumPower} onChange={this.setMinimumPower}>
-          {powerLevelOptions.map((power) => {
-            if (power === 0) {
-              return (
-                <option value={0} key={power}>
-                  {t('LoadoutBuilder.SelectPowerMinimum')}
-                </option>
-              );
-            }
-            return <option key={power}>{power}</option>;
-          })}
-        </select>
-        <h3>{t('LoadoutBuilder.SelectTier')}</h3>
-        <select value={currentTier} onChange={this.setSelectedTier}>
-          {setTiers.map((tier) => (
-            <option key={tier} disabled={tier.charAt(0) === '-'}>
-              {tier}
-            </option>
-          ))}
-        </select>
+        <div className="flex mr4">
+          <div>
+            <h3>{t('LoadoutBuilder.SelectTier')}</h3>
+            <div className="flex">
+              <TierSelect
+                name={t('LoadoutBuilder.Mobility')}
+                stat={stats.STAT_MOBILITY}
+                onTierChange={(stat) => this.onTierChanged('STAT_MOBILITY', stat)}
+              />
+              <TierSelect
+                name={t('LoadoutBuilder.Resilience')}
+                stat={stats.STAT_RESILIENCE}
+                onTierChange={(stat) => this.onTierChanged('STAT_RESILIENCE', stat)}
+              />
+              <TierSelect
+                name={t('LoadoutBuilder.Recovery')}
+                stat={stats.STAT_RECOVERY}
+                onTierChange={(stat) => this.onTierChanged('STAT_RECOVERY', stat)}
+              />
+            </div>
+          </div>
+          <div>
+            <h3>{t('LoadoutBuilder.SelectPower')}</h3>
+            <select value={minimumPower} onChange={this.setMinimumPower}>
+              {powerLevelOptions.map((power) => {
+                if (power === 0) {
+                  return (
+                    <option value={0} key={power}>
+                      {t('LoadoutBuilder.SelectPowerMinimum')}
+                    </option>
+                  );
+                }
+                return <option key={power}>{power}</option>;
+              })}
+            </select>
+          </div>
+        </div>
 
         <h3>{t('LoadoutBuilder.GeneratedBuilds')}</h3>
+        {matchedSets.length === 0 && <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
         {matchedSets.slice(0, shownSets).map((set) => (
           <div className="generated-build" key={set.id}>
             <GeneratedSetButtons

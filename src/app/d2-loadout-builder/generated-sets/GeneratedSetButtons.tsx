@@ -39,6 +39,14 @@ export default function GeneratedSetButtons({
       <button className="dim-button equip-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
+      <span>
+        {`T${set.tiers[0].STAT_MOBILITY +
+          set.tiers[0].STAT_RESILIENCE +
+          set.tiers[0].STAT_RECOVERY} | `}
+        {`${t('LoadoutBuilder.Mobility')} ${set.tiers[0].STAT_MOBILITY} | `}
+        {`${t('LoadoutBuilder.Resilience')} ${set.tiers[0].STAT_RESILIENCE} | `}
+        {`${t('LoadoutBuilder.Recovery')} ${set.tiers[0].STAT_RECOVERY}`}
+      </span>
       <span className="light">
         <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
       </span>
