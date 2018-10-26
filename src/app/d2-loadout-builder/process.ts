@@ -140,5 +140,5 @@ function process(
     );
   }
 
-  return step.call(this);
+  step.call(this);
 }

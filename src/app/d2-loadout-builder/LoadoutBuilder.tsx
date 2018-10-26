@@ -64,6 +64,7 @@ function mapStateToProps(state: RootState): StoreProps {
  */
 export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
+  private foundSets: boolean;
 
   constructor(props: Props) {
     super(props);
@@ -288,6 +289,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Recomputes matched sets
    */
   onCharacterChanged = (storeId: string) => {
+    this.foundSets = false;
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
     this.setState({ selectedStore, lockedMap: {}, requirePerks: true });
     this.computeSets({ classType: selectedStore.classType, lockedMap: {}, requirePerks: true });
@@ -383,7 +385,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           </p>
         )}
         {(processedSets.length === 0 &&
-          this.state.requirePerks && (
+          this.state.requirePerks &&
+          !this.foundSets && (
             <>
               <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
               <input
@@ -393,15 +396,16 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                 onClick={this.setRequiredPerks}
               />
             </>
-          )) || (
-          <GeneratedSets
-            processRunning={processRunning}
-            processedSets={processedSets}
-            lockedMap={lockedMap}
-            selectedStore={selectedStore}
-            onLockChanged={this.updateLockedArmor}
-          />
-        )}
+          )) ||
+          ((this.foundSets = true) && (
+            <GeneratedSets
+              processRunning={processRunning}
+              processedSets={processedSets}
+              lockedMap={lockedMap}
+              selectedStore={selectedStore}
+              onLockChanged={this.updateLockedArmor}
+            />
+          ))}
       </div>
     );
   }
