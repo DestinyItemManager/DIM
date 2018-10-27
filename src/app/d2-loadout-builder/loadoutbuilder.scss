@@ -23,6 +23,7 @@
 }
 
 .react-autosuggest__suggestions-container--open {
+  z-index: 10;
   position: absolute;
   background: #666;
   border: 1px solid #999;

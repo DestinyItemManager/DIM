@@ -25,10 +25,16 @@ export default function LockedItemContainer({
   onExclude(excludedItem: LockedItemType): void;
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }) {
-  // one item locked
+  // one item locked (replaces the select box)
   if (locked && locked.length && locked[0].type === 'item') {
     return (
-      <LoadoutBuilderItem item={locked[0].item as D2Item} locked={locked} onExclude={onExclude} />
+      <div className="locked-item-box">
+        <LoadoutBuilderItem item={locked[0].item as D2Item} locked={locked} onExclude={onExclude} />
+        <div
+          className="close"
+          onClick={() => toggleLockedItem(locked[0], bucket, onLockChanged, locked)}
+        />
+      </div>
     );
   }
 

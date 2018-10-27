@@ -72,7 +72,7 @@ export default class PerkAutoComplete extends React.Component<Props, State> {
     perkOptions = getPerkOptions(this.props.perks, this.props.bucketsById);
   }
 
-  onChange = (event, { newValue }) => {
+  onChange = (_, { newValue }) => {
     this.setState({
       value: newValue,
       lastValue: newValue
@@ -115,7 +115,7 @@ export default class PerkAutoComplete extends React.Component<Props, State> {
         renderSectionTitle={renderSectionTitle}
         inputProps={inputProps}
         multiSection={true}
-        onSuggestionSelected={(event, { suggestion, sectionIndex }) => {
+        onSuggestionSelected={(_, { suggestion, sectionIndex }) => {
           this.setState({ value: this.state.lastValue });
           this.props.onSelect(this.state.suggestions[sectionIndex].bucket, suggestion);
         }}
