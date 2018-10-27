@@ -309,6 +309,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       if (!lockedMap[bucket]) {
         return;
       }
+      filteredPerks[bucket] = new Set<DestinyInventoryItemDefinition>();
       const lockedPlugs = lockedMap[bucket].filter(
         (locked: LockedItemType) => locked.type === 'perk'
       );
@@ -331,10 +332,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             itemPlugs.find((plug) => plug.index === locked.item.index)
           );
           if (item.sockets && matched) {
-            if (!filteredPerks[bucket]) {
-              filteredPerks[bucket] = new Set<DestinyInventoryItemDefinition>();
-            }
-            // filteredPerks[bucket].add(itemPlugs);
             itemPlugs.forEach((plug) => {
               filteredPerks[bucket].add(plug);
             });
@@ -400,19 +397,21 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           title={t('LoadoutBuilder.SelectLockedItems')}
           sectionId="loadoutbuilder-locked"
         >
-          <div className="loadout-builder-row mr4">
-            {Object.values(LockableBuckets).map((armor) => (
-              <LockedArmor
-                key={armor}
-                locked={lockedMap[armor]}
-                bucket={buckets.byId[armor]}
-                items={items[store!.classType][armor]}
-                perks={perks[store!.classType][armor]}
-                filteredPerks={this.state.filteredPerks}
-                onLockChanged={this.updateLockedArmor}
-              />
-            ))}
-            <div className="flex mr4">
+          <div className="loadout-builder-row mr4 flex space-between">
+            <div>
+              {Object.values(LockableBuckets).map((armor) => (
+                <LockedArmor
+                  key={armor}
+                  locked={lockedMap[armor]}
+                  bucket={buckets.byId[armor]}
+                  items={items[store!.classType][armor]}
+                  perks={perks[store!.classType][armor]}
+                  filteredPerks={this.state.filteredPerks}
+                  onLockChanged={this.updateLockedArmor}
+                />
+              ))}
+            </div>
+            <div className="flex column mr4">
               <button className="dim-button" onClick={this.lockEquipped}>
                 {t('LoadoutBuilder.LockEquipped')}
               </button>

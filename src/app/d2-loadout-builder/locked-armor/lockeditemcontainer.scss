@@ -4,6 +4,7 @@
 
   > div:first-child {
     display: flex;
+    flex-wrap: wrap;
   }
   .locked-item-box {
     position: relative;
