@@ -15,7 +15,6 @@ interface Props {
 
 interface State {
   value: string;
-  lastValue: string;
   suggestions: any[];
 }
 
@@ -55,7 +54,7 @@ function getSuggestions(value) {
     .filter((section) => section.perks.length > 0);
 }
 
-const getSuggestionValue = (suggestion) => suggestion.displayProperties.name;
+const getSuggestionValue = () => 'noop';
 const renderSuggestion = (suggestion) => <div>{suggestion.displayProperties.name}</div>;
 
 const getSectionSuggestions = (section) => section.perks;
@@ -64,7 +63,6 @@ const renderSectionTitle = (section) => <strong>{section.bucket.name}</strong>;
 export default class PerkAutoComplete extends React.Component<Props, State> {
   state: State = {
     value: '',
-    lastValue: '',
     suggestions: []
   };
 
@@ -73,10 +71,11 @@ export default class PerkAutoComplete extends React.Component<Props, State> {
   }
 
   onChange = (_, { newValue }) => {
-    this.setState({
-      value: newValue,
-      lastValue: newValue
-    });
+    if (newValue !== 'noop') {
+      this.setState({
+        value: newValue
+      });
+    }
   };
 
   // Autosuggest will call this function every time you need to update suggestions.
@@ -97,9 +96,8 @@ export default class PerkAutoComplete extends React.Component<Props, State> {
   render() {
     const { value, suggestions } = this.state;
 
-    // Autosuggest will pass through all these props to the input.
     const inputProps = {
-      placeholder: '[BETA] Search for a perk',
+      placeholder: 'BETA - Search for a perk',
       value,
       onChange: this.onChange
     };
@@ -111,12 +109,12 @@ export default class PerkAutoComplete extends React.Component<Props, State> {
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
         getSuggestionValue={getSuggestionValue}
         getSectionSuggestions={getSectionSuggestions}
+        focusInputOnSuggestionClick={false}
         renderSuggestion={renderSuggestion}
         renderSectionTitle={renderSectionTitle}
         inputProps={inputProps}
         multiSection={true}
         onSuggestionSelected={(_, { suggestion, sectionIndex }) => {
-          this.setState({ value: this.state.lastValue });
           this.props.onSelect(this.state.suggestions[sectionIndex].bucket, suggestion);
         }}
       />
