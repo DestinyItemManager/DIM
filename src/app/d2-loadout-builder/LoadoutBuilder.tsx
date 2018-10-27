@@ -257,7 +257,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Recomputes matched sets
    */
   resetLocked = () => {
-    this.setState({ lockedMap: {} });
+    this.setState({ lockedMap: {}, filteredPerks: {} });
     this.computeSets({ lockedMap: {} });
   };
 
