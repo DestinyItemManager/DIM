@@ -1,4 +1,4 @@
-.character-select {
+.character-dropdown {
   display: flex;
   flex-direction: column;
   min-width: 230px;
@@ -13,7 +13,17 @@
   .character-tile {
     width: 100%;
   }
-  .unselected {
-    opacity: 0.4;
+}
+
+.character-select {
+  display: flex;
+  justify-content: space-between;
+
+  .character-tile {
+    min-width: 230px;
   }
+}
+
+.unselected {
+  opacity: 0.4;
 }

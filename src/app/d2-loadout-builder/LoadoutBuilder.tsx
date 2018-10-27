@@ -347,7 +347,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           title={t('LoadoutBuilder.SelectCharacter')}
           sectionId="loadoutbuilder-select"
         >
-          <div className="flex loadout-builder-row">
+          <div className="loadout-builder-row">
             <CharacterSelect
               selectedStore={store}
               stores={stores}

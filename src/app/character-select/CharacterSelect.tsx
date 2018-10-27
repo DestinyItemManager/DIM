@@ -18,7 +18,7 @@ export default class CharacterSelect extends React.Component<Props> {
     const { stores, selectedStore } = this.props;
 
     return (
-      <div className="character-select row">
+      <div className="character-select">
         {stores.filter((s) => !s.isVault).map((store) => (
           <div
             key={store.id}
