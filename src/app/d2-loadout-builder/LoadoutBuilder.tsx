@@ -217,9 +217,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           if (lockedItem.type === 'exclude') {
             filteredItems[bucket] = filteredItems[bucket].filter(
               (item) =>
-                !lockedMap[bucket].find(
-                  (excludeItem) => (excludeItem.item as D2Item).index === item.index
-                )
+                !lockedMap[bucket].find((excludeItem) => excludeItem.item.index === item.index)
             );
           }
           // filter out items that don't match the burn type
@@ -392,20 +390,18 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           </p>
         )}
 
-        {(processedSets.length === 0 &&
-          this.state.requirePerks &&
-          !this.foundSets && (
-            <>
-              <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
-              <input
-                type="button"
-                className="dim-button"
-                value={t('LoadoutBuilder.RequirePerks')}
-                onClick={this.setRequiredPerks}
-              />
-            </>
-          )) ||
-          ((this.foundSets = true) && (
+        {processedSets.length === 0 && this.state.requirePerks && !this.foundSets ? (
+          <>
+            <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
+            <input
+              type="button"
+              className="dim-button"
+              value={t('LoadoutBuilder.RequirePerks')}
+              onClick={this.setRequiredPerks}
+            />
+          </>
+        ) : (
+          (this.foundSets = true) && (
             <GeneratedSets
               processRunning={processRunning}
               processedSets={processedSets}
@@ -413,7 +409,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               selectedStore={selectedStore}
               onLockChanged={this.updateLockedArmor}
             />
-          ))}
+          )
+        )}
       </div>
     );
   }

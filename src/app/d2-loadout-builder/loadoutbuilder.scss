@@ -44,9 +44,10 @@
   }
 
   .generated-build-buttons {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
+    align-items: flex-end;
     > * {
       margin-bottom: 4px;
     }

@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import { D2Item, DimSocket } from '../../inventory/item-types';
-import { LockedItemType, ArmorSet, StatTypes, MinMax } from '../types';
+import { DimSocket } from '../../inventory/item-types';
+import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -205,8 +205,4 @@ export function toggleLockedItem(
   }
 
   onLockChanged(bucket, newLockedItems.length === 0 ? undefined : newLockedItems);
-}
-
-export function isD2Item(item: LockedItemType['item']): item is D2Item {
-  return Boolean(item as D2Item);
 }

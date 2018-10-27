@@ -26,31 +26,34 @@ export default function TierSelect({
     onTierChange(newTiers);
   };
 
+  const tierOptions = [...Array(11).keys()].slice(1);
+
+  function MinMaxSelect({ stat, type }: { stat: string; type: string }) {
+    const lower = type.toLowerCase();
+    function handleChange(e) {
+      const update = {};
+      update[lower] = parseInt(e.target.value, 10);
+      handleTierChange(stat, update);
+    }
+
+    return (
+      <select value={stats[stat][lower]} onChange={handleChange}>
+        <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>
+        {tierOptions.map((tier) => (
+          <option key={tier}>{tier}</option>
+        ))}
+      </select>
+    );
+  }
+
   return (
     <div className="flex mr4">
       {Object.keys(stats).map((stat) => (
         <div key={stat} className="flex mr4">
           <span className={`icon-stat icon-${stat}`} />
           <span>{t(`LoadoutBuilder.${stat}`)}</span>
-          <select
-            value={stats[stat].min}
-            onChange={(e) => handleTierChange(stat, { min: parseInt(e.target.value, 10) })}
-          >
-            <option disabled={true}>{t('LoadoutBuilder.SelectMin')}</option>
-            {[...Array(11).keys()].map((tier) => (
-              <option key={tier}>{tier}</option>
-            ))}
-          </select>
-
-          <select
-            value={stats[stat].max}
-            onChange={(e) => handleTierChange(stat, { max: parseInt(e.target.value, 10) })}
-          >
-            <option disabled={true}>{t('LoadoutBuilder.SelectMax')}</option>
-            {[...Array(11).keys()].map((tier) => (
-              <option key={tier}>{tier}</option>
-            ))}
-          </select>
+          <MinMaxSelect stat={stat} type="Min" />
+          <MinMaxSelect stat={stat} type="Max" />
         </div>
       ))}
     </div>

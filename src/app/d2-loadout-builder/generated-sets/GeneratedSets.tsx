@@ -2,15 +2,16 @@ import { t } from 'i18next';
 import * as React from 'react';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
+import { D2Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
+import { AppIcon, powerIndicatorIcon } from '../../shell/icons';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import TierSelect from './TierSelect';
-import { getBestSets, isD2Item, toggleLockedItem } from './utils';
-import { AppIcon, powerIndicatorIcon } from '../../shell/icons';
+import { getBestSets, toggleLockedItem } from './utils';
 
 interface Props {
   processRunning: number;
@@ -62,10 +63,10 @@ export default class GeneratedSets extends React.Component<Props, State> {
   };
 
   toggleLockedItem = (lockedItem: LockedItemType) => {
-    if (!isD2Item(lockedItem.item)) {
+    if (lockedItem.type !== 'exclude') {
       return;
     }
-    const bucket = lockedItem.item.bucket;
+    const bucket = (lockedItem.item as D2Item).bucket;
     toggleLockedItem(
       lockedItem,
       bucket,

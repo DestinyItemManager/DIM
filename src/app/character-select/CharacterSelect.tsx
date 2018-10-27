@@ -34,7 +34,6 @@ export default class CharacterSelect extends React.Component<Props> {
   }
 
   private selectCharacter = (storeId: string) => {
-    this.setState({ dropdownOpen: false });
     this.props.onCharacterChanged(storeId);
   };
 }

@@ -28,8 +28,7 @@ export default function LoadoutBuilderItem({
         <div
           className={classNames({
             'excluded-item':
-              locked &&
-              locked.some((p) => p.type === 'exclude' && (p.item as D2Item).id === item.id)
+              locked && locked.some((p) => p.type === 'exclude' && p.item.index === item.index)
           })}
         >
           <ConnectedInventoryItem item={item} onClick={handleShiftClick} />
