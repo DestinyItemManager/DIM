@@ -184,6 +184,7 @@
     "EnterNote": "Inserisci delle note:",
     "Equipment": "Oggetti che possono essere equipaggiati.",
     "Equipped": "Oggetti che sono al momento equipaggiati su un personaggio.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filtro",
     "Glimmer": {
       "Any": "Ogni tipo di oggetto Lumen.",
@@ -229,6 +230,7 @@
       "tTK": "Il Re dei Corrotti"
     },
     "RequiredLevel": "Mostra gli oggetti in base al livello richiesto.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "Mostra gli oggetti basandosi sulla quantità nel loro stack.",
     "Stackable": "Mostra gli oggetti accumulabili (sintesi munizioni, strane monete, ecc)",
     "Stats": "Mostra gli oggetti basandosi sul valore delle loro statistiche. I filtri disponibili sono:",
@@ -701,16 +703,12 @@
     "Flawless": "Vittoria Impeccabile",
     "SevenWins": "Ricompensa 7 Vittorie (Arma)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz segnala che questo mercante sta vendendo oggetti a livello luce 380.",
-    "ServiceCallFailed": "Richiesta al servizio di VendorEngrams.xyz fallita.",
-    "Vote": "Vedi un mercante che sta vendendo oggetti a livello luce 380? Vai su VendorEngrams.xyz per votare e farlo sapere alla comunità! (solo in inglese)"
-  },
   "Vendors": {
     "All": "Tutto",
     "ArmorAndWeapons": "Equipaggiamento & Armi",
     "Available": "Disponibile da:",
     "Bounties": "Taglie",
+    "Catalysts": "Catalizzatori",
     "CatalystsDisclaimer": "DIM può mostrare solo i catalizzatori esotici prodigiosi che hai sbloccato per gli oggetti nel tuo inventario.",
     "Collections": "Collezioni",
     "Compare": "Confronta con quello che hai già:",

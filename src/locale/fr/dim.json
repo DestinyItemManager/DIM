@@ -184,6 +184,7 @@
     "EnterNote": "Entrez vos notes:",
     "Equipment": "Objets qui peuvent être équipés.",
     "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filtre",
     "Glimmer": {
       "Any": "N'importe quel type d'objet de lumen.",
@@ -229,6 +230,7 @@
       "tTK": "Le Roi des Corrompus"
     },
     "RequiredLevel": "Affiche les objets selon leur niveau requis.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "Affiche les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Affiche les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
     "Stats": "Affiche les objets selon la valeur de leur statistique. Les filtres disponibles sont:",
@@ -701,16 +703,12 @@
     "Flawless": "Sans Défaite",
     "SevenWins": "Récompense à 7 Victoires (Arme)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz signale que ce vendeur vend des objets à 380 de puissance.",
-    "ServiceCallFailed": "Appel au service de VendorEngrams.xyz échoué.",
-    "Vote": "Vous voyez un marchand qui vend des objets a 380 de puissance? Allez sur VendorEngrams.xyz pour voter et faire savoir à la communauté!"
-  },
   "Vendors": {
     "All": "Tous",
     "ArmorAndWeapons": "Armure & Armes",
     "Available": "Disponible sur:",
     "Bounties": "Contrats",
+    "Catalysts": "Catalyseurs",
     "CatalystsDisclaimer": "DIM peut seulement montrer les catalyseurs de pièces maitresses exotiques que vous avez obtenu pour des objets que vous possédez.",
     "Collections": "Collections",
     "Compare": "Comparez avec ce que vous avez déjà:",

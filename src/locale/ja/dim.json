@@ -184,6 +184,7 @@
     "EnterNote": "ここにノート入力:",
     "Equipment": "装備できるアイテム",
     "Equipped": "現在装備中のアイテム",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "フィルター",
     "Glimmer": {
       "Any": "グリマー関係のアイテム",
@@ -229,6 +230,7 @@
       "tTK": "降り立ちし邪神"
     },
     "RequiredLevel": "必要なレベルに応じてアイテムを表示",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "一纏め可能なアイテム(弾合成アイテム、奇妙なコインなど)を表示",
     "Stats": "アイテムのステータスを基に表示。各フィルターは以下の通りです。",
@@ -701,16 +703,12 @@
     "Flawless": "完全勝利",
     "SevenWins": "7勝目の報酬 (武器)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
-  },
   "Vendors": {
     "All": "全て",
     "ArmorAndWeapons": "アーマーとウェポン",
     "Available": "利用可能:",
     "Bounties": "バウンティ",
+    "Catalysts": "Catalysts",
     "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
     "Collections": "コレクション",
     "Compare": "装備中のものと比較:",

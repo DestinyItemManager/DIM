@@ -184,6 +184,7 @@
     "EnterNote": "Enter notes text:",
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filter",
     "Glimmer": {
       "Any": "Any type of glimmer item.",
@@ -229,6 +230,7 @@
       "tTK": "The Taken King"
     },
     "RequiredLevel": "Shows items based on their required level.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
@@ -701,16 +703,12 @@
     "Flawless": "Flawless",
     "SevenWins": "7 Win Reward (Weapon)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
-  },
   "Vendors": {
     "All": "All",
     "ArmorAndWeapons": "Armor & Weapons",
     "Available": "Available on:",
     "Bounties": "Bounties",
+    "Catalysts": "Catalysts",
     "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
     "Collections": "Collections",
     "Compare": "Compare with what you already have:",
