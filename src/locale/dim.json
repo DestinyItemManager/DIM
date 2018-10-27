@@ -414,8 +414,6 @@
     "LockPerksTabTitle": "Perks",
     "LockPerksTitle": "Select perks to lock",
     "NoBuildsFound": "No Generated Builds Found",
-    "UseBaseStats": "Use base stats (ignore stat bonus from mods)",
-    "RequireBurn": "Require armor with matching damage resistance burn",
     "RequirePerks": "Widen search and retry",
     "ResetLocked": "Reset locked items",
     "SelectCharacter": "Select Character",

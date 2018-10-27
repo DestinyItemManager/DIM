@@ -22,6 +22,19 @@
   }
 }
 
+.react-autosuggest__suggestions-container--open {
+  position: absolute;
+  background: #666;
+  border: 1px solid #999;
+  margin: -1px;
+
+  ul {
+    list-style-type: none;
+    margin: 5px 20px 10px 5px;
+    padding: 0;
+  }
+}
+
 .column {
   flex-direction: column;
 }

@@ -16,11 +16,12 @@ import { DimStore } from '../inventory/store-types';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterPlugs } from './generated-sets/utils';
+import { filterPlugs, toggleLockedItem } from './generated-sets/utils';
 import './loadoutbuilder.scss';
 import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
+import PerkAutoComplete from './PerkAutoComplete';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -369,26 +370,28 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                 onLockChanged={this.updateLockedArmor}
               />
             ))}
-            <button className="dim-button" onClick={this.lockEquipped}>
-              {t('LoadoutBuilder.LockEquipped')}
-            </button>
-            <button className="dim-button" onClick={this.resetLocked}>
-              {t('LoadoutBuilder.ResetLocked')}
-            </button>
+            <div className="flex mr4">
+              <button className="dim-button" onClick={this.lockEquipped}>
+                {t('LoadoutBuilder.LockEquipped')}
+              </button>
+              <button className="dim-button" onClick={this.resetLocked}>
+                {t('LoadoutBuilder.ResetLocked')}
+              </button>
+              <PerkAutoComplete
+                perks={perks[store!.classType]}
+                bucketsById={buckets.byId}
+                onSelect={(bucket, item) =>
+                  toggleLockedItem(
+                    { type: 'perk', item },
+                    bucket,
+                    this.updateLockedArmor,
+                    this.state.lockedMap[bucket.hash]
+                  )
+                }
+              />
+            </div>
           </div>
         </CollapsibleTitle>
-
-        {false && (
-          <p>
-            <input
-              id="use-base-stats"
-              type="checkbox"
-              checked={this.state.useBaseStats}
-              onChange={this.setUseBaseStats}
-            />
-            <label htmlFor="use-base-stats">{t('LoadoutBuilder.UseBaseStats')}</label>
-          </p>
-        )}
 
         {processedSets.length === 0 && this.state.requirePerks && !this.foundSets ? (
           <>
