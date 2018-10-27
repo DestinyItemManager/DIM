@@ -398,7 +398,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           sectionId="loadoutbuilder-locked"
         >
           <div className="loadout-builder-row mr4 flex space-between">
-            <div>
+            <div className="locked-items">
               {Object.values(LockableBuckets).map((armor) => (
                 <LockedArmor
                   key={armor}
