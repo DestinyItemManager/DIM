@@ -10,6 +10,7 @@ import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import TierSelect from './TierSelect';
 import { getBestSets, isD2Item, toggleLockedItem } from './utils';
+import { AppIcon, powerIndicatorIcon } from '../../shell/icons';
 
 interface Props {
   processRunning: number;
@@ -126,11 +127,19 @@ export default class GeneratedSets extends React.Component<Props, State> {
             {matchedSets.length === 0 && <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
             {matchedSets.slice(0, shownSets).map((set) => (
               <div className="generated-build" key={set.id}>
-                <GeneratedSetButtons
-                  set={set}
-                  store={selectedStore!}
-                  onLoadoutSet={this.setCreateLoadout}
-                />
+                <span className="light">
+                  <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
+                </span>
+                <span>
+                  {`T${set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery}`}
+                </span>
+                <span>
+                  {` | ${t('LoadoutBuilder.Mobility')} ${set.tiers[0].Mobility} | ${t(
+                    'LoadoutBuilder.Resilience'
+                  )} ${set.tiers[0].Resilience} | ${t('LoadoutBuilder.Recovery')} ${
+                    set.tiers[0].Recovery
+                  }`}
+                </span>
                 <div className="sub-bucket">
                   {Object.values(set.armor).map((item) => (
                     <GeneratedSetItem
@@ -140,6 +149,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
                       onExclude={this.toggleLockedItem}
                     />
                   ))}
+                  <GeneratedSetButtons
+                    set={set}
+                    store={selectedStore!}
+                    onLoadoutSet={this.setCreateLoadout}
+                  />
                 </div>
               </div>
             ))}

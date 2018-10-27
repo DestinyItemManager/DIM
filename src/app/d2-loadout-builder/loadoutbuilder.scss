@@ -34,18 +34,21 @@
   //   border-top: 1px solid white;
   //   padding-top: 40px;
   // }
+  .light {
+    margin-right: 20px;
+    .app-icon {
+      font-size: 10px;
+      vertical-align: -0.125em;
+      margin-right: 0;
+    }
+  }
 
   .generated-build-buttons {
-    padding-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
     > * {
-      margin-right: 4px;
-    }
-    .light {
-      .app-icon {
-        font-size: 10px;
-        vertical-align: -0.125em;
-        margin-right: 0;
-      }
+      margin-bottom: 4px;
     }
   }
   .generated-build-items {

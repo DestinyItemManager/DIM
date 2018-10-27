@@ -4,14 +4,14 @@ import BungieImage from '../../dim-ui/BungieImage';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType, BurnItem } from '../types';
-import './lockeditem.scss';
+import './lockeditemcontainer.scss';
 import { D2Item } from '../../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 
 /**
  * Render the locked item bucket. Could contain an item, perk, burn
  */
-export default function LockedItem({
+export default function LockedItemContainer({
   locked,
   bucket,
   toggleOpen,

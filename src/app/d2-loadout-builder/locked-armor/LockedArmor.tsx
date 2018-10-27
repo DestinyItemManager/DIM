@@ -3,12 +3,12 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
+import { toggleLockedItem } from '../generated-sets/utils';
 import { LockedItemType } from '../types';
 import LoadoutBucketDropTarget from './LoadoutBucketDropTarget';
 import './lockedarmor.scss';
-import LockedItem from './LockedItem';
+import LockedItemContainer from './LockedItemContainer';
 import LockablePopup from './popup/LockablePopup';
-import { toggleLockedItem } from '../generated-sets/utils';
 
 interface Props {
   bucket: InventoryBucket;
@@ -60,7 +60,7 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
       <div className="locked-item">
         <LoadoutBucketDropTarget bucketType={bucket.type!} onItemLocked={this.setLockedItem}>
           {locked && locked.length !== 0 && <div className="close" onClick={this.reset} />}
-          <LockedItem
+          <LockedItemContainer
             locked={locked}
             bucket={bucket}
             toggleOpen={this.openPerkSelect}
