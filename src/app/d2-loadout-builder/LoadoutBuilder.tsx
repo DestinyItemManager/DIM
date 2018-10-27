@@ -361,12 +361,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           sectionId="loadoutbuilder-locked"
         >
           <div className="loadout-builder-row mr4">
-            <button className="dim-button" onClick={this.lockEquipped}>
-              {t('LoadoutBuilder.LockEquipped')}
-            </button>
-            <button className="dim-button" onClick={this.resetLocked}>
-              {t('LoadoutBuilder.ResetLocked')}
-            </button>
             {Object.values(LockableBuckets).map((armor) => (
               <LockedArmor
                 key={armor}
@@ -377,6 +371,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                 onLockChanged={this.updateLockedArmor}
               />
             ))}
+            <button className="dim-button" onClick={this.lockEquipped}>
+              {t('LoadoutBuilder.LockEquipped')}
+            </button>
+            <button className="dim-button" onClick={this.resetLocked}>
+              {t('LoadoutBuilder.ResetLocked')}
+            </button>
           </div>
         </CollapsibleTitle>
 
