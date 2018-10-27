@@ -1,7 +1,7 @@
 import { D2Item } from '../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 
-export type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
+export type StatTypes = 'Mobility' | 'Resilience' | 'Recovery';
 export type BurnTypes = 'arc' | 'solar' | 'void';
 
 export interface MinMax {

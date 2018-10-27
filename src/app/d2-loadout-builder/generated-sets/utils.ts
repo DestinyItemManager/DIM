@@ -54,23 +54,23 @@ export function getBestSets(
 ): ArmorSet[] {
   // Sort based on power level
   let sortedSets = _.sortBy(setMap, (set) => -set.power);
+
   // Sort by highest combined tier
   sortedSets = _.sortBy(
     sortedSets,
-    (set) =>
-      -(set.tiers[0].STAT_MOBILITY + set.tiers[0].STAT_RESILIENCE + set.tiers[0].STAT_RECOVERY)
+    (set) => -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery)
   );
 
   // Remove sets that do not match tier filters
   sortedSets = sortedSets.filter((set) => {
     return set.tiers.some((tier) => {
       return (
-        stats.STAT_MOBILITY.min <= tier.STAT_MOBILITY &&
-        stats.STAT_MOBILITY.max >= tier.STAT_MOBILITY &&
-        stats.STAT_RESILIENCE.min <= tier.STAT_RESILIENCE &&
-        stats.STAT_RESILIENCE.max >= tier.STAT_RESILIENCE &&
-        stats.STAT_RECOVERY.min <= tier.STAT_RECOVERY &&
-        stats.STAT_RECOVERY.max >= tier.STAT_RECOVERY
+        stats.Mobility.min <= tier.Mobility &&
+        stats.Mobility.max >= tier.Mobility &&
+        stats.Resilience.min <= tier.Resilience &&
+        stats.Resilience.max >= tier.Resilience &&
+        stats.Recovery.min <= tier.Recovery &&
+        stats.Recovery.max >= tier.Recovery
       );
     });
   });

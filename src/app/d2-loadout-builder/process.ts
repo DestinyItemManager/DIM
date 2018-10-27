@@ -76,20 +76,20 @@ function process(
                 };
 
                 const stats: { [statType in StatTypes]: number } = {
-                  STAT_MOBILITY: 0,
-                  STAT_RESILIENCE: 0,
-                  STAT_RECOVERY: 0
+                  Mobility: 0,
+                  Resilience: 0,
+                  Recovery: 0
                 };
 
                 let i = set.armor.length;
                 while (i--) {
                   const stat = set.armor[i].stats;
                   if (stat && stat.length) {
-                    stats.STAT_MOBILITY +=
+                    stats.Mobility +=
                       (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
-                    stats.STAT_RESILIENCE +=
+                    stats.Resilience +=
                       (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0);
-                    stats.STAT_RECOVERY +=
+                    stats.Recovery +=
                       (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0);
                   }
                 }

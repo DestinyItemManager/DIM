@@ -1,11 +1,13 @@
 import { UIViewInjectedProps } from '@uirouter/react';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
+import * as _ from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Subscription } from 'rxjs/Subscription';
-import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import CharacterSelect from '../character-select/CharacterSelect';
+import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
@@ -19,7 +21,6 @@ import './loadoutbuilder.scss';
 import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
-import CharacterSelect from '../character-select/CharacterSelect';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -341,33 +342,43 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     }
 
     return (
-      <div className="vendor d2-vendors dim-page">
-        <h2>{t('LoadoutBuilder.Title')}</h2>
-        <h3>{t('LoadoutBuilder.SelectCharacter')}</h3>
-        <div className="flex">
-          <CharacterSelect
-            selectedStore={store}
-            stores={stores}
-            onCharacterChanged={this.onCharacterChanged}
-          />
-        </div>
-        <h3>{t('LoadoutBuilder.SelectLockedItems')}</h3>
-        <button className="dim-button" onClick={this.lockEquipped}>
-          {t('LoadoutBuilder.LockEquipped')}
-        </button>
-        <button className="dim-button" onClick={this.resetLocked}>
-          {t('LoadoutBuilder.ResetLocked')}
-        </button>
-        {Object.values(LockableBuckets).map((armor) => (
-          <LockedArmor
-            key={armor}
-            locked={lockedMap[armor]}
-            bucket={buckets.byId[armor]}
-            items={items[store!.classType][armor]}
-            perks={perks[store!.classType][armor]}
-            onLockChanged={this.updateLockedArmor}
-          />
-        ))}
+      <div className="vendor d2-vendors loadout-builder dim-page">
+        <CollapsibleTitle
+          title={t('LoadoutBuilder.SelectCharacter')}
+          sectionId="loadoutbuilder-select"
+        >
+          <div className="flex loadout-builder-row">
+            <CharacterSelect
+              selectedStore={store}
+              stores={stores}
+              onCharacterChanged={this.onCharacterChanged}
+            />
+          </div>
+        </CollapsibleTitle>
+
+        <CollapsibleTitle
+          title={t('LoadoutBuilder.SelectLockedItems')}
+          sectionId="loadoutbuilder-locked"
+        >
+          <div className="loadout-builder-row mr4">
+            <button className="dim-button" onClick={this.lockEquipped}>
+              {t('LoadoutBuilder.LockEquipped')}
+            </button>
+            <button className="dim-button" onClick={this.resetLocked}>
+              {t('LoadoutBuilder.ResetLocked')}
+            </button>
+            {Object.values(LockableBuckets).map((armor) => (
+              <LockedArmor
+                key={armor}
+                locked={lockedMap[armor]}
+                bucket={buckets.byId[armor]}
+                items={items[store!.classType][armor]}
+                perks={perks[store!.classType][armor]}
+                onLockChanged={this.updateLockedArmor}
+              />
+            ))}
+          </div>
+        </CollapsibleTitle>
 
         {false && (
           <p>
@@ -380,6 +391,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             <label htmlFor="use-base-stats">{t('LoadoutBuilder.UseBaseStats')}</label>
           </p>
         )}
+
         {(processedSets.length === 0 &&
           this.state.requirePerks &&
           !this.foundSets && (

@@ -9,8 +9,7 @@ import { D2Item } from '../../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 
 /**
- * Render the locked item bucket. Could contain an item, perk, or a string if
- * multiple things are selected.
+ * Render the locked item bucket. Could contain an item, perk, burn
  */
 export default function LockedItem({
   locked,
@@ -77,61 +76,4 @@ export default function LockedItem({
         })}
     </>
   );
-
-  // // Multi-things locked
-  // if (locked.length > 1 || locked[0].type === 'exclude') {
-  //   const perks = locked.filter((item) => item.type === 'perk' || item.type === 'burn');
-  //   const excluded = locked.filter((item) => item.type === 'exclude');
-
-  //   return (
-  //     <div className="empty-item" onClick={toggleOpen}>
-  //       <div
-  //         className={classNames('add-perk-container', {
-  //           'has-locked': locked.length
-  //         })}
-  //       >
-  //         <div className="add-perk-text">
-  //           {perks.length !== 0 && (
-  //             <div>{t('LoadoutBuilder.LockedPerks', { locked: perks.length })}</div>
-  //           )}
-  //           {excluded.length !== 0 && (
-  //             <div>{t('LoadoutBuilder.ExcludedItems', { locked: excluded.length })}</div>
-  //           )}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
-  // const lockedItem = locked[0];
-
-  // // one item locked/excluded
-  // if (lockedItem.type === 'item' && isD2Item(lockedItem.item)) {
-  //   return <LoadoutBuilderItem item={lockedItem.item} locked={locked} onExclude={onExclude} />;
-  // }
-
-  // // one perk locked
-  // if (lockedItem.type === 'perk' && isInventoryItemDefinition(lockedItem.item)) {
-  //   return (
-  //     <BungieImage
-  //       className="empty-item"
-  //       title={lockedItem.item.displayProperties.name}
-  //       src={lockedItem.item.displayProperties.icon}
-  //       onClick={toggleOpen}
-  //     />
-  //   );
-  // }
-
-  // // one burn perk locked
-  // if (lockedItem.type === 'burn' && isBurnItem(lockedItem.item)) {
-  //   return (
-  //     <div
-  //       onClick={toggleOpen}
-  //       className={`empty-item ${lockedItem.item.index}`}
-  //       title={lockedItem.item.displayProperties.name}
-  //     />
-  //   );
-  // }
-
-  // return null;
 }

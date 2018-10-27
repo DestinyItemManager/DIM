@@ -3,8 +3,18 @@
   flex-wrap: wrap;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
+.loadout-builder {
+  margin-top: 10px;
+}
+.loadout-builder-row {
+  margin: 10px 0;
+}
+
 .mr4 {
-  margin-right: 40px;
   > * {
     margin-right: 4px;
   }
@@ -16,6 +26,12 @@
 
 .generated-build {
   padding-bottom: 20px;
+
+  // &:first-child {
+  //   margin-top: 40px;
+  //   border-top: 1px solid white;
+  //   padding-top: 40px;
+  // }
 
   .generated-build-buttons {
     padding-bottom: 5px;
@@ -43,4 +59,19 @@
     background-color: #4887ba;
     transform: scale(0.9);
   }
+}
+
+.icon-stat {
+  height: 17px;
+  width: 17px;
+  background-size: 100%;
+}
+.icon-Mobility {
+  background-image: url('../../images/mobility.png');
+}
+.icon-Resilience {
+  background-image: url('../../images/resilience.png');
+}
+.icon-Recovery {
+  background-image: url('../../images/recovery.png');
 }

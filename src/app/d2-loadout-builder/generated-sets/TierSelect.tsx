@@ -1,36 +1,58 @@
+import { t } from 'i18next';
 import * as React from 'react';
+import { StatTypes, MinMax } from '../types';
 
 export default function TierSelect({
-  name,
-  stat,
+  stats,
   onTierChange
 }: {
-  name: string;
-  stat: { min: number; max: number };
-  onTierChange({ min, max }: { min?: number; max?: number }): void;
+  stats: { [statType in StatTypes]: MinMax };
+  onTierChange(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
+  const handleTierChange = (which: string, changed) => {
+    const newTiers = stats;
+    if (changed.min) {
+      if (changed.min >= newTiers[which].max) {
+        newTiers[which].max = changed.min;
+      }
+      newTiers[which].min = changed.min;
+    }
+    if (changed.max) {
+      if (changed.max <= newTiers[which].min) {
+        newTiers[which].min = changed.max;
+      }
+      newTiers[which].max = changed.max;
+    }
+    onTierChange(newTiers);
+  };
+
   return (
     <div className="flex mr4">
-      <span>{name}</span>
-      <select
-        value={stat.min}
-        onChange={(e) => onTierChange({ min: parseInt(e.target.value, 10) })}
-      >
-        <option disabled={true}>Min</option>
-        {[...Array(11).keys()].map((tier) => (
-          <option key={tier}>{tier}</option>
-        ))}
-      </select>
+      {Object.keys(stats).map((stat) => (
+        <div key={stat} className="flex mr4">
+          <span className={`icon-stat icon-${stat}`} />
+          <span>{t(`LoadoutBuilder.${stat}`)}</span>
+          <select
+            value={stats[stat].min}
+            onChange={(e) => handleTierChange(stat, { min: parseInt(e.target.value, 10) })}
+          >
+            <option disabled={true}>{t('LoadoutBuilder.SelectMin')}</option>
+            {[...Array(11).keys()].map((tier) => (
+              <option key={tier}>{tier}</option>
+            ))}
+          </select>
 
-      <select
-        value={stat.max}
-        onChange={(e) => onTierChange({ max: parseInt(e.target.value, 10) })}
-      >
-        <option disabled={true}>Max</option>
-        {[...Array(11).keys()].map((tier) => (
-          <option key={tier}>{tier}</option>
-        ))}
-      </select>
+          <select
+            value={stats[stat].max}
+            onChange={(e) => handleTierChange(stat, { max: parseInt(e.target.value, 10) })}
+          >
+            <option disabled={true}>{t('LoadoutBuilder.SelectMax')}</option>
+            {[...Array(11).keys()].map((tier) => (
+              <option key={tier}>{tier}</option>
+            ))}
+          </select>
+        </div>
+      ))}
     </div>
   );
 }
