@@ -14,6 +14,7 @@ interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
   perks: Set<DestinyInventoryItemDefinition>;
+  filteredPerks: Set<DestinyInventoryItemDefinition>;
   isOpen: boolean;
   locked?: LockedItemType[];
   onClose(): void;
@@ -49,7 +50,7 @@ export default class LockablePopup extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, locked, items, perks } = this.props;
+    const { isOpen, locked, items, perks, filteredPerks } = this.props;
     const { tabSelected, hoveredPerk } = this.state;
 
     if (!isOpen) {
@@ -82,6 +83,7 @@ export default class LockablePopup extends React.Component<Props, State> {
         {tabSelected === 'perks' && (
           <LockablePerks
             perks={perks}
+            filteredPerks={filteredPerks}
             locked={locked}
             hoveredPerk={hoveredPerk}
             onPerkHover={this.onPerkHover}

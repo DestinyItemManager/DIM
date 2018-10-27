@@ -4,7 +4,7 @@
   flex-wrap: wrap;
   background: #222;
   position: absolute;
-  z-index: 10;
+  z-index: 3;
   top: 46px;
   left: 2px;
 }
@@ -49,6 +49,10 @@
   &:hover {
     border: 1px solid gray;
   }
+}
+.unselectable {
+  opacity: 0.1;
+  cursor: initial;
 }
 .perk-image.locked-perk {
   border: 1px solid orange;

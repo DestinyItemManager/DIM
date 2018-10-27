@@ -41,6 +41,7 @@ interface State {
   requirePerks: boolean;
   useBaseStats: boolean;
   lockedMap: { [bucketHash: number]: LockedItemType[] };
+  filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
   processedSets: ArmorSet[];
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
@@ -76,6 +77,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       useBaseStats: true,
       processRunning: 0,
       lockedMap: {},
+      filteredPerks: {},
       processedSets: []
     };
   }
@@ -107,12 +109,11 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             items[item.classType][item.bucket.hash][item.hash].push(item);
 
             // build the filtered unique perks item picker
-            item.sockets.categories.length === 2 &&
-              item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-                socket!.plugOptions.forEach((option) => {
-                  perks[item.classType][item.bucket.hash].add(option.plugItem);
-                });
+            item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+              socket!.plugOptions.forEach((option) => {
+                perks[item.classType][item.bucket.hash].add(option.plugItem);
               });
+            });
           }
         }
 
@@ -299,6 +300,50 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     const lockedMap = this.state.lockedMap;
     lockedMap[bucket.hash] = locked;
 
+    // filter down perks to only what is selectable
+    const storeClass = this.state.selectedStore!.classType;
+    const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
+
+    // loop all buckets
+    Object.keys(items[storeClass]).forEach((bucket) => {
+      if (!lockedMap[bucket]) {
+        return;
+      }
+      const lockedPlugs = lockedMap[bucket].filter(
+        (locked: LockedItemType) => locked.type === 'perk'
+      );
+      // loop all items by hash
+      Object.keys(items[storeClass][bucket]).forEach((itemHash) => {
+        const itemInstances = items[storeClass][bucket][itemHash];
+
+        // loop all items by instance
+        itemInstances.forEach((item) => {
+          // flat list of plugs per item
+          const itemPlugs: DestinyInventoryItemDefinition[] = [];
+          item.sockets &&
+            item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+              socket!.plugOptions.forEach((option) => {
+                itemPlugs.push(option.plugItem);
+              });
+            });
+          // for each item, look to see if all perks match locked
+          const matched = lockedPlugs.every((locked: LockedItemType) =>
+            itemPlugs.find((plug) => plug.index === locked.item.index)
+          );
+          if (item.sockets && matched) {
+            if (!filteredPerks[bucket]) {
+              filteredPerks[bucket] = new Set<DestinyInventoryItemDefinition>();
+            }
+            // filteredPerks[bucket].add(itemPlugs);
+            itemPlugs.forEach((plug) => {
+              filteredPerks[bucket].add(plug);
+            });
+          }
+        });
+      });
+    });
+
+    this.setState({ filteredPerks });
     this.computeSets({ lockedMap });
   };
 
@@ -363,6 +408,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                 bucket={buckets.byId[armor]}
                 items={items[store!.classType][armor]}
                 perks={perks[store!.classType][armor]}
+                filteredPerks={this.state.filteredPerks}
                 onLockChanged={this.updateLockedArmor}
               />
             ))}

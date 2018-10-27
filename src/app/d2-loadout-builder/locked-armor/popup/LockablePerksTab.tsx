@@ -7,12 +7,14 @@ import SelectableBurn from './SelectableBurn';
 
 export default function LockablePerks({
   perks,
+  filteredPerks,
   locked,
   hoveredPerk,
   onPerkHover,
   toggleLockedPerk
 }: {
   perks: Set<DestinyInventoryItemDefinition>;
+  filteredPerks: Set<DestinyInventoryItemDefinition>;
   locked?: LockedItemType[];
   hoveredPerk?: {
     name: string;
@@ -48,6 +50,17 @@ export default function LockablePerks({
     <>
       <div>{t('LoadoutBuilder.LockPerksTitle')}</div>
       <div className="add-perk-options-content" onMouseLeave={resetHover}>
+        {perks &&
+          Array.from(perks).map((perk) => (
+            <SelectableBungieImage
+              key={perk.hash}
+              selected={Boolean(locked && locked.some((p) => p.item.index === perk.index))}
+              unselectable={filteredPerks && !filteredPerks.has(perk)}
+              perk={perk}
+              onLockedPerk={toggleLockedPerk}
+              onHoveredPerk={setHoveredPerk}
+            />
+          ))}
         {burns.map((burn) => (
           <SelectableBurn
             key={burn.index}
@@ -57,16 +70,6 @@ export default function LockablePerks({
             onHoveredPerk={setHoveredPerk}
           />
         ))}
-        {perks &&
-          Array.from(perks).map((perk) => (
-            <SelectableBungieImage
-              key={perk.hash}
-              selected={Boolean(locked && locked.some((p) => p.item.index === perk.index))}
-              perk={perk}
-              onLockedPerk={toggleLockedPerk}
-              onHoveredPerk={setHoveredPerk}
-            />
-          ))}
       </div>
 
       {hoveredPerk && (

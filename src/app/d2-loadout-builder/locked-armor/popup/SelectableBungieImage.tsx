@@ -8,11 +8,13 @@ import { LockedItemType } from '../../types';
 export default function SelectableBungieImage({
   perk,
   selected,
+  unselectable,
   onLockedPerk,
   onHoveredPerk
 }: {
   perk: DestinyInventoryItemDefinition;
   selected: boolean;
+  unselectable: boolean;
   onLockedPerk(perk: LockedItemType): void;
   onHoveredPerk(perk: {}): void;
 }) {
@@ -33,6 +35,9 @@ export default function SelectableBungieImage({
   ].includes(perk.hash);
 
   const handleClick = () => {
+    if (unselectable) {
+      return;
+    }
     onLockedPerk({ type: 'perk', item: perk });
   };
   const handleHover = () => {
@@ -42,6 +47,7 @@ export default function SelectableBungieImage({
   return (
     <BungieImage
       className={classNames('perk-image', {
+        unselectable,
         'locked-perk': selected,
         'ammo-primary': perk.hash === 143442373,
         'ammo-special': perk.hash === 2620835322,

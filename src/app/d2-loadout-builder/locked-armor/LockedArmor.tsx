@@ -14,6 +14,7 @@ interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
   perks: Set<DestinyInventoryItemDefinition>;
+  filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
   locked?: LockedItemType[];
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
@@ -49,7 +50,7 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
   };
 
   render() {
-    const { items, perks, locked, bucket, onLockChanged } = this.props;
+    const { items, perks, filteredPerks, locked, bucket, onLockChanged } = this.props;
     const { isOpen } = this.state;
 
     return (
@@ -67,6 +68,7 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
           bucket={bucket}
           items={items}
           perks={perks}
+          filteredPerks={filteredPerks[bucket.hash]}
           locked={locked}
           isOpen={isOpen}
           onLockChanged={onLockChanged}
