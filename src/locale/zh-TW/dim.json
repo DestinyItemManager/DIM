@@ -184,6 +184,7 @@
     "EnterNote": "輸入備註文本:",
     "Equipment": "可以裝備的物品.",
     "Equipped": "當前已裝備的物品.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "篩選器",
     "Glimmer": {
       "Any": "所有類型的微光物品.",
@@ -229,6 +230,7 @@
       "tTK": "奪魂之王"
     },
     "RequiredLevel": "根據需要的等級顯示物品.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "根據堆疊數量來顯示物品.",
     "Stackable": "顯示可以堆疊的物品(合成彈藥,奇怪硬幣等)",
     "Stats": "根據統計數值顯示物品. 可用的篩選器有：",
@@ -701,16 +703,12 @@
     "Flawless": "完美無瑕",
     "SevenWins": "七連勝獎勵 (武器)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz reports that this vendor is verified to be selling 380 power level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling 380 power level items? Go to VendorEngrams.xyz to vote and let the community know!"
-  },
   "Vendors": {
     "All": "全部",
     "ArmorAndWeapons": "防具 & 武器",
     "Available": "可用:",
     "Bounties": "賞金",
+    "Catalysts": "Catalysts",
     "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
     "Collections": "收藏品",
     "Compare": "與您現有物品比較：",

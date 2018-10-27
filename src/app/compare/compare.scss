@@ -1,10 +1,8 @@
 @import '../../scss/variables.scss';
 
-dim-compare {
-  #loadout-drawer {
-    padding-left: 1em;
-    padding-right: 1em;
-  }
+#loadout-drawer.compare {
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .compare-bucket {
@@ -78,9 +76,8 @@ dim-compare {
   .range {
     font-size: 0.9em;
   }
-  dim-item-tag {
-    height: 20px;
-    margin-left: 5px;
+  .item-tag-selector {
+    height: 18px;
     display: block;
     select {
       background: gray;
@@ -90,7 +87,12 @@ dim-compare {
     }
   }
   .spacer {
-    height: 40px;
+    height: 39px;
+  }
+
+  .fa-star.app-icon {
+    font-size: 8px;
+    vertical-align: initial;
   }
 
   .tip-text {
@@ -114,6 +116,7 @@ dim-compare {
 
   .item-details {
     clear: both;
+    margin: 4px 0;
   }
 }
 

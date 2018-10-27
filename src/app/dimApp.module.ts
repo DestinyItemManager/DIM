@@ -17,7 +17,6 @@ import ngSanitize from 'angular-sanitize';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './inventory/inventory.module';
 import itemReviewModule from './item-review/item-review.module';
-import compareModule from './compare/compare.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
 import movePopupModule from './move-popup/move-popup.module';
@@ -37,7 +36,6 @@ const dependencies = [
   ToasterModule,
   inventoryModule,
   itemReviewModule,
-  compareModule,
   infuseModule,
   farmingModule,
   movePopupModule,
