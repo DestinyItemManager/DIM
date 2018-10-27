@@ -14,6 +14,7 @@ import { thumbsUpIcon, AppIcon } from '../shell/icons';
 interface Props {
   item: D2Item;
   $scope: IScope;
+  hideMods?: boolean;
 }
 
 interface State {
@@ -45,7 +46,7 @@ export default class Sockets extends React.Component<Props, State> {
   }
 
   render() {
-    const { item } = this.props;
+    const { item, hideMods } = this.props;
     const { defs } = this.state;
 
     if (!item.sockets || !defs) {
@@ -57,7 +58,8 @@ export default class Sockets extends React.Component<Props, State> {
     return (
       <div className="item-details">
         {item.sockets.categories.map(
-          (category) =>
+          (category, index) =>
+            (!hideMods || index === 0) &&
             category.sockets.length > 0 && (
               <div
                 key={category.category.hash}
@@ -66,16 +68,18 @@ export default class Sockets extends React.Component<Props, State> {
                   categoryStyle(category.category.categoryStyle)
                 )}
               >
-                <div className="item-socket-category-name">
-                  <div>{category.category.displayProperties.name}</div>
-                  {anyBestRatedUnselected(category) && (
-                    <div className="best-rated-key">
-                      <div className="tip-text">
-                        <BestRatedIcon /> {t('DtrReview.BestRatedKey')}
+                {!hideMods && (
+                  <div className="item-socket-category-name">
+                    <div>{category.category.displayProperties.name}</div>
+                    {anyBestRatedUnselected(category) && (
+                      <div className="best-rated-key">
+                        <div className="tip-text">
+                          <BestRatedIcon /> {t('DtrReview.BestRatedKey')}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )}
                 <div className="item-sockets">
                   {category.sockets.map((socketInfo) => (
                     <div key={socketInfo.socketIndex} className="item-socket">
