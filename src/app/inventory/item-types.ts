@@ -213,6 +213,8 @@ export interface D2Item extends DimItem {
   previewVendor?: number;
   dtrRating: D2RatingData | null;
   ammoType: DestinyAmmunitionType;
+  season: number;
+  event: number | null;
   getStoresService(): D2StoreServiceType;
 }
 
