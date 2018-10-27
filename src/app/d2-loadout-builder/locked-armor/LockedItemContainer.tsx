@@ -7,6 +7,7 @@ import { LockedItemType, BurnItem } from '../types';
 import './lockeditemcontainer.scss';
 import { D2Item } from '../../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { toggleLockedItem } from '../generated-sets/utils';
 
 /**
  * Render the locked item bucket. Could contain an item, perk, burn
@@ -15,18 +16,55 @@ export default function LockedItemContainer({
   locked,
   bucket,
   toggleOpen,
-  onExclude
+  onExclude,
+  onLockChanged
 }: {
   locked?: LockedItemType[];
   bucket: InventoryBucket;
   toggleOpen(): void;
   onExclude(excludedItem: LockedItemType): void;
+  onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }) {
   // one item locked
   if (locked && locked.length && locked[0].type === 'item') {
     return (
       <LoadoutBuilderItem item={locked[0].item as D2Item} locked={locked} onExclude={onExclude} />
     );
+  }
+
+  function renderLockedItem(lockedItem) {
+    switch (lockedItem.type) {
+      case 'exclude':
+      case 'item':
+        return (
+          <LoadoutBuilderItem
+            item={lockedItem.item as D2Item}
+            locked={locked}
+            onExclude={onExclude}
+          />
+        );
+
+      case 'perk':
+        const perkItem = lockedItem.item as DestinyInventoryItemDefinition;
+        return (
+          <BungieImage
+            key={perkItem.index}
+            className="empty-item"
+            title={perkItem.displayProperties.name}
+            src={perkItem.displayProperties.icon}
+          />
+        );
+
+      case 'burn':
+        const burnItem = lockedItem.item as BurnItem;
+        return (
+          <div
+            key={burnItem.index}
+            className={`empty-item ${burnItem.index}`}
+            title={burnItem.displayProperties.name}
+          />
+        );
+    }
   }
 
   return (
@@ -41,38 +79,15 @@ export default function LockedItemContainer({
 
       {locked &&
         locked.map((lockedItem) => {
-          switch (lockedItem.type) {
-            case 'exclude':
-            case 'item':
-              return (
-                <LoadoutBuilderItem
-                  key={lockedItem.item.index}
-                  item={lockedItem.item as D2Item}
-                  locked={locked}
-                  onExclude={onExclude}
-                />
-              );
-            case 'perk':
-              const perkItem = lockedItem.item as DestinyInventoryItemDefinition;
-              return (
-                <BungieImage
-                  key={perkItem.index}
-                  className="empty-item"
-                  title={perkItem.displayProperties.name}
-                  src={perkItem.displayProperties.icon}
-                />
-              );
-
-            case 'burn':
-              const burnItem = lockedItem.item as BurnItem;
-              return (
-                <div
-                  key={burnItem.index}
-                  className={`empty-item ${burnItem.index}`}
-                  title={burnItem.displayProperties.name}
-                />
-              );
-          }
+          return (
+            <div className="locked-item-box" key={lockedItem.item.index}>
+              {renderLockedItem(lockedItem)}
+              <div
+                className="close"
+                onClick={() => toggleLockedItem(lockedItem, bucket, onLockChanged, locked)}
+              />
+            </div>
+          );
         })}
     </>
   );

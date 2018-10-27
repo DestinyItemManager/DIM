@@ -48,10 +48,6 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     toggleLockedItem(lockedItem, this.props.bucket, this.props.onLockChanged, this.props.locked);
   };
 
-  reset = () => {
-    this.props.onLockChanged(this.props.bucket);
-  };
-
   render() {
     const { items, perks, locked, bucket, onLockChanged } = this.props;
     const { isOpen } = this.state;
@@ -59,12 +55,12 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     return (
       <div className="locked-item">
         <LoadoutBucketDropTarget bucketType={bucket.type!} onItemLocked={this.setLockedItem}>
-          {locked && locked.length !== 0 && <div className="close" onClick={this.reset} />}
           <LockedItemContainer
             locked={locked}
             bucket={bucket}
             toggleOpen={this.openPerkSelect}
             onExclude={this.toggleLockedItem}
+            onLockChanged={onLockChanged}
           />
         </LoadoutBucketDropTarget>
         <LockablePopup
