@@ -17,6 +17,7 @@
 
 .character-select {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
 
   .character-tile {

@@ -40,10 +40,11 @@ export default function GeneratedSetButtons({
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
       <span>
-        {`T${set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery} | `}
-        {`${t('LoadoutBuilder.Mobility')} ${set.tiers[0].Mobility} | `}
-        {`${t('LoadoutBuilder.Resilience')} ${set.tiers[0].Resilience} | `}
-        {`${t('LoadoutBuilder.Recovery')} ${set.tiers[0].Recovery}`}
+        {`T${set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery} | ${t(
+          'LoadoutBuilder.Mobility'
+        )} ${set.tiers[0].Mobility} | ${t('LoadoutBuilder.Resilience')} ${
+          set.tiers[0].Resilience
+        } | ${t('LoadoutBuilder.Recovery')} ${set.tiers[0].Recovery}`}
       </span>
       <span className="light">
         <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
