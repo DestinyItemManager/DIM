@@ -69,8 +69,6 @@ class SearchFilter extends React.Component<Props, State> {
   private $scope = $rootScope.$new(true);
 
   componentDidMount() {
-    this.setupTextcomplete();
-
     hotkeys
       .bindTo(this.$scope)
       .add({
@@ -110,7 +108,7 @@ class SearchFilter extends React.Component<Props, State> {
     this.$scope.$destroy();
   }
 
-  componentWillUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.destinyVersion !== this.props.destinyVersion) {
       this.setupTextcomplete();
     }
@@ -212,6 +210,9 @@ class SearchFilter extends React.Component<Props, State> {
   };
 
   private onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (!this.textcomplete) {
+      this.setupTextcomplete();
+    }
     // TODO: Debounce?
     const query = e.currentTarget.value;
     this.props.setSearchQuery(query);

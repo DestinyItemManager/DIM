@@ -17,7 +17,7 @@ if ($featureFlags.sentry) {
       'Bungie.net servers are down for maintenance.',
       "This action is forbidden at your character's current location.",
       "An unexpected error has occurred on Bungie's servers",
-      'Destiny tracker service call failed.',
+      /Destiny tracker service call failed\./,
       'Appel au service de Destiny tracker échoué.',
       /You may not be connected to the internet/,
       'Software caused connection abort'
