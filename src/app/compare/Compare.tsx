@@ -254,10 +254,11 @@ class Compare extends React.Component<Props, State> {
 
   private itemClick = (item: DimItem) => {
     // TODO: this is tough to do with an ID since we'll have multiple
-    const element = document.getElementById(item.index)!;
+    let element = document.getElementById(item.index)!;
     if (!element) {
       throw new Error(`No element with id ${item.index}`);
     }
+    element = element.parentNode!.parentNode! as HTMLElement;
     const elementRect = element.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
     window.scrollTo(0, absoluteElementTop - 150);
