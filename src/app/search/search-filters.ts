@@ -946,7 +946,7 @@ function searchFilters(
             case 'year1':
               return item.season >= 1 && item.season < 4;
             case 'year2':
-              return item.season > 3;
+              return item.season > 3 || !item.season;
             default:
               return false;
           }
@@ -961,7 +961,7 @@ function searchFilters(
           case 'season3':
             return item.season === 3;
           case 'season4':
-            return item.season === 4;
+            return item.season === 4 || !item.season;
           default:
             return false;
         }
