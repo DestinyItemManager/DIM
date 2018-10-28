@@ -8,6 +8,7 @@ import { currentAccountSelector } from '../accounts/reducer';
 import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
+import copyString from '../util';
 
 function mapStateToProps(state: RootState): Partial<Props> {
   return {
@@ -38,12 +39,12 @@ interface Props {
   account: any;
 }
 
-const selectElementContent = (id: string) => () => {
-  const el = document.getElementById(id);
+// tslint:disable-next-line:prefer-template
+const stringToCodeBlock = (str: string) => '```\n' + str + '\n```';
 
-  if (el) {
-    window.getSelection().selectAllChildren(el);
-  }
+const copyStringOnClick = (content: string) => () => {
+  copyString(content);
+  return false;
 };
 
 class DiagnosticsPageComponent extends React.Component<Props> {
@@ -97,8 +98,11 @@ class DiagnosticsPageComponent extends React.Component<Props> {
           <p>{t('Diagnostics.General.Privacy')}</p>
 
           <div className="diagnostic-info">
-            <button className="dim-button" onClick={selectElementContent('general-diagnostics')}>
-              <AppIcon icon={copyIcon} /> {t('Diagnostics.SelectToCopyToClipboard')}
+            <button
+              className="dim-button"
+              onClick={copyStringOnClick(stringToCodeBlock(generalDiagnostics))}
+            >
+              <AppIcon icon={copyIcon} /> {t('Diagnostics.CopyToClipboard')}
             </button>
             <pre id="general-diagnostics">{generalDiagnostics}</pre>
           </div>
