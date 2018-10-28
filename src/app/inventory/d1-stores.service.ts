@@ -22,7 +22,7 @@ import { InventoryBuckets } from './inventory-buckets';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
-import { update, setBuckets } from './actions';
+import { update } from './actions';
 
 export const D1StoresService = StoreService();
 
@@ -70,7 +70,7 @@ function StoreService(): D1StoreServiceType {
     updateCharacters,
     reloadStores,
     touch() {
-      store.dispatch(update(_stores));
+      store.dispatch(update({ stores: _stores }));
     }
   };
 
@@ -206,10 +206,9 @@ function StoreService(): D1StoreServiceType {
           )
         );
 
-        store.dispatch(setBuckets(buckets));
-        return $q.all([newItems, itemInfoService, processStorePromises]);
+        return $q.all([buckets, newItems, itemInfoService, processStorePromises]);
       })
-      .then(([newItems, itemInfoService, stores]) => {
+      .then(([buckets, newItems, itemInfoService, stores]) => {
         // Save and notify about new items
         NewItemsService.applyRemovedNewItems(newItems);
         NewItemsService.saveNewItems(newItems, account);
@@ -227,7 +226,7 @@ function StoreService(): D1StoreServiceType {
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        store.dispatch(update(stores));
+        store.dispatch(update({ stores, buckets, newItems }));
 
         return stores;
       })

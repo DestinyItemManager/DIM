@@ -121,7 +121,7 @@ function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
     // TODO: Starting to look like a saga
     store.dispatch(actions.setCurrentAccount(account));
     // Also clear inventory
-    store.dispatch(update([]));
+    store.dispatch(update({ stores: [] }));
 
     return SyncService.set({
       platformType: account.platformType,

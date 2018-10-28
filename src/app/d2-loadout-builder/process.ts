@@ -10,14 +10,17 @@ let killProcess = false;
  */
 export default function startNewProcess(
   this: LoadoutBuilder,
-  filteredItems: { [bucket: number]: D2Item[] }
+  filteredItems: { [bucket: number]: D2Item[] },
+  useBaseStats: boolean
 ) {
   if (this.state.processRunning !== 0) {
     killProcess = true;
-    return window.requestAnimationFrame(() => startNewProcess.call(this, filteredItems));
+    return window.requestAnimationFrame(() =>
+      startNewProcess.call(this, filteredItems, useBaseStats)
+    );
   }
 
-  process.call(this, filteredItems);
+  process.call(this, filteredItems, useBaseStats);
 }
 
 /**
@@ -26,7 +29,11 @@ export default function startNewProcess(
  *
  * @param filteredItems paired down list of items to process sets from
  */
-function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item[] }) {
+function process(
+  this: LoadoutBuilder,
+  filteredItems: { [bucket: number]: D2Item[] },
+  useBaseStats: boolean
+) {
   const pstart = performance.now();
   const helms = filteredItems[LockableBuckets.helmet] || [];
   const gaunts = filteredItems[LockableBuckets.gauntlets] || [];
@@ -69,24 +76,26 @@ function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item
                 };
 
                 const stats: { [statType in StatTypes]: number } = {
-                  STAT_MOBILITY: 0,
-                  STAT_RESILIENCE: 0,
-                  STAT_RECOVERY: 0
+                  Mobility: 0,
+                  Resilience: 0,
+                  Recovery: 0
                 };
 
                 let i = set.armor.length;
                 while (i--) {
-                  if (set.armor[i].stats!.length) {
-                    stats.STAT_MOBILITY += set.armor[i].stats![0].base;
-                    stats.STAT_RESILIENCE += set.armor[i].stats![1].base;
-                    stats.STAT_RECOVERY += set.armor[i].stats![2].base;
+                  const stat = set.armor[i].stats;
+                  if (stat && stat.length) {
+                    stats.Mobility +=
+                      (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
+                    stats.Resilience +=
+                      (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0);
+                    stats.Recovery +=
+                      (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0);
                   }
                 }
 
                 // TODO: iterate over perk bonus options and add all tier options
-                set.tiers.push(
-                  `${stats.STAT_MOBILITY}/${stats.STAT_RESILIENCE}/${stats.STAT_RECOVERY}`
-                );
+                set.tiers.push(stats);
 
                 // set.includesVendorItems = pieces.some((armor: any) => armor.isVendorItem);
                 setMap.push(set);
@@ -129,5 +138,5 @@ function process(this: LoadoutBuilder, filteredItems: { [bucket: number]: D2Item
     );
   }
 
-  return step.call(this);
+  step.call(this);
 }

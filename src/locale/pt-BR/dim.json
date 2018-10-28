@@ -184,6 +184,7 @@
     "EnterNote": "Digite a anotação:",
     "Equipment": "Items que podem ser equipados.",
     "Equipped": "Items que no momento estão equipados em outra personagem.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filtro",
     "Glimmer": {
       "Any": "Qualquer tipo de item de lúmem.",
@@ -229,6 +230,7 @@
       "tTK": "O Rei dos Possuídos"
     },
     "RequiredLevel": "Mostra itens baseado em seu nível necessário.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "Mostra itens baseados na quantidade de itens em sua pilha.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
     "Stats": "Exibir itens baseados em suas estatísticas. Os filtros disponíveis são:",
@@ -701,16 +703,12 @@
     "Flawless": "Vitória perfeita",
     "SevenWins": "Recompensa de 7 vitórias (arma)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz relata que este vendedor foi verificado vendendo itens de nível 380 de poder.",
-    "ServiceCallFailed": "Chamada ao serviço do VendorEngrams.xyz falhou.",
-    "Vote": "Achou um vendedor com itens de nível 380 de poder? Acesse VendorEngrams.xyz para votar e avise a Comunidade!"
-  },
   "Vendors": {
     "All": "Todos",
     "ArmorAndWeapons": "Armaduras & Armas",
     "Available": "Disponível em:",
     "Bounties": "Contratos",
+    "Catalysts": "Catalisadores",
     "CatalystsDisclaimer": "DIM só pode mostrar catalisadores de obra-primas exóticas que você ganhou para itens em seu inventário.",
     "Collections": "Coleções",
     "Compare": "Compare com o que você já possui:",

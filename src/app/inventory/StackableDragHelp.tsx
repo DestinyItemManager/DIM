@@ -23,10 +23,10 @@ function mapStateToProps(state: RootState) {
 class StackableDragHelp extends React.Component<Props, State> {
   state: State = { shiftKeyDown: false };
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (!this.props.isDraggingStack && nextProps.isDraggingStack) {
+  componentDidUpdate(prevProps: Props) {
+    if (!prevProps.isDraggingStack && this.props.isDraggingStack) {
       window.addEventListener('dragover', this.onDrag);
-    } else if (this.props.isDraggingStack && !nextProps.isDraggingStack) {
+    } else if (prevProps.isDraggingStack && !this.props.isDraggingStack) {
       window.removeEventListener('dragover', this.onDrag);
     }
   }

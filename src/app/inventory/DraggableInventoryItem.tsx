@@ -27,11 +27,14 @@ export interface DragObject {
   item: DimItem;
 }
 
+export let isDragging = false;
+
 const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
     if (props.item.maxStackSize > 1 && props.item.amount > 1) {
       store.dispatch(stackableDrag(true));
     }
+    isDragging = true;
     return { item: props.item };
   },
 
@@ -39,6 +42,7 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
     if (props.item.maxStackSize > 1 && props.item.amount > 1) {
       store.dispatch(stackableDrag(false));
     }
+    isDragging = false;
   },
 
   canDrag(props): boolean {

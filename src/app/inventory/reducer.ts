@@ -61,10 +61,17 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.update):
       // TODO: we really want to decompose these, drive out all deep mutation
       // TODO: mark DimItem, DimStore properties as Readonly
-      return {
+      const newState = {
         ...state,
-        stores: [...action.payload]
+        stores: [...action.payload.stores]
       };
+      if (action.payload.buckets) {
+        newState.buckets = action.payload.buckets;
+      }
+      if (action.payload.newItems) {
+        newState.newItems = action.payload.newItems;
+      }
+      return newState;
 
     // Buckets
     // TODO: only need to do this once, on loading a new platform.

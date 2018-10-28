@@ -184,6 +184,7 @@
     "EnterNote": "Inserta notas de texto:",
     "Equipment": "Objetos que pueden ser equipados.",
     "Equipped": "Objetos que actualmente están equipados en un personaje.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filtro",
     "Glimmer": {
       "Any": "Cualquier tipo de objeto de lumen.",
@@ -229,6 +230,7 @@
       "tTK": "El Rey de los Poseídos"
     },
     "RequiredLevel": "Muestra objetos basado en su nivel requerido.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "Muestra los objetos según la cantidad de objetos apilados.",
     "Stackable": "Muestra objetos que pueden ser apilados (municiones sintéticas, monedas extrañas, etc)",
     "Stats": "Muestra objetos basados en el valor de su estadística. Los filtros disponibles son:",
@@ -701,16 +703,12 @@
     "Flawless": "Impecable",
     "SevenWins": "Recompensa de 7 victorias (Arma)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz informa si que este vendedor está verificado para vender objetos de nivel de Poder 380.",
-    "ServiceCallFailed": "La llamada al servicio de VendorEngrams.xyz ha fallado.",
-    "Vote": "¿Viendo a un vendedor vender objetos a nivel de Poder 380? ¡Ve a VendorEngrams.xyz y házselo saber a la comunidad!"
-  },
   "Vendors": {
     "All": "Todo",
     "ArmorAndWeapons": "Armadura y armas",
     "Available": "Disponible en:",
     "Bounties": "Contratos",
+    "Catalysts": "Catalizadores",
     "CatalystsDisclaimer": "DIM solo puede mostrar catalizadores de obras maestras que hayas ganado para objetos en tu inventario.",
     "Collections": "Colecciones",
     "Compare": "Comparar con lo que ya tienes:",

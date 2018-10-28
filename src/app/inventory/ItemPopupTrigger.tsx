@@ -41,7 +41,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     );
   }
 
-  private clicked = (e) => {
+  private clicked = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
     const { item, template, extraData } = this.props;
@@ -63,7 +63,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     } else if (dimLoadoutService.dialogOpen) {
       $rootScope.$apply(() => dimLoadoutService.addItemToLoadout(item, e));
     } else if (CompareService.dialogOpen) {
-      $rootScope.$apply(() => CompareService.addItemToCompare(item, e));
+      $rootScope.$apply(() => CompareService.addItemToCompare(item));
     } else {
       // This is separate to hopefully work around an issue where Angular can't instantiate the controller with ES6 object shorthands
       function dialogController() {
