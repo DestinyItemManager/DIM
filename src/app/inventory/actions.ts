@@ -7,7 +7,11 @@ import { DimItemInfo } from './dim-item-info';
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
-export const update = createStandardAction('inventory/UPDATE')<DimStore[]>();
+export const update = createStandardAction('inventory/UPDATE')<{
+  stores: DimStore[];
+  buckets?: InventoryBuckets;
+  newItems?: Set<string>;
+}>();
 
 /**
  * Set the bucket info.
