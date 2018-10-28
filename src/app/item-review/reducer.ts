@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import { D2RatingData } from './d2-dtr-api-types';
 import { D1RatingData } from './d1-dtr-api-types';
 import { DimItem } from '../inventory/item-types';
-import { getReviewKey, getD2Roll } from '../destinyTrackerApi/d2-itemTransformer';
+import { getReviewKey, getD2Roll, getD2Key } from '../destinyTrackerApi/d2-itemTransformer';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface ReviewsState {
@@ -34,12 +34,16 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
   }
 };
 
+export function getItemStoreKey(referenceId: number | string, roll: string | null) {
+  return `${referenceId}-${roll || 'fixed'}`;
+}
+
 function ratingsFromItemStores(
   itemStores: (D2RatingData | D1RatingData)[]
 ): { [key: string]: D2RatingData | D1RatingData } {
   const ratings: { [key: string]: D2RatingData | D1RatingData } = {};
   for (const itemStore of itemStores) {
-    ratings[`${itemStore.referenceId}-${itemStore.roll}`] = itemStore;
+    ratings[getItemStoreKey(itemStore.referenceId, itemStore.roll)] = itemStore;
   }
   return ratings;
 }

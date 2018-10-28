@@ -54,21 +54,20 @@ class D2BulkFetcher {
       return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
-    const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 100);
+    // DTR admins requested we only make requests in batches of 10, and not in parallel
+    const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 10);
 
     const results: D2ItemFetchResponse[] = [];
 
-    const promiseSlices = arrayOfArrays.map((arraySlice) =>
-      dtrFetch(
+    for (const arraySlice of arrayOfArrays) {
+      const promiseSlice = dtrFetch(
         `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
         arraySlice
-      ).then(handleD2Errors, handleD2Errors)
-    );
+      ).then(handleD2Errors, handleD2Errors);
 
-    promiseSlices.forEach((promiseSlice) => loadingTracker.addPromise(promiseSlice));
-
-    for (const promiseSlice of promiseSlices) {
       try {
+        loadingTracker.addPromise(promiseSlice);
+
         const result = await promiseSlice;
         results.push(...result);
       } catch (error) {

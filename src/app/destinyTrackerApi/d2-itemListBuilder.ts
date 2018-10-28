@@ -7,7 +7,8 @@ import {
 import { D2Item } from '../inventory/item-types';
 import { D2Store } from '../inventory/store-types';
 import { D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
-import { translateToDtrItem, getD2Roll } from './d2-itemTransformer';
+import { translateToDtrItem, getD2Roll, getD2Key } from './d2-itemTransformer';
+import { getItemStoreKey } from '../item-review/reducer';
 
 /**
  * Translate the universe of items that the user has in their stores into a collection of data that we can send the DTR API.
@@ -50,11 +51,11 @@ export function getVendorItemList(
 function getNewItems(allItems: D2Item[], reviewDataCache: D2ReviewDataCache) {
   const allDtrItems = allItems.map(translateToDtrItem);
   const allKnownDtrItems = new Set(
-    reviewDataCache.getItemStores().map((kdi) => `${kdi.referenceId}-${kdi.roll}`)
+    reviewDataCache.getItemStores().map((kdi) => getItemStoreKey(kdi.referenceId, kdi.roll))
   );
 
   const unmatched = allDtrItems.filter(
-    (di) => !allKnownDtrItems.has(`${di.referenceId}-${getD2Roll(di.availablePerks)}`)
+    (di) => !allKnownDtrItems.has(getItemStoreKey(di.referenceId, getD2Roll(di.availablePerks)))
   );
 
   return unmatched;
@@ -62,11 +63,11 @@ function getNewItems(allItems: D2Item[], reviewDataCache: D2ReviewDataCache) {
 
 function getNewVendorItems(vendorItems: D2ItemFetchRequest[], reviewDataCache: D2ReviewDataCache) {
   const allKnownDtrItems = new Set(
-    reviewDataCache.getItemStores().map((kdi) => `${kdi.referenceId}-${kdi.roll}`)
+    reviewDataCache.getItemStores().map((kdi) => getItemStoreKey(kdi.referenceId, kdi.roll))
   );
 
   const unmatched = vendorItems.filter(
-    (di) => !allKnownDtrItems.has(`${di.referenceId}-${getD2Roll(di.availablePerks)}`)
+    (di) => !allKnownDtrItems.has(getItemStoreKey(di.referenceId, getD2Roll(di.availablePerks)))
   );
 
   return unmatched;
