@@ -26,6 +26,7 @@ interface InternalProps {
   connectDropTarget: ConnectDropTarget;
   isOver: boolean;
   canDrop: boolean;
+  item?: DimItem;
 }
 
 type Props = InternalProps & ExternalProps;
@@ -58,13 +59,15 @@ const dropSpec: DropTargetSpec<Props> = {
 
 // This forwards drag and drop state into props on the component
 function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): InternalProps {
+  const item = monitor.getItem();
   return {
     // Call this function inside render()
     // to let React DnD handle the drag events:
     connectDropTarget: connect.dropTarget(),
     // You can ask the monitor about the current drag state:
     isOver: monitor.isOver(),
-    canDrop: monitor.canDrop()
+    canDrop: monitor.canDrop(),
+    item: item && (item.item as DimItem)
   };
 }
 
@@ -75,7 +78,13 @@ class StoreBucketDropTarget extends React.Component<Props> {
   private element?: HTMLDivElement;
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.isOver && nextProps.isOver) {
+    if (
+      !this.props.isOver &&
+      nextProps.isOver &&
+      nextProps.item &&
+      nextProps.item.maxStackSize > 1 &&
+      nextProps.item.amount > 1
+    ) {
       // You can use this as enter handler
       this.dragTimer = window.setTimeout(() => {
         // TODO: publish this up to the parent and then consume it via props??
@@ -85,7 +94,13 @@ class StoreBucketDropTarget extends React.Component<Props> {
       }, 1000);
     }
 
-    if (this.props.isOver && !nextProps.isOver) {
+    if (
+      this.props.isOver &&
+      !nextProps.isOver &&
+      this.props.item &&
+      this.props.item.maxStackSize > 1 &&
+      this.props.item.amount > 1
+    ) {
       // You can use this as leave handler
       this.hovering = false;
       store.dispatch(stackableHover(false));
