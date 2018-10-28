@@ -25,7 +25,7 @@ export default class CharacterDropdown extends React.Component<Props, State> {
     const { dropdownOpen } = this.state;
 
     return (
-      <div className="character-select">
+      <div className="character-dropdown">
         <SimpleCharacterTile character={selectedStore} onClick={this.toggleDropdown} />
         {dropdownOpen && (
           <ClickOutside onClickOutside={this.closeDropdown}>

@@ -1,17 +1,20 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
 import * as React from 'react';
-import { LockedItemType } from '../../types';
+import { LockedItemType, BurnItem } from '../../types';
 import SelectableBungieImage from './SelectableBungieImage';
+import SelectableBurn from './SelectableBurn';
 
 export default function LockablePerks({
   perks,
+  filteredPerks,
   locked,
   hoveredPerk,
   onPerkHover,
   toggleLockedPerk
 }: {
   perks: Set<DestinyInventoryItemDefinition>;
+  filteredPerks: Set<DestinyInventoryItemDefinition>;
   locked?: LockedItemType[];
   hoveredPerk?: {
     name: string;
@@ -28,6 +31,21 @@ export default function LockablePerks({
     onPerkHover(hoveredPerk);
   };
 
+  const burns: BurnItem[] = [
+    {
+      index: 'arc',
+      displayProperties: { name: t('LoadoutBuilder.BurnTypeArc'), icon: '../../images/arc.png' }
+    },
+    {
+      index: 'solar',
+      displayProperties: { name: t('LoadoutBuilder.BurnTypeSolar'), icon: '../../images/solar.png' }
+    },
+    {
+      index: 'void',
+      displayProperties: { name: t('LoadoutBuilder.BurnTypeVoid'), icon: '../../images/void.png' }
+    }
+  ];
+
   return (
     <>
       <div>{t('LoadoutBuilder.LockPerksTitle')}</div>
@@ -36,12 +54,22 @@ export default function LockablePerks({
           Array.from(perks).map((perk) => (
             <SelectableBungieImage
               key={perk.hash}
-              selected={Boolean(locked && locked.some((p) => p.item.hash === perk.hash))}
+              selected={Boolean(locked && locked.some((p) => p.item.index === perk.index))}
+              unselectable={filteredPerks && !filteredPerks.has(perk)}
               perk={perk}
               onLockedPerk={toggleLockedPerk}
               onHoveredPerk={setHoveredPerk}
             />
           ))}
+        {burns.map((burn) => (
+          <SelectableBurn
+            key={burn.index}
+            burn={burn}
+            selected={Boolean(locked && locked.some((p) => p.item.index === burn.index))}
+            onLockedPerk={toggleLockedPerk}
+            onHoveredPerk={setHoveredPerk}
+          />
+        ))}
       </div>
 
       {hoveredPerk && (

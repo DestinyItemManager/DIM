@@ -1,12 +1,11 @@
-import { t } from 'i18next';
 import copy from 'fast-copy';
-import * as React from 'react';
+import { t } from 'i18next';
 import * as _ from 'lodash';
+import * as React from 'react';
 import { DimStore } from '../../inventory/store-types';
+import { newLoadout } from '../../loadout/loadout-utils';
 import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';
 import { ArmorSet } from '../types';
-import { newLoadout } from '../../loadout/loadout-utils';
-import { AppIcon, powerIndicatorIcon } from '../../shell/icons';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
@@ -39,9 +38,6 @@ export default function GeneratedSetButtons({
       <button className="dim-button equip-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
-      <span className="light">
-        <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
-      </span>
     </div>
   );
 }
