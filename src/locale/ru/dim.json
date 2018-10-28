@@ -184,6 +184,7 @@
     "EnterNote": "Введите текст заметки:",
     "Equipment": "Доступны для экипировки.",
     "Equipped": "На персонажах.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Фильтр",
     "Glimmer": {
       "Any": "Любые варианты блеска.",
@@ -229,6 +230,7 @@
       "tTK": "Одержимый Король"
     },
     "RequiredLevel": "По требуемому уровню.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "По количеству в пачке/стаке.",
     "Stackable": "Стакающиеся (боеприпасы, странные монеты и т.д.)",
     "Stats": "По значениям характеристик. Доступны:",
@@ -610,7 +612,7 @@
     "SortByRarity": "Редкость",
     "SortByRating": "Рейтинги Сообщества или Качество Брони",
     "SortByType": "Тип",
-    "SortCustom": "Задать критерии сортировки",
+    "SortCustom": "Свой порядок",
     "SortName": "Имя",
     "SortPrimary": "Основной стат (атака или защита)",
     "SortRarity": "Редкость, далее основной стат",
@@ -701,16 +703,12 @@
     "Flawless": "Безупречная",
     "SevenWins": "Награда за 7 побед (Оружие)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "Данные VendorEngrams.xyz: вендор выдает энграммы максимального уровня Силы.",
-    "ServiceCallFailed": "Ошибка выполнения запроса к сервису VendorEngrams.xyz.",
-    "Vote": "Получили от вендора энграмму 380го уровня Силы? Откройте сервис VendorEngrams.xyz (https://vendorengrams.xyz/) и отметьте вендора. Пусть сообщество узнает!"
-  },
   "Vendors": {
     "All": "Все",
     "ArmorAndWeapons": "Броня & Оружие",
     "Available": "Доступно на:",
     "Bounties": "Баунти",
+    "Catalysts": "Катализаторы",
     "CatalystsDisclaimer": "DIM не показывает полученные катализаторы, если предмета нет в инвентарях (есть в коллекции; возможно приобрести у вендора).",
     "Collections": "Коллекции",
     "Compare": "Сравнить с тем, что у вас уже есть:",

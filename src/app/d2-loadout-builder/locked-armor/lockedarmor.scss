@@ -4,9 +4,9 @@
   flex-wrap: wrap;
   background: #222;
   position: absolute;
-  z-index: 1;
-  top: 44px;
-  left: 6px;
+  z-index: 3;
+  top: 46px;
+  left: 2px;
 }
 .add-perk-options-title {
   margin: 5px 0;
@@ -25,8 +25,16 @@
   display: flex;
   flex-wrap: wrap;
 }
-.add-perk-options-content .excluded-item .item-img {
+.excluded-item .item-img {
   border-color: orange;
+}
+.perk-image,
+.empty-item {
+  &.arc,
+  &.solar,
+  &.void {
+    background-size: 100%;
+  }
 }
 
 .perk-image {
@@ -41,6 +49,10 @@
   &:hover {
     border: 1px solid gray;
   }
+}
+.unselectable {
+  opacity: 0.1;
+  cursor: initial;
 }
 .perk-image.locked-perk {
   border: 1px solid orange;
@@ -73,10 +85,16 @@
 }
 
 .on-loadout-hover {
-  .empty-item {
-    background-color: limegreen;
-  }
+  background-color: orange;
 }
 .close {
   z-index: 1;
+}
+.good-perk {
+  background-image: url('../../../images/good.png');
+  background-size: 10px 10px;
+}
+.bad-perk {
+  background-image: url('../../../images/bad.png');
+  background-size: 10px 10px;
 }

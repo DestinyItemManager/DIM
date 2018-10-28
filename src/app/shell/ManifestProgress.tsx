@@ -28,8 +28,8 @@ export default class ManifestProgress extends React.Component<Props, ManifestSer
     this.listenForUpdates();
   }
 
-  componentWillReceiveProps(newProps: Props) {
-    if (newProps.destinyVersion !== this.props.destinyVersion) {
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.destinyVersion !== this.props.destinyVersion) {
       this.listenForUpdates();
     }
   }

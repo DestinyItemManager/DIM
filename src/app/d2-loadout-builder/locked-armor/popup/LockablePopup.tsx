@@ -14,6 +14,7 @@ interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
   perks: Set<DestinyInventoryItemDefinition>;
+  filteredPerks: Set<DestinyInventoryItemDefinition>;
   isOpen: boolean;
   locked?: LockedItemType[];
   onClose(): void;
@@ -28,7 +29,7 @@ interface State {
 
 export default class LockablePopup extends React.Component<Props, State> {
   state: State = {
-    tabSelected: 'items',
+    tabSelected: 'perks',
     isOpen: false
   };
 
@@ -49,7 +50,7 @@ export default class LockablePopup extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, locked, items, perks } = this.props;
+    const { isOpen, locked, items, perks, filteredPerks } = this.props;
     const { tabSelected, hoveredPerk } = this.state;
 
     if (!isOpen) {
@@ -60,18 +61,18 @@ export default class LockablePopup extends React.Component<Props, State> {
       <ClickOutside onClickOutside={this.closePerkSelect} className="add-perk-options">
         <div className="add-perk-options-title move-popup-tabs">
           <span
-            className={classNames('move-popup-tab', { selected: tabSelected === 'items' })}
-            data-tab="items"
-            onClick={this.setTab}
-          >
-            {t('LoadoutBuilder.LockItemTabTitle')}
-          </span>
-          <span
             className={classNames('move-popup-tab', { selected: tabSelected === 'perks' })}
             data-tab="perks"
             onClick={this.setTab}
           >
             {t('LoadoutBuilder.LockPerksTabTitle')}
+          </span>
+          <span
+            className={classNames('move-popup-tab', { selected: tabSelected === 'items' })}
+            data-tab="items"
+            onClick={this.setTab}
+          >
+            {t('LoadoutBuilder.LockItemTabTitle')}
           </span>
           <div className="close" onClick={this.closePerkSelect} />
         </div>
@@ -82,6 +83,7 @@ export default class LockablePopup extends React.Component<Props, State> {
         {tabSelected === 'perks' && (
           <LockablePerks
             perks={perks}
+            filteredPerks={filteredPerks}
             locked={locked}
             hoveredPerk={hoveredPerk}
             onPerkHover={this.onPerkHover}

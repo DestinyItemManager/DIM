@@ -184,6 +184,7 @@
     "EnterNote": "메모를 입력하세요:",
     "Equipment": "장착 가능한 아이템",
     "Equipped": "캐릭터가 착용 하고 있는 아이템",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "필터",
     "Glimmer": {
       "Any": "모든 종류의 미광체 아이템",
@@ -229,6 +230,7 @@
       "tTK": "빼앗긴 자들의 왕"
     },
     "RequiredLevel": "필요 레벨에 따른 아이템 표시",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "중첩된 개수에 따른 아이템 표시",
     "Stackable": "증첩될 수 있는 아이템(탄약 신스, 이상한 동전 등) 표시",
     "Stats": "스탯 값에 따른 아이템을 보여줍니다. 사용 가능한 필터는 다음과 같습니다:",
@@ -421,7 +423,7 @@
     "ResetLocked": "잠금 초기화",
     "SelectCharacter": "캐릭터 선택",
     "SelectPower": "최소 파워",
-    "SelectPowerMinimum": "- 최저 없음 -",
+    "SelectPowerMinimum": "- 최솟값 없음 -",
     "SelectTier": "등급 생성하기",
     "SelectTierHeader": "- 등급 {{tier}} -",
     "ShowMore": "더 보기",
@@ -701,16 +703,12 @@
     "Flawless": "무결점",
     "SevenWins": "7승 보상(무기)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz에서 해당 상인이 380 전투력 아이템을 판매하는 것이 확인되었다고 보고하였습니다.",
-    "ServiceCallFailed": "VendorEngrams.xyz 서비스 호출에 실패하였습니다.",
-    "Vote": "상인이 380 전투력 아이템을 판매하는 것을 보셨나요? VendorEngrams.xyz에서 투표하셔서 커뮤니티가 알 수 있게 해주세요!"
-  },
   "Vendors": {
     "All": "전체",
     "ArmorAndWeapons": "방어구 & 무기",
     "Available": "사용 가능한 곳:",
     "Bounties": "현상금",
+    "Catalysts": "촉매제",
     "CatalystsDisclaimer": "DIM은 당신의 소지품에서 해금한 경이등급 걸작 촉매제만을 보여줄 수 있습니다",
     "Collections": "수집품",
     "Compare": "이미 가지고 있는 아이템과 비교:",

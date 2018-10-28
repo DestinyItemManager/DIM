@@ -44,6 +44,7 @@ export const NewItemsService = {
     const account = getActivePlatform();
     return this.loadNewItems(account).then((newItems) => {
       newItems.delete(item.id);
+      store.dispatch(setNewItems(newItems));
       this.saveNewItems(newItems, account, item.destinyVersion);
     });
   },
@@ -52,6 +53,7 @@ export const NewItemsService = {
     if (!stores || !account) {
       return;
     }
+    store.dispatch(setNewItems(new Set()));
     this.saveNewItems(new Set(), account);
   },
 
@@ -64,7 +66,6 @@ export const NewItemsService = {
   },
 
   saveNewItems(newItems: Set<string>, account: DestinyAccount) {
-    store.dispatch(setNewItems(newItems));
     return Promise.resolve(set(newItemsKey(account), newItems)).catch(handleLocalStorageFullError);
   },
 

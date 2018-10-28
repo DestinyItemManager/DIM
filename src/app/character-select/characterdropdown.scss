@@ -1,8 +1,30 @@
-.character-select {
+.character-dropdown {
   display: flex;
   flex-direction: column;
   min-width: 230px;
   height: 45px;
   z-index: 2;
   position: relative;
+
+  &.row {
+    width: 100%;
+    flex-direction: row;
+  }
+  .character-tile {
+    width: 100%;
+  }
+}
+
+.character-select {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .character-tile {
+    min-width: 230px;
+  }
+}
+
+.unselected {
+  opacity: 0.4;
 }

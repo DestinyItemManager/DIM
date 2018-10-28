@@ -230,15 +230,6 @@ $item-header-spacing: 5px;
     vertical-align: top;
     width: 1rem;
     background-size: contain;
-    &.void {
-      background-image: url('../../images/void.png');
-    }
-    &.arc {
-      background-image: url('../../images/arc.png');
-    }
-    &.solar {
-      background-image: url('../../images/solar.png');
-    }
   }
   .info {
     font-size: 1.5em;
@@ -246,6 +237,16 @@ $item-header-spacing: 5px;
   .compare-button {
     margin: 0 6px;
   }
+}
+
+.void {
+  background-image: url('../../images/void.png');
+}
+.arc {
+  background-image: url('../../images/arc.png');
+}
+.solar {
+  background-image: url('../../images/solar.png');
 }
 
 /**

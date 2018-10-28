@@ -10,6 +10,11 @@ interface State {
 }
 
 export default class Countdown extends React.Component<Props, State> {
+  static getDerivedStateFromProps(props: Props) {
+    const diff = props.endTime.getTime() - Date.now();
+    return { diff };
+  }
+
   private interval: number;
 
   constructor(props: Props) {
@@ -21,14 +26,6 @@ export default class Countdown extends React.Component<Props, State> {
     // Update once a minute
     this.interval = window.setInterval(this.update, 60000);
     this.update();
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.endTime !== this.props.endTime) {
-      clearInterval(this.interval);
-      this.interval = window.setInterval(this.update, 60000);
-      this.update();
-    }
   }
 
   componentWillUnmount() {

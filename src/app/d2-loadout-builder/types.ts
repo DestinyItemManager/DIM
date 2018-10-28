@@ -1,18 +1,32 @@
 import { D2Item } from '../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 
-export type StatTypes = 'STAT_MOBILITY' | 'STAT_RESILIENCE' | 'STAT_RECOVERY';
+export type StatTypes = 'Mobility' | 'Resilience' | 'Recovery';
+export type BurnTypes = 'arc' | 'solar' | 'void';
+
+export interface MinMax {
+  min: number;
+  max: number;
+}
+
+export interface BurnItem {
+  index: BurnTypes;
+  displayProperties: {
+    name: string;
+    icon: string;
+  };
+}
 
 export interface LockedItemType {
-  type: 'item' | 'perk' | 'exclude';
-  item: D2Item | DestinyInventoryItemDefinition;
+  type: 'item' | 'perk' | 'burn' | 'exclude';
+  item: D2Item | DestinyInventoryItemDefinition | BurnItem;
 }
 
 export interface ArmorSet {
   id: number;
   armor: D2Item[];
   power: number;
-  tiers: string[];
+  tiers: { [statType in StatTypes]: number }[];
   includesVendorItems: boolean;
 }
 

@@ -19,6 +19,7 @@ interface ExternalProps {
 interface InternalProps {
   connectDropTarget: ConnectDropTarget;
   isOver: boolean;
+  canDrop: boolean;
 }
 
 type Props = InternalProps & ExternalProps;
@@ -33,6 +34,11 @@ const dropSpec: DropTargetSpec<Props> = {
   drop(props, monitor) {
     const item = monitor.getItem().item as DimItem;
     props.onItemLocked(item);
+  },
+  canDrop(props, monitor) {
+    // can only drop on a matching bucket
+    const item = monitor.getItem().item as DimItem;
+    return item.bucket.type === props.bucketType;
   }
 };
 
@@ -43,18 +49,20 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
     // to let React DnD handle the drag events:
     connectDropTarget: connect.dropTarget(),
     // You can ask the monitor about the current drag state:
-    isOver: monitor.isOver()
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
   };
 }
 
 class LoadoutBucketDropTarget extends React.Component<Props> {
   render() {
-    const { connectDropTarget, children, isOver } = this.props;
+    const { connectDropTarget, children, isOver, canDrop } = this.props;
 
     return connectDropTarget(
       <div
         className={classNames({
-          'on-loadout-hover': isOver
+          'on-drag-hover': canDrop && isOver,
+          'on-drag-enter': canDrop
         })}
       >
         {children}
