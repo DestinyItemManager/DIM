@@ -23,36 +23,18 @@ interface Props {
   onSortOrderChanged(order: SortProperty[]): void;
 }
 
-// We keep a local copy of props in the state partly because Angular is slow. It's faster
-// to re-render locally then just ignore the "controlled" update if it doesn't change anything.
-interface State {
-  order: SortProperty[];
-}
-
 /**
  * An editor for sort-orders, with drag and drop.
  *
  * This is a "controlled component" - it fires an event when the order changes, and
  * must then be given back the new order by its parent.
  */
-export default class SortOrderEditor extends React.Component<Props, State> {
+export default class SortOrderEditor extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     this.state = {
       order: props.order
     };
-  }
-
-  shouldComponentUpdate(_nextProp: Props, nextState: State) {
-    // The order should be immutable - if the controlling component mutates it all bets are off
-    return nextState.order !== this.state.order;
-  }
-
-  componentWillReceiveProps(props: Props) {
-    // Copy props into state
-    this.setState({
-      order: props.order
-    });
   }
 
   onDragEnd = (result: DropResult) => {
@@ -84,12 +66,13 @@ export default class SortOrderEditor extends React.Component<Props, State> {
   };
 
   render() {
+    const { order } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided) => (
             <div className="sort-order-editor" ref={provided.innerRef} onClick={this.onClick}>
-              <SortEditorItemList order={this.state.order} />
+              <SortEditorItemList order={order} />
               {provided.placeholder}
             </div>
           )}
@@ -99,8 +82,8 @@ export default class SortOrderEditor extends React.Component<Props, State> {
   }
 
   private moveItem(oldIndex, newIndex, fromDrag = false) {
-    newIndex = Math.min(this.state.order.length, Math.max(newIndex, 0));
-    const order = reorder(this.state.order, oldIndex, newIndex);
+    newIndex = Math.min(this.props.order.length, Math.max(newIndex, 0));
+    const order = reorder(this.props.order, oldIndex, newIndex);
     if (fromDrag) {
       order[newIndex] = {
         ...order[newIndex],
@@ -111,15 +94,12 @@ export default class SortOrderEditor extends React.Component<Props, State> {
   }
 
   private toggleItem(index) {
-    const order = Array.from(this.state.order);
+    const order = Array.from(this.props.order);
     order[index] = { ...order[index], enabled: !order[index].enabled };
     this.fireOrderChanged(order);
   }
 
   private fireOrderChanged(order: SortProperty[]) {
-    this.setState({
-      order
-    });
     this.props.onSortOrderChanged(order);
   }
 }
