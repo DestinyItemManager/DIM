@@ -7,7 +7,7 @@ import {
 import { D2Item } from '../inventory/item-types';
 import { D2Store } from '../inventory/store-types';
 import { D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
-import { translateToDtrItem, getD2Roll, getD2Key } from './d2-itemTransformer';
+import { translateToDtrItem, getD2Roll } from './d2-itemTransformer';
 import { getItemStoreKey } from '../item-review/reducer';
 
 /**

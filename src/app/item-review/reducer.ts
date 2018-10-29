@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import { D2RatingData } from './d2-dtr-api-types';
 import { D1RatingData } from './d1-dtr-api-types';
 import { DimItem } from '../inventory/item-types';
-import { getReviewKey, getD2Roll, getD2Key } from '../destinyTrackerApi/d2-itemTransformer';
+import { getReviewKey, getD2Roll } from '../destinyTrackerApi/d2-itemTransformer';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface ReviewsState {
