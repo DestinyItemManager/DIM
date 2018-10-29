@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const { GenerateSW } = require('workbox-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -361,7 +361,7 @@ module.exports = (env) => {
       }),
 
       // Generate a service worker
-      new GenerateSW({
+      new InjectManifest({
         maximumFileSizeToCacheInBytes: 5000000,
         include: [/\.(html|js|css|woff2|json|wasm)/, /static\/.*\.(png|jpg|svg)/],
         exclude: [
@@ -372,24 +372,10 @@ module.exports = (env) => {
           /\.map$/,
           /^manifest.*\.js(?:on)?$/
         ],
+        swSrc: './src/service-worker.js',
         swDest: 'service-worker.js',
         importWorkboxFrom: 'local',
-        runtimeCaching: [
-          {
-            urlPattern: new RegExp('https://fonts.(googleapis|gstatic).com/.*'),
-            // Apply a network-first strategy.
-            handler: 'cacheFirst',
-            options: {
-              cacheName: 'googleapis',
-              expiration: {
-                maxEntries: 20
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          }
-        ]
+        dontCacheBustUrlsMatching: /-[a-f0-9]{6}\./
       })
     );
   }
