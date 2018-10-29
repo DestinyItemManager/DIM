@@ -25,7 +25,7 @@ const serverVersionChanged$ = Observable.timer(10 * 1000, 15 * 60 * 1000)
   .switchMap(() =>
     Observable.fromPromise(getServerVersion()).catch(() => Observable.empty<string>())
   )
-  .map((version) => version !== $DIM_VERSION)
+  .map(isNewVersion)
   .distinctUntilChanged()
   // At this point the value of the observable will flip to true once and only once
   .switchMap(
@@ -154,4 +154,17 @@ async function getServerVersion() {
   } else {
     throw response;
   }
+}
+
+function isNewVersion(version: string) {
+  const parts = version.split('.');
+  const currentVersionParts = $DIM_VERSION.split('.');
+
+  for (let i = 0; i < parts.length && i < currentVersionParts.length; i++) {
+    if (parseInt(parts[i], 10) > parseInt(currentVersionParts[i], 10)) {
+      return true;
+    }
+  }
+
+  return false;
 }
