@@ -978,13 +978,13 @@ FileETag None
     </IfModule>
 </FilesMatch>
 
-# Cache version.json for only 15 minutes
+# Don't cache version.json either
 
 <FilesMatch "version\.json(\.(gz|br))?">
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=900"
+        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
         Header unset Expires
     </IfModule>
 </FilesMatch>
