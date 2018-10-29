@@ -54,6 +54,7 @@ class D2BulkFetcher {
       return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
+    // DTR admins requested we only make requests in batches of 10, and not in parallel
     const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 10);
 
     const results: D2ItemFetchResponse[] = [];

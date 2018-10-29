@@ -135,7 +135,7 @@ class D2ReviewDataCache {
    * Add (and track) the community scores.
    */
   addScores(bulkRankings: D2ItemFetchResponse[]) {
-    if (bulkRankings) {
+    if (bulkRankings && bulkRankings.length > 0) {
       this._setMaximumTotalVotes(bulkRankings);
 
       bulkRankings.forEach((bulkRanking) => {
