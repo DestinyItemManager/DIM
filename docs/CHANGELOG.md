@@ -1,5 +1,7 @@
 # Next
 
+# 4.75.0 (2018-10-28)
+
 # 4.74.1 (2018-10-21)
 
 * We no longer support searching D1 vendor items.
