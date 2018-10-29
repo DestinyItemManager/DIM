@@ -89,10 +89,21 @@ export default function registerServiceWorker() {
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
               // available; please refresh." message in your web app.
-              console.log('SW: New content is available; please refresh.');
+              console.log('SW: New content is available; please refresh. (from onupdatefound)');
               // At this point, is it really cached??
 
               serviceWorkerUpdated$.next(true);
+
+              let preventDevToolsReloadLoop;
+              navigator.serviceWorker.addEventListener('controllerchange', () => {
+                // Ensure refresh is only called once.
+                // This works around a bug in "force update on reload".
+                if (preventDevToolsReloadLoop) {
+                  return;
+                }
+                preventDevToolsReloadLoop = true;
+                window.location.reload();
+              });
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
@@ -118,7 +129,8 @@ export default function registerServiceWorker() {
             }
           })
           .then(() => {
-            console.log('SW: New content is available; please refresh.');
+            console.log('SW: New content is available; please refresh. (from update)');
+            serviceWorkerUpdated$.next(true);
           });
       };
     })
