@@ -94,4 +94,9 @@ async function reloadDIM() {
   }
 
   registration.waiting.postMessage('skipWaiting');
+
+  // insurance!
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
 }
