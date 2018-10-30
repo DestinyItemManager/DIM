@@ -20,7 +20,6 @@ import itemReviewModule from './item-review/item-review.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
 import movePopupModule from './move-popup/move-popup.module';
-import searchModule from './search/search.module';
 
 import config from './dimApp.config';
 import run from './dimApp.run';
@@ -39,7 +38,6 @@ const dependencies = [
   infuseModule,
   farmingModule,
   movePopupModule,
-  searchModule,
   'ajoslin.promise-tracker',
   'cfp.hotkeys',
   'bcherny/ngimport',
