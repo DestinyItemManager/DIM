@@ -64,7 +64,7 @@ export function defaultItemSize() {
   return window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
 }
 
-export const initialSettingsState: Settings = {
+export const initialState: Settings = {
   // Show full details in item popup
   itemDetails: true,
   // Show item quality percentages
@@ -118,7 +118,7 @@ export const initialSettingsState: Settings = {
 export type SettingsAction = ActionType<typeof actions>;
 
 export const settings: Reducer<Settings, SettingsAction> = (
-  state: Settings = initialSettingsState,
+  state: Settings = initialState,
   action: SettingsAction
 ) => {
   switch (action.type) {

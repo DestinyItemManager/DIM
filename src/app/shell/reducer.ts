@@ -13,13 +13,13 @@ export interface ShellState {
 
 export type ShellAction = ActionType<typeof actions>;
 
-export const initialAccountsState: ShellState = {
+const initialState: ShellState = {
   isPhonePortrait: isPhonePortrait(),
   searchQuery: ''
 };
 
 export const shell: Reducer<ShellState, ShellAction> = (
-  state: ShellState = initialAccountsState,
+  state: ShellState = initialState,
   action: ShellAction
 ) => {
   switch (action.type) {

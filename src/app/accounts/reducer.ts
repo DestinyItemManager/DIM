@@ -22,13 +22,13 @@ export interface AccountsState {
 
 export type AccountsAction = ActionType<typeof actions>;
 
-export const initialAccountsState: AccountsState = {
+const initialState: AccountsState = {
   accounts: [],
   currentAccount: -1
 };
 
 export const accounts: Reducer<AccountsState, AccountsAction> = (
-  state: AccountsState = initialAccountsState,
+  state: AccountsState = initialState,
   action: AccountsAction
 ) => {
   switch (action.type) {

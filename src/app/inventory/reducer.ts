@@ -45,7 +45,7 @@ export interface InventoryState {
 
 export type InventoryAction = ActionType<typeof actions>;
 
-export const initialInventoryState: InventoryState = {
+const initialState: InventoryState = {
   stores: [],
   newItems: new Set(),
   itemInfos: {},
@@ -54,7 +54,7 @@ export const initialInventoryState: InventoryState = {
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
-  state: InventoryState = initialInventoryState,
+  state: InventoryState = initialState,
   action: InventoryAction | AccountsAction
 ) => {
   switch (action.type) {
