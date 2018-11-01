@@ -107,6 +107,7 @@ export {
   faCheckCircle as enabledIcon,
   faCheckCircle as redeemedIcon,
   faCheckCircleRegular as completedIcon,
+  faCheckCircleRegular as unselectedCheckIcon,
   faChevronCircleDown as openDropdownIcon,
   faCircleRegular as uncompletedIcon,
   faCog as settingsIcon,

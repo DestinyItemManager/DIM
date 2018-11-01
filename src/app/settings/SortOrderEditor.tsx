@@ -6,9 +6,9 @@ import {
   reorderIcon,
   AppIcon,
   enabledIcon,
-  disabledIcon,
   moveUpIcon,
-  moveDownIcon
+  moveDownIcon,
+  unselectedCheckIcon
 } from '../shell/icons';
 
 export interface SortProperty {
@@ -149,7 +149,7 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
           <AppIcon icon={moveUpIcon} className="sort-button sort-up" />
           <AppIcon icon={moveDownIcon} className="sort-button sort-down" />
           <AppIcon
-            icon={item.enabled ? enabledIcon : disabledIcon}
+            icon={item.enabled ? enabledIcon : unselectedCheckIcon}
             className="sort-button sort-toggle"
           />
         </div>
