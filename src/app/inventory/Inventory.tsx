@@ -11,12 +11,12 @@ import { angular2react } from 'angular2react';
 import { FarmingComponent } from '../farming/farming.component';
 import { D2FarmingComponent } from '../farming/d2farming.component';
 import { lazyInjector } from '../../lazyInjector';
-import { CompareComponent } from '../compare/compare.component';
 import ClearNewItems from './ClearNewItems';
 import StackableDragHelp from './StackableDragHelp';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
+import Compare from '../compare/Compare';
 
 const D1Farming = angular2react(
   'dimFarming',
@@ -26,11 +26,6 @@ const D1Farming = angular2react(
 const D2Farming = angular2react(
   'd2Farming',
   D2FarmingComponent,
-  lazyInjector.$injector as angular.auto.IInjectorService
-);
-const Compare = angular2react(
-  'dimCompare',
-  CompareComponent,
   lazyInjector.$injector as angular.auto.IInjectorService
 );
 

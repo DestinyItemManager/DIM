@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import * as idbKeyval from 'idb-keyval';
+import { get, set, keys, del } from 'idb-keyval';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '../rx-operators';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
@@ -205,10 +205,10 @@ function VendorService(): VendorServiceType {
 
   function deleteCachedVendors() {
     // Everything's in one table, so we can't just clear
-    idbKeyval.keys().then((keys) => {
+    keys().then((keys) => {
       keys.forEach((key) => {
-        if (key.startsWith('vendor')) {
-          idbKeyval.delete(key);
+        if (key.toString().startsWith('vendor')) {
+          del(key);
         }
       });
     });
@@ -432,8 +432,7 @@ function VendorService(): VendorServiceType {
     const vendorHash = vendorDef.hash;
 
     const key = vendorKey(store, vendorHash);
-    return idbKeyval
-      .get<Vendor>(key)
+    return get<Vendor>(key)
       .then((vendor) => {
         if (cachedVendorUpToDate(vendor, store, vendorDef)) {
           // console.log("loaded local", vendorDef.summary.vendorName, key, vendor);
@@ -448,8 +447,7 @@ function VendorService(): VendorServiceType {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
               vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
-              return idbKeyval
-                .set(key, vendor)
+              return set(key, vendor)
                 .catch(handleLocalStorageFullError)
                 .then(() => vendor);
             })
@@ -465,8 +463,7 @@ function VendorService(): VendorServiceType {
                   factionAligned: factionAligned(store, vendorDef.summary.factionHash)
                 };
 
-                return idbKeyval
-                  .set(key, vendor)
+                return set(key, vendor)
                   .catch(handleLocalStorageFullError)
                   .then(() => {
                     throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);

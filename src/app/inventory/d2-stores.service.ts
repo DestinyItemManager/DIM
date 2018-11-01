@@ -35,7 +35,7 @@ import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
-import { update, setBuckets } from './actions';
+import { update } from './actions';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -85,7 +85,7 @@ function makeD2StoresService(): D2StoreServiceType {
     reloadStores,
     refreshRatingsData,
     touch() {
-      store.dispatch(update(_stores));
+      store.dispatch(update({ stores: _stores }));
     }
   };
 
@@ -259,8 +259,6 @@ function makeD2StoresService(): D2StoreServiceType {
           )
         );
 
-        store.dispatch(setBuckets(buckets));
-
         return $q.all([
           defs,
           buckets,
@@ -294,7 +292,7 @@ function makeD2StoresService(): D2StoreServiceType {
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        store.dispatch(update(stores));
+        store.dispatch(update({ stores, buckets, newItems }));
 
         return stores;
       })

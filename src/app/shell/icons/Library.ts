@@ -37,7 +37,9 @@ import {
   faChevronDown,
   faChevronUp,
   faBolt,
-  faTag
+  faTag,
+  faPlus,
+  faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
 
 import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
@@ -56,6 +58,7 @@ library.add(
   faTrashAlt,
 
   faArrowCircleUp,
+  faArrowRight,
   faBan,
   faBars,
   faBolt,
@@ -69,6 +72,7 @@ library.add(
   faEraser,
   faLevelUpAlt,
   faPencilAlt,
+  faPlus,
   faPlusCircle,
   faSave,
   faSearch,
@@ -95,6 +99,7 @@ export {
   dimPowerAltIcon as powerActionIcon,
   faArrowAltCircleUp as raiseReputationIcon,
   faArrowCircleUp as updateIcon,
+  faArrowRight as rightArrowIcon,
   faBan as banIcon,
   faBars as menuIcon,
   faBars as reorderIcon,
@@ -111,6 +116,7 @@ export {
   faLevelUpAlt as levellingIcon,
   faMinusSquare as collapseIcon,
   faPencilAlt as editIcon,
+  faPlus as plusIcon,
   faPlusSquare as expandIcon,
   faPlusCircle as addIcon,
   faQuestionCircle as helpIcon,

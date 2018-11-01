@@ -1,18 +1,32 @@
-import WorkboxSW from 'workbox-sw';
+self.__precacheManifest = [].concat(self.__precacheManifest || []);
+workbox.precaching.suppressWarnings();
 
-const workboxSW = new WorkboxSW();
+workbox.precaching.addPlugins([new workbox.broadcastUpdate.Plugin('precache-updates')]);
+workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-// This array will be filled in with our files by the Workbox plugin
-workboxSW.precache([]);
-
-// Cache our fonts!
-workboxSW.router.registerRoute(
-  new RegExp('https://fonts.(googleapis|gstatic).com/.*'),
-  workboxSW.strategies.cacheFirst({
+workbox.routing.registerRoute(
+  /https:\/\/fonts.(googleapis|gstatic).com\/.*/,
+  workbox.strategies.cacheFirst({
     cacheName: 'googleapis',
-    cacheExpiration: {
-      maxEntries: 20
-    },
-    cacheableResponse: { statuses: [0, 200] }
-  })
+    plugins: [
+      new workbox.expiration.Plugin({ maxEntries: 20, purgeOnQuotaError: false }),
+      new workbox.cacheableResponse.Plugin({ statuses: [0, 200] })
+    ]
+  }),
+  'GET'
 );
+
+self.addEventListener('message', (event) => {
+  if (!event.data) {
+    return;
+  }
+
+  switch (event.data) {
+    case 'skipWaiting':
+      self.skipWaiting();
+      break;
+    default:
+      // NOOP
+      break;
+  }
+});

@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -272,7 +272,7 @@ module.exports = (env) => {
         { from: `./icons/${env}-extension/`, to: '../extension-dist' },
         { from: './src/manifest-webapp-6-2018.json' },
         { from: './src/manifest-webapp-6-2018-ios.json' },
-        { from: './src/data', to: 'data/' },
+        { from: './src/data', to: 'data/', ignore: ['missing_sources.json'] },
         { from: `./icons/${env}/` },
         { from: './src/safari-pinned-tab.svg' }
       ]),
@@ -348,52 +348,37 @@ module.exports = (env) => {
         contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
       })
     );
-
-    return config;
   } else {
     config.plugins.push(
       new CleanWebpackPlugin(['dist', '.awcache', 'node_modules/.cache'], {
         root: path.resolve('./')
-      })
-    );
+      }),
 
-    // Tell React we're in Production mode
-    config.plugins.push(
+      // Tell React we're in Production mode
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production'),
         'process.env': JSON.stringify({ NODE_ENV: 'production' })
-      })
-    );
+      }),
 
-    // Generate a service worker
-    config.plugins.push(
-      new WorkboxPlugin({
+      // Generate a service worker
+      new InjectManifest({
         maximumFileSizeToCacheInBytes: 5000000,
-        globPatterns: ['**/*.{html,js,css,woff2,json}', 'static/*.{png,jpg}'],
-        globIgnores: ['data/**', 'service-worker.js'],
-        swSrc: './dist/service-worker.js',
-        swDest: './dist/service-worker.js'
+        include: [/\.(html|js|css|woff2|json|wasm)/, /static\/.*\.(png|jpg|svg)/],
+        exclude: [
+          /sqlLib/,
+          /fontawesome-webfont.*\.svg/,
+          /version\.json/,
+          /extension-dist/,
+          /\.map$/,
+          /^manifest.*\.js(?:on)?$/
+        ],
+        swSrc: './src/service-worker.js',
+        swDest: 'service-worker.js',
+        importWorkboxFrom: 'local',
+        dontCacheBustUrlsMatching: /-[a-f0-9]{6}\./
       })
     );
   }
 
-  // Build the service worker in an entirely separate configuration so
-  // it doesn't get name-mangled. It'll be used by the
-  // WorkboxPlugin. This lets us inline the dependencies.
-  const serviceWorker = {
-    mode: isDev ? 'development' : 'production',
-
-    entry: {
-      'service-worker': './src/service-worker.js'
-    },
-
-    output: {
-      path: path.resolve('./dist'),
-      filename: '[name].js'
-    },
-
-    stats: 'errors-only'
-  };
-
-  return [serviceWorker, config];
+  return config;
 };

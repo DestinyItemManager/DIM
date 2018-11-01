@@ -1,5 +1,7 @@
 <div class="vendor dim-page">
-  <div ng-if="!vm.vendorService.vendorsLoaded" class="vendor-loading"><i class="fa-spin fa fa-refresh"></i> <span ng-i18next="Vendors.Load"></span>...</div>
+  <div ng-if="!vm.vendorService.vendorsLoaded" class="vendor-loading">
+    <font-awesome-icon icon="refresh" class="fa-spin"></font-awesome-icon> <span ng-i18next="Vendors.Load"></span>...
+  </div>
 
   <div id="vendorHeadersBackground" class="vendor-headers-background" scroll-class="sticky"></div>
   <div id="vendorHeaderWrapper" class="vendorHeaderWrapper" scroll-class="sticky">

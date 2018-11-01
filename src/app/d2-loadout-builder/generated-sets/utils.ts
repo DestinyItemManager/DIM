@@ -1,9 +1,7 @@
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { t } from 'i18next';
 import * as _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import { D2Item, DimSocket } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType } from '../types';
+import { DimSocket } from '../../inventory/item-types';
+import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -49,21 +47,33 @@ export function filterPlugs(socket: DimSocket) {
 /**
  * Get the best sorted computed sets for a specfic tier
  */
-export function getSetsForTier(
+export function getBestSets(
   setMap: ArmorSet[],
   lockedMap: { [bucketHash: number]: LockedItemType[] },
-  tier: string
+  stats: { [statType in StatTypes]: MinMax }
 ): ArmorSet[] {
-  const matchedSets: ArmorSet[] = [];
-
-  Object.values(setMap).forEach((set) => {
-    if (set.tiers.includes(tier)) {
-      matchedSets.push(set);
-    }
-  });
-
   // Sort based on power level
-  let sortedSets = _.sortBy(matchedSets, (set) => -set.power);
+  let sortedSets = _.sortBy(setMap, (set) => -set.power);
+
+  // Sort by highest combined tier
+  sortedSets = _.sortBy(
+    sortedSets,
+    (set) => -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery)
+  );
+
+  // Remove sets that do not match tier filters
+  sortedSets = sortedSets.filter((set) => {
+    return set.tiers.some((tier) => {
+      return (
+        stats.Mobility.min <= tier.Mobility &&
+        stats.Mobility.max >= tier.Mobility &&
+        stats.Resilience.min <= tier.Resilience &&
+        stats.Resilience.max >= tier.Resilience &&
+        stats.Recovery.min <= tier.Recovery &&
+        stats.Recovery.max >= tier.Recovery
+      );
+    });
+  });
 
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
@@ -93,52 +103,24 @@ export function getSetsForTier(
   return sortedSets;
 }
 
-/**
- * Build the dropdown options for a collection of armorSets
- */
-export function getSetTiers(armorSets: ArmorSet[]): string[] {
-  const tiersSet = new Set<string>();
-  armorSets.forEach((set: ArmorSet) => {
-    set.tiers.forEach((tier: string) => {
-      tiersSet.add(tier);
-    });
-  });
-
-  const tiers = _.each(
-    _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-      return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
-    }),
-    (tier) => {
-      tier.sort().reverse();
-    }
-  );
-
-  const tierKeys = Object.keys(tiers);
-  const setTiers: string[] = [];
-  for (let tier = tierKeys.length; tier > tierKeys.length - 3; tier--) {
-    if (tierKeys[tier]) {
-      setTiers.push(t('LoadoutBuilder.SelectTierHeader', { tier: tierKeys[tier] }));
-      tiers[tierKeys[tier]].forEach((set) => {
-        setTiers.push(set);
-      });
-    }
-  }
-
-  return setTiers;
-}
-
 export function toggleLockedItem(
   lockedItem: LockedItemType,
   bucket: InventoryBucket,
   onLockChanged: (bucket: InventoryBucket, locked?: LockedItemType[]) => void,
   locked?: LockedItemType[]
 ) {
-  let newLockedItems: LockedItemType[] = [];
-  if (locked && locked[0].type !== 'item') {
-    newLockedItems = Array.from(locked);
+  if (locked && locked[0].type === 'item') {
+    onLockChanged(
+      bucket,
+      lockedItem.item.index === locked[0].item.index ? undefined : [lockedItem]
+    );
   }
 
-  const existingIndex = newLockedItems.findIndex((existing) => existing.item === lockedItem.item);
+  const newLockedItems: LockedItemType[] = Array.from(locked || []);
+
+  const existingIndex = newLockedItems.findIndex(
+    (existing) => existing.item.index === lockedItem.item.index
+  );
   if (existingIndex > -1) {
     newLockedItems.splice(existingIndex, 1);
   } else {
@@ -146,14 +128,4 @@ export function toggleLockedItem(
   }
 
   onLockChanged(bucket, newLockedItems.length === 0 ? undefined : newLockedItems);
-}
-
-export function isInventoryItemDefinition(
-  item: D2Item | DestinyInventoryItemDefinition
-): item is DestinyInventoryItemDefinition {
-  return Boolean((item as DestinyInventoryItemDefinition).displayProperties);
-}
-
-export function isD2Item(item: D2Item | DestinyInventoryItemDefinition): item is D2Item {
-  return Boolean((item as D2Item).name);
 }

@@ -184,6 +184,7 @@
     "EnterNote": "Trage eine Beschreibung ein:",
     "Equipment": "Items die ausgerüstet werden können.",
     "Equipped": "Items die aktuell von einem Charakter ausgerüstet sind.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filter",
     "Glimmer": {
       "Any": "Jeder Typ Glimmer-Item.",
@@ -229,6 +230,7 @@
       "tTK": "König der Besessenen"
     },
     "RequiredLevel": "Zeigt Items basierend auf deren Mindestlevel.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "Stats": "Zeigt Items basierend auf ihrem statischen Wert an. Verfügbare Filter sind:",
@@ -701,16 +703,12 @@
     "Flawless": "Makellos",
     "SevenWins": "7 Siege Belohnung (Waffe)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz berichtet, dass dieser Händler 380er Power Items verkauft.",
-    "ServiceCallFailed": "VendorEngrams.xyz Service-Aufruf ist fehlgeschlagen.",
-    "Vote": "Siehst du einen Händler, der 380er Power Items verkauft? Gehe zu VendorEngrams.xyz zum voten und lass es die Community wissen!"
-  },
   "Vendors": {
     "All": "Alle",
     "ArmorAndWeapons": "Rüstungen & Waffen",
     "Available": "Verfügbar auf:",
     "Bounties": "Beutezüge",
+    "Catalysts": "Katalysatoren",
     "CatalystsDisclaimer": "DIM kann nur Meisterwerk Katalysatoren zu Items zeigen, die sich in deinem Inventar befinden.",
     "Collections": "Sammlungen",
     "Compare": "Vergleiche mit dem was du bereits hast:",

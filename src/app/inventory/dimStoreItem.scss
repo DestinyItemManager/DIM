@@ -39,7 +39,7 @@
   .show-reviews & {
     display: block;
   }
-  .fa-star {
+  .app-icon {
     font-size: 0.8em;
     bottom: 1px;
     padding-left: 1px;
@@ -66,6 +66,7 @@ dim-store-item,
   height: 52px;
   width: calc(var(--item-size) + 8px);
   height: calc(var(--item-size) + 8px);
+  contain: strict;
 }
 
 .item {

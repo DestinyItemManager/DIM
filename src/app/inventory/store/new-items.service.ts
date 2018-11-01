@@ -1,4 +1,4 @@
-import * as idbKeyval from 'idb-keyval';
+import { get, set } from 'idb-keyval';
 import { getActivePlatform } from '../../accounts/platform.service';
 import { DestinyAccount } from '../../accounts/destiny-account.service';
 import { DimItem } from '../item-types';
@@ -44,6 +44,7 @@ export const NewItemsService = {
     const account = getActivePlatform();
     return this.loadNewItems(account).then((newItems) => {
       newItems.delete(item.id);
+      store.dispatch(setNewItems(newItems));
       this.saveNewItems(newItems, account, item.destinyVersion);
     });
   },
@@ -52,24 +53,20 @@ export const NewItemsService = {
     if (!stores || !account) {
       return;
     }
+    store.dispatch(setNewItems(new Set()));
     this.saveNewItems(new Set(), account);
   },
 
   loadNewItems(account: DestinyAccount): Promise<Set<string>> {
     if (account) {
       const key = newItemsKey(account);
-      return Promise.resolve(idbKeyval.get(key)).then(
-        (v) => (v as Set<string>) || new Set<string>()
-      );
+      return Promise.resolve(get(key)).then((v) => (v as Set<string>) || new Set<string>());
     }
     return Promise.resolve(new Set<string>());
   },
 
   saveNewItems(newItems: Set<string>, account: DestinyAccount) {
-    store.dispatch(setNewItems(newItems));
-    return Promise.resolve(idbKeyval.set(newItemsKey(account), newItems)).catch(
-      handleLocalStorageFullError
-    );
+    return Promise.resolve(set(newItemsKey(account), newItems)).catch(handleLocalStorageFullError);
   },
 
   buildItemSet(stores) {

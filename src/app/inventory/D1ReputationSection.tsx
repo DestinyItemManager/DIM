@@ -4,14 +4,8 @@ import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import D1Reputation from './D1Reputation';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import { Settings } from '../settings/reducer';
 
-export default function D1ReputationSection({
-  stores
-}: {
-  stores: DimStore[];
-  collapsedSections: Settings['collapsedSections'];
-}) {
+export default function D1ReputationSection({ stores }: { stores: DimStore[] }) {
   return (
     <div className="section">
       <CollapsibleTitle title={t('Bucket.Reputation')} sectionId="Reputation">

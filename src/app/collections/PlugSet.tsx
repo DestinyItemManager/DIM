@@ -6,9 +6,9 @@ import './collections.scss';
 import { VendorItem } from '../d2-vendors/vendor-item';
 import VendorItemComponent from '../d2-vendors/VendorItemComponent';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import classNames from 'classnames';
 import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
+import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -54,12 +54,7 @@ export default class PlugSet extends React.Component<Props> {
             className="collapse-handle"
             onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
           >
-            <i
-              className={classNames(
-                'fa collapse',
-                childrenExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'
-              )}
-            />{' '}
+            <AppIcon className="collapse" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
             {title}
           </span>
           <span className="node-progress">

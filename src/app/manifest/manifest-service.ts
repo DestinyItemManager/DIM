@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import * as idbKeyval from 'idb-keyval';
+import { get, set, del } from 'idb-keyval';
 
 // For zip
 // tslint:disable-next-line:no-implicit-dependencies
@@ -208,7 +208,7 @@ class ManifestService {
   // This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
   private async saveManifestToIndexedDB(typedArray: Uint8Array, version: string) {
     try {
-      await idbKeyval.set(this.idbKey, typedArray);
+      await set(this.idbKey, typedArray);
       console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
       localStorage.setItem(this.localStorageKey, version);
     } catch (e) {
@@ -226,7 +226,7 @@ class ManifestService {
 
   private deleteManifestFile() {
     localStorage.removeItem(this.localStorageKey);
-    idbKeyval.delete(this.idbKey);
+    del(this.idbKey);
   }
 
   /**
@@ -241,7 +241,7 @@ class ManifestService {
     this.statusText = `${t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
     if (currentManifestVersion === version) {
-      const typedArray = (await idbKeyval.get(this.idbKey)) as Uint8Array;
+      const typedArray = (await get(this.idbKey)) as Uint8Array;
       if (!typedArray) {
         throw new Error('Empty cached manifest file');
       }

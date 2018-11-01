@@ -184,6 +184,7 @@
     "EnterNote": "输入备注文本:",
     "Equipment": "可以装备的物品.",
     "Equipped": "目前已装备的物品.",
+    "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "过滤器",
     "Glimmer": {
       "Any": "所有类型的微光物品.",
@@ -229,6 +230,7 @@
       "tTK": "夺魂之王"
     },
     "RequiredLevel": "根据需要的等级显示物品.",
+    "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "StackLevel": "根据堆叠数量来显示物品.",
     "Stackable": "显示可以堆叠的物品(合成弹药,奇怪硬币等)",
     "Stats": "根据统计数值显示物品. 可用的过滤器有：",
@@ -701,16 +703,12 @@
     "Flawless": "完美无瑕",
     "SevenWins": "七连胜奖励 (武器)"
   },
-  "VendorEngramsXyz": {
-    "Likely380": "VendorEngrams.xyz 提示您这位供应商只提供380光能的物品",
-    "ServiceCallFailed": "VendorEngrams 信息调用失败。",
-    "Vote": "看到供应商销售380个光能的武平？去 VendorEngrams.xyz 投票让其他玩家知道这件事吧!"
-  },
   "Vendors": {
     "All": "全部",
     "ArmorAndWeapons": "防具 & 武器",
     "Available": "可用:",
     "Bounties": "赏金",
+    "Catalysts": "Catalysts",
     "CatalystsDisclaimer": "DIM只能显示您已经拥有异域催化剂的效果",
     "Collections": "收藏品",
     "Compare": "与您现有的物品对比：",

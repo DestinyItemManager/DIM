@@ -3,17 +3,18 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
+import { toggleLockedItem } from '../generated-sets/utils';
 import { LockedItemType } from '../types';
 import LoadoutBucketDropTarget from './LoadoutBucketDropTarget';
 import './lockedarmor.scss';
-import LockedItem from './LockedItem';
+import LockedItemContainer from './LockedItemContainer';
 import LockablePopup from './popup/LockablePopup';
-import { toggleLockedItem } from '../generated-sets/utils';
 
 interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
   perks: Set<DestinyInventoryItemDefinition>;
+  filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
   locked?: LockedItemType[];
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
@@ -48,29 +49,26 @@ export default class LockedArmor extends React.Component<Props & UIViewInjectedP
     toggleLockedItem(lockedItem, this.props.bucket, this.props.onLockChanged, this.props.locked);
   };
 
-  reset = () => {
-    this.props.onLockChanged(this.props.bucket);
-  };
-
   render() {
-    const { items, perks, locked, bucket, onLockChanged } = this.props;
+    const { items, perks, filteredPerks, locked, bucket, onLockChanged } = this.props;
     const { isOpen } = this.state;
 
     return (
       <div className="locked-item">
         <LoadoutBucketDropTarget bucketType={bucket.type!} onItemLocked={this.setLockedItem}>
-          {locked && locked.length !== 0 && <div className="close" onClick={this.reset} />}
-          <LockedItem
+          <LockedItemContainer
             locked={locked}
             bucket={bucket}
             toggleOpen={this.openPerkSelect}
             onExclude={this.toggleLockedItem}
+            onLockChanged={onLockChanged}
           />
         </LoadoutBucketDropTarget>
         <LockablePopup
           bucket={bucket}
           items={items}
           perks={perks}
+          filteredPerks={filteredPerks[bucket.hash]}
           locked={locked}
           isOpen={isOpen}
           onLockChanged={onLockChanged}

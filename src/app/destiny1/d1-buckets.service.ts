@@ -75,7 +75,7 @@ _.each(D1Categories, (types, category) => {
   });
 });
 
-export const getBuckets: () => IPromise<any> = _.once(() => {
+export const getBuckets = _.once(() => {
   return getDefinitions().then((defs) => {
     const buckets: InventoryBuckets = {
       byHash: {}, // numeric hash -> bucket

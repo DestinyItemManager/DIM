@@ -218,7 +218,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       prophecy: ['prophecy'],
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
-      ammoType: ['special', 'primary', 'heavy']
+      ammoType: ['special', 'primary', 'heavy'],
+      season: ['season1', 'season2', 'season3', 'season4'],
+      event: ['dawning', 'crimsondays', 'solstice', 'fotl'],
+      year: ['year1', 'year2']
     });
   }
 
@@ -926,14 +929,53 @@ function searchFilters(
           compareByOperand(item.dtrRating.ratingCount, predicate)
         );
       },
-      year(item: D1Item, predicate: string) {
+      year(item: DimItem, predicate: string) {
+        if (item.isDestiny1()) {
+          switch (predicate) {
+            case 'year1':
+              return item.year === 1;
+            case 'year2':
+              return item.year === 2;
+            case 'year3':
+              return item.year === 3;
+            default:
+              return false;
+          }
+        } else if (item.isDestiny2()) {
+          switch (predicate) {
+            case 'year1':
+              return item.season >= 1 && item.season < 4;
+            case 'year2':
+              return item.season > 3 || !item.season;
+            default:
+              return false;
+          }
+        }
+      },
+      season(item: D2Item, predicate: string) {
         switch (predicate) {
-          case 'year1':
-            return item.year === 1;
-          case 'year2':
-            return item.year === 2;
-          case 'year3':
-            return item.year === 3;
+          case 'season1':
+            return item.season === 1;
+          case 'season2':
+            return item.season === 2;
+          case 'season3':
+            return item.season === 3;
+          case 'season4':
+            return item.season === 4 || !item.season;
+          default:
+            return false;
+        }
+      },
+      event(item: D2Item, predicate: string) {
+        switch (predicate) {
+          case 'dawning':
+            return item.event === 1;
+          case 'crimsondays':
+            return item.event === 2;
+          case 'solstice':
+            return item.event === 3;
+          case 'fotl':
+            return item.event === 4;
           default:
             return false;
         }
