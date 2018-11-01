@@ -344,15 +344,6 @@ class SettingsPage extends React.Component<Props, State> {
               <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
             </div>
 
-            {$featureFlags.forsakenTiles && (
-              <Checkbox
-                label="Beta Forsaken Tiles"
-                name="betaForsakenTiles"
-                value={settings.betaForsakenTiles}
-                onChange={this.onChange}
-              />
-            )}
-
             <Checkbox
               label="Settings.EnableAdvancedStats"
               name="itemQuality"
