@@ -9,6 +9,8 @@ import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import copyString from '../util';
+import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DimStore } from '../inventory/store-types';
 
 function mapStateToProps(state: RootState): Partial<Props> {
   return {
@@ -25,18 +27,22 @@ function mapStateToProps(state: RootState): Partial<Props> {
           id: store.id,
           name: store.name
         }))
-    },
-    account: state
+    }
   };
 }
 
 interface Props {
   user: {
-    current: any;
-    accounts: any;
-    characters: any;
+    current: DestinyAccount | undefined;
+    accounts: ReadonlyArray<DestinyAccount>;
+    characters: ReadonlyArray<{
+      current: DimStore['current'];
+      class: DimStore['class'];
+      destinyVersion: DimStore['destinyVersion'];
+      id: DimStore['id'];
+      name: DimStore['name'];
+    }>;
   };
-  account: any;
 }
 
 // tslint:disable-next-line:prefer-template
@@ -66,22 +72,7 @@ class DiagnosticsPageComponent extends React.Component<Props> {
         app: {
           version: $DIM_VERSION,
           flavor: $DIM_FLAVOR,
-          buildDate: new Date($DIM_BUILD_DATE).toISOString(),
-          featureFlags: {
-            debugMoves: $featureFlags.debugMoves,
-            reviewsEnabled: $featureFlags.reviewsEnabled,
-            gdrive: $featureFlags.gdrive,
-            debugSync: $featureFlags.debugSync,
-            wasm: $featureFlags.wasm,
-            colorA11y: $featureFlags.colorA11y,
-            googleAnalyticsForRouter: $featureFlags.googleAnalyticsForRouter,
-            debugRouter: $featureFlags.debugRouter,
-            debugSW: $featureFlags.debugSW,
-            sentry: $featureFlags.sentry,
-            respectDNT: $featureFlags.respectDNT,
-            forsakenTiles: $featureFlags.forsakenTiles,
-            d2LoadoutBuilder: $featureFlags.d2LoadoutBuilder
-          }
+          buildDate: new Date($DIM_BUILD_DATE).toISOString()
         }
       },
       undefined,
