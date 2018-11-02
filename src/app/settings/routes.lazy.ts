@@ -2,6 +2,7 @@ import SettingsPage from './SettingsPage';
 import { ReactStateDeclaration } from '@uirouter/react';
 import { settingsReady } from './settings';
 import GDriveRevisions from '../storage/GDriveRevisions';
+import DiagnosticsPage from './DiagnosticsPage';
 
 export const states: ReactStateDeclaration[] = [
   {
@@ -16,5 +17,10 @@ export const states: ReactStateDeclaration[] = [
     name: 'gdrive-revisions',
     component: GDriveRevisions,
     url: '/settings/gdrive-revisions'
+  },
+  {
+    name: 'diagnostics',
+    url: '/diagnostics',
+    component: DiagnosticsPage
   }
 ];
