@@ -14,13 +14,13 @@ export interface ReviewsState {
 
 export type ReviewsAction = ActionType<typeof actions>;
 
-export const initialReviewsState: ReviewsState = {
+const initialState: ReviewsState = {
   maxTotalVotes: 0,
   ratings: {}
 };
 
 export const reviews: Reducer<ReviewsState, ReviewsAction> = (
-  state: ReviewsState = initialReviewsState,
+  state: ReviewsState = initialState,
   action: ReviewsAction
 ) => {
   switch (action.type) {
@@ -34,12 +34,16 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
   }
 };
 
+export function getItemStoreKey(referenceId: number | string, roll: string | null) {
+  return `${referenceId}-${roll || 'fixed'}`;
+}
+
 function ratingsFromItemStores(
   itemStores: (D2RatingData | D1RatingData)[]
 ): { [key: string]: D2RatingData | D1RatingData } {
   const ratings: { [key: string]: D2RatingData | D1RatingData } = {};
   for (const itemStore of itemStores) {
-    ratings[`${itemStore.referenceId}-${itemStore.roll}`] = itemStore;
+    ratings[getItemStoreKey(itemStore.referenceId, itemStore.roll)] = itemStore;
   }
   return ratings;
 }

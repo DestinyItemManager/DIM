@@ -22,13 +22,13 @@ export interface LoadoutsState {
 
 export type LoadoutsAction = ActionType<typeof actions>;
 
-export const initialLoadoutsState: LoadoutsState = {
+const initialState: LoadoutsState = {
   loadouts: [],
   previousLoadouts: {}
 };
 
 export const loadouts: Reducer<LoadoutsState, LoadoutsAction | AccountsAction> = (
-  state: LoadoutsState = initialLoadoutsState,
+  state: LoadoutsState = initialState,
   action: LoadoutsAction
 ) => {
   switch (action.type) {

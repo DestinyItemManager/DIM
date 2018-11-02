@@ -1,19 +1,32 @@
 <div class="stat-box-row" ng-repeat="stat in $ctrl.item.stats track by $index">
-  <span class="stat-box-text stat-box-cell" ng-class="{ 'stat-box-masterwork': stat.statHash === $ctrl.item.masterworkInfo.statHash }"> {{ stat.name }} </span>
+  <span class="stat-box-text stat-box-cell" ng-class="{ 'stat-box-masterwork': stat.statHash === $ctrl.item.masterworkInfo.statHash }">
+    {{ stat.name }} </span>
   <span class="stat-box-outer" ng-class="{ 'stat-box-outer--no-bar': !stat.bar }"><span class="stat-box-container">
-    <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>
-    <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>
-    <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" dim-percent-width="(stat.equippedStatsValue - stat.value) / stat.maximumValue"></span>
-    <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.equippedStatsValue / stat.maximumValue"></span>
-    <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" dim-percent-width="(stat.value - stat.equippedStatsValue) / stat.maximumValue"></span>
-    <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ 'higher-stats': (stat.value > stat.equippedStatsValue), 'lower-stats': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>
-    <span ng-if="!stat.bar && (stat.equippedStatsName && !stat.comparable)">{{ stat.value }}</span>
-  </span></span>
-  <span class="stat-box-val stat-box-cell" ng-class="{ 'higher-stats': (stat.value > stat.equippedStatsValue && stat.comparable), 'lower-stats': (stat.value < stat.equippedStatsValue && stat.comparable) }" ng-show="{{ stat.bar }}">{{ stat.value }}
-    <span ng-if="stat.bar && $ctrl.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:'color'">({{ stat.qualityPercentage.range }})</span>
+      <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner"
+        dim-percent-width="stat.value / stat.maximumValue"></span>
+      <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner"
+        dim-percent-width="stat.value / stat.maximumValue"></span>
+      <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats"
+        dim-percent-width="(stat.equippedStatsValue - stat.value) / stat.maximumValue"></span>
+      <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner"
+        dim-percent-width="stat.equippedStatsValue / stat.maximumValue"></span>
+      <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats"
+        dim-percent-width="(stat.value - stat.equippedStatsValue) / stat.maximumValue"></span>
+      <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ 'higher-stats': (stat.value > stat.equippedStatsValue), 'lower-stats': (stat.value < stat.equippedStatsValue)}">{{
+        stat.value }}</span>
+      <span ng-if="!stat.bar && (stat.equippedStatsName && !stat.comparable)">{{ stat.value }}</span>
+    </span></span>
+  <span class="stat-box-val stat-box-cell" ng-class="{ 'higher-stats': (stat.value > stat.equippedStatsValue && stat.comparable), 'lower-stats': (stat.value < stat.equippedStatsValue && stat.comparable) }"
+    ng-show="{{ stat.bar }}">{{ stat.value }}
+    <span ng-if="stat.bar && $ctrl.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:'color'">({{
+      stat.qualityPercentage.range }})</span>
   </span>
 </div>
 <div class="stat-box-row" ng-if="$ctrl.item.quality && $ctrl.item.quality.min">
   <span class="stat-box-text stat-box-cell stat-box-wrap" ng-i18next="Stats.Quality"></span>
-  <span class="stat-box-cell stat-box-wrap" ng-style="$ctrl.item.quality.min | qualityColor:'color'" ng-i18next="[i18next]({ range: $ctrl.item.quality.range })Stats.OfMaxRoll"></span><span><a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is" target="_blank" rel="noopener noreferrer"><i class="fa fa-question-circle" ng-i18next="[title]Stats.PercentHelp"></i></a></span>
+  <span class="stat-box-cell stat-box-wrap" ng-style="$ctrl.item.quality.min | qualityColor:'color'" ng-i18next="[i18next]({ range: $ctrl.item.quality.range })Stats.OfMaxRoll"></span><span><a
+      href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"
+      target="_blank" rel="noopener noreferrer" ng-i18next="[title]Stats.PercentHelp">
+      <font-awesome-icon icon="help"></font-awesome-icon>
+    </a></span>
 </div>

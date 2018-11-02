@@ -3,7 +3,6 @@ import { t } from 'i18next';
 import { AppIcon, helpIcon, tagIcon, disabledIcon } from '../shell/icons';
 import { itemTags, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
-import { querySelector } from '../shell/reducer';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
 import * as _ from 'lodash';
@@ -31,7 +30,6 @@ bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
 bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
 interface StoreProps {
-  query: string;
   isPhonePortrait: boolean;
   destinyVersion: 1 | 2;
   account?: DestinyAccount;
@@ -49,11 +47,11 @@ type Props = StoreProps & DispatchProps;
 
 interface State {
   showSelect: boolean;
+  liveQuery: string;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    query: querySelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     destinyVersion: destinyVersionSelector(state),
     account: currentAccountSelector(state),
@@ -63,10 +61,11 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 class SearchFilter extends React.Component<Props, State> {
-  state: State = { showSelect: false };
+  state: State = { showSelect: false, liveQuery: '' };
   private textcomplete: Textcomplete;
   private inputElement = React.createRef<HTMLInputElement>();
   private $scope = $rootScope.$new(true);
+  private debouncedUpdateQuery = _.debounce(this.props.setSearchQuery, 500);
 
   componentDidMount() {
     hotkeys
@@ -115,8 +114,10 @@ class SearchFilter extends React.Component<Props, State> {
   }
 
   render() {
-    const { query, isPhonePortrait } = this.props;
-    const { showSelect } = this.state;
+    const { isPhonePortrait } = this.props;
+    const { showSelect, liveQuery } = this.state;
+
+    // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
 
     const placeholder = isPhonePortrait
       ? t('Header.FilterHelpBrief')
@@ -133,14 +134,14 @@ class SearchFilter extends React.Component<Props, State> {
           placeholder={placeholder}
           type="text"
           name="filter"
-          value={query}
+          value={liveQuery}
           onChange={() => {
             return;
           }}
           onInput={this.onQueryChange}
         />
 
-        {query.length === 0 ? (
+        {liveQuery.length === 0 ? (
           <span className="filter-help" onClick={this.showFilters} title={t('Header.Filters')}>
             <AppIcon icon={helpIcon} />
           </span>
@@ -196,7 +197,7 @@ class SearchFilter extends React.Component<Props, State> {
   };
 
   private blurFilterInputIfEmpty = () => {
-    if (this.props.query === '') {
+    if (this.state.liveQuery === '') {
       this.blurFilterInput();
     }
   };
@@ -213,9 +214,9 @@ class SearchFilter extends React.Component<Props, State> {
     if (!this.textcomplete) {
       this.setupTextcomplete();
     }
-    // TODO: Debounce?
     const query = e.currentTarget.value;
-    this.props.setSearchQuery(query);
+    this.setState({ liveQuery: query });
+    this.debouncedUpdateQuery(query);
   };
 
   private onTagClicked = () => {
@@ -224,7 +225,7 @@ class SearchFilter extends React.Component<Props, State> {
 
   private clearFilter = () => {
     this.props.setSearchQuery('');
-    this.setState({ showSelect: false });
+    this.setState({ showSelect: false, liveQuery: '' });
     this.textcomplete.trigger('');
   };
 

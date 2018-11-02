@@ -1,5 +1,12 @@
 # Next
 
+# 4.75.0 (2018-10-28)
+
+* DIM now supports searching by season, event and year in Destiny 2.
+* is:season1, is:season2, is:season3, is:season4
+* is:dawning, is:crimsondays, is:solstice, is:fotl
+* Performance improvements
+
 # 4.74.1 (2018-10-21)
 
 * We no longer support searching D1 vendor items.
@@ -12,9 +19,6 @@
 * Fix a bug that could accidentally erase loadouts. Don't forget you can restore your data from old Google Drive backups from the Settings page.
 * is:hasmod now includes Backup Mag.
 * is:ikelos now includes Sleeper Simulant.
-* DIM now supports searching by season, event and year in Destiny 2.
-  * is:season1, is:season2, is:season3, is:season4
-  * is:dawning, is:crimsondays, is:solstice, is:fotl
 
 # 4.74.0 (2018-10-14)
 
