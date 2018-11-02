@@ -43,25 +43,45 @@ export default class Developer extends React.Component<{}, State> {
                 </a>
               </li>
               <li>
-                Paste <input type="text" value={URLRet} readOnly={true} size={30} /> into the
-                "Redirect URL" section under "App Authentication".
+                Paste{' '}
+                <input name="redirectUrl" type="text" value={URLRet} readOnly={true} size={30} />{' '}
+                into the "Redirect URL" section under "App Authentication".
               </li>
               <li>
-                Paste <input type="text" value={URL} readOnly={true} size={20} /> into the "Origin
-                Header" section under "Browser Based Apps".
+                Paste{' '}
+                <input name="originHeader" type="text" value={URL} readOnly={true} size={20} /> into
+                the "Origin Header" section under "Browser Based Apps".
               </li>
               <li>Select "Confidential" OAuth type.</li>
               <li>
                 After saving, copy the "API Key" here{' '}
-                <input type="text" value={apiKey} onChange={this.onChange} size={40} />
+                <input
+                  name="apiKey"
+                  type="text"
+                  value={apiKey}
+                  onChange={this.onChange}
+                  size={40}
+                />
               </li>
               <li>
                 Copy the "OAuth client_id" here{' '}
-                <input type="text" value={clientId} onChange={this.onChange} size={5} />
+                <input
+                  name="clientId"
+                  type="text"
+                  value={clientId}
+                  onChange={this.onChange}
+                  size={5}
+                />
               </li>
               <li>
                 Copy the "OAuth client_secret" here{' '}
-                <input type="text" value={clientSecret} onChange={this.onChange} size={50} />
+                <input
+                  name="clientSecret"
+                  type="text"
+                  value={clientSecret}
+                  onChange={this.onChange}
+                  size={50}
+                />
               </li>
               <li>
                 <button>Save</button>
