@@ -103,6 +103,4 @@ class DiagnosticsPageComponent extends React.Component<Props> {
   }
 }
 
-export const DiagnosticsPage = connect(mapStateToProps)(DiagnosticsPageComponent);
-
-export default DiagnosticsPage;
+export default connect(mapStateToProps)(DiagnosticsPageComponent);
