@@ -1,7 +1,7 @@
 @import '../../scss/variables.scss';
 
 .sheet {
-  $corner-radius: 8px;
+  $corner-radius: 15px;
 
   left: 0;
   right: 0;
@@ -9,11 +9,7 @@
   backface-visibility: hidden;
   z-index: 3;
   bottom: 0;
-  background-color: rgba(34, 34, 34, 0.9);
-  @supports (backdrop-filter: blur(10px)) {
-    background-color: rgba(34, 34, 34, 0.6);
-    backdrop-filter: blur(10px);
-  }
+  background-color: rgba(30, 30, 30, 1);
   color: #e0e0e0;
   box-shadow: 0 -1px 6px 0px #222;
   padding-bottom: constant(safe-area-inset-bottom);
@@ -26,19 +22,20 @@
   height: 100%;
 
   .sheet-handle {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(198, 198, 198, 1);
     position: absolute;
-    top: 4px;
-    height: 4px;
-    width: 150px;
-    border-radius: 2px;
+    top: 5px;
+    height: 5px;
+    width: 36px;
+    border-radius: 2.5px;
     left: 50%;
-    margin-left: -75px;
+    margin-left: -18px;
   }
 
   .sheet-contents {
     max-height: 100%;
     overflow: auto;
     height: 100%;
+    padding: $corner-radius;
   }
 }
