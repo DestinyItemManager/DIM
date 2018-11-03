@@ -53,8 +53,6 @@ export interface Settings {
   /** Custom character sort - across all accounts and characters! */
   readonly customCharacterSort: string[];
 
-  readonly betaForsakenTiles: boolean;
-
   readonly language: string;
 
   readonly colorA11y: string;
@@ -105,8 +103,6 @@ export const initialState: Settings = {
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
   reviewsModeSelection: 0,
   hideCompletedRecords: false,
-
-  betaForsakenTiles: false,
 
   customCharacterSort: [],
 
