@@ -57,7 +57,7 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
     if (!vendorDef) {
       throw new Error(`No known vendor with hash ${this.state.vendorHash}`);
     }
-    this.setState({ defs, vendorDef });
+    this.setState({ defs, buckets, vendorDef });
 
     // TODO: if we had a cache per vendor (maybe in redux?) we could avoid this load sometimes?
 
@@ -81,7 +81,7 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
         this.state.vendorHash
       );
 
-      this.setState({ defs, vendorResponse, buckets });
+      this.setState({ vendorResponse });
 
       await fetchRatingsForVendor(defs, vendorResponse);
     } else {
