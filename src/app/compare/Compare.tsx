@@ -288,8 +288,8 @@ class Compare extends React.Component<Props, State> {
       ? allItems.filter(
           (i) =>
             compare.bucket.inArmor
-              ? i.classType === compare.classType
-              : i.typeName === compare.typeName
+              ? i.classType === compare.classType && i.type === compare.type
+              : i.type === compare.type
         )
       : [];
   };
