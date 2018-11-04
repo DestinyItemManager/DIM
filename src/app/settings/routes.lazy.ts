@@ -20,7 +20,7 @@ export const states: ReactStateDeclaration[] = [
   },
   {
     name: 'diagnostics',
-    url: '/diagnostics',
+    url: '/settings/diagnostics',
     component: DiagnosticsPage
   }
 ];
