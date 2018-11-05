@@ -239,7 +239,7 @@ class Compare extends React.Component<Props, State> {
         similarTypes,
         archetypes
       });
-    } else if (comparisons.some((i) => i.id !== item.id)) {
+    } else if (comparisons.every((i) => i.id !== item.id)) {
       this.setState({ comparisons: [...comparisons, item] });
     }
   };
@@ -287,9 +287,9 @@ class Compare extends React.Component<Props, State> {
     return compare
       ? allItems.filter(
           (i) =>
-            compare.bucket.inArmor
-              ? i.classType === compare.classType && i.type === compare.type
-              : i.type === compare.type
+            i.typeName === compare.typeName &&
+            // If it's armor, make sure it's all for the same class
+            (!compare.bucket.inArmor || i.classType === compare.classType)
         )
       : [];
   };
