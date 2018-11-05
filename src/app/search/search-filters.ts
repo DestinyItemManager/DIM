@@ -406,7 +406,7 @@ function searchFilters(
     };
   };
 
-  function compareByOperand(compare = 0, predicate) {
+  function compareByOperand(compare = 0, predicate: string) {
     if (predicate.length === 0) {
       return false;
     }
@@ -424,20 +424,20 @@ function searchFilters(
       }
     }, this);
 
-    predicate = parseFloat(predicate);
+    const predicateValue = parseFloat(predicate);
 
     switch (operand) {
       case 'none':
       case '=':
-        return compare === predicate;
+        return compare === predicateValue;
       case '<':
-        return compare < predicate;
+        return compare < predicateValue;
       case '<=':
-        return compare <= predicate;
+        return compare <= predicateValue;
       case '>':
-        return compare > predicate;
+        return compare > predicateValue;
       case '>=':
-        return compare >= predicate;
+        return compare >= predicateValue;
     }
     return false;
   }
@@ -492,9 +492,7 @@ function searchFilters(
         or = false;
       }
 
-      for (let search of searchTerms) {
-        search = search.replace(/['"]/g, '');
-
+      for (const search of searchTerms) {
         const invert = search.startsWith('-');
         const term = search.replace(/^-/, '');
 
@@ -516,10 +514,10 @@ function searchFilters(
           const filter = term.replace('tag:', '');
           addPredicate('itemtags', filter, invert);
         } else if (term.startsWith('notes:')) {
-          const filter = term.replace('notes:', '');
+          const filter = term.replace('notes:', '').replace(/(^['"]|['"]$)/g, '');
           addPredicate('notes', filter, invert);
         } else if (term.startsWith('perk:')) {
-          const filter = term.replace('perk:', '');
+          const filter = term.replace('perk:', '').replace(/(^['"]|['"]$)/g, '');
           addPredicate('perk', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
@@ -550,7 +548,7 @@ function searchFilters(
             addPredicate(filter, pieces[2]);
           }
         } else if (!/^\s*$/.test(term)) {
-          addPredicate('keyword', term, invert);
+          addPredicate('keyword', term.replace(/(^['"]|['"]$)/g, ''), invert);
         }
       }
 
