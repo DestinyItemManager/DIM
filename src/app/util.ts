@@ -13,3 +13,13 @@ export function count<T>(list: T[], predicate: (value: T) => boolean): number {
 export function shallowCopy<T>(o: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(o)), o);
 }
+
+export default function copyString(str) {
+  function listener(e) {
+    e.clipboardData.setData('text/plain', str);
+    e.preventDefault();
+  }
+  document.addEventListener('copy', listener);
+  document.execCommand('copy');
+  document.removeEventListener('copy', listener);
+}

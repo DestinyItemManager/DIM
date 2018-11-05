@@ -27,7 +27,8 @@ import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
 import { itemSortOrder } from './item-sort';
 import { Settings, defaultItemSize } from './reducer';
-import { AppIcon, refreshIcon, spreadsheetIcon } from '../shell/icons';
+import { AppIcon, refreshIcon, spreadsheetIcon, diagnosticsIcon } from '../shell/icons';
+import { UISref } from '@uirouter/react';
 
 interface StoreProps {
   settings: Settings;
@@ -516,6 +517,17 @@ class SettingsPage extends React.Component<Props, State> {
               >
                 <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
               </button>
+            </div>
+          </section>
+
+          <section>
+            <div className="setting">
+              <h2>{t('Diagnostics.Title')}</h2>
+              <UISref to="diagnostics" params={{}}>
+                <a className="dim-button">
+                  <AppIcon icon={diagnosticsIcon} /> {t('Diagnostics.View')}
+                </a>
+              </UISref>
             </div>
           </section>
         </form>

@@ -572,6 +572,16 @@
     "HideCompleted": "Hide completed records",
     "RecordBooks": "Record Books"
   },
+  "Diagnostics": {
+    "Title": "Developer Diagnostics",
+    "View": "View Developer Diagnostics",
+    "General": {
+      "Title": "General Information",
+      "Detail": "This information contains general information about the app at this time, as well as some information about your Bungie account and Destiny characters.",
+      "Privacy": "The following personal information is included: Display name (gamertag etc.), your unique Bungie account ID, your account platforms, and your characters for the current account."
+    },
+    "CopyToClipboard": "Copy"
+  },
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
     "AllowIdPostToDtrLine2": "This will share your account name and reviewed items with Destiny Tracker.",
