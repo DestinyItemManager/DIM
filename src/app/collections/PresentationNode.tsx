@@ -10,6 +10,7 @@ import {
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
+import Record, { getRecordState } from './Record';
 import classNames from 'classnames';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 
@@ -30,7 +31,7 @@ interface Props {
   onNodePathSelected(nodePath: number[]);
 }
 
-const rootNodes = [3790247699];
+const rootNodes = [3790247699, 1024788583];
 
 export default class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
@@ -65,11 +66,15 @@ export default class PresentationNode extends React.Component<Props> {
     }
 
     // TODO: class based on displayStyle
-    const { visible, acquired } = collectionCounts[presentationNodeHash];
+    const { visible, acquired } = collectionCounts[presentationNodeHash]
+      ? collectionCounts[presentationNodeHash]
+      : { visible: 10, acquired: 10 };
 
-    if (!visible && !acquired) {
-      return null;
-    }
+    //if (!visible && !acquired) {
+    //  return null;
+    //}
+
+    console.log('prese', presentationNodeDef);
 
     const parents = [...this.props.parents, presentationNodeHash];
 
@@ -177,6 +182,14 @@ export default class PresentationNode extends React.Component<Props> {
                   ownedItemHashes={ownedItemHashes}
                 />
               ))}
+              {presentationNodeDef.children.records.map((record) => (
+                <Record
+                  key={record.recordHash}
+                  recordHash={record.recordHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                />
+              ))}
             </div>
           )}
       </div>
@@ -220,6 +233,32 @@ export function countCollectibles(
       (c) =>
         !(
           getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
+          DestinyCollectibleState.NotAcquired
+        )
+    );
+
+    // add an entry for self and return
+    return {
+      [node]: {
+        acquired: acquiredCollectibles,
+        visible: visibleCollectibles
+      }
+    };
+  } else if (presentationNodeDef.children.records && presentationNodeDef.children.records.length) {
+    // TODO: class based on displayStyle
+    const visibleCollectibles = count(
+      presentationNodeDef.children.records,
+      (c) =>
+        !(
+          getRecordState(defs.Record.get(c.recordHash), profileResponse) &
+          DestinyCollectibleState.Invisible
+        )
+    );
+    const acquiredCollectibles = count(
+      presentationNodeDef.children.records,
+      (c) =>
+        !(
+          getRecordState(defs.Record.get(c.recordHash), profileResponse) &
           DestinyCollectibleState.NotAcquired
         )
     );

@@ -28,6 +28,7 @@ import { characterComponentSortSelector } from '../settings/character-sort';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
+import PresentationNode, { countCollectibles } from '../collections/PresentationNode';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -143,6 +144,11 @@ class Progress extends React.Component<Props, State> {
       firstCharacterProgression[2772425241]
     ];
 
+    // TODO: how to search and find an item within all nodes?
+    const fullNodePath: number[] = [];
+    fullNodePath.unshift(1024788583);
+    const collectionCounts = countCollectibles(defs, 1024788583, profileInfo);
+
     const profileMilestonesContent = (profileMilestones.length > 0 || profileQuests.length > 0) && (
       <>
         <div className="profile-content">
@@ -211,6 +217,20 @@ class Progress extends React.Component<Props, State> {
               </div>
             </CollapsibleTitle>
           </div>
+        </div>
+        <div className="section">
+          <h3 className="category-title">{t('Vendors.Collections')}</h3>
+          <PresentationNode
+            collectionCounts={collectionCounts}
+            presentationNodeHash={1024788583}
+            defs={defs}
+            profileResponse={profileInfo}
+            buckets={this.state.progress.buckets}
+            ownedItemHashes={new Set()}
+            path={fullNodePath}
+            onNodePathSelected={(nodePath: number[]) => {}}
+            parents={[]}
+          />
         </div>
         <hr />
       </>
