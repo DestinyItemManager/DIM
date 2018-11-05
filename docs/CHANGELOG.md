@@ -1,5 +1,7 @@
 # Next
 
+# 4.76.0 (2018-11-04)
+
 # 4.75.0 (2018-10-28)
 
 * DIM now supports searching by season, event and year in Destiny 2.
