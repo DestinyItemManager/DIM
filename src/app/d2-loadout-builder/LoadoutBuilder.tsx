@@ -138,6 +138,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   componentWillUnmount() {
+    Object.keys(perks).forEach((classType) => {
+      perks[classType] = {};
+      items[classType] = {};
+    });
     this.storesSubscription.unsubscribe();
   }
 
