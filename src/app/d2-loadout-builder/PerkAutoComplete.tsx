@@ -40,14 +40,13 @@ const getPerkOptions = (perks, bucketsById) => {
 // Teach Autosuggest how to calculate suggestions for any given input value.
 function getSuggestions(value) {
   const inputValue = value.trim().toLowerCase();
-  const inputLength = inputValue.length;
 
   return perkOptions
     .map((section) => {
       return {
         bucket: section.bucket,
-        perks: section.perks.filter(
-          (perk) => perk.displayProperties.name.toLowerCase().slice(0, inputLength) === inputValue
+        perks: section.perks.filter((perk) =>
+          perk.displayProperties.name.toLowerCase().includes(inputValue)
         )
       };
     })
