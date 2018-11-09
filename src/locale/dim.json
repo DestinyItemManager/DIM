@@ -409,7 +409,6 @@
     "EquipItems": "Equip on {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generating builds... {{loading}}%",
-    "LockBucket": "{{bucket}}",
     "LockEquipped": "Lock equipped items",
     "LockItemTabTitle": "Items",
     "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
