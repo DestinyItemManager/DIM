@@ -887,7 +887,7 @@ function buildFlavorObjective(
     progress:
       def.valueStyle === 5
         ? (flavorObjective.progress || 0) / flavorObjective.completionValue
-        : (def.valueStyle === 6 ? flavorObjective.progress : 0) || 0
+        : (def.valueStyle === 6 || def.valueStyle === 0 ? flavorObjective.progress : 0) || 0
   };
 }
 
