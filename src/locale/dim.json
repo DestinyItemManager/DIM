@@ -400,6 +400,7 @@
     "Vendor": "Include Vendor items"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "Search for a perk",
     "BadPerk": "\nAny perk that only \"Slightly\" modifies is generally considered not the best option.",
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
@@ -408,7 +409,6 @@
     "EquipItems": "Equip on {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generating builds... {{loading}}%",
-    "LockBucket": "Lock {{bucket}}",
     "LockEquipped": "Lock equipped items",
     "LockItemTabTitle": "Items",
     "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
