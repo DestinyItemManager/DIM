@@ -1,6 +1,7 @@
 # Next
 
 * Completed bounties now sort to the bottom of the Pursuits.
+* Return mods to the compare view.
 
 # 4.76.0 (2018-11-04)
 
