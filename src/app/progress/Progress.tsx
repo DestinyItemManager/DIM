@@ -127,7 +127,10 @@ class Progress extends React.Component<Props, State> {
     const characters = this.props.characterOrder(Object.values(profileInfo.characters.data));
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
-    const profileQuests = this.questItems(profileInfo.profileInventory.data.items);
+    const profileQuests = this.questItems(
+      characters[0].characterId,
+      profileInfo.profileInventory.data.items
+    );
 
     const firstCharacterProgression = Object.values(profileInfo.characterProgressions.data)[0]
       .progressions;
@@ -177,7 +180,7 @@ class Progress extends React.Component<Props, State> {
                         <Quest
                           defs={defs}
                           item={item}
-                          objectives={this.objectivesForItem(characters[0], item)}
+                          objectives={this.objectivesForItem(characters[0].characterId, item)}
                           key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}
                         />
                       ))}
@@ -299,12 +302,13 @@ class Progress extends React.Component<Props, State> {
                 {characters.map((character) => (
                   <div className="progress-for-character" key={character.characterId}>
                     {this.questItems(
+                      character.characterId,
                       profileInfo.characterInventories.data[character.characterId].items
                     ).map((item) => (
                       <Quest
                         defs={defs}
                         item={item}
-                        objectives={this.objectivesForItem(character, item)}
+                        objectives={this.objectivesForItem(character.characterId, item)}
                         key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}
                       />
                     ))}
@@ -431,7 +435,10 @@ class Progress extends React.Component<Props, State> {
    * up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
    * that represent milestones.
    */
-  private questItems(allItems: DestinyItemComponent[]): DestinyItemComponent[] {
+  private questItems(
+    characterId: string,
+    allItems: DestinyItemComponent[]
+  ): DestinyItemComponent[] {
     const { defs } = this.state.progress!;
 
     const filteredItems = allItems.filter((item) => {
@@ -452,6 +459,20 @@ class Progress extends React.Component<Props, State> {
 
     filteredItems.sort(
       chainComparator(
+        compareBy((item) => {
+          const objectives = this.objectivesForItem(characterId, item);
+          const percentComplete = _.sumBy(objectives, (objective) => {
+            if (objective.completionValue) {
+              return (
+                Math.min(1, (objective.progress || 0) / objective.completionValue) /
+                objectives.length
+              );
+            } else {
+              return 0;
+            }
+          });
+          return percentComplete >= 1;
+        }),
         compareBy((item) => {
           return item.expirationDate ? new Date(item.expirationDate) : new Date(8640000000000000);
         }),
@@ -482,7 +503,7 @@ class Progress extends React.Component<Props, State> {
    * and sometimes they are disassociated and stored in characterProgressions.
    */
   private objectivesForItem(
-    character: DestinyCharacterComponent,
+    characterId: string,
     item: DestinyItemComponent
   ): DestinyObjectiveProgress[] {
     const { profileInfo } = this.state.progress!;
@@ -494,7 +515,7 @@ class Progress extends React.Component<Props, State> {
       return objectives.objectives;
     }
     return (
-      profileInfo.characterProgressions.data[character.characterId].uninstancedItemObjectives[
+      profileInfo.characterProgressions.data[characterId].uninstancedItemObjectives[
         item.itemHash
       ] || []
     );

@@ -1,5 +1,7 @@
 # Next
 
+* Completed bounties now sort to the bottom of the Pursuits.
+
 # 4.76.0 (2018-11-04)
 
 # 4.75.0 (2018-10-28)
