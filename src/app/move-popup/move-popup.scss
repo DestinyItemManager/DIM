@@ -216,10 +216,6 @@ $item-header-spacing: 5px;
   }
   &.is-Legendary {
     background-color: $legendary;
-    color: #bbb;
-    select {
-      color: #bbb;
-    }
   }
   &.is-Exotic {
     background-color: $exotic;
@@ -227,6 +223,8 @@ $item-header-spacing: 5px;
   &.is-Uncommon,
   &.is-Rare,
   &.is-Legendary {
+    color: #bbb;
+    select,
     .item-title {
       color: #ddd;
     }
