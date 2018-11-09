@@ -226,7 +226,7 @@ class SearchFilter extends React.Component<Props, State> {
   private clearFilter = () => {
     this.props.setSearchQuery('');
     this.setState({ showSelect: false, liveQuery: '' });
-    this.textcomplete.trigger('');
+    this.textcomplete && this.textcomplete.trigger('');
   };
 
   private getStoresService = (): StoreServiceType => {

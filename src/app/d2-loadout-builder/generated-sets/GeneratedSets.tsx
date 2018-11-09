@@ -124,10 +124,10 @@ export default class GeneratedSets extends React.Component<Props, State> {
           title={t('LoadoutBuilder.GeneratedBuilds')}
           sectionId="loadoutbuilder-generated"
         >
-          <div className="loadout-builder-row">
-            {matchedSets.length === 0 && <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
-            {matchedSets.slice(0, shownSets).map((set) => (
-              <div className="generated-build" key={set.id}>
+          {matchedSets.length === 0 && <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
+          {matchedSets.slice(0, shownSets).map((set) => (
+            <div className="generated-build" key={set.id}>
+              <div className="generated-build-header">
                 <span className="light">
                   <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
                 </span>
@@ -140,29 +140,30 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     'LoadoutBuilder.Recovery'
                   )} ${set.tiers[0].Recovery}`}
                 </span>
-                <div className="sub-bucket">
-                  {Object.values(set.armor).map((item) => (
-                    <GeneratedSetItem
-                      key={item.index}
-                      item={item}
-                      locked={lockedMap[item.bucket.hash]}
-                      onExclude={this.toggleLockedItem}
-                    />
-                  ))}
-                  <GeneratedSetButtons
-                    set={set}
-                    store={selectedStore!}
-                    onLoadoutSet={this.setCreateLoadout}
-                  />
-                </div>
+
+                <GeneratedSetButtons
+                  set={set}
+                  store={selectedStore!}
+                  onLoadoutSet={this.setCreateLoadout}
+                />
               </div>
-            ))}
-            {matchedSets.length > shownSets && (
-              <button className="dim-button" onClick={this.showMore}>
-                {t('LoadoutBuilder.ShowMore')}
-              </button>
-            )}
-          </div>
+              <div className="sub-bucket">
+                {Object.values(set.armor).map((item) => (
+                  <GeneratedSetItem
+                    key={item.index}
+                    item={item}
+                    locked={lockedMap[item.bucket.hash]}
+                    onExclude={this.toggleLockedItem}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+          {matchedSets.length > shownSets && (
+            <button className="dim-button" onClick={this.showMore}>
+              {t('LoadoutBuilder.ShowMore')}
+            </button>
+          )}
         </CollapsibleTitle>
 
         <LoadoutDrawer />
