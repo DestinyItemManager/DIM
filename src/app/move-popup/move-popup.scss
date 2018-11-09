@@ -205,6 +205,31 @@ $item-header-spacing: 5px;
     background-color: $void;
   }
 
+  &.is-Common {
+    background-color: $common;
+  }
+  &.is-Uncommon {
+    background-color: $uncommon;
+  }
+  &.is-Rare {
+    background-color: $rare;
+  }
+  &.is-Legendary {
+    background-color: $legendary;
+  }
+  &.is-Exotic {
+    background-color: $exotic;
+  }
+  &.is-Uncommon,
+  &.is-Rare,
+  &.is-Legendary {
+    color: #bbb;
+    select,
+    .item-title {
+      color: #ddd;
+    }
+  }
+
   .item-title {
     color: #000;
     font-size: 1rem;
